@@ -1,8 +1,6 @@
 <?php
-session_start();
-require_once('admin/includes/main_include.php');
-include("includes/sescheck.php");
-require_once('includes/constants.inc');
+include "includes/top.htm";
+include_once "includes/constants.inc";
 $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
 $p_sql = mysql_query($sql);
 $payments = mysql_fetch_array($p_sql);
@@ -23,19 +21,7 @@ $num_sa = mysql_num_rows($saq);
 
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-
-<head>
-<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
-  <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
-  <script type="text/javascript" src="js/masks.js"></script>
-</head>
-<body>
-
+<div class="fullwidth">
 <script type="text/javascript">
 //CHECK LEDGER PAYMENT SUBMISSION
 function validSubmission(f){
@@ -205,7 +191,7 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 $sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
 $p_sql = mysql_query($sql);
 if(mysql_num_rows($p_sql)==0){
-?><div style="margin-left:50px; color:#fff;">No Previous Payments</div><?php
+?><div style="margin-left:50px;">No Previous Payments</div><?php
 }else{
 ?>
 <div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
@@ -219,7 +205,7 @@ if(mysql_num_rows($p_sql)==0){
 <?php
 while($p = mysql_fetch_array($p_sql)){
 ?>
-<div style="margin-left:9px; margin-top: 10px; width:98%; color: #fff;">
+<div style="margin-left:9px; margin-top: 10px; width:98%; ">
 <span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:80px;"><?= date('m/d/Y', strtotime($p['entry_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:190px;"><?= $p['description']; ?></span>
@@ -247,7 +233,7 @@ function updateType(payer){
 
 </script>
 <div id="form_div">
-<div id="select_fields" style="margin: 10px;color:#fff;">
+<div id="select_fields" style="margin: 10px;">
 <label>Paid By</label>
 <select id="payer" name="payer" onchange="updateType(this)" style="width:170px;margin: 0pt 10px 0pt 0pt;" >
   <option value="<?= DSS_TRXN_PAYER_PRIMARY; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]; ?></option>
@@ -278,7 +264,7 @@ $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_GET['cid'];
 $lq = mysql_query($lsql);
 while($row = mysql_fetch_assoc($lq)){
 ?>
-<div style="color:#fff;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
+<div style="height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
 <span style="width:80px;margin: 0 10px 0 0; float:left;"><?= $row['service_date']; ?></span>
 <span style="width:180px;margin: 0 10px 0 0; float:left;"><?= $row['description']; ?></span>
 <span style="width:100px;margin: 0 10px 0 0; float:left;">$<?= $row['amount']; ?></span>
@@ -290,14 +276,14 @@ while($row = mysql_fetch_assoc($lq)){
 }
 ?>
 <br />
-<input type="checkbox" id="close" name="close" onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1" /> <label style="color:#fff;">Close Claim</label>
+<input type="checkbox" id="close" name="close" onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1" /> <label>Close Claim</label>
 <br />
-<input type="checkbox" id="dispute" name="dispute" onclick=" if(this.checked){ $('#close').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' /> <label style="color:#fff;">Dispute</label>
+<input type="checkbox" id="dispute" name="dispute" onclick=" if(this.checked){ $('#close').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' /> <label>Dispute</label>
 <div id="dispute_reason_div" style="display: none">
-<label style="color:#fff;">Reason for dispute:</label> <input type="text" name="dispute_reason" />
+<label>Reason for dispute:</label> <input type="text" name="dispute_reason" />
 </div>
 <div id="ins_attach" style="display: none">
-<label style="color:#fff;">Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
+<label>Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
 </div>
 <input type="hidden" name="claimid" value="<?php echo $_GET['cid']; ?>">
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
@@ -308,7 +294,7 @@ while($row = mysql_fetch_assoc($lq)){
 <input type="hidden" name="entrycount" value="javascript::readCookie();">
 <div style="width:200px;float:right;margin-left:10px;text-align:left;" id="submitButton"><input type="submit" value="Submit Payments" /></div>
 </div>
-<div id="auth_div" style="display:none; padding: 10px; color:#fff;">
+<div id="auth_div" style="display:none; padding: 10px">
 <p>You are not authorized to complete this transaction. Please have an authorized user enter their credentials.</p>
 Username: <input type="text" name="username" /><br />
 Password: <input type="password" name="password" /><br />
@@ -316,5 +302,9 @@ Password: <input type="password" name="password" /><br />
 </div>
 
 </form>
-</body>
-</html> 
+<br><br>
+<a href="view_claim.php?claimid=<?=$_GET['cid']; ?>&pid=<?=$_GET['pid']; ?>" class="button" style="float:left;">Cancel</a>
+<a href="ledger_payments_advanced.php?cid=<?=$_GET['cid']; ?>&pid=<?=$_GET['pid']; ?>" class="button" style="float:right;">Advanced Payment</a>
+<div style="clear:both;"></div>
+</div>
+<?php include 'includes/bottom.htm'; ?>

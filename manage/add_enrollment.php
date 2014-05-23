@@ -158,24 +158,28 @@ label{
   <?php $t_sql = "SELECT * FROM dental_enrollment_transaction_type ORDER BY transaction_type ASC";
         $t_q = mysql_query($t_sql);
   ?>
-
 	<?php
 		$s = "SELECT eligible_test FROM dental_users where userid='".$_SESSION['docid']."'";
 		$q = mysql_query($s);
 		$r = mysql_fetch_assoc($q);
 		if($r['eligible_test']=="1"){
 	?>
-	<label style="color:#fff;">Test?</label> <input type="checkbox" value="1" name="test" /><br/>
+	<div>
+	<label style="color:#fff;">Test?</label> <input type="checkbox" value="1" name="test" />
+	</div>
 	<?php } ?>
-
+<div style="clear:both;">
+	<label style="color:#fff;">Enroll Type</label>
 
         <select id="transaction_type" name="transaction_type" onchange="update_list()">
             <?php while($t = mysql_fetch_assoc($t_q)){ ?>
                 <option value="<?= $t['id']; ?>"><?= $t['transaction_type']; ?> - <?= $t['description']; ?></option>
             <?php } ?>
         </select>
-<br />
+</div>
 
+<div>
+	<label style="color:#fff;">Insurance Co</label>
 		<input type="hidden" name="payer_id" id="payer_id">
                                 <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="Type insurance payer name" style="width:300px;" />
 <br />
@@ -184,12 +188,12 @@ label{
                 <li class="template" style="display:none"></li>
         </ul>
 </div>
+</div>
 <script type="text/javascript">
 $(document).ready(function(){
 setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', null, null, false);
 });
 </script>
-<br />
 <?php
   $sql = "SELECT * FROM dental_users WHERE (docid='".$_SESSION['docid']."' OR userid='".$_SESSION['docid']."') AND npi !='' AND (producer=1 OR docid=0) ORDER BY docid ASC";
   $q = mysql_query($sql);
@@ -200,6 +204,8 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
         $t_q = mysql_query($t_sql);
         $t_r = mysql_fetch_assoc($t_q);
 ?>
+<div>
+	<label style="color:#fff;">NPI to Enroll</label>
         <select id="provider_select" name="provider_select">
         <?php while($r = mysql_fetch_assoc($q)){ ?>
           <?php if($r['docid']==0){
@@ -214,7 +220,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
             <option value='<?= $sjson; ?>'><?= $snpi; ?> - Service Facility</option>
           <?php } ?>
         </select>
-
+</div>
 <div>
 	<label style="color:#fff;">Facility Name</label>
 	<input type="text" id="facility_name" name="facility_name" value="<?= $r['practice']; ?>" readonly="readonly" />

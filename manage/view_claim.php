@@ -224,12 +224,12 @@ return s;
                 Paper File
         </button>
 <?php if(
-(($claim['status'] == DSS_CLAIM_PENDING || $claim['status'] == DSS_CLAIM_REJECTED ||$claim['status'] == DSS_CLAIM_DISPUTED)
+(($claim['status'] == DSS_CLAIM_PENDING || $claim['status'] == DSS_CLAIM_REJECTED ||$claim['status'] == DSS_CLAIM_DISPUTE)
 &&
 $pat['p_m_dss_file']=='2'
 )
 ||
- (($claim['status'] == DSS_CLAIM_SEC_PENDING || $claim['status'] == DSS_CLAIM_SEC_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_DISPUTED)
+ (($claim['status'] == DSS_CLAIM_SEC_PENDING || $claim['status'] == DSS_CLAIM_SEC_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_DISPUTE)
 &&
 $pat['s_m_dss_file']=='2'
 )
@@ -292,12 +292,8 @@ if($claim['status'] == DSS_CLAIM_SEC_PENDING || $claim['status'] == DSS_CLAIM_SE
         </button>
         &nbsp;&nbsp;
 <?php } ?>
-        <button onclick="Javascript: loadPopup('add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>');" class="addButton">
+        <button onclick="Javascript: window.location = 'add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>';" class="addButton">
                Make Payment 
-        </button>
-        &nbsp;&nbsp;
-        <button onclick="Javascript: window.location='ledger_payments_advanced.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>';" class="addButton">
-               Make Payment Advanced
         </button>
         &nbsp;&nbsp;
 

@@ -2,7 +2,10 @@
 include "includes/top.htm";
 require_once '../3rdParty/stripe/lib/Stripe.php';
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
-	WHERE pi.docid=".mysql_real_escape_string($_GET['docid'])." ORDER BY adddate DESC";
+	WHERE 
+		pi.status != '".DSS_INVOICE_PENDING."'
+		AND
+		pi.docid=".mysql_real_escape_string($_GET['docid'])." ORDER BY adddate DESC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -122,7 +125,13 @@ start_date, end_date, amount, id FROM dental_enrollment_invoice
         UNION
 SELECT description,
 start_date, end_date, amount, id FROM dental_fax_invoice        WHERE
-                invoice_id='".$myarray['id']."'";
+                invoice_id='".$myarray['id']."'
+        UNION
+SELECT new_fee_desc,
+new_fee_date, '', new_fee_amount, patientid FROM dental_patients
+        WHERE
+                new_fee_invoice_id='".$myarray['id']."'
+";
 $case_q = mysql_query($case_sql);
 while($case_r = mysql_fetch_assoc($case_q)){
 $total_charge += $case_r['percase_amount'];

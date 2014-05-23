@@ -1508,7 +1508,7 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
           <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />-->
           <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
 	  <input type="submit" name="elec_save" id="elec_save" style="display:none;" />
-  <?php }elseif($is_rejected){
+  <?php }elseif($is_rejected || $is_disputed){
 ?>
           <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_reject_claim();" value="Resubmit Claim" />-->
           <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
@@ -1547,14 +1547,6 @@ if ($is_back_office || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && ($
                 }	
 ?>
 
- Insurance Co.
-                                        <input type="text" id="ins_payer_name" onclick="updateval_local(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
-<br />
-        <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
-                <ul id="ins_payer_list" class="search_list">
-                        <li class="template" style="display:none"></li>
-                </ul>
-        </div>
 <?php
         $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
         $prod_q = mysql_query($prod_s);

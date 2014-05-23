@@ -222,6 +222,11 @@ SELECT description,
 start_date, end_date, amount, id FROM dental_enrollment_invoice
         WHERE
                 invoice_id='".$invoice['id']."'
+        UNION
+SELECT new_fee_desc,
+new_fee_date, '', new_fee_amount, patientid FROM dental_patients
+        WHERE
+                new_fee_invoice_id='".$invoice['id']."'
 
 ";
 $case_q = mysql_query($case_sql);

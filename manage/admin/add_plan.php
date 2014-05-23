@@ -25,6 +25,7 @@ if($_POST["plansub"] == 1)
                 		free_vob = '".mysql_real_escape_string($_POST['free_vob'])."',
 				producer_fee = '".mysql_real_escape_string($_POST['producer_fee'])."',
 				user_fee = '".mysql_real_escape_string($_POST['user_fee'])."',
+				patient_fee = '".mysql_real_escape_string($_POST['patient_fee'])."',
 				duration = '".mysql_real_escape_string($_POST['duration'])."',
                 		office_type = '".mysql_real_escape_string($_POST['office_type'])."',
                                 status = '".mysql_real_escape_string($_POST['status'])."'
@@ -61,6 +62,7 @@ if($_POST["plansub"] == 1)
                                 free_vob = '".mysql_real_escape_string($_POST['free_vob'])."',
 				producer_fee = '".mysql_real_escape_string($_POST['producer_fee'])."',
 				user_fee = '".mysql_real_escape_string($_POST['user_fee'])."',
+				patient_fee = '".mysql_real_escape_string($_POST['patient_fee'])."',
 				duration = '".mysql_real_escape_string($_POST['duration'])."',
                                 office_type = '".mysql_real_escape_string($_POST['office_type'])."',
                                 status = '".mysql_real_escape_string($_POST['status'])."',
@@ -107,6 +109,7 @@ if($_POST["plansub"] == 1)
 		$free_vob = $_POST['free_vob'];
 		$producer_fee = $_POST['producer_fee'];
 		$user_fee = $_POST['user_fee'];
+		$patient_fee = $_POST['patient_fee'];
 		$duration = $_POST['duration'];
 		$office_type = $_POST['office_type'];
 		$status = $_POST['status'];
@@ -129,7 +132,7 @@ if($_POST["plansub"] == 1)
                 $vob_fee = $themyarray['vob_fee'];
                 $free_vob = $themyarray['free_vob'];
 		$producer_fee = $themyarray['producer_fee'];
-		$user_fee = $themyarray['user_fee'];
+		$patient_fee = $themyarray['patient_fee'];
 		$duration = $themyarray['duration'];
                 $office_type = $themyarray['office_type'];
 		$status = st($themyarray['status']);
@@ -328,6 +331,16 @@ if($_POST["plansub"] == 1)
                 <span class="red">*</span>
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                New Patient Fee
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_fee" value="<?=$patient_fee?>" class="moneymask form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+
 	<!-- NEW -->
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">

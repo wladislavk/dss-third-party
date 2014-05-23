@@ -21,7 +21,7 @@ $saq = mysql_query($sasql);
 $num_sa = mysql_num_rows($saq);
 
 ?>
-
+<div class="fullwidth">
 <script type="text/javascript">
 //CHECK LEDGER PAYMENT SUBMISSION
 function validSubmission(f){
@@ -191,7 +191,7 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 $sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
 $p_sql = mysql_query($sql);
 if(mysql_num_rows($p_sql)==0){
-?><div style="margin-left:50px; color:#fff;">No Previous Payments</div><?php
+?><div style="margin-left:50px; ">No Previous Payments</div><?php
 }else{
 ?>
 <div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
@@ -205,7 +205,7 @@ if(mysql_num_rows($p_sql)==0){
 <?php
 while($p = mysql_fetch_array($p_sql)){
 ?>
-<div style="margin-left:9px; margin-top: 10px; width:98%; color: #fff;">
+<div style="margin-left:9px; margin-top: 10px; width:98%; ">
 <span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:80px;"><?= date('m/d/Y', strtotime($p['entry_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:190px;"><?= $p['description']; ?></span>
@@ -233,7 +233,7 @@ function updateType(payer){
 
 </script>
 <div id="form_div">
-<div id="select_fields" style="margin: 10px;color:#fff;">
+<div id="select_fields" style="margin: 10px;">
 <label>Paid By</label>
 <select id="payer" name="payer" onchange="updateType(this)" style="width:170px;margin: 0pt 10px 0pt 0pt;" >
   <option value="<?= DSS_TRXN_PAYER_PRIMARY; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]; ?></option>
@@ -315,18 +315,22 @@ while($row = mysql_fetch_assoc($lq)){
 <input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">
 <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
 <input type="hidden" name="entrycount" value="javascript::readCookie();">
-<div style="width:200px;float:right;margin-left:10px;text-align:left;" id="submitButton"><input type="submit" value="Submit Payments" /></div>
+<div style="width:200px;float:right;margin-left:10px;text-align:left;" id="submitButton"><input style="width:auto;" type="submit" value="Submit Payments" /></div>
 </div>
-<div id="auth_div" style="display:none; padding: 10px; color:#fff;">
+<div id="auth_div" style="display:none; padding: 10px; ">
 <p>You are not authorized to complete this transaction. Please have an authorized user enter their credentials.</p>
 Username: <input type="text" name="username" /><br />
 Password: <input type="password" name="password" /><br />
-<input type="submit" value="Submit" />
+<input type="submit" value="Submit" style="width:auto;" />
 </div>
 
 </form>
+<br><br>
+<a href="view_claim.php?claimid=<?=$_GET['cid']; ?>&pid=<?=$_GET['pid']; ?>" class="button" style="float:left;">Cancel</a>
+<a href="add_ledger_payments.php?cid=<?=$_GET['cid']; ?>&pid=<?=$_GET['pid']; ?>" class="button" style="float:right;">Simple Payment</a>
+<div style="clear:both;"></div>
 
-
+</div>
 <?php
 include 'includes/bottom.htm';
 ?>

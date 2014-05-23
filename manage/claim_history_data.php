@@ -60,6 +60,26 @@ $claim = mysql_fetch_assoc($cq);
 ?>
 
 
+
+
+<span class="admin_head">
+        Claim Version History
+</span>
+<?php
+  $sql = "SELECT * FROM dental_insurance_history WHERE insuranceid='".mysql_real_escape_string($_GET['cid'])."'";
+  $q = mysql_query($sql) or die(mysql_error());
+  while($r = mysql_fetch_assoc($q)){
+ ?><div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
+                <?php
+    print_r($r);
+    ?></div><?php
+
+  }
+?>
+
+
+
+
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>

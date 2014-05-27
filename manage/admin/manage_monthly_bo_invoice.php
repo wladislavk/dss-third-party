@@ -17,6 +17,7 @@ else
 $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
   $sql = "SELECT c.*, p.name as plan_name,
+                (SELECT COUNT(i.id) FROM dental_percase_invoice i WHERE i.companyid=c.id AND i.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_BC)."') AS num_invoices,
 		(SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
                 FROM companies c
 		JOIN dental_plans p ON p.id=c.plan_id
@@ -185,7 +186,7 @@ $num_users=mysql_num_rows($my);
 		?>
 			<tr class="status_<?= $myarray["status"]; ?>">
                                 <td valign="top">
-                                        <a href="manage_monthly_invoice.php?company=<?=$myarray["id"]; ?>"><?=st($myarray["name"]);?></a>
+                                        <?=st($myarray["name"]);?>
                                 </td>
 				<td valign="top">
 					<?= $myarray['plan_name']; ?>

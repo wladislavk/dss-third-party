@@ -2,6 +2,7 @@
 include "includes/top.htm";
   require_once '../3rdParty/stripe/lib/Stripe.php';
 include '../includes/calendarinc.php';
+include 'includes/invoice_functions.php';
 
   if(isset($_GET['show']) && $_GET['show']=='1'){
   $sql = "SELECT c.*, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
@@ -191,7 +192,7 @@ if(isset($_POST['submit'])){
         " WHERE id = '".$id."'";
       mysql_query($up_sql);
     }else{
-      invoice_add_efile('2',$user['userid'],$id, DSS_INVOICE_TYPE_SU_BO);
+      invoice_add_efile('2',$user['userid'],$id, DSS_INVOICE_TYPE_SU_BC);
     }
 
   }
@@ -236,7 +237,7 @@ if(isset($_POST['submit'])){
 		WHERE fax_invoice_id = '".$fax['fax_invoice_id']."' AND docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
     mysql_query($up_sql);
   }else{
-    $i_id = invoice_find('2',$user['userid'], DSS_INVOICE_TYPE_SU_BO);
+    $i_id = invoice_find('2',$user['userid'], DSS_INVOICE_TYPE_SU_BC);
     $up_sql = "UPDATE dental_fax_invoice SET
                 invoice_id = '".mysql_real_escape_string($i_id)."'
                 WHERE invoice_id = '".$invoice_id."'";
@@ -281,7 +282,7 @@ if(isset($_POST['submit'])){
                 WHERE eligibility_invoice_id IS NULL AND userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
     mysql_query($up_sql);
   }else{
-    $i_id = invoice_find('2',$user['userid'], DSS_INVOICE_TYPE_SU_BO);
+    $i_id = invoice_find('2',$user['userid'], DSS_INVOICE_TYPE_SU_BC);
     $up_sql = "UPDATE dental_eligibility_invoice SET
                 invoice_id = '".mysql_real_escape_string($i_id)."'
                 WHERE invoice_id = '".$invoice_id."'";
@@ -331,7 +332,7 @@ if(isset($_POST['submit'])){
                 WHERE enrollment_invoice_id IS NULL AND user_id='".mysql_real_escape_string($_REQUEST['docid'])."'";
     mysql_query($up_sql);
   }else{
-    $i_id = invoice_find('2',$user['userid'], DSS_INVOICE_TYPE_SU_BO);
+    $i_id = invoice_find('2',$user['userid'], DSS_INVOICE_TYPE_SU_BC);
     $up_sql = "UPDATE dental_enrollment_invoice SET
                 invoice_id = '".mysql_real_escape_string($i_id)."'
                 WHERE invoice_id = '".$invoice_id."'";
@@ -620,6 +621,9 @@ if(mysql_num_rows($doc_q) == 0){
                     <td>
                         <div class="input-group">
                             <input type="text" id="user_date" class="date form-control text-center" name="user_date" value="<?=date('m/d/Y');?>">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
                         </div>
                     </td>
                     <td>

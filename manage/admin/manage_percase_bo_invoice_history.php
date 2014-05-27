@@ -2,7 +2,7 @@
 include "includes/top.htm";
 require_once '../3rdParty/stripe/lib/Stripe.php';
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
-	WHERE pi.companyid=".mysql_real_escape_string($_GET['companyid'])." ORDER BY adddate DESC";
+	WHERE pi.companyid=".mysql_real_escape_string($_GET['companyid'])." AND pi.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_BC)."' ORDER BY adddate DESC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;

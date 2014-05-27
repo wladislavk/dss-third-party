@@ -461,6 +461,12 @@ if (empty($prior_authorization_number)) {
 
         <script type="text/javascript"> window.eligiblePublicKey="-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-"</script>
 
+	<style type="text/css">
+		.claim.form-submit{ padding:5px 15px; cursor: pointer;}
+
+	</style>
+
+
     </head>
 
     <body>
@@ -519,6 +525,11 @@ if(!$r['reference_id'] || !$w_r['response']){
 
 <script type="text/javascript">
   $(document).ready( function(){
+
+	$('#eligibleapi-claim-1500-form .claim.form-submit').clone().appendTo('#eligibleapi-claim-1500-form');
+
+
+
                                   <?php
         if(isset($_GET['instype']) && $_GET['instype']==2){
           $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";

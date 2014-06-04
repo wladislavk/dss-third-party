@@ -637,6 +637,7 @@ $up_sql = "INSERT INTO dental_claim_electronic SET
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
 mysql_query($up_sql);
+  claim_status_history_update($_GET['ins_id'], '', DSS_CLAIM_SENT, $_SESSION['userid']);
 
 $dce_id = mysql_insert_id();
 invoice_add_efile('1', $_SESSION['docid'], $dce_id);

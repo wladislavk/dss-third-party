@@ -145,7 +145,7 @@
                 keepAliveURL: 'demo/idletimeout_keepalive.php',
                 serverResponseEquals: 'OK',
                 onTimeout: function(){
-                    window.location = redirUrl_path;
+                    window.location = 'logout.php';
                 },
                 onIdle: function(){
                     $('#idle-timeout-dialog').modal('show');

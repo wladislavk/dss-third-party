@@ -111,9 +111,9 @@ $eid = mysql_insert_id();
 $type = (isset($_REQUEST['type']))?$_REQUEST['type']:'1';
 invoice_add_eligibility($type, $_SESSION['admincompanyid'], $eid);
 if($q){
-  echo '{"success":true}';
+  echo '{"success":true,"id":"'.$eid.'"}';
 }else{
-  echo mysql_error();
-  echo '{"error":true}';
+  //echo mysql_error();
+  echo '{"error":true,"id":"'.$eid.'"}';
 }
 ?>

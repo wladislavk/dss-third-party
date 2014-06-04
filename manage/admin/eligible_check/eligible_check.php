@@ -13,7 +13,7 @@
                 $s = "SELECT eligible_test FROM dental_users where userid='".$preauth['doc_id']."'";
                 $q = mysql_query($s);
                 $r = mysql_fetch_assoc($q);
-                if($r['eligible_test']=="1"){
+                //if($r['eligible_test']=="1"){
         ?>
 
 <?php
@@ -96,28 +96,15 @@
 
 
 
-    <div class="form-group">
-      <label for="member_dob" class="col-lg-2 control-label">Test?</label>
-
-      <div class="col-lg-10">
-        <input type="radio" name="test" id="test_yes" value="true" checked="checked"> Yes
-        <input type="radio" name="test" id="test_no" value="false"> No
-      </div>
-    </div>
-
-	<?php }else{ ?>
-
     <div class="form-group hidden">
       <label for="member_dob" class="col-lg-2 control-label">Test?</label>
-		
+
       <div class="col-lg-10">
         <input type="radio" name="test" id="test_yes" value="true"> Yes
         <input type="radio" name="test" id="test_no" value="false" checked="checked"> No
       </div>
     </div>
 
-
-	<?php } ?>
 
         <input type="hidden" class="form-control" id="api_key" value="33b2e3a5-8642-1285-d573-07a22f8a15b4">
 
@@ -497,7 +484,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
 
     <div class="form-group">
       <div class="col-lg-offset-2 col-lg-10">
-	<input type="hidden" name="pid" id="pid" value="<?= $preauth['patient_id']; ?>" />
+	<input type="hidden" name="pid" id="pid" value="<?= $_GET['pid']; ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
         <button type="submit" class="btn btn-primary btn-lg">Submit</button>
       </div>
@@ -513,7 +500,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
     <th>View</th>
   </tr>
 
-  <?php $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysql_real_escape_string($preauth['patient_id'])."'";
+  <?php $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
     $q = mysql_query($s);
     while($r = mysql_fetch_assoc($q)){
       ?>

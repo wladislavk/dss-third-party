@@ -79,9 +79,7 @@ function EligibleRequest(endpoint, successCallback, errorCallback, debug) {
                                         data: {response: data, pid:pid},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
-                                                if(r.error){
-                                                }else{
-                                                }
+						parent.window.location = '../view_eligibility_response.php?id='+r.id
                                         },
                                         failure: function(data){
                                                 //alert('fail');

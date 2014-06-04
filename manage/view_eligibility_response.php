@@ -32,10 +32,15 @@ include_once('admin/includes/password.php');
 <body>
 <div id="coverage_container"></div>
     <?
-    $thesql = "select * from dental_eligibility where id='".$_REQUEST["id"]."'";
-        $themy = mysql_query($thesql);
+    $thesql = "select e.*, CONCAT(p.firstname,' ',p.lastname) as pat_name 
+			from dental_eligibility e 
+			JOIN dental_patients p on p.patientid=e.patientid
+			where e.id='".$_REQUEST["id"]."'";
+        $themy = mysql_query($thesql) or die(mysql_error());
         $themyarray = mysql_fetch_array($themy);
 ?>
+  <h2 style="color:#fff;">Eligibility for <?= $themyarray['pat_name']; ?></h2>
+  <a href="eligible_check.php?pid=<?=$themyarray['patientid'];?>" style="color:#fff;">Return to chart</a>
 <script type="text/javascript">
 $(document).ready(function(){
   var coverage = new Coverage(<?= $themyarray['response']; ?>);

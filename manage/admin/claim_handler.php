@@ -4,6 +4,7 @@ require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
 include_once 'includes/claim_functions.php';
 include_once 'includes/invoice_functions.php';
+include_once '../includes/claim_functions.php';
 if(!empty($_SERVER['HTTPS'])){
 $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
 }else{
@@ -637,7 +638,8 @@ $up_sql = "INSERT INTO dental_claim_electronic SET
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
 mysql_query($up_sql);
-
+  claim_status_history_update($_GET['insid'], DSS_CLAIM_SENT, DSS_CLAIM_PENDING, '', $_SESSION['adminuserid']);
+claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
 $dce_id = mysql_insert_id();
 invoice_add_efile('2', $_SESSION['admincompanyid'], $dce_id);
 invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
@@ -645,7 +647,8 @@ invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
 if($success == "false"){
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
   mysql_query($up_sql);
-  //claim_status_history_update($_GET['ins_id'], '', DSS_CLAIM_REJECTED, $_SESSION['userid']);
+claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
+  claim_status_history_update($_GET['insid'], '', DSS_CLAIM_REJECTED, '', $_SESSION['adminuserid']);
 ?>
 <script type="text/javascript">
   c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');
@@ -660,7 +663,7 @@ if($success == "false"){
 <script type="text/javascript">
   c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');
   if(c){
-   window.location = "manage_claims.php?insid=<?= $_GET['insid']; ?>&upstatus=<?= DSS_CLAIM_SENT; ?>"; 
+   //window.location = "manage_claims.php?insid=<?= $_GET['insid']; ?>&upstatus=<?= DSS_CLAIM_SENT; ?>"; 
   }
 </script>
 <?php

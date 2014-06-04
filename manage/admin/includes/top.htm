@@ -46,7 +46,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
     <script type="text/javascript" src="/manage/admin/script/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-filestyle.min.js"></script>
     <script type="text/javascript" src="/manage/3rdParty/jquery.tablesorter.min.js"></script>
-    <script type="text/javascript" src="/manage/admin/script/logout_timer.js"></script>
+    <!--<script type="text/javascript" src="/manage/admin/script/logout_timer.js"></script>-->
     <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
     <script type="text/javascript" src="/manage/admin/script/reskin.js"></script>
     <script type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
@@ -571,9 +571,15 @@ $num_pending_claims = mysql_num_rows($pending_q);
 								
 								<li>
 									<a href="/manage/admin/manage_monthly_invoice.php">
-										<i class="fa fa-external-link"></i> Monthly Invoicing
+										<i class="fa fa-bell"></i> Monthly Invoicing
 									</a>
 								</li>
+                                                                <li>
+                                                                        <a href="/manage/admin/manage_monthly_bo_invoice.php">
+                                                                                <i class="fa fa-bell"></i> Monthly Backoffice Invoicing
+                                                                        </a>
+                                                                </li>
+
 								<li>
 									<a href="/manage/admin/manage_payment_errors.php">
 										<i class="fa fa-bell"></i> Invoicing Payment Errors

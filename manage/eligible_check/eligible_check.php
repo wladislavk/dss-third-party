@@ -546,6 +546,12 @@ function view_coverage(response){
     buildCoverageHTML(coverage);
   }
 }
+
+$('document').ready(function(){
+$('#test_no, #test_yes').click(function(){
+  parent.autoResize('eligible');
+});
+});
 </script>
 
 

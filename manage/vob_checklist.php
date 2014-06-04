@@ -208,7 +208,13 @@ Verification CANNOT be requested*
 <br /><br />
 <?php } ?>
 
+
+<br /><br />
+<a style="margin-left:150px;" href="eligible_check.php?pid=<?= $_GET['pid']; ?>" class="button">Eligibility Check</a>
 </div>
+
+
+
 <div style="width:48%; float:left;">
 
 <div class="ins_header claim_header">

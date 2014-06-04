@@ -526,9 +526,9 @@ if(!$r['reference_id'] || !$w_r['response']){
 <script type="text/javascript">
   $(document).ready( function(){
 
-	$('#eligibleapi-claim-1500-form .claim.form-submit').clone().appendTo('#eligibleapi-claim-1500-form');
+	//$('#eligibleapi-claim-1500-form .claim.form-submit').clone().appendTo('#eligibleapi-claim-1500-form');
 
-
+	//alert($("button.eligibleapi.claim.form-submit").length);
 
                                   <?php
         if(isset($_GET['instype']) && $_GET['instype']==2){

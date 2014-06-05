@@ -33,6 +33,12 @@ if($_GET['did']==$_SESSION['docid']){
     if(!file_exists($filename) || $recreate){
       update_financial_agreement_medicare_form($_GET['did']);
     }
+  }elseif($_GET['file'] == "release_liability"){
+    $output = "release_liability";
+    if(!file_exists($filename) || $recreate){
+      update_release_liability_form($_GET['did']);
+    }
+
 
   }elseif($_GET['file'] == "home_care_instructions"){
     $output = "home_care_instructions";

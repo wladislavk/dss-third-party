@@ -399,7 +399,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 Code E0486 - Durable Medical Equipment Amount
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" name="trxn_code_amount" value="<?=$preauth['trxn_code_amount']?>" class="tbox readonly" readonly /> 
+                $<input type="text" name="trxn_code_amount2" value="<?=$preauth['trxn_code_amount']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>

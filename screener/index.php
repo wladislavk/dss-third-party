@@ -372,7 +372,7 @@ Survey: <span id="survey_score"></span>
 Sleep apnea is a life-threatening disease, and education and understanding of the condition is of utmost importance. Please mention this during your visit - we would love to help you learn more.
 </div>
 <?php
-  $s = "SELECT name FROM dental_users where userid='".mysql_real_escape_string($_SESSION['screener_user'])."'";
+  $s = "SELECT name FROM dental_users where userid='".mysql_real_escape_string($_SESSION['screener_doc'])."'";
   $q = mysql_query($s);
   $r = mysql_fetch_assoc($q);
 ?>

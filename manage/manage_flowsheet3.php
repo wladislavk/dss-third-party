@@ -257,6 +257,7 @@ $('.completed_today').click(function(){
 						  $clone.attr('id', 'completed_row_'+r.id);
                                                   $clone.find('.title').text(r.title);
                                                   $clone.find('.completed_date').val(r.datecomp);
+                                                  $clone.find('.completed_date').attr('id','completed_date_'+r.id);
 						  if(r.letters>0){
 						  	$clone.find('.letters').html('<a href="patient_letters.php?pid=<?= $_GET['pid']; ?>">'+r.letters+' Letters</a>');
 						  }else{
@@ -265,6 +266,19 @@ $('.completed_today').click(function(){
 						  $clone.find('.deleteButton').attr('onclick', "return delete_segment('"+r.id+"');");
 						  $tr.after($clone);
 						  $clone.show();
+		//SETUP CAL FOR NEW CALENDAR FIELD
+        var cid = 'completed_date_'+r.id; 
+        if(cid){
+                Calendar.setup({
+                        inputField : cid,
+                        trigger    : cid,
+                        fdow       : 0,
+                        align      : "Bl///T/",
+                        onSelect   : function() { this.hide(); update_completed_date(cid); },
+                        dateFormat : "%m/%d/%Y"
+                });
+        }
+
 						  $('#next_step').val('');
 						  $('#next_step_date').val('');
 						  $('#next_step_until').text('');

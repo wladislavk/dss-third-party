@@ -2297,13 +2297,445 @@ Solutions</small></span></p>
 
 }
 
+function update_release_liability_form($id, $locid = null, $backoffice=false){
+
+$logo = get_logo($id, $backoffice);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
+  $l_q = mysql_query($l_sql);
+  $l_r = mysql_fetch_assoc($l_q);
+if($locid){
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}else{
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}
+
+if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  $practice = $loc_r['location'];
+}else{
+  $practice = "DENTAL SLEEP SOLUTIONS <sup>&reg;</sup>";
+}
+
+
+
+$html = '<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=us-ascii">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<title>Release of Liability Assumption of Risks OSA</title>
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:Georgia;
+	panose-1:2 4 5 2 5 4 5 2 3 3;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:10.0pt;
+	margin-left:0in;
+	line-height:115%;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{font-family:"Times New Roman","serif";
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{mso-style-link:"Balloon Text Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:10.0pt;
+	margin-left:0in;
+	line-height:115%;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	mso-style-link:"Balloon Text";
+	font-family:"Tahoma","sans-serif";}
+p.yiv701883374msoheader, li.yiv701883374msoheader, div.yiv701883374msoheader
+	{mso-style-name:yiv701883374msoheader;
+	margin-right:0in;
+	margin-left:0in;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+span.yiv701883374grame
+	{mso-style-name:yiv701883374grame;
+	font-family:"Times New Roman","serif";}
+.MsoChpDefault
+	{font-size:10.0pt;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:27.0pt 1.25in 9.0pt 1.25in;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link=blue vlink=purple>
+
+<div class=WordSection1>
+
+<p class=yiv701883374msoheader style="margin:0in;margin-bottom:.0001pt"><span
+class=yiv701883374grame><b><span style="font-size:18.0pt;font-family:"Georgia","serif";
+color:black">[LOGO]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+</span></b></span><span class=yiv701883374grame><b><span style="font-family:
+"Georgia","serif";color:black">'.$practice.'</span></b></span></p>
+
+<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
+.0001pt;text-align:right"><span class=yiv701883374grame><b><span
+style="font-family:"Georgia","serif";color:black">'.$loc_r['address'].'</span></b></span></p>
+
+<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
+.0001pt;text-align:right"><span class=yiv701883374grame><b><span
+style="font-family:"Georgia","serif";color:black">'.$loc_r['city'].', '.$loc_r['state'].' '.$loc_r['zip'].'</span></b></span></p>
+
+<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
+.0001pt;text-align:right"><span class=yiv701883374grame><b><span
+style="font-family:"Georgia","serif";color:black">'.format_phone($loc_r['phone']).'
+</span></b></span></p>
+
+<p class=MsoNormal align=center style="text-align:center"><span
+style="font-size:12.0pt;line-height:115%">&nbsp;</span></p>
+
+<p class=MsoNormal align=center style="text-align:center"><b><span
+style="font-size:18.0pt;line-height:115%">General Release of Liability &amp;
+Assumption of Risk for Obstructive Sleep Apnea and Sleep Disordered Breathing</span></b></p>
+
+<p class=MsoNormal><span style="font-size:12.0pt;line-height:115%">I, ___________________________,
+understand that due to the nature of sleep medicine that failure to comply with
+the treatment can result in severe physical and social issues including, but
+not limited to: coronary artery disease; stroke; congestive heart failure;
+atrial fibrillation; diabetes; increased motor vehicle accidents; hypertension;
+excessive sleepiness; and increased mortality.</span></p>
+
+<p class=MsoNormal><span style="font-size:12.0pt;line-height:115%">As this
+office cannot ensure success of any type of therapy and cannot guarantee that
+any patient will comply with the treatment for sleep apnea, I hereby waive any
+rights that I, my heirs and assigns might have to seek legal redress for any
+damage, physical or monetary, that I might sustain as a result of my treatment
+for sleep apnea or any failure on my part to comply with treatment.</span></p>
+
+<p class=MsoNormal><span style="font-size:12.0pt;line-height:115%">Therefore, I
+release this office and its affiliates from any and all liability associated
+with my treatment and I personally assume all risks associated with my care,
+including, but not limited to: coronary artery disease; stroke; congestive
+heart failure; atrial fibrillation; diabetes; increased motor vehicle
+accidents; increased work place accidents; hypertension; excessive sleepiness;
+TMJ disease; periodontal disease and increased mortality.</span></p>
+
+<p class=MsoNormal><span style="font-size:12.0pt;line-height:115%">I hereby
+agree to indemnify and hold this office and its affiliates harmless for any
+issues or damages that might result from my sleep apnea treatment.</span></p>
+
+<p class=MsoNormal><span style="font-size:12.0pt;line-height:115%">&nbsp;</span></p>
+
+<p class=MsoNormal><span style="font-size:12.0pt;line-height:115%">Signature
+___________________________________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date__________________</span></p>
+
+<p class=MsoNormal><span style="font-size:12.0pt;line-height:115%">Please Print
+Name_______________________________________________________</span></p>
+
+<p class=MsoNormal><span style="font-size:12.0pt;line-height:115%">Witness
+____________________________________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date
+__________________</span></p>
+
+<p class=MsoNormal><span style="font-size:12.0pt;line-height:115%">Please Print
+Name _______________________________________________________</span></p>
+
+</div>
+
+</body>
+
+</html>';
+
+
+        $title = "Release of Liability";
+        $filename = "release_liability_".$id.".pdf";
+
+        create_form_pdf($html, $filename, $title, $backoffice);
+
+}
+
+
 
 
 function update_informed_consent_form($id, $backoffice){
 
 $logo = get_logo($id, $backoffice);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
+  $l_q = mysql_query($l_sql);
+  $l_r = mysql_fetch_assoc($l_q);
+if($locid){
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}else{
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}
+
+if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  $practice = $loc_r['location'];
+}else{
+  $practice = "DENTAL SLEEP SOLUTIONS <sup>&reg;</sup>";
+}
         
 $html = '
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=unicode">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<title>Informed Consent</title>
+
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:Georgia;
+	panose-1:2 4 5 2 5 4 5 2 3 3;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:10.0pt;
+	margin-left:0in;
+	line-height:115%;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{font-family:"Times New Roman","serif";
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{mso-style-link:"Balloon Text Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:10.0pt;
+	margin-left:0in;
+	line-height:115%;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	mso-style-link:"Balloon Text";
+	font-family:"Times New Roman","serif";}
+p.yiv701883374msoheader, li.yiv701883374msoheader, div.yiv701883374msoheader
+	{mso-style-name:yiv701883374msoheader;
+	margin-right:0in;
+	margin-left:0in;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+span.yiv701883374grame
+	{mso-style-name:yiv701883374grame;
+	font-family:"Times New Roman","serif";}
+.MsoChpDefault
+	{font-size:10.0pt;
+	font-family:"Calibri","sans-serif";}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:45.0pt 1.0in 63.0pt 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link=blue vlink=purple>
+
+<div class=WordSection1>
+
+<p class=yiv701883374msoheader style="margin:0in;margin-bottom:.0001pt"><span
+class=yiv701883374grame><b><span style="font-size:18.0pt;font-family:"Georgia","serif";
+color:black">'.$logo.'                                                                
+               </span></b></span><span class=yiv701883374grame><b><span
+style="font-family:"Georgia","serif";color:black">'.$practice.'</span></b></span></p>
+
+<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
+.0001pt;text-align:right"><span class=yiv701883374grame><b><span
+style="font-family:"Georgia","serif";color:black">'.$loc_r['address'].'</span></b></span></p>
+
+<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
+.0001pt;text-align:right"><span class=yiv701883374grame><b><span
+style="font-family:"Georgia","serif";color:black">'.$loc_r['city'].', '.$loc_r['state'].' '.$loc_r['zip'].'</span></b></span></p>
+
+<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
+.0001pt;text-align:right"><span class=yiv701883374grame><b><span
+style="font-family:"Georgia","serif";color:black">'.format_phone($loc_r['phone']).' 
+</span></b></span></p>
+
+<p class=yiv701883374msoheader style="margin:0in;margin-bottom:.0001pt"><span
+class=yiv701883374grame><b><span style="font-size:18.0pt;font-family:"Georgia","serif";
+color:black">&nbsp;</span></b></span></p>
+
+<p class=MsoNormal align=center style="margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal"><b><u><span style="font-size:16.0pt">INFORMED
+CONSENT FOR THE TREATMENT OF  </span></u></b></p>
+
+<p class=MsoNormal align=center style="text-align:center;line-height:normal"><b><u><span
+style="font-size:20.0pt"> OBSTRUCTIVE SLEEP APNEA and SLEEP DISORDERED
+BREATHING</span></u></b></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Obstructive
+sleep apnea (OSA) is a medical condition with a dental treatment.  For OSA to
+be treated by a dentist, a diagnosis of OSA must be made by a physician trained
+in the field of Sleep Medicine.  If you have not been diagnosed with OSA by
+your physician, please understand that we will not proceed with treatment
+without an overnight sleep study in a sleep lab and a diagnosis of OSA by the
+attending sleep physician. We will work in collaboration with your physician to
+achieve the best results possible for the treatment of your sleep apnea. </span></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">SUCCESSFUL
+TREATMENT:  </span></b><span style="font-size:12.0pt"> Oral appliance therapy
+is a very effective treatment.  However, no therapy works 100% of the time. 
+The mandibular advancement device (MAD) works by moving the jaw and tongue
+forward at night which acts to keep the airway open. As with any medical
+therapy, successful treatment of OSA using dental appliances cannot be
+guaranteed.   Success depends on many things.  The most important component of
+success is patient compliance.  By signing this document, you hereby agree to
+follow our instructions in detail.  Failure to do so may result in a poor
+clinical outcome.</span></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">COMPLICATIONS
+OF TREATMENT:</span></b><span style="font-size:12.0pt">  OSA is an unusual
+disease because it has been associated with many co-morbid medical conditions. 
+As a result of OSA, or as a complication of OSA treatment, patients may develop
+any or all of the following temporary or permanent co-morbid diseases: coronary
+artery disease; high blood pressure; diabetes; cerebrovascular disease; stroke;
+heart problems; heart attack; atrial fibrillation, depression, mood disorders,
+sexual dysfunction, weight gain, obesity; excessive daytime sleepiness;
+increased work related and traffic related accidents; and death. </span></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">Dental
+Issues:</span></b><span style="font-size:12.0pt"> A number of temporary or
+permanent dental issues can develop as a result of long term treatment of OSA
+with a mandibular advancement device (MAD), including but not limited to:  jaw
+joint pain; moderate or severe TMJ dysfunction; headaches; backaches; neck
+aches; pain on chewing; facial pain; popping and noise in the jaw; sore teeth;
+dental decay, gum (periodontal) disease, gingivitis; worsening of periodontal
+pockets; tooth loss; loosening of teeth, dry mouth or excess saliva; fracturing
+or loosening of dental fillings, crowns or bridges;  short term or long term bite
+changes; spacing or shifting of teeth; tilting of teeth; profile changes; 
+lessening of overbite or over jet; dental infection; infection of the gums;
+difficulty chewing; oral cysts, oral tumors, oral cancer, and death.  </span></p>
+
+<p class=MsoNormal style="margin-left:2.5in;line-height:normal"><span
+style="font-size:12.0pt">                                                                                                                                 
+                                           Initial______                                                                                                                       
+</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">&nbsp;</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">You
+should be aware that complications as a result of oral appliance therapy have
+been minor; however, it is the patient’s responsibility to immediately inform
+our office of any issues which may develop to prevent a permanent condition or
+complication. </span></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">FINAL
+SLEEP STUDY AND EVALUATION:</span></b><span style="font-size:12.0pt">  After
+your appliance is placed, it will be adjusted by us to achieve the best results
+possible.  When your apnea symptoms have improved and we are satisfied with the
+results of the adjustments, you will be referred back to your physician for
+post-treatment evaluation and a post-treatment sleep study.  This evaluation is
+to insure that your apnea is adequately controlled by the MAD and that no
+further adjustments or other treatment is needed.  Your treatment must be
+confirmed by an in-lab sleep study and evaluated by your physician after we
+complete our adjustments.</span></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">Follow-up
+appointments</span></b><span style="font-size:12.0pt"> are required with our
+office on a 6 month or yearly basis to check the effectiveness of your
+appliance and the success of your OSA treatment. Failure to maintain these
+follow-up appointments will constitute a lack of compliance with our office’s
+treatment plan.  Any decision on your part to forego follow-up appointments
+places your health at risk and increases the probability of complications and
+treatment failure. </span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Additionally,
+recall appointments should be kept with your general dentist on a three month
+schedule for the first year that you wear a MAD to evaluate your dental
+hygiene, gums and check for decay.  By signing this agreement you agree to
+schedule the recommended recall appointments and to use prescription oral
+topical fluoride daily for the prevention of decay and periodontal disease. 
+The prescription fluoride is to be used for as long as you wear a MAD.</span></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">ALTERNATIVE
+TREATMENTS:</span></b><span style="font-size:12.0pt">  By signing this consent
+form you acknowledge that you have been made aware of reasonable alternatives
+to MAD therapy for obstructive sleep apnea including, but not limited to: 
+tracheotomy; CPAP; oral or pharyngeal surgery; positional sleep therapy; weight
+loss and exercise.  Additionally, you are aware that more than one treatment may
+be necessary for the best results.</span></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">WHEREFORE:
+</span></b><span style="font-size:12.0pt"> I give my consent for the treatment
+of my OSA using a mandibular advancement device (MAD).  I agree and consent to
+allow qualified members of this office to examine my mouth, teeth, jaws, gums,
+and associated structures.  I give consent for the taking of x-rays, photos,
+impressions and any other procedures necessary for the treatment of my OSA.  I,
+also, give consent for a home sleep study, if necessary, for the adjustment of
+my appliance. I consent for the contents of my record to be shared with my
+physician and insurance company.</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt"> I
+affirm that I have read this document and have been given adequate information
+regarding the treatment of my condition to give my informed consent. I
+understand the proposed treatment of my OSA using MAD therapy and I have been
+given the opportunity to ask questions. All my questions have been answered and
+I am ready to proceed with treatment. </span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Patient
+Signature:       __________________________________    DATE:  ______________</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Print
+Name:                 __________________________________</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">WITNESS:                     __________________________________    DATE:
+_______________</span></p>
+
+</div>
+
+</body>
+
+</html>
+';
+
+
+
+
+
+$old = '
 <html>
 
 <head>

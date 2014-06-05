@@ -29,9 +29,9 @@ $other_insured_firstname = strtoupper(st($pat_myarray['s_m_partyfname']));
 $other_insured_lastname = strtoupper(st($pat_myarray['s_m_partylname']));
 $other_insured_middle = strtoupper(st($pat_myarray['s_m_partymname']));
 $insured_id_number =strtoupper($pat_myarray['p_m_ins_id']);
-$insured_dob =$pat_myarray['ins_dob'];
+$insured_dob =str_replace('-','/',$pat_myarray['ins_dob']);
 $p_m_ins_ass =strtoupper($pat_myarray['p_m_ins_ass']);
-$other_insured_dob =$pat_myarray['ins2_dob'];
+$other_insured_dob =str_replace('-','/',$pat_myarray['ins2_dob']);
 $other_insured_insurance_plan = strtoupper(st($pat_myarray['s_m_ins_plan']));
         if($pat_myarray['p_m_ins_type']==1){
           $insured_policy_group_feca = "NONE";
@@ -106,7 +106,7 @@ if($_GET['type']=='secondary'){
   $other_insured_lastname =strtoupper($myarray['insured_lastname']);
   $other_insured_middle =strtoupper($myarray['insured_middle']);
   $other_insured_dob =str_replace('-','/',$myarray['insured_dob']);
-  $other_insured_sex =$myarray['insured_sex'];
+  $other_insured_sex =strtoupper($myarray['insured_sex']);
   $other_insured_insurance_plan =strtoupper($myarray['insured_insurance_plan']);
   $other_insured_policy_group_feca =strtoupper($myarray['insured_policy_group_feca']);
   $insured_id_number =strtoupper($myarray['other_insured_id_number']);

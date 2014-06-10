@@ -389,7 +389,7 @@ $rs = $r['referred_source'];
                         WHERE 
                                 (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
                                 (ss.sleeptesttype='PSG Baseline' OR ss.sleeptesttype='HST Baseline') AND
-                                ss.patiendid = '".$_GET['pid']."' ORDER BY ss.date DESC;";
+                                ss.patiendid = '".$_GET['pid']."' ORDER BY STR_TO_DATE(ss.date, '%m/%d/%Y') DESC;";
                 $baseline_result = mysql_query($baseline_sleepstudies);
                 $baseline_numsleepstudy = mysql_num_rows($baseline_result);
                 $baseline_sleepstudy = mysql_fetch_assoc($baseline_result);

@@ -581,9 +581,9 @@ if(mysql_num_rows($doc_q) == 0){
                         <input type="text" name="producer_desc" value="Producers – <?= $producer_r['total_producers']." at $".$doc['producer_fee']." each "; ?>" class="form-control">
                     </td>
                     <td>
-                        <div class="input-group">
-                            <input type="text" id="producer_date" class="date form-control text-center" name="producer_date" value="<?=date('m/d/Y');?>">
-                            <span class="input-group-addon">
+                        <div class="input-group input-append date datepicker">
+                            <input type="text" id="producer_date" class="form-control text-center" name="producer_date" value="<?=date('m/d/Y');?>">
+                            <span class="add-on input-group-addon">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -982,7 +982,7 @@ $(document).ready(function(){
         
         row = $(row.replace(/\{row\}/g, row_count));
         row.insertBefore('#total_row');
-        row.find('.date').datepicker();
+        //row.find('.date').datepicker();
         
         $('#extra_total').val(row_count);
         row_count++;

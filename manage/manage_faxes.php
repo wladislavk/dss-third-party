@@ -2,7 +2,12 @@
 require_once('includes/constants.inc');
 include "includes/top.htm";
 
-
+if(isset($_GET['ceid']) && $_GET['ceid']!=''){
+  $up_sql = "UPDATE dental_faxes SET viewed='1'
+	WHERE id='".mysql_real_escape_string($_GET['ceid'])."'
+	";
+  mysql_query($up_sql);
+}
 
 
 
@@ -100,6 +105,8 @@ $title = mysql_result($template_result, 0);
                                           <a href="letterpdfs/<?= $myarray['pdf_path']; ?>">View Letter</a>
                                         <?php }else{ ?>
                                           <a href="edit_letter.php?pid=<?=$myarray['patientid'];?>&lid=<?= $myarray['letterid']; ?>&goto=faxes">Resend Letter</a>
+					  |
+                                          <a href="manage_faxes.php?ceid=<?= $myarray['id']; ?>" onclick="return confirm('This will revert the letter to a status of pending. You will still need to resend the letter. Are you sure you want to clear this error?');">Clear Error</a>
                                         <?php } ?>
                                 </td>
                         </tr>

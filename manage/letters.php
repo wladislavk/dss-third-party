@@ -424,6 +424,7 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
     $name = $dental_letters[$i]['lastname'] . " " . $dental_letters[$i]['middlename'] . ", " . $dental_letters[$i]['firstname'];
     $url = $dental_letters[$i]['url'];
     $subject = $dental_letters[$i]['subject'];
+    if($subject==''){ $subject='[View Letter]'; }
     $sentto = $dental_letters[$i]['sentto'];
 		$method = $dental_letters[$i]['send_method'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);

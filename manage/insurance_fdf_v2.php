@@ -27,7 +27,7 @@ $insured_middle = strtoupper(st($pat_myarray['p_m_partymname']));
 $other_insured_firstname = strtoupper(st($pat_myarray['s_m_partyfname']));
 $other_insured_lastname = strtoupper(st($pat_myarray['s_m_partylname']));
 $other_insured_middle = strtoupper(st($pat_myarray['s_m_partymname']));
-$insured_id_number =strtoupper($pat_myarray['p_m_ins_id']);
+$insured_id_number =preg_replace("/[^A-Za-z0-9 ]/", '', $pat_myarray['p_m_ins_id']);
 $insured_dob =str_replace('-','/',$pat_myarray['ins_dob']);
 $p_m_ins_ass =strtoupper($pat_myarray['p_m_ins_ass']);
 $other_insured_dob =str_replace('-','/',$pat_myarray['ins2_dob']);
@@ -65,7 +65,7 @@ $other_insured_middle =strtoupper($myarray['other_insured_middle']);
 $other_insured_dob = str_replace('-','/',st($myarray['other_insured_dob']));
 $other_insured_sex =strtoupper($myarray['other_insured_sex']);
 $other_insured_insurance_plan =strtoupper($myarray['other_insured_insurance_plan']);
-$insured_id_number =strtoupper($myarray['insured_id_number']);
+$insured_id_number =preg_replace("/[^A-Za-z0-9 ]/", '', $myarray['insured_id_number']);
 $insured_lastname = strtoupper(st($myarray['insured_lastname']));
 $insured_firstname = strtoupper(st($myarray['insured_firstname']));
 $insured_middle = strtoupper(st($myarray['insured_middle']));
@@ -108,7 +108,7 @@ if($_GET['type']=='secondary'){
   $other_insured_sex =strtoupper($myarray['insured_sex']);
   $other_insured_insurance_plan =strtoupper($myarray['insured_insurance_plan']);
   $other_insured_policy_group_feca =strtoupper($myarray['insured_policy_group_feca']);
-  $insured_id_number =strtoupper($myarray['other_insured_id_number']);
+  $insured_id_number =preg_replace("/[^A-Za-z0-9 ]/", '', $myarray['other_insured_id_number']);
   $insured_firstname =strtoupper($myarray['other_insured_firstname']);
   $insured_middle =strtoupper($myarray['other_insured_middle']);
   $insured_lastname =strtoupper($myarray['other_insured_lastname']);
@@ -132,7 +132,7 @@ if($_GET['type']=='secondary'){
   $other_insured_sex =strtoupper($myarray['other_insured_sex']);
   $other_insured_insurance_plan =strtoupper($myarray['other_insured_insurance_plan']);
   $other_insured_policy_group_feca =strtoupper($myarray['other_insured_policy_group_feca']);
-  $insured_id_number =strtoupper($myarray['insured_id_number']);
+  $insured_id_number =preg_replace("/[^A-Za-z0-9 ]/", '', $myarray['insured_id_number']);
   $insured_firstname =strtoupper($myarray['insured_firstname']);
   $insured_middle =strtoupper($myarray['insured_middle']);
   $insured_lastname =strtoupper($myarray['insured_lastname']);
@@ -796,7 +796,7 @@ $c++;
   << /T(".$field_path.".".$p."_modifier_three_fill[0]) /V(".$array['modcode3'].") >>
   << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V(".$array['modcode4'].") >>
   << /T(".$field_path.".".$p."_diagnosis_pointer_fill[0]) /V(".$diagnosis_array[$array['diagnosispointer']].") >> 
-  << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format($array['amount'],0).") >>
+  << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format($array['amount'],0,'.','').") >>
   << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents($array['amount']-floor($array['amount'])).") >>
   << /T(".$field_path.".".$p."_days_or_units_fill[0]) /V(".$array['daysorunits'].") >>
   << /T(".$field_path.".".$p."_EPSDT_fill[0]) /V(".$array['epsdt'].") >>
@@ -832,11 +832,11 @@ $fdf .= "
   << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".((strtolower($accept_assignment) == "yes")?1:'').") >>
   << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".((strtolower($accept_assignment) == "no")?1:'').") >>
   
-  << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format($total_charge,0).") >>
+  << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format($total_charge,0,'.','').") >>
   << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents(floor(($total_charge-floor($total_charge))*100)).") >>
-  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format($amount_paid,0).") >>
+  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format($amount_paid,0,'.','').") >>
   << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".fill_cents(floor(($amount_paid-floor($amount_paid))*100)).") >>
-  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($balance_due,0).") >>
+  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($balance_due,0,'.','').") >>
   << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents(floor(($balance_due-floor($balance_due))*100)).") >>
   
   << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($practice)."\n".strtoupper($address)."\n".strtoupper($city).", ".strtoupper($state)." ".$zip.") >>

@@ -217,7 +217,8 @@ if($_REQUEST['goto']!=''){
 <br /><br>
 
 <?php
-  $f_sql = "SELECT * FROM dental_faxes WHERE letterid='".mysql_real_escape_string($letterid)."' AND viewed=0;";
+  if($status==DSS_LETTER_PENDING){
+  $f_sql = "SELECT * FROM dental_faxes WHERE letterid='".mysql_real_escape_string($letterid)."';";
   $f_q = mysql_query($f_sql);
   while($f_r = mysql_fetch_assoc($f_q)){
     ?>
@@ -227,7 +228,7 @@ if($_REQUEST['goto']!=''){
 
  
   }
-
+  }
 
 //print_r ($_POST);
 

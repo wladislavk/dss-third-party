@@ -2393,25 +2393,24 @@ div.WordSection1
 
 <div class=WordSection1>
 
-<p class=yiv701883374msoheader style="margin:0in;margin-bottom:.0001pt"><span
-class=yiv701883374grame><b><span style="font-size:18.0pt;font-family:"Georgia","serif";
-color:black">[LOGO]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-</span></b></span><span class=yiv701883374grame><b><span style="font-family:
-"Georgia","serif";color:black">'.$practice.'</span></b></span></p>
-
-<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
-.0001pt;text-align:right"><span class=yiv701883374grame><b><span
-style="font-family:"Georgia","serif";color:black">'.$loc_r['address'].'</span></b></span></p>
-
-<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
-.0001pt;text-align:right"><span class=yiv701883374grame><b><span
-style="font-family:"Georgia","serif";color:black">'.$loc_r['city'].', '.$loc_r['state'].' '.$loc_r['zip'].'</span></b></span></p>
-
-<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
-.0001pt;text-align:right"><span class=yiv701883374grame><b><span
-style="font-family:"Georgia","serif";color:black">'.format_phone($loc_r['phone']).'
-</span></b></span></p>
-
+<table>
+<tr>
+<td>
+'.$logo.'
+</td>
+<td align="right" style="text-align:right; font-family:\"Georgia\",\"serif\";color:black">
+<b>
+'.$practice.'
+<br>
+'.$loc_r['address'].'
+<br>
+'.$loc_r['city'].', '.$loc_r['state'].' '.$loc_r['zip'].'
+<br>
+'.format_phone($loc_r['phone']).'
+</b>
+</td>
+</tr>
+</table>
 <p class=MsoNormal align=center style="text-align:center"><span
 style="font-size:12.0pt;line-height:115%">&nbsp;</span></p>
 
@@ -2575,28 +2574,24 @@ div.WordSection1
 
 <div class=WordSection1>
 
-<p class=yiv701883374msoheader style="margin:0in;margin-bottom:.0001pt"><span
-class=yiv701883374grame><b><span style="font-size:18.0pt;font-family:"Georgia","serif";
-color:black">'.$logo.'                                                                
-               </span></b></span><span class=yiv701883374grame><b><span
-style="font-family:"Georgia","serif";color:black">'.$practice.'</span></b></span></p>
-
-<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
-.0001pt;text-align:right"><span class=yiv701883374grame><b><span
-style="font-family:"Georgia","serif";color:black">'.$loc_r['address'].'</span></b></span></p>
-
-<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
-.0001pt;text-align:right"><span class=yiv701883374grame><b><span
-style="font-family:"Georgia","serif";color:black">'.$loc_r['city'].', '.$loc_r['state'].' '.$loc_r['zip'].'</span></b></span></p>
-
-<p class=yiv701883374msoheader align=right style="margin:0in;margin-bottom:
-.0001pt;text-align:right"><span class=yiv701883374grame><b><span
-style="font-family:"Georgia","serif";color:black">'.format_phone($loc_r['phone']).' 
-</span></b></span></p>
-
-<p class=yiv701883374msoheader style="margin:0in;margin-bottom:.0001pt"><span
-class=yiv701883374grame><b><span style="font-size:18.0pt;font-family:"Georgia","serif";
-color:black">&nbsp;</span></b></span></p>
+<table>
+<tr>
+<td>
+'.$logo.'
+</td>
+<td align="right" style="text-align:right; font-family:\"Georgia\",\"serif\";color:black">
+<b>
+'.$practice.'
+<br>
+'.$loc_r['address'].'
+<br>
+'.$loc_r['city'].', '.$loc_r['state'].' '.$loc_r['zip'].'
+<br>
+'.format_phone($loc_r['phone']).'
+</b>
+</td>
+</tr>
+</table>
 
 <p class=MsoNormal align=center style="margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center;line-height:normal"><b><u><span style="font-size:16.0pt">INFORMED
@@ -2715,20 +2710,14 @@ understand the proposed treatment of my OSA using MAD therapy and I have been
 given the opportunity to ask questions. All my questions have been answered and
 I am ready to proceed with treatment. </span></p>
 
-<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Patient
-Signature:       __________________________________    DATE:  ______________</span></p>
-
-<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Print
-Name:                 __________________________________</span></p>
-
-<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">WITNESS:                     __________________________________    DATE:
-_______________</span></p>
-
-</div>
-
-</body>
-
-</html>
+<p class=MsoNormal style="line-height:normal"><span style="font-size:11.0pt">Patient
+Signature:       __________________________________    DATE:  ______________</span>
+<br>
+<span style="font-size:11.0pt">Print
+Name:                 __________________________________</span>
+<br>
+<span style="font-size:11.0pt">WITNESS:                     __________________________________    DATE:
+_______________</span></p></div></body></html>
 ';
 
 

@@ -500,7 +500,7 @@ $template = htmlspecialchars($template);
     return $letterid;
     //return mysql_error();
   } else {
-    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list, cc_topatient, cc_md_list, cc_md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
+    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list, cc_topatient, cc_md_list, cc_md_referral_list, template_type FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
 		$select_result = mysql_query($select_letter);
 		while ($row = mysql_fetch_assoc($select_result)) {
 			$status = '0';
@@ -532,7 +532,7 @@ $template = htmlspecialchars($template);
 					}
 				}
 			}
-		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, null, $letterid, $template, $send_method, $status, null, false, null, $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list'], $font_size, $font_family); 	
+		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, null, $letterid, $template, $send_method, $status, null, false, $row['template_type'], $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list'], $font_size, $font_family); 	
 		}
  		if (is_numeric($letter)) {	// new letter was created successfully Update the parent letter by removing the recipient
                                 $update_edit = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."' WHERE letterid='".$letter."'";
@@ -601,7 +601,7 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 		  return "ERROR";
 		}
   } else {
-    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list, cc_topatient, cc_md_list, cc_md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
+    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list, cc_topatient, cc_md_list, cc_md_referral_list, template_type FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
                 $select_result = mysql_query($select_letter);
                 while ($row = mysql_fetch_assoc($select_result)) {
                         $status = '1';
@@ -631,7 +631,7 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
                                         }
                                 }
                         }
-                        $letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, null, null, $template, $send_method, $status, null, true, null, $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list']);
+                        $letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, null, null, $template, $send_method, $status, null, true, $row['template_type'], $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list']);
                 }
                 if (is_numeric($letter)) {      // new letter was created successfully Update the parent letter by removing the recipient
                         if ($type == 'patient') {

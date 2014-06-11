@@ -551,9 +551,9 @@ if(mysql_num_rows($doc_q) == 0){
                         <input type="text" name="extra_name_{row}" placeholder="Service Name" class="form-control">
                     </td>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" id="extra_service_date_{row}" class="form-control text-center" name="extra_service_date_{row}" value="<?= date('m/d/Y') ?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -575,9 +575,9 @@ if(mysql_num_rows($doc_q) == 0){
                         MONTHLY FEE
                     </th>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append input-group date">
                             <input type="text" id="monthly_date" name="monthly_date" class="form-control text-center" value="<?=$monthly_date;?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -602,9 +602,9 @@ if(mysql_num_rows($doc_q) == 0){
                         <input type="text" name="producer_desc" value="Producers – <?= $producer_r['total_producers']." at $".$doc['producer_fee']." each "; ?>" class="form-control">
                     </td>
                     <td>
-                        <div class="input-group">
-                            <input type="text" id="producer_date" class="date form-control text-center" name="producer_date" value="<?=date('m/d/Y');?>">
-                            <span class="input-group-addon">
+                        <div class="input-append datepicker date input-group">
+                            <input type="text" id="producer_date" class="form-control text-center" name="producer_date" value="<?=date('m/d/Y');?>">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -628,9 +628,9 @@ if(mysql_num_rows($doc_q) == 0){
                         <input type="text" name="name_<?= $case['ledgerid'] ?>" value="<?=st($case["firstname"]." ".$case["lastname"]);?>" class="form-control">
                     </td>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" id="service_date_<?= $case['ledgerid'] ?>" class="form-control text-center" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -656,9 +656,9 @@ if(mysql_num_rows($doc_q) == 0){
                         <input type="text" name="name_<?= $e0486['id'] ?>" value="E0486: <?=st($e0486["firstname"]." ".$e0486["lastname"]);?>" class="form-control">
                     </td>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" id="adddate_<?= $e0486['id'] ?>" class="form-control text-center" name="adddate_<?= $e0486['id'] ?>" value="<?=date('m/d/Y', strtotime(st($e0486["adddate"])));?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -694,9 +694,9 @@ if(mysql_num_rows($doc_q) == 0){
                         <input type="text" name="pat_new_name_<?= $claim['patientid'] ?>" value="New Patient: <?=st($claim["firstname"]." ".$claim["lastname"]);?>" class="form-control">
                     </td>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" id="pat_new_adddate_<?= $claim['patientid'] ?>" class="form-control text-center" name="pat_new_adddate_<?= $claim['patientid'] ?>" value="<?=date('m/d/Y', strtotime(st($claim["adddate"])));?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -723,9 +723,9 @@ if(mysql_num_rows($doc_q) == 0){
                         <input type="text" name="claim_name_<?= $claim['id'] ?>" value="Claim: <?=st($claim["firstname"]." ".$claim["lastname"]);?>" class="form-control">
                     </td>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" id="claim_adddate_<?= $claim['id'] ?>" class="form-control text-center" name="claim_adddate_<?= $claim['id'] ?>" value="<?=date('m/d/Y', strtotime(st($claim["adddate"])));?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -752,9 +752,9 @@ if(mysql_num_rows($doc_q) == 0){
                         Insurance Verification Services – <?= $vob['patient_firstname']." ".$vob['patient_lastname']; ?>
                     </td>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" name="vob_date_completed_<?= $vob['id'] ?>" id="vob_date_completed_<?= $vob['id'] ?>" class="form-control text-center" value="<?=date('m/d/Y', strtotime(st($vob["date_completed"])));?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>

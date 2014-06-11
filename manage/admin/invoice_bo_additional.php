@@ -515,9 +515,9 @@ if(mysql_num_rows($doc_q) == 0){
                         <input type="text" name="extra_name_{row}" placeholder="Service Name" class="form-control">
                     </td>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" id="extra_service_date_{row}" class="form-control text-center" name="extra_service_date_{row}" value="<?= date('m/d/Y') ?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -539,9 +539,9 @@ if(mysql_num_rows($doc_q) == 0){
                         MONTHLY FEE
                     </th>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" id="monthly_date" name="monthly_date" class="form-control text-center" value="<?=$monthly_date;?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -564,9 +564,9 @@ if(mysql_num_rows($doc_q) == 0){
                         <input type="text" name="name_<?= $case['ledgerid'] ?>" value="<?=st($case["firstname"]." ".$case["lastname"]);?>" class="form-control">
                     </td>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" id="service_date_<?= $case['ledgerid'] ?>" class="form-control text-center" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -592,9 +592,9 @@ if(mysql_num_rows($doc_q) == 0){
                         <input type="text" name="name_<?= $efile['id'] ?>" value="E-File: <?=st($efile["firstname"]." ".$efile["lastname"]);?>" class="form-control">
                     </td>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" id="adddate_<?= $efile['id'] ?>" class="form-control text-center" name="adddate_<?= $efile['id'] ?>" value="<?=date('m/d/Y', strtotime(st($efile["adddate"])));?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -619,9 +619,9 @@ if(mysql_num_rows($doc_q) == 0){
                         <input type="text" name="user_desc" value="Users – <?= $users_r['total_users']." at $".$doc['user_fee']." each "; ?>" class="form-control">
                     </td>
                     <td>
-                        <div class="input-group">
-                            <input type="text" id="user_date" class="date form-control text-center" name="user_date" value="<?=date('m/d/Y');?>">
-                            <span class="input-group-addon">
+                        <div class="input-append datepicker date input-group">
+                            <input type="text" id="user_date" class="form-control text-center" name="user_date" value="<?=date('m/d/Y');?>">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -647,9 +647,9 @@ if(mysql_num_rows($doc_q) == 0){
                         Insurance Verification Services – <?= $vob['patient_firstname']." ".$vob['patient_lastname']; ?>
                     </td>
                     <td>
-                        <div class="input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" name="vob_date_completed_<?= $vob['id'] ?>" id="vob_date_completed_<?= $vob['id'] ?>" class="form-control text-center" value="<?=date('m/d/Y', strtotime(st($vob["date_completed"])));?>">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
                         </div>
@@ -688,9 +688,9 @@ if(mysql_num_rows($doc_q) == 0){
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="free_fax_start_date" class="date form-control text-center" name="free_fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>">
+                            <input type="text" id="free_fax_start_date" class="datepicker date form-control text-center" name="free_fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="free_fax_end_date" class="date form-control text-center" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>">
+                            <input type="text" id="free_fax_end_date" class="datepicker date form-control text-center" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>">
                         </div>
                     </td>
                     <td>
@@ -712,9 +712,9 @@ if(mysql_num_rows($doc_q) == 0){
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="fax_start_date" class="date form-control text-center" name="fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>">
+                            <input type="text" id="fax_start_date" class="datepicker date form-control text-center" name="fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="fax_end_date" class="date form-control text-center" name="fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>">
+                            <input type="text" id="fax_end_date" class="datepicker date form-control text-center" name="fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>">
                         </div>
                     </td>
                     <td>
@@ -754,9 +754,9 @@ if(mysql_num_rows($doc_q) == 0){
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="free_ec_start_date" class="date form-control text-center" name="free_ec_start_date" value="<?=date('m/d/Y', strtotime(st($ec["start_date"])));?>">
+                            <input type="text" id="free_ec_start_date" class="datepicker date form-control text-center" name="free_ec_start_date" value="<?=date('m/d/Y', strtotime(st($ec["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="free_ec_end_date" class="date form-control text-center" name="free_ec_end_date" value="<?=date('m/d/Y', strtotime(st($ec["end_date"])));?>">
+                            <input type="text" id="free_ec_end_date" class="datepicker date form-control text-center" name="free_ec_end_date" value="<?=date('m/d/Y', strtotime(st($ec["end_date"])));?>">
                         </div>
                     </td>
                     <td>
@@ -778,9 +778,9 @@ if(mysql_num_rows($doc_q) == 0){
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="ec_start_date" class="date form-control text-center" name="ec_start_date" value="<?=date('m/d/Y', strtotime(st($ec["start_date"])));?>">
+                            <input type="text" id="ec_start_date" class="datepicker date form-control text-center" name="ec_start_date" value="<?=date('m/d/Y', strtotime(st($ec["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="ec_end_date" class="date form-control text-center" name="ec_end_date" value="<?=date('m/d/Y', strtotime(st($ec["end_date"])));?>">
+                            <input type="text" id="ec_end_date" class="datepicker date form-control text-center" name="ec_end_date" value="<?=date('m/d/Y', strtotime(st($ec["end_date"])));?>">
                         </div>
                     </td>
                     <td>
@@ -825,9 +825,9 @@ if(mysql_num_rows($doc_q) == 0){
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="free_enrollment_start_date" class="date form-control text-center" name="free_enrollment_start_date" value="<?=date('m/d/Y', strtotime(st($enroll["start_date"])));?>">
+                            <input type="text" id="free_enrollment_start_date" class="datepicker date form-control text-center" name="free_enrollment_start_date" value="<?=date('m/d/Y', strtotime(st($enroll["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="free_enrollment_end_date" class="date form-control text-center" name="free_enrollment_end_date" value="<?=date('m/d/Y', strtotime(st($enroll["end_date"])));?>">
+                            <input type="text" id="free_enrollment_end_date" class="datepicker date form-control text-center" name="free_enrollment_end_date" value="<?=date('m/d/Y', strtotime(st($enroll["end_date"])));?>">
                         </div>
                     </td>
                     <td>
@@ -849,9 +849,9 @@ if(mysql_num_rows($doc_q) == 0){
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="enrollment_start_date" class="date form-control text-center" name="enrollment_start_date" value="<?=date('m/d/Y', strtotime(st($enroll["start_date"])));?>">
+                            <input type="text" id="enrollment_start_date" class="datepicker date form-control text-center" name="enrollment_start_date" value="<?=date('m/d/Y', strtotime(st($enroll["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="enrollment_end_date" class="date form-control text-center" name="enrollment_end_date" value="<?=date('m/d/Y', strtotime(st($enroll["end_date"])));?>">
+                            <input type="text" id="enrollment_end_date" class="datepicker date form-control text-center" name="enrollment_end_date" value="<?=date('m/d/Y', strtotime(st($enroll["end_date"])));?>">
                         </div>
                     </td>
                     <td>

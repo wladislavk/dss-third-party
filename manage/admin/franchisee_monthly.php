@@ -80,20 +80,20 @@ $num_users=mysql_num_rows($my);
 
 <form method="post" class="form-inline">
     <div class="row">
-        <div class="col-md-3">
-            <div class="input-group date" id="start_date" data-date="<?= date('m/d/Y', strtotime($start_date)); ?>" data-date-format="mm/dd/yyyy">
+        <div class="col-md-4">
+            <div class="input-append datepicker input-group date" id="start_date" data-date="<?= date('m/d/Y', strtotime($start_date)); ?>" data-date-format="mm/dd/yyyy">
                 <span class="input-group-addon">Start date:</span>
                 <input class="form-control text-center" type="text" name="start_date" value="<?= date('m/d/Y', strtotime($start_date)); ?>">
-                <span class="input-group-addon">
+                <span class="input-group-addon add-on">
                     <i class="glyphicon glyphicon-calendar"></i>
                 </span>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="input-group date" id="end_date" data-date="<?= date('m/d/Y', strtotime($end_date)); ?>" data-date-format="mm/dd/yyyy">
+        <div class="col-md-4">
+            <div class="input-append datepicker input-group date" id="end_date" data-date="<?= date('m/d/Y', strtotime($end_date)); ?>" data-date-format="mm/dd/yyyy">
                 <span class="input-group-addon">End date:</span>
                 <input class="form-control text-center" type="text" name="end_date" value="<?= date('m/d/Y', strtotime($end_date)); ?>">
-                <span class="input-group-addon">
+                <span class="input-group-addon add-on">
                     <i class="glyphicon glyphicon-calendar"></i>
                 </span>
             </div>

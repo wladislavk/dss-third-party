@@ -145,9 +145,9 @@ $imp_r = mysql_fetch_assoc($imp_q);
         <div class="col-md-6">
             <div class="form-group">
                 <label for="dental_device_date" class="col-md-3 control-label">Date:</label>
-                <div class="input-group date col-md-9" data-date-format="mm/dd/yyyy">
+                <div class="input-append datepicker input-group date col-md-9" data-date-format="mm/dd/yyyy">
                     <input id="dental_device_date"  class="form-control text-center" type="text" name="dentaldevice_date" value="<?= $dentaldevice_date; ?>">
-                    <span class="input-group-addon">
+                    <span class="input-group-addon add-on">
                         <i class="glyphicon glyphicon-calendar"></i>
                     </span>
                 </div>

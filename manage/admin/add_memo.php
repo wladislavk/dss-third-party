@@ -70,9 +70,9 @@ if($_POST["memosub"] == 1)
         <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" class="form-horizontal">
             <div class="form-group date">
                 <label for="docid" class="col-md-3 control-label">End Date</label>
-                <div class="col-md-9">
+                <div class="input-append date datepicker col-md-9">
   <input class="form-control text-center" type="text" name="offdate" value="<?= $end_date; ?>">
-  <span class="input-group-addon">
+  <span class="input-group-addon add-on">
     <i class="glyphicon glyphicon-calendar"></i>
   </span>
 

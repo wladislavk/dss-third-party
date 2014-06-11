@@ -290,7 +290,7 @@ $pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$_GET['p
 $pat_q = mysql_query($pat_sql);
 $pat_r = mysql_fetch_assoc($pat_q);
 ?>
-<form id="new_sleep_study_form" action="#" method="POST" style="float:left; width:185px;display:none;" enctype="multipart/form-data">
+<form id="new_sleep_study_form" action="dss_summ.php?pid=<?=$_GET['pid'];?>&addtopat=1" method="POST" style="float:left; width:185px;display:none;" enctype="multipart/form-data">
 <table class="sleeplabstable new_table <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
 	<tr>
 		<td valign="top" class="odd">
@@ -518,7 +518,7 @@ $device_result = mysql_query($device_query);
 $device = mysql_result($device_result, 0);
 
 ?>
-<form action="#" style="float:left;" method="post" enctype="multipart/form-data">
+<form action="dss_summ.php?pid=<?=$_GET['pid'];?>&addtopat=1" style="float:left;" method="post" enctype="multipart/form-data">
 <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
 <table id="sleepstudycrolltable" class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
 	<tr>

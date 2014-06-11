@@ -223,7 +223,7 @@ if($_REQUEST['goto']!=''){
   $f_q = mysql_query($f_sql);
   while($f_r = mysql_fetch_assoc($f_q)){
     ?>
-	<div class="warning" id="fax_alert_<?=$f_r['id']; ?>">This letter failed to send via digital fax to <a href="#" onclick="loadPopup('add_contact.php?ed=<?=$f_r['contactid'];?>');return false;"><?= $f_r['to_name']; ?></a> at <a href="#" onclick="loadPopup('add_contact.php?ed=<?=$f_r['contactid'];?>');return false;"><?= format_phone($f_r['to_number']); ?></a> Please check fax number and retry. Click <a href="manage_faxes.php?status=3&viewed=0#fax">here</a> to view full failure details. </div>
+	<div class="warning" id="fax_alert_<?=$f_r['id']; ?>">This letter failed to send via digital fax to <a href="#" onclick="loadPopup('add_contact.php?ed=<?=$f_r['contactid'];?>');return false;"><?= $f_r['to_name']; ?></a> at <a href="#" onclick="loadPopup('add_contact.php?ed=<?=$f_r['contactid'];?>');return false;"><?= format_phone($f_r['to_number']); ?></a> Please check fax number and retry, or change delivery method. Click <a href="manage_faxes.php?status=3&viewed=0#fax">here</a> to view full failure details. </div>
 	<br /><br />
     <?php
 

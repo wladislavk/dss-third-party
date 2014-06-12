@@ -70,7 +70,7 @@ background:#999999;
                         </tr>
                         <tr class="tr_active">
                                 <td valign="top">
-                                        General Release of Liability &amp; Assumption of Risk for Obstructive Sleep Apnea and Sleep Disordered Breathing
+					Release of Liability and Assumption of Risk
                                 </td>
                                 <td valign="top">
                                         <a href="view_user_form.php?file=release_liability&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">

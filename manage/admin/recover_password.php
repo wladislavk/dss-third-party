@@ -72,7 +72,7 @@ $(document).ready(function(){
 			?>
                 <script type="text/javascript">
                         //alert("<?= $check_myarray['userid']; ?>");
-                        window.location.replace('login.php?msg=Password reset');
+                        window.location.replace('index.php?msg=Password reset');
                 </script>
                 <?
 		}

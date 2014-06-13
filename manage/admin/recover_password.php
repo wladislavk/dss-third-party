@@ -4,7 +4,7 @@ include_once('includes/password.php');
 
 ?>
 
-<?php require_once dirname(__FILE__) . '/includes/top.htm'; ?>
+<?php //require_once dirname(__FILE__) . '/includes/top.htm'; ?>
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -72,7 +72,7 @@ $(document).ready(function(){
 			?>
                 <script type="text/javascript">
                         //alert("<?= $check_myarray['userid']; ?>");
-                        window.location.replace('login.php?msg=Password reset');
+                        window.location.replace('index.php?msg=Password reset');
                 </script>
                 <?
 		}

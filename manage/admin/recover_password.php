@@ -4,7 +4,7 @@ include_once('includes/password.php');
 
 ?>
 
-<?php require_once dirname(__FILE__) . '/includes/top.htm'; ?>
+<?php //require_once dirname(__FILE__) . '/includes/top.htm'; ?>
 
 <script type="text/javascript">
 $(document).ready(function(){

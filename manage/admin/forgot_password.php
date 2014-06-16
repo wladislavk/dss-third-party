@@ -26,7 +26,9 @@ if($_POST["emailsub"] == 1)
                 $subject = "Dental Sleep Solutions Password Reset";
                 $message = "Please use this link to reset your password.
 <br /><br />
-http://".$_SERVER['HTTP_HOST']."/manage/admin/recover_password.php?un=".$check_myarray['username']."&rh=".$recover_hash;
+<a href=\"http://".$_SERVER['HTTP_HOST']."/manage/admin/recover_password.php?un=".$check_myarray['username']."&rh=".$recover_hash."\">
+http://".$_SERVER['HTTP_HOST']."/manage/admin/recover_password.php?un=".$check_myarray['username']."&rh=".$recover_hash."
+</a>";
 $message .= "<br /><br />";
 $message .= DSS_EMAIL_FOOTER;
                 //$ins_id = mysql_insert_id();

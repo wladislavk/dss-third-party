@@ -2879,7 +2879,7 @@ if ($is_pending) {
 											</td>
 											                
 											<td valign="top" width="90%">
-												<input disabled="disabled" type="text" value="<?php echo $service_practice;?>" name="service_facility_info_name" class="inbox_line3" size="40" />
+												<input type="text" value="<?php echo $service_practice;?>" name="service_facility_info_name" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
@@ -2887,7 +2887,7 @@ if ($is_pending) {
 												<span class="small_cap">Address:</span>		
 											</td>
 											<td valign="top" width="90%">
-												<input type="text" disabled="disabled" value="<?php echo $service_address;?>" name="service_facility_info_address" class="inbox_line3" size="40" />
+												<input type="text" value="<?php echo $service_address;?>" name="service_facility_info_address" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
@@ -2895,14 +2895,14 @@ if ($is_pending) {
 												<span class="small_cap">City/State/Zip:</span>		
 											</td>
 											<td valign="top" width="90%">
-												<input type="text" disabled="disabled" value="<?php echo $service_city;?>, <?php echo $service_state;?> <?php echo $service_zip;?>" name="service_facility_info_city" class="inbox_line3" size="40" />
+												<input type="text" value="<?php echo $service_city;?>, <?php echo $service_state;?> <?php echo $service_zip;?>" name="service_facility_info_city" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 									</table>
 									<span class="num_a">
 										a.
 									</span>
-									<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$service_medicare_npi:$service_npi; ?>" name="service_info_a" class="inbox_line3" size="15" />
+									<input type="text" value="<?= ($insurancetype == '1')?$service_medicare_npi:$service_npi; ?>" name="service_info_a" class="inbox_line3" size="15" />
 									
 									<span class="num_a">
 										b.
@@ -2950,7 +2950,7 @@ if ($is_pending) {
 									<span class="small_cap">Name:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" disabled="disabled" value="<?php echo $practice;?>" name="billing_provider_name" class="inbox_line3" size="40" />
+									<input type="text" value="<?php echo $practice;?>" name="billing_provider_name" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 							<tr>
@@ -2958,7 +2958,7 @@ if ($is_pending) {
 									<span class="small_cap">Address:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" disabled="disabled" value="<?php echo $address;?>" name="billing_provider_address" class="inbox_line3" size="40" />
+									<input type="text" value="<?php echo $address;?>" name="billing_provider_address" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 							<tr>
@@ -2966,14 +2966,14 @@ if ($is_pending) {
 									<span class="small_cap">City/State/Zip:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" disabled="disabled" value="<?php echo $city;?>, <?php echo $state;?> <?php echo $zip;?>" name="billing_provider_city" class="inbox_line3" size="40" />
+									<input type="text" value="<?php echo $city;?>, <?php echo $state;?> <?php echo $zip;?>" name="billing_provider_city" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 						</table>
 						<span class="num_a">
 							a.
 						</span>
-						<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$medicare_npi:$npi; ?>" name="billing_provider_a" class="inbox_line3" size="15" />
+						<input type="text" value="<?= ($insurancetype == '1')?$medicare_npi:$npi; ?>" name="billing_provider_a" class="inbox_line3" size="15" />
 						
 						<span class="num_a">
 							b.

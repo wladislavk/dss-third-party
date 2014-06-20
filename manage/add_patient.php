@@ -2297,7 +2297,7 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
                         <div>
                             <span>
                                 <select id="p_m_ins_type" name="p_m_ins_type" class="field text addr tbox" onchange="update_insurance_type()" maxlength="255" style="width:200px;" />
-                                     <option value="">Select Type</option>
+                                     <option value=""></option>
                                      <option value="1" <?php if($p_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($p_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
                                      <option value="3" <?php if($p_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
@@ -2519,7 +2519,7 @@ $image = mysql_fetch_assoc($itype_my);
                         <div  class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>
                                 <select id="s_m_ins_type" name="s_m_ins_type" onchange="checkMedicare()" class="field text addr tbox" maxlength="255" style="width:200px;" />
-                                     <option value="">Select Type</option>
+                                     <option value=""></option>
                                      <option value="1" <?php if($s_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($s_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
                                      <option value="3" <?php if($s_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>

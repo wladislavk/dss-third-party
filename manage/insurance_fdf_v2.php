@@ -840,10 +840,10 @@ $fdf .= "
   << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($balance_due,0,'.','').") >>
   << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents(floor(($balance_due-floor($balance_due))*100)).") >>
   
-  << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($practice)."\n".strtoupper($address)."\n".strtoupper($city).", ".strtoupper($state)." ".$zip.") >>
-  << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".split_phone($phone, true).") >>
-  << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".split_phone($phone, false).") >>
-  << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper($practice)."\n".strtoupper($address)."\n".strtoupper($city).", ".strtoupper($state)." ".$zip.") >>
+  << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($service_facility_info_name)."\n".strtoupper($service_facility_info_address)."\n".strtoupper($service_facility_info_city).") >>
+  << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".$billing_provider_phone_code.") >>
+  << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".$billing_provider_phone.") >>
+  << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper($billing_provider_name)."\n".strtoupper($billing_provider_address)."\n".strtoupper($billing_provider_city).") >>
   << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".$signature_physician.") >>  
   << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/y').") >>
   << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".(($insurancetype == '1')?$medicare_npi:$npi).") >>

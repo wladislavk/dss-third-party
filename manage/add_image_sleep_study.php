@@ -1,9 +1,12 @@
 <?php
 require_once('admin/includes/main_include.php');
+include("includes/calendarinc.php");
 $pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$_GET['pid']."';";
 $pat_q = mysql_query($pat_sql);
 $pat_r = mysql_fetch_assoc($pat_q);
 ?>
+ <script type="text/javascript" src="script/autocomplete.js"></script>
+ <script type="text/javascript" src="script/autocomplete_local.js"></script>
 <style type="text/css">
 .sleeplabstable tr{height:28px; }
 .yellow .odd, .yellow .even{
@@ -120,11 +123,11 @@ function validate_image(){
   <tr>
                 <td valign="top" class="even">
                 <select name="sleeptesttype">
-      <option value="HST">HST</option>
-      <option value="PSG">PSG</option>
-      <option value="PSG Baseline">PSG Baseline</option>
       <option value="HST Baseline">HST Baseline</option>
+      <option value="PSG Baseline">PSG Baseline</option>
       <option value="HST Titration">HST Titration</option>
+      <option value="PSG Titration">PSG Titration</option>
+      <option value="Oximeter">Oximeter</option>
     </select>
 <script type="text/javascript">
 
@@ -154,8 +157,10 @@ function addstudylab(v){
 </script>
                 <select name="place" class="place_select" onchange="addstudylab(this.value)">
 <option>SELECT</option>
+<option value="0">Home</option>
                 <?php
-     $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
+     $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY company ASC";
+
      $lab_place_r = mysql_query($lab_place_q);
      while($lab_place = mysql_fetch_array($lab_place_r)){
     ?>
@@ -187,9 +192,9 @@ function addstudylab(v){
                             </select> <span id="req_0" class="req">*</span>
                 </td>
         </tr>
-        <tr>
+<tr>
                 <td valign="top" class="odd">
-                  <input style="width:100px;" type="text" name="diagnosising_doc" />
+                  <input style="width:100px;" type="text" id="diagnosising_doc" autocomplete="off" name="diagnosising_doc" />
                 <?php
                         if($pat_r['p_m_ins_type']==1){
                 ?>
@@ -197,11 +202,24 @@ function addstudylab(v){
                 <?php
                         }
                 ?>
+
+                <br />
+                <div id="diagnosising_doc_hints" class="search_hints" style="display:none;">
+                <ul id="diagnosising_doc_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+                </div>
+                <script type="text/javascript">
+                        $(document).ready(function(){
+                                setup_autocomplete('diagnosising_doc', 'diagnosising_doc_hints', 'diagnosising_npi', '', 'list_contacts_npi.php', 'contact', '<?= $_GET['pid']; ?>');
+                        });
+                </script>
+
                 </td>
         </tr>
         <tr>
                 <td valign="top" class="even">
-                  <input style="width:100px;" type="text" name="diagnosising_npi" />
+                  <input style="width:100px;" type="text" id="diagnosising_npi" name="diagnosising_npi" />
                 <?php
                         if($pat_r['p_m_ins_type']==1){
                 ?>

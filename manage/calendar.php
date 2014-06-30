@@ -71,7 +71,7 @@ require_once('includes/formatters.php');
 	$appt_t_qu = mysql_query($appt_t_sql);
 	while($appt_t_r = mysql_fetch_array($appt_t_qu))
 	{
-		$str = str_replace('.','',str_replace('/','',str_replace(' ', '_', strtolower($appt_t_r['name']))));
+		$str = str_replace('&amp;_','',str_replace('.','',str_replace('/','',str_replace(' ', '_', strtolower($appt_t_r['name'])))));
 		?>.dhx_cal_event.event_<?php print $str; ?> div{ background-color: #<?php print $appt_t_r['color']; ?> !important; }
 	<?}
 	
@@ -142,7 +142,7 @@ require_once('includes/formatters.php');
 
 
                   if(event.category) // if event has subject property then special class should be assigned
-                    return "event_"+event.category;
+                    return "event_"+event.category.replace('&_','');
 
                   return "event_general"; // default return
 

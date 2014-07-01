@@ -1,5 +1,5 @@
 <?php
-
+// Common to All
 /***
  * AES_Encryption
  * This class allows you to easily encrypt and decrypt text in AES format

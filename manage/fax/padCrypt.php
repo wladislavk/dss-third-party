@@ -1,5 +1,5 @@
+// Common to All
 <?php
-
 /**
  * padCrypt.php
  * 

@@ -4,6 +4,7 @@ include 'includes/top.htm';?>
 
 
 <div class="row">
+			<?php if (!is_hst($_SESSION['admin_access'])) { ?>
 				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 					<div class="dashboard-stat blue">
 						<div class="visual">
@@ -40,6 +41,7 @@ include 'includes/top.htm';?>
 						</a>
 					</div>
 				</div>
+			<?php } ?>
 				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 					<div class="dashboard-stat purple">
 						<div class="visual">
@@ -58,6 +60,7 @@ include 'includes/top.htm';?>
 						</a>
 					</div>
 				</div>
+			<?php if (!is_hst($_SESSION['admin_access'])) { ?>
 				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 					<div class="dashboard-stat yellow">
 						<div class="visual">
@@ -76,6 +79,7 @@ include 'includes/top.htm';?>
 						</a>
 					</div>
 				</div>
+			<?php } ?>
 				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 					<div class="dashboard-stat red">
 						<div class="visual">

@@ -112,3 +112,6 @@ td.header, th.header {
   background-position: right 11px;
 }
 
+.page-content{
+  padding-top:10px;
+}

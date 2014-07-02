@@ -18,7 +18,7 @@ class FTSSamples
                 $key_q = mysql_query($key_sql);
                 $keys = mysql_fetch_assoc($key_q);
 	
-		$this->apiKey = "";//$keys['api_key'];//Required Key	
+		$this->apiKey = $keys['sfax_app_key'];//Required Key	
 	}
   /* 	
 	public function __construct ()
@@ -250,21 +250,19 @@ class FTSAESHelper
                 $key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($_SESSION['companyid'])."'";
                 $key_q = mysql_query($key_sql);
                 $keys = mysql_fetch_assoc($key_q);
-
+/*
                 $this->pTokenContext = $pSecurityContext;
                 $this->pTokenUsername = $keys['app_id'];                                   //<--- IMPORTANT: Enter a valid App Id 
                 $this->pTokenAppKey = $keys['app_key'];         //<--- IMPORTANT: Enter a valid Encryption key
                 $this->pTokenClient = "";                                                       //<--- IMPORTANT: Enter a valid Client IP
                 $this->pEncryptionKey = $keys['app_key'];       //<--- IMPORTANT: Enter a valid Encryption key
-                $this->pEncryptionInitVector = $keys['init_vector'];
-		/*
+                $this->pEncryptionInitVector = $keys['init_vector']; */
 	$this->pTokenContext=$pSecurityContext;                        
-        $this->pTokenUsername="";  //<--- IMPORTANT: Enter a valid Username
-        $this->pTokenApiKey=  "";  //<--- IMPORTANT: Enter a valid ApiKey
+        $this->pTokenUsername=$keys['sfax_app_id'];  //<--- IMPORTANT: Enter a valid Username
+        $this->pTokenApiKey=  $keys['sfax_app_key'];  //<--- IMPORTANT: Enter a valid ApiKey
         $this->pTokenClient="";   //<--- IMPORTANT: Leave Blank
-        $this->pEncryptionKey="";  //<--- IMPORTANT: Enter a valid Encryption key
-        $this->pEncryptionInitVector="x49e*wJVXr8BrALE";  //<--- IMPORTANT: Enter a valid Init vector
-		*/
+        $this->pEncryptionKey=$keys['sfax_encryption_key'];  //<--- IMPORTANT: Enter a valid Encryption key
+        $this->pEncryptionInitVector=$keys['sfax_init_vector'];//"x49e*wJVXr8BrALE";  //<--- IMPORTANT: Enter a valid Init vector
 	}
 	
 	public function GenerateSecurityTokenUrl()

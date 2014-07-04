@@ -30,7 +30,7 @@ class FTSSamples
 		$this->securityContext = $keys['sfax_security_context'];			//<--- IMPORTANT: Enter a valid securityContext
 	}
   */
-	public function OutboundFdaxCreate($faxNumber, $fileName, $filePath, $fileType)
+	public function OutboundFaxCreate($faxNumber, $fileName, $filePath, $fileType)
 {
 		// Service Connection and Security Settings
 		$isSuccess = false;
@@ -88,6 +88,7 @@ class FTSSamples
 		
 		curl_close ($ch);
 				
+	error_log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP ".$error);	
 		//get headers and response data
 		$helper = new FTSHelper();
 		$headers = $helper->GetHeaders($responseBody, $responseInfo);
@@ -161,7 +162,7 @@ class FTSSamples
 		$responseInfo = curl_getinfo($ch);
 		$error = curl_error($ch);
 		curl_close ($ch);
-		
+
 		//get headers and response data
 		$helper = new FTSHelper();
 		$headers = $helper->GetHeaders($responseBody, $responseInfo);

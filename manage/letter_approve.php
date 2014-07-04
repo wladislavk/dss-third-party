@@ -49,13 +49,14 @@ if(file_exists($jpg."-". $i.".jpg")){
 
 
   function send_letter(id){
-
+alert('test');
                                   $.ajax({
                                         url: "includes/letter_send.php",
                                         type: "post",
                                         data: {id: id},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
+alert(data);
                                                 if(r.error){
                                                 }else{
 <?php

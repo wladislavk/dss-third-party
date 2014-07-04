@@ -125,7 +125,7 @@ if(isset($_GET['msg'])){
 </div>
 <?php } ?>
 <div style="float:right; margin-right:20px;">
-  <a href="#" style="padding:2px;" onclick="$('#oa_form :checkbox').attr('checked','checked');" class="btn btn-primary">Select All</a>
+  <a href="#" style="padding:2px;" onclick="$('#oa_form :checkbox').attr('checked','checked');$('#oa_form :checkbox').parent().addClass('checked');" class="btn btn-primary">Select All</a>
 </div>
 <div style="clear:both;"></div>
 <br />

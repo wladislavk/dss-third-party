@@ -1,6 +1,11 @@
 <? 
 include "includes/top.htm";
 include_once "../includes/constants.inc";
+if(!is_admin($_SESSION['admin_access'])){
+  ?><h2>You are not authorized to view this page.</h2><?php
+  die();
+}
+
 if(isset($_GET['rid'])){
   $u_sql = "UPDATE dental_support_tickets SET viewed=0 WHERE id='".mysql_real_escape_string($_GET['rid'])."' AND create_type=1 ";
   mysql_query($u_sql);

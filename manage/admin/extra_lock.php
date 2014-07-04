@@ -59,7 +59,7 @@ License: You must have a valid license purchased only from themeforest(the above
 include('includes/main_include.php');
 include_once('includes/password.php');
 
-	$id1=$_REQUEST['id'];
+	$id1=$_SESSION['adminuserid'];
 	$address=$_REQUEST['addr'];
 	$address=$_REQUEST['addr'];
 	$check_sql = "SELECT * FROM admin WHERE adminid=".$id1;

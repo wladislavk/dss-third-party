@@ -114,11 +114,11 @@ $num_custom=mysql_num_rows($my);
   <form action="#" method="post">
   <div class="detail">
     <label>Top:</label>
-    <input class="value" name="claim_margin_top" value="<?= $practice['claim_margin_top']; ?>" />mm. Positive values shift up, negative shift down.
+    <input class="value" name="claim_margin_top" value="<?= $practice['claim_margin_top']; ?>" />mm. Positive values shift down, negative shift up.
   </div>
   <div class="detail">
     <label>Left:</label>
-    <input class="value" name="claim_margin_left" value="<?= $practice['claim_margin_left']; ?>" />mm. Positive values shift left, negative shift right.
+    <input class="value" name="claim_margin_left" value="<?= $practice['claim_margin_left']; ?>" />mm. Positive values shift right, negative shift left.
   </div>
   <div class="detail">
     <label>&nbsp;</label>

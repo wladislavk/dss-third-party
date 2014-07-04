@@ -4,6 +4,7 @@ include('includes/main_include.php');
 include_once('includes/password.php');
 include_once '../includes/constants.inc';
 
+
 if($_POST["emailsub"] == 1)
 {
         $check_sql = "SELECT adminid, username, email FROM admin WHERE email='".mysql_real_escape_string($_POST['email'])."'";
@@ -156,7 +157,8 @@ if (isset($_POST["loginsub"])) {
 			<!--<label class="checkbox">
 			<div class="checker"><span><input type="checkbox" value="1" name="remember"></span></div> Remember me </label>--->
 			 <!--<input type="submit" name="loginsub" value="Login"  class="btn btn-success btn blue pull-right">-->
-			<button type="submit" class="btn blue pull-right" name="loginsub" >Login
+				<input type="hidden" name="loginsub" value="1" />
+			<button type="submit" class="btn blue pull-right" name="loginbut" >Login
 			<i class="m-icon-swapright m-icon-white"></i>
 		</div>
 		

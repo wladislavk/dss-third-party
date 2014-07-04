@@ -140,9 +140,9 @@
 	   //alert(addr);
 	   var redirUrl_path='extra_lock.php?id='+userid+'&&addr='+path_name;
 	    $.idleTimeout('#idle-timeout-dialog', '.modal-content button:last', {
-                idleAfter: 300, // 5 seconds
+                idleAfter: 900, // 5 seconds
                 timeout: 2100000, //30 seconds to timeout
-                pollingInterval: 300, // 5 seconds
+                pollingInterval: 900, // 5 seconds
                 keepAliveURL: 'demo/idletimeout_keepalive.php',
                 serverResponseEquals: 'OK',
                 onTimeout: function(){

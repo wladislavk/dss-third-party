@@ -81,7 +81,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
 <body class="lpage-header-fixed">
 
         <div class="header navbar navbar-fixed-top"><a href="/manage/admin/home.php">
-            <h1 class="pull-left" style="color:#ffffff;font-size:17px; margin:12px;">Dental Sleep <span style="color:#ff0000;">Solutions</span></h1>
+            <h1 class="pull-left" style="color:#ffffff;font-size:17px; margin:12px;">Dental Sleep <span style="color:#187eb7;">Solutions</span></h1>
            </a>
            <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
 		<div class="sidebar-toggler hidden-phone">
@@ -101,7 +101,12 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
 					<!--<img alt="" src="admin/template/assets/img/avatar1_small.jpg"/>--->
 					<i class="fa fa-user"></i>
 					<span class="username">
-						 Nathan Drake
+						<?php 
+							$sql = "SELECT first_name, last_name FROM admin where adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+							$q = mysql_query($sql);
+							$admin = mysql_fetch_assoc($q);
+						 echo $admin['first_name']." ".$admin['last_name'];
+					?>
 					</span>
 					<i class="fa fa-angle-down"></i>
 				</a>
@@ -417,7 +422,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 					</form>
 					<!-- END RESPONSIVE QUICK SEARCH FORM -->
 				</li>
-				<?php if (!is_hst($_SESSION['admin_access'])) { ?>
+				<?php if (is_admin($_SESSION['admin_access'])) { ?>
 				<li class="start" >
 					<a href="/manage/admin/manage_letters.php" >
 						<i class="fa fa-envelope"></i>
@@ -430,6 +435,8 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						</span>
 					</a>
 				</li>
+				<?php } ?>
+				<?php if (!is_hst($_SESSION['admin_access'])) { ?>
 				<li>
 					<a href="/manage/admin/manage_vobs.php?status=0">
 						<i class="fa fa-hospital-o"></i>
@@ -445,6 +452,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 				
 								
 				<? } ?>
+				<?php if (!is_billing($_SESSION['admin_access'])) { ?>
 				<li  >
 					<a href="/manage/admin/manage_hsts.php?status=<?= DSS_HST_PENDING; ?>" >
 						<i class="fa fa-user-md"></i>
@@ -457,6 +465,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						</span>
 					</a>
 				</li>
+				<?php } ?>
 				 <?php if (!is_hst($_SESSION['admin_access'])) { ?>
 				
 				<li id="nn" >
@@ -470,6 +479,8 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						</span>
 					</a>
 				</li>
+				<?php } ?>
+				<?php if (is_admin($_SESSION['admin_access'])) { ?>
 				<li >
 					<a href="/manage/admin/manage_new_patient_calls.php">
 						<i class="fa fa-male"></i>
@@ -480,7 +491,8 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						</span>
 					</a>
 				</li>
-				
+				<?php } ?>	
+				<?php if (!is_hst($_SESSION['admin_access'])) { ?>
 				<li>
 					<a href="javascript:;">
 						<i class="fa fa-user"></i>
@@ -624,6 +636,11 @@ $num_pending_claims = mysql_num_rows($pending_q);
 								<?php } ?>
 								<li>
 									<a href="/manage/admin/manage_doctor_transaction_code_list.php">
+										<i class="fa fa-bell"></i>User Codes (Individual)
+									</a>
+								</li>
+								<li style="display:none;">
+									<a href="/manage/admin/manage_doctor_transaction_code.php">
 										<i class="fa fa-bell"></i>User Codes (Individual)
 									</a>
 								</li>
@@ -1137,7 +1154,9 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						</li>
 					</ul>
 				</li>
+			<?php } ?>
 				
+		<?php if (is_admin($_SESSION['admin_access'])) { ?>
 				 <?php if (is_billing($_SESSION['admin_access'])) { ?>
                 <?php
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";

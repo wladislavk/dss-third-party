@@ -15,7 +15,6 @@ $(function(){
     $breadcrumb = $container.find('ul'),
     path = window.location.href.replace(/^.*?\/([^\/]+)$/,'$1');
     path = path.substr(0,path.indexOf('?'));
-alert(path);
     
     $('.page-sidebar-menu').find('li a[href$="' + path + '"]').parents('li').find('>a:nth-child(1)').each(function(){
         var $this = $(this);

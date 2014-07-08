@@ -5,7 +5,7 @@ var Charts = function () {
 
         init: function () {
 
-            App.addResponsiveHandler(function () {
+            Metronic.addResizeHandler(function () {
                  Charts.initPieCharts(); 
             });
             

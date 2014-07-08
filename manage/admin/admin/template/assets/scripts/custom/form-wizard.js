@@ -10,7 +10,7 @@ var FormWizard = function () {
 
             function format(state) {
                 if (!state.id) return state.text; // optgroup
-                return "<img class='flag' src='assets/img/flags/" + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;" + state.text;
+                return "<img class='flag' src='../../assets/global/img/flags/" + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;" + state.text;
             }
 
             $("#country_list").select2({
@@ -30,7 +30,7 @@ var FormWizard = function () {
             form.validate({
                 doNotHideMessage: true, //this option enables to show the error/success messages on tab switch.
                 errorElement: 'span', //default input error message container
-                errorClass: 'help-block', // default input error message class
+                errorClass: 'help-block help-block-error', // default input error message class
                 focusInvalid: false, // do not focus the last invalid input
                 rules: {
                     //account
@@ -97,7 +97,7 @@ var FormWizard = function () {
                 messages: { // custom messages for radio buttons and checkboxes
                     'payment[]': {
                         required: "Please select at least one option",
-                        minlength: jQuery.format("Please select at least one option")
+                        minlength: jQuery.validator.format("Please select at least one option")
                     }
                 },
 
@@ -114,7 +114,7 @@ var FormWizard = function () {
                 invalidHandler: function (event, validator) { //display error alert on form submit   
                     success.hide();
                     error.show();
-                    App.scrollTo(error, -200);
+                    Metronic.scrollTo(error, -200);
                 },
 
                 highlight: function (element) { // hightlight error inputs
@@ -161,7 +161,7 @@ var FormWizard = function () {
                         $(this).html(input.attr("data-title"));
                     } else if ($(this).attr("data-display") == 'payment') {
                         var payment = [];
-                        $('[name="payment[]"]').each(function(){
+                        $('[name="payment[]"]:checked').each(function(){
                             payment.push($(this).attr('data-title'));
                         });
                         $(this).html(payment.join("<br>"));
@@ -195,7 +195,7 @@ var FormWizard = function () {
                     $('#form_wizard_1').find('.button-next').show();
                     $('#form_wizard_1').find('.button-submit').hide();
                 }
-                App.scrollTo($('.page-title'));
+                Metronic.scrollTo($('.page-title'));
             }
 
             // default form wizard

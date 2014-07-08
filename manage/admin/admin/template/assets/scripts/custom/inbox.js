@@ -28,8 +28,8 @@ var Inbox = function () {
 
                 loading.hide();
                 content.html(res);
-                App.fixContentHeight();
-                App.initUniform();
+                Layout.fixContentHeight();
+                Metronic.initUniform();
             },
             error: function(xhr, ajaxOptions, thrownError)
             {
@@ -75,8 +75,8 @@ var Inbox = function () {
 
                 loading.hide();
                 content.html(res);
-                App.fixContentHeight();
-                App.initUniform();
+                Layout.fixContentHeight();
+                Metronic.initUniform();
             },
             error: function(xhr, ajaxOptions, thrownError)
             {
@@ -88,7 +88,7 @@ var Inbox = function () {
 
     var initWysihtml5 = function () {
         $('.inbox-wysihtml5').wysihtml5({
-            "stylesheets": ["assets/plugins/bootstrap-wysihtml5/wysiwyg-color.css"]
+            "stylesheets": ["../../assets/global/plugins/bootstrap-wysihtml5/wysiwyg-color.css"]
         });
     }
 
@@ -97,14 +97,14 @@ var Inbox = function () {
         $('#fileupload').fileupload({
             // Uncomment the following to send cross-domain cookies:
             //xhrFields: {withCredentials: true},
-            url: 'assets/plugins/jquery-file-upload/server/php/',
+            url: '../../assets/global/plugins/jquery-file-upload/server/php/',
             autoUpload: true
         });
 
         // Upload server status check for browsers with CORS support:
         if ($.support.cors) {
             $.ajax({
-                url: 'assets/plugins/jquery-file-upload/server/php/',
+                url: '../../assets/global/plugins/jquery-file-upload/server/php/',
                 type: 'HEAD'
             }).fail(function () {
                 $('<span class="alert alert-error"/>')
@@ -142,8 +142,8 @@ var Inbox = function () {
                 initWysihtml5();
 
                 $('.inbox-wysihtml5').focus();
-                App.fixContentHeight();
-                App.initUniform();
+                Layout.fixContentHeight();
+                Metronic.initUniform();
             },
             error: function(xhr, ajaxOptions, thrownError)
             {
@@ -181,8 +181,8 @@ var Inbox = function () {
 
                 initFileupload();
                 initWysihtml5();
-                App.fixContentHeight();
-                App.initUniform();
+                Layout.fixContentHeight();
+                Metronic.initUniform();
             },
             error: function(xhr, ajaxOptions, thrownError)
             {
@@ -213,8 +213,8 @@ var Inbox = function () {
 
                 loading.hide();
                 content.html(res);
-                App.fixContentHeight();
-                App.initUniform();
+                Layout.fixContentHeight();
+                Metronic.initUniform();
             },
             error: function(xhr, ajaxOptions, thrownError)
             {
@@ -304,19 +304,19 @@ var Inbox = function () {
             });
 
             //handle compose/reply cc input toggle
-            $('.inbox-compose').on('click', '.mail-to .inbox-cc', function () {
+            $('.inbox-content').on('click', '.mail-to .inbox-cc', function () {
                 handleCCInput();
             });
 
             //handle compose/reply bcc input toggle
-            $('.inbox-compose').on('click', '.mail-to .inbox-bcc', function () {
+            $('.inbox-content').on('click', '.mail-to .inbox-bcc', function () {
                 handleBCCInput();
             });
 
             //handle loading content based on URL parameter
-            if (App.getURLParameter("a") === "view") {
+            if (Metronic.getURLParameter("a") === "view") {
                 loadMessage();
-            } else if (App.getURLParameter("a") === "compose") {
+            } else if (Metronic.getURLParameter("a") === "compose") {
                 loadCompose();
             } else {
                $('.inbox-nav > li.inbox > a').click();

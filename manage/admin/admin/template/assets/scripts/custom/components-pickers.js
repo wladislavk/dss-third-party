@@ -4,10 +4,11 @@ var ComponentsPickers = function () {
 
         if (jQuery().datepicker) {
             $('.date-picker').datepicker({
-                rtl: App.isRTL(),
+                rtl: Metronic.isRTL(),
+                orientation: "left",
                 autoclose: true
             });
-            $('body').removeClass("modal-open"); // fix bug when inline picker is used in modal
+            //$('body').removeClass("modal-open"); // fix bug when inline picker is used in modal
         }
     }
 
@@ -28,7 +29,7 @@ var ComponentsPickers = function () {
             $('.timepicker-24').timepicker({
                 autoclose: true,
                 minuteStep: 5,
-                showSeconds: true,
+                showSeconds: false,
                 showMeridian: false
             });
 
@@ -46,7 +47,7 @@ var ComponentsPickers = function () {
         }
 
         $('#defaultrange').daterangepicker({
-                opens: (App.isRTL() ? 'left' : 'right'),
+                opens: (Metronic.isRTL() ? 'left' : 'right'),
                 format: 'MM/DD/YYYY',
                 separator: ' to ',
                 startDate: moment().subtract('days', 29),
@@ -55,13 +56,12 @@ var ComponentsPickers = function () {
                 maxDate: '12/31/2014',
             },
             function (start, end) {
-                console.log("Callback has been called!");
                 $('#defaultrange input').val(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
             }
         );        
 
         $('#defaultrange_modal').daterangepicker({
-                opens: (App.isRTL() ? 'left' : 'right'),
+                opens: (Metronic.isRTL() ? 'left' : 'right'),
                 format: 'MM/DD/YYYY',
                 separator: ' to ',
                 startDate: moment().subtract('days', 29),
@@ -83,7 +83,7 @@ var ComponentsPickers = function () {
         });
 
         $('#reportrange').daterangepicker({
-                opens: (App.isRTL() ? 'left' : 'right'),
+                opens: (Metronic.isRTL() ? 'left' : 'right'),
                 startDate: moment().subtract('days', 29),
                 endDate: moment(),
                 minDate: '01/01/2012',
@@ -120,7 +120,6 @@ var ComponentsPickers = function () {
                 }
             },
             function (start, end) {
-                console.log("Callback has been called!");
                 $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
             }
         );
@@ -132,27 +131,27 @@ var ComponentsPickers = function () {
 
         $(".form_datetime").datetimepicker({
             autoclose: true,
-            isRTL: App.isRTL(),
+            isRTL: Metronic.isRTL(),
             format: "dd MM yyyy - hh:ii",
-            pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left")
+            pickerPosition: (Metronic.isRTL() ? "bottom-right" : "bottom-left")
         });
 
         $(".form_advance_datetime").datetimepicker({
-            isRTL: App.isRTL(),
+            isRTL: Metronic.isRTL(),
             format: "dd MM yyyy - hh:ii",
             autoclose: true,
             todayBtn: true,
             startDate: "2013-02-14 10:00",
-            pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left"),
+            pickerPosition: (Metronic.isRTL() ? "bottom-right" : "bottom-left"),
             minuteStep: 10
         });
 
         $(".form_meridian_datetime").datetimepicker({
-            isRTL: App.isRTL(),
+            isRTL: Metronic.isRTL(),
             format: "dd MM yyyy - HH:ii P",
             showMeridian: true,
             autoclose: true,
-            pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left"),
+            pickerPosition: (Metronic.isRTL() ? "bottom-right" : "bottom-left"),
             todayBtn: true
         });
 

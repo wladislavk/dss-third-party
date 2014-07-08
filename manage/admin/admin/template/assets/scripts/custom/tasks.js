@@ -5,7 +5,7 @@ var Tasks = function () {
 
         //main function to initiate the module
         initDashboardWidget: function () {
-			$('input.liChild').change(function() {
+			$('.task-list input[type="checkbox"]').change(function() {
 				if ($(this).is(':checked')) { 
 					$(this).parents('li').addClass("task-done"); 
 				} else { 

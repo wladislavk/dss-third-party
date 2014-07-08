@@ -1,9 +1,7 @@
 /***
 Error Pages
 ***/
-
 /* 404 page option #1 */
-
 .page-404 {
   text-align: center;
 }
@@ -34,7 +32,7 @@ Error Pages
   text-align: center;
 }
 
-.page-500 .number {  
+.page-500 .number {
   display: inline-block;
   letter-spacing: -10px;
   line-height: 128px;
@@ -82,10 +80,9 @@ Error Pages
 }
 
 /* 404 page option #3*/
-
 .page-404-3 {
-  background: #000 !important ;
-} 
+  background: black !important;
+}
 
 .page-404-3 .page-inner img {
   right: 0;
@@ -117,9 +114,7 @@ Error Pages
   font-size: 16px;
 }
 
-
-@media (max-width: 480px) { 
-
+@media (max-width: 480px) {
   .page-404 .number,
   .page-500 .number,
   .page-404 .details,
@@ -143,5 +138,4 @@ Error Pages
     z-index: -1;
     position: fixed;
   }
-
 }

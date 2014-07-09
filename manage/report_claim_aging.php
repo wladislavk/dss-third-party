@@ -60,19 +60,19 @@ background:#999999;
 			Patient Name
 		</th>
 		<th valign="top" class="col_head">
-			0-29 Days	
+			Current
 		</th>
                 <th valign="top" class="col_head">
-                        30-59 Days
+                        30 Days
                 </th>
                 <th valign="top" class="col_head">
-                        60-89 Days
+                        60 Days
                 </th>
                 <th valign="top" class="col_head">
-                        90-119 Days
+                        90 Days
                 </th>
                 <th valign="top" class="col_head">
-                        120+
+                        120+ Days
                 </th>
                 <th valign="top" class="col_head">
                         Total
@@ -246,6 +246,31 @@ $p_sql = '';
                         </td>
 
                 </tr>
+                <tr>
+                        <td valign="top">
+                                <b>Percentage</b>
+                        </td>
+                        <td valign="top">
+                          <strong><?php echo number_format(($total_029/$grand_total)*100,2); ?>%</strong>
+                        </td>
+                        <td valign="top">
+                          <strong><?php echo number_format(($total_3059/$grand_total)*100,2); ?>%</strong>
+                        </td>
+                        <td valign="top">
+                          <strong><?php echo number_format(($total_6089/$grand_total)*100,2); ?>%</strong>
+                        </td>
+                        <td valign="top">
+                          <strong><?php echo number_format(($total_90119/$grand_total)*100,2); ?>%</strong>
+                        </td>
+                        <td valign="top">
+                          <strong><?php echo number_format(($total_120/$grand_total)*100,2); ?>%</strong>
+                        </td>
+                        <td valign="top">
+                          <strong>100%</strong>
+                        </td>
+
+                </tr>
+
 	</tfoot>
 
 </table>

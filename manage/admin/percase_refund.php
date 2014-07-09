@@ -31,13 +31,17 @@ $last4 = $cards['data'][0]['last4'];
 
 
 if(isset($_POST['bill_submit'])){
-  $customerID = $r['cc_id'];
-  if($customerID!=''){
+  $charge = $_POST['cid'];
+  if($charge!=''){
     $amount = (str_replace(',','',$_POST['amount'])*100);
 
+    $csql = "SELECT * FROM dental_charges WHERE id='".mysql_real_escape_string($charge)."'";
+    $cq = mysql_query($csql);
+    $cr = mysql_fetch_assoc($csql);
 
 try{
-    $charge = Stripe_Charge::create(array(
+    $charge = Stripe_Charge::retrieve($cr['stripe_charge']);
+    $charge->refunds->create(array(
       "amount" => $amount, # $15.00 this time
       "currency" => "usd",
       "customer" => $customerID)
@@ -89,26 +93,16 @@ try{
 
 }
 
-  $stripe_charge = $charge->id;
-  $stripe_customer = $charge->customer;
-  $stripe_card_fingerprint = $charge->card->fingerprint;
-  $charge_sql = "INSERT INTO dental_charge SET
+  $charge_sql = "INSERT INTO dental_refund SET
 			amount='".mysql_real_escape_string(str_replace(',','',$_POST['amount']))."',
                         userid='".mysql_real_escape_string($id)."',
                         adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."',
-                        charge_date=NOW(),
-                        stripe_customer='".mysql_real_escape_string($stripe_customer)."',
-                        stripe_charge='".mysql_real_escape_string($stripe_charge)."',
-                        stripe_card_fingerprint='".mysql_real_escape_string($stripe_card_fingerprint)."',
-			invoice_id='".mysql_real_escape_string((isset($_REQUEST['invoice']) && $_REQUEST['invoice']!='')?$_REQUEST['invoice']:'')."',
+                        refund_date=NOW(),
+                        charge_id='".mysql_real_escape_string($cr['id'])."',
                         adddate=NOW(),
                         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";	
   	mysql_query($charge_sql); 
-  if(isset($_REQUEST['invoice']) && $_REQUEST['invoice']!=''){
-    $i_sql = "UPDATE dental_percase_invoice SET status=1 WHERE id='".mysql_real_escape_string($_REQUEST['invoice'])."'";
-    mysql_query($i_sql);
-  }
-    ?><h3><?= $r['first_name']; ?> <?= $r['last_name']; ?> billed <?= $_POST['amount']; ?>.</h3><?php
+    ?><h3><?= $r['first_name']; ?> <?= $r['last_name']; ?> refunded <?= $_POST['amount']; ?>.</h3><?php
      ?><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
 	die();
   }else{
@@ -119,48 +113,18 @@ try{
   }
 }
 
-  if(isset($_GET['invoice']) && $_GET['invoice']!=''){
-    $a_sql = "SELECT id, monthly_fee_amount, docid FROM dental_percase_invoice WHERE id='".mysql_real_escape_string($_GET['invoice'])."'";
-    $a_q = mysql_query($a_sql);
-    $myarray = mysql_fetch_assoc($a_q);
-    $total_charge = $myarray['monthly_fee_amount'];
-$case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl                 JOIN dental_patients dp ON dl.patientid=dp.patientid
-        WHERE 
-                dl.transaction_code='E0486' AND
-                dl.docid='".$myarray['docid']."' AND
-                dl.percase_invoice='".$myarray['id']."'
-        UNION
-SELECT percase_name, percase_date, '', percase_amount, id FROM dental_percase_invoice_extra dl
-         WHERE 
-                dl.percase_invoice='".$myarray['id']."'
-        UNION                   
-SELECT CONCAT('Insurance Verification Services – ', patient_firstname, ' ', patient_lastname), invoice_date, '', invoice_amount, id FROM dental_insurance_preauth
-        WHERE                   
-                invoice_id='".$myarray['id']."'
-        UNION                           
-SELECT description,             
-start_date, end_date, amount, id FROM dental_fax_invoice        WHERE
-                invoice_id='".$myarray['id']."'";
-$case_q = mysql_query($case_sql);
-while($case_r = mysql_fetch_assoc($case_q)){
-$total_charge += $case_r['percase_amount'];
-}
- 
-  }else{
-    $total_charge= "";
-  }
 ?>
         <div class="page-header">
-            <h1>Charge <?= $r['first_name']; ?> <?=$r['last_name'];?></h1>
+            <h1>Refund <?= $r['first_name']; ?> <?=$r['last_name'];?></h1>
 	</div> 
 
 <form action="#" method="post" onsubmit="return confirm_charge();">
-<?php  if(isset($_GET['invoice']) && $_GET['invoice']!=''){
-  ?><input type="hidden" name="invoice" value="<?= $_GET['invoice']; ?>" /><?php
+<?php  if(isset($_GET['cid']) && $_GET['cid']!=''){
+  ?><input type="hidden" name="cid" value="<?= $_GET['cid']; ?>" /><?php
 }
 ?>
             <div class="form-group">
-                <label for="npi" class="col-md-3 control-label">Amount to charge credit card ending <?= $last4; ?></label>
+                <label for="npi" class="col-md-3 control-label">Amount to refund credit card ending <?= $last4; ?></label>
                 <div class="col-md-9">
 			$<input type="text" id="amount" name="amount" value="<?=$total_charge;?>" />
 		</div>

@@ -117,8 +117,8 @@ if(isset($_POST['submit'])){
 	$amount = $_POST['extra_amount_'.$i];
 	$sql = "INSERT INTO dental_percase_invoice_extra SET" .
         " percase_date = '".$service_date."', " .
-        " percase_name = '".$name."', " .
-        " percase_amount = '".$amount."', " .
+        " percase_name = '".mysql_real_escape_string($name)."', " .
+        " percase_amount = '".mysql_real_escape_string($amount)."', " .
         " percase_status = '".DSS_PERCASE_INVOICED."', " .
         " percase_invoice = '".$invoiceid."', " .
 	" adddate = NOW(), " .

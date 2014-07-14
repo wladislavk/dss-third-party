@@ -131,7 +131,7 @@ try{
 	    </div>
 <span id="amount_notification" style="color:#c33; font-size:12px;"></span>
 
-<input type="submit" id="bill_submit" name="bill_submit"  value="Charge Credit Card" class="btn btn-primary">
+<input type="submit" id="bill_submit" name="bill_submit"  value="Refund Credit Card" class="btn btn-primary">
 <div id="loading_image" style="display:none;"><img src="../images/DSS-ajax-animated_loading-gif.gif" /></div>
 </form>
 <script type="text/javascript">

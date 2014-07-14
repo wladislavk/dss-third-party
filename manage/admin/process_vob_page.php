@@ -765,4 +765,4 @@ function autoResize(id){
 
 
 
-<?php include 'includes/bottom.htm'; ?>
+	<?php include 'includes/bottom.htm'; ?>

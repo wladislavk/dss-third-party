@@ -1,15 +1,5 @@
-/* ==========================================================
- * bootstrap-maxlength.js v1.4.2
- * 
- * Copyright (c) 2013 Maurizio Napoleoni; 
- *
- * Licensed under the terms of the MIT license.
- * See: https://github.com/mimo84/bootstrap-maxlength/blob/master/LICENSE
- * ========================================================== */
-/*jslint browser:true*/
-/*global  jQuery*/
 (function ($) {
-    "use strict";
+    'use strict';
 
     $.fn.extend({
         maxlength: function (options, callback) {
@@ -18,8 +8,8 @@
                 defaults = {
                     alwaysShow: false, // if true the indicator it's always shown.
                     threshold: 10, // Represents how many chars left are needed to show up the counter
-                    warningClass: "label label-success",
-                    limitReachedClass: "label label-important",
+                    warningClass: 'label label-success',
+                    limitReachedClass: 'label label-important',
                     separator: ' / ',
                     preText: '',
                     postText: '',
@@ -45,19 +35,19 @@
           */
             function inputLength(input) {
               var text = input.val();
-              var matches = text.match(/\n/g);
 
-              var breaks = 0;
-              var inputLength = 0;
+              // Remove all double-character (\r\n) linebreaks, so they're counted only once.
+              text = text.replace(new RegExp('\r?\n','g'), '\n');
+              // var matches = text.match(/\n/g);
+
+              var currentLength = 0;
 
               if (options.utf8) {
-                breaks = matches ? getUTF8Length(matches) : 0;
-                inputLength = getUTF8Length(input.val()) + breaks;
+                currentLength = utf8Length(input.val());
               } else {
-                breaks = matches ? matches.length : 0;
-                inputLength = input.val().length + breaks;
+                currentLength = input.val().length;
               }
-              return inputLength;
+              return currentLength;
             }
 
           /**
@@ -135,7 +125,7 @@
 
            /**
            * This function updates the value in the indicator
-           *  
+           *
            * @param maxLengthThisInput
            * @param typedChars
            * @return String
@@ -191,9 +181,9 @@
             }
 
           /**
-           * This function returns an object containing all the 
-           * informations about the position of the current input 
-           *  
+           * This function returns an object containing all the
+           * informations about the position of the current input
+           *
            *  @param currentInput
            *  @return object {bottom height left right top  width}
            *
@@ -266,14 +256,29 @@
 
             return this.each(function() {
 
-                var currentInput = $(this),
-                    maxLengthCurrentInput = getMaxLength(currentInput),
-                    maxLengthIndicator = $('<span></span>').css({
-                        display: 'none',
-                        position: 'absolute',
-                        whiteSpace: 'nowrap',
-                        zIndex: 1099
-                    }).html(updateMaxLengthHTML(maxLengthCurrentInput, '0'));
+              var currentInput = $(this),
+                  maxLengthCurrentInput,
+                  maxLengthIndicator;
+
+              $(window).resize(function() {
+                if(maxLengthIndicator) {
+                  place(currentInput, maxLengthIndicator);
+                }
+              });
+
+              currentInput.focus(function () {
+                var maxlengthContent = updateMaxLengthHTML(maxLengthCurrentInput, '0');
+                  maxLengthCurrentInput = getMaxLength(currentInput);
+
+                  if (!maxLengthIndicator) {
+                    maxLengthIndicator = $('<span class="bootstrap-maxlength"></span>').css({
+                      display: 'none',
+                      position: 'absolute',
+                      whiteSpace: 'nowrap',
+                      zIndex: 1099
+                    }).html(maxlengthContent);
+                  }
+
 
                 // We need to detect resizes if we are dealing with a textarea:
                 if (currentInput.is('textarea')) {
@@ -292,33 +297,18 @@
 
                 documentBody.append(maxLengthIndicator);
 
-                currentInput.focus(function() {
-                    var remaining = remainingChars(currentInput, getMaxLength(currentInput));
+                var remaining = remainingChars(currentInput, getMaxLength(currentInput));
                     manageRemainingVisibility(remaining, currentInput, maxLengthCurrentInput, maxLengthIndicator);
                     place(currentInput, maxLengthIndicator);
-                });
-
-                $(window).resize(function() {
-                  place(currentInput, maxLengthIndicator);
-                });
+              });
 
                 currentInput.blur(function() {
-                    maxLengthIndicator.css('display', 'none');
+                    maxLengthIndicator.remove();
                 });
 
-                currentInput.keyup(function(e) {
+                currentInput.keyup(function() {
                     var remaining = remainingChars(currentInput, getMaxLength(currentInput)),
-                        output = true,
-                        keyCode = e.keyCode || e.which;
-                    // Handle the tab press when the maxlength have been reached.
-                    if (remaining===0 && keyCode===9 && !e.shiftKey) {
-                      currentInput.attr('maxlength',getMaxLength(currentInput)+1)
-                                  .trigger({
-                                    type: 'keypress',
-                                    which: 9
-                                  }).attr('maxlength',getMaxLength(currentInput)-1);
-
-                    }
+                        output = true;
                     if (options.validate && remaining < 0) {
                         output = false;
                     } else {

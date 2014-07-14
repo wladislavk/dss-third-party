@@ -463,10 +463,15 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
 		Is the CPT code E0486 covered under the patient's plan?
             </td>
             <td valign="top" class="frmdata">
+		<div class="form-group">
+		<div class="radio-list">
                 <?php $yes_checked = ($preauth['trxn_code_covered'] == '1') ? 'CHECKED' : ''; ?>
                 <?php $no_checked  = ($preauth['trxn_code_covered'] != '1') ? 'CHECKED' : ''; ?>
                 <input type="radio" id="trxn_code_covered_yes" name="trxn_code_covered" value="1" <?= $yes_checked ?> <?=$disabled?>/> Yes
                 <input type="radio" name="trxn_code_covered" value="0" <?= $no_checked ?> <?=$disabled?>/> No
+		</div>
+		</div>
+
                 <br/><br/>
                 Notes:<br/>
                 <textarea name="code_covered_notes" class="tbox" <?=$disabled?>><?=$preauth['code_covered_notes']?></textarea>

@@ -1,5 +1,6 @@
 var FormValidation = function () {
 
+    // basic validation
     var handleValidation1 = function() {
         // for more info visit the official plugin documentation: 
             // http://docs.jquery.com/Plugins/Validation
@@ -10,9 +11,15 @@ var FormValidation = function () {
 
             form1.validate({
                 errorElement: 'span', //default input error message container
-                errorClass: 'help-block', // default input error message class
+                errorClass: 'help-block help-block-error', // default input error message class
                 focusInvalid: false, // do not focus the last invalid input
-                ignore: "",
+                ignore: "",  // validate all fields including form hidden input
+                messages: {
+                    select_multi: {
+                        maxlength: jQuery.validator.format("Max {0} items allowed for selection"),
+                        minlength: jQuery.validator.format("At least {0} items must be selected")
+                    }
+                },
                 rules: {
                     name: {
                         minlength: 2,
@@ -41,15 +48,20 @@ var FormValidation = function () {
                     occupation: {
                         minlength: 5,
                     },
-                    category: {
+                    select: {
                         required: true
+                    },
+                    select_multi: {
+                        required: true,
+                        minlength: 1,
+                        maxlength: 3
                     }
                 },
 
                 invalidHandler: function (event, validator) { //display error alert on form submit              
                     success1.hide();
                     error1.show();
-                    App.scrollTo(error1, -200);
+                    Metronic.scrollTo(error1, -200);
                 },
 
                 highlight: function (element) { // hightlight error inputs
@@ -73,8 +85,10 @@ var FormValidation = function () {
                 }
             });
 
+
     }
 
+    // validation using icons
     var handleValidation2 = function() {
         // for more info visit the official plugin documentation: 
             // http://docs.jquery.com/Plugins/Validation
@@ -85,9 +99,9 @@ var FormValidation = function () {
 
             form2.validate({
                 errorElement: 'span', //default input error message container
-                errorClass: 'help-block', // default input error message class
+                errorClass: 'help-block help-block-error', // default input error message class
                 focusInvalid: false, // do not focus the last invalid input
-                ignore: "",
+                ignore: "",  // validate all fields including form hidden input
                 rules: {
                     name: {
                         minlength: 2,
@@ -122,7 +136,7 @@ var FormValidation = function () {
                 invalidHandler: function (event, validator) { //display error alert on form submit              
                     success2.hide();
                     error2.show();
-                    App.scrollTo(error2, -200);
+                    Metronic.scrollTo(error2, -200);
                 },
 
                 errorPlacement: function (error, element) { // render error placement for each input type
@@ -133,7 +147,7 @@ var FormValidation = function () {
 
                 highlight: function (element) { // hightlight error inputs
                     $(element)
-                        .closest('.form-group').addClass('has-error'); // set error class to the control group   
+                        .closest('.form-group').removeClass("has-success").addClass('has-error'); // set error class to the control group   
                 },
 
                 unhighlight: function (element) { // revert the change done by hightlight
@@ -155,6 +169,7 @@ var FormValidation = function () {
 
     }
 
+    // advance validation
     var handleValidation3 = function() {
         // for more info visit the official plugin documentation: 
         // http://docs.jquery.com/Plugins/Validation
@@ -172,9 +187,9 @@ var FormValidation = function () {
 
             form3.validate({
                 errorElement: 'span', //default input error message container
-                errorClass: 'help-block', // default input error message class
+                errorClass: 'help-block help-block-error', // default input error message class
                 focusInvalid: false, // do not focus the last invalid input
-                ignore: "",
+                ignore: "", // validate all fields including form hidden input
                 rules: {
                     name: {
                         minlength: 2,
@@ -183,14 +198,17 @@ var FormValidation = function () {
                     email: {
                         required: true,
                         email: true
-                    },
-                    category: {
-                        required: true
-                    },
+                    },  
                     options1: {
                         required: true
                     },
                     options2: {
+                        required: true
+                    },
+                    select2tags: {
+                        required: true
+                    },
+                    datepicker: {
                         required: true
                     },
                     occupation: {
@@ -220,7 +238,7 @@ var FormValidation = function () {
                     },
                     service: {
                         required: "Please select  at least 2 types of Service",
-                        minlength: jQuery.format("Please select  at least {0} types of Service")
+                        minlength: jQuery.validator.format("Please select  at least {0} types of Service")
                     }
                 },
 
@@ -245,7 +263,7 @@ var FormValidation = function () {
                 invalidHandler: function (event, validator) { //display error alert on form submit   
                     success3.hide();
                     error3.show();
-                    App.scrollTo(error3, -200);
+                    Metronic.scrollTo(error3, -200);
                 },
 
                 highlight: function (element) { // hightlight error inputs
@@ -274,6 +292,22 @@ var FormValidation = function () {
             $('.select2me', form3).change(function () {
                 form3.validate().element($(this)); //revalidate the chosen dropdown value and show error or success message for the input
             });
+
+            // initialize select2 tags
+            $("#select2_tags").change(function() {
+                form3.validate().element($(this)); //revalidate the chosen dropdown value and show error or success message for the input 
+            }).select2({
+                tags: ["red", "green", "blue", "yellow", "pink"]
+            });
+
+            //initialize datepicker
+            $('.date-picker').datepicker({
+                rtl: Metronic.isRTL(),
+                autoclose: true
+            });
+            $('.date-picker .form-control').change(function() {
+                form3.validate().element($(this)); //revalidate the chosen dropdown value and show error or success message for the input 
+            })
     }
 
     var handleWysihtml5 = function() {
@@ -284,7 +318,7 @@ var FormValidation = function () {
 
         if ($('.wysihtml5').size() > 0) {
             $('.wysihtml5').wysihtml5({
-                "stylesheets": ["assets/plugins/bootstrap-wysihtml5/wysiwyg-color.css"]
+                "stylesheets": ["../../assets/global/plugins/bootstrap-wysihtml5/wysiwyg-color.css"]
             });
         }
     }

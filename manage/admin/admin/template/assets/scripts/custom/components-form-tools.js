@@ -20,9 +20,12 @@ var ComponentsFormTools = function () {
         numbers.initialize();
          
         // instantiate the typeahead UI
+        if (Metronic.isRTL()) {
+          $('#typeahead_example_1').attr("dir", "rtl");  
+        }
         $('#typeahead_example_1').typeahead(null, {
           displayKey: 'num',
-          hint: (App.isRTL() ? false : true),
+          hint: (Metronic.isRTL() ? false : true),
           source: numbers.ttAdapter()
         });
 
@@ -41,10 +44,13 @@ var ComponentsFormTools = function () {
  
         countries.initialize();
          
+        if (Metronic.isRTL()) {
+          $('#typeahead_example_2').attr("dir", "rtl");  
+        } 
         $('#typeahead_example_2').typeahead(null, {
           name: 'typeahead_example_2',
           displayKey: 'name',
-          hint: (App.isRTL() ? false : true),
+          hint: (Metronic.isRTL() ? false : true),
           source: countries.ttAdapter()
         });
 
@@ -57,11 +63,14 @@ var ComponentsFormTools = function () {
          
         custom.initialize();
          
+        if (Metronic.isRTL()) {
+          $('#typeahead_example_3').attr("dir", "rtl");  
+        }  
         $('#typeahead_example_3').typeahead(null, {
           name: 'datypeahead_example_3',
           displayKey: 'name',
           source: custom.ttAdapter(),
-          hint: (App.isRTL() ? false : true),
+          hint: (Metronic.isRTL() ? false : true),
           templates: {
             suggestion: Handlebars.compile([
               '<div class="media">',
@@ -96,8 +105,11 @@ var ComponentsFormTools = function () {
         nba.initialize();
         nhl.initialize();
          
+        if (Metronic.isRTL()) {
+          $('#typeahead_example_4').attr("dir", "rtl");  
+        }
         $('#typeahead_example_4').typeahead({
-          hint: (App.isRTL() ? false : true),
+          hint: (Metronic.isRTL() ? false : true),
           highlight: true
         },
         {
@@ -139,9 +151,12 @@ var ComponentsFormTools = function () {
         numbers.initialize();
          
         // instantiate the typeahead UI
+        if (Metronic.isRTL()) {
+          $('#typeahead_example_modal_1').attr("dir", "rtl");  
+        }
         $('#typeahead_example_modal_1').typeahead(null, {
           displayKey: 'num',
-          hint: (App.isRTL() ? false : true),
+          hint: (Metronic.isRTL() ? false : true),
           source: numbers.ttAdapter()
         });
 
@@ -160,10 +175,13 @@ var ComponentsFormTools = function () {
  
         countries.initialize();
          
+        if (Metronic.isRTL()) {
+          $('#typeahead_example_modal_2').attr("dir", "rtl");  
+        }
         $('#typeahead_example_modal_2').typeahead(null, {
           name: 'typeahead_example_modal_2',
           displayKey: 'name',
-          hint: (App.isRTL() ? false : true),
+          hint: (Metronic.isRTL() ? false : true),
           source: countries.ttAdapter()
         });
 
@@ -176,10 +194,13 @@ var ComponentsFormTools = function () {
          
         custom.initialize();
          
+        if (Metronic.isRTL()) {
+          $('#typeahead_example_modal_3').attr("dir", "rtl");  
+        }
         $('#typeahead_example_modal_3').typeahead(null, {
           name: 'datypeahead_example_modal_3',
           displayKey: 'name',
-          hint: (App.isRTL() ? false : true),
+          hint: (Metronic.isRTL() ? false : true),
           source: custom.ttAdapter(),
           templates: {
             suggestion: Handlebars.compile([
@@ -218,7 +239,7 @@ var ComponentsFormTools = function () {
         nhl.initialize();
          
         $('#typeahead_example_modal_4').typeahead({
-            hint: (App.isRTL() ? false : true),
+            hint: (Metronic.isRTL() ? false : true),
             highlight: true
         },
         {
@@ -318,7 +339,7 @@ var ComponentsFormTools = function () {
         $('#maxlength_placement').maxlength({
             limitReachedClass: "label label-danger",
             alwaysShow: true,
-            placement: App.isRTL() ? 'top-right' : 'top-left'
+            placement: Metronic.isRTL() ? 'top-right' : 'top-left'
         });
     }
 
@@ -362,7 +383,8 @@ var ComponentsFormTools = function () {
             "mask": "(999) 999-9999"
         }); //specifying fn & options
         $("#mask_tin").inputmask({
-            "mask": "99-9999999"
+            "mask": "99-9999999",
+            placeholder: "" // remove underscores from the input mask
         }); //specifying options only
         $("#mask_number").inputmask({
             "mask": "9",
@@ -430,15 +452,15 @@ var ComponentsFormTools = function () {
 
                 pop.popover('destroy');
                 pop.popover({
-                    'placement': (App.isRTL() ? 'left' : 'right'),
+                    'placement': (Metronic.isRTL() ? 'left' : 'right'),
                     'html': true,
                     'container': 'body',
                     'content': 'Please enter a username to check its availability.',
                 });
                 // add error class to the popover
                 pop.data('bs.popover').tip().addClass('error');
-                // set last poped popover to be closed on click(see App.js => handlePopovers function)     
-                App.setLastPopedPopover(pop);
+                // set last poped popover to be closed on click(see Metronic.js => handlePopovers function)     
+                Metronic.setLastPopedPopover(pop);
                 pop.popover('show');
                 e.stopPropagation(); // prevent closing the popover
 
@@ -468,7 +490,7 @@ var ComponentsFormTools = function () {
                     pop.popover('destroy');
                     pop.popover({
                         'html': true,
-                        'placement': (App.isRTL() ? 'left' : 'right'),
+                        'placement': (Metronic.isRTL() ? 'left' : 'right'),
                         'container': 'body',
                         'content': res.message,
                     });
@@ -480,13 +502,13 @@ var ComponentsFormTools = function () {
                     pop.popover('destroy');
                     pop.popover({
                         'html': true,
-                        'placement': (App.isRTL() ? 'left' : 'right'),
+                        'placement': (Metronic.isRTL() ? 'left' : 'right'),
                         'container': 'body',
                         'content': res.message,
                     });
                     pop.popover('show');
                     pop.data('bs.popover').tip().removeClass('success').addClass('error');
-                    App.setLastPopedPopover(pop);
+                    Metronic.setLastPopedPopover(pop);
                 }
 
             }, 'json');
@@ -527,14 +549,14 @@ var ComponentsFormTools = function () {
                     input.popover('destroy');
                     input.popover({
                         'html': true,
-                        'placement': (App.isRTL() ? 'left' : 'right'),
+                        'placement': (Metronic.isRTL() ? 'left' : 'right'),
                         'container': 'body',
                         'content': res.message,
                     });
                     input.popover('show');
                     input.data('bs.popover').tip().removeClass('success').addClass('error');
 
-                    App.setLastPopedPopover(input);
+                    Metronic.setLastPopedPopover(input);
                 }
 
             }, 'json');

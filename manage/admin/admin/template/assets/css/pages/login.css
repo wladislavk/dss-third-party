@@ -1,33 +1,33 @@
 /***
 Login page
 ***/
-
 /* logo page */
 .login {
   background-color: #444 !important;
 }
 
 .login .logo {
-  margin: 0 auto;   
-  margin-top:60px;
+  margin: 0 auto;
+  margin-top: 60px;
   padding: 15px;
   text-align: center;
-}  
+}
 
 .login .content {
-  background-color:#fff; 
+  background-color: #fff;
   width: 360px;
-  margin: 0 auto; 
+  margin: 0 auto;
   margin-bottom: 0px;
-  padding: 30px;  
-  padding-top: 20px;  
-  padding-bottom: 15px;  
+  padding: 30px;
+  padding-top: 20px;
+  padding-bottom: 15px;
 }
 
 .login .content h3 {
   color: #000;
 }
-.login .content h4  {
+
+.login .content h4 {
   color: #555;
 }
 
@@ -37,8 +37,8 @@ Login page
 
 .login .content .login-form,
 .login .content .forget-form {
-    padding: 0px;
-    margin: 0px;
+  padding: 0px;
+  margin: 0px;
 }
 
 .login .content .input-icon {
@@ -81,7 +81,7 @@ Login page
   border: 0;
   margin-bottom: 0;
   padding-bottom: 20px;
-}  
+}
 
 .login .content .register-form .form-actions {
   border: 0;
@@ -127,12 +127,12 @@ Login page
   position: relative;
   color: #ccc;
   z-index: 1;
-  top:1px;
-  margin: 4px 4px 0px 3px; 
+  top: 1px;
+  margin: 4px 4px 0px -1px;
   width: 16px;
   height: 16px;
   font-size: 16px;
-  text-align: center; 
+  text-align: center;
 }
 
 .login .content .has-error .select2-container i {
@@ -150,7 +150,7 @@ Login page
 /* footer copyright */
 .login .copyright {
   text-align: center;
-  margin: 0 auto; 
+  margin: 0 auto;
   padding: 10px;
   color: #999;
   font-size: 13px;
@@ -161,7 +161,7 @@ Login page
   Login page
   ***/
   .login .logo {
-    margin-top:10px;
+    margin-top: 10px;
   }
 
   .login .content {
@@ -171,7 +171,6 @@ Login page
   .login .content h3 {
     font-size: 22px;
   }
-
 
   .login .checkbox {
     font-size: 13px;

@@ -11,12 +11,12 @@ var MapsGoogle = function () {
     var mapMarker = function () {
         var map = new GMaps({
             div: '#gmap_marker',
-            lat: -12.043333,
-            lng: -77.028333
+           lat: -51.38739,
+                lng: -6.187181,
         });
         map.addMarker({
-            lat: -12.043333,
-            lng: -77.03,
+           lat: -51.38739,
+                lng: -6.187181,
             title: 'Lima',
             details: {
                 database_id: 42,
@@ -35,6 +35,7 @@ var MapsGoogle = function () {
                 content: '<span style="color:#000">HTML Content!</span>'
             }
         });
+        map.setZoom(5);
     }
 
     var mapPolylines = function () {
@@ -110,7 +111,7 @@ var MapsGoogle = function () {
                             lat: latlng.lat(),
                             lng: latlng.lng()
                         });
-                        App.scrollTo($('#gmap_geocoding'));
+                        Metronic.scrollTo($('#gmap_geocoding'));
                     }
                 }
             });
@@ -164,7 +165,7 @@ var MapsGoogle = function () {
         });
         $('#gmap_routes_start').click(function (e) {
             e.preventDefault();
-            App.scrollTo($(this), 400);
+            Metronic.scrollTo($(this), 400);
             map.travelRoute({
                 origin: [-12.044012922866312, -77.02470665341184],
                 destination: [-12.090814532191756, -77.02271108990476],

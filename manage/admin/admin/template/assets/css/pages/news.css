@@ -1,7 +1,6 @@
 /***
 News Page
 ***/
-
 .news-page {
   padding-bottom: 20px;
 }
@@ -67,7 +66,6 @@ News Page
 .news-blocks a.news-block-btn i {
   margin-left: 3px;
 }
-
 
 .news-blocks a.news-block-btn:hover {
   text-decoration: none;
@@ -138,5 +136,3 @@ News Page
 .blog-tag-data .blog-tag-data-inner {
   text-align: right;
 }
-
-

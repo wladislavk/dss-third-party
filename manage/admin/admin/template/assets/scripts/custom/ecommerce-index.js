@@ -8,14 +8,14 @@ var EcommerceIndex = function () {
             left: x - 60,
             border: '0px solid #ccc',
             padding: '2px 6px',
-            'background-color': '#fff',
+            'background-color': '#fff'
         }).appendTo("body").fadeIn(200);
     }
 
     var initChart1 = function () {
 
         var data = [
-            ['01/2013', 0],
+            ['01/2013', 4],
             ['02/2013', 8],
             ['03/2013', 10],
             ['04/2013', 12],
@@ -25,7 +25,7 @@ var EcommerceIndex = function () {
             ['08/2013', 1365],
             ['09/2013', 250],
             ['10/2013', 999],
-            ['11/2013', 390],
+            ['11/2013', 390]
         ];
 
             var plot_statistics = $.plot(
@@ -35,7 +35,7 @@ var EcommerceIndex = function () {
                         data:data,
                         lines: {
                             fill: 0.6,
-                            lineWidth: 0,
+                            lineWidth: 0
                         },
                         color: ['#f89f9f']
                     },
@@ -50,7 +50,7 @@ var EcommerceIndex = function () {
                         },
                         color: '#fff',
                         shadowSize: 0
-                    },
+                    }
                 ], 
                 {
 
@@ -132,7 +132,7 @@ var EcommerceIndex = function () {
             ['08/2013', 136],
             ['09/2013', 250],
             ['10/2013', 99],
-            ['11/2013', 190],
+            ['11/2013', 190]
         ];
 
             var plot_statistics = $.plot(
@@ -142,7 +142,7 @@ var EcommerceIndex = function () {
                         data:data,
                         lines: {
                             fill: 0.6,
-                            lineWidth: 0,
+                            lineWidth: 0
                         },
                         color: ['#BAD9F5']
                     },
@@ -157,7 +157,7 @@ var EcommerceIndex = function () {
                         },
                         color: '#fff',
                         shadowSize: 0
-                    },
+                    }
                 ], 
                 {
 

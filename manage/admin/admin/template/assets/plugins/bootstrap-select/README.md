@@ -1,7 +1,7 @@
 bootstrap-select
 ================
 
-A custom select / multiselect for @twitter bootstrap using button dropdown, designed to behave like regular Bootstrap selects;
+A custom select / multiselect for Bootstrap using button dropdown, designed to behave like regular Bootstrap selects;
 
 ## Demo and Documentation
 
@@ -34,6 +34,11 @@ Or just
     $('select').selectpicker();
 
 Checkout the [documentation](http://silviomoreto.github.com/bootstrap-select/) for further information.
+
+## CDN
+
+* https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.3.5/bootstrap-select.min.js
+* https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.3.5/bootstrap-select.min.css
 
 ## Bugs and feature requests
 

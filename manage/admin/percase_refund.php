@@ -22,7 +22,6 @@ $key_sql = "SELECT stripe_secret_key FROM companies c
                  WHERE uc.userid='".mysql_real_escape_string($id)."'";
 $key_q = mysql_query($key_sql);
 $key_r= mysql_fetch_assoc($key_q);
-
 Stripe::setApiKey($key_r['stripe_secret_key']);
 
 
@@ -35,29 +34,24 @@ if(isset($_POST['bill_submit'])){
   if($charge!=''){
     $amount = (str_replace(',','',$_POST['amount'])*100);
 
-    $csql = "SELECT * FROM dental_charges WHERE id='".mysql_real_escape_string($charge)."'";
+    $csql = "SELECT * FROM dental_charge WHERE id='".mysql_real_escape_string($charge)."'";
     $cq = mysql_query($csql);
-    $cr = mysql_fetch_assoc($csql);
-
+    $cr = mysql_fetch_assoc($cq);
 try{
     $charge = Stripe_Charge::retrieve($cr['stripe_charge']);
-    $charge->refunds->create(array(
-      "amount" => $amount, # $15.00 this time
-      "currency" => "usd",
-      "customer" => $customerID)
-    );
+    $charge->refunds->create();
 } catch(Stripe_CardError $e) {
   // Since it's a decline, Stripe_CardError will be caught
   $body = $e->getJsonBody();
   $err  = $body['error'];
-  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  echo $body['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   die();
 } catch (Stripe_InvalidRequestError $e) {
   // Invalid parameters were supplied to Stripe's API
   $body = $e->getJsonBody();
   $err  = $body['error'];
-  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  echo $body['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   die();
 } catch (Stripe_AuthenticationError $e) {
@@ -72,7 +66,7 @@ try{
   // Network communication with Stripe failed
   $body = $e->getJsonBody();
   $err  = $body['error'];
-  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  echo $body['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   die();
 } catch (Stripe_Error $e) {
@@ -80,14 +74,14 @@ try{
   // yourself an email
   $body = $e->getJsonBody();
   $err  = $body['error'];
-  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  echo $body['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   die();
 } catch (Exception $e) {
   // Something else happened, completely unrelated to Stripe
   $body = $e->getJsonBody();
   $err  = $body['error'];
-  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  echo $body['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   die();
 
@@ -140,12 +134,12 @@ try{
     $('#loading_image').show();
     a = $('#amount').val();
     if(a == '' || a < .5){
-	alert('You must enter amount to be billed. Amount must be at least $0.50');
+	alert('You must enter amount to be refunded. Amount must be at least $0.50');
         $('#bill_submit').show();
     $('#loading_image').hide();
 	return false;
     }
-    rval =  confirm("Credit card for <?= $r['first_name']; ?> <?= $r['last_name']; ?> will be charged $"+a+". Proceed?");
+    rval =  confirm("Credit card for <?= $r['first_name']; ?> <?= $r['last_name']; ?> will be refunded $"+a+". Proceed?");
     if(!rval){
       $('#bill_submit').show();
     $('#loading_image').hide();

@@ -5,6 +5,13 @@
 </span>
 <br />
 <br />
+<div style="float:right; margin-right:20px;">
+<button class="addButton" onclick="window.location.href='report_claim_aging.php'">Claim Aging</button>
+<button class="addButton" onclick="window.location.href='unpaid_patient.php'">Unpaid Patient</button>
+<button class="addButton" onclick="window.location.href='report_day_sheet.php'">Day Sheet</button>
+<button class="addButton" onclick="window.location.href='ledger_reconciliation.php'">Reconciliation</button>
+<button class="addButton" onclick="window.location.href='ledger_producer.php'">Producer</button>
+</div>
 <?php if(isset($_GET['pid'])){ ?>
 <button class="addButton" onclick="window.location.href='ledger.php'" style="float:right;">All Patients</button>
 <?php } ?>

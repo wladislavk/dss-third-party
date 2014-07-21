@@ -221,6 +221,7 @@ $case_q = mysql_query($case_sql);
         {
                 while($charge_r = mysql_fetch_array($charge_q))
                 {
+	
                 ?>
                         <tr>
                                 <td valign="top">
@@ -229,6 +230,14 @@ $case_q = mysql_query($case_sql);
                                 <td valign="top" style="font-weight:bold;">
                                         $<?php
                                             echo st($charge_r["amount"]); ?>
+                                </td>
+                                <td valign="top" style="font-weight:bold;">
+					<?php $r_sql = "SELECT SUM(amount) refund FROM dental_refund WHERE charge_id='".mysql_real_escape_string($charge_r['id'])."'";
+						$r_q = mysql_query($r_sql);
+						$refund = mysql_fetch_assoc($r_q);
+						?>
+                                        $<?php
+                                            echo number_format($refund["refund"], 2); ?>
                                 </td>
                                 <td valign="top" style="font-weight:bold;">
                                         <a href="https://manage.stripe.com/customers/<?php

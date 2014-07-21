@@ -1,6 +1,20 @@
-<? 
+<?php if(!isset($_GET['print'])){ 
 include "includes/top.htm";
-?><link rel="stylesheet" href="css/ledger.css" /><?php
+}else{
+?>
+  <html>
+<body>
+<?
+//include "includes/top.htm";
+
+session_start();
+require_once('admin/includes/main_include.php');
+include("includes/sescheck.php");
+require_once('includes/constants.inc');
+require_once('admin/includes/access.php');
+}
+?>
+<link rel="stylesheet" href="css/ledger.css" /><?php
 //COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance
 $sql = "SELECT p.firstname, p.lastname,
 		p.patientid
@@ -47,7 +61,13 @@ background:#cccccc;
 background:#999999;
 }
 </style>
+<div align="right">
+        <button onclick="Javascript: window.location='report_claim_aging.php?print';" class="addButton">
+                Print
+        </button>
+        &nbsp;&nbsp;
 
+</div>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -284,4 +304,6 @@ $p_sql = '';
 <div id="backgroundPopup"></div>
 
 <br /><br />	
+<?php if(!isset($_GET['print'])){ ?>
 <? include "includes/bottom.htm";?>
+<?php } ?>

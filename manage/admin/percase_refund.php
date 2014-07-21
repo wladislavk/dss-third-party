@@ -23,6 +23,7 @@ $key_sql = "SELECT stripe_secret_key FROM companies c
 $key_q = mysql_query($key_sql);
 $key_r= mysql_fetch_assoc($key_q);
 Stripe::setApiKey($key_r['stripe_secret_key']);
+Stripe::setApiVersion("2014-06-17");
 
 
 $cards = Stripe_Customer::retrieve($r['cc_id'])->cards->all();

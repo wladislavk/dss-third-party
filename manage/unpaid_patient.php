@@ -1,5 +1,18 @@
-<? 
+<?php if(!isset($_GET['print'])){
 include "includes/top.htm";
+}else{
+?>
+  <html>
+<body>
+<?
+//include "includes/top.htm";
+
+session_start();
+require_once('admin/includes/main_include.php');
+include("includes/sescheck.php");
+require_once('includes/constants.inc');
+require_once('admin/includes/access.php');
+}
 
 
 
@@ -46,8 +59,8 @@ $num_users=mysql_num_rows($my);
                Daily Ledger
         </button>
 	&nbsp;&nbsp;
-<button onclick="window.location='ledger_unpaid_statements.php';" class="addButton">
-		Print All Statements
+<button onclick="window.location='unpaid_patient.php?print';" class="addButton">
+		Print
 </button>
         &nbsp;&nbsp;
 </div>
@@ -341,4 +354,6 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 <div id="backgroundPopup"></div>
 
 <br /><br />	
+<?php if(!isset($_GET['print'])){ ?>
 <? include "includes/bottom.htm";?>
+<?php } ?>

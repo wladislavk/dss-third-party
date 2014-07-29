@@ -105,8 +105,9 @@ if(f.dispute.checked){
     if(f.payer.value==<?= DSS_TRXN_PAYER_PRIMARY;?>){
       if(f.close.checked){
         if(f.attachment.value =='' && <?= ($num_pa == 0)?1:0; ?>){
-          returnval = false;
-          alert('A claim must have an EOB attached to close.');
+          if(!confirm('A claim must have an EOB attached to close.')){
+            returnval = false;
+	  }
         }
         //file secondary
         //VALID
@@ -126,8 +127,9 @@ if(f.dispute.checked){
   }else if(<?= ($claim['status']==DSS_CLAIM_SEC_SENT)?1:0; ?>){
     if(f.close.checked){
       if(f.attachment.value =='' && <?= ($num_sa == 0)?1:0; ?>){
-          returnval = false;
-          alert('A claim must have an EOB attached to close.');
+          if(!confirm('A claim must have an EOB attached to close.')){
+	    returnval = false;
+	  }
         }
       //VALID
     }else{

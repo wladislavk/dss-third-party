@@ -83,26 +83,27 @@ while($letters_r = mysql_fetch_assoc($letters_q)){
 }
 
 
+if($w_r['contactid']!=''){
 
-
-  $ref_sql = "UPDATE dental_patients SET referred_by='".mysql_real_escape_string($w_r['contactid'])."' WHERE referred_source='2' AND referred_by='".mysql_real_escape_string($l_r['contactid'])."'";
+  $ref_sql = "UPDATE dental_patients SET referred_by='".mysql_real_escape_string($w_r['contactid'])."' WHERE referred_source='2' AND referred_by='".mysql_real_escape_string($l_r['contactid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($ref_sql);
 
-  $doc_sql = "UPDATE dental_patients SET docsleep='".mysql_real_escape_string($w_r['contactid'])."' WHERE docsleep='".mysql_real_escape_string($l_r['contactid'])."'";
+  $doc_sql = "UPDATE dental_patients SET docsleep='".mysql_real_escape_string($w_r['contactid'])."' WHERE docsleep='".mysql_real_escape_string($l_r['contactid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($doc_sql);
-  $doc_sql = "UPDATE dental_patients SET docpcp='".mysql_real_escape_string($w_r['contactid'])."' WHERE docpcp='".mysql_real_escape_string($l_r['contactid'])."'";
+  $doc_sql = "UPDATE dental_patients SET docpcp='".mysql_real_escape_string($w_r['contactid'])."' WHERE docpcp='".mysql_real_escape_string($l_r['contactid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($doc_sql);
-  $doc_sql = "UPDATE dental_patients SET docdentist='".mysql_real_escape_string($w_r['contactid'])."' WHERE docdentist='".mysql_real_escape_string($l_r['contactid'])."'";
+  $doc_sql = "UPDATE dental_patients SET docdentist='".mysql_real_escape_string($w_r['contactid'])."' WHERE docdentist='".mysql_real_escape_string($l_r['contactid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($doc_sql);
-  $doc_sql = "UPDATE dental_patients SET docent='".mysql_real_escape_string($w_r['contactid'])."' WHERE docent='".mysql_real_escape_string($l_r['contactid'])."'";
+  $doc_sql = "UPDATE dental_patients SET docent='".mysql_real_escape_string($w_r['contactid'])."' WHERE docent='".mysql_real_escape_string($l_r['contactid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($doc_sql);
-  $doc_sql = "UPDATE dental_patients SET docmdother='".mysql_real_escape_string($w_r['contactid'])."' WHERE docmdother='".mysql_real_escape_string($l_r['contactid'])."'";
+  $doc_sql = "UPDATE dental_patients SET docmdother='".mysql_real_escape_string($w_r['contactid'])."' WHERE docmdother='".mysql_real_escape_string($l_r['contactid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($doc_sql);
-  $doc_sql = "UPDATE dental_patients SET docmdother2='".mysql_real_escape_string($w_r['contactid'])."' WHERE docmdother2='".mysql_real_escape_string($l_r['contactid'])."'";
+  $doc_sql = "UPDATE dental_patients SET docmdother2='".mysql_real_escape_string($w_r['contactid'])."' WHERE docmdother2='".mysql_real_escape_string($l_r['contactid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($doc_sql);
-  $doc_sql = "UPDATE dental_patients SET docmdother3='".mysql_real_escape_string($w_r['contactid'])."' WHERE docmdother3='".mysql_real_escape_string($l_r['contactid'])."'";
+  $doc_sql = "UPDATE dental_patients SET docmdother3='".mysql_real_escape_string($w_r['contactid'])."' WHERE docmdother3='".mysql_real_escape_string($l_r['contactid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($doc_sql);
 
+}
                 $loser_name = ($l_r['firstname']!='' || $l_r['lastname']!='')?$l_r['firstname']." ".$l_r['lastname']:"";
                 $loser_name .= ($l_r['company']!='')?" (".$l_r['company'].")":"";
                 $winner_name = ($w_r['firstname']!='' || $w_r['lastname']!='')?$w_r['firstname']." ".$w_r['lastname']:"";

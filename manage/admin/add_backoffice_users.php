@@ -89,7 +89,7 @@ if($_POST["usersub"] == 1)
                         if(is_super($_SESSION['admin_access'])){
                           mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($adminid)."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
                         }else{
-                          mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($adminid)."', companyid='".mysql_real_escape_string($_SESSION["companyid"])."'");
+                          mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($adminid)."', companyid='".mysql_real_escape_string($_SESSION["admincompanyid"])."'");
                         }
 
 

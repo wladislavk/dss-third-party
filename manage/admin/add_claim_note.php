@@ -41,7 +41,11 @@ if($_POST["notesub"] == 1)
 
 		?>
 		<script type="text/javascript">
-			parent.window.location='claim_notes.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';
+			<?php if(isset($_POST['close']) && $_POST['close']==1){ ?>
+			  parent.window.location='claim_payments_advanced.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&close=1';
+			<?php }else{ ?>
+			  parent.window.location='claim_notes.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';
+			<?php } ?>
 		</script>
 		<?
 		
@@ -67,7 +71,11 @@ if($_POST["notesub"] == 1)
 
                 ?>
                 <script type="text/javascript">
-                        parent.window.location='claim_notes.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';
+			<?php if(isset($_POST['close']) && $_POST['close']==1){ ?>
+			  parent.window.location='claim_payments_advanced.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&close=1';
+			<?php }else{ ?>
+                          parent.window.location='claim_notes.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';
+			<?php } ?>
                 </script>
                 <?
 
@@ -157,6 +165,12 @@ $my = mysql_query($sql);
                             	<textarea name="note" id="note" placeholder="Claim Text" class="form-control"><?=$note?></textarea>
 		</div>
 	</div>
+            <div class="form-group">
+                <label for="body" class="col-md-3 control-label">Make Payment/Close Claim</label>
+                <div class="col-md-9">
+			<input type="checkbox" name="close" value="1" />
+                </div>
+        </div>
             <div class="form-group">
                 <label class="col-md-3 control-label">Attachments</label>
                 <div class="col-md-9">

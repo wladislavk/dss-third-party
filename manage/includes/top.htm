@@ -126,6 +126,13 @@ $claim_res = mysql_query($claim_query);
 $num_rejected_claims = mysql_num_rows($claim_res);
 
 
+$claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status IN (".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT."))
+	AND fo_paid_viewed=0";
+$claim_res = mysql_query($claim_query);
+$num_paid_claims = mysql_num_rows($claim_res);
+
+
+
 // Count Preauths
 $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_COMPLETE." AND (viewed IS NULL OR viewed != 1);";
 $preauth_res = mysql_query($preauth_query);

@@ -48,6 +48,7 @@ $c = mysql_fetch_assoc($c_q);
 </div>
 <div align="right">
 	<button onclick="loadPopup('add_claim_note.php?claim_id=<?= $_GET['id']; ?>&pid=<?= $_GET['pid'];?>');return false;" class="btn btn-success"> Add Note <span class="glyphicon glyphicon-plus"></span> </button>	
+	<button onclick="window.location='insurance_claim_v2.php?insid=<?= $_GET['id']; ?>&pid=<?= $_GET['pid'];?>';return false;" class="btn btn-success"> View Claim <span class="glyphicon glyphicon-view"></span> </button>	
 </div>
 <?php
  while($r = mysql_fetch_assoc($n_q)){
@@ -261,6 +262,7 @@ $total_charge = st($myarray['total_charge']);
                       $userquery = mysql_query($getuserinfo);
                       if($userinfo = mysql_fetch_array($userquery)){
                         $phone = $userinfo['phone'];
+			$doc = $userinfo['first_name']." ".$userinfo['last_name'];
                         $practice = $userinfo['practice'];
                         $address = $userinfo['address'];
                         $city = $userinfo['city'];
@@ -273,6 +275,7 @@ $total_charge = st($myarray['total_charge']);
                       $docquery = mysql_query($getdocinfo);
                       $docinfo = mysql_fetch_array($docquery);
                         if($phone == ""){ $phone = $docinfo['phone']; }
+                        if($doc == ""){ $doc = $docinfo['first_name']." ".$docinfo['last_name']; }
                         if($practice == ""){ $practice = $docinfo['practice']; }
                         if($address == ""){ $address = $docinfo['address']; }
                         if($city == ""){ $city = $docinfo['city']; }
@@ -283,6 +286,7 @@ $total_charge = st($myarray['total_charge']);
 
                         if($docinfo['use_service_npi']==1){
                           $service_npi = $docinfo['service_npi'];
+			  $service_doc = $docinfo['first_name']." ".$docinfo['last_name'];
                           $service_practice = $docinfo['service_name'];
                           $service_address = $docinfo['service_address'];
                           $service_city = $docinfo['service_city'];
@@ -291,6 +295,7 @@ $total_charge = st($myarray['total_charge']);
                           $service_medicare_npi = $docinfo['service_medicare_npi'];
                         }else{
                           $service_npi = $npi;
+			  $service_doc = $doc;
                           $service_practice = $practice;
                           $service_address = $address;
                           $service_city = $city;
@@ -412,7 +417,8 @@ if ($is_pending) {
 </ul>
 
 <ul>
-  <li><label>Doc Name:</label><span class="value"><?= $service_practice; ?></span></li>
+  <li><label>Doc Name:</label><span class="value"><?= $service_doc; ?></span></li>
+  <li><label>Doc Practice:</label><span class="value"><?= $service_practice; ?></span></li>
   <li><label>Doc Addr:</label><span class="value"><?= $service_address." " .$service_city." ".$service_state." ".$service_zip; ?></span></li>
   <li><label>Doc Tax ID:</label><span class="value"><?=$docinfo['tax_id_or_ssn'];?></span></li>
   <li><label>Doc NPI:</label><span class="value"><?= $service_npi; ?></span></li>
@@ -423,6 +429,8 @@ if ($is_pending) {
   <li><label>Billing Addr:</label> <span class="value"><?php echo $address; ?> <?php echo $city;?>, <?php echo $state;?> <?php echo $zip;?></span></li>
   <li><label>Billing Tax ID:</label> <span class="value"><?= $tax_id_or_ssn; ?></span></li>
   <li><label>Billing NPI:</label> <span class="value"><?= ($insurancetype == '1')?$medicare_npi:$npi; ?></span></li>
+  <li><label>Medicare Billing NPI:</label> <span class="value"><?= $medicare_npi; ?></span></li>
+  <li><label>Medicare PTAN:</label> <span class="value"><?= $medicare_ptan; ?></span></li>
 </ul>
 
 <ul>
@@ -465,7 +473,8 @@ if ($is_pending) {
 </ul>
 
 <ul>
-  <li><label>Doc Name:</label><span class="value"><?= $service_practice; ?></span></li>
+  <li><label>Doc Name:</label><span class="value"><?= $service_doc; ?></span></li>
+  <li><label>Doc Practice:</label><span class="value"><?= $service_practice; ?></span></li>
   <li><label>Doc Addr:</label><span class="value"><?= $service_address." " .$service_city." ".$service_state." ".$service_zip; ?></span></li>
   <li><label>Doc Tax ID:</label><span class="value"><?=$docinfo['tax_id_or_ssn'];?></span></li>
   <li><label>Doc NPI:</label><span class="value"><?= $service_npi; ?></span></li>

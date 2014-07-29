@@ -102,7 +102,7 @@ if (isset($_POST["loginsub"])) {
 }
 
 ?>
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+<?php require_once dirname(__FILE__) . '/includes/login_top.htm'; ?>
 		<!-- BEGIN LOGO -->
 <div class="logo">
 	<h1  style="color:#ffffff;font-size:30px; margin:9px;">Dental Sleep <span style="color:#187eb7;">Solutions</span></h1>

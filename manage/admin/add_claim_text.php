@@ -28,6 +28,7 @@ if($_POST["custom_textsub"] == 1)
 			$ins_sql = "insert into dental_claim_text SET
 			title='".mysql_real_escape_string($_POST["title"])."', 
 			description = '".mysql_real_escape_string($_POST["description"])."', 
+			default_text = 1,
 			adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'
 			";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());

@@ -769,6 +769,14 @@ if($let_r['use_letters']){
   }
 
   function check_profile(f){
+    <?php
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+ if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff']!=1){ ?>
+    alert('You do not have permission to edit the practice profile.  Only users with sufficient permission may do so.  Please contact your office manager to resolve this issue.');
+    return false;
+  <?php } ?>
     if(!mailinglocationabc(f)){
       return false;
     }else{

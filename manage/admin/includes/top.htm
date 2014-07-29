@@ -139,11 +139,6 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
 						</a>
 					</li>
 					<li>
-						<a href="extra_lock.php">
-							<i class="fa fa-lock"></i> Lock Screen
-						</a>
-					</li>
-					<li>
 						<a href="logout.php">
 							<i class="fa fa-key"></i> Log Out
 						</a>
@@ -692,9 +687,14 @@ $num_pending_claims = mysql_num_rows($pending_q);
 
 								<li>
 									<a href="/manage/admin/manage_claim_text.php">
-										<i class="fa fa-bell"></i>Claim Text
+										<i class="fa fa-bell"></i>Claim Default Text (Global)
 									</a>
 								</li>
+                                                                <li>
+                                                                        <a href="/manage/admin/manage_company_claim_text_list.php">
+                                                                                <i class="fa fa-bell"></i>Claim Company Text (Individual)
+                                                                        </a>
+                                                                </li>
 							</ul>
 						</li>
 						<?php } ?>
@@ -1179,12 +1179,17 @@ $num_pending_claims = mysql_num_rows($pending_q);
 				</li>
 			<?php } ?>
 				
-		<?php if (is_admin($_SESSION['admin_access'])) { ?>
+		<?php if (is_admin($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])) { ?>
 				 <?php if (is_billing($_SESSION['admin_access'])) { ?>
                 <?php
-    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_sql = "SELECT ac.companyid,
+			c.use_support
+		FROM admin_company ac 
+		JOIN companies c ON c.id = ac.companyid
+		where ac.adminid='".$_SESSION['adminuserid']."'";
     $c_q = mysql_query($c_sql);
     $c = mysql_fetch_assoc($c_q);
+	$use_support = $c['use_support'];
     $t_sql = "SELECT t.* FROM dental_support_tickets t
         JOIN dental_users u ON u.userid=t.userid
                 WHERE (t.status=0 OR t.status=1)
@@ -1192,9 +1197,13 @@ $num_pending_claims = mysql_num_rows($pending_q);
   } else {
     $t_sql = "SELECT * FROM dental_support_tickets
         WHERE status=0 OR status=1;";
+	$use_support = true;
   }
   $t_q = mysql_query($t_sql);
   $num_open_tickets = mysql_num_rows($t_q);
+
+
+	if($use_support){
                 ?>
 				
 				
@@ -1222,7 +1231,8 @@ $num_pending_claims = mysql_num_rows($pending_q);
 				</ul>
 			</li>
 				
-			 <? } ?>	
+			 <? }
+			} ?>	
 			</ul>
 			<!-- END SIDEBAR MENU -->
 		</div>

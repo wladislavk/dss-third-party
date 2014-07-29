@@ -624,9 +624,21 @@ return s;
 				</td>
 				<td valign="top">
                                    <?php if(($myarray[0]=='ledger'&&($myarray['claim_status']!=DSS_CLAIM_SENT&&$myarray['claim_status']!=DSS_CLAIM_SEC_SENT))||$myarray[0] == 'ledger_paid'){ ?>
-					<a href="Javascript:;" onclick="Javascript: loadPopup('add_ledger.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;" 
+  <?php
+    $pla_sql = "SELECT edit_ledger_entries FROM dental_users where userid='".$_SESSION['userid']."'";
+    $pla_q = mysql_query($pla_sql);
+    $pla = mysql_fetch_assoc($pla_q);
+    if($pla['edit_ledger_entries'] != '1' && $_SESSION['docid']!=$_SESSION['userid']){
+  ?>
+                                                onclick="alert('You do not have permission to edit ledger entries.  Please contact your office manager to resolve this issue.');" 
+  <? }else{ ?>
+						onclick="Javascript: loadPopup('add_ledger.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" 
+  <?php } ?>
+							class="editlink" title="EDIT">
 						Edit 
 					</a>
+ 			
                    		<?php if($myarray['primary_claim_id']!=0 && $myarray['primary_claim_id']!=''){ ?> 
                                            <a href="view_claim.php?claimid=<?= $myarray['primary_claim_id']; ?>&pid=<?=$_GET['pid'];?>" class="editlink" title="PAYMENT">
                                                  Pay 

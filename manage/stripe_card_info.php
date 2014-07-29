@@ -77,6 +77,15 @@ or <a href="#" onclick="$('#card_form').hide(); $('#show_but').show();return fal
 <script type="text/javascript">
 
       function add_cc(){
+    <?php
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+ if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff']!=1){ ?>
+    alert('You do not have permission to edit the practice profile.  Only users with sufficient permission may do so.  Please contact your office manager to resolve this issue.');
+    return false;
+  <?php } ?>
+
         if($('.card-number').val()=='' || $('.card-cvc').val()=='' || $('.card-expiry-month').val().length!=2 || $('.card-expiry-year').val().length!=4 || $('.card-name').val()=='' || $('.card-zip').val().length!=5){
           alert('Please enter valid information for all fields');
           return false;
@@ -130,6 +139,14 @@ $('#payment_proceed_add_buttons').show();
 
 
       function update_cc(){
+    <?php
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+ if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff']!=1){ ?>
+    alert('You do not have permission to edit the practice profile.  Only users with sufficient permission may do so.  Please contact your office manager to resolve this issue.');
+    return false;
+  <?php } ?>
 
         if($('.card-number').val()=='' || $('.card-cvc').val()=='' || $('.card-expiry-month').val().length!=2 || $('.card-expiry-year').val().length!=4 || $('.card-name').val()=='' || $('.card-zip').val().length!=5){
           alert('Please enter valid information for all fields');

@@ -1,11 +1,11 @@
 <?php 
 session_start();
-require_once('admin/includes/main_include.php');
-require_once('includes/constants.inc');
+require_once('includes/main_include.php');
+require_once('../includes/constants.inc');
 include("includes/sescheck.php");
-require_once('includes/authorization_functions.php');
-require_once 'admin/includes/claim_functions.php';
+require_once('../includes/authorization_functions.php');
 require_once 'includes/claim_functions.php';
+require_once '../includes/claim_functions.php';
 ?>
 <html>
 <head>
@@ -33,17 +33,17 @@ if($_POST['dispute']==1){
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 .= ".".$extension;
 
-                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"../../../shared/q_file/".$banner1);
-                        @chmod("../../../shared/q_file/".$banner1,0777);
+                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"../../../../shared/q_file/".$banner1);
+                        @chmod("../../../../shared/q_file/".$banner1,0777);
          }
 
           $note_sql = "INSERT INTO dental_ledger_note SET
                 service_date = CURDATE(),
                 entry_date = CURDATE(),
                 private = 1,
-                docid = '".$_SESSION['docid']."',
+                docid = '".$_pat['docid']."',
                 patientid = '".$_POST['patientid']."',
-                producerid = '".$_SESSION['userid']."',
+                admin_producerid = '".$_SESSION['adminuserid']."',
                 note = 'Insurance claim ".$_POST['claimid']." disputed because: ".mysql_escape_string($_POST['dispute_reason']).".'";
   mysql_query($note_sql);
 
@@ -274,7 +274,6 @@ $sqlinsertqry = "INSERT INTO `dental_ledger_payment` (
 `payment_date` ,
 `entry_date` ,
 `amount` ,
-`amount_allowed` ,
 `payment_type` ,
 `payer`
 ) VALUES ";
@@ -284,7 +283,7 @@ while($row = mysql_fetch_assoc($lq)){
 $id = $row['ledgerid'];
 if($_POST['amount_'.$id]!=''){
 $sqlinsertqry .= "(
-".$id.", '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', '".date('Y-m-d')."', '".str_replace(',','',$_POST['amount_'.$id])."', '".str_replace(',','',$_POST['allowed_'.$id])."','".$_POST['payment_type']."', '".$_POST['payer']."'
+".$id.", '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', '".date('Y-m-d')."', '".str_replace(',','',$_POST['amount_'.$id])."', '".$_POST['payment_type']."', '".$_POST['payer']."'
 ),";
 }
 
@@ -325,9 +324,9 @@ alert('<?= $msg; ?>');
 <?php
 if($new_status==DSS_CLAIM_SEC_PENDING){
 ?>
-  window.location = 'includes/claim_check_secondary.php?pid=<?= $_POST['patientid']; ?>&cid=<?= $_POST['claimid']; ?>&prod=0';
+  history.go(-1);
+  //window.location = 'includes/claim_check_secondary.php?pid=<?= $_POST['patientid']; ?>&cid=<?= $_POST['claimid']; ?>&prod=0';
 <?php }else{ ?>
-  //parent.window.location = parent.window.location;
   history.go(-1);
 <?php } ?>
 </script>

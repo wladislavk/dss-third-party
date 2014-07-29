@@ -1,20 +1,20 @@
 <?php
 include "includes/top.htm";
-include_once "includes/constants.inc";
-$sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
+include_once "../includes/constants.inc";
+$sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['id']."' ;";
 $p_sql = mysql_query($sql);
 $payments = mysql_fetch_array($p_sql);
-$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['cid']."';";
+$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['id']."';";
 $cq = mysql_query($csql);
 $claim = mysql_fetch_array($cq);
 
-$pasql = "SELECT * FROM dental_insurance_file where claimid='".mysql_real_escape_string($_GET['cid'])."' AND
+$pasql = "SELECT * FROM dental_insurance_file where claimid='".mysql_real_escape_string($_GET['id'])."' AND
 		(status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE.")";
 $paq = mysql_query($pasql);
 $num_pa = mysql_num_rows($paq);
 
 
-$sasql = "SELECT * FROM dental_insurance_file where claimid='".mysql_real_escape_string($_GET['cid'])."' AND
+$sasql = "SELECT * FROM dental_insurance_file where claimid='".mysql_real_escape_string($_GET['id'])."' AND
                 (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
 $saq = mysql_query($sasql);
 $num_sa = mysql_num_rows($saq);
@@ -40,19 +40,6 @@ if( !payment ){
   alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
   returnval = false;
 }
-
-allowed = false
-$('.allowed_amount').each( function(){
-  if( $(this).val()!=''){
-    allowed = true;
-  }
-
-});
-
-if( !allowed ){
-  returnval = confirm('You did not enter "Amount Allowed". This information is normally listed on the patient\'s EOB.  Proceed anyway?');
-}
-
 
 //DISPUTE CLAIM
 if(f.dispute.checked){
@@ -119,11 +106,8 @@ if(f.dispute.checked){
       if(f.close.checked){
         if(f.attachment.value =='' && <?= ($num_pa == 0)?1:0; ?>){
           if(!confirm('A claim must have an EOB attached to close.')){
-            returnval = false;
+  	    returnval = false;
 	  }
-          //EOB no longer needed to close claim
-          //returnval = false;
-          //alert('A claim must have an EOB attached to close.');
         }
         //file secondary
         //VALID
@@ -143,12 +127,8 @@ if(f.dispute.checked){
   }else if(<?= ($claim['status']==DSS_CLAIM_SEC_SENT)?1:0; ?>){
     if(f.close.checked){
       if(f.attachment.value =='' && <?= ($num_sa == 0)?1:0; ?>){
-          if(!confirm('A claim must have an EOB attached to close.')){
-	    returnval = false;
-	  }
-          //EOB no longer needed to close claim
-          //returnval = false;
-          //alert('A claim must have an EOB attached to close.');
+          returnval = false;
+          alert('A claim must have an EOB attached to close.');
         }
       //VALID
     }else{
@@ -209,7 +189,7 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 </div>
 
 <?php
-$sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
+$sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['id']."' ;";
 $p_sql = mysql_query($sql);
 if(mysql_num_rows($p_sql)==0){
 ?><div style="margin-left:50px;">No Previous Payments</div><?php
@@ -278,11 +258,10 @@ function updateType(payer){
 <span style="width:180px;margin: 0 10px 0 0; float:left;">Description</span>
 <span style="width:100px;margin: 0 10px 0 0; float:left;">Amount</span>
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">Payment Date</span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">Amount Allowed</span>
 <span style="float:left;font-weight:bold;">Paid Amount</span>
 </div>
 <?php
-$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_GET['cid'];
+$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_GET['id'];
 $lq = mysql_query($lsql);
 while($row = mysql_fetch_assoc($lq)){
 ?>
@@ -291,7 +270,6 @@ while($row = mysql_fetch_assoc($lq)){
 <span style="width:180px;margin: 0 10px 0 0; float:left;"><?= $row['description']; ?></span>
 <span style="width:100px;margin: 0 10px 0 0; float:left;">$<?= $row['amount']; ?></span>
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" class="allowed_amount dollar_input" name="allowed_<?= $row['ledgerid']; ?>" /></span>
 <span style="float:left;font-weight:bold;"><input class="payment_amount dollar_input" style="width:140px;" type="text" name="amount_<?= $row['ledgerid']; ?>" /></span>
 </div>
 
@@ -299,7 +277,7 @@ while($row = mysql_fetch_assoc($lq)){
 }
 ?>
 <br />
-<input type="checkbox" id="close" name="close" onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1" <?= (isset($_GET['close']) && $_GET['close']==1)?'checked="checked"':''; ?> /> <label>Close Claim</label>
+<input type="checkbox" id="close" name="close" onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1" /> <label>Close Claim</label>
 <br />
 <input type="checkbox" id="dispute" name="dispute" onclick=" if(this.checked){ $('#close').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' /> <label>Dispute</label>
 <div id="dispute_reason_div" style="display: none">
@@ -308,7 +286,7 @@ while($row = mysql_fetch_assoc($lq)){
 <div id="ins_attach" style="display: none">
 <label>Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
 </div>
-<input type="hidden" name="claimid" value="<?php echo $_GET['cid']; ?>">
+<input type="hidden" name="claimid" value="<?php echo $_GET['id']; ?>">
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
 <input type="hidden" name="producer" value="<?php echo $_SESSION['username']; ?>">
 <input type="hidden" name="userid" value="<?php echo $_SESSION['userid']; ?>">
@@ -326,8 +304,7 @@ Password: <input type="password" name="password" /><br />
 
 </form>
 <br><br>
-<a href="view_claim.php?claimid=<?=$_GET['cid']; ?>&pid=<?=$_GET['pid']; ?>" class="button" style="float:left;">Cancel</a>
-<a href="ledger_payments_advanced.php?cid=<?=$_GET['cid']; ?>&pid=<?=$_GET['pid']; ?>" class="button" style="float:right;">Advanced Payment</a>
+<a href="ledger_payments_advanced.php?id=<?=$_GET['id']; ?>&pid=<?=$_GET['pid']; ?>" class="button" style="float:right;">Advanced Payment</a>
 <div style="clear:both;"></div>
 </div>
 <?php include 'includes/bottom.htm'; ?>

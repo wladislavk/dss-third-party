@@ -437,6 +437,16 @@ if (empty($prior_authorization_number)) {
                           $service_medicare_npi = $medicare_npi;
                         }
 
+                        if($insurancetype == 1){
+                          $service_npi = "";
+                          $service_practice = "";
+                          $service_address = "";
+                          $service_city = "";
+                          $service_state = "";
+                          $service_zip = "";
+                          $service_medicare_npi = "";
+                        }
+
 
 
 

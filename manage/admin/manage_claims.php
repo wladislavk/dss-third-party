@@ -21,6 +21,8 @@ define('SORT_BY_PATIENT', '2');
 define('SORT_BY_FRANCHISEE', '3');
 define('SORT_BY_USER', '4');
 define('SORT_BY_BC', '5');
+define('SORT_BY_INS', '6');
+define('SORT_BY_NOTES', '7');
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
@@ -41,6 +43,12 @@ switch ($sort_by) {
     break;
   case SORT_BY_BC:
     $sort_by_sql = "billing_name $sort_dir";
+    break;
+  case SORT_BY_INS:
+    $sort_by_sql = "ins_name $sort_dir";
+    break;
+  case SORT_BY_NOTES:
+    $sort_by_sql = "notes_last $sort_dir";
     break;
   default:
     // default is SORT_BY_STATUS
@@ -155,6 +163,7 @@ $sql = "SELECT "
      . "  claim.primary_claim_version, claim.secondary_claim_version, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
      . "  c.name as billing_name, "
+     . "  co.company as ins_name, "
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
 		WHEN ".DSS_CLAIM_PENDING." THEN 1
@@ -169,6 +178,7 @@ $sql = "SELECT "
                 WHEN ".DSS_CLAIM_PAID_PATIENT." THEN 10
        END AS status_order, "
      . " COALESCE(notes.num_notes, 0) num_notes, "
+     . " notes_date.max_date notes_last, "
      . " (SELECT count(*) FROM dental_claim_notes where claim_id=claim.insuranceid AND create_type='1') num_fo_notes "
      . "FROM "
      . "  dental_insurance claim "
@@ -176,7 +186,9 @@ $sql = "SELECT "
      . "  JOIN dental_users users ON claim.docid = users.userid "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid "
      . "  LEFT JOIN companies c ON c.id = users.billing_company_id "
-     . "  LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=claim.insuranceid ";
+     . "  LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co "
+     . "  LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=claim.insuranceid "
+     . "  LEFT JOIN (SELECT claim_id, MAX(adddate) max_date FROM dental_claim_notes group by claim_id) notes_date ON notes_date.claim_id=claim.insuranceid ";
 }elseif(is_billing($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
@@ -248,6 +260,8 @@ if ((isset($_GET['status']) && ($_GET['status'] != '')) || !empty($_GET['fid']))
 	}elseif($_GET['status'] == '1'){
 		$sql .= " AND ((claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")) OR
 				(claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SEC_SENT.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_SEC_PATIENT.")))";
+        }elseif($_GET['status'] == 'unpaid14'){
+                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 14 day)";
         }elseif($_GET['status'] == 'unpaid21'){
                 $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 21 day)";
         }elseif($_GET['status'] == 'unpaid45'){
@@ -279,7 +293,7 @@ AND
 
 $sql .= " 
 ORDER BY " . $sort_by_sql;
-$my = mysql_query($sql);
+$my = mysql_query($sql) or die(mysql_error());
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
@@ -306,13 +320,15 @@ if(isset($_GET['msg'])){
     <select name="status">
       <?php $pending_selected = ($status == DSS_CLAIM_PENDING) ? 'selected' : ''; ?>
       <?php $sent_selected = ($status == DSS_CLAIM_SENT) ? 'selected' : ''; ?>
+      <?php $unpaid14_selected = ($status == 'unpaid14') ? 'selected' : ''; ?>
       <?php $unpaid21_selected = ($status == 'unpaid21') ? 'selected' : ''; ?>
       <?php $unpaid45_selected = ($status == 'unpaid45') ? 'selected' : ''; ?>
       <?php $rejected_selected = ($status == DSS_CLAIM_REJECTED) ? 'selected' : ''; ?>
       <option value="">Any</option>
       <option value="<?=DSS_CLAIM_PENDING?>" <?=$pending_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_PENDING]?></option>
       <option value="<?=DSS_CLAIM_SENT?>" <?=$sent_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_SENT]?></option>
-      <option value="unpaid21" <?= $unpaid45_selected; ?>>Unpaid 21+ Days</option>
+      <option value="unpaid14" <?= $unpaid14_selected; ?>>Unpaid 14+ Days</option>
+      <option value="unpaid21" <?= $unpaid21_selected; ?>>Unpaid 21+ Days</option>
       <option value="unpaid45" <?= $unpaid45_selected; ?>>Unpaid 45+ Days</option>
       <option value="<?=DSS_CLAIM_REJECTED?>" <?=$rejected_selected;?>><?=$dss_claim_status_labels[DSS_CLAIM_REJECTED];?></option>
     </select>
@@ -353,9 +369,9 @@ if(isset($_GET['msg'])){
 <a style="float:right;"  href="report_claim_aging.php" class="btn btn-primary"> Claim Aging </a>
 <?php } ?>
 <?php if(isset($_GET['notes']) && $_GET['notes']==1){ ?>
-<a style="float:right;margin-right:3px;"  href="manage_claims.php?" class="btn btn-primary"> Show All </a>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?=$_GET['status'];?>&fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>&sort_by=<?= $_GET['sort_by']; ?>&sort_dir=<?=$_GET['sort_dir']; ?>" class="btn btn-primary"> Show All Claims </a>
 <?php }else{ ?>
-<a style="float:right;margin-right:3px;"  href="manage_claims.php?notes=1" class="btn btn-primary"> Show Claim Notes </a>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?notes=1&status=<?=$_GET['status'];?>&fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>&sort_by=<?= $_GET['sort_by']; ?>&sort_dir=<?=$_GET['sort_dir']; ?>" class="btn btn-primary"> Show Claim w Notes </a>
 <?php } ?>
 <div style="clear:both;"></div>
 </div>
@@ -386,6 +402,9 @@ if(isset($_GET['msg'])){
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
+                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_INS, $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, SORT_BY_INS, get_sort_dir($sort_by, SORT_BY_INS, $sort_dir))?>">Insurance Company</a>
+                </td>
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="15%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
 		</td>
@@ -398,9 +417,9 @@ if(isset($_GET['msg'])){
 		<td valign="top" class="col_head" width="15%">
 			Action
 		</td>
-		<td valign="top" class="col_head" width="15%">
-			Notes	
-		</td>
+                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_NOTES, $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, SORT_BY_NOTES, get_sort_dir($sort_by, SORT_BY_NOTES, $sort_dir))?>">Notes</a>
+                </td>
 		<td valign="top" class="col_head" width="15%">
 			Mailed
 		</td>
@@ -452,7 +471,10 @@ if(isset($_GET['msg'])){
 					<?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<a href="view_patient.php?pid=<?=$myarray['patientid'];?>"><?=st($myarray["lastname"]);?>, <?=st($myarray["firstname"]);?></a>
+					<a href="view_patient.php?pid=<?=$myarray['patientid'];?>"><?=st($myarray["lastname"]);?>, <?=st($myarray["firstname"]);?> (View Chart)</a>
+				</td>
+				<td valign="top">
+					<?=st($myarray["ins_name"]);?>&nbsp;
 				</td>
 				<td valign="top">
 					<?=st($myarray["doc_name"]);?>&nbsp;
@@ -521,7 +543,13 @@ if(isset($_GET['msg'])){
 
 				</td>
 	<td valign="top" <?= ($myarray['num_fo_notes']>0)?'class="info"':''; ?>>
-		<a href="claim_notes.php?id=<?= $myarray['insuranceid']; ?>&pid=<?=$myarray['patientid'];?>">View (<?= $myarray['num_notes'];?>)</a>
+		<a href="claim_notes.php?id=<?= $myarray['insuranceid']; ?>&pid=<?=$myarray['patientid'];?>">View (<?= $myarray['num_notes'];?>)
+		<?php
+			if($myarray['notes_last']!=''){
+				echo date('m/d/y h:i a', strtotime($myarray['notes_last']));
+			}
+		?>
+		</a>
 	</td>
 <td>
 <?php

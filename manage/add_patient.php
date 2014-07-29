@@ -33,12 +33,14 @@ require_once('includes/dental_patient_summary.php');
 require_once('admin/includes/password.php');
 require_once('includes/preauth_functions.php');
 require_once 'includes/hst_functions.php';
-  $b_sql = "SELECT c.name FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $b_sql = "SELECT c.name, c.exclusive FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
   $b_q = mysql_query($b_sql);
   if(mysql_num_rows($b_q)>0){
     $b_r = mysql_fetch_assoc($b_q);
+    $exclusive_billing = $b_r['exclusive'];
     $billing_co = $b_r['name'];
   }else{
+    $exclusive_billing = 0;
     $billing_co = "DSS";
   }
 $docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
@@ -1549,7 +1551,7 @@ if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementBy
 }
 
 if($('#s_m_ins_type').val() == 1){
-  alert("Error! By law, Medicare MUST be set to Primary Insurance and CANNOT be Secondary Insurance. If patient has Medicare and additional insurance, please list Medicare as Primary Insurance.");
+  alert("Warning! It is very rare that Medicare is listed as a patient’s Secondary Insurance.  Please verify that Medicare is the secondary payer for this patient before proceeding.");
   return false;
 }
 
@@ -2221,8 +2223,11 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
             	<ul>
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
-                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="return false;" class="plain" title="Select YES if you would like <?= $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?= $billing_co; ?> filing insurance?</a><input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php if(!$exclusive_billing){ ?>
+				<a onclick="return false;" class="plain" title="Select YES if you would like <?= $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?= $billing_co; ?> filing insurance?</a><input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<?php } ?>
 		<a onclick="return false" class="plain" title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO.">Insured Address same as Pt. address?</a>
 			<input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" <? if($p_m_same_address == '1') echo "checked='checked'";?>> Yes
 			<input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" <? if($p_m_same_address == '2') echo "checked='checked'";?>> No
@@ -3098,7 +3103,7 @@ function update_insurance_type(){
 function checkMedicare(){
   if($('#s_m_ins_type').val() == 1){
     $('#s_m_ins_type').val('');
-    alert("Error! By law, Medicare MUST be set to Primary Insurance and CANNOT be Secondary Insurance. If patient has Medicare and additional insurance, please list Medicare as Primary Insurance.");
+    alert("Warning! It is very rare that Medicare is listed as a patient’s Secondary Insurance.  Please verify that Medicare is the secondary payer for this patient before proceeding.");
   }
 }
 

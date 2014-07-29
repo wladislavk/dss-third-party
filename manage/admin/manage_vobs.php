@@ -339,7 +339,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($dss_preauth_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<a href="view_patient.php?pid=<?= $myarray['patient_id'];?>"><?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?></a>
+					<a href="view_patient.php?pid=<?= $myarray['patient_id'];?>"><?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?> (View Chart)</a>
 				</td>
 				<td valign="top">
 					<?=st($myarray["ins_co"]);?>&nbsp;

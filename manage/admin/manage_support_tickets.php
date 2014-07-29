@@ -1,7 +1,7 @@
 <? 
 include "includes/top.htm";
 include_once "../includes/constants.inc";
-if(!is_admin($_SESSION['admin_access'])){
+if(!is_admin($_SESSION['admin_access']) && !is_billing($_SESSION['admin_access'])){
   ?><h2>You are not authorized to view this page.</h2><?php
   die();
 }
@@ -16,6 +16,7 @@ $sql = "select t.*,
 	CONCAT(u.first_name,' ',u.last_name) as user,
 	CONCAT(a.first_name,' ',a.last_name) as account,
 	c.name as company,
+	t.company_id,
 	cat.title as category,
 	(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
         (SELECT r3.attachment FROM dental_support_responses r3 WHERE r3.ticket_id=t.id ORDER BY r3.attachment DESC LIMIT 1) AS response_attachment,
@@ -33,7 +34,7 @@ if(is_billing($_SESSION['admin_access'])){
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
     $c_q = mysql_query($c_sql);
     $c = mysql_fetch_assoc($c_q);
-  $sql .= " AND u.billing_company_id='".$c['companyid']."' ";
+  $sql .= " AND t.company_id='".$c['companyid']."' ";
 }
 if(isset($_REQUEST['catid'])){
   $sql .= " AND t.category_id = ".mysql_real_escape_string($_REQUEST['catid']);
@@ -109,7 +110,7 @@ else
   }
 		$latest = ($myarray['last_response']!='')?$myarray['last_response']:$myarray['adddate'];
 		?>
-			<tr class="<?= (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"info":""; ?>">
+			<tr class="<?=  (is_admin($_SESSION['admin_access']) && $myarray['company_id']!=0)?'low ':''; ?><?= (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"info":""; ?>">
 			<td valign="top">
 			<?=st($myarray["title"]);?>
             <?php if($myarray['attachment']!='' || $myarray['response_attachment'] !='' || $myarray['ticket_attachment'] !=''){ ?>

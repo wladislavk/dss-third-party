@@ -28,6 +28,8 @@ if($_POST["compsub"] == 1)
 				sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
 				plan_id = '".mysql_real_escape_string($_POST['plan_id'])."',
 				status = '".mysql_real_escape_string($_POST["status"])."',
+				use_support = '".mysql_real_escape_string($_POST["use_support"])."',
+				exclusive = '".mysql_real_escape_string($_POST["exclusive"])."',
 				company_type = '".mysql_real_escape_string($_POST['company_type'])."'
 			where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -70,6 +72,8 @@ if($_POST["compsub"] == 1)
                                 sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
 				plan_id = '".mysql_real_escape_string($_POST['plan_id'])."',
 				status = '".mysql_real_escape_string($_POST['status'])."',
+				use_support = '".mysql_real_escape_string($_POST["use_support"])."',
+				exclusive = '".mysql_real_escape_string($_POST["exclusive"])."',
                                 company_type = '".mysql_real_escape_string($_POST['company_type'])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
@@ -78,6 +82,8 @@ if($_POST["compsub"] == 1)
 
 			$l_sql = "INSERT INTO dental_letter_templates (name, body, companyid, triggerid) SELECT name, body, '".$companyid."', id FROM dental_letter_templates WHERE default_letter=1";
 			mysql_query($l_sql);
+			$ct_sql = "insert into dental_claim_text (title, description, companyid) SELECT title, description, ".$companyid." FROM dental_claim_text WHERE default_text=1";
+                        mysql_query($ct_sql);
 
 			$msg = "Added Successfully";
 			?>
@@ -119,6 +125,8 @@ if($_POST["compsub"] == 1)
                 $sfax_init_vector = $_POST['sfax_init_vector'];
 		$plan_id = $_POST['plan_id'];
 		$status = $_POST['status'];
+		$use_support = $_POST['use_support'];
+		$exclusive = $_POST['exclusive'];
 		$company_type = $_POST['company_type'];
 	}
 	else
@@ -141,6 +149,8 @@ if($_POST["compsub"] == 1)
                 $sfax_init_vector = st($themyarray['sfax_init_vector']);
 		$plan_id = st($themyarray['plan_id']);
 		$status = st($themyarray['status']);
+		$use_support = st($themyarray['use_support']);
+		$exclusive = st($themyarray['exclusive']);
 		$company_type = st($themyarray['company_type']);
 		$but_text = "Add ";
 	}
@@ -347,6 +357,23 @@ if($_POST["compsub"] == 1)
                 </select>
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Support Tickets Active? 
+            </td>
+            <td valign="top" class="frmdata">
+		<input type="checkbox" name="use_support" value="1" <?= ($use_support==1)?'checked="checked"':''; ?> />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Exclusive? 
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="checkbox" name="exclusive" value="1" <?= ($exclusive==1)?'checked="checked"':''; ?> />
+            </td>
+        </tr>
+
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">

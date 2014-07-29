@@ -76,6 +76,7 @@ $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  hst.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
+     . "  hst.patient_id, "
      . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
      . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
      . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
@@ -92,6 +93,7 @@ $sql = "SELECT "
 }elseif(is_hst($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  hst.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
+     . "  hst.patient_id, "
      . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
      . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
      . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
@@ -112,6 +114,7 @@ $sql = "SELECT "
 }else{
 $sql = "SELECT "
      . "  preauth.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
+     . "  hst.patient_id, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name "
@@ -315,6 +318,10 @@ $my=mysql_query($sql) or die(mysql_error());
 					<a href="Javascript:;" onclick="Javascript: loadPopup('view_hst.php?ed=<?=$myarray["id"];?><?= (isset($_GET['status']) && $_GET['status']!='')?"&ret_status=".$_GET['status']:""; ?>');" title="Edit" class="btn btn-primary btn-sm">
 						View
 					 <span class="glyphicon glyphicon-pencil"></span></a>
+
+                                        <a href="view_patient.php?pid=<?= $myarray['patient_id']; ?>" title="View Chart" class="btn btn-primary btn-sm">
+                                                View Chart
+                                         <span class="glyphicon glyphicon-pencil"></span></a>
 				</td>
 			</tr>
 	<? 	}

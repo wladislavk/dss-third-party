@@ -60,6 +60,8 @@ if($_POST["staffsub"] == 1)
                         $old_username = $old_r['username'];
 
                         $p = ($_POST['producer']==1)?1:0;
+                        $pla = ($_POST['post_ledger_adjustments']==1)?1:0;
+                        $ele = ($_POST['edit_ledger_entries']==1)?1:0;
 			$pf = ($_POST['producer_files']==1)?1:0;
                         $n = ($_POST['sign_notes']==1)?1:0;
 			$c = ($_POST['use_course']==1)?1:0;
@@ -81,6 +83,8 @@ if($_POST["staffsub"] == 1)
                                 city = '".s_for($_POST["city"])."',
                                 state = '".s_for($_POST["state"])."',
                                 zip = '".s_for($_POST["zip"])."',
+				post_ledger_adjustments = ".$pla.", 
+				edit_ledger_entries = ".$ele.", 
 				use_course = ".$c.", ";
 				if($_SESSION['docid']==$_SESSION['userid']){
 				  $ed_sql .= " manage_staff = ".$s.", ";
@@ -105,6 +109,8 @@ if($_POST["staffsub"] == 1)
                         $salt = create_salt();
                         $password = gen_password($_POST['password'], $salt);
                         $p = ($_POST['producer']==1)?1:0;
+                        $pla = ($_POST['post_ledger_adjustments']==1)?1:0;
+                        $ele = ($_POST['edit_ledger_entries']==1)?1:0;
 			$pf = ($_POST['producer_files']==1)?1:0;
                         $n = ($_POST['sign_notes']==1)?1:0;
 			$c = ($_POST['use_course']==1)?1:0;
@@ -126,6 +132,8 @@ if($_POST["staffsub"] == 1)
                                 city = '".s_for($_POST["city"])."',
                                 state = '".s_for($_POST["state"])."',
                                 zip = '".s_for($_POST["zip"])."',
+				post_ledger_adjustments = ".$pla.", 
+				edit_ledger_entries = ".$ele.", 
 				use_course = ".$c.", ";
                                 if($_SESSION['docid']==$_SESSION['userid']){
                                   $ins_sql .= " manage_staff = ".$s.", ";
@@ -203,6 +211,8 @@ if($_POST["staffsub"] == 1)
                 $state = $_POST['state'];
                 $zip = $_POST['zip'];
                 $phone = $_POST['phone'];
+		$post_ledger_adjustments = $_POST['post_ledger_adjustments'];
+		$edit_ledger_entries = $_POST['edit_ledger_entries'];
 		$use_course = $_POST['use_course'];
 		$manage_staff = $_POST['manage_staff'];
                 $sign_notes = $_POST['sign_notes'];
@@ -231,6 +241,8 @@ if($_POST["staffsub"] == 1)
                 $state = st($themyarray['state']);
                 $zip = st($themyarray['zip']);
                 $phone = st($themyarray['phone']);
+		$post_ledger_adjustments = st($themyarray['post_ledger_adjustments']);
+		$edit_ledger_entries = st($themyarray['edit_ledger_entries']);
 		$use_course = st($themyarray['use_course']);
 		$manage_staff = st($themyarray['manage_staff']);
                 $sign_notes = st($themyarray['sign_notes']);
@@ -463,6 +475,30 @@ $r = mysql_fetch_assoc($q);
             </td>
         </tr>
 <?php } ?>
+        <tr>
+<td valign="top" class="frmhead">
+		Post Ledger Adjustments? <div id="pla_info" class="info_but"></div>
+                <div id="pla_info_modal" class="info_modal" title="Post Ledger Adjustments explanation">
+			Select this option if the user should be allowed to post adjustments to a patient ledger.  If this option is not checked, the user will still be able to see the patient ledger, but will not be able to post or edit any adjustments.
+                </div>
+
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="checkbox" <?= ($post_ledger_adjustments==1)?'checked="checked"':''; ?> value="1" name="post_ledger_adjustments" />
+            </td>
+        </tr>
+        <tr>
+<td valign="top" class="frmhead">
+		Edit Ledger Entries? <div id="ele_info" class="info_but"></div>
+                <div id="ele_info_modal" class="info_modal" title="Edit Ledger Entries explanation">
+			Select this option if the user is allowed to edit (make changes to) ledger entries in a patient ledger.  If this option is not checked, the user will still be able to see the patient ledger, but will not be able to edit or change any type of ledger entry.
+                </div> 
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="checkbox" <?= ($edit_ledger_entries==1)?'checked="checked"':''; ?> value="1" name="edit_ledger_entries" />
+            </td>
+        </tr>
+
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status <div id="s_info" class="info_but"></div>

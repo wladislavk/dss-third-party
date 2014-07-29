@@ -120,9 +120,6 @@ $num_users=mysql_num_rows($my);
 			Ins
 		</td>
 	</tr>
-	</table>
-	<div style="overflow:auto; ">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">

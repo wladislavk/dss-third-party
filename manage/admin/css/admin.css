@@ -115,3 +115,7 @@ td.header, th.header {
 .page-content{
   padding-top:10px;
 }
+
+.table tr.low td{
+  background:#ccc !important;
+}

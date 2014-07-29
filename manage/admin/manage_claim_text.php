@@ -24,7 +24,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_claim_text ORDER BY description ASC";
+$sql = "select * from dental_claim_text WHERE default_text=1 ORDER BY description ASC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;

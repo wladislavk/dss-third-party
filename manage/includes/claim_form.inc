@@ -612,7 +612,7 @@ die();
              if($status == DSS_CLAIM_SENT){
 		$fdf_type="primary";
                 if($p_m_ins_ass == 'No'){
-                   $u_status = DSS_CLAIM_PAID_PATIENT;
+                   $u_status = DSS_CLAIM_SENT;
                 }else{
 		   if(isset($_POST['ex_pagebtn_elec'])){
 		     $u_status = false;	
@@ -623,7 +623,7 @@ die();
              }elseif($status == DSS_CLAIM_SEC_SENT){
 		$fdf_type="secondary";
                 if($s_m_ins_ass == 'No'){
-                  $u_status = DSS_CLAIM_PAID_PATIENT;
+                  $u_status = DSS_CLAIM_SEC_SENT;
                 }else{
                   $u_status = DSS_CLAIM_SEC_SENT;
                 }

@@ -963,10 +963,13 @@ $pat_myarray = mysql_fetch_array($pat_my);
 $docid = $pat_myarray['docid'];
 if($is_pri_pending){
 // Load patient info from dental_patients table using pid on query string
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+$pat_sql = "select p.*, c.exclusive from dental_patients p where p.patientid='".s_for($_GET['pid'])."'
+	LEFT JOIN companies c ON c.id=p.billing_company_id
+";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 $p_m_dss_file = $pat_myarray['p_m_dss_file'];
+if($pat_myarray['exclusive']){ $p_m_dss_file = 1; }
 $s_m_dss_file = $pat_myarray['s_m_dss_file'];
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $insurancetype = st($pat_myarray['p_m_ins_type']);
@@ -1012,6 +1015,7 @@ $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
 $p_m_dss_file = $pat_myarray['p_m_dss_file'];
+if($pat_myarray['exclusive']){ $p_m_dss_file = 1; }
 $s_m_dss_file = $pat_myarray['s_m_dss_file'];
 $patient_lastname = st($myarray['patient_lastname']);
 $patient_firstname = st($myarray['patient_firstname']);
@@ -1253,7 +1257,7 @@ $billing_provider_b_other = st($myarray['billing_provider_b_other']);
 $reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
 }
-if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
+if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $p_m_dss_file == 1 && $pat_myarray['s_m_dss_file'] ==1){
   $another_plan = 'YES';
 }else{
   $another_plan = 'NO';
@@ -1529,7 +1533,13 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
 
                 <?php } ?>
 		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
-
+<?php
+if ($is_back_office){
+?>
+		<input type="button" class="print-button" onclick="window.location='claim_notes.php?id=<?= $_GET['insid']; ?>&pid=<?= $_GET['pid']; ?>'" value="View Notes" />
+<?php
+}
+?>
 		&nbsp;&nbsp;&nbsp;
 	</div>
 <?php
@@ -2255,6 +2265,16 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                           $service_state = $state;
                           $service_zip = $zip;
                           $service_medicare_npi = $medicare_npi;
+			}
+
+			if($insurancetype == 1){
+                          $service_npi = "";
+                          $service_practice = "";
+                          $service_address = "";
+                          $service_city = "";
+                          $service_state = "";
+                          $service_zip = "";
+                          $service_medicare_npi = "";
 			}
 
                       ?> 

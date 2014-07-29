@@ -138,6 +138,9 @@ $num_users=mysql_num_rows($my);
 			Impressions&nbsp;&nbsp;	
 		</th>
                 <th valign="top" class="col_head">
+                        Device Delivery&nbsp;&nbsp; 
+                </th>
+                <th valign="top" class="col_head">
                         Letters Sent
                 </th>
                 <th valign="top" class="col_head">
@@ -211,6 +214,14 @@ $imp_sql = "SELECT count(i.id) as num_imp FROM dental_flow_pg2_info i
 $imp_q = mysql_query($imp_sql);
 $imp = mysql_fetch_assoc($imp_q);
 
+$dd_sql = "SELECT count(i.id) as num_dd FROM dental_flow_pg2_info i
+                        JOIN dental_patients p ON p.patientid = i.patientid
+                        WHERE i.segmentid=7
+                                AND p.docid='".mysql_real_escape_string($myarray['userid'])."'
+                                AND i.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
+$dd_q = mysql_query($dd_sql);
+$dd = mysql_fetch_assoc($dd_q);
+
 $letters_sql = "SELECT count(l.letterid) as num_sent FROM dental_letters l 
                         WHERE 
                                 l.docid='".mysql_real_escape_string($myarray['userid'])."'
@@ -275,6 +286,9 @@ $ins_paid = mysql_fetch_assoc($ins_paid_q);
                                 </td>	
 				<td valign="top" align="center">
 				  <?= $imp['num_imp']; ?>
+				</td>
+				<td valign="top" align="center">
+				  <?= $dd['num_dd']; ?>
 				</td>
                                 <td valign="top" align="center">
                                   <?= $letters['num_sent']; ?>

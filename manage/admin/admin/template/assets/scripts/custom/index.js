@@ -442,6 +442,7 @@ var Index = function () {
                 };
             }
 
+/*
             $('.easy-pie-chart .number.transactions').easyPieChart({
                 animate: 1000,
                 size: 75,
@@ -470,7 +471,7 @@ var Index = function () {
                     $('span', this).text(newValue);
                 });
             });
-
+*/
             $("#sparkline_bar").sparkline([8, 9, 10, 11, 10, 10, 12, 10, 10, 11, 9, 12, 11, 10, 9, 11, 13, 13, 12], {
                 type: 'bar',
                 width: '100',
@@ -611,7 +612,9 @@ var Index = function () {
 
             $('#dashboard-report-range span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
             $('#dashboard-report-range').show();
-        },
+        }
+
+	/*,
 
         initIntro: function () {
 
@@ -710,7 +713,7 @@ var Index = function () {
 
                 $.cookie('intro_show', 1);
             }
-        }
+        }*/
 
     };
 

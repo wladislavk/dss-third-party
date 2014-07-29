@@ -2,6 +2,7 @@
 session_start();
 require_once('admin/includes/main_include.php');
 require_once('includes/constants.inc');
+require_once('includes/claim_functions.php');
 include("includes/sescheck.php");
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
@@ -92,7 +93,8 @@ if($_POST["ledgerub"] == 1)
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-		
+		$ledgerid = mysql_insert_id();
+		ledger_history_update($ledger_id, $_SESSION['userid'],'');		
 		
 		$ins_sql_rec = " insert into dental_ledger_rec set 
 		userid = '".s_for($_SESSION['userid'])."',
@@ -185,6 +187,7 @@ if($status == DSS_TRXN_NA){
 	 	where ledgerid='".$_POST["ed"]."'";
 		
 		mysql_query($up_sql) or die($up_sql." | ".mysql_error());
+		ledger_history_update($_POST['ed'], $_SESSION['docid'], '');
 if(($claim_r['primary_claim_id']!='' && $claim_r['primary_claim_id']!=0) && $status==DSS_TRXN_NA){
   $c_sql = "SELECT COUNT(*) as num_trxn FROM dental_ledger where primary_claim_id='".mysql_real_escape_string($claim_r['primary_claim_id'])."'";
   $c_q = mysql_query($c_sql);
@@ -439,6 +442,52 @@ xmlhttp.onreadystatechange=function()
         	<td valign="top" class="frmdata">
 				<input id="entry_date" name="entry_date" type="text" class="tbox" value="<?=$entry_date;?>" style="width:100px;" maxlength="255" readonly="readonly"/> (mm/dd/yyyy)
 				<span class="red">*</span>
+            </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                               	Posted By 
+            </td>
+                <td valign="top" class="frmdata">
+				<?php
+					$h_sql = "SELECT h.updated_at, CONCAT(u.first_name,' ',u.last_name) doc_name,
+						CONCAT(a.first_name,' ',a.last_name) admin_name
+						FROM dental_ledger_history h 
+						LEFT JOIN dental_users u ON u.userid=h.updated_by_user
+						LEFT JOIN admin a ON a.adminid=h.updated_by_admin
+						WHERE h.ledgerid='".mysql_real_escape_string($_GET['ed'])."' ORDER BY h.updated_at ASC LIMIT 1";
+					$h_q = mysql_query($h_sql);
+					$h_r = mysql_fetch_assoc($h_q);
+					if($h_r['doc_name']!=''){
+					  echo $h_r['doc_name'];
+					}elseif($h_r['admin_name']!=''){
+					  echo $h_r['admin_name'];
+					}
+					echo " - ".$h_r['updated_at'];
+				?>
+            </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                                Last Updated By
+            </td>
+                <td valign="top" class="frmdata">
+                                <?php
+                                        $h_sql = "SELECT h.updated_at, CONCAT(u.first_name,' ',u.last_name) doc_name,
+                                                CONCAT(a.first_name,' ',a.last_name) admin_name
+                                                FROM dental_ledger_history h 
+                                                LEFT JOIN dental_users u ON u.userid=h.updated_by_user
+                                                LEFT JOIN admin a ON a.adminid=h.updated_by_admin
+                                                WHERE h.ledgerid='".mysql_real_escape_string($_GET['ed'])."' ORDER BY h.updated_at DESC LIMIT 1";
+                                        $h_q = mysql_query($h_sql);
+                                        $h_r = mysql_fetch_assoc($h_q);
+                                        if($h_r['doc_name']!=''){
+                                          echo $h_r['doc_name'];
+                                        }elseif($h_r['admin_name']!=''){
+                                          echo $h_r['admin_name'];
+                                        }
+                                        echo " - ".$h_r['updated_at'];
+                                ?>
             </td>
         </tr>
 		<tr>

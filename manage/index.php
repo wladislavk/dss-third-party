@@ -360,6 +360,7 @@ ALERT THIRD
 
   <a href="manage_rejected_claims.php" class=" count_<?= $num_rejected_claims; ?> notification <?= ($num_rejected_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_rejected_claims;?></span><span class="label">Rejected Claims</span></a>
 
+  <a href="manage_claims_paid.php?paid_viewed=0" class=" count_<?= $num_paid_claims; ?> notification <?= ($num_paid_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_paid_claims;?></span><span class="label">Claims Paid</span></a>
 
 
   <a href="manage_unsigned_notes.php" class=" count_<?= $num_; ?> notification <?= ($num_unsigned==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_unsigned;?></span><span class="label">Unsigned Notes</span></a>

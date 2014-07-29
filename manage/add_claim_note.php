@@ -33,7 +33,12 @@ if($_POST["notesub"] == 1)
 
 		?>
 		<script type="text/javascript">
-			parent.window.location='view_claim.php?claimid=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';
+			<?php if($_POST['close']==1){ ?>
+			  alert('You selected "Close Claim".  After submitting this note you will be prompted to enter the final claim details on the next page.');
+			  parent.window.location='add_ledger_payments.php?cid=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&close=1';
+			<?php }else{ ?>
+			  parent.window.location='view_claim.php?claimid=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';
+			<?php } ?>
 		</script>
 		<?
 		
@@ -47,7 +52,12 @@ if($_POST["notesub"] == 1)
 
                 ?>
                 <script type="text/javascript">
-                        parent.window.location='view_claim.php?claimid=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';
+                        <?php if($_POST['close']==1){ ?>
+			  alert('You selected "Close Claim".  After submitting this note you will be prompted to enter the final claim details on the next page.');
+                          parent.window.location='add_ledger_payments.php?cid=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&close=1';
+                        <?php }else{ ?>
+                          parent.window.location='view_claim.php?claimid=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';
+                        <?php } ?>
                 </script>
                 <?
 
@@ -89,6 +99,12 @@ if($_POST["notesub"] == 1)
                             	<textarea name="note" id="note" class="field text addr tbox" style="width:100%; height:150px;"><?=$note?></textarea>
             </td>
         </tr>
+  	<tr>
+		<td valign="top" class="frmhead">Close claim</td>
+		<td valign="top" class="frmdata">
+			<input type="checkbox" value="1" name="close" />
+		</td>
+	</tr>
         <tr >
             <td  colspan="2" align="center">
                 <span class="red">

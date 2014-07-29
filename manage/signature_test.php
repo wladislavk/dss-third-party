@@ -1,6 +1,15 @@
 <? 
 
 if(isset($_POST['sign_but'])){
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+ if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff']!=1){ ?>
+    <script type="text/javascript">
+    alert('You do not have permission to edit the practice profile.  Only users with sufficient permission may do so.  Please contact your office manager to resolve this issue.');
+    </script>
+  <?php }else{
+
 require_once '3rdParty/thomasjbradley-signature-to-image/signature-to-image.php';
 
 $json = $_POST['output'];
@@ -21,6 +30,7 @@ imagedestroy($img);
      WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
 mysql_query($s);
 */
+}
 }
 ?>
 <div style="clear:both;"></div>

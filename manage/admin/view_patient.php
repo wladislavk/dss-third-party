@@ -1247,7 +1247,7 @@ if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementBy
 }
 
 if($('#s_m_ins_type').val() == 1){
-  alert("Error! By law, Medicare MUST be set to Primary Insurance and CANNOT be Secondary Insurance. If patient has Medicare and additional insurance, please list Medicare as Primary Insurance.");
+  alert("Warning! It is very rare that Medicare is listed as a patient’s Secondary Insurance.  Please verify that Medicare is the secondary payer for this patient before proceeding.");
   return false;
 }
 

@@ -31,6 +31,7 @@ if($_POST["ticketsub"] == 1)
 		$ins_sql = "insert into dental_support_tickets set 
 				title = '".mysql_real_escape_string($_POST['title'])."',
 				category_id = '".mysql_real_escape_string($_POST['category_id'])."',
+				company_id = '".mysql_real_escape_string($_POST['company_id'])."',
 				body = '".mysql_real_escape_string($_POST['body'])."',
 				userid = '".mysql_real_escape_string($_SESSION['userid'])."',
 				docid = '".mysql_real_escape_string($_SESSION['docid'])."',
@@ -40,7 +41,6 @@ if($_POST["ticketsub"] == 1)
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		$t_id = mysql_insert_id();
 		for($i=0;$i < count($_FILES['attachment']['name']); $i++){
-		error_log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'.$_FILES['attachment']['size'][$i]."|".DSS_IMAGE_MAX_SIZE);
 		if($_FILES['attachment']['tmp_name'][$i]!='' && $_FILES['attachment']['size'][$i] <= DSS_IMAGE_MAX_SIZE){
                   $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
 		  $attachment = "support_attachment_".$t_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
@@ -107,6 +107,7 @@ if($_POST["ticketsub"] == 1)
 
 		$title = $_POST['title'];
 		$category_id = $_POST['category_id'];
+		$company_id = $_POST['company_id'];
 		$body = $_POST['body'];
 		$but_text = "Add ";
 	
@@ -151,6 +152,35 @@ if($_POST["ticketsub"] == 1)
                                 </ul>
             </td>
         </tr>
+        <tr>
+                <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                        <li id="foli8" class="complex">
+                        <div>
+                            <span>
+                                <select id="company_id" name="company_id" class="field text addr tbox">
+                                <option value="0">Dental Sleep Solutions</option>
+                                    <?
+                                        $c_sql = "SELECT * FROM companies WHERE use_support=1 ORDER BY name ASC;";
+                                        $c_q = mysql_query($c_sql);
+                                        while($c_r = mysql_fetch_array($c_q)){
+                  ?>
+
+                  <option <?php if($company_id == $c_r['id']){ echo " selected='selected'";} ?> value="<?=st($c_r['id']);?>">
+
+                                                <?=st($c_r['name']);?>
+                                        </option>
+                                    <? }?>
+                                </select>
+
+                                <label for="contacttype">Send To</label>
+                            </span>
+                        </div>
+                    </li>
+                                </ul>
+            </td>
+        </tr>
+
         <tr class="content">
         	<td valign="top" colspan="2" class="frmhead">
 				<ul>        

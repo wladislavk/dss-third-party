@@ -1,4 +1,5 @@
 <?php
+
 require_once('padCrypt.php');
 require_once('AES_Encryption.php');
 
@@ -7,44 +8,54 @@ class FTSSamples
 	protected $serviceEndpointUrl;
 	protected $securityContext;
 	protected $securityToken;
-        protected $companyId;
+	protected $apiKey;
 	
-	public function __construct ($cid)
+	public function __construct ()
 	{
-		$this->companyId = $cid;
-		$this->serviceEndpointUrl = "https://fws.axacore.com/xws/";
-                $key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($cid)."'";
+		$this->serviceEndpointUrl = "https://api.sfaxme.com/api/";
+		$this->securityContext = ""; //<--- Required but leave blank exactly as it is here
+                $key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($_SESSION['companyid'])."'";
                 $key_q = mysql_query($key_sql);
                 $keys = mysql_fetch_assoc($key_q);
-                $this->securityContext = $keys['sfax_security_context'];                        //<--- IMPORTANT: Enter a valid securityContext
+	
+		$this->apiKey = $keys['sfax_app_key'];//Required Key	
 	}
-
-	public function OutboundFaxCreate($faxNumber, $fileName, $filePath, $fileType)
+  /* 	
+	public function __construct ()
 	{
+		$this->serviceEndpointUrl = "https://fws.axacore.com/xws/";
+		$key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($_SESSION['companyid'])."'";
+		$key_q = mysql_query($key_sql);
+		$keys = mysql_fetch_assoc($key_q);
+		$this->securityContext = $keys['sfax_security_context'];			//<--- IMPORTANT: Enter a valid securityContext
+	}
+  */
+	public function OutboundFaxCreate($faxNumber, $fileName, $filePath, $fileType, $faxRecipient = "test")
+{
 		// Service Connection and Security Settings
-		$methodSignature = "FTS.OutboundFaxCreate";
-		$xwsSuccess = false;
+		$isSuccess = false;
 
 		// IMPORTANT: key parameters
-		//$faxNumber = "18883635968";						//<--- IMPORTANT: Enter a valid fax number
-		//$fileName = "Page1.tif";						//<--- IMPORTANT: Enter a valid file name
-		//$filePath = getcwd() . "/Page1.tif";			//<--- IMPORTANT: Enter a valid path to primary file to be faxed
-		//$fileType = "tif";								//<--- IMPORTANT: Enter a valid file type
+		//$faxNumber = "15123668506";	//<--- IMPORTANT: Enter a valid fax number
+		//$filePath = getcwd() . "/Page1.tif";   //<--- IMPORTANT: Enter a valid path to primary file to be faxed
+		//$faxRecipient = "GeneTest";							
+		
+	$optionalParams="CoverPageName=None;CoverPageSubject=PHPTest;CoverPageReference=PhpTest1234;TrackingCode=PHPTest1234";//Parameters to pass for CoverPages
 		
 		// Set Security Token
-		$FTSAES = new FTSAESHelper($this->securityContext, $this->companyId);
+		$FTSAES = new FTSAESHelper($this->securityContext);
 		$this->securityToken = $FTSAES->GenerateSecurityTokenUrl();
 
 		// Construct the base service URL endpoint
 		$url = $this->serviceEndpointUrl; 
-		$url .= "?XM=" . urlencode($methodSignature);
-		$url .= "&XSC=" . urlencode($this->securityContext);
-		$url .= "&XST=". urlencode($this->securityToken);
+		$url .= "sendfax?";
+		$url .= "token=". urlencode($this->securityToken);
+		$url .= "&ApiKey=" . urlencode($this->apiKey);
 		
 		// Add the method specific parameters
 		$url .= "&RecipientFax=" . urlencode($faxNumber);
-		$url .= "&FileName=" . urlencode($fileName);
-		$url .= "&FileType=" . urlencode($fileType);
+		$url .= "&RecipientName=" . urlencode($faxRecipient);
+		$url .= "&OptionalParams=" . urlencode($optionalParams);
 		
 		//echo "URL: " . $url;
 		
@@ -55,6 +66,9 @@ class FTSSamples
 		$ch = curl_init($url); 
 		curl_setopt($ch, CURLOPT_URL, $url); 
 		curl_setopt($ch, CURLOPT_HEADER, true); 
+		//curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+		curl_setopt($ch, CURLOPT_NOBODY, false); 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
@@ -67,130 +81,147 @@ class FTSSamples
 		
 		//trust any cert - FOR DEVELOPMENT ONLY
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
 		//execute curl and get response information
 		$responseBody = curl_exec($ch);
 		$responseInfo = curl_getinfo($ch);
-		$error = curl_error($ch);
-		curl_close ($ch);
 		
+		$error = curl_error($ch);
+	$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+$header = substr($responseBody, 0, $header_size);
+$raw = substr($responseBody, $header_size);
+$body = json_decode(substr($responseBody, $header_size), true);	
+		curl_close ($ch);
+				
 		//get headers and response data
 		$helper = new FTSHelper();
 		$headers = $helper->GetHeaders($responseBody, $responseInfo);
-		
-		$xwsSuccess = ($headers["XwsSuccess"] == "1");
-		if($xwsSuccess)
-		{
-			$deliverId = $headers["XwsReturnData"];
-			
+			$xResponseData = $helper->GetResponseData($responseBody, $responseInfo);
+		if ($body['isSuccess'])
+
+		{			
 			//get additional information from XML payload
 			//response data xml payload
 			$xResponseData = $helper->GetResponseData($responseBody, $responseInfo);
 			if ($xResponseData != null)
 			{
-				//get transmissionid which is needed for OutboundFaxStatus, OutboundFaxDownload
-				$responseTransmissionId = (string)$xResponseData->Delivery->attributes()->TransmissionId;
-			}
-			$return["status"] = true;
-			$return["transmission_id"] = $responseTransmissionId;
-			return $return;			
+				
+			}			
+                        $deliverId = $headers["XwsReturnData"];
+
+                        //get additional information from XML payload
+                        //response data xml payload
+                        $xResponseData = $helper->GetResponseData($responseBody, $responseInfo);
+                        if ($xResponseData != null)
+                        {
+                                //get transmissionid which is needed for OutboundFaxStatus, OutboundFaxDownload
+                                $responseTransmissionId = (string)$xResponseData->Delivery->attributes()->TransmissionId;
+                        }
+                        $return["status"] = true;
+                        $return["transmission_id"] = $body['SendFaxQueueId'];
+                        return $return;
 		}
 		else
 		{
 			//something went wrong so investigate result and error information
 			
 			//get result information from response headers
-			$xwsResultCode = (int)$headers["XwsResultCode"];
-			$xwsResultInfo = $headers["XwsResultInfo"];
-			
-			//echo "ResultCode=" . $xwsResultCode . "ResultInfo=" . $xwsResultInfo;
+			$xwsResultCode = $responseInfo["http_code"];
+			echo "ResultCode=" . $xwsResultCode ;
 			
 			//get error information from response headers
-			$xwsErrorCode = (int)$headers["XwsErrorCode"];
-			$xwsErrorInfo = $headers["XwsErrorInfo"];
+			$xwsErrorCode = $responseInfo["http_code"];
 			
-			//echo "ErrorCode=" . $xwsErrorCode . "ErrorInfo=" . $xwsErrorInfo;
-                        return $headers;
-		}		
-	}
+			echo "ErrorCode=" . $xwsErrorCode ;
+                        //something went wrong so investigate result and error information
 
-
-        public function OutboundFaxStatus($transmissionId)
-        {
-                // Service Connection and Security Settings 
-                $methodSignature = "FTS.OutboundFaxStatus";
-                $xwsSuccess = false;
-
-                // key parameters 
-                //$transmissionId = "2120103201859933026"; //<--- IMPORTANT: Enter a valid transmissionId 
-
-                // Set Security Token
-                $FTSAES = new FTSAESHelper($this->securityContext, $this->companyId);
-                $this->securityToken = $FTSAES->GenerateSecurityTokenUrl();
-
-                // Construct the base service URL endpoint
-                $url = $this->serviceEndpointUrl;
-                $url .= "?XM=" . urlencode($methodSignature);
-                $url .= "&XSC=" . urlencode($this->securityContext);
-                $url .= "&XST=". urlencode($this->securityToken);
-
-                // Add the method specific parameters 
-                $url .= "&TransmissionId=" . urlencode($transmissionId);
-
-                //initialize cURL and set cURL options 
-                $ch = curl_init($url);
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_HEADER, true);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, "");
-                //specific cURL options for HTTPS sites 
-                //see http://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/ 
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-
-                $responseBody = curl_exec($ch);
-                $responseInfo = curl_getinfo($ch);
-                $error = curl_error($ch);
-                curl_close ($ch);
-
-                //get headers and response data 
-
-                $helper = new FTSHelper();
-                $headers = $helper->GetHeaders($responseBody, $responseInfo);
-                $xwsSuccess = ($headers["XwsSuccess"] == "1");
-                if($xwsSuccess)
-                {
-                        $deliverId = $headers["XwsReturnData"];
-                        //additional header information 
-                        $faxAttempt = $headers["XwsFaxAttempt"];
-                        $faxComplete = $headers["XwsFaxComplete"];
-                        $faxSuccess = $headers["XwsFaxSuccess"];
-                        //get additional information from XML payload 
-                        //response data xml payload
-                        $xResponseData = $helper->GetResponseData($responseBody, $responseInfo);
-                        if ($xResponseData != null)
-                        {
-
-                        }
-                }
-                else
-                {
-
-			error_log("fax error");
-                        //something went wrong so investigate result and error information 
-                        //get result information from response headers 
+                        //get result information from response headers
                         $xwsResultCode = (int)$headers["XwsResultCode"];
                         $xwsResultInfo = $headers["XwsResultInfo"];
+
                         //echo "ResultCode=" . $xwsResultCode . "ResultInfo=" . $xwsResultInfo;
-                        //get error information from response headers 
+
+                        //get error information from response headers
                         $xwsErrorCode = (int)$headers["XwsErrorCode"];
                         $xwsErrorInfo = $headers["XwsErrorInfo"];
-                        //echo "ErrorCode=" . $xwsErrorCode . "ErrorInfo=" . $xwsErrorInfo;
-                }
 
-		return $headers;
-        }
+                        //echo "ErrorCode=" . $xwsErrorCode . "ErrorInfo=" . $xwsErrorInfo;
+                        return $headers;
+		}
+	}
+
+	public function OutboundFaxStatus($sendfaxQueueId) 
+	{ 
+		// key parameters
+		//$sendfaxQueueId = ""; //<--- IMPORTANT: Enter a valid transmissionId
+		
+		// Set Security Token
+		$FTSAES = new FTSAESHelper($this->securityContext);
+		$this->securityToken = $FTSAES->GenerateSecurityTokenUrl();
+
+		// Construct the base service URL endpoint
+		$url = $this->serviceEndpointUrl; 
+		$url .= "sendfaxstatus?";
+		$url .= "token=". urlencode($this->securityToken);
+		$url .= "&ApiKey=" . urlencode($this->apiKey);
+		
+		// Add the method specific parameters
+		$url .= "&SendFaxQueueId=" . urlencode($sendfaxQueueId);
+		
+		//initialize cURL and set cURL options
+		$ch = curl_init($url); 
+		curl_setopt($ch, CURLOPT_URL, $url); 
+		curl_setopt($ch, CURLOPT_HEADER, true); 
+		curl_setopt($ch, CURLOPT_NOBODY, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
+		//curl_setopt($ch, CURLOPT_POST, true);
+		//curl_setopt($ch, CURLOPT_GETHTTP, true);
+		//curl_setopt($ch, CURLOPT_POSTFIELDS, "");
+		
+		//specific cURL options for HTTPS sites
+		//see http://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
+		//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+		//curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+		//curl_setopt($ch, CURLOPT_CAINFO, getcwd() . "/EquifaxSecureGlobaleBusinessCA-1.crt");
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		//execute curl and get response information
+		
+		//echo "URL: " . $url;
+		
+		$responseBody = curl_exec($ch);
+		$responseInfo = curl_getinfo($ch);
+		$error = curl_error($ch);
+		curl_close ($ch);
+		//get headers and response data
+		$helper = new FTSHelper();
+		$headers = $helper->GetHeaders($responseBody, $responseInfo);
+		
+		if ($responseInfo["http_code"] == 200)
+
+		{			
+			//get additional information from XML payload
+			//response data xml payload
+			$xResponseData = $helper->GetResponseData($responseBody, $responseInfo);
+			if ($xResponseData != null)
+			{
+				
+			}			
+		}
+		else
+		{
+			//something went wrong so investigate result and error information
+			
+			//get result information from response headers
+			$xwsResultCode = $responseInfo["http_code"];
+			
+			echo "ResultCode=" . $xwsResultCode ;
+			
+			//get error information from response headers
+			$xwsErrorCode = $responseInfo["http_code"];
+			
+			echo "ErrorCode=" . $xwsErrorCode ;
+		}
+	}
+
 
 
 
@@ -218,15 +249,12 @@ class FTSHelper
 				}
 			}
 		}
-		
-		return $headers;		
+		return $headers;	
 	}	
 	public static function GetResponseData($responseBody, $responseInfo)
 	{
-		$body = "<?xml version='1.0'?>" . substr($responseBody, $responseInfo['header_size']);
-		$xml = simplexml_load_string($body);
-		
-		return $xml->ResponseData;		
+        	$body = "" . substr($responseBody, $responseInfo['header_size']);
+        	echo "SendFaxResponse: " . $body;
 	}
 	public static function WriteResponseToFile($responseBody, $responseInfo, $localFileName)
 	{
@@ -240,24 +268,30 @@ class FTSHelper
 class FTSAESHelper
 {
 	protected $pTokenContext; 
-	protected $pTokenAppId;
-	protected $pTokenAppKey;
+	protected $pTokenUsername;
+	protected $pTokenApiKey;
 	protected $pTokenClient; 
 	protected $pEncryptionKey; 
 	protected $pEncryptionInitVector;
 	
-	public function __construct($pSecurityContext, $pCompanyId)
+	public function __construct($pSecurityContext)
 	{
-                $key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($pCompanyId)."'";
+                $key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($_SESSION['companyid'])."'";
                 $key_q = mysql_query($key_sql);
                 $keys = mysql_fetch_assoc($key_q);
-
+/*
                 $this->pTokenContext = $pSecurityContext;
-                $this->pTokenAppId = $keys['sfax_app_id'];                                   //<--- IMPORTANT: Enter a valid App Id 
-                $this->pTokenAppKey = $keys['sfax_app_key'];         //<--- IMPORTANT: Enter a valid Encryption key
+                $this->pTokenUsername = $keys['app_id'];                                   //<--- IMPORTANT: Enter a valid App Id 
+                $this->pTokenAppKey = $keys['app_key'];         //<--- IMPORTANT: Enter a valid Encryption key
                 $this->pTokenClient = "";                                                       //<--- IMPORTANT: Enter a valid Client IP
-                $this->pEncryptionKey = $keys['sfax_app_key'];       //<--- IMPORTANT: Enter a valid Encryption key
-                $this->pEncryptionInitVector = $keys['sfax_init_vector'];                            //<--- IMPORTANT: Enter a valid Init vectory
+                $this->pEncryptionKey = $keys['app_key'];       //<--- IMPORTANT: Enter a valid Encryption key
+                $this->pEncryptionInitVector = $keys['init_vector']; */
+	$this->pTokenContext=$pSecurityContext;                        
+        $this->pTokenUsername=$keys['sfax_app_id'];  //<--- IMPORTANT: Enter a valid Username
+        $this->pTokenApiKey=  $keys['sfax_app_key'];  //<--- IMPORTANT: Enter a valid ApiKey
+        $this->pTokenClient="";   //<--- IMPORTANT: Leave Blank
+        $this->pEncryptionKey=$keys['sfax_encryption_key'];  //<--- IMPORTANT: Enter a valid Encryption key
+        $this->pEncryptionInitVector=$keys['sfax_init_vector'];//"x49e*wJVXr8BrALE";  //<--- IMPORTANT: Enter a valid Init vector
 	}
 	
 	public function GenerateSecurityTokenUrl()
@@ -268,7 +302,7 @@ class FTSAESHelper
 		
 		$tokenGenDT = gmdate("Y-m-d") . "T" . gmdate("H:i:s") . "Z";
 		
-		$tokenDataInput = "Context=" . $this->pTokenContext . "&AppId=" . $this->pTokenAppId . "&AppKey=" . $this->pTokenAppKey . "&GenDT=" . $tokenGenDT . "";
+		$tokenDataInput = "Context=" . $this->pTokenContext . "&Username=" . $this->pTokenUsername. "&ApiKey=" . $this->pTokenApiKey . "&GenDT=" . $tokenGenDT . "";
 		
 		if($this->pTokenClient != null && $this->pTokenClient != "")
 		{
@@ -281,3 +315,4 @@ class FTSAESHelper
 		return $tokenDataEncoded;
 	}
 }
+

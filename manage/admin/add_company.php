@@ -25,6 +25,7 @@ if($_POST["compsub"] == 1)
 				sfax_security_context = '".mysql_real_escape_string($_POST['sfax_security_context'])."',
 				sfax_app_id = '".mysql_real_escape_string($_POST['sfax_app_id'])."',
 				sfax_app_key = '".mysql_real_escape_string($_POST['sfax_app_key'])."',
+				sfax_encryption_key = '".mysql_real_escape_string($_POST['sfax_encryption_key'])."',
 				sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
 				plan_id = '".mysql_real_escape_string($_POST['plan_id'])."',
 				status = '".mysql_real_escape_string($_POST["status"])."',
@@ -69,6 +70,7 @@ if($_POST["compsub"] == 1)
 				sfax_security_context = '".mysql_real_escape_string($_POST['sfax_security_context'])."',
                                 sfax_app_id = '".mysql_real_escape_string($_POST['sfax_app_id'])."',
                                 sfax_app_key = '".mysql_real_escape_string($_POST['sfax_app_key'])."',
+                                sfax_encryption_key = '".mysql_real_escape_string($_POST['sfax_encryption_key'])."',
                                 sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
 				plan_id = '".mysql_real_escape_string($_POST['plan_id'])."',
 				status = '".mysql_real_escape_string($_POST['status'])."',
@@ -122,6 +124,7 @@ if($_POST["compsub"] == 1)
 		$sfax_securty_context = $_POST['sfax_security_context'];
                 $sfax_app_id = $_POST['sfax_app_id'];
                 $sfax_app_key = $_POST['sfax_app_key'];
+                $sfax_encryption_key = $_POST['sfax_encryption_key'];
                 $sfax_init_vector = $_POST['sfax_init_vector'];
 		$plan_id = $_POST['plan_id'];
 		$status = $_POST['status'];
@@ -146,6 +149,7 @@ if($_POST["compsub"] == 1)
 		$sfax_security_context = st($themyarray['sfax_security_context']);
                 $sfax_app_id = st($themyarray['sfax_app_id']);
                 $sfax_app_key = st($themyarray['sfax_app_key']);
+                $sfax_encryption_key = st($themyarray['sfax_encryption_key']);
                 $sfax_init_vector = st($themyarray['sfax_init_vector']);
 		$plan_id = st($themyarray['plan_id']);
 		$status = st($themyarray['status']);
@@ -294,7 +298,7 @@ if($_POST["compsub"] == 1)
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                SFAX App ID
+                SFAX Username
             </td>
             <td valign="top" class="frmdata">
                 <input id="sfax_app_id" type="text" name="sfax_app_id" value="<?=$sfax_app_id;?>" class="form-control" />
@@ -302,10 +306,18 @@ if($_POST["compsub"] == 1)
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                SFAX App Key
+                SFAX API Key
             </td>
             <td valign="top" class="frmdata">
                 <input id="sfax_app_key" type="text" name="sfax_app_key" value="<?=$sfax_app_key;?>" class="form-control" />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                SFAX Encryption Key
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="sfax_encryption_key" type="text" name="sfax_encryption_key" value="<?=$sfax_encryption_key;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

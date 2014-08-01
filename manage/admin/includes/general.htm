@@ -1070,7 +1070,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
                 	$filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
                 	$fileType = "pdf";
 			$fts = new FTSSamples($doc_company);
-			$fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
+			$fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType, $firstname);
 			if($fax_send !== true){
 			  if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
 				$send_success = false;

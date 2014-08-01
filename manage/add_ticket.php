@@ -161,8 +161,12 @@ if($_POST["ticketsub"] == 1)
                                 <select id="company_id" name="company_id" class="field text addr tbox">
                                 <option value="0">Dental Sleep Solutions</option>
                                     <?
-                                        $c_sql = "SELECT * FROM companies WHERE use_support=1 ORDER BY name ASC;";
-                                        $c_q = mysql_query($c_sql);
+                                        $c_sql = "SELECT c.* FROM companies c
+						JOIN dental_users u ON u.billing_company_id=c.id
+						WHERE c.use_support=1 
+						AND u.userid='".mysql_real_escape_string($_SESSION['docid'])."'
+						ORDER BY c.name ASC;";
+                                        $c_q = mysql_query($c_sql) or die(mysql_error());
                                         while($c_r = mysql_fetch_array($c_q)){
                   ?>
 

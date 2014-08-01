@@ -1366,6 +1366,16 @@ text-decoration:none;
 border-top-color: #1f303b;
 background: #1f303b;
 }
+.addButton.mainButton{
+  background:#2487E0;
+  padding:4px 8px;
+  font-size:16px;
+}
+
+.addButton.mainButton:hover{
+  background:#0467c0;
+}
+
 
 .button.grayButton, .addButton.grayButton{
   background:#666;

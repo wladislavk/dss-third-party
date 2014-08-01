@@ -17,6 +17,7 @@ $sql = "select t.*,
 	CONCAT(a.first_name,' ',a.last_name) as account,
 	c.name as company,
 	t.company_id,
+ 	c2.name as ticket_company,
 	cat.title as category,
 	(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
         (SELECT r3.attachment FROM dental_support_responses r3 WHERE r3.ticket_id=t.id ORDER BY r3.attachment DESC LIMIT 1) AS response_attachment,
@@ -27,6 +28,7 @@ $sql = "select t.*,
 		LEFT JOIN dental_users a ON a.userid=t.docid
                 LEFT JOIN dental_user_company uc ON uc.userid=t.docid
                 LEFT JOIN companies c ON c.id=uc.companyid
+                LEFT JOIN companies c2 ON c2.id=t.company_id
 		LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
 		LEFT JOIN (SELECT MAX(r2.adddate) as last_response, r2.ticket_id FROM dental_support_responses r2 GROUP BY r2.ticket_id ) response ON response.ticket_id=t.id
    	WHERE t.status IN (".DSS_TICKET_STATUS_OPEN.", ".DSS_TICKET_STATUS_REOPENED.") ";
@@ -124,7 +126,11 @@ else
                         <?= st($myarray["account"]); ?>
                         </td>	
 			<td valign="top">
-			<?= $myarray["company"];?>
+			<?php if($myarray["company_id"]==0){ ?>
+				Dental Sleep Solutions
+			<?php }else{ ?>
+			<?= $myarray["ticket_company"];?>
+			<?php } ?>
 			</td>
 			<td valign="top">
 		 		<?= $myarray['category']; ?>	
@@ -157,6 +163,8 @@ $sql = "select t.*,
         CONCAT(u.first_name, ' ', u.last_name) as user,
 	CONCAT(a.first_name, ' ', a.last_name) as account,
         c.name as company,
+	t.company_id,
+	c2.name as ticket_company,
         cat.title as category,
         (SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
         (SELECT r2.adddate FROM dental_support_responses r2 WHERE r2.ticket_id=t.id ORDER BY r2.adddate DESC LIMIT 1) AS last_response,
@@ -166,8 +174,15 @@ $sql = "select t.*,
                 LEFT JOIN dental_users a ON a.userid=t.docid
 		LEFT JOIN dental_user_company uc ON uc.userid=t.docid
                 LEFT JOIN companies c ON c.id=uc.companyid
+                LEFT JOIN companies c2 ON c2.id=t.company_id
                 LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
 WHERE t.status IN (".DSS_TICKET_STATUS_CLOSED.") ";
+if(is_billing($_SESSION['admin_access'])){
+    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_q = mysql_query($c_sql);
+    $c = mysql_fetch_assoc($c_q);
+  $sql .= " AND t.company_id='".$c['companyid']."' ";
+}
 if(isset($_REQUEST['catid'])){
 	$sql .= " AND category_id = ".mysql_real_escape_string($_REQUEST['catid']);
 }
@@ -238,7 +253,11 @@ else
                         <?= st($myarray["account"]); ?>
                         </td>
                         <td valign="top">
-                        <?= $myarray["company"];?>
+                        <?php if($myarray["company_id"]==0){ ?>
+                                Dental Sleep Solutions
+                        <?php }else{ ?>
+                        <?= $myarray["ticket_company"];?>
+                        <?php } ?>
                         </td>
                         <td valign="top">
                                 <?= $myarray['category']; ?>

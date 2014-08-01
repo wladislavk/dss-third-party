@@ -256,6 +256,9 @@ if(isset($new_status)){
   }else{
     $x = "UPDATE dental_insurance SET status='".$new_status."'  ";
   }
+    if($_POST['close'] == 1){
+	$x = ", closed_by_office_type = 1 ";
+    }
   if($new_status == DSS_CLAIM_SENT || $new_status == DSS_CLAIM_SEC_SENT || $new_status == DSS_CLAIM_DISPUTE || $new_status == DSS_CLAIM_SEC_DISPUTE || $new_status == DSS_CLAIM_REJECTED || $new_status == DSS_CLAIM_SEC_REJECTED  || $new_status == DSS_CLAIM_PATIENT_DISPUTE || $new_status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
     $x .= ", mailed_date = NULL ";
   }

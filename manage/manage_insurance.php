@@ -9,7 +9,19 @@ if(isset($_GET['vobdel'])){
   mysql_query($d);
 
 }
+?>
+<a href="#" style="float:right;margin-right:20px;" onclick="$('#ins_info').show(500);$(this).hide();return false;" id="ins_info_but" class="button"> View Ins. Info </a>
 
+<div id="ins_info" class="fullwidth" style="display:none;">
+
+<a href="#" style="float:right;margin-right:20px;" onclick="$('#ins_info').hide(500);$('#ins_info_but').show();return false;" class="button"> Hide Ins. Info </a>
+<a href="add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>#p_m_ins" style="float:right;margin-right:20px;" class="button"> Edit Insurance </a>
+<?php include 'insurance_info.php'; ?>
+
+
+</div>
+
+<?php
   include 'vob_checklist.php';
 ?>
 <div style="clear:both;"></div>

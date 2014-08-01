@@ -251,13 +251,17 @@ if($_POST["usersub"] == 1)
 			<option value="">Select Access</option>
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
                         <option value="<?= DSS_ADMIN_ACCESS_SUPER; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_SUPER) echo " selected";?>>Super</option>
-			<?php } ?>
                         <option value="<?= DSS_ADMIN_ACCESS_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_ADMIN) echo " selected";?>>Admin</option>
                         <option value="<?= DSS_ADMIN_ACCESS_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BASIC) echo " selected";?>>Basic</option>
+			<?php } ?>
+			<?php if(is_super($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])){ ?>
                         <option value="<?= DSS_ADMIN_ACCESS_BILLING_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_ADMIN) echo " selected";?>>Billing Admin</option>
                         <option value="<?= DSS_ADMIN_ACCESS_BILLING_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_BASIC) echo " selected";?>>Billing Basic</option>
+			<?php } ?>
+			<?php if(is_super($_SESSION['admin_access']) || is_hst($_SESSION['admin_access'])){ ?>
                         <option value="<?= DSS_ADMIN_ACCESS_HST_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_ADMIN) echo " selected";?>>HST Admin</option>
                         <option value="<?= DSS_ADMIN_ACCESS_HST_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_BASIC) echo " selected";?>>HST Basic</option>
+			<?php } ?>
                 </select>
             </td>
         </tr>

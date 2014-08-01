@@ -300,7 +300,10 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <?=st($myarray["hst_company_name"]);?>
                                 </td>
 				<td valign="top">
+                                        <a href="view_patient.php?pid=<?= $myarray['patient_id']; ?>" title="View Chart">
 					<?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?>
+					(View Chart)
+					</a>
 				</td>
 				<td valign="top">
 					<?=st($myarray["ins_co"]);?>&nbsp;
@@ -315,13 +318,10 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <?=st($myarray["authorized_name"]);?>&nbsp;
                                 </td>
 				<td valign="top">
-					<a href="Javascript:;" onclick="Javascript: loadPopup('view_hst.php?ed=<?=$myarray["id"];?><?= (isset($_GET['status']) && $_GET['status']!='')?"&ret_status=".$_GET['status']:""; ?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="view_hst.php?ed=<?=$myarray["id"];?><?= (isset($_GET['status']) && $_GET['status']!='')?"&ret_status=".$_GET['status']:""; ?>" title="Edit" class="btn btn-primary btn-sm">
 						View
 					 <span class="glyphicon glyphicon-pencil"></span></a>
 
-                                        <a href="view_patient.php?pid=<?= $myarray['patient_id']; ?>" title="View Chart" class="btn btn-primary btn-sm">
-                                                View Chart
-                                         <span class="glyphicon glyphicon-pencil"></span></a>
 				</td>
 			</tr>
 	<? 	}

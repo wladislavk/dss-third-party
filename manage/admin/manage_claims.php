@@ -282,13 +282,20 @@ if ((isset($_GET['status']) && ($_GET['status'] != '')) || !empty($_GET['fid']))
 }
     $sql .= "  
 AND
+(
  CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.")
     THEN p.p_m_dss_file
     ELSE p.s_m_dss_file
-   END = '1' ";
+   END = '1' 
+
+	OR c.exclusive=1)
+	";
 
         if(isset($_GET['notes']) && $_GET['notes']==1){
           $sql .= " AND num_notes > 0 ";
+        }
+        if(isset($_GET['closedby']) ){
+          $sql .= " AND closed_by_office_type = ".$_GET['closedby'];
         }
 
 $sql .= " 
@@ -368,10 +375,17 @@ if(isset($_GET['msg'])){
 ?>
 <a style="float:right;"  href="report_claim_aging.php" class="btn btn-primary"> Claim Aging </a>
 <?php } ?>
+
+<?php if(isset($_GET['closedby']) && $_GET['closedby']==1){ ?>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?=$_GET['status'];?>&fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>&sort_by=<?= $_GET['sort_by']; ?>&sort_dir=<?=$_GET['sort_dir']; ?>" class="btn btn-primary"> Show All Claims </a>
+<?php }else{ ?>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?closedby=1&status=<?=$_GET['status'];?>&fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>&sort_by=<?= $_GET['sort_by']; ?>&sort_dir=<?=$_GET['sort_dir']; ?>" class="btn btn-primary" title="Show only claims closed by frontoffice (not backoffice) user."> Frontoffice Closed </a>
+<?php } ?>
+
 <?php if(isset($_GET['notes']) && $_GET['notes']==1){ ?>
 <a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?=$_GET['status'];?>&fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>&sort_by=<?= $_GET['sort_by']; ?>&sort_dir=<?=$_GET['sort_dir']; ?>" class="btn btn-primary"> Show All Claims </a>
 <?php }else{ ?>
-<a style="float:right;margin-right:3px;"  href="manage_claims.php?notes=1&status=<?=$_GET['status'];?>&fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>&sort_by=<?= $_GET['sort_by']; ?>&sort_dir=<?=$_GET['sort_dir']; ?>" class="btn btn-primary"> Show Claim w Notes </a>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?notes=1&status=<?=$_GET['status'];?>&fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>&sort_by=<?= $_GET['sort_by']; ?>&sort_dir=<?=$_GET['sort_dir']; ?>" class="btn btn-primary" title="Show only claims that have notes"> Show Claim w Notes </a>
 <?php } ?>
 <div style="clear:both;"></div>
 </div>

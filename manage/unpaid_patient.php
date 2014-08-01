@@ -15,12 +15,16 @@ $i_val = $index_val * $rec_disp;
 
 $sql = "SELECT  "
                  . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+     . " a.amount as adjusted_amount, "
      . "p.firstname, p.lastname, p.patientid "
      . "FROM dental_ledger dl  "
      . "JOIN dental_patients p ON p.patientid=dl.patientid "
+     . " LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."' "
+     . " LEFT JOIN (SELECT patientid, SUM(paid_amount) amount FROM dental_ledger group by patientid) a ON a.patientid=dl.patientid "
      . "WHERE dl.docid='".$_SESSION['docid']."'  "
+     . " AND tc.type!='".mysql_real_escape_string(DSS_TRXN_TYPE_ADJ)."' "
      . "GROUP BY dl.patientid";
-$my = mysql_query($sql);
+$my = mysql_query($sql) or die(mysql_error());
 /*
 $sql .= " order by service_date";
 
@@ -79,22 +83,19 @@ background:#999999;
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="5%">
-			Svc Date
-		</td>
-		<td valign="top" class="col_head" width="5%">
-			Entry Date
-		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head">
 			Patient
 		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head">
 			Charges
 		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head">
 			Credits
 		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head">
+			Adjustments	
+		</td>
+		<td valign="top" class="col_head">
 			Pt. Balance	
 		</td>
 	</tr>
@@ -112,6 +113,7 @@ background:#999999;
 	
 		$tot_charges = 0;
 		$tot_credit = 0;
+		$tot_adjusted = 0;
 		
 		while($myarray = mysql_fetch_array($my))
 		{
@@ -144,16 +146,10 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 			$tr_class = "tr_active";
 		?>
 			<tr class="<?=$tr_class;?>">
-				<td valign="top" width="18%">
-                	<?date('m-d-Y',strtotime(st($myarray["service_date"])));?>
+				<td valign="top">
+                	<a href="manage_ledger.php?addtopat=1&pid=<?=$myarray['patientid'];?>"><?=st($myarray['lastname'].", ".$myarray['firstname']);?> (Click to View)</a>
 				</td>
-				<td valign="top" width="18%">
-                	<?date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
-				</td>
-				<td valign="top" width="18%">
-                	<a href="manage_ledger.php?addtopat=1&pid=<?=$myarray['patientid'];?>"><?=st($myarray['lastname'].", ".$myarray['firstname']);?></a>
-				</td>
-				<td valign="top" align="right" width="18%">
+				<td valign="top" align="right">
           <?php
           echo "$".number_format($myarray["amount"],2);
 	  $tot_charges += $myarray["amount"];
@@ -161,7 +157,7 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 
 					&nbsp;
 				</td>
-				<td valign="top" align="right" width="18%">
+				<td valign="top" align="right">
 					<? if(st($paid_amount) <> 0) {?>
 	                	<?=number_format(st($paid_amount),2);?>
 					<? 
@@ -170,11 +166,18 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 					&nbsp;
 	
 				</td>
-				<td valign="top" width="10%">&nbsp;
+				<td valign="top" align="right">
+					<? if(st($myarray['adjusted_amount']) <> 0) {?>
+	                	<?=number_format(st($myarray['adjusted_amount']),2);?>
+					<? 
+						$tot_adjusted += st($myarray['adjusted_amount']);
+					}?>
+				</td>
+				<td valign="top">&nbsp;
 					<?php if($myarray["amount"]>$paid_amount){ ?>
 					<?= number_format(($myarray["amount"]-$paid_amount),2); ?>
 					<?php }elseif($myarray["amount"]<$paid_amount){ ?>
-						<span style="color:#070;">(<?= number_format((abs($myarray["amount"]-$paid_amount)),2); ?>)</span>
+						<span style="color:#070;">(<?= number_format((abs($myarray["amount"]-$paid_amount-$myarray['adjusted_amount'])),2); ?>)</span>
 					<?php }?>
 				</td>
 			</tr>
@@ -182,7 +185,7 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 	?> 
 	  
 		<tr>
-			<td valign="top" colspan="3" align="right">
+			<td valign="top" align="right">
 				<b>Totals</b>
 			</td>
 			<td valign="top" align="right">
@@ -200,6 +203,12 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 				&nbsp;
 				</b>
 			</td>
+			<td valign="top" align="right">
+				<b>
+				<?php echo "$".number_format($tot_adjusted,2);?>
+				&nbsp;
+				</b>
+			</td>
 			<td valign="top">&nbsp;
 				
 			</td>
@@ -210,7 +219,7 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
                         </td>
                         <td align="right">
                                 <b>                                <b>
-                                <?php echo "$".number_format(($tot_charges - $tot_credit),2);?>
+                                <?php echo "$".number_format(($tot_charges - $tot_credit - $tot_adjusted),2);?>
                                 &nbsp;
                                 </b>
                         </td>

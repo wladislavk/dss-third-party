@@ -32,8 +32,10 @@ if(isset($_REQUEST["vid"]))
 
 $pend_sql = "select i.*, p.firstname, p.lastname,
         (SELECT e.adddate FROM dental_claim_electronic e WHERE e.claimid=i.insuranceid ORDER by e.adddate DESC LIMIT 1) electronic_adddate
- from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' 
-	AND fo_paid_viewed=0 ";
+ from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
+if(isset($_GET['paid_viewed'])){ 
+	$pend_sql .= " AND fo_paid_viewed=0 ";
+}
 $pend_sql .= " AND (i.status IN (".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.", ".DSS_CLAIM_PAID_SEC_PATIENT."))" ;
 if(isset($_GET['sort2'])){
   if($_GET['sort2']=='patient'){
@@ -58,6 +60,15 @@ $pend_my=mysql_query($pend_sql) or die(mysql_error());
 </span>
 <br />
 &nbsp;&nbsp;
+<div style="float: right; margin-right: 20px;">
+<?php if(!isset($_GET['paid_viewed'])){ ?>
+<a href="manage_claims_paid.php?paid_viewed=0" class="addButton">Show Not-Yet Viewed</a>
+<?php }
+
+if(isset($_GET['paid_viewed'])){ ?>
+  <a href="manage_claims_paid.php" class="addButton">Show All</a>
+<?php } ?>
+</div>
 
   
 <br />
@@ -122,7 +133,10 @@ if(isset($_GET['msg'])){
 <a href="manage_claims_paid.php?claimid=<?=$pend_myarray["insuranceid"];?>&pid=<?= $pend_myarray['patientid']; ?>&vid=1" class="editlink" title="Mark Viewed">
                                                 Mark Viewed 
                                         </a>
-
+					|
+						<a href="view_claim.php?claimid=<?=$pend_myarray["insuranceid"];?>&pid=<?= $pend_myarray['patientid']; ?>" class="editlink" title="View">
+                                                View 
+                                        </a>
 
                                 </td>
                         </tr>

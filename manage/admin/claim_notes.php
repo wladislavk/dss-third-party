@@ -465,6 +465,11 @@ if ($is_pending) {
 
 <div style="display:block; float:left; width:48%;">
 <h3>Secondary</h3>
+<?php
+  if($myarray['has_s_m_ins']!='Yes'){
+?>
+  None
+<?php }else{ ?>
 <ul>
   <li><label>Insurance Co.:</label><span class="value"><?php echo $inscoinfo['company']; ?></span></li>
   <li><label>Insurance Addr:</label><span class="value"><?php echo $inscoinfo['add1']." ".$inscoinfo['add2']." ".$inscoinfo['city']." ".$inscoinfo['state']." ".$inscoinfo['zip']; ?></span></li>
@@ -512,6 +517,7 @@ if ($is_pending) {
   <li><label>Claim Date of Service: </label><span class="value"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></span></li>
   <li><label>Total Claim Amt: </label> <span class="value"><?= $total_charge; ?></span></li>
 </ul>
+<?php } ?>
 </div>
 
 

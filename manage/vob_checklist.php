@@ -118,6 +118,17 @@ if ($patient_info) {
   $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".$_GET['pid']."'";
   $pat_q = mysql_query($pat_sql);
   $pat_r = mysql_fetch_assoc($pat_q);
+
+  $b_sql = "SELECT c.name, c.exclusive FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $b_q = mysql_query($b_sql);
+  if(mysql_num_rows($b_q)>0){
+    $b_r = mysql_fetch_assoc($b_q);
+    $exclusive_billing = $b_r['exclusive'];
+  }else{
+    $exclusive_billing = 0;
+  }
+
+
   if($pat_r['p_m_relation']=='' ||
         $pat_r['p_m_partyfname'] == "" ||
         $pat_r['p_m_partylname'] == "" ||
@@ -130,6 +141,8 @@ if ($patient_info) {
         $pat_r['p_m_ins_type'] == ''
         ){
     $ins_error = true;
+  }elseif($exclusive_billing){
+    $ins_error = false;
   }elseif($pat_r['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
     $ins_error = false;
   }elseif($pat_r['p_m_dss_file']!=1){

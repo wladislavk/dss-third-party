@@ -27,7 +27,7 @@ $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
 ?>
-<div class="fullwidth">
+<div id="notes" class="fullwidth">
 <span class="admin_head" >
 	Claim Notes <?= $c['pat_name']; ?>
 </span>

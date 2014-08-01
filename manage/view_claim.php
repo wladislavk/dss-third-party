@@ -268,6 +268,10 @@ if($claim['status'] == DSS_CLAIM_SEC_PENDING || $claim['status'] == DSS_CLAIM_SE
 <?php } ?>
 */ ?>
 <div align="right" style="clear: right;">
+        <button onclick="Javascript: window.location = 'add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>';" class="addButton mainButton">
+               Make Payment
+        </button>
+        &nbsp;&nbsp;
 <?php
   if(
 	($claim['status'] == DSS_CLAIM_PAID_INSURANCE || $claim['status']== DSS_CLAIM_PAID_PATIENT) &&
@@ -304,10 +308,6 @@ if($claim['status'] == DSS_CLAIM_SEC_PENDING || $claim['status'] == DSS_CLAIM_SE
         </button>
         &nbsp;&nbsp;
 <?php } ?>
-        <button onclick="Javascript: window.location = 'add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>';" class="addButton">
-               Make Payment 
-        </button>
-        &nbsp;&nbsp;
 
 <button onclick="Javascript: window.location='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
                 Print Ledger

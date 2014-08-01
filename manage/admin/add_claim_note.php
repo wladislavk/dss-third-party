@@ -42,6 +42,7 @@ if($_POST["notesub"] == 1)
 		?>
 		<script type="text/javascript">
 			<?php if(isset($_POST['close']) && $_POST['close']==1){ ?>
+			  alert('After submitting this note you will be prompted to enter the final claim details on the next page.');
 			  parent.window.location='claim_payments_advanced.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&close=1';
 			<?php }else{ ?>
 			  parent.window.location='claim_notes.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';

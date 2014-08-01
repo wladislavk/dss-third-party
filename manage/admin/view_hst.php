@@ -1,13 +1,7 @@
-<?php 
-session_start();
+<?
+include "includes/top.htm";
 require_once('../includes/constants.inc');
-require_once('includes/main_include.php');
-include("includes/sescheck.php");
-require_once('../includes/dental_patient_summary.php');
-require_once('../includes/general_functions.php');
-?>
-<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-<?php
+require_once "includes/general.htm";
 
 if (isset($_REQUEST['ed'])) {
     // load hst
@@ -203,7 +197,6 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 
 ?>
 
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
 <style>
 .readonly {
@@ -530,5 +523,4 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
       $('.status_<?=$hst['status'];?>').show();
     });
   </script>
-</body>
-</html>
+<?php include 'includes/bottom.htm'; ?>

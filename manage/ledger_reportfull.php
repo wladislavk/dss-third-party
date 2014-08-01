@@ -188,6 +188,9 @@ background:#999999;
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="ledger_reportfull.php?sort=credits&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits
 		</td>
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_reportfull.php?sort=credits&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Adjustments
+		</td>
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
 			<a href="ledger_reportfull.php?sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
 		</td>
@@ -209,6 +212,7 @@ background:#999999;
 	
 		$tot_charges = 0;
 		$tot_credit = 0;
+		$tot_adj = 0;
 		
 		while($myarray = mysql_fetch_array($my))
 		{
@@ -258,14 +262,30 @@ background:#999999;
 
 					&nbsp;
 				</td>
+                                <?php if($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
+                                <td></td>
+                                        <?php
+                                                if($myarray[0]!='claim'){
+                                                $tot_adj += st($myarray["paid_amount"]);
+                                                }
+                                        ?>
+                                <?php } ?>
 				<td valign="top" align="right" width="10%">
 					<? if(st($myarray["paid_amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
-						$tot_credit += st($myarray["paid_amount"]);
 					}?>
 					&nbsp;
 				</td>
+                                <?php if(!($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ ?>
+                                                <?php
+                                                if($myarray[0]!='claim'){
+						$tot_credit += st($myarray["paid_amount"]);
+                                                }
+                                                ?>
+                                <td></td>
+                                <?php } ?>
+
 				<td valign="top" width="5%">&nbsp;
          <? if($myarray["status"] == 1){
 	           echo "Sent";
@@ -329,6 +349,12 @@ background:#999999;
 				&nbsp;
 				</b>
 			</td>
+                        <td valign="top" align="right">
+                                <b>
+                                <?php echo "$".number_format($tot_adj,2);?>
+                                &nbsp;
+                                </b>
+                        </td>
 			<td valign="top">&nbsp;
 				
 			</td>
@@ -339,7 +365,7 @@ background:#999999;
                         </td>
 			<td align="right">
 				<b>                                <b>
-                                <?php echo "$".number_format(($tot_charges - $tot_credit),2);?>
+                                <?php echo "$".number_format(($tot_charges - $tot_credit - $tot_adj),2);?>
                                 &nbsp;
                                 </b>
 			</td>

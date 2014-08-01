@@ -665,7 +665,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 														
 							</ul>
 						</li>
-						  <?php if (!is_billing($_SESSION['admin_access'])) { ?>
+						  <?php if (!is_hst($_SESSION['admin_access'])) { ?>
 						<li>
 							<a href="javascript:;">
 								<i class="fa fa-cogs"></i> Note Text
@@ -673,6 +673,9 @@ $num_pending_claims = mysql_num_rows($pending_q);
 								</span>
 							</a>
 							<ul class="sub-menu">
+
+							  <?php if (is_super($_SESSION['admin_access'])) { ?>
+
 								<li>
 									<a href="/manage/admin/manage_custom_text.php">
 										<i class="fa fa-user"></i>Progress Default Text (Global)
@@ -695,6 +698,13 @@ $num_pending_claims = mysql_num_rows($pending_q);
                                                                                 <i class="fa fa-bell"></i>Claim Company Text (Individual)
                                                                         </a>
                                                                 </li>
+							  <?php }else{ ?>
+                                                                <li>
+                                                                        <a href="/manage/admin/manage_company_claim_text.php?companyid=<?= $_SESSION['admincompanyid']; ?>">
+                                                                                <i class="fa fa-bell"></i>Claim Company Text
+                                                                        </a>
+                                                                </li>
+							<?php } ?>
 							</ul>
 						</li>
 						<?php } ?>

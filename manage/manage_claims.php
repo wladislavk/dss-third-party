@@ -30,8 +30,11 @@ if(isset($_REQUEST["delid"]))
 
 
 $pend_sql = "select i.*, p.firstname, p.lastname,
+	COALESCE(notes.num_notes, 0) num_notes,
         (SELECT e.adddate FROM dental_claim_electronic e WHERE e.claimid=i.insuranceid ORDER by e.adddate DESC LIMIT 1) electronic_adddate
- from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
+ from dental_insurance i left join dental_patients p on i.patientid=p.patientid 
+	LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=i.insuranceid 
+	where i.docid='".$_SESSION['docid']."' "; 
 $pend_sql .= " AND (i.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_SEC_REJECTED."))" ;
 if(isset($_GET['sort2'])){
   if($_GET['sort2']=='patient'){
@@ -41,21 +44,29 @@ if(isset($_GET['sort2'])){
   }
 
 }
+        if(isset($_GET['notes']) && $_GET['notes']==1){
+          $pend_sql .= " AND num_notes > 0 ";
+        }
 $pend_sql .= " ORDER BY " . mysql_real_escape_string($sort);
 $pend_my=mysql_query($pend_sql) or die(mysql_error());
 
 
 	
 $sql = "select i.*, p.firstname, p.lastname,
+	COALESCE(notes.num_notes, 0) num_notes,
 	(SELECT e.adddate FROM dental_claim_electronic e WHERE e.claimid=i.insuranceid ORDER by e.adddate DESC LIMIT 1) electronic_adddate
-	from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
+	from dental_insurance i left join dental_patients p on i.patientid=p.patientid 
+	LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=i.insuranceid 
+	where i.docid='".$_SESSION['docid']."' ";
 if($_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE){
   $sql .= " AND i.status NOT  IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_SEC_REJECTED.")";
 }
 if(isset($_GET['unpaid'])){
   $sql .= " AND i.status NOT IN  (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_SEC_PATIENT.") AND i.adddate < DATE_SUB(NOW(), INTERVAL ".mysql_real_escape_string($_GET['unpaid'])." day) ";
 }
-
+        if(isset($_GET['notes']) && $_GET['notes']==1){
+          $sql .= " AND num_notes > 0 ";
+        }
 if(isset($_GET['unmailed'])){
   $sql .= " AND i.mailed_date IS NULL AND i.sec_mailed_date is NULL ";
 }
@@ -79,6 +90,16 @@ $my=mysql_query($sql) or die(mysql_error());
 <span class="admin_head">
 	Pending Claims 
 </span>
+<div style="float: right; margin-right: 20px;">
+<?php if(!isset($_GET['notes'])){ ?>
+<a href="manage_claims.php?notes=1" class="addButton">Show Claims w Notes</a>
+<?php }
+
+if(isset($_GET['notes'])){ ?>
+  <a href="manage_claims.php" class="addButton">Show All</a>
+<?php } ?>
+</div>
+
 <br />
 &nbsp;&nbsp;
 
@@ -103,6 +124,9 @@ if(isset($_GET['msg'])){
                 </td>
                 <td valign="top" class="col_head <?= ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
                         <a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=status&dir2=<?= ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
+                </td>
+                <td valign="top" class="col_head <?= ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+                        <a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=notes&dir2=<?= ($_GET['sort2']=='notes' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Notes</a>
                 </td>
                 <td valign="top" class="col_head" width="20%">
                         Action
@@ -142,6 +166,9 @@ if(isset($_GET['msg'])){
                                     <?=$dss_claim_status_labels[$pend_myarray['status']];?>
                                 </td>
                                 <td valign="top">
+                                    <a href="view_claim.php?claimid=<?= $pend_myarray['insuranceid']; ?>&pid=<?= $pend_myarray['patientid']; ?>#notes">View (<?=$pend_myarray['num_notes'];?>)</a>
+                                </td>
+                                <td valign="top">
 <a href="view_claim.php?claimid=<?=$pend_myarray["insuranceid"];?>&pid=<?= $pend_myarray['patientid']; ?>" class="editlink" title="EDIT">
                                                 View 
                                         </a>
@@ -176,13 +203,17 @@ if(isset($_GET['unpaid'])){
 <option value="<?= DSS_CLAIM_REJECTED; ?>" <?= ($_GET['filter']== DSS_CLAIM_REJECTED)?'selected="selected"':''; ?>><?= $dss_claim_status_labels[DSS_CLAIM_REJECTED]; ?></option>
 </select>
 <div style="float: right; margin-right: 20px;">
-<?php if(!isset($_GET['unpaid'])){ ?>
+<?php if(!isset($_GET['notes'])){ ?>
+<a href="manage_claims.php?notes=1" class="addButton">Show Claims w Notes</a>
+<?php }
+
+if(!isset($_GET['unpaid'])){ ?>
 <a href="manage_claims.php?unpaid=30" class="addButton">Show Unpaid Claims 30 day+</a>
 <?php }
 if(!isset($_GET['unmailed'])){ ?>
 <a href="manage_claims.php?unmailed=1" class="addButton">Show Unmailed Claims</a>
 <?php }
-if(isset($_GET['unmailed']) || isset($_GET['unpaid'])){ ?>
+if(isset($_GET['notes']) || isset($_GET['unmailed']) || isset($_GET['unpaid'])){ ?>
   <a href="manage_claims.php" class="addButton">Show All</a>
 <?php } ?>
 </div>
@@ -235,6 +266,9 @@ if(v == '100'){
 		<td valign="top" class="col_head <?= ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
 			<a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=status&dir2=<?= ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
 		</td>
+		<td valign="top" class="col_head <?= ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="10%">
+			<a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=notes&dir2=<?= ($_GET['sort2']=='notes' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Notes</a>
+		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
@@ -283,6 +317,10 @@ if(v == '100'){
 				<td valign="top">
 				    <?=$dss_claim_status_labels[$myarray['status']];?>
 				</td>
+                                <td valign="top">
+                                    <a href="view_claim.php?claimid=<?= $myarray['insuranceid']; ?>&pid=<?= $myarray['patientid']; ?>#notes">View (<?=$myarray['num_notes'];?>)</a>
+                                </td>
+
 				<td valign="top">
 <a href="view_claim.php?claimid=<?=$myarray["insuranceid"];?>&pid=<?= $myarray['patientid']; ?>" class="editlink" title="EDIT">
                                                 View 

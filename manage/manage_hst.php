@@ -238,10 +238,10 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
 				<td valign="top">
 				  <?php if($myarray['status']==DSS_HST_COMPLETE){ ?>
-					<a href="dss_summ.php?pid=<?= $myarray['patient_id']; ?>&addtopat=1&sect=sleep" class="editlink" title="EDIT">
+					<a href="dss_summ.php?pid=<?= $myarray['patient_id']; ?>&addtopat=1&sect=sleep" class="editlink" title="EDIT"  onclick="alert('After you view the test results, please return to this page and click “Mark Read” to clear the item from your pending queue.');">
 					View</a>
 				 <?php }else{ ?>
-					<a href="hst_view.php?pid=<?= $myarray['patient_id']; ?>&hst_id=<?= $myarray["id"]; ?>" style="float:left;" class="editlink" title="EDIT">
+					<a href="hst_view.php?pid=<?= $myarray['patient_id']; ?>&hst_id=<?= $myarray["id"]; ?>" style="float:left;" class="editlink" title="EDIT" onclick="alert('After you view the test results, please return to this page and click “Mark Read” to clear the item from your pending queue.');">
 						View
 					</a>
 				  <?php } ?>

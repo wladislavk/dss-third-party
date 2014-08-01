@@ -963,10 +963,12 @@ $pat_myarray = mysql_fetch_array($pat_my);
 $docid = $pat_myarray['docid'];
 if($is_pri_pending){
 // Load patient info from dental_patients table using pid on query string
-$pat_sql = "select p.*, c.exclusive from dental_patients p where p.patientid='".s_for($_GET['pid'])."'
-	LEFT JOIN companies c ON c.id=p.billing_company_id
+$pat_sql = "select p.*, c.exclusive from dental_patients p
+	LEFT JOIN dental_users u ON u.userid=p.docid
+	LEFT JOIN companies c ON c.id=u.billing_company_id
+	 where p.patientid='".s_for($_GET['pid'])."'
 ";
-$pat_my = mysql_query($pat_sql);
+$pat_my = mysql_query($pat_sql) or die(mysql_error());
 $pat_myarray = mysql_fetch_array($pat_my);
 $p_m_dss_file = $pat_myarray['p_m_dss_file'];
 if($pat_myarray['exclusive']){ $p_m_dss_file = 1; }

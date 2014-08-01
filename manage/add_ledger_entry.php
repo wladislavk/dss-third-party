@@ -101,7 +101,7 @@ function getTransCodes(str,name)
     $pla_sql = "SELECT post_ledger_adjustments FROM dental_users where userid='".$_SESSION['userid']."'";
     $pla_q = mysql_query($pla_sql);
     $pla = mysql_fetch_assoc($pla_q);
-    if($pla['post_ledger_adjustments'] != '1'){
+    if($pla['post_ledger_adjustments'] != '1' && $_SESSION['docid']!=$_SESSION['userid']){
   ?>
   if(str==6){
     alert('You do not have permission to post adjustments.  Please contact your office manager to resolve this issue.');

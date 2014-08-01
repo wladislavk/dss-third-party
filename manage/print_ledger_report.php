@@ -116,6 +116,9 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="10%">
 			Credits
 		</td>
+                <td valign="top" class="col_head" width="10%">
+                        Adjustments
+                </td>
 		<td valign="top" class="col_head" width="5%">
 			Ins
 		</td>
@@ -335,12 +338,13 @@ select
                 pat.patientid,
                 pat.firstname, 
                 pat.lastname,
-                '' as payer,
+                tc.type as payer,
                 '' as payment_type,
                 dl.primary_claim_id
         from dental_ledger dl 
                 JOIN dental_patients as pat ON dl.patientid = pat.patientid
                 LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+                LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
         where dl.docid='".$_SESSION['docid']."' ".$lpsql." 
         ".$l_date."
  UNION
@@ -429,6 +433,10 @@ if($myarray[0]!='claim' && $myarray['amount'] <> 0){
 
 					&nbsp;
 				</td>
+				<?php if(($myarray[0] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ ?>
+                                <td></td>
+                                <?php } ?>
+
 				<td valign="top" align="right" width="10%">
 				<? if($myarray[0]!='claim') { ?>
 					<? if(st($myarray["paid_amount"]) <> 0) {?>
@@ -439,6 +447,10 @@ if($myarray[0]!='claim' && $myarray['amount'] <> 0){
 				<? } ?>
 					&nbsp;
 				</td>
+                                <?php if(!($myarray[0] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ ?>
+                                <td></td>
+                                <?php } ?>
+
 				<td valign="top" width="5%">&nbsp;
          <? if($myarray[0] == 'ledger'){
 	          echo $dss_trxn_status_labels[$myarray["status"]];

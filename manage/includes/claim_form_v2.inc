@@ -1402,7 +1402,7 @@ input{text-transform:uppercase;}
   <a href="manage_insurance.php?pid=<?=$_GET['pid']?>">
 	<b>&lt;&lt;Back to Manage Insurance Page</b></a>
 <?php } else if ($is_back_office) { ?>
-  <a href="manage_claims.php?status=0&pid=<?=$_GET['pid_filter']?>">
+  <a href="manage_claims.php?pid=<?=$_GET['pid_filter']?>">
 	<b>&lt;&lt;Back to Manage Claims Page</b></a>
 <?php } ?>
 

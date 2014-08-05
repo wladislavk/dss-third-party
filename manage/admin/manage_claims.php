@@ -197,6 +197,8 @@ $sql = "SELECT "
      . "  claim.mailed_date, claim.sec_mailed_date, "
      . "  claim.primary_claim_version, claim.secondary_claim_version, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
+     . "  c.name as billing_name, "
+     . "  co.company as ins_name, "
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
                 WHEN ".DSS_CLAIM_PENDING." THEN 1
@@ -209,13 +211,21 @@ $sql = "SELECT "
                 WHEN ".DSS_CLAIM_PAID_INSURANCE." THEN 8
                 WHEN ".DSS_CLAIM_PAID_SEC_INSURANCE." THEN 9
                 WHEN ".DSS_CLAIM_PAID_PATIENT." THEN 10
-       END AS status_order "
+       END AS status_order, "
+     . " COALESCE(notes.num_notes, 0) num_notes, "
+     . " notes_date.max_date notes_last, "
+     . " (SELECT count(*) FROM dental_claim_notes where claim_id=claim.insuranceid AND create_type='1') num_fo_notes "
      . "FROM "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid AND users.billing_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."'"
      . "  JOIN dental_user_company uc ON uc.userid = claim.docid " 
-     . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
+     . "  JOIN dental_users users2 ON claim.userid = users2.userid "
+     . "  LEFT JOIN companies c ON c.id = users.billing_company_id "
+     . "  LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co "
+     . "  LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=claim.insuranceid "
+     . "  LEFT JOIN (SELECT claim_id, MAX(adddate) max_date FROM dental_claim_notes group by claim_id) notes_date ON notes_date.claim_id=claim.insuranceid ";
+
 }
 else{
 $sql = "SELECT "

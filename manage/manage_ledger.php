@@ -21,9 +21,9 @@ update_patient_summary($_GET['pid'], 'ledger', $ledger_balance);
 ?>
 <link rel="stylesheet" href="css/ledger.css" />
 <?php
-if(!isset($_REQUEST['sort'])){
-  $_REQUEST['sort'] = 'service_date';
-  $_REQUEST['sortdir'] = 'desc';
+if(!isset($_GET['sort'])){
+  $_GET['sort'] = 'service_date';
+  $_GET['sortdir'] = 'desc';
 }
 
 if($_REQUEST["delid"] != "")
@@ -517,7 +517,24 @@ return s;
 	}
 	else
 	{
-		$cur_bal = $cur_cha = $cur_pay = $cur_adj = 0;
+
+		if($_GET['sortdir']=='DESC'){
+		  $cur_bal = $cur_cha = $cur_pay = $cur_adj = 0;
+		  $my2 = mysql_query($sql);
+		  while($myarray = mysql_fetch_array($my2)){
+                                               if($myarray[0]!='claim'){
+                                                $cur_bal += st($myarray["amount"]);
+                                                }
+                                                if($myarray[0]!='claim'){
+                                                $cur_bal -= st($myarray["paid_amount"]);
+                                                }
+ 			$orig_bal = $cur_bal;
+
+		  }
+		  
+		}else{
+		  $cur_bal = $cur_cha = $cur_pay = $cur_adj = 0;
+		}
 		$last_sd = '';
 		$last_ed = '';
 		while($myarray = mysql_fetch_array($my))
@@ -584,7 +601,11 @@ return s;
 	                	<?=number_format(st($myarray["amount"]),2);?>
 					<? 
 					 	if($myarray[0]!='claim'){
-						$cur_bal += st($myarray["amount"]);
+						if($_GET['sortdir']=='DESC'){
+						  $cur_bal -= st($myarray["amount"]);
+						}else{
+						  $cur_bal += st($myarray["amount"]);
+						}
 						$cur_cha += st($myarray["amount"]);	
 						}
 					}?>
@@ -594,7 +615,11 @@ return s;
 				<td></td>
 					<?php
                                                 if($myarray[0]!='claim'){
-                                                $cur_bal -= st($myarray["paid_amount"]);
+                                                if($_GET['sortdir']=='DESC'){
+                                                  $cur_bal += st($myarray["paid_amount"]);
+                                                }else{
+                                                  $cur_bal -= st($myarray["paid_amount"]);
+                                                }
                                                 $cur_adj += st($myarray["paid_amount"]);
                                                 }
 					?>
@@ -611,7 +636,11 @@ return s;
                                 <?php if(!($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ ?>
 						<?php
                                                 if($myarray[0]!='claim'){
-                                                $cur_bal -= st($myarray["paid_amount"]);
+                                                if($_GET['sortdir']=='DESC'){
+                                                  $cur_bal += st($myarray["paid_amount"]);
+                                                }else{
+                                                  $cur_bal -= st($myarray["paid_amount"]);
+                                                }
                                                 $cur_pay += st($myarray["paid_amount"]);
                                                 }
 						?>
@@ -622,7 +651,11 @@ return s;
                                 >
 					<?php if($myarray[0]=='ledger' || $myarray[0] == 'ledger_paid' || $myarray[0] == 'ledger_paid' || $myarray[0] == 'ledger_payment'){
 					if($_GET['sort']=='service_date' || $_GET['sort']=='entry_date'){
-					 echo number_format(st($cur_bal),2);
+					 $show_bal = $cur_bal;
+					 if($_GET['sortdir']=='DESC'){
+					   $show_bal += $myarray['amount']-$myarray['paid_amount'];
+					 }
+					 echo number_format(st($show_bal),2);
 					}else{ ?>
 						N/A
                 	&nbsp;
@@ -646,7 +679,7 @@ return s;
           ?>       	
 				</td>
 				<td valign="top">
-					<?php if( $myarray[0] == 'ledger'){ ?>
+					<?php if( $myarray[0] == 'ledger' || $myarray[0] == 'ledger_payment'){ ?>
 						<a href="#" onclick="$('.history_<?= $myarray['ledgerid']; ?>').toggle();return false;">View</a>
 					<?php } ?>
 				</td>
@@ -756,7 +789,62 @@ return s;
 				<td><?= $h_r['updated_user']; ?><?= $h_r['updated_admin']; ?></td>
 			</tr>
 		<?php } ?>
-	<? 	} }
+	<? 	}elseif(($myarray[0] == 'ledger_payment')){ 
+			?>
+                        <tr class="history_<?= $myarray['ledgerid']; ?>" style="display:none;">
+                                <td>Updated At</td>
+                                <td>Service Date</td>
+                                <td>Producer</td>
+                                <td>Description</td>
+                                <td>Charges</td>
+                                <td>Credits</td>
+                                <td>Update By</td>
+                        </tr>
+			<?php	
+			$h_sql = "select 
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date service_date,
+                dlp.entry_date,
+                CONCAT(p.first_name,' ',p.last_name) name,
+                dlp.amount,
+                dl.primary_claim_id,
+                dlp.payer,
+                dlp.payment_type,
+                dlp.updated_at,
+                CONCAT(u.first_name,' ',u.last_name) as updated_user,
+                CONCAT(a.first_name,' ',a.last_name) as updated_admin
+from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                JOIN dental_ledger_payment_history dlp on dlp.ledgerid=dl.ledgerid
+ LEFT JOIN dental_users u ON u.userid=dlp.updated_by_user
+                LEFT JOIN admin a ON a.adminid=dlp.updated_by_admin
+
+                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+                        AND dlp.amount != 0
+			AND dlp.paymentid='".$myarray['ledgerid']."'
+";
+                        $h_q = mysql_query($h_sql) or die(mysql_error());
+                        while($h_r = mysql_fetch_assoc($h_q)){
+                ?>
+                        <tr class="history_<?= $myarray['ledgerid']; ?>" style="display:none;">
+                                <td><?= $h_r['updated_at']; ?></td>
+                                <td><?= $h_r['service_date']; ?></td>
+                                <td><?= $h_r['name']; ?></td>
+                                <td>
+                        <?= $dss_trxn_payer_labels[$myarray['payer']]." Payment - "; ?>
+                        <?= $dss_trxn_pymt_type_labels[$myarray['payment_type']]." "; ?>
+                        <?= ($myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
+
+				</td>
+                                <td></td>
+                                <td><?= $h_r['amount']; ?></td>
+                                <td><?= $h_r['updated_user']; ?><?= $h_r['updated_admin']; ?></td>
+                        </tr>
+                <?php } 
+
+		}
+		}
 	}?>
 <tr class="tr_bg_h" style="color:#fff; font-weight: bold">
 <td></td>  
@@ -779,14 +867,18 @@ return s;
 <td style="color:#fff;"><?php echo number_format(st($cur_cha),2); ?></td>
 <td style="color:#fff;"><?php echo number_format(st($cur_pay),2); ?></td>
 <td style="color:#fff;"><?php echo number_format(st($cur_adj),2); ?></td>
+<?php if($_GET['sortdir']=='DESC'){ ?>
+<td style="color:#fff;"><?php echo number_format(st($orig_bal),2); ?></td>
+<?php }else{ ?>
 <td style="color:#fff;"><?php echo number_format(st($cur_bal),2); ?></td>
+<?php } ?>
 <td></td>
 <td></td>
 <td></td>
 </tr>
   <tr>
       <td colspan="8">
-          <center><button class="addButton" onclick="Javascript: loadPopup('view_ledger_record.php?pid=<?php echo $_GET['pid']; ?>');">
+          <center><button class="addButton" onclick="Javascript: loadPopup('view_ledger_record.php?pid=<?php echo $_GET['pid']; ?>');return false;">
 		View Ledger Records
 	</button></center>
       </td>

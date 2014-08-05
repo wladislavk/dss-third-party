@@ -86,7 +86,10 @@ if($_POST["staffsub"] == 1)
 				post_ledger_adjustments = ".$pla.", 
 				edit_ledger_entries = ".$ele.", 
 				use_course = ".$c.", ";
-				if($_SESSION['docid']==$_SESSION['userid']){
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff']==1){
 				  $ed_sql .= " manage_staff = ".$s.", ";
 				}
 				$ed_sql .= " sign_notes=".$n."  where userid='".$_POST["ed"]."'";
@@ -135,7 +138,10 @@ if($_POST["staffsub"] == 1)
 				post_ledger_adjustments = ".$pla.", 
 				edit_ledger_entries = ".$ele.", 
 				use_course = ".$c.", ";
-                                if($_SESSION['docid']==$_SESSION['userid']){
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff']==1){
                                   $ins_sql .= " manage_staff = ".$s.", ";
                                 }
                                 $ins_sql .= " sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";

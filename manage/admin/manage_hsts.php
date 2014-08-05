@@ -4,7 +4,7 @@ require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
-$pid = (isset($_REQUEST['pid']))?$_REQUEST['pid']:'';
+$pid = (isset($_GET['pid']))?$_GET['pid']:'';
 
 
 define('SORT_BY_DATE', 0);
@@ -146,7 +146,6 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid))
         $sql .= "AND hst.patient_id = " . $pid . " ";
     }
 }
-
 
 $sql .= "ORDER BY " . $sort_by_sql;
 $my = mysql_query($sql);

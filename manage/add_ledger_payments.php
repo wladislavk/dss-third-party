@@ -1,10 +1,13 @@
 <?php
 include "includes/top.htm";
 include_once "includes/constants.inc";
+require "includes/calendarinc.php";
 $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
 $p_sql = mysql_query($sql);
 $payments = mysql_fetch_array($p_sql);
-$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['cid']."';";
+$csql = "SELECT i.*, CONCAT(p.firstname, ' ',p.lastname) name FROM dental_insurance i 
+	JOIN dental_patients p ON p.patientid=i.patientid
+	WHERE i.insuranceid='".$_GET['cid']."';";
 $cq = mysql_query($csql);
 $claim = mysql_fetch_array($cq);
 
@@ -22,6 +25,11 @@ $num_sa = mysql_num_rows($saq);
 
 ?>
 <div class="fullwidth">
+<br />
+<span class="admin_head">
+Claim Payment - Claim <?= $_GET['cid']; ?> - <?= $claim['name']; ?>
+</span>
+<br /><br />
 <script type="text/javascript">
 //CHECK LEDGER PAYMENT SUBMISSION
 function validSubmission(f){
@@ -38,7 +46,7 @@ $('.payment_amount').each( function(){
 
 if( !payment ){
   alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
-  returnval = false;
+  return false;
 }
 
 allowed = false
@@ -118,7 +126,7 @@ if(f.dispute.checked){
     if(f.payer.value==<?= DSS_TRXN_PAYER_PRIMARY;?>){
       if(f.close.checked){
         if(f.attachment.value =='' && <?= ($num_pa == 0)?1:0; ?>){
-          if(!confirm('A claim must have an EOB attached to close.')){
+          if(!confirm('You did not upload an Explanation of Benefits (EOB) to this claim.  It is strongly recommended that you attach an EOB later for record keeping.')){
             returnval = false;
 	  }
           //EOB no longer needed to close claim
@@ -190,8 +198,6 @@ document.getElementById('auth_div').style.display = 'block';
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 
-<script language="JavaScript" src="calendar1.js"></script>
-<script language="JavaScript" src="calendar2.js"></script>
 <form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
 
  
@@ -222,17 +228,34 @@ if(mysql_num_rows($p_sql)==0){
 <span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;">Paid By</span>
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width: 100px;">Payment Type</span>
 <span style="float:left;font-weight:bold;width:100px;">Amount</span>
+<span style="float:left;font-weight:bold;width:100px;">Allowed</span>
+<span style="float:left;font-weight:bold;width:100px;">Ins. Paid</span>
+<span style="clear:both;float:left;font-weight:bold;width:100px;">Deductible</span>
+<span style="float:left;font-weight:bold;width:100px;">Copay</span>
+<span style="float:left;font-weight:bold;width:100px;">CoIns</span>
+<span style="float:left;font-weight:bold;width:100px;">Overpaid</span>
+<span style="float:left;font-weight:bold;width:100px;">Follow-up</span>
+<span style="float:left;font-weight:bold;width:100px;">Note</span>
+
 </div>
 <?php
 while($p = mysql_fetch_array($p_sql)){
 ?>
-<div style="margin-left:9px; margin-top: 10px; width:98%; ">
+<div style="clear:both;margin-left:9px; margin-top: 10px; width:98%; ">
 <span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:80px;"><?= date('m/d/Y', strtotime($p['entry_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:190px;"><?= $p['description']; ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:80px;"><?= $dss_trxn_payer_labels[$p['payer']]; ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['amount']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['amount_allowed']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['ins_paid']; ?></span>
+<span style="margin: 0 10px 0 0; clear:both; float:left;width:100px;"><?= $p['deductible']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['copay']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['coins']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['overpaid']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['followup']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['note']; ?></span>
 <div style="clear:both;"></div>
 </div>
 <?php 
@@ -277,9 +300,9 @@ function updateType(payer){
 <span style="width:80px;margin: 0 10px 0 0; float:left;">Service Date</span>
 <span style="width:180px;margin: 0 10px 0 0; float:left;">Description</span>
 <span style="width:100px;margin: 0 10px 0 0; float:left;">Amount</span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">Payment Date</span>
+<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">Payment Date <span class="req">*</span></span>
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">Amount Allowed</span>
-<span style="float:left;font-weight:bold;">Paid Amount</span>
+<span style="float:left;font-weight:bold;">Paid Amount <span class="req">*</span></span>
 </div>
 <?php
 $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_GET['cid'];
@@ -290,7 +313,7 @@ while($row = mysql_fetch_assoc($lq)){
 <span style="width:80px;margin: 0 10px 0 0; float:left;"><?= $row['service_date']; ?></span>
 <span style="width:180px;margin: 0 10px 0 0; float:left;"><?= $row['description']; ?></span>
 <span style="width:100px;margin: 0 10px 0 0; float:left;">$<?= $row['amount']; ?></span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></span>
+<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" id="payment_date_<?= $row['ledgerid']; ?>" class="calendar_top" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></span>
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" class="allowed_amount dollar_input" name="allowed_<?= $row['ledgerid']; ?>" /></span>
 <span style="float:left;font-weight:bold;"><input class="payment_amount dollar_input" style="width:140px;" type="text" name="amount_<?= $row['ledgerid']; ?>" /></span>
 </div>

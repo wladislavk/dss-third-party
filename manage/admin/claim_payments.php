@@ -206,7 +206,7 @@ if(mysql_num_rows($p_sql)==0){
 <?php
 while($p = mysql_fetch_array($p_sql)){
 ?>
-<div style="margin-left:9px; margin-top: 10px; width:98%; ">
+<div style="clear:both;margin-left:9px; margin-top: 10px; width:98%; ">
 <span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:80px;"><?= date('m/d/Y', strtotime($p['entry_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:190px;"><?= $p['description']; ?></span>
@@ -254,11 +254,12 @@ function updateType(payer){
 </div>
 
 <div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
-<span style="width:80px;margin: 0 10px 0 0; float:left;">Service Date</span>
+<span style="width:150px;margin: 0 10px 0 0; float:left;">Service Date</span>
 <span style="width:180px;margin: 0 10px 0 0; float:left;">Description</span>
 <span style="width:100px;margin: 0 10px 0 0; float:left;">Amount</span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">Payment Date</span>
-<span style="float:left;font-weight:bold;">Paid Amount</span>
+<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">Payment Date *</span>
+<span style="float:left;font-weight:bold; width:150px;">Paid Amount *</span>
+<span style="float:left;font-weight:bold;">Allowed</span>
 </div>
 <?php
 $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_GET['id'];
@@ -266,11 +267,12 @@ $lq = mysql_query($lsql);
 while($row = mysql_fetch_assoc($lq)){
 ?>
 <div style="height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
-<span style="width:80px;margin: 0 10px 0 0; float:left;"><?= $row['service_date']; ?></span>
+<span style="width:150px;margin: 0 10px 0 0; float:left;"><?= date('m/d/Y', strtotime($row['service_date'])); ?></span>
 <span style="width:180px;margin: 0 10px 0 0; float:left;"><?= $row['description']; ?></span>
 <span style="width:100px;margin: 0 10px 0 0; float:left;">$<?= $row['amount']; ?></span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></span>
-<span style="float:left;font-weight:bold;"><input class="payment_amount dollar_input" style="width:140px;" type="text" name="amount_<?= $row['ledgerid']; ?>" /></span>
+<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" id="payment_date_<?= $row['ledgerid']; ?>" class="calendar" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></span>
+<span style="float:left;font-weight:bold;width:150px;"><input class="payment_amount dollar_input" style="width:140px;" type="text" name="amount_<?= $row['ledgerid']; ?>" /></span>
+<span style="float:left;font-weight:bold;"><input class="payment_amount dollar_input" style="width:140px;" type="text" name="amount_allowed_<?= $row['ledgerid']; ?>" /></span>
 </div>
 
 <?php
@@ -304,7 +306,7 @@ Password: <input type="password" name="password" /><br />
 
 </form>
 <br><br>
-<a href="ledger_payments_advanced.php?id=<?=$_GET['id']; ?>&pid=<?=$_GET['pid']; ?>" class="button" style="float:right;">Advanced Payment</a>
+<a href="claim_payments_advanced.php?id=<?=$_GET['id']; ?>&pid=<?=$_GET['pid']; ?>" class="button" style="float:right;">Advanced Payment</a>
 <div style="clear:both;"></div>
 </div>
 <?php include 'includes/bottom.htm'; ?>

@@ -343,7 +343,7 @@ if($_POST["compsub"] == 1)
 
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                <a href="#" onclick="return false;" title="Choose backoffice billing plan associated with this account.  This is the plan that the Super Administrator will bill the COMPANY.">Plan</a>
+                <attr title="Choose backoffice billing plan associated with this account.  This is the plan that the Super Administrator will bill the COMPANY.">Plan</attr>
             </td>
             <td valign="top" class="frmdata">
                     <select name="plan_id" id="plan_id" class="form-control">
@@ -371,7 +371,7 @@ if($_POST["compsub"] == 1)
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                <a href="#" onclick="return false;" title="This option will allow any frontoffice user associated with this company to send Support tickets directly to this company by choosing the company in the ‘Send To’ section of the ticket.">Support Tickets Active?</a> 
+                <attr title="This option will allow any frontoffice user associated with this company to send Support tickets directly to this company by choosing the company in the ‘Send To’ section of the ticket.">Support Tickets Active?</attr> 
             </td>
             <td valign="top" class="frmdata">
 		<input type="checkbox" name="use_support" value="1" <?= ($use_support==1)?'checked="checked"':''; ?> />
@@ -379,7 +379,7 @@ if($_POST["compsub"] == 1)
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                <a href="#" onclick="return false;" title="This option is for BILLING companies.  If checked it will NOT allow frontoffice user to file their own claims, all billing will go exclusively to the backoffice billing company.">Exclusive? </a>
+                <attr title="This option is for BILLING companies.  If checked it will NOT allow frontoffice user to file their own claims, all billing will go exclusively to the backoffice billing company.">Exclusive?</attr>
             </td>
             <td valign="top" class="frmdata">
                 <input type="checkbox" name="exclusive" value="1" <?= ($exclusive==1)?'checked="checked"':''; ?> />

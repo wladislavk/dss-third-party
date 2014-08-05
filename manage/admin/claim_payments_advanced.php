@@ -49,7 +49,123 @@ $num_sa = mysql_num_rows($saq);
 
 ?>
 
+<script type="text/javascript">
+//CHECK LEDGER PAYMENT SUBMISSION
+function validSubmission(f){
+returnval = true;
+//CHECK PAYMENT IS ENTERED
+payment = false
+$('.payment_amount').each( function(){
+  if( $(this).val()!=''){
+    payment = true;
+  }
 
+});
+
+if( !payment ){
+  alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
+  returnval = false;
+}
+
+//DISPUTE CLAIM
+if(f.dispute.checked){
+  //CHECK IF ALREADY DISPUTED
+  if(<?= ($claim['status']==DSS_CLAIM_DISPUTE || $claim['status']==DSS_CLAIM_SEC_DISPUTE || $claim['status']==DSS_CLAIM_PATIENT_DISPUTE || $claim['status']==DSS_CLAIM_SEC_PATIENT_DISPUTE)?1:0; ?>){
+    alert('This claim is already under dispute. Please uncheck the "Dispute" box and resubmit. Please contact the DSS Corporate office if you have further questions regarding your dispute.');
+    returnval = false;
+  }else if(<?= ($claim['status']==DSS_CLAIM_PENDING || $claim['status']==DSS_CLAIM_SEC_PENDING)?1:0; ?>){
+    alert('A pending claim cannot be disputed. You cannot dispute a claim until it has been sent.');
+    returnval = false;
+  }else if(f.attachment.value ==''){
+    alert('A disputed claim must have attachments from insurance company.');
+    returnval = false;
+  }else if(f.dispute_reason.value == ''){
+    alert('You must provide a reason to dispute a claim.');
+    returnval = false;
+  }else{
+    //Dispute valid
+  } 
+
+//NO DISPUTE
+}else{
+  if(<?= ($claim['status']==DSS_CLAIM_DISPUTE || $claim['status']==DSS_CLAIM_SEC_DISPUTE || $claim['status']==DSS_CLAIM_PATIENT_DISPUTE || $claim['status']==DSS_CLAIM_SEC_PATIENT_DISPUTE)?1:0; ?>){
+    if(!confirm("You have posted payment to a claim that is currently under dispute. Do you want to change claim status from Dispute to PAID?")){
+      alert("You can make changes to the claim but they will not affect the already-submitted dispute. Please contact the DSS Corporate office if you have updates to this disputed claim.");
+      returnval =  false;
+    }
+  }
+
+  //Already status paid
+  if(<?= ($claim['status']==DSS_CLAIM_PAID_INSURANCE)?1:0; ?>){
+    //VALID    
+
+  //PENDING
+  }else if(<?= ($claim['status']==DSS_CLAIM_PENDING)?1:0; ?>){
+     if(f.payer.value==<?= DSS_TRXN_PAYER_PRIMARY; ?>){
+       alert('You listed Primary Insurance as the "Payer" for this transaction. However, the Primary insurance claim for this transaction has not been sent and therefore "Payer" field cannot be Primary Insurance. Please choose another Payer.');
+       returnval = false;
+     }else if(f.payer.value==<?= DSS_TRXN_PAYER_SECONDARY; ?>){
+       alert('You listed Secondary Insurance as the "Payer" for this transaction. However, the Secondary insurance claim for this transaction has not been sent and therefore "Payer" field cannot be Secondary Insurance. Please choose another Payer.');
+       returnval = false;
+     }else if(f.close.checked){
+       alert('You have selected "Pay Claim". However, the pending insurance claim for this transaction has not been submitted and the claim cannot be closed. Payment will be saved and claim status will remain PENDING.');
+       returnval = false;
+     }else{
+       //VALID
+     } 
+  //SEC PENDING
+  }else if(<?= ($claim['status']==DSS_CLAIM_SEC_PENDING)?1:0; ?>){
+    if(f.payer.value==<?= DSS_TRXN_PAYER_PRIMARY;?> && f.close.checked){
+      alert('You have selected "Pay Claim". However, the pending insurance claim for this transaction has not been submitted and the claim cannot be closed. Payment will be saved and claim status will remain PENDING.');
+      returnval = false;
+    }else if(f.payer.value!=<?= DSS_TRXN_PAYER_SECONDARY;?> && f.close.checked){
+      alert('You have selected "Pay Claim". However, the pending insurance claim for this transaction has not been submitted and the claim cannot be closed. Payment will be saved and claim status will remain PENDING.');
+      returnval = false;
+    }else if(f.payer.value==<?= DSS_TRXN_PAYER_SECONDARY;?>){
+       alert('You listed Secondary Insurance as the "Payer" for this transaction. However, the Secondary insurance claim for this transaction has not been sent and therefore "Payer" field cannot be Secondary Insurance. Please choose another Payer.');
+       returnval = false;
+    }else{
+
+    }
+  }else if(<?= ($claim['status']==DSS_CLAIM_SENT)?1:0; ?>){
+    if(f.payer.value==<?= DSS_TRXN_PAYER_PRIMARY;?>){
+      if(f.close.checked){
+        if(f.attachment.value =='' && <?= ($num_pa == 0)?1:0; ?>){
+          returnval = false;
+          alert('A claim must have an EOB attached to close.');
+        }
+        //file secondary
+        //VALID
+      }else{
+        if(!confirm('You did not select the "Close Claim" checkbox. Are you sure you want keep this claim open after submitting this payment?')){ returnval = false; }
+      }
+    }else if(f.payer.value==<?= DSS_TRXN_PAYER_SECONDARY;?>){
+      alert('You listed Secondary Insurance as the "Payer" for this transaction. However, the Secondary insurance claim for this transaction has not been sent and therefore "Payer" field cannot be Secondary Insurance. Please choose another Payer.');
+      returnval = false;
+    }else{
+      if(f.close.checked){
+        //VALID      
+      }else{
+        if(!confirm('You did not select the "Close Claim" checkbox. Are you sure you want keep this claim open after submitting this payment?')){ returnval = false; }
+      }
+    }
+  }else if(<?= ($claim['status']==DSS_CLAIM_SEC_SENT)?1:0; ?>){
+    if(f.close.checked){
+      if(f.attachment.value =='' && <?= ($num_sa == 0)?1:0; ?>){
+          returnval = false;
+          alert('A claim must have an EOB attached to close.');
+        }
+      //VALID
+    }else{
+      if(!confirm('You did not select the "Close Claim" checkbox. Are you sure you want keep this claim open after submitting this payment?')){ returnval = false; }
+    }
+  }else{
+    //WHAT HAPPENS?
+  }
+}
+return returnval;
+}
+</script>
 <?php
 $sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['id']."' ;";
 $p_sql = mysql_query($sql);
@@ -82,6 +198,7 @@ while($p = mysql_fetch_array($p_sql)){
 }
  ?>
 
+<form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments_advanced.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
 <div id="form_div">
 <div id="select_fields" style="margin: 10px;">
 <label>Paid By</label>
@@ -121,8 +238,8 @@ input{ width: 60px; }
 <td>CoIns</td>
 <td>Overpaid</td>
 <td>Follow-up</td>
-<td>Payment Date</td>
-<td>Paid Amount</td>
+<td>Payment Date *</td>
+<td>Paid Amount *</td>
 <td>Note</td>
 </tr>
 <?php
@@ -141,7 +258,7 @@ while($row = mysql_fetch_assoc($lq)){
 <td><input type="text" name="coins" value="<?= $row['coins']; ?>" /></td>
 <td><input type="text" name="overpaid" value="<?= $row['overpaid']; ?>" /></td>
 <td><input type="text" name="followup" value="<?= $row['followup']; ?>" /></td>
-<td><input type="text" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></td>
+<td><input type="text" id="payment_date_<?= $row['ledgerid']; ?>" class="calendar" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></td>
 <td><input class="payment_amount dollar_input" type="text" name="amount_<?= $row['ledgerid']; ?>" /></td>
 <td><input type="text" name="note" value="<?= $row['note']; ?>" /></td>
 </tr>
@@ -159,7 +276,7 @@ while($row = mysql_fetch_assoc($lq)){
 <div id="ins_attach" style="display: none">
 <label >Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
 </div>
-<input type="hidden" name="claimid" value="<?php echo $_GET['cid']; ?>">
+<input type="hidden" name="claimid" value="<?php echo $_GET['id']; ?>">
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
 <input type="hidden" name="producer" value="<?php echo $_SESSION['username']; ?>">
 <input type="hidden" name="userid" value="<?php echo $_SESSION['userid']; ?>">

@@ -23,6 +23,18 @@ if($pat_myarray['patientid'] == '')
 }
 
 $sql = "select * from dental_q_image where patientid='".$_GET['pid']."'";
+$sql = "select i.*,
+        CASE 
+                WHEN i.userid!=''
+                THEN CONCAT(u.first_name, ' ',u.last_name)
+                WHEN i.adminid!=''
+                THEN CONCAT(a.first_name, ' ',a.last_name)
+        END added_by
+
+         from dental_q_image i
+        LEFT join dental_users u ON u.userid=i.userid
+        LEFT join admin a ON a.adminid=i.adminid
+        where i.patientid='".$_GET['pid']."'";
 if($_GET['sh'] <> '')
         $sql .= " and imagetypeid='".$_GET['sh']."' ";
 
@@ -35,7 +47,15 @@ If(!isset($_REQUEST['sortdir'])){
 $sql .= " order by ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
 $my = mysql_query($sql);
 
-
+?>
+ <div align="right">
+        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>');" class="btn btn-success">
+                Add Image
+                <span class="glyphicon glyphicon-plus">
+        </button>
+        &nbsp;&nbsp;
+</div> 
+<?php
 include '../partials/patient_images.php';
 
 ?>

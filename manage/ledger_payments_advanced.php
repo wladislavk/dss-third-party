@@ -169,8 +169,6 @@ document.getElementById('auth_div').style.display = 'block';
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 
-<script language="JavaScript" src="calendar1.js"></script>
-<script language="JavaScript" src="calendar2.js"></script>
 <form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments_advanced.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
 
  
@@ -201,19 +199,37 @@ if(mysql_num_rows($p_sql)==0){
 <span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;">Paid By</span>
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width: 100px;">Payment Type</span>
 <span style="float:left;font-weight:bold;width:100px;">Amount</span>
+<span style="float:left;font-weight:bold;width:100px;">Allowed</span>
+<span style="float:left;font-weight:bold;width:100px;">Ins. Paid</span>
+<span style="clear:both;float:left;font-weight:bold;width:100px;">Deductible</span>
+<span style="float:left;font-weight:bold;width:100px;">Copay</span>
+<span style="float:left;font-weight:bold;width:100px;">CoIns</span>
+<span style="float:left;font-weight:bold;width:100px;">Overpaid</span>
+<span style="float:left;font-weight:bold;width:100px;">Follow-up</span>
+<span style="float:left;font-weight:bold;width:100px;">Note</span>
+
 </div>
 <?php
 while($p = mysql_fetch_array($p_sql)){
 ?>
-<div style="margin-left:9px; margin-top: 10px; width:98%; ">
+<div style="clear:both;margin-left:9px; margin-top: 10px; width:98%; ">
 <span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:80px;"><?= date('m/d/Y', strtotime($p['entry_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:190px;"><?= $p['description']; ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:80px;"><?= $dss_trxn_payer_labels[$p['payer']]; ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['amount']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['amount_allowed']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['ins_paid']; ?></span>
+<span style="margin: 0 10px 0 0; clear:both; float:left;width:100px;"><?= $p['deductible']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['copay']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['coins']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['overpaid']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['followup']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['note']; ?></span>
 <div style="clear:both;"></div>
 </div>
+
 <?php 
 }
 }
@@ -270,8 +286,8 @@ input{ width: 60px; }
 <td>CoIns</td>
 <td>Overpaid</td>
 <td>Follow-up</td>
-<td>Payment Date</td>
-<td>Paid Amount</td>
+<td>Payment Date <span class="req">*</span></td>
+<td>Paid Amount <span class="req">*</span></td>
 <td>Note</td>
 </tr>
 <?php
@@ -290,7 +306,7 @@ while($row = mysql_fetch_assoc($lq)){
 <td><input type="text" name="coins" value="<?= $row['coins']; ?>" /></td>
 <td><input type="text" name="overpaid" value="<?= $row['overpaid']; ?>" /></td>
 <td><input type="text" name="followup" value="<?= $row['followup']; ?>" /></td>
-<td><input type="text" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></td>
+<td><input type="text" id="payment_date_<?= $row['ledgerid']; ?>" name="payment_date_<?= $row['ledgerid']; ?>" class="calendar_top" value="<?= date('m/d/Y'); ?>" /></td>
 <td><input class="payment_amount dollar_input" type="text" name="amount_<?= $row['ledgerid']; ?>" /></td>
 <td><input type="text" name="note" value="<?= $row['note']; ?>" /></td>
 </tr>

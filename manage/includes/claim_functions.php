@@ -689,3 +689,48 @@ percase_free,
   mysql_query($sql) or die(mysql_error());
   return mysql_insert_id();
 }
+
+
+function payment_history_update($paymentid, $userid, $adminid){
+
+  $sql = "INSERT INTO dental_ledger_payment_history
+	(paymentid,
+payer,
+amount,
+payment_type,
+payment_date,
+entry_date,
+ledgerid,
+amount_allowed,
+ins_paid,
+deductible,
+copay,
+coins,
+overpaid,
+followup,
+note,
+updated_by_user,
+updated_by_admin,
+updated_at)
+                SELECT 
+id,
+payer,
+amount,
+payment_type,
+payment_date,
+entry_date,
+ledgerid,
+amount_allowed,
+ins_paid,
+deductible,
+copay,
+coins,
+overpaid,
+followup,
+note,
+'".mysql_real_escape_string($userid)."','".mysql_real_escape_string($adminid)."', now()
+                        FROM dental_ledger_payment p
+                        WHERE p.id='".mysql_real_escape_string($paymentid)."'";
+  mysql_query($sql) or die(mysql_error());
+  return mysql_insert_id();
+}

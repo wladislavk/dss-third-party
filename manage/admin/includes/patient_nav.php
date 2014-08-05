@@ -3,13 +3,13 @@
     $thesql = "select * from dental_patients where patientid='".$_REQUEST["pid"]."'";
         $themy = mysql_query($thesql);
         $themyarray = mysql_fetch_array($themy);
-$docsql = "SELECT username FROM dental_users WHERE userid='".mysql_real_escape_string($themyarray['docid'])."'";
+$docsql = "SELECT username, practice FROM dental_users WHERE userid='".mysql_real_escape_string($themyarray['docid'])."'";
 $docq = mysql_query($docsql);
 $docr = mysql_fetch_assoc($docq);
 
  ?>
 <div class="page-header">
-    <h1>Manage Patient - <?= $themyarray['firstname']." ".$themyarray['lastname']; ?> - <?= $docr['username']; ?></h1>
+    <h1>Manage Patient - <?= $themyarray['firstname']." ".$themyarray['lastname']; ?> - <?= $docr['username']; ?> - <?= $docr['practice']; ?></h1>
 </div>
 <div class="navbar navbar-default text-center">
     <a href="view_patient.php?pid=<?= $_GET['pid']; ?>" class="btn btn-default navbar-btn <?= ($file == 'view_patient.php' ? 'active' : '') ?>">Patient Info</a>
@@ -20,4 +20,5 @@ $docr = mysql_fetch_assoc($docq);
     <a href="patient_eligibility.php?pid=<?= $_GET['pid']; ?>" class="btn btn-default navbar-btn <?= ($file == 'patient_eligibility.php' ? 'active' : '') ?>">Eligibility</a>
     <a href="patient_questionnaire.php?pid=<?= $_GET['pid']; ?>" class="btn btn-default navbar-btn <?= ($file == 'patient_questionnaire.php' ? 'active' : '') ?>">Questionnaire</a>
     <a href="patient_clinical_exam.php?pid=<?= $_GET['pid']; ?>" class="btn btn-default navbar-btn <?= ($file == 'patient_clinical_exam.php' ? 'active' : '') ?>">Clinical Exam</a>
+    <a href="patient_screener.php?pid=<?= $_GET['pid']; ?>" class="btn btn-default navbar-btn <?= ($file == 'patient_screener.php' ? 'active' : '') ?>">Screener</a>
 </div>

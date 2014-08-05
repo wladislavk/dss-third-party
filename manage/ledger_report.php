@@ -44,7 +44,7 @@ else
 	
 $i_val = $index_val * $rec_disp;
 
-if(isset($_GET['pid'])){
+if(isset($_GET['pid'])&& $_GET['pid']!=''){
 $sql = "select * from dental_ledger where patientid='".$_GET['pid']."' "; 
 }else{
 $sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' ";
@@ -122,17 +122,6 @@ background:#999999;
 	<b><? echo $_GET['msg'];?></b>
 </div>
 <table class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
-			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
-			?>
-		</TD>        
-	</TR>
-	<? }
-        ?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'service_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=service_date&sortdir=<?php echo ($_REQUEST['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
@@ -155,13 +144,14 @@ background:#999999;
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits</a>
 		</td>
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                        <a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Adjustments</a>
+                </td>
+
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
 			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
 		</td>
 	</tr>
-	</table>
-	<div style="overflow:auto; ">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -175,6 +165,7 @@ background:#999999;
 	{
 		$tot_charges = 0;
 		$tot_credit = 0;
+		$tot_adj = 0;
 		if(isset($_GET['pid'])){
 		$newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname, p.name FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid LEFT JOIN dental_users p ON p.userid=dl.producerid WHERE  dl.docid='".$_SESSION['docid']."' AND dl.patientid = '".$_GET['pid']."'";
 		}else{
@@ -273,6 +264,7 @@ select
                 pat.patientid,
                 pat.firstname, 
                 pat.lastname,
+		CONCAT(pat.lastname,' ',pat.firstname) as pname,
                 '' as payer,
                 '' as payment_type,
 		dl.primary_claim_id
@@ -280,7 +272,34 @@ select
                 JOIN dental_patients as pat ON dl.patientid = pat.patientid
                 LEFT JOIN dental_users as p ON dl.producerid=p.userid 
         where dl.docid='".$_SESSION['docid']."' ".$lpsql." 
+		and (dl.paid_amount IS NULL || dl.paid_amount = 0)
 	".$l_date."
+  UNION
+        select 
+                'ledger_paid',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                dl.amount,
+                dl.paid_amount,
+                dl.status,
+                dl.description,
+                CONCAT(p.first_name,' ',p.last_name),
+                pat.patientid,
+                pat.firstname, 
+                pat.lastname,
+                CONCAT(pat.lastname,' ',pat.firstname) as pname,
+                tc.type,
+		'',
+                dl.primary_claim_id
+        from dental_ledger dl 
+                JOIN dental_patients as pat ON dl.patientid = pat.patientid
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+                LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
+                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+			".$l_date."
  UNION
         select 
                 'ledger_payment',
@@ -295,6 +314,7 @@ select
                 pat.patientid,
                 pat.firstname,
                 pat.lastname,
+		CONCAT(pat.lastname,' ',pat.firstname) as pname,
                 dlp.payer,
                 dlp.payment_type,
 		''
@@ -313,14 +333,14 @@ select
 	
                 if(isset($_REQUEST['sort'])){
                   if($_REQUEST['sort']=='patient'){
-                    $newquery .= " ORDER BY lastname ".$_REQUEST['sortdir'].", dp.firstname ".$_REQUEST['sortdir'];
+                    $newquery .= " ORDER BY pname ".$_REQUEST['sortdir'];
                   }elseif($_REQUEST['sort']=='producer'){
 		    $newquery .= " ORDER BY name ".$_REQUEST['sortdir'];
                   }else{
                     $newquery .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];	
                   }
                   }
-                $runquery = mysql_query($newquery);
+                $runquery = mysql_query($newquery) or die(mysql_error());
 		while($myarray = mysql_fetch_array($runquery))
 		{
 			$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
@@ -368,14 +388,18 @@ select
 
 					&nbsp;
 				</td>
+				 <?php if($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
+					<td></td>
+						<?php $tot_adj += st($myarray["paid_amount"]); ?>
+				<?php } ?>
 				<td valign="top" align="right" width="10%">
-					<? if(st($myarray["paid_amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
-					<? 
-						$tot_credit += st($myarray["paid_amount"]);
-					}?>
 					&nbsp;
 				</td>
+                                 <?php if(!($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ ?>
+                                        <td></td>
+						<?php $tot_credit += st($myarray["paid_amount"]); ?>
+                                <?php } ?>
 				<td valign="top" width="5%">&nbsp;
 			 <? if($myarray[0] == 'ledger'){
                   echo $dss_trxn_status_labels[$myarray["status"]];
@@ -436,6 +460,12 @@ select
 			&nbsp;
 			</b>
 		</td>
+                <td valign="top" align="right">
+                        <b>
+                        <?php echo "$".number_format($tot_adj,2);?>
+                        &nbsp;
+                        </b>
+                </td>
 		<td valign="top">&nbsp;
 			
 		</td>
@@ -459,8 +489,7 @@ select
 
 
 </table>
-</div>
-
+<?php include 'ledger_summary_report.php'; ?>
 <div id="popupContact" style="width:750px;">
 	    <a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>

@@ -14,7 +14,7 @@ if(isset($_GET['pid'])){
                                 {
                      $thename= $myarray['lastname'].", ".$myarray['firstname'];
 		     $theaddress = $myarray['add1']." ".$myarray['add2']." ".$myarray['city']." ".$myarray['state']." ".$myarray['zip'];
-		     $thephone = "H: ".$myarray['home_phone']." W: ".$myarray['work_phone']." C: ".$themyarray['cell_phone'];
+		     $thephone = "H: ".format_phone($myarray['home_phone'])." W: ".format_phone($myarray['work_phone'])." C: ".format_phone($myarray['cell_phone']);
                     }
                     }
 
@@ -117,7 +117,7 @@ $num_users=mysql_num_rows($my);
 			Credits
 		</td>
                 <td valign="top" class="col_head" width="10%">
-                        Adjustments
+                        Adj.
                 </td>
 		<td valign="top" class="col_head" width="5%">
 			Ins
@@ -519,12 +519,7 @@ if($myarray[0]!='claim' && $myarray['amount'] <> 0){
 </table>
  </div>
 
-<div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
-
+<?php include 'ledger_summary.php'; ?>
 <br /><br />	
 </body>
 </html>

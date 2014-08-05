@@ -31,8 +31,11 @@ if(isset($_REQUEST["vid"]))
 
 
 $pend_sql = "select i.*, p.firstname, p.lastname,
+	(SELECT SUM(amount) FROM dental_ledger WHERE primary_claim_id = i.insuranceid) billed,
+	(SELECT SUM(p.amount) FROM dental_ledger_payment p JOIN dental_ledger dl ON p.ledgerid=dl.ledgerid WHERE dl.primary_claim_id = i.insuranceid) paid,
         (SELECT e.adddate FROM dental_claim_electronic e WHERE e.claimid=i.insuranceid ORDER by e.adddate DESC LIMIT 1) electronic_adddate
- from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
+ from dental_insurance i left join dental_patients p on i.patientid=p.patientid 
+	where i.docid='".$_SESSION['docid']."' ";
 if(isset($_GET['paid_viewed'])){ 
 	$pend_sql .= " AND fo_paid_viewed=0 ";
 }
@@ -86,6 +89,12 @@ if(isset($_GET['msg'])){
                 <td valign="top" class="col_head <?= ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="40%">
                         <a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=electronic_adddate&dir2=<?= ($_GET['sort2']=='electronic_adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
                 </td>
+                <td valign="top" class="col_head <?= ($_GET['sort2'] == 'billed')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+                        <a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=billed&dir2=<?= ($_GET['sort2']=='billed' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Billed Amount</a>
+                </td>
+                <td valign="top" class="col_head <?= ($_GET['sort2'] == 'paid')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+                        <a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=paid&dir2=<?= ($_GET['sort2']=='paid' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Amount Paid</a>
+                </td>
                 <td valign="top" class="col_head <?= ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
                         <a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=patient&dir2=<?= ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
                 </td>
@@ -109,19 +118,24 @@ if(isset($_GET['msg'])){
         {
                 while($pend_myarray = mysql_fetch_array($pend_my))
                 {
-                        if($pend_myarray["status"] == 1)
+                        if($pend_myarray["fo_paid_viewed"] != 1)
                         {
-                                $tr_class = "tr_active";
+                                $tr_class = "unviewed";
                         }
                         else
                         {
-                                $tr_class = "tr_inactive";
+                                $tr_class = "";
                         }
-                        $tr_class = "tr_active";
                 ?>
                         <tr class="<?=$tr_class;?> status_<?= $pend_myarray['status']; ?> claim">
                                 <td valign="top">
 <?=date('m-d-Y H:i',strtotime((($pend_myarray["electronic_adddate"]!='')?$pend_myarray["electronic_adddate"]:$pend_myarray["adddate"])));?>
+                                </td>
+                                <td valign="top">
+                                        $<?= number_format($pend_myarray['billed'],2); ?>
+                                </td>
+                                <td valign="top">
+                                        $<?= number_format($pend_myarray['paid'],2); ?>
                                 </td>
                                 <td valign="top">
                                         <?= $pend_myarray['firstname'].' '.$pend_myarray['lastname']; ?>
@@ -130,10 +144,15 @@ if(isset($_GET['msg'])){
                                     <?=$dss_claim_status_labels[$pend_myarray['status']];?>
                                 </td>
                                 <td valign="top">
+			<?php
+			if($pend_myarray["fo_paid_viewed"] != 1)
+                        {
+			?>
 <a href="manage_claims_paid.php?claimid=<?=$pend_myarray["insuranceid"];?>&pid=<?= $pend_myarray['patientid']; ?>&vid=1" class="editlink" title="Mark Viewed">
                                                 Mark Viewed 
                                         </a>
 					|
+			<?php } ?>
 						<a href="view_claim.php?claimid=<?=$pend_myarray["insuranceid"];?>&pid=<?= $pend_myarray['patientid']; ?>" class="editlink" title="View">
                                                 View 
                                         </a>

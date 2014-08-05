@@ -195,9 +195,6 @@ background:#999999;
 			<a href="ledger_reportfull.php?sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
 		</td>
 	</tr>
-	</table>
-	<div style="overflow:auto; height:400px; overflow-x:hidden; overflow-y:scroll;">
-<table width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -373,7 +370,8 @@ background:#999999;
 			</td>
 		</tr>
 </table>
- </div>
+
+<?php include 'ledger_summary.php'; ?>
 
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><button>X</button></a>

@@ -2,6 +2,7 @@
 session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
+require_once 'includes/claim_functions.php';
 $sql = "SELECT * FROM dental_ledger_payment WHERE id='".$_POST['id']."' ;";
 $p_sql = mysql_query($sql);
 while($p = mysql_fetch_array($p_sql)){
@@ -13,8 +14,8 @@ payment_type='".mysql_real_escape_string($_POST['payment_type_'.$p['id']])."',
 amount='".mysql_real_escape_string(str_replace(',','',$_POST['amount_'.$p['id']]))."'
 WHERE id='".mysql_real_escape_string($p['id'])."'";
 mysql_query($s);
+payment_history_update($p['id'], $_SESSION['userid'], '');
 }
-
 ?>
 <script type="text/javascript">
 parent.window.location = parent.window.location;

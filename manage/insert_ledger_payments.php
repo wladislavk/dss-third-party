@@ -213,7 +213,9 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 )";
      mysql_query($image_sql);
 
-    }
+      }else{
+        $new_status = DSS_CLAIM_PAID_INSURANCE;
+      }
 }
   }elseif($claim['status']==DSS_CLAIM_SEC_SENT && $_POST['close'] == 1){
     $new_status = DSS_CLAIM_PAID_SEC_INSURANCE;
@@ -250,12 +252,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
 
 }
 if(isset($new_status)){
-  if($new_status==DSS_CLAIM_SEC_PENDING){
-    //claim_create_sec($_POST['patientid'], $_POST['claimid'],'0');
-    $x = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_INSURANCE."'  ";
-  }else{
     $x = "UPDATE dental_insurance SET status='".$new_status."'  ";
-  }
     if($_POST['close'] == 1){
 	$x = ", closed_by_office_type = 1 ";
     }
@@ -294,8 +291,10 @@ $sqlinsertqry .= "(
 }
 $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
 $insqry = mysql_query($sqlinsertqry);
+$pid = mysql_insert_id();
 
-if($secsql){
+payment_history_update($pid, $_SESSION['userid'], '');
+
 $paysql = "SELECT SUM(lp.amount) as payment
                         FROM dental_ledger_payment lp
                                 JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
@@ -303,12 +302,14 @@ $paysql = "SELECT SUM(lp.amount) as payment
                                 AND lp.payer='".DSS_TRXN_PAYER_PRIMARY."'";
 $payq = mysql_query($paysql);
 $payr = mysql_fetch_assoc($payq);
-if($payr['payment']>=$claim['amount_due']){
+//if($payr['payment']>=$claim['amount_due']){
+if(isset($_POST['close']) && $_POST['close']==1){
   $new_status = DSS_CLAIM_PAID_INSURANCE;
   $msg = 'Payment Successfully Added';
   $x = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_INSURANCE."'  WHERE insuranceid='".$_POST['claimid']."';";
   mysql_query($x); 
 }
+if($secsql){
   mysql_query($secsql);
 }
 

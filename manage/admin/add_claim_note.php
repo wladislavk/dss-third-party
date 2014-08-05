@@ -42,7 +42,6 @@ if($_POST["notesub"] == 1)
 		?>
 		<script type="text/javascript">
 			<?php if(isset($_POST['close']) && $_POST['close']==1){ ?>
-			  alert('After submitting this note you will be prompted to enter the final claim details on the next page.');
 			  parent.window.location='claim_payments_advanced.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&close=1';
 			<?php }else{ ?>
 			  parent.window.location='claim_notes.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';
@@ -85,7 +84,7 @@ if($_POST["notesub"] == 1)
 }
 
 
-$sql = "select * from dental_claim_text order by Title";
+$sql = "select * from dental_claim_text WHERE default_text=1 OR companyid = '".mysql_real_escape_string($_SESSION['admincompanyid'])."' order by Title";
 $my = mysql_query($sql);
 
 ?>
@@ -169,7 +168,10 @@ $my = mysql_query($sql);
             <div class="form-group">
                 <label for="body" class="col-md-3 control-label">Make Payment/Close Claim</label>
                 <div class="col-md-9">
-			<input type="checkbox" name="close" value="1" />
+			<input type="checkbox" onclick="$('#close_note').toggle(500);" name="close" value="1" />
+                </div>
+                <div id="close_note" class="col-md-9" style="display:none;">
+			After submitting this note you will be prompted to enter the final claim details on the next page.	
                 </div>
         </div>
             <div class="form-group">

@@ -43,7 +43,7 @@ if($_POST["notesub"] == 1)
 
         		$pass = gen_password($_POST['password'], $salt_row['salt']);
 
-        		$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1";
+        		$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND sign_notes=1";
         		$check_my = mysql_query($check_sql);
 
         		if(mysql_num_rows($check_my) == 1)
@@ -111,7 +111,7 @@ if($_POST["notesub"] == 1)
 
                         $pass = gen_password($_POST['password'], $salt_row['salt']);
 
-                        $check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1";
+                        $check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND sign_notes=1";
                         $check_my = mysql_query($check_sql);
 
                         if(mysql_num_rows($check_my) == 1)

@@ -21,13 +21,13 @@ die();
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 
 
-<head>
 
 
   <script type="text/javascript">
 function validate(){
 if(document.getElementById('ledger_entry_service_date').value = ''){
   alert('Please enter a service date');
+}
 }
 </script>
 

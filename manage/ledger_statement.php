@@ -12,6 +12,7 @@ include("includes/sescheck.php");
 //include "includes/general_functions.php";
 require_once('includes/dental_patient_summary.php');
 require_once('includes/patient_info.php');
+require_once('includes/constants.inc');
 if ($patient_info) {
 $docsql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
 $docq = mysql_query($docsql);
@@ -259,7 +260,7 @@ $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$sql .= " limit ".$i_val.",".$rec_disp;
+//$sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
@@ -302,7 +303,7 @@ $html .=' <table width="98%">
                         Producer
                 </td>
 
-		<td valign="top" class="col_head" width="30%">
+		<td valign="top" class="col_head" width="20%">
 			Description
 		</td>
 		<td valign="top" width="12%">
@@ -311,6 +312,9 @@ $html .=' <table width="98%">
 		<td valign="top" width="11%">
 			Credits
 		</td>
+                <td valign="top" width="10%">
+                        Adjustments
+                </td>
 		<td valign="top" width="12%">
 			Balance
 		</td>
@@ -326,7 +330,20 @@ $html .=' <table width="98%">
 	}
 	else
 	{
-		$cur_bal = $cur_cha = $cur_pay = 0;
+                  $cur_bal = $cur_cha = $cur_pay = $cur_adj = 0;
+                  $my2 = mysql_query($sql);
+                  while($myarray = mysql_fetch_array($my2)){
+                                               if($myarray[0]!='claim'){
+                                                $cur_bal += st($myarray["amount"]);
+                                                }
+                                                if($myarray[0]!='claim'){
+                                                $cur_bal -= st($myarray["paid_amount"]);
+                                                }
+                        $orig_bal = $cur_bal;
+
+                  }
+
+
 		$last_sd = '';
 		$last_ed = '';
 		while($myarray = mysql_fetch_array($my))
@@ -365,21 +382,29 @@ $html .=' <table width="98%">
 					if(st($myarray["amount"]) <> 0 && $myarray[0]!='claim') {
 	                	$html .= number_format(st($myarray["amount"]),2);
 					 	if($myarray[0]!='claim'){
-						$cur_bal += st($myarray["amount"]);
+						$cur_bal -= st($myarray["amount"]);
 						$cur_cha += st($myarray["amount"]);	
 						}
 					}
-				$html .= '</td>
-				<td valign="top" align="right">';
+
+				$html .= '</td>';
+		          	if($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){
+                                $html .= '<td></td>';
+                                }
+
+				$html .= '<td valign="top" align="right">';
 					if(st($myarray["paid_amount"]) <> 0 && $myarray[0]!='claim') {
 	                	$html .= number_format(st($myarray["paid_amount"]),2);
 						if($myarray[0]!='claim'){
-						$cur_bal -= st($myarray["paid_amount"]);
+						$cur_bal += st($myarray["paid_amount"]);
 						$cur_pay += st($myarray["paid_amount"]);
 						}
 					}
-				$html .= '</td>
-				<td valign="top" align="right">';
+				$html .= '</td>';
+				if(!($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
+                                $html .= '<td></td>';
+				}
+				$html .= '<td valign="top" align="right">';
 					if($myarray[0]=='ledger' || $myarray[0] == 'ledger_paid' || $myarray[0] == 'ledger_paid' || $myarray[0] == 'ledger_payment')
 					 $html .= number_format(st($cur_bal),2);
 				$html .= '</td>
@@ -390,18 +415,20 @@ $html .=' <table width="98%">
 
 $html .= '<tr>
 	<td colspan="5" align="right">Balance Due</td>
-	<td colspan="2" align="right">'.number_format(st($cur_bal),2).'</td></tr>';
+	<td colspan="2" align="right">'.number_format(st($orig_bal),2).'</td></tr>';
 $html .= '<tr>
         <td colspan="5" align="right">- Estimated Insurance:</td>
         <td colspan="2" align="right">0.00</td></tr>';
 $html .= '<tr>
         <td colspan="5" align="right">>>>>>>>>>Balance Due Now:</td>
-        <td colspan="2" align="right">'.number_format(st($cur_bal),2).'</td></tr>';
+        <td colspan="2" align="right">'.number_format(st($orig_bal),2).'</td></tr>';
 //echo $html;
 }
 
 $head = '<table><tr><td width="60%">';
 $head .= '<div style="display:block; ">';
+$head .= $docr['practice'];
+$head.='<br />'; 
 $head .= $docr['name'];
  if(st($docr['address']) <> '') {
         $head.='<br />' .
@@ -428,7 +455,7 @@ $head .= '<br />'.st($pat_myarray['city']).', '.st($pat_myarray['state']).' '.st
 $head .= '</div>';
 $head .= '<br /><br />';
 
-$head .= 'Office: '.$docr['phone'];
+$head .= 'Office: '.format_phone($docr['phone']);
 $head .= '<br /><br />';
 $head .= '</td>';
 $head .= '<td>';

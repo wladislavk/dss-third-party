@@ -5,6 +5,7 @@ require_once('includes/constants.inc');
 include("includes/sescheck.php");
 require_once('includes/authorization_functions.php');
 include_once 'admin/includes/claim_functions.php';
+require_once 'includes/claim_functions.php';
 ?>
 <html>
 <head>
@@ -263,14 +264,14 @@ if(isset($new_status)){
 
 
 
-$sqlinsertqry = "INSERT INTO `dental_ledger_payment` (
+$sqlinsertqry = "INSERT INTO dental_ledger_payment (
 `ledgerid` ,
 `payment_date` ,
 `entry_date` ,
 `amount` ,
 `payment_type` ,
 `payer`,
-`allowed`,
+`amount_allowed`,
 `ins_paid`,
 `deductible`,
 `copay`,
@@ -336,7 +337,7 @@ claim_history_update($_POST['claimid'], $_SESSION['userid'], $_SESSION['adminuse
 ?>
 <script type="text/javascript">
 alert('<?= $msg; ?>');
-parent.window.location = parent.window.location;
+history.go(-1);
 </script>
 <?php
 }

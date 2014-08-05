@@ -510,7 +510,6 @@ $num_pending_claims = mysql_num_rows($pending_q);
 					</a>
 				</li>
 				<?php } ?>	
-				<?php if (!is_hst($_SESSION['admin_access'])) { ?>
 				<li>
 					<a href="javascript:;">
 						<i class="fa fa-user"></i>
@@ -535,13 +534,14 @@ $num_pending_claims = mysql_num_rows($pending_q);
 									</a>
 								</li>
 								<?php } ?>
-								 <?php if (is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access']) || is_billing_admin($_SESSION['admin_access'])) { ?>
+								 <?php if (is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access']) || is_billing_admin($_SESSION['admin_access']) || is_hst_admin($_SESSION['admin_access'])) { ?>
 								<li>
 									<a href="/manage/admin/manage_backoffice.php">
 										<i class="fa fa-user"></i> Backoffice Accounts
 									</a>
 								</li>
 								<?php } ?>
+				<?php if (!is_hst($_SESSION['admin_access'])) { ?>
 								<li>
 									<a href="/manage/admin/manage_users.php">
 										<i class="fa fa-external-link"></i> User Accounts
@@ -1233,6 +1233,8 @@ $num_pending_claims = mysql_num_rows($pending_q);
 							<i class="fa fa-user"></i> Tickets
 						</a>
 					</li>
+		<?php if (is_admin($_SESSION['admin_access'])) { ?>
+				
 					<li>
 						<a href="/manage/admin/manage_support_categories.php">
 							<i class="fa fa-user"></i> Categories
@@ -1240,7 +1242,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 					</li>
 				</ul>
 			</li>
-				
+			<?php } ?>	
 			 <? }
 			} ?>	
 			</ul>

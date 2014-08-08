@@ -649,12 +649,17 @@ if($success == "false"){
   mysql_query($up_sql);
 claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
   claim_status_history_update($_GET['insid'], '', DSS_CLAIM_REJECTED, '', $_SESSION['adminuserid']);
+
+  $confirm = "Submission failed. ";
+  $errors = $json_response->{"errors"}->{"messages"};
+                                        foreach($errors as $error){
+                                          $confirm .= mysql_real_escape_string($error).", ";
+                                        }
+
 ?>
 <script type="text/javascript">
-  c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');
-  if(c){
+   alert('RESPONSE: <?= $confirm; ?>');
    window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>"; 
-  }
 </script>
 <?php
 

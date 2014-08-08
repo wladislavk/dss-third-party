@@ -3,6 +3,10 @@ session_start();
 require_once '../admin/includes/main_include.php';
 include_once '../admin/includes/invoice_functions.php';
 ?>
+<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+<?php
+include_once '../includes/calendarinc.php';
+?>
   <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
   <link href="css/cupertino/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" media="screen">
   <link href="css/sample_1.css" rel="stylesheet" media="screen">
@@ -156,6 +160,9 @@ include_once '../admin/includes/invoice_functions.php';
       </div>
     </div>
 
+    <fieldset class="real-param" style="display: none;">
+      <legend>&nbsp;</legend>
+
     <div class="form-group real-param" style="display: none;">
       <label for="date" class="col-lg-2 control-label">Patient Insurance</label>
 
@@ -168,7 +175,7 @@ include_once '../admin/includes/invoice_functions.php';
       <label for="payer_id" class="col-lg-2 control-label">Payer ID</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="payer_name">
+        <input type="text" class="form-control" id="payer_name" autocomplete="off">
 <br />
 <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
         <ul id="ins_payer_list" class="search_list">
@@ -188,7 +195,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       <label for="date" class="col-lg-2 control-label">Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="date">
+        <input type="text" class="form-control calendar" id="date" value="<?= date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -196,7 +203,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       <label for="from_date" class="col-lg-2 control-label">From Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="from_date">
+        <input type="text" class="form-control calendar" id="from_date" value="<?= date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -204,7 +211,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       <label for="to_date" class="col-lg-2 control-label">To Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="to_date">
+        <input type="text" class="form-control calendar" id="to_date" value="<?= date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -215,7 +222,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <input type="text" class="form-control" id="procedure_code">
       </div>
     </div>
-
+    </fieldset>
 
     <fieldset class="real-param" style="display: none;">
       <legend>Service Provider</legend>
@@ -504,7 +511,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
 
     </fieldset>
 
-    <div class="form-group">
+    <div style="clear:both;" class="form-group">
       <div class="col-lg-offset-2 col-lg-10">
 	<input type="hidden" name="pid" id="pid" value="<?= $_GET['pid']; ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
@@ -516,9 +523,10 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
 
 </div>
 <div id="coverage_container"></div>
+  <h2>Eligibility Check History</h2>
 <table>
   <tr>
-    <th>Date</th>
+    <th width="200">Date</th>
     <th>View</th>
   </tr>
 
@@ -554,5 +562,7 @@ $('#test_no, #test_yes').click(function(){
 });
 </script>
 
-
+<style type="text/css">
+  fieldset{ float:left; width:47%; margin:0 1%; }
+</style>
 <?php //include 'new.php'; ?> 

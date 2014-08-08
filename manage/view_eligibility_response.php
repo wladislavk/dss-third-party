@@ -39,7 +39,7 @@ include_once('admin/includes/password.php');
         $themy = mysql_query($thesql) or die(mysql_error());
         $themyarray = mysql_fetch_array($themy);
 ?>
-  <h2 style="color:#fff;">Eligibility for <?= $themyarray['pat_name']; ?></h2>
+  <h2 style="color:#fff;">Eligibility for <?= $themyarray['pat_name']; ?> - <?= date('m/d/Y h:ia', strtotime($themyarray['adddate'])); ?></h2>
   <a href="eligible_check.php?pid=<?=$themyarray['patientid'];?>" style="color:#fff;">Return to chart</a>
 <script type="text/javascript">
 $(document).ready(function(){

@@ -5,22 +5,16 @@
   <script src="eligible_check/js/eligible.js"></script>
   <script src="eligible_check/js/sample_1.js"></script>
 
-<div class="container eligible_check">
+<div  style="width:100%;" class="container eligible_check">
 
   <form role="form" class="form-horizontal form-coverage">
 
-        <?php
-                $s = "SELECT eligible_test FROM dental_users where userid='".$preauth['doc_id']."'";
-                $q = mysql_query($s);
-                $r = mysql_fetch_assoc($q);
-                //if($r['eligible_test']=="1"){
-        ?>
 
 <?php
   $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
          LEFT JOIN dental_users u ON u.userid = p.docid
-         WHERE p.patientid='".mysql_real_escape_string($preauth['patient_id'])."'";
+         WHERE p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
   $q = mysql_query($s);
   $r = mysql_fetch_assoc($q);
   $doc_name = $r['doc_name'];
@@ -29,7 +23,7 @@
   $doc_last_name = $doc_array[1];
 ?>
 <?php
-                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$preauth['doc_id']."'";
+                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$r['docid']."'";
                       $docquery = mysql_query($getdocinfo);
                       $docinfo = mysql_fetch_array($docquery);
                         $phone = $docinfo['phone'];
@@ -134,6 +128,9 @@
       </div>
     </div>
 
+    <fieldset class="real-param" style="display: none;">
+      <legend>&nbsp;</legend>
+
     <div class="form-group real-param" style="display: none;">
       <label for="date" class="col-lg-2 control-label">Patient Insurance</label>
 
@@ -146,7 +143,7 @@
       <label for="payer_id" class="col-lg-2 control-label">Payer ID</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="payer_name">
+        <input type="text" class="form-control" id="payer_name" autocomplete="off">
 <br />
 <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
         <ul id="ins_payer_list" class="search_list">
@@ -166,7 +163,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       <label for="date" class="col-lg-2 control-label">Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="date">
+        <input type="text" class="form-control calendar" id="date" value="<?= date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -174,7 +171,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       <label for="from_date" class="col-lg-2 control-label">From Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="from_date">
+        <input type="text" class="form-control calendar" id="from_date" value="<?= date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -182,7 +179,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       <label for="to_date" class="col-lg-2 control-label">To Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="to_date">
+        <input type="text" class="form-control calendar" id="to_date" value="<?= date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -194,7 +191,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       </div>
     </div>
 
-
+</fieldset>
     <fieldset class="real-param" style="display: none;">
       <legend>Service Provider</legend>
 
@@ -482,7 +479,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
 
     </fieldset>
 
-    <div class="form-group">
+    <div  style="clear:both;" class="form-group">
       <div class="col-lg-offset-2 col-lg-10">
 	<input type="hidden" name="pid" id="pid" value="<?= $_GET['pid']; ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
@@ -494,9 +491,10 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
 
 </div>
 <div id="coverage_container"></div>
+  <h2>Eligibility Check History</h2>
 <table>
   <tr>
-    <th>Date</th>
+    <th width="200">Date</th>
     <th>View</th>
   </tr>
 
@@ -526,5 +524,7 @@ function view_coverage(response){
 }
 </script>
 
-
+<style type="text/css">
+  fieldset{ float:left; width:47%; margin:0 1%; }
+</style>
 <?php //include 'new.php'; ?> 

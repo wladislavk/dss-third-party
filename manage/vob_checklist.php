@@ -224,6 +224,34 @@ Verification CANNOT be requested*
 
 <br /><br />
 <a style="margin-left:150px;" href="eligible_check.php?pid=<?= $_GET['pid']; ?>" class="button">Eligibility Check</a>
+<br /><br />
+<div style="margin-left:20px;">
+  <h2>Eligibility Check History</h2>
+<table>
+  <tr>
+    <th width="200">Date</th>
+    <th>View</th>
+  </tr>
+
+  <?php $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+    $q = mysql_query($s);
+    while($r = mysql_fetch_assoc($q)){
+      ?>
+        <tr>
+          <td><?= $r['adddate']; ?></td>
+          <td><a href="#" onclick="parent.window.location = 'view_eligibility_response.php?id=<?=$r['id']; ?>';return false;">View</a></td>
+        </tr>
+
+<?php
+
+
+   }
+?>
+</table>
+</div>
+
+
+
 </div>
 
 

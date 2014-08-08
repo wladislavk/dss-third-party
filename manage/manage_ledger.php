@@ -336,11 +336,11 @@ $sql = "select
 
 ";
 }
-if(isset($_REQUEST['sort'])){
-  if($_REQUEST['sort']=='producer'){
-    $sql .= " ORDER BY name ".$_REQUEST['sortdir']; 
+if(isset($_GET['sort'])){
+  if($_GET['sort']=='producer'){
+    $sql .= " ORDER BY name ".$_GET['sortdir']; 
   }else{
-    $sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
+    $sql .= " ORDER BY ".$_GET['sort']." ".$_GET['sortdir'];
   }
 }
 
@@ -469,8 +469,8 @@ return s;
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'service_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=service_date&sortdir=<?php echo ($_REQUEST['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
+		<td valign="top" class="col_head  <?= ($_GET['sort'] == 'service_date')?'arrow_'.strtolower($_GET['sortdir']):''; ?>" width="10%">
+			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=service_date&sortdir=<?php echo ($_GET['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
 		</td>
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>

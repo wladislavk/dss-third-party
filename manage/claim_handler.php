@@ -649,10 +649,8 @@ if($success == "false"){
   claim_status_history_update($_GET['ins_id'], '', DSS_CLAIM_REJECTED, $_SESSION['userid']);
 ?>
 <script type="text/javascript">
-  c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');
-  if(c){
+  alert('RESPONSE: <?= $result; ?> ');
    window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>"; 
-  }
 </script>
 <?php
 

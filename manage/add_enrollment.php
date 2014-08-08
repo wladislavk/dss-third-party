@@ -35,7 +35,7 @@ if(isset($_POST["enroll_but"]))
   $r = mysql_fetch_assoc($q);
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
 $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
-	$t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."'";
+	$t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."' AND status=1";
         $t_q = mysql_query($t_sql);
 	$t_r = mysql_fetch_assoc($t_q);
 $data = array();
@@ -155,7 +155,7 @@ label{
 </style>
 
     <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post">
-  <?php $t_sql = "SELECT * FROM dental_enrollment_transaction_type ORDER BY transaction_type ASC";
+  <?php $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE status=1 ORDER BY transaction_type ASC";
         $t_q = mysql_query($t_sql);
   ?>
 	<?php
@@ -178,7 +178,7 @@ label{
         </select>
 </div>
 
-<div>
+<div style="clear:both;">
 	<label style="color:#fff;">Insurance Co</label>
 		<input type="hidden" name="payer_id" id="payer_id">
                                 <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="Type insurance payer name" style="width:300px;" />
@@ -200,7 +200,7 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'h
   //$r = mysql_fetch_assoc($q);
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
 $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
-        $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."'";
+        $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."' AND status=1";
         $t_q = mysql_query($t_sql);
         $t_r = mysql_fetch_assoc($t_q);
 ?>
@@ -208,11 +208,12 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 	<label style="color:#fff;">NPI to Enroll</label>
         <select id="provider_select" name="provider_select">
         <?php while($r = mysql_fetch_assoc($q)){ ?>
+		<?php $signature = ($r['signature_json']!='')?1:0; ?>
           <?php if($r['docid']==0){
                 $snpi = $r['service_npi'];
-		$sjson ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'"}';
+		$sjson ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
                 }
-		$json ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'"}';
+		$json ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
           ?>
           <option value='<?= $json; ?>'><?= $r['npi']; ?> - <?= $r['first_name']." ".$r['last_name']; ?></option>
         <?php } ?>
@@ -221,7 +222,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
           <?php } ?>
         </select>
 </div>
-<div>
+<div style="clear:both;">
 	<label style="color:#fff;">Facility Name</label>
 	<input type="text" id="facility_name" name="facility_name" value="<?= $r['practice']; ?>" readonly="readonly" />
 </div>
@@ -294,9 +295,14 @@ function update_list(){
 }
 
 
-$('#provider_select').change(function(){
+$('#provider_select').change(function(event){
   var json = $(this).val();
   var r = $.parseJSON(json);
+  if(r.signature=="0"){
+    alert("Error - No e-signature on file for "+r.provider_name+".  In order to submit electronic enrollments this user must add an e-signature on his/her ‘Profile’ page.");
+	$('#provider_select option:first-child').attr("selected", "selected");
+	exit;
+  }
   $('#facility_name').val(r.facility_name);
   $('#provider_name').val(r.provider_name);
   $('#tax_id').val(r.tax_id);

@@ -38,20 +38,47 @@
         function sendValueRef_local(partial_name, in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment, npi, office_type) {
 //alert(local_data[0].payer_name);
 		data = [];
+		ld = []
 		r = 0
 		for(var i=0;i<local_data.length;i++){
-			if(local_data[i].payer_name.toLowerCase().indexOf(partial_name.toLowerCase()) != -1){
+		  ld[i] = local_data[i].payer_name.toLowerCase().split(" ");
+		}
+		var pn = partial_name.toLowerCase().split(" ");
+
+
+		for(var j=0;j<ld.length;j++){
+			fail = 0;
+			for(var k=0;k<pn.length;k++){
+				ldn = ld[j];
+				found = 0;
+				for(var l=0;l<ldn.length;l++){
+				  if(ldn[l].indexOf(pn[k]) != -1){
+					found = 1;
+					break;
+				  }
+				}
+				
+				if(found==0){
+					fail = 1;
+					break;
+				}
+			}
+			if(fail == 0){
+
+
 				data[r] = [];
 				if(id_only){
-				  data[r][0] = local_data[i].payer_id.replace(/(\r\n|\n|\r)/gm,"");
+				  data[r][0] = local_data[j].payer_id.replace(/(\r\n|\n|\r)/gm,"");
 				}else{
-				  data[r][0] = local_data[i].payer_id.replace(/(\r\n|\n|\r)/gm,"")+"-"+local_data[i].payer_name.replace(/(\r\n|\n|\r)/gm,"");
+				  data[r][0] = local_data[j].payer_id.replace(/(\r\n|\n|\r)/gm,"")+"-"+local_data[j].payer_name.replace(/(\r\n|\n|\r)/gm,"");
 				}
-				data[r][1] = local_data[i].payer_id.replace(/(\r\n|\n|\r)/gm,"")+" - "+local_data[i].payer_name.replace(/(\r\n|\n|\r)/gm,"");
-				data[r][2] = local_data[i].enrollment_required;
+				data[r][1] = local_data[j].payer_id.replace(/(\r\n|\n|\r)/gm,"")+" - "+local_data[j].payer_name.replace(/(\r\n|\n|\r)/gm,"");
+				data[r][2] = local_data[j].enrollment_required;
 				r++;
 			}
 		}
+
+
                         if (data.length == 0) {
                                 $('.json_patient').remove();
                                 $('.create_new').remove();

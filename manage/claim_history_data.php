@@ -59,11 +59,12 @@ $claim = mysql_fetch_assoc($cq);
 ?>
 
 
-
+<div style="clear:both;" >
 
 <span class="admin_head">
         Claim Version History
 </span>
+</div>
 <?php
   $sql = "SELECT * FROM dental_insurance_history WHERE insuranceid='".mysql_real_escape_string($_GET['cid'])."'";
   $q = mysql_query($sql) or die(mysql_error());
@@ -90,7 +91,6 @@ $claim = mysql_fetch_assoc($cq);
 
   }
 ?>
-
 
 
 

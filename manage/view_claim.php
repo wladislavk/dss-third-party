@@ -231,14 +231,14 @@ $pat['p_m_dss_file']=='2'
 $pat['s_m_dss_file']=='2'
 )
 ){ ?>	
-        <button onclick="Javascript: window.location='insurance_v2.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton">
+        <button onclick="Javascript: window.location='insurance_v2.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton mainButton">
                 <?php if($claim['status'] == DSS_CLAIM_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_REJECTED){ ?>
                 Refile Paper
                 <?php }else{ ?>
                 Paper File
                 <?php } ?>
         </button>
-        <button onclick="Javascript: window.location='insurance_eligible.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton">
+        <button onclick="Javascript: window.location='insurance_eligible.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton mainButton">
 		<?php if($claim['status'] == DSS_CLAIM_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_REJECTED){ ?>
                 Refile E-File
 		<?php }else{ ?>

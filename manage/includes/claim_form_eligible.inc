@@ -63,6 +63,8 @@ $dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
 $p_m_eligible_payer_id = $myarray['p_m_eligible_payer_id'];
 $p_m_eligible_payer_name = $myarray['p_m_eligible_payer_name'];
+$s_m_eligible_payer_id = $myarray['s_m_eligible_payer_id'];
+$s_m_eligible_payer_name = $myarray['s_m_eligible_payer_name'];
 if(!$is_pri_pending){
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
@@ -480,9 +482,20 @@ if (empty($prior_authorization_number)) {
     </head>
 
     <body>
+<div style="width:250px;float:left;">
+Instructions to E-File: Enter electronic Payer ID or Name in Box 1.  Verify all claim details.  Click “Submit” on bottom left of claim to e-file your claim.
+</div>
+<input type="button" onclick="change_form();" value="Switch to Paper File" style="float:right;margin-right:20px;" />
+<?php if ($is_front_office) { ?>
+ <input type="button" onclick="window.location='view_claim.php?claimid=<?=$_GET['insid'];?>&pid=<?=$_GET['pid']?>'; return false;" value="Back to Insurance Page" style="float:right;">
+<?php } else if ($is_back_office) { ?>
+ <input type="button" onclick="window.location='manage_claims.php'; return false;" value="Back to Insurance Page" style="float:right;">
+<?php } ?>
+
+
 <?php
   if($is_rejected){
-  ?> <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">  <?php
+  ?> <div style="clear:both;margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">  <?php
   $r_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($_GET['insid'])."' ORDER BY adddate DESC LIMIT 1";
 $r_my = mysql_query($r_sql);
 $r = mysql_fetch_assoc($r_my);
@@ -525,8 +538,7 @@ if(!$r['reference_id'] || !$w_r['response']){
 <?php
 }
 ?>
-<input type="button" onclick="change_form();" value="Switch to Paper File" />
-    <form action="claim_handler.php?insid=<?= $_REQUEST['insid']; ?>&pid=<?= $_REQUEST['pid']; ?>" method="POST">
+    <form style="clear:both;" action="claim_handler.php?insid=<?= $_REQUEST['insid']; ?>&pid=<?= $_REQUEST['pid']; ?>" method="POST">
 
         <div id="eligibleapi-claim-1500-form"></div>
 
@@ -550,7 +562,13 @@ if(!$r['reference_id'] || !$w_r['response']){
         $inscoinfo = mysql_fetch_array($inscoarray);
       ?>
 
-
+    <?php if($is_secondary){ ?>
+      $('input[name="payer[id]"]').val("<?= $s_m_eligible_payer_id;?>");
+      $('input[name="payer[name]"]').val("<?= $s_m_eligible_payer_name;?>");
+    <?php }else{ ?>
+      $('input[name="payer[id]"]').val("<?= $p_m_eligible_payer_id;?>");
+      $('input[name="payer[name]"]').val("<?= $p_m_eligible_payer_name;?>");
+    <?php } ?>
     $('input[name="payer[address][street_line_1]"]').val("<?= $inscoinfo['add1'];?>");
     $('input[name="payer[address][street_line_2]"]').val("<?= $inscoinfo['add2'];?>");
     $('input[name="payer[address][city]"]').val("<?= $inscoinfo['city'];?>");

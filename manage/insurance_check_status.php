@@ -8,12 +8,16 @@ $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
 $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
 }
 
+$_GET['id'] = $_GET['insid'];
 $sql = "SELECT i.*, u.npi, u.tax_id_or_ssn,
+		ce.reference_id,
 		u.first_name, u.last_name
 		FROM dental_claim_electronic ce 
 	JOIN dental_insurance i ON i.insuranceid = ce.claimid
 	JOIN dental_users u ON i.docid = u.userid
-	 WHERE id='".mysql_real_escape_string($_GET['id'])."' ORDER BY id DESC LIMIT 1";
+	 WHERE ce.claimid='".mysql_real_escape_string($_GET['id'])."' 
+	AND ce.reference_id!=''
+	ORDER BY id DESC LIMIT 1";
 $q = mysql_query($sql) or die(mysql_error());
 $r = mysql_fetch_assoc($q);
 
@@ -21,7 +25,7 @@ $l_sql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".mysql_real_escap
 $l_q = mysql_query($l_sql);
 $l = mysql_fetch_assoc($l_q);
 
-$reference_id = '1380637728877506331397';//$r['reference_id'];
+$reference_id = $r['reference_id'];
 
 $api_key = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
 $data = array();                                                                    
@@ -35,7 +39,7 @@ $data['provider_tax_id'] = preg_replace("/[^0-9]/","",$r['tax_id_or_ssn']);
 $data['member_id'] = preg_replace("/[^0-9]/","",$r['insured_id_number']);
 $data['member_last_name'] = $r['patient_lastname'];
 $data['member_first_name'] = $r['patient_firstname'];
-$data['member_dob'] = date_format(date_create_from_format('m-d-Y',$r['patient_dob']), 'Y-m-d');
+$data['member_dob'] = date('m-d-Y',strtotime($r['patient_dob']));
 $data['charge_amount'] = preg_replace("/[^0-9\.]/","",$r['total_charge']);
 $data['start_date'] = date('Y-m-d',strtotime($l['service_date']));
 $data['end_date'] = date('Y-m-d',strtotime($l['service_date']));

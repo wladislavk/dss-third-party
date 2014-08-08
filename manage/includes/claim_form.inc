@@ -1272,7 +1272,7 @@ input{text-transform:uppercase;}
 <?php } ?>
 
 <?php if ($is_front_office) { ?>
-  <a href="manage_insurance.php?pid=<?=$_REQUEST['pid']?>">
+  <a href="view_claim.php?claimid=<?= $_GET['insid']; ?>&pid=<?=$_REQUEST['pid']?>">
 	<b>&lt;&lt;Back to Manage Insurance Page</b></a>
 <?php } else if ($is_back_office) { ?>
   <a href="manage_claims.php?status=0&pid=<?=$_REQUEST['pid_filter']?>">
@@ -1280,6 +1280,81 @@ input{text-transform:uppercase;}
 <?php } ?>
 
 
+
+<form name="insurancefrm" action="<?=$_SERVER['PHP_SELF'];?>?insid=<?=$_GET['insid']?>&pid=<?=$_GET['pid']?>" method="post">
+	<input type="hidden" name="insurancesub" value="1" />
+	<input type="hidden" name="ed" value="<?=$insuranceid;?>" />
+	
+	<div align="right">
+        <?php if ($is_sent) { ?>
+          Claim has been sent
+		<?php if($is_back_office){ ?>
+			<input type="submit" class="print-button" name="ex_pagebtn" value="Print Claim" />
+			<input type="submit" class="print-button" name="ex_statusbtn" value="Check Status" />
+		<?php } ?>
+	    <?php } else if ($is_back_office) { ?>
+               <?php if($status == DSS_CLAIM_PENDING){ ?>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
+			<input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
+               <?php }elseif($status == DSS_CLAIM_SEC_PENDING){ ?>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
+			<input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
+               <?php }elseif($status == DSS_CLAIM_REJECTED){ ?>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
+                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
+               <?php }elseif($status == DSS_CLAIM_SEC_REJECTED){ ?>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
+                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
+               <?php }else ?>
+        <?php if (!$is_sent) {  ?>
+          <input type="submit" name="ex_pagebtn" 
+		<?php if($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED){ ?>
+onclick="return confirm('This claim has been rejected. By printing this claim the status will be changed to SENT, and the rejection notification will be removed. Click OK to proceed.');"
+		<?php } ?>
+		value="Print Claim" />
+          <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />-->
+
+        <?php } ?>
+
+		<?php } elseif ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
+               <?php if(($is_pending || $is_disputed || $is_rejected) && $p_m_dss_file == '2'){ ?>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
+                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
+        <?php if (!$is_sent) {  ?>
+          <input type="submit" name="ex_pagebtn" value="Print Claim" />
+<?php
+  $api_sql = "SELECT use_eligible_api FROM dental_users
+                WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $api_q = mysql_query($api_sql);
+  $api_r = mysql_fetch_assoc($api_q);
+  if($api_r['use_eligible_api']==1){
+  if($is_pending){
+?>
+          <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />-->
+  <?php }elseif($is_rejected){
+?>
+          <input type="submit" name="ex_pagebtn_elec" onclick="return file_reject_claim();" value="Resubmit Claim" />
+  <?php 
+  } ?>
+<?php } ?>
+        <?php } ?>
+
+               <?php }elseif(($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_REJECTED) && $s_m_dss_file == '2'){ ?>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
+                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
+        <?php if (!$is_sent) {  ?>
+          <input type="submit" name="ex_pagebtn" value="Print Claim" />
+          <!--<input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />-->
+
+        <?php } ?>
+
+               <?php } ?>
+
+                <?php } ?>
+		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
+
+		&nbsp;&nbsp;&nbsp;
+	</div>
 <?php
   if($is_rejected){
   ?> <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">  <?php
@@ -1333,81 +1408,6 @@ if(!$r['reference_id'] || !$w_r['response']){
 
 
 ?>
-
-<form name="insurancefrm" action="<?=$_SERVER['PHP_SELF'];?>?insid=<?=$_GET['insid']?>&pid=<?=$_GET['pid']?>" method="post">
-	<input type="hidden" name="insurancesub" value="1" />
-	<input type="hidden" name="ed" value="<?=$insuranceid;?>" />
-	
-	<div align="right">
-        <?php if ($is_sent) { ?>
-          Claim has been sent
-		<?php if($is_back_office){ ?>
-			<input type="submit" class="print-button" name="ex_pagebtn" value="Print Claim" />
-			<input type="submit" class="print-button" name="ex_statusbtn" value="Check Status" />
-		<?php } ?>
-	    <?php } else if ($is_back_office) { ?>
-               <?php if($status == DSS_CLAIM_PENDING){ ?>
-          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
-			<input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
-               <?php }elseif($status == DSS_CLAIM_SEC_PENDING){ ?>
-          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
-			<input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
-               <?php }elseif($status == DSS_CLAIM_REJECTED){ ?>
-          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
-                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
-               <?php }elseif($status == DSS_CLAIM_SEC_REJECTED){ ?>
-          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
-                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
-               <?php }else ?>
-        <?php if (!$is_sent) {  ?>
-          <input type="submit" name="ex_pagebtn" 
-		<?php if($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED){ ?>
-onclick="return confirm('This claim has been rejected. By printing this claim the status will be changed to SENT, and the rejection notification will be removed. Click OK to proceed.');"
-		<?php } ?>
-		value="Print Claim" />
-          <input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />
-
-        <?php } ?>
-
-		<?php } elseif ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
-               <?php if(($is_pending || $is_disputed || $is_rejected) && $p_m_dss_file == '2'){ ?>
-          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
-                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
-        <?php if (!$is_sent) {  ?>
-          <input type="submit" name="ex_pagebtn" value="Print Claim" />
-<?php
-  $api_sql = "SELECT use_eligible_api FROM dental_users
-                WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-  $api_q = mysql_query($api_sql);
-  $api_r = mysql_fetch_assoc($api_q);
-  if($api_r['use_eligible_api']==1){
-  if($is_pending){
-?>
-          <input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />
-  <?php }elseif($is_rejected){
-?>
-          <input type="submit" name="ex_pagebtn_elec" onclick="return file_reject_claim();" value="Resubmit Claim" />
-  <?php 
-  } ?>
-<?php } ?>
-        <?php } ?>
-
-               <?php }elseif(($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_REJECTED) && $s_m_dss_file == '2'){ ?>
-          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
-                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
-        <?php if (!$is_sent) {  ?>
-          <input type="submit" name="ex_pagebtn" value="Print Claim" />
-          <!--<input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />-->
-
-        <?php } ?>
-
-               <?php } ?>
-
-                <?php } ?>
-		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
-
-		&nbsp;&nbsp;&nbsp;
-	</div>
 <?php
 if ($is_back_office || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && ($is_pending || $is_rejected) && $p_m_dss_file == '2')){ 
                 $p_m_ins_payer_id = st($pat_myarray["p_m_eligible_id"]);

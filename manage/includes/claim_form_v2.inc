@@ -406,6 +406,15 @@ die();
                 $p_m_eligible_payer_id = '';
                 $p_m_eligible_payer_name = '';
         }
+
+        if($_POST['s_m_eligible_payer']!=''){
+                $s_m_eligible_payer_id = substr($_POST['s_m_eligible_payer'],0,strpos($_POST['s_m_eligible_payer'], '-'));
+                $s_m_eligible_payer_name = substr($_POST['s_m_eligible_payer'],(strpos($_POST['s_m_eligible_payer'], '-')+1));
+        }else{
+                $s_m_eligible_payer_id = '';
+                $s_m_eligible_payer_name = '';
+        }
+
 	
 	// Insert new claim into dental_insurance table
 	if ($is_new_claim) {
@@ -624,6 +633,8 @@ die();
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."',
 		p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
                 p_m_eligible_payer_name = '".$p_m_eligible_payer_name."',
+		s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
+                s_m_eligible_payer_name = '".$s_m_eligible_payer_name."',
 		status = '".s_for(DSS_CLAIM_PENDING)."',
 		userid = '".s_for($_SESSION['userid'])."',
 		docid = '".s_for($_SESSION['docid'])."',
@@ -888,7 +899,9 @@ die();
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."',
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."'";
+                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."',
+                s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
+                s_m_eligible_payer_name = '".$s_m_eligible_payer_name."'";
 		if(isset($_POST['reject_but'])){
 		  $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
                   $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";
@@ -939,6 +952,11 @@ die();
 		  $pat_sql = "UPDATE dental_patients SET p_m_eligible_id = '".s_for($_POST['p_m_ins_payer_id'])."' WHERE patientid='".mysql_real_escape_string($pat_myarray['patientid'])."'";
 		  mysql_query($pat_sql);
 		}
+                if(isset($_POST['s_m_ins_payer_id'])){
+                  $pat_sql = "UPDATE dental_patients SET s_m_eligible_id = '".s_for($_POST['s_m_ins_payer_id'])."' WHERE patientid='".mysql_real_escape_string($pat_myarray['patientid'])."'";
+                  mysql_query($pat_sql);
+                }
+
 
 claim_history_update($primary_claim_id, $_SESSION['userid'], $_SESSION['adminuserid']);
 
@@ -1012,6 +1030,8 @@ $dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
 $p_m_eligible_payer_id = $myarray['p_m_eligible_payer_id'];
 $p_m_eligible_payer_name = $myarray['p_m_eligible_payer_name'];
+$s_m_eligible_payer_id = $myarray['s_m_eligible_payer_id'];
+$s_m_eligible_payer_name = $myarray['s_m_eligible_payer_name'];
 if(!$is_pri_pending){
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
@@ -1399,66 +1419,14 @@ input{text-transform:uppercase;}
 <?php } ?>
 
 <?php if ($is_front_office) { ?>
-  <a href="manage_insurance.php?pid=<?=$_GET['pid']?>">
+  <a href="view_claim.php?claimid=<?=$_GET['insid'];?>&pid=<?=$_GET['pid']?>">
 	<b>&lt;&lt;Back to Manage Insurance Page</b></a>
 <?php } else if ($is_back_office) { ?>
-  <a href="manage_claims.php?pid=<?=$_GET['pid_filter']?>">
+  <a href="manage_claims.php">
 	<b>&lt;&lt;Back to Manage Claims Page</b></a>
 <?php } ?>
 
 
-<?php
-  if($is_rejected){
-  ?> <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">  <?php
-  $r_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($_GET['insid'])."' ORDER BY adddate DESC LIMIT 1";
-$r_my = mysql_query($r_sql);
-$r = mysql_fetch_assoc($r_my);
-if($r['reference_id']){
-    $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysql_real_escape_string($r['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
-    $w_q = mysql_query($w_sql);
-    $w_r = mysql_fetch_assoc($w_q);
-    if($w_r['response']!=''){
-                          ?><h3><?= $w_r['event_type']; ?> on
-                <?= $w_r['adddate']; ?></h3>
-<?php $p = json_decode($w_r['response']); ?>
-                                <p>Category: <?= $p->{"details"}->{"codes"}->{"category_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"category_label"}; ?><br />
-                                Status: <?= $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"status_label"}; ?>
-                                </p>
-
-                        <?php
-    }
-}
-if(!$r['reference_id'] || !$w_r['response']){
- 	?>
-                <h3>Claim Electronically filed on
-                <?= $r['adddate']; ?></h3>
-                        <?php
-                        $d = json_decode($r['response']);
-                        $success = $d->{"success"};
-                        if($success=="true"){
-                                ?><p><strong>Success Response:</strong><br /><?php
-                        }else{
-                                ?><p><strong>Error Response:</strong><br /><?php
-                                        $errors = $d->{"errors"}->{"messages"};
-                                        foreach($errors as $error){
-                                          echo $error."<br />";
-                                        }
-                        }
-                        ?>
-                </p>
-<?php } ?>
-        </div>
-
-<?php
-}
-
-
-
-
-
-
-
-?>
 
 <form name="insurancefrm" action="<?=$_SERVER['PHP_SELF'];?>?insid=<?=$_GET['insid']?>&pid=<?=$_GET['pid']?>" method="post">
 	<input type="hidden" name="insurancesub" value="1" />
@@ -1544,6 +1512,70 @@ if ($is_back_office){
 ?>
 		&nbsp;&nbsp;&nbsp;
 	</div>
+
+
+
+<?php
+  if($is_rejected){
+  ?> <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">  <?php
+  $r_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($_GET['insid'])."' ORDER BY adddate DESC LIMIT 1";
+$r_my = mysql_query($r_sql);
+$r = mysql_fetch_assoc($r_my);
+if($r['reference_id']){
+    $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysql_real_escape_string($r['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
+    $w_q = mysql_query($w_sql);
+    $w_r = mysql_fetch_assoc($w_q);
+    if($w_r['response']!=''){
+                          ?><h3><?= $w_r['event_type']; ?> on
+                <?= $w_r['adddate']; ?></h3>
+<?php $p = json_decode($w_r['response']); ?>
+                                <p>Category: <?= $p->{"details"}->{"codes"}->{"category_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"category_label"}; ?><br />
+                                Status: <?= $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"status_label"}; ?>
+                                </p>
+
+                        <?php
+    }
+}
+if(!$r['reference_id'] || !$w_r['response']){
+ 	?>
+                <h3>Claim Electronically filed on
+                <?= $r['adddate']; ?></h3>
+                        <?php
+                        $d = json_decode($r['response']);
+                        $success = $d->{"success"};
+                        if($success=="true"){
+                                ?><p><strong>Success Response:</strong><br /><?php
+                        }else{
+                                ?><p><strong>Error Response:</strong><br /><?php
+                                        $errors = $d->{"errors"}->{"messages"};
+                                        foreach($errors as $error){
+                                          echo $error."<br />";
+                                        }
+                        }
+                        ?>
+                </p>
+<?php } ?>
+        </div>
+
+<?php
+}
+
+
+
+
+
+
+
+?>
+
+
+
+
+
+
+
+
+
 <?php
 if ($is_back_office || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && ($is_pending || $is_rejected) && $p_m_dss_file == '2')){ 
                 $p_m_ins_payer_id = st($pat_myarray["p_m_eligible_id"]);
@@ -1594,6 +1626,31 @@ $(document).ready(function(){
 });
 </script>
 <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />
+
+
+
+<?php } ?>
+
+<?php
+if ($is_back_office || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && ($is_sec_pending || $is_sec_rejected) && $p_m_dss_file == '2')){ 
+                $p_m_ins_payer_id = st($pat_myarray["s_m_eligible_id"]);
+                if($p_m_ins_payer_id){
+                  $dsql = "SELECT name, payer_id FROM dental_ins_payer
+                        WHERE id=".mysql_real_escape_string($s_m_ins_payer_id);
+                  $dq = mysql_query($dsql);
+                  $d = mysql_fetch_assoc($dq);
+                  $s_m_ins_payer_name = $d['payer_id']." - ".$d['name'];
+                }else{
+                  $s_m_ins_payer_name = "";
+                }	
+?>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete_local('s_m_ins_payer_name', 's_m_ins_payer_hints', 's_m_eligible_payer', '', 'https://eligibleapi.com/resources/payers/claims/medical.json', null, null, null, true, '<?= $npi; ?>', '<?= ($is_front_office)?1:2; ?>');
+});
+</script>
+<input type="hidden" name="s_m_eligible_payer" id="s_m_eligible_payer" value="<?=$s_m_eligible_payer_id."-".$s_m_eligible_payer_name;?>" />
 
 
 

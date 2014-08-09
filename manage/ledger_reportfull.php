@@ -371,7 +371,7 @@ background:#999999;
 		</tr>
 </table>
 
-<?php include 'ledger_summary.php'; ?>
+<?php include 'ledger_summary_reportfull.php'; ?>
 
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><button>X</button></a>

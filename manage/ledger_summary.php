@@ -5,7 +5,9 @@
 <?php
   $ch_total = 0;
   $ch_sql = "SELECT dl.description, sum(dl.amount) amount FROM dental_ledger dl
-		WHERE amount != '' ";
+		JOIN dental_patients p ON p.patientid=dl.patientid
+		WHERE amount != '' 
+		AND p.docid='".mysql_real_escape_string($_SESSION['docid'])."' ";
 	if(isset($_GET['pid'])){
 		$ch_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
 	}

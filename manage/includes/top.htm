@@ -1475,6 +1475,7 @@ if(isset($_GET['pid'])){
 
 <div id="patient_warnings" <?= ($_COOKIE['hide_pat_warnings']==$_GET['pid'])?'style="display:none;"':'';?>>
 <?php
+  $warnings = 0;
   if(isset($_GET['pid']) && $_GET['pid']!='' && $_GET['pid']!='0'){
 	$s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
                                 $q = mysql_query($s);
@@ -1495,6 +1496,7 @@ $insurance_sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlas
 $insurance_my = mysql_query($insurance_sql);
 $total_insurance = mysql_num_rows($insurance_my);
                                 if(($n+$total_contacts+$total_insurance)>0){ ?>
+  <?php $warnings = 1; ?>
 <a class="warning" href="patient_changes.php?pid=<?=$_GET['pid'];?>">
 <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
 </a>
@@ -1505,6 +1507,7 @@ $total_insurance = mysql_num_rows($insurance_my);
         $exist_q = mysql_query($exist_sql);
         $exist_row = mysql_fetch_assoc($exist_q);
 	if($exist_row['symptoms_status']==2 || $exist_row['treatments_status']==2 || $exist_row['history_status']==2 || $exist_row['sleep_status']==2){ ?>
+  <?php $warnings = 1; ?>
 <a class="warning" href="q_page1.php?pid=<?= $_GET['pid']; ?>&addtopat=1" >
 <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
 </a>
@@ -1515,6 +1518,7 @@ $total_insurance = mysql_num_rows($insurance_my);
         $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
         $email_q = mysql_query($email_sql);
         if(mysql_num_rows($email_q)>0){ ?>
+  <?php $warnings = 1; ?>
 <a class="warning" href="add_patient.php?ed=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>&addtopat=1" >
 <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
 </a>
@@ -1526,7 +1530,9 @@ $total_insurance = mysql_num_rows($insurance_my);
 			AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
 	$rc_q = mysql_query($rc_sql);
 	if(mysql_num_rows($rc_q) > 0){
-		?><span class="warning">
+		?>
+  <?php $warnings = 1; ?>
+	<span class="warning">
 		Warning! Patient has the following rejected claims: <br />
 		<?php
 	  while($rejected = mysql_fetch_assoc($rc_q)){
@@ -1545,7 +1551,9 @@ $total_insurance = mysql_num_rows($insurance_my);
 	$pat_hst_num_uncompleted = mysql_num_rows($rc_q);
         $pat_hst_status = '';
         if(mysql_num_rows($rc_q) > 0){
-                ?><span class="warning">
+                ?>
+  <?php $warnings = 1; ?>
+<span class="warning">
                 Patient has the following Home Sleep Tests: <br />
                 <?php
           while($hst = mysql_fetch_assoc($rc_q)){
@@ -1578,6 +1586,13 @@ $total_insurance = mysql_num_rows($insurance_my);
   ?>
 </div>
   <?php
+  if($warnings==0){
+	?><script type="text/javascript">
+	$('#patient_warnings').hide();$('#hide_patient_warnings').hide();
+	</script>
+	<?php
+  }
+
 }
 
 

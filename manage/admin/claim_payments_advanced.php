@@ -131,8 +131,10 @@ if(f.dispute.checked){
     if(f.payer.value==<?= DSS_TRXN_PAYER_PRIMARY;?>){
       if(f.close.checked){
         if(f.attachment.value =='' && <?= ($num_pa == 0)?1:0; ?>){
-          returnval = false;
-          alert('A claim must have an EOB attached to close.');
+          if(!confirm('It is recommended a claim has an EOB attached to close. Proceed?')){
+            returnval = false;
+          }
+
         }
         //file secondary
         //VALID
@@ -152,8 +154,10 @@ if(f.dispute.checked){
   }else if(<?= ($claim['status']==DSS_CLAIM_SEC_SENT)?1:0; ?>){
     if(f.close.checked){
       if(f.attachment.value =='' && <?= ($num_sa == 0)?1:0; ?>){
-          returnval = false;
-          alert('A claim must have an EOB attached to close.');
+          if(!confirm('It is recommended a claim has an EOB attached to close. Proceed?')){
+            returnval = false;
+          }
+
         }
       //VALID
     }else{
@@ -273,7 +277,7 @@ while($row = mysql_fetch_assoc($lq)){
 <div id="dispute_reason_div" style="display: none">
 <label >Reason for dispute:</label> <input type="text" name="dispute_reason" />
 </div>
-<div id="ins_attach" style="display: none">
+<div id="ins_attach" <?php if(!isset($_GET['close'])||$_GET['close']!=1){ ?>style="display: none"<?php } ?>>
 <label >Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
 </div>
 <input type="hidden" name="claimid" value="<?php echo $_GET['id']; ?>">

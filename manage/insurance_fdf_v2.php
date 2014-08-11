@@ -527,6 +527,15 @@ $seventeenA = $qua_myarray['qualifier'];
                         if($npi == ""){ $npi = $docinfo['npi']; }
                         if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
 
+                        if($insurancetype == 1){
+                          $service_npi = "";
+                          $service_facility_info_name = "";
+                          $service_facility_info_address = "";
+                          $service_facility_info_city = "";
+                          $service_medicare_npi = "";
+                        }
+
+
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$diagnosis_1;
 $ins_diag_my = mysql_query($ins_diag_sql);
 $ins_diag_myarray = mysql_fetch_array($ins_diag_my);
@@ -846,7 +855,7 @@ $fdf .= "
   << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper($billing_provider_name)."\n".strtoupper($billing_provider_address)."\n".strtoupper($billing_provider_city).") >>
   << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".$signature_physician.") >>  
   << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/y').") >>
-  << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".(($insurancetype == '1')?$medicare_npi:$npi).") >>
+  << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".(($insurancetype == '1')?$service_medicare_npi:$service_npi).") >>
   << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".$service_info_b_other.") >>
   << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".(($insurancetype == '1')?$medicare_npi:$npi).") >>
   << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".$billing_provider_b_other.") >>

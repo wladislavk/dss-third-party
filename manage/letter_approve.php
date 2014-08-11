@@ -49,7 +49,6 @@ if(file_exists($jpg."-". $i.".jpg")){
 
 
   function send_letter(id){
-alert('test');
                                   $.ajax({
                                         url: "includes/letter_send.php",
                                         type: "post",

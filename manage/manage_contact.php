@@ -260,11 +260,11 @@ if(isset($_GET['letter']) && $_GET['letter'] != ''){
                                 <?= ($num_pat)?'<a href="#" onclick="$(\'#ref_pat_'.$myarray['contactid'].'\').toggle();return false;">'.$num_pat.'</a>':''; ?>
                                 </td>
 				<td valign="top" width="20%">
-				        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$myarray["contactid"];?>')" class="editlink" title="EDIT">
+				        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$myarray["contactid"];?>'); return false;" class="editlink" title="EDIT">
                                                 Quick View
                                         </a>
 					|
-					<a href="#" onclick="loadPopup('add_contact.php?ed=<?=$myarray["contactid"];?>')" class="editlink" title="EDIT">
+					<a href="#" onclick="loadPopup('add_contact.php?ed=<?=$myarray["contactid"];?>'); return false;" class="editlink" title="EDIT">
 						Edit 
 					</a>
                     

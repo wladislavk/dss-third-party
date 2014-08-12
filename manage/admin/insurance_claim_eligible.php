@@ -11,5 +11,5 @@ $is_back_office = true;
 $manage_path = "../";
 $admin_path = "";
 $called_from = "manage_claims.php";
-$v2_form = "insurance_claim_v2.php?insid=".$_GET['insid']."&pid=".$_GET['pid'];
+$v2_form = "insurance_claim_v2.php?insid=".$_GET['insid']."&pid=".$_GET['pid']."&instype=".$_GET['instype'];
 include_once("../includes/claim_form_eligible.inc");

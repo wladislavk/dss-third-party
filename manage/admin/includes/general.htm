@@ -904,12 +904,14 @@ function deliver_created_letter($letterid){
                         if ($send_method == 'paper') {
                                 return "paper";
                         }
+			return true;
 
                 }else{
                         $letter_query = "UPDATE dental_letters SET status='2' WHERE letterid='".s_for($letterid)."';";
                         $letter_result = mysql_query($letter_query);
                         return "Letter could not be sent.";
                 }
+
 }
 
 // Actually Sends The Letter, returns send_method on success, false on failure.

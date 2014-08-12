@@ -54,10 +54,6 @@ if(file_exists($jpg."-". $i.".jpg")){
                                         type: "post",
                                         data: {id: id},
                                         success: function(data){
-                                                var r = $.parseJSON(data);
-alert(data);
-                                                if(r.error){
-                                                }else{
 <?php
 if(isset($_REQUEST['parent'])){
 if($_REQUEST['goto']!=''){
@@ -83,7 +79,7 @@ if($_REQUEST['goto']!=''){
 <?php
 }
  ?>
-                                                }
+                                                
                                         },
                                         failure: function(data){
                                                 //alert('fail');

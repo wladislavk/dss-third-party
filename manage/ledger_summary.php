@@ -38,6 +38,21 @@
   <li><label><?= $cr_r['description']; ?></label> $<?= number_format($cr_r['amount'],2); ?></li>
         <?php $cr_total += $cr_r['amount']; ?>
   <?php } ?>
+<?php
+  $cr_sql = "SELECT dlp.payment_type, sum(dlp.amount) amount FROM dental_ledger_payment dlp
+		JOIN dental_ledger dl ON dl.ledgerid=dlp.ledgerid
+                WHERE dlp.amount != '' 
+                ";
+        if(isset($_GET['pid'])){
+                $cr_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
+        }
+                $cr_sql .= " GROUP BY dlp.payment_type";
+  $cr_q = mysql_query($cr_sql);
+  while($cr_r = mysql_fetch_assoc($cr_q)){ ?>
+  <li><label><?=$dss_trxn_pymt_type_labels[$cr_r['payment_type']]; ?></label> $<?= number_format($cr_r['amount'],2); ?></li>
+        <?php $cr_total += $cr_r['amount']; ?>
+  <?php } ?>
+
   <li><label>Credits Total</label> $<?= number_format($cr_total,2); ?></li>
 </ul>
 

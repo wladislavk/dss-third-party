@@ -678,7 +678,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 Device amount
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="trxn_code_amount2 name="trxn_code_amount2 value="<?=$preauth['trxn_code_amount']?>" class="tbox readonly" readonly /> 
+                $<input type="text" id="trxn_code_amount2" name="trxn_code_amount2" value="<?=$preauth['trxn_code_amount']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>

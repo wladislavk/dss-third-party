@@ -1415,6 +1415,33 @@ if(isset($_GET['pid'])){
 }
 ?>
 
+<?php
+  if(isset($_GET['pid']) && $_GET['pid']!=''){ 
+$pat_unsigned_query = "select * from (select n.*, u.name signed_name, p.adddate as parent_adddate from
+        (
+        select * from dental_notes where status!=0 AND docid='".$_SESSION['docid']."' AND patientid='".$_GET['pid']."' order by adddate desc
+        ) as n
+        LEFT JOIN dental_users u on u.userid=n.signed_id
+        LEFT JOIN dental_notes p ON p.notesid = n.parentid
+        group by n.parentid
+        order by n.procedure_date DESC, n.adddate desc) as m
+        where m.signed_on IS NULL OR m.signed_on = ''
+        ";
+
+$pat_unsigned_res = mysql_query($pat_unsigned_query);
+$pat_num_unsigned = mysql_num_rows($pat_unsigned_res);
+
+                        $pat_dental_letters_query = "SELECT letterid FROM dental_letters                                 JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid                                 WHERE dental_letters.status = '0' AND 
+                                        dental_letters.deleted = '0' AND 
+                                        dental_patients.docid = '".mysql_real_escape_string($_SESSION['docid'])."' AND
+                                        dental_letters.patientid= '".mysql_real_escape_string($_REQUEST['pid'])."';";
+$pat_dental_letters_res = mysql_query($pat_dental_letters_query) or die(mysql_error());
+$pat_pending_letters = mysql_num_rows($pat_dental_letters_res);
+
+
+}
+?>
+
 <div class="suckertreemenu">
 <span style="line-height:38px; margin-right:10px;font-size:20px; color:#fff; float:right;">Welcome <?= $_SESSION['username']; ?></span>
 </div>
@@ -1425,8 +1452,8 @@ if(isset($_GET['pid'])){
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Summary Sheet</a> </li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" <?php {echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a> </li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a></li>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=notes&pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a></li>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=letters&pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a></li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=notes&pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes <?= ($pat_num_unsigned!=0)?'('.$pat_num_unsigned.')':''; ?></a></li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=letters&pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters <?= ($pat_pending_letters!=0)?'('.$pat_pending_letters.')':''; ?></a></li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" href="q_image.php?pid=<?= $_GET['pid'] ?>">Images</a></li>
         <li><a class="<?= (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" href="q_page1.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Questionnaire</a></li>
         <li><a class="<?= (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" href="ex_page4.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Clinical Exam</a> </li>

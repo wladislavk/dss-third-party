@@ -2599,5 +2599,4 @@ if(!isset($_GET['noheaders'])){
 <!-- Stick Footer Section Here -->
 </table>
 
-</body>
-</html>
+<?php include 'includes/bottom.htm'; ?>

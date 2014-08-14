@@ -203,7 +203,7 @@ $(function() {
   
   // Disable/enable fields related to this trxn code being covered by insurance
   $("input[name='trxn_code_covered']").bind('click', function() {
-    if ($(this).val() == 1) {
+    if ($(this).val() == "1") {
       // enable all the "covered" fields
       $('.covered').each(function() {
         $(this).removeAttr('disabled');
@@ -221,7 +221,7 @@ $(function() {
       $('.covered-row').hide();
 
       // manually set expected payments
-      var deviceAmount = $('#trxn_code_amount').val();
+      var deviceAmount = $('#trxn_code_amount2').val();
       $('#expected_insurance_payment').val('0.00');
       $('#expected_patient_payment').val(deviceAmount);
       

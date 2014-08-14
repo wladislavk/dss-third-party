@@ -519,6 +519,7 @@ primary_claim_id,
 
   mysql_query($sql) or die(mysql_error());
   $hid = mysql_insert_id();
+if($insid!='' && $insid!=0){
   $sql = "INSERT INTO dental_ledger_history
 	(ledgerid,
 formid,
@@ -601,6 +602,7 @@ percase_free,
                         FROM dental_ledger l
                         WHERE l.primary_claim_id='".mysql_real_escape_string($insid)."'";
   mysql_query($sql) or die(mysql_error());
+}
   return $hid;
 }
 

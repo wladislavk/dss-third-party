@@ -142,6 +142,9 @@ background:#999999;
 		<td valign="top" class="col_head" width="10%">
 			Credits
 		</td>
+		<td valign="top" class="col_head" width="10%">
+			Adjustments	
+		</td>
 		<td valign="top" class="col_head" width="5%">
 			Ins
 		</td>
@@ -163,6 +166,7 @@ background:#999999;
 	
 		$tot_charges = 0;
 		$tot_credit = 0;
+		$tot_adj = 0;
 		
 		while($myarray = mysql_fetch_array($my))
 		{
@@ -209,14 +213,31 @@ background:#999999;
 
 					&nbsp;
 				</td>
+                                <?php if($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
+                                <td></td>
+                                        <?php
+                                                if($myarray[0]!='claim'){
+                                                $tot_adj += st($myarray["paid_amount"]);
+                                                }
+                                        ?>
+                                <?php } ?>
+
 				<td valign="top" align="right" width="10%">
 					<? if(st($myarray["paid_amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
-						$tot_credit += st($myarray["paid_amount"]);
 					}?>
 					&nbsp;
 				</td>
+                                <?php if(!($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ ?>
+                                                <?php
+                                                if($myarray[0]!='claim'){
+                                                $tot_credit += st($myarray["paid_amount"]);
+                                                }
+                                                ?>
+                                <td></td>
+                                <?php } ?>
+
 				<td valign="top" width="5%">&nbsp;
          <? if($myarray["status"] == 1){
 	           echo "Sent";
@@ -248,6 +269,12 @@ background:#999999;
                                 &nbsp;
                                 </b>
                         </td>
+                        <td valign="top" align="right">
+                                <b>
+                                <?php echo "$".number_format($tot_adj,2);?>
+                                &nbsp;
+                                </b>
+                        </td>
                         <td valign="top">&nbsp;
 
                         </td>
@@ -257,12 +284,7 @@ background:#999999;
 </table>
  </div>
 
-<div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
-
+<?php include 'ledger_summary_reportfull.php'; ?>
 <br /><br />	
 <script type="text/javascript">
 window.print();

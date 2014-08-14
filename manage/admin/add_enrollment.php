@@ -192,7 +192,10 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
             <td valign="top" class="frmdata">
         <select id="provider_select" name="provider_select" class="form-control">
         <?php while($r = mysql_fetch_assoc($q)){ ?>
-		<?php $signature = ($r['signature_json']!='')?1:0; ?>
+		<?php $us_sql = "SELECT * FROM dental_user_signatures where user_id='".mysql_real_escape_string($_GET['docid'])."'";
+		  $us_q = mysql_query($us_sql);
+		  $signature = mysql_num_rows($us_q);
+		?>
           <?php if($r['docid']==0){
                 $snpi = $r['service_npi'];
                 $sjson ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';

@@ -270,6 +270,7 @@ $total_charge = st($myarray['total_charge']);
                         $zip = $userinfo['zip'];
                         $npi = $userinfo['npi'];
                         $medicare_npi = $userinfo['medicare_npi'];
+                        $medicare_ptan = $userinfo['medicare_ptan'];
                       }
                       $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
                       $docquery = mysql_query($getdocinfo);
@@ -283,6 +284,7 @@ $total_charge = st($myarray['total_charge']);
                         if($zip == ""){ $zip = $docinfo['zip']; }
                         if($npi == ""){ $npi = $docinfo['npi']; }
                         if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
+                        if($medicare_ptan == ""){ $medicare_ptan = $docinfo['medicare_ptan']; }
 
                         if($docinfo['use_service_npi']==1){
                           $service_npi = $docinfo['service_npi'];
@@ -455,7 +457,7 @@ if ($is_pending) {
 </ul>
 
 <ul>
-  <li><label>Claim Date of Service: </label><span class="value"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></span></li>
+  <li><label>Claim Date of Service: </label> <span class="value"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></span></li>
   <li><label>Total Claim Amt: </label> <span class="value"><?= $total_charge; ?></span></li>
 </ul>
 </div>
@@ -515,7 +517,7 @@ if ($is_pending) {
 
 <ul>
   <li><label>Claim Date of Service: </label><span class="value"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></span></li>
-  <li><label>Total Claim Amt: </label> <span class="value"><?= $total_charge; ?></span></li>
+  <li><label>Total Claim Amt: </label> <span class="value"><?= ($total_charge!='')?$total_charge:'0.00'; ?></span></li>
 </ul>
 <?php } ?>
 </div>

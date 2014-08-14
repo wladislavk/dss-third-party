@@ -17,6 +17,22 @@ $doc_sql = "SELECT * from dental_users WHERE userid=".mysql_real_escape_string($
 $doc_q = mysql_query($doc_sql);
 $doc = mysql_fetch_assoc($doc_q);
 
+
+
+
+    $key_sql = "SELECT stripe_secret_key FROM companies c
+        JOIN dental_user_company uc
+        ON c.id = uc.companyid
+        WHERE uc.userid='".mysql_real_escape_string($_GET['docid'])."'";
+
+    $key_q = mysql_query($key_sql);
+    $key_r= mysql_fetch_assoc($key_q);
+
+    Stripe::setApiKey($key_r['stripe_secret_key']);
+
+$cards = Stripe_Customer::retrieve($doc['cc_id'])->cards->all();
+$last4 = $cards['data'][0]['last4'];
+
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
@@ -27,6 +43,10 @@ $doc = mysql_fetch_assoc($doc_q);
 
 <div class="page-header">
         <h2>Invoice History <small> - <?= $doc['first_name']; ?> <?= $doc['last_name']; ?>
+	<?php if($last4!=''){
+	?> - Current Card Ending <?php
+		echo $last4;
+	} ?>
         <a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
 </small></h2></div>
 <br />
@@ -46,8 +66,8 @@ $myarray = mysql_fetch_assoc($q);
                                                 Create
                                         </a>
                                         <?php if($myarray['cc_id']!=''){ ?>
-                                        <a href="#" onclick="loadPopup('percase_bill.php?docid=<?=$myarray["userid"];?>'); return false;" class="btn btn-primary" title="Bill Credit Card" style="padding:3px 5px;">
-                                                Bill Card
+                                        <a href="#" onclick="loadPopup('percase_bill.php?docid=<?=$myarray["userid"];?>'); return false;" class="btn btn-primary" title="Charge Credit Card" style="padding:3px 5px;">
+                                                Charge Card
                                         </a>
                                         <?php } ?>
                                   <?php }else{ ?>
@@ -55,8 +75,8 @@ $myarray = mysql_fetch_assoc($q);
                                                 Create
                                         </a>
                                         <?php if($myarray['cc_id']!=''){ ?>
-                                        <a href="#" onclick="alert('Error! This user is INACTIVE. You can only bill and invoice invoice active users.'); return false;" class="btn btn-primary" title="Bill Credit Card" style="padding:3px 5px;">
-                                                Bill Card
+                                        <a href="#" onclick="alert('Error! This user is INACTIVE. You can only bill and invoice invoice active users.'); return false;" class="btn btn-primary" title="Charge Credit Card" style="padding:3px 5px;">
+                                                Charge Card
                                         </a>
                                         <?php } ?>
                                   <?php } ?>
@@ -166,7 +186,6 @@ $case_q = mysql_query($case_sql);
 					<a href="display_file.php?f=percase_invoice_<?= $myarray['docid'];?>_<?= $myarray['id']; ?>.pdf" class="btn btn-primary" title="EDIT" style="padding:3px 5px;" target="_blank">
 						View
 					</a>
-                    
 				</td>
 			</tr>
 	<? 	}
@@ -212,6 +231,9 @@ $case_q = mysql_query($case_sql);
 		<td valign="top" class="col_head" width="20%">
 			Card
 		</td>
+		<td valign="top" class="col_head" width="20%">
+			Refund
+		</td>
         </tr>
         <? if(mysql_num_rows($charge_q) == 0)
         { ?>
@@ -226,6 +248,7 @@ $case_q = mysql_query($case_sql);
         {
                 while($charge_r = mysql_fetch_array($charge_q))
                 {
+	
                 ?>
                         <tr>
                                 <td valign="top">
@@ -234,6 +257,14 @@ $case_q = mysql_query($case_sql);
                                 <td valign="top" style="font-weight:bold;">
                                         $<?php
                                             echo st($charge_r["amount"]); ?>
+                                </td>
+                                <td valign="top" style="font-weight:bold;">
+					<?php $r_sql = "SELECT SUM(amount) refund FROM dental_refund WHERE charge_id='".mysql_real_escape_string($charge_r['id'])."'";
+						$r_q = mysql_query($r_sql);
+						$refund = mysql_fetch_assoc($r_q);
+						?>
+                                        $<?php
+                                            echo number_format($refund["refund"], 2); ?>
                                 </td>
                                 <td valign="top" style="font-weight:bold;">
                                         <a href="https://manage.stripe.com/customers/<?php
@@ -275,8 +306,13 @@ try{
 echo $charge->card->last4;
 ?>
 				</td>
+				<td>
+				        <a href="#" onclick="loadPopup('percase_refund.php?docid=<?=$_GET["docid"];?>&cid=<?= $charge_r["id"];?>'); return false;" class="btn btn-primary" title="Refund" style="padding:3px 5px;">
+                                                Refund
+                                        </a>
+				</td>
 
-                        </tr>
+                        </tr>	
         <?      }
 
         }?>

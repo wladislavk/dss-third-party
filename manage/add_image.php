@@ -43,6 +43,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 = str_replace("'","_",$banner1);
                         $banner1 = str_replace("&","amp",$banner1);
+			$banner1 = preg_replace("/[^a-zA-Z0-9_]/", "", $banner1);
                         $banner1 .= ".".$extension;
 
                         $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);

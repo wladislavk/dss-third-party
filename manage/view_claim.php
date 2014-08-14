@@ -570,6 +570,11 @@ include 'claim_notes.php';
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>
-
+<?php 
+  if(isset($_GET['inspay']) && $_GET['inspay']==1){ ?>
+    <script type="text/javascript">
+	loadPopup('add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>');
+    </script>
+  <?php } ?>
 <br /><br />	
 <? include "includes/bottom.htm";?>

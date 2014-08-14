@@ -1,6 +1,20 @@
-<? 
+<?php if(!isset($_GET['print'])){ 
 include "includes/top.htm";
-?><link rel="stylesheet" href="css/ledger.css" /><?php
+}else{
+?>
+  <html>
+<body>
+<?
+//include "includes/top.htm";
+
+session_start();
+require_once('admin/includes/main_include.php');
+include("includes/sescheck.php");
+require_once('includes/constants.inc');
+require_once('admin/includes/access.php');
+}
+?>
+<link rel="stylesheet" href="css/ledger.css" /><?php
 //COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance
 $sql = "SELECT p.firstname, p.lastname,
 		p.patientid
@@ -47,7 +61,13 @@ background:#cccccc;
 background:#999999;
 }
 </style>
+<div align="right">
+        <button onclick="Javascript: window.location='report_claim_aging.php?print';" class="addButton">
+                Print
+        </button>
+        &nbsp;&nbsp;
 
+</div>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -60,19 +80,19 @@ background:#999999;
 			Patient Name
 		</th>
 		<th valign="top" class="col_head">
-			0-29 Days	
+			Current
 		</th>
                 <th valign="top" class="col_head">
-                        30-59 Days
+                        30 Days
                 </th>
                 <th valign="top" class="col_head">
-                        60-89 Days
+                        60 Days
                 </th>
                 <th valign="top" class="col_head">
-                        90-119 Days
+                        90 Days
                 </th>
                 <th valign="top" class="col_head">
-                        120+
+                        120+ Days
                 </th>
                 <th valign="top" class="col_head">
                         Total
@@ -246,6 +266,31 @@ $p_sql = '';
                         </td>
 
                 </tr>
+                <tr>
+                        <td valign="top">
+                                <b>Percentage</b>
+                        </td>
+                        <td valign="top">
+                          <strong><?php echo number_format(($total_029/$grand_total)*100,2); ?>%</strong>
+                        </td>
+                        <td valign="top">
+                          <strong><?php echo number_format(($total_3059/$grand_total)*100,2); ?>%</strong>
+                        </td>
+                        <td valign="top">
+                          <strong><?php echo number_format(($total_6089/$grand_total)*100,2); ?>%</strong>
+                        </td>
+                        <td valign="top">
+                          <strong><?php echo number_format(($total_90119/$grand_total)*100,2); ?>%</strong>
+                        </td>
+                        <td valign="top">
+                          <strong><?php echo number_format(($total_120/$grand_total)*100,2); ?>%</strong>
+                        </td>
+                        <td valign="top">
+                          <strong>100%</strong>
+                        </td>
+
+                </tr>
+
 	</tfoot>
 
 </table>
@@ -259,4 +304,6 @@ $p_sql = '';
 <div id="backgroundPopup"></div>
 
 <br /><br />	
+<?php if(!isset($_GET['print'])){ ?>
 <? include "includes/bottom.htm";?>
+<?php } ?>

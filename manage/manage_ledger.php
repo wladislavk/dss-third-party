@@ -439,6 +439,10 @@ return s;
 		Add New Transaction
 	</button>
 	&nbsp;&nbsp;
+        <button onclick="Javascript: window.location='manage_ledger.php?pid=<?=$_GET['pid'];?>&inspay=1'" class="addButton">
+                Add Ins. Payment
+        </button>
+        &nbsp;&nbsp;
         <button onclick="Javascript: loadPopup('add_ledger_note.php?pid=<?=$_GET['pid'];?>');" class="addButton">
                 Add Note 
         </button>
@@ -453,7 +457,11 @@ return s;
 
 <br />
 <div align="center" class="red">
+	<?php if(isset($_GET['inspay']) && $_GET['inspay']==1){ ?>
+		Please select claim below to apply insurance payment.
+	<?php }else{ ?>
 	<b><? echo $_GET['msg'];?></b>
+	<?php } ?>
 </div>
 
 <form name="edit_mult_form" id="edit_mult_form" />
@@ -553,9 +561,15 @@ return s;
 			if($myarray[0] == 'ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ $tr_class .= ' claimless clickable_row'; }
 			if($myarray[0] == 'statement' && $myarray['filename']!=''){ $tr_class .= ' statement clickable_row'; }
 			if($myarray['status'] == 3 || $myarray['status'] == 5 || $myarray['status'] == 9){ $tr_class .= ' completed'; }
+			if(!isset($_GET['inspay']) || $_GET['inspay']!=1 || $myarray[0]=="claim"){
 		?>
 			<tr 
-			<?php if($myarray[0]=="claim"){ echo 'onclick="window.location=\'view_claim.php?claimid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; } ?>
+			<?php if($myarray[0]=="claim"){ 
+				if(isset($_GET['inspay']) && $_GET['inspay']==1){
+					echo 'onclick="window.location=\'view_claim.php?inspay=1&claimid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; 
+				}else{
+					echo 'onclick="window.location=\'view_claim.php?claimid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; 
+				} } ?>
 			<?php if($myarray['filename']!=""){ echo 'onclick="window.location=\''.$myarray['filename'].'\'"'; } ?>
 			class="<?=$tr_class;?> <?= $myarray[0]; ?>">
 				<td valign="top"
@@ -739,6 +753,7 @@ return s;
 				<?php } ?>
 				</td>
 			</tr>
+<<<<<<< HEAD
 					<?php if( $myarray[0] == 'ledger'){ ?>
 			<tr class="history_<?= $myarray['ledgerid']; ?>" style="display:none;">
                                 <td>Updated At</td>
@@ -844,6 +859,9 @@ from dental_ledger dl
                 <?php } 
 
 		}
+=======
+	<? 	}
+>>>>>>> hotfix_12031a
 		}
 	}?>
 <tr class="tr_bg_h" style="color:#fff; font-weight: bold">

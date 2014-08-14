@@ -1,21 +1,21 @@
 <table class="sort_table" width="98%" align="center">
   <thead>
     <tr>
-      <th>Days</th>
-      <th>Since</th>
-      <th>DOS</th>
-      <th>Service</th>
+      <th width="10%">Days</th>
+      <th width="10%">Since</th>
+      <th width="10%">DOS</th>
+      <th width="10%">Service</th>
 <?php if($office_type==DSS_OFFICE_BACK){ ?>
-      <th>Patient</th>
-      <th>Account</th>
+      <th width="10%">Patient</th>
+      <th width="10%">Account</th>
 <?php }else{ ?>
-      <th>Client</th>
+      <th width="10%">Client</th>
 <?php } ?>
-      <th>Charge</th>
-      <th>Ins</th>
-      <th>Client</th>
-      <th>Adj</th>
-      <th>Balance</th>
+      <th width="10%">Charge</th>
+      <th width="10%">Ins</th>
+      <th width="10%">Client</th>
+      <th width="10%">Adj</th>
+      <th width="10%">Balance</th>
     </tr>
   </thead>
   <tbody>

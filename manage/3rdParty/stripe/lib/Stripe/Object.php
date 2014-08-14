@@ -2,13 +2,21 @@
 
 class Stripe_Object implements ArrayAccess
 {
-  public static $_permanentAttributes;
-  public static $_nestedUpdatableAttributes;
+  /**
+   * @var array Attributes that should not be sent to the API because they're
+   *    not updatable (e.g. API key, ID).
+   */
+  public static $permanentAttributes;
+  /**
+   * @var array Attributes that are nested but still updatable from the parent
+   *    class's URL (e.g. metadata).
+   */
+  public static $nestedUpdatableAttributes;
 
   public static function init()
   {
-    self::$_permanentAttributes = new Stripe_Util_Set(array('_apiKey', 'id'));
-    self::$_nestedUpdatableAttributes = new Stripe_Util_Set(array('metadata'));
+    self::$permanentAttributes = new Stripe_Util_Set(array('_apiKey', 'id'));
+    self::$nestedUpdatableAttributes = new Stripe_Util_Set(array('metadata'));
   }
 
   protected $_apiKey;
@@ -27,33 +35,36 @@ class Stripe_Object implements ArrayAccess
     $this->_retrieveOptions = array();
     if (is_array($id)) {
       foreach($id as $key => $value) {
-        if ($key != 'id')
+        if ($key != 'id') {
           $this->_retrieveOptions[$key] = $value;
+        }
       }
       $id = $id['id'];
     }
 
-    if ($id)
+    if ($id !== null) {
       $this->id = $id;
+    }
   }
 
   // Standard accessor magic methods
   public function __set($k, $v)
   {
-    if ($v === ""){
+    if ($v === "") {
       throw new InvalidArgumentException(
-        'You cannot set \''.$k.'\'to an empty string. '
-        .'We interpret empty strings as NULL in requests. '
-        .'You may set obj->'.$k.' = NULL to delete the property');
+          'You cannot set \''.$k.'\'to an empty string. '
+          .'We interpret empty strings as NULL in requests. '
+          .'You may set obj->'.$k.' = NULL to delete the property'
+      );
     }
 
-    if (self::$_nestedUpdatableAttributes->includes($k) && isset($this->$k) && is_array($v)) {
+    if (self::$nestedUpdatableAttributes->includes($k) && isset($this->$k) && is_array($v)) {
       $this->$k->replaceWith($v);
     } else {
       // TODO: may want to clear from $_transientValues.  (Won't be user-visible.)
       $this->_values[$k] = $v;
     }
-    if (!self::$_permanentAttributes->includes($k))
+    if (!self::$permanentAttributes->includes($k))
       $this->_unsavedValues->add($k);
   }
   public function __isset($k)
@@ -73,7 +84,13 @@ class Stripe_Object implements ArrayAccess
     } else if ($this->_transientValues->includes($k)) {
       $class = get_class($this);
       $attrs = join(', ', array_keys($this->_values));
-      error_log("Stripe Notice: Undefined property of $class instance: $k.  HINT: The $k attribute was set in the past, however.  It was then wiped when refreshing the object with the result returned by Stripe's API, probably as a result of a save().  The attributes currently available on this object are: $attrs");
+      $message = "Stripe Notice: Undefined property of $class instance: $k. "
+               . "HINT: The $k attribute was set in the past, however. "
+               . "It was then wiped when refreshing the object "
+               . "with the result returned by Stripe's API, "
+               . "probably as a result of a save(). The attributes currently "
+               . "available on this object are: $attrs";
+      error_log($message);
       return null;
     } else {
       $class = get_class($this);
@@ -107,7 +124,15 @@ class Stripe_Object implements ArrayAccess
     return array_keys($this->_values);
   }
 
-  // This unfortunately needs to be public to be used in Util.php
+  /**
+   * This unfortunately needs to be public to be used in Util.php
+   *
+   * @param Stripe_Object $class
+   * @param array $values
+   * @param string|null $apiKey
+   *
+   * @return Stripe_Object The object constructed from the given values.
+   */
   public static function scopedConstructFrom($class, $values, $apiKey=null)
   {
     $obj = new $class(isset($values['id']) ? $values['id'] : null, $apiKey);
@@ -115,12 +140,26 @@ class Stripe_Object implements ArrayAccess
     return $obj;
   }
 
+  /**
+   * @param array $values
+   * @param string|null $apiKey
+   *
+   * @return Stripe_Object The object of the same class as $this constructed
+   *    from the given values.
+   */
   public static function constructFrom($values, $apiKey=null)
   {
-    $class = get_class();
+    $class = get_class($this);
     return self::scopedConstructFrom($class, $values, $apiKey);
   }
 
+  /**
+   * Refreshes this object using the provided values.
+   *
+   * @param array $values
+   * @param string $apiKey
+   * @param boolean $partial Defaults to false.
+   */
   public function refreshFrom($values, $apiKey, $partial=false)
   {
     $this->_apiKey = $apiKey;
@@ -128,31 +167,37 @@ class Stripe_Object implements ArrayAccess
     // Wipe old state before setting new.  This is useful for e.g. updating a
     // customer, where there is no persistent card parameter.  Mark those values
     // which don't persist as transient
-    if ($partial)
+    if ($partial) {
       $removed = new Stripe_Util_Set();
-    else
+    } else {
       $removed = array_diff(array_keys($this->_values), array_keys($values));
+    }
 
     foreach ($removed as $k) {
-      if (self::$_permanentAttributes->includes($k))
+      if (self::$permanentAttributes->includes($k))
         continue;
       unset($this->$k);
     }
 
     foreach ($values as $k => $v) {
-      if (self::$_permanentAttributes->includes($k))
+      if (self::$permanentAttributes->includes($k) && isset($this[$k]))
         continue;
 
-      if (self::$_nestedUpdatableAttributes->includes($k))
+      if (self::$nestedUpdatableAttributes->includes($k) && is_array($v)) {
         $this->_values[$k] = Stripe_Object::scopedConstructFrom('Stripe_AttachedObject', $v, $apiKey);
-      else
+      } else {
         $this->_values[$k] = Stripe_Util::convertToStripeObject($v, $apiKey);
+      }
 
       $this->_transientValues->discard($k);
       $this->_unsavedValues->discard($k);
     }
   }
 
+  /**
+   * @return array A recursive mapping of attributes to values for this object,
+   *    including the proper value for deleted attributes.
+   */
   public function serializeParameters()
   {
     $params = array();
@@ -167,7 +212,7 @@ class Stripe_Object implements ArrayAccess
     }
 
     // Get nested updates.
-    foreach (self::$_nestedUpdatableAttributes->toArray() as $property) {
+    foreach (self::$nestedUpdatableAttributes->toArray() as $property) {
       if (isset($this->$property) && $this->$property instanceOf Stripe_Object) {
         $params[$property] = $this->$property->serializeParameters();
       }
@@ -190,10 +235,11 @@ class Stripe_Object implements ArrayAccess
 
   public function __toJSON()
   {
-    if (defined('JSON_PRETTY_PRINT'))
+    if (defined('JSON_PRETTY_PRINT')) {
       return json_encode($this->__toArray(true), JSON_PRETTY_PRINT);
-    else
+    } else {
       return json_encode($this->__toArray(true));
+    }
   }
 
   public function __toString()
@@ -203,10 +249,11 @@ class Stripe_Object implements ArrayAccess
 
   public function __toArray($recursive=false)
   {
-    if ($recursive)
+    if ($recursive) {
       return Stripe_Util::convertStripeObjectToArray($this->_values);
-    else
+    } else {
       return $this->_values;
+    }
   }
 }
 

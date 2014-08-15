@@ -102,10 +102,10 @@ $(function() {
 
 
   function calc_expected_payments() {
-    var debug = false;
+    var debug = true;
     if (debug) { console.log('calc_expected_payments'); }
     var deductibleFrom = $("input[name='deductible_from']:checked").val(); 
-    var deviceAmount = $('#trxn_code_amount').val();
+    var deviceAmount = $('#trxn_code_amount2').val();
     if(deductibleFrom == '1'){
       var amountLeftToMeet = $('#patient_amount_left_to_meet').val();
     }else{

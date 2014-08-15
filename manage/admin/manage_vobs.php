@@ -4,7 +4,7 @@ require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
-$pid = (isset($_REQUEST['pid']))?$_REQUEST['pid']:'';
+$pid = (isset($_GET['pid']))?$_GET['pid']:'';
 
 function insert_preauth_row($patient_id) {
   if (empty($patient_id)) { return; }
@@ -209,9 +209,8 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid))
     }
 }
 
-
 $sql .= "ORDER BY " . $sort_by_sql;
-$my = mysql_query($sql);
+$my = mysql_query($sql) or die(mysql_error());
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 

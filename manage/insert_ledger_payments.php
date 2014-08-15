@@ -21,6 +21,42 @@ $pq = mysql_query($psql);
 $pat = mysql_fetch_array($pq);
 $msg = "Payments have been added.";
 echo "<br />";
+
+
+$sqlinsertqry = "INSERT INTO `dental_ledger_payment` (
+`ledgerid` ,
+`payment_date` ,
+`entry_date` ,
+`amount` ,
+`amount_allowed` ,
+`payment_type` ,
+`payer`
+) VALUES ";
+$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_POST['claimid'];
+$lq = mysql_query($lsql);
+while($row = mysql_fetch_assoc($lq)){
+$id = $row['ledgerid'];
+if($_POST['amount_'.$id]!=''){
+$sqlinsertqry .= "(
+".$id.", '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', '".date('Y-m-d')."', '".str_replace(',','',$_POST['amount_'.$id])."', '".str_replace(',','',$_POST['allowed_'.$id])."','".$_POST['payment_type']."', '".$_POST['payer']."'
+),";
+}
+
+}
+$sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
+$insqry = mysql_query($sqlinsertqry);
+$pid = mysql_insert_id();
+
+payment_history_update($pid, $_SESSION['userid'], '');
+
+$paysql = "SELECT SUM(lp.amount) as payment
+                        FROM dental_ledger_payment lp
+                                JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
+                        WHERE dl.primary_claim_id='".$_POST['claimid']."'
+                                AND lp.payer='".DSS_TRXN_PAYER_PRIMARY."'";
+$payq = mysql_query($paysql);
+$payr = mysql_fetch_assoc($payq);
+
 //Determine new status
 if($_POST['dispute']==1){
           if($_FILES["attachment"]["name"]!=''){
@@ -149,7 +185,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
     //SAVE WITHOUT CHANGING STATUS
   }elseif($claim['status']==DSS_CLAIM_SENT){
     if($_POST['close'] == 1){
-      if($pat['s_m_dss_file']==1 && $payer['payment']<$claim['amount_due']){ //secondary
+      if($pat['s_m_dss_file']==1 && $payr['payment']<$claim['amount_due']){ //secondary
 
         if($pat['p_m_ins_type']==1){ //medicare
 	  if($pat['s_m_ins_ass']=="Yes"){
@@ -213,8 +249,6 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 )";
      mysql_query($image_sql);
 
-      }else{
-        $new_status = DSS_CLAIM_PAID_INSURANCE;
       }
 }
   }elseif($claim['status']==DSS_CLAIM_SEC_SENT && $_POST['close'] == 1){
@@ -254,7 +288,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
 if(isset($new_status)){
     $x = "UPDATE dental_insurance SET status='".$new_status."'  ";
     if($_POST['close'] == 1){
-	$x = ", closed_by_office_type = 1 ";
+	$x .= ", closed_by_office_type = 1 ";
     }
   if($new_status == DSS_CLAIM_SENT || $new_status == DSS_CLAIM_SEC_SENT || $new_status == DSS_CLAIM_DISPUTE || $new_status == DSS_CLAIM_SEC_DISPUTE || $new_status == DSS_CLAIM_REJECTED || $new_status == DSS_CLAIM_SEC_REJECTED  || $new_status == DSS_CLAIM_PATIENT_DISPUTE || $new_status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
     $x .= ", mailed_date = NULL ";
@@ -268,42 +302,8 @@ if(isset($new_status)){
 }
 
 
-
-$sqlinsertqry = "INSERT INTO `dental_ledger_payment` (
-`ledgerid` ,
-`payment_date` ,
-`entry_date` ,
-`amount` ,
-`amount_allowed` ,
-`payment_type` ,
-`payer`
-) VALUES ";
-$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_POST['claimid'];
-$lq = mysql_query($lsql);
-while($row = mysql_fetch_assoc($lq)){
-$id = $row['ledgerid'];
-if($_POST['amount_'.$id]!=''){
-$sqlinsertqry .= "(
-".$id.", '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', '".date('Y-m-d')."', '".str_replace(',','',$_POST['amount_'.$id])."', '".str_replace(',','',$_POST['allowed_'.$id])."','".$_POST['payment_type']."', '".$_POST['payer']."'
-),";
-}
-
-}
-$sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
-$insqry = mysql_query($sqlinsertqry);
-$pid = mysql_insert_id();
-
-payment_history_update($pid, $_SESSION['userid'], '');
-
-$paysql = "SELECT SUM(lp.amount) as payment
-                        FROM dental_ledger_payment lp
-                                JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
-                        WHERE dl.primary_claim_id='".$_POST['claimid']."'
-                                AND lp.payer='".DSS_TRXN_PAYER_PRIMARY."'";
-$payq = mysql_query($paysql);
-$payr = mysql_fetch_assoc($payq);
 //if($payr['payment']>=$claim['amount_due']){
-if(isset($_POST['close']) && $_POST['close']==1){
+if(isset($_POST['close']) && $_POST['close']==1 && $new_status!=DSS_CLAIM_SEC_PENDING){
   $new_status = DSS_CLAIM_PAID_INSURANCE;
   $msg = 'Payment Successfully Added';
   $x = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_INSURANCE."'  WHERE insuranceid='".$_POST['claimid']."';";
@@ -329,7 +329,8 @@ alert('<?= $msg; ?>');
 <?php
 if($new_status==DSS_CLAIM_SEC_PENDING){
 ?>
-  window.location = 'includes/claim_check_secondary.php?pid=<?= $_POST['patientid']; ?>&cid=<?= $_POST['claimid']; ?>&prod=0';
+  history.go(-1);
+  //window.location = 'includes/claim_check_secondary.php?pid=<?= $_POST['patientid']; ?>&cid=<?= $_POST['claimid']; ?>&prod=0';
 <?php }else{ ?>
   //parent.window.location = parent.window.location;
   history.go(-1);

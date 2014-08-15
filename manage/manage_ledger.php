@@ -753,7 +753,6 @@ return s;
 				<?php } ?>
 				</td>
 			</tr>
-<<<<<<< HEAD
 					<?php if( $myarray[0] == 'ledger'){ ?>
 			<tr class="history_<?= $myarray['ledgerid']; ?>" style="display:none;">
                                 <td>Updated At</td>
@@ -859,9 +858,7 @@ from dental_ledger dl
                 <?php } 
 
 		}
-=======
-	<? 	}
->>>>>>> hotfix_12031a
+	 	}
 		}
 	}?>
 <tr class="tr_bg_h" style="color:#fff; font-weight: bold">

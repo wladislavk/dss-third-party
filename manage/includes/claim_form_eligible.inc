@@ -164,6 +164,20 @@ $diagnosis_1 = st($myarray['diagnosis_1']);
 $diagnosis_2 = st($myarray['diagnosis_2']);
 $diagnosis_3 = st($myarray['diagnosis_3']);
 $diagnosis_4 = st($myarray['diagnosis_4']);
+$icd_ind = st($myarray['icd_ind']);
+$diagnosis_a = st($myarray['diagnosis_a']);
+$diagnosis_b = st($myarray['diagnosis_b']);
+$diagnosis_c = st($myarray['diagnosis_c']);
+$diagnosis_d = st($myarray['diagnosis_d']);
+$diagnosis_e = st($myarray['diagnosis_e']);
+$diagnosis_f = st($myarray['diagnosis_f']);
+$diagnosis_g = st($myarray['diagnosis_g']);
+$diagnosis_h = st($myarray['diagnosis_h']);
+$diagnosis_i = st($myarray['diagnosis_i']);
+$diagnosis_j = st($myarray['diagnosis_j']);
+$diagnosis_k = st($myarray['diagnosis_k']);
+$diagnosis_l = st($myarray['diagnosis_l']);
+
 $medicaid_resubmission_code = st($myarray['medicaid_resubmission_code']);
 $original_ref_no = st($myarray['original_ref_no']);
 $prior_authorization_number = st($myarray['prior_authorization_number']);
@@ -650,12 +664,12 @@ if(!$r['reference_id'] || !$w_r['response']){
 
     $('input[name="claim[original_ref_number]"]').val("<?= $original_ref_no; ?>");
     $('input[name="claim[prior_authorization_number]"]').val("<?= $prior_authorization_number; ?>");
-   <?php
+  <?php
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_1)."'";
      $ins_diag_q = mysql_query($ins_diag_sql);
      $ins_diag = mysql_fetch_assoc($ins_diag_q);
    ?>
-    $('input[name="claim[diagnosis_codes][1]"]').val("<?= $ins_diag['ins_diagnosis']; ?>");
+    $('input[name="claim[diagnosis_codes][1]"]').val("<?= $diagnosis_a; ?>");
    <?php
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_2)."'";
      $ins_diag_q = mysql_query($ins_diag_sql);
@@ -713,7 +727,7 @@ if($insurancetype == '1'){
 } else {
   $sql = "SELECT "
        . "  ledger.*, ";
-if($is_pending){
+if($is_pending || $is_rejected){
   $sql .= "trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_2 as modcode2, trxn_code.days_units as daysorunits, ";
 }
 if($insurancetype == '1'){
@@ -721,7 +735,7 @@ if($insurancetype == '1'){
 }else{
         $sql .= " user.npi ";
 }
-  $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS place_description "
+  $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS place_description, user.first_name as provider_first_name, user.last_name as provider_last_name "
        . "FROM "
        . "  dental_ledger ledger "
        . "  JOIN dental_users user ON user.userid = ledger.docid "
@@ -756,6 +770,8 @@ $query = mysql_query($sql);
     $('input[name="claim[service_lines][<?=$li;?>][diagnosis_code_pointers][<?=$dp-1; ?>]"]').attr("checked","checked");
     $('input[name="claim[service_lines][<?=$li;?>][charge_amount]"]').val("<?= number_format($array['amount'], 2,'.',''); ?>");
     $('input[name="claim[service_lines][<?=$li;?>][units]"]').val("<?= $array['daysorunits']; ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][rendering_provider][first_name]"]').val("<?= $array['provider_first_name']; ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][rendering_provider][last_name]"]').val("<?= $array['provider_last_name']; ?>");
     $('input[name="claim[service_lines][<?=$li;?>][rendering_provider][npi]"]').val("<?= $array['provider_id']; ?>");
 	
 
@@ -787,7 +803,7 @@ $query = mysql_query($sql);
     <?php }elseif($ein=="1"){ ?>
     $('input[name="billing_provider[tax_id_type]"][value="EI"]').attr("checked", "checked"); 
     <?php } ?>
-    $('input[name="billing_provider[entity]"][value="false"]').attr("checked", "checked"); 
+    $('input[name="billing_provider[entity]"][value="false"]').click();//attr("checked", "checked"); 
     $('input[name="service_facility[name]"]').val("<?= $service_practice; ?>");
     $('input[name="service_facility[address][street_line_1]"]').val("<?= $service_address; ?>");
     $('input[name="service_facility[address][city]"]').val("<?= $service_city; ?>");
@@ -881,7 +897,7 @@ if ($is_pending) {
 
     $('input[name="claim[total_charge]"]').val("<?= $total_charge; ?>");
     $('input[name="claim[patient_amount_paid]"]').val("<?= $amount_paid; ?>");
-
+    $('input[name="claim[signature_date]"]').val("<?= date('Y-m-d'); ?>");
 
     $('input').each( function(){
 //      $(this).val($(this).val().toUpperCase());

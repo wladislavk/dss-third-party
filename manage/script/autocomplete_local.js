@@ -45,7 +45,6 @@
 		}
 		var pn = partial_name.toLowerCase().split(" ");
 
-
 		for(var j=0;j<ld.length;j++){
 			fail = 0;
 			for(var k=0;k<pn.length;k++){

@@ -169,9 +169,7 @@ if(isset($json_response->{"error"})){
                 <li class="template" style="display:none"></li>
         </ul>
 <script type="text/javascript">
-$(document).ready(function(){
 setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', null, null, false);
-});
 </script>
             </td>
         </tr>

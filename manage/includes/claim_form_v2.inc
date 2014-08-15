@@ -202,6 +202,7 @@ die();
 	$insured_zip = $_POST['insured_zip'];
 	$insured_phone_code = num($_POST['insured_phone_code']);
 	$insured_phone = num($_POST['insured_phone'], false);
+	$other_insured_id_number = $_POST['other_insured_id_number'];
 	$other_insured_firstname = $_POST['other_insured_firstname'];
 	$other_insured_lastname = $_POST['other_insured_lastname'];
 	$other_insured_middle = $_POST['other_insured_middle'];
@@ -448,6 +449,7 @@ die();
 		insured_zip = '".s_for($insured_zip)."',
 		insured_phone_code = '".s_for($insured_phone_code)."',
 		insured_phone = '".s_for($insured_phone)."',
+		other_insured_id_number = '".s_for($other_insured_id_number)."',
 		other_insured_firstname = '".s_for($other_insured_firstname)."',
 		other_insured_lastname = '".s_for($other_insured_lastname)."',
 		other_insured_middle = '".s_for($other_insured_middle)."',
@@ -714,6 +716,7 @@ die();
                 insured_zip = '".s_for($insured_zip)."',
                 insured_phone_code = '".s_for($insured_phone_code)."',
                 insured_phone = '".s_for($insured_phone)."',
+                other_insured_id_number = '".s_for($other_insured_id_number)."',
                 other_insured_firstname = '".s_for($other_insured_firstname)."',
                 other_insured_lastname = '".s_for($other_insured_lastname)."',
                 other_insured_middle = '".s_for($other_insured_middle)."',
@@ -1001,6 +1004,7 @@ $other_insured_firstname = st($pat_myarray['s_m_partyfname']);
 $other_insured_lastname = st($pat_myarray['s_m_partylname']);
 $other_insured_middle = st($pat_myarray['s_m_partymname']);
 $insured_id_number = st($pat_myarray['p_m_ins_id']);
+$other_insured_id_number = st($pat_myarray['s_m_ins_id']);
 $insured_dob = st($pat_myarray['ins_dob']);
 $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
 $other_insured_dob = st($pat_myarray['ins2_dob']);
@@ -1054,6 +1058,7 @@ if($_GET['instype']==2){
   $other_insured_sex = st($myarray['insured_sex']);
   $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
   $other_insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
+  $other_insured_id_number = st($myarray['insured_id_number']);
   $insured_id_number = st($myarray['other_insured_id_number']);
   $insured_firstname = st($myarray['other_insured_firstname']);
   $insured_middle = st($myarray['other_insured_middle']);
@@ -1080,6 +1085,7 @@ if($_GET['instype']==2){
   $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
   $other_insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
   $insured_id_number = st($myarray['insured_id_number']);
+  $other_insured_id_number = st($myarray['other_insured_id_number']);
   $insured_firstname = st($myarray['insured_firstname']);
   $insured_middle = st($myarray['insured_middle']);
   $insured_lastname = st($myarray['insured_lastname']);
@@ -1310,6 +1316,7 @@ if($is_pri_pending){
 	$insured_phone = split_phone($pat_myarray['home_phone'], false);
 	$patient_status = $pat_myarray['marital_status'];	
 	$insured_id_number = $pat_myarray['p_m_ins_id'];
+	$other_insured_id_number = $pat_myarray['s_m_ins_id'];
 	$insured_address = $myarray['insured_address'];
 	$insured_city = $myarray['insured_city'];
 	$insured_state = $myarray['insured_state'];
@@ -1804,6 +1811,7 @@ Medicare
 						<span class="small_cap">(For Program in item 1)</span>
 						<br />
 						<input type="text" value="<?=$insured_id_number?>" name="insured_id_number" value="" size="60" />
+						<input type="hidden" value="<?=$other_insured_id_number?>" name="other_insured_id_number" value="" size="60" />
 					</td>
 				</tr>
 				<tr>
@@ -2662,7 +2670,7 @@ if($insurancetype == '1'){
 } else {
   $sql = "SELECT "
        . "  ledger.*, ";
-if($is_pending){
+if($is_pending || $is_rejected){
   $sql .= "trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_2 as modcode2, trxn_code.days_units as daysorunits, ";
 }
 if($insurancetype == '1'){

@@ -21,6 +21,58 @@ $pq = mysql_query($psql);
 $pat = mysql_fetch_array($pq);
 $msg = "Payments have been added.";
 echo "<br />";
+
+$sqlinsertqry = "INSERT INTO dental_ledger_payment (
+`ledgerid` ,
+`payment_date` ,
+`entry_date` ,
+`amount` ,
+`payment_type` ,
+`payer`,
+`amount_allowed`,
+`ins_paid`,
+`deductible`,
+`copay`,
+`coins`,
+`overpaid`,
+`followup`,
+`note`
+) VALUES ";
+$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_POST['claimid'];
+$lq = mysql_query($lsql);
+while($row = mysql_fetch_assoc($lq)){
+$id = $row['ledgerid'];
+if($_POST['amount_'.$id]!=''){
+$sqlinsertqry .= "(
+".$id.", 
+'".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', 
+'".date('Y-m-d')."', 
+'".str_replace(',','',$_POST['amount_'.$id])."', 
+'".mysql_real_escape_string($_POST['payment_type'])."', 
+'".mysql_real_escape_string($_POST['payer'])."',
+'".mysql_real_escape_string($_POST['allowed'])."',
+'".mysql_real_escape_string($_POST['ins_paid'])."',
+'".mysql_real_escape_string($_POST['deductible'])."',
+'".mysql_real_escape_string($_POST['copay'])."',
+'".mysql_real_escape_string($_POST['coins'])."',
+'".mysql_real_escape_string($_POST['overpaid'])."',
+'".mysql_real_escape_string($_POST['followup'])."',
+'".mysql_real_escape_string($_POST['note'])."'
+),";
+}
+
+}
+$sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
+$insqry = mysql_query($sqlinsertqry);
+
+if($secsql){
+$paysql = "SELECT SUM(lp.amount) as payment
+                        FROM dental_ledger_payment lp
+                                JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
+                        WHERE dl.primary_claim_id='".$_POST['claimid']."'
+                                AND lp.payer='".DSS_TRXN_PAYER_PRIMARY."'";
+$payq = mysql_query($paysql);
+$payr = mysql_fetch_assoc($payq);
 //Determine new status
 if($_POST['dispute']==1){
           if($_FILES["attachment"]["name"]!=''){
@@ -264,58 +316,7 @@ if(isset($new_status)){
 
 
 
-$sqlinsertqry = "INSERT INTO dental_ledger_payment (
-`ledgerid` ,
-`payment_date` ,
-`entry_date` ,
-`amount` ,
-`payment_type` ,
-`payer`,
-`amount_allowed`,
-`ins_paid`,
-`deductible`,
-`copay`,
-`coins`,
-`overpaid`,
-`followup`,
-`note`
-) VALUES ";
-$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_POST['claimid'];
-$lq = mysql_query($lsql);
-while($row = mysql_fetch_assoc($lq)){
-$id = $row['ledgerid'];
-if($_POST['amount_'.$id]!=''){
-$sqlinsertqry .= "(
-".$id.", 
-'".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', 
-'".date('Y-m-d')."', 
-'".str_replace(',','',$_POST['amount_'.$id])."', 
-'".mysql_real_escape_string($_POST['payment_type'])."', 
-'".mysql_real_escape_string($_POST['payer'])."',
-'".mysql_real_escape_string($_POST['allowed'])."',
-'".mysql_real_escape_string($_POST['ins_paid'])."',
-'".mysql_real_escape_string($_POST['deductible'])."',
-'".mysql_real_escape_string($_POST['copay'])."',
-'".mysql_real_escape_string($_POST['coins'])."',
-'".mysql_real_escape_string($_POST['overpaid'])."',
-'".mysql_real_escape_string($_POST['followup'])."',
-'".mysql_real_escape_string($_POST['note'])."'
-),";
-}
-
-}
-$sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
-$insqry = mysql_query($sqlinsertqry);
-
-if($secsql){
-$paysql = "SELECT SUM(lp.amount) as payment
-                        FROM dental_ledger_payment lp
-                                JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
-                        WHERE dl.primary_claim_id='".$_POST['claimid']."'
-                                AND lp.payer='".DSS_TRXN_PAYER_PRIMARY."'";
-$payq = mysql_query($paysql);
-$payr = mysql_fetch_assoc($payq);
-if($payr['payment']>=$claim['amount_due']){
+if(isset($_POST['close']) && $_POST['close']==1 && $new_status!=DSS_CLAIM_SEC_PENDING){
   $new_status = DSS_CLAIM_PAID_INSURANCE;
   $msg = 'Payment Successfully Added';
   $x = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_INSURANCE."'  WHERE insuranceid='".$_POST['claimid']."';";

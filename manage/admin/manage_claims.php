@@ -14,7 +14,7 @@ if(isset($_GET['upstatus'])){
 
 
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
-$pid = (isset($_REQUEST['pid']))?$_REQUEST['pid']:'';
+$pid = (isset($_GET['pid']))?$_GET['pid']:'';
 define('SORT_BY_DATE', '0');
 define('SORT_BY_STATUS', '1');
 define('SORT_BY_PATIENT', '2');

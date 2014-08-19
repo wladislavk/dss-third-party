@@ -5,6 +5,14 @@ require_once "includes/general.htm";
 
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 $pid = (isset($_GET['pid']))?$_GET['pid']:'';
+$iid = (isset($_GET['iid']))?$_GET['iid']:'';
+
+if($fid!=''){
+  $account_sql = "SELECT * FROM dental_users where userid='".$fid."'";
+  $account_q = mysql_query($account_sql);
+  $account_r = mysql_fetch_assoc($account_q);
+  $account_name = $account_r['last_name'].', '.$account_r['first_name'];
+}
 
 function insert_preauth_row($patient_id) {
   if (empty($patient_id)) { return; }
@@ -141,6 +149,7 @@ $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
+     . "  preauth.doc_id, "
      . "  preauth.front_office_request_date, CONCAT(users.first_name, ' ',users.last_name) as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
@@ -155,6 +164,7 @@ $sql = "SELECT "
 }elseif(is_billing($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
+     . "  preauth.doc_id, "
      . "  preauth.front_office_request_date, CONCAT(users.first_name, ' ',users.last_name) as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name, "
@@ -171,6 +181,7 @@ $sql = "SELECT "
 }else{
 $sql = "SELECT "
      . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
+     . "  preauth.doc_id, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name "
@@ -241,6 +252,21 @@ $my=mysql_query($sql) or die(mysql_error());
     &nbsp;&nbsp;&nbsp;
 
     Account:
+<input type="text" id="account_name" onclick="updateval(this)" autocomplete="off" name="account_name" value="<?= ($fid!='')?$account_name:'Type contact name'; ?>" />
+
+<br />        <div id="account_hints" class="search_hints" style="display:none;">
+                <ul id="account_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('account_name', 'account_hints', 'fid', '', 'list_accounts.php', 'contact', '<?= $_GET['pid']; ?>');
+});
+</script>
+                                        </div>
+<input type="hidden" name="fid" id="fid" value="<?=$fid;?>" />
+
+<?php /*
     <select name="fid">
       <option value="">Any</option>
       <?php $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees(); ?>
@@ -250,6 +276,7 @@ $my=mysql_query($sql) or die(mysql_error());
       <?php } ?>
     </select>
     &nbsp;&nbsp;&nbsp;
+*/ ?>
 
     <?php if (!empty($fid)) { ?>
       Patients:
@@ -259,6 +286,16 @@ $my=mysql_query($sql) or die(mysql_error());
         <?php while ($row = mysql_fetch_array($patients)) { ?>
           <?php $selected = ($row['patientid'] == $pid) ? 'selected' : ''; ?>
           <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['lastname'] ?>, <?= $row['firstname'] ?></option>
+        <?php } ?>
+      </select>
+      &nbsp;&nbsp;&nbsp;
+      Insurance:
+      <select name="iid">
+        <option value="">Any</option>
+        <?php $patients = get_insurance($fid); ?>
+        <?php while ($row = mysql_fetch_array($patients)) { ?>
+          <?php $selected = ($row['contactid'] == $iid) ? 'selected' : ''; ?>
+          <option value="<?= $row['contactid'] ?>" <?= $selected ?>>[<?= $row['contactid'] ?>] <?= $row['company'] ?>, <?= $row['company'] ?></option>
         <?php } ?>
       </select>
       &nbsp;&nbsp;&nbsp;
@@ -344,7 +381,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["ins_co"]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["doc_name"]);?>&nbsp;
+					<a href="view_user.php?ed=<?= $myarray['doc_id']; ?>"><?=st($myarray["doc_name"]);?></a>&nbsp;
 				</td>
 				<td valign="top">
 					<?=st($myarray["user_name"]);?>&nbsp;

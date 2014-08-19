@@ -158,6 +158,7 @@ if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
+     . "  claim.docid, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
      . "  claim.mailed_date, claim.sec_mailed_date, "
      . "  claim.primary_claim_version, claim.secondary_claim_version, "
@@ -198,6 +199,7 @@ $sql = "SELECT "
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
+     . "  claim.docid, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
      . "  claim.mailed_date, claim.sec_mailed_date, "
      . "  claim.primary_claim_version, claim.secondary_claim_version, "
@@ -236,6 +238,7 @@ else{
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
+     . "  claim.docid, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
      . "  claim.mailed_date, claim.mailed_date, "
      . "  claim.primary_claim_version, claim.secondary_claim_version, "
@@ -506,7 +509,7 @@ if(isset($_GET['msg'])){
 					<?=st($myarray["ins_name"]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["doc_name"]);?>&nbsp;
+					<a href="view_user.php?ed=<?= $myarray['docid']; ?>"><?=st($myarray["doc_name"]);?></a>&nbsp;
 				</td>
 				<td valign="top">
 					<?=st($myarray["user_name"]);?>&nbsp;

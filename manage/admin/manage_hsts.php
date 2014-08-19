@@ -78,6 +78,7 @@ $sql = "SELECT "
      . "  hst.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
      . "  hst.patient_id, "
      . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
+     . "  hst.doc_id, "
      . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
      . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
      . "  CONCAT(users3.first_name, ' ',users3.last_name) as authorized_name, "
@@ -95,6 +96,7 @@ $sql = "SELECT "
      . "  hst.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
      . "  hst.patient_id, "
      . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
+     . "  hst.doc_id, "
      . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
      . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
      . "  CONCAT(users3.first_name, ' ',users3.last_name) as authorized_name, "
@@ -116,6 +118,7 @@ $sql = "SELECT "
      . "  preauth.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
      . "  hst.patient_id, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
+     . "  hst.doc_id, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name "
      . "FROM "
@@ -308,7 +311,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["ins_co"]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["doc_name"]);?>&nbsp;
+					<a href="view_user.php?ed=<?= $myarray['doc_id']; ?>"><?=st($myarray["doc_name"]);?></a>&nbsp;
 				</td>
 				<td valign="top">
 					<?=st($myarray["user_name"]);?>&nbsp;

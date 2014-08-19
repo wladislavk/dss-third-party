@@ -369,6 +369,42 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
+                Client Name
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="doc_name" value="<?=$preauth['doc_name']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+		Client Practice
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="doc_practice" value="<?=$preauth['doc_practice']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Client Address
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="doc_address" value="<?=$preauth['doc_address']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Client Phone
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="doc_phone" value="<?=$preauth['doc_phone']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
                 Client's NPI Number
             </td>
             <td valign="top" class="frmdata">

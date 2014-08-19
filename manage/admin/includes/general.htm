@@ -1619,6 +1619,12 @@ function get_patients($franchisee_id = -1) {
     return mysql_query($sql);
 }
 
+function get_insurance($franchisee_id = -1) {
+    $sql = "SELECT * FROM dental_contact WHERE docid = $franchisee_id AND contacttypeid=11 
+		AND merge_id IS NULL AND status=1 ORDER BY company ASC";
+    return mysql_query($sql);
+}
+
 /**
  * Returns the class 'arrow_asc' or 'arrow_desc' depending on the params
  * passed in to the function.  Returns false if $sort_by or $sort_compare_to

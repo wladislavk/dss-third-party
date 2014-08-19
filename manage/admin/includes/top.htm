@@ -1198,7 +1198,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 				</li>
 			<?php } ?>
 				
-		<?php if (is_admin($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])) { ?>
+		<?php if (is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])) { ?>
 				 <?php if (is_billing($_SESSION['admin_access'])) { ?>
                 <?php
     $c_sql = "SELECT ac.companyid,

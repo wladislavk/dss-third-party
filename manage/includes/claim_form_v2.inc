@@ -1032,6 +1032,7 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 $dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
+$fdf_file = $myarray['primary_fdf'];
 $p_m_eligible_payer_id = $myarray['p_m_eligible_payer_id'];
 $p_m_eligible_payer_name = $myarray['p_m_eligible_payer_name'];
 $s_m_eligible_payer_id = $myarray['s_m_eligible_payer_id'];
@@ -1516,6 +1517,15 @@ if ($is_back_office){
 		<input type="button" class="print-button" onclick="window.location='claim_notes.php?id=<?= $_GET['insid']; ?>&pid=<?= $_GET['pid']; ?>'" value="View Notes" />
 <?php
 }
+?>
+
+<?php
+if($is_front_office && $fdf_file!=''){
+?>
+		<a href="display_fdf_v2.php?f=<?=$fdf_file; ?>" class="print-button" >Print Claim Form</a>
+<?php
+}
+
 ?>
 		&nbsp;&nbsp;&nbsp;
 	</div>

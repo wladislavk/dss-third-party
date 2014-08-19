@@ -1,7 +1,7 @@
 <? 
 include "includes/top.htm";
 include_once "../includes/constants.inc";
-if(!is_admin($_SESSION['admin_access']) && !is_billing($_SESSION['admin_access'])){
+if(!is_super($_SESSION['admin_access']) && !is_software($_SESSION['admin_access']) && !is_billing($_SESSION['admin_access'])){
   ?><h2>You are not authorized to view this page.</h2><?php
   die();
 }

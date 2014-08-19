@@ -84,7 +84,7 @@ include 'includes/top.htm';?>
 					</div>
 				</div>
 			<?php } ?>
-			<?php if (is_admin($_SESSION['admin_access'])) { ?>
+			<?php if (is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])) { ?>
 				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 					<div class="dashboard-stat red">
 						<div class="visual">

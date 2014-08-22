@@ -1420,8 +1420,7 @@ input{text-transform:uppercase;}
 <?php if ($is_sent || (!$is_new_claim && !$is_pending && !$is_rejected && !$is_disputed && $is_front_office)) { ?>
   <script>
 	$(function() {
-	  $('input, select, textarea').attr('disabled', 'true');
-	  $('.print-button').removeAttr('disabled');
+	  //$('.print-button').removeAttr('disabled');
 	});
   </script>
 <?php } ?>
@@ -1820,7 +1819,7 @@ Medicare
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<span class="small_cap">(For Program in item 1)</span>
 						<br />
-						<input type="text" value="<?=$insured_id_number?>" name="insured_id_number" value="" size="60" />
+						<input type="text" value="<?=$insured_id_number?>" name="insured_id_number" size="60" />
 						<input type="hidden" value="<?=$other_insured_id_number?>" name="other_insured_id_number" value="" size="60" />
 					</td>
 				</tr>

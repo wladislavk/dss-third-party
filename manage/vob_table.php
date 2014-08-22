@@ -4,8 +4,11 @@ $sql = "SELECT "
      . "FROM "
      . "  dental_insurance_preauth "
      . "WHERE "
-     . "  patient_id = " . $_GET['pid'] . " "
-     . "ORDER BY "
+     . "  patient_id = " . $_GET['pid'] . " ";
+     if(isset($_GET['vob_id']) && $_GET['vob_id']!=''){
+       $sql .= " AND id='".mysql_real_escape_string($_GET['vob_id'])."' ";
+     }
+     $sql .= " ORDER BY "
      . "  front_office_request_date DESC "
      . "LIMIT 1";
 $my = mysql_query($sql) or die(mysql_error());

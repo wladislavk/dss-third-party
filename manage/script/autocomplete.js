@@ -119,7 +119,7 @@ function update_referredby(in_field, name, id_field, id, source, t, hint){
                 });
 
 function updateval(t){
-  if(t.value == 'Type referral name' || t.value == 'Type contact name' || t.value == 'Type insurance payer name' || t.value == 'Search Calendar'){
+  if(t.value == 'Type referral name' || t.value == 'Type contact name' ||  t.value == 'Type patient name' || t.value == 'Type insurance payer name' || t.value == 'Search Calendar'){
 	t.value = '';
   }
 } 

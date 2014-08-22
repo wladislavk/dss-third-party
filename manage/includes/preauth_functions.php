@@ -217,6 +217,7 @@ function create_vob( $pid ){
        . "  p.state as 'patient_state', p.zip as 'patient_zip', p.dob as 'patient_dob', "
        . "  p.p_m_partyfname as 'insured_first_name', p.p_m_partylname as 'insured_last_name', "
        . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "       . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
+       . "  CONCAT(d.first_name, ' ', d.last_name) as doc_name, CONCAT(d.address, ', ', d.city, ', ',d.state,' ',d.zip) as doc_address, d.practice as doc_practice, d.phone as doc_phone, "
        . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
        . "  d.userid as 'doc_id', p.home_phone as 'patient_phone'  "
        . "FROM "
@@ -228,7 +229,7 @@ function create_vob( $pid ){
        . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
        . "WHERE "
        . "  p.patientid = ".$pid;
-  $my = mysql_query($sql);
+  $my = mysql_query($sql) or error_log(mysql_error());
   $my_array = mysql_fetch_array($my);
 
   $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND filename IS NOT NULL AND patiendid = '".$pid."' ORDER BY id DESC LIMIT 1;";
@@ -243,7 +244,8 @@ function create_vob( $pid ){
        . "  patient_add2, patient_city, patient_state, patient_zip, patient_dob, "
        . "  insured_first_name, insured_last_name, insured_dob, doc_npi, referring_doc_npi, "
        . "  trxn_code_amount, diagnosis_code, doc_medicare_npi, doc_tax_id_or_ssn, "
-       . "  front_office_request_date, status, userid, viewed "
+       . "  front_office_request_date, status, userid, viewed, "
+       . "  doc_name, doc_practice, doc_address, doc_phone "
        . ") VALUES ("
        . "  " . $pid . ", "
        . "  " . mysql_real_escape_string($my_array['doc_id']) . ", "
@@ -273,9 +275,13 @@ function create_vob( $pid ){
        . "  '" . mysql_real_escape_string($sd) . "', "
        . DSS_PREAUTH_PENDING . ", "
        . "  '" . mysql_real_escape_string($_SESSION['userid']) . "', "
-       . 1
+       . " 1, "
+       . "  '" . mysql_real_escape_string($my_array['doc_name']) . "', "
+       . "  '" . mysql_real_escape_string($my_array['doc_practice']) . "', "
+       . "  '" . mysql_real_escape_string($my_array['doc_address']) . "', "
+       . "  '" . mysql_real_escape_string($my_array['doc_phone']) . "' "
        . ")";
-error_log($sql);
+//error_log($sql);
   return mysql_query($sql);
 }
 

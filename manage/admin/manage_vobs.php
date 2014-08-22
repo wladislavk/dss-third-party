@@ -13,6 +13,19 @@ if($fid!=''){
   $account_r = mysql_fetch_assoc($account_q);
   $account_name = $account_r['last_name'].', '.$account_r['first_name'];
 }
+if($pid!=''){
+  $account_sql = "SELECT * FROM dental_patients where patientid='".$pid."'";
+  $account_q = mysql_query($account_sql);
+  $account_r = mysql_fetch_assoc($account_q);
+  $patient_name = $account_r['lastname'].', '.$account_r['firstname'];
+}
+if($iid!=''){
+  $account_sql = "SELECT * FROM dental_contact where contactid='".$iid."'";
+  $account_q = mysql_query($account_sql);
+  $account_r = mysql_fetch_assoc($account_q);
+  $insurance_name = $account_r['company'];
+}
+
 
 function insert_preauth_row($patient_id) {
   if (empty($patient_id)) { return; }
@@ -90,6 +103,7 @@ define('SORT_BY_FRANCHISEE', 3);
 define('SORT_BY_USER', 4);
 define('SORT_BY_INSURANCE', 5);
 define('SORT_BY_BC', 6);
+define('SORT_BY_EDIT', 7);
 $sort_dir = strtolower($_REQUEST['sort_dir']);
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
@@ -113,6 +127,9 @@ switch ($sort_by) {
     break;
   case SORT_BY_BC:
     $sort_by_sql = "billing_name $sort_dir";
+    break;
+  case SORT_BY_EDIT:
+    $sort_by_sql = "updated_at $sort_dir";
     break;
   default:
     // default is SORT_BY_STATUS
@@ -149,11 +166,12 @@ $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
-     . "  preauth.doc_id, "
+     . "  preauth.doc_id, preauth.updated_at, "
      . "  preauth.front_office_request_date, CONCAT(users.first_name, ' ',users.last_name) as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
-     . "  c.name as billing_name "
+     . "  c.name as billing_name, "
+     . "  (SELECT COUNT(*) FROM dental_insurance_preauth dip where dip.patient_id=p.patientid) as total_vob "
      . "FROM "
      . "  dental_insurance_preauth preauth "
      . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
@@ -164,7 +182,7 @@ $sql = "SELECT "
 }elseif(is_billing($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
-     . "  preauth.doc_id, "
+     . "  preauth.doc_id, preauth.updated_at, "
      . "  preauth.front_office_request_date, CONCAT(users.first_name, ' ',users.last_name) as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name, "
@@ -181,7 +199,7 @@ $sql = "SELECT "
 }else{
 $sql = "SELECT "
      . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
-     . "  preauth.doc_id, "
+     . "  preauth.doc_id, preauth.updated_at, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name "
@@ -218,6 +236,11 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid))
     if (!empty($pid)) {
         $sql .= "AND preauth.patient_id = " . $pid . " ";
     }
+
+    if (!empty($iid)) {
+        $sql .= "AND p.p_m_ins_co = " . $iid . " ";
+    }
+
 }
 
 $sql .= "ORDER BY " . $sort_by_sql;
@@ -280,26 +303,40 @@ $(document).ready(function(){
 
     <?php if (!empty($fid)) { ?>
       Patients:
-      <select name="pid">
-        <option value="">Any</option>
-        <?php $patients = get_patients($fid); ?>
-        <?php while ($row = mysql_fetch_array($patients)) { ?>
-          <?php $selected = ($row['patientid'] == $pid) ? 'selected' : ''; ?>
-          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['lastname'] ?>, <?= $row['firstname'] ?></option>
-        <?php } ?>
-      </select>
+<input type="text" id="patient_name" onclick="updateval(this)" autocomplete="off" name="patient_name" value="<?= ($pid!='')?$patient_name:'Type patient name'; ?>" />
+
+<br />        <div id="patient_hints" class="search_hints" style="display:none;">
+                <ul id="patient_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('patient_name', 'patient_hints', 'pid', '', 'list_patients_search.php?fid=<?=$fid; ?>', 'patient', '<?= $_GET['pid']; ?>');
+});
+</script>
+                                        </div>
+<input type="hidden" name="pid" id="pid" value="<?=$pid;?>" />
+
       &nbsp;&nbsp;&nbsp;
       Insurance:
-      <select name="iid">
-        <option value="">Any</option>
-        <?php $patients = get_insurance($fid); ?>
-        <?php while ($row = mysql_fetch_array($patients)) { ?>
-          <?php $selected = ($row['contactid'] == $iid) ? 'selected' : ''; ?>
-          <option value="<?= $row['contactid'] ?>" <?= $selected ?>>[<?= $row['contactid'] ?>] <?= $row['company'] ?>, <?= $row['company'] ?></option>
-        <?php } ?>
-      </select>
-      &nbsp;&nbsp;&nbsp;
-    <?php } ?>
+
+<input type="text" id="insurance_name" onclick="updateval(this)" autocomplete="off" name="insurance_name" value="<?= ($iid!='')?$insurance_name:'Type contact name'; ?>" />
+
+<br />        <div id="insurance_hints" class="search_hints" style="display:none;">
+                <ul id="insurance_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('insurance_name', 'insurance_hints', 'iid', '', 'list_insurance_search.php?fid=<?=$fid; ?>', 'insurance', '<?= $_GET['pid']; ?>');
+});
+</script>
+                                        </div>
+<input type="hidden" name="iid" id="iid" value="<?=$iid;?>" />
+
+<?php
+  }
+ ?>
     
     <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
     <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
@@ -328,6 +365,9 @@ $(document).ready(function(){
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Requested</a>
 		</td>
+                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_EDIT, $sort_dir) ?>" width="15%">
+                        <a href="<?=sprintf($sort_qs, SORT_BY_EDIT, get_sort_dir($sort_by, SORT_BY_EDIT, $sort_dir))?>">Last Edit</a>
+                </td>
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
 		</td>
@@ -369,6 +409,9 @@ $(document).ready(function(){
 				<td valign="top">
 					<?=st($myarray["front_office_request_date"]);?>&nbsp;
 				</td>
+                                <td valign="top">
+                                        <?=st($myarray["updated_at"]);?>&nbsp;
+                                </td>
 				<?php $status_color = ($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) ? "warning" : "success"; ?>
 				<?php $status_color = (($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
 				<td valign="top" class="<?= $status_color; ?>">
@@ -394,6 +437,10 @@ $(document).ready(function(){
 					<a href="process_vob_page.php?ed=<?=$myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
 						<?= $link_label ?>
 					 <span class="glyphicon glyphicon-pencil"></span></a>
+                                        <a href="manage_vobs.php?fid=<?=$myarray['doc_id']; ?>&pid=<?=$myarray["patient_id"];?>" title="Edit" class="btn btn-primary btn-sm">
+						History <?= ($myarray['total_vob']>1)?"(".$myarray['total_vob'].")":''; ?>
+                                         </a>
+
 				</td>
 			</tr>
 	<? 	}

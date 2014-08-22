@@ -81,6 +81,10 @@ if (isset($_REQUEST['ed'])) {
 				 . "insured_first_name = '" . s_for($_POST["insured_first_name"]) . "', "
 				 . "insured_last_name = '" . s_for($_POST["insured_last_name"]) . "', "
 				 . "insured_dob = '" . s_for($_POST["insured_dob"]) . "', "
+				 . "doc_name = '". s_for($_POST["doc_name"]). "', "
+				 . "doc_practice = '". s_for($_POST["doc_practice"]). "', "
+				 . "doc_address = '". s_for($_POST["doc_address"]). "', "
+				 . "doc_phone = '". s_for($_POST["doc_phone"]). "', "
 				 . "doc_npi = '" . s_for($_POST["doc_npi"]) . "', "
 				 . "referring_doc_npi = '" . s_for($_POST["referring_doc_npi"]) . "', "
 				 . "doc_medicare_npi = '" . s_for($_POST["doc_medicare_npi"]) . "', "
@@ -127,7 +131,9 @@ if (isset($_REQUEST['ed'])) {
          . "patient_amount_left_to_meet = '" . $_POST["patient_amount_left_to_meet"] . "', "
          . "family_amount_left_to_meet = '" . $_POST["family_amount_left_to_meet"] . "', "
          . "expected_insurance_payment = '" . $_POST["expected_insurance_payment"] . "', "
-         . "expected_patient_payment = '" . $_POST["expected_patient_payment"] . "' ";
+         . "expected_patient_payment = '" . $_POST["expected_patient_payment"] . "', "
+	 . "updated_at = now(), "
+	 . "updated_by = '".mysql_real_escape_string($_SESSION['adminuserid'])."' ";
     
     if(isset($_POST['reject_but'])){
         $sql .= ", status = " . DSS_PREAUTH_REJECTED . " ";
@@ -744,7 +750,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
 		<?php if(!$is_complete && !$is_rejected){ ?>
                         <a href="#" onclick="$('#reject_reason_div').show(); return false;" class="editdel btn btn-warning pull-right" title="REJECT">Reject</a>
                         <div id="reject_reason_div" <?= ($preauth['status']==DSS_PREAUTH_REJECTED)?'':'style="display:none;"'; ?> >
-                                <label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $preauth['reject_reason']; ?></textarea>
+                                <label>VOB will be REJECTED and the dental office will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $preauth['reject_reason']; ?></textarea>
                                 <input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" class="btn btn-primary">
 				<input type="button" onclick="$('#reject_reason').val(''); $('#reject_reason_div').hide(); return false;" value="Cancel"  class="btn btn-primary">
                         </div>

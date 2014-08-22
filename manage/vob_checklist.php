@@ -150,6 +150,7 @@ if ($patient_info) {
   }else{
     $ins_error = false;
   }
+
 $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
                 WHERE                                 
@@ -160,17 +161,24 @@ $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss
   $result = mysql_query($sleepstudies);
   $numsleepstudy = mysql_num_rows($result);
   if($numsleepstudy == 0){
-    $study_error = true;
+    $study_error = $vob_study_error = true;
   }else{
-    $study_error = false;
+    $study_error = $vob_study_error = false;
   } 
-
+ $vrt_sql = "SELECT c.vob_require_test FROM companies c
+                JOIN dental_users u ON u.billing_company_id=c.id
+                WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+ $vrt_q = mysql_query($vrt_sql) or die(mysql_error());
+ $vrt = mysql_fetch_assoc($vrt_q);
+ if($vrt['vob_require_test']!='1'){
+   $vob_study_error = false;
+ }
 ?>
 <div class="ins_header vob_header">
 Request<br />
 Verification of Benefits
 <?php
-if($ins_error || $study_error){
+if($ins_error || $vob_study_error){
 ?>
 <span class="sub_text">The follwing items are <span class="highlight">INCOMPLETE</span> (click to finish)*</span>
 <?php
@@ -190,7 +198,7 @@ Verification CANNOT be requested*
 </div>
 </div>
 <?php
-}elseif(!$ins_error && !$study_error){
+}elseif(!$ins_error && !$vob_study_error){
   include 'vob_table.php'; 
 }else{ ?>
 <a href="add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>#p_m_ins" class="vob_item
@@ -205,9 +213,10 @@ Verification CANNOT be requested*
 <span>Insurance Information</span>
 </a>
 
+<?php if($vrt['vob_require_test']=='1'){ ?>
 <a href="dss_summ.php?pid=<?= $_GET['pid']; ?>&addtopat=1&sect=sleep"  class="vob_item
 <?php
-  if($study_error){
+  if($vob_study_error){
     ?>error<?php
   }else{
     ?>success<?php
@@ -220,9 +229,30 @@ Verification CANNOT be requested*
 <div class="clear"></div>
 <br /><br />
 <?php } ?>
-
+<?php } ?>
 
 <br /><br />
+
+<?php $vob_sql = "SELECT * FROM dental_insurance_preauth WHERE doc_id='".mysql_real_escape_string($_SESSION['docid'])."'
+				AND patient_id='".mysql_real_escape_string($_GET['pid'])."'";
+  $vob_q = mysql_query($vob_sql);
+  $num_vob = mysql_num_rows($vob_q);
+  if($num_vob>1){ 
+?>
+<div style="margin-left:20px;">
+  <h2>VOB History</h2>
+
+  <?php
+  while($vob_r = mysql_fetch_assoc($vob_q)){
+  ?>
+    <?= $vob_r['front_office_request_date']; ?> -
+    <a href="manage_insurance.php?pid=<?= $_GET['pid']; ?>&vob_id=<?=$vob_r['id']; ?>">View</a>
+    <br />
+  <?php
+  }
+  ?>
+</div>
+<?php } ?>
 <a style="margin-left:150px;" href="eligible_check.php?pid=<?= $_GET['pid']; ?>" class="button">Eligibility Check</a>
 <br /><br />
 <div style="margin-left:20px;">

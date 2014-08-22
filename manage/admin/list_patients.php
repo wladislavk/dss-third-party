@@ -10,7 +10,6 @@ if (isset($_POST['partial_name'])) {
 	$partial = ereg_replace("[^ A-Za-z'\-]", "", $partial);
 	$partial = s_for($partial);
 }
-
 $names = explode(" ", $partial);
 if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS stat, p.premedcheck,  "

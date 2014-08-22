@@ -31,7 +31,8 @@ if($_POST["compsub"] == 1)
 				status = '".mysql_real_escape_string($_POST["status"])."',
 				use_support = '".mysql_real_escape_string($_POST["use_support"])."',
 				exclusive = '".mysql_real_escape_string($_POST["exclusive"])."',
-				company_type = '".mysql_real_escape_string($_POST['company_type'])."'
+				company_type = '".mysql_real_escape_string($_POST['company_type'])."',
+				vob_require_test = '".mysql_real_escape_string($_POST['vob_require_test'])."'
 			where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
@@ -77,6 +78,7 @@ if($_POST["compsub"] == 1)
 				use_support = '".mysql_real_escape_string($_POST["use_support"])."',
 				exclusive = '".mysql_real_escape_string($_POST["exclusive"])."',
                                 company_type = '".mysql_real_escape_string($_POST['company_type'])."',
+				vob_require_test = '".mysql_real_escape_string($_POST['vob_require_test'])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
@@ -131,6 +133,7 @@ if($_POST["compsub"] == 1)
 		$use_support = $_POST['use_support'];
 		$exclusive = $_POST['exclusive'];
 		$company_type = $_POST['company_type'];
+		$vob_require_test = $_POST['vob_require_test'];
 	}
 	else
 	{
@@ -156,6 +159,7 @@ if($_POST["compsub"] == 1)
 		$use_support = st($themyarray['use_support']);
 		$exclusive = st($themyarray['exclusive']);
 		$company_type = st($themyarray['company_type']);
+		$vob_require_test = $themyarray['vob_require_test'];
 		$but_text = "Add ";
 	}
 	
@@ -340,7 +344,14 @@ if($_POST["compsub"] == 1)
                 </select>
             </td>
         </tr>
-
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+		Sleep Test Required for VOB?
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="checkbox" name="vob_require_test" value="1" <?= ($vob_require_test==1)?'checked="checked"':''; ?> />
+            </td>
+        </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 <attr title="Choose backoffice billing plan associated with this account.  This is the plan that the Super Administrator will bill the COMPANY.">Plan</attr>

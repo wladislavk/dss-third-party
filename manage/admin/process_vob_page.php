@@ -519,7 +519,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                     <?= $preauth['pcp_salutation'] ?>
                     <?= $preauth['pcp_firstname'] ?>
                     <?= $preauth['pcp_lastname'] ?><br/>
-                    <?= $preauth['pcp_phone'] ?><br/>
+                    <?= $preauth['pcp_phone1'] ?><br/>
                     <br/>
                     <?php if (empty($preauth['hmo_date_called'])) { $preauth['hmo_date_called'] = date('m/d/Y'); } ?>
                     Date Called <input id="hmo_date_called" type="text" name="hmo_date_called" value="<?=$preauth['hmo_date_called']?>" onchange="validateDate('hmo_date_called');" class="tbox covered calendar" <?=$disabled?>/><br/>

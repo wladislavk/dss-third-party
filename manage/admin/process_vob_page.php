@@ -740,7 +740,11 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
   var cal10 = new calendar2(document.getElementById('in_network_appeal_date_received'));
   var cal11 = new calendar2(document.getElementById('written_pre_auth_date_received'));
 </script>
-<?php require 'eligible_check/eligible_check.php';//'eligible_check/eligible_check.php?docid='.$preauth['doc_id'].'&pid='.$preauth['patient_id'];
+<?php 
+
+  //setting pid to work with eligible check
+  $_GET['pid'] = $pid;
+  require 'eligible_check/eligible_check.php';//'eligible_check/eligible_check.php?docid='.$preauth['doc_id'].'&pid='.$preauth['patient_id'];
  ?>
 
 

@@ -19,11 +19,11 @@ $sql = "SELECT "
 		 . "FROM "
 		 . "  dental_insurance_preauth preauth "
 		 . "WHERE "
-		 . "  preauth.id = " . $_REQUEST['ed'];
+		 . "  preauth.id = " . $_GET['ed'];
 $result = mysql_query($sql);
 $pid = mysql_result($result, 0);
 
-if (isset($_REQUEST['ed'])) {
+if (isset($_GET['ed'])) {
     // load preauth
     $sql = "SELECT "
          . "  preauth.*, id.ins_diagnosis, pcp.salutation as 'pcp_salutation', pcp.firstname as 'pcp_firstname', "
@@ -34,7 +34,7 @@ if (isset($_REQUEST['ed'])) {
          . "  LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
 	 . "  LEFT OUTER JOIN dental_ins_diagnosis id ON id.ins_diagnosisid = preauth.diagnosis_code "
          . "WHERE "
-         . "  preauth.id = " . $_REQUEST['ed'];
+         . "  preauth.id = " . $_GET['ed'];
 		$my = mysql_query($sql) or die(mysql_error());
 		$preauth = mysql_fetch_array($my);
 		// load dynamic preauth info
@@ -561,7 +561,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                     <?= $preauth['pcp_salutation'] ?>
                     <?= $preauth['pcp_firstname'] ?>
                     <?= $preauth['pcp_lastname'] ?><br/>
-                    <?= $preauth['pcp_phone'] ?><br/>
+                    <?= $preauth['pcp_phone1'] ?><br/>
                     <br/>
                     <?php if (empty($preauth['hmo_date_called'])) { $preauth['hmo_date_called'] = date('m/d/Y'); } ?>
                     Date Called <input id="hmo_date_called" type="text" name="hmo_date_called" value="<?=$preauth['hmo_date_called']?>" onchange="validateDate('hmo_date_called');" class="tbox covered calendar" <?=$disabled?>/><br/>
@@ -756,7 +756,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                         </div>
 <br />
 		<?php } ?>
-                <input type="hidden" name="preauth_id" value="<?= $_REQUEST['ed'] ?>"/>
+                <input type="hidden" name="preauth_id" value="<?= $_GET['ed'] ?>"/>
                 Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?> <?=$disabled?>/>
                 <?php if (!$is_complete && !$is_rejected ) { ?>
                   <input type="submit" value="Save Verfication of Benefits" class="btn btn-primary">
@@ -782,7 +782,11 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
   var cal10 = new calendar2(document.getElementById('in_network_appeal_date_received'));
   var cal11 = new calendar2(document.getElementById('written_pre_auth_date_received'));
 </script>
-<?php require 'eligible_check/eligible_check.php';//'eligible_check/eligible_check.php?docid='.$preauth['doc_id'].'&pid='.$preauth['patient_id'];
+<?php 
+
+  //setting pid to work with eligible check
+  $_GET['pid'] = $pid;
+  require 'eligible_check/eligible_check.php';//'eligible_check/eligible_check.php?docid='.$preauth['doc_id'].'&pid='.$preauth['patient_id'];
  ?>
 
 

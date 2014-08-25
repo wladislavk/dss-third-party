@@ -11,6 +11,17 @@ $(function() {
     }
   });
   $("input[name='has_out_of_network_benefits']:checked").click();
+
+  $("input[name='has_in_network_benefits']").bind('click', function() {
+    if ($(this).val() == 1) {
+      $('#has_in_network_benefits_yes').css('display', 'block');
+      $('#has_in_network_benefits_no').css('display', 'none');
+    } else {
+      $('#has_in_network_benefits_yes').css('display', 'none');
+      $('#has_in_network_benefits_no').css('display', 'block');
+    }
+  });
+  $("input[name='has_in_network_benefits']:checked").click();
   
   $("input[name='is_hmo']").bind('click', function() {
     if ($(this).val() == 1) {

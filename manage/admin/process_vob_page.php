@@ -523,14 +523,24 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
             <td valign="top" class="frmhead" width="30%">
                 How often will you pay for another device?
             </td>
-            <td class="frmdata">
+            <td class="frmdata" colspan="2">
                 <input id="how_often" type="text" name="how_often" value="<?=$preauth['how_often']?>" class="tbox covered"/> years
                 <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF" class="covered-row">
+		<td valign="top" class="frmhead">
+		</td>
+		<td valign="top" class="frmhead">
+		  Out-of-network benefits?
+		</td>
+		<td valign="top" class="frmhead">
+		  In-network benefits?
+		</td>
+	</tr>
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
-                Does the patient have "out-of-network" benefits?
+                Does the patient have benefits?
             </td>
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['has_out_of_network_benefits'] == '1') ? 'CHECKED="true"' : ''; ?>
@@ -543,8 +553,15 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                   What percent do they pay an "out-of-network" provider?
                   <input type="text" id="out_of_network_percentage" name="out_of_network_percentage" value="<?=$preauth['out_of_network_percentage']?>" class="tbox covered" <?=$disabled?>/>% (enter 0-100)
                 </div>
-                
-                <div id="has_out_of_network_benefits_no" class="sub-question">
+            </td> 
+            <td valign="top" class="frmdata">
+                <?php $yes_checked = ($preauth['has_in_network_benefits'] == '1') ? 'CHECKED="true"' : ''; ?>
+                <?php $no_checked  = ($preauth['has_in_network_benefits'] != '1') ? 'CHECKED="true"' : ''; ?>
+                <input type="radio" name="has_in_network_benefits" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
+                <input type="radio" name="has_in_network_benefits" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
+                <br/><br/>
+
+                <div id="has_in_network_benefits_yes" class="sub-question">
                   Is this an HMO?
                   <?php $yes_checked = ($preauth['is_hmo'] == '1') ? 'CHECKED' : ''; ?>
                   <?php $no_checked  = ($preauth['is_hmo'] != '1') ? 'CHECKED' : ''; ?>

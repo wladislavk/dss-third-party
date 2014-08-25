@@ -19,11 +19,11 @@ $sql = "SELECT "
 		 . "FROM "
 		 . "  dental_insurance_preauth preauth "
 		 . "WHERE "
-		 . "  preauth.id = " . $_REQUEST['ed'];
+		 . "  preauth.id = " . $_GET['ed'];
 $result = mysql_query($sql);
 $pid = mysql_result($result, 0);
 
-if (isset($_REQUEST['ed'])) {
+if (isset($_GET['ed'])) {
     // load preauth
     $sql = "SELECT "
          . "  preauth.*, id.ins_diagnosis, pcp.salutation as 'pcp_salutation', pcp.firstname as 'pcp_firstname', "
@@ -34,7 +34,7 @@ if (isset($_REQUEST['ed'])) {
          . "  LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
 	 . "  LEFT OUTER JOIN dental_ins_diagnosis id ON id.ins_diagnosisid = preauth.diagnosis_code "
          . "WHERE "
-         . "  preauth.id = " . $_REQUEST['ed'];
+         . "  preauth.id = " . $_GET['ed'];
 		$my = mysql_query($sql) or die(mysql_error());
 		$preauth = mysql_fetch_array($my);
 		// load dynamic preauth info
@@ -714,7 +714,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                         </div>
 <br />
 		<?php } ?>
-                <input type="hidden" name="preauth_id" value="<?= $_REQUEST['ed'] ?>"/>
+                <input type="hidden" name="preauth_id" value="<?= $_GET['ed'] ?>"/>
                 Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?> <?=$disabled?>/>
                 <?php if (!$is_complete && !$is_rejected ) { ?>
                   <input type="submit" value="Save Verfication of Benefits" class="btn btn-primary">

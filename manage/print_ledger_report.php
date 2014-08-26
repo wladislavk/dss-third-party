@@ -44,7 +44,6 @@ $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$sql .= " limit ".$i_val.",".$rec_disp.";";
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
@@ -84,16 +83,6 @@ $num_users=mysql_num_rows($my);
 </span>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
-			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
-			?>
-		</TD>        
-	</TR>
-	<? }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="10%">
 			Svc Date
@@ -136,6 +125,7 @@ $num_users=mysql_num_rows($my);
 	{
 		$tot_charges = 0;
 		$tot_credit = 0;
+		$tot_adj = 0;
 		if(isset($_GET['pid'])){
 		    $lpsql = " AND dl.patientid = '".$_GET['pid']."'"; 
                     $npsql = " AND n.patientid = '".$_GET['pid']."'";   
@@ -433,7 +423,9 @@ if($myarray[0]!='claim' && $myarray['amount'] <> 0){
 
 					&nbsp;
 				</td>
-				<?php if(($myarray[0] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ ?>
+				<?php if(($myarray[0] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
+						$tot_adj += st($myarray["paid_amount"]);
+				?>
                                 <td></td>
                                 <?php } ?>
 
@@ -442,12 +434,13 @@ if($myarray[0]!='claim' && $myarray['amount'] <> 0){
 					<? if(st($myarray["paid_amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
-						$tot_credit += st($myarray["paid_amount"]);
 					}?>
 				<? } ?>
 					&nbsp;
 				</td>
-                                <?php if(!($myarray[0] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ ?>
+                                <?php if(!($myarray[0] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
+						$tot_credit += st($myarray["paid_amount"]);
+				?>
                                 <td></td>
                                 <?php } ?>
 
@@ -505,21 +498,24 @@ if($myarray[0]!='claim' && $myarray['amount'] <> 0){
 				&nbsp;
 				</b>
 			</td>
-			<td valign="top" align="right">
+			<td valign="top">
 				<b>
 				<?php echo "$".number_format($tot_credit,2);?>
 				&nbsp;
 				</b>
 			</td>
 			<td valign="top">&nbsp;
-				
+			                                <b>
+                                <?php echo "$".number_format($tot_adj,2);?>
+                                &nbsp;
+                                </b>	
 			</td>
 		</tr>
 
 </table>
  </div>
 
-<?php include 'ledger_summary.php'; ?>
+<?php include 'ledger_summary_report.php'; ?>
 <br /><br />	
 </body>
 </html>

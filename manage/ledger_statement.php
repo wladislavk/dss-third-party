@@ -313,7 +313,7 @@ $html .=' <table width="98%">
 			Credits
 		</td>
                 <td valign="top" width="10%">
-                        Adjustments
+                        Adj.
                 </td>
 		<td valign="top" width="12%">
 			Balance
@@ -429,7 +429,7 @@ $head = '<table><tr><td width="60%">';
 $head .= '<div style="display:block; ">';
 $head .= $docr['practice'];
 $head.='<br />'; 
-$head .= $docr['name'];
+$head .= $docr['first_name']." ".$docr['last_name'];
  if(st($docr['address']) <> '') {
         $head.='<br />' .
         st($docr['address']);

@@ -72,6 +72,20 @@ function EligibleRequest(endpoint, successCallback, errorCallback, debug) {
           errorCallback(null, null, err);
         }
         if (jsonData)
+        var pid = $('#pid').val();
+                                      $.ajax({
+                                        url: "../includes/eligibility_save.php",
+                                        type: "post",
+                                        data: {response: data, pid:pid},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                //parent.window.location = '../view_eligibility_response.php?id='+r.id
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+
           successCallback(jsonData);
       },
       error: function (xhr, textStatus, errorThrown) {

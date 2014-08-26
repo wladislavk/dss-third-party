@@ -149,9 +149,6 @@ background:#999999;
 			Ins
 		</td>
 	</tr>
-	</table>
-	<div>
-<table width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -282,7 +279,6 @@ background:#999999;
 	
 
 </table>
- </div>
 
 <?php include 'ledger_summary_reportfull.php'; ?>
 <br /><br />	

@@ -313,7 +313,7 @@ $html .=' <table width="98%">
 			Credits
 		</td>
                 <td valign="top" width="10%">
-                        Adjustments
+                        Adj.
                 </td>
 		<td valign="top" width="12%">
 			Balance
@@ -429,7 +429,7 @@ $head = '<table><tr><td width="60%">';
 $head .= '<div style="display:block; ">';
 $head .= $docr['practice'];
 $head.='<br />'; 
-$head .= $docr['name'];
+$head .= $docr['first_name']." ".$docr['last_name'];
  if(st($docr['address']) <> '') {
         $head.='<br />' .
         st($docr['address']);
@@ -464,7 +464,7 @@ $head .= '<br />
 <table cellspacing="2">
 <tr><td align="right">Acct#:</td><td>'.$_GET['pid'].'</td></tr>
 <tr><td align="right">Statement Date:</td><td>'.date('m/d/Y').'</td></tr>
-<tr><td align="right">Balance Due:</td><td>'.number_format(st($cur_bal),2).'</td></tr>
+<tr><td align="right">Balance Due:</td><td>'.number_format(st($orig_bal),2).'</td></tr>
 <tr><td align="right">Due Date:</td><td>'.date('m/d/Y', strtotime("+30 days")).'</td></tr>
 </table>';
 $head .= '</td></tr></table>';

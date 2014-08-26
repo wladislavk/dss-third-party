@@ -22,13 +22,6 @@ include_once '../includes/calendarinc.php';
 
   <form role="form" class="form-horizontal form-coverage">
 
-        <?php
-                $s = "SELECT eligible_test FROM dental_users where userid='".$_GET['docid']."'";
-                $q = mysql_query($s);
-                $r = mysql_fetch_assoc($q);
-                if($r['eligible_test']=="1"){
-        ?>
-
 <?php
   $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
@@ -42,7 +35,7 @@ include_once '../includes/calendarinc.php';
   $doc_last_name = $doc_array[1];
 ?>
 <?php
-                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$_SESSION['docid']."'";
+                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$_GET['docid']."'";
                       $docquery = mysql_query($getdocinfo);
                       $docinfo = mysql_fetch_array($docquery);
                         $phone = $docinfo['phone'];
@@ -106,7 +99,12 @@ include_once '../includes/calendarinc.php';
     }
   ?>
 
-
+        <?php
+                $s = "SELECT eligible_test FROM dental_users where userid='".$_GET['docid']."'";
+                $q = mysql_query($s);
+                $row = mysql_fetch_assoc($q);
+                if($row['eligible_test']=="1"){
+        ?>
 
 
     <div class="form-group">

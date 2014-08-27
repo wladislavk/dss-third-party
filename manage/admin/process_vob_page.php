@@ -604,17 +604,6 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         <tr><td  colspan="2" align="center">&nbsp;</td></tr>
         <tr bgcolor="#FFFFFF" class="">
             <td valign="top" class="frmhead" width="30%">
-                Benefits
-            </td>
-            <td valign="top" class="frmdata">
-                <?php $yes_checked = ($preauth['network_benefits'] == '1') ? 'CHECKED="true"' : ''; ?>
-                <?php $no_checked  = ($preauth['network_benefits'] != '1') ? 'CHECKED="true"' : ''; ?>
-                <input type="radio" name="network_benefits" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Out of network
-                <input type="radio" name="network_benefits" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> In Network
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF" class="">
-            <td valign="top" class="frmhead" width="30%">
                 Deductible Calculated From
             </td>
             <td valign="top" class="frmdata">
@@ -622,6 +611,12 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 <?php $family_checked  = ($preauth['deductible_from'] != '1') ? 'CHECKED="true"' : ''; ?>
                 <input type="radio" name="deductible_from" value="1" <?= $patient_checked ?> <?=$disabled?> class="covered"/> Patient Deductible 
                 <input type="radio" name="deductible_from" value="0" <?= $family_checked ?> <?=$disabled?> class="covered"/> Family Deductible
+            </td>
+            <td valign="top" class="frmdata covered-row">
+                <?php $patient_checked = ($preauth['in_deductible_from'] == '1') ? 'CHECKED="true"' : ''; ?>
+                <?php $family_checked  = ($preauth['in_deductible_from'] != '1') ? 'CHECKED="true"' : ''; ?>
+                <input type="radio" name="in_deductible_from" value="1" <?= $patient_checked ?> <?=$disabled?> class="covered"/> Patient Deductible
+                <input type="radio" name="in_deductible_from" value="0" <?= $family_checked ?> <?=$disabled?> class="covered"/> Family Deductible
             </td>
         </tr>
         <tr bgcolor="#FFFFFF" class="">
@@ -632,6 +627,10 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 $<input type="text" id="patient_deductible" name="patient_deductible" value="<?=$preauth['patient_deductible']?>" class="tbox covered" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
+            <td valign="top" class="frmdata covered-row">
+                $<input type="text" id="in_patient_deductible" name="in_patient_deductible" value="<?=$preauth['in_patient_deductible']?>" class="tbox covered" <?=$disabled?>/>
+                <span class="red">*</span>
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF" class="">
             <td valign="top" class="frmhead" width="30%">
@@ -640,6 +639,10 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
             <td valign="top" class="frmdata">
                 $<input type="text" id="patient_amount_met" name="patient_amount_met" value="<?=$preauth['patient_amount_met']?>" class="tbox covered" <?=$disabled?>/> 
                 <span class="red">*</span>				
+            </td>
+            <td valign="top" class="frmdata covered-row">
+                $<input type="text" id="in_patient_amount_met" name="in_patient_amount_met" value="<?=$preauth['in_patient_amount_met']?>" class="tbox covered" <?=$disabled?>/>
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF" class="">
@@ -650,6 +653,10 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 $<input type="text" id="patient_amount_left_to_meet" name="patient_amount_left_to_meet" value="<?=$preauth['patient_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
+            <td valign="top" class="frmdata covered-row">
+                $<input type="text" id="in_patient_amount_left_to_meet" name="in_patient_amount_left_to_meet" value="<?=$preauth['in_patient_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/>
+                <span class="red">*</span>
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF" class="">
             <td valign="top" class="frmhead" width="30%">
@@ -658,6 +665,10 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
             <td valign="top" class="frmdata">
                 $<input type="text" id="family_deductible" name="family_deductible" value="<?=$preauth['family_deductible']?>" class="tbox covered" <?=$disabled?>/> 
                 <span class="red">*</span>				
+            </td>
+            <td valign="top" class="frmdata covered-row">
+                $<input type="text" id="in_family_deductible" name="in_family_deductible" value="<?=$preauth['in_family_deductible']?>" class="tbox covered" <?=$disabled?>/>
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF" class="">
@@ -668,6 +679,10 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 $<input type="text" id="family_amount_met" name="family_amount_met" value="<?=$preauth['family_amount_met']?>" class="tbox covered" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
+            <td valign="top" class="frmdata covered-row">
+                $<input type="text" id="in_family_amount_met" name="in_family_amount_met" value="<?=$preauth['in_family_amount_met']?>" class="tbox covered" <?=$disabled?>/>
+                <span class="red">*</span>
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF" class="">
             <td valign="top" class="frmhead" width="30%">
@@ -675,6 +690,10 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
             </td>
             <td valign="top" class="frmdata">
                 $<input type="text" id="family_amount_left_to_meet" name="family_amount_left_to_meet" value="<?=$preauth['family_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/>
+                <span class="red">*</span>
+            </td>
+            <td valign="top" class="frmdata covered-row">
+                $<input type="text" id="in_family_amount_left_to_meet" name="in_family_amount_left_to_meet" value="<?=$preauth['in_family_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/>
                 <span class="red">*</span>
             </td>
         </tr>
@@ -687,6 +706,10 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 <input type="text" id="deductible_reset_date" name="deductible_reset_date" value="<?=$preauth['deductible_reset_date']?>" placeholder="Auto-calculated field" class="tbox covered" style="color:grey" <?=$disabled?>/>
                 <span class="red">*</span>				
             </td>
+            <td valign="top" class="frmdata covered-row">
+                <input type="text" id="deductible_reset_date" name="in_deductible_reset_date" value="<?=$preauth['in_deductible_reset_date']?>" placeholder="Auto-calculated field" class="tbox covered" style="color:grey" <?=$disabled?>/>
+                <span class="red">*</span>
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF" class="">
             <td valign="top" class="frmhead" width="30%">
@@ -697,6 +720,12 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 <?php $no_checked  = ($preauth['out_of_pocket_met'] != '1') ? 'CHECKED' : ''; ?>
                 <input id="out_of_pocket_met_yes" type="radio" name="out_of_pocket_met" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
                 <input id="out_of_pocket_met_no" type="radio" name="out_of_pocket_met" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
+            </td>
+            <td valign="top" class="frmdata covered-row">
+                <?php $yes_checked = ($preauth['in_out_of_pocket_met'] == '1') ? 'CHECKED' : ''; ?>
+                <?php $no_checked  = ($preauth['in_out_of_pocket_met'] != '1') ? 'CHECKED' : ''; ?>
+                <input id="in_out_of_pocket_met_yes" type="radio" name="in_out_of_pocket_met" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
+                <input id="in_out_of_pocket_met_no" type="radio" name="in_out_of_pocket_met" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
             </td>
         </tr>
         <tr bgcolor="#FFFFFF" class="">
@@ -722,6 +751,26 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                   Notes<br/><textarea name="written_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['written_pre_auth_notes']?></textarea><br/>
                 </div>
             </td>
+            <td valign="top" class="frmdata covered-row">
+                <?php $yes_checked = ($preauth['in_is_pre_auth_required'] == '1') ? 'CHECKED' : ''; ?>
+                <?php $no_checked  = ($preauth['in_is_pre_auth_required'] != '1') ? 'CHECKED' : ''; ?>
+                <input type="radio" name="in_is_pre_auth_required" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
+                <input type="radio" name="in_is_pre_auth_required" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
+                <br/><br/>
+
+                <div id="in_is_pre_auth_required_yes" class="sub-question">
+                  <h3>Verbal</h3>
+                  Name <input type="text" name="in_verbal_pre_auth_name" value="<?=$preauth['in_verbal_pre_auth_name']?>" class="tbox covered" <?=$disabled?>/><br/>
+                  Ref Num <input type="text" name="in_verbal_pre_auth_ref_num" value="<?=$preauth['in_verbal_pre_auth_ref_num']?>" class="tbox covered" <?=$disabled?>/><br/>
+                  Notes<br/><textarea name="in_verbal_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['in_verbal_pre_auth_notes']?></textarea><br/>
+
+                  <h3>Pre-Auth Approval</h3>
+                  Date Received <input id="in_written_pre_auth_date_received" type="text" name="in_written_pre_auth_date_received" value="<?=$preauth['in_written_pre_auth_date_received']?>" onchange="validateDate('in_written_pre_auth_date_received');" class="tbox covered calendar" <?=$disabled?>/> <br/>
+                  Pre-Authorization Number <input id="in_pre_auth_num" type="text" name="in_pre_auth_num" value="<?=$preauth['in_pre_auth_num']?>" class="tbox covered" <?=$disabled?>/> <br/>
+                  Notes<br/><textarea name="in_written_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['in_written_pre_auth_notes']?></textarea><br/>
+                </div>
+            </td>
+
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
@@ -729,6 +778,10 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="call_reference_num" value="<?=$preauth['call_reference_num']?>" class="tbox" <?=$disabled?>/>
+                <span class="red">*</span>
+            </td>
+            <td valign="top" class="frmdata covered-row">
+                <input type="text" name="in_call_reference_num" value="<?=$preauth['in_call_reference_num']?>" class="tbox" <?=$disabled?>/>
                 <span class="red">*</span>
             </td>
         </tr>
@@ -740,14 +793,23 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 $<input type="text" id="trxn_code_amount2" name="trxn_code_amount2" value="<?=$preauth['trxn_code_amount']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
+            <td valign="top" class="frmdata covered-row">
+                $<input type="text" id="in_trxn_code_amount2" name="in_trxn_code_amount2" value="<?=$preauth['trxn_code_amount']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Expected insurance payment
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="expected_insurance_payment" name="expected_insurance_payment" value="<?=$preauth['expected_insurance_payment']?>" class="tbox readonly" <?=$disabled?>/> 
+                $<input type="text" id="expected_insurance_payment" name="expected_insurance_payment" value="<?=$preauth['in_expected_insurance_payment']?>" class="tbox readonly" <?=$disabled?>/> 
                 <span class="red">*</span>				
+            </td>
+            <td valign="top" class="frmdata covered-row">
+                $<input type="text" id="in_expected_insurance_payment" name="in_expected_insurance_payment" value="<?=$preauth['in_expected_insurance_payment']?>" class="tbox readonly" <?=$disabled?>/>
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -757,6 +819,21 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
             <td valign="top" class="frmdata">
                 $<input type="text" id="expected_patient_payment" name="expected_patient_payment" value="<?=$preauth['expected_patient_payment']?>" class="tbox readonly" <?=$disabled?>/> 
                 <span class="red">*</span>				
+            </td>
+            <td valign="top" class="frmdata covered-row">
+                $<input type="text" id="in_expected_patient_payment" name="in_expected_patient_payment" value="<?=$preauth['in_expected_patient_payment']?>" class="tbox readonly" <?=$disabled?>/>
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF" class="">
+            <td valign="top" class="frmhead" width="30%">
+                Benefits
+            </td>
+            <td valign="top" class="frmdata">
+                <?php $yes_checked = ($preauth['network_benefits'] == '1') ? 'CHECKED="true"' : ''; ?>
+                <?php $no_checked  = ($preauth['network_benefits'] != '1') ? 'CHECKED="true"' : ''; ?>
+                <input type="radio" name="network_benefits" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Out of network
+                <input type="radio" name="network_benefits" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> In Network
             </td>
         </tr>
         <tr>

@@ -29,10 +29,10 @@ $doc = mysql_fetch_assoc($doc_q);
     $key_r= mysql_fetch_assoc($key_q);
 
     Stripe::setApiKey($key_r['stripe_secret_key']);
-
+if($doc['cc_id']!=''){
 $cards = Stripe_Customer::retrieve($doc['cc_id'])->cards->all();
 $last4 = $cards['data'][0]['last4'];
-
+}
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>

@@ -644,12 +644,14 @@ invoice_add_efile('1', $_SESSION['docid'], $dce_id);
 invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
 
 if($success == "false"){
+  $errors = $json_response->{"errors"}->{"messages"};
+  $e_msg = implode($errors, ', ');
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
   mysql_query($up_sql);
   claim_status_history_update($_GET['ins_id'], '', DSS_CLAIM_REJECTED, $_SESSION['userid']);
 ?>
 <script type="text/javascript">
-  alert('RESPONSE: <?= $result; ?> ');
+  alert('Submission failed due to the following errors: <?= $e_msg; ?> ');
    window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>"; 
 </script>
 <?php

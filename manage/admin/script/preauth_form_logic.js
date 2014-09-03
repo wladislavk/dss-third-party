@@ -51,14 +51,24 @@ $(function() {
     }
   });
   $("input[name='is_pre_auth_required']:checked").click();
+  $("input[name='in_is_pre_auth_required']").bind('click', function() {
+    if ($(this).val() == 1) {
+      $('#in_is_pre_auth_required_yes').css('display', 'block');
+    } else {
+      $('#in_is_pre_auth_required_yes').css('display', 'none');
+    }
+  });
+  $("input[name='in_is_pre_auth_required']:checked").click();
   
   $("#ins_cal_year_end").bind("focus blur click", function() {
 	if($(this).val()!=''){
 	myDate = new Date($(this).val());
 	myDate.setDate(myDate.getDate()+1);
     $("#deductible_reset_date").val(parseInt(myDate.getMonth()+1,10)+"/"+myDate.getDate()+"/"+myDate.getFullYear());
+    $("#in_deductible_reset_date").val(parseInt(myDate.getMonth()+1,10)+"/"+myDate.getDate()+"/"+myDate.getFullYear());
 	}else{
 	  $("#deductible_reset_date").val('');
+	  $("#in_deductible_reset_date").val('');
 	}
   });
   $("#ins_cal_year_end").blur();
@@ -68,8 +78,10 @@ $(function() {
         myDate = new Date($("#ins_cal_year_end").val());
         myDate.setDate(myDate.getDate()+1);
     $("#deductible_reset_date").val(parseInt(myDate.getMonth()+1,10)+"/"+myDate.getDate()+"/"+myDate.getFullYear());
+    $("#in_deductible_reset_date").val(parseInt(myDate.getMonth()+1,10)+"/"+myDate.getDate()+"/"+myDate.getFullYear());
         }else{
           $("#deductible_reset_date").val('');
+          $("#in_deductible_reset_date").val('');
         }
 
   });
@@ -84,6 +96,13 @@ $(function() {
     var leftToMeet = deductible - amountMet;
     if (leftToMeet < 0) { leftToMeet = 0; }
     $('#patient_amount_left_to_meet').val(leftToMeet.toFixed(2));
+    var deductible = $('#in_patient_deductible').val();
+    var amountMet  = $('#in_patient_amount_met').val();
+    if (isNaN(deductible)) { deductible = 0; }
+    if (isNaN(amountMet))  { amountMet = 0; }
+    var leftToMeet = deductible - amountMet;
+    if (leftToMeet < 0) { leftToMeet = 0; }
+    $('#in_patient_amount_left_to_meet').val(leftToMeet.toFixed(2));
   }
 
   function calc_amount_left_to_meet_family() {
@@ -94,19 +113,26 @@ $(function() {
     var leftToMeet = deductible - amountMet;
     if (leftToMeet < 0) { leftToMeet = 0; }
     $('#family_amount_left_to_meet').val(leftToMeet.toFixed(2));
+    var deductible = $('#in_family_deductible').val();
+    var amountMet  = $('#in_family_amount_met').val();
+    if (isNaN(deductible)) { deductible = 0; }
+    if (isNaN(amountMet))  { amountMet = 0; }
+    var leftToMeet = deductible - amountMet;
+    if (leftToMeet < 0) { leftToMeet = 0; }
+    $('#in_family_amount_left_to_meet').val(leftToMeet.toFixed(2));
   }
 
   
-  $("#patient_deductible, #patient_amount_met").bind("focus blur click", function() {
+  $("#patient_deductible, #patient_amount_met, #in_patient_deductible, #in_patient_amount_met").bind("focus blur click", function() {
     calc_amount_left_to_meet();
     calc_expected_payments();
   });
 
-  $("input[name='deductible_from']").bind("focus blur click", function() {
+  $("input[name='deductible_from'], input[name='in_deductible_from']").bind("focus blur click", function() {
     calc_expected_payments();
   });
 
-  $("#family_deductible, #family_amount_met").bind("focus blur click", function() {
+  $("#family_deductible, #family_amount_met, #in_family_deductible, #in_family_amount_met").bind("focus blur click", function() {
     calc_amount_left_to_meet_family();
     calc_expected_payments();
   });
@@ -242,7 +268,7 @@ $(function() {
   }
   
   // Fields that should be clear on focus if value is 0
-  $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met').bind('focus', function() {
+  $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met, #in_patient_deductible, #in_patient_amount_met, #in_family_deductible, #in_family_amount_met').bind('focus', function() {
     var value = $(this).val();
     if (isNaN(value) || (value == 0)) {
       $(this).val('');
@@ -250,7 +276,7 @@ $(function() {
   });
   
   // Fields that should display two decimal places on blur
-  $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met').bind('blur', function() {
+  $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met, #in_patient_deductible, #in_patient_amount_met, #in_family_deductible, #in_family_amount_met').bind('blur', function() {
     var value = parseFloat($(this).val());
     if (!isNaN(value)) {
       $(this).val(value.toFixed(2));
@@ -266,7 +292,7 @@ $(function() {
   });
   
   // Fields where the user shouldn't be able to gain focus
-  $('#patient_amount_left_to_meet, #family_amount_left_to_meet, #deductible_reset_date, #expected_insurance_payment, #expected_patient_payment').bind('focus', function() {
+  $('#patient_amount_left_to_meet, #family_amount_left_to_meet, #in_patient_amount_left_to_meet, #in_family_amount_left_to_meet, #deductible_reset_date, #expected_insurance_payment, #expected_patient_payment').bind('focus', function() {
     $(this).blur();
   });
   

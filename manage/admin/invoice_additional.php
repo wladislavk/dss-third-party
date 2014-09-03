@@ -546,13 +546,13 @@ if(mysql_num_rows($doc_q) == 0){
                 </tr>
                 <tr id="month_row">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
-                    <th>
+                    <td>
                         MONTHLY FEE
-                    </th>
+                    </td>
                     <td>
                         <div class="input-append datepicker input-group date">
                             <input type="text" id="monthly_date" name="monthly_date" class="form-control text-center" value="<?=$monthly_date;?>">

@@ -650,11 +650,11 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 Patient amount left to meet
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="patient_amount_left_to_meet" name="patient_amount_left_to_meet" value="<?=$preauth['patient_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/> 
+                $<input tabindex="-1" type="text" id="patient_amount_left_to_meet" name="patient_amount_left_to_meet" value="<?=$preauth['patient_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
             <td valign="top" class="frmdata covered-row">
-                $<input type="text" id="in_patient_amount_left_to_meet" name="in_patient_amount_left_to_meet" value="<?=$preauth['in_patient_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/>
+                $<input tabindex="-1" type="text" id="in_patient_amount_left_to_meet" name="in_patient_amount_left_to_meet" value="<?=$preauth['in_patient_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/>
                 <span class="red">*</span>
             </td>
         </tr>
@@ -689,11 +689,11 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 Family amount left to meet
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="family_amount_left_to_meet" name="family_amount_left_to_meet" value="<?=$preauth['family_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/>
+                $<input tabindex="-1" type="text" id="family_amount_left_to_meet" name="family_amount_left_to_meet" value="<?=$preauth['family_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/>
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata covered-row">
-                $<input type="text" id="in_family_amount_left_to_meet" name="in_family_amount_left_to_meet" value="<?=$preauth['in_family_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/>
+                $<input tabindex="-1" type="text" id="in_family_amount_left_to_meet" name="in_family_amount_left_to_meet" value="<?=$preauth['in_family_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/>
                 <span class="red">*</span>
             </td>
         </tr>
@@ -707,7 +707,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 <span class="red">*</span>				
             </td>
             <td valign="top" class="frmdata covered-row">
-                <input type="text" id="deductible_reset_date" name="in_deductible_reset_date" value="<?=$preauth['in_deductible_reset_date']?>" placeholder="Auto-calculated field" class="tbox covered" style="color:grey" <?=$disabled?>/>
+                <input type="text" id="in_deductible_reset_date" name="in_deductible_reset_date" value="<?=$preauth['in_deductible_reset_date']?>" placeholder="Auto-calculated field" class="tbox covered" style="color:grey" <?=$disabled?>/>
                 <span class="red">*</span>
             </td>
         </tr>

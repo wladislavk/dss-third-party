@@ -19,7 +19,7 @@ if(isset($_GET['show']) && $_GET['show']=='1'){
 }else{
   $sql = "SELECT du.*, c.name AS company_name, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
 		plan.trial_period, 
-                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
+                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".DSS_INVOICE_TYPE_BC_FO."'AND i2.invoice_type='".DSS_INVOICE_TYPE_BC_FO."'  ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
                 FROM dental_users du 
                 JOIN dental_user_company uc ON uc.userid = du.userid
                 JOIN companies c ON c.id=uc.companyid
@@ -28,8 +28,8 @@ if(isset($_GET['show']) && $_GET['show']=='1'){
 		du.billing_company_id='".$_SESSION['admincompanyid']."' AND
 		du.status=1 AND du.docid=0
 AND 
-                ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-                        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
+                ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".DSS_INVOICE_TYPE_BC_FO."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
+                        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".DSS_INVOICE_TYPE_BC_FO."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
  ";
 /*
         $sql = "SELECT du.*, c.name AS company_name, c.id AS company_id, p.name as plan_name,
@@ -201,7 +201,7 @@ $total_amount = 0;
 			adminid = '".$_SESSION['adminuserid']."',
 			status = '0' ";
 	if(isset($_POST['monthly_date'])){
-			$in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."',
+			$in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."'
 			"; 
         }
         if(isset($_POST['producer_amount'])){
@@ -211,7 +211,7 @@ $total_amount = 0;
           $total_amount += $_POST['producer_amount'];
         }
  	$in_sql .= " WHERE id = '".$invoice_id."'";
-    mysql_query($in_sql);
+    mysql_query($in_sql) or die(mysql_error());
 
   while($e0486 = mysql_fetch_assoc($e0486_q)){
     $id = $e0486['id'];
@@ -391,7 +391,7 @@ $total_amount = 0;
                         adddate = now(),
                         ip_address = '".$_SERVER['REMOTE_ADDR']."' ";
         if(isset($_POST['monthly_date'])){
-                        $in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."',
+                        $in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."'
                         ";
         }
         if(isset($_POST['producer_amount'])){
@@ -400,7 +400,7 @@ $total_amount = 0;
           $total_amount += $_POST['producer_amount'];
         }
 
-    mysql_query($in_sql);
+    mysql_query($in_sql) or die(mysql_error());
     $invoice_id = mysql_insert_id();
 
 }
@@ -471,20 +471,20 @@ $total_amount = 0;
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
-		JOIN dental_plans p ON p.id=u.billing_plan_id
+		LEFT JOIN dental_plans p ON p.id=u.billing_plan_id
 		WHERE u.userid='".mysql_real_escape_string($user['userid'])."'";
-  $doc_q = mysql_query($doc_sql);
+  $doc_q = mysql_query($doc_sql) or die(mysql_error());
 if(mysql_num_rows($doc_q) == 0){
   //If no plan get company fees
   $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type, c.name as company_name, p.name as plan_name
                 FROM dental_users u
                 JOIN dental_user_company uc ON uc.userid = u.userid
                 JOIN companies c ON uc.companyid = c.id
+		JOIN dental_plans p ON p.id=u.billing_plan_id
                 WHERE u.userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
   $doc_q = mysql_query($doc_sql);
 
 }
-
   $doc = mysql_fetch_assoc($doc_q);
 
         if($user['last_monthly_fee_date']){

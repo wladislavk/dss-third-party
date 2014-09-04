@@ -200,10 +200,9 @@ $total_amount = 0;
       $in_sql = "update dental_percase_invoice SET
 			adminid = '".$_SESSION['adminuserid']."',
 			status = '0' ";
-	if(isset($_POST['amount_monthly'])){
+	if(isset($_POST['monthly_date'])){
 			$in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."',
-			monthly_fee_amount = '".mysql_real_escape_string($_POST['amount_monthly'])."' "; 
-	  $total_amount += $_POST['amount_monthly'];
+			"; 
         }
         if(isset($_POST['producer_amount'])){
                         $in_sql .= ", producer_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['producer_date'])))."',
@@ -391,10 +390,9 @@ $total_amount = 0;
                         status = '0',
                         adddate = now(),
                         ip_address = '".$_SERVER['REMOTE_ADDR']."' ";
-        if(isset($_POST['amount_monthly'])){
+        if(isset($_POST['monthly_date'])){
                         $in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."',
-                        monthly_fee_amount = '".mysql_real_escape_string($_POST['amount_monthly'])."' ";
-          $total_amount = $_POST['amount_monthly'];
+                        ";
         }
         if(isset($_POST['producer_amount'])){
                         $in_sql .= ", producer_fee_desc = '".mysql_real_escape_string($_POST['producer_desc'])."', producer_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['producer_date'])))."',
@@ -567,12 +565,9 @@ if(mysql_num_rows($doc_q) == 0){
                 </tr>
                 <tr id="month_row">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
                     </td>
                     <th>
-                        MONTHLY FEE
+                        INVOICE DATE 
                     </th>
                     <td>
                         <div class="input-append input-group date">
@@ -583,10 +578,6 @@ if(mysql_num_rows($doc_q) == 0){
                         </div>
                     </td>
                     <td>
-                        <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="amount_monthly" value="<?= $doc['monthly_fee']; ?>">
-                        </div>
                     </td>
                 </tr>
 

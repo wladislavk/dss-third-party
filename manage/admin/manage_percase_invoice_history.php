@@ -231,6 +231,9 @@ $case_q = mysql_query($case_sql);
 		<td valign="top" class="col_head" width="20%">
 			Card
 		</td>
+                <td valign="top" class="col_head" width="20%">
+                        Last 4
+                </td>
 		<td valign="top" class="col_head" width="20%">
 			Refund
 		</td>
@@ -284,6 +287,7 @@ $case_q = mysql_query($case_sql);
                                 </td>
 				<td valign="top">
 	                                <?php
+if($charge_r['stripe_charge']){
 $key_sql = "SELECT stripe_secret_key FROM companies c 
                 JOIN dental_user_company uc
                         ON c.id = uc.companyid
@@ -304,6 +308,7 @@ try{
 
 }
 echo $charge->card->last4;
+}
 ?>
 				</td>
 				<td>

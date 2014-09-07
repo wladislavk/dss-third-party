@@ -546,7 +546,7 @@ if(mysql_num_rows($doc_q) == 0){
                 </tr>
                 <tr id="month_row">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger  remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -983,12 +983,11 @@ $(document).ready(function(){
         
         row = $(row.replace(/\{row\}/g, row_count));
         row.insertBefore('#total_row');
-        //row.find('.date').datepicker();
+        row.find('.date').datepicker();
         
         $('#extra_total').val(row_count);
         row_count++;
         calcTotal();
-        
         return false;
     });
 });

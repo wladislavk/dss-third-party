@@ -222,6 +222,9 @@ $case_q = mysql_query($case_sql);
                 <td valign="top" class="col_head" width="20%">
                         Amount
                 </td>
+                <td valign="top" class="col_head" width="20%">
+                        Refund
+                </td>
                 <td valign="top" class="col_head" width="30%">
                         Customer 
                 </td>
@@ -231,9 +234,6 @@ $case_q = mysql_query($case_sql);
 		<td valign="top" class="col_head" width="20%">
 			Card
 		</td>
-                <td valign="top" class="col_head" width="20%">
-                        Last 4
-                </td>
 		<td valign="top" class="col_head" width="20%">
 			Refund
 		</td>

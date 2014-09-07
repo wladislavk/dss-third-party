@@ -238,6 +238,13 @@ $pat['s_m_dss_file']=='2'
                 Paper File
                 <?php } ?>
         </button>
+<?php
+  $api_sql = "SELECT use_eligible_api FROM dental_users
+                WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $api_q = mysql_query($api_sql);
+  $api_r = mysql_fetch_assoc($api_q);
+  if($api_r['use_eligible_api']==1){
+?>
         <button onclick="Javascript: window.location='insurance_eligible.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton mainButton">
 		<?php if($claim['status'] == DSS_CLAIM_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_REJECTED){ ?>
                 Refile E-File
@@ -245,6 +252,7 @@ $pat['s_m_dss_file']=='2'
                 E-File
 		<?php } ?>
         </button>
+<?php } ?>
 	<?php }else{ ?>
         <button onclick="Javascript: window.location='insurance_v2.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton">
 		View CMS 1500

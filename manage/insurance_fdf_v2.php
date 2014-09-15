@@ -705,7 +705,7 @@ $fdf = "
   $fdf .= "
   << /T(".$field_path.".name_referring_provider_fill[0]) /V(".$referring_provider.") >>
   << /T(".$field_path.".seventeenA_fill[0]) /V(".$field_17a.") >>
-  << /T(".$field_path.".seventeenb_NPI_fill[0]) /V(".$diagnosising_npi.") >>
+  << /T(".$field_path.".seventeenb_NPI_fill[0]) /V(".$field_17b.") >>
   ";
   if($hospitalization_date_from!=''){
     $fdf .= "
@@ -855,7 +855,7 @@ $fdf .= "
   << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper($billing_provider_name)."\n".strtoupper($billing_provider_address)."\n".strtoupper($billing_provider_city).") >>
   << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".$signature_physician.") >>  
   << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/y').") >>
-  << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".(($insurancetype == '1')?$service_medicare_npi:$service_npi).") >>
+  << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".$service_info_a.") >>
   << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".$service_info_b_other.") >>
   << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".(($insurancetype == '1')?$medicare_npi:$npi).") >>
   << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".$billing_provider_b_other.") >>

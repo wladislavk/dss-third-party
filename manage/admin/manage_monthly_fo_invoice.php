@@ -23,16 +23,23 @@ $i_val = $index_val * $rec_disp;
                 		dl.transaction_code='E0486' AND
                 		dl.docid=du.userid AND
                 		dl.service_date > DATE_SUB(now(), INTERVAL 30 DAY)) as num_case30,
-		(SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
+		(SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_BC_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
                 FROM dental_users du 
                 JOIN dental_user_company uc ON uc.userid = du.userid
                 JOIN companies c ON c.id=uc.companyid
 		JOIN dental_plans p ON p.id=du.plan_id
                 WHERE 
 		du.billing_company_id ='".$_SESSION['admincompanyid']."' AND
-		du.status=1 AND du.docid=0 AND ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL p.trial_period DAY) < now()))
+		du.status=1 AND du.docid=0 AND ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_BC_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
+		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_BC_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL p.trial_period DAY) < now()))
 		";
+        $sql .= " AND 
+                (SELECT COUNT(*) as num_inv FROM dental_percase_invoice
+                        WHERE docid=du.userid AND 
+                                invoice_type='".DSS_INVOICE_TYPE_BC_FO."'
+                                and status = '".DSS_INVOICE_PENDING."')
+                != 0
+                ";
 
 
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
@@ -84,33 +91,13 @@ $num_users=mysql_num_rows($my);
 </div>
 <br />
 <div class="row text-center">
-    <div class="col-md-4">
-        <a class="btn btn-sm btn-info" href="invoice_monthly.php?bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
-            Invoice Monthly Only
-            <span class="glyphicon glyphicon-envelope"></span>
-        </a>
-        <a class="btn btn-sm btn-primary" href="invoice_monthly.php?bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
-            Invoice And Bill Monthly Only
-            <span class="glyphicon glyphicon-usd"></span>
-        </a>
-    </div>
-    <div class="col-md-4 text-center">
-        <a class="btn btn-sm btn-info" href="invoice_fo_additional.php?show=all&bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
+    <div class="col-md-12 text-right">
+        <a class="btn btn-sm btn-info" href="invoice_fo_additional.php?bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
             Invoice All
             <span class="glyphicon glyphicon-envelope"></span>
         </a>
-        <a class="btn btn-sm btn-primary" href="invoice_fo_additional.php?show=all&bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
-            Invoice And Bill All
-            <span class="glyphicon glyphicon-usd"></span>
-        </a>
-    </div>
-    <div class="col-md-4 text-right">
-        <a class="btn btn-sm btn-info" href="invoice_fo_additional.php?bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
-            Invoice Additional
-            <span class="glyphicon glyphicon-envelope"></span>
-        </a>
         <a class="btn btn-sm btn-primary" href="invoice_fo_additional.php?bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
-            Invoice And Bill Additional
+            Invoice And Bill All
             <span class="glyphicon glyphicon-usd"></span>
         </a>
     </div>

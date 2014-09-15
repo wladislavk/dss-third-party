@@ -223,7 +223,11 @@ $case_q = mysql_query($case_sql);
                         Amount
                 </td>
                 <td valign="top" class="col_head" width="20%">
+<<<<<<< HEAD
                         Refunded
+=======
+                        Refund
+>>>>>>> hotfix_12398
                 </td>
                 <td valign="top" class="col_head" width="30%">
                         Customer 
@@ -287,7 +291,11 @@ $case_q = mysql_query($case_sql);
                                 </td>
 				<td valign="top">
 	                                <?php
+<<<<<<< HEAD
 if($charge_r['stripe_charge']!=''){
+=======
+if($charge_r['stripe_charge']){
+>>>>>>> hotfix_12398
 $key_sql = "SELECT stripe_secret_key FROM companies c 
                 JOIN dental_user_company uc
                         ON c.id = uc.companyid

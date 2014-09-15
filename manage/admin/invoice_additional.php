@@ -571,6 +571,7 @@ if(mysql_num_rows($doc_q) == 0){
 
 
                 <?php $producer_r = mysql_fetch_assoc($producer_q); ?>
+		<?php if($producer_r['total_producers']>0){ ?>
                 <tr id="user_row">
                     <td>
                         <a href="#" class="btn btn-danger remove-single hidden">
@@ -595,7 +596,7 @@ if(mysql_num_rows($doc_q) == 0){
                         </div>
                     </td>
                 </tr>
-
+		<?php } ?>
                 <?php while ($case = mysql_fetch_array($case_q)) { ?>
                 <tr id="case_row_<?= $case['ledgerid'] ?>">
                     <td>
@@ -982,12 +983,11 @@ $(document).ready(function(){
         
         row = $(row.replace(/\{row\}/g, row_count));
         row.insertBefore('#total_row');
-        //row.find('.date').datepicker();
+        row.find('.date').datepicker();
         
         $('#extra_total').val(row_count);
         row_count++;
         calcTotal();
-        
         return false;
     });
 });

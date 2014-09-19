@@ -594,7 +594,7 @@ if(!$r['reference_id'] || !$w_r['response']){
     $('input[name="dependent[last_name]"]').val("<?= $patient_lastname;?>");
     $('input[name="dependent[first_name]"]').val("<?= $patient_firstname;?>");
     $('input[name="dependent[middle_name]"]').val("<?= $patient_middle;?>");
-    $('input[name="dependent[dob]"]').val("<?= date('m-d-Y', strtotime($patient_dob));?>");
+    $('input[name="dependent[dob]"]').val("<?= date('Y-m-d', strtotime($patient_dob));?>");
     $('input[name="dependent[gender]"][value="<?= substr($patient_sex,0,1); ?>"]').attr("checked", "checked");
     $('input[name="dependent[address][street_line_1]"]').val("<?= $patient_address;?>");
     $('input[name="dependent[address][city]"]').val("<?= $patient_city;?>");
@@ -669,7 +669,7 @@ $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mys
      $ins_diag_q = mysql_query($ins_diag_sql);
      $ins_diag = mysql_fetch_assoc($ins_diag_q);
    ?>
-    $('input[name="claim[diagnosis_codes][1]"]').val("<?= $diagnosis_a; ?>");
+    $('input[name="claim[diagnosis_codes][1]"]').val("<?= $ins_diag['ins_diagnosis']; ?>");
    <?php
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_2)."'";
      $ins_diag_q = mysql_query($ins_diag_sql);
@@ -803,7 +803,7 @@ $query = mysql_query($sql);
     <?php }elseif($ein=="1"){ ?>
     $('input[name="billing_provider[tax_id_type]"][value="EI"]').attr("checked", "checked"); 
     <?php } ?>
-    $('input[name="billing_provider[entity]"][value="false"]').click();//attr("checked", "checked"); 
+    $('input[name="billing_provider[entity]"][value="true"]').click();//attr("checked", "checked"); 
     $('input[name="service_facility[name]"]').val("<?= $service_practice; ?>");
     $('input[name="service_facility[address][street_line_1]"]').val("<?= $service_address; ?>");
     $('input[name="service_facility[address][city]"]').val("<?= $service_city; ?>");

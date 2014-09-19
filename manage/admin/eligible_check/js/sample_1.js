@@ -169,8 +169,10 @@ buildError = function (error) {
   var coverageSection = $("<section/>").addClass("coverage-section");
   if (error['details'].indexOf("Payer id submitted") !== -1) {
     var h1 = $("<h1/>", {text: error['details']}).appendTo(coverageSection);
+    alert(error['details']);
   } else {
     var h1 = $("<h1/>", {text: error['reject_reason_description']}).appendTo(coverageSection);
+    alert(error['reject_reason_description']);
   }
   var body = $('body');
   coverageSection.appendTo(body);

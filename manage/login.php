@@ -25,7 +25,7 @@ else
 if(isset($_POST["loginsub"]))
 {
 	$salt_sql = "SELECT salt FROM dental_users WHERE username='".mysql_real_escape_string($_POST['username'])."'";
-	$salt_row = $db->getResults($salt_sql);
+	$salt_row = $db->getRow($salt_sql);
 
 	$pass = gen_password($_POST['password'], $salt_row['salt']);
 
@@ -42,7 +42,7 @@ if(isset($_POST["loginsub"]))
                                 END)
 			where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status in (1, 3)";
 	
-	$check_myarray = $db->getResults($check_sql);
+	$check_myarray = $db->getRow($check_sql);
 
 	if($check_myarray) 
 	{
@@ -62,7 +62,7 @@ if(isset($_POST["loginsub"]))
 			{
 				$_SESSION['docid']=$check_myarray['docid'];
 				$ut_sql = "SELECT user_type FROM dental_users WHERE userid='".mysql_real_escape_string($check_myarray['docid'])."'";
-	 			$ut_r = $db->getResults($ut_sql);
+	 			$ut_r = $db->getRow($ut_sql);
 				$_SESSION['user_type']=$ut_r['user_type'];
 			}
 			else

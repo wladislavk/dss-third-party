@@ -605,7 +605,7 @@ if(!$r['reference_id'] || !$w_r['response']){
     $('input[name="subscriber[last_name]"]').val("<?= $insured_lastname;?>");
     $('input[name="subscriber[first_name]"]').val("<?= $insured_firstname;?>");
     $('input[name="subscriber[middle_name]"]').val("<?= $insured_middle;?>");
-    $('input[name="subscriber[dob]"]').val("<?= date('m-d-Y', strtotime($insured_dob));?>");
+    $('input[name="subscriber[dob]"]').val("<?= date('Y-m-d', strtotime($insured_dob));?>");
     $('input[name="subscriber[gender]"][value="<?= substr($insured_sex,0,1); ?>"]').attr("checked", "checked");
     $('input[name="subscriber[address][street_line_1]"]').val("<?= $insured_address;?>");
     $('input[name="subscriber[address][city]"]').val("<?= $insured_city;?>");

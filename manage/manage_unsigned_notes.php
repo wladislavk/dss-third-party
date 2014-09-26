@@ -122,7 +122,11 @@ $sql = "select * from (select n.*, u.name signed_name, p.adddate as parent_addda
                                                         <td valign="top" width="35%">
                                                                 Added By:
                                                                 <span style="font-weight:normal;">
-                                                                        <?=st($user_myarray["name"]);?>
+                                                                        <?php if( st($user_myarray["name"]) == '') { ?>
+                                                                           <?= st($user_myarray["first_name"] . ' ' . $user_myarray["last_name"]);?>
+                                                                        <? }else{ ?>
+                                                                          <?= st($user_myarray["name"]);?>
+                                                                        <? } ?>
                                                                 </span>
                                                         </td>
                                                       <td valign="top" width="30%">

@@ -1212,7 +1212,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
     $t_sql = "SELECT t.* FROM dental_support_tickets t
         JOIN dental_users u ON u.userid=t.userid
                 WHERE (t.status=0 OR t.status=1)
-            AND u.billing_company_id='".mysql_real_escape_string($c['companyid'])."' AND u.billing_company_id!=''";
+            AND t.company_id='".mysql_real_escape_string($c['companyid'])."' AND u.billing_company_id!=''";
   } else {
     $t_sql = "SELECT * FROM dental_support_tickets
         WHERE status=0 OR status=1;";

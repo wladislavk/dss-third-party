@@ -32,6 +32,9 @@ include 'partials/patient_notes.php'; ?>
 <script type="text/javascript">
 
 function sign_notes(){
+  if(!confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?')){
+    return false;
+  }
   sign_arr = new Array();
   i=0;
   $('.sign_chbx:checked').each(function(){

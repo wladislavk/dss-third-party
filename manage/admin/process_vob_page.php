@@ -540,7 +540,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF" class="covered-row">
+        <tr bgcolor="#FFFFFF" class="header-row">
 		<td valign="top" class="frmhead">
 		</td>
 		<td valign="top" class="frmhead">

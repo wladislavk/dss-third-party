@@ -2,9 +2,7 @@
   // include 'includes/top.htm';
   // require_once 'admin/classes/Db.php';
 // $_SESSION['docid'] = 5;
-  $db = new Models\Db(); 
-  $sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . mysql_real_escape_string($_SESSION['docid']) . "'";
-  $r = $db->getRow($sql);
+
 ?>
 
 <table>
@@ -87,9 +85,7 @@
                   <ul>
 
                     <?php
-                      $s = "SELECT * FROM dental_document_category WHERE status=1 ORDER BY name ASC";
-                      $sq = $db->getResults($s);
-
+                    
                       foreach ($sq as $dss_file) {
                         ?>
                         <li><a class="submenu_item" href="view_documents.php?cat=<?php echo  $dss_file['categoryid']; ?>"><?php echo $dss_file['name']; ?></a></li>
@@ -142,11 +138,6 @@
                 <?php else: ?>
 
                   <?php
-                    $course_sql = "SELECT s.use_course, d.use_course_staff FROM dental_users s
-                                  JOIN dental_users d ON d.userid = s.docid
-                                  WHERE s.userid='" . mysql_real_escape_string($_SESSION['userid']). "'";
-                    $course_r = $db->getRow($course_sql);
-                    
                     if ($course_r['use_course']==1 && $course_r['use_course_staff'] == 1):
                   ?>
 
@@ -487,9 +478,6 @@
           <ul>
 
             <?php
-              $m_sql = "SELECT * FROM memo_admin WHERE off_date <= CURDATE()";
-              $m_q = $db->getResults($m_sql);
-
               foreach ($m_q as $m_r) { ?>
 
                 <li><?php echo $m_r['memo']; ?></li>

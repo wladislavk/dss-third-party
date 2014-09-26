@@ -2,7 +2,6 @@
 
 	function mlaphp_autoloader($class)
 	{
-		echo "<pre>"; var_dump($class); die();
 		// strip off any leading namespace separator from PHP 5.3
 		$class = ltrim($class, '\\');
 

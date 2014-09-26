@@ -1,49 +1,77 @@
 <?php
 
 namespace Models;
+use PDO;
 
 class Db extends Config
 {
-	public function __construct()
-	{
-		mysql_connect($this->host, $this->user, $this->password);	
-		mysql_select_db($this->dBName);
+	protected $dataBase;
+	public function __construct(){
+		$this->dBConnection();
 	}
 
-	// Perfom query
-	public function query($query_string)
-	{
-		return mysql_query($query_string);
+	private function dBConnection(){ 
+		// mysql_connect($this->host, $this->user, $this->password);	
+		// mysql_select_db($this->dBName);
+		$this->dataBase = new PDO('mysql:host='.$this->host.'; dbname='.$this->dBName, $this->user , $this->password);
 	}
 
-	// Get the first result row
-	public function getRow($query_string)
+	public function queryPDO($query_string)
 	{
-		$result = $this->query($query_string);
-		return mysql_fetch_assoc($result);		
+		$query = $this->dataBase->prepare($query_string);
+		$query->execute();
+		return $query;
 	}
 
-	public function getResults($query_string)
+	public function getResultsPDO($query_string)
 	{
-		$result = $this->query($query_string);
-		while($row = mysql_fetch_assoc($result)){
-			$return[] = $row;
-		}
-		return $return;
+		$query = $this->queryPDO($query_string);
+        $result = $query->fetchAll();
+        return $result;
 	}
 
-	// Get count of result rows
-	public function getNumberRows($query_string)
+	public function getRowPDO($query_string)
 	{
-		$result = $this->query($query_string);
-		return mysql_num_rows($result);
+		$query = $this->queryPDO($query_string);
+        $result = $query->fetchAll();
+        return $result[0];
 	}
 
-	public function getInsertId($query_string)
-	{
-		$result = $this->query($query_string);
-		return mysql_insert_id();
-	}
+
+	// // Perfom query
+	// public function query($query_string)
+	// {
+	// 	return mysql_query($query_string);
+	// }
+
+	// // Get the first result row
+	// public function getRow($query_string)
+	// {
+	// 	$result = $this->query($query_string);
+	// 	return mysql_fetch_assoc($result);		
+	// }
+
+	// public function getResults($query_string)
+	// {
+	// 	$result = $this->query($query_string);
+	// 	while($row = mysql_fetch_assoc($result)){
+	// 		$return[] = $row;
+	// 	}
+	// 	return $return;
+	// }
+
+	// // Get count of result rows
+	// public function getNumberRows($query_string)
+	// {
+	// 	$result = $this->query($query_string);
+	// 	return mysql_num_rows($result);
+	// }
+
+	// public function getInsertId($query_string)
+	// {
+	// 	$result = $this->query($query_string);
+	// 	return mysql_insert_id();
+	// }
 
 }
 ?>

@@ -1,53 +1,19 @@
 <?php 
     session_start();
     define('APP_PATH', dirname(__FILE__));
+    define('ROOT_URI', '/manage_mvc/');
+    
     include APP_PATH . '/autoloader.php';
-    // mlaphp_autoloader('models');
 
- //    function getURI(){
- //        if(!empty($_SERVER['REQUEST_URI'])) {
- //            return trim($_SERVER['REQUEST_URI'], '/');
- //        }
- 
- //        if(!empty($_SERVER['PATH_INFO'])) {
- //            return trim($_SERVER['PATH_INFO'], '/');
- //        }
- 
- //        if(!empty($_SERVER['QUERY_STRING'])) {
- //            return trim($_SERVER['QUERY_STRING'], '/');
- //        }
- //    }
+	$routes = explode('/', $_SERVER['REQUEST_URI']);
 
- //    $uri = getURI();
+	if (empty($routes[2])) {
+		$routes[2] = 'index';
+	}
+	if (empty($routes[3])) {
+		$routes[3] = 'index';
+	}
 
-
-	// $segments = explode('/', $uri);
-	// array_shift($segments);
-	// // Первый сегмент — контроллер.
-	// $controller = ucfirst(array_shift($segments)).'Controller';
-	// // Второй — действие.
-	// $action = 'action'.ucfirst(array_shift($segments));
-	// // Остальные сегменты — параметры.
-	// $parameters = $segments;
-
-	// // Подключаем файл контроллера, если он имеется
-	// $controllerFile = APP_PATH . '/controllers/'.$controller.'.php';
-	// // if(file_exists($controllerFile)){
-	// //     include($controllerFile);
-	// // }
-
-	// // Если не загружен нужный класс контроллера или в нём нет
-	// // нужного метода — 404 
-	// // if(!is_callable(array($controller, $action))){
-	// //     header("HTTP/1.0 404 Not Found");
-	// //     return;
-	// // }
-
-	// // Вызываем действие контроллера с параметрами
-	// call_user_func_array(array($controller, $action), $params);
-
-	
-	// $route = (!empty($_GET['route'])) ? explode('/', $_GET['route']) : array('controllers\IndexController', 'index');
-	$route = (!empty($uri)) ? explode('/', $uri) : array('controllers\IndexController', 'index');
-	$controller = new $route[1];
-	$controller->{$route[2]}();
+	$routes[2] = 'controllers\\' . $routes[2] . 'Controller';
+	$controller = new $routes[2];
+	$controller->{$routes[3]}();

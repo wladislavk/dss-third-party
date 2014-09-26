@@ -1,0 +1,147 @@
+<?php
+// include('admin/includes/main_include.php');
+// include('admin/includes/password.php');
+// include('admin/classes/Db.php');
+//$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
+//$page_my = mysql_query($page_sql);
+//$page_myarray = mysql_fetch_array($page_my);
+
+
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title><?php echo $sitename;?></title>
+<link href="css/login.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body> 
+<style>
+	body{
+  background: #b4c6d4 url(../../manage/images/login_bg.gif) repeat-x 0 0;
+  }
+
+#alert_container{
+  width:625px;
+  background: #f33;
+  padding: 10px 0;
+  color: #fff;
+  margin:0 auto;
+  font-weight: bold;
+  font-size:16px;
+  text-align: center;
+}
+
+#login_container{
+  background: url(../../manage/images/login_box.png) no-repeat 0 0;
+  width: 625px;
+  height: 162px;
+  margin: 80px auto 0 auto;
+  }
+
+
+#login_container form{
+  padding: 20px 0 0 200px;
+  width: 400px;
+  }
+
+#login_container table{
+  width: 400px;
+  }
+
+#login_container .t_head{
+  background: #00457c;
+  text-align: center;
+  color: #fff;
+  font-family: sans-serif;
+  font-size: 12px; 
+  }
+
+#login_container a, #login_container .screener{
+  font-size:10px;
+  color: #00457C;
+  text-decoration: none;
+  font-family: sans-serif;
+  }
+
+.red{
+        color:#FF0000;
+}
+
+#siteseal{
+  float:right;
+  margin-right: 10px;
+  display: block;
+  }
+
+</style>
+<!--[if lte IE 7]>
+<div id="alert_container">
+  This application does not support old versions of IE.<br />For best performance please use Chrome, Firefox or IE8+
+</div>
+<![endif]-->
+
+
+<div id="login_container">
+	<FORM NAME="loginfrm" METHOD="POST" ACTION="<?=ROOT_URI . 'index/login'?>" onSubmit="return loginabc(this)";>
+		<table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
+		    <tr bgcolor="#FFFFFF">
+		        <td colspan="2" class="t_head">
+			       Please Enter Your Login Information 
+		        </td>
+		    </tr>
+			<?php
+			if( isset($msg) && $msg!="" ){
+		    ?> 
+		        <tr bgcolor="#FFFFFF">
+		            <td colspan="2" >
+		                <span class="red">
+							<?php echo $msg;?>
+		                </span>
+		            </td>
+		        </tr>
+		    <?php
+			}
+			?>
+		    <tr bgcolor="#FFFFFF">
+		        <td class="t_data">
+		        	User name
+		        </td>
+		        <td class="t_data">
+		        	<input type="text" name="username" value="<?php echo (isset($_POST['username']))?$_POST['username']:''; ?>">
+		        </td>
+		    </tr>
+		    <tr bgcolor="#FFFFFF">
+		        <td class="t_data">
+		        	Password
+		        </td>
+		        <td class="t_data">
+		        	<input type="password" name="password">
+		        </td>
+			</tr>
+		    <tr bgcolor="#FFFFFF">
+		        <td colspan="2" align="center" >
+		            <input type="hidden" name="loginsub" value="1">
+		            <input type="submit" name="btnsubmit" value=" Login " class="addButton">
+				<span style="float:right;">
+		            <a href="register/new.php">Register</a>
+				|
+		            <a href="forgot_password.php">Forgot Password</a>
+				</span>
+		        </td>
+		    </tr>
+		</table>
+		<span style="float:right; margin-top:4px;" class="screener">
+			Looking for the screener? <a href="../screener">Click Here</a>
+		</span>
+	</FORM>
+</div>
+<span style="clear:both;" id="siteseal">
+	<script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
+	<br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a>
+</span>
+<div style="clear:both;"></div>
+</body>
+</html>

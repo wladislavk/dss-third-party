@@ -1,0 +1,18 @@
+.half{
+  float:left;
+  margin: 0 1%;
+  }
+
+.detail{
+  display: block;
+  clear: both;
+  }
+
+.detail label{
+  width: 250px;
+  display: block;
+  float: left;
+  text-align: right;
+  line-height: 24px;
+  margin-right: 10px;
+}

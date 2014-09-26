@@ -1,18 +1,21 @@
-<? 
+<?php
 include "includes/top.htm";
+include "admin/classes/Db.php";
+
+$db = new Db();
 
 if($_REQUEST["delid"] != "")
 {
 	$del_sql = "delete from dental_fcontact where contactid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	$db->query($del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
-	<?
+	<?php
 	die();
 }
 
@@ -40,18 +43,16 @@ switch($_GET['sort']){
     break;
 }
 
-
-
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_contact=mysql_num_rows($my);
+$my = $db->getResults($sql);
+$num_contact = count($my);
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/manage.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
@@ -65,56 +66,49 @@ $num_contact=mysql_num_rows($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
-<style>
-#contentMain tr:hover{
-background:#cccccc;
-}
 
-#contentMain td:hover{
-background:#999999;
-}
-</style>
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
-			<?
+			<?php
 				 paging($no_pages,$index_val,"");
 			?>
 		</TD>        
 	</TR>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
-                        <a href="manage_fcontact.php?sort=company&sortdir=<?php echo ($_REQUEST['sort']=='company'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
+        <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+	        <a href="manage_fcontact.php?sort=company&sortdir=<?php echo ($_REQUEST['sort']=='company'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
 		</td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-                        <a href="manage_fcontact.php?sort=type&sortdir=<?php echo ($_REQUEST['sort']=='type'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Type</a>
+        <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+            <a href="manage_fcontact.php?sort=type&sortdir=<?php echo ($_REQUEST['sort']=='type'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Type</a>
 		</td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
-                        <a href="manage_fcontact.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
+        <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+            <a href="manage_fcontact.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
-		</tr>
-	<? if(mysql_num_rows($my) == 0)
+	</tr>
+	<?php if($num_contact == 0)
 	{ ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="10" align="center">
-				No Records
-			</td>
-		</tr>
-	<? 
+	<tr class="tr_bg">
+		<td valign="top" class="col_head" colspan="10" align="center">
+			No Records
+		</td>
+	</tr>
+	<?php
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
-		{
+		foreach ($my as $myarray) {
+
 			if($myarray["status"] == 1)
 			{
 				$tr_class = "tr_active";
@@ -126,29 +120,27 @@ background:#999999;
 			
 			$name = st($myarray['lastname'])." ".st($myarray['middlename']).", ".st($myarray['firstname']);
 		?>
-			<tr class="<?=$tr_class;?>">
-                		<td valign="top" >
-					<?=st($myarray["company"]);?>
-				</td>
-                		<td valign="top" >
-					<?=st($myarray["contacttype"]);?>
-				</td>
-                		<td valign="top">
-					<?=$name;?>
-				</td>
-				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('view_contact.php?ed=<?=$myarray["contactid"];?>&corp=1');" class="editlink" title="EDIT">
-						Quick View 
-					</a>
-					|
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('view_fcontact.php?ed=<?=$myarray["contactid"];?>');" class="editlink" title="EDIT">
-						View Full 
-					</a>
-                    
-                  
-				</td>
-			</tr>
-	<? 	}
+	<tr class="<?php echo $tr_class;?>">
+		<td valign="top" >
+			<?php echo st($myarray["company"]);?>
+		</td>
+		<td valign="top" >
+			<?php echo st($myarray["contacttype"]);?>
+		</td>
+		<td valign="top">
+			<?php echo $name;?>
+		</td>
+		<td valign="top">
+			<a href="Javascript:;"  onclick="Javascript: loadPopup('view_contact.php?ed=<?php echo $myarray["contactid"];?>&corp=1');" class="editlink" title="EDIT">
+				Quick View 
+			</a>
+			|
+			<a href="Javascript:;"  onclick="Javascript: loadPopup('view_fcontact.php?ed=<?php echo $myarray["contactid"];?>');" class="editlink" title="EDIT">
+				View Full 
+			</a>
+		</td>
+	</tr>
+	<?php 	}
 	}?>
 </table>
 </form>

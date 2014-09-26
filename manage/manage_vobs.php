@@ -1,16 +1,19 @@
-<? 
-require_once('includes/constants.inc');
+<?php
+include 'includes/constants.inc';
 include "includes/top.htm";
+include "admin/classes/Db.php";
+
+$db = new Db();
 
 if(isset($_GET['rid'])){
-$s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s",$_REQUEST['rid'], $_REQUEST['pid'], $_SESSION['docid']);
-mysql_query($s);
+  $s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s",$_REQUEST['rid'], $_REQUEST['pid'], $_SESSION['docid']);
+  $db->query($s);
 }elseif(isset($_GET['urid'])){
-$s = sprintf("UPDATE dental_insurance_preauth SET viewed=0 WHERE id=%s AND patient_id=%s AND doc_id=%s",$_REQUEST['urid'], $_REQUEST['pid'], $_SESSION['docid']);
-mysql_query($s);
+  $s = sprintf("UPDATE dental_insurance_preauth SET viewed=0 WHERE id=%s AND patient_id=%s AND doc_id=%s",$_REQUEST['urid'], $_REQUEST['pid'], $_SESSION['docid']);
+  $db->query($s);
 }elseif(isset($_GET['frid'])){
-$s = sprintf("UPDATE dental_faxes SET viewed=1 WHERE id=%s AND docid=%s",$_REQUEST['frid'], $_SESSION['docid']);
-mysql_query($s);
+  $s = sprintf("UPDATE dental_faxes SET viewed=1 WHERE id=%s AND docid=%s",$_REQUEST['frid'], $_SESSION['docid']);
+  $db->query($s);
 }
 
 
@@ -38,8 +41,7 @@ function insert_preauth_row($patient_id) {
        . "WHERE " 
        . "  p.patientid = $patient_id";
   
-  $my = mysql_query($sql);
-  $my_array = mysql_fetch_array($my);
+  $my_array = $db->getRow($sql);
 //  print_r($my_array);exit;
   
   $sql = "INSERT INTO dental_insurance_preauth ("
@@ -79,7 +81,7 @@ function insert_preauth_row($patient_id) {
        . ")";
   //print_r($my_array);
   //print_r($sql);exit;
-  $my = mysql_query($sql);
+  $my = $db->query($sql);
 }
 
 
@@ -126,12 +128,12 @@ if(isset($_GET['viewed'])){
   }
 }
   $sql .= "ORDER BY ".$sort." ".$dir;
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+
+$total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
+$my = $db->getResults($sql);
 
 ?>
 
@@ -142,9 +144,9 @@ $my=mysql_query($sql) or die(mysql_error());
 	Manage Verification of Benefits
 </span>
 <?php if(isset($_GET['viewed']) && $_GET['viewed']==0){ ?>
-<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">Show All</a>
+  <a href="manage_vobs.php?pid=<?php echo $_GET['pid'] ?>&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">Show All</a>
 <?php }else{ ?>
-<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&viewed=0&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">Show Unread</a>
+  <a href="manage_vobs.php?pid=<?php echo $_GET['pid'] ?>&viewed=0&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">Show Unread</a>
 <?php } ?>
 <br />
 <br />
@@ -152,90 +154,88 @@ $my=mysql_query($sql) or die(mysql_error());
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 
 
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
-			Pages:
-			<?
-				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
-			?>
-		</TD>
-	</TR>
-	<? }?>
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'request_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
-			<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&sort=request_date&sortdir=<?php echo ($_REQUEST['sort']=='request_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Requested</a>
-		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
-			<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient Name</a>
-		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
-			<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Status</a>	
-		</td>
-		<td valign="top" class="col_head" width="40%">
-			Comments
-		</td>
-		<td valign="top" class="col_head" width="15%">
-			Action
-		</td>
-	</tr>
-	<? if(mysql_num_rows($my) == 0)
+<form name="sortfrm" action="<?php echo$_SERVER['PHP_SELF']?>" method="post">
+  <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+	<?php if($total_rec > $rec_disp) {?>
+  	<TR bgColor="#ffffff">
+  		<TD  align="right" colspan="15" class="bp">
+  			Pages:
+  			<?php
+  				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
+  			?>
+  		</TD>
+  	</TR>
+	<?php }?>
+  	<tr class="tr_bg_h">
+  		<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'request_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+  			<a href="manage_vobs.php?pid=<?php echo $_GET['pid'] ?>&sort=request_date&sortdir=<?php echo ($_REQUEST['sort']=='request_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Requested</a>
+  		</td>
+  		<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+  			<a href="manage_vobs.php?pid=<?php echo $_GET['pid'] ?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient Name</a>
+  		</td>
+  		<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+  			<a href="manage_vobs.php?pid=<?php echo $_GET['pid'] ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Status</a>	
+  		</td>
+  		<td valign="top" class="col_head" width="40%">
+  			Comments
+  		</td>
+  		<td valign="top" class="col_head" width="15%">
+  			Action
+  		</td>
+  	</tr>
+	<?php if(count($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="4" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
-		{
-		?>
-			<tr class="<?=$tr_class;?> <?= ($myarray['viewed']||$myarray['status']==DSS_PREAUTH_PENDING)?'':'unviewed'; ?>">
-				<td valign="top">
-					<?=st($myarray["front_office_request_date"]);?>&nbsp;
-				</td>
-				<td valign="top">
-					<?=st($myarray["firstname"]);?>&nbsp;
-                    <?=st($myarray["lastname"]);?> 
-				</td>
-				<td valign="top" class="status_<?= $myarray['status']; ?>">
-					<?= $dss_preauth_status_labels[$myarray["status"]];?>&nbsp;
-				</td>
-				<td>
-					<?php if($myarray['status']==DSS_PREAUTH_REJECTED){ 
-						echo $myarray['reject_reason'];
-					} ?>
-				</td>
-				<td valign="top">
-					<a href="manage_insurance.php?pid=<?= $myarray["patient_id"]; ?>&vob_id=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
-						View
-					</a>
-					<br />
-					<?php 
-					if(!$myarray['viewed']){ ?>
-                                        <a href="manage_vobs.php?pid=<?= $myarray["patient_id"]; ?>&rid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
-                                                Mark Read
-                                        </a>
-					<?php }else{ ?>
-                                        <a href="manage_vobs.php?pid=<?= $myarray["patient_id"]; ?>&urid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
-                                                Mark Unread
-                                        </a>
-					<?php } 
-					?>
-				</td>
-			</tr>
-	<? 	}
+    foreach ($my as $myarray) { ?>
+		<tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed']||$myarray['status']==DSS_PREAUTH_PENDING)?'':'unviewed'; ?>">
+			<td valign="top">
+				<?php echo($myarray["front_office_request_date"]);?>&nbsp;
+			</td>
+			<td valign="top">
+				<?php echo($myarray["firstname"]);?>&nbsp;
+        <?php echo($myarray["lastname"]);?> 
+			</td>
+			<td valign="top" class="status_<?php echo $myarray['status']; ?>">
+				<?php echo $dss_preauth_status_labels[$myarray["status"]];?>&nbsp;
+			</td>
+			<td>
+				<?php if($myarray['status']==DSS_PREAUTH_REJECTED){ 
+					echo $myarray['reject_reason'];
+				} ?>
+			</td>
+			<td valign="top">
+				<a href="manage_insurance.php?pid=<?php echo $myarray["patient_id"]; ?>&vob_id=<?php echo $myarray["id"]; ?>" class="editlink" title="EDIT">
+					View
+				</a>
+				<br />
+			<?php 
+			if(!$myarray['viewed']){ ?>
+        <a href="manage_vobs.php?pid=<?php echo $myarray["patient_id"]; ?>&rid=<?php echo $myarray["id"]; ?>" class="editlink" title="EDIT">
+          Mark Read
+        </a>
+			<?php }else{ ?>
+        <a href="manage_vobs.php?pid=<?php echo $myarray["patient_id"]; ?>&urid=<?php echo $myarray["id"]; ?>" class="editlink" title="EDIT">
+          Mark Unread
+        </a>
+				<?php } 
+				?>
+			</td>
+		</tr>
+	<?php	}
 	}?>
-</table>
+  </table>
 </form>
 
 
@@ -246,4 +246,4 @@ $my=mysql_query($sql) or die(mysql_error());
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

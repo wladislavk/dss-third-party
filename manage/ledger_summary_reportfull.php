@@ -9,16 +9,20 @@
 		WHERE amount != '' 
 		AND dl.service_date=CURDATE()
 		AND p.docid='".mysql_real_escape_string($_SESSION['docid'])."' ";
+
 	if(isset($_GET['pid'])){
 		$ch_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
 	}
-		$ch_sql .= " GROUP BY dl.description";
-  $ch_q = mysql_query($ch_sql);
-  while($ch_r = mysql_fetch_assoc($ch_q)){ ?>
-  <li><label><?= $ch_r['description']; ?></label> $<?= number_format($ch_r['amount'],2); ?></li>
-	<?php $ch_total += $ch_r['amount']; ?>
-  <?php } ?>
-  <li><label>Charges Total</label> $<?= number_format($ch_total,2); ?></li>
+	$ch_sql .= " GROUP BY dl.description";
+  $ch_q = $db->getResults($ch_sql);
+
+  if ($ch_q) {
+    foreach ($ch_q as $ch_r){ 
+      echo "<li><label>" . $ch_r['description'] . "</label> $" . number_format($ch_r['amount'],2) . "</li>";
+      $ch_total += $ch_r['amount']; 
+    }
+  } ?>
+  <li><label>Charges Total</label> $<?php echo number_format($ch_total,2); ?></li>
 </ul>
 
 <h3>Credit</h3>
@@ -35,12 +39,15 @@
                 $cr_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
         }
                 $cr_sql .= " GROUP BY dl.description";
-  $cr_q = mysql_query($cr_sql);
-  while($cr_r = mysql_fetch_assoc($cr_q)){ ?>
-  <li><label><?= $cr_r['description']; ?></label> $<?= number_format($cr_r['amount'],2); ?></li>
-        <?php $cr_total += $cr_r['amount']; ?>
-  <?php } ?>
-  <li><label>Credits Total</label> $<?= number_format($cr_total,2); ?></li>
+  $cr_q = $db->getResults($cr_sql);
+
+  if ($cr_q) {
+    foreach ($cr_q as $cr_r){ 
+      echo "<li><label>" . $cr_r['description'] . "</label> $" . number_format($cr_r['amount'],2) . "</li>";
+      $cr_total += $cr_r['amount']; 
+    }
+  } ?>
+  <li><label>Credits Total</label> $<?php echo number_format($cr_total,2); ?></li>
 </ul>
 
 <h3>Adjustments</h3>
@@ -57,11 +64,14 @@
                 $adj_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
         }
                 $adj_sql .= " GROUP BY dl.description";
-  $adj_q = mysql_query($adj_sql);
-  while($adj_r = mysql_fetch_assoc($adj_q)){ ?>
-  <li><label><?= $adj_r['description']; ?></label> $<?= number_format($adj_r['amount'],2); ?></li>
-        <?php $adj_total += $adj_r['amount']; ?>
-  <?php } ?>
-  <li><label>Adjust. Total</label> $<?= number_format($adj_total,2); ?></li>
+  $adj_q = $db->getResults($adj_sql);
+
+  if ($adj_q) {
+    foreach ($adj_q as $adj_r){ 
+      echo "<li><label>" . $adj_r['description'] . "</label> $" . number_format($adj_r['amount'],2) . "</li>";
+      $cr_total += $adj_r['amount']; 
+    }
+  } ?>
+  <li><label>Adjust. Total</label> $<?php echo number_format($adj_total,2); ?></li>
 </ul>
 

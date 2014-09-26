@@ -1,18 +1,21 @@
-<? 
+<?php
 include "includes/top.htm";
+include "admin/classes/Db.php";
+
+$db = new Db();
 
 if($_REQUEST["delid"] != "")
 {
 	$del_sql = "delete from dental_referredby where referredbyid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	$db->query($del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
-	<?
+	<?php
 	die();
 }
 
@@ -88,12 +91,13 @@ switch($_GET['sort']){
     break;
 }
 
-$my = mysql_query($sql) or die(mysql_error());
-$num_referredby=mysql_num_rows($my);
+$my = $db->getResults($sql);
+$num_referredby = count($my);
 
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/manage.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
@@ -114,142 +118,132 @@ $num_referredby=mysql_num_rows($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
-<style>
-#contentMain tr:hover{
-background:#cccccc;
-}
 
-#contentMain td:hover{
-background:#999999;
-}
-</style>
 <div id="pager" class="pager">
-        <form>
-                <img src="images/first.png" class="first">
-                <img src="images/prev.png" class="prev">
-                <input class="pagedisplay" style="width:75px;" type="text">
-                <img src="images/next.png" class="next">
-                <img src="images/last.png" class="last">
-        </form>
+    <form>
+        <img src="images/first.png" class="first">
+        <img src="images/prev.png" class="prev">
+        <input class="pagedisplay" style="width:75px;" type="text">
+        <img src="images/next.png" class="next">
+        <img src="images/last.png" class="last">
+    </form>
 </div>
 
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table id="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<thead>
-	<tr class="tr_bg_h">
-		<th valign="top" class="col_head" width="20%">
-		  Name
-		</th>
-		<th valign="top" class="col_head" width="20%">
-			Physician Type	
-		</th>
-		<th valign="top" class="col_head" width="20%">
-			Total Referrals
-		</th>
-                <th valign="top" class="col_head">
-                        30 Days
-                </th>
-                <th valign="top" class="col_head">
-                        60 Days 
-                </th>
-                <th valign="top" class="col_head">
-                        90 Days
-                </th>
-                <th valign="top" class="col_head">
-                        90+ Days
-                </th>
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+	<table id="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+		<thead>
+		<tr class="tr_bg_h">
+			<th valign="top" class="col_head" width="20%">
+			  Name
+			</th>
+			<th valign="top" class="col_head" width="20%">
+				Physician Type	
+			</th>
+			<th valign="top" class="col_head" width="20%">
+				Total Referrals
+			</th>
+	                <th valign="top" class="col_head">
+	                        30 Days
+	                </th>
+	                <th valign="top" class="col_head">
+	                        60 Days 
+	                </th>
+	                <th valign="top" class="col_head">
+	                        90 Days
+	                </th>
+	                <th valign="top" class="col_head">
+	                        90+ Days
+	                </th>
 
-                <th valign="top" class="col_head">
-                        Notes
-                </th>
-		<th valign="top" class="col_head">
-			Expand
-		</th>
-	</tr>
-	</thead>
-	<tbody>
-	<? if(mysql_num_rows($my) == 0)
-	{ ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="10" align="center">
-				No Records
-			</td>
+	                <th valign="top" class="col_head">
+	                        Notes
+	                </th>
+			<th valign="top" class="col_head">
+				Expand
+			</th>
 		</tr>
-	<? 
-	}
-	else
-	{
-		while($myarray = mysql_fetch_array($my))
+		</thead>
+		<tbody>
+		<?php if($num_referredby == 0)
+		{ ?>
+			<tr class="tr_bg">
+				<td valign="top" class="col_head" colspan="10" align="center">
+					No Records
+				</td>
+			</tr>
+		<?php 
+		}
+		else
 		{
-			$pat_sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and referred_by='".$myarray["referredbyid"]."'";
-			$pat_my = mysql_query($pat_sql);
-			
-			if($myarray["status"] == 1)
-			{
-				$tr_class = "tr_active";
-			}
-			else
-			{
-				$tr_class = "tr_inactive";
-			}
-			
-			$name = st($myarray['salutation'])." ".st($myarray['firstname'])." ".st($myarray['middlename'])." ".st($myarray['lastname']);
-		?>
+			foreach ($my as $myarray) {
+				$pat_sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and referred_by='".$myarray["referredbyid"]."'";
+				$pat_my = $db->getResults($pat_sql);
+				
+				if($myarray["status"] == 1)
+				{
+					$tr_class = "tr_active";
+				}
+				else
+				{
+					$tr_class = "tr_inactive";
+				}
+				
+				$name = st($myarray['salutation'])." ".st($myarray['firstname'])." ".st($myarray['middlename'])." ".st($myarray['lastname']);
+			?>
 			<tr >
 				<td valign="top" width="20%">
 					<?php if($myarray['referred_source']==DSS_REFERRED_PHYSICIAN){
-						?><a href="#" onclick="loadPopup('view_contact.php?ed=<?= $myarray['contactid'];?>');return false;"><?=$name;?></a><?php
+						?><a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo  $myarray['contactid'];?>');return false;"><?php echo $name;?></a><?php
 					}else{
 						echo $name;
 					} ?>
 				</td>
 				<td valign="top" width="30%">
-					<?=st($myarray['contacttype']);?>
+					<?php echo st($myarray['contacttype']);?>
 				</td>
 				<td valign="top" width="10%">
-					<a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink">
-						<?=$myarray['num_ref'];?>
+					<a href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>" class="editlink">
+						<?php echo $myarray['num_ref'];?>
 					</a>
 				</td>
-                                <td valign="top" width="10%">
-                                        <a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink">
-                                                <?=$myarray['num_ref30'];?>
-                                        </a>
-                                </td>
-                                <td valign="top" width="10%">
-                                        <a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink">
-                                                <?=$myarray['num_ref60'];?>
-                                        </a>
-                                </td>
-                                <td valign="top" width="10%">
-                                        <a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink">
-                                                <?=$myarray['num_ref90'];?>
-                                        </a>
-                                </td>
-                                <td valign="top" width="10%">
-                                        <a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink">
-                                                <?=$myarray['num_ref90plus'];?>
-                                        </a>
-                                </td>
+	            <td valign="top" width="10%">
+	                <a href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>" class="editlink">
+	                    <?php echo $myarray['num_ref30'];?>
+	                </a>
+	            </td>
+	            <td valign="top" width="10%">
+	                <a href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>" class="editlink">
+	                    <?php echo $myarray['num_ref60'];?>
+	                </a>
+	            </td>
+	            <td valign="top" width="10%">
+	                <a href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>" class="editlink">
+	                    <?php echo $myarray['num_ref90'];?>
+	                </a>
+	            </td>
+	            <td valign="top" width="10%">
+	                <a href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>" class="editlink">
+	                    <?php echo $myarray['num_ref90plus'];?>
+	                </a>
+	            </td>
 				<td valign="top" width="10%">
-                                        <a href="#" onclick="loadPopup('add_referredby_notes.php?rid=<?=$myarray["contactid"];?>')" class="editlink" title="<?= ($myarray['referredby_notes'])?$myarray['referredby_notes']:'No Notes'; ?>">
+	                <a href="#" onclick="loadPopup('add_referredby_notes.php?rid=<?php echo $myarray["contactid"];?>')" class="editlink" title="<?php echo ($myarray['referredby_notes'])?$myarray['referredby_notes']:'No Notes'; ?>">
 						View
-                                        </a>
-                                </td>
+	                </a>
+		        </td>
 				<td valign="top"> 
-					<a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink" title="<?= $myarray['patients_list']; ?>">
+					<a href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>" class="editlink" title="<?php echo $myarray['patients_list']; ?>">
 					List
 					</a>
 				</td>
 			</tr>
-	<? 	}
-	}?>
-	</tbody>
-</table>
+		<?php }
+		}?>
+		</tbody>
+	</table>
 </form>
-
 
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><button>X</button></a>

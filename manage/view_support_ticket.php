@@ -64,7 +64,7 @@ if(isset($_POST['respond'])){
 } 
 
 
-$sql = "select t.*, (SELECT name FROM companies WHERE companies.id=t.company_id LIMIT 1)
+$sql = "select t.*, (SELECT name FROM companies WHERE companies.id=t.company_id LIMIT 1) AS company_name
 	FROM dental_support_tickets t 
 	 WHERE t.id = ".mysql_real_escape_string($_REQUEST['ed']);
 $my = mysql_query($sql);

@@ -1,9 +1,6 @@
 <? 
 require_once('includes/constants.inc');
 include "includes/top.htm";
-include "admin/classes/Db.php";
-
-$db = new Db();
 
 if(isset($_GET['ceid']) && $_GET['ceid']!=''){
   $up_sql = "UPDATE dental_faxes SET viewed='1'

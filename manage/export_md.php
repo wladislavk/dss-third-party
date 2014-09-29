@@ -39,33 +39,31 @@ $sql = "select dc.*, dq.qualifier as qualifier_name,
 		where dc.docid='".$_SESSION['docid']."' 
 			AND dct.physician=1
 		order by dc.lastname";
-$q = mysql_query($sql);
-while($r = mysql_fetch_assoc($q)){
+$q = $db->getResults($sql);
 
-$csv .= '"'.$r['salutation'].'",';
-$csv .= '"'.$r['firstname'].'",';
-$csv .= '"'.$r['lastname'].'",';
-$csv .= '"'.$r['middlename'].'",';
-$csv .= '"'.$r['company'].'",';
-$csv .= '"'.$r['add1'].'",';
-$csv .= '"'.$r['add2'].'",';
-$csv .= '"'.$r['city'].'",';
-$csv .= '"'.$r['state'].'",';
-$csv .= '"'.$r['zip'].'",';
-$csv .= '"'.$r['phone1'].'",';
-$csv .= '"'.$r['phone2'].'",';
-$csv .= '"'.$r['fax'].'",';
-$csv .= '"'.$r['email'].'",';
-$csv .= '"'.$r['national_provider_id'].'",';
-$csv .= '"'.$r['qualifier_name'].'",';
-$csv .= '"'.$r['qualifierid'].'",';
-$csv .= '"'.$r['notes'].'",';
-$csv .= '"'.$r['preferredcontact'].'",';
-$csv .= '"'.(($r['num_ref']>0)?'Yes':'No').'",';
-$csv .= '"'.(($r['status']==1)?'Active':'Inactive').'"';
-$csv .= "\n";
-
-
+foreach ($q as $r) {
+	$csv .= '"'.$r['salutation'].'",';
+	$csv .= '"'.$r['firstname'].'",';
+	$csv .= '"'.$r['lastname'].'",';
+	$csv .= '"'.$r['middlename'].'",';
+	$csv .= '"'.$r['company'].'",';
+	$csv .= '"'.$r['add1'].'",';
+	$csv .= '"'.$r['add2'].'",';
+	$csv .= '"'.$r['city'].'",';
+	$csv .= '"'.$r['state'].'",';
+	$csv .= '"'.$r['zip'].'",';
+	$csv .= '"'.$r['phone1'].'",';
+	$csv .= '"'.$r['phone2'].'",';
+	$csv .= '"'.$r['fax'].'",';
+	$csv .= '"'.$r['email'].'",';
+	$csv .= '"'.$r['national_provider_id'].'",';
+	$csv .= '"'.$r['qualifier_name'].'",';
+	$csv .= '"'.$r['qualifierid'].'",';
+	$csv .= '"'.$r['notes'].'",';
+	$csv .= '"'.$r['preferredcontact'].'",';
+	$csv .= '"'.(($r['num_ref']>0)?'Yes':'No').'",';
+	$csv .= '"'.(($r['status']==1)?'Active':'Inactive').'"';
+	$csv .= "\n";
 }
 
 

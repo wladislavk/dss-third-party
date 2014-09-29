@@ -1,8 +1,5 @@
 <?php 
   include "includes/top.htm";
-  include 'admin/classes/Db.php';
-
-  $db = new Db();
 ?>
 
 <link rel="stylesheet" href="css/ledger.css" />

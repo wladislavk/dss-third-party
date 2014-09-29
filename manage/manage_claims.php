@@ -1,9 +1,6 @@
 <?php
 include "includes/top.htm";
 include_once "includes/constants.inc";
-include "admin/classes/Db.php";
-
-$db = new Db();
 
 if(!isset($_GET['sort1'])){
     $_GET['sort1']='oldest';

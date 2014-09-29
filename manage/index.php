@@ -1,8 +1,6 @@
 <?php
   include 'includes/top.htm';
-  require_once 'admin/classes/Db.php';
-
-  $db = new Db(); 
+  
   $sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . mysql_real_escape_string($_SESSION['docid']) . "'";
   $r = $db->getRow($sql);
 

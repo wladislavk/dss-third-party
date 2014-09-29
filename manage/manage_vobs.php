@@ -1,9 +1,6 @@
 <?php
 include 'includes/constants.inc';
 include "includes/top.htm";
-include "admin/classes/Db.php";
-
-$db = new Db();
 
 if(isset($_GET['rid'])){
   $s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s",$_REQUEST['rid'], $_REQUEST['pid'], $_SESSION['docid']);

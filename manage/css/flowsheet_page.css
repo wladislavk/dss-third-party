@@ -1,0 +1,7 @@
+#flowsheet_page1 {
+	display: block;
+}
+
+#flowsheet_page2, #flowsheet_page2btm {
+	display: none;
+}

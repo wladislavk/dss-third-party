@@ -1,8 +1,5 @@
 <? 
 include "includes/top.htm";
-include "admin/classes/Db.php";
-
-$db = new Db();
 
 if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))
 {

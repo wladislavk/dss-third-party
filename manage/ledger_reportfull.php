@@ -1,8 +1,5 @@
 <? 
 include "includes/top.htm";
-include "admin/classes/Db.php";
-
-$db = new Db();
 
 $rec_disp = 200;
 

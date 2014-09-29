@@ -2,9 +2,6 @@
 	require_once('includes/constants.inc');
 	include "includes/top.htm";
 	include "includes/similar.php";
-	include 'admin/classes/Db.php';
-
-	$db = new Db();
 ?>
 
 <link rel="stylesheet" href="css/screener.css" />

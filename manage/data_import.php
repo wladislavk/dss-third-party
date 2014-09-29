@@ -1,4 +1,4 @@
-<? 
+<?php
 include "includes/top.htm";
 include_once "includes/constants.inc";
 ?>

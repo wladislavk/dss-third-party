@@ -2,9 +2,6 @@
 include('includes/top.htm');
 include('includes/constants.inc');
 include('includes/formatters.php');
-include('admin/classes/Db.php');
-
-$db = new Db();
 
 if(isset($_REQUEST["delid"]))
 {

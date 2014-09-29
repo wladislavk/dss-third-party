@@ -1,11 +1,10 @@
 <?php
 include('admin/includes/main_include.php');
 include('admin/includes/password.php');
-include('admin/classes/Db.php');
 //$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
 //$page_my = mysql_query($page_sql);
 //$page_myarray = mysql_fetch_array($page_my);
-$db = new Db();
+
 if(isset($_SESSION['loginid']) &&$_SESSION['loginid'] <> '')
 {
 	$cur_page_full =  $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];

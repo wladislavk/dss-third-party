@@ -1,8 +1,5 @@
 <?php
   include 'includes/top.htm';
-  include 'admin/classes/Db.php';
-
-  $db = new Db();
 
   if(!$use_letters){ 
 ?>

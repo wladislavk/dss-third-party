@@ -2,9 +2,6 @@
 include 'includes/constants.inc';
 include "includes/top.htm";
 include "includes/constants.inc";
-include "admin/classes/Db.php";
-
-$db = new Db();
 
 if(isset($_GET['rid'])){
   $s = sprintf("UPDATE dental_hst SET viewed=1 WHERE id=%s AND doc_id=%s",$_REQUEST['rid'], $_SESSION['docid']);

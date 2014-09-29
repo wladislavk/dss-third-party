@@ -31,5 +31,11 @@ class Db
 		return mysql_num_rows($result);
 	}
 
+	public function getInsertId($query_string)
+	{
+		$result = $this->query($query_string);
+		return mysql_insert_id();
+	}
+
 }
 ?>

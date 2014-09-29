@@ -1,8 +1,5 @@
 <?php 
 include "includes/top.htm";
-include 'admin/classes/Db.php';
-
-$db = new Db();
 
 if ($_REQUEST["delid"] != "") {
 	$del_sql = "delete from dental_sleeplab where sleeplabid='" . $_REQUEST["delid"] . "'";

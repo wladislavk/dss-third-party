@@ -1,4 +1,4 @@
-<? 
+<?php
 include "includes/top.htm";
 ?>
 
@@ -13,11 +13,11 @@ include "includes/top.htm";
 &nbsp;
 
 <?php
-  $sql = "SELECT e.*, CONCAT(t.transaction_type,' - ',t.description) as transaction_type 
-	FROM dental_eligible_enrollment e
-	LEFT JOIN dental_enrollment_transaction_type t ON e.transaction_type_id = t.id
-	WHERE e.user_id = '".mysql_real_escape_string($_SESSION['docid'])."'";
-  $my = mysql_query($sql);
+	$sql = "SELECT e.*, CONCAT(t.transaction_type,' - ',t.description) as transaction_type 
+			FROM dental_eligible_enrollment e
+			LEFT JOIN dental_enrollment_transaction_type t ON e.transaction_type_id = t.id
+			WHERE e.user_id = '".mysql_real_escape_string($_SESSION['docid'])."'";
+	$my = $db->getResults($sql);
 ?>
 <div style="margin-left:10px;margin-right:10px;">
 	<button style="margin-right:10px; float:right;" onclick="loadPopup('add_enrollment.php')" class="addButton">
@@ -27,67 +27,65 @@ include "includes/top.htm";
 </div>
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table class="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-  <thead>
-    <tr class="tr_bg_h">
-      <th class="col_head">Provider</th>
-      <th class="col_head">NPI</th>
-      <th class="col_head">Payer ID</th>
-      <th class="col_head">Service Type</th>
-      <th class="col_head">Payer Name</th>
-      <th class="col_head">Status</th>
-      <th class="col_head">Response</th>	  
-      <th class="col_head">Get Form</th>
-  </thead>
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+	<table class="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+		<thead>
+		<tr class="tr_bg_h">
+			<th class="col_head">Provider</th>
+			<th class="col_head">NPI</th>
+			<th class="col_head">Payer ID</th>
+			<th class="col_head">Service Type</th>
+			<th class="col_head">Payer Name</th>
+			<th class="col_head">Status</th>
+			<th class="col_head">Response</th>	  
+			<th class="col_head">Get Form</th>
+		</thead>
 		<?php
-		while($myarray = mysql_fetch_array($my))
-		{
-		?>
-			<tr >
-				<td valign="top">
-					<?=$myarray['provider_name']?>
-				</td>
-				<td valign="top">
-					<?=$myarray['npi']?>
-				</td>
-				<td valign="top">
-					<?=$myarray['payer_id']?>
-				</td>
-				<td valign="top">
-					<?= $myarray['transaction_type']; ?>
-				</td>
-				<td valign="top">
-					<?=$myarray['payer_name']?>
-				</td>
-				<td valign="top">
-					<?=st($dss_enrollment_labels[$myarray["status"]]);?>
-					<?php
-						$w_sql = "SELECT * from dental_eligible_response where reference_id='".mysql_real_escape_string($myarray['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
-						$w_q = mysql_query($w_sql);
-						$w_r = mysql_fetch_assoc($w_q);
-						if($w_r['adddate'] !=''){
-							echo " - ".date('m/d/Y h:i a', strtotime($w_r['adddate']));
-						}else{	
-							echo " - ".date('m/d/Y h:i a', strtotime($myarray['adddate']));
-						}
-					?>
-				</td>
-				<td valign="top">
-					<a href="#" onclick="$('#response_<?= $myarray['id']; ?>').toggle();return false;" style="display:block;">View</a>
-					<span id="response_<?= $myarray['id']; ?>" style="display:none;">
-                   			  <?= $myarray["response"]; ?> 
-					</span>
-				</td>
-				<td valign="top">
-					<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4&transaction_type=837P" target="_blank">PDF</a>
-				</td>
-			</tr>
-	<? 	}
-	?>
-</table>
+		if ($my) {
+			foreach ($my as $myarray) { ?>
+		<tr >
+			<td valign="top">
+				<?php echo $myarray['provider_name']?>
+			</td>
+			<td valign="top">
+				<?php echo $myarray['npi']?>
+			</td>
+			<td valign="top">
+				<?php echo $myarray['payer_id']?>
+			</td>
+			<td valign="top">
+				<?php echo $myarray['transaction_type']; ?>
+			</td>
+			<td valign="top">
+				<?php echo $myarray['payer_name']?>
+			</td>
+			<td valign="top">
+				<?php echo st($dss_enrollment_labels[$myarray["status"]]);?>
+				<?php
+					$w_sql = "SELECT * from dental_eligible_response where reference_id='".mysql_real_escape_string($myarray['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
+					$w_r = $db->getRow($w_sql);
+					if($w_r['adddate'] !=''){
+						echo " - ".date('m/d/Y h:i a', strtotime($w_r['adddate']));
+					}else{	
+						echo " - ".date('m/d/Y h:i a', strtotime($myarray['adddate']));
+					}
+				?>
+			</td>
+			<td valign="top">
+				<a href="#" onclick="$('#response_<?php echo $myarray['id']; ?>').toggle();return false;" style="display:block;">View</a>
+				<span id="response_<?php echo $myarray['id']; ?>" style="display:none;">
+					<?php echo $myarray["response"]; ?> 
+				</span>
+			</td>
+			<td valign="top">
+				<a href="https://gds.eligibleapi.com/v1.3/payers/<?php echo $myarray['payer_id']; ?>/enrollment_form?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4&transaction_type=837P" target="_blank">PDF</a>
+			</td>
+		</tr>
+			<? 	}
+		}?>
+	</table>
 </form>
 <div class="fullwidth">
 <?php //include 'eligible_enrollment/index.php'; ?>
@@ -104,4 +102,4 @@ include "includes/top.htm";
 </div>
 <div id="backgroundPopupRef"></div>-->
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

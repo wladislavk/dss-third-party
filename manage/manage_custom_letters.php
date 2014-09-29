@@ -1,20 +1,18 @@
-<? 
+<?php
 include "includes/top.htm";
 
 if(isset($_GET['delid']) && $_GET['delid']){
 
   $d = "UPDATE dental_letter_templates_custom SET status=2 WHERE docid='".$_SESSION['docid']."'
   		AND id='".mysql_real_escape_string($_GET['delid'])."'";
-  mysql_query($d);
+  $db->query($d);
 }
 
-
 $sql = "select * from dental_letter_templates_custom where docid='".$_SESSION['docid']."' AND status=1";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$total_rec = $db->getNumberRows($sql);
 
-$my=mysql_query($sql) or die(mysql_error());
-$num_contact=mysql_num_rows($my);
+$my = $db->getResults($sql);
+$num_contact = count($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -36,10 +34,10 @@ $num_contact=mysql_num_rows($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="60%">
@@ -49,31 +47,31 @@ $num_contact=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if($num_contact == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
 		while($myarray = mysql_fetch_array($my))
 		{
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?php echo $tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["name"]);?>
+					<?php echo st($myarray["name"]);?>
 				</td>
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: window.location='add_custom_letter_template.php?ed=<?=$myarray["id"];?>';" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="Javascript: window.location='add_custom_letter_template.php?ed=<?php echo $myarray["id"];?>';" class="editlink" title="EDIT">
 						Edit
 					</a>
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 </form>

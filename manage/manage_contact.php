@@ -1,8 +1,5 @@
 <?php 
 	include "includes/top.htm";
-	require_once 'admin/classes/Db.php';
-
-	$db = new Db();
 ?>
 
 <?php

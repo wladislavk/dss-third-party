@@ -64,11 +64,15 @@ if(isset($_POST['respond'])){
 } 
 
 
-$sql = "select t.*
+$sql = "select t.*, (SELECT name FROM companies WHERE companies.id=t.company_id LIMIT 1)
 	FROM dental_support_tickets t 
 	 WHERE t.id = ".mysql_real_escape_string($_REQUEST['ed']);
 $my = mysql_query($sql);
 $t = mysql_fetch_assoc($my);
+$company_name = "Dental Sleep Solutions";
+if ($t['company_name'] != ''){
+  $company_name = $t['company_name'];
+}
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -77,7 +81,7 @@ $t = mysql_fetch_assoc($my);
 <div style="width:96%; margin:0 auto;">
 <div id="support_ticket">
 <span class="admin_head">
-	<?= $t['title']; ?>
+	<?= $t['title']." - ".$company_name; ?>
 </span>
 <br />
 <br />

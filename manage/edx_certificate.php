@@ -1,4 +1,4 @@
-<? 
+<?php
 include "includes/top.htm";
 include_once "includes/constants.inc";
 ?>
@@ -7,21 +7,18 @@ include_once "includes/constants.inc";
 <br /><br />
 <ul class="fullwidth" style="list-style:none;">
 <?php
-  $c_sql = "SELECT * FROM edx_certificates c 
-		JOIN dental_users u ON c.edx_id = u.edx_id
-		WHERE u.userid='".mysql_real_escape_string($_SESSION['userid'])."'";
-  $c_q = mysql_query($c_sql);
-  while($c = mysql_fetch_assoc($c_q)){
-    ?>
+  $c_sql = "SELECT * FROM edx_certificates c JOIN dental_users u ON c.edx_id = u.edx_id
+			WHERE u.userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+  $c_q = $db->getResults($c_sql);
+  foreach ($c_q as $c) { ?>
     <li>
-	<a href="<?= $c['url']; ?>" target="_blank">
-	  <?= $c['course_name']; ?> -
-	  <?= $c['course_section']; ?> - 
-	  <?= $c['course_subsection']; ?> -
-	  <?= $c['number_ce']; ?>
+	<a href="<?php echo $c['url']; ?>" target="_blank">
+	  <?php echo $c['course_name']; ?> -
+	  <?php echo $c['course_section']; ?> - 
+	  <?php echo $c['course_subsection']; ?> -
+	  <?php echo $c['number_ce']; ?>
 	</a>
     </li>
-
 <?php
   }
 ?>

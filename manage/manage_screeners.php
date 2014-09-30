@@ -56,7 +56,7 @@
 	}		
 ?>
 
-<link rel="stylesheet" type="text/css" href="css/manage_screeners.css">
+<link rel="stylesheet" type="text/css" href="css/manage_display_similar.css">
 
 <?php
 	$rec_disp = 20;

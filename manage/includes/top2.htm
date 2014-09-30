@@ -1,13 +1,12 @@
 <?php
 
-  include 'admin/includes/main_include.php';
-  include 'includes/sescheck.php';
-  include 'includes/constants.inc';
-  include 'includes/authorization_functions.php';
-  include_once 'includes/general_functions.php';
-  include 'includes/notifications.php';
-  include 'includes/patient_changes.php';
-
+require_once('admin/includes/main_include.php');
+include_once("includes/sescheck.php");
+require_once('includes/constants.inc');
+require_once('includes/authorization_functions.php');
+require_once('includes/general_functions.php');
+require_once('includes/notifications.php');
+require_once('includes/patient_changes.php');
 
   if( $_SESSION['userid'] == '') {
 ?>
@@ -159,33 +158,6 @@
 
     <script type="text/javascript" src="../../Scripts/sucker_tree.js"></script>
 
-    <?php
-    /**
-    
-
-    */
-    ?>
-
-    <script language="VBScript">
-      hasVB = true
-      Function vbConfirm (str)
-           return = msgbox(str, vbYesNo + vbQuestion)
-           select case return
-              case vbYes
-                  return = true
-              case vbNo
-                  return = false
-          end select
-          vbConfirm = return
-      End Function
-    </script>
-
-    <?php
-    /**
-    
-    */
-    ?>
-
   <?php
     include('includes/calendarinc.php');
 
@@ -218,7 +190,8 @@
       $hideallblocks = 1;
     } else {
       $hideallblocks = 2;
-    } 
+    }
+  } 
 ?>
 
   <script type="text/javascript" src="js/top2.js"></script>
@@ -241,12 +214,10 @@
 
 <?php if(isset($_GET['pid']) && $_GET['pid']!= '') { ?> 
   <?php
-		
     $title = '';
     $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid=".$_GET['pid'];
     
     $my = $db->getResults($sql);
-
     foreach ($my as $myarray) {
 			$premed = $myarray['premedcheck'];
 
@@ -257,7 +228,6 @@
       $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid=".mysql_real_escape_string($_GET['pid']);
 
       $myq3array = $db->getRow($sqlq3);
-
       $allergen = $myq3array['allergenscheck'];
 
       if ($allergen) {
@@ -273,37 +243,27 @@
     <tr>
       <td colspan="2" align="right" ></td>
     </tr>
-
     <tr>
 	    <td valign='top' height="400">
-	
-        <div class="suckertreemenu2">
+	      <div class="suckertreemenu2">
           <ul id="topmenu">
-
             <li><a href="#">Manage Settings</a>
-
               <ul style="z-index:5001;margin-top:-20px;">
-
                 <li>
                   <a class="menu_item" href="#">Directory</a>
                 </li>
-
                 <li>
                   <a class="submenu_item" href="manage_contact.php">Contacts</a>
                 </li>
-
                 <li>
                   <a class="submenu_item" href="manage_referredby.php">Referral List</a>
                 </li>
-
                 <li>
                   <a class="submenu_item" href="manage_sleeplab.php">Sleep Labs</a>
                 </li>
-
                 <li>
                   <a class="submenu_item" href="manage_fcontact.php">Corporate Contacts</a>
                 </li>
-
                 <li>
                   <a class="menu_item" href="#">DSS Files</a>
                 </li>
@@ -323,15 +283,12 @@
                 <li>
                   <a class="menu_item" href="#">Admin</a>
                 </li>
-
                 <li>
                   <a class="submenu_item" href="manage_claim_setup.php">Claim Setup</a>
                 </li>
-
 	              <li>
                   <a class="submenu_item" href="manage_profile.php">Profile</a>
                 </li>
-
                 <li>
                   <a class="submenu_item" href="manage_custom.php">Custom Text</a>
                 </li>
@@ -345,23 +302,18 @@
                 <li>
                   <a class="submenu_item" href="manage_staff.php">Staff</a>
                 </li>
-
       		      <li>
                   <a class="submenu_item" href="manage_user_forms.php">Forms</a>
                 </li>
-
       		      <li>
                   <a class="submenu_item" href="manage_manuals.php">Manuals</a>
                 </li>
-
       		      <li>
                   <a class="submenu_item" href="manage_locations.php">Locations</a>
                 </li>
-
                 <li>
                   <a class="menu_item" href="pending_patient.php">Pending Patients</a>
                 </li>
-
                 <li>
                   <a class="menu_item" href="export_md.php" onclick="return (prompt('Enter password')=='1234');">Export MD</a>
                 </li>
@@ -423,7 +375,6 @@
                 <ul id="task_od_list">
 
                   <?php foreach ($od_q as $od_r) { ?>
-
                     <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
                       <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
                         <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
@@ -441,12 +392,11 @@
                         ?>
                       </div>
                     </li>
-
                   <?php } ?>
 
                 </ul>
-              <?php }
 
+              <?php }
                 $tod_q = $db->getResults($tod_sql);
                 $tod_num = count($tod_q);
 
@@ -457,7 +407,6 @@
                 <ul id="task_tod_list">
 
                   <?php foreach ($tod_q as $od_r ) { ?>
-
                     <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
                       <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
                         <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
@@ -474,13 +423,11 @@
                         ?>
                       </div>
                     </li>
-
                   <?php } ?>
 
                 </ul>
 
               <?php }
-
                 $tom_q = $db->getResults($tom_sql);
                 $tom_num = count($tom_q);
                 if ($tom_num > 0) {
@@ -489,8 +436,7 @@
                 <h4 id="task_tom_header" class="task_tom_header">Tomorrow</h4>
                 <ul id="task_tom_list">
 
-                  <?php foreach ($tom_q as $od_r) { ?>
-                    
+                  <?php foreach ($tom_q as $od_r) { ?>             
                     <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
                       <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
                         <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
@@ -507,13 +453,11 @@
                         ?>
                       </div>
                     </li>
-
                   <?php } ?>
 
                 </ul>
 
               <?php }
-
                 $tw_q = $db->getResults($tw_sql);
                 $tw_num = count($tw_q);
                 if ($tw_num > 0) {
@@ -539,13 +483,11 @@
                         ?>
                       </div>
                     </li>
-
                   <?php } ?>
 
                 </ul>
 
               <?php }
-
                 $nw_q = $db->getResults($nw_sql);
                 $nw_num = count($nw_q);
 
@@ -572,13 +514,11 @@
                         ?>
                       </div>
                     </li>
-
                   <?php } ?>
 
                 </ul>
               
               <?php } 
-
                 $lat_q = $db->getResults($lat_sql);
                 $lat_num = count($lat_q);
 
@@ -589,7 +529,6 @@
                 <ul id="task_lat_list">
 
                   <?php foreach ($lat_q as $od_r) { ?>
-
                     <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
                       <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
                         <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
@@ -610,7 +549,6 @@
                         ?>
                       </div>
                     </li>
-
                   <?php } ?>
 
                 </ul>
@@ -759,13 +697,11 @@
                                   }
                                 ?>
                               </li>
-
                             <?php } ?>
 
                           </ul>
 
                         <?php }
-
                           $od_q = $db->getResults($tod_sql);
                           $od_num = count($od_q);
 
@@ -792,13 +728,11 @@
                                 }
                               ?>
                             </li>
-
                           <?php } ?>
 
                         </ul>
 
                       <?php } 
-
                         $od_q = $db->getResults($tom_sql);
                         $od_num = count($od_q);
 
@@ -825,13 +759,11 @@
                                 }
                               ?>
                             </li>
-
                           <?php } ?>
 
                         </ul>
 
                       <?php } 
-
                         $od_q = $db->getResults($fut_sql);
                         $od_num = count($od_q);
 
@@ -842,7 +774,6 @@
                         <ul id="pat_task_fut_list">
 
                           <?php foreach($od_q as $od_r) { ?>
-
                             <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
                               <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
                                 <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
@@ -860,7 +791,6 @@
                               ?>
 
                             </li>
-
                           <?php } ?>
 
                         </ul>
@@ -885,7 +815,6 @@
                   <li>
                     <a href="manage_patient.php">Manage Patients</a>
                   </li>
-
                   <li>
                     <a href="#">Directory</a>
 
@@ -893,15 +822,12 @@
                        <li>
                         <a href="manage_contact.php">Contacts</a>
                       </li>
-
                        <li>
                         <a href="manage_referredby.php">Referral List</a>
                       </li>
-
                        <li>
                         <a href="manage_sleeplab.php">Sleep Labs</a>
                       </li>
-
                        <li>
                         <a href="manage_fcontact.php">Corporate Contacts</a>
                       </li>    
@@ -917,15 +843,12 @@
                   <li>
                     <a href="ledger_reportfull.php">Ledger</a>
                   </li>
-
                   <li>
                     <a href="manage_claims.php">Claims (<?php echo  $num_pending_claims; ?>)</a>
                   </li>
-
                   <li>
                     <a href="performance.php">Performance</a>
                   </li>
-
                   <li>
                     <a href="manage_screeners.php">Pt. Screener</a>
                   </li>
@@ -937,133 +860,166 @@
                 $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce;
               ?>
 
+              <li>
+                <a href="#">MESSAGES (<?php echo $mess_count; ?>)</a>
 
-              <?php
-              /**
+                <ul>
+                  <li>
+                    <a <?php echo "href='letters.php?status=pending'"; ?>>Pending Letters (<?php echo $pending_letters; ?>)</a>
+                  </li>
+                  <li>
+                    <a <?php echo "href='manage_vobs.php'"; ?>>VOBs (<?php echo  $num_preauth; ?>)</a>
+                  </li>
+                  <li>
+                    <a <?php echo "href='manage_patient_contacts.php'"; ?>>Patient Contacts (<?php echo  $num_pc; ?>)</a>
+                  </li>
+                  <li>
+                    <a <?php echo "href='manage_patient_insurance.php'"; ?>>Patient Insurance (<?php echo  $num_pi; ?>)</a>
+                  </li>
+                  <li>
+                    <a <?php echo "href='manage_patient_changes.php'"; ?>>Patient Changes (<?php echo  $num_c; ?>)</a>
+                  </li>
+                  <li>
+                    <a href="manage_vobs.php?status=<?php echo  DSS_PREAUTH_REJECTED; ?>&viewed=0">Alerts (<?php echo  $num_rejected_preauth; ?>)</a>
+                  </li>
+                  <li>
+                    <a href="manage_email_bounces.php">Email Bounces (<?php echo  $num_bounce; ?>)</a>
+                  </li>
+                  <li>
+                    <a href="manage_tasks.php">Tasks (<?php echo  $num_tasks; ?>)</a>
+                  </li>
+                </ul>
+            </ul>
+          </li>
+        </ul>
+      </div>
 
+      <?php if (isset($_GET['pid']) && $_GET['pid'] != '') { ?>
 
+        <div id="patient_nav">
+          <ul>
+            <li>
+              <a class="<?php echo ($_SERVER['PHP_SELF'] == '/manage/manage_flowsheet3.php')?'nav_active':'';?>" <?php echo "href='manage_flowsheet3.php?pid=".$_GET['pid']."&addtopat=1'"; ?>>Tracker</a>
+            </li>
+            <li>
+              <a class="<?php echo ($_SERVER['PHP_SELF'] == '/manage/dss_summ.php')?'nav_active':'';?>" <?php echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'"; ?>>Summary Sheet</a>
+            </li>
+            <li>
+              <a class="<?php echo ($_SERVER['PHP_SELF'] == '/manage/manage_ledger.php')?'nav_active':'';?>" <?php echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'"; ?>>Ledger</a>
+            </li>
+            <li>
+              <a class="<?php echo ($_SERVER['PHP_SELF'] == '/manage/manage_insurance.php')?'nav_active':'';?>" <?php echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'"; ?>>Insurance</a>
+            </li>
+            <li>
+              <a class="<?php echo ($_SERVER['PHP_SELF'] == '/manage/manage_progress_notes.php')?'nav_active':'';?>" <?php echo "href='dss_summ.php?sect=notes&pid=".$_GET["pid"]."&addtopat=1'"; ?>>Progress Notes</a>
+            </li>
+            <li>
+              <a class="<?php echo ($_SERVER['PHP_SELF'] == '/manage/patient_letters.php')?'nav_active':'';?>" <?php echo "href='dss_summ.php?sect=letters&pid=".$_GET['pid']."&addtopat=1'"; ?>>Letters</a>
+            </li>
+            <li>
+              <a class="<?php echo ($_SERVER['PHP_SELF'] == '/manage/q_image.php')?'nav_active':'';?>" href="q_image.php?pid=<?php echo  $_GET['pid'] ?>">Images</a>
+            </li>
+            <li>
+              <a class="<?php echo (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" href="q_page1.php?pid=<?php echo  $_GET['pid'] ?>&addtopat=1">Questionnaire</a>
+            </li>
+            <li>
+              <a class="<?php echo (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" href="ex_page4.php?pid=<?php echo  $_GET['pid'] ?>&addtopat=1">Clinical Exam</a>
+            </li>
+            <li class="last">
+              <a class="<?php echo ($_SERVER['PHP_SELF'] == '/manage/add_patient.php')?'nav_active':'';?>" href="add_patient.php?ed=<?php echo  $_GET['pid'] ?>&preview=1&addtopat=1&pid=<?php echo  $_GET['pid'] ?>">Patient Info</a>
+            </li>
+          </ul>
+        </div>
 
-              */
-              ?>  
+      <?php } else { ?>
 
+        <div style="clear:both;"></div>
 
-
-<li><a href="#">MESSAGES (<?php echo $mess_count; ?>)</a>
-  <ul>
-      <li><a <?php {echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
-      <li><a <?php {echo "href='manage_vobs.php'";} ?>>VOBs (<?php echo  $num_preauth; ?>)</a></li>
-      <li><a <?php {echo "href='manage_patient_contacts.php'";} ?>>Patient Contacts (<?php echo  $num_pc; ?>)</a></li>
-      <li><a <?php {echo "href='manage_patient_insurance.php'";} ?>>Patient Insurance (<?php echo  $num_pi; ?>)</a></li>
-      <li><a <?php {echo "href='manage_patient_changes.php'";} ?>>Patient Changes (<?php echo  $num_c; ?>)</a></li>
-      <li><a href="manage_vobs.php?status=<?php echo  DSS_PREAUTH_REJECTED; ?>&viewed=0">Alerts (<?php echo  $num_rejected_preauth; ?>)</a></li>
-      <li><a href="manage_email_bounces.php">Email Bounces (<?php echo  $num_bounce; ?>)</a></li>
-      <li><a href="manage_tasks.php">Tasks (<?php echo  $num_tasks; ?>)</a></li>
-  </ul>
-
-
-  </ul>
-</li>
-
-</ul>
-</div>
-  <?php if(isset($_GET['pid']) && $_GET['pid']!=''){ ?>
-    <div id="patient_nav">
-      <ul>
-        <li><a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'nav_active':'';?>" <?php {echo "href='manage_flowsheet3.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Tracker</a></li>
-        <li><a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Summary Sheet</a> </li>
-        <li><a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" <?php {echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a> </li>
-        <li><a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a></li>
-        <li><a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=notes&pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a></li>
-        <li><a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=letters&pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a></li>
-        <li><a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" href="q_image.php?pid=<?php echo  $_GET['pid'] ?>">Images</a></li>
-        <li><a class="<?php echo  (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" href="q_page1.php?pid=<?php echo  $_GET['pid'] ?>&addtopat=1">Questionnaire</a></li>
-        <li><a class="<?php echo  (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" href="ex_page4.php?pid=<?php echo  $_GET['pid'] ?>&addtopat=1">Clinical Exam</a> </li>
-        <li class="last"><a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/add_patient.php')?'nav_active':'';?>" href="add_patient.php?ed=<?php echo  $_GET['pid'] ?>&preview=1&addtopat=1&pid=<?php echo  $_GET['pid'] ?>">Patient Info</a></li>
-      </ul>
-
+      <?php } ?>
 
     </div>
-  <?php }else{ ?>
+
     <div style="clear:both;"></div>
-  <?php } ?>
-</div>
-<div style="clear:both;"></div>
-</div>
+  </div>
 
+  <div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
+    <div style="clear:both;"></div>
 
-<div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
+    <?php if (isset($_GET['pid']) && $_GET['pid'] != ''){ ?>
+      <div style="margin-left:20px;float:left;width:400px;display:none;">
+        <?php echo "You are currently in a patient chart - " ?>
 
-<div style="clear:both;"></div>
-<?php if(isset($_GET['pid']) && $_GET['pid']!= ''){?> <div style="margin-left:20px;float:left;width:400px;display:none;"> <?php echo "You are currently in a patient chart - " ?><a href="manage_patient.php" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a><?php ?> </div><div style="float:right;width:300px;"> 
-                    <?php
-                    $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid=".$_GET['pid'];
-                    $my=mysql_query($sql) or die(mysql_error());
-                    while($myarray = mysql_fetch_array($my))
-		                {
-                     $thename= $myarray['firstname']." ".$myarray['lastname'];
-                    if($myarray["premedcheck"] == 1){
-                    //echo "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; font-size:18px; color:#FF0000;\">*PREMED PATIENT</font>";
-                    }
-                    }
-                    ?>
-                    </div> <?php } ?>
-<br />
+        <a href="manage_patient.php" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a>
+      </div>
 
-<?php
-  if(isset($_GET['pid'])){
-	$s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
-                                $q = mysql_query($s);
-                                $n = mysql_num_rows($q);
-				$n = num_patient_changes($_GET['pid']);
-                                $pat = mysql_fetch_assoc($q);
-$contacts_sql = "SELECT pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1, pc.address2, pc.city, pc.state, pc.zip, pc.phone,
-        p.firstname as patfirstname, p.lastname as patlastname
-        FROM dental_patient_contacts pc 
-        INNER JOIN dental_patients p ON pc.patientid=p.patientid
-        WHERE p.docid='".$_SESSION['docid']."' AND
-                p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
-$contacts_my = mysql_query($contacts_sql);
-$total_contacts = mysql_num_rows($contacts_my);
-$insurance_sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname FROM dental_patient_insurance pi INNER JOIN dental_patients p ON pi.patientid=p.patientid 
-        WHERE p.docid='".$_SESSION['docid']."' AND
-                p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
-$insurance_my = mysql_query($insurance_sql);
-$total_insurance = mysql_num_rows($insurance_my);
-                                if(($n+$total_contacts+$total_insurance)>0){ ?>
-<a class="warning" href="patient_changes.php?pid=<?php echo $_GET['pid'];?>">
-<span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
-</a>
-
-                                <? } 
-
-        $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
-        $exist_q = mysql_query($exist_sql);
-        $exist_row = mysql_fetch_assoc($exist_q);
-	if($exist_row['symptoms_status']==2 || $exist_row['treatments_status']==2 || $exist_row['history_status']==2 || $exist_row['sleep_status']==2){ ?>
-<a class="warning" href="q_page1.php?pid=<?php echo  $_GET['pid']; ?>&addtopat=1" >
-<span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
-</a>
-	<?php
-	}
-
-
-        $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
-        $email_q = mysql_query($email_sql);
-        if(mysql_num_rows($email_q)>0){ ?>
-<a class="warning" href="add_patient.php?ed=<?php echo  $_GET['pid']; ?>&pid=<?php echo  $_GET['pid']; ?>&addtopat=1" >
-<span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
-</a>
+      <div style="float:right;width:300px;"> 
         <?php
-        }
+          $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid=".$_GET['pid'];
 
+          $my = $db->getResults($sql);
+          foreach ($my as $myarray) {
+            $thename = $myarray['firstname']." ".$myarray['lastname'];
+            if ($myarray["premedcheck"] == 1) {
+            }
+          }
+        ?>
+      </div>
 
+    <?php } ?>
 
-  }
+    <br />
 
-  $sql = "SELECT use_letters from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-  $q = mysql_query($sql);
-  $r = mysql_fetch_assoc($q);
-  $use_letters = ($r['use_letters']=='1');
+    <?php
+      if (isset($_GET['pid'])) {
+	      $s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
 
-?>
+        $n = $db->getNumberRows($q);
+        $pat = $db->getRow($q);
+				$n = num_patient_changes($_GET['pid']);
+                                
+        $contacts_sql = "SELECT pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1, pc.address2, pc.city, pc.state, pc.zip, pc.phone,
+          p.firstname as patfirstname, p.lastname as patlastname
+          FROM dental_patient_contacts pc 
+          INNER JOIN dental_patients p ON pc.patientid=p.patientid
+          WHERE p.docid='".$_SESSION['docid']."' AND
+          p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
 
+        $total_contacts = $db->getNumberRows($contacts_sql);
+
+        $insurance_sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname FROM dental_patient_insurance pi INNER JOIN dental_patients p ON pi.patientid=p.patientid 
+          WHERE p.docid='".$_SESSION['docid']."' AND
+          p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+
+        $total_insurance = $db->getNumberRows($insurance_sql);
+
+        if (($n + $total_contacts + $total_insurance) > 0) {
+    ?>
+          <a class="warning" href="patient_changes.php?pid=<?php echo $_GET['pid'];?>">
+            <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+          </a>
+    <?php } 
+        $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+
+        $exist_row = $db->getRow($exist_sql);
+
+	      if ($exist_row['symptoms_status'] == 2 || $exist_row['treatments_status'] == 2 || $exist_row['history_status'] == 2 || $exist_row['sleep_status'] == 2) {
+    ?>
+          <a class="warning" href="q_page1.php?pid=<?php echo  $_GET['pid']; ?>&addtopat=1" >
+            <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+          </a>	  
+    <?php }
+      $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+
+      if ($db->getNumberRows($email_sql)>0) { 
+    ?>
+        <a class="warning" href="add_patient.php?ed=<?php echo  $_GET['pid']; ?>&pid=<?php echo  $_GET['pid']; ?>&addtopat=1" >
+          <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
+        </a>
+    <?php }
+      }
+
+      $sql = "SELECT use_letters from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+
+      $r = $db->getRow($sql);
+      $use_letters = ($r['use_letters']=='1');
+    ?>

@@ -1,0 +1,12 @@
+.duplicate{ 
+	display:none; 
+}
+table {  
+	width: 700px; margin:0 auto; 
+}
+input.selected { 
+	background-color:#0f3; border:solid 1px #0f3;
+}
+input.button1 { 
+	font-size:20px; background:#fff; 
+}

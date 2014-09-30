@@ -1,4 +1,4 @@
-<? 
+<?php
 include "includes/top.htm";
 include_once "includes/constants.inc";
 ?>
@@ -68,16 +68,11 @@ Learn how to decide when you have titrated your device far enough, when you have
 <em>Time: 7 minutes</em><br />
 <iframe src="https://player.vimeo.com/video/65784955" height="281" width="500" allowfullscreen="" frameborder="0"></iframe>
 
-
-
 </div>
 
 <a href="course.php" target="_blank" style="margin-left: 30px;"  class="addButton">Course</a>
 
-
 <?php
-
 include "includes/bottom.htm";
-
 ?>
 

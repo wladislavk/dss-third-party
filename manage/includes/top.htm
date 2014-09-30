@@ -1082,7 +1082,7 @@ if ($_SESSION['userid'] == '') {
 
           $pat_hst_status = '';
 
-          if (mysql_num_rows($rc_q) > 0) {
+          if (count($rc_q) > 0) {
         ?>
 
           <span class="warning">Patient has the following Home Sleep Tests: <br />

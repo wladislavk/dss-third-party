@@ -91,7 +91,7 @@
 ?>
 
 	<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-	<link rel="stylesheet" href="css/manage_contact.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="css/manage.css" type="text/css" media="screen" />
 	<script src="admin/popup/popup.js" type="text/javascript"></script>
 
 	<span class="admin_head">Manage Contact</span><br /><br />&nbsp;

@@ -220,6 +220,8 @@ $body = json_decode(substr($responseBody, $header_size), true);
 			
 			echo "ErrorCode=" . $xwsErrorCode ;
 		}
+
+		return $headers;
 	}
 
 

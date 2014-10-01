@@ -41,11 +41,14 @@ $notes_sql = "select n.*, u.name signed_name, p.adddate as parent_adddate from
               ";
 $notes_q = $db->getResults($notes_sql);
 $num_unsigned_notes = 0;
-foreach ($notes_q as $notes_r) {
-    if($notes_r['signed_id']==''){
-        $num_unsigned_notes++;
+if ($notes_q) {
+    foreach ($notes_q as $notes_r) {
+        if($notes_r['signed_id']==''){
+            $num_unsigned_notes++;
+        }
     }
 }
+
 $dental_letters_query = "SELECT letterid FROM dental_letters
                         JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid
                         WHERE dental_letters.status = '0' AND 

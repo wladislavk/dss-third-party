@@ -48,6 +48,7 @@ if (isset($_GET['ed'])) {
 		 . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
 		 . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
 		 . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
+         . "  d.name as doc_name, d.practice as doc_practice, d.address as doc_address, d.phone as doc_phone, "
 		 . "  p.home_phone as 'patient_phone', p.work_phone, p.cell_phone  "
 		 . "FROM "
 		 . "  dental_patients p  "

@@ -1,0 +1,28 @@
+#hideshow2section2 input { 
+	width:40px; 
+}
+.followup-datatable { 
+	margin: 0; 
+	padding: 0; 
+	border: 0; 
+}
+.followup-datatable tr { 
+	height: 25px; 
+}
+.followup-datatable tr td { 
+	padding: 0 4px; 
+}
+
+.followup-keytable { 
+	margin: 0; 
+	padding: 0; 
+	border: 0; 
+}
+.followup-keytable tr { 
+	height: 28px; 
+}
+.followup-keytable tr td{ 
+	text-align: right; 
+	padding-right: 4px; 
+	font-weight: normal; 
+}

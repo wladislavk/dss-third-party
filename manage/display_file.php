@@ -34,6 +34,4 @@ switch ($filetype) {
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         readfile($basepath . '/' . $filename);
         break;
-}
-
-?>
+}?>

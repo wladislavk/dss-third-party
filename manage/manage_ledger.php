@@ -2,8 +2,8 @@
 include "includes/top.htm";
 require_once('includes/dental_patient_summary.php');
 require_once('includes/patient_info.php');
-if ($patient_info) {
 
+if ($patient_info)
 $sql = "SELECT  "
 		 . "  dl.amount, sum(pay.amount) as paid_amount "
      . "FROM dental_ledger dl  "

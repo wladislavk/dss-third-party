@@ -69,15 +69,6 @@ $pending_letters = $db->getNumberRows($dental_letters_query);
   <li><a href="#" onclick="show_sect('sleep')" id="link_sleep">SLEEP TESTS</a></li>
   <li><a href="#" onclick="show_sect('subj')" id="link_subj">SUBJ TESTS</a></li>
 </ul>
-<?php
-if($_GET['sect']!=''){ 
-        $sect = $_GET['sect']; 
-    }elseif($_COOKIE['summ_sect'] && $_COOKIE['pid'] == $_GET['pid']){ 
-        $sect = $_COOKIE['summ_sect'];
-    }else{
-        $sect = 'summ';
-    }
-?>
     <div id="sections">
         <div id="sect_summ">
             <?php include 'summ_summ.php'; ?>
@@ -114,17 +105,6 @@ if($_GET['sect']!=''){
         </div>
         <div id="backgroundPopupRef"></div>
 
-<? include 'includes/bottom.htm';?>
+<?php include 'includes/bottom.htm';?>
 
-<script type="text/javascript">
-  function show_sect(sect){
-    $('.active').removeClass('active');
-    $("#link_"+sect).addClass('active');
-    $("#sections > div").hide();
-    $("#sect_"+sect).show();
-    $.cookie('pid', '<?= $_GET['pid']; ?>');
-    $.cookie('summ_sect', sect);
-  }
-show_sect('<?= $sect; ?>');
-
-</script>
+<script src="js/dss_summ.js" type="text/javascript"></script>

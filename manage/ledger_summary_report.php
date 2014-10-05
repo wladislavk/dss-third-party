@@ -26,7 +26,7 @@
 <ul>
 <?php
   $cr_total = 0;
-  $cr_sql = "SELECT dlp.payment_type description, sum(dlp.amount) amount FROM dental_ledger dl
+  $cr_sql = "SELECT dlp.payment_type description, sum(dlp.amount) amount, sum(dl.paid_amount) FROM dental_ledger dl
 		JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
 		JOIN dental_ledger_payment dlp ON dlp.ledgerid=dl.ledgerid
                 JOIN dental_patients p ON p.patientid=dl.patientid
@@ -44,7 +44,25 @@
   while($cr_r = mysql_fetch_assoc($cr_q)){ ?>
   <li><label><?= $dss_trxn_pymt_type_labels[$cr_r['description']]; ?></label> $<?= number_format($cr_r['amount'],2); ?></li>
         <?php $cr_total += $cr_r['amount']; ?>
+  <?php } 
+  $cr2_sql = "SELECT dl.description, sum(dl.paid_amount) amount FROM dental_ledger dl
+                JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
+                JOIN dental_patients p ON p.patientid=dl.patientid
+                WHERE paid_amount != '' 
+                AND p.docid='".mysql_real_escape_string($_SESSION['docid'])."' 
+                AND tc.type != '".DSS_TRXN_TYPE_ADJ."'
+                ".$lpsql." ".$l_date."
+                ";
+        if(isset($_GET['pid'])){
+                $cr2_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
+        }
+                $cr2_sql .= " GROUP BY dl.description";
+  $cr2_q = mysql_query($cr2_sql);
+  while($cr2_r = mysql_fetch_assoc($cr2_q)){ ?>
+  <li><label><?= $cr2_r['description']; ?></label> $<?= number_format($cr2_r['amount'],2); ?></li>
+        <?php $cr_total += $cr2_r['amount']; ?>
   <?php } ?>
+
   <li><label>Credits Total</label> $<?= number_format($cr_total,2); ?></li>
 </ul>
 

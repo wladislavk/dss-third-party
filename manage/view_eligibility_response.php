@@ -6,15 +6,15 @@ include_once('admin/includes/password.php');
 //include('includes/general_functions.php');
 
 ?>
-  <link href="eligible_check/css/bootstrap.min.css" rel="stylesheet" media="screen">
-  <link href="eligible_check/css/cupertino/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" media="screen">
-  <link href="eligible_check/css/sample_1.css" rel="stylesheet" media="screen">
+<link href="eligible_check/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="eligible_check/css/cupertino/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" media="screen">
+<link href="eligible_check/css/sample_1.css" rel="stylesheet" media="screen">
 
-  <script src="eligible_check/js/lib/jquery-1.10.2.min.js"></script>
-  <script src="eligible_check/js/lib/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="eligible_check/js/lib/jquery-1.10.2.min.js"></script>
+<script src="eligible_check/js/lib/jquery-ui-1.10.3.custom.min.js"></script>
 
-  <script src="eligible_check/js/eligible.js"></script>
-  <script src="eligible_check/js/sample_1.js"></script>
+<script src="eligible_check/js/eligible.js"></script>
+<script src="eligible_check/js/sample_1.js"></script>
 <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
 <script type="text/javascript" src="/manage/includes/modal.js"></script>
 <script type="text/javascript" src="/manage/3rdParty/jscolor/jscolor.js"></script>
@@ -31,19 +31,19 @@ include_once('admin/includes/password.php');
 </head>
 <body>
 <div id="coverage_container"></div>
-    <?
-    $thesql = "select e.*, CONCAT(p.firstname,' ',p.lastname) as pat_name 
-			from dental_eligibility e 
-			JOIN dental_patients p on p.patientid=e.patientid
-			where e.id='".$_REQUEST["id"]."'";
-        $themy = mysql_query($thesql) or die(mysql_error());
-        $themyarray = mysql_fetch_array($themy);
+<?php
+  $thesql = "SELECT e.*, CONCAT(p.firstname,' ',p.lastname) as pat_name 
+              from dental_eligibility e 
+              JOIN dental_patients p on p.patientid=e.patientid
+              where e.id='".$_REQUEST["id"]."'";
+  $themyarray = $db->getRow($thesql);
 ?>
-  <h2 style="color:#fff;">Eligibility for <?= $themyarray['pat_name']; ?> - <?= date('m/d/Y h:ia', strtotime($themyarray['adddate'])); ?></h2>
-  <a href="eligible_check.php?pid=<?=$themyarray['patientid'];?>" style="color:#fff;">Return to chart</a>
+  <h2 style="color:#fff;">Eligibility for <?php echo $themyarray['pat_name']; ?> - <?php echo date('m/d/Y h:ia', strtotime($themyarray['adddate'])); ?></h2>
+  <a href="eligible_check.php?pid=<?php echo $themyarray['patientid'];?>" style="color:#fff;">Return to chart</a>
+
 <script type="text/javascript">
 $(document).ready(function(){
-  var coverage = new Coverage(<?= $themyarray['response']; ?>);
+  var coverage = new Coverage(<?php echo $themyarray['response']; ?>);
   if (coverage.hasError()) {
     buildError(coverage.parseError());
   } else {

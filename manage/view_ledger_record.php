@@ -18,25 +18,24 @@ include("includes/sescheck.php");
 
 <?php
 $rec_qry = "SELECT `ledgerid`,`patientid`,`service_date` ,`entry_date`,`description` ,`producer` ,`amount` ,`transaction_type` ,`paid_amount` ,`userid` ,`docid` ,`status` ,`adddate` ,`ip_address`,`transaction_code` FROM dental_ledger_rec WHERE patientid='". $_GET['pid'] ."' ORDER BY service_date ASC";
-$result = mysql_query($rec_qry);
+$row = $db->getRow($rec_qry);
 
-$num_rows = mysql_num_rows($result);
-$row = mysql_fetch_assoc($result);
 print '<table style="margin:20px;" border="1" width="95%"><tr>';
 foreach($row as $name => $value) {
-print "<th>$name</th>";
+	print "<th>$name</th>";
 }
 print '</tr>';
-while($row) {
-print '<tr>';
-foreach($row as $value) {
-print "<td style=\"color:#FFFFFF;\">$value</td>";
-}
-print '</tr>';
-$row = mysql_fetch_assoc($result);
+unset($row);
+
+$rows = $db->getResults($rec_qry);
+foreach($rows as $row) {
+	print '<tr>';
+	foreach ($row as $value) {
+		print "<td style=\"color:#FFFFFF;\">$value</td>";
+	}
+	print '</tr>';
 }
 print '</table>';
-
 ?>	
 	
 </body>

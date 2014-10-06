@@ -800,7 +800,12 @@ return s;
 				<td><?= $h_r['description']; ?></td>
 				<td><?= $h_r['amount']; ?></td>
 				<td><?= $h_r['paid_amount']; ?></td>
-				<td><?= $h_r['updated_user']; ?><?= $h_r['updated_admin']; ?></td>
+				<td><?php if($h_r['updated_admin']!=''){ ?>
+						<?= $h_r['updated_admin']; ?>
+					<?php }elseif($h_r['updated_user']!=''){ ?>
+						<?= $h_r['updated_user']; ?>
+					<? } ?>
+				</td>
 			</tr>
 		<?php } ?>
 	<? 	}elseif(($myarray[0] == 'ledger_payment')){ 

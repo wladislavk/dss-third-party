@@ -10,11 +10,12 @@ $q = mysql_query($sql);
 while($r = mysql_fetch_assoc($q)){
 $fts = new FTSSamples($r['companyid']);
 $fax_status = $fts->OutboundFaxStatus($r['sfax_transmission_id']);
-$comp = $fax_status['XwsFaxComplete'];
+$items = $fax_status['RecipientFaxStatusItems'];
+$comp = $items['IsSuccess'];
 $response = json_encode($fax_status);
   if($comp){
-    $success = ($fax_status['XwsFaxSuccess'])?'1':'2';
-    $error_code = $fax_status['XwsFaxErrorCode'];
+    $success = ($fax_status['IsSuccess'])?'1':'2';
+    $error_code = $fax_status['ErrorCode'];
     $up_sql = "UPDATE dental_faxes SET sfax_completed='".mysql_real_escape_string($comp)."',
 				sfax_response='".mysql_real_escape_string($response)."',
 				sfax_status = '".mysql_real_escape_string($success)."',

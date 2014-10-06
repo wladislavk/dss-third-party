@@ -7,7 +7,7 @@ include 'includes/invoice_functions.php';
   if(isset($_GET['show']) && $_GET['show']=='1'){
   $sql = "SELECT c.*, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
                 plan.trial_period, 
-                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
+                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
                 FROM companies c
                 JOIN dental_plans plan ON plan.id = c.plan_id
                 WHERE c.status=1
@@ -15,13 +15,13 @@ include 'includes/invoice_functions.php';
   }else{
   $sql = "SELECT c.*, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
 		plan.trial_period, 
-                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
+                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
                 FROM companies c
 		JOIN dental_plans plan ON plan.id = c.plan_id
                 WHERE c.status=1
 AND 
-                ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-                        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(c.adddate, INTERVAL plan.trial_period DAY) < now()))
+                ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
+                        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_BC)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(c.adddate, INTERVAL plan.trial_period DAY) < now()))
  ";
 /*
         $sql = "SELECT du.*, c.name AS company_name, c.id AS company_id, p.name as plan_name,

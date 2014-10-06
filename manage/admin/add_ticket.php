@@ -13,9 +13,9 @@ include_once 'includes/general.htm';
 <?php
 if($_POST["ticketsub"] == 1)
 {
-
-
-
+    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_q = mysql_query($c_sql);
+    $c = mysql_fetch_assoc($c_q);
 		$ins_sql = "insert into dental_support_tickets set 
 				title = '".mysql_real_escape_string($_POST['title'])."',
 				category_id = '".mysql_real_escape_string($_POST['category_id'])."',
@@ -23,6 +23,7 @@ if($_POST["ticketsub"] == 1)
 				userid = '".mysql_real_escape_string($_POST['userid'])."',
 				docid = '".mysql_real_escape_string($_POST['docid'])."',
 				create_type = '0',
+                company_id = '".$c['companyid']."',
 				creator_id = '".mysql_real_escape_string($_SESSION['adminuserid'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());

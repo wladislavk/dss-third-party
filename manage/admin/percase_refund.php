@@ -15,7 +15,11 @@ $sql = "SELECT * FROM dental_users
 	WHERE userid='".mysql_real_escape_string($id)."'";
 $q = mysql_query($sql);
 $r = mysql_fetch_assoc($q);
-
+  $charge_sql = "SELECT * FROM dental_charge
+                        WHERE userid='".mysql_real_escape_string($_GET['docid'])."'
+				AND id='".mysql_real_escape_string($_GET['cid'])."'";
+$charge_q = mysql_query($charge_sql);
+$charge_r = mysql_fetch_assoc($charge_q);
 $key_sql = "SELECT stripe_secret_key FROM companies c 
                 JOIN dental_user_company uc
                         ON c.id = uc.companyid
@@ -119,7 +123,7 @@ try{
 }
 ?>
             <div class="form-group">
-                <label for="npi" class="col-md-3 control-label">Amount to refund credit card ending <?= $last4; ?></label>
+                <label for="npi" class="col-md-3 control-label">Amount to refund credit card ending <?= $last4; ?> for $<?= $charge_r['amount']; ?> on <?=date('m/d/Y g:i a', strtotime($charge_r['adddate']));?></label>
                 <div class="col-md-9">
 			$<input type="text" id="amount" name="amount" value="<?=$total_charge;?>" />
 		</div>

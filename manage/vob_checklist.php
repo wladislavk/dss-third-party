@@ -229,10 +229,8 @@ Verification CANNOT be requested*
 <div class="clear"></div>
 <br /><br />
 <?php } ?>
-<<<<<<< HEAD
 <?php } ?>
 
-=======
 
 <?php
   $api_sql = "SELECT use_eligible_api FROM dental_users
@@ -241,7 +239,6 @@ Verification CANNOT be requested*
   $api_r = mysql_fetch_assoc($api_q);
   if($api_r['use_eligible_api']==1){
 ?>
->>>>>>> hotfix_12398
 <br /><br />
 
 <?php $vob_sql = "SELECT * FROM dental_insurance_preauth WHERE doc_id='".mysql_real_escape_string($_SESSION['docid'])."'

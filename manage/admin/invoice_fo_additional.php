@@ -570,7 +570,7 @@ if(mysql_num_rows($doc_q) == 0){
                         INVOICE DATE 
                     </th>
                     <td>
-                        <div class="input-append input-group date">
+                        <div class="input-append datepicker input-group date">
                             <input type="text" id="monthly_date" name="monthly_date" class="form-control text-center" value="<?=$monthly_date;?>">
                             <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>

@@ -261,7 +261,11 @@ $sql = "SELECT "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
      . "  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'"
-     . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
+     . "  JOIN dental_users users2 ON claim.userid = users2.userid "
+     . "  LEFT JOIN companies c ON c.id = users.billing_company_id "
+     . "  LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co "
+     . "  LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=claim.insuranceid "
+     . "  LEFT JOIN (SELECT claim_id, MAX(adddate) max_date FROM dental_claim_notes group by claim_id) notes_date ON notes_date.claim_id=claim.insuranceid ";
 }
 // . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
 

@@ -581,7 +581,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 billing_provider_b_other = '".s_for($billing_provider_b_other)."',
 		eligible_token = '".mysql_real_escape_string($_POST["eligibleToken"])."',
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."'";
+                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."'";
                 if(isset($_POST['reject_but'])){
                   $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
                   $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";
@@ -597,7 +597,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 
 	$pat_sql = "UPDATE dental_patients SET 
 			                p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."'
+                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."'
 		WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
 	mysql_query($pat_sql);
 

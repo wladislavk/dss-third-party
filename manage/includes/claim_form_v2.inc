@@ -634,9 +634,9 @@ die();
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."',
 		p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."',
+                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
 		s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
-                s_m_eligible_payer_name = '".$s_m_eligible_payer_name."',
+                s_m_eligible_payer_name = '".mysql_real_escape_string($s_m_eligible_payer_name)."',
 		status = '".s_for(DSS_CLAIM_PENDING)."',
 		userid = '".s_for($_SESSION['userid'])."',
 		docid = '".s_for($_SESSION['docid'])."',
@@ -902,9 +902,9 @@ die();
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."',
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."',
+                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
                 s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
-                s_m_eligible_payer_name = '".$s_m_eligible_payer_name."'";
+                s_m_eligible_payer_name = '".mysql_real_escape_string($s_m_eligible_payer_name)."'";
 		if(isset($_POST['reject_but'])){
 		  $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
                   $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";

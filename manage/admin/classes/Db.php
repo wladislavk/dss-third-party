@@ -18,9 +18,12 @@ class Db
 	public function getResults($query_string)
 	{
 		$result = $this->query($query_string);
-		while($row = mysql_fetch_assoc($result)){
-			$return[] = $row;
+		if ($result) {
+			while($row = mysql_fetch_assoc($result)){
+				$return[] = $row;
+			}
 		}
+		
 		return $return;
 	}
 

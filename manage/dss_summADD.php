@@ -35,8 +35,6 @@ $fuquery_array = $db->getResults($fuquery_sql);
 
 ?>
 
-<link rel="stylesheet" href="css/dss_summADD.css" type="text/css" media="screen" />
-
 <!--key reference table-->
 <div style="float: left; width: 210px; margin-right: 10px; padding: 0; border: 0;">
 	<table style="width: 100%;" class="followup-keytable" cellpadding="0">

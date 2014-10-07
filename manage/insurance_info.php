@@ -260,8 +260,8 @@ $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS pla
      . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
      . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
      . "WHERE "
-     . "  ledger.primary_claim_id = " . $_GET['id'] . " "
-     . "  AND ledger.patientid = " . $_GET['pid'] . " "
+     . "  ledger.primary_claim_id = '" . $_GET['id'] . "' "
+     . "  AND ledger.patientid = '" . $_GET['pid'] . "' "
      . "  AND ledger.docid = '" . $docid . "' "
      . "  AND trxn_code.docid = '" . $docid . "' "
      . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -269,6 +269,7 @@ $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS pla
      . "  ledger.service_date ASC";
 
 $array = $db->getRow($sql);
+
 if ($is_pending) {
   // get total_charge
   if($is_pri_pending){

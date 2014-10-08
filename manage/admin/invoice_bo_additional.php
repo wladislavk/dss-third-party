@@ -167,6 +167,7 @@ if(isset($_POST['submit'])){
 
       $in_sql = "update dental_percase_invoice SET
 			adminid = '".$_SESSION['adminuserid']."',
+                        due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['due_date'])))."',
 			status = '0' ";
 	if(isset($_POST['amount_monthly'])){
 			$in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."',
@@ -346,6 +347,7 @@ if(isset($_POST['submit'])){
                         adminid = '".$_SESSION['adminuserid']."',
 			companyid = '".$_POST['companyid']."',
                         status = '0',
+                        due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['due_date'])))."',
 			adddate = now(),
 			ip_address = '".$_SERVER['REMOTE_ADDR']."' ";
         if(isset($_POST['amount_monthly'])){
@@ -492,6 +494,15 @@ if(mysql_num_rows($doc_q) == 0){
         <h3><?= $count_current; ?> of <?= $count_invoices; ?></h3>
         <form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&coid=<?=$_GET['coid'];?>&bill=<?=$_GET['bill'];?>&cid=<?=$_GET['cid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
             <input type="hidden" name="companyid" value="<?=$user["id"];?>">
+<div class="input-group date pull-right">
+Invoice Due Date:
+<input type="text" name="due_date" id="due_date" class="form-control text-center datepicker" value="<?=  date('m/d/Y'); ?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+</div>
+<div class="clearfix"></div>
+
             <table id="invoice_table" class="table table-bordered table-hover">
                 <tr>
                     <th></th>

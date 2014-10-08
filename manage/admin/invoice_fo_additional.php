@@ -199,6 +199,7 @@ $total_amount = 0;
 
       $in_sql = "update dental_percase_invoice SET
 			adminid = '".$_SESSION['adminuserid']."',
+			due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['due_date'])))."',
 			status = '0' ";
 	if(isset($_POST['monthly_date'])){
 			$in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."'
@@ -387,6 +388,7 @@ $total_amount = 0;
       $in_sql = "insert into dental_percase_invoice SET
                         adminid = '".$_SESSION['adminuserid']."',
                         docid = '".$_POST['docid']."',
+			due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['due_date'])))."',
                         status = '0',
                         adddate = now(),
                         ip_address = '".$_SERVER['REMOTE_ADDR']."' ";
@@ -526,6 +528,15 @@ if(mysql_num_rows($doc_q) == 0){
         <h3><?= $count_current; ?> of <?= $count_invoices; ?></h3>
         <form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&docid=<?=$_GET['docid'];?>&company=<?=$_GET['company'];?>&bill=<?=$_GET['bill'];?>&uid=<?=$_GET['uid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
             <input type="hidden" name="docid" value="<?=$user["userid"];?>">
+<div class="input-group date pull-right">
+Invoice Due Date:
+<input type="text" name="due_date" id="due_date" class="form-control text-center datepicker" value="<?=  date('m/d/Y'); ?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+</div>
+<div class="clearfix"></div>
+
             <table id="invoice_table" class="table table-bordered table-hover">
                 <tr>
                     <th></th>

@@ -56,7 +56,13 @@
                                                                 Status: <span style="font-size:14px;">Unsigned</span>
 								<?php if($office_type == DSS_OFFICE_TYPE_FRONT){ ?>
                                                                 <a href="#" onclick="loadPopup('add_notes.php?pid=<?= $_GET['pid']; ?>&ed=<?= $myarray['notesid']; ?>');return false;">Edit</a>
-                                                                <?php if($myarray["docid"]==$_SESSION['userid']){ ?>
+<?php
+        $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+        $sign_q = mysql_query($sign_sql);
+        $sign_r = mysql_fetch_assoc($sign_q);
+        $user_sign = $sign_r['sign_notes'];
+?>
+                                                                <?php if($myarray["docid"]==$_SESSION['userid'] || $user_sign){ ?>
                                                                 /
                                                                 <a href="dss_summ.php?pid=<?= $_GET['pid']; ?>&sid=<?= $myarray['notesid'];?>&addtopat=1" onclick="return confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?');">Sign</a>
                                                                 <input type="checkbox" class="sign_chbx" name="sign[]" value="<?= $myarray['notesid']; ?>" />

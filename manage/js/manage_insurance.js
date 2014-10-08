@@ -23,10 +23,3 @@ if (getParameterByName('showins') == 1) {
   var pid = getParameterByName('pid');
   window.location = "insurance_fdf_v2.php?insid=" + insid + "&type=" + type + "&pid=" + pid;
 };
-
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}

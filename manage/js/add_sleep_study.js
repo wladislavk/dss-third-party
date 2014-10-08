@@ -72,11 +72,3 @@ $(document).ready(function(){
 	update_home(document.getElementById('new_sleep_study_form'));
 	var cal1 = new calendar2(document.getElementById('date'));
 });
-
-
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}

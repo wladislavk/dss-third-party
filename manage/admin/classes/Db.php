@@ -12,7 +12,10 @@ class Db
 	public function getRow($query_string)
 	{
 		$result = $this->query($query_string);
-		return mysql_fetch_assoc($result);		
+		if ($result) {
+			$return = mysql_fetch_assoc($result);
+		}
+		return $return;		
 	}
 
 	public function getResults($query_string)

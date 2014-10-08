@@ -33,10 +33,3 @@ $(document).ready(function(){
 		alert('This item is not captured on initial patient questionnaire, but is tracked in follow-up visits after you have delivered a device.');
 	});
 });
-
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}

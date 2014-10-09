@@ -271,13 +271,12 @@ $fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' O
 $fuquery_array = $db->getResults($fuquery_sql);
 if($fuquery_array){
   $numrows = count($fuquery_array);
-}
-foreach ($fuquery_array as $fuquery) {
-  $device_query = "SELECT device FROM dental_device WHERE deviceid = '".$fuquery['devadd']."';";
+  foreach ($fuquery_array as $fuquery) {
+    $device_query = "SELECT device FROM dental_device WHERE deviceid = '".$fuquery['devadd']."';";
 
-  $device_result = $db->getRow($device_query);
-  $device = $device_result['device'];
-  if($numrows){ ?>
+    $device_result = $db->getRow($device_query);
+    $device = $device_result['device'];
+    if($numrows){ ?>
 
 <form style="float:left;" id="sleepstdyupdate_<?php echo $fuquery['followupid'];?>" class="sleepstudyupdate" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
   <input type="hidden" name="id" value="<?php echo $fuquery['followupid'];?>" /> 
@@ -295,13 +294,13 @@ foreach ($fuquery_array as $fuquery) {
     <tr>
       <td style="background: #E4FFCF;">
         <select name="devadd" style="width:150px;">
-<?php
-    $device_sql = "select * from dental_device where status=1 order by sortby";
-    $device_my = $db->getResults($device_sql);
-    foreach ($device_my as $device_myarray) { ?>
+  <?php
+      $device_sql = "select * from dental_device where status=1 order by sortby";
+      $device_my = $db->getResults($device_sql);
+      foreach ($device_my as $device_myarray) { ?>
           <option <?php echo ($device==$device_myarray['device'])?'selected="selected"':''; ?>value="<?php echo st($device_myarray['deviceid'])?>"><?php echo st($device_myarray['device']);?></option>
-<?php 
-    }?>
+  <?php 
+      }?>
         </select>
       </td>
     </tr>
@@ -313,10 +312,10 @@ foreach ($fuquery_array as $fuquery) {
     <tr>
       <td style="background: #E4FFCF;">
         <select name="nightsperweek" style="width:150px;">
-<?php 
-    for ($i = 0; $i <= 7; $i++){	 
-      print ($i == $fuquery['nightsperweek']) ? "<option selected value=\"$i\">$i</option>" : "<option value=\"$i\">$i</option>";
-    }?>
+  <?php 
+      for ($i = 0; $i <= 7; $i++){	 
+        print ($i == $fuquery['nightsperweek']) ? "<option selected value=\"$i\">$i</option>" : "<option value=\"$i\">$i</option>";
+      }?>
         </select>	
       </td>
     </tr>
@@ -325,19 +324,19 @@ foreach ($fuquery_array as $fuquery) {
         <input type="text" size="12" id="ep_eadd_<?php echo $fuquery['followupid'];?>" name="ep_eadd" value="<?php echo $fuquery['ep_eadd'];?>" onclick="loadPopup('summ_subj_ess.php?pid=<?php echo $_GET['pid']; ?>&id=<?php echo $fuquery['followupid'];?>');return false;"  />
       </td>
     </tr>
-    <!--- ESS ANSWERS -->
+      <!--- ESS ANSWERS -->
     <tr style="display:none;">
       <td style="background: #E4FFCF;">
-<?php
-    $epworth_sql = "select e.*, fu.answer from dental_epworth e 
-                      LEFT JOIN dentalsummfu_ess fu ON fu.epworthid=e.epworthid AND fu.followupid='".mysql_real_escape_string($fuquery['followupid'])."'
-                      where e.status=1 order by e.sortby";
-    $epworth_my = $db->getResults($epworth_sql);
-    $epworth_number = count($epworth_my);
-    foreach ($epworth_my as $epworth_myarray) {?>
+  <?php
+      $epworth_sql = "select e.*, fu.answer from dental_epworth e 
+                        LEFT JOIN dentalsummfu_ess fu ON fu.epworthid=e.epworthid AND fu.followupid='".mysql_real_escape_string($fuquery['followupid'])."'
+                        where e.status=1 order by e.sortby";
+      $epworth_my = $db->getResults($epworth_sql);
+      $epworth_number = count($epworth_my);
+      foreach ($epworth_my as $epworth_myarray) {?>
         <input type="text" size="12" id="epworth_<?php echo $fuquery['followupid'];?>_<?php echo $epworth_myarray['epworthid']; ?>" name="epworth_<?php echo $fuquery['followupid'];?>_<?php echo $epworth_myarray['epworthid']; ?>" value="<?php echo $epworth_myarray['answer']; ?>" /><br />
-<?php 
-    } ?>    
+  <?php 
+      } ?>    
       </td>
     </tr>
     <tr>
@@ -347,15 +346,15 @@ foreach ($fuquery_array as $fuquery) {
     </tr>
     <tr style="display:none;">
       <td style="background: #E4FFCF;">
-<?php
-    for($thorntonid=1;$thorntonid<=5;$thorntonid++){
-      $t_sql = "SELECT answer FROM dentalsummfu_tss
-                  WHERE followupid='".mysql_real_escape_string($fuquery['followupid'])."' 
-                  AND thorntonid='".$thorntonid."'";
-      $thornton_myarray = $db->getRow($t_sql);?>
+  <?php
+      for($thorntonid=1;$thorntonid<=5;$thorntonid++){
+        $t_sql = "SELECT answer FROM dentalsummfu_tss
+                    WHERE followupid='".mysql_real_escape_string($fuquery['followupid'])."' 
+                    AND thorntonid='".$thorntonid."'";
+        $thornton_myarray = $db->getRow($t_sql);?>
         <input type="text" size="12" id="thornton_<?php echo $fuquery['followupid'];?>_<?php echo $thorntonid; ?>" name="thornton_<?php echo $fuquery['followupid'];?>_<?php echo $thorntonid; ?>" value="<?php echo $thornton_myarray['answer']; ?>" /><br />
-<?php 
-    } ?>    
+  <?php 
+      } ?>    
       </td>
     </tr>
     <tr>
@@ -375,9 +374,9 @@ foreach ($fuquery_array as $fuquery) {
     </tr>
     <tr>
       <td style="background: #E4FFCF;">
-    <!--<input type="text" size="12" style="width:90px;" name="ep_hadd" value="<?php echo $fuquery['ep_hadd'];?>" />-->
-<?php 
-    $morning_headaches = $fuquery['ep_hadd']; ?>
+      <!--<input type="text" size="12" style="width:90px;" name="ep_hadd" value="<?php echo $fuquery['ep_hadd'];?>" />-->
+  <?php 
+      $morning_headaches = $fuquery['ep_hadd']; ?>
         <select name="ep_hadd" class="field text addr tbox" style="width:150px;">
           <option value=""></option>
           <option value="Most Mornings" <?php if($morning_headaches == 'Most Mornings') echo " selected";?>>
@@ -430,7 +429,8 @@ foreach ($fuquery_array as $fuquery) {
     </tr>
   </table>
 </form>
- <?php
+   <?php
+    }
   }
 }
 

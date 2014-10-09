@@ -24,73 +24,66 @@ include_once 'includes/constants.inc';
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
-if($_POST["ticketsub"] == 1)
-{
+if($_POST["ticketsub"] == 1){
+	$ins_sql = "insert into dental_support_tickets set 
+                    title = '".mysql_real_escape_string($_POST['title'])."',
+                    category_id = '".mysql_real_escape_string($_POST['category_id'])."',
+                    company_id = '".mysql_real_escape_string($_POST['company_id'])."',
+                    body = '".mysql_real_escape_string($_POST['body'])."',
+                    userid = '".mysql_real_escape_string($_SESSION['userid'])."',
+                    docid = '".mysql_real_escape_string($_SESSION['docid'])."',
+                    create_type = '1',
+                    creator_id = '".mysql_real_escape_string($_SESSION['userid'])."',
+                    adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 
+	$t_id = $db->getInsertId($ins_sql);
 
-		$ins_sql = "insert into dental_support_tickets set 
-				title = '".mysql_real_escape_string($_POST['title'])."',
-				category_id = '".mysql_real_escape_string($_POST['category_id'])."',
-				company_id = '".mysql_real_escape_string($_POST['company_id'])."',
-				body = '".mysql_real_escape_string($_POST['body'])."',
-				userid = '".mysql_real_escape_string($_SESSION['userid'])."',
-				docid = '".mysql_real_escape_string($_SESSION['docid'])."',
-				create_type = '1',
-				creator_id = '".mysql_real_escape_string($_SESSION['userid'])."',
-				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysql_query($ins_sql) or die($ins_sql.mysql_error());
-		$t_id = mysql_insert_id();
-		for($i=0;$i < count($_FILES['attachment']['name']); $i++){
-		if($_FILES['attachment']['tmp_name'][$i]!='' && $_FILES['attachment']['size'][$i] <= DSS_IMAGE_MAX_SIZE){
-                  $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
-		  $attachment = "support_attachment_".$t_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
-                  move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../shared/q_file/" . $attachment);
-		
-		  $a_sql = "INSERT INTO dental_support_attachment SET
-				filename = '".mysql_real_escape_string($attachment)."',
-				ticket_id=".mysql_real_escape_string($t_id);
-		  mysql_query($a_sql);
-		}
-		}
-		$u_sql = "SELECT a.* FROM admin a 
-				JOIN dental_support_category_admin ca ON ca.adminid=a.adminid
-				WHERE ca.category_id = '".mysql_real_escape_string($_POST['category_id'])."'";
-		$u_q = mysql_query($u_sql);
-		$admins = array();
-		while($u_r = mysql_fetch_assoc($u_q)){
-                  array_push($admins, $u_r['email']);
-		}
-
-		$info_sql = "SELECT u.* FROM dental_users u WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
-		$info_q = mysql_query($info_sql);
-		$info_r = mysql_fetch_assoc($info_q);
-
-
-		$html = "Support ticket has been opened by ".$info_r['name'].".";
-
-		$headers = 'From: Dental Sleep Solutions <support@dentalsleepsolutions.com>' . "\r\n" .
-                    'Content-type: text/html' ."\r\n" .
-                    'Reply-To: support@dentalsleepsolutions.com' . "\r\n" .
-                     'X-Mailer: PHP/' . phpversion();
-
-                $subject = "Support Ticket Opened";
-		$e = implode(',', $admins);
-                mail($e, $subject, $m, $headers);
-
-		?>
-		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			alert('Thank you for your submission! We will respond promptly to you inquiry.');
-			parent.window.location='support.php?msg=<?=$msg;?>';
-		</script>
-		<?
-		
-		die();
+	for($i=0;$i < count($_FILES['attachment']['name']); $i++){
+    	if($_FILES['attachment']['tmp_name'][$i]!='' && $_FILES['attachment']['size'][$i] <= DSS_IMAGE_MAX_SIZE){
+            $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
+            $attachment = "support_attachment_".$t_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
+            move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../shared/q_file/" . $attachment);
 	
-}
+            $a_sql = "INSERT INTO dental_support_attachment SET
+                        filename = '".mysql_real_escape_string($attachment)."',
+                        ticket_id=".mysql_real_escape_string($t_id);
+            $db->query($a_sql);
+        }
+	}
 
-?>
-<?php /*
+	$u_sql = "SELECT a.* FROM admin a 
+                JOIN dental_support_category_admin ca ON ca.adminid=a.adminid
+                WHERE ca.category_id = '".mysql_real_escape_string($_POST['category_id'])."'";
+	$u_q = $db->getResults($u_sql);
+	$admins = array();
+    if ($u_q) {
+        foreach ($u_q as $u_r) {
+            array_push($admins, $u_r['email']);
+        }
+    }
+
+	$info_sql = "SELECT u.* FROM dental_users u WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+	$info_r = $db->getRow($info_sql);
+
+	$html = "Support ticket has been opened by ".$info_r['name'].".";
+
+	$headers = 'From: Dental Sleep Solutions <support@dentalsleepsolutions.com>' . "\r\n" .
+                'Content-type: text/html' ."\r\n" .
+                'Reply-To: support@dentalsleepsolutions.com' . "\r\n" .
+                 'X-Mailer: PHP/' . phpversion();
+
+    $subject = "Support Ticket Opened";
+    $e = implode(',', $admins);
+    mail($e, $subject, $m, $headers);?>
+<script type="text/javascript">
+	//alert("<?php echo $msg;?>");
+	alert('Thank you for your submission! We will respond promptly to you inquiry.');
+	parent.window.location='support.php?msg=<?php echo $msg;?>';
+</script>
+<?php
+	die();
+}
+/*
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -103,154 +96,130 @@ if($_POST["ticketsub"] == 1)
 </head>
 <body width="98%"> */ ?>
 <br /><br />
-    <?
+<?php
 
-		$title = $_POST['title'];
-		$category_id = $_POST['category_id'];
-		$company_id = $_POST['company_id'];
-		$body = $_POST['body'];
-		$but_text = "Add ";
+$title = $_POST['title'];
+$category_id = $_POST['category_id'];
+$company_id = $_POST['company_id'];
+$body = $_POST['body'];
+$but_text = "Add ";
 	
-	 if($msg != '') {?>
-    <div align="center" class="red">
-        <? echo $msg;?>
-    </div>
-    <? }?>
+if($msg != '') {?>
+<div align="center" class="red">
+<?php echo $msg;?>
+</div>
+<?php 
+}?>
 
-    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" enctype="multipart/form-data" onsubmit="return ticketabc(this)">
+<form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" enctype="multipart/form-data" onsubmit="return ticketabc(this)">
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>
             <td colspan="2" class="cat_head">
-		Add Support Ticket
+                Add Support Ticket
             </td>
         </tr>
         <tr>
-                <td valign="top" colspan="2" class="frmhead">
+            <td valign="top" colspan="2" class="frmhead">
                 <ul>
-                        <li id="foli8" class="complex">
+                    <li id="foli8" class="complex">
                         <div>
                             <span>
                                 <select id="category_id" name="category_id" class="field text addr tbox">
-                                <option value="">Select a category</option>
-                                    <? 
-					$c_sql = "SELECT * FROM dental_support_categories WHERE status=0 ORDER BY title ASC;";
-					$c_q = mysql_query($c_sql);
-					while($c_r = mysql_fetch_array($c_q)){
-                  ?>
-
-                  <option <?php if($category_id == $c_r['id']){ echo " selected='selected'";} ?> value="<?=st($c_r['id']);?>">
-
-                                                <?=st($c_r['title']);?>
-                                        </option>
-                                    <? }?>
+                                    <option value="">Select a category</option>
+<?php 
+    $c_sql = "SELECT * FROM dental_support_categories WHERE status=0 ORDER BY title ASC;";
+    $c_q = $db->getResults($c_sql);
+    foreach ($c_q as $c_r) {?>
+                                    <option <?php if($category_id == $c_r['id']){ echo " selected='selected'";} ?> value="<?php echo st($c_r['id']);?>">
+                                        <?php echo st($c_r['title']);?>
+                                    </option>
+<?php 
+}?>
                                 </select>
-
                                 <label for="contacttype">Category</label>
                             </span>
                         </div>
                     </li>
-                                </ul>
+                </ul>
             </td>
         </tr>
         <tr>
-                <td valign="top" colspan="2" class="frmhead">
+            <td valign="top" colspan="2" class="frmhead">
                 <ul>
-                        <li id="foli8" class="complex">
+                    <li id="foli8" class="complex">
                         <div>
                             <span>
-                                <select id="company_id" name="company_id" class="field text addr tbox">
+                            <select id="company_id" name="company_id" class="field text addr tbox">
                                 <option value="0">Dental Sleep Solutions</option>
-                                    <?
-                                        $c_sql = "SELECT c.* FROM companies c
-						JOIN dental_users u ON u.billing_company_id=c.id
-						WHERE c.use_support=1 
-						AND u.userid='".mysql_real_escape_string($_SESSION['docid'])."'
-						ORDER BY c.name ASC;";
-                                        $c_q = mysql_query($c_sql) or die(mysql_error());
-                                        while($c_r = mysql_fetch_array($c_q)){
-                  ?>
-
-                  <option <?php if($company_id == $c_r['id']){ echo " selected='selected'";} ?> value="<?=st($c_r['id']);?>">
-
-                                                <?=st($c_r['name']);?>
-                                        </option>
-                                    <? }?>
-                                </select>
-
-                                <label for="contacttype">Send To</label>
+<?php
+$c_sql = "SELECT c.* FROM companies c
+            JOIN dental_users u ON u.billing_company_id=c.id
+            WHERE c.use_support=1 
+            AND u.userid='".mysql_real_escape_string($_SESSION['docid'])."'
+            ORDER BY c.name ASC;";
+$c_q = $db->getResults($c_sql);
+if ($c_q) 
+foreach ($c_q as $c_r) {?>
+                                <option <?php if($company_id == $c_r['id']){ echo " selected='selected'";} ?> value="<?php echo st($c_r['id']);?>">
+                                    <?php echo st($c_r['name']);?>
+                                </option>
+<?php 
+}?>
+                            </select>
+                            <label for="contacttype">Send To</label>
                             </span>
                         </div>
-                    </li>
-                                </ul>
-            </td>
-        </tr>
-
-        <tr class="content">
-        	<td valign="top" colspan="2" class="frmhead">
-				<ul>        
-                    <li id="foli8" class="complex">	
-                        <div>
-                        	<span>
-                                <input id="title" name="title" type="text" class="field text addr tbox" value="<?=$title?>" tabindex="2" maxlength="255" />
-                                <label for="firstname">Title</label>
-                            </span>
-                       </div>   
                     </li>
                 </ul>
             </td>
         </tr>
-         <tr class="content physician insurance other"> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	 <label class="desc" id="title0" for="Field0">
+        <tr class="content">
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>        
+                    <li id="foli8" class="complex">	
+                        <div>
+                            <span>
+                                <input id="title" name="title" type="text" class="field text addr tbox" value="<?php echo $title?>" tabindex="2" maxlength="255" />
+                                <label for="firstname">Title</label>
+                            </span>
+                        </div>   
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr class="content physician insurance other"> 
+            <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                    <li id="foli8" class="complex">	
+                        <label class="desc" id="title0" for="Field0">
                             Message:
                         </label>
                         <div>
                             <span class="full">
-                            	<textarea name="body" id="body" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?=$body?></textarea>
+                                <textarea name="body" id="body" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?php echo $body?></textarea>
                             </span>
                         </div>
                     </li>
-				</ul>
+                </ul>
             </td>
         </tr>
-                <tr class="content physician insurance other">
-                <td valign="top" colspan="2" class="frmhead">
+        <tr class="content physician insurance other">
+            <td valign="top" colspan="2" class="frmhead">
                 <ul>
-                        <li id="foli8" class="complex">
-                         <label class="desc" id="title0" for="Field0">
+                    <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
                             Attachment:
                         </label>
                         <div>
                             <span class="full">
-				<div id="attachments">
-                                <span class="fullwidth"><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" onchange="$('#add_attachment_but').show();" style="width:auto;" /> <a href="#" onclick="$(this).parent().remove();$('#add_attachment_but').show();return false;">Remove</a></span>
-
-				</div>
-				<a href="#" id="add_attachment_but" onclick="add_attachment();return false;" style="display:none;" class="button">Add Additional</a>
+                                <div id="attachments">
+                                    <span class="fullwidth"><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" onchange="$('#add_attachment_but').show();" style="width:auto;" /> <a href="#" onclick="$(this).parent().remove();$('#add_attachment_but').show();return false;">Remove</a></span>
+                                </div>
+                                <a href="#" id="add_attachment_but" onclick="add_attachment();return false;" style="display:none;" class="button">Add Additional</a>
                             </span>
                         </div>
                     </li>
-                                </ul>
-		<script type="text/javascript">
-			function add_attachment(){
-				var blank = $(".attachment").filter(function() {
-    return !this.value;
-}).length;
-			if(blank > 0){
-			  alert('Please attach another file with the "Browse" button before adding another.');
-			  return false;
-			}
-				if($('.attachment').length<5){	
-				  $('#attachments').append('<span class="fullwidth"><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" style="width:auto;" /> <a href="#" onclick="$(this).parent().remove();$(\'#add_attachment_but\').show();return false;">Remove</a></span>');
-				}
-				if($('.attachment').length==5){
-				  $('#add_attachment_but').hide();
-				}
-
-			}
-		</script>
+                </ul>
             </td>
         </tr> 
         <tr class="content physician insurance other">
@@ -259,19 +228,13 @@ if($_POST["ticketsub"] == 1)
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="ticketsub" value="1" />
-                <input type="submit" value=" <?=$but_text?> Ticket" class="button" />
+                <input type="submit" value=" <?php echo $but_text?> Ticket" class="button" />
             </td>
         </tr>
     </table>
-    </form>
+</form>
 
-<script type="text/javascript">
-  $('#google_link').click(function(){ 
-	$('#google_link').attr('href', 'http://google.com/search?q='+$('#firstname').val()+'+'+$('#lastname').val()+'+'+$('#company').val()+'+'+$('#add1').val()+'+'+$('#city').val()+'+'+$('#state').val()+'+'+$('#zip').val());
-  });
-</script>
-
-      </div>
+</div>
 <!--<div style="margin:0 auto;background:url(images/dss_05.png) no-repeat top left;width:980px; height:28px;"> </div>
   </td>
 </tr>-->
@@ -283,16 +246,8 @@ if($_POST["ticketsub"] == 1)
 </div>
 <div id="backgroundPopup"></div>
 -->
-<script type="text/javascript">
-var cal1 = new calendar2(document.getElementById('ins_dob'));
-</script>
-<script type="text/javascript">
-var cal2 = new calendar2(document.getElementById('ins2_dob'));
-</script>
-<script type="text/javascript">
-var cal3 = new calendar2(document.getElementById('dob'));
-</script>
 <script type="text/javascript" src="script/contact.js"></script>
+<script type="text/javascript" src="js/add_ticket.js"></script>
 
 </body>
 </html>

@@ -517,7 +517,8 @@ include_once '../includes/calendarinc.php';
 <?php 
   $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
   $q = $db->getResults($s);
-  foreach ($q as $r) {?>
+  if ($q) {
+    foreach ($q as $r) {?>
 
 	<tr>
 	  <td><?php echo $r['adddate']; ?></td>
@@ -525,6 +526,7 @@ include_once '../includes/calendarinc.php';
         </tr>
 
 <?php
+     }
    }?>
 </table>
 

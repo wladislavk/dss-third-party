@@ -17,7 +17,7 @@ $sql = "select n.*, CONCAT(u.first_name,' ',u.last_name) signed_name, p.adddate 
         group by n.parentid
         order by n.procedure_date DESC, n.adddate desc
         ";
-$my = $db->getResults($sql) or die(mysql_error());
+$my = $db->getResults($sql);
 
 include 'partials/patient_notes.php'; ?>
 

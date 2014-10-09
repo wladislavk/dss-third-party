@@ -541,7 +541,7 @@ if($_POST["patientsub"] == 1){
                                     $.ajax({
                                         url: "includes/vob_request_preauth.php",
                                         type: "post",
-                                        data: {pid: <?=$_POST["ed"];?>},
+                                        data: {pid: <?php echo $_POST["ed"];?>},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
@@ -698,8 +698,8 @@ if($_POST["patientsub"] == 1){
             $sendPin = "";
         }?>
         <script type="text/javascript">
-          	//alert("<?=$msg;?>");
-          	parent.window.location='add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>&msg=<?=$msg;?><?= $sendPin; ?>';
+          	//alert("<?php echo $msg;?>");
+          	parent.window.location='add_patient.php?ed=<?php echo $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?php echo $_GET['pid']; ?>&msg=<?php echo $msg;?><?php echo $sendPin; ?>';
         </script>
 <?php
         die();
@@ -907,7 +907,7 @@ if($_POST["patientsub"] == 1){
         $sim = similar_patients($pid);
         if(count($sim) > 0){?>
             <script type="text/javascript">
-                parent.window.location='duplicate_patients.php?pid=<?= $pid; ?>';
+                parent.window.location='duplicate_patients.php?pid=<?php echo $pid; ?>';
             </script>
 <?php
             die();
@@ -919,8 +919,8 @@ if($_POST["patientsub"] == 1){
                 $sendPin = "";
             }?>
             <script type="text/javascript">
-              	alert("<?=$msg;?>");
-              	parent.window.location='add_patient.php?pid=<?= $pid; ?>&ed=<?=$pid; ?>&addtopat=1<?= $sendPin; ?>';
+              	alert("<?php echo $msg;?>");
+              	parent.window.location='add_patient.php?pid=<?php echo $pid; ?>&ed=<?php echo $pid; ?>&addtopat=1<?php echo $sendPin; ?>';
             </script>
 <?php
             die();
@@ -1328,7 +1328,7 @@ function validate_add_patient(fa){
     $rl_q = mysql_query($rl_sql);
 
     if(mysql_num_rows($rl_q)>0){ ?>
-        if(fa.referred_by.value != '<?= $referred_by; ?>' || fa.referred_source.value != '<?= $referred_source; ?>'){
+        if(fa.referred_by.value != '<?php echo $referred_by; ?>' || fa.referred_source.value != '<?php echo $referred_source; ?>'){
             if(!confirm("The referrer has been updated. Existing pending letters to the referrer may be updated or deleted and previous changes lost. Proceed?")){
                 valid = false;
             }
@@ -1337,18 +1337,18 @@ function validate_add_patient(fa){
     }?>
 
     //IF PENDING VOB MAKE SURE INSURANCE HASN'T CHANGED
-    if((fa.p_m_ins_co.value != '<?= $p_m_ins_co; ?>' ||
-    	fa.p_m_relation.value != '<?= $p_m_relation; ?>' ||
-            fa.p_m_partyfname.value != '<?= $p_m_partyfname; ?>' ||
-            fa.p_m_partylname.value != '<?= $p_m_partylname; ?>' || 
-            fa.ins_dob.value != '<?= $ins_dob; ?>' ||
-            fa.p_m_ins_type.value != '<?= $p_m_ins_type; ?>' || 
-            $('.p_m_ins_ass:checked').val() != '<?= $p_m_ins_ass; ?>' || 
-            fa.p_m_ins_id.value != '<?= $p_m_ins_id; ?>' || 
-            fa.p_m_ins_grp.value != '<?= $p_m_ins_grp; ?>' || 
-            fa.p_m_ins_plan.value != '<?= $p_m_ins_plan ; ?>'
+    if((fa.p_m_ins_co.value != '<?php echo $p_m_ins_co; ?>' ||
+    	fa.p_m_relation.value != '<?php echo $p_m_relation; ?>' ||
+            fa.p_m_partyfname.value != '<?php echo $p_m_partyfname; ?>' ||
+            fa.p_m_partylname.value != '<?php echo $p_m_partylname; ?>' || 
+            fa.ins_dob.value != '<?php echo $ins_dob; ?>' ||
+            fa.p_m_ins_type.value != '<?php echo $p_m_ins_type; ?>' || 
+            $('.p_m_ins_ass:checked').val() != '<?php echo $p_m_ins_ass; ?>' || 
+            fa.p_m_ins_id.value != '<?php echo $p_m_ins_id; ?>' || 
+            fa.p_m_ins_grp.value != '<?php echo $p_m_ins_grp; ?>' || 
+            fa.p_m_ins_plan.value != '<?php echo $p_m_ins_plan ; ?>'
     )
-    	&& <?= $pending_vob; ?>){
+    	&& <?php echo $pending_vob; ?>){
 <?php 
         if($pending_vob_status == DSS_PREAUTH_PREAUTH_PENDING){ ?>
       		  if(!confirm('Warning! This patient has a Verification of Benefits (VOB) that is currently awaiting pre-authorization from the insurance company. You have changed the patient\'s insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?'));
@@ -1376,7 +1376,7 @@ if(trim(fa.p_m_partyfname.value) != "" ||
     $.ajax({
         url: "includes/check_email.php",
         type: "post",
-        data: {email: fa.email.value<?= (isset($_GET['pid']))?", id: ".$_GET['pid']:''; ?>},
+        data: {email: fa.email.value<?php echo (isset($_GET['pid']))?", id: ".$_GET['pid']:''; ?>},
         async: false,
         success: function(data){
             var r = $.parseJSON(data);
@@ -1398,7 +1398,7 @@ if(trim(fa.p_m_partyfname.value) != "" ||
     $.ajax({
         url: "includes/check_send.php",
         type: "post",
-        data: {email: fa.email.value<?= (isset($_GET['pid']))?", id: ".$_GET['pid']:''; ?>},
+        data: {email: fa.email.value<?php echo (isset($_GET['pid']))?", id: ".$_GET['pid']:''; ?>},
         async: false,
         success: function(data){
             var r = $.parseJSON(data);
@@ -1482,13 +1482,13 @@ if(trim(fa.p_m_partyfname.value) != "" ||
                    $('#p_m_ins_grp').val()!='' ||
                    $('#p_m_ins_plan').val()!='' ||
                    $('#p_m_ins_type').val()!=''){
-                    alert('Is <?= $billing_co; ?> filing insurance?  Please select Yes or No.');
+                    alert('Is <?php echo $billing_co; ?> filing insurance?  Please select Yes or No.');
                     return false;
                 }
             }
         }
         if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementById('p_m_dss_file_yes').checked){
-            alert('<?= $billing_co;?> must file Primary Insurance in order to file Secondary Insurance.');
+            alert('<?php echo $billing_co;?> must file Primary Insurance in order to file Secondary Insurance.');
             return false;
         }
 
@@ -1522,9 +1522,9 @@ if(trim(fa.p_m_partyfname.value) != "" ||
 $notifications = find_patient_notifications($_GET['pid']);
 foreach($notifications AS $not){?>
 
-<div id="not_<?= $not['id']; ?>" class="warning <?= $not['notification_type']; ?>">
-    <span><?= $not['notification']; ?> <?= ($not['notification_date'])?"- ".date('m/d/Y h:i a', strtotime($not['notification_date'])):''; ?></span>
-    <a href="#" class="close_but" onclick="remove_notification('<?= $not['id']; ?>');return false;">X</a>
+<div id="not_<?php echo $not['id']; ?>" class="warning <?php echo $not['notification_type']; ?>">
+    <span><?php echo $not['notification']; ?> <?php echo ($not['notification_date'])?"- ".date('m/d/Y h:i a', strtotime($not['notification_date'])):''; ?></span>
+    <a href="#" class="close_but" onclick="remove_notification('<?php echo $not['id']; ?>');return false;">X</a>
 </div>
 <?php
 }
@@ -1538,7 +1538,7 @@ if(isset($_GET['search']) && $_GET['search'] != ''){
     }
 }?>
 
-<form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
+<form name="patientfrm" id="patientfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
     <script language="JavaScript" src="calendar1.js"></script>
     <script language="JavaScript" src="calendar2.js"></script>
     <table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -1548,7 +1548,7 @@ if(isset($_GET['search']) && $_GET['search'] != ''){
             </td>
 
             <td  align="right">
-                <input type="submit" style="float:right; margin-left: 5px;" value=" <?=$but_text?> Patient" class="button" />
+                <input type="submit" style="float:right; margin-left: 5px;" value=" <?php echo $but_text?> Patient" class="button" />
 <?php 
 if($doc_patient_portal && $use_patient_portal){
     if($themyarray['registration_status']==1 || $themyarray['registration_status']==0){  ?>
@@ -1565,7 +1565,7 @@ $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h
 $bu_q = $db->getNumberRows($bu_sql);
 if($bu_q>0){
     if($pat_hst_num_uncompleted>0){?>
-                    <a href="#" onclick="alert('Patient has existing HST with status <?= $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;" class="button">Order HST</a>
+                    <a href="#" onclick="alert('Patient has existing HST with status <?php echo $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;" class="button">Order HST</a>
 <?php
     }else{?>
                 <input type="submit" name="sendHST"
@@ -1590,7 +1590,7 @@ $num_face = count($itype_my);?>
                             <span style="float:right">
 <?php 
 if($num_face==0){ ?>
-                                <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
+                                <a href="#" onclick="loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
                                 	<img src="images/add_patient_photo.png" />
                                 </a>
 <?php 
@@ -1616,39 +1616,39 @@ if($num_face==0){ ?>
                     			<label for="salutation">Salutation</label>
                 		    </span>
                 		    <span>
-                    			<input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?=$firstname?>" maxlength="255" style="width:150px;" />
+                    			<input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?php echo $firstname?>" maxlength="255" style="width:150px;" />
                     			<label for="firstname">First Name</label>
                 		    </span>
                 		    <span>
-                    			<input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?=$lastname?>" maxlength="255" style="width:190px;" />
+                    			<input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?php echo $lastname?>" maxlength="255" style="width:190px;" />
                     			<label for="lastname">Last Name</label>
                 		    </span>
                             <span>
-                                <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?=$middlename?>" style="width:30px;" maxlength="1" />
+                                <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?php echo $middlename?>" style="width:30px;" maxlength="1" />
                                 <label for="middlename">MI</label>
                             </span>
                             <span>
-                                <input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="<?=$preferred_name?>" maxlength="255" style="width:150px" />
+                                <input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="<?php echo $preferred_name?>" maxlength="255" style="width:150px" />
                                 <label for="preferred_name">Preferred Name</label>
                             </span>
                         </div>   
                         <div style="float:left">
                             <span>
-                                <input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:100px;" />
+                                <input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?php echo $home_phone?>"  maxlength="255" style="width:100px;" />
                                 <label for="home_phone">Home Phone
                                     <span id="req_0" class="req">*</span>
                                 </label>
                             </span>
                             <span>
-                                <input id="cell_phone" name="cell_phone" type="text" class="phonemask field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:100px;" />
+                                <input id="cell_phone" name="cell_phone" type="text" class="phonemask field text addr tbox" value="<?php echo $cell_phone?>"  maxlength="255" style="width:100px;" />
                                 <label for="cell_phone">Cell Phone</label>
                             </span>
                             <span>
-                                <input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:150px;" />
+                                <input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="<?php echo $work_phone?>" maxlength="255" style="width:150px;" />
                                 <label for="work_phone">Work Phone</label>
                             </span>
                             <span>
-                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:275px;" />
+                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?php echo $email?>"  maxlength="255" style="width:275px;" />
                                 <label for="email">Email/Pt. Portal Login</label>
                             </span>
                         </div>
@@ -1656,25 +1656,25 @@ if($num_face==0){ ?>
                             <span style="width:140px;">
                                 <select id="best_time" name="best_time">
                                     <option value="">Please Select</option>
-                                    <option value="morning" <?= ($best_time=='morning')?'selected="selected"':''; ?>>Morning</option>
-                                    <option value="midday" <?= ($best_time=='midday')?'selected="selected"':''; ?>>Mid-Day</option>
-                                    <option value="evening" <?= ($best_time=='evening')?'selected="selected"':''; ?>>Evening</option>
+                                    <option value="morning" <?php echo ($best_time=='morning')?'selected="selected"':''; ?>>Morning</option>
+                                    <option value="midday" <?php echo ($best_time=='midday')?'selected="selected"':''; ?>>Mid-Day</option>
+                                    <option value="evening" <?php echo ($best_time=='evening')?'selected="selected"':''; ?>>Evening</option>
                                 </select>
                                 <label for="best_time">Best time to contact</label>
                             </span>
                             <span style="width:150px;">
                                 <select id="best_number" name="best_number">
                                     <option value="">Please Select</option>
-                                    <option value="home" <?= ($best_number=='home')?'selected="selected"':''; ?>>Home Phone</option>
-                                    <option value="work" <?= ($best_number=='work')?'selected="selected"':''; ?>>Work Phone</option>
-                                    <option value="cell" <?= ($best_number=='cell')?'selected="selected"':''; ?>>Cell Phone</option>
+                                    <option value="home" <?php echo ($best_number=='home')?'selected="selected"':''; ?>>Home Phone</option>
+                                    <option value="work" <?php echo ($best_number=='work')?'selected="selected"':''; ?>>Work Phone</option>
+                                    <option value="cell" <?php echo ($best_number=='cell')?'selected="selected"':''; ?>>Cell Phone</option>
                                 </select>
                                 <label for="best_number">Best number to contact</label>
                             </span>
                             <span style="width:160px;">
                                 <select id="preferredcontact" name="preferredcontact" >
-                                    <option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
-                                    <option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
+                                    <option value="paper" <?php if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
+                                    <option value="email" <?php if($preferredcontact == 'email') echo " selected";?>>Email</option>
                                 </select>
                                 <label>Preferred Contact Method</label>
                             </span>
@@ -1723,7 +1723,7 @@ if($themyarray['registration_status']==1){
 			
 		    </span>
 		    <span>
-			<textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" <?php if($premedcheck == 0){ echo "disabled";} ?>><?=$premeddet;?></textarea>
+			<textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" <?php if($premedcheck == 0){ echo "disabled";} ?>><?php echo $premeddet;?></textarea>
 		    </span>
 		  
 	       </div>   
@@ -1741,23 +1741,23 @@ if($themyarray['registration_status']==1){
                 		</label>
                 		<div>
                 		    <span>
-                    			<input id="add1" name="add1" type="text" class="field text addr tbox" value="<?=$add1?>" style="width:225px;"  maxlength="255"/>
+                    			<input id="add1" name="add1" type="text" class="field text addr tbox" value="<?php echo $add1?>" style="width:225px;"  maxlength="255"/>
                     			<label for="add1">Address1</label>
                 		    </span>
                 		    <span>
-                    			<input id="add2" name="add2" type="text" class="field text addr tbox" value="<?=$add2?>" style="width:175px;" maxlength="255" />
+                    			<input id="add2" name="add2" type="text" class="field text addr tbox" value="<?php echo $add2?>" style="width:175px;" maxlength="255" />
                     			<label for="add2">Address2</label>
                 		    </span>
                 		    <span>
-                    			<input id="city" name="city" type="text" class="field text addr tbox" value="<?=$city?>" style="width:200px;" maxlength="255" />
+                    			<input id="city" name="city" type="text" class="field text addr tbox" value="<?php echo $city?>" style="width:200px;" maxlength="255" />
                     			<label for="city">City</label>
                 		    </span>
                 		    <span>
-                    			<input id="state" name="state" type="text" class="field text addr tbox" value="<?=$state?>" style="width:25px;" maxlength="2" />
+                    			<input id="state" name="state" type="text" class="field text addr tbox" value="<?php echo $state?>" style="width:25px;" maxlength="2" />
                     			<label for="state">State</label>
                 		    </span>
                 		    <span>
-                    			<input id="zip" name="zip" type="text" class="field text addr tbox" value="<?=$zip?>" style="width:80px;" maxlength="255" />
+                    			<input id="zip" name="zip" type="text" class="field text addr tbox" value="<?php echo $zip?>" style="width:80px;" maxlength="255" />
                     			<label for="zip">Zip / Post Code </label>
                 		    </span>
 <?php
@@ -1770,7 +1770,7 @@ if($num_loc > 1){?>
                                     <option value="">Select</option>
 <?php
     foreach ($loc_q as $loc_r) {?>
-                                    <option <?= ($location==$loc_r['id'] || ($loc_r['default_location'] == 1 && !isset($_GET['pid'])))?'selected="selected"':''; ?>value="<?= $loc_r['id']; ?>"><?= $loc_r['location']; ?></option>
+                                    <option <?php echo ($location==$loc_r['id'] || ($loc_r['default_location'] == 1 && !isset($_GET['pid'])))?'selected="selected"':''; ?>value="<?php echo $loc_r['id']; ?>"><?php echo $loc_r['location']; ?></option>
 <?php
     }?>
                     			</select>
@@ -1789,20 +1789,20 @@ if($num_loc > 1){?>
                     <li id="foli8" class="complex">	
                         <div>
                             <span>
-                                <input id="dob" name="dob" type="text" class="field text addr tbox calendar" value="<?=$dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+                                <input id="dob" name="dob" type="text" class="field text addr tbox calendar" value="<?php echo $dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
                                 <label for="dob">Birthday</label>
                             </span>
                             <span>
                                 <select name="gender" id="gender" class="field text addr tbox" style="width:100px;" >
                                     <option value="">Select</option>
-                                    <option value="Male" <? if($gender == 'Male') echo " selected";?>>Male</option>
-                                    <option value="Female" <? if($gender == 'Female') echo " selected";?>>Female</option>
+                                    <option value="Male" <?php if($gender == 'Male') echo " selected";?>>Male</option>
+                                    <option value="Female" <?php if($gender == 'Female') echo " selected";?>>Female</option>
                                 </select>
                                 <span id="req_0" class="req">*</span>
                                 <label for="gender">Gender</label>
                             </span>
                             <span style="width:150px">
-                                <input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="<?=$ssn?>"  maxlength="255" style="width:100px;" />
+                                <input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="<?php echo $ssn?>"  maxlength="255" style="width:100px;" />
                                 <label for="ssn">Social Security No.</label>
                             </span>
                             <span>
@@ -1810,7 +1810,7 @@ if($num_loc > 1){?>
                         			<option value="0">Feet</option>
 <?php 
 for($i=1;$i<9;$i++){?>
-    								<option value="<?=$i?>" <?php if($feet == $i) echo " selected";?>><?=$i?></option>
+    								<option value="<?php echo $i?>" <?php if($feet == $i) echo " selected";?>><?php echo $i?></option>
 <?php
 }?>
                     		    </select>
@@ -1824,7 +1824,7 @@ for($i=1;$i<9;$i++){?>
                         			<option value="-1">Inches</option>
 <?php 
 for($i=0;$i<12;$i++){?>
-    								<option value="<?=$i?>" <?php if($inches!='' && $inches == $i) echo " selected";?>><?=$i?></option>
+    								<option value="<?php echo $i?>" <?php if($inches!='' && $inches == $i) echo " selected";?>><?php echo $i?></option>
 <?php
 }?>
                     		    </select>
@@ -1838,7 +1838,7 @@ for($i=0;$i<12;$i++){?>
                         			<option value="0">Weight</option>
 <?php 
 for($i=80;$i<=500;$i++){?>
-    								<option value="<?=$i?>" <? if($weight == $i) echo " selected";?>><?=$i?></option>
+    								<option value="<?php echo $i?>" <?php if($weight == $i) echo " selected";?>><?php echo $i?></option>
 <?php
 }?>
                     		    </select>
@@ -1849,7 +1849,7 @@ for($i=80;$i<=500;$i++){?>
                     		</span>
                     		<span>
                     			<span style="color:#000000; padding-top:2px;">BMI</span>
-                    			<input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?=$bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
+                    			<input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?php echo $bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
                     		</span>
                     		<span>
                     			<label for="inches">
@@ -1877,15 +1877,15 @@ for($i=80;$i<=500;$i++){?>
                 		    <span>
                                 <select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" >
                                     <option value="">Select</option>
-                                    <option value="Married" <? if($marital_status == 'Married') echo " selected";?>>Married</option>
-                                    <option value="Single" <? if($marital_status == 'Single') echo " selected";?>>Single</option>
-                                    <option value="Life Partner" <? if($marital_status == 'Life Partner') echo " selected";?>>Life Partner</option>
-                                    <option value="Minor" <? if($marital_status == 'Minor') echo " selected";?>>Minor</option>
+                                    <option value="Married" <?php if($marital_status == 'Married') echo " selected";?>>Married</option>
+                                    <option value="Single" <?php if($marital_status == 'Single') echo " selected";?>>Single</option>
+                                    <option value="Life Partner" <?php if($marital_status == 'Life Partner') echo " selected";?>>Life Partner</option>
+                                    <option value="Minor" <?php if($marital_status == 'Minor') echo " selected";?>>Minor</option>
                                 </select>
                     			<label for="marital_status">Marital Status</label>
                 		    </span>
         					<span>
-                    			<input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="<?=$partner_name?>"  maxlength="255" />
+                    			<input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="<?php echo $partner_name?>"  maxlength="255" />
                     			<label for="partner_name">Partner/Guardian Name</label>
                 		    </span>
                         </div>
@@ -1900,7 +1900,7 @@ for($i=80;$i<=500;$i++){?>
 		</label>-->
                         <div>
                 		    <span>
-                    			<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?=$patient_notes;?></textarea>
+                    			<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?php echo $patient_notes;?></textarea>
                     			<label for="patient_notes">Patient Notes</label>
                 		    </span>
                 		</div>
@@ -1917,15 +1917,15 @@ for($i=80;$i<=500;$i++){?>
                 		</label>
                 		<div>
                 		    <span>
-                    			<input id="emergency_name" name="emergency_name" type="text" class="field text addr tbox" value="<?=$emergency_name?>" maxlength="255" style="width:200px;" />
+                    			<input id="emergency_name" name="emergency_name" type="text" class="field text addr tbox" value="<?php echo $emergency_name?>" maxlength="255" style="width:200px;" />
                     			<label for="home_phone">Name</label>
                 		    </span>
                 		    <span>
-                    			<input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="<?=$emergency_relationship?>" maxlength="255" style="width:150px;" />
+                    			<input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="<?php echo $emergency_relationship?>" maxlength="255" style="width:150px;" />
                     			<label for="home_phone">Relationship</label>
                 		    </span>
                 		    <span>
-                    			<input id="emergency_number" name="emergency_number" type="text" class="extphonemask field text addr tbox" value="<?=$emergency_number?>" maxlength="255" style="width:150px;" />
+                    			<input id="emergency_number" name="emergency_number" type="text" class="extphonemask field text addr tbox" value="<?php echo $emergency_number?>" maxlength="255" style="width:150px;" />
                     			<label for="emergency_number">Number</label>
                 		    </span>
     					</div>
@@ -1956,15 +1956,15 @@ if(!isset($pid)){
                 			</div>
 <link rel="stylesheet" href="css/add_patient.css" type="text/css" media="screen" />
                 			<div style="float:left;" id="referred_source_div">
-                    			<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person
-                    			<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?= DSS_REFERRED_MEDIA; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_MEDIA]; ?>
-                    			<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_FRANCHISE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?>
-                    			<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_DSSOFFICE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?>
-                    			<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_OTHER; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
+                    			<input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person
+                    			<input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?php echo DSS_REFERRED_MEDIA; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_MEDIA]; ?>
+                    			<input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?php echo DSS_REFERRED_FRANCHISE; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?>
+                    			<input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?php echo DSS_REFERRED_DSSOFFICE; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?>
+                    			<input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?php echo DSS_REFERRED_OTHER; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
                 			</div>
                 			<div style="clear:both;float:left;">
-                				<div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;margin-left:100px;"':'style="margin-left:100px"'; ?>>	
-                    				<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?= ($referred_name!='')?$referred_name:'Type referral name'; ?>" style="width:300px;" />
+                				<div id="referred_person" <?php echo ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;margin-left:100px;"':'style="margin-left:100px"'; ?>>	
+                    				<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?php echo ($referred_name!='')?$referred_name:'Type referral name'; ?>" style="width:300px;" />
                                     <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="+ Create New Contact" />
                                     <br />
                                     <div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
@@ -1973,12 +1973,12 @@ if(!isset($pid)){
                                     	</ul>
                                     </div>
                 				</div>
-                				<div id="referred_notes" <?= ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;margin-left:200px;"':'style="margin-left:200px;"'; ?>>
-                					<textarea name="referred_notes" style="width:300px;"><?= $referred_notes; ?></textarea> 	
+                				<div id="referred_notes" <?php echo ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;margin-left:200px;"':'style="margin-left:200px;"'; ?>>
+                					<textarea name="referred_notes" style="width:300px;"><?php echo $referred_notes; ?></textarea> 	
                 				</div>
-                                <input type="hidden" name="referred_by" id="referred_by" value="<?=$referred_by;?>" />
-                                <input type="hidden" name="referred_source" id="referred_source" value="<?=$referred_source;?>" />
-		       <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
+                                <input type="hidden" name="referred_by" id="referred_by" value="<?php echo $referred_by;?>" />
+                                <input type="hidden" name="referred_source" id="referred_source" value="<?php echo $referred_source;?>" />
+		       <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?php echo $referred_by?>" maxlength="255" style="width:300px;" /> -->
                 		    </div>
                         </div>
             	    </li>
@@ -2003,33 +2003,33 @@ if(!isset($pid)){
                                 <label for="add1">Employer</label>
                             </span>
                             <span>
-                                <input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="<?=$emp_phone?>"  style="width:150px;" maxlength="255" />
+                                <input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="<?php echo $emp_phone?>"  style="width:150px;" maxlength="255" />
                                 <label for="state">&nbsp;&nbsp;Phone</label>
                             </span>
                             <span>
-                                <input id="emp_fax" name="emp_fax" type="text" class="phonemask field text addr tbox" value="<?=$emp_fax?>"  style="width:120px;" maxlength="255" />
+                                <input id="emp_fax" name="emp_fax" type="text" class="phonemask field text addr tbox" value="<?php echo $emp_fax?>"  style="width:120px;" maxlength="255" />
                                 <label for="state">Fax</label>
                             </span>
                         </div>
                         <div>
                             <span>
-                                <input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?=$emp_add1?>" style="width:225px;"  maxlength="255"/>
+                                <input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?php echo $emp_add1?>" style="width:225px;"  maxlength="255"/>
                                 <label for="add1">Address1</label>
                             </span>
                             <span>
-                                <input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?=$emp_add2?>" style="width:175px;" maxlength="255" />
+                                <input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?php echo $emp_add2?>" style="width:175px;" maxlength="255" />
                                 <label for="add2">Address2</label>
                             </span>
                             <span>
-                                <input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="<?=$emp_city?>" style="width:200px;" maxlength="255" />
+                                <input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="<?php echo $emp_city?>" style="width:200px;" maxlength="255" />
                                 <label for="city">City</label>
                             </span>
                             <span>
-                                <input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?=$emp_state?>"  style="width:80px;" maxlength="255" />
+                                <input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?php echo $emp_state?>"  style="width:80px;" maxlength="255" />
                                 <label for="state">State</label>
                             </span>
                             <span>
-                                <input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="<?=$emp_zip?>" style="width:80px;" maxlength="255" />
+                                <input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="<?php echo $emp_zip?>" style="width:80px;" maxlength="255" />
                                 <label for="zip">Zip Code </label>
                             </span>
                 		</div>
@@ -2052,14 +2052,14 @@ if($api_r['use_eligible_api']==1){?>
 		<tr>
         	<td valign="top" colspan="2" class="frmhead">
             	Insurance Co.
-				<input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
+				<input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?php echo ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
                 <br />
                 <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
                 	<ul id="ins_payer_list" class="search_list">
                 		<li class="template" style="display:none"></li>
                 	</ul>
                 </div>
-                <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />
+                <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?php echo $p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />
     		</td>
         </tr>	
 <?php 
@@ -2074,38 +2074,38 @@ if($api_r['use_eligible_api']==1){?>
 if($exclusive_billing){
     echo $billing_co . " filing insurance";
 }else{ ?>
-                            <a onclick="return false;" class="plain" title="Select YES if you would like <?= $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?= $billing_co; ?> filing insurance?</a><input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+                            <a onclick="return false;" class="plain" title="Select YES if you would like <?php echo $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?php echo $billing_co; ?> filing insurance?</a><input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <?php if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <?php if($p_m_dss_file == '2') echo "checked='checked'";?>>No
 <?php 
 } ?>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     		<a onclick="return false" class="plain" title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO.">Insured Address same as Pt. address?</a>
-                			<input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" <? if($p_m_same_address == '1') echo "checked='checked'";?>> Yes
-                			<input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" <? if($p_m_same_address == '2') echo "checked='checked'";?>> No
+                			<input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" <?php if($p_m_same_address == '1') echo "checked='checked'";?>> Yes
+                			<input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" <?php if($p_m_same_address == '2') echo "checked='checked'";?>> No
                         </label>
                         <div>
                             <span>
                                 <select id="p_m_relation" name="p_m_relation" class="field text addr tbox" style="width:200px;">
-                                    <option value="" <? if($p_m_relation == '') echo " selected";?>>None</option>
-                                    <option value="Self" <? if($p_m_relation == 'Self') echo " selected";?>>Self</option>
-                                    <option value="Spouse" <? if($p_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
-                                    <option value="Child" <? if($p_m_relation == 'Child') echo " selected";?>>Child</option>
-                                    <option value="Other" <? if($p_m_relation == 'Other') echo " selected";?>>Other</option>
+                                    <option value="" <?php if($p_m_relation == '') echo " selected";?>>None</option>
+                                    <option value="Self" <?php if($p_m_relation == 'Self') echo " selected";?>>Self</option>
+                                    <option value="Spouse" <?php if($p_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
+                                    <option value="Child" <?php if($p_m_relation == 'Child') echo " selected";?>>Child</option>
+                                    <option value="Other" <?php if($p_m_relation == 'Other') echo " selected";?>>Other</option>
                                 </select>
                                 <label for="work_phone">Relationship to insured party</label>
                             </span>
                             <span>
-                                <input id="p_m_partyfname" name="p_m_partyfname" type="text" class="field text addr tbox" value="<?=$p_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="p_m_partymname" name="p_m_partymname" type="text" class="field text addr tbox" value="<?=$p_m_partymname?>" maxlength="255" style="width:50px;" /><input id="p_m_partylname" name="p_m_partylname" type="text" class="field text addr tbox" value="<?=$p_m_partylname?>" maxlength="255" style="width:150px;" />
+                                <input id="p_m_partyfname" name="p_m_partyfname" type="text" class="field text addr tbox" value="<?php echo $p_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="p_m_partymname" name="p_m_partymname" type="text" class="field text addr tbox" value="<?php echo $p_m_partymname?>" maxlength="255" style="width:50px;" /><input id="p_m_partylname" name="p_m_partylname" type="text" class="field text addr tbox" value="<?php echo $p_m_partylname?>" maxlength="255" style="width:150px;" />
                                 <label for="p_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
                             </span>
                             <span>
-                                <input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox calendar" value="<?=$ins_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins_dob');" />
+                                <input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox calendar" value="<?php echo $ins_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins_dob');" />
                                 <label for="ins_dob">Insured Date of Birth</label>
                             </span>
                             <span>
                                 <select name="p_m_gender" id="p_m_gender" class="field text addr tbox" style="width:100px;" >
                                     <option value="">Select</option>
-                                    <option value="Male" <? if($p_m_gender == 'Male') echo " selected";?>>Male</option>
-                                    <option value="Female" <? if($p_m_gender == 'Female') echo " selected";?>>Female</option>
+                                    <option value="Male" <?php if($p_m_gender == 'Male') echo " selected";?>>Male</option>
+                                    <option value="Female" <?php if($p_m_gender == 'Female') echo " selected";?>>Female</option>
                                 </select>
                                 <span id="req_0" class="req">*</span>
                                 <label for="gender">Insured Gender</label>
@@ -2115,23 +2115,23 @@ if($exclusive_billing){
                         </div>
                     </li>
                 </ul>
-                <ul id="p_m_address_fields" <?= ($p_m_same_address == "1")?'style="display:none;"':''; ?>>
+                <ul id="p_m_address_fields" <?php echo ($p_m_same_address == "1")?'style="display:none;"':''; ?>>
                     <li id="foli8" class="complex">
                         <div>
                             <span>
-                                <input id="p_m_address" name="p_m_address" type="text" class="field text addr tbox" value="<?=$p_m_address?>" style="width:225px;"  maxlength="255"/>
+                                <input id="p_m_address" name="p_m_address" type="text" class="field text addr tbox" value="<?php echo $p_m_address?>" style="width:225px;"  maxlength="255"/>
                                 <label for="add">Insured Address</label>
                             </span>
                             <span>
-                                <input id="p_m_city" name="p_m_city" type="text" class="field text addr tbox" value="<?=$p_m_city?>" style="width:200px;" maxlength="255" />
+                                <input id="p_m_city" name="p_m_city" type="text" class="field text addr tbox" value="<?php echo $p_m_city?>" style="width:200px;" maxlength="255" />
                                 <label for="city">Insured City</label>
                             </span>
                             <span>
-                                <input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="<?=$p_m_state?>"  style="width:80px;" maxlength="255" />
+                                <input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="<?php echo $p_m_state?>"  style="width:80px;" maxlength="255" />
                                 <label for="state">Insured State</label>
                             </span>
                             <span>
-                                <input id="p_m_zip" name="p_m_zip" type="text" class="field text addr tbox" value="<?=$p_m_zip?>" style="width:80px;" maxlength="255" />
+                                <input id="p_m_zip" name="p_m_zip" type="text" class="field text addr tbox" value="<?php echo $p_m_zip?>" style="width:80px;" maxlength="255" />
                                 <label for="zip">Insured Zip Code </label>
                             </span>
                         </div>
@@ -2164,13 +2164,13 @@ $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".
 $itype_my = $db->getResults($itype_sql);
 $num_face = count($itype_my);
 if($num_face == 0){ ?>
-                                <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');return false;" class="addButton">
+                                <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');return false;" class="addButton">
                                     + Add Insurance Card Image
                                 </button>
 <?php 
 }else{
 $image = $itype_my[0];?>
-                                <button id="p_m_ins_card" onclick="window.open('display_file.php?f=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                                <button id="p_m_ins_card" onclick="window.open('display_file.php?f=<?php echo $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
                                     View Insurance Card Image
                                 </button>
 <?php 
@@ -2204,7 +2204,7 @@ foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                                 <input type="button" class="button" style="width:215px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="+ Create New Insurance Company" />
                             </span>
                             <span>
-    							 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p_m_ins_id?>" maxlength="255" style="width:190px;" />
+    							 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?php echo $p_m_ins_id?>" maxlength="255" style="width:190px;" />
                                 <label for="home_phone">Insurance ID.</label>
                             </span>
                             <span>
@@ -2214,7 +2214,7 @@ if($p_m_ins_type == '1'){?>
                                         value="NONE" readonly="readonly"
 <?php 
 }else{ ?>
-                                        value="<?=$p_m_ins_grp?>" 
+                                        value="<?php echo $p_m_ins_grp?>" 
 <?php 
 } ?>
                                         maxlength="255" style="width:100px;" />
@@ -2227,7 +2227,7 @@ if($p_m_ins_type == '1'){?>
                                         value="" readonly="readonly"
 <?php 
 }else{ ?>
-                                        value="<?=$p_m_ins_plan?>" 
+                                        value="<?php echo $p_m_ins_plan?>" 
 <?php 
 } ?>
                         				maxlength="255" style="width:200px;" />
@@ -2254,8 +2254,8 @@ if($p_m_ins_type == '1'){?>
                         <div style="height:40px;display:block;">
                             <span>
                 				<label style="display:inline;">Does patient have secondary insurance?</label>
-                                <input type="radio" value="Yes" <?= ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-                                <input type="radio" value="No" <?= ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); clearInfo();" /> No
+                                <input type="radio" value="Yes" <?php echo ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
+                                <input type="radio" value="No" <?php echo ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); clearInfo();" /> No
                             </span>
                         </div>
                     </li>
@@ -2267,14 +2267,14 @@ if($api_r['use_eligible_api']==1){?>
         <tr>
             <td valign="top" colspan="2" class="frmhead">
                 Insurance Co.
-                <input type="text" id="s_m_ins_payer_name" onclick="updateval(this)" autocomplete="off" name="s_m_ins_payer_name" value="<?= ($s_m_eligible_payer_id!='')?$s_m_eligible_payer_id.' - '.$s_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
+                <input type="text" id="s_m_ins_payer_name" onclick="updateval(this)" autocomplete="off" name="s_m_ins_payer_name" value="<?php echo ($s_m_eligible_payer_id!='')?$s_m_eligible_payer_id.' - '.$s_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
                 <br />
                 <div id="s_m_ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
                     <ul id="s_m_ins_payer_list" class="search_list">
                         <li class="template" style="display:none"></li>
                     </ul>
                 </div>
-                <input type="hidden" name="s_m_eligible_payer" id="s_m_eligible_payer" value="<?=$s_m_eligible_payer_id."-".$s_m_eligible_payer_name;?>" />
+                <input type="hidden" name="s_m_eligible_payer" id="s_m_eligible_payer" value="<?php echo $s_m_eligible_payer_id."-".$s_m_eligible_payer_name;?>" />
             </td>
         </tr>
 <?php 
@@ -2283,45 +2283,45 @@ if($api_r['use_eligible_api']==1){?>
             <td valign="top" colspan="2" class="frmhead">
                 <ul>
                     <li id="foli8" class="complex"> 
-                    	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                    	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php 
 if($exclusive_billing){
     echo $billing_co . " filing insurance";
 }else{ ?>
-            				<a onclick="return false;" class="plain" title="Select YES if you would like <?= $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?= $billing_co; ?> filing insurance?</a><input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
+            				<a onclick="return false;" class="plain" title="Select YES if you would like <?php echo $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?php echo $billing_co; ?> filing insurance?</a><input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" <?php if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" <?php if($s_m_dss_file == '2') echo "checked='checked'";?>>No
 <?php 
 } ?>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a onclick="return false" class="plain" title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO.">Insured Address same as Pt. address?</a>
-                            <input type="radio" onclick="$('#s_m_address_fields').hide();" name="s_m_same_address" value="1" <? if($s_m_same_address == '1') echo "checked='checked'";?>> Yes
-                            <input type="radio" onclick="$('#s_m_address_fields').show();" name="s_m_same_address" value="2" <? if($s_m_same_address == '2') echo "checked='checked'";?>> No
+                            <input type="radio" onclick="$('#s_m_address_fields').hide();" name="s_m_same_address" value="1" <?php if($s_m_same_address == '1') echo "checked='checked'";?>> Yes
+                            <input type="radio" onclick="$('#s_m_address_fields').show();" name="s_m_same_address" value="2" <?php if($s_m_same_address == '2') echo "checked='checked'";?>> No
 
                         </label>
-                        <div class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                        <div class="s_m_ins_div" <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>
                                 <select id="s_m_relation" name="s_m_relation" class="field text addr tbox" style="width:200px;">
-                                    <option value="" <? if($s_m_relation == '') echo " selected";?>>None</option>
-                                    <option value="Self" <? if($s_m_relation == 'Self') echo " selected";?>>Self</option>
-                                    <option value="Spouse" <? if($s_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
-                                    <option value="Child" <? if($s_m_relation == 'Child') echo " selected";?>>Child</option>
-                                    <option value="Other" <? if($s_m_relation == 'Other') echo " selected";?>>Other</option>
+                                    <option value="" <?php if($s_m_relation == '') echo " selected";?>>None</option>
+                                    <option value="Self" <?php if($s_m_relation == 'Self') echo " selected";?>>Self</option>
+                                    <option value="Spouse" <?php if($s_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
+                                    <option value="Child" <?php if($s_m_relation == 'Child') echo " selected";?>>Child</option>
+                                    <option value="Other" <?php if($s_m_relation == 'Other') echo " selected";?>>Other</option>
                                 </select>
                                 <label for="work_phone">Relationship to insured party</label>
                             </span>
                             <span>
-                                <input id="s_m_partyfname" name="s_m_partyfname" type="text" class="field text addr tbox" value="<?=$s_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="s_m_partymname" name="s_m_partymname" type="text" class="field text addr tbox" value="<?=$s_m_partymname?>" maxlength="255" style="width:50px;" /><input id="s_m_partylname" name="s_m_partylname" type="text" class="field text addr tbox" value="<?=$s_m_partylname?>" maxlength="255" style="width:150px;" />
+                                <input id="s_m_partyfname" name="s_m_partyfname" type="text" class="field text addr tbox" value="<?php echo $s_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="s_m_partymname" name="s_m_partymname" type="text" class="field text addr tbox" value="<?php echo $s_m_partymname?>" maxlength="255" style="width:50px;" /><input id="s_m_partylname" name="s_m_partylname" type="text" class="field text addr tbox" value="<?php echo $s_m_partylname?>" maxlength="255" style="width:150px;" />
                                 <label for="s_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
                             </span>
                             <span>
-                                <input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox calendar" value="<?=$ins2_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins2_dob');" />
+                                <input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox calendar" value="<?php echo $ins2_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins2_dob');" />
                                 <label for="ins2_dob">Insured Date of Birth</label>
                             </span>
                             <span>
                                 <select name="s_m_gender" id="s_m_gender" class="field text addr tbox" style="width:100px;" >
                                     <option value="">Select</option>
-                                    <option value="Male" <? if($s_m_gender == 'Male') echo " selected";?>>Male</option>
-                                    <option value="Female" <? if($s_m_gender == 'Female') echo " selected";?>>Female</option>
+                                    <option value="Male" <?php if($s_m_gender == 'Male') echo " selected";?>>Male</option>
+                                    <option value="Female" <?php if($s_m_gender == 'Female') echo " selected";?>>Female</option>
                                 </select>
                                 <span id="req_0" class="req">*</span>
                                 <label for="gender">Insured Gender</label>
@@ -2332,23 +2332,23 @@ if($exclusive_billing){
                     </li>
 				</ul>
 
-                <ul id="s_m_address_fields" <?= ($s_m_same_address == "1")?'style="display:none;"':''; ?>>
+                <ul id="s_m_address_fields" <?php echo ($s_m_same_address == "1")?'style="display:none;"':''; ?>>
                     <li id="foli8" class="complex">
                         <div>
                             <span>
-                                <input id="s_m_address" name="s_m_address" type="text" class="field text addr tbox" value="<?=$s_m_address?>" style="width:225px;"  maxlength="255"/>
+                                <input id="s_m_address" name="s_m_address" type="text" class="field text addr tbox" value="<?php echo $s_m_address?>" style="width:225px;"  maxlength="255"/>
                                 <label for="add">Insured Address</label>
                             </span>
                             <span>
-                                <input id="s_m_city" name="s_m_city" type="text" class="field text addr tbox" value="<?=$s_m_city?>" style="width:200px;" maxlength="255" />
+                                <input id="s_m_city" name="s_m_city" type="text" class="field text addr tbox" value="<?php echo $s_m_city?>" style="width:200px;" maxlength="255" />
                                 <label for="city">Insured City</label>
                             </span>
                             <span>
-                                <input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="<?=$s_m_state?>"  style="width:80px;" maxlength="255" />
+                                <input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="<?php echo $s_m_state?>"  style="width:80px;" maxlength="255" />
                                 <label for="state">Insured State</label>
                             </span>
                             <span>
-                                <input id="s_m_zip" name="s_m_zip" type="text" class="field text addr tbox" value="<?=$s_m_zip?>" style="width:80px;" maxlength="255" />
+                                <input id="s_m_zip" name="s_m_zip" type="text" class="field text addr tbox" value="<?php echo $s_m_zip?>" style="width:80px;" maxlength="255" />
                                 <label for="zip">Insured Zip Code </label>
                             </span>
                         </div>
@@ -2358,7 +2358,7 @@ if($exclusive_billing){
                 </ul>
                 <ul>
                     <li id="foli8" class="complex">
-                        <div  class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                        <div  class="s_m_ins_div" <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>
                                 <select id="s_m_ins_type" name="s_m_ins_type" onchange="checkMedicare()" class="field text addr tbox" maxlength="255" style="width:200px;" />
                                     <option value=""></option>
@@ -2381,14 +2381,14 @@ $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".
 $itype_my = $db->getResults($itype_sql);
 $num_face = count($itype_my);
 if($num_face == 0){ ?>
-                                <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');return false;" class="addButton">
+                                <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');return false;" class="addButton">
                                     + Add Insurance Card Image
                                 </button>
 <?php 
 }else{
     $image = $itype_my[0];
 ?>
-                                <button id="s_m_ins_card" onclick="window.open('imageholder.php?image=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                                <button id="s_m_ins_card" onclick="window.open('imageholder.php?image=<?php echo $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
                                     View Insurance Card Image
                                 </button>
 <?php 
@@ -2401,7 +2401,7 @@ if($num_face == 0){ ?>
                 </ul>
             	<ul>
             		<li id="foli8" class="complex">	
-                        <div class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                        <div class="s_m_ins_div" <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>
                                 <select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" onchange="updateNumber2('s_m_ins_phone')" />
                                     <option value="">Select Insurance Company</option>
@@ -2412,7 +2412,7 @@ insurance_nums = [];
 $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE status=1 AND merge_id IS NULL AND contacttypeid = '11' AND docid='".$_SESSION['docid']."' ORDER BY company ASC";
 $ins_contact_qry_run = $db->getResults($ins_contact_qry);
 foreach ($ins_contact_qry_run as $ins_contact_res) {?>
-    insurance_nums[<?= $ins_contact_res['contactid']; ?>] = "<?= $ins_contact_res['add1']; ?>\n<?= $ins_contact_res['add2']; ?><?= ($ins_contact_res['add2'])?'\n':''; ?><?= $ins_contact_res['city']; ?> <?= $ins_contact_res['state']; ?> <?= $ins_contact_res['zip']; ?>\n<?= format_phone($ins_contact_res['phone1']); ?>"
+    insurance_nums[<?php echo $ins_contact_res['contactid']; ?>] = "<?php echo $ins_contact_res['add1']; ?>\n<?php echo $ins_contact_res['add2']; ?><?php echo ($ins_contact_res['add2'])?'\n':''; ?><?php echo $ins_contact_res['city']; ?> <?php echo $ins_contact_res['state']; ?> <?php echo $ins_contact_res['zip']; ?>\n<?php echo format_phone($ins_contact_res['phone1']); ?>"
     document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($s_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>');
 <?php 
 } ?>
@@ -2422,15 +2422,15 @@ foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                                 <input type="button" class="button" style="width:215px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="+ Create New Insurance Company" />
                             </span>
                             <span>
-                                <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$s_m_ins_id?>" maxlength="255" style="width:190px;" />
+                                <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?php echo $s_m_ins_id?>" maxlength="255" style="width:190px;" />
                                 <label for="s_m_ins_id">Insurance ID.</label>
                             </span>
                             <span>
-                                <input id="s_m_ins_grp" name="s_m_ins_grp" type="text" class="field text addr tbox" value="<?=$s_m_ins_grp?>" maxlength="255" style="width:100px;" />
+                                <input id="s_m_ins_grp" name="s_m_ins_grp" type="text" class="field text addr tbox" value="<?php echo $s_m_ins_grp?>" maxlength="255" style="width:100px;" />
                                 <label for="s_m_ins_grp">Group #</label>
                             </span>
                             <span>
-                                <input id="s_m_ins_plan" name="s_m_ins_plan" type="text" class="field text addr tbox" value="<?=$s_m_ins_plan?>" maxlength="255" style="width:200px;" />
+                                <input id="s_m_ins_plan" name="s_m_ins_plan" type="text" class="field text addr tbox" value="<?php echo $s_m_ins_plan?>" maxlength="255" style="width:200px;" />
                                 <label for="s_m_ins_plan">Plan Name</label>
                             </span>
                             <span>
@@ -2460,19 +2460,19 @@ foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                             <ul>
                                 <li  id="foli8" class="complex">
                                     <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
-                                    <div id="docpcp_static_info" style="<?= ($docpcp!='')?'':'display:none'; ?>">
-                                        <span id="docpcp_name_static" style="width:300px;"><?= $docpcp_name; ?></span>
-                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docpcp;?>');return false;" class="addButton">Quick View</a>
+                                    <div id="docpcp_static_info" style="<?php echo ($docpcp!='')?'':'display:none'; ?>">
+                                        <span id="docpcp_name_static" style="width:300px;"><?php echo $docpcp_name; ?></span>
+                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $docpcp;?>');return false;" class="addButton">Quick View</a>
                                         <a href="#" onclick="$('#docpcp_static_info').hide();$('#docpcp_name').show();return false;" class="addButton">Change Contact</a>
                                     </div>
-                                    <input type="text" id="docpcp_name" style="width:300px;<?= ($docpcp!='')?'display:none;':'';?>" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?= ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
+                                    <input type="text" id="docpcp_name" style="width:300px;<?php echo ($docpcp!='')?'display:none;':'';?>" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?php echo ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
                                     <br />        
                                     <div id="docpcp_hints" class="search_hints" style="display:none;">
                                         <ul id="docpcp_list" class="search_list">
                                             <li class="template" style="display:none">Doe, John S</li>
                                         </ul>
                                     </div>
-                                    <input type="hidden" name="docpcp" id="docpcp" value="<?=$docpcp;?>" />
+                                    <input type="hidden" name="docpcp" id="docpcp" value="<?php echo $docpcp;?>" />
                                 </li>
                             </ul>
                         </td>
@@ -2482,19 +2482,19 @@ foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                             <ul>
                                 <li  id="foli8" class="complex">
                                     <label style="display: block; float: left; width: 110px;">ENT</label>
-                                    <div id="docent_static_info" style="<?= ($docent!='')?'':'display:none'; ?>">
-                                        <span id="docent_name_static" style="width:300px;"><?= $docent_name; ?></span>
-                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docent;?>');return false;" class="addButton">Quick View</a>
+                                    <div id="docent_static_info" style="<?php echo ($docent!='')?'':'display:none'; ?>">
+                                        <span id="docent_name_static" style="width:300px;"><?php echo $docent_name; ?></span>
+                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $docent;?>');return false;" class="addButton">Quick View</a>
                                         <a href="#" onclick="$('#docent_static_info').hide();$('#docent_name').show();return false;" class="addButton">Change Contact</a>
                                     </div>
-                                    <input type="text" id="docent_name" style="width:300px;<?= ($docent!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?= ($docent!='')?$docent_name:'Type contact name'; ?>" />
+                                    <input type="text" id="docent_name" style="width:300px;<?php echo ($docent!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?php echo ($docent!='')?$docent_name:'Type contact name'; ?>" />
                                     <br />
                                     <div id="docent_hints" class="search_hints" style="display:none;">
                                         <ul id="docent_list" class="search_list">
                                             <li class="template" style="display:none">Doe, John S</li>
                                         </ul>
                                     </div>
-                                    <input type="hidden" name="docent" id="docent" value="<?=$docent;?>" />
+                                    <input type="hidden" name="docent" id="docent" value="<?php echo $docent;?>" />
                                 </li>
                             </ul>
                         </td>
@@ -2504,19 +2504,19 @@ foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                             <ul>
                                 <li  id="foli8" class="complex">
                                     <label style="display: block; float: left; width: 110px;">Sleep MD</label>
-                                    <div id="docsleep_static_info" style="<?= ($docsleep!='')?'':'display:none'; ?>">
-                                        <span id="docsleep_name_static" style="width:300px;"><?= $docsleep_name; ?></span>
-                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docsleep;?>');return false;" class="addButton">Quick View</a>
+                                    <div id="docsleep_static_info" style="<?php echo ($docsleep!='')?'':'display:none'; ?>">
+                                        <span id="docsleep_name_static" style="width:300px;"><?php echo $docsleep_name; ?></span>
+                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $docsleep;?>');return false;" class="addButton">Quick View</a>
                                         <a href="#" onclick="$('#docsleep_static_info').hide();$('#docsleep_name').show();return false;" class="addButton">Change Contact</a>
                                     </div>
-                                    <input type="text" id="docsleep_name" style="width:300px;<?= ($docsleep!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docsleep_name" value="<?= ($docsleep!='')?$docsleep_name:'Type contact name'; ?>" />
+                                    <input type="text" id="docsleep_name" style="width:300px;<?php echo ($docsleep!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docsleep_name" value="<?php echo ($docsleep!='')?$docsleep_name:'Type contact name'; ?>" />
                                     <br />
                                     <div id="docsleep_hints" class="search_hints" style="display:none;">
                                         <ul id="docsleep_list" class="search_list">
                                             <li class="template" style="display:none">Doe, John S</li>
                                         </ul>
                                     </div>
-                                    <input type="hidden" name="docsleep" id="docsleep" value="<?=$docsleep;?>" />
+                                    <input type="hidden" name="docsleep" id="docsleep" value="<?php echo $docsleep;?>" />
                                 </li>
                             </ul>
                         </td>
@@ -2526,19 +2526,19 @@ foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                             <ul>
                                 <li  id="foli8" class="complex">
                                     <label style="display: block; float: left; width: 110px;">Dentist</label>
-                                    <div id="docdentist_static_info" style="<?= ($docdentist!='')?'':'display:none'; ?>">
-                                        <span id="docdentist_name_static" style="width:300px;"><?= $docdentist_name; ?></span>
-                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docdentist;?>');return false;" class="addButton">Quick View</a>
+                                    <div id="docdentist_static_info" style="<?php echo ($docdentist!='')?'':'display:none'; ?>">
+                                        <span id="docdentist_name_static" style="width:300px;"><?php echo $docdentist_name; ?></span>
+                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $docdentist;?>');return false;" class="addButton">Quick View</a>
                                         <a href="#" onclick="$('#docdentist_static_info').hide();$('#docdentist_name').show();return false;" class="addButton">Change Contact</a>
                                     </div>
-                                    <input type="text" id="docdentist_name" style="width:300px;<?= ($docdentist!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="<?= ($docdentist!='')?$docdentist_name:'Type contact name'; ?>" />
+                                    <input type="text" id="docdentist_name" style="width:300px;<?php echo ($docdentist!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="<?php echo ($docdentist!='')?$docdentist_name:'Type contact name'; ?>" />
                                     <br />
                                     <div id="docdentist_hints" class="search_hints" style="display:none;">
                                         <ul id="docdentist_list" class="search_list">
                                             <li class="template" style="display:none">Doe, John S</li>
                                         </ul>
                                     </div>
-                                    <input type="hidden" name="docdentist" id="docdentist" value="<?=$docdentist;?>" />
+                                    <input type="hidden" name="docdentist" id="docdentist" value="<?php echo $docdentist;?>" />
                                 </li>
                             </ul>
                         </td>
@@ -2548,12 +2548,12 @@ foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                             <ul>
                                 <li  id="foli8" class="complex">
                                     <label style="display: block; float: left; width: 110px;">Other MD</label>
-                                    <div id="docmdother_static_info" style="<?= ($docmdother!='')?'':'display:none;'; ?>height:25px;">
-                                        <span id="docmdother_name_static" style="width:300px;"><?= $docmdother_name; ?></span>
-                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docmdother;?>');return false;" class="addButton">Quick View</a>
+                                    <div id="docmdother_static_info" style="<?php echo ($docmdother!='')?'':'display:none;'; ?>height:25px;">
+                                        <span id="docmdother_name_static" style="width:300px;"><?php echo $docmdother_name; ?></span>
+                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother;?>');return false;" class="addButton">Quick View</a>
                                         <a href="#" onclick="$('#docmdother_static_info').hide();$('#docmdother_name').show();return false;" class="addButton">Change Contact</a>
                                     </div>
-                                    <input type="text" id="docmdother_name" style="width:300px;<?= ($docmdother!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="<?= ($docmdother!='')?$docmdother_name:'Type contact name'; ?>" />
+                                    <input type="text" id="docmdother_name" style="width:300px;<?php echo ($docmdother!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="<?php echo ($docmdother!='')?$docmdother_name:'Type contact name'; ?>" />
 <?php 
 if($docmdother2=='' || $docmdother3==''){ ?>
                                     <a href="#" id="add_new_md" onclick="add_md(); return false;"  style="clear:both" class="addButton">+ Add Additional MD</a>
@@ -2565,51 +2565,51 @@ if($docmdother2=='' || $docmdother3==''){ ?>
                                             <li class="template" style="display:none">Doe, John S</li>
                                         </ul>
                                     </div>
-                                    <input type="hidden" name="docmdother" id="docmdother" value="<?=$docmdother;?>" />
+                                    <input type="hidden" name="docmdother" id="docmdother" value="<?php echo $docmdother;?>" />
                                 </li>
                             </ul>
                         </td>
                     </tr>	        
-                    <tr height="35" id="docmdother2_tr" <?= ($docmdother2=='')?'style="display:none;"':''; ?>>
+                    <tr height="35" id="docmdother2_tr" <?php echo ($docmdother2=='')?'style="display:none;"':''; ?>>
                         <td>
                             <ul>
                                 <li  id="foli8" class="complex">
                                     <label style="display: block; float: left; width: 110px;">Other MD 2</label>
-                                    <div id="docmdother2_static_info" style="<?= ($docmdother2!='')?'':'display:none'; ?>">
-                                        <span id="docmdother2_name_static" style="width:300px;"><?= $docmdother2_name; ?></span>
-                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docmdother2;?>');return false;" class="addButton">Quick View</a>
+                                    <div id="docmdother2_static_info" style="<?php echo ($docmdother2!='')?'':'display:none'; ?>">
+                                        <span id="docmdother2_name_static" style="width:300px;"><?php echo $docmdother2_name; ?></span>
+                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother2;?>');return false;" class="addButton">Quick View</a>
                                         <a href="#" onclick="$('#docmdother2_static_info').hide();$('#docmdother2_name').show();return false;" class="addButton">Change Contact</a>
                                     </div>
-                                    <input type="text" id="docmdother2_name" style="width:300px;<?= ($docmdother2!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="<?= ($docmdother2!='')?$docmdother2_name:'Type contact name'; ?>" />
+                                    <input type="text" id="docmdother2_name" style="width:300px;<?php echo ($docmdother2!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="<?php echo ($docmdother2!='')?$docmdother2_name:'Type contact name'; ?>" />
                                     <br />
                                     <div id="docmdother2_hints" class="search_hints" style="display:none;">
                                         <ul id="docmdother2_list" class="search_list">
                                             <li class="template" style="display:none">Doe, John S</li>
                                         </ul>
                                     </div>
-                                    <input type="hidden" name="docmdother2" id="docmdother2" value="<?=$docmdother2;?>" />
+                                    <input type="hidden" name="docmdother2" id="docmdother2" value="<?php echo $docmdother2;?>" />
                                 </li>
                             </ul>
                         </td>
                     </tr>
-                    <tr height="35" id="docmdother3_tr" <?= ($docmdother3=='')?'style="display:none;"':''; ?>>
+                    <tr height="35" id="docmdother3_tr" <?php echo ($docmdother3=='')?'style="display:none;"':''; ?>>
                         <td>
                             <ul>
                                 <li  id="foli8" class="complex">
                                     <label style="display: block; float: left; width: 110px;">Other MD 3</label>
-                                    <div id="docmdother3_static_info" style="<?= ($docmdother3!='')?'':'display:none'; ?>">
-                                        <span id="docmdother3_name_static" style="width:300px;"><?= $docmdother3_name; ?></span>
-                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docmdother3;?>');return false;" class="addButton">Quick View</a>                                     
+                                    <div id="docmdother3_static_info" style="<?php echo ($docmdother3!='')?'':'display:none'; ?>">
+                                        <span id="docmdother3_name_static" style="width:300px;"><?php echo $docmdother3_name; ?></span>
+                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother3;?>');return false;" class="addButton">Quick View</a>                                     
                                         <a href="#" onclick="$('#docmdother3_static_info').hide();$('#docmdother3_name').show();return false;" class="addButton">Change Contact</a>                          
                                     </div>
-                                    <input type="text" id="docmdother3_name" style="width:300px;<?= ($docmdother3!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother3_name" value="<?= ($docmdother3!='')?$docmdother3_name:'Type contact name'; ?>" />
+                                    <input type="text" id="docmdother3_name" style="width:300px;<?php echo ($docmdother3!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother3_name" value="<?php echo ($docmdother3!='')?$docmdother3_name:'Type contact name'; ?>" />
                                     <br />
                                     <div id="docmdother3_hints" class="search_hints" style="display:none;">
                                         <ul id="docmdother3_list" class="search_list">
                                             <li class="template" style="display:none">Doe, John S</li>
                                         </ul>
                                     </div>
-                                    <input type="hidden" name="docmdother3" id="docmdother3" value="<?=$docmdother3;?>" />
+                                    <input type="hidden" name="docmdother3" id="docmdother3" value="<?php echo $docmdother3;?>" />
                                 </li>
                             </ul>
                         </td>
@@ -2624,8 +2624,8 @@ if($docmdother2=='' || $docmdother3==''){ ?>
             </td>
             <td valign="top" class="frmdata">
                 <select name="status" id="status" class="tbox" onchange="updatePPAlert()";>
-                    <option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                    <option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                    <option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                    <option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>
@@ -2636,12 +2636,12 @@ if($doc_patient_portal){ ?>
             <td valign="top" class="frmhead">
                 Portal Status
         		<br />
-        		<span id="ppAlert" style="font-weight:normal;font-size:12px; <?= ($status == 2)?'':'display:none;'; ?>">Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
+        		<span id="ppAlert" style="font-weight:normal;font-size:12px; <?php echo ($status == 2)?'':'display:none;'; ?>">Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
             </td>
             <td valign="top" class="frmdata">
                 <select name="use_patient_portal" class="tbox" >
-                    <option value="1" <? if($use_patient_portal == 1) echo " selected";?>>Active</option>
-                    <option value="0" <? if($use_patient_portal!='' && $use_patient_portal == 0) echo " selected";?>>In-Active</option>
+                    <option value="1" <?php if($use_patient_portal == 1) echo " selected";?>>Active</option>
+                    <option value="0" <?php if($use_patient_portal!='' && $use_patient_portal == 0) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>
@@ -2668,8 +2668,8 @@ if (!$result) {?>
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="patientsub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["patientid"]?>" />
-                <input type="submit" value=" <?=$but_text?> Patient" class="button" />
+                <input type="hidden" name="ed" value="<?php echo $themyarray["patientid"]?>" />
+                <input type="submit" value=" <?php echo $but_text?> Patient" class="button" />
             </td>
         </tr>
     </table>
@@ -2708,7 +2708,7 @@ if(isset($_REQUEST['readonly'])){ ?>
 if(isset($_GET['sendPin'])){ ?>
 <script type="text/javascript">
     $(document).ready( function(){ 
-        loadPopup('patient_access_code.php?pid=<?= $_GET['pid']; ?>');
+        loadPopup('patient_access_code.php?pid=<?php echo $_GET['pid']; ?>');
     });
 </script>
 <?php 
@@ -2716,11 +2716,11 @@ if(isset($_GET['sendPin'])){ ?>
 <script type="text/javascript">
     $('.dss_file_radio').click(function(){
         if($('#p_m_dss_file_no').is(':checked') && $('#s_m_dss_file_yes').is(':checked')){
-            alert('<?=$billing_co;?> must file Primary Insurance in order to file Secondary Insurance.');
+            alert('<?php echo $billing_co;?> must file Primary Insurance in order to file Secondary Insurance.');
             return false;
         } 
         if($('#p_m_dss_file_yes').is(':checked') && $('#s_m_dss_file_no').is(':checked')){
-            return confirm('You indicated that <?=$billing_co;?> will file Primary insurance claims but NOT Secondary insurance claims. Normally patients expect claims to be filed in both cases; please select "Yes" for Secondary unless you are sure of your choice.');
+            return confirm('You indicated that <?php echo $billing_co;?> will file Primary insurance claims but NOT Secondary insurance claims. Normally patients expect claims to be filed in both cases; please select "Yes" for Secondary unless you are sure of your choice.');
         } 
     });
 </script>

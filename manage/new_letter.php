@@ -494,8 +494,10 @@ if (isset($_POST['submit'])) {
 	foreach ($md_referrals as $id) {
 		$md_referral_list .= $id . ",";
 	}
-	foreach ($mds as $id) {
-		$md_list .= $id . ",";
+	if ($mds) {
+		foreach ($mds as $id) {
+			$md_list .= $id . ",";
+		}
 	}
 	$md_referral_list = rtrim($md_referral_list, ",");
 	$md_list = rtrim($md_list, ",");

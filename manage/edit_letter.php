@@ -736,8 +736,10 @@ foreach ($master_q as $master_r) {
     
     <?php
       if ($_POST != array()) {
-	      foreach ($_POST['duplicate_letter'] as $key => $value) {
-          $dupekey = $key;
+        if ($_POST['duplicate_letter']) {
+  	      foreach ($_POST['duplicate_letter'] as $key => $value) {
+            $dupekey = $key;
+          }
         }
 
         // Check for updated templates search and replace 1 of 2

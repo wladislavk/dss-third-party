@@ -49,6 +49,7 @@ $doc_patient_portal = $docr['use_patient_portal'];
 include "includes/similar.php";
 
 function trigger_letter20($pid) {
+
     $letterid = '20';
     $md_list = get_mdcontactids($pid);
     $pt_referral_list = get_ptreferralids($pid);
@@ -64,7 +65,7 @@ function trigger_letter20($pid) {
 // Trigger Letter 20 Thankyou
 $pt_referralid = get_ptreferralids($_GET['pid']);
 if ($pt_referralid) {
-    $sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND pat_referral_list = '".s_for($pt_referralid)."';";uery($sql);
+    $sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND pat_referral_list = '".s_for($pt_referralid)."';";
     $numrows = $db->getNumberRows($sql);
     if ($numrows == 0) {
         trigger_letter20($_GET['pid']);

@@ -168,7 +168,7 @@ if($imp_r['segmentid']=='4'){ ?>
     <strong>Duration:</strong>
 <?php
     if($dentaldevice_date!=''){ 
-        echo '(' . time_agoNaN_format(date('U') - strtotime($dentaldevice_date)) . ')';
+        // echo '(' . time_agoNaN_format(date('U') - strtotime($dentaldevice_date)) . ')';
     }else{
         echo '(N/A)';
     }

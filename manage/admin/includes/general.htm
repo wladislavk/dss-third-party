@@ -23,93 +23,70 @@ function st($str)
 //This Function is used for Paging
 function paging($no_pages,$index_val,$vid)
 {
-	for($p_count=0;$p_count<$no_pages;$p_count++)
-	{
-		if($index_val == $p_count)
-		{
-		?>
-			<strong><?=$p_count+1;?></strong>
-		<?
+  for($p_count=0;$p_count<$no_pages;$p_count++){
+		if($index_val == $p_count){?>
+			<strong><?php echo $p_count+1;?></strong>
+<?php
+		}else{?>
+			<a href="<?php echo $_SERVER['PHP_SELF']?>?page=<?php echo $p_count?>&<?php echo $vid?>" class="fp">
+			<?php echo $p_count+1;?></a>
+<?php
 		}
-		else
-		{
-			
-		?>
-			<a href="<?=$_SERVER['PHP_SELF']?>?page=<?=$p_count?>&<?=$vid?>" class="fp">
-			<?=$p_count+1;?></a>
-		<?
-		}
-	}
-		
+	}	
 }
+
 function paging1($no_pages,$index_val,$vid,$index_val2 = 0)
 {
-	for($p_count=0;$p_count<$no_pages;$p_count++)
-	{
-		if($index_val == $p_count)
-		{
-		?>
-			<strong><?=$p_count+1;?></strong>
-		<?php
+	for($p_count=0;$p_count<$no_pages;$p_count++){
+		if($index_val == $p_count){?>
+			<strong><?php echo $p_count+1;?></strong>
+<?php
+		}else{?>
+			<a href="<?php echo $_SERVER['PHP_SELF']?>?page1=<?php echo $p_count?>&page2=<?php echo $index_val2?>&<?php echo $vid?>" class="fp">
+      <?php echo $p_count+1;?></a>
+<?php
 		}
-		else
-		{
-			
-		?>
-			<a href="<?=$_SERVER['PHP_SELF']?>?page1=<?=$p_count?>&page2=<?=$index_val2?>&<?=$vid?>" class="fp">
-			<?=$p_count+1;?></a>
-		<?php
-		}
-	}
-		
+	}	
 }
 
 function paging2($no_pages,$index_val,$vid,$index_val1 = 0)
 {
-	for($p_count=0;$p_count<$no_pages;$p_count++)
-	{
-		if($index_val == $p_count)
-		{
-		?>
-			<strong><?=$p_count+1;?></strong>
-		<?php
-		}
-		else
-		{
-			
-		?>
-			<a href="<?=$_SERVER['PHP_SELF']?>?page1=<?=$index_val1?>&page2=<?=$p_count?>&<?=$vid?>" class="fp">
-			<?=$p_count+1;?></a>
-		<?php
+	for($p_count=0;$p_count<$no_pages;$p_count++){
+		if($index_val == $p_count){?>
+			<strong><?php echo $p_count+1;?></strong>
+<?php
+		}else{?>
+			<a href="<?php echo $_SERVER['PHP_SELF']?>?page1=<?php echo $index_val1?>&page2=<?php echo $p_count?>&<?php echo $vid?>" class="fp">
+			<?php echo $p_count+1;?></a>
+<?php
 		}
 	}
-		
 }
 
 // Function to Get Contacts
 // Returns comma delimited list of contactids
 function get_mdcontactids ($pid, $active = true) {
+
+  $db = new DB();
   $contact_sql = "SELECT docsleep, docpcp, docdentist, docent, docmdother, docmdother2, docmdother3 FROM dental_patients where patientid = '".s_for($pid)."';";
-  $contact_res = mysql_query($contact_sql);
+  $contact_res = $db->getRow($contact_sql);
   $contactids = array();
-  $row = mysql_fetch_array($contact_res, MYSQL_NUM);
-  foreach ($row as $field) {
+  foreach ($contact_res as $field) {
     if ($field != "Not Set") {
       $contacts = explode(",", $field);
       foreach ($contacts as $contact) {
 				if ($contact != "") {
-		if(!in_array($contact, $contactids)){
-		  if($active){
-		    $a_sql = "select status FROM dental_contact WHERE contactid='".mysql_real_escape_string($contact)."'";
-		    $a_q = mysql_query($a_sql);
-		    $a_r = mysql_fetch_assoc($a_q);
-		    if($a_r['status']==1){
+      		if(!in_array($contact, $contactids)){
+      		  if($active){
+      		    $a_sql = "select status FROM dental_contact WHERE contactid='".mysql_real_escape_string($contact)."'";
+      		    $a_r = $db->getRow($a_sql);
+      		    if($a_r['status']==1){
 	              $contactids[] = $contact;
-		    }
-                  }else{
-                    $contactids[] = $contact;
-		  }
-		}
+      		    }
+            }else{
+              $contactids[] = $contact;
+      		  }
+      		}
 				}
       }
     }
@@ -120,25 +97,26 @@ function get_mdcontactids ($pid, $active = true) {
 }
 
 function get_mdreferralids ($pid, $active = true) {
-  $contact_sql = "SELECT dental_contact.contactid FROM dental_contact JOIN dental_patients ON  dental_patients.referred_by=dental_contact.contactid 
-	JOIN dental_contacttype ct ON ct.contacttypeid = dental_contact.contacttypeid
-	WHERE dental_patients.patientid IN('".$pid."') AND dental_patients.referred_source IN('2') AND ct.physician=1;";
-  $contact_res = mysql_query($contact_sql);
-  $contactids = array();
-  while ($row = mysql_fetch_array($contact_res, MYSQL_NUM)) {
-        if(!in_array($row[0], $contactids)){
-                  if($active){
-                    $a_sql = "select status FROM dental_contact WHERE contactid='".mysql_real_escape_string($row[0])."'";
-                    $a_q = mysql_query($a_sql);
-                    $a_r = mysql_fetch_assoc($a_q);
-                    if($a_r['status']==1){
-                      $contactids[] = $row[0];
-                    }
-                  }else{
-                    $contactids[] = $row[0];
-                  }
 
-	}
+  $db = new DB(); 
+  $contact_sql = "SELECT dental_contact.contactid FROM dental_contact JOIN dental_patients ON  dental_patients.referred_by=dental_contact.contactid 
+                  	JOIN dental_contacttype ct ON ct.contacttypeid = dental_contact.contacttypeid
+                  	WHERE dental_patients.patientid IN('".$pid."') AND dental_patients.referred_source IN('2') AND ct.physician=1;";
+  $contact_res = $db->getResults($contact_sql);
+  $contactids = array();
+  foreach ($contact_res as $row) {
+    $element = array_shift($row);
+    if(!in_array($element, $contactids)){
+      if($active){
+        $a_sql = "select status FROM dental_contact WHERE contactid='".mysql_real_escape_string($element)."'";
+        $a_r = $db->getRow($a_sql);
+        if($a_r['status']==1){
+          $contactids[] = $element;
+        }
+      }else{
+        $contactids[] = $element;
+      }
+  	}
   }
 
   $contactid_list = implode(",", $contactids);
@@ -148,77 +126,89 @@ function get_mdreferralids ($pid, $active = true) {
 }
 
 function get_ptreferralids ($pid) {
+
+  $db = new Db();
 	$pt_sql = "SELECT referred_source FROM dental_patients WHERE patientid=".$pid." LIMIT 1";
-	$pq = mysql_query($pt_sql);
-	$prow = mysql_fetch_assoc($pq);
+	$prow = $db->getRow($pt_sql);
 	if($prow['referred_source']==1){
-		$contact_sql = "SELECT pr.patientid FROM dental_patients pr INNER JOIN dental_patients p ON p.referred_by = pr.patientid WHERE p.patientid IN('".s_for($pid)."')";
+    $contact_sql = "SELECT pr.patientid FROM dental_patients pr INNER JOIN dental_patients p ON p.referred_by = pr.patientid WHERE p.patientid IN('".s_for($pid)."')";
 	}elseif($prow['referred_source']==2){
 		$contact_sql = "SELECT dental_contact.contactid FROM dental_contact JOIN dental_patients ON  dental_patients.referred_by=dental_contact.contactid 
 		JOIN dental_contacttype ct ON ct.contacttypeid = dental_contact.contacttypeid
 			WHERE dental_patients.patientid IN('".s_for($pid)."') AND ct.physician != 1;";
 	}
-	$contact_res = mysql_query($contact_sql);
+	$contact_res = $db->getResults($contact_sql);
   $contactids = array();
-  while ($row = mysql_fetch_array($contact_res, MYSQL_NUM)) {
-    $contactids[] = $row[0];
+  if ($contact_res) {
+    foreach ($contact_res as $row) {
+      $contactids[] = array_shift($row);
+    }
   }
   $contactid_list = implode(",", $contactids);
 
   return $contactid_list;
-
 }
 
 
 // Retrieve Names Salutation and more from Database
 // Returns an array of the form [patient, mds, or md_referrals][id]['fieldname']
 function get_contact_info ($patient, $md_list, $md_referral_list, $pat_referral_list = null, $letterid = 0) {
+
+  $db = new Db();
   $contact_info = array();
   if (isset($patient)) {
     $sql = "SELECT patientid AS id, salutation, firstname, lastname, add1, add2, city, state, zip, email, preferredcontact, ".$letterid." AS letterid FROM dental_patients WHERE patientid IN('".$patient."');";
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_assoc($result)) {
-      $contact_info['patient'][] = $row;
+    $result = $db->getResults($sql);
+    if ($result) {
+      foreach ($result as $row) {
+        $contact_info['patient'][] = $row;
+      }
     }
   }
   if (isset($md_list) && $md_list != "") {
     $sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contact.middlename, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contacttype.contacttype, ".$letterid." AS letterid, dental_contact.status FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_list.");";
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_assoc($result)) {
-      $contact_info['mds'][] = $row;
+    $result = $db->getResults($sql);
+    if ($result) {
+      foreach ($result as $row) {
+        $contact_info['mds'][] = $row;
+      }
     }
   }
   if (isset($md_referral_list) && $md_referral_list != "") {
-    		$sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.lastname, dental_contact.middlename, dental_contact.firstname, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contact.contacttypeid, ".$letterid." AS letterid, dental_contact.status FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_referral_list.");";
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_assoc($result)) {
-      $contact_info['md_referrals'][] = $row;
+		$sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.lastname, dental_contact.middlename, dental_contact.firstname, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contact.contacttypeid, ".$letterid." AS letterid, dental_contact.status FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_referral_list.");";
+    $result = $db->getResults($sql);
+    if ($result) {
+      foreach ($result as $row) {
+        $contact_info['md_referrals'][] = $row;
+      }
     }
   }
-  if (isset($pat_referral_list) && $pat_referral_list != "") {
-                  $sql = "SELECT p.patientid AS id,
-                                p.salutation,
-                                p.lastname,
-                                p.middlename,
-                                p.firstname,
-                                '' as company,
-                                p.add1,
-                                p.add2,
-                                p.city,
-                                p.state,
-                                p.zip,
-                                p.email,
-                                '' as fax,
-                                p.preferredcontact,
-                                '' as contacttypeid,
-                                ".$letterid." AS letterid,
-                                p.status
-                        FROM dental_patients p WHERE p.patientid IN(".$pat_referral_list.");";
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_assoc($result)) {
-      $contact_info['pat_referrals'][] = $row;
-    }
 
+  if (isset($pat_referral_list) && $pat_referral_list != "") {
+    $sql = "SELECT p.patientid AS id,
+              p.salutation,
+              p.lastname,
+              p.middlename,
+              p.firstname,
+              '' as company,
+              p.add1,
+              p.add2,
+              p.city,
+              p.state,
+              p.zip,
+              p.email,
+              '' as fax,
+              p.preferredcontact,
+              '' as contacttypeid,
+              ".$letterid." AS letterid,
+              p.status
+            FROM dental_patients p WHERE p.patientid IN(".$pat_referral_list.");";
+    $result = $db->getResults($sql);
+    if ($result) {
+      foreach ($result as $row) {
+        $contact_info['pat_referrals'][] = $row;
+      }  
+    }
   }
 
   return $contact_info;
@@ -228,20 +218,24 @@ function get_contact_info ($patient, $md_list, $md_referral_list, $pat_referral_
 
 //get number of contacts for letter
 function num_letter_contacts($lid){
+
+  $db = new Db();
   $sql = "SELECT topatient, md_list, md_referral_list FROM dental_letters l
-		WHERE letterid='".mysql_real_escape_string($lid)."' OR parentid='".mysql_real_escape_string($lid)."'";
-  $q = mysql_query($sql);
+            WHERE letterid='".mysql_real_escape_string($lid)."' OR parentid='".mysql_real_escape_string($lid)."'";
+  $q = $db->getResults($sql);
   $num_contacts = 0;
-  while($r = mysql_fetch_assoc($q)){
-    if($r['topatient']==1){
-	$num_contacts++;
+  if ($q) {
+    foreach ($q as $r) {
+      if($r['topatient']==1){
+      	$num_contacts++;
+      }
+      if($r['md_list']!=''){
+        $num_contacts += count(explode(',',$r['md_list']));
+      }
+      if($r['md_referral_list']!=''){
+        $num_contacts += count(explode(',',$r['md_referral_list']));
+      }
     }
-if($r['md_list']!=''){
-    $num_contacts += count(explode(',',$r['md_list']));
-}
-if($r['md_referral_list']!=''){
-    $num_contacts += count(explode(',',$r['md_referral_list']));
-}
   }
   return $num_contacts;  
 }
@@ -261,18 +255,18 @@ class MDReferralFilter {
 
 // Function to Create Letters
 function create_letter ($templateid, $pid = null, $info_id = null, $topatient = null, $md_list = null, $md_referral_list = null, $pat_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null, $check_recipient = true, $template_type = null, $cc_topatient = null, $cc_md_list = null, $cc_md_referral_list = null, $cc_pat_referral_list = null, $font_size = null, $font_family = null) {
+
+  $db = new Db();
   if(isset($_SESSION['docid'])){
     $l_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-    $l_q = mysql_query($l_sql);
-    $l_r = mysql_fetch_assoc($l_q);
+    $l_r = $db->getRow($l_sql);
     if($l_r['use_letters'] != '1'){
       return -1;
     }
   }
   if((!$topatient && !$md_referral_list && !$md_list && !$pat_referral_list) || ($check_recipient && !$md_referral_list && !$md_list && ($templateid==16 || $templateid==19))){
-	$nsql = "SELECT name FROM dental_letter_templates where id=".$templateid;
-	$nq = mysql_query($nsql);
-	$nrow = mysql_fetch_assoc($nq);
+  	$nsql = "SELECT name FROM dental_letter_templates where id=".$templateid;
+  	$nrow = $db->getRow($nsql);
     return false;
   }
   //To remove referral source from md list if exists
@@ -381,94 +375,90 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
 		$values .= ", '".mysql_real_escape_string($deleted)."', '".$_SESSION['userid']."', now() ";
 	}
   if (isset($template_type)) {
-                $columns .= ", template_type";
-                $values .= ", '".mysql_real_escape_string($template_type)."'";
-        }
+    $columns .= ", template_type";
+    $values .= ", '".mysql_real_escape_string($template_type)."'";
+  }
   if($font_size){
-                $columns .= ", font_size";
-                $values .= ", '".mysql_real_escape_string($font_size)."'";
+    $columns .= ", font_size";
+    $values .= ", '".mysql_real_escape_string($font_size)."'";
   }
   if($font_family){
-                $columns .= ", font_family";
-                $values .= ", '".mysql_real_escape_string($font_family)."'";
+    $columns .= ", font_family";
+    $values .= ", '".mysql_real_escape_string($font_family)."'";
   }
   $columns .= ", generated_date, delivered, docid, userid";
   $values .= ", '$gen_date', '$delivered', '". $_SESSION['docid'] ."', '". $_SESSION['userid'] ."'";
   $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
-error_log($letter_query);
-  $letter_insert = mysql_query($letter_query);
+  error_log($letter_query);
+  $letter_insert = $db->query($letter_query);
   if(!$letter_insert) {
     return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
   } else {
     $id = mysql_insert_id();
     // If parent and recipient ids are set, clear the recipient id from the parent
-
     return $id;
   }
 }
-
-
 
 // Function to Create Letters
 function create_welcome_letter ($templateid, $md_list, $docid) {
-$let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-$let_q = mysql_query($let_sql);
-$let_r = mysql_fetch_assoc($let_q);
-if($let_r['use_letters'] && $let_r['intro_letters']){
 
-  $gen_date = date('Y-m-d H:i:s');
-  $status = '0';
-  $delivered = '0';
-  $deleted = '0';
-  $columns = "templateid";
-  $values = "'".mysql_real_escape_string($templateid)."'";
-  if ($status == 1) {
-    $columns .= ", date_sent";
-    $values .= ", NOW()";
-  }
-  if (isset($md_list)) {
-    $columns .= ", md_list";
-    $values .= ", '".mysql_real_escape_string($md_list)."'";
-    $columns .= ", cc_md_list";
-    $values .= ", '".mysql_real_escape_string($md_list)."'";
-  }
-  if (isset($status)) {
-                $columns .= ", status";
-                $values .= ", '".mysql_real_escape_string($status)."'";
-        }
-  if (isset($deleted)) {
-                $columns .= ", deleted";
-                $values .= ", '".mysql_real_escape_string($deleted)."'";
-        }
+  $db = new Db();
+  $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $let_r = $db->getRow($let_sql);
 
-  $columns .= ", generated_date, delivered, docid, userid";
-  $values .= ", '$gen_date', '$delivered', '". $docid ."', '". $docid ."'";
-  $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
-  $letter_insert = mysql_query($letter_query);
-  if(!$letter_insert) {
-    return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
-  } else {
-    $id = mysql_insert_id();
-    // If parent and recipient ids are set, clear the recipient id from the parent
+  if($let_r['use_letters'] && $let_r['intro_letters']){
+    $gen_date = date('Y-m-d H:i:s');
+    $status = '0';
+    $delivered = '0';
+    $deleted = '0';
+    $columns = "templateid";
+    $values = "'".mysql_real_escape_string($templateid)."'";
+    if ($status == 1) {
+      $columns .= ", date_sent";
+      $values .= ", NOW()";
+    }
+    if (isset($md_list)) {
+      $columns .= ", md_list";
+      $values .= ", '".mysql_real_escape_string($md_list)."'";
+      $columns .= ", cc_md_list";
+      $values .= ", '".mysql_real_escape_string($md_list)."'";
+    }
+    if (isset($status)) {
+      $columns .= ", status";
+      $values .= ", '".mysql_real_escape_string($status)."'";
+    }
+    if (isset($deleted)) {
+      $columns .= ", deleted";
+      $values .= ", '".mysql_real_escape_string($deleted)."'";
+    }
 
-    return $id;
+    $columns .= ", generated_date, delivered, docid, userid";
+    $values .= ", '$gen_date', '$delivered', '". $docid ."', '". $docid ."'";
+    $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
+    $letter_insert = $db->query($letter_query);
+    if(!$letter_insert) {
+      return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
+    } else {
+      $id = mysql_insert_id();
+      // If parent and recipient ids are set, clear the recipient id from the parent
+      return $id;
+    }
   }
 }
-}
-
-
-
 
 function save_letter($letterid, $parent = null, $type, $recipientid, $template = null, $update_send = null, $font_size = null, $font_family = null) {
+
+  $db = new Db();
   if (!isset($letterid)) {
 		return false;
   }
 	// Enable/Disable email
 	if ($preferred == "email") {
 		$sql = "SELECT templateid, send_method FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
-		$result = mysql_query($sql);
-		$templateid = mysql_result($result, 0);
-		$send_method = mysql_result($result, 1);
+		$result = $db->getRow($sql);
+		$templateid = $result['templateid'];
+		$send_method = $result['send_method'];
 		if(empty($allowemail) && !in_array($templateid, $safeemails)) {
 			$preferred = "paper";
 		}
@@ -482,61 +472,63 @@ $template = htmlspecialchars($template);
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
 		$template = html_entity_decode( preg_replace('/(&Acirc;|&acirc;|&nbsp;)+/i', '', $template), ENT_COMPAT | ENT_IGNORE,"UTF-8");
 		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), template='".mysql_real_escape_string($template)."' ";
-                if($font_size ){
-                        $letter_query .= ", font_size='".mysql_real_escape_string($font_size)."' ";
-		}
-                if($font_family ){
-                        $letter_query .= ", font_family='".mysql_real_escape_string($font_family)."' ";
-                }
+    if($font_size ){
+      $letter_query .= ", font_size='".mysql_real_escape_string($font_size)."' ";
+    }
+    if($font_family ){
+      $letter_query .= ", font_family='".mysql_real_escape_string($font_family)."' ";
+    }
 
 		if($update_send){
 			$letter_query .= ", send_method='".mysql_real_escape_string($update_send)."' ";
 			if($update_send == 'paper' || $update_send == 'email'){
-				mysql_query("UPDATE dental_faxes SET viewed='1' WHERE letterid='".mysql_real_escape_string($letterid)."'");
+				$db->query("UPDATE dental_faxes SET viewed='1' WHERE letterid='".mysql_real_escape_string($letterid)."'");
 			}
 		}
 		$letter_query .= " WHERE letterid='".s_for($letterid)."';";
-		$letter_result = mysql_query($letter_query);
+		$letter_result = $db->query($letter_query);
     return $letterid;
     //return mysql_error();
   } else {
     $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list, cc_topatient, cc_md_list, cc_md_referral_list, template_type FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
-		$select_result = mysql_query($select_letter);
-		while ($row = mysql_fetch_assoc($select_result)) {
-			$status = '0';
-			if ($type == 'patient') {
-				$topatient = '1';
-				$removepatient = '0';
-			} elseif ($type == 'md') {
-				$md_list = $recipientid;
-				$mds = explode(",", $row['md_list']);
-				$key = array_search($recipientid, $mds);
-				unset($mds[$key]);
-				$new_mds = implode(",", $mds);
-			} elseif ($type == 'md_referral') {
-				$md_referral_list = $recipientid;
-				$md_referrals = explode(",", $row['md_referral_list']);
-				$key = array_search($recipientid, $md_referrals);
-				unset($md_referrals[$key]);
-				$new_md_referrals = implode(",", $mds);
-			}
-			if($update_send){
-				$send_method = $update_send;
-			}elseif ($row['send_method'] == "") {
-				$send_method = $preferred;
-			} else {
-				$send_method = $row['send_method'];
-				if ($send_method == "email") {
-					if(empty($allowemail) && !in_array($templateid, $safeemails)) {
-						$send_method = "paper";
-					}
-				}
-			}
-		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, null, $letterid, $template, $send_method, $status, null, false, $row['template_type'], $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list'], $font_size, $font_family); 	
-		}
+		$select_result = $db->getResults($select_letter);
+    if ($select_result) {
+      foreach ($select_result as $row) {
+  			$status = '0';
+  			if ($type == 'patient') {
+  				$topatient = '1';
+  				$removepatient = '0';
+  			} elseif ($type == 'md') {
+  				$md_list = $recipientid;
+  				$mds = explode(",", $row['md_list']);
+  				$key = array_search($recipientid, $mds);
+  				unset($mds[$key]);
+  				$new_mds = implode(",", $mds);
+  			} elseif ($type == 'md_referral') {
+  				$md_referral_list = $recipientid;
+  				$md_referrals = explode(",", $row['md_referral_list']);
+  				$key = array_search($recipientid, $md_referrals);
+  				unset($md_referrals[$key]);
+  				$new_md_referrals = implode(",", $mds);
+  			}
+  			if($update_send){
+  				$send_method = $update_send;
+  			}elseif ($row['send_method'] == "") {
+  				$send_method = $preferred;
+  			} else {
+  				$send_method = $row['send_method'];
+  				if ($send_method == "email") {
+  					if(empty($allowemail) && !in_array($templateid, $safeemails)) {
+  						$send_method = "paper";
+  					}
+  				}
+  			}
+  		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, null, $letterid, $template, $send_method, $status, null, false, $row['template_type'], $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list'], $font_size, $font_family); 	
+  		}
+    }
  		if (is_numeric($letter)) {	// new letter was created successfully Update the parent letter by removing the recipient
-                                $update_edit = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."' WHERE letterid='".$letter."'";
-				mysql_query($update_edit);
+      $update_edit = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."' WHERE letterid='".$letter."'";
+			$db->query($update_edit);
 			if ($type == 'patient') {
 				$update_letters = "UPDATE dental_letters SET topatient='".$removepatient."' WHERE letterid='".$letterid."';";
 			} elseif ($type == 'md') {
@@ -544,7 +536,7 @@ $template = htmlspecialchars($template);
 			} elseif ($type == 'md_referral') {
 				$update_letters = "UPDATE dental_letters SET md_referral_list='".$new_md_referrals."' WHERE letterid='".$letterid."';";
 			}
-			$update_result = mysql_query($update_letters);
+			$update_result = $db->query($update_letters);
       if (!$update_result) {
 				return mysql_error();
 			} else {
@@ -552,451 +544,452 @@ $template = htmlspecialchars($template);
 			}
 		}
   }
-
 }
 
-
-
 function send_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
-  if (!isset($letterid)) {
-                return false;
-  }
-        // Find out preferred send_method
-        switch ($type) {
-                case "patient":
-                        $sql = "SELECT preferredcontact FROM dental_patients WHERE patientid = '".$recipientid."';";
-                        $result = mysql_query($sql);
-                        $preferred = mysql_result($result, 0);
-                        break;
-                case "md":
-                        $sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$recipientid."';";
-                        $result = mysql_query($sql);
-                        $preferred = mysql_result($result, 0);
 
-                        break;
-                case "md_referral":
-                        $sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$recipientid."';";
-                        $result = mysql_query($sql);
-                        $preferred = mysql_result($result, 0);
-                        break;
-        }
-        // Enable/Disable email
-        if ($preferred == "email") {
-                $sql = "SELECT templateid, send_method FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
-                $result = mysql_query($sql);
-                $templateid = mysql_result($result, 0);
-		$send_method = mysql_result($result, 0);
-                if(empty($allowemail) && !in_array($templateid, $safeemails)) {
-                        $preferred = "paper";
-                }
-        }
-  if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
-                $letter_query = "UPDATE dental_letters SET parentid=null, status='1', date_sent = NOW(), send_method='".s_for($send_method)."', template='".s_for($template)."' WHERE letterid='".s_for($letterid)."';";
-                $letter_result = mysql_query($letter_query);
-                $parent_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".$letterid."';";
-                $parent_result = mysql_query($parent_query);
-		if($letter_result){
-		  return $letterid;
-		}else{
-		  return "ERROR";
-		}
+  $db = new Db();
+  if (!isset($letterid)) {
+    return false;
+  }
+  // Find out preferred send_method
+  switch ($type) {
+    case "patient":
+      $sql = "SELECT preferredcontact FROM dental_patients WHERE patientid = '".$recipientid."';";
+      $result = $db->getRow($sql);
+      $preferred = array_shift($result);
+      break;
+    case "md":
+      $sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$recipientid."';";
+      $result = $db->getRow($sql);
+      $preferred = array_shift($result);
+      break;
+    case "md_referral":
+      $sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$recipientid."';";
+      $result = $db->getRow($sql);
+      $preferred = array_shift($result);
+      break;
+  }
+  // Enable/Disable email
+  if ($preferred == "email") {
+    $sql = "SELECT templateid, send_method FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
+    $result = $db->getRow($sql);
+    $templateid = $result['templateid'];
+    $send_method = $result['send_method'];
+    if(empty($allowemail) && !in_array($templateid, $safeemails)) {
+      $preferred = "paper";
+    }
+  }
+    if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
+    $letter_query = "UPDATE dental_letters SET parentid=null, status='1', date_sent = NOW(), send_method='".s_for($send_method)."', template='".s_for($template)."' WHERE letterid='".s_for($letterid)."';";
+    $letter_result = $db->query($letter_query);
+    $parent_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".$letterid."';";
+    $parent_result = $db->query($parent_query);
+    if($letter_result){
+    return $letterid;
+    }else{
+    return "ERROR";
+    }
   } else {
+
     $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list, cc_topatient, cc_md_list, cc_md_referral_list, template_type FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
-                $select_result = mysql_query($select_letter);
-                while ($row = mysql_fetch_assoc($select_result)) {
-                        $status = '1';
-                        if ($type == 'patient') {
-                                $topatient = '1';
-                                $removepatient = '0';
-                        } elseif ($type == 'md') {
-                                $md_list = $recipientid;
-                                $mds = explode(",", $row['md_list']);
-                                $key = array_search($recipientid, $mds);
-                                unset($mds[$key]);
-                                $new_mds = implode(",", $mds);
-                        } elseif ($type == 'md_referral') {
-                                $md_referral_list = $recipientid;
-                                $md_referrals = explode(",", $row['md_referral_list']);
-                                $key = array_search($recipientid, $md_referrals);
-                                unset($md_referrals[$key]);
-                                $new_md_referrals = implode(",", $mds);
-                        }
-                        if ($row['send_method'] == "") {
-                                $send_method = $preferred;
-                        } else {
-                                $send_method = $row['send_method'];
-                                if ($send_method == "email") {
-                                        if(empty($allowemail) && !in_array($templateid, $safeemails)) {
-                                                $send_method = "paper";
-                                        }
-                                }
-                        }
-                        $letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, null, null, $template, $send_method, $status, null, true, $row['template_type'], $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list']);
-                }
-                if (is_numeric($letter)) {      // new letter was created successfully Update the parent letter by removing the recipient
-                        if ($type == 'patient') {
-                                $update_letters = "UPDATE dental_letters SET topatient='".$removepatient."' WHERE letterid='".$letterid."';";
-                        } elseif ($type == 'md') {
-                                $update_letters = "UPDATE dental_letters SET md_list='".$new_mds."' WHERE letterid='".$letterid."';";
-                        } elseif ($type == 'md_referral') {
-                                $update_letters = "UPDATE dental_letters SET md_referral_list='".$new_md_referrals."' WHERE letterid='".$letterid."';";
-                        }
-                        $update_result = mysql_query($update_letters);
+    $select_result = $db->getResults($select_letter);
+    if ($select_result) {
+      foreach ($select_result as $row) {
+        $status = '1';
+        if ($type == 'patient') {
+          $topatient = '1';
+          $removepatient = '0';
+        } elseif ($type == 'md') {
+          $md_list = $recipientid;
+          $mds = explode(",", $row['md_list']);
+          $key = array_search($recipientid, $mds);
+          unset($mds[$key]);
+          $new_mds = implode(",", $mds);
+        } elseif ($type == 'md_referral') {
+          $md_referral_list = $recipientid;
+          $md_referrals = explode(",", $row['md_referral_list']);
+          $key = array_search($recipientid, $md_referrals);
+          unset($md_referrals[$key]);
+          $new_md_referrals = implode(",", $mds);
+        }
+        if ($row['send_method'] == "") {
+          $send_method = $preferred;
+        } else {
+          $send_method = $row['send_method'];
+          if ($send_method == "email") {
+            if(empty($allowemail) && !in_array($templateid, $safeemails)) {
+              $send_method = "paper";
+            }
+          }
+        }
+        $letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, null, null, $template, $send_method, $status, null, true, $row['template_type'], $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list']);
+      }
+    }
+    if (is_numeric($letter)) {      // new letter was created successfully Update the parent letter by removing the recipient
+      if ($type == 'patient') {
+        $update_letters = "UPDATE dental_letters SET topatient='".$removepatient."' WHERE letterid='".$letterid."';";
+      } elseif ($type == 'md') {
+        $update_letters = "UPDATE dental_letters SET md_list='".$new_mds."' WHERE letterid='".$letterid."';";
+      } elseif ($type == 'md_referral') {
+        $update_letters = "UPDATE dental_letters SET md_referral_list='".$new_md_referrals."' WHERE letterid='".$letterid."';";
+      }
+      $update_result = $db->query($update_letters);
       if (!$update_result) {
-                                return mysql_error();
-                        } else {
-                                return $letter;
-                        }
-                }
+        return mysql_error();
+      } else {
+        return $letter;
+      }
+    }
   }
 }
 
 function create_letter_pdf($letterid){
 
-                $sql = "SELECT patientid, topatient, md_list, md_referral_list, send_method, docid, userid, templateid, template FROM dental_letters where letterid = '".$letterid."';";
-                $result = mysql_query($sql);
-                if (!$result) {
-                        return mysql_error();
-                }
-			$row = mysql_fetch_assoc($result);
-                        $to_name = $firstname . " " . $lastname;
-                        $send_method = $row['send_method'];
-                        $patientid = $row['patientid'];
-                        $docid = $row['docid'];
-                        $userid = $row['userid'];
-                        $templateid = $row['templateid'];
-			$message = $row['template'];
+  $db = new DB();
 
-			if ($row['md_list']) {
-                                $id = $row['md_list'];
-                                $sql = "SELECT preferredcontact, firstname, lastname, phone1, fax FROM dental_contact WHERE contactid = '".$id."';";
-                                $myinfo = mysql_query($sql);
-                                $preferredcontact = mysql_result($myinfo, 0, 0);
-                                $to_name = mysql_result($myinfo, 0, 1) . " " . mysql_result($myinfo, 0, 2);
-                                $phone = mysql_result($myinfo, 0, 3);
-                                $fax = mysql_result($myinfo, 0, 4);
-                        } elseif ($row['md_referral_list']) {
-                                $id = $row['md_referral_list'];
-                                $sql = "SELECT preferredcontact, firstname, lastname, phone1, fax FROM dental_contact WHERE contactid = '".$id."';";
-                                $myinfo = mysql_query($sql);
-                                $preferredcontact = mysql_result($myinfo, 0, 0);
-                                $to_name = mysql_result($myinfo, 0, 1) . " " . mysql_result($myinfo, 0, 2);
-                                $phone = mysql_result($myinfo, 0, 3);
-                                $fax = mysql_result($myinfo, 0, 4);
-                        }
-
-
-		if($send_method == "" && $preferredcontact == "fax"){
-			$send_method="fax";
-		}
-
-                // Get Doctor's Name and Email
-                $sql = "SELECT name, email, phone, use_digital_fax, fax, logo, user_type FROM dental_users WHERE userid = '".$docid."';";
-                $result = mysql_query($sql);
-                $doc_name = mysql_result($result, 0, 0);
-                $doc_email = mysql_result($result, 0, 1);
-                $doc_phone = mysql_result($result, 0, 2);
-                $use_digital_fax = mysql_result($result, 0, 3);
-                $doc_fax = mysql_result($result, 0, 4);
-                $logo = mysql_result($result, 0, 5);
-                $user_type = mysql_result($result, 0, 6);
-
-		$loc_sql = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
-		$loc_q = mysql_query($loc_sql);
-		$loc_r = mysql_fetch_assoc($loc_q);
-		$doc_name = $loc_r['name'];
-		$doc_phone = $loc_r['phone'];
-		$doc_fax = $loc_r['fax'];
-
-$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($patientid)."'";
-$loc_q = mysql_query($loc_sql);
-$loc_r = mysql_fetch_assoc($loc_q);
-if($patientid!='' && $loc_r['location'] != '' && $loc_r['location'] != '0'){
-  $location_query = "SELECT * FROM dental_locations WHERE id='".mysql_real_escape_string($loc_r['location'])."' AND docid='".mysql_real_escape_string($docid)."'";
-}else{
-  $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
-}
-		$loc_rq = mysql_query($location_query);
-                $loc_r2 = mysql_fetch_assoc($loc_rq);
-                $doc_name = $loc_r2['name'];
-                $doc_phone = $loc_r2['phone'];
-                $doc_fax = $loc_r2['fax'];
-                // Create PDF
-                $title = "Dental Sleep Solutions";
-                $filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
-                if($send_method == 'fax' && $use_digital_fax){
-if($user_type == DSS_USER_TYPE_SOFTWARE){
-  if($logo != ''){
-    $cover_image = "<img src=\"../../../shared/q_file/".$logo."\" />";
-  }else{
-    $cover_image = "";
+  $sql = "SELECT patientid, topatient, md_list, md_referral_list, send_method, docid, userid, templateid, template FROM dental_letters where letterid = '".$letterid."';";
+  $row = $db->getRow($sql);
+  if (!$row) {
+    return mysql_error();
   }
-}else{
-  $cover_image = "<img src=\"/manage/images/logo.gif\" />";
-}
-                        $cover = "
-<table>
-<tr>
-<td>".$cover_image."</td>
-<td><center>
-<b>CONFIDENTAL HEALTH INFORMATION<br />
-FAX COVER SHEET</b>
-</center>
-</td>
-</tr>
-</table>
-<br /><br /><br />
-<b>DATE:</b> ".date('m/d/Y')."<br />
-<br />
-<b>TO:</b><br />
-NAME: ".$to_name."<br />
-PHONE: ".format_phone($phone)."<br />
-FAX: ".format_phone($fax)."
-<br /><br />
-<b>FROM:</b><br />
-NAME: ".$doc_name."<br />
-PHONE: ".format_phone($doc_phone)."<br />
-FAX: ".format_phone($doc_fax)."<br /><br />
+  $to_name = $firstname . " " . $lastname;
+  $send_method = $row['send_method'];
+  $patientid = $row['patientid'];
+  $docid = $row['docid'];
+  $userid = $row['userid'];
+  $templateid = $row['templateid'];
+  $message = $row['template'];
 
-TOTAL NUMBER OF PAGES:  %NUM_PAGES%
-<br /><br />
-<b>IF YOU RECEIVE THIS FAX IN ERROR, PLEASE CONTACT THE SENDER IMMEDIATELY AND THEN DESTROY THE FAXED MATERIALS.
-<br /><br />
-CONFIDENTIALITY NOTICE:</b><br />
-The documents accompanying this transmission contain legally privileged health information. This information is intended only for the use of the individual or entity named above. The authorized recipient of this information is prohibited from disclosing this information to any other party unless required to do so by law or regulation and is required to destroy the information after its stated need has been fulfilled.
-<br /><br />
-If you are not the intended recipient, you are hereby notified that any disclosure, copying, distribution, or action taken in reliance on the contents of these documents is strictly prohibited. If you have received this information in error, please notify the sender and the privacy officer immediately and arrange for the return or destruction of these documents.
-";
-                }else{
-                        $cover = '';
-                }
-                //$html = html_entity_decode($message, ENT_COMPAT | ENT_QUOTES, "UTF-8");
-		//$html = $message;
-		$html = html_entity_decode( preg_replace('/(&Acirc;|&nbsp;)+/i', '', $message), ENT_COMPAT | ENT_IGNORE,"UTF-8");
-                $franchisee_query = "SELECT u.user_type, l.name, mailing_name, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip, u.email FROM dental_users u
-			                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-					WHERE u.userid = '".$docid."';";
-                $franchisee_result = mysql_query($franchisee_query);
-                while ($row = mysql_fetch_assoc($franchisee_result)) {
-                        $fi = $row;
-                }
-                if($fi['user_type'] == DSS_USER_TYPE_FRANCHISEE){
-                  $footerText = $fi['mailing_name'].' '.$fi['mailing_practice'].' '.$fi['mailing_address'].' '.$fi['mailing_city'].' '.$fi['mailing_state'].' '.$fi['mailing_zip'];
-                }else{
-                  $footerText = "";
-                }
-                create_pdf($title, $filename, $html, null, '', $footerText, $cover, $docid, $letterid);
-                $letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
-                $letter_result = mysql_query($letter_query);
-}
+  if ($row['md_list']) {
+    $id = $row['md_list'];
+    $sql = "SELECT preferredcontact, firstname, lastname, phone1, fax FROM dental_contact WHERE contactid = '".$id."';";
+    $myinfo = $db->getRow($sql);
+    $preferredcontact = $myinfo['preferredcontact'];
+    $to_name = $myinfo['firstname'] . " " . $myinfo['lastname'];
+    $phone = $myinfo['phone1'];
+    $fax = $myinfo['fax'];
+  } elseif ($row['md_referral_list']) {
+    $id = $row['md_referral_list'];
+    $sql = "SELECT preferredcontact, firstname, lastname, phone1, fax FROM dental_contact WHERE contactid = '".$id."';";
+    $myinfo = $db->getRow($sql);
+    $preferredcontact = $myinfo['preferredcontact'];
+    $to_name = $myinfo['firstname'] . " " . $myinfo['lastname'];
+    $phone = $myinfo['phone1'];
+    $fax = $myinfo['fax'];
+  }
 
+  if($send_method == "" && $preferredcontact == "fax"){
+    $send_method="fax";
+  }
+
+  // Get Doctor's Name and Email
+  $sql = "SELECT name, email, phone, use_digital_fax, fax, logo, user_type FROM dental_users WHERE userid = '".$docid."';";
+  $result = $db->getRow($sql);
+  $doc_name = $result['name'];
+  $doc_email = $result['email'];
+  $doc_phone = $result['phone'];
+  $use_digital_fax = $result['use_digital_fax'];
+  $doc_fax = $result['fax'];
+  $logo = $result['logo'];
+  $user_type = $result['user_type'];
+
+  $loc_sql = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
+  $loc_r = $db->getRow($loc_sql);
+  $doc_name = $loc_r['name'];
+  $doc_phone = $loc_r['phone'];
+  $doc_fax = $loc_r['fax'];
+
+  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($patientid)."'";
+  $loc_r = $db->getRow($loc_sql);
+  if($patientid!='' && $loc_r['location'] != '' && $loc_r['location'] != '0'){
+    $location_query = "SELECT * FROM dental_locations WHERE id='".mysql_real_escape_string($loc_r['location'])."' AND docid='".mysql_real_escape_string($docid)."'";
+  }else{
+    $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
+  }
+
+  $loc_r2 = $db->getRow($location_query);
+  $doc_name = $loc_r2['name'];
+  $doc_phone = $loc_r2['phone'];
+  $doc_fax = $loc_r2['fax'];
+  // Create PDF
+  $title = "Dental Sleep Solutions";
+  $filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
+  if($send_method == 'fax' && $use_digital_fax){
+    if($user_type == DSS_USER_TYPE_SOFTWARE){
+      if($logo != ''){
+        $cover_image = "<img src=\"../../../shared/q_file/".$logo."\" />";
+      }else{
+        $cover_image = "";
+      }
+    }else{
+      $cover_image = "<img src=\"/manage/images/logo.gif\" />";
+    }
+    $cover = "
+  <table>
+  <tr>
+  <td>".$cover_image."</td>
+  <td><center>
+  <b>CONFIDENTAL HEALTH INFORMATION<br />
+  FAX COVER SHEET</b>
+  </center>
+  </td>
+  </tr>
+  </table>
+  <br /><br /><br />
+  <b>DATE:</b> ".date('m/d/Y')."<br />
+  <br />
+  <b>TO:</b><br />
+  NAME: ".$to_name."<br />
+  PHONE: ".format_phone($phone)."<br />
+  FAX: ".format_phone($fax)."
+  <br /><br />
+  <b>FROM:</b><br />
+  NAME: ".$doc_name."<br />
+  PHONE: ".format_phone($doc_phone)."<br />
+  FAX: ".format_phone($doc_fax)."<br /><br />
+
+  TOTAL NUMBER OF PAGES:  %NUM_PAGES%
+  <br /><br />
+  <b>IF YOU RECEIVE THIS FAX IN ERROR, PLEASE CONTACT THE SENDER IMMEDIATELY AND THEN DESTROY THE FAXED MATERIALS.
+  <br /><br />
+  CONFIDENTIALITY NOTICE:</b><br />
+  The documents accompanying this transmission contain legally privileged health information. This information is intended only for the use of the individual or entity named above. The authorized recipient of this information is prohibited from disclosing this information to any other party unless required to do so by law or regulation and is required to destroy the information after its stated need has been fulfilled.
+  <br /><br />
+  If you are not the intended recipient, you are hereby notified that any disclosure, copying, distribution, or action taken in reliance on the contents of these documents is strictly prohibited. If you have received this information in error, please notify the sender and the privacy officer immediately and arrange for the return or destruction of these documents.
+  ";
+  }else{
+    $cover = '';
+  }
+  //$html = html_entity_decode($message, ENT_COMPAT | ENT_QUOTES, "UTF-8");
+  //$html = $message;
+  $html = html_entity_decode( preg_replace('/(&Acirc;|&nbsp;)+/i', '', $message), ENT_COMPAT | ENT_IGNORE,"UTF-8");
+  $franchisee_query = "SELECT u.user_type, l.name, mailing_name, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip, u.email FROM dental_users u
+                        LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+                        WHERE u.userid = '".$docid."';";
+  $franchisee_result = $db->getResults($franchisee_query);
+  if ($franchisee_result) {
+    foreach ($franchisee_result as $row) {
+      $fi = $row;
+    }
+  }
+  if($fi['user_type'] == DSS_USER_TYPE_FRANCHISEE){
+    $footerText = $fi['mailing_name'].' '.$fi['mailing_practice'].' '.$fi['mailing_address'].' '.$fi['mailing_city'].' '.$fi['mailing_state'].' '.$fi['mailing_zip'];
+  }else{
+    $footerText = "";
+  }
+  create_pdf($title, $filename, $html, null, '', $footerText, $cover, $docid, $letterid);
+  $letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
+  $letter_result = $db->query($letter_query);
+}
 
 function deliver_created_letter($letterid){
+
+  $db = new Db();
   $send_success = true;
 
-                $sql = "SELECT patientid, topatient, pdf_path, md_list, md_referral_list, send_method, docid, userid, templateid, template FROM dental_letters where letterid = '".$letterid."';";
-                $result = mysql_query($sql);
-                if (!$result) {
-                        return mysql_error();
-                }
-                while ($row = mysql_fetch_assoc($result)) {
-                        if ($row['topatient']) {
-                                $id = $row['patientid'];
-                                $sql = "SELECT firstname, lastname, email FROM dental_patients WHERE patientid = '".$id."';";
-                                $myinfo = mysql_query($sql);
-                                $firstname = mysql_result($myinfo, 0, 0);
-                                $lastname = mysql_result($myinfo, 0, 1);
-                                $to_email = mysql_result($myinfo, 0, 2);
-				$preferredcontact = "";
-				$pid = $id;
-				$contactid = '';
-                        } elseif ($row['md_list']) {
-                                $id = $row['md_list'];
-                                $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
-                                $myinfo = mysql_query($sql);
-                                $firstname = mysql_result($myinfo, 0, 0);
-                                $lastname = mysql_result($myinfo, 0, 1);
-                                $to_email = mysql_result($myinfo, 0, 2);
-                                $fax = mysql_result($myinfo, 0, 3);
-                                $company = mysql_result($myinfo, 0, 4);
-                                $phone = mysql_result($myinfo, 0, 5);
-				$preferredcontact = mysql_result($myinfo, 0, 6);
-				$pid = '';
-				$contactid = $id;
-                        } elseif ($row['md_referral_list']) {
-                                $id = $row['md_referral_list'];
-                                $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
-                                $myinfo = mysql_query($sql);
-                                $firstname = mysql_result($myinfo, 0, 0);
-                                $lastname = mysql_result($myinfo, 0, 1);
-                                $to_email = mysql_result($myinfo, 0, 2);
-                                $fax = mysql_result($myinfo, 0, 3);
-                                $company = mysql_result($myinfo, 0, 4);
-                                $phone = mysql_result($myinfo, 0, 5);
-				$preferredcontact = mysql_result($myinfo, 0, 6);
-                                $pid = '';
-                                $contactid = $id;
-                        }
-                        $to_name = $firstname . " " . $lastname;
-                        $send_method = $row['send_method'];
-                        $patientid = $row['patientid'];
-                        $docid = $row['docid'];
-                        $userid = $row['userid'];
-                        $templateid = $row['templateid'];
-			$filename = $row['pdf_path'];
-			$template = $row['template'];
-                }
+  $sql = "SELECT patientid, topatient, pdf_path, md_list, md_referral_list, send_method, docid, userid, templateid, template FROM dental_letters where letterid = '".$letterid."';";
+  $result = $db->getResults($sql);
+  if (!$result) {
+    return mysql_error();
+  } else {
+    foreach ($result as $row) {
+      if ($row['topatient']) {
+        $id = $row['patientid'];
+        $sql = "SELECT firstname, lastname, email FROM dental_patients WHERE patientid = '".$id."';";
+        $myinfo = $db->getRow($sql);
+        $firstname = $myinfo['firstname'];
+        $lastname = $myinfo['lastname'];
+        $to_email = $myinfo['email'];
+        $preferredcontact = "";
+        $pid = $id;
+        $contactid = '';
+      } elseif ($row['md_list']) {
+        $id = $row['md_list'];
+        $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
+        $myinfo = $db->getRow($sql);
+        $firstname = $myinfo['firstname'];
+        $lastname = $myinfo['lastname'];
+        $to_email = $myinfo['email'];
+        $fax = $myinfo['fax'];
+        $company = $myinfo['company'];
+        $phone = $myinfo['phone1'];
+        $preferredcontact = $myinfo['preferredcontact'];
+        $pid = '';
+        $contactid = $id;
+      } elseif ($row['md_referral_list']) {
+        $id = $row['md_referral_list'];
+        $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
+        $myinfo = $db->getRow($sql);
+        $firstname = $myinfo['firstname'];
+        $lastname = $myinfo['lastname'];
+        $to_email = $myinfo['email'];
+        $fax = $myinfo['fax'];
+        $company = $myinfo['company'];
+        $phone = $myinfo['phone1'];
+        $preferredcontact = $myinfo['preferredcontact'];
+        $pid = '';
+        $contactid = $id;
+      }
 
-		if($send_method=="" && $preferredcontact!=""){
-			$send_method = $preferredcontact;
-		}
+      $to_name = $firstname . " " . $lastname;
+      $send_method = $row['send_method'];
+      $patientid = $row['patientid'];
+      $docid = $row['docid'];
+      $userid = $row['userid'];
+      $templateid = $row['templateid'];
+      $filename = $row['pdf_path'];
+      $template = $row['template'];
+    }
+  }
 
-                // Get Doctor's Name and Email
-                $sql = "SELECT u.name, u.email, u.phone, u.use_digital_fax, u.fax, u.logo, u.user_type, c.companyid FROM dental_users u LEFT JOIN dental_user_company c ON c.userid=u.userid WHERE u.userid = '".$docid."';";
-                $result = mysql_query($sql);
-                $doc_name = mysql_result($result, 0, 0);
-                $doc_email = mysql_result($result, 0, 1);
-                $doc_phone = mysql_result($result, 0, 2);
-                $use_digital_fax = mysql_result($result, 0, 3);
-                $doc_fax = mysql_result($result, 0, 4);
-                $logo = mysql_result($result, 0, 5);
-                $user_type = mysql_result($result, 0, 6);
-		$doc_company = mysql_result($result, 0, 7);
+  if($send_method=="" && $preferredcontact!=""){
+    $send_method = $preferredcontact;
+  }
 
+  // Get Doctor's Name and Email
+  $sql = "SELECT u.name, u.email, u.phone, u.use_digital_fax, u.fax, u.logo, u.user_type, c.companyid FROM dental_users u LEFT JOIN dental_user_company c ON c.userid=u.userid WHERE u.userid = '".$docid."';";
+  $result = $db->getRow($sql);
+  $doc_name = $result['name'];
+  $doc_email = $result['email'];
+  $doc_phone = $result['phone'];
+  $use_digital_fax = $result['use_digital_fax'];
+  $doc_fax = $result['fax'];
+  $logo = $result['logo'];
+  $user_type = $result['user_type'];
+  $doc_company = $result['companyid'];
 
-                mysql_query("UPDATE dental_faxes SET viewed='1' WHERE letterid='".$letterid."'");
+  $db->query("UPDATE dental_faxes SET viewed='1' WHERE letterid='".$letterid."'");
 
-                $fax_send = false;
-                // Send Fax
-                if ($send_method == 'fax' && $use_digital_fax) {
-                        $subject = "Dental Sleep Solutions";
-                        include 'class.fax.php';
-                        $filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
-                        $fileType = "pdf";
-                        $fts = new FTSSamples($doc_company);
-                        $fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
-                        if($fax_send["status"] !== true){
-                          if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
-                                $send_success = false;
-                          }else{
-                                $send_success = false;
-                          }
-                        }
-                        //$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid);
-                }
-                if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
-                        if($fax_send['status']){
-                          $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
-			  $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysql_real_escape_string($patientid)."',userid = '".mysql_real_escape_string($userid)."',docid = '".mysql_real_escape_string($docid)."',sent_date = NOW(),pages = '".mysql_real_escape_string(count_pages('../letterpdfs/'.$filename))."',contactid = '".mysql_real_escape_string($contactid)."',filename = '".mysql_real_escape_string($filename)."',to_number = '".mysql_real_escape_string($fax)."',to_name = '".mysql_real_escape_string($to_name)."',letterid = '".mysql_real_escape_string($letterid)."',status = '0', sfax_transmission_id = '".$fax_send['transmission_id']."', letter_body = '".mysql_real_escape_string($template)."', adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-			  error_log($fax_query);
-			  mysql_query($fax_query);
-			  $fid = mysql_insert_id();
-			  invoice_add_fax('1', $_SESSION['docid'], $fid);
-                        }else{
-                          $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
-                        }
-                        $letter_result = mysql_query($letter_query);
-                        $letter_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".s_for($letterid)."';";
-                        $letter_result = mysql_query($letter_query);
-                        if (!$letter_result) {
-                                return mysql_error();
-                        }
-                        if ($send_method == 'paper') {
-                                return "paper";
-                        }
-			return true;
-
-                }else{
-                        $letter_query = "UPDATE dental_letters SET status='2' WHERE letterid='".s_for($letterid)."';";
-                        $letter_result = mysql_query($letter_query);
-                        return "Letter could not be sent.";
-                }
-
+  $fax_send = false;
+  // Send Fax
+  if ($send_method == 'fax' && $use_digital_fax) {
+    $subject = "Dental Sleep Solutions";
+    include 'class.fax.php';
+    $filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
+    $fileType = "pdf";
+    $fts = new FTSSamples($doc_company);
+    $fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
+    if($fax_send["status"] !== true){
+      if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
+        $send_success = false;
+      }else{
+        $send_success = false;
+      }
+    }
+    //$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid);
+  }
+  if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
+    if($fax_send['status']){
+      $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
+      $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysql_real_escape_string($patientid)."',userid = '".mysql_real_escape_string($userid)."',docid = '".mysql_real_escape_string($docid)."',sent_date = NOW(),pages = '".mysql_real_escape_string(count_pages('../letterpdfs/'.$filename))."',contactid = '".mysql_real_escape_string($contactid)."',filename = '".mysql_real_escape_string($filename)."',to_number = '".mysql_real_escape_string($fax)."',to_name = '".mysql_real_escape_string($to_name)."',letterid = '".mysql_real_escape_string($letterid)."',status = '0', sfax_transmission_id = '".$fax_send['transmission_id']."', letter_body = '".mysql_real_escape_string($template)."', adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+      error_log($fax_query);
+      $fid = $db->getInsertId($fax_query);
+      invoice_add_fax('1', $_SESSION['docid'], $fid);
+    }else{
+      $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
+    }
+    $letter_result = $db->query($letter_query);
+    $letter_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".s_for($letterid)."';";
+    $letter_result = $db->query($letter_query);
+    if (!$letter_result) {
+      return mysql_error();
+    }
+    if ($send_method == 'paper') {
+      return "paper";
+    }
+    return true;
+  }else{
+    $letter_query = "UPDATE dental_letters SET status='2' WHERE letterid='".s_for($letterid)."';";
+    $letter_result = $db->query($letter_query);
+    return "Letter could not be sent.";
+  }
 }
 
 // Actually Sends The Letter, returns send_method on success, false on failure.
 function deliver_letter($letterid, $message) {
-        $send_success = true;
+
+  $db = new Db();
+  $send_success = true;
+
 	if (!isset($letterid)) {
 		return false;
 	} else {
 		$sql = "SELECT patientid, topatient, md_list, md_referral_list, send_method, docid, userid, templateid FROM dental_letters where letterid = '".$letterid."';";
-		$result = mysql_query($sql);
+		$result = $db->getResults($sql);
 		if (!$result) {
 			return mysql_error();
- 		}
-		while ($row = mysql_fetch_assoc($result)) {
-			if ($row['topatient']) {
-				$id = $row['patientid'];
-				$sql = "SELECT firstname, lastname, email FROM dental_patients WHERE patientid = '".$id."';";
-				$myinfo = mysql_query($sql);
-				$firstname = mysql_result($myinfo, 0, 0);
-				$lastname = mysql_result($myinfo, 0, 1);
-				$to_email = mysql_result($myinfo, 0, 2);
-				$preferredcontact = "";
-			} elseif ($row['md_list']) {
-				$id = $row['md_list'];
-				$sql = "SELECT firstname, lastname, email, fax, company, phone1, preferred_contact FROM dental_contact WHERE contactid = '".$id."';";
-				$myinfo = mysql_query($sql);
-				$firstname = mysql_result($myinfo, 0, 0);
-				$lastname = mysql_result($myinfo, 0, 1);
-				$to_email = mysql_result($myinfo, 0, 2);
-				$fax = mysql_result($myinfo, 0, 3);
-				$company = mysql_result($myinfo, 0, 4);
-				$phone = mysql_result($myinfo, 0, 5);
-				$preferredcontact = mysql_result($myinfo, 0, 6);
-			} elseif ($row['md_referral_list']) {
-				$id = $row['md_referral_list'];
-				$sql = "SELECT firstname, lastname, email, fax, company, phone1, preferred_contact FROM dental_contact WHERE contactid = '".$id."';";
-				$myinfo = mysql_query($sql);
-				$firstname = mysql_result($myinfo, 0, 0);
-				$lastname = mysql_result($myinfo, 0, 1);
-				$to_email = mysql_result($myinfo, 0, 2);	
-				$fax = mysql_result($myinfo, 0, 3);
-				$company = mysql_result($myinfo, 0, 4);
-				$phone = mysql_result($myinfo, 0, 5);
-                                $preferredcontact = mysql_result($myinfo, 0, 6);
-			}
-			$to_name = $firstname . " " . $lastname;
-			$send_method = $row['send_method'];
-			$patientid = $row['patientid'];
-			$docid = $row['docid'];
-			$userid = $row['userid'];
-			$templateid = $row['templateid'];
-		}
+ 		} else {
+      foreach ($result as $row) {
+  			if ($row['topatient']) {
+  				$id = $row['patientid'];
+  				$sql = "SELECT firstname, lastname, email FROM dental_patients WHERE patientid = '".$id."';";
+  				$myinfo = $db->getRow($sql);
+  				$firstname = $myinfo['firstname'];
+  				$lastname = $myinfo['lastname'];
+  				$to_email = $myinfo['email'];
+  				$preferredcontact = "";
+  			} elseif ($row['md_list']) {
+  				$id = $row['md_list'];
+  				$sql = "SELECT firstname, lastname, email, fax, company, phone1, preferred_contact FROM dental_contact WHERE contactid = '".$id."';";
+  				$myinfo = $db->getRow($sql);
+  				$firstname = $myinfo['firstname'];
+  				$lastname = $myinfo['lastname'];
+  				$to_email = $myinfo['email'];
+  				$fax = $myinfo['fax'];
+  				$company = $myinfo['company'];
+  				$phone = $myinfo['phone1'];
+  				$preferredcontact = $myinfo['preferred_contact'];
+  			} elseif ($row['md_referral_list']) {
+  				$id = $row['md_referral_list'];
+  				$sql = "SELECT firstname, lastname, email, fax, company, phone1, preferred_contact FROM dental_contact WHERE contactid = '".$id."';";
+  				$myinfo = $db->getRow($sql);
+  				$firstname = $myinfo['firstname'];
+  				$lastname = $myinfo['lastname'];
+  				$to_email = $myinfo['email'];	
+  				$fax = $myinfo['fax'];
+  				$company = $myinfo['company'];
+  				$phone = $myinfo['phone1'];
+          $preferredcontact = $myinfo['preferred_contact'];
+  			}
+  			$to_name = $firstname . " " . $lastname;
+  			$send_method = $row['send_method'];
+  			$patientid = $row['patientid'];
+  			$docid = $row['docid'];
+  			$userid = $row['userid'];
+  			$templateid = $row['templateid'];
+  		}
+    }
 
-
-                if($send_method=="" && $preferredcontact!=""){
-                        $send_method = $preferredcontact;
-                }
+    if($send_method=="" && $preferredcontact!=""){
+      $send_method = $preferredcontact;
+    }
 
 		if ($send_method == "email") {
 			if(empty($allowemail) && !in_array($templateid, $safeemails)) {
 				$send_method = "paper";
 				$sql = "UPDATE dental_letters SET send_method = 'paper' WHERE letterid = '".s_for($letterid)."';";
-				$result = mysql_query($sql);
+				$result = $db->query($sql);
 			}
 		}
 
 		// Get Doctor's Name and Email
-                $sql = "SELECT u.name, u.email, u.phone, u.use_digital_fax, u.fax, u.logo, u.user_type, c.companyid FROM dental_users u LEFT JOIN dental_user_company c ON c.userid=u.userid WHERE u.userid = '".$docid."';";
-		$result = mysql_query($sql);
-		$doc_name = mysql_result($result, 0, 0);
-		$doc_email = mysql_result($result, 0, 1);
-		$doc_phone = mysql_result($result, 0, 2);
-		$use_digital_fax = mysql_result($result, 0, 3);
-		$doc_fax = mysql_result($result, 0, 4);
-		$logo = mysql_result($result, 0, 5);
-		$user_type = mysql_result($result, 0, 6);
-		$doc_company = mysql_result($result, 0, 7);
+    $sql = "SELECT u.name, u.email, u.phone, u.use_digital_fax, u.fax, u.logo, u.user_type, c.companyid FROM dental_users u LEFT JOIN dental_user_company c ON c.userid=u.userid WHERE u.userid = '".$docid."';";
+		$result = $db->getRow($sql);
+		$doc_name = $result['name,'];
+		$doc_email = $result['email'];
+		$doc_phone = $result['phone'];
+		$use_digital_fax = $result['use_digital_fax'];
+		$doc_fax = $result['fax'];
+		$logo = $result['logo'];
+		$user_type = $result['user_type'];
+		$doc_company = $result['companyid'];
 
-                $loc_sql = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
-                $loc_q = mysql_query($loc_sql);
-                $loc_r = mysql_fetch_assoc($loc_q);
-                $doc_name = $loc_r['name'];
-                $doc_phone = $loc_r['phone'];
-                $doc_fax = $loc_r['fax'];
-
+    $loc_sql = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
+    $loc_r = $db->getRow($loc_sql);
+    $doc_name = $loc_r['name'];
+    $doc_phone = $loc_r['phone'];
+    $doc_fax = $loc_r['fax'];
 
 		// Send Email
 		if ($send_method == 'email') {
@@ -1007,12 +1000,12 @@ function deliver_letter($letterid, $message) {
 		$title = "Dental Sleep Solutions";
 		$filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
 		if($send_method == 'fax' && $use_digital_fax){
-if($user_type == DSS_USER_TYPE_SOFTWARE){
-  $cover_image = "/manage/q_file/".$logo;
-}else{
-  $cover_image = "/manage/images/logo.gif";
-}
-			$cover = "
+      if($user_type == DSS_USER_TYPE_SOFTWARE){
+        $cover_image = "/manage/q_file/".$logo;
+      }else{
+        $cover_image = "/manage/images/logo.gif";
+      }
+  		$cover = "
 <table>
 <tr>
 <td><img src=\"".$cover_image."\" /></td>
@@ -1049,12 +1042,12 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 			$cover = '';
 		}
 		$html = $message;
-                $franchisee_query = "SELECT u.user_type, l.name, mailing_name, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip, u.email FROM dental_users u
-                                        LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-                                        WHERE u.userid = '".$docid."';";
-		$franchisee_result = mysql_query($franchisee_query);
-		while ($row = mysql_fetch_assoc($franchisee_result)) {
-        		$fi = $row;
+    $franchisee_query = "SELECT u.user_type, l.name, mailing_name, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip, u.email FROM dental_users u
+                            LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+                            WHERE u.userid = '".$docid."';";
+		$franchisee_result = $db->getResults($franchisee_query);
+    if ($franchisee_result) foreach ($franchisee_result as $row) {
+  		$fi = $row;
 		}
 		if($fi['user_type'] == DSS_USER_TYPE_FRANCHISEE){
 		  $footerText = $fi['mailing_name'].' '.$fi['mailing_practice'].' '.$fi['mailing_address'].' '.$fi['mailing_city'].' '.$fi['mailing_state'].' '.$fi['mailing_zip'];
@@ -1063,42 +1056,42 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 		}
 		create_pdf($title, $filename, $html, null, '', $footerText, $cover, $docid, $letterid);
 		$letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
-		$letter_result = mysql_query($letter_query);
+		$letter_result = $db->query($letter_query);
 		$fax_send = false;	
 		// Send Fax	
 		if ($send_method == 'fax' && $use_digital_fax) {
 			$subject = "Dental Sleep Solutions";
 			include 'class.fax.php';
-                	$filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
-                	$fileType = "pdf";
+    	$filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
+    	$fileType = "pdf";
 			$fts = new FTSSamples($doc_company);
 			$fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType, $firstname);
 			if($fax_send !== true){
 			  if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
-				$send_success = false;
+  				$send_success = false;
 			  }else{
-				$send_success = false;
+  				$send_success = false;
 			  }
 			}
 			//$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid); 
 		} 
 		if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
 			if($fax_send){
-                          $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
+        $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
 			}else{
 			  $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
 			}
-			$letter_result = mysql_query($letter_query);
+			$letter_result = $db->query($letter_query);
 			if (!$letter_result) {
 				return mysql_error();
 			}
 			if ($send_method == 'paper') {
 				return "paper";
-      			}
+			}
 
 		}else{
 			$letter_query = "UPDATE dental_letters SET status='2' WHERE letterid='".s_for($letterid)."';";
-                        $letter_result = mysql_query($letter_query);
+      $letter_result = $db->query($letter_query);
 			return "Letter could not be sent.";
 		}
 		/*
@@ -1112,6 +1105,8 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 }
 
 function send_email($to_name, $to_email, $from_name, $from_email, $subject, $message, $attachment = null, $uid) {
+
+  $db = new Db();
 	require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/swift-4.0.6/lib/swift_required.php');
 	$email = Swift_Message::newInstance();
 
@@ -1119,8 +1114,7 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 	$from = "$from_name <$from_email>";
 
 	$sql = "SELECT email_header, email_footer FROM dental_users WHERE userid = '".st($uid)."';"; 
-	$result = mysql_query($sql);
-	$my = mysql_fetch_array($result);
+	$my = $db->getRow($sql);
 	$email_header_imgname = $my['email_header'];
 	$email_footer_imgname = $my['email_footer'];
 	if (!empty($email_header_imgname)) {
@@ -1164,9 +1158,11 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 }
 
 function send_fax($fax, $phone, $email, $name, $company, $subject, $sender_name, $pdf_filename, $message, $uid) {
+
+  $db= new Db();
 	$sql = "SELECT fax_header, fax_footer FROM dental_users WHERE userid = '".st($uid)."';"; 
-	$result = mysql_query($sql);
-	$my = mysql_fetch_array($result);
+
+	$my = $db->getRow($result);
 	$fax_header_imgname = $my['fax_header'];
 	$fax_footer_imgname = $my['fax_footer'];
 	if (!empty($fax_header_imgname)) {
@@ -1255,174 +1251,173 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
 // Extend the TCPDF class to create custom Header and Footer
 class MYPDF extends TCPDF {
 
-		public $footerText = '';
-
-		//Page header
-		public function Header() {
-				// Logo
-				$image_file = K_PATH_IMAGES.'dss_print_header.jpg';
-					//$this->Image($image_file, 0, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
-			}
-
-			// Page footer
-			public function Footer() {
-				// Position at 26 mm from bottom
-				$this->SetY(-17);
-				$this->Cell(0, 10, html_entity_decode($this->footerText), 0, false, 'C', 0, '', 0, false, 'T', 'M');
-		}
-        public function AcceptPageBreak() {
-                if ($this->num_columns > 1) {
-                        // multi column mode
-                        if ($this->current_column < ($this->num_columns - 1)) {
-                                // go to next column
-                                $this->selectColumn($this->current_column + 1);
-                        } else {
-                                // add a new page
-                                $this->AddPage();
-                                // set first column
-                                $this->selectColumn(0);
-                        }
-                        // avoid page breaking from checkPageBreak()
-                        return false;
-                }
-                $this->setMargins(18,40,18);
-                return $this->AutoPageBreak;
-        }
+  public $footerText = '';
+  //Page header
+  public function Header() {
+    // Logo
+    $image_file = K_PATH_IMAGES.'dss_print_header.jpg';
+    //$this->Image($image_file, 0, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
+  }
+  // Page footer
+  public function Footer() {
+    // Position at 26 mm from bottom
+    $this->SetY(-17);
+    $this->Cell(0, 10, html_entity_decode($this->footerText), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+  }
+  public function AcceptPageBreak() {
+    if ($this->num_columns > 1) {
+      // multi column mode
+      if ($this->current_column < ($this->num_columns - 1)) {
+        // go to next column
+        $this->selectColumn($this->current_column + 1);
+      } else {
+        // add a new page
+        $this->AddPage();
+        // set first column
+        $this->selectColumn(0);
+      }
+      // avoid page breaking from checkPageBreak()
+      return false;
+    }
+    $this->setMargins(18,40,18);
+    return $this->AutoPageBreak;
+  }
 }
 
 function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $cover = '', $docid = null, $letterid = null) {	
 	// create new PDF document
   if ($fax) {
-		global $pdf_header, $pdf_footer;
-		$pdf_header = $header;
-		$pdf_footer = $footer;
-		// Extend the TCPDF class to create custom Header and Footer
-		class FAXPDF extends TCPDF {
-				//Page header
-				public function Header() {
-						// Logo
-						global $pdf_header;
-						if ($pdf_header) {
-							$this->Image($pdf_header, 24, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
-						}
-					}
+    global $pdf_header, $pdf_footer;
+    $pdf_header = $header;
+    $pdf_footer = $footer;
+    // Extend the TCPDF class to create custom Header and Footer
+    class FAXPDF extends TCPDF {
+      //Page header
+      public function Header() {
+        // Logo
+        global $pdf_header;
+        if ($pdf_header) {
+          $this->Image($pdf_header, 24, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
+        }
+      }
 
-					// Page footer
-					public function Footer() {
-						// Position at 26 mm from bottom
-						$this->SetY(-26);
-						global $pdf_footer;
-						if ($pdf_footer) {
-							$this->Image($pdf_footer, 24, 281, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
-						}
-				}
-		}
-		$pdf = new FAXPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+      // Page footer
+      public function Footer() {
+        // Position at 26 mm from bottom
+        $this->SetY(-26);
+        global $pdf_footer;
+        if ($pdf_footer) {
+          $this->Image($pdf_footer, 24, 281, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
+        }
+      }
+    }
+    $pdf = new FAXPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
   } else {
-		$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$pdf->footerText = $footer;
-	}
+    $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    $pdf->footerText = $footer;
+  }
 
-	// set document information
-	$pdf->SetCreator(PDF_CREATOR);
-	$pdf->SetAuthor('Dental Sleep Solutions');
-	$pdf->SetTitle($title);
-	$pdf->SetSubject($title);
-	$pdf->SetKeywords('DSS Correspondance');
+  // set document information
+  $pdf->SetCreator(PDF_CREATOR);
+  $pdf->SetAuthor('Dental Sleep Solutions');
+  $pdf->SetTitle($title);
+  $pdf->SetSubject($title);
+  $pdf->SetKeywords('DSS Correspondance');
 
-	// set default monospaced font
-	$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-                $font_size = 10;
-                $font_family = "dejavusans";
-	if($docid){
-		$m_sql = "SELECT * from dental_users where userid='".mysql_real_escape_string($docid)."'";
-		$m_q = mysql_query($m_sql);
-		$m_r = mysql_fetch_assoc($m_q);
-		if($m_r['user_type']==2){
-                $margin_top = $m_r['letter_margin_top'];
-                $margin_left = $m_r['letter_margin_left'];
-                $margin_right = $m_r['letter_margin_right'];
-                $margin_bottom = $m_r['letter_margin_bottom'];
-                $margin_header = $m_r['letter_margin_header']; 
-                $margin_footer = $m_r['letter_margin_footer'];
-			if($letterid){
-				$l_sql = "SELECT * FROM dental_letters where letterid='".mysql_real_escape_string($letterid)."'";
-				$l_q = mysql_query($l_sql);
-				$l_r = mysql_fetch_assoc($l_q);
-				$font_size = $l_r['font_size'];
-				$font_family = $l_r['font_family'];
-			}
-		}else{
-                $margin_top = PDF_MARGIN_TOP;
-                $margin_left = PDF_MARGIN_LEFT;
-                $margin_right = PDF_MARGIN_RIGHT;
-                $margin_bottom = PDF_MARGIN_BOTTOM;
-                $margin_header = PDF_MARGIN_HEADER; 
-                $margin_footer = PDF_MARGIN_FOOTER;
-		}
-	}else{
-		$margin_top = PDF_MARGIN_TOP;
-		$margin_left = PDF_MARGIN_LEFT;
-		$margin_right = PDF_MARGIN_RIGHT;
-		$margin_bottom = PDF_MARGIN_BOTTOM;
-		$margin_header = PDF_MARGIN_HEADER;
-		$margin_footer = PDF_MARGIN_FOOTER;
-	}
+  // set default monospaced font
+  $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+  $font_size = 10;
+  $font_family = "dejavusans";
+  $db = new Db();
+  if($docid){
+    $m_sql = "SELECT * from dental_users where userid='".mysql_real_escape_string($docid)."'";
+    $m_r = $db->getRow($m_sql);
+    if($m_r['user_type']==2){
+      $margin_top = $m_r['letter_margin_top'];
+      $margin_left = $m_r['letter_margin_left'];
+      $margin_right = $m_r['letter_margin_right'];
+      $margin_bottom = $m_r['letter_margin_bottom'];
+      $margin_header = $m_r['letter_margin_header']; 
+      $margin_footer = $m_r['letter_margin_footer'];
+      if($letterid){
+        $l_sql = "SELECT * FROM dental_letters where letterid='".mysql_real_escape_string($letterid)."'";
+        $l_r = $db->getRow($l_sql);
+        $font_size = $l_r['font_size'];
+        $font_family = $l_r['font_family'];
+      }
+    }else{
+      $margin_top = PDF_MARGIN_TOP;
+      $margin_left = PDF_MARGIN_LEFT;
+      $margin_right = PDF_MARGIN_RIGHT;
+      $margin_bottom = PDF_MARGIN_BOTTOM;
+      $margin_header = PDF_MARGIN_HEADER; 
+      $margin_footer = PDF_MARGIN_FOOTER;
+    }
+  }else{
+    $margin_top = PDF_MARGIN_TOP;
+    $margin_left = PDF_MARGIN_LEFT;
+    $margin_right = PDF_MARGIN_RIGHT;
+    $margin_bottom = PDF_MARGIN_BOTTOM;
+    $margin_header = PDF_MARGIN_HEADER;
+    $margin_footer = PDF_MARGIN_FOOTER;
+  }
 
+  //set margins
+  $pdf->SetMargins($margin_left, $margin_top, $margin_right);
+  $pdf->SetHeaderMargin($margin_header);
+  $pdf->SetFooterMargin($margin_footer);
 
-	//set margins
-	$pdf->SetMargins($margin_left, $margin_top, $margin_right);
-	$pdf->SetHeaderMargin($margin_header);
-	$pdf->SetFooterMargin($margin_footer);
+  //set auto page breaks
+  $pdf->SetAutoPageBreak(TRUE, $margin_bottom);
 
-	//set auto page breaks
-	$pdf->SetAutoPageBreak(TRUE, $margin_bottom);
+  //set image scale factor
+  $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-	//set image scale factor
-	$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+  //set some language-dependent strings
+  //$pdf->setLanguageArray($l);
 
-	//set some language-dependent strings
-	//$pdf->setLanguageArray($l);
+  // set font
+  $pdf->SetFont($font_family, '', $font_size);
 
-	// set font
-	$pdf->SetFont($font_family, '', $font_size);
+  if($cover != ''){
+    $cover = str_replace('%NUM_PAGES%', $pdf->getAliasNbPages(), $cover);
+    $pdf->AddPage();
+    $pdf->writeHTML($cover, true, false, true, false, '');
+  }
 
-	if($cover != ''){
-		$cover = str_replace('%NUM_PAGES%', $pdf->getAliasNbPages(), $cover);
-		$pdf->AddPage();
-  		$pdf->writeHTML($cover, true, false, true, false, '');
-	}
+  // add a page
+  $pdf->AddPage();
 
-	// add a page
-	$pdf->AddPage();
-
-	//fix to allow signature to show for both html and pdf
-	$html = str_replace('display_file.php?f=', '../../../shared/q_file/' , $html);
-	// output the HTML content
-	$pdf->writeHTML($html, true, false, true, false, '');
-        //Close and output PDF document
-	//WORK AROUND FOR MASS LETTER CREATION
-        //$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs2/' . $filename, 'F');
-	//Close and output PDF document
-	$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename, 'F');
+  //fix to allow signature to show for both html and pdf
+  $html = str_replace('display_file.php?f=', '../../../shared/q_file/' , $html);
+  // output the HTML content
+  $pdf->writeHTML($html, true, false, true, false, '');
+  //Close and output PDF document
+  //WORK AROUND FOR MASS LETTER CREATION
+  //$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs2/' . $filename, 'F');
+  //Close and output PDF document
+  $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename, 'F');
 }
 
 
 //reset letter
 function reset_letter($letterid){
+
+  $db = new Db();
   $sql = "UPDATE dental_letters set template='', edit_userid=null, edit_date=null WHERE letterid='".mysql_real_escape_string($letterid)."'";
-  mysql_query($sql);
+  $db->query($sql);
 }
 
 /**
   * gets letters that were delivered for contact
   */
 function get_contact_sent_letters($contactid){
+
+  $db = new Db();
   $s = "SELECT * from dental_letters WHERE delivered=1 AND 
 		(FIND_IN_SET('".$contactid."', md_list) OR
 		FIND_IN_SET('".$contactid."', md_referral_list))";
-  $q = mysql_query($s);
-  $num = mysql_num_rows($q);
+  $num = $db->getNumberRows($s);
   return $num;
 }
 
@@ -1430,38 +1425,43 @@ function get_contact_sent_letters($contactid){
   * gets letters that were not delivered for contact
   */
 function get_contact_pending_letters($contactid){
+
+  $db = new Db();
   $s = "SELECT * from dental_letters WHERE delivered=0 AND 
                 (FIND_IN_SET('".$contactid."', md_list) OR
                 FIND_IN_SET('".$contactid."', md_referral_list))";
-  $q = mysql_query($s);
-  return mysql_num_rows($q);
+  return $db->getNumberRows($s);
 }
 
 function mail_letter($letterid, $mailed = true) {
+
+  $db = new Db();
   if($mailed != 'false'){
     $s = "UPDATE dental_letters set mailed_date = NOW(), mailed_once=1 where letterid='".mysql_real_escape_string($letterid)."'";
   }else{
     $s = "UPDATE dental_letters set mailed_date = null where letterid='".mysql_real_escape_string($letterid)."'";
   }
-  return mysql_query($s);
+  return $db->query($s);
 }
 
 function mail_claim($claimid, $mailed = true, $type = 'pri') {
+
+  $db = new Db();
   if($type == 'pri'){
-  if($mailed != 'false'){
-    $s = "UPDATE dental_insurance set mailed_date = NOW() where insuranceid='".mysql_real_escape_string($claimid)."'";
+    if($mailed != 'false'){
+      $s = "UPDATE dental_insurance set mailed_date = NOW() where insuranceid='".mysql_real_escape_string($claimid)."'";
+    }else{
+      $s = "UPDATE dental_insurance set mailed_date = null where insuranceid='".mysql_real_escape_string($claimid)."'";
+    }
   }else{
-    $s = "UPDATE dental_insurance set mailed_date = null where insuranceid='".mysql_real_escape_string($claimid)."'";
-  }
-  }else{
-  if($mailed != 'false'){
-    $s = "UPDATE dental_insurance set sec_mailed_date = NOW() where insuranceid='".mysql_real_escape_string($claimid)."'";
-  }else{
-    $s = "UPDATE dental_insurance set sec_mailed_date = null where insuranceid='".mysql_real_escape_string($claimid)."'";
-  }
+    if($mailed != 'false'){
+      $s = "UPDATE dental_insurance set sec_mailed_date = NOW() where insuranceid='".mysql_real_escape_string($claimid)."'";
+    }else{
+      $s = "UPDATE dental_insurance set sec_mailed_date = null where insuranceid='".mysql_real_escape_string($claimid)."'";
+    }
   }
   claim_history_update($claimid, $_SESSION['userid'], $_SESSION['adminuserid']);
-  return mysql_query($s);
+  return $db->query($s);
 }
 
 /* Set $parent to true if you want to delete the original letter including all contacts
@@ -1472,26 +1472,27 @@ function mail_claim($claimid, $mailed = true, $type = 'pri') {
  * $template is for a modified template (including tokens) if the original template has been edited.
  */
 function delete_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
-$rval = '';
+
+  $db = new Db();
+  $rval = '';
   $c_sql = "SELECT patientid, topatient, md_list, md_referral_list, pat_referral_list FROM dental_letters WHERE letterid='".mysql_real_escape_string($letterid)."'";
-  $c_q = mysql_query($c_sql);
-  $c_r = mysql_fetch_assoc($c_q);
+  $c_r = $db->getRow($c_sql);
   $contacts = get_contact_info((($c_r['topatient'] == "1") ? $c_r['patientid'] : ''), $c_r['md_list'], $c_r['md_referral_list'], $c_r['pat_referral_list']);
   $total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']) + count($contacts['pat_referrals']);
   if (!isset($letterid)) {
 		return false;
   } elseif ( $total_contacts == 1) {
 		$letter_query = "UPDATE dental_letters SET parentid=null, deleted='1', deleted_by='".$_SESSION['userid']."', deleted_on=now() WHERE letterid='".$letterid."';";
-		$letter_result = mysql_query($letter_query);
+		$letter_result = $db->query($letter_query);
 		$fax_query = "UPDATE dental_faxes SET viewed='1' WHERE letterid='".mysql_real_escape_string($letterid)."'";
-		$fax_result = mysql_query($fax_query);
+		$fax_result = $db->query($fax_query);
  		$parent_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".$letterid."';";
-		$parent_result = mysql_query($parent_query);
+		$parent_result = $db->query($parent_query);
 		return $letter_result;
   }else {
     $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list, cc_md_list, cc_md_referral_list FROM dental_letters WHERE letterid = '".$letterid."';";
-		$select_result = mysql_query($select_letter);
-		while ($row = mysql_fetch_assoc($select_result)) {
+		$select_result = $db->getResults($select_letter);
+    if ($select_result) foreach ($select_result as $row) {
 			$deleted = '1';
 			if ($type == 'patient') {
 				$topatient = '1';
@@ -1504,29 +1505,29 @@ $rval = '';
 				$new_mds = implode(",", $mds);
 				$cc_mds = explode(",", $row['cc_md_list']);
 				$cc_key = array_search($recipientid, $cc_mds);
-                                unset($cc_mds[$cc_key]);
-                                $new_cc_mds = implode(",", $cc_mds);
+        unset($cc_mds[$cc_key]);
+        $new_cc_mds = implode(",", $cc_mds);
 			} elseif ($type == 'md_referral') {
 				$md_referral_list = $recipientid;
 				$md_referrals = explode(",", $row['md_referral_list']);
 				$key = array_search($recipientid, $md_referrals);
 				unset($md_referrals[$key]);
 				$new_md_referrals = implode(",", $md_referrals);
-                                $cc_md_referrals = explode(",", $row['cc_md_referral_list']);
-                                $cc_key = array_search($recipientid, $cc_md_referrals);
-                                unset($cc_md_referrals[$cc_key]);
-                                $new_cc_md_referrals = implode(",", $cc_md_referrals);
+        $cc_md_referrals = explode(",", $row['cc_md_referral_list']);
+        $cc_key = array_search($recipientid, $cc_md_referrals);
+        unset($cc_md_referrals[$cc_key]);
+        $new_cc_md_referrals = implode(",", $cc_md_referrals);
 			} elseif ($type == 'pat_referral') {
-                                $pat_referral_list = $recipientid;
-                                $pat_referrals = explode(",", $row['pat_referral_list']);
-                                $key = array_search($recipientid, $pat_referrals);
-                                unset($pat_referrals[$key]);
-                                $new_pat_referrals = implode(",", $pat_referrals);
-                                $cc_pat_referrals = explode(",", $row['cc_pat_referral_list']);
-                                $cc_key = array_search($recipientid, $cc_pat_referrals);
-                                unset($cc_pat_referrals[$cc_key]);
-                                $new_cc_pat_referrals = implode(",", $cc_pat_referrals);
-                        }
+        $pat_referral_list = $recipientid;
+        $pat_referrals = explode(",", $row['pat_referral_list']);
+        $key = array_search($recipientid, $pat_referrals);
+        unset($pat_referrals[$key]);
+        $new_pat_referrals = implode(",", $pat_referrals);
+        $cc_pat_referrals = explode(",", $row['cc_pat_referral_list']);
+        $cc_key = array_search($recipientid, $cc_pat_referrals);
+        unset($cc_pat_referrals[$cc_key]);
+        $new_cc_pat_referrals = implode(",", $cc_pat_referrals);
+      }
 		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $pat_referral_list, $letterid, $template, $row['send_method'], '', $deleted, false); 	
 		}
  		if (is_numeric($letter)) {
@@ -1537,10 +1538,10 @@ $rval = '';
 			} elseif ($type == 'md_referral') {
 				$update_letters = "UPDATE dental_letters SET md_referral_list='".$new_md_referrals."', cc_md_referral_list='".$new_cc_md_referrals."' WHERE letterid='".$letterid."';";
 			} elseif ($type == 'pat_referral') {
-                                $update_letters = "UPDATE dental_letters SET pat_referral_list='".$new_pat_referrals."', cc_pat_referral_list='".$new_cc_pat_referrals."' WHERE letterid='".$letterid."';";
-                        }
+        $update_letters = "UPDATE dental_letters SET pat_referral_list='".$new_pat_referrals."', cc_pat_referral_list='".$new_cc_pat_referrals."' WHERE letterid='".$letterid."';";
+      }
 
-			$update_result = mysql_query($update_letters);
+			$update_result = $db->query($update_letters);
 
       if (!$update_result) {
 				return false;
@@ -1556,24 +1557,25 @@ $rval = '';
  *
  */
 function delete_contact_letters($contact){
+
+  $db = new Db();
   $l_sql = "SELECT * from dental_letters
-		WHERE FIND_IN_SET('".$contact."', md_list)
-			AND status=0 AND delivered=0";
-  $l_q = mysql_query($l_sql);
-  while($l_r = mysql_fetch_assoc($l_q)){
+              WHERE FIND_IN_SET('".$contact."', md_list)
+              AND status=0 AND delivered=0";
+  $l_q = $db->getResults($l_sql);
+  if ($l_q) foreach ($l_q as $l_r) {
     $lid = $l_r['letterid'];
     delete_letter($lid, false, 'md', $contact);
   }
 
   $l_sql = "SELECT * from dental_letters
-                WHERE FIND_IN_SET('".$contact."', md_referral_list)
-                        AND status=0";
-  $l_q = mysql_query($l_sql);
-  while($l_r = mysql_fetch_assoc($l_q)){
+              WHERE FIND_IN_SET('".$contact."', md_referral_list)
+              AND status=0";
+  $l_q = $db->getResults($l_sql);
+  if ($l_q) foreach ($l_q as $l_r) {
     $lid = $l_r['letterid'];
     delete_letter($lid, false, 'md_referral', $contact);
   }
-
 }
 
 /**
@@ -1581,30 +1583,36 @@ function delete_contact_letters($contact){
  *
  */
 function delete_contact_from_patients($contact){
+
+  $db = new Db();
   $docs = array('docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother', 'docmdother2', 'docmdother3');
   foreach($docs as $doc){
     $s = "UPDATE dental_patients SET ".$doc."='' WHERE ".$doc."=".mysql_real_escape_string($contact);
-    mysql_query($s);
+    $db->query($s);
   }
 }
-
 
 /**
  * Returns a mysql resultset resource for dental_users table on success,
  * false otherwise. Only franchisees are included (no staff).
  */
 function get_franchisees() {
-    $sql = "SELECT * FROM dental_users WHERE docid = 0 ORDER BY last_name ASC, first_name asc";
-    return mysql_query($sql);
+
+  $db = new Db();
+  $sql = "SELECT * FROM dental_users WHERE docid = 0 ORDER BY last_name ASC, first_name asc";
+  // return $db->getResults($sql);
+  return mysql_query($sql);
 }
 
 function get_billing_franchisees() {
-    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
-    $c_q = mysql_query($c_sql);
-    $c = mysql_fetch_assoc($c_q);
 
-    $sql = "SELECT * FROM dental_users WHERE billing_company_id='".$c['companyid']."' AND docid = 0 ORDER BY last_name ASC, first_name asc";
-    return mysql_query($sql);
+  $db = new Db();  
+  $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+  $c = $db->getRow($c_sql);
+
+  $sql = "SELECT * FROM dental_users WHERE billing_company_id='".$c['companyid']."' AND docid = 0 ORDER BY last_name ASC, first_name asc";
+  // return $db->getResults($sql);
+  return mysql_query($sql);
 }
 
 /**
@@ -1615,14 +1623,20 @@ function get_billing_franchisees() {
  *                       the franchisee id.
  */
 function get_patients($franchisee_id = -1) {
-    $sql = "SELECT * FROM dental_patients WHERE docid = $franchisee_id ORDER BY lastname ASC, firstname ASC";
-    return mysql_query($sql);
+
+  $db = new Db();  
+  $sql = "SELECT * FROM dental_patients WHERE docid = $franchisee_id ORDER BY lastname ASC, firstname ASC";
+  // return $db->getResults($sql);
+  return mysql_query($sql);
 }
 
 function get_insurance($franchisee_id = -1) {
-    $sql = "SELECT * FROM dental_contact WHERE docid = $franchisee_id AND contacttypeid=11 
-		AND merge_id IS NULL AND status=1 ORDER BY company ASC";
-    return mysql_query($sql);
+
+  $db = new Db();
+  $sql = "SELECT * FROM dental_contact WHERE docid = $franchisee_id AND contacttypeid=11 
+          	AND merge_id IS NULL AND status=1 ORDER BY company ASC";
+  // return $db->getResults($sql);
+  return mysql_query($sql);
 }
 
 /**
@@ -1635,25 +1649,22 @@ function get_insurance($franchisee_id = -1) {
  * @param $sort_direction Optional (default 'asc'). Direction of the sort (desc|asc).
  */
 function get_sort_arrow_class($sort_by, $sort_compare_to, $sort_direction = 'asc') {
-    print "$sort_by:$sort_compare_to ";
-
-    $arrow = '';
-    
-    if ($sort_by == $sort_compare_to) {
-        $arrow .= 'arrow_' . strtolower($sort_direction);
-    }
-    
-    return $arrow;
+  
+  print "$sort_by:$sort_compare_to ";
+  $arrow = '';
+  if ($sort_by == $sort_compare_to) {
+      $arrow .= 'arrow_' . strtolower($sort_direction);
+  }
+  return $arrow;
 }
 
 function get_sort_dir($sort_by, $sort_compare_to, $current_sort_dir = 'asc') {
-    $direction = $current_sort_dir;
-    
-    if ($sort_by == $sort_compare_to) {
-        $direction = (strtolower($current_sort_dir) == 'asc') ? 'desc' : 'asc';
-    }
-    
-    return $direction;
+  
+  $direction = $current_sort_dir;
+  if ($sort_by == $sort_compare_to) {
+      $direction = (strtolower($current_sort_dir) == 'asc') ? 'desc' : 'asc';
+  }
+  return $direction;
 }
 
 
@@ -1664,24 +1675,19 @@ function time_ago_format($seconds_ago){
   $day = 24 * $hour;
   $month = 30 * $day;
 
-  if ($seconds_ago < 0)
-  {
+  if ($seconds_ago < 0){
     return "";
   }
-  if ($seconds_ago < $minute)
-  {
+  if ($seconds_ago < $minute){
     return $seconds_ago == 1 ? "one second" : $seconds_ago + " seconds";
   }
-  if ($seconds_ago < $hour)
-  {
+  if ($seconds_ago < $hour){
     return floor($seconds_ago/$minute)." minutes";
   }
-  if ($seconds_ago < $day)
-  {
+  if ($seconds_ago < $day){
     return floor($seconds_ago/$hour) . " hours";
   }
-  if( $seconds_ago < $month)
-  {
+  if( $seconds_ago < $month){
     return floor($seconds_ago/$day) . " days";
   }
   return floor($seconds_ago/$month) . " months";

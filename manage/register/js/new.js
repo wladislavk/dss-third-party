@@ -265,3 +265,130 @@ function disable_registration(){
 
 }
 
+$(document).ready(function(){
+    lga_wizard.init();
+    $(".chzn-select").chosen({no_results_text: "No results matched"});
+
+    /* Using custom settings */
+        
+    $("a#saas_agree_but").fancybox({
+        'hideOnContentClick': true
+    });
+
+    $("a#hipaa_agree_but").fancybox({
+        'hideOnContentClick': true
+    });
+});
+
+
+function cancel(n)
+{
+    $('#pc_'+n+'_input_div').hide();
+    $('#pc_'+n+'_person').show();
+    $('#pc_'+n+'_input_div input').val('');
+}
+
+function checkPass()
+{
+    var p1 = $('#password').val();
+    var p2 = $('#password2').val();
+    if(p1!='' || p2!='') {
+        if(p1!=p2) {
+          $('#password2').addClass('pass_invalid');
+          $('#password2').removeClass('pass_valid');
+        } else {
+          $('#password2').addClass('pass_valid');
+          $('#password2').removeClass('pass_invalid');
+        }
+    } else {
+        $('#password2').removeClass('pass_valid');
+        $('#password2').removeClass('pass_invalid');  
+    }
+}
+
+function stripeResponseHandler(status, response)
+{
+    if (response.error) {
+        // Show the errors on the form
+        alert(response.error.message);
+        $('#loader').hide();
+        $('#payment_proceed').show();
+    } else {
+        var address = '';
+        var token = response.id;
+        $.ajax({
+            url: "includes/update_token.php",
+            type: "get",
+            data: {id: $("#userid").val(), name: $('#first_name').val()+" "+$('#last_name').val(), address: address, email: $("#email").val(), token: token},
+            success: function(data){
+                $('#loader').hide();      
+                $('#payment_proceed').show();
+            },
+            failure: function(data){
+                alert('f - '+data);
+                $('#loader').hide();
+                $('#payment_proceed').show();
+            }
+        });
+    }
+    
+    $('#loader').hide();
+    $('#payment_proceed').show();
+}
+
+function add_cc()
+{
+    if($('.card-number').val()=='' || $('.card-cvc').val()=='' || $('.card-expiry-month').val().length!=2 || $('.card-expiry-year').val().length!=4 || $('.card-name').val()=='' || $('.card-zip').val().length!=5){
+        alert('Please enter valid information for all fields');
+        return false;
+    }
+
+    $('#loader').show();
+    $('#payment_proceed').hide();
+    var post = $('#register_form').serializeObject();
+    
+    $.post('helpers/new_submit.php', post, function(data) {
+        var r = $.parseJSON(data);
+        $('#userid').val(r['userid']);
+
+        $.ajax({
+            url: "includes/update_token_new.php",
+            type: "post",
+            data: {
+                id: $("#userid").val(), 
+                name: $('#first_name').val()+" "+$('#last_name').val(), 
+                email: $("#email").val(),
+                cnumber: $('.card-number').val(),
+                cname: $('.card-name').val(),
+                exp_month: $('.card-expiry-month').val(),
+                exp_year: $('.card-expiry-year').val(),
+                cvc: $('.card-cvc').val(),
+                zip: $('.card-zip').val(),
+                companyid: "<?php echo   addslashes($c_r['id']); ?>", 
+                company: "<?php echo   addslashes($c_r['name']); ?>"
+            },
+            success: function(data){
+                var r = $.parseJSON(data);
+                if(r.error){
+                    $('#loader').hide();      
+                    $('#payment_proceed').show();
+                    alert(r.error.message);
+                } else {
+                    $('.card-number').val('');
+                    $('.card-cvc').val('');
+                    $('.card-expiry-month').val('');
+                    $('.card-expiry-year').val('');
+                    $("#email_add").text($("#email").val());
+                    $('a.next').click();
+                }
+            },
+            failure: function(data){
+                $('#loader').hide();
+                $('#payment_proceed').show();
+            }
+        });
+    });
+    
+    // Prevent the form from submitting with the default action
+    return false;
+}

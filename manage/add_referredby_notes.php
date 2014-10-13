@@ -2,24 +2,22 @@
 session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-if($_POST["notesub"] == 1)
-{
+if($_POST["notesub"] == 1){
 	$referredby_notes = $_POST['referredby_notes'];
-	
-		$up_sql = "update dental_contact set 
-		referredby_notes = '".mysql_real_escape_string($referredby_notes)."'
-	 	where contactid='".$_POST["rid"]."'";
-		
-		mysql_query($up_sql) or die($up_sql." | ".mysql_error());
-		
-		$msg = "Edited Successfully";
-		?>
-		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			parent.window.location='manage_referredby.php?msg=<?=$msg;?>';
-		</script>
-		<?
-		die();
+
+	$up_sql = "update dental_contact set 
+				referredby_notes = '".mysql_real_escape_string($referredby_notes)."'
+				where contactid='".$_POST["rid"]."'";
+
+	$db->query($up_sql) or die($up_sql." | ".mysql_error());
+
+	$msg = "Edited Successfully";?>
+	<script type="text/javascript">
+		//alert("<?=$msg;?>");
+		parent.window.location='manage_referredby.php?msg=<?=$msg;?>';
+	</script>
+<?php
+	die();
 }
 
 ?>
@@ -32,19 +30,16 @@ if($_POST["notesub"] == 1)
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 </head>
 <body>
-    <?
+<?php
 	
-    $thesql = "select * from dental_contact where contactid='".$_REQUEST["rid"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+$thesql = "select * from dental_contact where contactid='".$_REQUEST["rid"]."'";
+$themyarray = $db->getRow($thesql);
+
+$referredby_notes = st($themyarray['referredby_notes']);?>
 	
-	$referredby_notes = st($themyarray['referredby_notes']);
+<br /><br />
 	
-	?>
-	
-	<br /><br />
-	
-    <form name="notesfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post">
+<form name="notesfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post">
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -56,7 +51,6 @@ if($_POST["notesub"] == 1)
 				<textarea id="referredby_notes" name="referredby_notes" class="tbox" style="width:100%; height:200px;"><?=$referredby_notes;?></textarea>
             </td>
         </tr>
-        
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
@@ -68,6 +62,6 @@ if($_POST["notesub"] == 1)
             </td>
         </tr>
     </table>
-    </form>
+</form>
 </body>
 </html>

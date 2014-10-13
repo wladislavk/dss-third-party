@@ -152,6 +152,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         <?php
         die();
     }
+    
     // Put POST values into variables
         //$pica1 = $_POST['pica1'];
         //$pica2 = $_POST['pica2'];
@@ -392,6 +393,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 $fdf_type="primary";
                $u_status = false;
              }
+               if( $patient_lastname != ''){
                 $ed_sql = " update dental_insurance set
                 patient_lastname = '".s_for($patient_lastname)."',
                 patient_firstname = '".s_for($patient_firstname)."',
@@ -581,7 +583,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 billing_provider_b_other = '".s_for($billing_provider_b_other)."',
 		eligible_token = '".mysql_real_escape_string($_POST["eligibleToken"])."',
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."'";
+                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."'";
                 if(isset($_POST['reject_but'])){
                   $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
                   $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";
@@ -591,13 +593,14 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 $ed_sql .= " where insuranceid = '".s_for($_GET['insid'])."'";
 
                 mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+            }
                 // update the ledger trxns passed in with the form
                 $trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
                 update_ledger_trxns($_POST['ed'], $trxn_status);
 
 	$pat_sql = "UPDATE dental_patients SET 
 			                p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."'
+                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."'
 		WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
 	mysql_query($pat_sql);
 
@@ -643,7 +646,7 @@ claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
 $dce_id = mysql_insert_id();
 invoice_add_efile('2', $_SESSION['admincompanyid'], $dce_id);
 invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
-
+echo $result;
 if($success == "false"){
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
   mysql_query($up_sql);
@@ -655,14 +658,20 @@ claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
                                         foreach($errors as $error){
                                           $confirm .= mysql_real_escape_string($error).", ";
                                         }
-
 ?>
 <script type="text/javascript">
    alert('RESPONSE: <?= $confirm; ?>');
    window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>"; 
 </script>
 <?php
-
+}elseif($result == "Invalid JSON"){
+  $confirm = "Submission failed. Invalid JSON";
+?>
+<script type="text/javascript">
+   alert('RESPONSE: <?= $confirm; ?>');
+   window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>"; 
+</script>
+<?php
 }else{
 ?>
 <script type="text/javascript">

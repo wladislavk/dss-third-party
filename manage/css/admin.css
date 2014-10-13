@@ -39,6 +39,9 @@ td {
 	color: #000000;
 	text-decoration: none;
 }
+td.highlight{
+	background-color: #AAAAFF;
+}
 
 .t_head {
 	font-family: Arial, Helvetica, sans-serif;

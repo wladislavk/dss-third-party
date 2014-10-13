@@ -144,7 +144,15 @@ if (isset($_GET['ed'])) {
          . "in_family_amount_left_to_meet = '" . $_POST["in_family_amount_left_to_meet"] . "', "
          . "in_expected_insurance_payment = '" . $_POST["in_expected_insurance_payment"] . "', "
          . "in_expected_patient_payment = '" . $_POST["in_expected_patient_payment"] . "', "
-
+         . "has_in_network_benefits = '" . $_POST["has_in_network_benefits"] . "', "
+         . "in_is_pre_auth_required = '" . $_POST["in_is_pre_auth_required"] . "', "
+         . "in_call_reference_num = '" . $_POST["in_call_reference_num"] . "', "
+         . "in_verbal_pre_auth_name = '" . $_POST["in_verbal_pre_auth_name"] . "', "
+         . "in_verbal_pre_auth_ref_num = '" . $_POST["in_verbal_pre_auth_ref_num"] . "', "
+         . "in_verbal_pre_auth_notes = '" . $_POST["in_verbal_pre_auth_notes"] . "', "
+         . "in_written_pre_auth_date_received = '" . $_POST["in_written_pre_auth_date_received"] . "', "
+         . "in_pre_auth_num = '" . $_POST["in_pre_auth_num"] . "', "
+         . "in_written_pre_auth_notes = '" . $_POST["in_written_pre_auth_notes"] . "', "
 	 . "updated_at = now(), "
 	 . "updated_by = '".mysql_real_escape_string($_SESSION['adminuserid'])."' ";
     

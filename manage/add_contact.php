@@ -518,7 +518,7 @@ if($themyarray["contactid"] != ''){ ?>
 -->
 
 <script type="text/javascript" src="script/contact.js"></script>
-<script type="text/javascript" src="script/add_contact.js"></script>
+<script type="text/javascript" src="js/add_contact.js"></script>
 
 </body>
 </html>

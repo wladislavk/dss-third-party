@@ -3,13 +3,15 @@
 
 	function update_patient_summary($pid = null, $column = null, $value = null)
 	{
+		$db = new Db();
+		
 		if (empty($pid) || empty($column)) {
 			return 0;
 		}
 
 		$insert = false;
 		$sql = "SELECT pid FROM dental_patient_summary WHERE pid = '".s_for($pid)."';";
-		
+
 		if ($db->getNumberRows($sql) == 0) {
 			$insert = true;
 		}

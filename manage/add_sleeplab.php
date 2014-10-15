@@ -320,7 +320,7 @@ if($themyarray["sleeplabid"] != ''){
         </tr>
     </table>
 </form>
-<script src="js/add_sleeblab.js" type="text/javascript"></script>
+<script src="js/add_sleeplab.js" type="text/javascript"></script>
 
 </body>
 </html>

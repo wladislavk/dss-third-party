@@ -12,7 +12,7 @@ $sql = "SELECT  "
      . "GROUP BY dl.ledgerid";
 $result = $db->getResults($sql);
 $ledger_balance = 0;
-foreach ($result as $row) {
+if ($result) foreach ($result as $row) {
   $ledger_balance -= $row['amount'];
   $ledger_balance += $row['paid_amount'];
 }

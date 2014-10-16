@@ -152,6 +152,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         <?php
         die();
     }
+    
     // Put POST values into variables
         //$pica1 = $_POST['pica1'];
         //$pica2 = $_POST['pica2'];
@@ -392,6 +393,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 $fdf_type="primary";
                $u_status = false;
              }
+               if( $patient_lastname != ''){
                 $ed_sql = " update dental_insurance set
                 patient_lastname = '".s_for($patient_lastname)."',
                 patient_firstname = '".s_for($patient_firstname)."',
@@ -591,6 +593,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 $ed_sql .= " where insuranceid = '".s_for($_GET['insid'])."'";
 
                 mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+            }
                 // update the ledger trxns passed in with the form
                 $trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
                 update_ledger_trxns($_POST['ed'], $trxn_status);
@@ -643,7 +646,7 @@ claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
 $dce_id = mysql_insert_id();
 invoice_add_efile('2', $_SESSION['admincompanyid'], $dce_id);
 invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
-
+echo $result;
 if($success == "false"){
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
   mysql_query($up_sql);
@@ -655,14 +658,20 @@ claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
                                         foreach($errors as $error){
                                           $confirm .= mysql_real_escape_string($error).", ";
                                         }
-
 ?>
 <script type="text/javascript">
    alert('RESPONSE: <?= $confirm; ?>');
    window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>"; 
 </script>
 <?php
-
+}elseif($result == "Invalid JSON"){
+  $confirm = "Submission failed. Invalid JSON";
+?>
+<script type="text/javascript">
+   alert('RESPONSE: <?= $confirm; ?>');
+   window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>"; 
+</script>
+<?php
 }else{
 ?>
 <script type="text/javascript">

@@ -9,7 +9,8 @@ function create_notification($pid, $docid, $n, $n_type, $s=1){
 		 '".mysql_real_escape_string($n_type)."',
 		 '".mysql_real_escape_string($s)."',
 		 NOW())";
-  $q = mysql_query($s);
+
+  $q = $db->query($s);
   return $q;
 }
 
@@ -17,9 +18,10 @@ function create_notification($pid, $docid, $n, $n_type, $s=1){
 function find_patient_notifications($p){
 
   $s = "SELECT * FROM dental_notifications WHERE patientid='".mysql_real_escape_string($p)."' AND status=1";
-  $q = mysql_query($s);
+  
+  $q = $db->getResults($s);
   $not = array();
-  while($r = mysql_fetch_assoc($q)){
+  if ($q) foreach ($q as $r){
     array_push($not, $r);
   }
   return $not;

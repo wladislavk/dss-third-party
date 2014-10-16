@@ -15,7 +15,7 @@
 	}
 	$ch_sql .= " GROUP BY dl.description";
   $ch_q = $db->getResults($ch_sql);
-  foreach ($ch_q as $ch_r) {?>
+  if ($ch_q) foreach ($ch_q as $ch_r) {?>
     <li><label><?php echo $ch_r['description']; ?></label> $<?php echo number_format($ch_r['amount'],2); ?></li>
 	<?php 
     $ch_total += $ch_r['amount']; 
@@ -41,11 +41,12 @@
         }
                 $cr_sql .= " GROUP BY description";
 
-  $cr_q = mysql_query($cr_sql) or die(mysql_error());
-  while($cr_r = mysql_fetch_assoc($cr_q)){ ?>
-  <li><label><?= $dss_trxn_pymt_type_labels[$cr_r['description']]; ?></label> $<?= number_format($cr_r['amount'],2); ?></li>
-        <?php $cr_total += $cr_r['amount']; ?>
-  <?php } 
+  $cr_q = $db->getResults($cr_sql);
+  if ($cr_q) foreach ($cr_q as $cr_r) {?>
+    <li><label><?php echo $dss_trxn_pymt_type_labels[$cr_r['description']]; ?></label> $<?php echo number_format($cr_r['amount'],2); ?></li>
+  <?php 
+      $cr_total += $cr_r['amount'];
+  } 
   $cr2_sql = "SELECT dl.description, sum(dl.paid_amount) amount FROM dental_ledger dl
                 JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
                 JOIN dental_patients p ON p.patientid=dl.patientid
@@ -54,18 +55,19 @@
                 AND tc.type != '".DSS_TRXN_TYPE_ADJ."'
                 ".$lpsql." ".$l_date."
                 ";
-        if(isset($_GET['pid'])){
-                $cr2_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
-        }
-                $cr2_sql .= " GROUP BY dl.description";
-  $cr2_q = mysql_query($cr2_sql);
-  while($cr2_r = mysql_fetch_assoc($cr2_q)){ ?>
-  <li><label><?= $cr2_r['description']; ?></label> $<?= number_format($cr2_r['amount'],2); ?></li>
-        <?php $cr_total += $cr2_r['amount']; ?>
-  <?php } ?>
+  if(isset($_GET['pid'])){
+    $cr2_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
+  }
+  $cr2_sql .= " GROUP BY dl.description";
+  $cr2_q = $db->getResults($cr2_sql);
+  if ($cr2_q) foreach ($cr2_q as $cr2_r) {?>
+    <li><label><?php echo $cr2_r['description']; ?></label> $<?php echo number_format($cr2_r['amount'],2); ?></li>
+  <?php 
+    $cr_total += $cr2_r['amount'];
+  } ?>
 
-  <li><label>Credits Total</label> $<?= number_format($cr_total,2); ?></li>
-</ul>
+    <li><label>Credits Total</label> $<?php echo number_format($cr_total,2); ?></li>
+  </ul>
 
   <h3>Adjustments</h3>
   <ul>
@@ -84,12 +86,10 @@
   }
   $adj_sql .= " GROUP BY dl.description";
   $adj_q = $db->getResults($adj_sql);
-  if ($adj_q) {
-    foreach ($adj_q as $adj_r) {?>
+  if ($adj_q) foreach ($adj_q as $adj_r) {?>
     <li><label><?php echo $adj_r['description']; ?></label> $<?php echo number_format($adj_r['amount'],2); ?></li>
-<?php 
+  <?php 
       $adj_total += $adj_r['amount'];
-    }
-  } ?>
+  }?>
     <li><label>Adjust. Total</label> $<?php echo number_format($adj_total,2); ?></li>
   </ul>

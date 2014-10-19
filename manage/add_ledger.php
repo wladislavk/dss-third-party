@@ -1,19 +1,19 @@
 <?php 
-session_start();
-require_once('admin/includes/main_include.php');
-require_once('includes/constants.inc');
-require_once('includes/claim_functions.php');
-include("includes/sescheck.php");
+	include_once('admin/includes/main_include.php');
+	include_once('includes/constants.inc');
+	include_once('includes/claim_functions.php');
+	include("includes/sescheck.php");
 ?>
-<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-<script type="text/javascript" src="/manage/js/masks.js"></script>
+	<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+	<script type="text/javascript" src="/manage/js/masks.js"></script>
 <?php
-include("includes/calendarinc.php");
-include("includes/preauth_functions.php");
-$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
-$flowresult = mysql_query($flowquery);
-    $flow = mysql_fetch_array($flowresult);
+	include("includes/calendarinc.php");
+	include("includes/preauth_functions.php");
+
+	$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
+
+    $flow = $db->getRow($flowquery);
     $copyreqdate = $flow['copyreqdate'];
     $referred_by = $flow['referred_by'];
     $referreddate = $flow['referreddate'];
@@ -36,723 +36,552 @@ $flowresult = mysql_query($flowquery);
     $preauth2 = $flow['preauth2'];
     $insverbendate1 = $flow['insverbendate1'];
 
-if($_POST["ledgerub"] == 1)
-{
-	$service_date = $_POST['service_date'];
-	$entry_date = $_POST['entry_date'];
-	$description = $_POST['description'];
-	$amount = str_replace(',','',$_POST['amount']);
-	$paid_amount = str_replace(',', '',$_POST['paid_amount']);
-	$transaction_type = $_POST['transaction_type'];
-	$transaction_code = $_POST['transaction_code'];
-    $status = (isset($_POST['status'])) ? DSS_TRXN_PENDING : DSS_TRXN_NA;
-	if(strpos($service_date,'-') === false)
-	{
-		$s_arr = explode('/',$service_date);
-		$service_date = $s_arr[2]."-".$s_arr[0]."-".$s_arr[1];
-	}
-	else
-	{
-		$s_arr = explode('-',$service_date);
-		$service_date = $s_arr[2]."-".$s_arr[0]."-".$s_arr[1];
-	}
-	
-	if(strpos($entry_date,'-') === false)
-	{
-		$e_arr = explode('/',$entry_date);
-		$entry_date = $e_arr[2]."-".$e_arr[0]."-".$e_arr[1];
-	}
-	else
-	{
-		$e_arr = explode('-',$entry_date);
-		$entry_date = $e_arr[2]."-".$e_arr[0]."-".$e_arr[1];
-	}
-	
-	if($transaction_type == 'Entry')
-	{
-		$paid_amount = 0;
-	}
-	else
-	{
-	}
-	
-	if($_POST['ed'] == '')
-	{
-		$ins_sql = " insert into dental_ledger set 
-		patientid = '".s_for($_GET['pid'])."',
-		service_date = '".s_for($service_date)."',
-		entry_date = '".s_for($entry_date)."',
-		description = '".s_for($description)."',
-		amount = '".s_for($amount)."',
-		paid_amount = '".s_for($paid_amount)."',
-		transaction_type = '".s_for($transaction_type)."',
-		userid = '".s_for($_SESSION['userid'])."',
-		docid = '".s_for($_SESSION['docid'])."',
-		transaction_code = '".s_for($transaction_code)."',
-		adddate = now(),
-		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+	if($_POST["ledgerub"] == 1) {
+		$service_date = $_POST['service_date'];
+		$entry_date = $_POST['entry_date'];
+		$description = $_POST['description'];
+		$amount = str_replace(',','',$_POST['amount']);
+		$paid_amount = str_replace(',', '',$_POST['paid_amount']);
+		$transaction_type = $_POST['transaction_type'];
+		$transaction_code = $_POST['transaction_code'];
+	    $status = (isset($_POST['status'])) ? DSS_TRXN_PENDING : DSS_TRXN_NA;
+		if(strpos($service_date,'-') === false) {
+			$s_arr = explode('/',$service_date);
+			$service_date = $s_arr[2]."-".$s_arr[0]."-".$s_arr[1];
+		} else {
+			$s_arr = explode('-',$service_date);
+			$service_date = $s_arr[2]."-".$s_arr[0]."-".$s_arr[1];
+		}
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-		$ledgerid = mysql_insert_id();
-		ledger_history_update($ledger_id, $_SESSION['userid'],'');		
+		if(strpos($entry_date,'-') === false) {
+			$e_arr = explode('/',$entry_date);
+			$entry_date = $e_arr[2]."-".$e_arr[0]."-".$e_arr[1];
+		} else {
+			$e_arr = explode('-',$entry_date);
+			$entry_date = $e_arr[2]."-".$e_arr[0]."-".$e_arr[1];
+		}
+	
+		if($transaction_type == 'Entry') {
+			$paid_amount = 0;
+		} else {
+		}
+	
+		if($_POST['ed'] == '') 
+			$ins_sql = " insert into dental_ledger set 
+			patientid = '".s_for($_GET['pid'])."',
+			service_date = '".s_for($service_date)."',
+			entry_date = '".s_for($entry_date)."',
+			description = '".s_for($description)."',
+			amount = '".s_for($amount)."',
+			paid_amount = '".s_for($paid_amount)."',
+			transaction_type = '".s_for($transaction_type)."',
+			userid = '".s_for($_SESSION['userid'])."',
+			docid = '".s_for($_SESSION['docid'])."',
+			transaction_code = '".s_for($transaction_code)."',
+			adddate = now(),
+			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+		
+		$ledgerid = $db->getInsertId($ins_sql);
+		// ledger_history_update($ledger_id, $_SESSION['userid'],'');		
 		
 		$ins_sql_rec = " insert into dental_ledger_rec set 
-		userid = '".s_for($_SESSION['userid'])."',
-    patientid = '".s_for($_GET['pid'])."',
-		service_date = '".s_for($service_date)."',
-		description = '".s_for($description)."',
-		amount = '".s_for($amount)."',
-		paid_amount = '".s_for($paid_amount)."',
-		transaction_code = '".s_for($transaction_code)."',
-		transaction_type = '".s_for($transaction_type)."',
-		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+			userid = '".s_for($_SESSION['userid'])."',
+	    	patientid = '".s_for($_GET['pid'])."',
+			service_date = '".s_for($service_date)."',
+			description = '".s_for($description)."',
+			amount = '".s_for($amount)."',
+			paid_amount = '".s_for($paid_amount)."',
+			transaction_code = '".s_for($transaction_code)."',
+			transaction_type = '".s_for($transaction_type)."',
+			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql_rec) or die($ins_sql." | ".mysql_error());
-		
+		$db->query($ins_sql_rec);
 		$msg = "Added Successfully";
-		?>
-		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			parent.window.location='manage_ledger.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>';
-		</script>
-		<?
-		die();
-	}
-	else
-	{
-		
-		$pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-    $pat_my2 = mysql_query($pat_sql2);
-    while($pat_myarray2 = mysql_fetch_array($pat_my2)){ 
-    
-    $pat_sql3 = mysql_query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".$_GET['pid']."','".$pat_myarray2['service_date']."','".$pat_myarray2['description']."','".$pat_myarray2['amount']."','".$pat_myarray2['paid_amount']."','".$pat_myarray2['transaction_code']."','".$pat_myarray2['ip_address']."','".$pat_myarray2['transaction_type']."');");
-    if(!$pat_sql3){
-     echo "There was an error updating the ledger record.  Please contact your system administrator.";
-    }
-   
-        $service_date = date('Y-m-d', strtotime($_POST['service_date']));
-        $entry_date = date('Y-m-d', strtotime($_POST['entry_date']));
-        $transaction_type = $_POST['transaction_type'];
-        $transaction_code = $_POST['proccode'];
-        $tsql = "SELECT transaction_code, description from dental_transaction_code where transaction_codeid=".$transaction_code;
-        $tmy = mysql_query($tsql);
-        $trow = mysql_fetch_row($tmy);
-        $transaction_code = $trow[0];
-        $description = $trow[1];
-        $status = (isset($_POST['status'])) ? DSS_TRXN_PENDING : DSS_TRXN_NA;
-        $amount = str_replace(',','',$_POST['amount']);
-        $paid_amount = str_replace(',','',$_POST['paid_amount']);
-
-$claim_sql = "SELECT * FROM dental_ledger where ledgerid='".$_POST["ed"]."'";
-$claim_q = mysql_query($claim_sql);
-$claim_r = mysql_fetch_assoc($claim_q);
-if(($claim_r['primary_claim_id']=='' || $claim_r['primary_claim_id']==0) && $status==DSS_TRXN_PENDING){
-
-  $pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysql_real_escape_string($claim_r['producerid'])."'";
-  $pf_q = mysql_query($pf_sql);
-  $pf = mysql_fetch_assoc($pf_q);
-  if($pf['producer_files'] == '1'){
-    $claim_producer = $claim_r['producerid'];
-  }else{
-    $claim_producer = $_SESSION['docid'];
-  }
-
-  $s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
-  $q = mysql_query($s);
-  $n = mysql_num_rows($q);
-  if($n > 0){
-        $r = mysql_fetch_assoc($q);
-        $claim_id = $r['insuranceid'];
-  }else{
-        $claim_id = create_claim($_GET['pid'], $claim_producer);
-  }
-}else{
-  $claim_id = $claim_r['primary_claim_id'];
-}
-
-if($status == DSS_TRXN_NA){
-  $claim_id = '';
-}
-    $up_sql = "update dental_ledger set
-    service_date = '".s_for($service_date)."',
-		entry_date = '".s_for($entry_date)."',
-		description = '".s_for($description)."',
-		amount = '".s_for($amount)."',
-		paid_amount = '".s_for($paid_amount)."',
-        transaction_type = '".s_for($transaction_type)."',
-		transaction_code = '".s_for($transaction_code)."',
-		userid = '".s_for($_SESSION['userid'])."',
-        status = ". s_for($status).",
-	primary_claim_id='".$claim_id."'
-	 	where ledgerid='".$_POST["ed"]."'";
-		
-		mysql_query($up_sql) or die($up_sql." | ".mysql_error());
-		ledger_history_update($_POST['ed'], $_SESSION['docid'], '');
-if(($claim_r['primary_claim_id']!='' && $claim_r['primary_claim_id']!=0) && $status==DSS_TRXN_NA){
-  $c_sql = "SELECT COUNT(*) as num_trxn FROM dental_ledger where primary_claim_id='".mysql_real_escape_string($claim_r['primary_claim_id'])."'";
-  $c_q = mysql_query($c_sql);
-  $c_r = mysql_fetch_assoc($c_q);
-  if($c_r['num_trxn']==0){
-   $del_sql = "DELETE FROM dental_insurance where insuranceid='".mysql_real_escape_string($claim_r['primary_claim_id'])."'";
-   mysql_query($del_sql);
-  }
-}
-
-		$msg = "Edited Successfully";
-		?>
-		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			parent.window.location='manage_ledger.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>';
-		</script>
-		<?
-		die();
-	}
-}
-}
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
-
-if($pat_myarray['patientid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		window.location = 'manage_patient.php';
-	</script>
-	<?
-	die();
-}
 ?>
-<script type="text/javascript">
-function getTransCodes(str,name)
-{
-if (str=="")
-  {
-  document.getElementById("txtHint").innerHTML="";
-  return;
-  }
-if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-  xmlhttp=new XMLHttpRequest();
-  }
-else
-  {// code for IE6, IE5
-  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-xmlhttp.onreadystatechange=function()
-  {
-  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-    {
-    document.getElementById("proccode_div").innerHTML=xmlhttp.responseText;
-    }
-  }
-  var pco = name.substr(5,1);
-  xmlhttp.open("GET","add_ledger_entry_process_edit.php?q="+str+"&pco="+pco,true);
-  xmlhttp.send();
-  if (str==2||str==3||str==6){
-  document.getElementById("tr_amount").style.display = "none";
-  document.getElementById("tr_paid_amount").style.display = "table-row";
+		<script type="text/javascript">
+			parent.window.location = 'manage_ledger.php?msg=<?php echo $msg;?>&pid=<?php echo $_GET['pid'];?>';
+		</script>
+<?php
+		die();
+	} else {
+		$pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+    	$pat_my2 = $db->getResults($pat_sql2);
+    	if ($pat_my2) foreach ($pat_my2 as $pat_myarray2) {   
+		    $pat_sql3 = $db->query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".$_GET['pid']."','".$pat_myarray2['service_date']."','".$pat_myarray2['description']."','".$pat_myarray2['amount']."','".$pat_myarray2['paid_amount']."','".$pat_myarray2['transaction_code']."','".$pat_myarray2['ip_address']."','".$pat_myarray2['transaction_type']."');");
+		    if(!$pat_sql3){
+		    	echo "There was an error updating the ledger record.  Please contact your system administrator.";
+		    }
+   
+			$service_date = date('Y-m-d', strtotime($_POST['service_date']));
+			$entry_date = date('Y-m-d', strtotime($_POST['entry_date']));
+			$transaction_type = $_POST['transaction_type'];
+			$transaction_code = $_POST['proccode'];;
+			$tsql = "SELECT transaction_code, description from dental_transaction_code where transaction_codeid=".$transaction_code;
+			
+			$trow = $db->getRow($tsql);
+			$transaction_code = $trow['transaction_code'];
+			$description = $trow['description'];
+			$status = (isset($_POST['status'])) ? DSS_TRXN_PENDING : DSS_TRXN_NA;
+			$amount = str_replace(',','',$_POST['amount']);
+			$paid_amount = str_replace(',','',$_POST['paid_amount']);
+			$claim_sql = "SELECT * FROM dental_ledger where ledgerid='".$_POST["ed"]."'";
+			
+			$claim_r = $db->getRow($claim_sql);
+			if(($claim_r['primary_claim_id']=='' || $claim_r['primary_claim_id']==0) && $status==DSS_TRXN_PENDING){
+				$pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysql_real_escape_string($claim_r['producerid'])."'";
+				
+				$pf = $db->getRow($pf_sql);
+				if($pf['producer_files'] == '1'){
+					$claim_producer = $claim_r['producerid'];
+				} else {
+					$claim_producer = $_SESSION['docid'];
+				}
 
-  }else{
-    document.getElementById("tr_amount").style.display = "table-row";
-    document.getElementById("tr_paid_amount").style.display = "none";
-  }
-}
+				$s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+				
+				$q = $db->getResults($s);
+				$n = count($q);
+				if($n > 0){
+				    $r = $q[0];
+				    $claim_id = $r['insuranceid'];
+				} else {
+				    $claim_id = create_claim($_GET['pid'], $claim_producer);
+				}
+			} else {
+  				$claim_id = $claim_r['primary_claim_id'];
+			}
 
-function getTransCodesAmount(str,name,type,fid)
-{
-if (str=="")
-  {
-  document.getElementById("txtHint").innerHTML="";
-  return;
-  }
-if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-  xmlhttp=new XMLHttpRequest();
-  }
-else
-  {// code for IE6, IE5
-  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-xmlhttp.onreadystatechange=function()
-  {
-  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-    {
-    document.getElementById("amount_span").innerHTML=xmlhttp.responseText;
-    }
-  }
-  var pco = name.substr(5,1);
-  xmlhttp.open("GET","add_ledger_entry_process_amount_edit.php?id="+fid+"&t="+type+"&q="+str+"&pco="+pco,true);
-  xmlhttp.send();
-}
+			if($status == DSS_TRXN_NA) {
+			  $claim_id = '';
+			}
+			
+			$up_sql = "update dental_ledger set
+			    	   service_date = '".s_for($service_date)."',
+					   entry_date = '".s_for($entry_date)."',
+					   description = '".s_for($description)."',
+					   amount = '".s_for($amount)."',
+					   paid_amount = '".s_for($paid_amount)."',
+			           transaction_type = '".s_for($transaction_type)."',
+					   transaction_code = '".s_for($transaction_code)."',
+					   userid = '".s_for($_SESSION['userid'])."',
+			           status = ". s_for($status).",
+					   primary_claim_id='".$claim_id."'
+				 	   where ledgerid='".$_POST["ed"]."'";
+					
+			$db->query($up_sql);
+			// ledger_history_update($_POST['ed'], $_SESSION['docid'], '');
+			if(($claim_r['primary_claim_id']!='' && $claim_r['primary_claim_id']!=0) && $status==DSS_TRXN_NA){
+			  $c_sql = "SELECT COUNT(*) as num_trxn FROM dental_ledger where primary_claim_id='".mysql_real_escape_string($claim_r['primary_claim_id'])."'";
+			  
+			  $c_r = $db->getRow($c_sql);
+			  if($c_r['num_trxn'] == 0) {
+				$del_sql = "DELETE FROM dental_insurance where insuranceid='".mysql_real_escape_string($claim_r['primary_claim_id'])."'";
+				$db->query($del_sql);
+			  }
+			}
 
-</script>
+			$msg = "Edited Successfully";
+?>
+		<script type="text/javascript">
+			parent.window.location = 'manage_ledger.php?msg=<?php echo $msg;?>&pid=<?php echo $_GET['pid'];?>';
+		</script>
+<?php
+			die();
+		}
+	}
+	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+	
+	$pat_myarray = $db->getRow($pat_sql);
+	$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
+	if($pat_myarray['patientid'] == '') {
+?>
+		<script type="text/javascript">
+			window.location = 'manage_patient.php';
+		</script>
+<?php
+		die();
+	}
+?>
+
+<script type="text/javascript" src="js/add_ledger.js"></script>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-<script language="JavaScript" src="calendar1.js"></script>
-<script language="JavaScript" src="calendar2.js"></script>
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-<script type="text/javascript" src="script/wufoo.js"></script>
-<script type="text/javascript">
-//parent.window.scroll(0, 0);
-</script>
-</head>
-<body>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link href="css/admin.css" rel="stylesheet" type="text/css" />
+		<script language="javascript" type="text/javascript" src="script/validation.js"></script>
+		<script language="JavaScript" src="calendar1.js"></script>
+		<script language="JavaScript" src="calendar2.js"></script>
+		<link rel="stylesheet" href="css/form.css" type="text/css" />
+		<script type="text/javascript" src="script/wufoo.js"></script>
+		<script type="text/javascript">
+		</script>
+	</head>
 
-    <?
-	$sql = "select sum(amount) as amt, sum(paid_amount) as p_amt from dental_ledger where patientid='".$_REQUEST["pid"]."'";
-	$my = mysql_query($sql);
-	$myarray = mysql_fetch_array($my);
-	$cur_balance = $myarray['amt'] - $myarray['p_amt'];
-	
-  $thesql = "select * from dental_ledger where ledgerid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
-	
-	$service_date = st($themyarray['service_date']);
-	$entry_date = st($themyarray['entry_date']);
-	$description = st($themyarray['description']);
-	$amount = st($themyarray['amount']);
-	$paid_amount = st($themyarray['paid_amount']);
-        $transaction_code = st($themyarray['transaction_code']);
-        $tsql = "SELECT type FROM dental_transaction_code WHERE docid=".$_SESSION['docid']." AND transaction_code='".$transaction_code."'"; 
-        $tmy = mysql_query($tsql);
-        $trow = mysql_fetch_row($tmy);
-        $transaction_type = $trow[0];
-        $status = ($themyarray['primary_claim_id']!=0 && $themyarray['primary_claim_id']!='')?DSS_TRXN_PENDING:DSS_TRXN_NA;//st($themyarray['status']);	
-	$but_text = "Add ";
-	
-	if($service_date == '')
-	{
-		$service_date = date('m/d/Y');
-	}
-	else
-	{
-		$service_date = date('m/d/Y',strtotime($service_date));
-	}
-	
-	if($entry_date == '')
-	{
-		$entry_date = date('m/d/Y');
-	}
-	else
-	{
-		$entry_date = date('m/d/Y',strtotime($entry_date));
-	}
-	
-	if($transaction_type == '')
-	{
-		//$transaction_type = 'Entry';
-	}
-	
-	
-	if($themyarray["userid"] != '')
-	{
-		$but_text = "Edit ";
-	}
-	else
-	{
-		$but_text = "Add ";
-	}
-	?>
-	
-	<br /><br />
-	
-	<? if($msg != '') {?>
-    <div align="center" class="red">
-        <? echo $msg;?>
-    </div>
-    <? }?>
-	<script type="text/javascript">
-		function change_t()
-		{
-			fa = document.ledgerfrm;
+	<body>
+    	<?php
+			$sql = "select sum(amount) as amt, sum(paid_amount) as p_amt from dental_ledger where patientid='".$_REQUEST["pid"]."'";
 			
-			if(fa.transaction_type.value == "6")
-			{
-				document.getElementById("tr_paid_amount").style.display = '';
-				
-			}
-			else
-			{
-				document.getElementById("tr_paid_amount").style.display = 'none';
-				
-			}
-		}
-		
-		function change_t_code()
-		{
-			fa = document.ledgerfrm;
+			$myarray = $db->getRow($sql);
+			$cur_balance = $myarray['amt'] - $myarray['p_amt'];
+  			$thesql = "select * from dental_ledger where ledgerid='".$_REQUEST["ed"]."'";
 			
-			<? 
+			$themyarray = $db->getRow($thesql);
+			$service_date = st($themyarray['service_date']);
+			$entry_date = st($themyarray['entry_date']);
+			$description = st($themyarray['description']);
+			$amount = st($themyarray['amount']);
+			$paid_amount = st($themyarray['paid_amount']);
+        	$transaction_code = st($themyarray['transaction_code']);
+        	$tsql = "SELECT type FROM dental_transaction_code WHERE docid=".$_SESSION['docid']." AND transaction_code='".$transaction_code."'"; 
+        
+	        $trow = $db->getRow($tsql);
+	        $transaction_type = $trow['type'];
+	        $status = ($themyarray['primary_claim_id']!=0 && $themyarray['primary_claim_id']!='')?DSS_TRXN_PENDING:DSS_TRXN_NA;//st($themyarray['status']);	
+			$but_text = "Add ";
+	
+			if($service_date == '') {
+				$service_date = date('m/d/Y');
+			} else {
+				$service_date = date('m/d/Y',strtotime($service_date));
+			}
+	
+			if($entry_date == '') {
+				$entry_date = date('m/d/Y');
+			} else {
+				$entry_date = date('m/d/Y',strtotime($entry_date));
+			}
+	
+			if($transaction_type == '')
+			{
+				//$transaction_type = 'Entry';
+			}
+	
+	
+			if($themyarray["userid"] != '') {
+				$but_text = "Edit ";
+			} else {
+				$but_text = "Add ";
+			}
+		?>
+		<br /><br />
+	
+		<?php if($msg != '') { ?>
+		    <div align="center" class="red">
+		        <?php echo $msg;?>
+		    </div>
+	    <?php } ?>
+
+	    <?php 
 			$tcode_sql = "select * from dental_transaction_code where status=1 AND docid=".$_SESSION['docid']." order by sortby";
-			$tcode_my = mysql_query($tcode_sql) or die($tcode_sql ." | ".mysql_error());
 			
-			while($tcode_myarray = mysql_fetch_array($tcode_my))
-			{
-			?>
-			if(fa.transaction_code.value == '<?=st($tcode_myarray['transaction_codeid'])?>')
-			{
-				fa.description.value = '<?=st($tcode_myarray['description'])?>';
+			$tcode_my = $db->getResults($tcode_sql);
+			$transactionCodeStr = "";
+			$descriptionStr = "";
+			if ($tcode_my) foreach ($tcode_my as $tcode_myarray) {
+				$transactionCodeStr .= st($tcode_myarray['transaction_codeid']) . ',';
+				$descriptionStr .= st($tcode_myarray['description']) . ',';
 			}
-			<?
-			}
-			?>
-		}
-	</script>
-    <form name="ledgerfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid']?>" method="post" onSubmit="return addledgerabc(this)">
-    <table cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
-        <tr>
-            <td colspan="2" class="cat_head">
-               <?=$but_text?> Transaction
-			   -
-    			Patient <i><?=$name;?></i>
-            </td>
-        </tr>
-		<tr>
-        	<td valign="top" class="frmdata" colspan="2" style="text-align:right;">
-				<span class="red">
-					Current Balance: 
-					<b>$<?=number_format($cur_balance,2);?></b>
-				</span>
-            </td>
-        </tr>
-        <tr>
-        	<td valign="top" class="frmhead" width="30%">
-				Service Date
-            </td>
-        	<td valign="top" class="frmdata">
-				<input id="service_date" name="service_date" type="text" class="tbox calendar" value="<?=$service_date;?>" style="width:100px;" maxlength="255"/> (mm/dd/yyyy)
-                 <script type="text/javascript">
-                     var cal = new calendar2(document.getElementById('service_date'));
-                 </script>
-				<span class="red">*</span>
-            </td>
-        </tr>
-        <tr>
-        	<td valign="top" class="frmhead">
-				Entry Date
-            </td>
-        	<td valign="top" class="frmdata">
-				<input id="entry_date" name="entry_date" type="text" class="tbox" value="<?=$entry_date;?>" style="width:100px;" maxlength="255" readonly="readonly"/> (mm/dd/yyyy)
-				<span class="red">*</span>
-            </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                               	Posted By 
-            </td>
-                <td valign="top" class="frmdata">
-				<?php
-					$h_sql = "SELECT h.updated_at, CONCAT(u.first_name,' ',u.last_name) doc_name,
-						CONCAT(a.first_name,' ',a.last_name) admin_name
-						FROM dental_ledger_history h 
-						LEFT JOIN dental_users u ON u.userid=h.updated_by_user
-						LEFT JOIN admin a ON a.adminid=h.updated_by_admin
-						WHERE h.ledgerid='".mysql_real_escape_string($_GET['ed'])."' ORDER BY h.updated_at ASC LIMIT 1";
-					$h_q = mysql_query($h_sql);
-					$h_r = mysql_fetch_assoc($h_q);
-					if($h_r['doc_name']!=''){
-					  echo $h_r['doc_name'];
-					}elseif($h_r['admin_name']!=''){
-					  echo $h_r['admin_name'];
-					}
-					echo " - ".$h_r['updated_at'];
-				?>
-            </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                                Last Updated By
-            </td>
-                <td valign="top" class="frmdata">
-                                <?php
-                                        $h_sql = "SELECT h.updated_at, CONCAT(u.first_name,' ',u.last_name) doc_name,
-                                                CONCAT(a.first_name,' ',a.last_name) admin_name
-                                                FROM dental_ledger_history h 
-                                                LEFT JOIN dental_users u ON u.userid=h.updated_by_user
-                                                LEFT JOIN admin a ON a.adminid=h.updated_by_admin
-                                                WHERE h.ledgerid='".mysql_real_escape_string($_GET['ed'])."' ORDER BY h.updated_at DESC LIMIT 1";
-                                        $h_q = mysql_query($h_sql);
-                                        $h_r = mysql_fetch_assoc($h_q);
-                                        if($h_r['doc_name']!=''){
-                                          echo $h_r['doc_name'];
-                                        }elseif($h_r['admin_name']!=''){
-                                          echo $h_r['admin_name'];
-                                        }
-                                        echo " - ".$h_r['updated_at'];
-                                ?>
-            </td>
-        </tr>
-		<tr>
-        	<td valign="top" class="frmhead">
-				Transaction Type
-            </td>
-        	<td valign="top" class="frmdata">
-                                <select name="transaction_type" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name)">
-					<option value="0" <?= ($transaction_type=='0')?'selected="selected"':''; ?>>Select Type</option>
-					<option value="1" <?= ($transaction_type=='1')?'selected="selected"':''; ?>>Medical Code</option>
-					<option value="2" <?= ($transaction_type=='2')?'selected="selected"':''; ?>>Patient Payment Code</option>
-					<!--<option value="3" <?= ($transaction_type=='3')?'selected="selected"':''; ?>>Insurance Payment Code</option>-->
-					<option value="4" <?= ($transaction_type=='4')?'selected="selected"':''; ?>>Diagnostic Code</option>
-					<option value="6" <?= ($transaction_type=='6')?'selected="selected"':''; ?>>Adjustment Code</option>
- 				</select>
-				<!-- <select name="transaction_type" class="tbox" onChange="change_t();">
-					<option value="Credit" <? if($transaction_type == 'Credit') echo " selected";?>>Credit</option>
-					<option value="Charge" <? if($transaction_type == 'Charge') echo " selected";?>>Charge</option>
-					<option value="None" <? if($transaction_type == 'None') echo " selected";?>>None</option>
-					<option value="Debit-Prod Adj" <? if($transaction_type == 'Debit-Prod Adj') echo " selected";?>>Debit-Prod Adj</option>
-					<option value="Credit-Coll Adj" <? if($transaction_type == 'Credit-Coll Adj') echo " selected";?>>Credit-Coll Adj</option>
-				</select> --> 
-				<span class="red">*</span>
-            </td>
-        </tr>
+			$transactionCodeStr = trim($transactionCodeStr, ',');
+			$descriptionStr = trim($descriptionStr, ',');
+		?>
 
-		<tr>
-        	<td valign="top" class="frmhead">
-				Procedure Code
-            </td>
-        	<td valign="top" class="frmdata"> 
-				<div id="proccode_div">
-<?php
-$sql="SELECT * FROM dental_transaction_code WHERE type = '".$transaction_type."' and docid=".$_SESSION['docid'];
+		<script>
+			//Example of use
+			//change_t_code("<?php echo $transactionCodeStr; ?>", "<?php echo $descriptionStr; ?>");
+		</script>
 
-$result = mysql_query($sql);
-
-
-echo "<select onchange='getTransCodesAmount(this.value,this.name,".$transaction_type.")' id='proccode' name='proccode'><option value='0'>Select TX Code</option>";
-while($row = mysql_fetch_array($result))
-  {
-  $r = ($row['transaction_code']==$transaction_code)?'selected="selected"':'';
-  echo "<option ".$r." value='".$row['transaction_codeid']."'>".$row['transaction_code']." - ".$row['description']."</option>";
-  }
-
-echo "</select>";
-?>
-
-
-</div>
-                                  <!--
-                                  <select name="transaction_code" class="tbox" onChange="change_t_code();">
-					<option value=""></option> 
-					<?
-					$tcode_sql = "select * from dental_transaction_code where status=1 AND docid=".$_SESSION['docid']." order by sortby";
-					$tcode_my = mysql_query($tcode_sql) or die($tcode_sql ." | ".mysql_error());
-	
-					while($tcode_myarray = mysql_fetch_array($tcode_my))
-					{?>
-						<option value="<?=st($tcode_myarray['transaction_code']);?>" <? if($transaction_code == st($tcode_myarray['transaction_code'])) echo " selected";?>>
-							<?=st($tcode_myarray['transaction_code'])." - ".$tcode_myarray['description'];?>
-						</option>
-					<?
-					}?>
-				</select>
-				-->
-				
-				<span class="red">*</span>
-            </td>
-        </tr>
-		<tr id="tr_amount" <?= ($transaction_type==2||$transaction_type==3||$transaction_type==6)?'style="display:none;"':''?>>
-        	<td valign="top" class="frmhead">
-				Amount
-            </td>
-        	<td valign="top" class="frmdata">
-				<span id="amount_span"><input readonly="readonly" name="amount" type="text" class="dollar_input tbox" value="<?php echo $amount; ?>"  maxlength="255"/></span>
-				<span class="red">*</span>
-            </td>
-        </tr>
-		<tr id="tr_paid_amount"  <?= ($transaction_type!=2&&$transaction_type!=3&&$transaction_type!=6)?'style="display:none;"':''?>>
-        	<td valign="top" class="frmhead">
-				Paid Amount
-            </td>
-        	<td valign="top" class="frmdata">
-				<input id="paid_amount" name="paid_amount" type="text"  class="dollar_input tbox" value="<?php if(isset($paid_amount)){ echo number_format($paid_amount,2,'.','');};?>"  maxlength="255"/>
-				<span class="red">*</span>
-            </td>
-        </tr>
-          <tr>
-             <td valign="top" class="frmhead">
-                              File
-             </td>
-                <td valign="top" class="frmdata">
-                   <?php /*if ($status == DSS_TRXN_PENDING) { ?>
-                       <?= $dss_trxn_status_labels[DSS_TRXN_PENDING] ?>
-                       <input type="hidden" name="status" value="<?= DSS_TRXN_PENDING ?>" />
-                   <?php } else { */ ?>
-                     <?php
-$errors = claim_errors($_GET['pid']);
-if(count($errors)>0){
-$e_text = 'Unable to file claim: ';
-$e_text .= implode($errors, ', ');
-
-                     ?>
-		                 <input type="checkbox" onclick="alert('<?= $e_text; ?>'); return false;" name="status" value="<?= DSS_TRXN_PENDING ?>" />
-                     <?php } else { ?> 
-                         <input type="checkbox" name="status" <?= ($status == DSS_TRXN_PENDING)?'checked="checked"':''; ?> value="<?= DSS_TRXN_PENDING ?>" />
-                     <?php } ?>
-                   <?php // } ?>
-			<span class="pend"><?= ($status == DSS_TRXN_PENDING)?'Pending':''; ?></span>
-			<input type="hidden" name="old_status" value="<?= $status; ?>" />
-                </td>
-          </tr>		
-        <tr>
-            <td>
-              <a href="/manage/manage_ledger.php?delid=<?= $_GET['ed']; ?>&amp;pid=<?= $_GET['pid']; ?>" target="_parent" style="font-weight:bold;" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-                                                 Delete 
-                                        </a>
- 
-            </td>
-            <td >
-                <span class="red">
-                    * Required Fields					
-                </span><br />
-                <input type="hidden" name="ledgerub" value="1" />
-                <input type="hidden" name="ed" value="<?php echo $_GET["ed"]?>" />
-                <input type="submit" value=" <?=$but_text?> Transaction" style="float:right;" class="button" />
-            </td>
-        </tr>
-    </table>
-    </form>
-	<script type="text/javascript">
-		//change_t()
-	</script> 
-	
-	
-	
-</body>
+	    <form name="ledgerfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid']?>" method="post" onSubmit="return addledgerabc(this)">
+		    <table cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+		        <tr>
+		            <td colspan="2" class="cat_head">
+		               <?php echo $but_text?> Transaction
+					   -
+		    			Patient <i><?php echo $name;?></i>
+		            </td>
+		        </tr>
+				<tr>
+		        	<td valign="top" class="frmdata" colspan="2" style="text-align:right;">
+						<span class="red">
+							Current Balance: 
+							<b>$<?php echo number_format($cur_balance,2);?></b>
+						</span>
+		            </td>
+		        </tr>
+		        <tr>
+		        	<td valign="top" class="frmhead" width="30%">
+						Service Date
+		            </td>
+		        	<td valign="top" class="frmdata">
+						<input id="service_date" name="service_date" type="text" class="tbox calendar" value="<?php echo $service_date;?>" style="width:100px;" maxlength="255"/> (mm/dd/yyyy)
+		                 <script type="text/javascript">
+		                     var cal = new calendar2(document.getElementById('service_date'));
+		                 </script>
+						<span class="red">*</span>
+		            </td>
+		        </tr>
+		        <tr>
+		        	<td valign="top" class="frmhead">
+						Entry Date
+		            </td>
+		        	<td valign="top" class="frmdata">
+						<input id="entry_date" name="entry_date" type="text" class="tbox" value="<?php echo $entry_date;?>" style="width:100px;" maxlength="255" readonly="readonly"/> (mm/dd/yyyy)
+						<span class="red">*</span>
+		            </td>
+		        </tr>
+		        <tr>
+		            <td valign="top" class="frmhead">
+		                Posted By 
+		            </td>
+		            <td valign="top" class="frmdata">
+						<?php
+							$h_sql = "SELECT h.updated_at, CONCAT(u.first_name,' ',u.last_name) doc_name,
+									  CONCAT(a.first_name,' ',a.last_name) admin_name
+									  FROM dental_ledger_history h 
+								 	  LEFT JOIN dental_users u ON u.userid=h.updated_by_user
+									  LEFT JOIN admin a ON a.adminid=h.updated_by_admin
+									  WHERE h.ledgerid='".mysql_real_escape_string($_GET['ed'])."' ORDER BY h.updated_at ASC LIMIT 1";
+							
+							$h_r = $db->getRow($h_sql);
+							if($h_r['doc_name']!=''){
+								echo $h_r['doc_name'];
+							} elseif($h_r['admin_name']!='') {
+								echo $h_r['admin_name'];
+							}
+							echo " - ".$h_r['updated_at'];
+						?>
+		            </td>
+		        </tr>
+        		<tr>
+                	<td valign="top" class="frmhead">
+                        Last Updated By
+            		</td>
+                	<td valign="top" class="frmdata">
+                        <?php
+                            $h_sql = "SELECT h.updated_at, CONCAT(u.first_name,' ',u.last_name) doc_name,
+                                      CONCAT(a.first_name,' ',a.last_name) admin_name
+                                      FROM dental_ledger_history h 
+                                      LEFT JOIN dental_users u ON u.userid=h.updated_by_user
+                                      LEFT JOIN admin a ON a.adminid=h.updated_by_admin
+                                      WHERE h.ledgerid='".mysql_real_escape_string($_GET['ed'])."' ORDER BY h.updated_at DESC LIMIT 1";
+                            
+                            $h_r = $db->getRow($h_sql);
+                            if($h_r['doc_name']!=''){
+                            	echo $h_r['doc_name'];
+                            } elseif($h_r['admin_name']!='') {
+                            	echo $h_r['admin_name'];
+                            }
+                            echo " - ".$h_r['updated_at'];
+                        ?>
+            		</td>
+        		</tr>
+				<tr>
+		        	<td valign="top" class="frmhead">
+						Transaction Type
+		            </td>
+		        	<td valign="top" class="frmdata">
+		                <select name="transaction_type" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name)">
+							<option value="0" <?php echo  ($transaction_type=='0')?'selected="selected"':''; ?>>Select Type</option>
+							<option value="1" <?php echo  ($transaction_type=='1')?'selected="selected"':''; ?>>Medical Code</option>
+							<option value="2" <?php echo  ($transaction_type=='2')?'selected="selected"':''; ?>>Patient Payment Code</option>
+							<option value="4" <?php echo  ($transaction_type=='4')?'selected="selected"':''; ?>>Diagnostic Code</option>
+							<option value="6" <?php echo  ($transaction_type=='6')?'selected="selected"':''; ?>>Adjustment Code</option>
+		 				</select>
+						<span class="red">*</span>
+		            </td>
+		        </tr>
+				<tr>
+		        	<td valign="top" class="frmhead">
+						Procedure Code
+		            </td>
+		        	<td valign="top" class="frmdata"> 
+						<div id="proccode_div">
+							<?php
+								$sql="SELECT * FROM dental_transaction_code WHERE type = '".$transaction_type."' and docid=".$_SESSION['docid'];
+								
+								$result = $db->getResults($sql);
+								echo "<select onchange='getTransCodesAmount(this.value,this.name,".$transaction_type.")' id='proccode' name='proccode'><option value='0'>Select TX Code</option>";
+								if ($result) foreach ($result as $row) {
+								  $r = ($row['transaction_code']==$transaction_code)?'selected="selected"':'';
+								  echo "<option ".$r." value='".$row['transaction_codeid']."'>".$row['transaction_code']." - ".$row['description']."</option>";
+								}
+								echo "</select>";
+							?>
+						</div>
+						<span class="red">*</span>
+            		</td>
+        		</tr>
+				<tr id="tr_amount" <?php echo  ($transaction_type==2||$transaction_type==3||$transaction_type==6)?'style="display:none;"':''?>>
+		        	<td valign="top" class="frmhead">
+						Amount
+		            </td>
+		        	<td valign="top" class="frmdata">
+						<span id="amount_span"><input readonly="readonly" name="amount" type="text" class="dollar_input tbox" value="<?php echo $amount; ?>"  maxlength="255"/></span>
+						<span class="red">*</span>
+		            </td>
+		        </tr>
+				<tr id="tr_paid_amount"  <?php echo  ($transaction_type!=2&&$transaction_type!=3&&$transaction_type!=6)?'style="display:none;"':''?>>
+		        	<td valign="top" class="frmhead">
+						Paid Amount
+		            </td>
+		        	<td valign="top" class="frmdata">
+						<input id="paid_amount" name="paid_amount" type="text"  class="dollar_input tbox" value="<?php if(isset($paid_amount)){ echo number_format($paid_amount,2,'.','');};?>"  maxlength="255"/>
+						<span class="red">*</span>
+		            </td>
+		        </tr>
+	          	<tr>
+		            <td valign="top" class="frmhead">
+		                File
+		            </td>
+	                <td valign="top" class="frmdata">
+                    	<?php
+							$errors = claim_errors($_GET['pid']);
+							if(count($errors)>0) {
+								$e_text = 'Unable to file claim: ';
+								$e_text .= implode($errors, ', ');
+                     	?>
+		                 		<input type="checkbox" onclick="alert('<?php echo  $e_text; ?>'); return false;" name="status" value="<?php echo  DSS_TRXN_PENDING ?>" />
+                     	<?php } else { ?> 
+                         		<input type="checkbox" name="status" <?php echo  ($status == DSS_TRXN_PENDING)?'checked="checked"':''; ?> value="<?php echo  DSS_TRXN_PENDING ?>" />
+                     	<?php } ?>
+						<span class="pend"><?php echo  ($status == DSS_TRXN_PENDING)?'Pending':''; ?></span>
+						<input type="hidden" name="old_status" value="<?php echo  $status; ?>" />
+                	</td>
+          		</tr>		
+		        <tr>
+		            <td>
+		              	<a href="/manage/manage_ledger.php?delid=<?php echo  $_GET['ed']; ?>&amp;pid=<?php echo  $_GET['pid']; ?>" target="_parent" style="font-weight:bold;" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+		                    Delete 
+		                </a>
+		            </td>
+		            <td >
+		                <span class="red">
+		                    * Required Fields					
+		                </span><br />
+		                <input type="hidden" name="ledgerub" value="1" />
+		                <input type="hidden" name="ed" value="<?php echo $_GET["ed"]?>" />
+		                <input type="submit" value=" <?php echo $but_text?> Transaction" style="float:right;" class="button" />
+		            </td>
+		        </tr>
+    		</table>
+    	</form>
+	</body>
 </html>
-<script type="text/javascript">
-
-function is_dollar_input(evt){
-
-         var charCode = (evt.which) ? evt.which : event.keyCode
-
-         if (charCode != 44 && charCode != 45 && charCode !=46 && (charCode < 48 || charCode > 57) )
-            return false;
-
-         return true;
-
-}
-</script>
-
 
 <?php
 
-function create_claim($pid, $prod){
-             $pat_sql = "select * from dental_patients where patientid='".s_for($pid)."'";
-             $pat_my = mysql_query($pat_sql);
-             $pat_myarray = mysql_fetch_array($pat_my);
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-$insurancetype = st($pat_myarray['p_m_ins_type']);
-$insured_firstname = st($pat_myarray['p_m_partyfname']);
-$insured_lastname = st($pat_myarray['p_m_partymname']);
-$insured_middle = st($pat_myarray['p_m_partylname']);
-$other_insured_firstname = st($pat_myarray['s_m_partyfname']);
-$other_insured_lastname = st($pat_myarray['s_m_partymname']);
-$other_insured_middle = st($pat_myarray['s_m_partylname']);
-$insured_id_number = st($pat_myarray['p_m_ins_id']);
-$insured_dob = st($pat_myarray['ins_dob']);
-$p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
-$other_insured_dob = st($pat_myarray['ins2_dob']);
-$insured_insurance_plan = st($pat_myarray['p_m_ins_plan']);
-$other_insured_insurance_plan = st($pat_myarray['s_m_ins_plan']);
-$insured_policy_group_feca = st($pat_myarray['p_m_ins_grp']);
-$other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
-$referredby = st($pat_myarray['referred_by']);
-$referred_source = st($pat_myarray['referred_source']);
-$docid = $pat_myarray['docid'];
-$insured_sex = $pat_myarray['gender'];
-$patient_firstname = $pat_myarray['firstname'];
-$patient_lastname = $pat_myarray['lastname'];
-$patient_middle = $pat_myarray['middlename'];
-$patient_address = $pat_myarray['add1'];
-$patient_city = $pat_myarray['city'];
-$patient_state = $pat_myarray['state'];
-$patient_zip = $pat_myarray['zip'];
-$patient_dob = $pat_myarray['dob'];
-       if($pat_myarray['p_m_ins_ass']=='Yes'){
-          $insured_signature = 1;
-        }
-        $patient_signature = 1;
-        $signature_physician = "Signature on File";
-        $patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
-        $physician_signed_date = date('m/d/Y');
-        $patient_phone_code = split_phone($pat_myarray['home_phone'], true);
-        $patient_phone = split_phone($pat_myarray['home_phone'], false);
-        $insured_phone_code = split_phone($pat_myarray['home_phone'], true);
-        $insured_phone = split_phone($pat_myarray['home_phone'], false);
-        $patient_status = $pat_myarray['marital_status'];
-        $insured_id_number = $pat_myarray['p_m_ins_id'];
-        $insured_firstname = $pat_myarray['p_d_party'];
-        $insured_address = $pat_myarray['add1'];
-        $insured_city = $pat_myarray['city'];
-        $insured_state = $pat_myarray['state'];
-        $insured_zip = $pat_myarray['zip'];
-        $insured_dob = $pat_myarray['ins_dob'];
-        $patient_relation_insured = $pat_myarray['p_m_relation'];
-        $insured_employer_school_name = $pat_myarray['employer'];
-        $insured_policy_group_feca = $pat_myarray['group_number'];
-        $insured_insurance_plan = $pat_myarray['plan_name'];
-        $p_m_eligible_payer_id = $pat_myarray['p_m_eligible_payer_id'];
-        $p_m_eligible_payer_name = $pat_myarray['p_m_eligible_payer_name'];
-$sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss                                 
-                        JOIN dental_patients p on ss.patiendid=p.patientid                        
-                WHERE                                 
-                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
-                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
+function create_claim($pid, $prod)
+{
+	$pat_sql = "select * from dental_patients where patientid='".s_for($pid)."'";
 
-  $result = mysql_query($sleepstudies);
-  $d = mysql_fetch_assoc($result);
-  $diagnosis_1 = $d['diagnosis'];
+	$pat_myarray = $db->getRow($pat_sql);
+	$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
+	$insurancetype = st($pat_myarray['p_m_ins_type']);
+	$insured_firstname = st($pat_myarray['p_m_partyfname']);
+	$insured_lastname = st($pat_myarray['p_m_partymname']);
+	$insured_middle = st($pat_myarray['p_m_partylname']);
+	$other_insured_firstname = st($pat_myarray['s_m_partyfname']);
+	$other_insured_lastname = st($pat_myarray['s_m_partymname']);
+	$other_insured_middle = st($pat_myarray['s_m_partylname']);
+	$insured_id_number = st($pat_myarray['p_m_ins_id']);
+	$insured_dob = st($pat_myarray['ins_dob']);
+	$p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
+	$other_insured_dob = st($pat_myarray['ins2_dob']);
+	$insured_insurance_plan = st($pat_myarray['p_m_ins_plan']);
+	$other_insured_insurance_plan = st($pat_myarray['s_m_ins_plan']);
+	$insured_policy_group_feca = st($pat_myarray['p_m_ins_grp']);
+	$other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
+	$referredby = st($pat_myarray['referred_by']);
+	$referred_source = st($pat_myarray['referred_source']);
+	$docid = $pat_myarray['docid'];
+	$insured_sex = $pat_myarray['gender'];
+	$patient_firstname = $pat_myarray['firstname'];
+	$patient_lastname = $pat_myarray['lastname'];
+	$patient_middle = $pat_myarray['middlename'];
+	$patient_address = $pat_myarray['add1'];
+	$patient_city = $pat_myarray['city'];
+	$patient_state = $pat_myarray['state'];
+	$patient_zip = $pat_myarray['zip'];
+	$patient_dob = $pat_myarray['dob'];
 
-$sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss                                 
-                        JOIN dental_patients p on ss.patiendid=p.patientid                        
-                WHERE                                 
-                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
-                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
-
-  $result = mysql_query($sleepstudies);
-  $d = mysql_fetch_assoc($result);
-                                                                    
-  $diagnosising_doc = $d['diagnosising_doc'];
-  $diagnosising_npi = $d['diagnosising_npi'];
-  $field_17a = $diagnosising_doc;
-  $field_17b = $diagnosising_npi;
-
-$accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
-if ($dent_rows <= 0) {
-    $accept_assignment = $accept_assignmentnew;
-}
-// If claim doesn't yet have a preauth number, try to load it
-// from the patient's most recently completed preauth.
-if (empty($prior_authorization_number)) {
-    $sql = "SELECT "
-         . "  * "
-         . "FROM "
-         . "  dental_insurance_preauth "
-         . "WHERE "
-         . "  patient_id = '" . $_GET['pid'] . "' "
-         . "  AND status = " . DSS_PREAUTH_COMPLETE . " "
-         . "ORDER BY "
-         . "  date_completed desc "
-         . "LIMIT 1";
-    $my = mysql_query($sql);
-    $num_rows = mysql_num_rows($my);
-
-    if ($num_rows > 0) {
-        $myarray = mysql_fetch_array($my);
-        $prior_authorization_number = $myarray['pre_auth_num'];
+    if($pat_myarray['p_m_ins_ass'] == 'Yes') {
+        $insured_signature = 1;
     }
-}
-                $ins_sql = " insert into dental_insurance set 
+
+    $patient_signature = 1;
+    $signature_physician = "Signature on File";
+    $patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
+    $physician_signed_date = date('m/d/Y');
+    $patient_phone_code = split_phone($pat_myarray['home_phone'], true);
+    $patient_phone = split_phone($pat_myarray['home_phone'], false);
+    $insured_phone_code = split_phone($pat_myarray['home_phone'], true);
+    $insured_phone = split_phone($pat_myarray['home_phone'], false);
+    $patient_status = $pat_myarray['marital_status'];
+    $insured_id_number = $pat_myarray['p_m_ins_id'];
+    $insured_firstname = $pat_myarray['p_d_party'];
+    $insured_address = $pat_myarray['add1'];
+    $insured_city = $pat_myarray['city'];
+    $insured_state = $pat_myarray['state'];
+    $insured_zip = $pat_myarray['zip'];
+    $insured_dob = $pat_myarray['ins_dob'];
+    $patient_relation_insured = $pat_myarray['p_m_relation'];
+    $insured_employer_school_name = $pat_myarray['employer'];
+    $insured_policy_group_feca = $pat_myarray['group_number'];
+    $insured_insurance_plan = $pat_myarray['plan_name'];
+    $p_m_eligible_payer_id = $pat_myarray['p_m_eligible_payer_id'];
+    $p_m_eligible_payer_name = $pat_myarray['p_m_eligible_payer_name'];
+
+	$sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss                                 
+                     JOIN dental_patients p on ss.patiendid=p.patientid                        
+                	 WHERE                                 
+                     (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
+                     (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
+                     ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
+
+	$d = $db->getRow($sleepstudies);
+	$diagnosis_1 = $d['diagnosis'];
+	$sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss                                 
+                     JOIN dental_patients p on ss.patiendid=p.patientid                        
+                	 WHERE                                 
+                     (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
+                     (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
+                     ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
+
+	$d = $db->getRow($sleepstudies);                                                             
+	$diagnosising_doc = $d['diagnosising_doc'];
+	$diagnosising_npi = $d['diagnosising_npi'];
+	$field_17a = $diagnosising_doc;
+	$field_17b = $diagnosising_npi;
+	$accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
+
+	if ($dent_rows <= 0) {
+	    $accept_assignment = $accept_assignmentnew;
+	}
+	// If claim doesn't yet have a preauth number, try to load it
+	// from the patient's most recently completed preauth.
+	if (empty($prior_authorization_number)) {
+	    $sql = "SELECT "
+	         . "  * "
+	         . "FROM "
+	         . "  dental_insurance_preauth "
+	         . "WHERE "
+	         . "  patient_id = '" . $_GET['pid'] . "' "
+	         . "  AND status = " . DSS_PREAUTH_COMPLETE . " "
+	         . "ORDER BY "
+	         . "  date_completed desc "
+	         . "LIMIT 1";
+
+	    $my = $db->getResults($sql);
+	    $num_rows = count($my);
+
+	    if ($num_rows > 0) {
+	        $myarray = $my[0];
+	        $prior_authorization_number = $myarray['pre_auth_num'];
+	    }
+	}
+    
+    $ins_sql = " insert into dental_insurance set 
                 patientid = '".s_for($pid)."',
                 pica1 = '".s_for($pica1)."',
                 pica2 = '".s_for($pica2)."',
@@ -951,15 +780,10 @@ if (empty($prior_authorization_number)) {
                 producer = '".s_for($prod)."',
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-                mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 
-        $primary_claim_id = mysql_insert_id();
+        $primary_claim_id = $db->getInsertId($ins_sql);
 
         return $primary_claim_id;
 }
 
-
-
-
 ?>
-

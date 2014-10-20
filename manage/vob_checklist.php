@@ -263,12 +263,14 @@ $api_r = $db->getRow($api_sql);
 <?php 
     $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
     $q = $db->getResults($s);
-    foreach ($q as $r) {?>
+    if ($q) {
+      foreach ($q as $r) {?>
     <tr>
       <td><?php echo $r['adddate']; ?></td>
       <td><a href="#" onclick="parent.window.location = 'view_eligibility_response.php?id=<?php echo $r['id']; ?>';return false;">View</a></td>
     </tr>
 <?php
+      }
     }?>
   </table>
 </div>

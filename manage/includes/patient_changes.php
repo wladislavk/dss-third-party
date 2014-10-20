@@ -2,6 +2,7 @@
 
 function num_patient_changes($pid){
 
+	$db = new Db();
 	$num_changes = 0;
 
 	$psql = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($pid)."'";

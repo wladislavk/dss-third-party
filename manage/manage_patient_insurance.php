@@ -138,8 +138,8 @@ $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
 ?>
 
-<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/popup.js" type="text/javascript"></script>
+<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
 	Manage Patient Insurance 

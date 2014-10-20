@@ -187,7 +187,7 @@ $my = $db->getResults($sql);
 	<?php if(count($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="4" align="center">
+			<td valign="top" class="col_head" colspan="5" align="center">
 				No Records
 			</td>
 		</tr>

@@ -104,7 +104,7 @@ function get_mdreferralids ($pid, $active = true) {
                   	WHERE dental_patients.patientid IN('".$pid."') AND dental_patients.referred_source IN('2') AND ct.physician=1;";
   $contact_res = $db->getResults($contact_sql);
   $contactids = array();
-  foreach ($contact_res as $row) {
+  if ($contact_res) foreach ($contact_res as $row) {
     $element = array_shift($row);
     if(!in_array($element, $contactids)){
       if($active){
@@ -128,8 +128,10 @@ function get_mdreferralids ($pid, $active = true) {
 function get_ptreferralids ($pid) {
 
   $db = new Db();
-	$pt_sql = "SELECT referred_source FROM dental_patients WHERE patientid=".$pid." LIMIT 1";
-	$prow = $db->getRow($pt_sql);
+  if ($pid) {
+  	$pt_sql = "SELECT referred_source FROM dental_patients WHERE patientid=".$pid." LIMIT 1";
+  	$prow = $db->getRow($pt_sql);
+  }
 	if($prow['referred_source']==1){
     $contact_sql = "SELECT pr.patientid FROM dental_patients pr INNER JOIN dental_patients p ON p.referred_by = pr.patientid WHERE p.patientid IN('".s_for($pid)."')";
 	}elseif($prow['referred_source']==2){
@@ -137,14 +139,16 @@ function get_ptreferralids ($pid) {
 		JOIN dental_contacttype ct ON ct.contacttypeid = dental_contact.contacttypeid
 			WHERE dental_patients.patientid IN('".s_for($pid)."') AND ct.physician != 1;";
 	}
-	$contact_res = $db->getResults($contact_sql);
+  if($prow['referred_source']==1 || $prow['referred_source']==2){
+  	$contact_res = $db->getResults($contact_sql);
+  }
   $contactids = array();
   if ($contact_res) {
     foreach ($contact_res as $row) {
       $contactids[] = array_shift($row);
     }
   }
-  $contactid_list = implode(",", $contactids);
+  $contactid_list = implode(",", $contactids); 
 
   return $contactid_list;
 }

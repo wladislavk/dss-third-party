@@ -1,6 +1,8 @@
 <?php
 
 function create_notification($pid, $docid, $n, $n_type, $s=1){
+
+  $db = new Db();
   $s = "INSERT INTO dental_notifications (patientid, docid, notification, notification_type, status, notification_date)
 		VALUES
 	('".mysql_real_escape_string($pid)."',
@@ -17,6 +19,7 @@ function create_notification($pid, $docid, $n, $n_type, $s=1){
 
 function find_patient_notifications($p){
 
+  $db = new Db();
   $s = "SELECT * FROM dental_notifications WHERE patientid='".mysql_real_escape_string($p)."' AND status=1";
   
   $q = $db->getResults($s);

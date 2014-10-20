@@ -1,46 +1,44 @@
-<? 
+<?php 
 require_once('includes/constants.inc');
 include "includes/top.htm";
 include "includes/similar.php";
 ?>
-<style type="text/css">
-.similar{ display:none; }
-</style>
+
+<link rel="stylesheet" href="css/manage_display_similar.css" type="text/css" media="screen" />
+
 <?php
 if(isset($_REQUEST['useid'])){
-$u = $_REQUEST['useid'];
-$pc = $_REQUEST['pcid'];
+	$u = $_REQUEST['useid'];
+	$pc = $_REQUEST['pcid'];
 
-$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($pc)."'";
-$pcq = mysql_query($pcsql);
-$pcr = mysql_fetch_assoc($pcq);
-$psql = "UPDATE dental_patients SET ";
-switch($pcr['contacttype']){
-	case '1':
-		$psql .= " docsleep ";
-		break;
-        case '2':
-                $psql .= " docpcp ";
-                break;
-        case '3':
-                $psql .= " docdentist ";
-                break;
-        case '4':
-                $psql .= " docent ";
-                break;
-        case '5':
-                $psql .= " docmdother ";
-                break;
+	$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($pc)."'";
+	$pcr = $db->getRow($pcsql);
+	$psql = "UPDATE dental_patients SET ";
+	switch($pcr['contacttype']){
+		case '1':
+			$psql .= " docsleep ";
+			break;
+		case '2':
+			$psql .= " docpcp ";
+			break;
+		case '3':
+			$psql .= " docdentist ";
+			break;
+		case '4':
+			$psql .= " docent ";
+			break;
+		case '5':
+			$psql .= " docmdother ";
+			break;
+	}
+	$psql .= " = '".$u."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
+	$db->query($psql);
 
-}
-$psql .= " = '".$u."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
-mysql_query($psql);
-
-$dsql = "DELETE FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($pc)."'";
-mysql_query($dsql);
-?>  <script type="text/javascript">
-        window.location = "patient_changes.php?pid=<?= $pcr['patientid']; ?>";
-  </script>
+	$dsql = "DELETE FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($pc)."'";
+	$db->query($dsql);?>
+	<script type="text/javascript">
+		window.location = "patient_changes.php?pid=<?php echo $pcr['patientid']; ?>";
+	</script>
 <?php
 }elseif(isset($_REQUEST['createid'])){
 
@@ -66,48 +64,45 @@ mysql_query($dsql);
 		'".mysql_real_escape_string($_SESSION['docid'])."'
 	FROM dental_patient_contacts
 		WHERE id='".mysql_real_escape_string($_REQUEST['createid'])."'";
-  mysql_query($s); 
-  $pc_id = mysql_insert_id();
-$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($_REQUEST['createid'])."'";
-$pcq = mysql_query($pcsql);
-$pcr = mysql_fetch_assoc($pcq);
-$psql = "UPDATE dental_patients SET ";
-switch($pcr['contacttype']){
-        case '1':
-                $psql .= " docsleep ";
-                break;
-        case '2':
-                $psql .= " docpcp ";
-                break;
-        case '3':
-                $psql .= " docdentist ";
-                break;
-        case '4':
-                $psql .= " docent ";
-                break;
-        case '5':
-                $psql .= " docmdother ";
-                break;
+  $pc_id = $db->getInsertId($s);
 
-}
-$psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
-mysql_query($psql);
-    $d = "DELETE FROM dental_patient_contacts where id='".mysql_real_escape_string($_REQUEST['createid'])."'";
-  mysql_query($d);
-  ?>
-  <script type="text/javascript">
-	//window.location = "add_contact.php?ed=<?= $pc_id; ?>";
-  </script>
-  <?php
+	$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($_REQUEST['createid'])."'";
+	$pcr = $db->getRow($pcsql);
+	$psql = "UPDATE dental_patients SET ";
+	switch($pcr['contacttype']){
+		case '1':
+			$psql .= " docsleep ";
+			break;
+		case '2':
+			$psql .= " docpcp ";
+			break;
+		case '3':
+			$psql .= " docdentist ";
+			break;
+		case '4':
+			$psql .= " docent ";
+			break;
+		case '5':
+			$psql .= " docmdother ";
+			break;
+	}
+
+	$psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
+	$db->query($psql);
+	$d = "DELETE FROM dental_patient_contacts where id='".mysql_real_escape_string($_REQUEST['createid'])."'";
+	$db->query($d);?>
+	<script type="text/javascript">
+		//window.location = "add_contact.php?ed=<?php echo $pc_id; ?>";
+	</script>
+ <?php
 }elseif(isset($_REQUEST['delid'])){
-$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($_REQUEST['delid'])."'";
-$pcq = mysql_query($pcsql);
-$pcr = mysql_fetch_assoc($pcq);
-$dsql = "DELETE FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($_REQUEST['delid'])."'";
-mysql_query($dsql);
-?>  <script type="text/javascript">
-	window.location = "patient_changes.php?pid=<?= $pcr['patientid']; ?>";
-  </script>
+	$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($_REQUEST['delid'])."'";
+	$pcr = $db->getRow($pcsql);
+	$dsql = "DELETE FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($_REQUEST['delid'])."'";
+	$db->query($dsql);?>
+	<script type="text/javascript">
+		window.location = "patient_changes.php?pid=<?php echo $pcr['patientid']; ?>";
+	</script>
 <?php
 }
 
@@ -119,42 +114,40 @@ else
 	$index_val = 0;
 
 if(isset($_REQUEST['sort']) && $_REQUEST['sort'] != ''){
-  switch($_REQUEST['sort']){
-    case 'address':
-	$sort = "pc.address1";
-	break;
-    case 'name':
-	$sort = "pc.lastname";
-	break;
-    case 'phone':
-	$sort = 'pc.phone';
-	break;
-  }
+	switch($_REQUEST['sort']){
+		case 'address':
+			$sort = "pc.address1";
+			break;
+		case 'name':
+			$sort = "pc.lastname";
+			break;
+		case 'phone':
+			$sort = 'pc.phone';
+			break;
+	}
 }else{
-  $_REQUEST['sort']='name';
-  $_REQUEST['sortdir']='DESC';
-  $sort = "pc.lastname";
+	$_REQUEST['sort']='name';
+	$_REQUEST['sortdir']='DESC';
+	$sort = "pc.lastname";
 }
 if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']){
-  $dir = $_REQUEST['sortdir'];
+	$dir = $_REQUEST['sortdir'];
 }else{
-  $dir = 'DESC';
+	$dir = 'DESC';
 }
 	
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1, pc.address2, pc.city, pc.state, pc.zip, pc.phone,
-	p.firstname as patfirstname, p.lastname as patlastname
-	FROM dental_patient_contacts pc 
-	INNER JOIN dental_patients p ON pc.patientid=p.patientid
-	WHERE p.docid='".$_SESSION['docid']."' ";
-  $sql .= "ORDER BY ".$sort." ".$dir;
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+			p.firstname as patfirstname, p.lastname as patlastname
+			FROM dental_patient_contacts pc 
+			INNER JOIN dental_patients p ON pc.patientid=p.patientid
+			WHERE p.docid='".$_SESSION['docid']."' ";
+$sql .= "ORDER BY ".$sort." ".$dir;
+$total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-
+$my = $db->getResults($sql);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -169,146 +162,137 @@ $my=mysql_query($sql) or die(mysql_error());
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 
 
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
-			Pages:
-			<?
-				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
-			?>
-		</TD>
-	</TR>
-	<? }?>
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-			<a href="manage_patient_contacts.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Contact Name</a>
-		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'address')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
-			<a href="manage_patient_contacts.php?sort=address&sortdir=<?php echo ($_REQUEST['sort']=='address'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Address</a>
-		</td>
-               <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        <a href="manage_patient_contacts.php?sort=phone&sortdir=<?php echo ($_REQUEST['sort']=='phone'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Phone</a>
-                </td>
-               <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        <a href="manage_patient_contacts.php?sort=type&sortdir=<?php echo ($_REQUEST['sort']=='type'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Contact Type</a>
-                </td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'addedby')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        <a href="manage_patient_contacts.php?sort=addedby&sortdir=<?php echo ($_REQUEST['sort']=='addedby'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Added By</a>
-                </td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'similar')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
-                        <a href="manage_patient_contacts.php?sort=similar&sortdir=<?php echo ($_REQUEST['sort']=='similar'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Similar Doctors</a>
-                </td>
-		<td valign="top" class="col_head" width="5%">
-			Action
-		</td>
-	</tr>
-	<? if(mysql_num_rows($my) == 0)
-	{ ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="4" align="center">
-				No Records
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+	<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+	<?php if($total_rec > $rec_disp) {?>
+		<TR bgColor="#ffffff">
+			<TD  align="right" colspan="15" class="bp">
+				Pages:
+				<?php paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);?>
+			</TD>
+		</TR>
+	<?php }?>
+		<tr class="tr_bg_h">
+			<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+				<a href="manage_patient_contacts.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Contact Name</a>
+			</td>
+			<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'address')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
+				<a href="manage_patient_contacts.php?sort=address&sortdir=<?php echo ($_REQUEST['sort']=='address'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Address</a>
+			</td>
+			<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+				<a href="manage_patient_contacts.php?sort=phone&sortdir=<?php echo ($_REQUEST['sort']=='phone'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Phone</a>
+			</td>
+			<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+				<a href="manage_patient_contacts.php?sort=type&sortdir=<?php echo ($_REQUEST['sort']=='type'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Contact Type</a>
+			</td>
+			<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'addedby')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+				<a href="manage_patient_contacts.php?sort=addedby&sortdir=<?php echo ($_REQUEST['sort']=='addedby'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Added By</a>
+			</td>
+			<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'similar')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+				<a href="manage_patient_contacts.php?sort=similar&sortdir=<?php echo ($_REQUEST['sort']=='similar'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Similar Doctors</a>
+			</td>
+			<td valign="top" class="col_head" width="5%">
+				Action
 			</td>
 		</tr>
-	<? 
-	}
-	else
-	{
-		while($myarray = mysql_fetch_array($my))
-		{
-			$sim = similar_doctors($myarray['id']);
-		?>
-			<tr class="<?=$tr_class;?> <?= ($myarray['viewed'])?'':'unviewed'; ?>">
-				<td valign="top">
-					<?=st($myarray["firstname"]);?>&nbsp;
-                    			<?=st($myarray["lastname"]);?> 
-				</td>
-				<td valign="top">
-					<?= st($myarray["address1"]); ?>
-                                        <?= st($myarray["address2"]); ?>
-                                        <?= st($myarray["city"]); ?>,
-                                        <?= st($myarray["state"]); ?>
-                                        <?= st($myarray["zip"]); ?>
-				</td>
-                                <td valign="top">
-					<?= st($myarray["phone"]); ?>
-                                </td>
-				<td valign="top">
-					<?php
-	switch($myarray['contacttype']){
-        case '1':
-                echo "Sleep MD";
-                break;
-        case '2':
-                echo "Primary Care MD";
-                break;
-        case '3':
-                echo "Dentist";
-                break;
-        case '4':
-                echo "ENT";
-                break;
-        default:
-                echo "Unknown";
-                break;
-}
-
-					?>
-				</td>
-				<td valign="top">
-					<?= $myarray['patfirstname']." ".$myarray['patlastname']; ?>	
-				</td>
-				<td valign="top">
-					<a href="#" <?= (count($sim))?'class="plus_count"':''; ?> onclick="$('.sim_<?= $myarray['id']; ?>').toggle();return false;"><?= count($sim); ?> <?= (count($sim)>0)?'(click to view)':'';?></a>
-				</td>
-				<td valign="top">
-					<a href="#" onclick="loadPopup('view_patient_contact.php?id=<?= $myarray["id"]; ?>');return false;" class="editlink" title="EDIT">
-					        View
-					</a> 
-                                        <a href="http://google.com/search?q=<?= $myarray["firstname"]; ?>+<?= $myarray["lastname"]; ?>+<?= $myarray["zip"]; ?>" target="_blank" class="editlink" title="SEARCH">
-                                               Search 
-                                        </a>
-                                        <a href="manage_patient_contacts.php?delid=<?= $myarray["id"]; ?>" onclick="return confirm('Are you sure you want to delete this contact?')" class="dellink" title="DELETE">
-                                                Delete 
-                                        </a>
-
+	<?php 
+	if(count($my) == 0){ ?>
+			<tr class="tr_bg">
+				<td valign="top" class="col_head" colspan="7" align="center">
+					No Records
 				</td>
 			</tr>
-			<?php 
+	<?php 
+	} else {
+		foreach ($my as $myarray) {
+			$sim = similar_doctors($myarray['id']);?>
+		<tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
+			<td valign="top">
+				<?php echo st($myarray["firstname"]);?>&nbsp;
+				<?php echo st($myarray["lastname"]);?> 
+			</td>
+			<td valign="top">
+				<?php echo st($myarray["address1"]);
+					  echo st($myarray["address2"]);
+					  echo st($myarray["city"]); 
+					  echo st($myarray["state"]);
+					  echo st($myarray["zip"]); ?>
+			</td>
+			<td valign="top">
+				<?php echo st($myarray["phone"]); ?>
+			</td>
+			<td valign="top">
+				<?php
+				switch($myarray['contacttype']){
+				case '1':
+					echo "Sleep MD";
+					break;
+				case '2':
+					echo "Primary Care MD";
+					break;
+				case '3':
+					echo "Dentist";
+					break;
+				case '4':
+					echo "ENT";
+					break;
+				default:
+					echo "Unknown";
+					break;
+				}?>
+			</td>
+			<td valign="top">
+				<?php echo $myarray['patfirstname']." ".$myarray['patlastname']; ?>	
+			</td>
+			<td valign="top">
+				<a href="#" <?php echo (count($sim))?'class="plus_count"':''; ?> onclick="$('.sim_<?php echo $myarray['id']; ?>').toggle();return false;"><?php echo count($sim); ?> <?php echo (count($sim)>0)?'(click to view)':'';?></a>
+			</td>
+			<td valign="top">
+				<a href="#" onclick="loadPopup('view_patient_contact.php?id=<?php echo $myarray["id"]; ?>');return false;" class="editlink" title="EDIT">
+					View
+				</a> 
+				<a href="http://google.com/search?q=<?php echo $myarray["firstname"]; ?>+<?php echo $myarray["lastname"]; ?>+<?php echo $myarray["zip"]; ?>" target="_blank" class="editlink" title="SEARCH">
+					Search 
+				</a>
+				<a href="manage_patient_contacts.php?delid=<?php echo $myarray["id"]; ?>" onclick="return confirm('Are you sure you want to delete this contact?')" class="dellink" title="DELETE">
+					Delete 
+				</a>
+			</td>
+		</tr>
+		<?php 
 			if(count($sim) > 0){ 
 			    foreach($sim as $s){ ?>
-				<tr class="similar sim_<?= $myarray['id']; ?>">
-                                <td valign="top">
-                                        <?=st($s["name"]);?>
-                                </td>
-                                <td valign="top">
-                                        <?= st($s["address"]); ?>
-                                </td>
-                                <td valign="top">
-                                        <?= st($s["phone"]); ?>
-                                </td>
-				<td>
-				</td>
-				<td valign="top">
-					<a href="#" onclick="loadPopup('add_contact.php?ed=<?= $s['id']; ?>'); return false;" class="editlink">
-                                                View
-                                        </a>
-					<a href="manage_patient_contacts.php?useid=<?= $s['id']; ?>&pcid=<?= $myarray['id']; ?>" class="editlink">
-						Use
-					</a>
-				</td>
-				</tr>
-				<?php
+		<tr class="similar sim_<?php echo $myarray['id']; ?>">
+			<td valign="top">
+				<?php echo st($s["name"]);?>
+			</td>
+			<td valign="top">
+				<?php echo st($s["address"]); ?>
+			</td>
+			<td valign="top">
+				<?php echo st($s["phone"]); ?>
+			</td>
+			<td>
+			</td>
+			<td valign="top">
+				<a href="#" onclick="loadPopup('add_contact.php?ed=<?php echo $s['id']; ?>'); return false;" class="editlink">
+					View
+				</a>
+				<a href="manage_patient_contacts.php?useid=<?php echo $s['id']; ?>&pcid=<?php echo $myarray['id']; ?>" class="editlink">
+					Use
+				</a>
+			</td>
+		</tr>
+			<?php
 			    }
-			}  ?>
-	<? 	}
+			}	
+		}
 	}?>
-</table>
+	</table>
 </form>
 
 
@@ -319,4 +303,4 @@ $my=mysql_query($sql) or die(mysql_error());
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

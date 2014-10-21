@@ -275,7 +275,7 @@ if($pat_myarray['patientid'] == '')
    				Patient <i><?=$name;?></i>
 
 		Entry Date: <?= date('m/d/Y', strtotime($procedure_date)); ?>
-            </td>
+            <span id="autosave_note" style="float:right; font-size:14px; font-weight:400;"><span></td>
         </tr>
         <tr>
         	<td valign="top" colspan="2" class="frmhead">
@@ -320,7 +320,7 @@ if($pat_myarray['patientid'] == '')
         
         <tr>
         	<td valign="top" class="frmdata">
-				Editor Initials: <input type="text" name="editor_initials" value="<?=$editor_initials ?>" maxlength="3" />
+				Editor Initials: <input type="text" id="editor_initials" name="editor_initials" value="<?=$editor_initials ?>" maxlength="3" />
             </td>
         	<td class="frmdata">
 				Procedure Date: <span class="red">*</span> <input type="text" id="procedure_date" name="procedure_date" value="<?=$procedure_date ?>" class="calendar_top" />
@@ -390,9 +390,41 @@ if($pat_myarray['patientid'] == '')
 			$('#submit_buttons').hide();
 			$('#cred_div').show();
 		}
-	   }	
+	   }
+    function pad_time(number){
+      if (number < 10){
+        number = "0"+number;
+      }
+      return number;
+    }
+    function save_draft(){
+      var noteContent = $('#notes')[0].value;
+      var procedureDate = $('#procedure_date')[0].value;
+      var editorInitials = $('#editor_initials')[0].value;
+      var post_data = { ed_initials: editorInitials, ed:<?=$_GET['ed']?>, notes: noteContent, procedure_date: procedureDate };
+      $.post("create_draft_note.php",post_data, function(data){
+        if (data.indexOf('logged_out')!= -1 || data.indexOf('login.php') != -1){
+          alert("you have been logged out elsewhere. Redirecting to login page.");
+          parent.window.location="login.php";
+        }
+        else if (data.indexOf('save_failed')!= -1)
+        {
+          alert("autosave failed, please contact support.");
+        }
+        else
+        {
+          var d = new Date();
+          $('#autosave_note').text("Last autosaved at: "+pad_time(d.getHours())+":"+pad_time(d.getMinutes())+":"+pad_time(d.getSeconds()));
+        }
+      });
+    }
 	   var cal72 = new calendar2(document.forms['notesfrm'].elements['procedure_date']);
-
+     var minutes = 1;
+     var interval = 1000 * 60 * minutes; //interval is 60000ms, or 1 minute
+    $(document).ready(function() {
+      setInterval(save_draft, interval);
+    });
+  
     </script>
 </body>
 </html>

@@ -15,10 +15,19 @@
                         if($myarray["signed_id"] != '')
                         {
                                 $tr_class = "tr_active";
+                                $bg_color = "";
+                                $status = "Signed";
+                        }
+                        else if($myarray["status"]==0){
+                                $tr_class = "tr_draft";
+                                $bg_color = "#FFFF99";
+                                $status = 'Draft';
                         }
                         else
                         {
                                 $tr_class = "tr_inactive";
+                                $bg_color = "#FF9999";
+                                $status = "Unsigned";
                         }
                         $tr_class = "tr_active";
 
@@ -26,7 +35,7 @@
                         $user_my = mysql_query($user_sql);
                         $user_myarray = mysql_fetch_array($user_my);
                 ?>
-                        <tr id="note_<?= $myarray['notesid'];?>" class="<?=$tr_class;?>" <? if(st($myarray["signed_id"]) == '') {?> style="background-color:#FF9999" <? }?>>
+                        <tr id="note_<?= $myarray['notesid'];?>" class="<?=$tr_class;?>" <? if($bg_color != '') {?> style="background-color:<?= $bg_color?>" <? }?>>
                                 <td valign="top" style="border:solid 1px #000;">
                                         <table width="100%" cellpadding="2" cellspacing="1" border="0">
                                                 <tr>
@@ -52,8 +61,8 @@
                                                         </td>
                                                         <td valign="top" width="30%">
                                                         <span id="note_edit_<?= $myarray['notesid'];?>">
-                                                        <? if(st($myarray["signed_id"]) == '') { ?>
-                                                                Status: <span style="font-size:14px;">Unsigned</span>
+                                                        <? if($status == 'Unsigned' || $status == 'Draft') { ?>
+                                                                Status: <span style="font-size:14px;"><?=$status?></span>
 								<?php if($office_type == DSS_OFFICE_TYPE_FRONT){ ?>
                                                                 <a href="#" onclick="loadPopup('add_notes.php?pid=<?= $_GET['pid']; ?>&ed=<?= $myarray['notesid']; ?>');return false;">Edit</a>
 <?php

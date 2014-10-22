@@ -1,5 +1,5 @@
 
-        <button onclick="Javascript: loadPopup('add_notes.php?pid=<?=$_GET['pid'];?>');" class="addButton" style="float: right;">
+        <button onclick="add_note(<?=$_GET['pid'];?>);" class="addButton" style="float: right;">
                 + Add New Progress Note
         </button>
 <div class="clear"></div>
@@ -11,7 +11,7 @@ where n.docid='".$_SESSION['docid']."' and n.patientid='".s_for($_GET['pid'])."'
 $sql .= " order by n.adddate DESC";
 $sql = "select n.*, CONCAT(u.first_name,' ',u.last_name) signed_name, p.adddate as parent_adddate from
         (
-        select * from dental_notes where status!=0 AND docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate desc
+        select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate desc
         ) as n
         LEFT JOIN dental_users u on u.userid=n.signed_id
         LEFT JOIN dental_notes p ON p.notesid = n.parentid
@@ -61,6 +61,18 @@ function sign_notes(){
                                   });
 }
 
+function add_note(pid){
+  $.ajax({
+  url:'create_draft_note.php?pid='+pid,
+  complete: function (response) {
+    note_id = response['responseText'];
+    loadPopup('add_notes.php?pid='+pid+'&ed='+note_id);
+  },
+  error: function(){
+    alert("There was an error creating the note");
+  }
+  });
+}
 </script>
 
 

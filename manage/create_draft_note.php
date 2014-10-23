@@ -12,7 +12,7 @@ include("includes/calendarinc.php");
 if ($_POST['ed'] != ''){ //post from editing
   if ($_SESSION['userid'] != ''){
     $update_sql = "UPDATE dental_notes SET
-    status = 0,
+    status = 2,
     notes = '".$_POST['notes']."',
     editor_initials='".$_POST['ed_initials']."',
     procedure_date='".date('Y-m-d', strtotime($_POST['procedure_date']))."',
@@ -38,11 +38,16 @@ else //creating a new note.
       patientid = '".s_for($_GET['pid'])."',
       userid = '".s_for($_SESSION['userid'])."',
       docid = '".s_for($_SESSION['docid'])."',
-      status = 0, 
+      status = 2, 
       adddate = '".date('Y-m-d H:i:s')."',
       procedure_date = '".date('Y-m-d')."',
       ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
   $note_result = mysql_query($note_sql);
-  echo mysql_insert_id();
+  
+  $note_id =  mysql_insert_id();
+  $update_sql = "UPDATE dental_notes SET parentid = '".$note_id."' WHERE notesid = '".$note_id."';";
+  $update_result = mysql_query($update_sql);
+
+  echo $note_id;
 }
 ?>

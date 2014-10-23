@@ -1,11 +1,9 @@
 <?php 
 if($_GET['backoffice'] == '1') {
-  include 'admin/includes/top.htm';
+	include 'admin/includes/top.htm';
 } else {
-  include 'includes/top.htm';
-}
-
-?>
+	include 'includes/top.htm';
+}?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript" src="/manage/js/edit_letter.js"></script>
 <?php
@@ -34,29 +32,26 @@ $letterid = mysql_real_escape_string($_GET['lid']);
 
 // Select Letter
 $letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
-$letter_result = mysql_query($letter_query);
-while ($row = mysql_fetch_assoc($letter_result)) {
-  $templateid = $row['templateid'];
-  $patientid = $row['patientid'];
-  $topatient = $row['topatient'];
-  $md_list = $row['md_list'];
-  $md_referral_list = $row['md_referral_list'];
+$letter_result = $db->getRow($letter_query);
+if ($letter_result) {
+  $templateid = $letter_result['templateid'];
+  $patientid = $letter_result['patientid'];
+  $topatient = $letter_result['topatient'];
+  $md_list = $letter_result['md_list'];
+  $md_referral_list = $letter_result['md_referral_list'];
   $mds = explode(",", $md_list);
   $md_referrals = explode(",", $md_referral_list);
 }
 
 // Get Letter Subject
 $template_query = "SELECT name FROM dental_letter_templates WHERE id = ".$templateid.";";
-$template_result = mysql_query($template_query);
-$title = mysql_result($template_result, 0);
+$template_result = $db->getRow($template_query);
+$title = array_shift($template_result);
 
 // Get Franchisee Name
 $franchisee_query = "SELECT name FROM dental_users WHERE userid = '".$_SESSION['docid']."';";
-$franchisee_result = mysql_query($franchisee_query);
-$franchisee_name = mysql_result($franchisee_result, 0);
-
-?>
-
+$franchisee_result = $db->getRow($franchisee_query);
+$franchisee_name = array_shift($franchisee_result);?>
 
 <br />
 <span class="admin_head">
@@ -72,20 +67,20 @@ $franchisee_name = mysql_result($franchisee_result, 0);
 //print_r ($_POST);
 
 if ($topatient) {
-  $contact_info = get_contact_info($patientid, $md_list, $md_referral_list);
+	$contact_info = get_contact_info($patientid, $md_list, $md_referral_list);
 } else {
-  $contact_info = get_contact_info('', $md_list, $md_referral_list);
+	$contact_info = get_contact_info('', $md_list, $md_referral_list);
 }
 
 $letter_contacts = array();
-foreach ($contact_info['patient'] as $contact) {
-  $letter_contacts[] = array_merge(array('type' => 'patient'), $contact);
+if ($contact_info['patient']) foreach ($contact_info['patient'] as $contact) {
+	$letter_contacts[] = array_merge(array('type' => 'patient'), $contact);
 }
-foreach ($contact_info['mds'] as $contact) {
-  $letter_contacts[] = array_merge(array('type' => 'md'), $contact);
+if ($contact_info['mds']) foreach ($contact_info['mds'] as $contact) {
+	$letter_contacts[] = array_merge(array('type' => 'md'), $contact);
 }
-foreach ($contact_info['md_referrals'] as $contact) {
-  $letter_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
+if ($contact_info['md_referrals']) foreach ($contact_info['md_referrals'] as $contact) {
+	$letter_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
 }
 $numletters = count($letter_contacts);
 $todays_date = date('F d, Y');
@@ -120,10 +115,10 @@ Dr. %franchisee_fullname%</p>";
 <?php
 if ($_POST != array()) {
 	foreach ($_POST['duplicate_letter'] as $key => $value) {
-    $dupekey = $key;
-  }
-  // Check for updated templates
-  foreach ($letter_contacts as $key => $contact) {
+		$dupekey = $key;
+	}
+	// Check for updated templates
+	foreach ($letter_contacts as $key => $contact) {
 		$search = array();
 		$replace = array();
 		$search[] = '%todays_date%';
@@ -148,22 +143,22 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $letter_contacts[$key]['zip'] . "</strong>";
 		$search[] = "%franchisee_fullname%";
 		$replace[] = "<strong>" . $franchisee_name . "</strong>";
-    $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
-    // Letter hasn't been edited, but a new template exists in hidden field
+	    $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
+	    // Letter hasn't been edited, but a new template exists in hidden field
  		if ($new_template[$key] == null && $_POST['new_template'][$key] != null) {
 			$new_template[$key] = $_POST['new_template'][$key];
-    }
-    // Template hasn't changed
-    if ($new_template[$key] == $template) {
+	    }
+	    // Template hasn't changed
+	    if ($new_template[$key] == $template) {
 			$new_template[$key] = null;	
-    }
-  }
-  // Duplicate Letter Template
+	    }
+	}
+	// Duplicate Letter Template
 	if (isset($_POST['duplicate_letter']) && !$duplicated) {
 		$dupe_template = $new_template[$dupekey];
-    foreach ($letter_contacts as $key => $contact) {
-      $new_template[$key] = $dupe_template;
-    }
+	    foreach ($letter_contacts as $key => $contact) {
+			$new_template[$key] = $dupe_template;
+	    }
 		$duplicated = true;
 	}
 	// Reset Letter
@@ -195,30 +190,30 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
 	$search[] = '%addr1%';
 	$replace[] = "<strong>" . $contact['add1'] . "</strong>";
-  $search[] = '%addr2%';
+	$search[] = '%addr2%';
 	$replace[] = ($contact['add2']) ? "<strong>" . $contact['add2'] . "</strong><br />" : "<!--%addr2%-->";
-  $search[] = '%city%';
+	$search[] = '%city%';
 	$replace[] = "<strong>" . $contact['city'] . "</strong>";
-  $search[] = '%state%';
+	$search[] = '%state%';
 	$replace[] = "<strong>" . $contact['state'] . "</strong>";
-  $search[] = '%zip%';
+	$search[] = '%zip%';
 	$replace[] = "<strong>" . $contact['zip'] . "</strong>";
 	$search[] = '%franchisee_fullname%';
 	$replace[] = "<strong>" . $franchisee_name . "</strong>";
 	
  	if ($new_template[$key] != null) {
-	  $letter[$key] = str_replace($search, $replace, $new_template[$key]);
+		$letter[$key] = str_replace($search, $replace, $new_template[$key]);
 		$new_template[$key] = htmlentities($new_template[$key]);
 	} else {
-	  $letter[$key] = str_replace($search, $replace, $template);
+		$letter[$key] = str_replace($search, $replace, $template);
  	}
 
 	// Catch Post Send Submit Button and Send letters Here
-  if ($_POST['send_letter'][$key] != null && $numletters == $_POST['numletters']) {
-    if (count($letter_contacts) == 1) {
-  		$parent = true;
-    }
-    $letterid = $letterid;
+	if ($_POST['send_letter'][$key] != null && $numletters == $_POST['numletters']) {
+	    if (count($letter_contacts) == 1) {
+	  		$parent = true;
+	    }
+	    $letterid = $letterid;
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
 		if ($_GET['backoffice'] == '1') {
@@ -227,39 +222,32 @@ foreach ($letter_contacts as $key => $contact) {
 			$message = str_replace($search, "", $message);	
 			deliver_letter($letterid, $message);
 		} else {
-	    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+		    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 		}
-		if ($parent) {
-			?>
+		if ($parent) {?>
 			<script type="text/javascript">
 				window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
 			</script>
 			<?php
 		}
-
     continue;
-  }
+	}
 	// Catch Post Delete Button and Delete letters Here
-  if ($_POST['delete_letter'][$key] != null && $numletters == $_POST['numletters']) {
-    if (count($letter_contacts) == 1) {
-  		$parent = true;
-    }
+	if ($_POST['delete_letter'][$key] != null && $numletters == $_POST['numletters']) {
+		if (count($letter_contacts) == 1) {
+			$parent = true;
+		}
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
-    $letterid = delete_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
-		if ($parent) {
-			?>
+	    $letterid = delete_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+		if ($parent) {?>
 			<script type="text/javascript">
 				window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
 			</script>
 			<?php
 		}
-
     continue;
-  }
-
-
-	?>
+	}?>
 	<?php // loop through letters ?>
 	<div align="right">
 		<button class="addButton" onclick="Javascript: edit_letter('letter<?=$key?>');return false;" >
@@ -284,7 +272,7 @@ foreach ($letter_contacts as $key => $contact) {
 		<tr>
 			<td valign="top">
 				<div id="letter<?=$key?>">
-				<?php print $letter[$key]; ?>
+					<?php print $letter[$key]; ?>
 				</div>
 				<input type="hidden" name="new_template[<?=$key?>]" value="<?=$new_template[$key]?>" />
 			</td>
@@ -300,8 +288,7 @@ foreach ($letter_contacts as $key => $contact) {
 	<hr width="90%" />
 
 <?php
-}
-?>
+}?>
 <br><br>
 </form>
 
@@ -315,6 +302,4 @@ if($_GET['backoffice'] == '1') {
   include 'admin/includes/bottom.htm';
 } else {
 	include 'includes/bottom.htm';
-
-} 
-?>
+} ?>

@@ -1,11 +1,9 @@
-<? 
+<?php 
 require_once('includes/constants.inc');
 include "includes/top.htm";
 include "includes/similar.php";
 ?>
-<style type="text/css">
-.similar{ display:none; }
-</style>
+<link rel="stylesheet" href="css/manage_display_similar.css" type="text/css" media="screen" />
 <?php
  
 //SQL to search for possible duplicates
@@ -16,39 +14,36 @@ $simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.doc
 
 
 if(isset($_REQUEST['deleteid'])){
-$dsql = "DELETE FROM dental_patients WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND patientid='".mysql_real_escape_string($_REQUEST['deleteid'])."'";
-mysql_query($dsql);
-?>  <script type="text/javascript">
-        alert("Duplicate patient removed.");
-        window.location = "add_patient.php?ed=<?= $_REQUEST['useid']; ?>&preview=1&addtopat=1&pid=<?= $_REQUEST['useid']; ?>";
-  </script>
+	$dsql = "DELETE FROM dental_patients WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND patientid='".mysql_real_escape_string($_REQUEST['deleteid'])."'";
+	$db->query($dsql);?>  
+	<script type="text/javascript">
+	    alert("Duplicate patient removed.");
+        window.location = "add_patient.php?ed=<?php echo $_REQUEST['useid']; ?>&preview=1&addtopat=1&pid=<?php echo $_REQUEST['useid']; ?>";
+	</script>
 <?php
-}elseif(isset($_REQUEST['createid'])){
-?>  <script type="text/javascript">
-        window.location = "add_patient.php?pid=<?= $_REQUEST['createid']; ?>&ed=<?= $_REQUEST['createid']; ?>";
-  </script>
+}elseif(isset($_REQUEST['createid'])){?>
+	<script type="text/javascript">
+        window.location = "add_patient.php?pid=<?php echo $_REQUEST['createid']; ?>&ed=<?php echo $_REQUEST['createid']; ?>";
+	</script>
 <?php
-
 }
 
-	
 $sql = "SELECT p.* FROM dental_patients p WHERE patientid='".mysql_real_escape_string($_REQUEST['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0 ";
-  $sql .= "ORDER BY p.lastname ASC"; 
-$my = mysql_query($sql);
-$myarray = mysql_fetch_assoc($my);
-?>
+$sql .= "ORDER BY p.lastname ASC"; 
+$myarray = $db->getRow($sql);?>
+
 <span class="admin_head" style="float:left;">
 	Warning: Possible Duplicate Patients
 </span>
 <br />
 <br />
 <div align="center" class="red" style="clear:both;padding:0 30px;">
-	<b>Patient <? echo $myarray['firstname']." ".$myarray['lastname'];?> may be a duplicate - please check the list of similar patients below. If patient is NOT a duplicate click "Create as New Patient" to add the patient to the software. If the patient IS a duplicate click "Use This Patient" next to the correct patient to use the original patient instead.</b>
-	<!--<b>Patient <? echo $myarray['firstname']." ".$myarray['lastname'];?> might be a duplicate.  Please check below and click Create to add the patient, or if the patient is a duplicate click Delete to remove the patient you just created and use the old patient instead.</b>-->
+	<b>Patient <?php echo $myarray['firstname']." ".$myarray['lastname'];?> may be a duplicate - please check the list of similar patients below. If patient is NOT a duplicate click "Create as New Patient" to add the patient to the software. If the patient IS a duplicate click "Use This Patient" next to the correct patient to use the original patient instead.</b>
+	<!--<b>Patient <?php echo $myarray['firstname']." ".$myarray['lastname'];?> might be a duplicate.  Please check below and click Create to add the patient, or if the patient is a duplicate click Delete to remove the patient you just created and use the old patient instead.</b>-->
 </div>
 <br />
-<a href="<?= $_SERVER['PHP_SELF']; ?>?createid=<?= $myarray['patientid']; ?>" class="addButton" style="margin-left:30px;font-size:14px;">Create as New Patient</a>
-<a href="#" onclick="loadPopup('add_patient.php?noheaders=1&readonly=1&pid=<?= $myarray['patientid']; ?>&ed=<?= $myarray['patientid']; ?>'); return false;" class="addButton" style="font-size:14px;" >View</a>
+<a href="<?php echo $_SERVER['PHP_SELF']; ?>?createid=<?php echo $myarray['patientid']; ?>" class="addButton" style="margin-left:30px;font-size:14px;">Create as New Patient</a>
+<a href="#" onclick="loadPopup('add_patient.php?noheaders=1&readonly=1&pid=<?php echo $myarray['patientid']; ?>&ed=<?php echo $myarray['patientid']; ?>'); return false;" class="addButton" style="font-size:14px;" >View</a>
 
 <br /><br />
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -69,33 +64,29 @@ $myarray = mysql_fetch_assoc($my);
 			Action
 		</td>
 	</tr>
-		<?php
-			$sim = similar_patients($myarray['patientid']);
-			if(count($sim) > 0){ 
-			    foreach($sim as $s){ ?>
-				<tr>
-                                <td valign="top">
-                                        <?=st($s["name"]);?>
-                                </td>
-                                <td valign="top">
-                                        <?= st($s["address"]); ?>
-                                </td>
-                                <td valign="top">
-                                        <?= st($s["phone"]); ?>
-                                </td>
-				<td valign="top">
-					<a href="#" onclick="loadPopup('add_patient.php?noheaders=1&readonly=1&pid=<?= $s['id']; ?>&ed=<?= $s['id']; ?>'); return false;" class="addButton" style="margin-right:10px;float:right;font-size:14px;" >View</a>
-
-				</td>
-				<td valign="top">
-					<a href="<?= $_SERVER['PHP_SELF']; ?>?useid=<?= $s['id']; ?>&deleteid=<?= $myarray['patientid']; ?>" class="addButton" style="margin-right:10px;float:right;font-size:14px;" >Use This Patient</a>
-				</td>
-				</tr>
-				<?php
-			    }
-			}  ?>
+<?php
+$sim = similar_patients($myarray['patientid']);
+if(count($sim) > 0){ 
+	foreach($sim as $s){ ?>
+	<tr>
+		<td valign="top">
+			<?php echo st($s["name"]);?>
+		</td>
+		<td valign="top">
+			<?php echo st($s["address"]); ?>
+		</td>
+		<td valign="top">
+			<?php echo st($s["phone"]); ?>
+		</td>
+		<td valign="top">
+			<a href="#" onclick="loadPopup('add_patient.php?noheaders=1&readonly=1&pid=<?php echo $s['id']; ?>&ed=<?php echo $s['id']; ?>'); return false;" class="addButton" style="margin-right:10px;float:right;font-size:14px;" >View</a>
+		</td>
+		<td valign="top">
+			<a href="<?php echo $_SERVER['PHP_SELF']; ?>?useid=<?php echo $s['id']; ?>&deleteid=<?php echo $myarray['patientid']; ?>" class="addButton" style="margin-right:10px;float:right;font-size:14px;" >Use This Patient</a>
+		</td>
+	</tr>
+<?php
+	}
+}?>
 </table>
-
-
-
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

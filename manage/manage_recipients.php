@@ -1,8 +1,7 @@
-<? 
+<?php 
 include "includes/top.htm";
 
-if($_POST['q_recipientssub'] == 1)
-{
+if($_POST['q_recipientssub'] == 1){
 	$referring_physician = $_POST['referring_physician'];
 	$dentist = $_POST['dentist'];
 	$physicians_other = $_POST['physicians_other'];
@@ -15,73 +14,63 @@ if($_POST['q_recipientssub'] == 1)
 	echo "patient_info - ".$patient_info."<br>";
 	*/
 	
-	
-	if($_POST['ed'] == '')
-	{
-		$ins_sql = " insert into dental_q_recipients set 
-		patientid = '".s_for($_GET['pid'])."',
-		referring_physician = '".s_for($referring_physician)."',
-		dentist = '".s_for($dentist)."',
-		physicians_other = '".s_for($physicians_other)."',
-		patient_info = '".s_for($patient_info)."',
-		userid = '".s_for($_SESSION['userid'])."',
-		docid = '".s_for($_SESSION['docid'])."',
-		adddate = now(),
-		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+	if($_POST['ed'] == ''){
+		$ins_sql = "insert into dental_q_recipients set 
+						patientid = '".s_for($_GET['pid'])."',
+						referring_physician = '".s_for($referring_physician)."',
+						dentist = '".s_for($dentist)."',
+						physicians_other = '".s_for($physicians_other)."',
+						patient_info = '".s_for($patient_info)."',
+						userid = '".s_for($_SESSION['userid'])."',
+						docid = '".s_for($_SESSION['docid'])."',
+						adddate = now(),
+						ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		$db->query($ins_sql) or die($ins_sql." | ".mysql_error());
 		
-		$msg = "Added Successfully";
-		?>
+		$msg = "Added Successfully";?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
-		<?
+		<?php
 		die();
-	}
-	else
-	{
-		$ed_sql = " update dental_q_recipients set 
-		referring_physician = '".s_for($referring_physician)."',
-		dentist = '".s_for($dentist)."',
-		physicians_other = '".s_for($physicians_other)."',
-		patient_info = '".s_for($patient_info)."'
-		where q_recipientsid = '".s_for($_POST['ed'])."'";
+	}else{
+		$ed_sql = "update dental_q_recipients set 
+					referring_physician = '".s_for($referring_physician)."',
+					dentist = '".s_for($dentist)."',
+					physicians_other = '".s_for($physicians_other)."',
+					patient_info = '".s_for($patient_info)."'
+					where q_recipientsid = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		$db->query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		//echo $ed_sql;
-		$msg = "Edited Successfully";
-		?>
+		$msg = "Edited Successfully";?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
-		<?
+		<?php
 		die();
 	}
 }
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_myarray = $db->getRow($pat_sql);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
-if($pat_myarray['patientid'] == '')
-{
-	?>
+if($pat_myarray['patientid'] == ''){?>
 	<script type="text/javascript">
 		window.location = 'manage_patient.php';
 	</script>
-	<?
+	<?php
 	die();
 }
 $sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$myarray = $db->getRow($sql);
 
 $q_recipientsid = st($myarray['q_recipientsid']);
 $referring_physician = st($myarray['referring_physician']);
@@ -89,43 +78,34 @@ $dentist = st($myarray['dentist']);
 $physicians_other = st($myarray['physicians_other']);
 $patient_info = st($myarray['patient_info']);
 
-if($patient_info == '')
-{
-	$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-			
-$sel_val = st($name);
-if(st($pat_myarray['company']) <> '')
-{
-$sel_val .= "
-".st($pat_myarray['company']);
-}
-if(st($pat_myarray['add1']) <> '')
-{
-$sel_val .= "
-".st($pat_myarray['add1']);
-}
-if(st($pat_myarray['add2']) <> '')
-{
-$sel_val .= "
-".st($pat_myarray['add2']);
-}
-if(st($pat_myarray['city']) <> '')
-{
-$sel_val .= "
-".st($pat_myarray['city']);
-}
-if(st($pat_myarray['state']) <> '')
-{
-$sel_val .= " ".st($pat_myarray['state']);
-}
-if(st($pat_myarray['zip']) <> '')
-{
-$sel_val .= " ".st($pat_myarray['zip']);
-}
+if($patient_info == ''){
+	$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);			
+	$sel_val = st($name);
+	if(st($pat_myarray['company']) <> ''){
+		$sel_val .= "
+		".st($pat_myarray['company']);
+	}
+	if(st($pat_myarray['add1']) <> ''){
+		$sel_val .= "
+		".st($pat_myarray['add1']);
+	}
+	if(st($pat_myarray['add2']) <> ''){
+	$sel_val .= "
+	".st($pat_myarray['add2']);
+	}
+	if(st($pat_myarray['city']) <> ''){
+	$sel_val .= "
+	".st($pat_myarray['city']);
+	}
+	if(st($pat_myarray['state']) <> ''){
+	$sel_val .= " ".st($pat_myarray['state']);
+	}
+	if(st($pat_myarray['zip']) <> ''){
+	$sel_val .= " ".st($pat_myarray['zip']);
+	}
 
-$patient_info = $sel_val;
-}
-?>
+	$patient_info = $sel_val;
+}?>
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
@@ -146,7 +126,7 @@ $patient_info = $sel_val;
 &nbsp;
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 
 <form name="q_recipientsfrm" action="<?=$_SERVER['PHP_SELF'];?>?ex=<?=$_GET['ex']?>&pid=<?=$_GET['pid']?>" method="post" enctype="multipart/form-data" >
@@ -251,4 +231,4 @@ $patient_info = $sel_val;
 </form>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

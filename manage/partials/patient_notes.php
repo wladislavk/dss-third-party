@@ -18,7 +18,7 @@
                                 $bg_color = "";
                                 $status = "Signed";
                         }
-                        else if($myarray["status"]==0){
+                        else if($myarray["status"]==2){
                                 $tr_class = "tr_draft";
                                 $bg_color = "#FFFF99";
                                 $status = 'Draft';

@@ -115,8 +115,8 @@ $template = "<p>%todays_date%</p>
 Dr. %franchisee_fullname%</p>";
 
 ?>
-<form action="/manage/dss_intro_to_md_from_dentist.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
-<input type="hidden" name="numletters" value="<?=$numletters?>" />
+<form action="/manage/dss_intro_to_md_from_dentist.php?pid=<?php echo $patientid?>&lid=<?php echo $letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
+<input type="hidden" name="numletters" value="<?php echo $numletters?>" />
 <?php
 if ($_POST != array()) {
 	foreach ($_POST['duplicate_letter'] as $key => $value) {
@@ -255,38 +255,38 @@ foreach ($letter_contacts as $key => $contact) {
 	}?>
 	<?php // loop through letters ?>
 	<div align="right">
-		<button class="addButton" onclick="Javascript: edit_letter('letter<?=$key?>');return false;" >
+		<button class="addButton" onclick="Javascript: edit_letter('letter<?php echo $key?>');return false;" >
 			Edit Letter
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<input type="submit" name="duplicate_letter[<?=$key?>]" class="addButton" value="Duplicate" />
+		<input type="submit" name="duplicate_letter[<?php echo $key?>]" class="addButton" value="Duplicate" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?=$_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
 			Print Letter 
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_word.php?pid=<?=$_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
 			Word Document
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<input type="submit" name="send_letter[<?=$key?>]" class="addButton" value="Send Letter" />
+		<input type="submit" name="send_letter[<?php echo $key?>]" class="addButton" value="Send Letter" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
 	</div>
 
 	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
 		<tr>
 			<td valign="top">
-				<div id="letter<?=$key?>">
+				<div id="letter<?php echo $key?>">
 					<?php print $letter[$key]; ?>
 				</div>
-				<input type="hidden" name="new_template[<?=$key?>]" value="<?=$new_template[$key]?>" />
+				<input type="hidden" name="new_template[<?php echo $key?>]" value="<?php echo $new_template[$key]?>" />
 			</td>
 		</tr>
 	</table>
 	<div align="right">
-		<input type="submit" name="reset_letter[<?=$key?>]" class="addButton" value="Reset" />
+		<input type="submit" name="reset_letter[<?php echo $key?>]" class="addButton" value="Reset" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<input type="submit" name="delete_letter[<?=$key?>]" class="addButton" value="Delete" />
+		<input type="submit" name="delete_letter[<?php echo $key?>]" class="addButton" value="Delete" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
 	</div>
 

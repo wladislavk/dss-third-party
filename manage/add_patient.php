@@ -2451,7 +2451,7 @@ $image = mysql_fetch_assoc($itype_my);
                             <span>
 				<label style="display:inline;">Does patient have secondary insurance?</label>
                                 <input type="radio" value="Yes" <?= ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-                                <input type="radio" value="No" <?= ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); clearInfo();" /> No
+                                <input type="radio" value="No" <?= ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide();$('#s_m_address_fields').hide(); clearInfo();" /> No
                             </span>
                         </div>
 
@@ -2541,7 +2541,7 @@ setup_autocomplete_local('s_m_ins_payer_name', 's_m_ins_payer_hints', 's_m_eligi
                     </li>
 				</ul>
 
-                <ul id="s_m_address_fields" <?= ($s_m_same_address == "1")?'style="display:none;"':''; ?>>
+                <ul id="s_m_address_fields" <?= ($s_m_same_address == "1" || $has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                         <li id="foli8" class="complex">
 
                 <div>

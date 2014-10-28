@@ -644,22 +644,19 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
 	<?php $morning_headaches = $q_row['morning_headaches']; ?>
 <select name="morning_headaches" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <option value="Most Mornings" <? if($morning_headaches == 'Most Mornings') echo " selected";?>>
-                                                Most Mornings
+                                            <option value="0" <? if($morning_headaches == '0') echo " selected";?>>
+                                                Everyday
                                             </option>
-                                            <option value="Several times per week" <? if($morning_headaches == 'Several times per week') echo " selected";?>>
-                                                Several times per week
+                                            <option value="1" <? if($morning_headaches == '1') echo " selected";?>>
+                                                Often
                                             </option>
-                                            <option value="Several times per month" <? if($morning_headaches == 'Several times per month') echo " selected";?>>
-                                                Several times per month
+                                            <option value="2" <? if($morning_headaches == '2') echo " selected";?>>
+                                                Sometimes
                                             </option>
-                                            <option value="Occasionally" <? if($morning_headaches == 'Occasionally') echo " selected";?>>
-                                                Occasionally
-                                            </option>
-                                            <option value="Rarely" <? if($morning_headaches == 'Rarely') echo " selected";?>>
+                                            <option value="3" <? if($morning_headaches == '3') echo " selected";?>>
                                                 Rarely
                                             </option>
-                                            <option value="Never" <? if($morning_headaches == 'Never') echo " selected";?>>
+                                            <option value="4" <? if($morning_headaches == '4') echo " selected";?>>
                                                 Never
                                             </option>
                                         </select>

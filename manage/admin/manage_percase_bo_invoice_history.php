@@ -2,7 +2,7 @@
 include "includes/top.htm";
 require_once '../3rdParty/stripe/lib/Stripe.php';
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
-	WHERE pi.companyid=".mysql_real_escape_string($_GET['companyid'])." AND pi.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_BC)."' ORDER BY adddate DESC";
+	WHERE pi.companyid='".mysql_real_escape_string($_GET['companyid'])."' AND pi.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_BC)."' ORDER BY adddate DESC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -140,7 +140,7 @@ $case_q = mysql_query($case_sql);
 		?>
 			<tr class="status_<?= $myarray['status']; ?>">
 				<td valign="top">
-					<?=st(date('m/d/Y g:i a', strtotime($myarray["adddate"])));?>
+					<?=($myarray['due_date']!='')?date('m/d/Y', strtotime($myarray["due_date"])):'';?>
 				</td>
 				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
 					<?php

@@ -203,7 +203,7 @@ $body = json_decode(substr($responseBody, $header_size), true);
 			$xResponseData = $helper->GetResponseData($responseBody, $responseInfo);
 			if ($xResponseData != null)
 			{
-				
+				return $xResponseData;	
 			}			
 		}
 		else
@@ -256,7 +256,7 @@ class FTSHelper
 	public static function GetResponseData($responseBody, $responseInfo)
 	{
         	$body = "" . substr($responseBody, $responseInfo['header_size']);
-        	echo "SendFaxResponse: " . $body;
+        	return $body;
 	}
 	public static function WriteResponseToFile($responseBody, $responseInfo, $localFileName)
 	{

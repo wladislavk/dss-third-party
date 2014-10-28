@@ -12,7 +12,10 @@ if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1){
 }
 
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
-	WHERE pi.docid=".mysql_real_escape_string($_SESSION['docid'])." ORDER BY adddate DESC";
+	WHERE 
+pi.status != '".DSS_INVOICE_PENDING."'
+                AND
+pi.docid=".mysql_real_escape_string($_SESSION['docid'])." ORDER BY adddate DESC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -83,7 +86,7 @@ $case_q = mysql_query($case_sql);
 		?>
 			<tr>
 				<td valign="top">
-					<?=st(date('m/d/Y g:i a', strtotime($myarray["adddate"])));?>
+					<?=($myarray["due_date"])?st(date('m/d/Y', strtotime($myarray["due_date"]))):'';?>
 				</td>
 				<td valign="top">
 					<a href="display_file.php?f=percase_invoice_<?= $myarray['docid'];?>_<?= $myarray['id']; ?>.pdf" class="button" title="EDIT" style="padding:3px 5px;" target="_blank">

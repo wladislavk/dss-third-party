@@ -140,7 +140,7 @@ function autoselect(selectedOption, f) {
 `date` = '".$date."',
 `sleeptesttype`  = '".$sleeptesttype."',
 `place`  = '".$place."',
-`diagnosising_doc` = '".$diagnosising_doc."',
+`diagnosising_doc` = '".mysql_real_escape_string($diagnosising_doc)."',
 `diagnosising_npi` = '".$diagnosising_npi."',
 `ahi`  = '".$ahi."',
 `ahisupine`  = '".$ahisupine."',
@@ -250,7 +250,7 @@ WHERE id='".$id."'
 `patiendid`,
 `image_id`
 )
-VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$patientid."','".$image_id."')";
+VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".mysql_real_escape_string($diagnosising_doc)."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$patientid."','".$image_id."')";
   $run_q = mysql_query($q);
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";

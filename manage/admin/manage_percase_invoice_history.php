@@ -172,7 +172,7 @@ $case_q = mysql_query($case_sql);
 		?>
 			<tr class="status_<?= $myarray['status']; ?>">
 				<td valign="top">
-					<?=st(date('m/d/Y g:i a', strtotime($myarray["adddate"])));?>
+					<?=($myarray['due_date']!='')?date('m/d/Y', strtotime($myarray["due_date"])):'';?>
 				</td>
 				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
 					<?php

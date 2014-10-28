@@ -26,9 +26,10 @@
 <?php
   $cr_total = 0;
   $cr_sql = "SELECT dl.description, sum(dl.paid_amount) amount FROM dental_ledger dl
-		JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
+		LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
                 WHERE paid_amount != '' 
 		AND dl.service_date = CURDATE()
+		AND dl.docid='".$_SESSION['docid']."'
 		AND tc.type != '".DSS_TRXN_TYPE_ADJ."'
 		";
         if(isset($_GET['pid'])){
@@ -51,6 +52,7 @@
                 JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
                 WHERE paid_amount != ''
 		AND dl.service_date = CURDATE() 
+		AND dl.docid='".$_SESSION['docid']."'
                 AND tc.type = '".DSS_TRXN_TYPE_ADJ."'
                 ";
         if(isset($_GET['pid'])){

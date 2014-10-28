@@ -215,11 +215,11 @@ $ins_sent = mysql_fetch_assoc($ins_sent_q);
 </div>
 <div class="data">
   <label>Ledger Charges</label>
-  <span class="value">$<?= number_format($total_charge,2); ?></span>
+  <span class="value">$<?= number_format($total_charge_sum,2); ?></span>
 </div>
 <div class="data">
   <label>Ledger Credits</label>
-  <span class="value">$<?= number_format($total_credits,2); ?></span>
+  <span class="value">$<?= number_format($total_credits_sum,2); ?></span>
 </div>
 
 <div style="clear:both;">&nbsp;</div>

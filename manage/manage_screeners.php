@@ -237,7 +237,7 @@ $my=mysql_query($sql) or die(mysql_error());
 		while($myarray = mysql_fetch_array($my))
 		{
 
-        $ep_sql = "SELECT sum(se.response) FROM dental_screener_epworth se WHERE se.screener_id = s.id) ep_total";
+        $ep_sql = "SELECT sum(se.response) as ep_total FROM dental_screener_epworth se WHERE se.screener_id = '".$myarray['id']."'";
  	$ep_q = mysql_query($ep_sql);
 	$ep = mysql_fetch_assoc($ep_q);
         

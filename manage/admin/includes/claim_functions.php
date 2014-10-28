@@ -106,7 +106,7 @@ if($reuse_sec){
           $insured_state = $pat_myarray['s_m_state'];
           $insured_zip = $pat_myarray['s_m_zip'];
 	}
-$insurancetype = st($pat_myarray['p_m_ins_type']);
+$insurancetype = st($pat_myarray['s_m_ins_type']);
 $other_insurancetype = st($pat_myarray['p_m_ins_type']);
 $insured_firstname = st($pat_myarray['s_m_partyfname']);
 $insured_lastname = st($pat_myarray['s_m_partylname']);
@@ -137,8 +137,8 @@ $other_insured_sex = $pat_myarray['p_m_gender'];
         //$insured_policy_group_feca = $pat_myarray['group_number'];
         //$insured_insurance_plan = $pat_myarray['plan_name'];
 //NEED SECONDARY?
-  $p_m_eligible_payer_id = $pat_myarray['p_m_eligible_payer_id'];
-  $p_m_eligible_payer_name = $pat_myarray['p_m_eligible_payer_name'];
+  $p_m_eligible_payer_id = $pat_myarray['s_m_eligible_payer_id'];
+  $p_m_eligible_payer_name = $pat_myarray['s_m_eligible_payer_name'];
 $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
                 WHERE                                 

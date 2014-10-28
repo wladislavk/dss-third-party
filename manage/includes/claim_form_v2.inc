@@ -1687,7 +1687,7 @@ $(document).ready(function(){
 		<td width="50%">
 		  <table>
 		  		  <?php 
-	if(isset($_GET['instype']) && $_GET['instype']==2){
+	if(isset($_GET['instype']) && $_GET['instype']==2 || $is_secondary){
 	  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'"; 
 	}else{
 	  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'"; 

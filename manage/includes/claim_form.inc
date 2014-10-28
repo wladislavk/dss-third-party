@@ -1456,7 +1456,7 @@ $(document).ready(function(){
 		<td width="50%">
 		  <table>
 		  		  <?php 
-	if(isset($_GET['instype']) && $_GET['instype']==2){
+	if(isset($_GET['instype']) && $_GET['instype']==2 || $is_secondary){
 	  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'"; 
 	}else{
 	  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'"; 
@@ -1914,7 +1914,7 @@ $(document).ready(function(){
 						<span class="num_a">b.</span>
 						Employer's Name or School Name
 						<br />
-						<input value="<?=$insured_employer_school_name?>" name="insured_employer_school_name" type="text" class="inbox_line3" size="28"  />
+						<input value="<?=htmlspecialchars_decode($insured_employer_school_name)?>" name="insured_employer_school_name" type="text" class="inbox_line3" size="28"  />
 					</td>
 				</tr>
 				<tr>

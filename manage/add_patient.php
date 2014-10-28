@@ -1490,10 +1490,12 @@ var emailConfirm = false;
                                         }
                                   });
 if(sendEmail){ return false; }
-if(clickedBut == "sendReg" && !emailConfirm){
+if(p){ //no emails sent so don't confirm
+ if(clickedBut == "sendReg" && !emailConfirm){
     if(!regabc(fa)){ return false; }
-}else if(clickedBut == "sendRem" && !emailConfirm){
+ }else if(clickedBut == "sendRem" && !emailConfirm){
     if(!remabc(fa)){ return false; }
+ }
 }
 if(p){
   if(document.getElementById('s_m_dss_file_yes').checked){

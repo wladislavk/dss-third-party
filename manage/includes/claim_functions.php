@@ -2,6 +2,8 @@
 
 //inserts row into dental_insurance_history
 function claim_history_update($insid, $userid, $adminid){
+  $db = new Db();
+
   $sql = "INSERT INTO dental_insurance_history(
     insuranceid,
     formid,

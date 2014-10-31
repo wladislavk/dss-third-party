@@ -199,7 +199,7 @@ $body = json_decode(substr($responseBody, $header_size), true);
 		{			
 			//get additional information from XML payload
 			//response data xml payload
-			$xResponseData = $helper->GetResponseData($responseBody, $responseInfo);
+			$xResponseData = $helper->ReturnResponseData($responseBody, $responseInfo);
 			if ($xResponseData != null)
 			{
 				return $xResponseData;	
@@ -256,8 +256,15 @@ class FTSHelper
 	{
         	$body = "" . substr($responseBody, $responseInfo['header_size']);
 		echo "SendFaxResponse: " . $body;
-        	return $body;
 	}
+
+        public static function ReturnResponseData($responseBody, $responseInfo)
+        {
+                $body = "" . substr($responseBody, $responseInfo['header_size']);
+                return $body;
+        }
+
+
 	public static function WriteResponseToFile($responseBody, $responseInfo, $localFileName)
 	{
 		$data = substr($responseBody, $responseInfo['header_size']);

@@ -123,9 +123,9 @@ function disablePopup(){
 		$("#popupContact").fadeOut("slow");
 		eraseCookie('tempforledgerentry');
 		popupStatus = 0;
-		//parent.window.location.reload();
+		parent.window.location.reload(true);
 	}else{
-		//parent.window.location.reload();
+		parent.window.location.reload(true);
 	}
 	}
 }
@@ -151,7 +151,7 @@ function disablePopupRef(){
                 $("#popupRefer").fadeOut("slow");
                 popupStatus = 0;
         }else{
-                //parent.window.location.reload();
+                parent.window.location.reload(true);
         }
         }
 }

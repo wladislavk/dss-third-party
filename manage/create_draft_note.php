@@ -38,7 +38,7 @@ else //creating a new note.
       patientid = '".s_for($_GET['pid'])."',
       userid = '".s_for($_SESSION['userid'])."',
       docid = '".s_for($_SESSION['docid'])."',
-      status = 2, 
+      status = 0, 
       adddate = '".date('Y-m-d H:i:s')."',
       procedure_date = '".date('Y-m-d')."',
       ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";

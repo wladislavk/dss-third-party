@@ -141,6 +141,15 @@ if($_GET['did']==$_SESSION['docid']){
           update_patient_questionnaire_form($_GET['did']);
 	}
     }
+  }elseif($_GET['file'] == "proof_of_delivery"){
+    $output = "proof_of_delivery";
+    if(!file_exists($filename) || $recreate){
+        if(isset($_GET['locid'])){
+          update_proof_of_delivery_form($_GET['did'], $_GET['locid']);
+        }else{
+          update_proof_of_delivery_form($_GET['did']);
+        }
+    }
   }
 
 

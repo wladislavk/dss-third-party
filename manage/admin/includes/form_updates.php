@@ -5102,7 +5102,498 @@ Date: _________________</p>
 }
 
 
+function update_proof_of_delivery_form($id, $locid = null, $backoffice=false){
 
+$logo = get_logo($id, $backoffice);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
+  $l_q = mysql_query($l_sql);
+  $l_r = mysql_fetch_assoc($l_q);
+if($locid){
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}else{
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}
+
+if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  $practice = $loc_r['location'];
+}else{
+  $practice = "DENTAL SLEEP SOLUTIONS <sup>&reg;</sup>";
+}
+
+$html = '
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<title>Medicare Proof of Delivery</title>
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:10.0pt;
+	font-family:"Times New Roman","serif";}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-top:0in;
+	margin-right:-.5in;
+	margin-bottom:0in;
+	margin-left:-.5in;
+	margin-bottom:.0001pt;
+	page-break-after:avoid;
+	text-autospace:ideograph-other;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+h2
+	{mso-style-link:"Heading 2 Char";
+	margin-top:0in;
+	margin-right:-.5in;
+	margin-bottom:0in;
+	margin-left:-.5in;
+	margin-bottom:.0001pt;
+	page-break-after:avoid;
+	text-autospace:ideograph-other;
+	font-size:10.0pt;
+	font-family:"Times New Roman","serif";}
+h3
+	{mso-style-link:"Heading 3 Char";
+	margin-top:0in;
+	margin-right:-.5in;
+	margin-bottom:0in;
+	margin-left:-13.5pt;
+	margin-bottom:.0001pt;
+	text-indent:-22.5pt;
+	page-break-after:avoid;
+	text-autospace:ideograph-other;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+p.MsoHeader, li.MsoHeader, div.MsoHeader
+	{mso-style-link:"Header Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:10.0pt;
+	font-family:"Times New Roman","serif";}
+p.MsoFooter, li.MsoFooter, div.MsoFooter
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:10.0pt;
+	font-family:"Times New Roman","serif";}
+p.MsoTitle, li.MsoTitle, div.MsoTitle
+	{mso-style-link:"Title Char";
+	margin-top:0in;
+	margin-right:-.5in;
+	margin-bottom:0in;
+	margin-left:-.5in;
+	margin-bottom:.0001pt;
+	text-align:center;
+	text-autospace:ideograph-other;
+	font-size:16.0pt;
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
+	{mso-style-link:"Body Text Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	punctuation-wrap:simple;
+	text-autospace:none;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+p.MsoBlockText, li.MsoBlockText, div.MsoBlockText
+	{margin-top:0in;
+	margin-right:-.25in;
+	margin-bottom:0in;
+	margin-left:-9.0pt;
+	margin-bottom:.0001pt;
+	line-height:150%;
+	text-autospace:ideograph-other;
+	font-size:10.0pt;
+	font-family:"Times New Roman","serif";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Cambria","serif";
+	color:#365F91;
+	font-weight:bold;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-link:"Heading 2";
+	font-family:"Cambria","serif";
+	color:#4F81BD;
+	font-weight:bold;}
+span.Heading3Char
+	{mso-style-name:"Heading 3 Char";
+	mso-style-link:"Heading 3";
+	font-family:"Cambria","serif";
+	color:#4F81BD;
+	font-weight:bold;}
+span.HeaderChar
+	{mso-style-name:"Header Char";
+	mso-style-link:Header;
+	font-family:"Times New Roman","serif";}
+span.FooterChar
+	{mso-style-name:"Footer Char";}
+span.TitleChar
+	{mso-style-name:"Title Char";
+	mso-style-link:Title;
+	font-family:"Cambria","serif";
+	color:#17365D;
+	letter-spacing:.25pt;}
+span.BodyTextChar
+	{mso-style-name:"Body Text Char";
+	mso-style-link:"Body Text";
+	font-family:"Times New Roman","serif";}
+p.msochpdefault, li.msochpdefault, div.msochpdefault
+	{mso-style-name:msochpdefault;
+	margin-right:0in;
+	margin-left:0in;
+	font-size:10.0pt;
+	font-family:"Times New Roman","serif";}
+p.msopapdefault, li.msopapdefault, div.msopapdefault
+	{mso-style-name:msopapdefault;
+	margin-right:0in;
+	margin-left:0in;
+	text-autospace:ideograph-other;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+.MsoChpDefault
+	{font-size:10.0pt;}
+.MsoPapDefault
+	{text-autospace:ideograph-other;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:.4in .6in .4in .6in;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link=blue vlink=purple>
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>Proof of Delivery
+(POD) for </span></b></p>
+
+<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>Custom Oral Appliance</span></b></p>
+
+<p class=MsoNormal align=center style=\'text-align:center\'><span
+style=\'font-size:20.0pt;font-family:"Arial","sans-serif"\'>(Receipt of DME
+Goods)</span></p>
+
+<p class=MsoNormal align=center style=\'text-align:center\'><b>&nbsp;</b></p>
+
+<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></b></p>
+
+<p class=MsoNormal><b><span style=\'font-size:16.0pt;font-family:"Arial","sans-serif";
+background:yellow\'>'.$loc_r['name'].'</span></b></p>
+
+<p class=MsoNormal><b><span style=\'font-size:16.0pt;font-family:"Arial","sans-serif";
+background:yellow\'>'.$loc_r['address'].'</span></b></p>
+
+<p class=MsoNormal><b><span style=\'font-size:16.0pt;font-family:"Arial","sans-serif";
+background:yellow\'>'.$loc_r['city'].', '.$loc_r['state'].', '.$loc_r['zip'].'</span></b></p>
+
+<p class=MsoNormal><b><span style=\'font-size:16.0pt;font-family:"Arial","sans-serif";
+background:yellow\'>'.format_phone($loc_r['phone']).'</span></b></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
+line-height:150%;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
+line-height:150%;font-family:"Arial","sans-serif"\'>I certify that I have
+received the item(s) marked below in good condition.  This equipment is
+medically necessary and not substandard.  This device was fitted and sized and
+the device fits well.  I have received verbal and written instructions for use
+of the equipment, the warranty, complaint resolution information and the
+Durable Medical Equipment Supplier Guidelines. </span></p>
+
+<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
+line-height:150%;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
+line-height:150%;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
+line-height:150%;font-family:"Arial","sans-serif"\'>____ Custom Fabricated Oral
+Appliance for Obstructive Sleep Apnea (E0486) – Qty 1</span></p>
+
+<p class=MsoNormal style=\'text-indent:.5in;line-height:150%\'><span
+style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>Brand
+Name (Manufacturer): _______________________________________</span></p>
+
+<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
+line-height:150%;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
+line-height:150%;font-family:"Arial","sans-serif"\'>____ Other Item: __________________</span></p>
+
+<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
+line-height:150%;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
+line-height:150%;font-family:"Arial","sans-serif"\'>&nbsp;&nbsp;</span></p>
+
+<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>_______________________________________________&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
+
+<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>Patient
+Name (Please
+Print)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></p>
+
+<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>_______________________________________________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+___________________________</span></p>
+
+<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>Patient
+Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Date&nbsp;&nbsp;&nbsp; </span></p>
+
+<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+
+<p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
+8.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep Solutions</span></p>
+
+</div>
+
+</body>
+
+</html>';
+
+
+
+
+
+$htmls = '
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+        {font-family:Wingdings;
+        panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+        {font-family:Wingdings;
+        panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+        {font-family:Calibri;
+        panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+        {font-family:Tahoma;
+        panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+        {font-family:"Adobe Garamond Pro";
+        panose-1:2 2 5 2 6 5 6 2 4 3;}
+@font-face
+        {font-family:Webdings;
+        panose-1:5 3 1 2 1 5 9 6 7 3;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+        {margin-top:0in;
+        margin-right:0in;
+        margin-bottom:0in;
+        margin-left:0in;
+        line-height:115%;
+        text-autospace:ideograph-other;
+        font-size:11.0pt;
+        font-family:"Calibri","sans-serif";}
+p.MsoHeader, li.MsoHeader, div.MsoHeader
+        {margin:0in;
+        margin-bottom:.0001pt;
+        text-autospace:ideograph-other;
+        font-size:11.0pt;
+        font-family:"Calibri","sans-serif";}
+p.MsoFooter, li.MsoFooter, div.MsoFooter
+        {margin:0in;
+        margin-bottom:.0001pt;
+        text-autospace:ideograph-other;
+        font-size:11.0pt;
+        font-family:"Calibri","sans-serif";}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+        {margin:0in;
+        margin-bottom:.0001pt;
+        text-autospace:ideograph-other;
+        font-size:8.0pt;
+        font-family:"Tahoma","sans-serif";}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+        {margin-top:0in;
+        margin-right:0in;
+        margin-bottom:10.0pt;
+        margin-left:.5in;
+        line-height:115%;
+        text-autospace:ideograph-other;
+        font-size:11.0pt;
+        font-family:"Calibri","sans-serif";}
+span.HeaderChar
+        {mso-style-name:"Header Char";}
+span.FooterChar
+        {mso-style-name:"Footer Char";}
+span.BalloonTextChar
+        {mso-style-name:"Balloon Text Char";
+        font-family:"Tahoma","sans-serif";}
+.MsoChpDefault
+        {font-family:"Calibri","sans-serif";}
+.MsoPapDefault
+        {margin-bottom:10.0pt;
+        line-height:115%;
+        text-autospace:ideograph-other;}
+ /* Page Definitions */
+ @page WordSection1
+        {size:8.5in 11.0in;
+        border:solid black 1.0pt;
+}
+div.WordSection1
+        {page:WordSection1;}
+@page WordSection2
+        {size:8.5in 11.0in;
+        border:solid black 1.0pt;
+}
+div.WordSection2
+        {page:WordSection2;}
+@page WordSection3
+        {size:8.5in 11.0in;
+        margin:.4in .5in .4in .5in;
+        border:solid black 1.0pt;
+        padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection3
+        {page:WordSection3;}
+@page WordSection4
+        {size:8.5in 11.0in;
+        margin:.4in .5in .4in .5in;
+        border:solid black 1.0pt;
+        padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection4
+        {page:WordSection4;}
+@page WordSection5
+        {size:8.5in 11.0in;
+        margin:.4in .5in .4in .5in;
+        border:solid black 1.0pt;
+        padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection5
+        {page:WordSection5;}
+ /* List Definitions */
+ ol
+        {margin-bottom:0in;}
+ul
+        {margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US>
+
+<div class=WordSection1>
+<table><tr><td width="30%">'.$logo.'</td>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
+ Patient Questionnaire</span></b></h2>
+</td></tr></table>
+
+
+<img width=780 height=950
+src="/manage/images/patient_questionnaire_files/questionnaire_pg1.gif" align=left
+hspace=12>
+</div>
+
+
+<br pagebreak="true" />
+<br />
+<table><tr><td width="30%">'.$logo.'</td>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
+ Patient Questionnaire</span></b></h2>
+</td></tr></table>
+
+
+<img width=780 height=950
+src="/manage/images/patient_questionnaire_files/questionnaire_pg2.gif" align=left
+hspace=12>
+
+
+
+
+<br pagebreak="true" />
+<br />
+
+<table><tr><td width="30%">'.$logo.'</td>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
+ Patient Questionnaire</span></b></h2>
+</td></tr></table>
+
+
+<img width=780 height=950
+src="/manage/images/patient_questionnaire_files/questionnaire_pg3.gif" align=left
+hspace=12>
+
+
+</body>
+</html>
+';
+
+        $title = "Proof of Delivery";
+        if($locid){
+          $filename = "proof_of_delivery_".$locid.'_'.$id.".pdf";
+        }else{
+          $filename = "proof_of_delivery_".$id.".pdf";
+        }
+
+        create_form_pdf($html, $filename, $title, $backoffice);
+
+}        
 
 
 

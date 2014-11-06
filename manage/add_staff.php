@@ -95,6 +95,8 @@ $r = mysql_fetch_assoc($q);
 				$ed_sql .= " sign_notes=".$n."  where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			edx_user_update($_POST['ed']);
+
+			//help_user_update will fail in dev environments since help site is not setup. Only in production
 			help_user_update($_POST['ed'] ,$help_con);	
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";

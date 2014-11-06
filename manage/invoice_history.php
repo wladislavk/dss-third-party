@@ -86,7 +86,7 @@ $case_q = mysql_query($case_sql);
 		?>
 			<tr>
 				<td valign="top">
-					<?=($myarray["due_date"])?st(date('m/d/Y', strtotime($myarray["due_date"]))):'';?>
+					<?=($myarray["due_date"])?st(date('m/d/Y', strtotime($myarray["due_date"]))):($myarray["adddate"])?st(date('m/d/Y', strtotime($myarray["adddate"]))):'';?>
 				</td>
 				<td valign="top">
 					<a href="display_file.php?f=percase_invoice_<?= $myarray['docid'];?>_<?= $myarray['id']; ?>.pdf" class="button" title="EDIT" style="padding:3px 5px;" target="_blank">

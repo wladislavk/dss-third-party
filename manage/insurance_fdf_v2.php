@@ -1,4 +1,12 @@
 <?php
+/***************************************
+
+
+NOTE: If sent claim it pulls old FDF instead of regenerating FDF with this file
+
+
+
+*/
 //header("Content-type: application/vnd.fdf");
 //header('Content-Disposition: attachment; filename="file.fdf"');
 session_start();
@@ -726,6 +734,7 @@ $fdf = "
   << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".(($outside_lab == "YES")?1:'').") >>
   << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".(($outside_lab == "NO")?1:'').") >>
   << /T(".$field_path.".charges_fill[0]) /V(".$s_charges.") >>
+  << /T(".$field_path.".icd_ind[0]) /V(".$icd_ind.") >>
   << /T(".$field_path.".diagnosis_a[0]) /V(".$diagnosis_a.") >>
   << /T(".$field_path.".diagnosis_b[0]) /V(".$diagnosis_b.") >>
   << /T(".$field_path.".diagnosis_c[0]) /V(".$diagnosis_c.") >>

@@ -1,22 +1,22 @@
 <?php
-session_start();
-require_once('../admin/includes/main_include.php');
-include("sescheck.php");
-if(isset($_GET['id']))
-{
-// if id is set then get the file with the id from database
+	require_once('../admin/includes/main_include.php');
+	include("sescheck.php");
 
-$id    = $_GET['id'];
-$query = "SELECT name, type, size, content FROM filemanager WHERE id = '$id'";
+	if(isset($_GET['id'])) {
+		// if id is set then get the file with the id from database
+		$id    = $_GET['id'];
+		$query = "SELECT name, type, size, content FROM filemanager WHERE id = '$id'";
 
-$result = mysql_query($query) or die('Error, query failed');
-list($name, $type, $size, $content) = mysql_fetch_array($result);
+		$list_result = $db->getRow($query);
+		$name = $list_result['name'];
+		$type = $list_result['type'];
+		$size = $list_result['size'];
+		$content = $list_result['content'];
 
-header("Content-length: $size");
-header("Content-type: $type");
-header("Content-Disposition: attachment; filename=$name");
-echo $content;
-exit;
-}
-
+		header("Content-length: $size");
+		header("Content-type: $type");
+		header("Content-Disposition: attachment; filename=$name");
+		echo $content;
+		exit;
+	}
 ?>

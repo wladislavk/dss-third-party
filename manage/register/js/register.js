@@ -308,3 +308,122 @@ function disable_registration(){
 
 }
 
+$(document).ready(function(){
+    lga_wizard.init();
+    $(".chzn-select").chosen({no_results_text: "No results matched"});
+});
+
+$('.service_info').hide();
+
+function show_service_info()
+{
+    $('.service_info').show();
+    $("#register").animate({ height : 600 }, 300);
+    $("#main_section").animate({ height : 680 }, 300);
+}
+
+function cancel(n)
+{
+    $('#pc_' + n + '_input_div').hide();
+    $('#pc_' + n + '_person').show();
+    $('#pc_' + n + '_input_div input').val('');
+}
+
+function checkPass()
+{
+    var p1 = $('#password').val();
+    var p2 = $('#password2').val();
+    if(p1 != '' || p2 != '') {
+        if (p1 != p2) {
+            $('#password2').addClass('pass_invalid');
+            $('#password2').removeClass('pass_valid');
+        } else {
+            $('#password2').addClass('pass_valid');
+            $('#password2').removeClass('pass_invalid');
+        }
+    } else {
+        $('#password2').removeClass('pass_valid');
+        $('#password2').removeClass('pass_invalid');  
+    }
+}
+
+function stripeResponseHandler(status, response)
+{
+    //console.log(response);
+    if (response.error) {
+        // Show the errors on the form
+        alert(response.error.message);
+        $('#loader').hide();
+        $('#payment_proceed').show();
+    } else {
+        var address = $('#address').val()+" "+$('#city').val()+" "+ $('#state').val()+" "+$('#zip').val();
+        var token = response.id;
+        $.ajax({
+            url: "includes/update_token.php",
+            type: "get",
+            data: {id: $("#userid").val(), name: $('#name').val(), address: address, email: $("#email").val(), token: token},
+            success: function(data){
+                $('#loader').hide();      
+                $('#payment_proceed').show();
+            },
+            failure: function(data){
+                alert('f - '+data);
+                $('#loader').hide();
+                $('#payment_proceed').show();
+            }
+        });
+    }
+    
+    $('#loader').hide();
+    $('#payment_proceed').show();
+}
+
+function add_cc()
+{
+    if($('.card-number').val()=='' || $('.card-cvc').val()=='' || $('.card-expiry-month').val().length!=2 || $('.card-expiry-year').val().length!=4 || $('.card-name').val()=='' || $('.card-zip').val().length!=5){
+        alert('Please enter valid information for all fields');
+        return false;
+    }
+    
+    $('#loader').show();
+    var address = $('#address').val()+" "+$('#city').val()+" "+ $('#state').val()+" "+$('#zip').val();
+    $('#payment_proceed').hide();
+    $.ajax({
+        url: "includes/update_token.php",
+        type: "post",
+        data: {id: $("#userid").val(), 
+                name: $('#name').val(), 
+                address: address, 
+                email: $("#email").val(),
+                cnumber: $('.card-number').val(),
+                cname: $('.card-name').val(),
+                exp_month: $('.card-expiry-month').val(),
+                exp_year: $('.card-expiry-year').val(),
+                cvc: $('.card-cvc').val(),
+                zip: $('.card-zip').val(),
+                companyid: "<?php echo  addslashes($c_r['id']); ?>", 
+                company: "<?php echo  addslashes($c_r['name']); ?>"
+              },
+        success: function(data){
+            var r = $.parseJSON(data);
+            if(r.error){
+                $('#loader').hide();      
+                $('#payment_proceed').show();
+                alert(r.error.message);
+            } else {
+                $('.card-number').val('');
+                $('.card-cvc').val('');
+                $('.card-expiry-month').val('');
+                $('.card-expiry-year').val('');
+                $('a.next').click();
+            }
+        },
+        failure: function(data){
+             $('#loader').hide();
+             $('#payment_proceed').show();
+        }
+    });
+
+    // Prevent the form from submitting with the default action
+    return false;
+}

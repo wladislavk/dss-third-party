@@ -56,7 +56,7 @@
 		        AND p.docid='".$_SESSION['docid']."'";
     }  
 
-    $q = $db->query($s);
+    $q = $db->getResults($s);
 ?>
     <span class="admin_head">
       0-29 days
@@ -121,7 +121,7 @@
 		      AND p.docid='".$_SESSION['docid']."'";
     } 
 
-    $q = $db->query($s);
+    $q = $db->getResults($s);
 ?>
     <span class="admin_head">
       30-59 days
@@ -188,7 +188,7 @@
               AND p.docid='".$_SESSION['docid']."'";
     } 
 
-    $q = $db->query($s);
+    $q = $db->getResults($s);
 ?>
     <span class="admin_head">
       60-89 days
@@ -255,7 +255,7 @@
 		      AND p.docid='".$_SESSION['docid']."'";
     } 
 
-    $q = $db->query($s);
+    $q = $db->getResults($s);
 ?>
     <span class="admin_head">
       90-119 days
@@ -322,7 +322,7 @@
 		      AND p.docid='".$_SESSION['docid']."'";
     } 
 
-    $q = $db->query($s);
+    $q = $db->getResults($s);
 ?>
     <span class="admin_head">
       120+ Days

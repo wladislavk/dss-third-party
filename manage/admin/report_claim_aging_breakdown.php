@@ -12,7 +12,7 @@
 		(COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0) - COALESCE((SELECT SUM(dlp.amount) FROM dental_ledger_payment dlp INNER JOIN dental_ledger l ON l.ledgerid=dlp.ledgerid WHERE l.primary_claim_id=i.insuranceid),0))>0
 	";
 
-  $q= mysql_query($s);
+  $q = $db->getResults($s);
 ?>
 <span class="admin_head">
   0-29 days
@@ -34,7 +34,7 @@
                 (COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0) - COALESCE((SELECT SUM(dlp.amount) FROM dental_ledger_payment dlp INNER JOIN dental_ledger l ON l.ledgerid=dlp.ledgerid WHERE l.primary_claim_id=i.insuranceid),0))>0
         ";
 
-  $q= mysql_query($s);
+  $q = $db->getResults($s);
 ?>
 <span class="admin_head">
   30-59 days
@@ -54,7 +54,7 @@
                 (COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0) - COALESCE((SELECT SUM(dlp.amount) FROM dental_ledger_payment dlp INNER JOIN dental_ledger l ON l.ledgerid=dlp.ledgerid WHERE l.primary_claim_id=i.insuranceid),0))>0
         ";
 
-  $q= mysql_query($s);
+  $q = $db->getResults($s);
 ?>
 <span class="admin_head">
   60-89 days
@@ -75,7 +75,7 @@
                 (COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0) - COALESCE((SELECT SUM(dlp.amount) FROM dental_ledger_payment dlp INNER JOIN dental_ledger l ON l.ledgerid=dlp.ledgerid WHERE l.primary_claim_id=i.insuranceid),0))>0
         ";
 
-  $q= mysql_query($s);
+  $q = $db->getResults($s);
 ?>
 <span class="admin_head">
   90-119 days
@@ -95,7 +95,7 @@
                 (COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0) - COALESCE((SELECT SUM(dlp.amount) FROM dental_ledger_payment dlp INNER JOIN dental_ledger l ON l.ledgerid=dlp.ledgerid WHERE l.primary_claim_id=i.insuranceid),0))>0
         ";
 
-  $q= mysql_query($s);
+  $q = $db->getResults($s);
 ?>
 <span class="admin_head">
   120+ Days

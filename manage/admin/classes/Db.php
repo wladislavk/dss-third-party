@@ -20,13 +20,15 @@ class Db
 
 	public function getResults($query_string)
 	{
+		$return = array();
+
 		$result = $this->query($query_string);
 		if ($result) {
 			while($row = mysql_fetch_assoc($result)){
 				$return[] = $row;
 			}
 		}
-		
+
 		return $return;
 	}
 

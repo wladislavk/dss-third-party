@@ -34,7 +34,7 @@ if(isset($_POST['submitaddfu'])){
               answer='".mysql_real_escape_string($_POST['epworth_new_'.$epworth_myarray['epworthid']])."',
               adddate=now(),
               ip_address='".$_SERVER['REMOTE_ADDR']."'";
-      $db->getRow($i);
+      $db->query($i);
     }
     for($thorntonid=1; $thorntonid<=5; $thorntonid++){
       $i = "INSERT INTO dentalsummfu_tss SET
@@ -43,7 +43,7 @@ if(isset($_POST['submitaddfu'])){
               answer='".mysql_real_escape_string($_POST['thornton_new_'.$thorntonid])."',
               adddate=now(),
               ip_address='".$_SERVER['REMOTE_ADDR']."'";
-      $db->getRow($i);
+      $db->query($i);
     }
   }
 }elseif(isset($_POST['submitupdatefu'])){

@@ -164,11 +164,11 @@ if(isset($_REQUEST['sort'])){
 
 $sql_sort .= $sql;
 
-$total_rec = $db->getNumberRows($sql_sort ) or die(mysql_error());
+$total_rec = $db->getNumberRows($sql_sort );
 $no_pages = $total_rec/$rec_disp;
 
 $sql_sort .= " limit ". $i_val.",".$rec_disp;
-$my=$db->getResults($sql_sort ) or die(mysql_error());
+$my=$db->getResults($sql_sort);
 $num_users=count($my);
 
 ?>
@@ -288,7 +288,7 @@ if(isset($_GET['msg'])){
 <?php if($num_users == 0)
 	{ ?>
 	<tr class="tr_bg">
-		<td valign="top" class="col_head" colspan="9" align="center">
+		<td valign="top" class="col_head" colspan="10" align="center">
 			No Records
 		</td>
 	</tr>
@@ -298,6 +298,7 @@ if(isset($_GET['msg'])){
 	{
 		foreach ($my as $myarray)
 		{
+			$i++;
 			if($myarray["status"] == 1)
 			{
 				$tr_class = "tr_active";
@@ -309,7 +310,7 @@ if(isset($_GET['msg'])){
 
 			$summ_sql = "SELECT s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment, s.vob, s.ledger, s.patient_info
 					FROM dental_patient_summary s WHERE s.pid='".mysql_real_escape_string($myarray["patientid"])."' LIMIT 1";
-			$summ = $db->getRow($summ_sql) or die(mysql_error());
+			$summ = $db->getRow($summ_sql);
 ?>
 	<tr class="<?php echo $tr_class;?> initial_list">
 		<td valign="top">
@@ -331,7 +332,6 @@ if(isset($_GET['msg'])){
 		</td>
 		<?php 
 			if($summ['patient_info'] == 1){ 
-
 				$lc_sql = "SELECT pg2_info.date_completed, pg2_info.segmentid FROM dental_flow_pg2_info pg2_info WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = '".mysql_real_escape_string($myarray['patientid'])."' ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC LIMIT 1";
 				$lc = $db->getRow($lc_sql);
 				$last_completed = $lc['date_completed'];

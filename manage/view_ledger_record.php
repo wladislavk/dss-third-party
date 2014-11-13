@@ -21,14 +21,14 @@ $rec_qry = "SELECT `ledgerid`,`patientid`,`service_date` ,`entry_date`,`descript
 $row = $db->getRow($rec_qry);
 
 print '<table style="margin:20px;" border="1" width="95%"><tr>';
-foreach($row as $name => $value) {
+if ($row) foreach($row as $name => $value) {
 	print "<th>$name</th>";
 }
 print '</tr>';
 unset($row);
 
 $rows = $db->getResults($rec_qry);
-foreach($rows as $row) {
+if ($row) foreach($rows as $row) {
 	print '<tr>';
 	foreach ($row as $value) {
 		print "<td style=\"color:#FFFFFF;\">$value</td>";

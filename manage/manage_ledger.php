@@ -341,7 +341,7 @@ $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my = $db->getResults($sql) or die(mysql_error());
+$my = $db->getResults($sql);
 $num_users = count($my);
 ?>
 
@@ -895,15 +895,15 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       <td></td>
       <td></td>
       <td></td>
-      <td style="color:#fff;"><?php echo number_format(st($cur_cha),2); ?></td>
-      <td style="color:#fff;"><?php echo number_format(st($cur_pay),2); ?></td>
-      <td style="color:#fff;"><?php echo number_format(st($cur_adj),2); ?></td>
+      <td style="color:#fff;"><?php echo ($cur_cha) ? number_format(st($cur_cha),2) : '0'; ?></td>
+      <td style="color:#fff;"><?php echo ($cur_pay) ? number_format(st($cur_pay),2) : '0'; ?></td>
+      <td style="color:#fff;"><?php echo ($cur_adj) ? number_format(st($cur_adj),2) : '0'; ?></td>
 <?php 
 if($_GET['sortdir']=='DESC'){ ?>
-      <td style="color:#fff;"><?php echo number_format(st($orig_bal),2); ?></td>
+      <td style="color:#fff;"><?php echo ($orig_bal) ? number_format(st($orig_bal),2) : '0'; ?></td>
 <?php 
 }else{ ?>
-      <td style="color:#fff;"><?php echo number_format(st($cur_bal),2); ?></td>
+      <td style="color:#fff;"><?php echo ($cur_bal) ? number_format(st($cur_bal),2) : '0'; ?></td>
 <?php 
 } ?>
       <td></td>

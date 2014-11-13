@@ -297,7 +297,7 @@ if ($_SESSION['userid'] == '') {
       $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid=".$_GET['pid'];
 
       $my = $db->getResults($sql);
-      foreach ($my as $myarray) {
+      if ($my) foreach ($my as $myarray) {
   			$premed = $myarray['premedcheck'];
   			$medicare = ($myarray['p_m_ins_type'] == 1);
 
@@ -981,7 +981,7 @@ if ($_SESSION['userid'] == '') {
           
             $my = $db->getResults($sql);
 
-            foreach ($my as $myarray) {
+            if ($my) foreach ($my as $myarray) {
               $thename = $myarray['firstname'] . " " . $myarray['lastname'];
               
               if ($myarray["premedcheck"] == 1) {

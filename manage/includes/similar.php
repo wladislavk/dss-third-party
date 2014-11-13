@@ -34,7 +34,6 @@ function similar_doctors($id){
 
 function similar_contacts($id){
     $db = new Db();
-    $db = new Db();
     $s = "SELECT * from dental_contact WHERE contactid='".$id."'";
     $r = $db->getRow($s);
 
@@ -67,7 +66,7 @@ function similar_contacts($id){
 function similar_patients($id){
     $db = new Db();
     $s = "SELECT * from dental_patients WHERE patientid='".$id."'";
-    $r = getRow($s);
+    $r = $db->getRow($s);
     $simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND 
               ((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
               (dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))

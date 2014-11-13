@@ -8,7 +8,7 @@ include("includes/calendarinc.php");
 // Determine Type of Appliance
 $sql = "SELECT dentaldevice FROM dental_summ_sleeplab WHERE patiendid ='".s_for($_GET['pid'])."' ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC LIMIT 1;";
 $result = $db->getResults($sql);
-foreach ($result as $row) {
+if ($result) foreach ($result as $row) {
   $deviceid = $row['dentaldevice'];
 }
 update_patient_summary($_GET['pid'], 'appliance', $deviceid);

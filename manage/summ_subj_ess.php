@@ -2,6 +2,7 @@
 // require_once 'admin/includes/config.php';
 require_once 'admin/includes/main_include.php';
 require_once 'admin/includes/general.htm';
+
 if($_POST['q_sleepsub'] == 1)
 {
 	$epworth_sql = "select * from dental_epworth where status=1 order by sortby";
@@ -75,6 +76,8 @@ if($epworthid <> '')
 }?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/manage/script/autocomplete.js"></script>
 <script src="admin/popup/popup2.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />

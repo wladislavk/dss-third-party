@@ -16,7 +16,7 @@
 <table>
   <tr>
     <td valign="top" style="border-right:1px solid #00457c;width:980px;">
-      <link rel="stylesheet" type="text/css" href="css/index.css">
+      <link rel="stylesheet" type="text/css" href="/manage/css/index.css">
 
       <div class="home_third first">
         <h3>Navigation</h3>

@@ -13,7 +13,7 @@ if(isset($_GET['pid'])){
 }
 	$ch_sql .= " GROUP BY dl.description";
 $ch_q = $db->getResults($ch_sql);
-foreach ($ch_q as $ch_r) { ?>
+if ($ch_q) foreach ($ch_q as $ch_r) { ?>
     <li><label><?php echo $ch_r['description']; ?></label> $<?php echo number_format($ch_r['amount'],2); ?></li>
 <?php 
   $ch_total += $ch_r['amount'];
@@ -52,7 +52,7 @@ if(isset($_GET['pid'])){
 }
 $cr_sql .= " GROUP BY dlp.payment_type";
 $cr_q = $db->getResults($cr_sql);
-foreach ($cr_q as $cr_r) { ?>
+if ($cr_q) foreach ($cr_q as $cr_r) { ?>
     <li><label><?php echo $dss_trxn_pymt_type_labels[$cr_r['payment_type']]; ?></label> $<?php echo number_format($cr_r['amount'],2); ?></li>
 <?php $cr_total += $cr_r['amount'];
 } ?>

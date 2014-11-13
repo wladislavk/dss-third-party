@@ -10,17 +10,17 @@ define('DSS_TRXN_REJECTED', 5);   // trxn's associated claim was received by fro
 // A convenience array to get trxn labels
 $dss_trxn_status_labels = array();
 $dss_trxn_status_labels[DSS_TRXN_NA] = 'N/A';
-$dss_trxn_status_labels[DSS_TRXN_NA]['short'] = 'N/A';
+// $dss_trxn_status_labels[DSS_TRXN_NA]['short'] = 'N/A';
 $dss_trxn_status_labels[DSS_TRXN_PENDING] = 'Pending';
-$dss_trxn_status_labels[DSS_TRXN_PENDING]['short'] = 'Pend.';
+// $dss_trxn_status_labels[DSS_TRXN_PENDING]['short'] = 'Pend.';
 $dss_trxn_status_labels[DSS_TRXN_PROCESSING] = 'Processing';
-$dss_trxn_status_labels[DSS_TRXN_PROCESSING]['short'] = 'Proc.';
+// $dss_trxn_status_labels[DSS_TRXN_PROCESSING]['short'] = 'Proc.';
 $dss_trxn_status_labels[DSS_TRXN_SENT] = 'Sent';
-$dss_trxn_status_labels[DSS_TRXN_SENT]['short'] = 'Sent';
+// $dss_trxn_status_labels[DSS_TRXN_SENT]['short'] = 'Sent';
 $dss_trxn_status_labels[DSS_TRXN_PAID] = 'Paid';
-$dss_trxn_status_labels[DSS_TRXN_PAID]['short'] = 'Paid';
+// $dss_trxn_status_labels[DSS_TRXN_PAID]['short'] = 'Paid';
 $dss_trxn_status_labels[DSS_TRXN_REJECTED] = 'Rejected';
-$dss_trxn_status_labels[DSS_TRXN_REJECTED]['short'] = 'Rej.';
+// $dss_trxn_status_labels[DSS_TRXN_REJECTED]['short'] = 'Rej.';
 
 // Transaction types (ledger)
 define('DSS_TRXN_TYPE_MED', 1);
@@ -56,31 +56,31 @@ define('DSS_CLAIM_SEC_REJECTED', 13);
 // A convenience array to get claim labels
 $dss_claim_status_labels = array();
 $dss_claim_status_labels[DSS_CLAIM_PENDING] = 'Pending';
-$dss_claim_status_labels[DSS_CLAIM_PENDING]['short'] = 'Pend.';
+// $dss_claim_status_labels[DSS_CLAIM_PENDING]['short'] = 'Pend.';
 $dss_claim_status_labels[DSS_CLAIM_SENT] = 'Sent';
-$dss_claim_status_labels[DSS_CLAIM_SENT]['short'] = 'Sent';
+// $dss_claim_status_labels[DSS_CLAIM_SENT]['short'] = 'Sent';
 $dss_claim_status_labels[DSS_CLAIM_DISPUTE] = 'Disputed';
-$dss_claim_status_labels[DSS_CLAIM_DISPUTE]['short'] = 'Disp.';
+// $dss_claim_status_labels[DSS_CLAIM_DISPUTE]['short'] = 'Disp.';
 $dss_claim_status_labels[DSS_CLAIM_PAID_INSURANCE] = 'Paid';
-$dss_claim_status_labels[DSS_CLAIM_PAID_INSURANCE]['short'] = 'Paid';
+// $dss_claim_status_labels[DSS_CLAIM_PAID_INSURANCE]['short'] = 'Paid';
 $dss_claim_status_labels[DSS_CLAIM_PAID_PATIENT] = 'Paid to Patient';
-$dss_claim_status_labels[DSS_CLAIM_PAID_PATIENT]['short'] = 'Paid to pt.';
+// $dss_claim_status_labels[DSS_CLAIM_PAID_PATIENT]['short'] = 'Paid to pt.';
 $dss_claim_status_labels[DSS_CLAIM_REJECTED] = 'Rejected';
-$dss_claim_status_labels[DSS_CLAIM_REJECTED]['short'] = 'Rej.';
+// $dss_claim_status_labels[DSS_CLAIM_REJECTED]['short'] = 'Rej.';
 $dss_claim_status_labels[DSS_CLAIM_SEC_PENDING] = 'Secondary Pending';
-$dss_claim_status_labels[DSS_CLAIM_SEC_PENDING]['short'] = 'Sec Pend.';
+// $dss_claim_status_labels[DSS_CLAIM_SEC_PENDING]['short'] = 'Sec Pend.';
 $dss_claim_status_labels[DSS_CLAIM_SEC_SENT] = 'Secondary Sent';
-$dss_claim_status_labels[DSS_CLAIM_SEC_SENT]['short'] = 'Sec Sent';
+// $dss_claim_status_labels[DSS_CLAIM_SEC_SENT]['short'] = 'Sec Sent';
 $dss_claim_status_labels[DSS_CLAIM_SEC_DISPUTE] = 'Secondary Disputed';
-$dss_claim_status_labels[DSS_CLAIM_SEC_DISPUTE]['short'] = 'Sec Disp.';
+// $dss_claim_status_labels[DSS_CLAIM_SEC_DISPUTE]['short'] = 'Sec Disp.';
 $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_INSURANCE] = 'Secondary Paid';
-$dss_claim_status_labels[DSS_CLAIM_PAID_SEC_INSURANCE]['short'] = 'Sec. Paid';
+// $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_INSURANCE]['short'] = 'Sec. Paid';
 $dss_claim_status_labels[DSS_CLAIM_PATIENT_DISPUTE] = 'Disputed';
-$dss_claim_status_labels[DSS_CLAIM_PATIENT_DISPUTE]['short'] = 'Disp.';
+// $dss_claim_status_labels[DSS_CLAIM_PATIENT_DISPUTE]['short'] = 'Disp.';
 $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_PATIENT] = 'Secondary Paid to Patient';
-$dss_claim_status_labels[DSS_CLAIM_PAID_SEC_PATIENT]['short'] = 'Sec. Paid to pt.';
+// $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_PATIENT]['short'] = 'Sec. Paid to pt.';
 $dss_claim_status_labels[DSS_CLAIM_SEC_PATIENT_DISPUTE] = 'Secondary Disputed';
-$dss_claim_status_labels[DSS_CLAIM_SEC_PATIENT_DISPUTE]['short'] = 'Sec. Disp.';
+// $dss_claim_status_labels[DSS_CLAIM_SEC_PATIENT_DISPUTE]['short'] = 'Sec. Disp.';
 
 // Pre-authorization statuses (pre-auth)
 define('DSS_PREAUTH_PENDING', 0);
@@ -91,13 +91,13 @@ define('DSS_PREAUTH_REJECTED', 3);
 // A convenience array to get pre-auth labels
 $dss_preauth_status_labels = array();
 $dss_preauth_status_labels[DSS_PREAUTH_PENDING] = 'Pending';
-$dss_preauth_status_labels[DSS_PREAUTH_PENDING]['short'] = 'Pend.';
+// $dss_preauth_status_labels[DSS_PREAUTH_PENDING]['short'] = 'Pend.';
 $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE] = 'Complete';
-$dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]['short'] = 'Comp.';
+// $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]['short'] = 'Comp.';
 $dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING] = 'Pre-Auth Pending';
-$dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING]['short'] = 'Pre-Auth Pend.';
+// $dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING]['short'] = 'Pre-Auth Pend.';
 $dss_preauth_status_labels[DSS_PREAUTH_REJECTED] = 'Rejected';
-$dss_preauth_status_labels[DSS_PREAUTH_REJECTED]['short'] = 'Rjct.';
+// $dss_preauth_status_labels[DSS_PREAUTH_REJECTED]['short'] = 'Rjct.';
 
 // Pre-authorization statuses (pre-auth)
 define('DSS_HST_REQUESTED', 0);
@@ -126,15 +126,15 @@ define('DSS_TRXN_PAYER_DISCOUNT', 4);
 // A convenience array to get trxn payment labels
 $dss_trxn_payer_labels = array();
 $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY] = "Primary Insurance";
-$dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]['short'] = "Prim. Ins.";
+// $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]['short'] = "Prim. Ins.";
 $dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY] = "Secondary Insurance";
-$dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY]['short'] = "Sec. Ins.";
+// $dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY]['short'] = "Sec. Ins.";
 $dss_trxn_payer_labels[DSS_TRXN_PAYER_PATIENT] = "Patient";
-$dss_trxn_payer_labels[DSS_TRXN_PAYER_PATIENT]['short'] = "Pat.";
+// $dss_trxn_payer_labels[DSS_TRXN_PAYER_PATIENT]['short'] = "Pat.";
 $dss_trxn_payer_labels[DSS_TRXN_PAYER_WRITEOFF] = "Write Off";
-$dss_trxn_payer_labels[DSS_TRXN_PAYER_WRITEOFF]['short'] = "Write Off";
+// $dss_trxn_payer_labels[DSS_TRXN_PAYER_WRITEOFF]['short'] = "Write Off";
 $dss_trxn_payer_labels[DSS_TRXN_PAYER_DISCOUNT] = "Professional Discount";
-$dss_trxn_payer_labels[DSS_TRXN_PAYER_DISCOUNT]['short'] = "Pro. Disc.";
+// $dss_trxn_payer_labels[DSS_TRXN_PAYER_DISCOUNT]['short'] = "Pro. Disc.";
 
 //Transaction Payment Types (ledger)
 define('DSS_TRXN_PYMT_CREDIT', 0);
@@ -146,15 +146,15 @@ define('DSS_TRXN_PYMT_WRITEOFF', 4);
 // A convenience array to get trxn payment type labels
 $dss_trxn_pymt_type_labels = array();
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CREDIT] = "Credit Card";
-$dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CREDIT]['short'] = "CC";
+// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CREDIT]['short'] = "CC";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_DEBIT] = "Debit";
-$dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_DEBIT]['short'] = "Debit";
+// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_DEBIT]['short'] = "Debit";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK] = "Check";
-$dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]['short'] = "Check";
+// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]['short'] = "Check";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH] = "Cash";
-$dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]['short'] = "Cash";
+// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]['short'] = "Cash";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF] = "Write Off";
-$dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]['short'] = "Write Off";
+// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]['short'] = "Write Off";
 
 //Max File size allowed for upload forms
 define('DSS_FILE_MAX_SIZE', 10000000);

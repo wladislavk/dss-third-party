@@ -1181,7 +1181,7 @@ if(isset($msg) && $msg != ''){
   $medical_insurance = st($themyarray["medical_insurance"]);
   $mark_yes = st($themyarray["mark_yes"]);
   $docsleep = st($themyarray["docsleep"]);
-  if($docsleep){
+  if($docsleep && $docsleep!='Not Set'){
     $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
               WHERE contactid=".$docsleep;
@@ -1192,7 +1192,7 @@ if(isset($msg) && $msg != ''){
   }
 
   $docpcp = st($themyarray["docpcp"]);
-  if($docpcp){
+  if($docpcp && $docpcp!='Not Set'){
     $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
               WHERE contactid=".$docpcp;
@@ -1203,7 +1203,7 @@ if(isset($msg) && $msg != ''){
   }
 
   $docdentist = st($themyarray["docdentist"]);
-  if($docdentist){
+  if($docdentist && $docdentist!='Not Set'){
     $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
               WHERE contactid=".$docdentist;
@@ -1214,7 +1214,7 @@ if(isset($msg) && $msg != ''){
   }
 
   $docent = st($themyarray["docent"]);
-  if($docent){
+  if($docent && $docent!='Not Set'){
     $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
               WHERE contactid=".$docent;
@@ -1225,7 +1225,7 @@ if(isset($msg) && $msg != ''){
   }
 
   $docmdother = st($themyarray["docmdother"]);
-  if($docmdother){
+  if($docmdother && $docmdother!='Not Set'){
     $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
               WHERE contactid=".$docmdother;
@@ -1236,7 +1236,7 @@ if(isset($msg) && $msg != ''){
   }
 
   $docmdother2 = st($themyarray["docmdother2"]);
-  if($docmdother2){
+  if($docmdother2 && $docmdother2!='Not Set'){
     $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
               WHERE contactid=".$docmdother2;
@@ -1247,7 +1247,7 @@ if(isset($msg) && $msg != ''){
   }
 
   $docmdother3 = st($themyarray["docmdother3"]);
-  if($docmdother3){
+  if($docmdother3 && $docmdother3!='Not Set'){
     $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
               WHERE contactid=".$docmdother3;

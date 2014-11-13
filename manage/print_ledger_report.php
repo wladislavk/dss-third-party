@@ -7,7 +7,7 @@ include("includes/sescheck.php");
 require_once('includes/constants.inc');
 if(isset($_GET['pid'])){
     $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid=".$_GET['pid'];
-    $my = $db->getResults($sql) or die(mysql_error());
+    $my = $db->getResults($sql);
     foreach ($my as $myarray) {
         $thename= $myarray['lastname'].", ".$myarray['firstname'];
         $theaddress = $myarray['add1']." ".$myarray['add2']." ".$myarray['city']." ".$myarray['state']." ".$myarray['zip'];
@@ -37,7 +37,7 @@ $sql .= " order by service_date";
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
-$my = $db->getResults($sql) or die(mysql_error());
+$my = $db->getResults($sql) or die('No Results for print');
 $num_users = count($my);
 //echo $sql; 
 ?>

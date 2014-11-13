@@ -1,7 +1,7 @@
 <?php
   include 'includes/top.htm';
   
-  $sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . mysql_real_escape_string($_SESSION['docid']) . "'";
+  $sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
   $r = $db->getRow($sql);
 
   if ($r['homepage'] != '1'): 
@@ -150,7 +150,7 @@
                   <?php
                     $course_sql = "SELECT s.use_course, d.use_course_staff FROM dental_users s
                                   JOIN dental_users d ON d.userid = s.docid
-                                  WHERE s.userid='" . mysql_real_escape_string($_SESSION['userid']). "'";
+                                  WHERE s.userid='" . mysqli_real_escape_string($con, $_SESSION['userid']). "'";
                     $course_r = $db->getRow($course_sql);
                     
                     if ($course_r['use_course']==1 && $course_r['use_course_staff'] == 1):

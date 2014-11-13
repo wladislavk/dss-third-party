@@ -2,7 +2,7 @@
     include_once('includes/constants.inc');
     include_once('admin/includes/main_include.php');
 
-    $s = "SELECT primary_fdf FROM dental_insurance i WHERE i.insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+    $s = "SELECT primary_fdf FROM dental_insurance i WHERE i.insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
     
     $r = $db->getRow($s);
     $file = $r['primary_fdf'];
@@ -34,10 +34,10 @@
                 $this->setSourceFile($this->_template);
                 $this->_tplIdx = $this->importPage(1);
             }
+            $h_con = $db->con;
+            $d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysqli_real_escape_string($h_con, $_SESSION['docid'])."'";
 
-        	$d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-
-        	$d_r = $db->getRow($d_sql);
+            $d_r = $db->getRow($d_sql);
             $this->useTemplate($this->_tplIdx, $d_r['claim_margin_left'], $d_r['claim_margin_top']);
         }
     

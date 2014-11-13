@@ -22,7 +22,7 @@ if ($_SESSION['userid'] == '') {
 
 <? }
 
-  $sql = "SELECT homepage from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $sql = "SELECT homepage from dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 
   $r = $db->getRow($sql);
 
@@ -129,12 +129,12 @@ if ($_SESSION['userid'] == '') {
     $num_c = $db->getNumberRows($c_query);
 
 
-    $simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND
+    $simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND
                  ((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
                 (dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
                 )";
 
-    $d_sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0 "; 
+    $d_sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0 "; 
 
     $num_pending_duplicates = $db->getNumberRows($d_sql);
 
@@ -305,7 +305,7 @@ if ($_SESSION['userid'] == '') {
           $title .= "Pre-medication: " . $myarray['premed']."\n";
         }
         
-        $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid=".mysql_real_escape_string($_GET['pid']);
+        $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid=".mysqli_real_escape_string($con, $_GET['pid']);
 
         $myq3array = $db->getRow($sqlq3);
         $allergen = $myq3array['allergenscheck'];
@@ -335,7 +335,7 @@ if ($_SESSION['userid'] == '') {
                 LEFT JOIN dental_patients p ON p.patientid=dt.patientid
            WHERE (dt.status = '0' OR
                 dt.status IS NULL) AND
-                dt.responsibleid='".mysql_real_escape_string($_SESSION['userid'])."'";
+                dt.responsibleid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
 
         $num_tasks = $db->getNumberRows($task_sql);
       ?>
@@ -376,7 +376,7 @@ if ($_SESSION['userid'] == '') {
                 LEFT JOIN dental_patients p ON p.patientid=dt.patientid
            WHERE (dt.status = '0' OR
                 dt.status IS NULL) AND
-                dt.responsibleid='".mysql_real_escape_string($_SESSION['userid'])."'";
+                dt.responsibleid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
 
         $num_tasks = $db->getNumberRows($task_sql);
       ?>
@@ -627,7 +627,7 @@ if ($_SESSION['userid'] == '') {
 
       <?php
         if ($_SESSION['docid'] == $_SESSION['userid']) {
-          $course_sql = "SELECT use_course FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+          $course_sql = "SELECT use_course FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
 
           $course_r = $db->getRow($course_sql);
 
@@ -643,7 +643,7 @@ if ($_SESSION['userid'] == '') {
         } else {
           $course_sql = "SELECT s.use_course, d.use_course_staff FROM dental_users s
 		                     JOIN dental_users d ON d.userid = s.docid
-		                     WHERE s.userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+		                     WHERE s.userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
 
           $course_r = $db->getRow($course_sql);
 
@@ -734,7 +734,7 @@ if ($_SESSION['userid'] == '') {
 
           <?php
             $t_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt JOIN dental_users du ON dt.responsibleid=du.userid LEFT JOIN dental_patients p ON p.patientid=dt.patientid WHERE (dt.status = '0' OR
-              dt.status IS NULL) AND (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') AND dt.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+              dt.status IS NULL) AND (du.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' OR du.userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."') AND dt.patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
             $t_num_sql = $t_sql;
             $num_pat_tasks = $db->getNumberRows($t_num_sql);
@@ -1007,7 +1007,7 @@ if ($_SESSION['userid'] == '') {
 
         <?php
           if (isset($_GET['pid']) && $_GET['pid'] != '' && $_GET['pid'] != '0') {
-	           $s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
+	           $s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
            
             $pat = $db->getRow($s);
             $n = count($pat);
@@ -1018,13 +1018,13 @@ if ($_SESSION['userid'] == '') {
               FROM dental_patient_contacts pc 
               INNER JOIN dental_patients p ON pc.patientid=p.patientid
               WHERE p.docid='".$_SESSION['docid']."' AND
-              p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+              p.patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
             $total_contacts = $db->getNumberRows($contacts_sql);
 
             $insurance_sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname FROM dental_patient_insurance pi INNER JOIN dental_patients p ON pi.patientid=p.patientid 
                 WHERE p.docid='".$_SESSION['docid']."' AND
-                p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+                p.patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
             $total_insurance = $db->getNumberRows($insurance_sql);
 
@@ -1035,7 +1035,7 @@ if ($_SESSION['userid'] == '') {
             <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
           </a>
         <?php } 
-          $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+          $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
           $exist_row = $db->getRow($exist_sql);
 
@@ -1044,7 +1044,7 @@ if ($_SESSION['userid'] == '') {
                 <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
               </a>
 	      <?php }
-          $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+          $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
           if ($db->getNumberRows($email_sql) > 0) {
         ?>
@@ -1056,7 +1056,7 @@ if ($_SESSION['userid'] == '') {
         <?php }
         	$rc_sql = "SELECT * FROM dental_insurance WHERE 
 			               (status='".DSS_CLAIM_REJECTED."' OR status='".DSS_CLAIM_SEC_REJECTED."')
-			               AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+			               AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
 	        $rc_q = $db->getResults($rc_sql);
           $rc_num = count($rc_q);
@@ -1075,7 +1075,7 @@ if ($_SESSION['userid'] == '') {
         <?php	}
 	        $rc_sql = "SELECT * FROM dental_hst WHERE 
                      (status='".DSS_HST_REQUSTED."' OR status='".DSS_HST_PENDING."' OR status='".DSS_HST_SCHEDULED."' OR (status='".DSS_HST_REJECTED."' AND (viewed IS NULL or viewed = 0)))
-                        AND patient_id='".mysql_real_escape_string($_GET['pid'])."'";
+                        AND patient_id='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
           $rc_q = $db->getResults($rc_sql);
 	        $pat_hst_num_uncompleted = count($rc_q);
@@ -1124,7 +1124,7 @@ if ($_SESSION['userid'] == '') {
         ?>
       </div>
     <?php }
-      $sql = "SELECT use_letters from dental_users WHERE userid='" . mysql_real_escape_string($_SESSION['docid']) . "'";
+      $sql = "SELECT use_letters from dental_users WHERE userid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
 
       $r = $db->getRow($sql);
 

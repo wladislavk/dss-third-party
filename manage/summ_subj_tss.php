@@ -29,7 +29,7 @@
 	$snore_5 = 0;
 
     $a_sql = "SELECT answer, thorntonid FROM dentalsummfu_tss
-              WHERE followupid='".mysql_real_escape_string($_GET['id'])."';";
+              WHERE followupid='".mysqli_real_escape_string($con,$_GET['id'])."';";
     
     $a_q = $db->getResults($a_sql);
     if ($a_q) foreach ($a_q as $a) {

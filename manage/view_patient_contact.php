@@ -24,7 +24,7 @@
                 $ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 
                 $pc_id = $db->getInsertId($ins_sql);
-                $pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($_REQUEST['id'])."'";
+                $pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysqli_real_escape_string($con,$_REQUEST['id'])."'";
 
                 $pcr = $db->getRow($pcsql);
                 $psql = "UPDATE dental_patients SET ";
@@ -48,7 +48,7 @@
                 $psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
 
                 $db->query($psql);
-                $d = "DELETE FROM dental_patient_contacts where id='".mysql_real_escape_string($_REQUEST['id'])."'";
+                $d = "DELETE FROM dental_patient_contacts where id='".mysqli_real_escape_string($con,$_REQUEST['id'])."'";
                 
                 $db->query($d);
         ?>
@@ -67,7 +67,7 @@
             }
             $physician_types = implode(',', $physician_array);
 
-            $thesql = "select * from dental_patient_contacts where id='".mysql_real_escape_string($_REQUEST["id"])."'";
+            $thesql = "select * from dental_patient_contacts where id='".mysqli_real_escape_string($con,$_REQUEST["id"])."'";
         	
         	$themyarray = $db->getRow($thesql);	
     		$salutation = st($themyarray['salutation']);

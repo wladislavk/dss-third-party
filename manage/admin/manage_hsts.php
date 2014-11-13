@@ -1,4 +1,4 @@
-<? 
+<?php  
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
@@ -52,15 +52,15 @@ $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUES
 if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_insurance_preauth where id='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
-	<?
+	<?php 
 	die();
 }
 
@@ -151,20 +151,19 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid))
 }
 
 $sql .= "ORDER BY " . $sort_by_sql;
-$my = mysql_query($sql);
+$my = mysqli_query($con,$sql);
 $total_rec = mysql_num_rows($my);
 
 if(isset($_GET['status']) && isset($_GET['from']) && $_GET['from']=='view' && $total_rec == 0){
   ?>
   <script type="text/javascript">
-    window.location="manage_hsts.php?msg=<?=$_GET['msg'];?>";
+    window.location="manage_hsts.php?msg=<?php echo $_GET['msg'];?>";
   </script>
-  <?php
-}
+  <?php }
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
+$my=mysqli_query($con,$sql) or die(mysql_error());
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -179,11 +178,11 @@ $my=mysql_query($sql) or die(mysql_error());
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php  echo $_GET['msg'];?></b>
 </div>
 
 <div style="width:98%;margin:auto;">
-  <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
+  <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="get">
     Status:
     <select name="status">
       <?php $requested_selected = ($status == DSS_HST_REQUESTED) ? 'selected' : ''; ?>
@@ -192,20 +191,21 @@ $my=mysql_query($sql) or die(mysql_error());
       <?php $scheduled_selected = ($status == DSS_HST_SCHEDULED) ? 'selected' : ''; ?>
       <?php $complete_selected = ($status == DSS_HST_COMPLETE) ? 'selected' : ''; ?>
       <option value="">Any</option>
-      <option value="<?=DSS_HST_REQUESTED?>" <?=$requested_selected?>><?=$dss_hst_status_labels[DSS_HST_REQUESTED]?></option>
-      <option value="<?=DSS_HST_PENDING?>" <?=$pending_selected?>><?=$dss_hst_status_labels[DSS_HST_PENDING]?></option>
-      <option value="<?=DSS_HST_CONTACTED?>" <?=$contacted_selected?>><?=$dss_hst_status_labels[DSS_HST_CONTACTED]?></option>
-      <option value="<?=DSS_HST_SCHEDULED?>" <?=$scheduled_selected?>><?=$dss_hst_status_labels[DSS_HST_SCHEDULED]?></option>
-      <option value="<?=DSS_HST_COMPLETE?>" <?=$complete_selected?>><?=$dss_hst_status_labels[DSS_HST_COMPLETE]?></option>
+      <option value="<?php echo DSS_HST_REQUESTED?>" <?php echo $requested_selected?>><?php echo $dss_hst_status_labels[DSS_HST_REQUESTED]?></option>
+      <option value="<?php echo DSS_HST_PENDING?>" <?php echo $pending_selected?>><?php echo $dss_hst_status_labels[DSS_HST_PENDING]?></option>
+      <option value="<?php echo DSS_HST_CONTACTED?>" <?php echo $contacted_selected?>><?php echo $dss_hst_status_labels[DSS_HST_CONTACTED]?></option>
+      <option value="<?php echo DSS_HST_SCHEDULED?>" <?php echo $scheduled_selected?>><?php echo $dss_hst_status_labels[DSS_HST_SCHEDULED]?></option>
+      <option value="<?php echo DSS_HST_COMPLETE?>" <?php echo $complete_selected?>><?php echo $dss_hst_status_labels[DSS_HST_COMPLETE]?></option>
     </select>
     &nbsp;&nbsp;&nbsp;
     Account:
     <select name="fid">
       <option value="">Any</option>
-      <?php $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees(); ?>
-      <?php while ($row = mysql_fetch_array($franchisees)) { ?>
-        <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
-        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['first_name']." ".$row['last_name']; ?></option>
+      <?php 
+        $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees();
+        if ($franchisees) foreach ($franchisees as $row) {
+          $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
+        <option value="<?php echo  $row['userid'] ?>" <?php echo  $selected ?>>[<?php echo  $row['userid'] ?>] <?php echo  $row['first_name']." ".$row['last_name']; ?></option>
       <?php } ?>
     </select>
     &nbsp;&nbsp;&nbsp;
@@ -215,118 +215,117 @@ $my=mysql_query($sql) or die(mysql_error());
       <select name="pid">
         <option value="">Any</option>
         <?php $patients = get_patients($fid); ?>
-        <?php while ($row = mysql_fetch_array($patients)) { ?>
+        <?php while ($row = mysqli_fetch_array($patients)) { ?>
           <?php $selected = ($row['patientid'] == $pid) ? 'selected' : ''; ?>
-          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['lastname'] ?>, <?= $row['firstname'] ?></option>
+          <option value="<?php echo  $row['patientid'] ?>" <?php echo  $selected ?>>[<?php echo  $row['patientid'] ?>] <?php echo  $row['lastname'] ?>, <?php echo  $row['firstname'] ?></option>
         <?php } ?>
       </select>
       &nbsp;&nbsp;&nbsp;
     <?php } ?>
     
-    <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
-    <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
+    <input type="hidden" name="sort_by" value="<?php echo $sort_by?>"/>
+    <input type="hidden" name="sort_dir" value="<?php echo $sort_dir?>"/>
     <input type="submit" value="Filter List" class="btn btn-primary">
-    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'" class="btn btn-primary">
+    <input type="button" value="Reset" onclick="window.location='<?php echo $_SERVER['PHP_SELF']?>'" class="btn btn-primary">
   </form>
 </div>
 
-<form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<form name="pagefrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php  if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
-			<?
+			<?php 
 				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
 			?>
 		</TD>
 	</TR>
-	<? }?>
-	<?php
-    $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
+	<?php  }?>
+	<?php     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
              . "&status=" . $_REQUEST['status'] . "&sort_by=%s&sort_dir=%s";
     ?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Requested</a>
+		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
+			<a href="<?php echo sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Requested</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
+		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
+			<a href="<?php echo sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
 		</td>
-                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_COMPANY, $sort_dir) ?>" width="10%">
-                        <a href="<?=sprintf($sort_qs, SORT_BY_COMPANY, get_sort_dir($sort_by, SORT_BY_COMPANY, $sort_dir))?>">Company</a>
+                <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_COMPANY, $sort_dir) ?>" width="10%">
+                        <a href="<?php echo sprintf($sort_qs, SORT_BY_COMPANY, get_sort_dir($sort_by, SORT_BY_COMPANY, $sort_dir))?>">Company</a>
                 </td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
+		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
+			<a href="<?php echo sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
-                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_INSURANCE, $sort_dir) ?>" width="20%">
-                        <a href="<?=sprintf($sort_qs, SORT_BY_INSURANCE, get_sort_dir($sort_by, SORT_BY_INSURANCE, $sort_dir))?>">Insurance</a>
+                <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_INSURANCE, $sort_dir) ?>" width="20%">
+                        <a href="<?php echo sprintf($sort_qs, SORT_BY_INSURANCE, get_sort_dir($sort_by, SORT_BY_INSURANCE, $sort_dir))?>">Insurance</a>
                 </td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="20%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
+		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="20%">
+			<a href="<?php echo sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
+		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
+			<a href="<?php echo sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
 		</td>
-                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_AUTHORIZED, $sort_dir) ?>" width="20%">
-                        <a href="<?=sprintf($sort_qs, SORT_BY_AUTHORIZED, get_sort_dir($sort_by, SORT_BY_AUTHORIZED, $sort_dir))?>">Authorized&nbsp;&nbsp;</a>
+                <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_AUTHORIZED, $sort_dir) ?>" width="20%">
+                        <a href="<?php echo sprintf($sort_qs, SORT_BY_AUTHORIZED, get_sort_dir($sort_by, SORT_BY_AUTHORIZED, $sort_dir))?>">Authorized&nbsp;&nbsp;</a>
                 </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php  if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="6" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php  
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 		?>
-			<tr class="<?= (isset($tr_class))?$tr_class:'';?>">
+			<tr class="<?php echo  (isset($tr_class))?$tr_class:'';?>">
 				<td valign="top">
-					<?=st($myarray["adddate"]);?>&nbsp;
+					<?php echo st($myarray["adddate"]);?>&nbsp;
 				</td>
 				<?php $status_color = ($myarray["status"] == DSS_HST_PENDING ) ? "warning" : "success"; ?>
 				<?php $status_color = (($myarray["status"] == DSS_HST_PENDING) && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
-				<td valign="top" class="<?= $status_color ?>">
-					<?=st($dss_hst_status_labels[$myarray["status"]]);?>&nbsp;
+				<td valign="top" class="<?php echo  $status_color ?>">
+					<?php echo st($dss_hst_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
                                 <td valign="top">
-                                        <?=st($myarray["hst_company_name"]);?>
+                                        <?php echo st($myarray["hst_company_name"]);?>
                                 </td>
 				<td valign="top">
-                                        <a href="view_patient.php?pid=<?= $myarray['patient_id']; ?>" title="View Chart">
-					<?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?>
+                                        <a href="view_patient.php?pid=<?php echo  $myarray['patient_id']; ?>" title="View Chart">
+					<?php echo st($myarray["patient_lastname"]);?>, <?php echo st($myarray["patient_firstname"]);?>
 					(View Chart)
 					</a>
 				</td>
 				<td valign="top">
-					<?=st($myarray["ins_co"]);?>&nbsp;
+					<?php echo st($myarray["ins_co"]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<a href="view_user.php?ed=<?= $myarray['doc_id']; ?>"><?=st($myarray["doc_name"]);?></a>&nbsp;
+					<a href="view_user.php?ed=<?php echo  $myarray['doc_id']; ?>"><?php echo st($myarray["doc_name"]);?></a>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["user_name"]);?>&nbsp;
+					<?php echo st($myarray["user_name"]);?>&nbsp;
 				</td>
                                 <td valign="top">
-                                        <?=st($myarray["authorized_name"]);?>&nbsp;
+                                        <?php echo st($myarray["authorized_name"]);?>&nbsp;
                                 </td>
 				<td valign="top">
-					<a href="view_hst.php?ed=<?=$myarray["id"];?><?= (isset($_GET['status']) && $_GET['status']!='')?"&ret_status=".$_GET['status']:""; ?>" title="Edit" class="btn btn-primary btn-sm">
+					<a href="view_hst.php?ed=<?php echo $myarray["id"];?><?php echo  (isset($_GET['status']) && $_GET['status']!='')?"&ret_status=".$_GET['status']:""; ?>" title="Edit" class="btn btn-primary btn-sm">
 						View
 					 <span class="glyphicon glyphicon-pencil"></span></a>
 
 				</td>
 			</tr>
-	<? 	}
+	<?php  	}
 	}?>
 </table>
 </form>
@@ -339,4 +338,4 @@ $my=mysql_query($sql) or die(mysql_error());
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php  include "includes/bottom.htm";?>

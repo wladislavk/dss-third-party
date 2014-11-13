@@ -1,11 +1,21 @@
-<?php
+<?php 
 
 class Db
 {
+	protected $con;
 	// Perfom query
+	public function __construct()
+	{
+		$this->con = $GLOBALS['con'];
+	}
 	public function query($query_string)
 	{
-		return mysql_query($query_string);
+		if($query_string)
+		{
+			return mysqli_query($this->con, $query_string);
+		}
+		return;
+		
 	}
 
 	// Get the first result row
@@ -13,7 +23,9 @@ class Db
 	{
 		$result = $this->query($query_string);
 		if ($result) {
-			$return = mysql_fetch_assoc($result);
+
+			$return = mysqli_fetch_assoc($result);
+
 		}
 		return $return;		
 	}
@@ -24,11 +36,11 @@ class Db
 
 		$result = $this->query($query_string);
 		if ($result) {
-			while($row = mysql_fetch_assoc($result)){
+			while($row = mysqli_fetch_assoc($result)){
 				$return[] = $row;
 			}
 		}
-
+		
 		return $return;
 	}
 
@@ -36,13 +48,13 @@ class Db
 	public function getNumberRows($query_string)
 	{
 		$result = $this->query($query_string);
-		return mysql_num_rows($result);
+		return mysqli_num_rows($result);
 	}
 
 	public function getInsertId($query_string)
 	{
 		$result = $this->query($query_string);
-		return mysql_insert_id();
+		return mysqli_insert_id($this->con);
 	}
 
 }

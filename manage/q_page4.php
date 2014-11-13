@@ -9,71 +9,71 @@
 
 <?php
     if($_POST['q_page4sub'] == 1) {
-    	$family_had = $_POST['family_had'];
-    	$family_diagnosed = $_POST['family_diagnosed'];
-    	$additional_paragraph = $_POST['additional_paragraph'];
-    	$alcohol = $_POST['alcohol'];
-    	$sedative = $_POST['sedative'];
-    	$caffeine = $_POST['caffeine'];
-    	$smoke = $_POST['smoke'];
-    	$smoke_packs = $_POST['smoke_packs'];
-    	$tobacco = $_POST['tobacco'];
-	
-    	$family_had_arr = '';
-    	if(is_array($family_had)) {
-    		foreach($family_had as $val) {
-    			if(trim($val) <> '') $family_had_arr .= trim($val).'~';
-    		}
-    	}
-	    if($family_had_arr != '') $family_had_arr = '~'.$family_had_arr;
-	
-	    if($_POST['ed'] == '') {
-    		$ins_sql = " insert into dental_q_page4 set 
-        		patientid = '".s_for($_GET['pid'])."',
-        		family_had = '".s_for($family_had_arr)."',
-        		family_diagnosed = '".s_for($family_diagnosed)."',
-        		additional_paragraph = '".s_for($additional_paragraph)."',
-        		alcohol = '".s_for($alcohol)."',
-        		sedative = '".s_for($sedative)."',
-        		caffeine = '".s_for($caffeine)."',
-        		smoke = '".s_for($smoke)."',
-        		smoke_packs = '".s_for($smoke_packs)."',
-        		tobacco = '".s_for($tobacco)."',
-        		userid = '".s_for($_SESSION['userid'])."',
-        		docid = '".s_for($_SESSION['docid'])."',
-        		adddate = now(),
-        		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-		
-		    $db->query($ins_sql);
-		    $msg = "Added Successfully";
+        $family_had = $_POST['family_had'];
+        $family_diagnosed = $_POST['family_diagnosed'];
+        $additional_paragraph = $_POST['additional_paragraph'];
+        $alcohol = $_POST['alcohol'];
+        $sedative = $_POST['sedative'];
+        $caffeine = $_POST['caffeine'];
+        $smoke = $_POST['smoke'];
+        $smoke_packs = $_POST['smoke_packs'];
+        $tobacco = $_POST['tobacco'];
+    
+        $family_had_arr = '';
+        if(is_array($family_had)) {
+            foreach($family_had as $val) {
+                if(trim($val) <> '') $family_had_arr .= trim($val).'~';
+            }
+        }
+        if($family_had_arr != '') $family_had_arr = '~'.$family_had_arr;
+    
+        if($_POST['ed'] == '') {
+            $ins_sql = " insert into dental_q_page4 set 
+                patientid = '".s_for($_GET['pid'])."',
+                family_had = '".s_for($family_had_arr)."',
+                family_diagnosed = '".s_for($family_diagnosed)."',
+                additional_paragraph = '".s_for($additional_paragraph)."',
+                alcohol = '".s_for($alcohol)."',
+                sedative = '".s_for($sedative)."',
+                caffeine = '".s_for($caffeine)."',
+                smoke = '".s_for($smoke)."',
+                smoke_packs = '".s_for($smoke_packs)."',
+                tobacco = '".s_for($tobacco)."',
+                userid = '".s_for($_SESSION['userid'])."',
+                docid = '".s_for($_SESSION['docid'])."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+        
+            $db->query($ins_sql);
+            $msg = "Added Successfully";
 ?>
-    		<script type="text/javascript">
-    			window.location = '<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
-    		</script>
+            <script type="text/javascript">
+                window.location = '<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
+            </script>
 <?php
-		    die();
-	    } else {
-    		$ed_sql = " update dental_q_page4 set 
-        		family_had = '".s_for($family_had_arr)."',
-        		family_diagnosed = '".s_for($family_diagnosed)."',
-        		additional_paragraph = '".s_for($additional_paragraph)."',
-        		alcohol = '".s_for($alcohol)."',
-        		sedative = '".s_for($sedative)."',
-        		caffeine = '".s_for($caffeine)."',
-        		smoke = '".s_for($smoke)."',
-        		smoke_packs = '".s_for($smoke_packs)."',
-        		tobacco = '".s_for($tobacco)."'
-        		where q_page4id = '".s_for($_POST['ed'])."'";
-		
-		    $db->query($ed_sql);
-		    $msg = "Edited Successfully";
+            die();
+        } else {
+            $ed_sql = " update dental_q_page4 set 
+                family_had = '".s_for($family_had_arr)."',
+                family_diagnosed = '".s_for($family_diagnosed)."',
+                additional_paragraph = '".s_for($additional_paragraph)."',
+                alcohol = '".s_for($alcohol)."',
+                sedative = '".s_for($sedative)."',
+                caffeine = '".s_for($caffeine)."',
+                smoke = '".s_for($smoke)."',
+                smoke_packs = '".s_for($smoke_packs)."',
+                tobacco = '".s_for($tobacco)."'
+                where q_page4id = '".s_for($_POST['ed'])."'";
+        
+            $db->query($ed_sql);
+            $msg = "Edited Successfully";
 ?>
-    		<script type="text/javascript">
-    			window.location = '<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
-    		</script>
+            <script type="text/javascript">
+                window.location = '<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
+            </script>
 <?php
-		  die();
-	    }
+          die();
+        }
     }
 
     $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -82,11 +82,11 @@
     $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     if($pat_myarray['patientid'] == '') {
 ?>
-    	<script type="text/javascript">
-    		window.location = 'manage_patient.php';
-    	</script>
+        <script type="text/javascript">
+            window.location = 'manage_patient.php';
+        </script>
 <?php
-    	die();
+        die();
     }
 
     $sql = "select * from dental_q_page4 where patientid='".$_GET['pid']."'";
@@ -116,7 +116,7 @@
     <br>
 
     <div align="center" class="red">
-    	<b><?php echo $_GET['msg'];?></b>
+        <b><?php echo $_GET['msg'];?></b>
     </div>
 
     <form id="q_page4frm" name="q_page4frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post" >
@@ -125,35 +125,35 @@
         <input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
 
         <div align="right">
-        	<input type="reset" value="Reset" />
-        	<input type="submit" name="q_pagebtn" value="Save" />
+            <input type="reset" value="Reset" />
+            <input type="submit" name="q_pagebtn" value="Save" />
             &nbsp;&nbsp;&nbsp;
         </div>
         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
             <tr>
                 <td valign="top" class="frmhead">
-                	<ul>
-        				<li id="foli8" class="complex">	
+                    <ul>
+                        <li id="foli8" class="complex"> 
                             <label class="desc" id="title0" for="Field0">
                                 Family History
                             </label>
                             <div>
                                 <span class="full">
-                                	<table width="100%" cellpadding="3" cellspacing="1" border="0">
-                                    	<tr>
-                                        	<td valign="top" width="1%">
-                                            	<span>
-                                                	1.
+                                    <table width="100%" cellpadding="3" cellspacing="1" border="0">
+                                        <tr>
+                                            <td valign="top" width="1%">
+                                                <span>
+                                                    1.
                                                 </span>
                                             </td>
-                                        	<td valign="top" width="50%">
-                                            	<span>
-                                                	Have genetic members of your family had:
+                                            <td valign="top" width="50%">
+                                                <span>
+                                                    Have genetic members of your family had:
                                                 </span>
                                             </td>
                                             <td valign="top">
-                                            	<span>
-                                                	<input type="checkbox" name="family_had[]" value="Heart disease" class="tbox" style="width:10px;" <?php if(strpos($family_had,'~Heart disease~') === false) {} else { echo " checked";}?> />
+                                                <span>
+                                                    <input type="checkbox" name="family_had[]" value="Heart disease" class="tbox" style="width:10px;" <?php if(strpos($family_had,'~Heart disease~') === false) {} else { echo " checked";}?> />
                                                     Heart disease
                                                     <br />
                                                     
@@ -168,19 +168,19 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                        	<td valign="top">
-                                            	<span>
-                                                	2.
-                                                </span>
-                                            </td>
-                                        	<td valign="top">
-                                            	<span>
-                                                	Have any immediate genetic family members been diagnosed or treated for a sleep disorder?
+                                            <td valign="top">
+                                                <span>
+                                                    2.
                                                 </span>
                                             </td>
                                             <td valign="top">
-                                            	<span>
-                                                	<input type="radio" name="family_diagnosed" value="Yes" class="tbox" style="width:10px;" <?php if($family_diagnosed == 'Yes')  echo " checked";?> />
+                                                <span>
+                                                    Have any immediate genetic family members been diagnosed or treated for a sleep disorder?
+                                                </span>
+                                            </td>
+                                            <td valign="top">
+                                                <span>
+                                                    <input type="radio" name="family_diagnosed" value="Yes" class="tbox" style="width:10px;" <?php if($family_diagnosed == 'Yes')  echo " checked";?> />
                                                     Yes
                                                     
                                                     &nbsp;&nbsp;&nbsp;
@@ -190,12 +190,12 @@
                                             </td>
                                         </tr>
                                     </table>
-                   			        <br />
-                    	        </span>
-					        </div>
+                                    <br />
+                                </span>
+                            </div>
                             Additional Paragraph
                             /
-		                    <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=q_page4frm&tx=additional_paragraph'); return false;">Custom Text</button>
+                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=q_page4frm&tx=additional_paragraph'); return false;">Custom Text</button>
                             <div>
                                 <span>
                                     <textarea name="additional_paragraph" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $additional_paragraph;?></textarea>
@@ -208,14 +208,14 @@
             </tr>
             <tr>
                 <td valign="top" class="frmhead">
-                	<ul>
-        				<li id="foli8" class="complex">	
+                    <ul>
+                        <li id="foli8" class="complex"> 
                             <label class="desc" id="title0" for="Field0">
                                 SOCIAL HISTORY
                             </label>
                             <div>
                                 <span class="full">
-                                	Alcohol consumption: How often do you consume alcohol within 2-3 hours of bedtime?
+                                    Alcohol consumption: How often do you consume alcohol within 2-3 hours of bedtime?
                                     <br />
                                     
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -318,16 +318,16 @@
                                     No
 
                                 </span>
-					        </div>
+                            </div>
                         <br />
-    				</li>
-    			</ul>
-    		</td>
-    	</tr>
+                    </li>
+                </ul>
+            </td>
+        </tr>
         </table>
 
         <div align="right">
-        	<input type="reset" value="Reset" />
+            <input type="reset" value="Reset" />
             <input type="submit" name="q_pagebtn" value="Save" tabindex="12" />
             &nbsp;&nbsp;&nbsp;
         </div>
@@ -353,11 +353,11 @@
     </div>
     <div id="backgroundPopup"></div>
 
-    <br /><br />	
+    <br /><br />    
 
 <?php
     } else {  // end pt info check
-    	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+        print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
     }
 ?>
 

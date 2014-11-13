@@ -1,5 +1,5 @@
 <?php
-	require_once('../admin/includes/main_include.php');
+	include_once('../admin/includes/main_include.php');
 	include("sescheck.php");
 
 	if(isset($_GET['id'])) {

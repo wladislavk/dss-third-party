@@ -5,7 +5,7 @@
         $sql = "SELECT u.* FROM 
                 dental_patients p 
                 JOIN dental_users u ON p.docid = u.userid 
-                WHERE p.patientid = '".mysql_real_escape_string($pid)."' AND
+                WHERE p.patientid = '".mysqli_real_escape_string($con,$pid)."' AND
     			u.npi != '' AND u.npi IS NOT NULL AND
     			u.tax_id_or_ssn != '' AND u.tax_id_or_ssn IS NOT NULL AND
     			(u.ssn = 1 OR u.ein = 1) 
@@ -35,7 +35,7 @@
 
         $my_array = $db->getRow($sql);
 
-        $thorton_sql = "SELECT * FROM dental_thorton WHERE patientid = '".mysql_real_escape_string($pid)."'";
+        $thorton_sql = "SELECT * FROM dental_thorton WHERE patientid = '".mysqli_real_escape_string($con,$pid)."'";
 
         $thorton = $db->getRow($thorton_sql);
         $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND filename IS NOT NULL AND patiendid = '".$pid."' ORDER BY id DESC LIMIT 1;";
@@ -52,30 +52,30 @@
              . "  status, adddate, ip_address "
              . ") VALUES ("
              . "  " . $pid . ", "
-             . "  " . mysql_real_escape_string($my_array['doc_id']) . ", "
-             . "  '" . mysql_real_escape_string($_SESSION['userid']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['p_m_ins_co']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['patient_ins_group_id']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['patient_ins_id']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['patient_firstname']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['patient_lastname']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['patient_add1']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['patient_add2']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['patient_city']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['patient_state']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['patient_zip']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['patient_dob']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['insured_first_name']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['insured_last_name']) . "', "
-             . "  '" . mysql_real_escape_string($my_array['insured_dob']) . "', "
-             . "  '" . mysql_real_escape_string($thorton['snore_1']) . "', "
-             . "  '" . mysql_real_escape_string($thorton['snore_2']) . "', "
-             . "  '" . mysql_real_escape_string($thorton['snore_3']) . "', "
-             . "  '" . mysql_real_escape_string($thorton['snore_4']) . "', "
-             . "  '" . mysql_real_escape_string($thorton['snore_5']) . "', "
+             . "  " . mysqli_real_escape_string($con,$my_array['doc_id']) . ", "
+             . "  '" . mysqli_real_escape_string($con,$_SESSION['userid']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['p_m_ins_co']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['patient_ins_group_id']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['patient_ins_id']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['patient_firstname']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['patient_lastname']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['patient_add1']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['patient_add2']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['patient_city']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['patient_state']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['patient_zip']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['patient_dob']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['insured_first_name']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['insured_last_name']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$my_array['insured_dob']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$thorton['snore_1']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$thorton['snore_2']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$thorton['snore_3']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$thorton['snore_4']) . "', "
+             . "  '" . mysqli_real_escape_string($con,$thorton['snore_5']) . "', "
              . DSS_HST_PENDING . ", "
              . "  now(), "
-             . "  '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."' " 
+             . "  '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."' " 
              . ")";
 
         $hst_id = $db->getInsertId($sql);
@@ -111,11 +111,11 @@
 
             if($chk != '') {
                 $hst_sql = "INSERT INTO dental_hst_epworth SET
-                        	hst_id = '".mysql_real_escape_string($hst_id)."',
-                        	epworth_id = '".mysql_real_escape_string($epworth_myarray['epworthid'])."',
-                        	response = '".mysql_real_escape_string($chk)."',
+                        	hst_id = '".mysqli_real_escape_string($con,$hst_id)."',
+                        	epworth_id = '".mysqli_real_escape_string($con,$epworth_myarray['epworthid'])."',
+                        	response = '".mysqli_real_escape_string($con,$chk)."',
                         	adddate = now(),
-                        	ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
+                        	ip_address = '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
                 
                 $db->query($hst_sql);
             }

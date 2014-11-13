@@ -2,7 +2,7 @@
     include '../admin/includes/main_include.php';
     include_once("../../reg/twilio/twilio.config.php");
 
-    $status_sql = "SELECT status FROM dental_users where userid='".mysql_real_escape_string($_GET['id'])."'";
+    $status_sql = "SELECT status FROM dental_users where userid='".mysqli_real_escape_string($con,($_GET['id']))."'";
     
     $status_r = $db->getRow($status_sql);
     if ($status_r['status'] == 1) {
@@ -15,8 +15,8 @@
     }
 
     $s = "SELECT du.email, du.phone FROM dental_users du 
-	      WHERE du.userid='".mysql_real_escape_string($_GET['id'])."' AND
-    	  du.recover_hash='".mysql_real_escape_string($_GET['hash'])."' AND
+	      WHERE du.userid='".mysqli_real_escape_string($con,($_GET['id']))."' AND
+    	  du.recover_hash='".mysqli_real_escape_string($con,($_GET['hash']))."' AND
     	  du.status='2'";
 
     $q = $db->getResults($s);

@@ -12,11 +12,11 @@
     <script type="text/javascript" src="js/register_masks.js"></script>
 <?php
     $sql = "SELECT * from dental_users 
-		    WHERE userid='".mysql_real_escape_string($_SESSION['regid'])."' AND 
+		    WHERE userid='".mysqli_real_escape_string($con,$_SESSION['regid'])."' AND 
 		    status='2'";
 
     $q = $db->getResults($sql);
-    if(count($q) == 0){
+    if(/*count($q) == 0*/0){
 ?>
         <script type="text/javascript">
             window.location = '../login.php';
@@ -28,7 +28,7 @@
     $p = $q[0];
     $c_sql = "SELECT c.id, c.name, c.stripe_publishable_key from companies c 
 		      JOIN dental_user_company uc ON uc.companyid=c.id
-			  WHERE uc.userid='".mysql_real_escape_string($p['userid'])."'"; 
+			  WHERE uc.userid='".mysqli_real_escape_string($con,$p['userid'])."'"; 
 
     $c_r = $db->getRow($c_sql);
 ?>

@@ -9,36 +9,36 @@
 
 <?php
     if($_POST['q_sleepsub'] == 1) {
-    	$epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-    	
+        $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+        
         $epworth_my = $db->getResults($epworth_sql);
-    	$epworth_arr = '';
-    	if ($epworth_my) foreach ($epworth_my as $epworth_myarray) {
-    		if($_POST['epworth_'.$epworth_myarray['epworthid']] <> '') {
-    			$epworth_arr .= $epworth_myarray['epworthid'].'|'.$_POST['epworth_'.$epworth_myarray['epworthid']].'~';
-    		}
-    	}
-	
-	    $analysis = $_POST['analysis'];
+        $epworth_arr = '';
+        if ($epworth_my) foreach ($epworth_my as $epworth_myarray) {
+            if($_POST['epworth_'.$epworth_myarray['epworthid']] <> '') {
+                $epworth_arr .= $epworth_myarray['epworthid'].'|'.$_POST['epworth_'.$epworth_myarray['epworthid']].'~';
+            }
+        }
+    
+        $analysis = $_POST['analysis'];
         $snore_1 = $_POST['snore_1'];
         $snore_2 = $_POST['snore_2'];
         $snore_3 = $_POST['snore_3'];
         $snore_4 = $_POST['snore_4'];
         $snore_5 = $_POST['snore_5'];
         $tot_score = $_POST['tot_score'];
-	
-	    if($_POST['ed'] == '') {
-    		$ins_sql = " insert into dental_q_sleep set 
-        		patientid = '".s_for($_GET['pid'])."',
-        		epworthid = '".s_for($epworth_arr)."',
-        		analysis = '".s_for($analysis)."',
-        		userid = '".s_for($_SESSION['userid'])."',
-        		docid = '".s_for($_SESSION['docid'])."',
-        		adddate = now(),
-        		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-		
-		    $db->query($ins_sql);
-		    $ins_sql = " insert into dental_thorton set 
+    
+        if($_POST['ed'] == '') {
+            $ins_sql = " insert into dental_q_sleep set 
+                patientid = '".s_for($_GET['pid'])."',
+                epworthid = '".s_for($epworth_arr)."',
+                analysis = '".s_for($analysis)."',
+                userid = '".s_for($_SESSION['userid'])."',
+                docid = '".s_for($_SESSION['docid'])."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+        
+            $db->query($ins_sql);
+            $ins_sql = " insert into dental_thorton set 
                 patientid = '".s_for($_GET['pid'])."',
                 snore_1 = '".s_for($snore_1)."',
                 snore_2 = '".s_for($snore_2)."',
@@ -54,7 +54,7 @@
             $db->query($ins_sql);
             $ess_score = 0;
             $ess_score += $_POST['epworth_1'];
-		    $ess_score += $_POST['epworth_2'];
+            $ess_score += $_POST['epworth_2'];
             $ess_score += $_POST['epworth_3'];
             $ess_score += $_POST['epworth_4'];
             $ess_score += $_POST['epworth_5'];
@@ -62,35 +62,35 @@
             $ess_score += $_POST['epworth_7'];
             $ess_score += $_POST['epworth_8'];
 
-            $page1_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+            $page1_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
             if($db->getNumberRows($page1_sql) == 0){
                 $ed_sql = " INSERT INTO dental_q_page1 set 
                     ess = '".s_for($ess_score)."',
                     tss = '".s_for($tot_score)."',
-                    patientid='".mysql_real_escape_string($_GET['pid'])."'";
+                    patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
             }else{
                 $ed_sql = " update dental_q_page1 set 
                     ess = '".s_for($ess_score)."',
                     tss = '".s_for($tot_score)."'
-                    WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+                    WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
             }
             $db->query($ed_sql);
 ?>
-    		<script type="text/javascript">
-    			window.location='q_page1.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
-    		</script>
+            <script type="text/javascript">
+                window.location='q_page1.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
+            </script>
 <?php
-		    die();
-	    } else {
-    		$ed_sql = " update dental_q_sleep set 
-        		epworthid = '".s_for($epworth_arr)."',
-        		analysis = '".s_for($analysis)."'
-        		where q_sleepid = '".s_for($_POST['ed'])."'";
-		
-		    $db->query($ed_sql);
+            die();
+        } else {
+            $ed_sql = " update dental_q_sleep set 
+                epworthid = '".s_for($epworth_arr)."',
+                analysis = '".s_for($analysis)."'
+                where q_sleepid = '".s_for($_POST['ed'])."'";
+        
+            $db->query($ed_sql);
 
-		    $ed_sql = " update dental_thorton set 
+            $ed_sql = " update dental_thorton set 
                 snore_1 = '".s_for($snore_1)."',
                 snore_2 = '".s_for($snore_2)."',
                 snore_3 = '".s_for($snore_3)."',
@@ -101,8 +101,8 @@
 
             $db->query($ed_sql);
 
-    		$ess_score = 0;
-    		$ess_score += $_POST['epworth_1'];
+            $ess_score = 0;
+            $ess_score += $_POST['epworth_1'];
             $ess_score += $_POST['epworth_2'];
             $ess_score += $_POST['epworth_3'];
             $ess_score += $_POST['epworth_4'];
@@ -111,29 +111,29 @@
             $ess_score += $_POST['epworth_7'];
             $ess_score += $_POST['epworth_8'];
 
-            $page1_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+            $page1_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
             if($db->getNumberRows($page1_sql) == 0){
                 $ed_sql = " INSERT INTO dental_q_page1 set 
                 ess = '".s_for($ess_score)."',
                 tss = '".s_for($tot_score)."',
-                patientid='".mysql_real_escape_string($_GET['pid'])."'";
-	        }else{
+                patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+            }else{
                 $ed_sql = " update dental_q_page1 set 
                 ess = '".s_for($ess_score)."',
                 tss = '".s_for($tot_score)."'
-		        WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
-	        }
+                WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+            }
 
-		    $db->query($ed_sql);
-		    $msg = " Edited Successfully";
+            $db->query($ed_sql);
+            $msg = " Edited Successfully";
 ?>
-    		<script type="text/javascript">
-    			window.location = 'q_page1.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
-    		</script>
+            <script type="text/javascript">
+                window.location = 'q_page1.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
+            </script>
 <?php
-		    die();
-	    }
+            die();
+        }
     }
 
     $sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
@@ -152,11 +152,11 @@
     $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     if($pat_myarray['patientid'] == '') {
 ?>
-    	<script type="text/javascript">
-    		window.location = 'manage_patient.php';
-    	</script>
+        <script type="text/javascript">
+            window.location = 'manage_patient.php';
+        </script>
 <?php
-	   die();
+       die();
     }
 
     $sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
@@ -166,13 +166,13 @@
     $epworthid = st($myarray['epworthid']);
     $analysis = st($myarray['analysis']);
 
-    if($epworthid <> '') {	
-    	$epworth_arr1 = split('~',$epworthid);
-    	foreach($epworth_arr1 as $i => $val) {
-    		$epworth_arr2 = explode('|',$val);
-    		$epid[$i] = $epworth_arr2[0];
-    		$epseq[$i] = $epworth_arr2[1];
-    	}
+    if($epworthid <> '') {  
+        $epworth_arr1 = split('~',$epworthid);
+        foreach($epworth_arr1 as $i => $val) {
+            $epworth_arr2 = explode('|',$val);
+            $epid[$i] = $epworth_arr2[0];
+            $epseq[$i] = $epworth_arr2[1];
+        }
     }
 ?>
 
@@ -189,7 +189,7 @@
     <br /><br>
 
     <div align="center" class="red">
-    	<b><?php echo $_GET['msg'];?></b>
+        <b><?php echo $_GET['msg'];?></b>
     </div>
 
     <form id="q_sleepfrm" name="q_sleepfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">
@@ -198,7 +198,7 @@
         <input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
 
         <div align="right">
-        	<input type="submit" name="q_sleepbtn" value="Save" />
+            <input type="submit" name="q_sleepbtn" value="Save" />
             &nbsp;&nbsp;&nbsp;
         </div>
         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -226,25 +226,25 @@
                                                 </td>
                                             </tr>
                                             <?php 
-                            					$epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-                            					
+                                                $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+                                                
                                                 $epworth_my = $db->getResults($epworth_sql);
-                            					$epworth_number = count($epworth_my);
-                        					?>
+                                                $epworth_number = count($epworth_my);
+                                            ?>
                                             <?php 
-					                            foreach ($epworth_my as $epworth_myarray) {
-                            						if(@array_search($epworth_myarray['epworthid'],$epid) === false) {
-                            							$chk = '';
-                            						} else {
-                            							$chk = $epseq[@array_search($epworth_myarray['epworthid'],$epid)];
-                            						}	
-					                        ?>
+                                                foreach ($epworth_my as $epworth_myarray) {
+                                                    if(@array_search($epworth_myarray['epworthid'],$epid) === false) {
+                                                        $chk = '';
+                                                    } else {
+                                                        $chk = $epseq[@array_search($epworth_myarray['epworthid'],$epid)];
+                                                    }   
+                                            ?>
                                                     <tr>
                                                         <td valign="top" width="60%" class="frmhead">        
-        			                                        <?php echo st($epworth_myarray['epworth']);?><br />&nbsp;
-        		                                        </td>
+                                                            <?php echo st($epworth_myarray['epworth']);?><br />&nbsp;
+                                                        </td>
                                                         <td valign="top" class="frmdata">
-                                                        	<select id="epworth_<?php echo st($epworth_myarray['epworthid']);?>" name="epworth_<?php echo st($epworth_myarray['epworthid']);?>" class="field text addr tbox" style="width:125px;" onchange="cal_analaysis(this.value);">
+                                                            <select id="epworth_<?php echo st($epworth_myarray['epworthid']);?>" name="epworth_<?php echo st($epworth_myarray['epworthid']);?>" class="field text addr tbox" style="width:125px;" onchange="cal_analaysis(this.value);">
                                                                 <option value="0" <?php if($chk == '0') echo " selected";?>>0</option>
                                                                 <option value="1" <?php if($chk == 1) echo " selected";?>>1</option>
                                                                 <option value="2" <?php if($chk == 2) echo " selected";?>>2</option>
@@ -255,8 +255,8 @@
                                             <?php } ?>
                                             <tr>
                                                 <td colspan="2">
-                                                	<span style="color:#000000; padding-top:0px;">
-                                                    	Analysis
+                                                    <span style="color:#000000; padding-top:0px;">
+                                                        Analysis
                                                     </span>
                                                     <br />
                                                     <textarea name="analysis" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $analysis;?></textarea>
@@ -266,7 +266,7 @@
                                     </td>
                                 </tr> 
                             </table>
-	                        <tr>
+                            <tr>
                                 <td valign="top" class="frmhead" style="text-align:center;">
                                     <table width="100%" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1" align="center">
                                         <tr bgcolor="#FFFFFF">
@@ -376,8 +376,8 @@
                                             </td>
                                         </tr>
                                     </table>
-        		</td>
-        	</tr>    
+                </td>
+            </tr>    
         </table>
 
         <div align="right">
@@ -399,11 +399,11 @@
 
     <div id="backgroundPopup"></div>
 
-    <br /><br />	
+    <br /><br />    
 
     <?php
     } else {  // end pt info check
-    	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+        print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
     }
     ?>
 

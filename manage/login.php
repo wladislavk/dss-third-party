@@ -23,7 +23,7 @@ else
 
 if(isset($_POST["loginsub"]))
 {
-	$salt_sql = "SELECT salt FROM dental_users WHERE username='".mysql_real_escape_string($_POST['username'])."'";
+	$salt_sql = "SELECT salt FROM dental_users WHERE username='".mysqli_real_escape_string($con, $_POST['username'])."'";
 	$salt_row = $db->getRow($salt_sql);
 
 	$pass = gen_password($_POST['password'], $salt_row['salt']);
@@ -39,7 +39,7 @@ if(isset($_POST["loginsub"]))
                                         WHEN 0 THEN dental_users.userid
                                         ELSE docid
                                 END)
-			where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status in (1, 3)";
+			where username='".mysqli_real_escape_string($con, $_POST['username'])."' and password='".$pass."' and status in (1, 3)";
 	
 	$check_myarray = $db->getRow($check_sql);
 
@@ -60,7 +60,7 @@ if(isset($_POST["loginsub"]))
 			if($check_myarray['docid'] != 0)
 			{
 				$_SESSION['docid']=$check_myarray['docid'];
-				$ut_sql = "SELECT user_type FROM dental_users WHERE userid='".mysql_real_escape_string($check_myarray['docid'])."'";
+				$ut_sql = "SELECT user_type FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $check_myarray['docid'])."'";
 	 			$ut_r = $db->getRow($ut_sql);
 				$_SESSION['user_type']=$ut_r['user_type'];
 			}
@@ -72,9 +72,8 @@ if(isset($_POST["loginsub"]))
 
 			$_SERVER['QUERY_STRING'];
 			$ins_sql = "insert into dental_login (docid,userid,login_date,ip_address) values('".$_SESSION['docid']."','".$_SESSION['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
-			$db->query($ins_sql);
 
-			$ins_id = mysql_insert_id();
+			$ins_id = $db->getInsertId($ins_sql);
 			
 			$_SESSION['loginid']=$ins_id;
 		

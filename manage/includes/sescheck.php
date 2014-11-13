@@ -6,6 +6,6 @@ if($_SESSION['userid'] == '')
 	header('Location: login.php');
 	die();
 }else{
-  $db->query("UPDATE dental_users SET last_accessed_date = NOW() WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'");
+  $db->query("UPDATE dental_users SET last_accessed_date = NOW() WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'");
 }
 ?>

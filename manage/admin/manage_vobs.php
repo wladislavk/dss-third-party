@@ -1,4 +1,4 @@
-<? 
+<?php  
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
@@ -9,20 +9,20 @@ $iid = (isset($_GET['iid']))?$_GET['iid']:'';
 
 if($fid!=''){
   $account_sql = "SELECT * FROM dental_users where userid='".$fid."'";
-  $account_q = mysql_query($account_sql);
-  $account_r = mysql_fetch_assoc($account_q);
+  $account_q = mysqli_query($con,$account_sql);
+  $account_r = mysqli_fetch_assoc($account_q);
   $account_name = $account_r['last_name'].', '.$account_r['first_name'];
 }
 if($pid!=''){
   $account_sql = "SELECT * FROM dental_patients where patientid='".$pid."'";
-  $account_q = mysql_query($account_sql);
-  $account_r = mysql_fetch_assoc($account_q);
+  $account_q = mysqli_query($con,$account_sql);
+  $account_r = mysqli_fetch_assoc($account_q);
   $patient_name = $account_r['lastname'].', '.$account_r['firstname'];
 }
 if($iid!=''){
   $account_sql = "SELECT * FROM dental_contact where contactid='".$iid."'";
-  $account_q = mysql_query($account_sql);
-  $account_r = mysql_fetch_assoc($account_q);
+  $account_q = mysqli_query($con,$account_sql);
+  $account_r = mysqli_fetch_assoc($account_q);
   $insurance_name = $account_r['company'];
 }
 
@@ -51,8 +51,8 @@ function insert_preauth_row($patient_id) {
        . "WHERE " 
        . "  p.patientid = $patient_id";
   
-  $my = mysql_query($sql);
-  $my_array = mysql_fetch_array($my);
+  $my = mysqli_query($con,$sql);
+  $my_array = mysqli_fetch_array($my);
   
   $sql = "INSERT INTO dental_insurance_preauth ("
        . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
@@ -89,7 +89,7 @@ function insert_preauth_row($patient_id) {
        . "  '" . date('Y-m-d H:i:s') . "', "
        . DSS_PREAUTH_PENDING
        . ")";
-  $my = mysql_query($sql);
+  $my = mysqli_query($con,$sql);
 }
 
 if ($_REQUEST['gen_preauth'] == 1) {
@@ -142,15 +142,15 @@ $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUES
 if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_insurance_preauth where id='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
-	<?
+	<?php 
 	die();
 }
 
@@ -244,12 +244,12 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid))
 }
 
 $sql .= "ORDER BY " . $sort_by_sql;
-$my = mysql_query($sql) or die(mysql_error());
+$my = mysqli_query($con,$sql) or die(mysql_error());
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
+$my=mysqli_query($con,$sql) or die(mysql_error());
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -259,23 +259,23 @@ $my=mysql_query($sql) or die(mysql_error());
 	Manage Verification of Benefits
 </div>
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php  echo $_GET['msg'];?></b>
 </div>
 
 <div style="width:98%;margin:auto;">
-  <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
+  <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="get">
     Status:
     <select name="status">
       <?php $pending_selected = ($status == DSS_PREAUTH_PENDING) ? 'selected' : ''; ?>
       <?php $complete_selected = ($status == DSS_PREAUTH_COMPLETE) ? 'selected' : ''; ?>
       <option value="">Any</option>
-      <option value="<?=DSS_PREAUTH_PENDING?>" <?=$pending_selected?>><?=$dss_preauth_status_labels[DSS_PREAUTH_PENDING]?></option>
-      <option value="<?=DSS_PREAUTH_COMPLETE?>" <?=$complete_selected?>><?=$dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]?></option>
+      <option value="<?php echo DSS_PREAUTH_PENDING?>" <?php echo $pending_selected?>><?php echo $dss_preauth_status_labels[DSS_PREAUTH_PENDING]?></option>
+      <option value="<?php echo DSS_PREAUTH_COMPLETE?>" <?php echo $complete_selected?>><?php echo $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]?></option>
     </select>
     &nbsp;&nbsp;&nbsp;
 
     Account:
-<input type="text" id="account_name" onclick="updateval(this)" autocomplete="off" name="account_name" value="<?= ($fid!='')?$account_name:'Type contact name'; ?>" />
+<input type="text" id="account_name" onclick="updateval(this)" autocomplete="off" name="account_name" value="<?php echo  ($fid!='')?$account_name:'Type contact name'; ?>" />
 
 <br />        <div id="account_hints" class="search_hints" style="display:none;">
                 <ul id="account_list" class="search_list">
@@ -283,18 +283,19 @@ $my=mysql_query($sql) or die(mysql_error());
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('account_name', 'account_hints', 'fid', '', 'list_accounts.php', 'contact', '<?= $_GET['pid']; ?>');
+  setup_autocomplete('account_name', 'account_hints', 'fid', '', 'list_accounts.php', 'contact', '<?php echo  $_GET['pid']; ?>');
 });
 </script>
                                         </div>
-<input type="hidden" name="fid" id="fid" value="<?=$fid;?>" />
+<input type="hidden" name="fid" id="fid" value="<?php echo $fid;?>" />
 
 <?php /*
     <select name="fid">
       <option value="">Any</option>
-      <?php $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees(); ?>
-      <?php while ($row = mysql_fetch_array($franchisees)) { ?>
-        <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
+      <?php 
+        $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees();
+        if ($franchisees) foreach ($franchisees as $row) {
+          $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
         <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['first_name']." ".$row['last_name']; ?></option>
       <?php } ?>
     </select>
@@ -303,7 +304,7 @@ $(document).ready(function(){
 
     <?php if (!empty($fid)) { ?>
       Patients:
-<input type="text" id="patient_name" onclick="updateval(this)" autocomplete="off" name="patient_name" value="<?= ($pid!='')?$patient_name:'Type patient name'; ?>" />
+<input type="text" id="patient_name" onclick="updateval(this)" autocomplete="off" name="patient_name" value="<?php echo  ($pid!='')?$patient_name:'Type patient name'; ?>" />
 
 <br />        <div id="patient_hints" class="search_hints" style="display:none;">
                 <ul id="patient_list" class="search_list">
@@ -311,16 +312,16 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('patient_name', 'patient_hints', 'pid', '', 'list_patients_search.php?fid=<?=$fid; ?>', 'patient', '<?= $_GET['pid']; ?>');
+  setup_autocomplete('patient_name', 'patient_hints', 'pid', '', 'list_patients_search.php?fid=<?php echo $fid; ?>', 'patient', '<?php echo  $_GET['pid']; ?>');
 });
 </script>
                                         </div>
-<input type="hidden" name="pid" id="pid" value="<?=$pid;?>" />
+<input type="hidden" name="pid" id="pid" value="<?php echo $pid;?>" />
 
       &nbsp;&nbsp;&nbsp;
       Insurance:
 
-<input type="text" id="insurance_name" onclick="updateval(this)" autocomplete="off" name="insurance_name" value="<?= ($iid!='')?$insurance_name:'Type contact name'; ?>" />
+<input type="text" id="insurance_name" onclick="updateval(this)" autocomplete="off" name="insurance_name" value="<?php echo  ($iid!='')?$insurance_name:'Type contact name'; ?>" />
 
 <br />        <div id="insurance_hints" class="search_hints" style="display:none;">
                 <ul id="insurance_list" class="search_list">
@@ -328,122 +329,120 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('insurance_name', 'insurance_hints', 'iid', '', 'list_insurance_search.php?fid=<?=$fid; ?>', 'insurance', '<?= $_GET['pid']; ?>');
+  setup_autocomplete('insurance_name', 'insurance_hints', 'iid', '', 'list_insurance_search.php?fid=<?php echo $fid; ?>', 'insurance', '<?php echo  $_GET['pid']; ?>');
 });
 </script>
                                         </div>
-<input type="hidden" name="iid" id="iid" value="<?=$iid;?>" />
+<input type="hidden" name="iid" id="iid" value="<?php echo $iid;?>" />
 
-<?php
-  }
+<?php   }
  ?>
     
-    <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
-    <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
+    <input type="hidden" name="sort_by" value="<?php echo $sort_by?>"/>
+    <input type="hidden" name="sort_dir" value="<?php echo $sort_dir?>"/>
     <input type="submit" value="Filter List" class="btn btn-primary">
-    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'" class="btn btn-primary">
+    <input type="button" value="Reset" onclick="window.location='<?php echo $_SERVER['PHP_SELF']?>'" class="btn btn-primary">
   </form>
 </div>
 
-<form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<form name="pagefrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php  if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
-			<?
+			<?php 
 				 paging($no_pages,$index_val,"fid=".$_GET['fid']."&pid=". $_GET['pid']."&status=". $_GET['status']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
 			?>
 		</TD>
 	</TR>
-	<? }?>
-	<?php
-    $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
+	<?php  }?>
+	<?php     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
              . "&status=" . $_REQUEST['status'] . "&sort_by=%s&sort_dir=%s";
     ?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Requested</a>
+		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
+			<a href="<?php echo sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Requested</a>
 		</td>
-                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_EDIT, $sort_dir) ?>" width="15%">
-                        <a href="<?=sprintf($sort_qs, SORT_BY_EDIT, get_sort_dir($sort_by, SORT_BY_EDIT, $sort_dir))?>">Last Edit</a>
+                <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_EDIT, $sort_dir) ?>" width="15%">
+                        <a href="<?php echo sprintf($sort_qs, SORT_BY_EDIT, get_sort_dir($sort_by, SORT_BY_EDIT, $sort_dir))?>">Last Edit</a>
                 </td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
+		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
+			<a href="<?php echo sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
+		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
+			<a href="<?php echo sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
-                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_INSURANCE, $sort_dir) ?>" width="20%">
-                        <a href="<?=sprintf($sort_qs, SORT_BY_INSURANCE, get_sort_dir($sort_by, SORT_BY_INSURANCE, $sort_dir))?>">Insurance</a>
+                <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_INSURANCE, $sort_dir) ?>" width="20%">
+                        <a href="<?php echo sprintf($sort_qs, SORT_BY_INSURANCE, get_sort_dir($sort_by, SORT_BY_INSURANCE, $sort_dir))?>">Insurance</a>
                 </td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="20%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
+		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="20%">
+			<a href="<?php echo sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
+		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
+			<a href="<?php echo sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
 		</td>
-                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
-                        <a href="<?=sprintf($sort_qs, SORT_BY_BC, get_sort_dir($sort_by, SORT_BY_BC, $sort_dir))?>">Billing Company</a>
+                <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
+                        <a href="<?php echo sprintf($sort_qs, SORT_BY_BC, get_sort_dir($sort_by, SORT_BY_BC, $sort_dir))?>">Billing Company</a>
                 </td>
 
 		<td valign="top" class="col_head" width="15%">
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php  if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="6" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php  
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 		?>
-			<tr class="<?= (isset($tr_class))?$tr_class:'';?>">
+			<tr class="<?php echo  (isset($tr_class))?$tr_class:'';?>">
 				<td valign="top">
-					<?=st($myarray["front_office_request_date"]);?>&nbsp;
+					<?php echo st($myarray["front_office_request_date"]);?>&nbsp;
 				</td>
                                 <td valign="top">
-                                        <?=st($myarray["updated_at"]);?>&nbsp;
+                                        <?php echo st($myarray["updated_at"]);?>&nbsp;
                                 </td>
 				<?php $status_color = ($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) ? "warning" : "success"; ?>
 				<?php $status_color = (($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
-				<td valign="top" class="<?= $status_color; ?>">
-					<?=st($dss_preauth_status_labels[$myarray["status"]]);?>&nbsp;
+				<td valign="top" class="<?php echo  $status_color; ?>">
+					<?php echo st($dss_preauth_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<a href="view_patient.php?pid=<?= $myarray['patient_id'];?>"><?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?> (View Chart)</a>
+					<a href="view_patient.php?pid=<?php echo  $myarray['patient_id'];?>"><?php echo st($myarray["patient_lastname"]);?>, <?php echo st($myarray["patient_firstname"]);?> (View Chart)</a>
 				</td>
 				<td valign="top">
-					<?=st($myarray["ins_co"]);?>&nbsp;
+					<?php echo st($myarray["ins_co"]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<a href="view_user.php?ed=<?= $myarray['doc_id']; ?>"><?=st($myarray["doc_name"]);?></a>&nbsp;
+					<a href="view_user.php?ed=<?php echo  $myarray['doc_id']; ?>"><?php echo st($myarray["doc_name"]);?></a>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["user_name"]);?>&nbsp;
+					<?php echo st($myarray["user_name"]);?>&nbsp;
 				</td>
                                 <td valign="top">
-                                        <?=st($myarray["billing_name"]);?>&nbsp;
+                                        <?php echo st($myarray["billing_name"]);?>&nbsp;
                                 </td>
 				<td valign="top">
 				    <?php $link_label = ($myarray["status"] == DSS_PREAUTH_PENDING) ? 'Edit' : 'View'; ?>
-					<a href="process_vob_page.php?ed=<?=$myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
-						<?= $link_label ?>
+					<a href="process_vob_page.php?ed=<?php echo $myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
+						<?php echo  $link_label ?>
 					 <span class="glyphicon glyphicon-pencil"></span></a>
-                                        <a href="manage_vobs.php?fid=<?=$myarray['doc_id']; ?>&pid=<?=$myarray["patient_id"];?>" title="Edit" class="btn btn-primary btn-sm">
-						History <?= ($myarray['total_vob']>1)?"(".$myarray['total_vob'].")":''; ?>
+                                        <a href="manage_vobs.php?fid=<?php echo $myarray['doc_id']; ?>&pid=<?php echo $myarray["patient_id"];?>" title="Edit" class="btn btn-primary btn-sm">
+						History <?php echo  ($myarray['total_vob']>1)?"(".$myarray['total_vob'].")":''; ?>
                                          </a>
 
 				</td>
 			</tr>
-	<? 	}
+	<?php  	}
 	}?>
 </table>
 </form>
@@ -456,4 +455,4 @@ $(document).ready(function(){
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php  include "includes/bottom.htm";?>

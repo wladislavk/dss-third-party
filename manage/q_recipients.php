@@ -302,16 +302,20 @@
 		$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);		
 		$sel_val = st($name);
 		if(st($pat_myarray['company']) <> '') {
-			$sel_val .= " ".st($pat_myarray['company']);
+			$sel_val .= "
+".st($pat_myarray['company']);
 		}
 		if(st($pat_myarray['add1']) <> '') {
-			$sel_val .= " ".st($pat_myarray['add1']);
+			$sel_val .= "
+".st($pat_myarray['add1']);
 		}
 		if(st($pat_myarray['add2']) <> '') {
-			$sel_val .= " ".st($pat_myarray['add2']);
+			$sel_val .= "
+".st($pat_myarray['add2']);
 		}
 		if(st($pat_myarray['city']) <> '') {
-			$sel_val .= " ".st($pat_myarray['city']);
+			$sel_val .= "
+".st($pat_myarray['city']);
 		}
 		if(st($pat_myarray['state']) <> '') {
 			$sel_val .= " ".st($pat_myarray['state']);

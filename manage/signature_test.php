@@ -1,6 +1,6 @@
 <?php
     if(isset($_POST['sign_but'])){
-        $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+        $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
         
         $r = $db->getRow($sql);
         if($_SESSION['docid'] != $_SESSION['userid'] && $r['manage_staff'] != 1) {
@@ -14,10 +14,10 @@
 
             $json = $_POST['output'];
             $s = "INSERT INTO dental_user_signatures SET
-                    signature_json='".mysql_real_escape_string($json)."',
-                    user_id='".mysql_real_escape_string($_SESSION['userid'])."',
+                    signature_json='".mysqli_real_escape_string($con,$json)."',
+                    user_id='".mysqli_real_escape_string($con,$_SESSION['userid'])."',
                     adddate=now(),
-                    ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
+                    ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
 
             $signature_id = $db->getInsertId($s);
             $img = sigJsonToImage($json);
@@ -41,7 +41,7 @@
     <br />
     <div class="fullwidth">
         <?php
-            $sign_sql = "SELECT * FROM dental_user_signatures WHERE user_id='".mysql_real_escape_string($_SESSION['userid'])."' ORDER BY adddate DESC LIMIT 1";
+            $sign_sql = "SELECT * FROM dental_user_signatures WHERE user_id='".mysqli_real_escape_string($con,$_SESSION['userid'])."' ORDER BY adddate DESC LIMIT 1";
 
             $sign = $db->getRow($sign_sql);
             if(file_exists('../../../shared/q_file/signature_'.$_SESSION['userid'].'_'.$sign['id'].'.png')) {

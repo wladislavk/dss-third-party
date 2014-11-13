@@ -2,48 +2,48 @@
     include 'includes/top.htm';
 
     if($_POST["profilesub"] == 1) {
-    	$ed_sql = "update dental_users set name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for($_POST["phone"])."' where userid='".$_POST["ed"]."'";
-    	
+        $ed_sql = "update dental_users set name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for($_POST["phone"])."' where userid='".$_POST["ed"]."'";
+        
         $db->query($ed_sql);
-    	$msg = "Edited Successfully";
+        $msg = "Edited Successfully";
 ?>
-    	<script type="text/javascript">
-    		window.location = "<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>";
-    	</script>
+        <script type="text/javascript">
+            window.location = "<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>";
+        </script>
 <?php
-	    die();
+        die();
     }
 
     $thesql = "select * from dental_users where userid='".$_SESSION["userid"]."'";
 
     $themyarray = $db->getRow($thesql);
     if($msg != '') {
-    	$username = $_POST['username'];
-    	$password = $_POST['password'];
-    	$name = $_POST['name'];
-    	$email = $_POST['email'];
-    	$address = $_POST['address'];
-    	$phone = $_POST['phone'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $address = $_POST['address'];
+        $phone = $_POST['phone'];
     } else {
-    	$username = st($themyarray['username']);
-    	$password = st($themyarray['password']);
-    	$name = st($themyarray['name']);
-    	$email = st($themyarray['email']);
-    	$address = st($themyarray['address']);
-    	$phone = st($themyarray['phone']);
-    	$but_text = "Add ";
+        $username = st($themyarray['username']);
+        $password = st($themyarray['password']);
+        $name = st($themyarray['name']);
+        $email = st($themyarray['email']);
+        $address = st($themyarray['address']);
+        $phone = st($themyarray['phone']);
+        $but_text = "Add ";
     }
 
     if($themyarray["userid"] != '') {
-    	$but_text = "Edit ";
+        $but_text = "Edit ";
     } else {
-    	$but_text = "Add ";
+        $but_text = "Add ";
     }
 ?>
 
     <br />
     <span class="admin_head">
-    	Profile
+        Profile
     </span>
     <br /><br />
 
@@ -111,7 +111,7 @@
             <tr>
                 <td colspan="2" align="center">
                     <span class="red">
-                        * Required Fields					
+                        * Required Fields                   
                     </span><br />
                     <input type="hidden" name="profilesub" value="1" />
                     <input type="hidden" name="ed" value="<?php echo $themyarray["userid"]?>" />

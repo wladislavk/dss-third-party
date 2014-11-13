@@ -1,3 +1,5 @@
+<?php include_once('admin/includes/main_include.php'); ?>
+
 <?php
     if($office_type == DSS_OFFICE_TYPE_BACK) {
         $s = "SELECT i.insuranceid, i.mailed_date, l.service_date, p.patientid, p.firstname, p.lastname, i.total_charge,
@@ -20,7 +22,7 @@
               ";
 
         if(isset($_GET['fid'])){
-            $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+            $s .= " AND p.docid='".mysqli_real_escape_string($con, $_GET['fid'])."' ";
         }
         if(isset($_GET['bc'])){
             $s .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
@@ -30,15 +32,15 @@
         }
 
         if(is_software($_SESSION['admin_access'])){
-            $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
+            $s .= " AND uc.companyid='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."' ";
         }
         if(is_billing($_SESSION['admin_access'])){
             $a_sql = "SELECT ac.companyid FROM admin_company ac
                       JOIN admin a ON a.adminid = ac.adminid
-                      WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+                      WHERE a.adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'";
 
             $admin = $db->getRow($a_sql);
-            $s .= " AND u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."' ";
+            $s .= " AND u.billing_company_id='".mysqli_real_escape_string($con, $admin['companyid'])."' ";
         }
     } else {
         $s = "SELECT i.insuranceid, i.mailed_date, l.service_date, p.patientid, p.firstname, p.lastname, i.total_charge,
@@ -85,7 +87,7 @@
               ";
 
         if(isset($_GET['fid'])){
-            $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+            $s .= " AND p.docid='".mysqli_real_escape_string($con, $_GET['fid'])."' ";
         }
         if(isset($_GET['bc'])){
             $s .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
@@ -95,15 +97,15 @@
         }
 
         if(is_software($_SESSION['admin_access'])){
-            $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
+            $s .= " AND uc.companyid='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."' ";
         }
         if(is_billing($_SESSION['admin_access'])){
             $a_sql = "SELECT ac.companyid FROM admin_company ac
                       JOIN admin a ON a.adminid = ac.adminid
-                      WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+                      WHERE a.adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'";
             
             $admin = $db->getRow($a_sql);
-            $s .= " AND u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."' ";
+            $s .= " AND u.billing_company_id='".mysqli_real_escape_string($con, $admin['companyid'])."' ";
         }
     } else {
         $s = "SELECT i.insuranceid, i.mailed_date, l.service_date, p.patientid, p.firstname, p.lastname, i.total_charge,
@@ -152,7 +154,7 @@
               ";
 
         if(isset($_GET['fid'])){
-            $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+            $s .= " AND p.docid='".mysqli_real_escape_string($con, $_GET['fid'])."' ";
         }
         if(isset($_GET['bc'])){
             $s .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
@@ -162,15 +164,15 @@
         }
 
         if(is_software($_SESSION['admin_access'])){
-            $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
+            $s .= " AND uc.companyid='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."' ";
         }
         if(is_billing($_SESSION['admin_access'])){
             $a_sql = "SELECT ac.companyid FROM admin_company ac
                       JOIN admin a ON a.adminid = ac.adminid
-                      WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+                      WHERE a.adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'";
 
             $admin = $db->getRow($a_sql);
-            $s .= " AND u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."' ";
+            $s .= " AND u.billing_company_id='".mysqli_real_escape_string($con, $admin['companyid'])."' ";
         }
     } else {
         $s = "SELECT i.insuranceid, i.mailed_date, l.service_date, p.patientid, p.firstname, p.lastname, i.total_charge,
@@ -219,7 +221,7 @@
               ";
 
         if(isset($_GET['fid'])){
-            $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+            $s .= " AND p.docid='".mysqli_real_escape_string($con, $_GET['fid'])."' ";
         }
         if(isset($_GET['bc'])){
             $s .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
@@ -229,15 +231,15 @@
         }
 
         if(is_software($_SESSION['admin_access'])){
-            $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
+            $s .= " AND uc.companyid='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."' ";
         }
         if(is_billing($_SESSION['admin_access'])){
             $a_sql = "SELECT ac.companyid FROM admin_company ac
                       JOIN admin a ON a.adminid = ac.adminid
-                      WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+                      WHERE a.adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'";
             
             $admin = $db->getRow($a_sql);
-            $s .= " AND u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."' ";
+            $s .= " AND u.billing_company_id='".mysqli_real_escape_string($con, $admin['companyid'])."' ";
         }
     } else {
         $s = "SELECT i.insuranceid, i.mailed_date, l.service_date, p.patientid, p.firstname, p.lastname, i.total_charge,
@@ -286,7 +288,7 @@
                 l.primary_claim_id=i.insuranceid),0))>0
               ";
         if(isset($_GET['fid'])){
-            $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+            $s .= " AND p.docid='".mysqli_real_escape_string($con, $_GET['fid'])."' ";
         }
         if(isset($_GET['bc'])){
             $s .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
@@ -296,15 +298,15 @@
         }
 
         if(is_software($_SESSION['admin_access'])){
-            $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
+            $s .= " AND uc.companyid='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."' ";
         }
         if(is_billing($_SESSION['admin_access'])){
             $a_sql = "SELECT ac.companyid FROM admin_company ac
                       JOIN admin a ON a.adminid = ac.adminid
-                      WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+                      WHERE a.adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'";
 
             $admin = $db->getRow($a_sql);
-            $s .= " AND u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."' ";
+            $s .= " AND u.billing_company_id='".mysqli_real_escape_string($con, $admin['companyid'])."' ";
         }
     } else {
         $s = "SELECT i.insuranceid, i.mailed_date, l.service_date, p.patientid, p.firstname, p.lastname, i.total_charge,

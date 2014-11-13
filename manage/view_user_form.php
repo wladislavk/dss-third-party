@@ -8,7 +8,7 @@
     if($_GET['did']==$_SESSION['docid']) {
         $loc = (isset($_GET['locid']))?$_GET['locid'].'_':'';
         $filename = "../../../shared/q_file/".$_GET['file']."_".$loc.$_GET['did'].".pdf";
-        $sql = "SELECT updated_at FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+        $sql = "SELECT updated_at FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 
         $r = $db->getRow($sql);
         if(date('U', strtotime($r['updated_at'])) > filemtime($filename)){

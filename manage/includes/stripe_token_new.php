@@ -16,7 +16,7 @@
     $cvc = $_REQUEST['cvc'];
     $zip = $_REQUEST['zip'];
 
-    $key_sql = "SELECT stripe_secret_key FROM companies WHERE id='".mysql_real_escape_string($companyid)."'";
+    $key_sql = "SELECT stripe_secret_key FROM companies WHERE id='".mysqli_real_escape_string($con,$companyid)."'";
     
     $key_r = $db->getRow($key_sql);
 
@@ -83,8 +83,8 @@
     //  "customer" => $customer->id)
     //);
 
-    $sql = "UPDATE dental_users SET cc_id='".mysql_real_escape_string($customer->id)."'
-	 	    WHERE userid='".mysql_real_escape_string($id)."'";
+    $sql = "UPDATE dental_users SET cc_id='".mysqli_real_escape_string($con,$customer->id)."'
+	 	    WHERE userid='".mysqli_real_escape_string($con,$id)."'";
 
     $db->query($sql);
     echo '{"success": true}';

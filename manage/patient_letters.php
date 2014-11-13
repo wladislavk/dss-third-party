@@ -128,7 +128,7 @@
         $filter = "%";
 
         if (isset($_GET['filter'])) {
-            $filter = mysql_real_escape_string($_GET['filter']);
+            $filter = mysqli_real_escape_string($con,$_GET['filter']);
         }
 
         if(!isset($_REQUEST['sort'])){
@@ -154,7 +154,7 @@
         
         $letters_res = $db->getResults($letters_query);
         if (!$letters_res) {
-        	print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
+        	print "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_errno($con)."<br/>"."Error selecting letters from the database.";
         } else {
         	foreach ($letters_res as $row) {
         		$dental_letters[] = $row;
@@ -180,7 +180,7 @@
         	}
 
 	        // Get Recipients for Sent to Column
-            $s = "SELECT referred_source FROM dental_patients where patientid=".mysql_real_escape_string($letter['patientid'])." LIMIT 1";
+            $s = "SELECT referred_source FROM dental_patients where patientid=".mysqli_real_escape_string($con,$letter['patientid'])." LIMIT 1";
 
             $r = $db->getRow($s);
             $source = $r['referred_source'];

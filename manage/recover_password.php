@@ -20,8 +20,8 @@
             </td>
         </tr>
         <tr>
-	       <td valign='top' height="400">
-	            <div style="float:right;margin-right:20px;margin-top:8px;">
+         <td valign='top' height="400">
+              <div style="float:right;margin-right:20px;margin-top:8px;">
                     <div style="text-align:center; float:left;width:50px; color:#00457c; padding-right:20px;">
                         <a style="color:#00457c;text-decoration:none;" href="index.php" target="_self">
                             <img border="0" src="images/homeIcon.png"><br />Home</a>
@@ -51,37 +51,37 @@
                 <div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
                 <div style="clear:both;"></div>
                 <?php
-                	if($_POST['recoversub']==1) {
-                		if($_POST['password1']==$_POST['password2']) {
-                			$salt = create_salt();
+                  if($_POST['recoversub']==1) {
+                    if($_POST['password1']==$_POST['password2']) {
+                      $salt = create_salt();
                             $pass = gen_password($_POST['password1'], $salt);
-			                $up_sql = "UPDATE dental_users SET password='".mysql_real_escape_string($pass)."', salt='".$salt."', recover_hash='' WHERE userid='".mysql_real_escape_string($_POST['userid'])."' AND recover_hash='".mysql_real_escape_string($_POST['hash'])."'";
-			                
+                      $up_sql = "UPDATE dental_users SET password='".mysqli_real_escape_string($con, $pass)."', salt='".$salt."', recover_hash='' WHERE userid='".mysqli_real_escape_string($con, $_POST['userid'])."' AND recover_hash='".mysqli_real_escape_string($con, $_POST['hash'])."'";
+                      
                             $db->query($up_sql);
-			    ?>
+          ?>
                             <script type="text/javascript">
                                     window.location.replace('login.php?msg=Password reset');
                             </script>
                 <?php
-		                }
-	                }
+                    }
+                  }
 
-                	$check_sql = "SELECT userid FROM dental_users WHERE username='".mysql_real_escape_string($_GET['un'])."' AND recover_hash='".mysql_real_escape_string($_GET['rh'])."' AND recover_time>DATE_SUB(NOW(), INTERVAL 1 HOUR)";
-                	
+                  $check_sql = "SELECT userid FROM dental_users WHERE username='".mysqli_real_escape_string($con, $_GET['un'])."' AND recover_hash='".mysqli_real_escape_string($con, $_GET['rh'])."' AND recover_time>DATE_SUB(NOW(), INTERVAL 1 HOUR)";
+                  
                     $check_my = $db->getResults($check_sql);
-                	if(count($check_my) == 1) {
-		                $check_myarray = $check_my[0];
-	                } else {
-		                $msg = 'Unable to find user.';
-		        ?>
-                		<script type="text/javascript">
-                			window.location.replace('forgot_password.php?msg=<?php echo $msg;?>');
-                		</script>
-		        <?php } ?>
+                  if(count($check_my) == 1) {
+                    $check_myarray = $check_my[0];
+                  } else {
+                    $msg = 'Unable to find user.';
+            ?>
+                    <script type="text/javascript">
+                      window.location.replace('forgot_password.php?msg=<?php echo $msg;?>');
+                    </script>
+            <?php } ?>
 
                     <br />
                     <span class="admin_head">
-                    	Reset Password
+                      Reset Password
                     </span>
                     <br /><br />
 
@@ -93,17 +93,17 @@
                                 <tr bgcolor="#FFFFFF">
                                     <td colspan="2" >
                                         <span class="red">
-                        					<?php echo $_GET['msg'];?>
+                                  <?php echo $_GET['msg'];?>
                                         </span>
                                     </td>
                                 </tr>
                             <?php } ?>
                             <tr bgcolor="#FFFFFF">
                                 <td class="t_data">
-                                	Password	
+                                  Password  
                                 </td>
                                 <td class="t_data">
-                                	<input type="password" name="password1">
+                                  <input type="password" name="password1">
                                 </td>
                             </tr>
                             <tr bgcolor="#FFFFFF">

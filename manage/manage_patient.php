@@ -150,7 +150,7 @@ elseif($_GET['sh'] == 3)
 	$sql .= " AND p.status = 2";
 }
 if(isset($_GET['letter'])){
-	$sql .= " AND p.lastname LIKE '".mysql_real_escape_string($_GET['letter'])."%' ";
+	$sql .= " AND p.lastname LIKE '".mysqli_real_escape_string($con, $_GET['letter'])."%' ";
 }
 if(isset($_REQUEST['sort'])){
 	if ($_REQUEST['sort'] == 'lastname') {
@@ -309,7 +309,7 @@ if(isset($_GET['msg'])){
 			}
 
 			$summ_sql = "SELECT s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment, s.vob, s.ledger, s.patient_info
-					FROM dental_patient_summary s WHERE s.pid='".mysql_real_escape_string($myarray["patientid"])."' LIMIT 1";
+					FROM dental_patient_summary s WHERE s.pid='".mysqli_real_escape_string($con, $myarray["patientid"])."' LIMIT 1";
 			$summ = $db->getRow($summ_sql);
 ?>
 	<tr class="<?php echo $tr_class;?> initial_list">
@@ -320,7 +320,7 @@ if(isset($_GET['msg'])){
 									' . st($myarray["firstname"]) . '&nbsp;
 									' . (!empty($myarray["middlename"]) ? st($myarray["middlename"]) : "") . '</a>';
 
-				$sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid=".mysql_real_escape_string($myarray['patientid']);
+				$sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid=".mysqli_real_escape_string($con, $myarray['patientid']);
 				$myq3array = $db->getRow($sqlq3);
 
 				$allergen = $myq3array['allergenscheck'];
@@ -332,17 +332,17 @@ if(isset($_GET['msg'])){
 		</td>
 		<?php 
 			if($summ['patient_info'] == 1){ 
-				$lc_sql = "SELECT pg2_info.date_completed, pg2_info.segmentid FROM dental_flow_pg2_info pg2_info WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = '".mysql_real_escape_string($myarray['patientid'])."' ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC LIMIT 1";
+				$lc_sql = "SELECT pg2_info.date_completed, pg2_info.segmentid FROM dental_flow_pg2_info pg2_info WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = '".mysqli_real_escape_string($con, $myarray['patientid'])."' ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC LIMIT 1";
 				$lc = $db->getRow($lc_sql);
 				$last_completed = $lc['date_completed'];
 				$last_segmentid = $lc['segmentid']; 
 
-				$ns_sql = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid= '".mysql_real_escape_string($myarray['patientid'])."' LIMIT 1";
+				$ns_sql = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid= '".mysqli_real_escape_string($con, $myarray['patientid'])."' LIMIT 1";
 				$ns = $db->getRow($ns_sql);
 
 				$next_scheduled = $ns['date_scheduled'];
 
-				$ex_sql = "SELECT dentaldevice, dentaldevice_date FROM dental_ex_page5 WHERE patientid= '".mysql_real_escape_string($myarray['patientid'])."' LIMIT 1";
+				$ex_sql = "SELECT dentaldevice, dentaldevice_date FROM dental_ex_page5 WHERE patientid= '".mysqli_real_escape_string($con, $myarray['patientid'])."' LIMIT 1";
 				        $ex = $db->getRow($ex_sql);
 				        $delivery_date = $ex['dentaldevice_date'];
 

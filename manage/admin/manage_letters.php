@@ -129,9 +129,9 @@ $column = 'letterid';
 $filter = "%";
 if (isset($_GET['status'])) { $status = $_GET['status']; }
 if (isset($_GET['page'])) { $page = $_GET['page']; }
-//if (isset($_GET['sort'])) { $sort = mysql_real_escape_string($_GET['sort']); }
-//if (isset($_GET['column'])) { $column = mysql_real_escape_string($_GET['column']); }
-if (isset($_GET['filter'])) { $filter = mysql_real_escape_string($_GET['filter']); }
+//if (isset($_GET['sort'])) { $sort = mysqli_real_escape_string($con,$_GET['sort']); }
+//if (isset($_GET['column'])) { $column = mysqli_real_escape_string($con,$_GET['column']); }
+if (isset($_GET['filter'])) { $filter = mysqli_real_escape_string($con,$_GET['filter']); }
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 $doc_filter = '';
 if(!empty($_REQUEST['fid'])) {
@@ -155,9 +155,9 @@ $sortdir = $_REQUEST['sortdir'];
 // Letters count and Oldest letter
 //$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' ORDER BY generated_date ASC;";
 $dental_letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.pat_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters, mailed_date FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ".$doc_filter." ORDER BY dental_letters.letterid ASC;";
-$dental_letters_res = mysql_query($dental_letters_query);
+$dental_letters_res = mysqli_query($con,$dental_letters_query);
 $pending_letters = mysql_num_rows($dental_letters_res);
-$generated_date = mysql_fetch_array($dental_letters_res);
+$generated_date = mysqli_fetch_array($dental_letters_res);
 $seconds_per_day = 86400;
 if($generated_date){
 $oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day);
@@ -220,7 +220,7 @@ if ($status == 'pending') {
         JOIN dental_user_company uc ON uc.userid = dental_letters.docid
         JOIN dental_users u ON u.userid = dental_letters.docid
         LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
-                WHERE u.billing_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."' AND
+                WHERE u.billing_company_id='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' AND
                         ((dental_letters.status = '1' AND dental_letters.delivered=0) 
                                         OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
                                 ) AND
@@ -253,7 +253,7 @@ if ($status == 'pending') {
 	JOIN dental_user_company uc ON uc.userid = dental_letters.docid
 	JOIN dental_users u ON u.userid = dental_letters.docid
 	LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
-		WHERE uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' AND
+		WHERE uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' AND
 			((dental_letters.status = '1' AND dental_letters.delivered=0) 
                                         OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
                                 ) AND
@@ -263,11 +263,11 @@ if ($status == 'pending') {
 		ORDER BY dental_letters.letterid ASC;";
 
   }
-  $letters_res = mysql_query($letters_query);
+  $letters_res = mysqli_query($con,$letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
   } else {
-    while ($row = mysql_fetch_assoc($letters_res)) {
+    while ($row = mysqli_fetch_assoc($letters_res)) {
       $dental_letters[] = $row;
     }
   }
@@ -302,11 +302,11 @@ LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid
   }else{
 
   }
-  $letters_res = mysql_query($letters_query);
+  $letters_res = mysqli_query($con,$letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
   } else {
-    while ($row = mysql_fetch_assoc($letters_res)) {
+    while ($row = mysqli_fetch_assoc($letters_res)) {
       $dental_letters[] = $row;
     }
   }
@@ -335,11 +335,11 @@ foreach ($dental_letters as $key => $letter) {
   $dental_letters[$key]['status'] = $letter['status'];
   $dental_letters[$key]['date_sent'] = $letter['date_sent'];
   $franchisee_query = "SELECT dental_users.name FROM dental_users WHERE userid='".$letter['docid']."'";
-  $result = mysql_query($franchisee_query);
+  $result = mysqli_query($con,$franchisee_query);
   $dental_letters[$key]['franchisee'] = mysql_result($result, 0);
 	// Get Username
 	$username_query = "SELECT name from dental_users WHERE userid = '" . $letter['userid'] . "';";
-	$username_result = mysql_query($username_query);
+	$username_result = mysqli_query($con,$username_query);
 	$dental_letters[$key]['username'] = mysql_result($username_result, 0);
   // Get Correspondance Column
   if($letter['template_type']=='0'){
@@ -347,9 +347,9 @@ foreach ($dental_letters as $key => $letter) {
   }else{
     $template_sql = "SELECT name FROM dental_letter_templates_custom WHERE id = '".$letter['templateid']."';";
   }
-  $template_res = mysql_query($template_sql);
+  $template_res = mysqli_query($con,$template_sql);
   $correspondance = array();
-  $correspondance = mysql_fetch_assoc($template_res);
+  $correspondance = mysqli_fetch_assoc($template_res);
 	if (!empty($letter['pdf_path'])) {
     $dental_letters[$key]['url'] = "/manage/letterpdfs/" . $letter['pdf_path'];
     $dental_letters[$key]['url_target'] = "_blank";
@@ -503,13 +503,12 @@ color: white;
 <div class="letters-tryptych1">
   <h1 class="blue"><?php echo ($status == 'pending') ? "Pending" : "Sent" ?> Letters (<?php echo count($dental_letters); ?>)</h1>
   <form name="filter_letters" action="/manage/admin/manage_letters.php" method="get">
-		<input type="hidden" name="status" value="<?=$status?>" />
+		<input type="hidden" name="status" value="<?php echo $status?>" />
   Filter by type: <select name="filter"> <!-- onchange="document.filter_letters.submit();">-->
     <option value="%"></option>
-    <?php
-    $templates = "SELECT id, name FROM dental_letter_templates ORDER BY id ASC;";
-    $result = mysql_query($templates);
-    while ($row = mysql_fetch_assoc($result)) {
+    <?php     $templates = "SELECT id, name FROM dental_letter_templates ORDER BY id ASC;";
+    $result = mysqli_query($con,$templates);
+    while ($row = mysqli_fetch_assoc($result)) {
       print "<option " . (($filter == $row['id']) ? "selected " : "") . "value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
     }
     ?>
@@ -517,10 +516,11 @@ color: white;
     Account:
     <select name="fid">
       <option value="">Any</option>
-      <?php $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees(); ?>
-      <?php while ($row = mysql_fetch_array($franchisees)) { ?>
-        <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
-        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['first_name'] ?> <?= $row['last_name'] ?></option>
+      <?php 
+        $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees();
+        if ($franchisees) foreach ($franchisees as $row) {
+          $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
+        <option value="<?php echo  $row['userid'] ?>" <?php echo  $selected ?>>[<?php echo  $row['userid'] ?>] <?php echo  $row['first_name'] ?> <?php echo  $row['last_name'] ?></option>
       <?php } ?>
     </select>
     &nbsp;&nbsp;&nbsp;
@@ -530,17 +530,17 @@ color: white;
       <select name="pid">
         <option value="">Any</option>
         <?php $patients = get_patients($_REQUEST['fid']); ?>
-        <?php while ($row = mysql_fetch_array($patients)) { ?>
+        <?php while ($row = mysqli_fetch_array($patients)) { ?>
           <?php $selected = ($row['patientid'] == $_REQUEST['pid']) ? 'selected' : ''; ?>
-          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['lastname'] ?>, <?= $row['firstname'] ?></option>
+          <option value="<?php echo  $row['patientid'] ?>" <?php echo  $selected ?>>[<?php echo  $row['patientid'] ?>] <?php echo  $row['lastname'] ?>, <?php echo  $row['firstname'] ?></option>
         <?php } ?>
       </select>
       &nbsp;&nbsp;&nbsp;
     <?php } ?>
-    <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
-    <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
+    <input type="hidden" name="sort_by" value="<?php echo $sort_by?>"/>
+    <input type="hidden" name="sort_dir" value="<?php echo $sort_dir?>"/>
     <input type="submit" value="Filter List" class="btn btn-primary">
-    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'" class="btn btn-primary">
+    <input type="button" value="Reset" onclick="window.location='<?php echo $_SERVER['PHP_SELF']?>'" class="btn btn-primary">
   </form>
 </div>
 <div class="letters-tryptych2">
@@ -567,19 +567,18 @@ color: white;
 <div style="clear:both;">
 <table id="letters-table" class="table table-bordered table-hover">
   <tr class="tr_bg_h">
-    <td class="col_head <?= ($_REQUEST['sort'] == 'franchisee')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=franchisee&sortdir=<?php echo ($_REQUEST['sort']=='franchisee'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Account</a></td>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Username</a></td>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'date_sent')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=date_sent&sortdir=<?php echo ($_REQUEST['sort']=='date_sent'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Received</a></td>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=delivery_date&sortdir=<?php echo ($_REQUEST['sort']=='delivery_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent On</a></td>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient Name</a></td>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a></td>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></td>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'send_method')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=send_method&sortdir=<?php echo ($_REQUEST['sort']=='send_method'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Method</a></td>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></td>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'mailed')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=mailed&sortdir=<?php echo ($_REQUEST['sort']=='mailed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Mailed</a></td>
+    <td class="col_head <?php echo  ($_REQUEST['sort'] == 'franchisee')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=franchisee&sortdir=<?php echo ($_REQUEST['sort']=='franchisee'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Account</a></td>
+    <td class="col_head <?php echo  ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Username</a></td>
+    <td class="col_head <?php echo  ($_REQUEST['sort'] == 'date_sent')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=date_sent&sortdir=<?php echo ($_REQUEST['sort']=='date_sent'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Received</a></td>
+    <td class="col_head <?php echo  ($_REQUEST['sort'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=delivery_date&sortdir=<?php echo ($_REQUEST['sort']=='delivery_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent On</a></td>
+    <td class="col_head <?php echo  ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient Name</a></td>
+    <td class="col_head <?php echo  ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a></td>
+    <td class="col_head <?php echo  ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></td>
+    <td class="col_head <?php echo  ($_REQUEST['sort'] == 'send_method')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=send_method&sortdir=<?php echo ($_REQUEST['sort']=='send_method'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Method</a></td>
+    <td class="col_head <?php echo  ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></td>
+    <td class="col_head <?php echo  ($_REQUEST['sort'] == 'mailed')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=mailed&sortdir=<?php echo ($_REQUEST['sort']=='mailed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Mailed</a></td>
   </tr>
-<?php
-  $i = $page_limit * $page;
+<?php   $i = $page_limit * $page;
   $end = $i + $page_limit;
   while ($i < count($dental_letters) && $i < $end) {
     //print $dental_letters[$i]['templateid']; print "<br />";
@@ -604,14 +603,12 @@ color: white;
     }
     
     print "<tr><td>$franchisee</td><td>$username</td>"."<td$bgcolor>$received</td><td$bgcolor>$delivered</td><td>$name</td><td><a href=\"$url\" target=\"$url_target\">$subject</a></td><td>$sentto</td><td>$method</td><td>$generated</td>";
-?><td><?php
-    if($delivered || $mailed != ''){ ?>
-      <input type="checkbox" class="mailed_chk" value="<?= $id; ?>" <?= ($mailed !='')?'checked="checked"':''; ?> />
+?><td><?php     if($delivered || $mailed != ''){ ?>
+      <input type="checkbox" class="mailed_chk" value="<?php echo  $id; ?>" <?php echo  ($mailed !='')?'checked="checked"':''; ?> />
     <?php } ?> 
 	</td>
     </tr>
-    <?php
-    $i++;
+    <?php     $i++;
   }
 ?>
 </table>

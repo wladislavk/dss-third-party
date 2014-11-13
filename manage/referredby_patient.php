@@ -35,7 +35,7 @@
 			Patient
 		<?php } elseif($_GET['rsource'] == DSS_REFERRED_PHYSICIAN) {
 			$c_sql = "SELECT contacttype FROM dental_contacttype
-					  WHERE contacttypeid='".mysql_real_escape_string($ref_myarray['contacttypeid'])."'";
+					  WHERE contacttypeid='".mysqli_real_escape_string($con, $ref_myarray['contacttypeid'])."'";
 			
 			$c_r = $db->getRow($c_sql);
 			echo $c_r['contacttype'];

@@ -33,7 +33,7 @@
 
 		// Create Filename
 		if(isset($_POST['deletestudy'])&&isset($_POST['sleepstudyid'])){
-			$s = "DELETE FROM dental_sleepstudy where id=".mysql_real_escape_string($_POST['sleepstudyid'])." AND patientid=".mysql_real_escape_string($_POST['patientid']); 
+			$s = "DELETE FROM dental_sleepstudy where id=".mysqli_real_escape_string($con,$_POST['sleepstudyid'])." AND patientid=".mysqli_real_escape_string($con,$_POST['patientid']); 
 			
 			$db->query($s);
 		}
@@ -88,10 +88,11 @@
 			$insslquery = "INSERT INTO `dental_sleepstudy` (`id`,`testnumber`,`docid`,`patientid`,`needed`,`scheddate`,`sleeplabwheresched`,`completed`,`interpolation`,`labtype`,`copyreqdate`,`sleeplab`,`date`) VALUES (NULL,'".$random."','".$docid."','".$_POST['patientid']."','".$needed."','".$scheddate."','".$sleeplabwheresched."','".$completed."','".$interpolation."','".$labtype."','".$copyreqdate."','".$sleeplab."','".$date."');";
 			//echo $insslquery;
 
-			if (!$db->query($insslquery)){
+			$sleepstudyid = $db->getInsertId($insslquery);
+
+			if (!$sleepstudyid){
 				echo "Could not add sleep lab, please try again!";
 			} else {
-				$sleepstudyid = mysql_insert_id();
 				$inserted = true;
 			}
 		}
@@ -122,9 +123,9 @@
 					  			// Delete previous file if updating, then add reference to filename in database
 								if ($updated) {
 									$prevfile_qry = "SELECT filename, scanext FROM dental_sleepstudy WHERE `id` = '".$_POST['sleepstudyid']."' and `patientid` = '".$patientid."';";
-									$prevfile_result = mysql_query($prevfile_qry);
-									$prev_filename = mysql_result($prevfile_result, 0, 0);
-									$prev_scanext = mysql_result($prevfile_result, 0, 1);
+									$prevfile_result = $db->getRow($prevfile_qry);
+									$prev_filename = $prevfile_result['filename'];
+									$prev_scanext = $prevfile_result['scanext'];
 									unlink("../../../shared/q_file/" . $prev_filename . "." . $prev_scanext);
 								}
 								$filequery = "filename = '".$filename."', scanext = '".$scanext."'";
@@ -186,8 +187,8 @@
 		
 		<?php 
 			$sleepstudyquery = "SELECT COUNT(id) FROM dental_sleepstudy WHERE docid=".$_SESSION['docid']." AND patientid='".$_GET['pid']."' ORDER BY id DESC;";
-			$sleepstudyres = mysql_query($sleepstudyquery);
-			$i = mysql_result($sleepstudyres, 0) + 1;
+			$sleepstudyres = $db->getRow($sleepstudyquery);
+			$i = $sleepstudyres['COUNT(id)'] + 1;
 			$calendar_vars = array();
 			$calendar_vars[$i]['scheddate_id'] = "sleepsched$i";
 			$calendar_vars[$i]['copyreqdate_id'] = "copyreqdate$i" 
@@ -294,7 +295,7 @@
 				foreach ($sleepstudyres as $sleepstudy){
 					$sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
 					
-					$sleeplabres = mysql_query($sleeplabquery);
+					$sleeplabres = $db->query($sleeplabquery);
 					$calendar_vars[$i]['scheddate_id'] = "scheddate$i";
 					$calendar_vars[$i]['copyreqdate_id'] = "copyreqdate$i"
  		?>

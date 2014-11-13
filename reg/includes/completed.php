@@ -1,5 +1,11 @@
 <?php
-	$s = "SELECT last_reg_sect FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con,$_SESSION['pid'])."' OR patientid='".mysqli_real_escape_string($con,$_SESSION['pid'])."' ORDER BY last_reg_sect DESC";
+	if (!empty($_SESSION['pid'])) {
+		$pid = $_SESSION['pid'];
+	} else {
+		$pid = '';
+	}
+
+	$s = "SELECT last_reg_sect FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con,$pid)."' OR patientid='".mysqli_real_escape_string($con,$pid)."' ORDER BY last_reg_sect DESC";
 	
 	$r = $db->getRow($s);
 	if($r['last_reg_sect'] >= 5) {
@@ -8,16 +14,16 @@
 		$qp = 0;
 	}
 
-	$s = "SELECT * FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,$_SESSION['pid'])."' OR parent_patientid='".mysqli_real_escape_string($con,$_SESSION['pid'])."'";
+	$s = "SELECT * FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,$pid)."' OR parent_patientid='".mysqli_real_escape_string($con,$pid)."'";
 	
 	$q1 = ($db->getNumberRows($s) > 0)?1:0;
-	$s = "SELECT * FROM dental_q_sleep WHERE patientid='".mysqli_real_escape_string($con,$_SESSION['pid'])."' OR parent_patientid='".mysqli_real_escape_string($con,$_SESSION['pid'])."'";
+	$s = "SELECT * FROM dental_q_sleep WHERE patientid='".mysqli_real_escape_string($con,$pid)."' OR parent_patientid='".mysqli_real_escape_string($con,$pid)."'";
 	
 	$qs = ($db->getNumberRows($s) > 0)?1:0;
-	$s = "SELECT * FROM dental_q_page2 WHERE patientid='".mysqli_real_escape_string($con,$_SESSION['pid'])."' OR parent_patientid='".mysqli_real_escape_string($con,$_SESSION['pid'])."'";
+	$s = "SELECT * FROM dental_q_page2 WHERE patientid='".mysqli_real_escape_string($con,$pid)."' OR parent_patientid='".mysqli_real_escape_string($con,$pid)."'";
 
 	$q2 = ($db->getNumberRows($s) > 0)?1:0;
-	$s = "SELECT * FROM dental_q_page3 WHERE patientid='".mysqli_real_escape_string($con,$_SESSION['pid'])."' OR parent_patientid='".mysqli_real_escape_string($con,$_SESSION['pid'])."'";
+	$s = "SELECT * FROM dental_q_page3 WHERE patientid='".mysqli_real_escape_string($con,$pid)."' OR parent_patientid='".mysqli_real_escape_string($con,$pid)."'";
 
 	$q3 = ($db->getNumberRows($s) > 0)?1:0;
 

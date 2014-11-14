@@ -3,7 +3,7 @@
 	include("includes/sescheck.php");
 	include_once 'includes/claim_functions.php';
 
-	$sql = "SELECT * FROM dental_ledger_payment WHERE id='".$_POST['id']."' ;";
+	$sql = "SELECT * FROM dental_ledger_payment WHERE id='".(!empty($_POST['id']) ? $_POST['id'] : '')."' ;";
 	
 	$p_sql = $db->getResults($sql);
 	if ($p_sql) foreach ($p_sql as $p) {

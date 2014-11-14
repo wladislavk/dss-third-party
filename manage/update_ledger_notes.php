@@ -9,9 +9,12 @@
 
 	<body>
 		<?php
+			if (!isset($sqlinsertqry)) {
+				$sqlinsertqry = '';
+			}
 			$sqlinsertqry .= "UPDATE `dental_ledger_note` SET "; 
-			$private = ($_POST['private'])?1:0;
-			$sqlinsertqry .= "service_date = '".date('Y-m-d', strtotime($_POST['entry_date']))."', entry_date = '".date('Y-m-d', strtotime($_POST['entry_date']))."', note = '".$_POST['note']."', private = '".$private."', producerid = '".$_POST['producer']."' WHERE id=".$_POST['id'];
+			$private = (!empty($_POST['private']) && $_POST['private'])?1:0;
+			$sqlinsertqry .= "service_date = '".date('Y-m-d', strtotime((!empty($_POST['entry_date']) ? $_POST['entry_date'] : '')))."', entry_date = '".date('Y-m-d', strtotime((!empty($_POST['entry_date']) ? $_POST['entry_date'] : '')))."', note = '".(!empty($_POST['note']) ? $_POST['note'] : '')."', private = '".$private."', producerid = '".(!empty($_POST['producer']) ? $_POST['producer'] : '')."' WHERE id=".(!empty($_POST['id']) ? $_POST['id'] : '');
 
 			$insqry = $db->query($sqlinsertqry);
 			if (!$insqry) {
@@ -29,6 +32,10 @@
 					parent.window.location = parent.window.location;
 				</script>
 <?php
+			}
+
+			if (!isset($sqlinsertqry2)) {
+				$sqlinsertqry2 = '';
 			}
 
 			$sqlinsertqry2 .= "INSERT INTO `dental_ledger_rec` (
@@ -49,7 +56,7 @@
 								`transaction_code`
 							   ) VALUES ";
 
-			foreach($_POST['form'] as $form) {
+			if (!empty($_POST['form'])) foreach($_POST['form'] as $form) {
 				if($d <= $i) {
 					$descsql = "SELECT description, transaction_code FROM dental_transaction_code WHERE transaction_codeid='".$form['proccode']."' LIMIT 1;";
 					

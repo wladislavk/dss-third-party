@@ -1,5 +1,7 @@
+<?php include_once 'admin/includes/main_include.php'; ?>
+
 <?php
-    if(isset($_POST['sign_but'])){
+    if(/*isset($_POST['sign_but'])*/1){
         $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
         
         $r = $db->getRow($sql);
@@ -12,7 +14,7 @@
         } else {
             include_once '3rdParty/thomasjbradley-signature-to-image/signature-to-image.php';
 
-            $json = $_POST['output'];
+            $json = (!empty($_POST['output']) ? $_POST['output'] : '');
             $s = "INSERT INTO dental_user_signatures SET
                     signature_json='".mysqli_real_escape_string($con,$json)."',
                     user_id='".mysqli_real_escape_string($con,$_SESSION['userid'])."',
@@ -22,8 +24,11 @@
             $signature_id = $db->getInsertId($s);
             $img = sigJsonToImage($json);
             $file = "signature_" . $_SESSION['userid'] . "_" . $signature_id . ".png";
-            $s = imagepng($img, '../../../shared/q_file/'.$file);
-            imagedestroy($img);
+            
+            if (file_exists('../../../shared/q_file/'.$file)) {
+                $s = imagepng($img, '../../../shared/q_file/'.$file);
+                imagedestroy($img);
+            }
         }
     }
 ?>

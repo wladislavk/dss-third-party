@@ -41,7 +41,16 @@
 <br /><br />
 
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b>
+    <?php
+      if (!empty($_GET['msg'])) {
+        echo $_GET['msg'];
+      } else {
+        echo '';
+      }
+        
+    ?>
+  </b>
 </div>
 
 <table class="ledger sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -84,14 +93,14 @@
       foreach($my as $r) {
         $c_total = $p_total = $pat_total = 0;
         
-        $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysql_real_escape_string($r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
+        $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysqli_real_escape_string($con,$r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
         
         $c_q = $db->getResults($c_sql);
         if (count($c_q)) foreach ($c_q as $c_r) {
           $c_total += $c_r['total_charge'];
           $p_sql = "SELECT sum(dlp.amount) paid_amount FROM dental_ledger dl
       		          LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid=dl.ledgerid
-      		          WHERE dl.primary_claim_id='".mysql_real_escape_string($c_r['insuranceid'])."'";
+      		          WHERE dl.primary_claim_id='".mysqli_real_escape_string($con,$c_r['insuranceid'])."'";
           
           $p_r = $db->getRow($p_sql);
           $p_total = $p_r['paid_amount'];
@@ -116,7 +125,7 @@
         <?php
           $c_total = $p_total = 0;
 
-          $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysql_real_escape_string($r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
+          $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysqli_real_escape_string($con,$r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
           
           $c_q = $db->getResults($c_sql);
           $p_sql = '';
@@ -126,7 +135,7 @@
             
             $p_sql = "SELECT sum(dlp.amount) paid_amount FROM dental_ledger dl
           	          LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid=dl.ledgerid
-          	          WHERE dl.primary_claim_id='".mysql_real_escape_string($c_r['insuranceid'])."'";
+          	          WHERE dl.primary_claim_id='".mysqli_real_escape_string($con,$c_r['insuranceid'])."'";
             
             $p_r = $db->getRow($p_sql);
             $p_total = $p_r['paid_amount'];
@@ -146,7 +155,7 @@
 
         <?php
           $c_total = $p_total = 0;
-          $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysql_real_escape_string($r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 60 DAY)";
+          $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysqli_real_escape_string($con,$r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 60 DAY)";
           $c_q = $db->getResults($c_sql);
           $p_sql = '';
 
@@ -155,7 +164,7 @@
             
             $p_sql = "SELECT sum(dlp.amount) paid_amount FROM dental_ledger dl
                       LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid=dl.ledgerid
-                      WHERE dl.primary_claim_id='".mysql_real_escape_string($c_r['insuranceid'])."'";
+                      WHERE dl.primary_claim_id='".mysqli_real_escape_string($con,$c_r['insuranceid'])."'";
             
             $p_r = $db->getRow($p_sql);
             $p_total = $p_r['paid_amount'];
@@ -175,7 +184,7 @@
 
         <?php
           $c_total = $p_total = 0;
-          $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysql_real_escape_string($r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 120 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 90 DAY)";
+          $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysqli_real_escape_string($con,$r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 120 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 90 DAY)";
           
           $c_q = $db->getResults($c_sql);
           $p_sql = '';
@@ -185,7 +194,7 @@
             
             $p_sql = "SELECT sum(dlp.amount) paid_amount FROM dental_ledger dl
                       LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid=dl.ledgerid
-                      WHERE dl.primary_claim_id='".mysql_real_escape_string($c_r['insuranceid'])."'";
+                      WHERE dl.primary_claim_id='".mysqli_real_escape_string($con,$c_r['insuranceid'])."'";
             
             $p_r = $db->getRow($p_sql);
             $p_total = $p_r['paid_amount'];
@@ -205,7 +214,7 @@
 
         <?php
           $c_total = $p_total = 0;
-          $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysql_real_escape_string($r['patientid'])."' AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 120 DAY)";
+          $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysqli_real_escape_string($con,$r['patientid'])."' AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 120 DAY)";
           
           $c_q = $db->getResults($c_sql);
           $p_sql = '';
@@ -215,7 +224,7 @@
             
             $p_sql = "SELECT sum(dlp.amount) paid_amount FROM dental_ledger dl
                       LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid=dl.ledgerid
-                      WHERE dl.primary_claim_id='".mysql_real_escape_string($c_r['insuranceid'])."'";
+                      WHERE dl.primary_claim_id='".mysqli_real_escape_string($con,$c_r['insuranceid'])."'";
             
             $p_r = $db->getRow($p_sql);
             $p_total = $p_r['paid_amount'];

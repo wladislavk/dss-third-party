@@ -20,7 +20,7 @@
 
     <body>
         <?php
-            if($_POST["contactsub"] == 1) {
+            if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1) {
                 $ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 
                 $pc_id = $db->getInsertId($ins_sql);
@@ -67,7 +67,7 @@
             }
             $physician_types = implode(',', $physician_array);
 
-            $thesql = "select * from dental_patient_contacts where id='".mysqli_real_escape_string($con,$_REQUEST["id"])."'";
+            $thesql = "select * from dental_patient_contacts where id='".mysqli_real_escape_string($con,(!empty($_REQUEST["id"]) ? $_REQUEST["id"] : ''))."'";
         	
         	$themyarray = $db->getRow($thesql);	
     		$salutation = st($themyarray['salutation']);
@@ -115,7 +115,7 @@
 	    ?>
 	    <br /><br />
 	
-	    <?php if($msg != '') { ?>
+	    <?php if(isset($msg) && $msg != '') { ?>
             <div align="center" class="red">
                 <?php echo $msg;?>
             </div>
@@ -125,7 +125,7 @@
 
         <form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" onsubmit="return patcontactabc(this)">
             <input type="hidden" id="physician_types" value="<?php echo  $physician_types; ?>" />
-            <input type="hidden" name="contact_type" value="<?php echo  $_GET['ctype']; ?>" />
+            <input type="hidden" name="contact_type" value="<?php echo  (!empty($_GET['ctype']) ? $_GET['ctype'] : ''); ?>" />
             <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
                 <tr>
                     <td colspan="2" class="cat_head">
@@ -138,7 +138,7 @@
                             <li id="foli8" class="complex">	
                                 <label class="desc" id="title0" for="Field0">
                                     Name
-                                    <?php echo  ($_GET['ctype']!='ins')?'<span id="req_0" class="req">*</span>':''; ?>
+                                    <?php echo  (!empty($_GET['ctype']) && $_GET['ctype']!='ins')?'<span id="req_0" class="req">*</span>':''; ?>
                                 </label>
                                 <div>
                                 	<span>
@@ -174,7 +174,7 @@
                     		<li id="foli8" class="complex">	
                             	<label class="desc" id="title0" for="Field0">
                                     <span>
-                                        <span style="color:#000000">Company <?php echo  ($_GET['ctype']=='ins')?'<span id="req_0" class="req">*</span>':''; ?></span>
+                                        <span style="color:#000000">Company <?php echo  (!empty($_GET['ctype']) && $_GET['ctype']=='ins')?'<span id="req_0" class="req">*</span>':''; ?></span>
                                         <input id="company" name="company" type="text" class="field text addr tbox" value="<?php echo $company;?>" tabindex="5" style="width:575px;"  maxlength="255"/>
                                     </span>
                                 </label>
@@ -348,8 +348,8 @@
                     </td>
                     <td valign="top" class="frmdata">
                     	<select name="status" class="tbox" tabindex="22">
-                        	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
-                        	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
+                        	<option value="1" <?php if(isset($status) && $status == 1) echo " selected";?>>Active</option>
+                        	<option value="2" <?php if(isset($status) && $status == 2) echo " selected";?>>In-Active</option>
                         </select>
                         <br />&nbsp;
                     </td>

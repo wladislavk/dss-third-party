@@ -11,8 +11,14 @@
     <script type="text/javascript" src="js/autocomplete.js"></script>
     <script type="text/javascript" src="js/register_masks.js"></script>
 <?php
+    if (!empty($_SESSION['regid'])) {
+        $regid = $_SESSION['regid'];
+    } else {
+        $regid = '';
+    }
+
     $sql = "SELECT * from dental_users 
-		    WHERE userid='".mysqli_real_escape_string($con,$_SESSION['regid'])."' AND 
+		    WHERE userid='".mysqli_real_escape_string($con,$regid)."' AND 
 		    status='2'";
 
     $q = $db->getResults($sql);
@@ -25,10 +31,20 @@
         die();
     }
 
-    $p = $q[0];
+    $p = array();
+    if (!empty($q[0])) {
+        $p = $q[0];  
+    }
+
+    if (!empty($p['userid'])) {
+        $userid = $p['userid'];
+    } else {
+        $userid = '';
+    }
+    
     $c_sql = "SELECT c.id, c.name, c.stripe_publishable_key from companies c 
 		      JOIN dental_user_company uc ON uc.companyid=c.id
-			  WHERE uc.userid='".mysqli_real_escape_string($con,$p['userid'])."'"; 
+			  WHERE uc.userid='".mysqli_real_escape_string($con,$userid)."'"; 
 
     $c_r = $db->getRow($c_sql);
 ?>
@@ -36,7 +52,7 @@
 		<div id="main_content" class="cf">
             <h2 class="sepH_c">Step-by-Step User Registration</h2>
 	        <form action="register.php" id="register_form" method="post">
-		        <input type="hidden" id="userid" name="userid" value="<?php echo  $_SESSION['regid']; ?>" />
+		        <input type="hidden" id="userid" name="userid" value="<?php echo $regid; ?>" />
 					<ul id="status" class="cf">
 					    <?php $pagenum = 1; ?>
 						<li class="active"><span class="large"><?php echo  $pagenum++; ?>. Welcome</span></li>
@@ -51,7 +67,7 @@
                                 <div class="pageInside">
                                     <div class="cf">
                                         <div class="dp100">
-                                            <h3 class="sepH_a">Welcome <?php echo  $p['name']; ?>!</h3>
+                                            <h3 class="sepH_a">Welcome <?php echo  (!empty($p['name']) ? $p['name'] : ''); ?>!</h3>
 											<p>Please accurately complete the information on the following pages in order to create your Dental Sleep Solutions software account. We're excited to work with you!</p>
                                             <br />
                                             <div class="cf">
@@ -73,33 +89,33 @@
 												<div id="welcome_errors" class="form_errors" style="display:none"></div>
                                         		<div class="sepH_b half">
                                         			<label class="lbl_a"><strong>1.</strong> First Name <span class="req">*</span></label>
-                                        			<input class="inpt_a validate" type="text" name="first_name" id="first_name" value="<?php echo  $p['first_name']; ?>" />
+                                        			<input class="inpt_a validate" type="text" name="first_name" id="first_name" value="<?php echo  (!empty($p['first_name']) ? $p['first_name'] : ''); ?>" />
                                         		</div>
                                                 <div class="sepH_b half">
                                                     <label class="lbl_a"><strong>2.</strong> Last Name <span class="req">*</span></label>
-                                                    <input class="inpt_a validate" type="text" name="last_name" id="last_name" value="<?php echo  $p['last_name']; ?>" />
+                                                    <input class="inpt_a validate" type="text" name="last_name" id="last_name" value="<?php echo  (!empty($p['last_name']) ? $p['last_name'] : ''); ?>" />
                                                 </div>
                                                 <div class="sepH_b half clear">
-                                		            <input class="inpt_a validate" type="hidden" id="oldemail" name="oldemail" value="<?php echo  $p['email']; ?>" />
-                                                    <label class="lbl_a"><strong>3.</strong> Personal Email (for DS3 account login): <span class="req">*</span></label><input class="inpt_a validate" type="text" id="email" name="email" value="<?php echo  $p['email']; ?>" />
+                                		            <input class="inpt_a validate" type="hidden" id="oldemail" name="oldemail" value="<?php echo  (!empty($p['email']) ? $p['email'] : ''); ?>" />
+                                                    <label class="lbl_a"><strong>3.</strong> Personal Email (for DS3 account login): <span class="req">*</span></label><input class="inpt_a validate" type="text" id="email" name="email" value="<?php echo  (!empty($p['email']) ? $p['email'] : ''); ?>" />
                                                 </div>
                                                 <div class="sepH_b half clear">
-                                                    <label class="lbl_a"><strong>4.</strong> Office Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="phone" name="phone" value="<?php echo  $p['phone']; ?>" />
+                                                    <label class="lbl_a"><strong>4.</strong> Office Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="phone" name="phone" value="<?php echo  (!empty($p['phone']) ? $p['phone'] : ''); ?>" />
                                                 </div>
                                                 <div class="sepH_b half">
-                                                    <label class="lbl_a"><strong>5.</strong> Office Fax:</label><input class="inpt_a phonemask" type="text" id="fax" name="fax" value="<?php echo  $p['fax']; ?>" />
+                                                    <label class="lbl_a"><strong>5.</strong> Office Fax:</label><input class="inpt_a phonemask" type="text" id="fax" name="fax" value="<?php echo  (!empty($p['fax']) ? $p['fax'] : ''); ?>" />
                                                 </div>
                                                 <div class="sepH_b half clear">
-                                                    <label class="lbl_a"><strong>6.</strong> Practice Name: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="practice" name="practice" value="<?php echo  $p['practice']; ?>" />
+                                                    <label class="lbl_a"><strong>6.</strong> Practice Name: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="practice" name="practice" value="<?php echo  (!empty($p['practice']) ? $p['practice'] : ''); ?>" />
                                                 </div>
                                                 <div class="sepH_b half">
-                                                    <label class="lbl_a"><strong>7.</strong> Practice Address: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="address" name="address" value="<?php echo  $p['address']; ?>" />
+                                                    <label class="lbl_a"><strong>7.</strong> Practice Address: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="address" name="address" value="<?php echo  (!empty($p['address']) ? $p['address'] : ''); ?>" />
                                                 </div>
                                                 <div class="sepH_b third clear">
-                                                    <label class="lbl_a"><strong>8.</strong> Practice City: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="city" name="city" value="<?php echo  $p['city']; ?>" />
+                                                    <label class="lbl_a"><strong>8.</strong> Practice City: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="city" name="city" value="<?php echo  (!empty($p['city']) ? $p['city'] : ''); ?>" />
                                                 </div>
                                                 <div class="sepH_b third">
-			                                        <?php $s = $p['state']; ?>
+			                                        <?php $s = (!empty($p['state']) ? $p['state'] : ''); ?>
                                                     <label class="lbl_a"><strong>9.</strong> Practice State: <span class="req">*</span></label>
 	                                                <select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="state" name="state">
                                                         <option value=""></option>
@@ -157,7 +173,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="sepH_b third">
-                                                    <label class="lbl_a"><strong>10.</strong> Practice Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="zip" name="zip" value="<?php echo  $p['zip']; ?>" />
+                                                    <label class="lbl_a"><strong>10.</strong> Practice Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="zip" name="zip" value="<?php echo  (!empty($p['zip']) ? $p['zip'] : ''); ?>" />
                                                 </div>
 												<div class="cf">
                                                     <a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>
@@ -182,30 +198,30 @@
                                     		</div>
                                             <div class="sepH_b ">
                                                 <label class="lbl_a"><strong>1.</strong> Practice Email (for website and patients, NOT a personal email): <span class="req">*</span></label>
-                                                <input class="inpt_a validate" type="text" id="mailing_email" name="mailing_email" value="<?php echo  $p['mailing_email']; ?>" />
+                                                <input class="inpt_a validate" type="text" id="mailing_email" name="mailing_email" value="<?php echo  (!empty($p['mailing_email']) ? $p['mailing_email'] : ''); ?>" />
                                             </div>
                                             <div class="sepH_b half clear">
                                                 <label class="lbl_a"><strong>2.</strong> Physician's Mailing Name: <span class="req">*</span></label>
-                                                <input class="inpt_a validate" type="text" id="mailing_name" name="mailing_name" value="<?php echo  $p['mailing_name']; ?>" />
+                                                <input class="inpt_a validate" type="text" id="mailing_name" name="mailing_name" value="<?php echo  (!empty($p['mailing_name']) ? $p['mailing_name'] : ''); ?>" />
                                             </div>
                                             <div class="sepH_b half">
                                                 <label class="lbl_a"><strong>3.</strong> Mailing Practice Name: <span class="req">*</span></label>
-                            		            <input class="inpt_a validate" type="text" id="mailing_practice" name="mailing_practice" value="<?php echo  $p['mailing_practice']; ?>" />
+                            		            <input class="inpt_a validate" type="text" id="mailing_practice" name="mailing_practice" value="<?php echo  (!empty($p['mailing_practice']) ? $p['mailing_practice'] : ''); ?>" />
                             		        </div>
                                             <div class="sepH_b half clear">
                                                 <label class="lbl_a"><strong>4.</strong> Mailing Phone: <span class="req">*</span></label>
-                                                <input class="inpt_a phonemask validate" type="text" id="mailing_phone" name="mailing_phone" value="<?php echo  $p['mailing_phone']; ?>" />
+                                                <input class="inpt_a phonemask validate" type="text" id="mailing_phone" name="mailing_phone" value="<?php echo  (!empty($p['mailing_phone']) ? $p['mailing_phone'] : ''); ?>" />
                                             </div>
                                             <div class="sepH_b half">
                                                 <label class="lbl_a"><strong>5.</strong> Mailing Address: <span class="req">*</span></label>
-                                                <input class="inpt_a validate" type="text" id="mailing_address" name="mailing_address" value="<?php echo  $p['mailing_address']; ?>" />
+                                                <input class="inpt_a validate" type="text" id="mailing_address" name="mailing_address" value="<?php echo  (!empty($p['mailing_address']) ? $p['mailing_address'] : ''); ?>" />
                                             </div>
                                             <div class="sepH_b third clear">
                                                 <label class="lbl_a"><strong>6.</strong> Mailing City: <span class="req">*</span></label>
-                            		            <input class="inpt_a validate" type="text" id="mailing_city" name="mailing_city" value="<?php echo  $p['mailing_city']; ?>" />
+                            		            <input class="inpt_a validate" type="text" id="mailing_city" name="mailing_city" value="<?php echo  (!empty($p['mailing_city']) ? $p['mailing_city'] : ''); ?>" />
                                             </div>
                                             <div class="sepH_b third">
-                                                <?php $s = $p['mailing_state']; ?>
+                                                <?php $s = (!empty($p['mailing_state']) ? $p['mailing_state'] : ''); ?>
                                                 <label class="lbl_a"><strong>7.</strong> Mailing State: <span class="req">*</span></label>
                                                 <select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="mailing_state" name="mailing_state">
                                                     <option value=""></option>
@@ -263,7 +279,7 @@
                                                 </select>
                                             </div>
                                             <div class="sepH_b third">
-                                                <label class="lbl_a"><strong>8.</strong> Mailing Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="mailing_zip" name="mailing_zip" value="<?php echo  $p['mailing_zip']; ?>" />
+                                                <label class="lbl_a"><strong>8.</strong> Mailing Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="mailing_zip" name="mailing_zip" value="<?php echo  (!empty($p['mailing_zip']) ? $p['mailing_zip'] : ''); ?>" />
                                             </div>
                                             <div class="cf">
 												<a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
@@ -285,38 +301,38 @@
                                         <div>
                                             <div class="form_errors" style="display:none"></div>
                                             <div class="sepH_b half">
-                                                <label class="lbl_a"><strong>1.</strong> NPI Number:</label><input class="inpt_a validate" id="npi" name="npi" type="text" value="<?php echo $p['npi']?>" maxlength="255" />
+                                                <label class="lbl_a"><strong>1.</strong> NPI Number:</label><input class="inpt_a validate" id="npi" name="npi" type="text" value="<?php echo (!empty($p['npi']) ? $p['npi'] : '')?>" maxlength="255" />
 		                                    </div>
                                             <div class="sepH_b half">
-                                                <label class="lbl_a"><strong>2.</strong> Medicare Provider (NPI/DME) Number:</label><input class="inpt_a validate" id="medicare_npi" name="medicare_npi" type="text" value="<?php echo $p['medicare_npi']?>" maxlength="255" />
+                                                <label class="lbl_a"><strong>2.</strong> Medicare Provider (NPI/DME) Number:</label><input class="inpt_a validate" id="medicare_npi" name="medicare_npi" type="text" value="<?php echo (!empty($p['medicare_npi']) ? $p['medicare_npi'] : ''); ?>" maxlength="255" />
 		                                    </div>
                                             <div class="sepH_b half clear">
-                                                <label class="lbl_a"><strong>3.</strong> Medicare PTAN Number:</label><input class="inpt_a" id="medicare_ptan" name="medicare_ptan" type="text" value="<?php echo $p['medicare_ptan']?>" maxlength="255" />
+                                                <label class="lbl_a"><strong>3.</strong> Medicare PTAN Number:</label><input class="inpt_a" id="medicare_ptan" name="medicare_ptan" type="text" value="<?php echo (!empty($p['medicare_ptan']) ? $p['medicare_ptan'] : ''); ?>" maxlength="255" />
                                             </div>
                                             <div class="sepH_b half">
-                                                <label class="lbl_a"><strong>4.</strong> Tax ID or SSN:</label><input class="inpt_a validate" id="tax_id_or_ssn" name="tax_id_or_ssn" type="text" value="<?php echo $p['tax_id_or_ssn']?>" maxlength="255" />
+                                                <label class="lbl_a"><strong>4.</strong> Tax ID or SSN:</label><input class="inpt_a validate" id="tax_id_or_ssn" name="tax_id_or_ssn" type="text" value="<?php echo (!empty($p['tax_id_or_ssn']) ? $p['tax_id_or_ssn'] : '')?>" maxlength="255" />
                                             </div>
                                             <div class="sepH_b half clear">
                                                 <label class="lbl_a"><strong>5.</strong> Is box 4 your EIN or SSN?</label>
-                                    			<input class="" name="ein" onclick="$('#register_form').validate().element('#tax_id_or_ssn');" id="ein" type="checkbox" value="1" <?php echo  ($p['ein']==1)?'checked="checked"':''; ?> /> EIN
-                                    			<input class="" name="ssn" onclick="$('#register_form').validate().element('#tax_id_or_ssn');" id="ssn" type="checkbox" value="1" <?php echo  ($p['ssn']==1)?'checked="checked"':''; ?> /> SSN
+                                    			<input class="" name="ein" onclick="$('#register_form').validate().element('#tax_id_or_ssn');" id="ein" type="checkbox" value="1" <?php echo  (!empty($p['ein']) && $p['ein']==1)?'checked="checked"':''; ?> /> EIN
+                                    			<input class="" name="ssn" onclick="$('#register_form').validate().element('#tax_id_or_ssn');" id="ssn" type="checkbox" value="1" <?php echo  (!empty($p['ssn']) && $p['ssn']==1)?'checked="checked"':''; ?> /> SSN
                                             </div>
                                             <div class="sepH_b half">
                                                 <label class="lbl_a"><strong>6.</strong> Do you use a separate NPI number for Service Facility (CMS1500 box 32) and Billing Provider (CMS1500 box 33) items when filing claims?</label>
-                                    			<input class="" name="use_service_npi" onclick="show_service_info();" id="use_service_npi" type="radio" value="1" <?php echo  ($p['use_service_npi']=='1')?'checked="checked"':''; ?> /> Yes 
-                                    			<input class="" name="use_service_npi" onclick="$('.service_info').hide();" id="use_service_npi" type="radio" value="0" <?php echo  ($p['use_service_npi']=='0')?'checked="checked"':''; ?> /> No
+                                    			<input class="" name="use_service_npi" onclick="show_service_info();" id="use_service_npi" type="radio" value="1" <?php echo  (!empty($p['use_service_npi']) && $p['use_service_npi']=='1')?'checked="checked"':''; ?> /> Yes 
+                                    			<input class="" name="use_service_npi" onclick="$('.service_info').hide();" id="use_service_npi" type="radio" value="0" <?php echo  (!empty($p['use_service_npi']) && $p['use_service_npi']=='0')?'checked="checked"':''; ?> /> No
                                             </div>
                                             <div class="sepH_b half clear service_info">
-                                                <label class="lbl_a"><strong>7.</strong> Service Facility Name: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_name" name="service_name" value="<?php echo  $p['service_name']; ?>" />
+                                                <label class="lbl_a"><strong>7.</strong> Service Facility Name: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_name" name="service_name" value="<?php echo  (!empty($p['service_name']) ? $p['service_name'] : ''); ?>" />
                                             </div>
                                             <div class="sepH_b half service_info">
-                                                <label class="lbl_a"><strong>8.</strong> Service Facility Address: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_address" name="service_address" value="<?php echo  $p['service_address']; ?>" />
+                                                <label class="lbl_a"><strong>8.</strong> Service Facility Address: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_address" name="service_address" value="<?php echo  (!empty($p['service_address']) ? $p['service_address'] : ''); ?>" />
                                             </div>
                                             <div class="sepH_b third clear service_info">
-                                                <label class="lbl_a"><strong>9.</strong> Service Facility City: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_city" name="service_city" value="<?php echo  $p['service_city']; ?>" />
+                                                <label class="lbl_a"><strong>9.</strong> Service Facility City: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_city" name="service_city" value="<?php echo  (!empty($p['service_city']) ? $p['service_city'] : ''); ?>" />
                                             </div>
                                             <div class="sepH_b third service_info">
-                                                <?php $s = $p['service_state']; ?>
+                                                <?php $s = (!empty($p['service_state']) ? $p['service_state'] : ''); ?>
                                                 <label class="lbl_a"><strong>10.</strong> Service Facility State: <span class="req">*</span></label>
                                                 <select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="service_state" name="service_state">
                                                     <option value=""></option>
@@ -374,31 +390,31 @@
                                                 </select>
                                             </div>
                                             <div class="sepH_b third service_info">
-                                                <label class="lbl_a"><strong>11.</strong> Service Facility Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_zip" name="service_zip" value="<?php echo  $p['service_zip']; ?>" />
+                                                <label class="lbl_a"><strong>11.</strong> Service Facility Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_zip" name="service_zip" value="<?php echo  (!empty($p['service_zip']) ? $p['service_zip'] : ''); ?>" />
                                             </div>
                                             <div class="sepH_b half clear service_info">
-                                                <label class="lbl_a"><strong>12.</strong> Service Facility Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="service_phone" name="service_phone" value="<?php echo  $p['service_phone']; ?>" />
+                                                <label class="lbl_a"><strong>12.</strong> Service Facility Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="service_phone" name="service_phone" value="<?php echo  (!empty($p['service_phone']) ? $p['service_phone'] : ''); ?>" />
                                             </div>
                                             <div class="sepH_b half service_info">
-                                                <label class="lbl_a"><strong>13.</strong> Service Facility Fax: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="service_fax" name="service_fax" value="<?php echo  $p['service_fax']; ?>" />
+                                                <label class="lbl_a"><strong>13.</strong> Service Facility Fax: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="service_fax" name="service_fax" value="<?php echo  (!empty($p['service_fax']) ? $p['service_fax'] : ''); ?>" />
                                             </div>
                                             <div class="sepH_b half service_info">
-                                                <label class="lbl_a"><strong>14.</strong> Service Facility NPI Number:</label><input class="inpt_a validate" id="service_npi" name="service_npi" type="text" value="<?php echo $p['service_npi']?>" maxlength="255" />
+                                                <label class="lbl_a"><strong>14.</strong> Service Facility NPI Number:</label><input class="inpt_a validate" id="service_npi" name="service_npi" type="text" value="<?php echo (!empty($p['service_npi']) ? $p['service_npi'] : '')?>" maxlength="255" />
                                             </div>
                                             <div class="sepH_b half service_info">
-                                                <label class="lbl_a"><strong>15.</strong> Service Facility Medicare Provider (NPI/DME) Number:</label><input class="inpt_a validate" id="service_medicare_npi" name="service_medicare_npi" type="text" value="<?php echo $p['service_medicare_npi']?>" maxlength="255" />
+                                                <label class="lbl_a"><strong>15.</strong> Service Facility Medicare Provider (NPI/DME) Number:</label><input class="inpt_a validate" id="service_medicare_npi" name="service_medicare_npi" type="text" value="<?php echo (!empty($p['service_medicare_npi']) ? $p['service_medicare_npi'] : '')?>" maxlength="255" />
                                             </div>
                                             <div class="sepH_b half clear service_info">
-                                                <label class="lbl_a"><strong>16.</strong> Service Facility Medicare PTAN Number:</label><input class="inpt_a" id="service_medicare_ptan" name="service_medicare_ptan" type="text" value="<?php echo $p['service_medicare_ptan']?>" maxlength="255" />
+                                                <label class="lbl_a"><strong>16.</strong> Service Facility Medicare PTAN Number:</label><input class="inpt_a" id="service_medicare_ptan" name="service_medicare_ptan" type="text" value="<?php echo (!empty($p['service_medicare_ptan']) ? $p['service_medicare_ptan'] : '')?>" maxlength="255" />
                                             </div>
 
                                             <div class="sepH_b half service_info">
-                                                <label class="lbl_a"><strong>17.</strong> Service Facility Tax ID or SSN:</label><input class="inpt_a validate" id="service_tax_id_or_ssn" name="service_tax_id_or_ssn" type="text" value="<?php echo $p['service_tax_id_or_ssn']?>" maxlength="255" />
+                                                <label class="lbl_a"><strong>17.</strong> Service Facility Tax ID or SSN:</label><input class="inpt_a validate" id="service_tax_id_or_ssn" name="service_tax_id_or_ssn" type="text" value="<?php echo (!empty($p['service_tax_id_or_ssn']) ? $p['service_tax_id_or_ssn'] : '')?>" maxlength="255" />
                                             </div>
                                             <div class="sepH_b half clear service_info">
                                                 <label class="lbl_a"><strong>18.</strong> Is box 10 your service facility  EIN or SSN?</label>
-                                                <input class="" name="service_ein" onclick="$('#register_form').validate().element('#service_tax_id_or_ssn');" id="service_ein" type="checkbox" value="1" <?php echo  ($p['service_ein']==1)?'checked="checked"':''; ?> /> EIN
-                                                <input class="" name="service_ssn" onclick="$('#register_form').validate().element('#service_tax_id_or_ssn');" id="service_ssn" type="checkbox" value="1" <?php echo  ($p['service_ssn']==1)?'checked="checked"':''; ?> /> SSN
+                                                <input class="" name="service_ein" onclick="$('#register_form').validate().element('#service_tax_id_or_ssn');" id="service_ein" type="checkbox" value="1" <?php echo  (!empty($p['service_ein']) && $p['service_ein']==1)?'checked="checked"':''; ?> /> EIN
+                                                <input class="" name="service_ssn" onclick="$('#register_form').validate().element('#service_tax_id_or_ssn');" id="service_ssn" type="checkbox" value="1" <?php echo  (!empty($p['service_ssn']) && $p['service_ssn']==1)?'checked="checked"':''; ?> /> SSN
                                             </div>
                                             <div class="cf clear">
 											    <a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
@@ -420,7 +436,7 @@
                                         <div>
                                             <div class="form_errors" style="display:none"></div>
                                             <div class="sepH_b">
-                                                <label class="lbl_a"><strong>1.</strong> Username:</label><input class="inpt_a validate" id="username" name="username" type="text" value="<?php echo $p['username']?>" maxlength="255" />
+                                                <label class="lbl_a"><strong>1.</strong> Username:</label><input class="inpt_a validate" id="username" name="username" type="text" value="<?php echo (!empty($p['username']) ? $p['username'] : '')?>" maxlength="255" />
                                             </div>
                                             <div class="sepH_b">
                                                 <label class="lbl_a"><strong>2.</strong> Password:</label><input class="inpt_a validate" id="password" name="password" type="password" onkeyup="checkPass()" maxlength="255" />
@@ -446,7 +462,7 @@
                                     <div class="dp75">
                                         <div>
                                             <div class="form_errors" style="display:none"></div>
-			                                <input type="hidden" id="cc_id" value="<?php echo  ($p['cc_id']=='')?0:1; ?>" />
+			                                <input type="hidden" id="cc_id" value="<?php echo  (isset($p['cc_id']) && $p['cc_id']=='')?0:1; ?>" />
                                         <div class="sepH_b half">
                                             <label class="lbl_a"><strong>1.</strong> Card Number:</label><input type="text" size="20" autocomplete="off" class="inpt_a ccmask card-number"/>
                                         </div>

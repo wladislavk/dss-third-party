@@ -75,7 +75,7 @@
             }
 
             $sql = "select * from dental_patients where docid='".$_SESSION['docid']."'";
-            if($_GET['sh'] != 2) {
+            if(!empty($_GET['sh']) && $_GET['sh'] != 2) {
 	           $sql .= " and status = 1";
             }
             $sql .= " order by lastname, firstname";
@@ -121,7 +121,7 @@
             // next we need to do the links to other results
             if ($s >= 1) { // bypass PREV link if s is 0
                 $prevs = ($s-$limit);
-                print "<div style=\"padding-left:40px;\">&nbsp;<a href=\"$PHP_SELF?s=$prevs&q=$var\">&lt;&lt; 
+                print "<div style=\"padding-left:40px;\">&nbsp;<a href=\"" . (isset($PHP_SELF) ? $PHP_SELF : '') . "?s=$prevs&q=$var\">&lt;&lt; 
                 Prev 10</a>&nbsp&nbsp;</div>";
             }
 
@@ -139,7 +139,7 @@
             if (!((($s+$limit)/$limit)==$pages) && $pages!=1) {
                 // not last page so give NEXT link
                 $news = $s + $limit;
-                echo "<div style=\"padding-left:40px;\">&nbsp;<a href=\"$PHP_SELF?s=$news&q=$var\">Next 10 &gt;&gt;</a></div>";
+                echo "<div style=\"padding-left:40px;\">&nbsp;<a href=\"" . (isset($PHP_SELF) ? $PHP_SELF : '') . "?s=$news&q=$var\">Next 10 &gt;&gt;</a></div>";
             }
 
             $a = $s + ($limit) ;

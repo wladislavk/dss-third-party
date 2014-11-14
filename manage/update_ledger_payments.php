@@ -2,7 +2,7 @@
 	include_once('admin/includes/main_include.php');
 	include("includes/sescheck.php");
 
-	$sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".$_POST['ledgerid']."' ;";
+	$sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".(!empty($_POST['ledgerid']) ? $_POST['ledgerid'] : '')."' ;";
 	
 	$p_sql = $db->getResults($sql);
 	if ($p_sql) foreach ($p_sql as $p) {

@@ -18,7 +18,7 @@
         
         $pat = $db->getRow($sql);
         if($pat['recover_hash']==''){
-            $recover_hash = hash('sha256', $pat['patientid'].$r['email'].rand());
+            $recover_hash = hash('sha256', $pat['patientid'].(isset($r['email']) ? $r['email'] : '').rand());
             $ins_sql = "UPDATE dental_patients set access_type=2, text_num=0, text_date=NOW(), registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$pat['patientid']."'";
             
             $db->query($ins_sql);
@@ -128,7 +128,7 @@
         <br />
         <h3>Online Patient Registration Without Text Messaging:</h3>
         <?php
-            $a_sql = "SELECT access_code, access_code_date FROM dental_patients WHERE patientid='".$_GET['pid']."'";
+            $a_sql = "SELECT access_code, access_code_date FROM dental_patients WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
             
             $a_r = $db->getRow($a_sql);
             if($a_r['access_code']!='' && !isset($_GET['reset'])){
@@ -142,14 +142,14 @@
         <?php
             }else{
                 $access_code = rand(100000, 999999);
-                $ins_sql = "UPDATE dental_patients set access_code='".$access_code."', access_code_date = NOW() WHERE patientid='".$_GET['pid']."'";
+                $ins_sql = "UPDATE dental_patients set access_code='".$access_code."', access_code_date = NOW() WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
                 
                 $db->query($ins_sql);
         ?> 
                 <p>Is this patient unable or unwilling to receive text messages?  If so you can generate a temporary PIN that will allow the user to register without receiving a text message activation code.</p>
                 <p>Temporary PIN: <?php echo  $access_code; ?></p>
                 <form method="post">
-                    <input type="hidden" name="pid" value="<?php echo  $_GET['pid']; ?>" />
+                    <input type="hidden" name="pid" value="<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" />
                     <input type="hidden" name="access_code" value="<?php echo  $access_code; ?>" />
                     <input type="submit" name="email_but" value="Email Patient and Print PIN" />
                 </form>

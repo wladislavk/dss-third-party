@@ -5,7 +5,7 @@
       <th width="10%">Since</th>
       <th width="10%">DOS</th>
       <th width="10%">Service</th>
-<?php if($office_type==DSS_OFFICE_BACK){ ?>
+<?php if(defined('DSS_OFFICE_BACK') && $office_type==DSS_OFFICE_BACK){ ?>
       <th width="10%">Patient</th>
       <th width="10%">Account</th>
 <?php }else{ ?>
@@ -44,7 +44,7 @@
           <a href="view_patient.php?pid=<?php echo  $r['patientid']; ?>"><?php echo  $r['firstname']." ".$r['lastname']; ?></a>
 	<?php } ?>
       </td>
-<?php if($office_type==DSS_OFFICE_BACK){ ?>
+<?php if(defined('DSS_OFFICE_BACK') && $office_type==DSS_OFFICE_BACK){ ?>
       <td>
 	<?php echo  $r['doc_name']; ?>
       </td>

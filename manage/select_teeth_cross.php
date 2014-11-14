@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
+		<meta name="keywords" content="<?php echo st((!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : ''));?>" />
 		<title><?php echo $sitename;?></title>
 		<link href="css/admin.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
@@ -18,19 +18,21 @@
 					<br />
 					<span class="admin_head">
 						<?php
-						 	switch($_GET['tx']) { 
-								case 'crossbite':
-									echo "Teeth in Crossbite";
-									break;
-								case 'initial_tooth':
-									echo "Tooth Contacts prior to OAT Therapy";
-									break;
-				                case 'open_proximal':
-			                        echo "Open contacts";
-			                        break;
-				                case 'deistema':
-			                        echo "Diastemas";
-			                        break;
+							if (!empty($_GET['tx'])) {
+							 	switch($_GET['tx']) { 
+									case 'crossbite':
+										echo "Teeth in Crossbite";
+										break;
+									case 'initial_tooth':
+										echo "Tooth Contacts prior to OAT Therapy";
+										break;
+					                case 'open_proximal':
+				                        echo "Open contacts";
+				                        break;
+					                case 'deistema':
+				                        echo "Diastemas";
+				                        break;
+								}
 							}
 						?>
 						<input type="button" value="save" onclick="fill_up()" />
@@ -43,7 +45,7 @@
             
 					<script type="text/javascript" src="/manage/js/select_teeth_cross.js"></script>
 
-					<form name="selfrm" action="<?php echo $_SERVER['PHP_SELF']?>?tx=<?php echo $_GET['tx'];?>" method="post">
+					<form name="selfrm" action="<?php echo $_SERVER['PHP_SELF']?>?tx=<?php echo (!empty($_GET['tx']) ? $_GET['tx'] : '');?>" method="post">
 						<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 							<tr>
 								<td valign="top" colspan="2" width="25%" >
@@ -112,7 +114,7 @@
 						                </tr>
                 						<tr>
                 							<td valign="top" colspan="2">
-                    							<textarea name="t_text" class="tbox" style="width:250px; height:100px;"><?php echo str_replace(' , ','',$_GET['fval']);?></textarea>
+                    							<textarea name="t_text" class="tbox" style="width:250px; height:100px;"><?php echo str_replace(' , ','',(!empty($_GET['fval']) ? $_GET['fval'] : ''));?></textarea>
 						                    </td>
 						                </tr>
 						            </table>

@@ -33,7 +33,7 @@
             $thesql = "SELECT e.*, CONCAT(p.firstname,' ',p.lastname) as pat_name 
                       from dental_eligibility e 
                       JOIN dental_patients p on p.patientid=e.patientid
-                      where e.id='".$_REQUEST["id"]."'";
+                      where e.id='".(!empty($_REQUEST["id"]) ? $_REQUEST["id"] : '')."'";
 
             $themyarray = $db->getRow($thesql);
         ?>

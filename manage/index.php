@@ -1,7 +1,6 @@
-<?php
-  include 'includes/top.htm';
+<?php   include 'includes/top.htm';
   
-  $sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
+  $sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'";
   $r = $db->getRow($sql);
 
   if ($r['homepage'] != '1'): 
@@ -16,7 +15,7 @@
 <table>
   <tr>
     <td valign="top" style="border-right:1px solid #00457c;width:980px;">
-      <link rel="stylesheet" type="text/css" href="/manage/css/index.css">
+      <link rel="stylesheet" type="text/css" href="css/index.css">
 
       <div class="home_third first">
         <h3>Navigation</h3>
@@ -44,8 +43,7 @@
                  <li><a href="manage_screeners.php?contacted=0">Pt. Screener</a></li>
                  <li><a href='manage_vobs.php'>VOB History</a></li>
     
-                <?php
-                  if ($_SESSION['docid'] == $_SESSION['userid'] || $r['manage_staff'] == 1):
+                <?php                   if ($_SESSION['docid'] == $_SESSION['userid'] || $r['manage_staff'] == 1):
                 ?>
 
                   <li><a href="invoice_history.php">Invoices</a></li>
@@ -71,8 +69,7 @@
                 </li>
                 <li><a href="change_list.php">Change List</a></li>
 
-                <?php
-                  if ($_SESSION['userid'] == $_SESSION['docid'] || $r['manage_staff'] == 1):
+                <?php                   if ($_SESSION['userid'] == $_SESSION['docid'] || $r['manage_staff'] == 1):
                 ?>
                   
                   <li><a class="submenu_item" href="manage_transaction_code.php">Transaction Code</a></li>
@@ -92,15 +89,13 @@
                 <li><a href="#">DSS Files</a>
                   <ul>
 
-                    <?php
-                      $s = "SELECT * FROM dental_document_category WHERE status=1 ORDER BY name ASC";
+                    <?php                       $s = "SELECT * FROM dental_document_category WHERE status=1 ORDER BY name ASC";
                       $sq = $db->getResults($s);
 
                       foreach ($sq as $dss_file) {
                         ?>
                         <li><a class="submenu_item" href="view_documents.php?cat=<?php echo  $dss_file['categoryid']; ?>"><?php echo $dss_file['name']; ?></a></li>
-                        <?php
-                      }
+                        <?php                       }
                     ?>
 
                   </ul>
@@ -108,8 +103,7 @@
                 <li><a href="manage_locations.php">Manage Locations</a></li>
                 <li><a href="data_import.php" onclick="return confirm('Data import is supported for certain file types from certain other software. Due to the complexity of data import, you must first create a Support ticket in order to use this feature correctly.');">Data Import</a></li>
                 
-                <?php
-                  if ($r['use_eligible_api'] == 1):
+                <?php                   if ($r['use_eligible_api'] == 1):
                 ?>
 
                   <li><a href="manage_enrollment.php">Enrollments</a></li>
@@ -137,8 +131,7 @@
 
                 <?php if ($_SESSION['docid'] == $_SESSION['userid']): ?>
 
-                    <?php
-                      if($r['use_course'] == 1): 
+                    <?php                       if($r['use_course'] == 1): 
                     ?>
 
                       <li><a href="edx_login.php" target="_blank">Get C.E.</a></li>
@@ -147,10 +140,9 @@
 
                 <?php else: ?>
 
-                  <?php
-                    $course_sql = "SELECT s.use_course, d.use_course_staff FROM dental_users s
+                  <?php                     $course_sql = "SELECT s.use_course, d.use_course_staff FROM dental_users s
                                   JOIN dental_users d ON d.userid = s.docid
-                                  WHERE s.userid='" . mysqli_real_escape_string($con, $_SESSION['userid']). "'";
+                                  WHERE s.userid='" . mysqli_real_escape_string($con,$_SESSION['userid']). "'";
                     $course_r = $db->getRow($course_sql);
                     
                     if ($course_r['use_course']==1 && $course_r['use_course_staff'] == 1):
@@ -243,7 +235,7 @@
           <span class="label">Rejected Claims</span>
         </a>
 
-        <a href="manage_unsigned_notes.php" class=" count_<?php echo $num_; ?> notification <?php echo ($num_unsigned==0)?"good_count":"bad_count"; ?>">
+        <a href="manage_unsigned_notes.php" class=" count_<?php echo $num_unsigned; ?> notification <?php echo ($num_unsigned==0)?"good_count":"bad_count"; ?>">
           <span class="count"><?php echo $num_unsigned;?></span>
           <span class="label">Unsigned Notes</span>
         </a>
@@ -281,9 +273,8 @@
         <div class="task_menu index_task">
           <h4>My Tasks</h4>
 
-          <?php
-            $od_q = $db->getResults($od_sql);
-
+          <?php             $od_q = $db->getResults($od_sql);
+            
             if(count($od_q) > 0):
           ?>
 
@@ -300,8 +291,7 @@
                   <input type="checkbox" style="float:left; " class="task_status" value="<?php echo $od_r['id']; ?>" />
                   <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
                   
-                    <?php
-                     if ($od_r['firstname'] != '' && $od_r['lastname'] != ''){
+                    <?php                      if ($od_r['firstname'] != '' && $od_r['lastname'] != ''){
                       echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                      }
                     ?>
@@ -313,8 +303,7 @@
             </ul>
           <?php endif ?>
 
-          <?php
-            $tod_q = $db->getResults($tod_sql);
+          <?php             $tod_q = $db->getResults($tod_sql);
 
             if (count($tod_q) > 0):
           ?>
@@ -335,8 +324,7 @@
                   
                     <?php echo $od_r['task']; ?>
 
-                    <?php
-                     if($od_r['firstname']!='' && $od_r['lastname']!=''){
+                    <?php                      if($od_r['firstname']!='' && $od_r['lastname']!=''){
                       echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                      } 
                     ?>
@@ -348,8 +336,7 @@
             </ul>
           <?php endif ?>
 
-          <?php
-            $tom_q = $db->getResults($tom_sql);
+          <?php             $tom_q = $db->getResults($tom_sql);
 
             if(count($tom_q) > 0):
           ?>
@@ -366,8 +353,7 @@
                       <input type="checkbox" style="float:left;" class="task_status" value="<?php echo $od_r['id']; ?>" />
                       <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
                       
-                        <?php
-                         if($od_r['firstname']!='' && $od_r['lastname']!=''){
+                        <?php                          if($od_r['firstname']!='' && $od_r['lastname']!=''){
                           echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                          } 
                         ?>
@@ -381,8 +367,7 @@
 
           <?php endif ?>
 
-          <?php
-            $tw_q = $db->getResults($tw_sql);
+          <?php             $tw_q = $db->getResults($tw_sql);
 
             if(count($tw_q) > 0):
           ?>
@@ -399,8 +384,7 @@
                     <input type="checkbox" class="task_status" style="float:left;" value="<?php echo $od_r['id']; ?>" />
                     <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
                    
-                      <?php
-                       if($od_r['firstname']!='' && $od_r['lastname']!=''){
+                      <?php                        if($od_r['firstname']!='' && $od_r['lastname']!=''){
                         echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                         } 
                       ?>
@@ -413,8 +397,7 @@
 
           <?php endif ?>
 
-          <?php
-            $nw_q = $db->getResults($nw_sql);
+          <?php             $nw_q = $db->getResults($nw_sql);
 
             if(count($nw_q) > 0):
           ?>
@@ -431,8 +414,7 @@
                   </div>
                   <input type="checkbox" class="task_status" style="float:left;" value="<?php echo $od_r['id']; ?>" />
                   <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
-                    <?php
-                     if($od_r['firstname']!='' && $od_r['lastname']!=''){
+                    <?php                      if($od_r['firstname']!='' && $od_r['lastname']!=''){
                       echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                       } 
                     ?>
@@ -443,8 +425,7 @@
             </ul>
           <?php endif ?>
 
-          <?php
-            $lat_q = $db->getResults($lat_sql);
+          <?php             $lat_q = $db->getResults($lat_sql);
 
             if(count($lat_q) > 0):
           ?>
@@ -466,8 +447,7 @@
                     -
                     <?php echo $od_r['task']; ?>
 
-                    <?php
-                     if($od_r['firstname']!='' && $od_r['lastname']!=''){
+                    <?php                      if($od_r['firstname']!='' && $od_r['lastname']!=''){
                       echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                      } 
                     ?>
@@ -492,8 +472,7 @@
         <div class="task_menu index_task">
           <ul>
 
-            <?php
-              $m_sql = "SELECT * FROM memo_admin WHERE off_date <= CURDATE()";
+            <?php               $m_sql = "SELECT * FROM memo_admin WHERE off_date <= CURDATE()";
               $m_q = $db->getResults($m_sql);
 
               foreach ($m_q as $m_r) { ?>
@@ -513,4 +492,4 @@
 
 <script type="text/javascript" src="../Scripts/sucker_tree_home.js"></script>
 
-<? include 'includes/bottom.htm';?> 
+<?php  include 'includes/bottom.htm';?> 

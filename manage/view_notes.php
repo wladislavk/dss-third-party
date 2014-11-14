@@ -16,7 +16,7 @@
 	}
 
 	$sql = "select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' ";
-	if($_GET['ed'] <> '') {
+	if(isset($_GET['ed']) && $_GET['ed'] <> '') {
 		$sql .= " and notesid = '".$_GET['ed']."' ";
 	}
 	$sql .= " order by adddate DESC";
@@ -46,7 +46,7 @@
 			<?php echo $name;?>
 		    </i>
 		</span>
-		<?php if ($_GET['ed'] == '') { ?>
+		<?php if (isset($_GET['ed']) && $_GET['ed'] == '') { ?>
 			<br />
 			<div align="right">
 				<button onClick="Javascript: window.open('print_notes.php?pid=<?php echo $_GET['pid'];?>','Print_Notes','width=800,height=500',scrollbars=1);" class="addButton">
@@ -57,7 +57,7 @@
 		<?php } ?>
 		<br />
 		<div align="center" class="red">
-			<b><?php echo $_GET['msg'];?></b>
+			<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 		</div>
 		<table width="15%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="right" >
 			<tr>

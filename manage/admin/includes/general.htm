@@ -1334,7 +1334,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
   $font_family = "dejavusans";
   $db = new Db();
   if($docid){
-    $m_sql = "SELECT * from dental_users where userid='".mysqli_real_escape_string($GLOBAL['con'],$docid)."'";
+    $m_sql = "SELECT * from dental_users where userid='".mysqli_real_escape_string($GLOBALS['con'],$docid)."'";
     $m_r = $db->getRow($m_sql);
     if($m_r['user_type']==2){
       $margin_top = $m_r['letter_margin_top'];
@@ -1400,7 +1400,10 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
   //WORK AROUND FOR MASS LETTER CREATION
   //$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs2/' . $filename, 'F');
   //Close and output PDF document
-  $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename, 'F');
+  $file = $_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename;
+  if (file_exists($file)) {
+    $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename, 'F');
+  }
 }
 
 

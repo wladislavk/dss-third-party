@@ -3,19 +3,19 @@
     include_once '../3rdParty/stripe/lib/Stripe.php';
     include_once 'constants.inc';
 
-    $id = $_REQUEST['id'];
-    $token = $_REQUEST['token'];
-    $email = $_REQUEST['email'];
-    $name = $_REQUEST['name'];
-    $companyid = $_REQUEST['companyid'];
-    $company = $_REQUEST['company'];
+    $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
+    $token = (!empty($_REQUEST['token']) ? $_REQUEST['token'] : '');
+    $email = (!empty($_REQUEST['email']) ? $_REQUEST['email'] : '');
+    $name = (!empty($_REQUEST['name']) ? $_REQUEST['name'] : '');
+    $companyid = (!empty($_REQUEST['companyid']) ? $_REQUEST['companyid'] : '');
+    $company = (!empty($_REQUEST['company']) ? $_REQUEST['company'] : '');
     $desc = $name." - ".$company;
-    $number = $_REQUEST['cnumber'];
-    $cname = $_REQUEST['cname'];
-    $exp_month = $_REQUEST['exp_month'];
-    $exp_year = $_REQUEST['exp_year'];
-    $cvc = $_REQUEST['cvc'];
-    $zip = $_REQUEST['zip'];
+    $number = (!empty($_REQUEST['cnumber']) ? $_REQUEST['cnumber'] : '');
+    $cname = (!empty($_REQUEST['cname']) ? $_REQUEST['cname'] : '');
+    $exp_month = (!empty($_REQUEST['exp_month']) ? $_REQUEST['exp_month'] : '');
+    $exp_year = (!empty($_REQUEST['exp_year']) ? $_REQUEST['exp_year'] : '');
+    $cvc = (!empty($_REQUEST['cvc']) ? $_REQUEST['cvc'] : '');
+    $zip = (!empty($_REQUEST['zip']) ? $_REQUEST['zip'] : '');
 
     $key_sql = "SELECT stripe_secret_key FROM companies WHERE id='".mysqli_real_escape_string($con,$companyid)."'";
     

@@ -4,7 +4,7 @@
 	include_once 'admin/includes/config.php';
 	include_once 'admin/includes/general.htm';
 	
-	if($_POST['q_sleepsub'] == 1) {
+	if(!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
 		$snore_1 = $_POST['snore_1'];
 		$snore_2 = $_POST['snore_2'];
 		$snore_3 = $_POST['snore_3'];
@@ -18,7 +18,7 @@
 <?php
 	}
 
-	$sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
+	$sql = "select * from dental_thorton where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
 	$myarray = $db->getRow($sql);
 	$thortonid = st($myarray['thortonid']);
@@ -29,14 +29,14 @@
 	$snore_5 = 0;
 
     $a_sql = "SELECT answer, thorntonid FROM dentalsummfu_tss
-              WHERE followupid='".mysqli_real_escape_string($con,$_GET['id'])."';";
+              WHERE followupid='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."';";
     
     $a_q = $db->getResults($a_sql);
     if ($a_q) foreach ($a_q as $a) {
         ${'snore_'.$a['thorntonid']} = $a['answer'];
 	}
 
-	$sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
+	$sql = "select * from dental_q_sleep where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$myarray = $db->getRow($sql);
 
@@ -62,7 +62,7 @@
 	<link rel="stylesheet" href="css/form.css" type="text/css" />
 	<script type="text/javascript" src="script/wufoo.js"></script>
 
-	<form id="q_sleepfrm" name="q_sleepfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>&id=<?php echo $_GET['id']; ?>" method="post">
+	<form id="q_sleepfrm" name="q_sleepfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&id=<?php echo (!empty($_GET['id']) ? $_GET['id'] : ''); ?>" method="post">
 		<input type="hidden" name="q_sleepsub" value="1" />
 		<div align="right">
 			<input type="submit" name="q_sleepbtn" value="Save" />

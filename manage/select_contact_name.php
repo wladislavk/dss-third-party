@@ -3,7 +3,7 @@
 
 	$rec_disp = 40;
 
-	if($_REQUEST["page"] != "") {
+	if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
 		$index_val = $_REQUEST["page"];
 	} else {
 		$index_val = 0;
@@ -24,7 +24,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
+		<meta name="keywords" content="<?php echo st((!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : ''));?>" />
 		<title><?php echo $sitename;?></title>
 		<link href="css/admin.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>

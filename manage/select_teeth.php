@@ -1,7 +1,7 @@
 <?php
 	include "admin/includes/main_include.php";
 
-	if($_POST['selsub'] == 1) {
+	if(!empty($_POST['selsub']) && $_POST['selsub'] == 1) {
 		$per_teeth = $_POST['per_teeth'];
 		$pri_teeth = $_POST['pri_teeth'];
 		
@@ -36,14 +36,14 @@
 <?php
 	}
 
-	$mt_arr = explode(',',$_GET['fval']);
+	$mt_arr = explode(',',(!empty($_GET['fval']) ? $_GET['fval'] : ''));
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
+		<meta name="keywords" content="<?php echo st((!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : ''));?>" />
 		<title><?php echo $sitename;?></title>
 		<link href="css/admin.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
@@ -55,9 +55,9 @@
 		    <tr bgcolor="#FFFFFF">
 			    <td> 
 					<br />
-					<form name="selfrm" action="<?php echo $_SERVER['PHP_SELF']?>?tx=<?php echo $_GET['tx'];?>" method="post">
+					<form name="selfrm" action="<?php echo $_SERVER['PHP_SELF']?>?tx=<?php echo (!empty($_GET['tx']) ? $_GET['tx'] : '');?>" method="post">
 						<span class="admin_head">
-							<?php echo ucwords($_GET['tx']);?> Teeth # <input type="submit" value="save" />
+							<?php echo ucwords((!empty($_GET['tx']) ? $_GET['tx'] : ''));?> Teeth # <input type="submit" value="save" />
 						</span>
 						<div style="clear:both"></div>
 						<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -104,11 +104,11 @@
 										?>
 							                    <tr bgcolor="#FFFFFF">	
 							                        <td valign="top" width="50%">
-							                        	<input type="checkbox" name="pri_teeth[]" value="<?php echo $i?>" <?php if(strpos($_GET['fval'],$i) === false) {} else { echo " checked";}?> />
+							                        	<input type="checkbox" name="pri_teeth[]" value="<?php echo $i?>" <?php if(strpos((!empty($_GET['fval']) ? $_GET['fval'] : ''),$i) === false) {} else { echo " checked";}?> />
 							                            <?php echo $i;?>
 							                        </td>
 							                        <td valign="top" width="50%">
-							                        	<input type="checkbox" name="pri_teeth[]" value="<?php echo $j?>"  <?php if(strpos($_GET['fval'],$j) === false) {} else { echo " checked";}?> />
+							                        	<input type="checkbox" name="pri_teeth[]" value="<?php echo $j?>"  <?php if(strpos((!empty($_GET['fval']) ? $_GET['fval'] : ''),$j) === false) {} else { echo " checked";}?> />
 							                            <?php echo $j;?>
 							                        </td>
 							                    </tr>

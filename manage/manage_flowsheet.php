@@ -1,7 +1,7 @@
 <?php 
 	include "includes/top.htm";
 
-	if($_REQUEST["delid"] != "") {
+	if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
 		$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
 		
 		$db->query($del_sql);
@@ -14,7 +14,7 @@
 		die();
 	}
 
-	if($_POST["flowsheetsub"] == 1) {
+	if(isset($_POST["flowsheetsub"]) && $_POST["flowsheetsub"] == 1) {
 		$inquiry_call_comp = $_POST['inquiry_call_comp'];
 		$send_np = $_POST['send_np'];
 		$send_np_comp = $_POST['send_np_comp'];
@@ -333,7 +333,7 @@
 	$home_sleep_comp = st($myarray['home_sleep_comp']);
 	$further_checks_apt = st($myarray['further_checks_apt']);
 	$further_checks_comp = st($myarray['further_checks_comp']);
-	$comp_treatment_comp = st($myarray['comp_treatment_comp']);
+	$comp_treatment_comp = isset($myarray['comp_treatment_comp']) ? st($myarray['comp_treatment_comp']) : '';
 	$portable_date_comp = st($myarray['portable_date_comp']);
 	$treatment_success = st($myarray['treatment_success']);
 	$ltr_doc_ss_date_prepared = st($myarray['ltr_doc_ss_date_prepared']);
@@ -387,7 +387,7 @@
 
 	<br />
 	<div align="center" class="red">
-		<b><?php echo $_GET['msg'];?></b>
+		<b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
 	</div>
 
 	<script type="text/javascript" src="/manage/js/manage_flowsheet.js"></script>

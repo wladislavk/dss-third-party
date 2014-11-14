@@ -113,7 +113,6 @@ $sql = "select
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
                         AND primary_claim_id=".$_GET['claimid']." 
-			AND dlp.amount != 0
   UNION
 	SELECT
 		'eob',
@@ -157,7 +156,21 @@ $psql = "SELECT * FROM dental_patients WHERE patientid=".mysql_real_escape_strin
 $pq = mysql_query($psql);
 $pat = mysql_fetch_assoc($pq);
 ?>
-<span style="float:right; font-size: 26px; margin-right: 20px; font-weight: bold; color:#f00;">Claim <?= $_GET['claimid']." - ".$thename; ?></span>
+<span style="float:right; font-size: 26px; margin-right: 20px; font-weight: bold; color:#f00;">
+<?php
+  $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id='".mysql_real_escape_string($_GET['claimid'])."'";
+  $sec_q = mysql_query($sec_sql);
+  $sec_r = mysql_fetch_assoc($sec_q);
+  if(mysql_num_rows($sec_q)>0){
+?>
+Primary Claim <?= $_GET['claimid']; ?> - (<a href="view_claim.php?claimid=<?php echo $sec_r['insuranceid']; ?>&pid=<?php echo $_GET['pid']; ?>">Secondary is <?php echo $sec_r['insuranceid']; ?></a>) 
+<?php
+  }else{
+?>
+Claim <?= $_GET['claimid']; ?>
+<?php echo (($claim['primary_claim_id'])?' - (<a href="view_claim.php?claimid='.$claim['primary_claim_id'].'&pid='.$_GET['pid'].'">Secondary to '.$claim['primary_claim_id'].'</a>)':''); ?>
+  <?php } ?>
+<?= " - ".$thename; ?></span>
 
 <span class="admin_head">
 	Ledger Card

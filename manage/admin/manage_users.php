@@ -221,7 +221,7 @@ $num_users=mysql_num_rows($my);
                         $pat_my = mysql_query($pat_sql) or die(mysql_error()." | ".$pat_sql);
                         $pat_myarray = mysql_fetch_array($pat_my);
 
-                        $inv_sql = "select count(id) as inv_count from dental_percase_invoice where docid='".st($myarray['userid'])."' ";
+                        $inv_sql = "select count(id) as inv_count from dental_percase_invoice where docid='".st($myarray['userid'])."'  AND pi.status != '".DSS_INVOICE_PENDING."'";
                         $inv_my = mysql_query($inv_sql) or die(mysql_error()." | ".$inv_sql);
                         $inv_myarray = mysql_fetch_array($inv_my);
 			

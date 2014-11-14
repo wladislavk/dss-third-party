@@ -1032,6 +1032,7 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 $dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
+$orig_claim_id = $myarray['primary_claim_id'];
 $fdf_file = $myarray['primary_fdf'];
 $p_m_eligible_payer_id = $myarray['p_m_eligible_payer_id'];
 $p_m_eligible_payer_name = $myarray['p_m_eligible_payer_name'];
@@ -1433,7 +1434,19 @@ input{text-transform:uppercase;}
 	<b>&lt;&lt;Back to Manage Claims Page</b></a>
 <?php } ?>
 
-
+<?php if($is_secondary){ ?>
+	<h4>Secondary Claim (<a href="insurance_claim_v2.php?insid=<?php echo $orig_claim_id; ?>&pid=<?php echo $_GET['pid']; ?>">Primary is <?php echo $orig_claim_id; ?></a>)</h4>
+<?php }else{ 
+  $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id='".mysql_real_escape_string($_GET['insid'])."'";
+  $sec_q = mysql_query($sec_sql);
+  $sec_r = mysql_fetch_assoc($sec_q);	
+?>
+        <h4>Primary Claim
+	<?php if(mysql_num_rows($sec_q)){ ?>
+		(<a href="insurance_claim_v2.php?insid=<?php echo $sec_r['insuranceid']; ?>&pid=<?php echo $_GET['pid']; ?>">Secondary is <?php echo $sec_r['insuranceid']; ?></a>)
+	<?php } ?>
+	</h4>
+<?php } ?>
 
 <form name="insurancefrm" action="<?=$_SERVER['PHP_SELF'];?>?insid=<?=$_GET['insid']?>&pid=<?=$_GET['pid']?>" method="post">
 	<input type="hidden" name="insurancesub" value="1" />
@@ -2909,6 +2922,27 @@ if ($is_pending) {
       $total_charge = $charge_row['total_charge'];
     }
   }
+  if($is_sec_pending){
+    $sql = "SELECT "
+       . "  SUM(ledger.amount) as 'total_charge' "
+       . "FROM "
+       . "  dental_ledger ledger "
+       . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+       . "WHERE "
+       . "  ledger.primary_claim_id = " . $orig_claim_id . " "
+       . "  AND ledger.patientid = " . $_GET['pid'] . " "
+       . "  AND ledger.docid = " . $docid . " "
+       . "  AND trxn_code.docid = " . $docid . " "
+       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
+       . "ORDER BY "
+       . "  ledger.service_date ASC";
+    $charge_my = mysql_query($sql);
+    if ($charge_my && (mysql_num_rows($charge_my) > 0)) {
+      $charge_row = mysql_fetch_array($charge_my);
+      $total_charge = $charge_row['total_charge'];
+    }
+  }
+
   // get amount paid
   $sql = "SELECT "
        . "  SUM(ledger.paid_amount) as 'amount_paid' "
@@ -2923,14 +2957,14 @@ if ($is_pending) {
        . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
        . "ORDER BY "
        . "  ledger.service_date ASC";
-  if($_GET['instype']==2 && $status == DSS_CLAIM_SEC_PENDING){
+  if($status == DSS_CLAIM_SEC_PENDING){
     $sql = "SELECT
                 sum(dlp.amount) as amount_paid
         from dental_ledger dl 
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."' 
-                        AND primary_claim_id=".$_GET['insid']." 
+                        AND primary_claim_id=".$orig_claim_id." 
                         AND dlp.amount != 0
 			AND dlp.payer = 0
 	";

@@ -3183,7 +3183,7 @@ var cal4 = new calendar2(document.getElementById('copyreqdate'));
 <?php if(isset($_GET['sendPin'])){ ?>
 <script type="text/javascript">
   $(document).ready( function(){ 
-	loadPopup('patient_access_code.php?pid=<?= $_GET['pid']; ?>');
+	loadPopupWithClose('patient_access_code.php?pid=<?= $_GET['pid']; ?>', 'add_patient.php?ed=<?= $_GET['ed']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>');
   });
 </script>
 <?php } ?>

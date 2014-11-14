@@ -321,7 +321,7 @@ $sql = "select
 				where i2.insuranceid=i.insuranceid),
 		sum(pay.amount),
 		i.status,
-		i.insuranceid,
+		i.primary_claim_id,
 		'',
 		'',
 		'',
@@ -600,7 +600,10 @@ return s;
 			<?= ($myarray[0] == 'note' && $myarray['status']==1)?"(P) ":''; ?>
                         <?= (($myarray[0] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":''; ?>
                 	<?= $myarray["description"]; ?>
-			<?= (($myarray[0] == 'ledger' || $myarray[0] =='claim') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
+			<?= (($myarray[0] == 'ledger') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
+                        <?= (($myarray[0] =='claim') && $myarray['ledgerid'])?"(".$myarray['ledgerid'].") ":''; ?>
+                        <?= (($myarray[0] =='claim') && $myarray['primary_claim_id'])?"Secondary to (".$myarray['primary_claim_id'].") ":''; ?>
+
 			<?= (($myarray[0] =='claim') && $myarray['num_notes'] > 0)?" - Notes (".$myarray['num_notes'].") ":''; ?>
 			<?= ($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING)?' (Click to file)':''; ?>
 			<?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>

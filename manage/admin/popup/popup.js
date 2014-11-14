@@ -4,7 +4,7 @@
 //0 means disabled; 1 means enabled;
 var popupStatus = 0;
 var popupEdit = false;
-
+var close = false;
 //loading popup with jQuery magic!
 function loadPopup(fa){
 	//centering with css
@@ -27,6 +27,30 @@ function loadPopup(fa){
 		popupStatus = 1;
 	}
 }
+
+function loadPopupWithClose(fa, c){
+ 	close = c;
+        //centering with css
+        centerPopup();
+        popupEdit = false;
+        $('#aj_pop').attr('src', fa).load( function(){
+        $("#aj_pop").contents().find("input, textarea, select").change( function(){
+                popupEdit = true;
+        });
+
+        });
+        //document.getElementById("aj_pop").src = fa; 
+        //loads popup only if it is disabled
+        if(popupStatus==0){
+                $("#backgroundPopup").css({
+                        "opacity": "0.7"
+                });
+                $("#backgroundPopup").fadeIn("slow");
+                $("#popupContact").fadeIn("slow");
+                popupStatus = 1;
+        }
+}
+
 
 //loading popup with jQuery magic!
 function loadPopupRefer(fa){
@@ -123,10 +147,12 @@ function disablePopup(){
 		$("#popupContact").fadeOut("slow");
 		eraseCookie('tempforledgerentry');
 		popupStatus = 0;
-		parent.window.location.reload(true);
-	}else{
-		parent.window.location.reload(true);
 	}
+		if(close){
+		  parent.window.location = close;
+		}else{
+		  parent.window.location.reload(true);
+		}
 	}
 }
 function disablePopupClean(){

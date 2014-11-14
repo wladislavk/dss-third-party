@@ -260,6 +260,7 @@ if(isset($_GET['letter']) && $_GET['letter'] != ''){
                                 <?= ($num_pat)?'<a href="#" onclick="$(\'#ref_pat_'.$myarray['contactid'].'\').toggle();return false;">'.$num_pat.'</a>':''; ?>
                                 </td>
 				<td valign="top" width="20%">
+ 					<div class="actions" style="display:none;">
 				        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$myarray["contactid"];?>'); return false;" class="editlink" title="EDIT">
                                                 Quick View
                                         </a>
@@ -267,7 +268,7 @@ if(isset($_GET['letter']) && $_GET['letter'] != ''){
 					<a href="#" onclick="loadPopup('add_contact.php?ed=<?=$myarray["contactid"];?>'); return false;" class="editlink" title="EDIT">
 						Edit 
 					</a>
-                    
+                   			</div> 
 				</td>
 			</tr>
 			<tr id="ref_pat_<?= $myarray['contactid'];?>" style="display:none;">
@@ -307,4 +308,9 @@ if(isset($_GET['letter']) && $_GET['letter'] != ''){
 </div>
 <div id="backgroundPopupRef"></div>
 <br /><br />	
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.actions').show();
+  });
+</script>
 <? include "includes/bottom.htm";?>

@@ -409,7 +409,7 @@ if($pat_myarray['patientid'] == '')
         }
         else if (data.indexOf('save_failed')!= -1)
         {
-          alert("autosave failed, please contact support.");
+          alert("Auto-save failed. Make sure your note is backed up before saving or exiting this note.");
         }
         else
         {

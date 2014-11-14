@@ -7,7 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-        <meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
+        <meta name="keywords" content="<?php echo isset($page_myarray['keywords']) ? st($page_myarray['keywords']) : '';?>" />
         <title><?php echo $sitename;?></title>
         <link href="css/admin.css" rel="stylesheet" type="text/css" />
     </head>
@@ -51,33 +51,32 @@
                 <div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
                 <div style="clear:both;"></div>
                 <?php
-                  if($_POST['recoversub']==1) {
+                if(isset($_POST['recoversub']) && $_POST['recoversub']==1) {
                     if($_POST['password1']==$_POST['password2']) {
-                      $salt = create_salt();
-                            $pass = gen_password($_POST['password1'], $salt);
-                      $up_sql = "UPDATE dental_users SET password='".mysqli_real_escape_string($con, $pass)."', salt='".$salt."', recover_hash='' WHERE userid='".mysqli_real_escape_string($con, $_POST['userid'])."' AND recover_hash='".mysqli_real_escape_string($con, $_POST['hash'])."'";
+                        $salt = create_salt();
+                        $pass = gen_password($_POST['password1'], $salt);
+                        $up_sql = "UPDATE dental_users SET password='".mysqli_real_escape_string($con, $pass)."', salt='".$salt."', recover_hash='' WHERE userid='".mysqli_real_escape_string($con, $_POST['userid'])."' AND recover_hash='".mysqli_real_escape_string($con, $_POST['hash'])."'";
                       
-                            $db->query($up_sql);
-          ?>
-                            <script type="text/javascript">
-                                    window.location.replace('login.php?msg=Password reset');
-                            </script>
+                        $db->query($up_sql);?>
+                        <script type="text/javascript">
+                                window.location.replace('login.php?msg=Password reset');
+                        </script>
                 <?php
                     }
-                  }
+                }
 
-                  $check_sql = "SELECT userid FROM dental_users WHERE username='".mysqli_real_escape_string($con, $_GET['un'])."' AND recover_hash='".mysqli_real_escape_string($con, $_GET['rh'])."' AND recover_time>DATE_SUB(NOW(), INTERVAL 1 HOUR)";
-                  
-                    $check_my = $db->getResults($check_sql);
-                  if(count($check_my) == 1) {
+                $check_sql = "SELECT userid FROM dental_users WHERE username='".mysqli_real_escape_string($con, $_GET['un'])."' AND recover_hash='".mysqli_real_escape_string($con, $_GET['rh'])."' AND recover_time>DATE_SUB(NOW(), INTERVAL 1 HOUR)";
+
+                $check_my = $db->getResults($check_sql);
+                if(count($check_my) == 1) {
                     $check_myarray = $check_my[0];
-                  } else {
-                    $msg = 'Unable to find user.';
-            ?>
+                } else {
+                    $msg = 'Unable to find user.';?>
                     <script type="text/javascript">
                       window.location.replace('forgot_password.php?msg=<?php echo $msg;?>');
                     </script>
-            <?php } ?>
+                <?php 
+                } ?>
 
                     <br />
                     <span class="admin_head">
@@ -89,11 +88,11 @@
                         <input type="hidden" name="hash" value="<?php echo  $_GET['rh']; ?>" />
                         <input type="hidden" name="userid" value="<?php echo  $check_myarray['userid']; ?>" />
                         <table border="0" align="center" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
-                            <?php if($_GET['msg']!="") { ?> 
+                            <?php if(isset($_GET['msg']) && $_GET['msg']!="") { ?> 
                                 <tr bgcolor="#FFFFFF">
                                     <td colspan="2" >
                                         <span class="red">
-                                  <?php echo $_GET['msg'];?>
+                                          <?php echo $_GET['msg'];?>
                                         </span>
                                     </td>
                                 </tr>

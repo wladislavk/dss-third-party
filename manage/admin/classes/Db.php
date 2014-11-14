@@ -2,7 +2,7 @@
 
 class Db
 {
-	protected $con;
+	public $con;
 	// Perfom query
 	public function __construct()
 	{
@@ -12,7 +12,8 @@ class Db
 	{
 		if($query_string)
 		{
-			return mysqli_query($this->con, $query_string);
+			$result = mysqli_query($this->con, $query_string) /*or die($query_string . ' ' . mysqli_error($this->con))*/;
+			return $result;
 		}
 		return;
 		

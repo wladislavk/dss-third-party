@@ -1,7 +1,7 @@
 <?php
     include 'includes/top.htm';
 
-    if($_POST["profilesub"] == 1) {
+    if(isset($_POST["profilesub"]) && $_POST["profilesub"] == 1) {
         $ed_sql = "update dental_users set name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for($_POST["phone"])."' where userid='".$_POST["ed"]."'";
         
         $db->query($ed_sql);
@@ -17,7 +17,7 @@
     $thesql = "select * from dental_users where userid='".$_SESSION["userid"]."'";
 
     $themyarray = $db->getRow($thesql);
-    if($msg != '') {
+    if(isset($msg) && $msg != '') {
         $username = $_POST['username'];
         $password = $_POST['password'];
         $name = $_POST['name'];
@@ -47,7 +47,7 @@
     </span>
     <br /><br />
 
-    <?php if($_GET['msg'] != '') { ?>
+    <?php if(isset($_GET['msg']) && $_GET['msg'] != '') { ?>
         <div align="center" class="red">
             <b><?php echo $_GET['msg'];?></b>
         </div>

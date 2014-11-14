@@ -3,7 +3,7 @@
 	include "includes/constants.inc";
 
 	$rec_disp = 200;
-	if($_REQUEST["page"] != "") {
+	if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
 		$index_val = $_REQUEST["page"];
 	} else {
 		$index_val = 0;
@@ -12,7 +12,7 @@
 	$i_val = $index_val * $rec_disp;
 	$sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' order by service_date limit 0, 10;";
 	
-	if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1){
+	if((!isset($_POST['dailysub']) || $_POST['dailysub'] != 1) && (!isset($_POST['monthlysub']) || $_POST['monthlysub'] != 1)){
 		$sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."' AND dl.service_date=CURDATE() order by dl.service_date;";
 
 		$sql = "select 
@@ -70,26 +70,26 @@
 
 	<span class="admin_head">
 		Ledger Report
-		<?php if($_POST['dailysub'] == 1) { ?>
+		<?php if(isset($_POST['dailysub']) && $_POST['dailysub'] == 1) { ?>
 		    (<i><?php echo $_POST['d_mm']?>-<?php echo $_POST['d_dd']?>-<?php echo $_POST['d_yy']?></i>)
 		<?php }
 		
-		if($_POST['monthlysub'] == 1) { ?>
+		if(isset($_POST['monthlysub']) && $_POST['monthlysub'] == 1) { ?>
 			(<i><?php echo $_POST['d_mm']?>-<?php echo $_POST['d_yy']?></i>)
 		<?php }
 		
 		if($_GET['pid'] <> '') { ?>
-			(<i><?php echo $thename;?></i>)
+			(<i><?php echo isset($thename) ? $thename : '';?></i>)
 		<?php } ?>
 	</span>
 
 	<link rel="stylesheet" href="css/manage.css" type="text/css" media="screen" />
 
 	<div align="center" class="red">
-		<b><?php echo $_GET['msg'];?></b>
+		<b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
 	</div>
 	<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-		<?php if($total_rec > $rec_disp) { ?>
+		<?php if(isset($total_rec) && ($total_rec > $rec_disp)) { ?>
 			<tr bgColor="#ffffff">
 				<td  align="right" colspan="15" class="bp">
 					Pages:
@@ -218,19 +218,19 @@
                         </td>
                         <td valign="top" align="right">
                             <b>
-                            <?php echo "$".number_format($tot_charges,2); ?>
+                            <?php echo "$".number_format(isset($tot_charges) ? $tot_charges : 0,2); ?>
                             &nbsp;
                             </b>
                         </td>
                         <td valign="top" align="right">
                             <b>
-                            <?php echo "$".number_format($tot_credit,2);?>
+                            <?php echo "$".number_format(isset($tot_credit) ? $tot_credit : 0,2);?>
                             &nbsp;
                             </b>
                         </td>
                         <td valign="top" align="right">
                             <b>
-                            <?php echo "$".number_format($tot_adj,2);?>
+                            <?php echo "$".number_format(isset($tot_adj) ? $tot_adj : 0,2);?>
                             &nbsp;
                             </b>
                         </td>

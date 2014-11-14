@@ -11,7 +11,7 @@
 	$name = st($ref_myarray['salutation'])." ".st($ref_myarray['firstname'])." ".st($ref_myarray['middlename'])." ".st($ref_myarray['lastname']);
 	$rec_disp = 20;
 
-	if($_REQUEST["page"] != "") {
+	if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
 		$index_val = $_REQUEST["page"];
 	} else {
 		$index_val = 0;
@@ -48,7 +48,7 @@
 	<br /><br />
 
 	<div align="center" class="red">
-		<b><?php echo $_GET['msg'];?></b>
+		<b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
 	</div>
 
 	<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >

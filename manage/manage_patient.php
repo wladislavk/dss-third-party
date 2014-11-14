@@ -1,6 +1,6 @@
 <?php 
 include('includes/top.htm');
-include('includes/constants.inc');
+// include('includes/constants.inc');
 include('includes/formatters.php');
 
 if(isset($_REQUEST["delid"]))
@@ -210,8 +210,9 @@ $num_users=count($my);
 <?php
 	$letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
 	foreach($letters as $let){
-		$class = ($_GET['letter']==$let) ? 'class="selected_letter"' : '';
-		echo '<a ' . $class . 'href="manage_patient.php?letter=' . $let . '&sh=' . $_GET['sh'] . '">' . $let . '</a> ';
+		$class = (isset($_GET['letter']) && $_GET['letter']==$let) ? 'class="selected_letter"' : '';
+		$sh = isset($_GET['sh']) ? $_GET['sh'] : '';
+		echo '<a ' . $class . 'href="manage_patient.php?letter=' . $let . '&sh=' . $sh . '">' . $let . '</a> ';
 	}
 	if(isset($_GET['letter']) && $_GET['letter'] != ''){
 		echo '<a href="manage_patient.php?sh=' . $_GET['sh'] . '">View All</a>';
@@ -236,7 +237,11 @@ if(isset($_GET['msg'])){
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?php
-				 paging($no_pages,$index_val,"letter=".$_GET['letter']."&sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']."&sh=".$_GET['sh']);
+				$letter = isset($_GET['letter']) ? $_GET['letter'] : '';
+				$sort = isset($_GET['sort']) ? $_GET['sort'] : '';
+				$sortdir = isset($_GET['sortdir']) ? $_GET['sortdir'] : '';
+				$sh = isset($_GET['sh']) ? $_GET['sh'] : '';
+				paging($no_pages,$index_val,"letter=". $letter ."&sort=". $sort ."&sortdir=". $sortdir ."&sh=". $sh );
 			?>
 		</TD>        
 	</TR>
@@ -298,7 +303,6 @@ if(isset($_GET['msg'])){
 	{
 		foreach ($my as $myarray)
 		{
-			$i++;
 			if($myarray["status"] == 1)
 			{
 				$tr_class = "tr_active";
@@ -468,7 +472,7 @@ if(isset($_GET['msg'])){
 		?>
 			<a href="manage_ledger.php?pid=<?php echo $myarray["patientid"];?>"><?php echo ($summ['ledger'] == null ? 'N/A' : format_ledger(number_format($total,0))); ?></a>
 		<?php 
-			echo $total1;
+			echo isset($total1) ? $total1 : '';
 		?>
         </td>
         <?php 

@@ -1,7 +1,7 @@
 <?php
 	include "includes/top.htm";
 
-	if($_POST['q_recipientssub'] == 1) {
+	if(isset($_POST['q_recipientssub']) && $_POST['q_recipientssub'] == 1) {
 		$referring_physician = $_POST['referring_physician'];
 		$dentist = $_POST['dentist'];
 		$physicians_other = $_POST['physicians_other'];
@@ -345,7 +345,7 @@
 	<br /><br>
 
 	<div align="center" class="red">
-		<b><?php echo $_GET['msg']; ?></b>
+		<b><?php echo isset($_GET['msg']) ? $_GET['msg'] : ''; ?></b>
 	</div>
 
 	<form name="q_recipientsfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?ex=<?php echo $_GET['ex']?>&pid=<?php echo $_GET['pid']?>" method="post" enctype="multipart/form-data" >

@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="css/ledger.css" />
 
 <?php
-    if($_REQUEST['dailysub'] != 1 && $_REQUEST['monthlysub'] != 1 && $_REQUEST['weeklysub'] != 1 && $_REQUEST['rangesub'] != 1 && $_GET['pid'] == '') { ?>
+    if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] != 1 && !empty($_REQUEST['monthlysub']) && $_REQUEST['monthlysub'] != 1 && !empty($_REQUEST['weeklysub']) && $_REQUEST['weeklysub'] != 1 && !empty($_REQUEST['rangesub']) && $_REQUEST['rangesub'] != 1 && empty($_GET['pid'])) { ?>
     	<script type="text/javascript">
     		window.location = 'ledger.php';
     	</script>
@@ -32,16 +32,16 @@
     if(isset($_REQUEST['start_date']) && isset($_REQUEST['end_date'])){
         $start_date = $_REQUEST['start_date'];
         $end_date = $_REQUEST['end_date'];
-    }elseif($_REQUEST['dailysub']){
+    }elseif(!empty($_REQUEST['dailysub'])){
         $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy'])); 
         $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
-    }elseif($_REQUEST['weeklysub']){
+    }elseif(!empty($_REQUEST['weeklysub'])){
         $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
         $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd']+6, $_REQUEST['d_yy']));
-    }elseif($_REQUEST['monthlysub']){
+    }elseif(!empty($_REQUEST['monthlysub'])){
         $start_date = date('Y-m-01', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
         $end_date = date('Y-m-t', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
-    }elseif($_REQUEST['rangesub']){
+    }elseif(!empty($_REQUEST['rangesub'])){
         $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['s_d_mm'], $_REQUEST['s_d_dd'], $_REQUEST['s_d_yy']));
         $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['e_d_mm'], $_REQUEST['e_d_dd'], $_REQUEST['e_d_yy']));
     }else{
@@ -51,7 +51,7 @@
 
     $rec_disp = 200;
 
-    if($_REQUEST["page"] != "") {
+    if(!empty($_REQUEST["page"])) {
     	$index_val = $_REQUEST["page"];
     } else {
     	$index_val = 0;
@@ -80,18 +80,18 @@
 
     <span class="admin_head">
     	Ledger Report
-            <?php if($_REQUEST['dailysub'] == 1) { ?>
+            <?php if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] == 1) { ?>
                 (<i><?php echo  date('m-d-Y', strtotime($start_date)); ?></i>)
             <?php }
-                if($_REQUEST['weeklysub'] == 1 || $_REQUEST['rangesub'] == 1) { 
+                if(!empty($_REQUEST['weeklysub']) && $_REQUEST['weeklysub'] == 1 || !empty($_REQUEST['rangesub']) && $_REQUEST['rangesub'] == 1) { 
             ?>
                     (<i><?php echo  date('m-d-Y', strtotime($start_date))?> - <?php echo  date('m-d-Y', strtotime($end_date))?></i>)
             <?php }
-                if($_REQUEST['monthlysub'] == 1) {
+                if(!empty($_REQUEST['monthlysub']) && $_REQUEST['monthlysub'] == 1) {
             ?>
                     (<i><?php echo  date('m-Y', strtotime($start_date)) ?></i>)
             <?php }
-                if($_GET['pid'] <> '') {
+                if(!empty($_GET['pid'])) {
             ?>
                     (<i><?php echo $thename;?></i>)
             <?php } ?>
@@ -107,7 +107,7 @@
     <link rel="stylesheet" href="css/manage.css" type="text/css" media="screen" />
 
     <div align="right">
-        <button onclick="Javascript: window.location='ledger_producer_report.php?print=1&dailysub=<?php echo $_REQUEST['dailysub'];?>&monthlysub=<?php echo $_REQUEST['monthlysub'];?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo $_REQUEST['rangesub'];?>&weeklysub=<?php echo $_REQUEST['weeklysub'];?><?php echo  (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>';" class="addButton">
+        <button onclick="Javascript: window.location='ledger_producer_report.php?print=1&dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo $start_date;?>&end_date=<?php echo $end_date;?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo  (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>';" class="addButton">
             Print
         </button>
         &nbsp;&nbsp;
@@ -116,7 +116,7 @@
     <br />
 
     <div align="center" class="red">
-    	<b><?php echo $_GET['msg'];?></b>
+    	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
     </div>
 
     <?php

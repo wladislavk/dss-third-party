@@ -3,9 +3,11 @@
 
     $invoice_sql = "SELECT i.*, u.name FROM dental_percase_invoice i 
             		JOIN dental_users u ON u.userid = i.docid
-            		WHERE i.id = '".$_REQUEST['invoice_id']."'";
+            		WHERE i.id = '".(!empty($_REQUEST['invoice_id']) ? $_REQUEST['invoice_id'] : '')."'";
 
     $invoice = $db->getRow($invoice_sql);
+
+    $invoice_id = (!empty($_REQUEST['invoice_id']) ? $_REQUEST['invoice_id'] : '');
 
     $case_sql = "SELECT 
             	 dl.percase_name,
@@ -16,11 +18,11 @@
 	             WHERE 
         		 dl.transaction_code='E0486' AND
         		 dl.docid='".$_SESSION['docid']."' AND
-        		 dl.percase_invoice = '".$_REQUEST['invoice_id']."'
+        		 dl.percase_invoice = '".$invoice_id."'
                  UNION ALL
                  SELECT percase_name, percase_date, percase_amount FROM dental_claim_electronic e 
                  WHERE 
-                 e.percase_invoice='".$_REQUEST['invoice_id']."'
+                 e.percase_invoice='".$invoice_id."'
                  UNION ALL
 	             SELECT
                  e.percase_name,
@@ -28,7 +30,7 @@
                  e.percase_amount
                  FROM dental_percase_invoice_extra e
                  WHERE 
-                 e.percase_invoice = '".$_REQUEST['invoice_id']."'
+                 e.percase_invoice = '".$invoice_id."'
                  UNION ALL
                  SELECT
                  f.description,
@@ -36,7 +38,7 @@
                  f.amount
                  FROM dental_fax_invoice f
                  WHERE 
-                 f.invoice_id = '".$_REQUEST['invoice_id']."'
+                 f.invoice_id = '".$invoice_id."'
                  UNION
             	 SELECT 
             	 CONCAT('Insurance Verification Services – ', patient_firstname, ' ', patient_lastname), 
@@ -44,17 +46,17 @@
             	 invoice_amount 
             	 FROM dental_insurance_preauth
                  WHERE
-                 invoice_id='".$_REQUEST['invoice_id']."'
+                 invoice_id='".$invoice_id."'
                  UNION
                  SELECT description,
                  start_date, amount FROM dental_eligibility_invoice
                  WHERE
-                 invoice_id='".$_REQUEST['invoice_id']."'
+                 invoice_id='".$invoice_id."'
                  UNION
                  SELECT description,
                  start_date, amount FROM dental_enrollment_invoice
                  WHERE
-                 invoice_id='".$_REQUEST['invoice_id']."'
+                 invoice_id='".$invoice_id."'
                 ";
 
     $case_q = $db->getResults($case_sql);
@@ -73,12 +75,12 @@
     <br />
 
     <div align="center" class="red">
-    	<b><?php echo $_GET['msg'];?></b>
+    	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
     </div>
     <br /><br />
 
     <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
-        <input type="hidden" name="docid" value="<?php echo $_GET["docid"];?>" />
+        <input type="hidden" name="docid" value="<?php echo (!empty($_GET["docid"]) ? $_GET["docid"] : '');?>" />
         <table id="invoice_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         	<tr class="tr_bg_h">
         		<td valign="top" class="col_head" width="40%">
@@ -130,43 +132,48 @@
                                 WHERE 
                                 dl.transaction_code='E0486' AND
                                 dl.docid='".$_SESSION['docid']."' AND
-                                dl.percase_invoice = '".$_REQUEST['invoice_id']."'
+                                dl.percase_invoice = '".$invoice_id."'
                                 UNION ALL
                                 SELECT  percase_amount FROM dental_claim_electronic e 
                                 WHERE 
-                                e.percase_invoice='".$_REQUEST['invoice_id']."'
+                                e.percase_invoice='".$invoice_id."'
                                 UNION ALL
                                 SELECT
                                 e.percase_amount
                                 FROM dental_percase_invoice_extra e
                                 WHERE 
-                                e.percase_invoice = '".$_REQUEST['invoice_id']."'
+                                e.percase_invoice = '".$invoice_id."'
                                 UNION ALL
                                 SELECT
                                 f.amount
                                 FROM dental_fax_invoice f
                                 WHERE 
-                                f.invoice_id = '".$_REQUEST['invoice_id']."'
+                                f.invoice_id = '".$invoice_id."'
                                 UNION ALL
                             	SELECT 
                             	invoice_amount
                             	FROM dental_insurance_preauth
                                 WHERE
-                                invoice_id='".$_REQUEST['invoice_id']."'
+                                invoice_id='".$invoice_id."'
                                 UNION
                                 SELECT 
                                 amount FROM dental_eligibility_invoice
                                 WHERE
-                                invoice_id='".$_REQUEST['invoice_id']."'
+                                invoice_id='".$invoice_id."'
                                 UNION
                                 SELECT 
                                 amount FROM dental_enrollment_invoice
                                 WHERE
-                                invoice_id='".$_REQUEST['invoice_id']."'
+                                invoice_id='".$invoice_id."'
 		                      ) t1
 	                        ";
 
                 $case_total = $db->getRow($total_sql);
+
+                if (empty($case_total)) {
+                   $case_total['case_total'] = 0;
+                   $invoice['monthly_fee_amount'] = 0; 
+                }
             ?>
             <tr id="total_row">
     			<td valign="top" colspan="2">&nbsp;

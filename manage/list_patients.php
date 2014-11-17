@@ -5,6 +5,7 @@
 	include_once('includes/constants.inc');
 	include_once('includes/formatters.php');
 
+	$partial = '';
 	if (isset($_POST['partial_name'])) {
 		$partial = $_POST['partial_name'];
 		$partial = ereg_replace("[^ A-Za-z'\-]", "", $partial);
@@ -18,8 +19,8 @@
 		 . " FROM dental_patients p"
 		 . " LEFT JOIN dental_patient_summary s ON p.patientid = s.pid  "
 		 . " WHERE (((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')" 
-		 . " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
-		 . " OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))"
+		 . " AND (lastname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%' OR firstname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%'))"
+		 . " OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .(!empty($names[1]) ? $names[1] : '')."%' AND lastname LIKE '" . (!empty($names[2]) ? $names[2] : '') . "%'))"
 		 . " AND p.status=1 "
 		 . " AND docid = '" . $_SESSION['docid'] . "' ORDER BY lastname ASC LIMIT 12;";
 

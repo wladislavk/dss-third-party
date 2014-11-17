@@ -257,7 +257,7 @@
 
 	<br />
 
-	<form name="patfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']; ?>" method="get" onSubmit="return patabc(this)">
+	<form name="patfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" method="get" onSubmit="return patabc(this)">
 		<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 			<tr>
 				<td colspan="2" class="cat_head">
@@ -269,7 +269,7 @@
 					Patient's Last Name
 				</td>
 				<td valign="top" class="frmdata">
-					<input type="text" name="pt_lastname" value="<?php echo $_GET['pt_lastname'];?>"  />
+					<input type="text" name="pt_lastname" value="<?php echo (!empty($_GET['pt_lastname']) ? $_GET['pt_lastname'] : '');?>"  />
 					<span class="red">*</span>
 					<br />
 					(Full / Part Lastname)
@@ -286,8 +286,8 @@
 		</table>
 	</form>
 
-	<?php if($_GET['pt_lastname'] <> '') {
-		$pat_sql = "select * from dental_patients where docid='".mysql_real_escape_string($_SESSION['docid'])."' AND lastname like '%".s_for($_GET['pt_lastname'])."%' and status=1";
+	<?php if(!empty($_GET['pt_lastname'])) {
+		$pat_sql = "select * from dental_patients where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND lastname like '%".s_for($_GET['pt_lastname'])."%' and status=1";
 		
 		$pat_my = $db->getResults($pat_sql);
 	?>

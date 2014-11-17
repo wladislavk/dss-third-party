@@ -5,6 +5,7 @@
     include_once('includes/constants.inc');
     include_once('includes/formatters.php');
 
+    $partial = '';
     if (isset($_POST['partial_name'])) {
     	$partial = $_POST['partial_name'];
     	$partial = ereg_replace("[^ A-Za-z'\-]", "", $partial);
@@ -18,14 +19,14 @@
          . " LEFT JOIN dental_patient_summary s ON p.patientid = s.pid  "
          . " LEFT JOIN dental_device d ON s.appliance = d.deviceid "
          . " WHERE ((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')" 
-         . " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
+         . " AND (lastname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%' OR firstname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%'))"
          . " AND docid = '" . $_SESSION['docid']."'"
          . " UNION "
          . " SELECT c.contactid, c.lastname, c.firstname, c.middlename, '".DSS_REFERRED_PHYSICIAN."', ct.contacttype"
          .	" FROM dental_contact c"
          . " LEFT JOIN dental_contacttype ct ON c.contacttypeid=ct.contacttypeid"
          . " WHERE ((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')"
-         . " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
+         . " AND (lastname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%' OR firstname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%'))"
          . " AND merge_id IS NULL "
          . " AND docid = '" . $_SESSION['docid'] . "' ORDER BY lastname ASC";
 

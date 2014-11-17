@@ -2,7 +2,7 @@
     include "includes/top.htm";
     include_once '3rdParty/stripe/lib/Stripe.php';
 
-    $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+    $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
     
     $r = $db->getRow($sql);
     if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1){
@@ -13,15 +13,19 @@
     }
 
     $sql = "SELECT pi.* FROM dental_percase_invoice pi
-    	    WHERE pi.docid=".mysql_real_escape_string($_SESSION['docid'])." ORDER BY adddate DESC";
+    	    WHERE pi.docid=".mysqli_real_escape_string($con,$_SESSION['docid'])." ORDER BY adddate DESC";
     
+    if (!isset($rec_disp)) {
+        $rec_disp = 1;
+    }
+
     $total_rec = $db->getNumberRows($sql);
     $no_pages = $total_rec/$rec_disp;
 
     $my = $db->getResults($sql);
     $num_users = count($my);
 
-    $doc_sql = "SELECT * from dental_users WHERE userid=".mysql_real_escape_string($_SESSION['docid']);
+    $doc_sql = "SELECT * from dental_users WHERE userid=".mysqli_real_escape_string($con,$_SESSION['docid']);
     
     $doc = $db->getRow($doc_sql);
 ?>
@@ -34,7 +38,7 @@
     <br />
 
     <div align="center" class="red" style="clear:both;">
-        <b><?php echo $_GET['msg'];?></b>
+        <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
     </div>
 
     <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
@@ -97,12 +101,12 @@
     <br />
 
     <div align="center" class="red" style="clear:both;">
-        <b><?php echo $_GET['msg'];?></b>
+        <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
     </div>
 
     <?php
         $charge_sql = "SELECT * FROM dental_charge
-        		       WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+        		       WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
         
         $charge_q = $db->getResults($charge_sql);
     ?>
@@ -136,7 +140,7 @@
                                 $key_sql = "SELECT stripe_secret_key FROM companies c 
                                             JOIN dental_user_company uc
                                             ON c.id = uc.companyid
-                                            WHERE uc.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+                                            WHERE uc.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
                                 
                                 $key_r= $db->getRow($key_sql);
 

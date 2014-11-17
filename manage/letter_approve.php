@@ -7,7 +7,7 @@
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 
 <?php
-    $s = "SELECT pdf_path, send_method, md_list, md_referral_list from dental_letters where letterid='".mysql_real_escape_string($_GET['id'])."'";
+    $s = "SELECT pdf_path, send_method, md_list, md_referral_list from dental_letters where letterid='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."'";
     
     $r = $db->getRow($s);
     $file = './letterpdfs/'.$r['pdf_path'];
@@ -40,11 +40,11 @@
 ?>
 
     <div style="float:left;">
-        <a href="#" onclick="send_letter('<?php echo $_GET['id']; ?>', <?php echo $reload; ?>, '<?php echo $page; ?>')">Looks Good! SEND!</a> | <a href="#" onclick="reload_parent();">Cancel/Revise</a>
+        <a href="#" onclick="send_letter('<?php echo (!empty($_GET['id']) ? $_GET['id'] : ''); ?>', <?php echo (isset($reload) ? $reload : ''); ?>, '<?php echo (isset($page) ? $page : ''); ?>')">Looks Good! SEND!</a> | <a href="#" onclick="reload_parent();">Cancel/Revise</a>
     </div>
     <?php
-        $fsql = "SELECT fax, preferredcontact from dental_contact WHERE contactid='".mysql_real_escape_string($r['md_list'])."' OR 
-        contactid='".mysql_real_escape_string($r['md_referral_list'])."'";
+        $fsql = "SELECT fax, preferredcontact from dental_contact WHERE contactid='".mysqli_real_escape_string($con,$r['md_list'])."' OR 
+        contactid='".mysqli_real_escape_string($con,$r['md_referral_list'])."'";
         
         $f = $db->getRow($fsql); 
     ?>

@@ -7,11 +7,11 @@
   $ch_sql = "SELECT dl.description, sum(dl.amount) amount FROM dental_ledger dl
                 JOIN dental_patients p ON p.patientid=dl.patientid
                 WHERE amount != '' 
-                AND p.docid='".mysql_real_escape_string($_SESSION['docid'])."' 
+                AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' 
             		".$lpsql." ".$l_date."
                 ";
 	if(isset($_GET['pid'])){
-		$ch_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
+		$ch_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
 	}
 	$ch_sql .= " GROUP BY dl.description";
   $ch_q = $db->getResults($ch_sql);
@@ -32,12 +32,12 @@
 		JOIN dental_ledger_payment dlp ON dlp.ledgerid=dl.ledgerid
                 JOIN dental_patients p ON p.patientid=dl.patientid
                 WHERE dlp.amount != '' 
-                AND p.docid='".mysql_real_escape_string($_SESSION['docid'])."'
+                AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'
 		AND tc.type != '".DSS_TRXN_TYPE_ADJ."'
 		".$lpsql." ".$p_date."
 		";
         if(isset($_GET['pid'])){
-                $cr_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
+                $cr_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
         }
                 $cr_sql .= " GROUP BY description";
 
@@ -51,12 +51,12 @@
                 JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
                 JOIN dental_patients p ON p.patientid=dl.patientid
                 WHERE paid_amount != '' 
-                AND p.docid='".mysql_real_escape_string($_SESSION['docid'])."' 
+                AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' 
                 AND tc.type != '".DSS_TRXN_TYPE_ADJ."'
                 ".$lpsql." ".$l_date."
                 ";
   if(isset($_GET['pid'])){
-    $cr2_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
+    $cr2_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
   }
   $cr2_sql .= " GROUP BY dl.description";
   $cr2_q = $db->getResults($cr2_sql);
@@ -77,12 +77,12 @@
                 JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
                 JOIN dental_patients p ON p.patientid=dl.patientid
                 WHERE paid_amount != '' 
-                AND p.docid='".mysql_real_escape_string($_SESSION['docid'])."' 
+                AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' 
                 AND tc.type = '".DSS_TRXN_TYPE_ADJ."'
             		".$lpsql." ".$l_date."
                 ";
   if(isset($_GET['pid'])){
-    $adj_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
+    $adj_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
   }
   $adj_sql .= " GROUP BY dl.description";
   $adj_q = $db->getResults($adj_sql);

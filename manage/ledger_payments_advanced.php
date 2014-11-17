@@ -2,17 +2,17 @@
     include "includes/top.htm";
     include_once "includes/constants.inc";
 
-    $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
+    $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
 
     $payments = $db->getRow($sql);
-    $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['cid']."';";
+    $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."';";
 
     $claim = $db->getRow($csql);
-    $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysql_real_escape_string($_GET['cid'])."' AND
+    $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
     		  (status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE.")";
 
     $num_pa = $db->getNumberRows($pasql);
-    $sasql = "SELECT * FROM dental_insurance_file where claimid='".mysql_real_escape_string($_GET['cid'])."' AND
+    $sasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
               (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
 
     $num_sa = $db->getNumberRows($sasql);
@@ -42,7 +42,7 @@
                 <input type="hidden" value="0" id="currval" />
             </div>
             <?php
-                $sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
+                $sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
                 $p_sql = $db->getResults($sql);
                 if(count($p_sql)==0){
             ?>
@@ -129,7 +129,7 @@
                             <td>Note</td>
                         </tr>
                         <?php
-                            $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_GET['cid'];
+                            $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_GET['cid']) ? $_GET['cid'] : '');
                             
                             $lq = $db->getResults($lsql);
                             if ($lq) foreach ($lq as $row){
@@ -165,8 +165,8 @@
                         <label >Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
                     </div>
 
-                    <input type="hidden" name="claimid" value="<?php echo $_GET['cid']; ?>">
-                    <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
+                    <input type="hidden" name="claimid" value="<?php echo (!empty($_GET['cid']) ? $_GET['cid'] : ''); ?>">
+                    <input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
                     <input type="hidden" name="producer" value="<?php echo $_SESSION['username']; ?>">
                     <input type="hidden" name="userid" value="<?php echo $_SESSION['userid']; ?>">
                     <input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">
@@ -188,8 +188,8 @@
         </form>
 
         <br><br>
-        <a href="view_claim.php?claimid=<?php echo $_GET['cid']; ?>&pid=<?php echo $_GET['pid']; ?>" class="button" style="float:left;">Cancel</a>
-        <a href="add_ledger_payments.php?cid=<?php echo $_GET['cid']; ?>&pid=<?php echo $_GET['pid']; ?>" class="button" style="float:right;">Simple Payment</a>
+        <a href="view_claim.php?claimid=<?php echo (!empty($_GET['cid']) ? $_GET['cid'] : ''); ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="button" style="float:left;">Cancel</a>
+        <a href="add_ledger_payments.php?cid=<?php echo (!empty($_GET['cid']) ? $_GET['cid'] : ''); ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="button" style="float:right;">Simple Payment</a>
         <div style="clear:both;"></div>
     </div>
 

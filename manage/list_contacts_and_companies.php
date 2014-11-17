@@ -5,6 +5,7 @@
     include_once('includes/constants.inc');
     include_once('includes/formatters.php');
 
+    $partial = '';
     if (isset($_POST['partial_name'])) {
     	$partial = $_POST['partial_name'];
     	$partial = ereg_replace("[^ A-Za-z'\-]", "", $partial);
@@ -17,8 +18,8 @@
          . " FROM dental_contact c"
          . " LEFT JOIN dental_contacttype ct ON c.contacttypeid=ct.contacttypeid"
          . " WHERE (((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')"
-         . "      AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
-         . " OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%')"
+         . "      AND (lastname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%' OR firstname LIKE '" . (!empty($names[1]) ? $names[1] : '') . "%'))"
+         . " OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .(!empty($names[1]) ? $names[1] : '')."%' AND lastname LIKE '" . (!empty($names[2]) ? $names[2] : '') . "%')"
          . "   OR "
          . "      (company LIKE '".$partial."%')) "
          . " AND merge_id IS NULL "

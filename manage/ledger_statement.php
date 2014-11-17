@@ -13,8 +13,9 @@
 	include_once('includes/patient_info.php');
 	include_once('includes/constants.inc');
 
+	$docr = array();
 	if ($patient_info) {
-		$docsql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+		$docsql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 		
 		$docr = $db->getRow($docsql); 
 		$sql = "SELECT  "
@@ -39,7 +40,7 @@
 			$_REQUEST['sortdir'] = 'desc';
 		}
 
-		if($_REQUEST["delid"] != "") {
+		if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
 			$pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 			
 			$pat_my2 = $db->getResults($pat_sql2);
@@ -68,7 +69,7 @@
 			die();
 		}
 
-		if($_REQUEST["delclaimid"] != "") {
+		if(isset($_REQUEST["delclaimid"]) && $_REQUEST["delclaimid"] != "") {
 	        $del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
 	        
 	        if($db->query($del_sql)){
@@ -108,14 +109,14 @@
 		}
 
 		$rec_disp = 200;
-		if($_REQUEST["page"] != "") {
+		if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
 			$index_val = $_REQUEST["page"];
 		} else {
 			$index_val = 0;
 		}
 	
 		$i_val = $index_val * $rec_disp;
-		if($_GET['openclaims']==1){
+		if(isset($_GET['openclaims']) && $_GET['openclaims']==1){
 			$sql = "select
                 'claim',
                 i.insuranceid as ledgerid,
@@ -405,48 +406,48 @@
 
 	$head = '<table><tr><td width="60%">';
 	$head .= '<div style="display:block; ">';
-	$head .= $docr['practice'];
+	$head .= (!empty($docr['practice']) ? $docr['practice'] : '');
 	$head.='<br />'; 
-	$head .= $docr['first_name']." ".$docr['last_name'];
+	$head .= (!empty($docr['first_name']) ? $docr['first_name'] : '')." ".(!empty($docr['last_name']) ? $docr['last_name'] : '');
 	
-	if(st($docr['address']) <> '') {
+	if(isset($docr['address']) && st($docr['address']) <> '') {
 	    $head.='<br />' .
 	    st($docr['address']);
 	}
 
-	$head .= '<br />'.st($docr['city']).', '.st($docr['state']).' '.st($docr['zip']);
+	$head .= '<br />'.st((!empty($docr['city']) ? $docr['city'] : '')).', '.st((!empty($docr['state']) ? $docr['state'] : '')).' '.st((!empty($docr['zip']) ? $docr['zip'] : ''));
 	$head .= '</div>';
 	$head .= '<br /><br /><br /><br />';
 	$head .= '<div style="display:block; ">';
-	$head .= $name;
+	$head .= (isset($name) ? $name : '');
 
-	if(st($pat_myarray['add1']) <> '') {
+	if(isset($pat_myarray['add1']) && st($pat_myarray['add1']) <> '') {
 		$head.='<br />' .
 		st($pat_myarray['add1']);
 	}
 
-	if(st($pat_myarray['add2']) <> '') {
+	if(isset($pat_myarray['add2']) && st($pat_myarray['add2']) <> '') {
 	    $head .= '<br />' .
 	    st($pat_myarray['add2']);
 	}
 
-	$head .= '<br />'.st($pat_myarray['city']).', '.st($pat_myarray['state']).' '.st($pat_myarray['zip']);
+	$head .= '<br />'.st((!empty($pat_myarray['city']) ? $pat_myarray['city'] : '')).', '.st((!empty($pat_myarray['state']) ? $pat_myarray['state'] : '')).' '.st((!empty($pat_myarray['zip']) ? $pat_myarray['zip'] : ''));
 	$head .= '</div>';
 	$head .= '<br /><br />';
-	$head .= 'Office: '.format_phone($docr['phone']);
+	$head .= 'Office: '.format_phone((!empty($docr['phone']) ? $docr['phone'] : ''));
 	$head .= '<br /><br />';
 	$head .= '</td>';
 	$head .= '<td>';
 	$head .= '*******STATEMENT********';
 	$head .= '<br />
 		<table cellspacing="2">
-		<tr><td align="right">Acct#:</td><td>'.$_GET['pid'].'</td></tr>
+		<tr><td align="right">Acct#:</td><td>'.(!empty($_GET['pid']) ? $_GET['pid'] : '').'</td></tr>
 		<tr><td align="right">Statement Date:</td><td>'.date('m/d/Y').'</td></tr>
-		<tr><td align="right">Balance Due:</td><td>'.number_format(st($orig_bal),2).'</td></tr>
+		<tr><td align="right">Balance Due:</td><td>'.number_format(st((isset($orig_bal) ? $orig_bal : 0)),2).'</td></tr>
 		<tr><td align="right">Due Date:</td><td>'.date('m/d/Y', strtotime("+30 days")).'</td></tr>
 		</table>';
 	$head .= '</td></tr></table>';
-	$html = $head.$html;
+	$html = $head . (!empty($html) ? $html : '');
 
 	$title = "test";
     $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -484,16 +485,18 @@
     // output the HTML content
     $pdf->writeHTML($html, true, false, true, false, '');
 
-	$filename = '/manage/letterpdfs/statement_'.$_GET['pid'].'_'.date('YmdHis').'.pdf';
-    $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
+	$filename = '/manage/letterpdfs/statement_'.(!empty($_GET['pid']) ? $_GET['pid'] : '').'_'.date('YmdHis').'.pdf';
+    if (file_exists($filename)) {
+    	$pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
+    }
 	//$pdf->Output('example_001.pdf', 'I');
 
 	$state_sql = "INSERT INTO dental_ledger_statement SET
-				  producerid = '".mysql_real_escape_string($_SESSION['userid'])."',
-				  filename = '".mysql_real_escape_string($filename)."',
+				  producerid = '".mysqli_real_escape_string($con,$_SESSION['userid'])."',
+				  filename = '".mysqli_real_escape_string($con,$filename)."',
 				  service_date = CURDATE(),
 				  entry_date = CURDATE(),
-				  patientid = '".mysql_real_escape_string($_GET['pid'])."',
+				  patientid = '".mysqli_real_escape_string($con,$_GET['pid'])."',
 				  adddate = now(),
 				  ip_address = '".$_SERVER['REMOTE_ADDR']."'";
 

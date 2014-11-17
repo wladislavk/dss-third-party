@@ -4,8 +4,7 @@
 
 <link rel="stylesheet" href="css/ledger.css" />
 
-<?php
-  $sql = "SELECT p.firstname, p.lastname,
+<?php   $sql = "SELECT p.firstname, p.lastname,
 		      p.patientid
 		      FROM dental_patients p
 	        WHERE p.docid='".$_SESSION['docid']."'
@@ -41,16 +40,7 @@
 <br /><br />
 
 <div align="center" class="red">
-	<b>
-    <?php
-      if (!empty($_GET['msg'])) {
-        echo $_GET['msg'];
-      } else {
-        echo '';
-      }
-        
-    ?>
-  </b>
+	<b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
 </div>
 
 <table class="ledger sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -86,8 +76,7 @@
 	 </tr>
 	</thead>	
 	<tbody>
-	 <?php
-      $total_029 = $total_3059 = $total_6089 = $total_90119 = $total_120 = $grand_total = 0;
+	 <?php       $total_029 = $total_3059 = $total_6089 = $total_90119 = $total_120 = $grand_total = 0;
 
   		if ($total_rec)
       foreach($my as $r) {
@@ -122,8 +111,7 @@
 				  <?php } ?>
 				</td>
 
-        <?php
-          $c_total = $p_total = 0;
+        <?php           $c_total = $p_total = 0;
 
           $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysqli_real_escape_string($con,$r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
           
@@ -153,8 +141,7 @@
           <?php } ?>
   			</td>
 
-        <?php
-          $c_total = $p_total = 0;
+        <?php           $c_total = $p_total = 0;
           $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysqli_real_escape_string($con,$r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 60 DAY)";
           $c_q = $db->getResults($c_sql);
           $p_sql = '';
@@ -182,8 +169,7 @@
           <?php } ?>
         </td>
 
-        <?php
-          $c_total = $p_total = 0;
+        <?php           $c_total = $p_total = 0;
           $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysqli_real_escape_string($con,$r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 120 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 90 DAY)";
           
           $c_q = $db->getResults($c_sql);
@@ -212,8 +198,7 @@
           <?php } ?>
         </td>
 
-        <?php
-          $c_total = $p_total = 0;
+        <?php           $c_total = $p_total = 0;
           $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysqli_real_escape_string($con,$r['patientid'])."' AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 120 DAY)";
           
           $c_q = $db->getResults($c_sql);

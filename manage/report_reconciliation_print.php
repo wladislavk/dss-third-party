@@ -44,7 +44,7 @@
 
     $rec_disp = 200;
 
-    if($_REQUEST["page"] != "") {
+    if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
         $index_val = $_REQUEST["page"];
     } else {
         $index_val = 0;
@@ -80,7 +80,7 @@
             ?>
                 (<i><?php echo  date('m-Y', strtotime($start_date)) ?></i>)
             <?php }
-                if($_GET['pid'] <> '') {
+                if(isset($_GET['pid']) && $_GET['pid'] <> '') {
             ?>
                 (<i><?php echo $thename;?></i>)
             <?php } ?>
@@ -89,7 +89,7 @@
     <div>
         <br />
         <div align="center" class="red">
-            <b><?php echo $_GET['msg'];?></b>
+            <b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
         </div>
         <table class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
             <tr class="tr_bg_h">
@@ -315,10 +315,13 @@
                                 &nbsp;
                             </td>
                             <td valign="top" width="5%">&nbsp;
-                                <?php if($myarray[0] == 'ledger'){
-                                    echo $dss_trxn_status_labels[$myarray["status"]];
-                                }elseif($myarray[0] == 'claim'){
-                                    echo $dss_claim_status_labels[$myarray["status"]];
+                                <?php 
+                                if (isset($myarray[0])) {
+                                    if($myarray[0] == 'ledger'){
+                                        echo $dss_trxn_status_labels[$myarray["status"]];
+                                    }elseif($myarray[0] == 'claim'){
+                                        echo $dss_claim_status_labels[$myarray["status"]];
+                                    }
                                 }
                     }
                             ?>          

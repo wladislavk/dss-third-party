@@ -19,7 +19,7 @@
     if(isset($_REQUEST["vid"]))
     {
             $del_sql = "UPDATE dental_insurance SET fo_paid_viewed=1 where insuranceid='".$_REQUEST["claimid"]."'";
-    	
+        
             $db->query($del_sql);
             $msg = "Claim marked viewed";
 ?>
@@ -31,13 +31,13 @@
     }
 
     $pend_sql = "select i.*, p.firstname, p.lastname,
-            	(SELECT SUM(amount) FROM dental_ledger WHERE primary_claim_id = i.insuranceid) billed,
-            	(SELECT SUM(p.amount) FROM dental_ledger_payment p JOIN dental_ledger dl ON p.ledgerid=dl.ledgerid WHERE dl.primary_claim_id = i.insuranceid) paid,
+                (SELECT SUM(amount) FROM dental_ledger WHERE primary_claim_id = i.insuranceid) billed,
+                (SELECT SUM(p.amount) FROM dental_ledger_payment p JOIN dental_ledger dl ON p.ledgerid=dl.ledgerid WHERE dl.primary_claim_id = i.insuranceid) paid,
                 (SELECT e.adddate FROM dental_claim_electronic e WHERE e.claimid=i.insuranceid ORDER by e.adddate DESC LIMIT 1) electronic_adddate
                 from dental_insurance i left join dental_patients p on i.patientid=p.patientid 
-	            where i.docid='".$_SESSION['docid']."' ";
+                where i.docid='".$_SESSION['docid']."' ";
     if(isset($_GET['paid_viewed'])){ 
-    	$pend_sql .= " AND fo_paid_viewed=0 ";
+        $pend_sql .= " AND fo_paid_viewed=0 ";
     }
     $pend_sql .= " AND (i.status IN (".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.", ".DSS_CLAIM_PAID_SEC_PATIENT."))" ;
     if(isset($_GET['sort2'])){
@@ -47,7 +47,7 @@
             $sort = $_GET['sort2']." ".$_GET['dir2'];
         }
     }
-    $pend_sql .= " ORDER BY " . mysql_real_escape_string($sort);
+    $pend_sql .= " ORDER BY " . mysqli_real_escape_string($con,$sort);
 
     $pend_my = $db->getResults($pend_sql);
 ?>
@@ -56,7 +56,7 @@
     <script src="admin/popup/popup.js" type="text/javascript"></script>
 
     <span class="admin_head">
-    	Paid Claims 
+        Paid Claims 
     </span>
     <br />
     &nbsp;&nbsp;
@@ -73,7 +73,7 @@
         if(isset($_GET['msg'])){
     ?>
             <div align="center" class="red">
-            	<b><?php echo $_GET['msg'];?></b>
+                <b><?php echo $_GET['msg'];?></b>
             </div>
     <?php
         } 
@@ -107,7 +107,7 @@
             </tr>
         <?php } else {
                 foreach ($pend_my as $pend_myarray) {
-                    if($pend_myarray["fo_paid_viewed"] != 1) {
+                    if(!isset($pend_myarray["fo_paid_viewed"]) || $pend_myarray["fo_paid_viewed"] != 1) {
                         $tr_class = "unviewed";
                     } else {
                         $tr_class = "";
@@ -130,13 +130,13 @@
                             <?php echo $dss_claim_status_labels[$pend_myarray['status']];?>
                         </td>
                         <td valign="top">
-			                <?php if($pend_myarray["fo_paid_viewed"] != 1) { ?>
+                            <?php if(!isset($pend_myarray["fo_paid_viewed"]) || $pend_myarray["fo_paid_viewed"] != 1) { ?>
                                 <a href="manage_claims_paid.php?claimid=<?php echo $pend_myarray["insuranceid"];?>&pid=<?php echo  $pend_myarray['patientid']; ?>&vid=1" class="editlink" title="Mark Viewed">
                                     Mark Viewed 
                                 </a>
-					           |
-			                <?php } ?>
-						    <a href="view_claim.php?claimid=<?php echo $pend_myarray["insuranceid"];?>&pid=<?php echo  $pend_myarray['patientid']; ?>" class="editlink" title="View">
+                               |
+                            <?php } ?>
+                            <a href="view_claim.php?claimid=<?php echo $pend_myarray["insuranceid"];?>&pid=<?php echo  $pend_myarray['patientid']; ?>" class="editlink" title="View">
                                 View 
                             </a>
                         </td>

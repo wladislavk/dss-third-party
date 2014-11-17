@@ -8,7 +8,7 @@
     <script type="text/javascript" src="/manage/js/q_page4.js"></script>
 
 <?php
-    if($_POST['q_page4sub'] == 1) {
+    if(isset($_POST['q_page4sub']) && $_POST['q_page4sub'] == 1) {
         $family_had = $_POST['family_had'];
         $family_diagnosed = $_POST['family_diagnosed'];
         $additional_paragraph = $_POST['additional_paragraph'];
@@ -116,7 +116,7 @@
     <br>
 
     <div align="center" class="red">
-        <b><?php echo $_GET['msg'];?></b>
+        <b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
     </div>
 
     <form id="q_page4frm" name="q_page4frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post" >

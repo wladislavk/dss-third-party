@@ -9,7 +9,7 @@
     <br />
 
     <div align="center" class="red">
-        <b><?php echo $_GET['msg'];?></b>
+        <b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
     </div>
 
     <table class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -26,16 +26,16 @@
                 if(isset($_REQUEST['start_date']) && isset($_REQUEST['end_date'])){
                     $start_date = $_REQUEST['start_date'];
                     $end_date = $_REQUEST['end_date'];
-                }elseif($_REQUEST['dailysub']){
+                }elseif(isset($_REQUEST['dailysub'])){
                     $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
                     $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
-                }elseif($_REQUEST['weeklysub']){
+                }elseif(isset($_REQUEST['weeklysub'])){
                     $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd'], $_REQUEST['d_yy']));
                     $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['d_mm'], $_REQUEST['d_dd']+6, $_REQUEST['d_yy']));
-                }elseif($_REQUEST['monthlysub']){
+                }elseif(isset($_REQUEST['monthlysub'])){
                     $start_date = date('Y-m-01', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
                     $end_date = date('Y-m-t', mktime(0, 0, 0, $_REQUEST['d_mm'], 1, $_REQUEST['d_yy']));
-                }elseif($_REQUEST['rangesub']){
+                }elseif(isset($_REQUEST['rangesub'])){
                     $start_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['s_d_mm'], $_REQUEST['s_d_dd'], $_REQUEST['s_d_yy']));
                     $end_date = date('Y-m-d', mktime(0, 0, 0, $_REQUEST['e_d_mm'], $_REQUEST['e_d_dd'], $_REQUEST['e_d_yy']));
                 }else{

@@ -8,7 +8,7 @@
     <script type="text/javascript" src="/manage/js/q_sleep.js"></script>
 
 <?php
-    if($_POST['q_sleepsub'] == 1) {
+    if(isset($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1) {
         $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
         
         $epworth_my = $db->getResults($epworth_sql);
@@ -167,11 +167,11 @@
     $analysis = st($myarray['analysis']);
 
     if($epworthid <> '') {  
-        $epworth_arr1 = split('~',$epworthid);
+        $epworth_arr1 = explode('~',$epworthid);
         foreach($epworth_arr1 as $i => $val) {
             $epworth_arr2 = explode('|',$val);
             $epid[$i] = $epworth_arr2[0];
-            $epseq[$i] = $epworth_arr2[1];
+            $epseq[$i] = isset($epworth_arr2[1]) ? $epworth_arr2[1] : '';
         }
     }
 ?>
@@ -189,7 +189,7 @@
     <br /><br>
 
     <div align="center" class="red">
-        <b><?php echo $_GET['msg'];?></b>
+        <b><?php echo isset($_GET['msg']) ? $_GET['msg'] : '';?></b>
     </div>
 
     <form id="q_sleepfrm" name="q_sleepfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">

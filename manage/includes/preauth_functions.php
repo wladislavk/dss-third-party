@@ -2,6 +2,7 @@
     function claim_errors( $pid, $medicare = false )
     {
         $db = new Db();
+        $con = $GLOBALS['con'];
 
         $errors = array();
         /*
@@ -13,7 +14,7 @@
           }
         */
         if ($medicare) {
-            $sql = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".$pid." LIMIT 1";
+            $sql = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".(!empty($pid) ? $pid : '')." LIMIT 1";
             
             $row = $db->getRow($sql);
             if($row['p_m_ins_type']==1){
@@ -38,7 +39,14 @@
         $sql = "SELECT * FROM dental_patients p WHERE p.patientid=".$pid;
         
         $m = $db->getRow($sql);
-        if( $m['p_m_dss_file']!=1 && $_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE ){
+
+        if (!empty($_SESSION['user_type'])) {
+            $user_type = $_SESSION['user_type'];
+        } else {
+            $user_type = '';
+        }
+
+        if( $m['p_m_dss_file']!=1 && $user_type != DSS_USER_TYPE_SOFTWARE ){
             array_push($errors, "Primary DSS filing insurance not selected - Patient Info");
         }
 
@@ -172,6 +180,7 @@
     function create_vob( $pid )
     {
         $db = new Db();
+        $con = $GLOBALS['con'];
 
         $sql = "SELECT tc.* FROM 
                 dental_patients p 

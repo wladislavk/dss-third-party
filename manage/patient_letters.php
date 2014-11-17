@@ -133,7 +133,7 @@
 
         if(!isset($_REQUEST['sort'])){
             $_REQUEST['sort'] = 'generated_date';
-            if ($status == 'sent') {
+            if (isset($status) && $status == 'sent') {
                 $_REQUEST['sortdir'] = 'DESC';
             } else {
                 $_REQUEST['sortdir'] = 'ASC';
@@ -142,8 +142,8 @@
         $sort = $_REQUEST['sort'];
         $sortdir = $_REQUEST['sortdir'];
         $patientid = $_REQUEST['pid'];
-        $page1 = $_REQUEST['page1'];
-        $page2 = $_REQUEST['page2'];
+        $page1 = (!empty($_REQUEST['page1']) ? $_REQUEST['page1'] : '');
+        $page2 = (!empty($_REQUEST['page2']) ? $_REQUEST['page2'] : '');
         // Get doctor id
         $docid = $_SESSION['docid'];
 
@@ -192,33 +192,33 @@
             $master_q = $db->getResults($master_sql);
 	        if ($master_q) foreach ($master_q as $master_r){
                 $master_contacts = get_contact_info((($master_r['topatient'] == "1") ? $master_r['patientid'] : ''), $master_r['md_list'],$master_r['md_referral_list'], $source, $master_r['letterid']);
-                if(count($contacts['patient']) && count($master_contacts['patient'])){
+                if(isset($contacts['patient']) && isset($master_contacts['patient']) && count($contacts['patient']) && count($master_contacts['patient'])){
                     //$contacts['patient'] = array_merge($contacts['patient'], $master_contacts['patient']);
-                }elseif(count($master_contacts['patient'])){
+                }elseif(isset($master_contacts['patient']) && count($master_contacts['patient'])){
                     $contacts['patient'] = $master_contacts['patient'];
                 }
 
-                if(count($contacts['mds']) && count($master_contacts['mds'])){
+                if(isset($contacts['mds']) && isset($master_contacts['mds']) && count($contacts['mds']) && count($master_contacts['mds'])){
                     $contacts['mds'] = array_merge($contacts['mds'], $master_contacts['mds']);
-                }elseif(count($master_contacts['mds'])){
+                }elseif(isset($master_contacts['mds']) && count($master_contacts['mds'])){
                     $contacts['mds'] = $master_contacts['mds'];
                 }
 
-                if(count($contacts['md_referrals']) && count($master_contacts['md_referrals'])){
+                if(isset($contacts['md_referrals']) && isset($master_contacts['md_referrals']) && count($contacts['md_referrals']) && count($master_contacts['md_referrals'])){
                     $contacts['md_referrals'] = array_merge($contacts['md_referrals'], $master_contacts['md_referrals']);
-                }elseif(count($master_contacts['md_referrals'])){
+                }elseif(isset($master_contacts['md_referrals']) && count($master_contacts['md_referrals'])){
                     $contacts['md_referrals'] = $master_contacts['md_referrals'];
                 }
 	        }
 
-            $total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']);
+            $total_contacts = count((!empty($contacts['patient']) ? $contacts['patient'] : '')) + count((!empty($contacts['mds']) ? $contacts['mds'] : '')) + count((!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : ''));
             $dental_letters[$key]['total_contacts'] = $total_contacts;
             
             if ($total_contacts > 1) {
                 $dental_letters[$key]['sentto'] = $total_contacts . " Contacts";
-                $dental_letters[$key]['patient'] = $contacts['patient'];
-                $dental_letters[$key]['mds'] = $contacts['mds'];
-                $dental_letters[$key]['md_referrals'] = $contacts['md_referrals'];
+                $dental_letters[$key]['patient'] = (!empty($contacts['patient']) ? $contacts['patient'] : '');
+                $dental_letters[$key]['mds'] = (!empty($contacts['mds']) ? $contacts['mds'] : '');
+                $dental_letters[$key]['md_referrals'] = (!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : '');
             } elseif ($total_contacts == 0) {
                 $dental_letters[$key]['sentto'] = "<span class=\"red\">No Contacts</span>";
             } else {
@@ -252,7 +252,7 @@
                 }
 	        }
             // Determine if letter is older than 7 days
-            if (floor((time() - $letter['generated_date']) / $seconds_per_day) > 7 && $status == "pending") {
+            if (floor((time() - $letter['generated_date']) / $seconds_per_day) > 7 && isset($status) && $status == "pending") {
                 $dental_letters[$key]['old'] = true;
             }
         }
@@ -378,7 +378,7 @@
                         $total_contacts = $pending_letters[$i]['total_contacts'];
                         $generated = date('m/d/Y', $pending_letters[$i]['generated_date']);
                         
-                        if ($pending_letters[$i]['old']) {
+                        if (!empty($pending_letters[$i]['old'])) {
                             $alert = " bgcolor=\"#FF9696\"";
                         } elseif ($pending_letters[$i]['status'] == DSS_LETTER_SEND_FAILED) {
                             $alert = " bgcolor=\"#FF9696\"";

@@ -1,6 +1,7 @@
 <?php
     function create_hst( $pid ) {
         $db = new Db();
+        $con = $GLOBALS['con'];
 
         $sql = "SELECT u.* FROM 
                 dental_patients p 

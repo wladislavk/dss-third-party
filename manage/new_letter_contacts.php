@@ -8,22 +8,24 @@
     	$patientid = $_POST['patientid'];
     } else {
     	$html = "No data received.";
+        $patientid = '';
     }
 
     $md_list = get_mdcontactids($patientid, false);
     $md_referral_list = get_mdreferralids($patientid, false);
     $contactinfo = get_contact_info($patientid, $md_list, $md_referral_list);
+
     $contacts = array();
     $j = 0;
     $contacts[$j]['type'] = 'patient';
     $contacts[$j]['id'] = $patientid;
-    $contacts[$j]['name'] = $contactinfo['patient'][0]['salutation'] . " " . $contactinfo['patient'][0]['firstname'] . " " . $contactinfo['patient'][0]['lastname'];
-    $contacts[$j]['email'] = $contactinfo['patient'][0]['email'];
-    $contacts[$j]['fax'] = $contactinfo['patient'][0]['fax'];
+    $contacts[$j]['name'] = (!empty($contactinfo['patient'][0]['salutation']) ? $contactinfo['patient'][0]['salutation'] : '') . " " . (!empty($contactinfo['patient'][0]['firstname']) ? $contactinfo['patient'][0]['firstname'] : '') . " " . (!empty($contactinfo['patient'][0]['lastname']) ? $contactinfo['patient'][0]['lastname'] : '');
+    $contacts[$j]['email'] = (!empty($contactinfo['patient'][0]['email']) ? $contactinfo['patient'][0]['email'] : '');
+    $contacts[$j]['fax'] = (!empty($contactinfo['patient'][0]['fax']) ? $contactinfo['patient'][0]['fax'] : '');
     $j++;
 
     $i = 0;
-    if ($contactinfo['md_referrals']) foreach ($contactinfo['md_referrals'] as $md) {
+    if ($contactinfo) foreach ($contactinfo['md_referrals'] as $md) {
         $contacts[$j]['type'] = 'md_referral';
         $contacts[$j]['id'] = $md['id'];
         $contacts[$j]['name'] = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
@@ -35,7 +37,7 @@
     }
 
     $i = 0;
-    $contact_sql = "SELECT docsleep, docpcp, docdentist, docent, docmdother, docmdother2, docmdother3 FROM dental_patients where patientid = '".s_for($_POST['patientid'])."';";
+    $contact_sql = "SELECT docsleep, docpcp, docdentist, docent, docmdother, docmdother2, docmdother3 FROM dental_patients where patientid = '".s_for((!empty($_POST['patientid']) ? $_POST['patientid'] : ''))."';";
     
     $row = $db->getRow($contact_sql);
     if($row['docsleep']!=''){

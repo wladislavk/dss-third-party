@@ -3,14 +3,16 @@
 function num_patient_changes($pid){
 
 	$db = new Db();
+	$con = $GLOBALS['con'];
+
 	$num_changes = 0;
 
-	$psql = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($pid)."'";
+	$psql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$pid)."'";
 	$p = $db->getRow($psql);
 
-	$csql = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($pid)."'";
+	$csql = "SELECT * FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con,$pid)."'";
 	$cq = $db->getResults($csql);
-	$c = $cq[0];
+	$c = (!empty($cq[0]) ? $cq[0] : array());
 
 
 	$fields = array();

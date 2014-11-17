@@ -97,7 +97,7 @@
 			}
 		}
 
-		if ($origfilename != '') {
+		if (isset($origfilename) && $origfilename != '') {
 			if ($inserted || $updated) {
 				if ((array_search($_FILES["file"]["type"], $dss_file_types) !== false) && ($_FILES["file"]["size"] < DSS_FILE_MAX_SIZE)) {
 					if ($_FILES["file"]["error"] > 0) {
@@ -186,14 +186,14 @@
 		?>
 		
 		<?php 
-			$sleepstudyquery = "SELECT COUNT(id) FROM dental_sleepstudy WHERE docid=".$_SESSION['docid']." AND patientid='".$_GET['pid']."' ORDER BY id DESC;";
+			$sleepstudyquery = "SELECT COUNT(id) FROM dental_sleepstudy WHERE docid=".$_SESSION['docid']." AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC;";
 			$sleepstudyres = $db->getRow($sleepstudyquery);
 			$i = $sleepstudyres['COUNT(id)'] + 1;
 			$calendar_vars = array();
 			$calendar_vars[$i]['scheddate_id'] = "sleepsched$i";
 			$calendar_vars[$i]['copyreqdate_id'] = "copyreqdate$i" 
 		?>
-  			<form name="sleepstudyadd" id="sleepstudyadd" style="float:left;" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>?pid=<?php echo  $_GET['pid']; ?>">
+  			<form name="sleepstudyadd" id="sleepstudyadd" style="float:left;" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
 				<input id="title<?php echo $i?>" name="title" type="hidden" value="Sleep Study <?php echo $i?>" />
 				<table id="sleepstudyscrolltable">
 					<tr style="height:25px;">
@@ -207,7 +207,7 @@
 					</tr>
 					<tr style="height:43px;">
 						<td>
-							<input id="sleepsched<?php echo $i; ?>" name="scheddate" type="text" class="field text addr tbox calendar" value="<?php echo $scheddate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
+							<input id="sleepsched<?php echo $i; ?>" name="scheddate" type="text" class="field text addr tbox calendar" value="<?php echo (isset($scheddate) ? $scheddate : ''); ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
 						</td>
 					</tr>
 					<tr style="height:30px;">
@@ -247,7 +247,7 @@
 					</tr>						
 					<tr style="height:40px;">
 						<td>
-							<input id="copyreqdate<?php echo $i; ?>" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" /><span id="req_0" class="req">*</span>
+							<input id="copyreqdate<?php echo $i; ?>" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo (isset($copyreqdate) ? $copyreqdate : ''); ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" /><span id="req_0" class="req">*</span>
 						</td>
 					</tr>	
 					<tr style="height:29px;">
@@ -268,7 +268,7 @@
 					<tr style="height:39px;">
 						<td>
 							<input type="hidden" value="<?php echo $i; ?>" name="formid" />
-        					<input type="hidden" value="<?php echo $_GET['pid'] ?>" name="patientid" />
+        					<input type="hidden" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>" name="patientid" />
 							<input type="hidden" name="MAX_FILE_SIZE" value="1000000000" />
         					<input name="file" type="file" size="4" />
 						</td>
@@ -282,7 +282,7 @@
 			</form>
 
 		<?php
-			$sleepstudyquery = "SELECT * FROM dental_sleepstudy WHERE docid=".$_SESSION['docid']." AND patientid='".$_GET['pid']."' ORDER BY id DESC;";
+			$sleepstudyquery = "SELECT * FROM dental_sleepstudy WHERE docid=".$_SESSION['docid']." AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC;";
 			
 			$sleepstudyres = $db->getResults($sleepstudyquery);
 			if($sleepstudyres){
@@ -299,7 +299,7 @@
 					$calendar_vars[$i]['scheddate_id'] = "scheddate$i";
 					$calendar_vars[$i]['copyreqdate_id'] = "copyreqdate$i"
  		?>
-					<form id="sleepstudy<?php echo $i; ?>" name="sleepstudy<?php echo $i; ?>" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>?pid=<?php echo $_GET['pid']; ?>" method="POST" style="height:400px;width:150px;float:left;margin:0 7px 0 0;">
+					<form id="sleepstudy<?php echo $i; ?>" name="sleepstudy<?php echo $i; ?>" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" method="POST" style="height:400px;width:150px;float:left;margin:0 7px 0 0;">
 						<input id="title<?php echo $i?>" name="title" type="hidden" value="Sleep Study <?php echo $i?>" />
 						<div id="sleepstudyscrolltable<?php echo $i; ?>">
 							<table id="sleepstudyscrolltable" style="border-right: 1px solid #000000;float: left;margin-right: 27px;width: 150px;">
@@ -429,7 +429,7 @@
 								</tr>
 								<tr style="height:30px;">
 									<td>
-										<input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
+										<input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
 										<input type="hidden" name="formid" value="<?php echo  $i ?>">
 										<input type="hidden" name="sleepstudyid" value="<?php echo $sleepstudy['id']; ?>">
             							<input type="submit" name="updatestudy" value="Save Study" />

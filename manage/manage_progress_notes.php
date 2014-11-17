@@ -3,7 +3,7 @@
 	include_once('includes/patient_info.php');
 
 	if ($patient_info) {
-		if($_REQUEST["delid"] != "") {
+		if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
 			$del_sql = "delete from dental_notes where notesid='".$_REQUEST["delid"]."'";
 			
 			$db->query($del_sql);
@@ -31,7 +31,7 @@
 
 		$rec_disp = 200;
 
-		if($_REQUEST["page"] != "") {
+		if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
 			$index_val = $_REQUEST["page"];
 		} else {
 			$index_val = 0;
@@ -87,7 +87,7 @@
 		</div>
 		<br />
 		<div align="center" class="red">
-			<b><?php echo $_GET['msg'];?></b>
+			<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 		</div>
 
 		<table width="15%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="right" >

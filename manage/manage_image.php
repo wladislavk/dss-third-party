@@ -1,7 +1,7 @@
 <?php 
 	include "includes/top.htm";
 
-	if($_REQUEST["delid"] != "") {
+	if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
 		$del_sql = "delete from dental_contact where userid='".$_REQUEST["delid"]."'";
 		
 		$db->query($del_sql);
@@ -16,7 +16,7 @@
 
 	$rec_disp = 20;
 
-	if($_REQUEST["page"] != "") {
+	if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
 		$index_val = $_REQUEST["page"];
 	} else {
 		$index_val = 0;
@@ -49,7 +49,7 @@
 	</div>
 	<br />
 	<div align="center" class="red">
-		<b><?php echo $_GET['msg'];?></b>
+		<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 	</div>
 	<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 		<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >

@@ -3,7 +3,7 @@
 	include("includes/sescheck.php");
 
 	$sql = "select * from dental_notes where docid='".$_SESSION['docid']."' ";
-	$sql .= " and parentid = '".$_GET['nid']."' ";
+	$sql .= " and parentid = '".(!empty($_GET['nid']) ? $_GET['nid'] : '')."' ";
 	$sql .= " order by adddate DESC";
 	$my = $db->getResults($sql);
 	$num_users = count($my);
@@ -29,7 +29,7 @@
 		</span>
 		<br />
 		<div align="center" class="red">
-			<b><?php echo $_GET['msg'];?></b>
+			<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 		</div>
 
 		<table width="15%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="right" >

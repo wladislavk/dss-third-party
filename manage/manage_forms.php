@@ -1,14 +1,14 @@
 <?php
 	include "includes/top.htm";
 ?>
-
+<!--
 	<script type="text/javascript">
 		window.location = "manage_patient.php";
 	</script>
-
+-->
 <?php
-	die();
-	if($_REQUEST["delid"] != "") {
+	//die();
+	if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
 		$del_sql = "delete from dental_forms where formid='".$_REQUEST["delid"]."'";
 		
 		$db->query($del_sql);
@@ -35,7 +35,7 @@
 	}
 
 	$rec_disp = 20;
-	if($_REQUEST["page"] != "") {
+	if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
 		$index_val = $_REQUEST["page"];
 	} else {
 		$index_val = 0;
@@ -77,7 +77,7 @@
 	<?php } ?>
 	<br />
 	<div align="center" class="red">
-		<b><?php echo $_GET['msg'];?></b>
+		<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 	</div>
 
 	<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
@@ -120,7 +120,7 @@
 				</tr>
 			<?php } else {
 				foreach ($my as $myarray) {
-					if($myarray["status"] == 1) {
+					if(isset($myarray["status"]) && $myarray["status"] == 1) {
 						$tr_class = "tr_active";
 					} else {
 						$tr_class = "tr_inactive";

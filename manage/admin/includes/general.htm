@@ -71,7 +71,7 @@ function get_mdcontactids ($pid, $active = true) {
   $contact_sql = "SELECT docsleep, docpcp, docdentist, docent, docmdother, docmdother2, docmdother3 FROM dental_patients where patientid = '".s_for($pid)."';";
   $contact_res = $db->getRow($contact_sql);
   $contactids = array();
-  foreach ($contact_res as $field) {
+  if ($contact_res) foreach ($contact_res as $field) {
     if ($field != "Not Set") {
       $contacts = explode(",", $field);
       foreach ($contacts as $contact) {

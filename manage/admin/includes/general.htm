@@ -78,7 +78,7 @@ function get_mdcontactids ($pid, $active = true) {
 				if ($contact != "") {
       		if(!in_array($contact, $contactids)){
       		  if($active){
-      		    $a_sql = "select status FROM dental_contact WHERE contactid='".mysqli_real_escape_string($GLOBAL['con'],$contact)."'";
+      		    $a_sql = "select status FROM dental_contact WHERE contactid='".mysqli_real_escape_string($GLOBALS['con'],$contact)."'";
       		    $a_r = $db->getRow($a_sql);
       		    if($a_r['status']==1){
 	              $contactids[] = $contact;
@@ -262,7 +262,7 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
 
   $db = new Db();
   if(isset($_SESSION['docid'])){
-    $l_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBAL['con'],$_SESSION['docid'])."'";
+    $l_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'],$_SESSION['docid'])."'";
     $l_r = $db->getRow($l_sql);
     if($l_r['use_letters'] != '1'){
       return -1;
@@ -290,7 +290,7 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
   if (!isset($templateid)) {
     return "Error: Letter Template not specified";
   } else {
-    $values = "'".mysqli_real_escape_string($GLOBAL['con'],$templateid)."'";
+    $values = "'".mysqli_real_escape_string($GLOBALS['con'],$templateid)."'";
   }
   if ($status == 1) {
     $columns .= ", date_sent";
@@ -298,15 +298,15 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
   }
   if (isset($pid)) {
     $columns .= ", patientid";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$pid)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$pid)."'";
   }
   if (isset($info_id)) {
     $columns .= ", info_id";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$info_id)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$info_id)."'";
   }
   if (isset($parentid) && $status != 1) {
     $columns .= ", parentid";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$parentid)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$parentid)."'";
   }
   if($status==1){
     $columns .= ", parentid";
@@ -314,81 +314,81 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
   }
   if (isset($topatient)) {
     $columns .= ", topatient";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$topatient)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$topatient)."'";
     if(!isset($cc_topatient)){
       $columns .= ", cc_topatient";
-      $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$topatient)."'";
+      $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$topatient)."'";
     }
   }
   if(isset($cc_topatient)){
     $columns .= ", cc_topatient";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$cc_topatient)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$cc_topatient)."'";
   }
   if (isset($md_list)) {
     $columns .= ", md_list";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$md_list)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$md_list)."'";
     if(!isset($cc_md_list)){
       $columns .= ", cc_md_list";
-      $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$md_list)."'";
+      $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$md_list)."'";
     }
   }
   if(isset($cc_md_list)){
     $columns .= ", cc_md_list";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$cc_md_list)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$cc_md_list)."'";
   }
   if (isset($md_referral_list)) {
     $columns .= ", md_referral_list";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$md_referral_list)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$md_referral_list)."'";
     if(!isset($cc_md_referral_list)){
       $columns .= ", cc_md_referral_list";
-      $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$md_referral_list)."'";
+      $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$md_referral_list)."'";
     }
   }
   if(isset($cc_md_referral_list)){
     $columns .= ", cc_md_referral_list";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$cc_md_referral_list)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$cc_md_referral_list)."'";
   }
   if (isset($pat_referral_list)) {
     $columns .= ", pat_referral_list";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$pat_referral_list)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$pat_referral_list)."'";
     if(!isset($cc_pat_referral_list)){
       $columns .= ", cc_pat_referral_list";
-      $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$pat_referral_list)."'";
+      $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$pat_referral_list)."'";
     }
   }
   if(isset($cc_pat_referral_list)){
     $columns .= ", cc_pat_referral_list";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$cc_pat_referral_list)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$cc_pat_referral_list)."'";
   }
 
   if (isset($template)) {
     $columns .= ",template ";
     $template = html_entity_decode( preg_replace('/(&Acirc;|&acirc;|&nbsp;)+/i', '', $template), ENT_COMPAT | ENT_IGNORE,"UTF-8");
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$template)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$template)."'";
   }
   if (isset($send_method)) {
     $columns .= ", send_method";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$send_method)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$send_method)."'";
   }
   if (isset($status)) {
 		$columns .= ", status";
-		$values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$status)."'";
+		$values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$status)."'";
 	}
   if (isset($deleted)) {
 		$columns .= ", deleted, deleted_by, deleted_on ";
-		$values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$deleted)."', '".$_SESSION['userid']."', now() ";
+		$values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$deleted)."', '".$_SESSION['userid']."', now() ";
 	}
   if (isset($template_type)) {
     $columns .= ", template_type";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$template_type)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$template_type)."'";
   }
   if($font_size){
     $columns .= ", font_size";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$font_size)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$font_size)."'";
   }
   if($font_family){
     $columns .= ", font_family";
-    $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$font_family)."'";
+    $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$font_family)."'";
   }
   $columns .= ", generated_date, delivered, docid, userid";
   $values .= ", '$gen_date', '$delivered', '". $_SESSION['docid'] ."', '". $_SESSION['userid'] ."'";
@@ -398,7 +398,7 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
   if(!$letter_insert) {
     return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
   } else {
-    $id = mysql_insert_id();
+    $id = mysqli_insert_id($GLOBALS['con']);
     // If parent and recipient ids are set, clear the recipient id from the parent
     return $id;
   }
@@ -408,7 +408,7 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
 function create_welcome_letter ($templateid, $md_list, $docid) {
 
   $db = new Db();
-  $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBAL['con'],$_SESSION['docid'])."'";
+  $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'],$_SESSION['docid'])."'";
   $let_r = $db->getRow($let_sql);
 
   if($let_r['use_letters'] && $let_r['intro_letters']){
@@ -417,24 +417,24 @@ function create_welcome_letter ($templateid, $md_list, $docid) {
     $delivered = '0';
     $deleted = '0';
     $columns = "templateid";
-    $values = "'".mysqli_real_escape_string($GLOBAL['con'],$templateid)."'";
+    $values = "'".mysqli_real_escape_string($GLOBALS['con'],$templateid)."'";
     if ($status == 1) {
       $columns .= ", date_sent";
       $values .= ", NOW()";
     }
     if (isset($md_list)) {
       $columns .= ", md_list";
-      $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$md_list)."'";
+      $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$md_list)."'";
       $columns .= ", cc_md_list";
-      $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$md_list)."'";
+      $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$md_list)."'";
     }
     if (isset($status)) {
       $columns .= ", status";
-      $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$status)."'";
+      $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$status)."'";
     }
     if (isset($deleted)) {
       $columns .= ", deleted";
-      $values .= ", '".mysqli_real_escape_string($GLOBAL['con'],$deleted)."'";
+      $values .= ", '".mysqli_real_escape_string($GLOBALS['con'],$deleted)."'";
     }
 
     $columns .= ", generated_date, delivered, docid, userid";
@@ -444,7 +444,7 @@ function create_welcome_letter ($templateid, $md_list, $docid) {
     if(!$letter_insert) {
       return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
     } else {
-      $id = mysql_insert_id();
+      $id = mysqli_insert_id($GLOBALS['con']);
       // If parent and recipient ids are set, clear the recipient id from the parent
       return $id;
     }
@@ -475,18 +475,18 @@ $template = htmlspecialchars($template);
 */
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
 		$template = html_entity_decode( preg_replace('/(&Acirc;|&acirc;|&nbsp;)+/i', '', $template), ENT_COMPAT | ENT_IGNORE,"UTF-8");
-		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), template='".mysqli_real_escape_string($GLOBAL['con'],$template)."' ";
+		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), template='".mysqli_real_escape_string($GLOBALS['con'],$template)."' ";
     if($font_size ){
-      $letter_query .= ", font_size='".mysqli_real_escape_string($GLOBAL['con'],$font_size)."' ";
+      $letter_query .= ", font_size='".mysqli_real_escape_string($GLOBALS['con'],$font_size)."' ";
     }
     if($font_family ){
-      $letter_query .= ", font_family='".mysqli_real_escape_string($GLOBAL['con'],$font_family)."' ";
+      $letter_query .= ", font_family='".mysqli_real_escape_string($GLOBALS['con'],$font_family)."' ";
     }
 
 		if($update_send){
-			$letter_query .= ", send_method='".mysqli_real_escape_string($GLOBAL['con'],$update_send)."' ";
+			$letter_query .= ", send_method='".mysqli_real_escape_string($GLOBALS['con'],$update_send)."' ";
 			if($update_send == 'paper' || $update_send == 'email'){
-				$db->query("UPDATE dental_faxes SET viewed='1' WHERE letterid='".mysqli_real_escape_string($GLOBAL['con'],$letterid)."'");
+				$db->query("UPDATE dental_faxes SET viewed='1' WHERE letterid='".mysqli_real_escape_string($GLOBALS['con'],$letterid)."'");
 			}
 		}
 		$letter_query .= " WHERE letterid='".s_for($letterid)."';";
@@ -698,18 +698,18 @@ function create_letter_pdf($letterid){
   $logo = $result['logo'];
   $user_type = $result['user_type'];
 
-  $loc_sql = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($GLOBAL['con'],$docid)."'";
+  $loc_sql = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($GLOBALS['con'],$docid)."'";
   $loc_r = $db->getRow($loc_sql);
   $doc_name = $loc_r['name'];
   $doc_phone = $loc_r['phone'];
   $doc_fax = $loc_r['fax'];
 
-  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($GLOBAL['con'],$patientid)."'";
+  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($GLOBALS['con'],$patientid)."'";
   $loc_r = $db->getRow($loc_sql);
   if($patientid!='' && $loc_r['location'] != '' && $loc_r['location'] != '0'){
-    $location_query = "SELECT * FROM dental_locations WHERE id='".mysqli_real_escape_string($GLOBAL['con'],$loc_r['location'])."' AND docid='".mysqli_real_escape_string($GLOBAL['con'],$docid)."'";
+    $location_query = "SELECT * FROM dental_locations WHERE id='".mysqli_real_escape_string($GLOBALS['con'],$loc_r['location'])."' AND docid='".mysqli_real_escape_string($GLOBALS['con'],$docid)."'";
   }else{
-    $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($GLOBAL['con'],$docid)."'";
+    $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($GLOBALS['con'],$docid)."'";
   }
 
   $loc_r2 = $db->getRow($location_query);
@@ -886,7 +886,7 @@ function deliver_created_letter($letterid){
   if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
     if($fax_send['status']){
       $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
-      $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysqli_real_escape_string($GLOBAL['con'],$patientid)."',userid = '".mysqli_real_escape_string($GLOBAL['con'],$userid)."',docid = '".mysqli_real_escape_string($GLOBAL['con'],$docid)."',sent_date = NOW(),pages = '".mysqli_real_escape_string($GLOBAL['con'],count_pages('../letterpdfs/'.$filename))."',contactid = '".mysqli_real_escape_string($GLOBAL['con'],$contactid)."',filename = '".mysqli_real_escape_string($GLOBAL['con'],$filename)."',to_number = '".mysqli_real_escape_string($GLOBAL['con'],$fax)."',to_name = '".mysqli_real_escape_string($GLOBAL['con'],$to_name)."',letterid = '".mysqli_real_escape_string($GLOBAL['con'],$letterid)."',status = '0', sfax_transmission_id = '".$fax_send['transmission_id']."', letter_body = '".mysqli_real_escape_string($GLOBAL['con'],$template)."', adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+      $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysqli_real_escape_string($GLOBALS['con'],$patientid)."',userid = '".mysqli_real_escape_string($GLOBALS['con'],$userid)."',docid = '".mysqli_real_escape_string($GLOBALS['con'],$docid)."',sent_date = NOW(),pages = '".mysqli_real_escape_string($GLOBALS['con'],count_pages('../letterpdfs/'.$filename))."',contactid = '".mysqli_real_escape_string($GLOBALS['con'],$contactid)."',filename = '".mysqli_real_escape_string($GLOBALS['con'],$filename)."',to_number = '".mysqli_real_escape_string($GLOBALS['con'],$fax)."',to_name = '".mysqli_real_escape_string($GLOBALS['con'],$to_name)."',letterid = '".mysqli_real_escape_string($GLOBALS['con'],$letterid)."',status = '0', sfax_transmission_id = '".$fax_send['transmission_id']."', letter_body = '".mysqli_real_escape_string($GLOBALS['con'],$template)."', adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
       error_log($fax_query);
       $fid = $db->getInsertId($fax_query);
       invoice_add_fax('1', $_SESSION['docid'], $fid);
@@ -989,7 +989,7 @@ function deliver_letter($letterid, $message) {
 		$user_type = $result['user_type'];
 		$doc_company = $result['companyid'];
 
-    $loc_sql = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($GLOBAL['con'],$docid)."'";
+    $loc_sql = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($GLOBALS['con'],$docid)."'";
     $loc_r = $db->getRow($loc_sql);
     $doc_name = $loc_r['name'];
     $doc_phone = $loc_r['phone'];
@@ -1344,7 +1344,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
       $margin_header = $m_r['letter_margin_header']; 
       $margin_footer = $m_r['letter_margin_footer'];
       if($letterid){
-        $l_sql = "SELECT * FROM dental_letters where letterid='".mysqli_real_escape_string($GLOBAL['con'],$letterid)."'";
+        $l_sql = "SELECT * FROM dental_letters where letterid='".mysqli_real_escape_string($GLOBALS['con'],$letterid)."'";
         $l_r = $db->getRow($l_sql);
         $font_size = $l_r['font_size'];
         $font_family = $l_r['font_family'];
@@ -1411,7 +1411,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 function reset_letter($letterid){
 
   $db = new Db();
-  $sql = "UPDATE dental_letters set template='', edit_userid=null, edit_date=null WHERE letterid='".mysqli_real_escape_string($GLOBAL['con'],$letterid)."'";
+  $sql = "UPDATE dental_letters set template='', edit_userid=null, edit_date=null WHERE letterid='".mysqli_real_escape_string($GLOBALS['con'],$letterid)."'";
   $db->query($sql);
 }
 
@@ -1444,9 +1444,9 @@ function mail_letter($letterid, $mailed = true) {
 
   $db = new Db();
   if($mailed != 'false'){
-    $s = "UPDATE dental_letters set mailed_date = NOW(), mailed_once=1 where letterid='".mysqli_real_escape_string($GLOBAL['con'],$letterid)."'";
+    $s = "UPDATE dental_letters set mailed_date = NOW(), mailed_once=1 where letterid='".mysqli_real_escape_string($GLOBALS['con'],$letterid)."'";
   }else{
-    $s = "UPDATE dental_letters set mailed_date = null where letterid='".mysqli_real_escape_string($GLOBAL['con'],$letterid)."'";
+    $s = "UPDATE dental_letters set mailed_date = null where letterid='".mysqli_real_escape_string($GLOBALS['con'],$letterid)."'";
   }
   return $db->query($s);
 }
@@ -1456,15 +1456,15 @@ function mail_claim($claimid, $mailed = true, $type = 'pri') {
   $db = new Db();
   if($type == 'pri'){
     if($mailed != 'false'){
-      $s = "UPDATE dental_insurance set mailed_date = NOW() where insuranceid='".mysqli_real_escape_string($GLOBAL['con'],$claimid)."'";
+      $s = "UPDATE dental_insurance set mailed_date = NOW() where insuranceid='".mysqli_real_escape_string($GLOBALS['con'],$claimid)."'";
     }else{
-      $s = "UPDATE dental_insurance set mailed_date = null where insuranceid='".mysqli_real_escape_string($GLOBAL['con'],$claimid)."'";
+      $s = "UPDATE dental_insurance set mailed_date = null where insuranceid='".mysqli_real_escape_string($GLOBALS['con'],$claimid)."'";
     }
   }else{
     if($mailed != 'false'){
-      $s = "UPDATE dental_insurance set sec_mailed_date = NOW() where insuranceid='".mysqli_real_escape_string($GLOBAL['con'],$claimid)."'";
+      $s = "UPDATE dental_insurance set sec_mailed_date = NOW() where insuranceid='".mysqli_real_escape_string($GLOBALS['con'],$claimid)."'";
     }else{
-      $s = "UPDATE dental_insurance set sec_mailed_date = null where insuranceid='".mysqli_real_escape_string($GLOBAL['con'],$claimid)."'";
+      $s = "UPDATE dental_insurance set sec_mailed_date = null where insuranceid='".mysqli_real_escape_string($GLOBALS['con'],$claimid)."'";
     }
   }
   claim_history_update($claimid, $_SESSION['userid'], $_SESSION['adminuserid']);
@@ -1482,7 +1482,7 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
 
   $db = new Db();
   $rval = '';
-  $c_sql = "SELECT patientid, topatient, md_list, md_referral_list, pat_referral_list FROM dental_letters WHERE letterid='".mysqli_real_escape_string($GLOBAL['con'],$letterid)."'";
+  $c_sql = "SELECT patientid, topatient, md_list, md_referral_list, pat_referral_list FROM dental_letters WHERE letterid='".mysqli_real_escape_string($GLOBALS['con'],$letterid)."'";
   $c_r = $db->getRow($c_sql);
   $contacts = get_contact_info((($c_r['topatient'] == "1") ? $c_r['patientid'] : ''), $c_r['md_list'], $c_r['md_referral_list'], $c_r['pat_referral_list']);
   $total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']) + count($contacts['pat_referrals']);
@@ -1491,7 +1491,7 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
   } elseif ( $total_contacts == 1) {
 		$letter_query = "UPDATE dental_letters SET parentid=null, deleted='1', deleted_by='".$_SESSION['userid']."', deleted_on=now() WHERE letterid='".$letterid."';";
 		$letter_result = $db->query($letter_query);
-		$fax_query = "UPDATE dental_faxes SET viewed='1' WHERE letterid='".mysqli_real_escape_string($GLOBAL['con'],$letterid)."'";
+		$fax_query = "UPDATE dental_faxes SET viewed='1' WHERE letterid='".mysqli_real_escape_string($GLOBALS['con'],$letterid)."'";
 		$fax_result = $db->query($fax_query);
  		$parent_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".$letterid."';";
 		$parent_result = $db->query($parent_query);
@@ -1594,7 +1594,7 @@ function delete_contact_from_patients($contact){
   $db = new Db();
   $docs = array('docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother', 'docmdother2', 'docmdother3');
   foreach($docs as $doc){
-    $s = "UPDATE dental_patients SET ".$doc."='' WHERE ".$doc."=".mysqli_real_escape_string($GLOBAL['con'],$contact);
+    $s = "UPDATE dental_patients SET ".$doc."='' WHERE ".$doc."=".mysqli_real_escape_string($GLOBALS['con'],$contact);
     $db->query($s);
   }
 }

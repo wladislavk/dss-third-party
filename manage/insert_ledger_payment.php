@@ -10,8 +10,13 @@
 
     <body>
         <?php
-            $i = $_COOKIE['tempforledgerentry'];
+            $i = (!empty($_COOKIE['tempforledgerentry']) ? $_COOKIE['tempforledgerentry'] : '');
             $d = 1;
+
+            if (!isset($sqlinsertqry)) {
+                $sqlinsertqry = '';
+            }
+
             $sqlinsertqry .= "INSERT INTO `dental_ledger_payment` (
                 `ledgerid` ,
                 `payment_date` ,
@@ -21,7 +26,7 @@
                 `payer`
                 ) VALUES ";
 
-            foreach($_POST['form'] as $form){
+            if (!empty($_POST['form'])) foreach($_POST['form'] as $form){
                 $sqlinsertqry .= "(".$_POST['ledgerid'].", '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".str_replace(',','',$form['amount'])."', '".$form['payment_type']."', '".$form['payer']."'),";
             }
 

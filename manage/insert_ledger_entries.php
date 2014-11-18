@@ -15,9 +15,9 @@
     <body>
         <br /><br />
         <?php
-            $i = $_COOKIE['tempforledgerentry'];
+            $i = (!empty($_COOKIE['tempforledgerentry']) ? $_COOKIE['tempforledgerentry'] : '');
             $d = 1;
-            if(authorize($_POST['username'], $_POST['password'], DSS_USER_TYPE_ADMIN)){
+            if(authorize((!empty($_POST['username']) ? $_POST['username'] : ''), (!empty($_POST['password']) ? $_POST['password'] : ''), DSS_USER_TYPE_ADMIN)){
                 $sqlinsertqry = "INSERT INTO `dental_ledger` (
                 `ledgerid` ,
                 `patientid` ,
@@ -38,7 +38,7 @@
                 `primary_claim_id`
                 ) VALUES ";
 
-                if ($_POST['form']) foreach($_POST['form'] as $form){
+                if (!empty($_POST['form'])) foreach($_POST['form'] as $form){
                     $sqlinsertqry = "INSERT INTO `dental_ledger` (
                         `ledgerid` ,
                         `patientid` ,
@@ -162,9 +162,9 @@
                     }
                 }
 
-	            claim_history_update($claim_id, $_SESSION['userid'], '');
+	            claim_history_update((!empty($claim_id) ? $claim_id : ''), $_SESSION['userid'], '');
 
-                if(!$insqry){
+                if(empty($insqry)){
         ?>
                     <script type="text/javascript">
                         alert('Could not add ledger entries, please close this window and contact your system administrator');

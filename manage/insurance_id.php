@@ -3,7 +3,7 @@
     include("includes/sescheck.php");
 
     $docid = $_SESSION['docid'];
-    $patientid = $_GET['pid'];
+    $patientid = (!empty($_GET['pid']) ? $_GET['pid'] : '');
     //define a maxim size for the uploaded images in Kb
     define ("MAX_SIZE","5096"); 
 
@@ -81,7 +81,7 @@
         }
     }
 
-    $sql = "select card from dental_insurance where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate";
+    $sql = "select card from dental_insurance where docid='".$_SESSION['docid']."' and patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' order by adddate";
     
     $my = $db->getResults($sql);
     if ($my) foreach ($my as $myinsid){

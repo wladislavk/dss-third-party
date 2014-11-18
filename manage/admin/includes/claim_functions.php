@@ -2,25 +2,34 @@
 
 
 function claim_status_history_update($insuranceid, $new, $old, $userid, $adminid=''){
+
+  $db = new Db();
+  $con = $GLOBALS['con'];
+
   if($old != $new){
     $sql = "INSERT INTO dental_insurance_status_history SET
-		insuranceid='".mysql_real_escape_string($insuranceid)."',
-		status='".mysql_real_escape_string($new)."',
-		userid='".mysql_real_escape_string($userid)."',
-		adminid='".mysql_real_escape_string($adminid)."',
+		insuranceid='".mysqli_real_escape_string($con,$insuranceid)."',
+		status='".mysqli_real_escape_string($con,$new)."',
+		userid='".mysqli_real_escape_string($con,$userid)."',
+		adminid='".mysqli_real_escape_string($con,$adminid)."',
 		adddate=now(),
-		ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
-    mysql_query($sql) or error_log(mysql_error());
+		ip_address = '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
+
+    $db->query($sql);
   }
 }
 
 
 function claim_create_sec($pid, $primary_claim_id, $prod, $reuse_sec = false){
+
+  $db = new Db();
+  $con = $GLOBALS['con'];
+
              $pat_sql = "select p.*, u.billing_company_id from dental_patients p 
 		JOIN dental_users u ON u.userid=p.docid
 		where p.patientid='".s_for($pid)."'";
-             $pat_my = mysql_query($pat_sql);
-             $pat_myarray = mysql_fetch_array($pat_my);
+
+             $pat_myarray = $db->getRow($pat_sql);
 $p_m_dss_file = $pat_myarray['s_m_dss_file'];
 $p_m_billing_id = $pat_myarray['billing_company_id'];
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
@@ -52,8 +61,8 @@ $patient_dob = $pat_myarray['dob'];
 //USE SECONDARY INSURANCE FROM PRIMARY CLAIM
 if($reuse_sec){
   $p_sql = "SELECT * FROM dental_insurance WHERE insuranceid='".$primary_claim_id."'";
-  $p_q = mysql_query($p_sql);
-  $p_r = mysql_fetch_assoc($p_q);
+
+  $p_r = $db->getRow($p_sql);
   $insurancetype = st($p_r['other_insurance_type']);
   $other_insurancetype = $p_r['insurance_type'];
   $other_insured_firstname = st($p_r['insured_firstname']);
@@ -146,13 +155,12 @@ $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
                         ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
 
-  $result = mysql_query($sleepstudies);
-  $d = mysql_fetch_assoc($result);
+  $d = $db->getRow($sleepstudies);
   $diagnosis_1 = $d['diagnosis'];
 
-  $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_1)."'";
-     $ins_diag_q = mysql_query($ins_diag_sql);
-     $ins_diag = mysql_fetch_assoc($ins_diag_q);
+  $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con,$diagnosis_1)."'";
+     
+     $ins_diag = $db->getRow($ins_diag_sql);
      $diagnosis_a = $ins_diag['ins_diagnosis'];
 
 $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss                                 
@@ -162,8 +170,7 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
                         ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
 
-  $result = mysql_query($sleepstudies);
-  $d = mysql_fetch_assoc($result);
+  $d = $db->getRow($sleepstudies);
   $diagnosising_doc = $d['diagnosising_doc'];
   $diagnosising_npi = $d['diagnosising_npi'];
 
@@ -184,12 +191,11 @@ if (empty($prior_authorization_number)) {
          . "ORDER BY "
          . "  date_completed desc "
          . "LIMIT 1";
-    $my = mysql_query($sql);
-    $num_rows = mysql_num_rows($my);
 
-    if ($num_rows > 0) {
-        $myarray = mysql_fetch_array($my);
-        $prior_authorization_number = $myarray['pre_auth_num'];
+    $my = $db->getRow($sql);
+
+    if (!empty($my)) {
+        $prior_authorization_number = $my['pre_auth_num'];
     }
 }
 		$ins_sql = " insert into dental_insurance set 
@@ -401,9 +407,9 @@ if (empty($prior_authorization_number)) {
                 billing_provider_a = '".s_for($billing_provider_a)."',
                 billing_provider_dd = '".s_for($billing_provider_dd)."',
                 billing_provider_b_other = '".s_for($billing_provider_b_other)."',
-		p_m_eligible_payer_id = '".mysql_real_escape_string($p_m_eligible_payer_id)."',
-                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
-		primary_claim_id = '".mysql_real_escape_string($primary_claim_id)."',
+		p_m_eligible_payer_id = '".mysqli_real_escape_string($con,$p_m_eligible_payer_id)."',
+                p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
+		primary_claim_id = '".mysqli_real_escape_string($con,$primary_claim_id)."',
                 status = '".s_for(DSS_CLAIM_SEC_PENDING)."',
                 userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',
@@ -412,21 +418,16 @@ if (empty($prior_authorization_number)) {
 		p_m_dss_file='".s_for($p_m_dss_file)."',
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-                mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-
-	$secondary_claim_id = mysql_insert_id();
+                
+	$secondary_claim_id = $db->getInsertId($ins_sql);
 	claim_history_update($secondary_claim_id, $_SESSION['userid'], '');
 
 	$l_sql = "UPDATE dental_ledger SET secondary_claim_id = '".$secondary_claim_id."' 
 			WHERE primary_claim_id='".$primary_claim_id."'";
-	mysql_query($l_sql) or die(mysql_error());
+	
+  $db->query($l_sql);
+
 	return $secondary_claim_id;
 }
-
-
-
-
-
-
 
 ?>

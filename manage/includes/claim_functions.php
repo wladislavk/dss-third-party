@@ -3,6 +3,7 @@
 //inserts row into dental_insurance_history
 function claim_history_update($insid, $userid, $adminid){
   $db = new Db();
+  $con = $GLOBALS['con'];
 
   $sql = "INSERT INTO dental_insurance_history(
     insuranceid,
@@ -514,9 +515,9 @@ function claim_history_update($insid, $userid, $adminid){
       percase_status,
       percase_invoice,
       primary_claim_id,
-     '".mysql_real_escape_string($userid)."','".mysql_real_escape_string($adminid)."', now()
+     '".mysqli_real_escape_string($con,$userid)."','".mysqli_real_escape_string($con,$adminid)."', now()
     			FROM dental_insurance i
-    			WHERE i.insuranceid='".mysql_real_escape_string($insid)."'";
+    			WHERE i.insuranceid='".mysqli_real_escape_string($con,$insid)."'";
 
   $hid = $db->getInsertId($sql);
   $sql = "INSERT INTO dental_ledger_history(
@@ -597,9 +598,9 @@ function claim_history_update($insid, $userid, $adminid){
       percase_status,
       percase_free, 
       '".$hid."',
-      '".mysql_real_escape_string($userid)."','".mysql_real_escape_string($adminid)."', now()
+      '".mysqli_real_escape_string($con,$userid)."','".mysqli_real_escape_string($con,$adminid)."', now()
                         FROM dental_ledger l
-                        WHERE l.primary_claim_id='".mysql_real_escape_string($insid)."'";
+                        WHERE l.primary_claim_id='".mysqli_real_escape_string($con,$insid)."'";
 
   $db->query($sql);
   return $hid;

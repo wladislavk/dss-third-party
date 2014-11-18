@@ -3,13 +3,15 @@
 function create_notification($pid, $docid, $n, $n_type, $s=1){
 
   $db = new Db();
+  $con = $GLOBALS['con'];
+  
   $s = "INSERT INTO dental_notifications (patientid, docid, notification, notification_type, status, notification_date)
 		VALUES
-	('".mysql_real_escape_string($pid)."',
-		 '".mysql_real_escape_string($docid)."',
-		 '".mysql_real_escape_string($n)."',
-		 '".mysql_real_escape_string($n_type)."',
-		 '".mysql_real_escape_string($s)."',
+	('".mysqli_real_escape_string($con,$pid)."',
+		 '".mysqli_real_escape_string($con,$docid)."',
+		 '".mysqli_real_escape_string($con,$n)."',
+		 '".mysqli_real_escape_string($con,$n_type)."',
+		 '".mysqli_real_escape_string($con,$s)."',
 		 NOW())";
 
   $q = $db->query($s);
@@ -20,7 +22,9 @@ function create_notification($pid, $docid, $n, $n_type, $s=1){
 function find_patient_notifications($p){
 
   $db = new Db();
-  $s = "SELECT * FROM dental_notifications WHERE patientid='".mysql_real_escape_string($p)."' AND status=1";
+  $con = $GLOBALS['con'];
+
+  $s = "SELECT * FROM dental_notifications WHERE patientid='".mysqli_real_escape_string($con,$p)."' AND status=1";
   
   $q = $db->getResults($s);
   $not = array();

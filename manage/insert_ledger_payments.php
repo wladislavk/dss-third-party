@@ -13,11 +13,11 @@
 
     <body>
         <?php
-            if(authorize($_POST['username'], $_POST['password'], DSS_USER_TYPE_ADMIN)){
-                $csql = "SELECT *, REPLACE(i.total_charge,',','') AS amount_due FROM dental_insurance i WHERE i.insuranceid='".$_POST['claimid']."';";
+            if(authorize((!empty($_POST['username']) ? $_POST['username'] : ''), (!empty($_POST['password']) ? $_POST['password'] : ''), DSS_USER_TYPE_ADMIN)){
+                $csql = "SELECT *, REPLACE(i.total_charge,',','') AS amount_due FROM dental_insurance i WHERE i.insuranceid='".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."';";
                 
                 $claim = $db->getRow($csql);
-                $psql = "SELECT * FROM dental_patients p WHERE p.patientid='".$_POST['patientid']."';";
+                $psql = "SELECT * FROM dental_patients p WHERE p.patientid='".(!empty($_POST['patientid']) ? $_POST['patientid'] : '')."';";
 
                 $pat = $db->getRow($psql);
                 $msg = "Payments have been added.";
@@ -33,7 +33,7 @@
                     `payer`
                     ) VALUES ";
 
-                $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_POST['claimid'];
+                $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '');
                 
                 $lq = $db->getResults($lsql);
                 if ($lq) foreach ($lq as $row){
@@ -51,12 +51,12 @@
                 $paysql = "SELECT SUM(lp.amount) as payment
                             FROM dental_ledger_payment lp
                             JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
-                            WHERE dl.primary_claim_id='".$_POST['claimid']."'
+                            WHERE dl.primary_claim_id='".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."'
                             AND lp.payer='".DSS_TRXN_PAYER_PRIMARY."'";
 
                 $payr = $db->getRow($paysql);
                 //Determine new status
-                if($_POST['dispute'] == 1){
+                if(!empty($_POST['dispute']) && $_POST['dispute'] == 1){
                     if($_FILES["attachment"]["name"] != ''){
                         $fname = $_FILES["attachment"]["name"];
                         $lastdot = strrpos($fname,".");
@@ -95,7 +95,7 @@
                         		adddate,
                         		ip_address)
                                 VALUES (
-                                ".mysql_real_escape_string($_POST['claimid']).",
+                                ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                 'primary',
                         		'".$banner1."',
                         		'".mysql_escape_string($_POST['dispute_reason'])."',
@@ -120,7 +120,7 @@
                                 adddate,
                                 ip_address)
                                 VALUES (
-                                ".mysql_real_escape_string($_POST['claimid']).",
+                                ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                 'secondary',
                                 '".$banner1."',
                         		'".mysql_escape_string($_POST['dispute_reason'])."',
@@ -145,7 +145,7 @@
                                 adddate,
                                 ip_address)
                                 VALUES (
-                                ".mysql_real_escape_string($_POST['claimid']).",
+                                ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                 'primary',
                                 '".$banner1."',
                                 '".mysql_escape_string($_POST['dispute_reason'])."',
@@ -170,7 +170,7 @@
                                 adddate,
                                 ip_address)
                                 VALUES (
-                                ".mysql_real_escape_string($_POST['claimid']).",
+                                ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                 'secondary',
                                 '".$banner1."',
                                 '".mysql_escape_string($_POST['dispute_reason'])."',
@@ -243,7 +243,7 @@
                                     adddate,
                                     ip_address)
                                     VALUES (
-                                    ".mysql_real_escape_string($_POST['claimid']).",
+                                    ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                     'primary',
                                     '".$banner1."',
                                     '".$new_status."',
@@ -277,7 +277,7 @@
                                 adddate,
                                 ip_address)
                                 VALUES (
-                                ".mysql_real_escape_string($_POST['claimid']).",
+                                ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                 'secondary',
                                 '".$banner1."',
                                 '".$new_status."',
@@ -316,11 +316,11 @@
                     $db->query($x); 
                 }
 
-                if($secsql){
+                if(!empty($secsql)){
                     $db->query($secsql);
                 }
 
-                if(!$insqry){
+                if(empty($insqry)){
         ?>
                     <script type="text/javascript">
                         alert('Could not add ledger payments, please close this window and contact your system administrator');

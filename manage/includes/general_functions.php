@@ -99,12 +99,16 @@ function uploadImage($image, $file_path, $type = 'general'){
 }
 
 function sendUpdatedEmail($id, $new, $old, $by){
+
+$db = new Db();
+$con = $GLOBALS['con'];
+
 if(trim($new) != trim($old)){
   $sql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
                 LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-	where p.patientid='".mysql_real_escape_string($id)."'";
-  $q = mysql_query($sql);
-  $r = mysql_fetch_assoc($q);
+	where p.patientid='".mysqli_real_escape_string($con,$id)."'";
+
+  $r = $db->getRow($sql);
   $n = $r['mailing_phone'];
   if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
     $logo = "/manage/q_file/".$ur['logo'];
@@ -222,7 +226,7 @@ if(  preg_match( '/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches ) )
 }
 
 function split_phone($num, $a){
-        $num = ereg_replace("[^0-9]", "", $num);
+        $num = preg_replace("[^0-9]", "", $num);
         preg_match('/([0-1]*)(.*)/',$num, $m);
         $num = $m[2];
   if($a){

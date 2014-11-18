@@ -9,6 +9,10 @@
 
 	<body>
 		<?php
+			if (!isset($sqlinsertqry)) {
+				$sqlinsertqry = '';
+			}
+
 			$sqlinsertqry .= "INSERT INTO `dental_ledger_note` (
 				`service_date` ,
 				`entry_date` ,
@@ -20,8 +24,8 @@
 				`patientid`,
 				`docid`
 				) VALUES ";
-			$private = ($_POST['private'])?1:0;
-			$sqlinsertqry .= "( '".date('Y-m-d', strtotime($_POST['entry_date']))."', '".date('Y-m-d', strtotime($_POST['entry_date']))."', '".mysql_real_escape_string($_POST['note'])."', '".$private."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$_POST['producer']."', ".$_POST['patientid'].", ".$_POST['docid'].")";
+			$private = (!empty($_POST['private']))?1:0;
+			$sqlinsertqry .= "( '".date('Y-m-d', strtotime((!empty($_POST['entry_date']) ? $_POST['entry_date'] : '')))."', '".date('Y-m-d', strtotime((!empty($_POST['entry_date']) ? $_POST['entry_date'] : '')))."', '".mysqli_real_escape_string($con,(!empty($_POST['note']) ? $_POST['note'] : ''))."', '".$private."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".(!empty($_POST['producer']) ? $_POST['producer'] : '')."', ".(!empty($_POST['patientid']) ? $_POST['patientid'] : '').", ".(!empty($_POST['docid']) ? $_POST['docid'] : '').")";
 
 			$insqry = $db->query($sqlinsertqry);
 			if(!$insqry){
@@ -48,6 +52,10 @@
 		?>
 
 		<?php
+			if (!isset($sqlinsertqry2)) {
+				$sqlinsertqry2 = '';
+			}
+
 			$sqlinsertqry2 .= "INSERT INTO `dental_ledger_rec` (
 				`ledgerid` ,
 				`patientid` ,
@@ -66,7 +74,7 @@
 				`transaction_code`
 				) VALUES ";
 
-			foreach($_POST['form'] as $form){
+			if (!empty($_POST['form'])) foreach($_POST['form'] as $form){
 				if($d <= $i){
 					$descsql = "SELECT description, transaction_code FROM dental_transaction_code WHERE transaction_codeid='".$form['proccode']."' LIMIT 1;";
 					

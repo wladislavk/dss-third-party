@@ -1,16 +1,16 @@
 <?php
 if(!isset($_GET['noheaders'])){
   include "includes/top.htm";
-  require_once('includes/constants.inc');
+  include_once('includes/constants.inc');
 }else{
   session_start();
-  require_once('admin/includes/main_include.php');
+  include_once('admin/includes/main_include.php');
   include("includes/sescheck.php");
-  require_once('includes/constants.inc');
-  require_once('includes/authorization_functions.php');
-  require_once('includes/general_functions.php');
-  require_once('includes/notifications.php');
-  require_once('includes/patient_changes.php');
+  include_once('includes/constants.inc');
+  include_once('includes/authorization_functions.php');
+  include_once('includes/general_functions.php');
+  include_once('includes/notifications.php');
+  include_once('includes/patient_changes.php');
 ?>
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <link href="css/task.css" rel="stylesheet" type="text/css" />
@@ -36,11 +36,11 @@ require_once('includes/dental_patient_summary.php');
 require_once('admin/includes/password.php');
 require_once('includes/preauth_functions.php');
 require_once 'includes/hst_functions.php';
-$b_sql = "SELECT c.name/*, c.exclusive*/ FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$b_sql = "SELECT c.name/*, c.exclusive*/ FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 $b_r = $db->getRow($b_sql);
 if($b_r){
-  $exclusive_billing = $b_r['exclusive'];
-  $billing_co = $b_r['name'];
+  $exclusive_billing = (!empty($b_r['exclusive']) ? $b_r['exclusive'] : '');
+  $billing_co = (!empty($b_r['name']) ? $b_r['name'] : '');
 }else{
   $exclusive_billing = 0;
   $billing_co = "DSS";
@@ -51,7 +51,7 @@ if($b_r){
   var billing_co = '<?php echo $billing_co; ?>';
 </script>
 <?php
-$docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 $docr = $db->getRow($docsql);
 $doc_patient_portal = $docr['use_patient_portal'];
 
@@ -70,7 +70,7 @@ function trigger_letter20($pid) {
 }
 
 // Trigger Letter 20 Thankyou
-$pt_referralid = get_ptreferralids($_GET['pid']);
+$pt_referralid = get_ptreferralids((!empty($_GET['pid']) ? $_GET['pid'] : ''));
 if ($pt_referralid) {
   $sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND pat_referral_list = '".s_for($pt_referralid)."';";
   $numrows = $db->getNumberRows($sql);
@@ -92,7 +92,7 @@ function trigger_letter1and2($pid) {
 
   $db = new Db();
   //prevent letters from being generated if letters or intro letters disabled
-  $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'],$_SESSION['docid'])."'";
   $let_r = $db->getRow($let_sql);
   if($let_r['use_letters'] && $let_r['intro_letters']){
     $letter1id = "1";
@@ -105,20 +105,20 @@ function trigger_letter1and2($pid) {
     $mdcontacts[] = $_POST['docmdother'];
     $mdcontacts[] = $_POST['docmdother2'];
     $mdcontacts[] = $_POST['docmdother3'];
-    $recipients	= array();
+    $recipients = array();
     foreach ($mdcontacts as $contact) {
       if ($contact != "Not Set") {
         $letter_query = "SELECT md_list FROM dental_letters WHERE md_list IS NOT NULL AND CONCAT(',', md_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letter1id.",".$letter2id.");";
-        $letter_result = mysql_query($letter_query);
-        $num_rows = mysql_num_rows($letter_result);
+
+        $num_rows = $db->getNumberRows($letter_query);
         if(!$letter_result) {
           print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
           die();
         }
         if ($num_rows == 0 && $contact != "") {
-          $c_sql = "select * from dental_contact where contactid='".mysql_real_escape_string($contact)."' and status=1";
-          $c_q = mysql_query($c_sql);
-          if(mysql_num_rows($c_q)>0){
+          $c_sql = "select * from dental_contact where contactid='".mysqli_real_escape_string($GLOBALS['con'],$contact)."' and status=1";
+          $c_q = mysqli_query($GLOBALS['con'],$c_sql);
+          if(count($c_q)>0){
             $recipients[] = $contact;
           }
         }
@@ -164,31 +164,31 @@ function trigger_letter3($pid) {
 function sendRegEmail($id, $e, $l, $old_email=''){
 
   $db = new Db();
-  $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($id)."'";
+  $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$id)."'";
   $r = $db->getRow($s);
-	if($r['recover_hash']=='' || $e!=$old_email){
+  if($r['recover_hash']=='' || $e!=$old_email){
     $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
     $ins_sql = "UPDATE dental_patients set text_num=0, access_type=1, text_date=NOW(), access_code='', registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
     $db->query($ins_sql);
-	}else{
-		$ins_sql = "UPDATE dental_patients set access_type=1, registration_senton=NOW(), registration_status=1 WHERE patientid='".$r['patientid']."'";
+  }else{
+    $ins_sql = "UPDATE dental_patients set access_type=1, registration_senton=NOW(), registration_status=1 WHERE patientid='".$r['patientid']."'";
     $db->query($ins_sql);
-		$recover_hash = $r['recover_hash'];
-	}
+    $recover_hash = $r['recover_hash'];
+  }
   $usql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
             LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-          	where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
-  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($r['patientid'])."'";
+            where p.patientid='".mysqli_real_escape_string($con,$r['patientid'])."'";
+  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($con,$r['patientid'])."'";
   $loc_r = $db->getRow($loc_sql);
   if($loc_r['location'] != '' && $loc_r['location'] != '0'){
     $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
                         from dental_users u inner join dental_patients p on u.userid=p.docid 
                         LEFT JOIN dental_locations l ON l.docid = u.userid
-                        WHERE l.id='".mysql_real_escape_string($loc_r['location'])."' AND l.docid='".mysql_real_escape_string($r['docid'])."'";
+                        WHERE l.id='".mysqli_real_escape_string($con,$loc_r['location'])."' AND l.docid='".mysqli_real_escape_string($con,$r['docid'])."'";
   }else{
     $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
                         LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-                        where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+                        where p.patientid='".mysqli_real_escape_string($con,$r['patientid'])."'";
   }
   $ur = $db->getRow($location_query);
   $n = $ur['mailing_phone'];
@@ -203,11 +203,11 @@ function sendRegEmail($id, $e, $l, $old_email=''){
   $headers  = "MIME-Version: 1.0\r\n";
   $headers .= "Content-Type: multipart/alternative; boundary=\"$mime_boundary\"\r\n";
   $headers .= "Content-Transfer-Encoding: 7bit\r\n";
-  $body	=  "";
-  $body	.= "--$mime_boundary\n";
-  $body	.= "Content-Type: text/plain; charset=\"iso-8859-1\"\n";
-  $body	.= "Content-Transfer-Encoding: 7bit\n\n";
-  $body	.= "A message from your healthcare provider 
+  $body =  "";
+  $body .= "--$mime_boundary\n";
+  $body .= "Content-Type: text/plain; charset=\"iso-8859-1\"\n";
+  $body .= "Content-Transfer-Encoding: 7bit\n\n";
+  $body .= "A message from your healthcare provider 
 
 Your New Account
 A new patient account has been created for you by ".$ur['mailing_practice'].".
@@ -227,12 +227,12 @@ Contact us at ".format_phone($n)."
 
 "; 
   $body .= DSS_EMAIL_FOOTER;
-	$body	.= "\n\n";
+  $body .= "\n\n";
 
-	$body	.= "--$mime_boundary\n";
-	$body	.= "Content-Type: text/html; charset=\"UTF-8\"\n";
-	$body	.= "Content-Transfer-Encoding: 7bit\n\n";
-	$body	.= "<html><body><center>
+  $body .= "--$mime_boundary\n";
+  $body .= "Content-Type: text/html; charset=\"UTF-8\"\n";
+  $body .= "Content-Transfer-Encoding: 7bit\n\n";
+  $body .= "<html><body><center>
 <table width='600'>
 <tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
 <tr><td width='400'>
@@ -258,14 +258,14 @@ Contact us at ".format_phone($n)."
 <tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
 </table>
 </center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>";
-	$body	.= "\n\n";
-	// End email
-	$body	.= "--$mime_boundary--\n";
+  $body .= "\n\n";
+  // End email
+  $body .= "--$mime_boundary--\n";
 
-	# Finish off headers
-	$headers .= "From: ".$from."\r\n";
-	$headers .= "X-Sender-IP: $_SERVER[SERVER_ADDR]\r\n";
-	$headers .= 'Date: '.date('n/d/Y g:i A')."\r\n";
+  # Finish off headers
+  $headers .= "From: ".$from."\r\n";
+  $headers .= "X-Sender-IP: $_SERVER[SERVER_ADDR]\r\n";
+  $headers .= 'Date: '.date('n/d/Y g:i A')."\r\n";
 
   $headers = 'From: "Dental Sleep Solutions" <Patient@dentalsleepsolutions.com>' . "\n"; 
   $headers .= "MIME-Version: 1.0\n";
@@ -286,19 +286,19 @@ Contact us at ".format_phone($n)."
 function sendRemEmail($id, $e){
 
   $db = new Db();
-  $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($id)."'";
+  $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($GLOBALS['con'],$id)."'";
   $r = $db->getRow($s);
-  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($r['patientid'])."'";
+  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($GLOBALS['con'],$r['patientid'])."'";
   $loc_r = $db->getRow($loc_sql);
   if($loc_r['location'] != '' && $loc_r['location'] != '0'){
     $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
                         from dental_users u inner join dental_patients p on u.userid=p.docid 
                         LEFT JOIN dental_locations l ON l.docid = u.userid
-                        WHERE l.id='".mysql_real_escape_string($loc_r['location'])."' AND l.docid='".mysql_real_escape_string($r['docid'])."'";
+                        WHERE l.id='".mysqli_real_escape_string($con,$loc_r['location'])."' AND l.docid='".mysqli_real_escape_string($con,$r['docid'])."'";
   }else{
     $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
                         LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-                        where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+                        where p.patientid='".mysqli_real_escape_string($GLOBALS['con'],$r['patientid'])."'";
   }
   $ur = $db->getRow($location_query);
   $n = $ur['mailing_phone'];
@@ -348,17 +348,17 @@ function sendRemEmail($id, $e){
 }
 
 /*==========================================
-  	FORM SUBMISSION
+    FORM SUBMISSION
 ==========================================*/
-if($_POST["patientsub"] == 1){
+if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
 
-	if($_POST['p_m_eligible_payer']!=''){
-		$p_m_eligible_payer_id = substr($_POST['p_m_eligible_payer'],0,strpos($_POST['p_m_eligible_payer'], '-'));
-		$p_m_eligible_payer_name = substr($_POST['p_m_eligible_payer'],(strpos($_POST['p_m_eligible_payer'], '-')+1));
-	}else{
-		$p_m_eligible_payer_id = '';
-		$p_m_eligible_payer_name = '';
-	}
+  if($_POST['p_m_eligible_payer']!=''){
+    $p_m_eligible_payer_id = substr($_POST['p_m_eligible_payer'],0,strpos($_POST['p_m_eligible_payer'], '-'));
+    $p_m_eligible_payer_name = substr($_POST['p_m_eligible_payer'],(strpos($_POST['p_m_eligible_payer'], '-')+1));
+  }else{
+    $p_m_eligible_payer_id = '';
+    $p_m_eligible_payer_name = '';
+  }
   if($_POST['s_m_eligible_payer']!=''){
     $s_m_eligible_payer_id = substr($_POST['s_m_eligible_payer'],0,strpos($_POST['s_m_eligible_payer'], '-'));
     $s_m_eligible_payer_name = substr($_POST['s_m_eligible_payer'],(strpos($_POST['s_m_eligible_payer'], '-')+1));
@@ -366,9 +366,9 @@ if($_POST["patientsub"] == 1){
     $s_m_eligible_payer_id = '';
     $s_m_eligible_payer_name = '';
   }
-	$use_patient_portal = $_POST['use_patient_portal'];
-	if($_POST["ed"] != "") { //existing patient (update)
-		$s_sql = "SELECT referred_by, referred_source, email, password, registration_status, 
+  $use_patient_portal = $_POST['use_patient_portal'];
+  if($_POST["ed"] != "") { //existing patient (update)
+    $s_sql = "SELECT referred_by, referred_source, email, password, registration_status, 
                 p_m_relation,
                 p_m_partyfname, 
                 p_m_partylname, 
@@ -380,23 +380,23 @@ if($_POST["patientsub"] == 1){
                 p_m_ins_grp, 
                 p_m_ins_plan 
               FROM dental_patients
-              WHERE patientid=".mysql_real_escape_string($_GET['pid']);
-		$s_r = $db->getRow($s_sql);
-		$old_referred_by = $s_r['referred_by'];
-		$old_referred_source = $s_r['referred_source'];
-		$old_p_m_ins_co = $s_r['p_m_ins_co'];
-		if($s_r['registration_status']==2 && $_POST['email'] != $s_r['email']){ //if registered attempt to send update email
-			sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'doc');
-		}elseif(isset($_POST['sendRem'])){ 
+              WHERE patientid=".mysqli_real_escape_string($con,$_GET['pid']);
+    $s_r = $db->getRow($s_sql);
+    $old_referred_by = $s_r['referred_by'];
+    $old_referred_source = $s_r['referred_source'];
+    $old_p_m_ins_co = $s_r['p_m_ins_co'];
+    if($s_r['registration_status']==2 && $_POST['email'] != $s_r['email']){ //if registered attempt to send update email
+      sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'doc');
+    }elseif(isset($_POST['sendRem'])){ 
       sendRemEmail($_POST['ed'], $_POST['email']); //send reminder email
-		}elseif(!isset($_POST['sendReg']) && $s_r['registration_status']==1 && trim($_POST['email']) != trim($s_r['email'])){
-			if($doc_patient_portal && $use_patient_portal){
-			  sendRegEmail($_POST['ed'], $_POST['email'], ''); //send reg email if email is updated and not registered 
-			}
-		}
+    }elseif(!isset($_POST['sendReg']) && $s_r['registration_status']==1 && trim($_POST['email']) != trim($s_r['email'])){
+      if($doc_patient_portal && $use_patient_portal){
+        sendRegEmail($_POST['ed'], $_POST['email'], ''); //send reg email if email is updated and not registered 
+      }
+    }
 
 
-		$ed_sql = "update dental_patients 
+    $ed_sql = "update dental_patients 
                 set 
                 firstname = '".s_for($_POST["firstname"])."', 
                 lastname = '".s_for($_POST["lastname"])."', 
@@ -472,9 +472,9 @@ if($_POST["patientsub"] == 1){
       p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
       p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
       p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-      p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."'," . 
+      p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."'," . 
       // s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
-      // s_m_eligible_payer_name = '".mysql_real_escape_string($s_m_eligible_payer_name)."',
+      // s_m_eligible_payer_name = '".mysqli_real_escape_string($con,$s_m_eligible_payer_name)."',
     " has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
       s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
       s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -527,8 +527,8 @@ if($_POST["patientsub"] == 1){
       preferredcontact = '".s_for($_POST["preferredcontact"])."'
       where 
       patientid='".$_POST["ed"]."'";
-		$db->query($ed_sql) or die($ed_sql." | ".mysql_error());
-    $db->query("UPDATE dental_patients set email='".mysql_real_escape_string($_POST['email'])."' WHERE parent_patientid='".mysql_real_escape_string($_POST["ed"])."'");	
+    $db->query($ed_sql) or die($ed_sql." | ".mysql_error());
+    $db->query("UPDATE dental_patients set email='".mysqli_real_escape_string($con,$_POST['email'])."' WHERE parent_patientid='".mysqli_real_escape_string($con,$_POST["ed"])."'"); 
 
     //Remove pending vobs if ins info has changed.
     if($old_p_m_ins_co != $_POST['p_m_ins_co'] ||
@@ -543,17 +543,17 @@ if($_POST["patientsub"] == 1){
      $s_r['p_m_ins_plan'] != $_POST['p_m_ins_plan']){
       $vob_sql = "UPDATE dental_insurance_preauth SET
                     status = " . DSS_PREAUTH_REJECTED . ",
-                    reject_reason = '".mysql_real_escape_string($_SESSION['name'])." altered patient insurance information requiring VOB resubmission on ".date('m/d/Y h:i')."',
+                    reject_reason = '".mysqli_real_escape_string($con,$_SESSION['name'])." altered patient insurance information requiring VOB resubmission on ".date('m/d/Y h:i')."',
                     viewed = 1
-                    WHERE patient_id = '".mysql_real_escape_string($_REQUEST['ed'])."'
+                    WHERE patient_id = '".mysqli_real_escape_string($con,$_REQUEST['ed'])."'
                     AND (status = ".DSS_PREAUTH_PENDING." OR status=".DSS_PREAUTH_PREAUTH_PENDING.")";
       $vob_update = $db->query($vob_sql) or die(mysql_error());
-			if(mysql_affected_rows() >= 1){
-				$c = create_vob( $_POST['ed'] );
-			/*
+      if(mysqli_affected_rows($GLOBALS['con']) >= 1){
+        $c = create_vob( $_POST['ed'] );
+      /*
 
-	?>
-					<script type="text/javascript">
+  ?>
+          <script type="text/javascript">
                                     $.ajax({
                                         url: "includes/vob_request_preauth.php",
                                         type: "post",
@@ -579,27 +579,27 @@ if($_POST["patientsub"] == 1){
                                                 alert('fail');
                                         }
                                   });
-					</script>
-				<?php */
-			}
+          </script>
+        <?php */
+      }
     }
-	
-		if(isset($_POST['location'])){
-			$ds_sql = "SELECT * FROM dental_summary where patientid='".$_GET['pid']."';";
-			$ds_q = $db->getRow($ds_sql);
-			if($ds_q){
-			  $loc_query = "UPDATE dental_summary SET location='".mysql_real_escape_string($_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
-			}else{
-        $loc_query = "INSERT INTO dental_summary SET location='".mysql_real_escape_string($_POST['location'])."', patientid='".$_GET['pid']."';";
-			}
-			$db->query($loc_query);
-		}
+  
+    if(isset($_POST['location'])){
+      $ds_sql = "SELECT * FROM dental_summary where patientid='".$_GET['pid']."';";
+      $ds_q = $db->getRow($ds_sql);
+      if($ds_q){
+        $loc_query = "UPDATE dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+      }else{
+        $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='".$_GET['pid']."';";
+      }
+      $db->query($loc_query);
+    }
 
-		$lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
-		$l = $db->getRow($lsql);
-		$login = $l['login'];
-		$pass = $l['password'];
-		if($login == ''){
+    $lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$_POST['ed'])."'";
+    $l = $db->getRow($lsql);
+    $login = $l['login'];
+    $pass = $l['password'];
+    if($login == ''){
       $clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
       $clogin = ereg_replace("[^A-Za-z]", "", $clogin);
       $csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
@@ -617,41 +617,41 @@ if($_POST["patientsub"] == 1){
       }else{
         $login = strtolower($clogin);
       }
-      $ilsql = "UPDATE dental_patients set login='".mysql_real_escape_string($login)."'  WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
+      $ilsql = "UPDATE dental_patients set login='".mysqli_real_escape_string($con,$login)."'  WHERE patientid='".mysqli_real_escape_string($con,$_POST['ed'])."'";
       $db->query($ilsql);
-		}
-		if(isset($_POST['sendReg']) && $doc_patient_portal && $_POST['use_patient_portal']){
-  		if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
-  			sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email']); 
-  		}else{?>
+    }
+    if(isset($_POST['sendReg']) && $doc_patient_portal && $_POST['use_patient_portal']){
+      if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
+        sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email']); 
+      }else{?>
         <script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script><?php
-  		}
-		}
+      }
+    }
 
-  	$s1 = "UPDATE dental_flow_pg2_info SET date_completed = '".date('Y-m-d', strtotime($_POST['copyreqdate']))."' WHERE patientid='".$_POST['ed']."' AND stepid='1';";
+    $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '".date('Y-m-d', strtotime($_POST['copyreqdate']))."' WHERE patientid='".$_POST['ed']."' AND stepid='1';";
     $db->query($s1);
-	
-		if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
-  		if($old_referred_source == 2 && $_POST['referred_source'] ==2){
-  			//PHYSICIAN -> PHYSICIAN
-  			//change pending letters to new referrer
-  			$sql = "UPDATE dental_letters SET template=null, md_referral_list=".$_POST["referred_by"]." WHERE status=0 AND md_referral_list=".$old_referred_by." AND patientid=".mysql_real_escape_string($_POST['ed'])."";
-  			$db->query($sql);
-  		}elseif($old_referred_source == 1 && $_POST['referred_source'] ==1){
+  
+    if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
+      if($old_referred_source == 2 && $_POST['referred_source'] ==2){
+        //PHYSICIAN -> PHYSICIAN
+        //change pending letters to new referrer
+        $sql = "UPDATE dental_letters SET template=null, md_referral_list=".$_POST["referred_by"]." WHERE status=0 AND md_referral_list=".$old_referred_by." AND patientid=".mysqli_real_escape_string($con,$_POST['ed'])."";
+        $db->query($sql);
+      }elseif($old_referred_source == 1 && $_POST['referred_source'] ==1){
         //PATIENT -> PATIENT
         //change pending letters to new referrer
-        $sql = "UPDATE dental_letters SET template=null, pat_referral_list=".$_POST["referred_by"]." WHERE status=0 AND patientid=".mysql_real_escape_string($_POST['ed'])." AND pat_referral_list='".$old_referred_by."'";
-  			$db->query($sql);
-  		}elseif($old_referred_source == 2 && $_POST['referred_source']!=2){
-  			//PHYSICIAN -> NOT PHYSICIAN
-  			$l_sql = "SELECT * FROM dental_letters WHERE md_referral_list='".mysql_real_escape_string($old_referred_by)."'  AND patientid=".mysql_real_escape_string($_POST['ed'])." AND status=0";
-  			$l_q = $db->getResults($l_sql);
-        if ($l_q) foreach ($l_q as $l) {
-  				delete_letter($l['letterid'], null, 'md_referral', $old_referred_by);
-  			}
-  		}elseif($old_referred_source == 1 && $_POST['referred_source']!=1){
+        $sql = "UPDATE dental_letters SET template=null, pat_referral_list=".$_POST["referred_by"]." WHERE status=0 AND patientid=".mysqli_real_escape_string($con,$_POST['ed'])." AND pat_referral_list='".$old_referred_by."'";
+        $db->query($sql);
+      }elseif($old_referred_source == 2 && $_POST['referred_source']!=2){
         //PHYSICIAN -> NOT PHYSICIAN
-        $l_sql = "SELECT * FROM dental_letters WHERE pat_referral_list='".mysql_real_escape_string($old_referred_by)."'  AND patientid=".mysql_real_escape_string($_POST['ed'])." AND status=0";
+        $l_sql = "SELECT * FROM dental_letters WHERE md_referral_list='".mysqli_real_escape_string($con,$old_referred_by)."'  AND patientid=".mysqli_real_escape_string($con,$_POST['ed'])." AND status=0";
+        $l_q = $db->getResults($l_sql);
+        if ($l_q) foreach ($l_q as $l) {
+          delete_letter($l['letterid'], null, 'md_referral', $old_referred_by);
+        }
+      }elseif($old_referred_source == 1 && $_POST['referred_source']!=1){
+        //PHYSICIAN -> NOT PHYSICIAN
+        $l_sql = "SELECT * FROM dental_letters WHERE pat_referral_list='".mysqli_real_escape_string($con,$old_referred_by)."'  AND patientid=".mysqli_real_escape_string($con,$_POST['ed'])." AND status=0";
         $l_q = $db->getResults($l_sql);
         if ($l_q) foreach ($l_q as $l) {
           delete_letter($l['letterid'], null, 'pat_referral', $old_referred_by);
@@ -659,41 +659,41 @@ if($_POST["patientsub"] == 1){
       }
 /*
 
-			if($_POST['referred_by']){
-				$sql = "UPDATE dental_letters SET md_referral_list=".$_POST["referred_by"]." WHERE patientid=".mysql_real_escape_string($_POST['ed'])."";
-			}else{
-				$sql = "DELETE FROM dental_letters where patientid=".mysql_real_escape_string($_POST['ed'])." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
-			}
-			mysql_query($sql);
-			*/
+      if($_POST['referred_by']){
+        $sql = "UPDATE dental_letters SET md_referral_list=".$_POST["referred_by"]." WHERE patientid=".mysqli_real_escape_string($con,$_POST['ed'])."";
+      }else{
+        $sql = "DELETE FROM dental_letters where patientid=".mysqli_real_escape_string($con,$_POST['ed'])." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
+      }
+      mysql_query($sql);
+      */
     }
 
-		trigger_letter1and2($_POST['ed']);
+    trigger_letter1and2($_POST['ed']);
 
-		if($_POST['introletter'] == 1) {
-		  trigger_letter3($_POST['ed']);
-		}
+    if($_POST['introletter'] == 1) {
+      trigger_letter3($_POST['ed']);
+    }
 
-		if(isset($_POST['add_ref_but'])) {?>
-			<script type="text/javascript">
+    if(isset($_POST['add_ref_but'])) {?>
+      <script type="text/javascript">
         window.location = "add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>";
-			</script>
-			<?php
-		}
+      </script>
+      <?php
+    }
 
-		if(isset($_POST['add_ins_but'])) {?>
-			<script type="text/javascript">
-  			window.location = "add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>";
-			</script>
-			<?php
-		}
+    if(isset($_POST['add_ins_but'])) {?>
+      <script type="text/javascript">
+        window.location = "add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>";
+      </script>
+      <?php
+    }
 
-		if(isset($_POST['add_contact_but'])) {?>
-			<script type="text/javascript">
-  			window.location = "add_patient_to.php?ed=<?php echo $_GET['pid']; ?>";
-			</script>
-			<?php
-		}
+    if(isset($_POST['add_contact_but'])) {?>
+      <script type="text/javascript">
+        window.location = "add_patient_to.php?ed=<?php echo $_GET['pid']; ?>";
+      </script>
+      <?php
+    }
     if(isset($_POST['sendHST'])){?>
       <script type="text/javascript">
         window.location = "hst_request_co.php?ed=<?php echo $_GET['pid']; ?>";
@@ -701,48 +701,48 @@ if($_POST["patientsub"] == 1){
       <?php
     }
 
-		//echo $ed_sql.mysql_error();
-		$msg = "Edited Successfully";
+    //echo $ed_sql.mysql_error();
+    $msg = "Edited Successfully";
     if(isset($_POST['sendPin'])){
-		  $sendPin = "&sendPin=1";
-		}else{
-		  $sendPin = "";
-		}?>
-		<script type="text/javascript">
-			//alert("<?php echo $msg;?>");
-			parent.window.location='add_patient.php?ed=<?php echo $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?php echo $_GET['pid']; ?>&msg=<?php echo $msg;?><?php echo $sendPin; ?>';
-		</script>
-		<?php
-		die();
-	} else {
+      $sendPin = "&sendPin=1";
+    }else{
+      $sendPin = "";
+    }?>
+    <script type="text/javascript">
+      //alert("<?php echo $msg;?>");
+      parent.window.location='add_patient.php?ed=<?php echo $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?php echo $_GET['pid']; ?>&msg=<?php echo $msg;?><?php echo $sendPin; ?>';
+    </script>
+    <?php
+    die();
+  } else {
     //echo('in');
-		$clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
-		$clogin = ereg_replace("[^A-Za-z]", "", $clogin);
-		$csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
-		$cq = $db->getResults($csql);
-		$carray = array();
+    $clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
+    $clogin = ereg_replace("[^A-Za-z]", "", $clogin);
+    $csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
+    $cq = $db->getResults($csql);
+    $carray = array();
     if ($cq) foreach ($cq as $c) {
-			array_push($carray, $c['login']);
-		}
-		if(in_array($clogin, $carray)){
-		  $count = 1;
-		  while(in_array($clogin.$count, $carray)){
-		    $count++;
-		  }
-		  $login = strtolower($clogin.$count);
-		}else{
-		  $login = strtolower($clogin);
-		}
-		
-		if($_POST['ssn']!=''){
-			$salt = create_salt();
-			$p = preg_replace('/\D/', '', $_POST['ssn']);
-    	$password = gen_password($p , $salt);
-		}else{
-			$salt = '';
-			$password = '';
-		}
-		$ins_sql = "insert 
+      array_push($carray, $c['login']);
+    }
+    if(in_array($clogin, $carray)){
+      $count = 1;
+      while(in_array($clogin.$count, $carray)){
+        $count++;
+      }
+      $login = strtolower($clogin.$count);
+    }else{
+      $login = strtolower($clogin);
+    }
+    
+    if($_POST['ssn']!=''){
+      $salt = create_salt();
+      $p = preg_replace('/\D/', '', $_POST['ssn']);
+      $password = gen_password($p , $salt);
+    }else{
+      $salt = '';
+      $password = '';
+    }
+    $ins_sql = "insert 
                   into 
                   dental_patients 
                   set 
@@ -752,7 +752,7 @@ if($_POST["patientsub"] == 1){
                   preferred_name = '".s_for($_POST["preferred_name"])."',
                   login = '".$login."',
                   salt = '".$salt."',
-                  password = '".mysql_real_escape_string($password)."',
+                  password = '".mysqli_real_escape_string($con,$password)."',
                   salutation = '".s_for($_POST["salutation"])."',
                   member_no = '".s_for($_POST['member_no'])."',
                   group_no = '".s_for($_POST['group_no'])."',
@@ -799,9 +799,9 @@ if($_POST["patientsub"] == 1){
                   p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
                   p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
                   p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                  p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."', " . 
+                  p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."', " . 
                   // s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
-                  // s_m_eligible_payer_name = '".mysql_real_escape_string($s_m_eligible_payer_name)."',
+                  // s_m_eligible_payer_name = '".mysqli_real_escape_string($con,$s_m_eligible_payer_name)."',
                 " has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
                   s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
                   s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -873,14 +873,14 @@ if($_POST["patientsub"] == 1){
                   ip_address='".$_SERVER['REMOTE_ADDR']."',
                   preferredcontact='".s_for($_POST["preferredcontact"])."';";
 
-		$pid = $db->getInsertId($ins_sql);
-		
-		if(isset($_POST['location'])){
-    	$loc_query = "INSERT INTO dental_summary SET location='".mysql_real_escape_string($_POST['location'])."', patientid='".$_GET['pid']."';";
-    	$db->query($loc_query);
-		}
+    $pid = $db->getInsertId($ins_sql);
+    
+    if(isset($_POST['location'])){
+      $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='".$_GET['pid']."';";
+      $db->query($loc_query);
+    }
 
- 		trigger_letter1and2($pid);
+    trigger_letter1and2($pid);
 
     if(isset($_POST['sendReg'])&& $doc_patient_portal && $_POST["use_patient_portal"]){
       if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
@@ -891,9 +891,9 @@ if($_POST["patientsub"] == 1){
       }
     }
 
-		if($_POST['introletter'] == 1) {
-		  trigger_letter3($pid);
-		}
+    if($_POST['introletter'] == 1) {
+      trigger_letter3($pid);
+    }
     $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`pid`) VALUES (NULL,'".s_for($_POST["copyreqdate"])."','".$pid."');";
     $flowinsert = $db->query($flowinsertqry);
     if(!$flowinsert){
@@ -913,31 +913,31 @@ if($_POST["patientsub"] == 1){
       $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact Information to Flowsheet Page 2";
     }
 
-		$sim = similar_patients($pid);
+    $sim = similar_patients($pid);
     if(count($sim) > 0){?>
       <script type="text/javascript">
       parent.window.location='duplicate_patients.php?pid=<?php echo $pid; ?>';
       </script>
 <?php
       die();
-		}else{
-  		$msg = "Patient ".$_POST["firstname"]." ".$_POST["lastname"]." added Successfully";
+    }else{
+      $msg = "Patient ".$_POST["firstname"]." ".$_POST["lastname"]." added Successfully";
       if(isset($_POST['sendPin'])){
         $sendPin = "&sendPin=1";
       }else{
         $sendPin = "";
       }?>
-  		<script type="text/javascript">
-  			alert("<?php echo $msg;?>");
-  			parent.window.location='add_patient.php?pid=<?php echo $pid; ?>&ed=<?php echo $pid; ?>&addtopat=1<?php echo $sendPin; ?>';
-  		</script>
+      <script type="text/javascript">
+        alert("<?php echo $msg;?>");
+        parent.window.location='add_patient.php?pid=<?php echo $pid; ?>&ed=<?php echo $pid; ?>&addtopat=1<?php echo $sendPin; ?>';
+      </script>
 <?php
-  		die();
-		}
-	}
+      die();
+    }
+  }
 }
 
-$request_ed = ($_REQUEST['ed']) ? $_REQUEST['ed'] : '-1';
+$request_ed = (!empty($_REQUEST['ed'])) ? $_REQUEST['ed'] : '-1';
 //Check if user has pending VOB
 $vob_sql = "SELECT "
          . "  * "
@@ -956,7 +956,7 @@ $pending_vob_status = $vob_myarray['status'];
 
 $thesql = "select * from dental_patients where patientid='".$request_ed."'";
 $themyarray = $db->getRow($thesql);
-	
+  
 if(isset($msg) && $msg != ''){
   $firstname = $_POST['firstname'];
   $middlename = $_POST['middlename'];
@@ -1271,12 +1271,12 @@ if(isset($msg) && $msg != ''){
     $referred_name = $r['lastname'].", ".$r['firstname'] . " ". $r['middlename'] . " - Patient";
   }elseif($referred_source==DSS_REFERRED_PHYSICIAN){
     $rsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
-            	LEFT JOIN dental_contacttype dct on dc.contacttypeid=dct.contacttypeid
-            	WHERE contactid=".$referred_by;
+              LEFT JOIN dental_contacttype dct on dc.contacttypeid=dct.contacttypeid
+              WHERE contactid=".$referred_by;
     $r = $db->getRow($rsql);
     $referred_name = $r['lastname'].", ".$r['firstname']. " ". $r['middlename'];
     if($r['contacttype'] != ''){
-  			$referred_name .= " - " . $r['contacttype'];
+        $referred_name .= " - " . $r['contacttype'];
     }
   }
 
@@ -1285,17 +1285,17 @@ if(isset($msg) && $msg != ''){
   $referred_notes = st($themyarray["referred_notes"]);
   $name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 
-  $loc_sql = "SELECT location from dental_summary WHERE patientid='".$_GET['pid']."';";
+  $loc_sql = "SELECT location from dental_summary WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
   $loc_r = $db->getRow($loc_sql);
   $location = $loc_r['location'];
 
   $but_text = "Add ";
 }
-	
+  
 if($themyarray["userid"] != ''){
-	$but_text = "Save/Update ";
+  $but_text = "Save/Update ";
 } else {
-	$but_text = "Add ";
+  $but_text = "Add ";
 }
 
 // Check if required information is filled out
@@ -1306,11 +1306,11 @@ if (!empty($home_phone) || !empty($work_phone) || !empty($cell_phone)) {
 if (!empty($email)) {
   $patientemail = true;
 }
-if (($patientemail || $patientphone) && !empty($add1) && !empty($city) && !empty($state) && !empty($zip) && !empty($dob) && !empty($gender)) {
+if ((!empty($patientemail) || !empty($patientphone)) && !empty($add1) && !empty($city) && !empty($state) && !empty($zip) && !empty($dob) && !empty($gender)) {
   $complete_info = 1;
 }
 // Determine Whether Patient Info has been set
-update_patient_summary($_GET['ed'], 'patient_info', $complete_info);
+update_patient_summary((!empty($_GET['ed']) ? $_GET['ed'] : ''), 'patient_info', $complete_info);
 
 ?>
 
@@ -1328,9 +1328,9 @@ function validate_add_patient(fa){
   p = patientabc(fa);
   var valid = true;
   <?php if($referred_source==1){
-    $rl_sql = "SELECT * FROM dental_letters WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND status=0 AND pat_referral_list='".$referred_by."'"; 
+    $rl_sql = "SELECT * FROM dental_letters WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND status=0 AND pat_referral_list='".$referred_by."'"; 
   }else{
-    $rl_sql = "SELECT * FROM dental_letters WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND status=0 AND md_referral_list='".$referred_by."'";
+    $rl_sql = "SELECT * FROM dental_letters WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND status=0 AND md_referral_list='".$referred_by."'";
   }
   $rl_q = $db->getResults($rl_sql);
 
@@ -1364,7 +1364,7 @@ function validate_add_patient(fa){
 <?php 
   }else{ ?>
     if(!confirm('Warning! This patient has a pending Verification of Benefits (VOB). You have changed the patient\'s insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?')){
-  	<?php 
+    <?php 
   } ?>
       return false;
     }
@@ -1450,21 +1450,21 @@ function validate_add_patient(fa){
   if(p){
     result = true;
     if( /*d &&*/ i && i2 && clickedBut != "sendReg" && clickedBut != "sendRem"){
-  		var result = true;
-  		info = required_info(fa);
-  		if (info.length == 0) {
-  			result = true;
-  		} else {
-  			m = 'Warning! Patient info is incomplete. Software functionality will be disabled for this patient until all required fields are entered. Are you sure you want to continue?\n\n';
-  			m += "Missing fields:";
-  			for(i=0;i<info.length;i++){
-  			  m += "\n"+info[i];
-  			}
-  			result = confirm(m);
-  		}
-    	if(!result){
-      		return result;
-    	}
+      var result = true;
+      info = required_info(fa);
+      if (info.length == 0) {
+        result = true;
+      } else {
+        m = 'Warning! Patient info is incomplete. Software functionality will be disabled for this patient until all required fields are entered. Are you sure you want to continue?\n\n';
+        m += "Missing fields:";
+        for(i=0;i<info.length;i++){
+          m += "\n"+info[i];
+        }
+        result = confirm(m);
+      }
+      if(!result){
+          return result;
+      }
     }
 
     if(trim(fa.p_m_partyfname.value) != "" || 
@@ -1526,7 +1526,7 @@ function validate_add_patient(fa){
 </script>
 
 <?php
-$notifications = find_patient_notifications($_GET['pid']);
+$notifications = find_patient_notifications((!empty($_GET['pid']) ? $_GET['pid'] : ''));
 foreach($notifications AS $not){?>
 <div id="not_<?php echo $not['id']; ?>" class="warning <?php echo $not['notification_type']; ?>">
   <span><?php echo $not['notification']; ?> <?php echo ($not['notification_date'])?"- ".date('m/d/Y h:i a', strtotime($not['notification_date'])):''; ?></span>
@@ -1539,11 +1539,11 @@ if(isset($_GET['search']) && $_GET['search'] != ''){
     $firstname = ucfirst(substr($_GET['search'], 0, strpos($_GET['search'], ' ')));
     $lastname = ucfirst(substr($_GET['search'], strpos($_GET['search'],' ')+1));
   }else{
-    $firstname = ucfirst($_GET['search']);	
+    $firstname = ucfirst($_GET['search']);  
   }
 }?>
 
-<form name="patientfrm" id="patientfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
+<form name="patientfrm" id="patientfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
   <script language="JavaScript" src="calendar1.js"></script>
   <script language="JavaScript" src="calendar2.js"></script>
   <table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -1551,24 +1551,24 @@ if(isset($_GET['search']) && $_GET['search'] != ''){
       <td >
         <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION</font>
       </td>
-    	<td  align="right">
-    		<input type="submit" style="float:right; margin-left: 5px;" value=" <?php echo $but_text?> Patient" class="button" />
+      <td  align="right">
+        <input type="submit" style="float:right; margin-left: 5px;" value=" <?php echo $but_text?> Patient" class="button" />
 <?php 
 if($doc_patient_portal && $use_patient_portal){
   if($themyarray['registration_status']==1 || $themyarray['registration_status']==0){  ?>
-  	    <input type="submit" name="sendReg" value="Send Registration Email" class="button" />
+        <input type="submit" name="sendReg" value="Send Registration Email" class="button" />
 <?php 
   }else{ ?>
-  	    <input type="submit" name="sendRem" value="Send Reminder Email" class="button" />
+        <input type="submit" name="sendRem" value="Send Reminder Email" class="button" />
 <?php
-  }	
+  } 
 }
 $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-    				JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
-    				WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+            JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'
+            WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
 $bu_q = $db->getResults($bu_sql);
 if(count($bu_q)>0){
-  if($pat_hst_num_uncompleted>0){?>
+  if(!empty($pat_hst_num_uncompleted) && $pat_hst_num_uncompleted > 0){?>
         <a href="#" onclick="alert('Patient has existing HST with status <?php echo $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;" class="button">Order HST</a><?php
   }else{?>
         <input type="submit" name="sendHST"
@@ -1578,15 +1578,15 @@ if(count($bu_q)>0){
   }
 } ?>
 
-    	</td>
+      </td>
     </tr>
     <tr>
-    	<td valign="top" colspan="2" class="frmhead">
-  			<ul>
-    	    <li id="foli8" class="complex">	
+      <td valign="top" colspan="2" class="frmhead">
+        <ul>
+          <li id="foli8" class="complex"> 
             <div id="profile_image" style="float:right; width:270px;">
 <?php
-$pid = ($_GET['pid']) ? $_GET['pid'] : '-1';
+$pid = (!empty($_GET['pid'])) ? $_GET['pid'] : '-1';
 $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
 $itype_my = $db->getResults($itype_sql);
 $num_face = count($itype_my);
@@ -1594,8 +1594,8 @@ $num_face = count($itype_my);
               <span style="float:right">
 <?php 
 if($num_face==0){ ?>
-                <a href="#" onclick="loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
-                	<img src="images/add_patient_photo.png" />
+                <a href="#" onclick="loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
+                  <img src="images/add_patient_photo.png" />
                 </a>
 <?php 
 }else{ 
@@ -1604,25 +1604,25 @@ if($num_face==0){ ?>
   }
 } ?>
             </div>
-        		<label class="desc" id="title0" for="Field0" style="float:left;">
-      		    Name
-      		    <span id="req_0" class="req">*</span>
-        		</label>
-        		<div style="float:left; clear:left;">
-      		    <span>
-          			<select name="salutation" style="width:80px;" >
-          			  <option value="Mr." <?php if($salutation == "Mr."){echo "selected='selected'";} ?>>Mr.</option>
-          			  <option value="Mrs." <?php if($salutation == "Mrs."){echo "selected='selected'";} ?>>Mrs.</option>
-          			  <option value="Ms." <?php if($salutation == "Ms."){echo "selected='selected'";} ?>>Ms.</option>
-          			  <option value="Dr." <?php if($salutation == "Dr."){echo "selected='selected'";} ?>>Dr.</option>
-          			</select>
-          			<label for="salutation">Salutation</label>
-      		    </span>
-      		    <span>
-          			<input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?php echo $firstname?>" maxlength="255" style="width:150px;" />
-          			<label for="firstname">First Name</label>
-      		    </span>
-      		    <span>
+            <label class="desc" id="title0" for="Field0" style="float:left;">
+              Name
+              <span id="req_0" class="req">*</span>
+            </label>
+            <div style="float:left; clear:left;">
+              <span>
+                <select name="salutation" style="width:80px;" >
+                  <option value="Mr." <?php if($salutation == "Mr."){echo "selected='selected'";} ?>>Mr.</option>
+                  <option value="Mrs." <?php if($salutation == "Mrs."){echo "selected='selected'";} ?>>Mrs.</option>
+                  <option value="Ms." <?php if($salutation == "Ms."){echo "selected='selected'";} ?>>Ms.</option>
+                  <option value="Dr." <?php if($salutation == "Dr."){echo "selected='selected'";} ?>>Dr.</option>
+                </select>
+                <label for="salutation">Salutation</label>
+              </span>
+              <span>
+                <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?php echo $firstname?>" maxlength="255" style="width:150px;" />
+                <label for="firstname">First Name</label>
+              </span>
+              <span>
                 <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?php echo $lastname?>" maxlength="255" style="width:190px;" />
                 <label for="lastname">Last Name</label>
               </span>
@@ -1654,11 +1654,11 @@ if($num_face==0){ ?>
                 <input id="email" name="email" type="text" class="field text addr tbox" value="<?php echo $email?>"  maxlength="255" style="width:275px;" />
                 <label for="email">Email/Pt. Portal Login</label>
               </span>
-  					</div>
-        		<div style="clear:both">
-      		    <span style="width:140px;">
-          			<select id="best_time" name="best_time">
-          				<option value="">Please Select</option>
+            </div>
+            <div style="clear:both">
+              <span style="width:140px;">
+                <select id="best_time" name="best_time">
+                  <option value="">Please Select</option>
                   <option value="morning" <?php echo ($best_time=='morning')?'selected="selected"':''; ?>>Morning</option>
                   <option value="midday" <?php echo ($best_time=='midday')?'selected="selected"':''; ?>>Mid-Day</option>
                   <option value="evening" <?php echo ($best_time=='evening')?'selected="selected"':''; ?>>Evening</option>
@@ -1685,21 +1685,21 @@ if($num_face==0){ ?>
                 <span style="color:#933; float:none;">
 <?php
 if($themyarray['use_patient_portal']==1){
-	switch($themyarray['registration_status']){
-		case 0:
-			echo 'Unregistered';
-			break;
-		case 1:
-			echo 'Registration Emailed '.date('m/d/Y h:i a', strtotime($themyarray['registration_senton'])) . ' ET';
-			break;
-		case 2:
-			echo 'Registered';
-			break;
-	}
+  switch($themyarray['registration_status']){
+    case 0:
+      echo 'Unregistered';
+      break;
+    case 1:
+      echo 'Registration Emailed '.date('m/d/Y h:i a', strtotime($themyarray['registration_senton'])) . ' ET';
+      break;
+    case 2:
+      echo 'Registered';
+      break;
+  }
 }else{
-	echo 'Patient Portal In-active';
+  echo 'Patient Portal In-active';
 }?>
-          			</span>
+                </span>
                 <br />
                 <input type="submit" name="sendPin" value="Patient can't receive text message?" class="button" />
 <?php if($themyarray['registration_status']==1){?>
@@ -1707,36 +1707,36 @@ if($themyarray['use_patient_portal']==1){
 <?php } ?>
               </div>           
             </div>
-    	    </li>
-      	</ul>
+          </li>
+        </ul>
       </td>
     </tr>
 <!-- <tr>
-	<td valign="top" colspan="2" class="frmhead">
-			<ul>
-	    <li id="foli8" class="complex">	
-		<label class="desc" id="title0" for="Field0">
-		    Premedication
-		    <span id="req_0" class="req">*</span>
-		</label>
-		<div>
-		    <span>
-			<label for="premedcheck">Is Patient Pre-Med?<input id="premedcheck" name="premedcheck" tabindex="5" type="checkbox"  <?php if($premedcheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('premeddet').disabled=!(this.checked)" value="1" /></label>
-			
-		    </span>
-		    <span>
-			<textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" <?php if($premedcheck == 0){ echo "disabled";} ?>><?php echo $premeddet;?></textarea>
-		    </span>
-		  
-	       </div>   
-	    </li>
-	</ul>
+  <td valign="top" colspan="2" class="frmhead">
+      <ul>
+      <li id="foli8" class="complex"> 
+    <label class="desc" id="title0" for="Field0">
+        Premedication
+        <span id="req_0" class="req">*</span>
+    </label>
+    <div>
+        <span>
+      <label for="premedcheck">Is Patient Pre-Med?<input id="premedcheck" name="premedcheck" tabindex="5" type="checkbox"  <?php if($premedcheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('premeddet').disabled=!(this.checked)" value="1" /></label>
+      
+        </span>
+        <span>
+      <textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" <?php if($premedcheck == 0){ echo "disabled";} ?>><?php echo $premeddet;?></textarea>
+        </span>
+      
+         </div>   
+      </li>
+  </ul>
     </td>
 </tr>-->
     <tr> 
-    	<td valign="top" colspan="2" class="frmhead">
+      <td valign="top" colspan="2" class="frmhead">
         <ul>
-          <li id="foli8" class="complex">	
+          <li id="foli8" class="complex"> 
             <label class="desc" id="title0" for="Field0">
               Address
               <span id="req_0" class="req">*</span>
@@ -1767,31 +1767,31 @@ $loc_sql = "SELECT * FROM dental_locations WHERE docid='".$docid."'";
 $loc_q = $db->getResults($loc_sql);
 $num_loc = count($loc_q);
 if($num_loc >= 1){?>
-      		    <span>
-          			<select name="location">
-          				<option value="">Select</option>
+              <span>
+                <select name="location">
+                  <option value="">Select</option>
 <?php
   foreach ($loc_q as $loc_r) {?>
                   <option <?php echo ($location==$loc_r['id'] || ($loc_r['default_location'] == 1 && !isset($_GET['pid'])))?'selected="selected"':''; ?>value="<?php echo $loc_r['id']; ?>"><?php echo $loc_r['location']; ?></option><?php
-	}?>
-          			</select>
-          			<label for"location">Office Site</label>
-      		    </span>
+  }?>
+                </select>
+                <label for"location">Office Site</label>
+              </span>
 <?php 
 } ?>
-        		</div>
-    	    </li>
-  			</ul>
+            </div>
+          </li>
+        </ul>
       </td>
     </tr>
     <tr>
-    	<td valign="top" colspan="2" class="frmhead">
-      	<ul>
-      		<li id="foli8" class="complex">	
-        		<div>
-      		    <span>
-          			<input id="dob" name="dob" type="text" class="field text addr tbox calendar" value="<?php echo $dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
-          			<label for="dob">Birthday</label>
+      <td valign="top" colspan="2" class="frmhead">
+        <ul>
+          <li id="foli8" class="complex"> 
+            <div>
+              <span>
+                <input id="dob" name="dob" type="text" class="field text addr tbox calendar" value="<?php echo $dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+                <label for="dob">Birthday</label>
               </span>
               <span>
                 <select name="gender" id="gender" class="field text addr tbox" style="width:100px;" >
@@ -1806,45 +1806,45 @@ if($num_loc >= 1){?>
                 <label for="ssn">Social Security No.</label>
               </span>
               <span>
-        		    <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
-            			<option value="0">Feet</option>
+                <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
+                  <option value="0">Feet</option>
 <?php 
 for($i=1;$i<9;$i++){?>
-  								<option value="<?php echo $i?>" <?php if($feet == $i) echo " selected";?>><?php echo $i?></option>
+                  <option value="<?php echo $i?>" <?php if($feet == $i) echo " selected";?>><?php echo $i?></option>
 <?php
 }?>
-        		    </select>
+                </select>
 <?php
-			//showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);?>
-        		    <label for="feet">Height: Feet</label>
-          		</span>
-          		<span>
-        		    <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
-            			<option value="-1">Inches</option>
+      //showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);?>
+                <label for="feet">Height: Feet</label>
+              </span>
+              <span>
+                <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
+                  <option value="-1">Inches</option>
 <?php 
 for($i=0;$i<12;$i++){?>
-  								<option value="<?php echo $i?>" <?php if($inches!='' && $inches == $i) echo " selected";?>><?php echo $i?></option>
+                  <option value="<?php echo $i?>" <?php if($inches!='' && $inches == $i) echo " selected";?>><?php echo $i?></option>
 <?php
 }?>
-        		    </select>
+                </select>
 <?php
-			//showPatientValue('dental_patients', $_GET['pid'], 'inches', $pat_row['inches'], $inches, true, $showEdits);?>
-        		    <label for="inches">Inches</label>
-          		</span>
-          		<span>
-        		    <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
-            			<option value="0">Weight</option>
+      //showPatientValue('dental_patients', $_GET['pid'], 'inches', $pat_row['inches'], $inches, true, $showEdits);?>
+                <label for="inches">Inches</label>
+              </span>
+              <span>
+                <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
+                  <option value="0">Weight</option>
 <?php 
 for($i=80;$i<=500;$i++){?>
-  								<option value="<?php echo $i?>" <?php if($weight == $i) echo " selected";?>><?php echo $i?></option>
+                  <option value="<?php echo $i?>" <?php if($weight == $i) echo " selected";?>><?php echo $i?></option>
 <?php
 }?>
-        		    </select>
+                </select>
 <?php
       //showPatientValue('dental_patients', $_GET['pid'], 'weight', $pat_row['weight'], $weight, true, $showEdits);?>
-        		    <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
-          		</span>
-          		<span>
+                <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
+              </span>
+              <span>
                 <span style="color:#000000; padding-top:2px;">BMI</span>
                 <input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?php echo $bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
               </span>
@@ -1860,10 +1860,10 @@ for($i=80;$i<=500;$i++){?>
                   <br />
                   &gt; 30 is Obese
                 </label>
-          		</span>
-        		</div>
-      	  </li>
-      	</ul>
+              </span>
+            </div>
+          </li>
+        </ul>
       </td>
     </tr> 
     <tr>
@@ -1891,7 +1891,7 @@ for($i=80;$i<=500;$i++){?>
       </td>
       <td valign="top" class="frmhead">
         <ul>
-          <li id="foli8" class="complex">	
+          <li id="foli8" class="complex"> 
             <!--<label class="desc" id="title0" for="Field0">
             Optional Fields (not used in letters)
             </label>-->
@@ -1905,10 +1905,10 @@ for($i=80;$i<=500;$i++){?>
         </ul>
       </td>
     </tr>
-  	<tr> 
+    <tr> 
       <td valign="top" colspan="2" class="frmhead">
         <ul>
-          <li id="foli8" class="complex">	
+          <li id="foli8" class="complex"> 
             <label class="desc" id="title0" for="Field0">
               In case of an emergency
             </label>
@@ -1930,7 +1930,7 @@ for($i=80;$i<=500;$i++){?>
         </ul>
       </td>
     </tr>
-	  <tr>
+    <tr>
       <td colspan="2">
         <font style="color:#0a5da0; font-weight:bold; font-size:16px;">REFERRED BY</font>
       </td>
@@ -1938,7 +1938,7 @@ for($i=80;$i<=500;$i++){?>
     <tr> 
       <td valign="top" colspan="2" class="frmhead">
         <ul>
-          <li id="foli8" class="complex">	
+          <li id="foli8" class="complex"> 
             <label class="desc" id="title0" for="Field0">
               &nbsp;
             </label>
@@ -1948,34 +1948,34 @@ for($i=80;$i<=500;$i++){?>
                 <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo $copyreqdate; ?>"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" value="example 11/11/1234" />
                 <label>Date</label>
               </div>
-        			<div style="float:left;" id="referred_source_div">
-          			<input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person
-          			<input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?php echo DSS_REFERRED_MEDIA; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_MEDIA]; ?>
-          			<input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?php echo DSS_REFERRED_FRANCHISE; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?>
-          			<input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?php echo DSS_REFERRED_DSSOFFICE; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?>
-          			<input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?php echo DSS_REFERRED_OTHER; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
-        			</div>
-        			<div style="clear:both;float:left;">
-        				<div id="referred_person" <?php echo ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;margin-left:100px;"':'style="margin-left:100px"'; ?>>	
-          				<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?php echo ($referred_name!='')?$referred_name:'Type referral name'; ?>" style="width:300px;" />
-                  <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="+ Create New Contact" />
+              <div style="float:left;" id="referred_source_div">
+                <input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person
+                <input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?php echo DSS_REFERRED_MEDIA; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_MEDIA]; ?>
+                <input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?php echo DSS_REFERRED_FRANCHISE; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?>
+                <input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?php echo DSS_REFERRED_DSSOFFICE; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?>
+                <input name="referred_source_r" <?php echo ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?php echo DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?php echo DSS_REFERRED_OTHER; ?>)" /> <?php echo $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
+              </div>
+              <div style="clear:both;float:left;">
+                <div id="referred_person" <?php echo ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;margin-left:100px;"':'style="margin-left:100px"'; ?>> 
+                  <input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?php echo (!empty($referred_name))?$referred_name:'Type referral name'; ?>" style="width:300px;" />
+                  <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&from=add_patient');" value="+ Create New Contact" />
                   <br />
                   <div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
-                  	<ul id="referredby_list" class="search_list">
-                  		<li class="template" style="display:none">Doe, John S</li>
-                  	</ul>
+                    <ul id="referredby_list" class="search_list">
+                      <li class="template" style="display:none">Doe, John S</li>
+                    </ul>
                   </div>
-        				</div>
-        				<div id="referred_notes" <?php echo ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;margin-left:200px;"':'style="margin-left:200px;"'; ?>>
-        					<textarea name="referred_notes" style="width:300px;"><?php echo $referred_notes; ?></textarea> 	
-        				</div>
+                </div>
+                <div id="referred_notes" <?php echo ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;margin-left:200px;"':'style="margin-left:200px;"'; ?>>
+                  <textarea name="referred_notes" style="width:300px;"><?php echo $referred_notes; ?></textarea>  
+                </div>
                 <input type="hidden" name="referred_by" id="referred_by" value="<?php echo $referred_by;?>" />
                 <input type="hidden" name="referred_source" id="referred_source" value="<?php echo $referred_source;?>" />
-		       <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?php echo $referred_by?>" maxlength="255" style="width:300px;" /> -->
-      		    </div>
+           <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?php echo $referred_by?>" maxlength="255" style="width:300px;" /> -->
+              </div>
             </div>
-    	    </li>
-  			</ul>
+          </li>
+        </ul>
       </td>
     </tr>
     <tr>
@@ -2034,46 +2034,46 @@ for($i=80;$i<=500;$i++){?>
     <tr>
       <td colspan="2">
         <a name="p_m_ins"></a>
-        <font style="color:#0a5da0; font-weight:bold; font-size:16px;">INSURANCE</font>	      
+        <font style="color:#0a5da0; font-weight:bold; font-size:16px;">INSURANCE</font>       
       </td>
     </tr>
 <?php
 $api_sql = "SELECT use_eligible_api FROM dental_users
-            	WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+              WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 $api_r = $db->getRow($api_sql);
 if($api_r['use_eligible_api']==1){?>
-  	<tr>
-    	<td valign="top" colspan="2" class="frmhead">
-      	Insurance Co.
-  			<input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?php echo ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
+    <tr>
+      <td valign="top" colspan="2" class="frmhead">
+        Insurance Co.
+        <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?php echo ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
         <br />
         <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
-        	<ul id="ins_payer_list" class="search_list">
-        		<li class="template" style="display:none"></li>
-        	</ul>
+          <ul id="ins_payer_list" class="search_list">
+            <li class="template" style="display:none"></li>
+          </ul>
         </div>
         <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?php echo $p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />
-  		</td>
-    </tr>	
+      </td>
+    </tr> 
 <?php 
 } ?>
-		<tr> 
+    <tr> 
       <td valign="top" colspan="2" class="frmhead">
         <ul>
-          <li id="foli8" class="complex">	
+          <li id="foli8" class="complex"> 
             <label class="desc" id="title0" for="Field0">
               Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php 
 if($exclusive_billing){ 
   echo $billing_co . ' filing insurance';
 }else{ ?>
-      				<a onclick="return false;" class="plain" title="Select YES if you would like <?php echo $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?php echo $billing_co; ?> filing insurance?</a><input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <?php if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <?php if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+              <a onclick="return false;" class="plain" title="Select YES if you would like <?php echo $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?php echo $billing_co; ?> filing insurance?</a><input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <?php if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <?php if($p_m_dss_file == '2') echo "checked='checked'";?>>No
 <?php 
 } ?>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          		<a onclick="return false" class="plain" title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO.">Insured Address same as Pt. address?</a>
-        			<input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" <?php if($p_m_same_address == '1') echo "checked='checked'";?>> Yes
-        			<input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" <?php if($p_m_same_address == '2') echo "checked='checked'";?>> No
+              <a onclick="return false" class="plain" title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO.">Insured Address same as Pt. address?</a>
+              <input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" <?php if($p_m_same_address == '1') echo "checked='checked'";?>> Yes
+              <input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" <?php if($p_m_same_address == '2') echo "checked='checked'";?>> No
             </label>
             <div>
               <span>
@@ -2156,7 +2156,7 @@ if($exclusive_billing){
 $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
 $image = $db->getRow($itype_sql);
 if(!$image){ ?>
-                <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');return false;" class="addButton">
+                <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');return false;" class="addButton">
                   + Add Insurance Card Image
                 </button>
 <?php 
@@ -2172,8 +2172,8 @@ if(!$image){ ?>
             </div>
           </li>
         </ul>
-      	<ul>
-          <li id="foli8" class="complex">	
+        <ul>
+          <li id="foli8" class="complex"> 
             <div>
               <span>
                 <select id="p_m_ins_co" name="p_m_ins_co" class="field text addr tbox" maxlength="255" onchange="updateNumber('p_m_ins_phone');" style="width:200px;" />
@@ -2187,7 +2187,7 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
 } ?>
                 </select>
                 <label for="p_m_ins_co">Insurance Co.</label><br />
-						<!--<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />-->
+            <!--<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />-->
                 <input type="button" class="button" style="width:215px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="+ Create New Insurance Company" />
               </span>
               <span>
@@ -2196,12 +2196,12 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
               </span>
               <span>
                 <input id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox"
-      					<?php if($p_m_ins_type == '1'){?>
-      					  value="NONE" readonly="readonly"
-      					<?php }else{ ?>
-      					  value="<?php echo $p_m_ins_grp?>" 
-      					<?php } ?>
-        					maxlength="255" style="width:100px;" />
+                <?php if($p_m_ins_type == '1'){?>
+                  value="NONE" readonly="readonly"
+                <?php }else{ ?>
+                  value="<?php echo $p_m_ins_grp?>" 
+                <?php } ?>
+                  maxlength="255" style="width:100px;" />
                 <label for="home_phone">Group #</label>
               </span>            
               <span>
@@ -2218,31 +2218,31 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                 <textarea id="p_m_ins_phone" name="p_m_ins_phone" class="field text addr tbox" disabled="disabled" style="width:190px;height:60px;background:#ccc;"></textarea>
                 <label for="p_m_ins_phone">Address</label>
               </span>
-						</div>
-						<div>       
-						</div>
+            </div>
+            <div>       
+            </div>
           </li>
-				</ul>
+        </ul>
       </td>
     </tr>
     <tr>
       <td colspan="2"></td>
     </tr>    
-		<tr> 
-    	<td valign="top" colspan="2" class="frmhead">
-      	<ul>
-      		<li id="foli8" class="complex">	
+    <tr> 
+      <td valign="top" colspan="2" class="frmhead">
+        <ul>
+          <li id="foli8" class="complex"> 
             <div style="height:40px;display:block;">
               <span>
-        				<label style="display:inline;">Does patient have secondary insurance?</label>
+                <label style="display:inline;">Does patient have secondary insurance?</label>
                 <input type="radio" value="Yes" <?php echo ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
                 <input type="radio" value="No" <?php echo ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); clearInfo();" /> No
               </span>
             </div>
           </li>
         </ul>
-  		</td>
-		</tr>
+      </td>
+    </tr>
 <?php
 if($api_r['use_eligible_api']==1){
 ?>
@@ -2265,12 +2265,12 @@ if($api_r['use_eligible_api']==1){
       <td valign="top" colspan="2" class="frmhead">
         <ul>
           <li id="foli8" class="complex"> 
-          	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+            <label class="desc s_m_ins_div" id="title0" for="Field0"  <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
               Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php if($exclusive_billing){
   echo $billing_co . ' filing insurance';
 }else{ ?>
-      				<a onclick="return false;" class="plain" title="Select YES if you would like <?php echo $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?php echo $billing_co; ?> filing insurance?</a><input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" <?php if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" <?php if($s_m_dss_file == '2') echo "checked='checked'";?>>No
+              <a onclick="return false;" class="plain" title="Select YES if you would like <?php echo $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?php echo $billing_co; ?> filing insurance?</a><input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" <?php if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" <?php if($s_m_dss_file == '2') echo "checked='checked'";?>>No
 <?php 
 } ?>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2308,9 +2308,9 @@ if($api_r['use_eligible_api']==1){
               </span>
             </div>
             <div>
-						</div>
+            </div>
           </li>
-				</ul>
+        </ul>
         <ul id="s_m_address_fields" <?php echo ($s_m_same_address == "1")?'style="display:none;"':''; ?>>
           <li id="foli8" class="complex">
             <div>
@@ -2359,7 +2359,7 @@ if($api_r['use_eligible_api']==1){
 $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
 $image = $db->getRow($itype_sql);
 if(!$image){ ?>
-                <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');return false;" class="addButton">
+                <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');return false;" class="addButton">
                   + Add Insurance Card Image
                 </button>
 <?php 
@@ -2375,12 +2375,12 @@ if(!$image){ ?>
             </div>
           </li>
         </ul>
-      	<ul>
-      		<li id="foli8" class="complex">	
+        <ul>
+          <li id="foli8" class="complex"> 
             <div class="s_m_ins_div" <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
               <span>
                 <select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" onchange="updateNumber2('s_m_ins_phone')" />
-    							<option value="">Select Insurance Company</option>
+                  <option value="">Select Insurance Company</option>
 <script type="text/javascript">
 insurance_nums = []; 
 <?php
@@ -2397,7 +2397,7 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                 <input type="button" class="button" style="width:215px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="+ Create New Insurance Company" />
               </span>
               <span>
-								<input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?php echo $s_m_ins_id?>" maxlength="255" style="width:190px;" />
+                <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?php echo $s_m_ins_id?>" maxlength="255" style="width:190px;" />
                 <label for="s_m_ins_id">Insurance ID.</label>
               </span>
               <span>
@@ -2412,26 +2412,26 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                 <textarea id="s_m_ins_phone" name="s_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" style="width:190px;height:60px;background:#ccc;"></textarea>
                 <label for="s_m_ins_phone">Address</label>
               </span>
-						</div>
-						<div>          
-						</div>
+            </div>
+            <div>          
+            </div>
           </li>
-				</ul>
+        </ul>
       </td>
     </tr>
-		      <?php //if((isset($_GET['pid']) && isset($_GET['ed'])) || (isset($_GET['pid']) && isset($_GET['addtopat']))){?>
-	  <tr>
+          <?php //if((isset($_GET['pid']) && isset($_GET['ed'])) || (isset($_GET['pid']) && isset($_GET['addtopat']))){?>
+    <tr>
       <td colspan="2">
-        <font style="color:#0a5da0; font-weight:bold; font-size:16px;">CONTACT SECTION</font>	      
+        <font style="color:#0a5da0; font-weight:bold; font-size:16px;">CONTACT SECTION</font>       
       </td>
-	  </tr>        
+    </tr>        
     <tr>
       <td class="frmhead" colspan="2">
         <table id="contactmds" style="float:left;">
           <tr height="35">
             <td>
               <span style="padding-left:10px; float:left;">Add medical contacts so they can receive correspondence about this patient.</span>
-              <span style="float:left; margin-left:20px;"><input type="button" class="button" style="float:left; width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="+ Create New Contact" /></span>
+              <span style="float:left; margin-left:20px;"><input type="button" class="button" style="float:left; width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&from=add_patient');" value="+ Create New Contact" /></span>
               <ul>
                 <li  id="foli8" class="complex">
                   <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
@@ -2473,10 +2473,10 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
             </td>
           </tr>
           <tr height="35">   
-		        <td>
+            <td>
               <ul>
-    		        <li  id="foli8" class="complex">
-      		        <label style="display: block; float: left; width: 110px;">Sleep MD</label>
+                <li  id="foli8" class="complex">
+                  <label style="display: block; float: left; width: 110px;">Sleep MD</label>
                   <div id="docsleep_static_info" style="<?php echo ($docsleep!='')?'':'display:none'; ?>"><span id="docsleep_name_static" style="width:300px;"><?php echo $docsleep_name; ?></span>
                     <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $docsleep;?>');return false;" class="addButton">Quick View</a>
                     <a href="#" onclick="$('#docsleep_static_info').hide();$('#docsleep_name').show();return false;" class="addButton">Change Contact</a>
@@ -2600,8 +2600,8 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
     <tr bgcolor="#FFFFFF">
       <td valign="top" class="frmhead">
         Portal Status
-    		<br />
-    		<span id="ppAlert" style="font-weight:normal;font-size:12px; <?php echo ($status == 2)?'':'display:none;'; ?>">Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
+        <br />
+        <span id="ppAlert" style="font-weight:normal;font-size:12px; <?php echo ($status == 2)?'':'display:none;'; ?>">Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
       </td>
       <td valign="top" class="frmdata">
         <select name="use_patient_portal" class="tbox" >
@@ -2615,7 +2615,7 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
     <tr>
       <td valign="top">
 <?php
-$sql = "SELECT generated_date FROM dental_letters WHERE templateid = '3' AND deleted = '0' AND patientid = '". $_GET['pid'] ."' ORDER BY generated_date ASC LIMIT 1;";
+$sql = "SELECT generated_date FROM dental_letters WHERE templateid = '3' AND deleted = '0' AND patientid = '". (!empty($_GET['pid']) ? $_GET['pid'] : '') ."' ORDER BY generated_date ASC LIMIT 1;";
 $result = $db->getRow($sql);
 if (!$result) {?>
         <input id="introletter" name="introletter" type="checkbox" value="1"> Send Intro Letter to DSS patient
@@ -2629,7 +2629,7 @@ print "DSS Intro Letter Sent to Patient $date_generated";
     <tr>
       <td  colspan="2" align="right">
         <span class="red">
-          * Required Fields					
+          * Required Fields         
         </span><br />
         <input type="hidden" name="patientsub" value="1" />
         <input type="hidden" name="ed" value="<?php echo $themyarray["patientid"]?>" />

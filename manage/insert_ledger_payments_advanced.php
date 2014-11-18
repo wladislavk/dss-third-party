@@ -13,11 +13,11 @@
 
     <body>
         <?php
-            if(authorize($_POST['username'], $_POST['password'], DSS_USER_TYPE_ADMIN)){
-                $csql = "SELECT *, REPLACE(i.total_charge,',','') AS amount_due FROM dental_insurance i WHERE i.insuranceid='".$_POST['claimid']."';";
+            if(authorize((!empty($_POST['username']) ? $_POST['username'] : ''), (!empty($_POST['password']) ? $_POST['password'] : ''), DSS_USER_TYPE_ADMIN)){
+                $csql = "SELECT *, REPLACE(i.total_charge,',','') AS amount_due FROM dental_insurance i WHERE i.insuranceid='".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."';";
                 
                 $claim = $db->getRow($csql);
-                $psql = "SELECT * FROM dental_patients p WHERE p.patientid='".$_POST['patientid']."';";
+                $psql = "SELECT * FROM dental_patients p WHERE p.patientid='".(!empty($_POST['patientid']) ? $_POST['patientid'] : '')."';";
                 
                 $pat = $db->getRow($psql);
                 $msg = "Payments have been added.";
@@ -39,7 +39,7 @@
                     `followup`,
                     `note`
                     ) VALUES ";
-                $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_POST['claimid'];
+                $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '');
 
                 $lq = $db->getResults($lsql);
                 if ($lq) foreach ($lq as $row){
@@ -50,23 +50,23 @@
                             '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', 
                             '".date('Y-m-d')."', 
                             '".str_replace(',','',$_POST['amount_'.$id])."', 
-                            '".mysql_real_escape_string($_POST['payment_type'])."', 
-                            '".mysql_real_escape_string($_POST['payer'])."',
-                            '".mysql_real_escape_string($_POST['allowed'])."',
-                            '".mysql_real_escape_string($_POST['ins_paid'])."',
-                            '".mysql_real_escape_string($_POST['deductible'])."',
-                            '".mysql_real_escape_string($_POST['copay'])."',
-                            '".mysql_real_escape_string($_POST['coins'])."',
-                            '".mysql_real_escape_string($_POST['overpaid'])."',
-                            '".mysql_real_escape_string($_POST['followup'])."',
-                            '".mysql_real_escape_string($_POST['note'])."'
+                            '".mysqli_real_escape_string($con,$_POST['payment_type'])."', 
+                            '".mysqli_real_escape_string($con,$_POST['payer'])."',
+                            '".mysqli_real_escape_string($con,$_POST['allowed'])."',
+                            '".mysqli_real_escape_string($con,$_POST['ins_paid'])."',
+                            '".mysqli_real_escape_string($con,$_POST['deductible'])."',
+                            '".mysqli_real_escape_string($con,$_POST['copay'])."',
+                            '".mysqli_real_escape_string($con,$_POST['coins'])."',
+                            '".mysqli_real_escape_string($con,$_POST['overpaid'])."',
+                            '".mysqli_real_escape_string($con,$_POST['followup'])."',
+                            '".mysqli_real_escape_string($con,$_POST['note'])."'
                             ),";
                     }
                 }
 
                 $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
                 $insqry = $db->query($sqlinsertqry);
-                if($secsql){
+                if(!empty($secsql)){
                     $paysql = "SELECT SUM(lp.amount) as payment
                                 FROM dental_ledger_payment lp
                                 JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
@@ -97,7 +97,7 @@
                             docid = '".$_SESSION['docid']."',
                             patientid = '".$_POST['patientid']."',
                             producerid = '".$_SESSION['userid']."',
-                            note = 'Insurance claim ".$_POST['claimid']." disputed because: ".mysql_escape_string($_POST['dispute_reason']).".'";
+                            note = 'Insurance claim ".$_POST['claimid']." disputed because: ".mysqli_real_escape_string($con,(!empty($_POST['dispute_reason']) ? $_POST['dispute_reason'] : '')).".'";
                         
                         $db->query($note_sql);
                         if($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_PAID_INSURANCE){
@@ -114,10 +114,10 @@
                             		adddate,
                             		ip_address)
                                     VALUES (
-                                    ".mysql_real_escape_string($_POST['claimid']).",
+                                    ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                     'primary',
                             		'".$banner1."',
-                            		'".mysql_escape_string($_POST['dispute_reason'])."',
+                            		'".mysqli_real_escape_string($con,$_POST['dispute_reason'])."',
                             		".$new_status.",
                                     now(),
                                     '".s_for($_SERVER['REMOTE_ADDR'])."'
@@ -139,10 +139,10 @@
                                     adddate,
                                     ip_address)
                                     VALUES (
-                                    ".mysql_real_escape_string($_POST['claimid']).",
+                                    ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                     'secondary',
                                     '".$banner1."',
-                            		'".mysql_escape_string($_POST['dispute_reason'])."',
+                            		'".mysqli_real_escape_string($con,$_POST['dispute_reason'])."',
                             		'".$new_status."',
                                     now(),
                                     '".s_for($_SERVER['REMOTE_ADDR'])."'
@@ -164,10 +164,10 @@
                                     adddate,
                                     ip_address)
                                     VALUES (
-                                    ".mysql_real_escape_string($_POST['claimid']).",
+                                    ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                     'primary',
                                     '".$banner1."',
-                                    '".mysql_escape_string($_POST['dispute_reason'])."',
+                                    '".mysqli_real_escape_string($con,$_POST['dispute_reason'])."',
                                     '".$new_status."',
                                     now(),
                                     '".s_for($_SERVER['REMOTE_ADDR'])."'
@@ -189,10 +189,10 @@
                                     adddate,
                                     ip_address)
                                     VALUES (
-                                    ".mysql_real_escape_string($_POST['claimid']).",
+                                    ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                     'secondary',
                                     '".$banner1."',
-                                    '".mysql_escape_string($_POST['dispute_reason'])."',
+                                    '".mysqli_real_escape_string($con,$_POST['dispute_reason'])."',
                                     '".$new_status."',
                                     now(),
                                     '".s_for($_SERVER['REMOTE_ADDR'])."'
@@ -262,7 +262,7 @@
                                         adddate,
                                         ip_address)
                                         VALUES (
-                                        ".mysql_real_escape_string($_POST['claimid']).",
+                                        ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                         'primary',
                                         '".$banner1."',
                                         '".$new_status."',
@@ -297,7 +297,7 @@
                                     adddate,
                                     ip_address)
                                     VALUES (
-                                    ".mysql_real_escape_string($_POST['claimid']).",
+                                    ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                     'secondary',
                                     '".$banner1."',
                                     '".$new_status."',

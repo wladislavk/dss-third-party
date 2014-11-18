@@ -8,20 +8,20 @@
         $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
     }
 
-    $_GET['id'] = $_GET['insid'];
+    $_GET['id'] = (!empty($_GET['insid']) ? $_GET['insid'] : '');
     $sql = "SELECT i.*, u.npi, u.tax_id_or_ssn,
       		ce.reference_id,
       		u.first_name, u.last_name
       		FROM dental_claim_electronic ce 
           	JOIN dental_insurance i ON i.insuranceid = ce.claimid
           	JOIN dental_users u ON i.docid = u.userid
-  	        WHERE ce.claimid='".mysql_real_escape_string($_GET['id'])."' 
+  	        WHERE ce.claimid='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."' 
           	AND ce.reference_id!=''
           	ORDER BY id DESC LIMIT 1";
 
     $r = $db->getRow($sql);
 
-    $l_sql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".mysql_real_escape_string($_GET['id'])."'";
+    $l_sql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".mysqli_real_escape_string($con,$_GET['id'])."'";
 
     $l = $db->getRow($l_sql);
     $reference_id = $r['reference_id'];

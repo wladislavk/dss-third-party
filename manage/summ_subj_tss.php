@@ -17,6 +17,8 @@ $tot_score = $snore_1 + $snore_2 + $snore_3 + $snore_4 + $snore_5;
                           </script>
                         <?php
 }
+else
+{
 
 $sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
@@ -213,5 +215,6 @@ Thornton Snoring Scale
   $('#snore_5').val(v);
 </script>
 
-
-
+<?php 
+}
+?>

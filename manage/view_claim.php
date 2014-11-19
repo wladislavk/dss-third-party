@@ -594,7 +594,7 @@ include 'claim_notes.php';
 <?php 
   if(isset($_GET['inspay']) && $_GET['inspay']==1){ ?>
     <script type="text/javascript">
-	loadPopup('add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>');
+	window.location('add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>');
     </script>
   <?php } ?>
 <br /><br />	

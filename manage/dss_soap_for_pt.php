@@ -1,7 +1,7 @@
 <?php
 	include 'includes/top.htm';
 
-	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+	$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 	
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
@@ -15,7 +15,7 @@
 		die();
 	}
 
-	$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
+	$ref_sql = "select * from dental_q_recipients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$ref_myarray = $db->getRow($ref_sql);
 	$referring_physician = st($ref_myarray['referring_physician']);
@@ -29,10 +29,10 @@
 		$age = 'N/A';
 	}
 
-	$q1_sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
+	$q1_sql = "select * from dental_q_page1 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
 	$q1_myarray = $db->getRow($q1_sql);
-	$q3_sql = "select * from dental_q_page3 where patientid='".$_GET['pid']."'";
+	$q3_sql = "select * from dental_q_page3 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$q3_myarray = $db->getRow($q3_sql);
 	$history = st($q3_myarray['history']);
@@ -65,7 +65,7 @@
 		}
 	}
 
-	$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+	$q2_sql = "select * from dental_q_page2 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$q2_myarray = $db->getRow($q2_sql);
 	$polysomnographic = st($q2_myarray['polysomnographic']);
@@ -95,7 +95,7 @@
 	</span>
 	<br />
 	&nbsp;&nbsp;
-	<a href="dss_letters.php?pid=<?php echo $_GET['pid'];?>" class="editlink" title="EDIT">
+	<a href="dss_letters.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>" class="editlink" title="EDIT">
 		<b>&lt;&lt;Back</b></a>
 	<br /><br>
 	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">

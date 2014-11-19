@@ -1,7 +1,7 @@
 <?php
 include_once ($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/main_include.php');
 
-if($_SESSION['userid'] == '')
+if(empty($_SESSION['userid']))
 {
 	header('Location: login.php');
 	die();

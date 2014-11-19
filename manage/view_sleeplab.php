@@ -1,6 +1,5 @@
 <?php 
-session_start();
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include_once "admin/includes/general.htm";
 //include "includes/top.htm";
@@ -24,7 +23,7 @@ include_once "admin/includes/general.htm";
 <?php
 
 $thesql = "select s.* from dental_sleeplab s 
-			where s.sleeplabid='".$_REQUEST["ed"]."'";
+			where s.sleeplabid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 $themyarray = $db->getRow($thesql);
 
 $salutation = st($themyarray['salutation']);
@@ -32,7 +31,7 @@ $firstname = st($themyarray['firstname']);
 $middlename = st($themyarray['middlename']);
 $lastname = st($themyarray['lastname']);
 $company = st($themyarray['company']);
-$contacttype = st($themyarray['contacttype']);
+$contacttype = st((!empty($themyarray['contacttype']) ? $themyarray['contacttype'] : ''));
 $add1 = st($themyarray['add1']);
 $add2 = st($themyarray['add2']);
 $city = st($themyarray['city']);
@@ -42,14 +41,14 @@ $phone1 = st($themyarray['phone1']);
 $phone2 = st($themyarray['phone2']);
 $fax = st($themyarray['fax']);
 $email = st($themyarray['email']);
-$national_provider_id = st($themyarray['national_provider_id']);
-$qualifier = st($themyarray['qualifier']);
-$qualifierid = st($themyarray['qualifierid']);
+$national_provider_id = st((!empty($themyarray['national_provider_id']) ? $themyarray['national_provider_id'] : ''));
+$qualifier = st((!empty($themyarray['qualifier']) ? $themyarray['qualifier'] : ''));
+$qualifierid = st((!empty($themyarray['qualifierid']) ? $themyarray['qualifierid'] : ''));
 $greeting = st($themyarray['greeting']);
 $sincerely = st($themyarray['sincerely']);
-$contacttypeid = st($themyarray['contacttypeid']);
+$contacttypeid = st((!empty($themyarray['contacttypeid']) ? $themyarray['contacttypeid'] : ''));
 $notes = st($themyarray['notes']);
-$preferredcontact = st($themyarray['preferredcontact']);
+$preferredcontact = st((!empty($themyarray['preferredcontact']) ? $themyarray['preferredcontact'] : ''));
 $name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
 $status = st($themyarray['status']);
 
@@ -88,7 +87,7 @@ $status = st($themyarray['status']);
 	<div class="info">
 	        <label>Notes:</label> <span class="value"><?php echo $notes; ?></span>
 	</div>
-	<a href="add_sleeplab.php?ed=<?php echo $_REQUEST['ed'];?>" style="margin-right:10px;float:right;">Edit</a>
+	<a href="add_sleeplab.php?ed=<?php echo (!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '');?>" style="margin-right:10px;float:right;">Edit</a>
 </div>
 
 </body>

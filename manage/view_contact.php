@@ -1,6 +1,5 @@
 <?php 
-session_start();
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 //include "includes/general_functions.php";
 include_once "admin/includes/general.htm";
@@ -33,7 +32,7 @@ $physician_types = implode(',', $physician_array);
 
 $thesql = "select c.*, ct.contacttype from dental_contact c 
 			LEFT JOIN dental_contacttype ct ON ct.contacttypeid = c.contacttypeid
-			where c.contactid='".$_REQUEST["ed"]."'";
+			where c.contactid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 $themyarray = $db->getRow($thesql);
 
 $salutation = st($themyarray['salutation']);
@@ -104,7 +103,7 @@ if($themyarray['corporate']=='1'){ ?>
 	<a href="view_fcontact.php?ed=<?php echo $_REQUEST['ed'];?>" style="margin-right:10px;float:right;">View Full</a>
 <?php 
 }else{ ?>
-	<a href="add_contact.php?ed=<?php echo $_REQUEST['ed'];?>" style="margin-right:10px;float:right;">Edit</a>
+	<a href="add_contact.php?ed=<?php echo (!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '');?>" style="margin-right:10px;float:right;">Edit</a>
 <?php 
 } ?>
 </div>

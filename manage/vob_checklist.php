@@ -1,15 +1,15 @@
 <?php
-if($_GET['rx']==1){?>
+if(!empty($_GET['rx']) && $_GET['rx']==1){?>
 
 <div id="loader" style="position:absolute;width:100%; height:98%;">
   <img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
 </div>
 <?php
-  $file = $_FILES['rx_file'];
-  if ($file["name"] <> '') {
+  $file = (!empty($_FILES['rx_file']) ? $_FILES['rx_file'] : array());
+  if (!empty($file["name"])) {
     $rximgid = save_insurance_image($file, 6);
     $rxrec = date("m/d/Y");
-    $rx_sql = "UPDATE dental_flow_pg1 SET rx_imgid='".$rximgid."', rxrec='".$rxrec."' WHERE pid = '".$_GET['pid']."';";
+    $rx_sql = "UPDATE dental_flow_pg1 SET rx_imgid='".$rximgid."', rxrec='".$rxrec."' WHERE pid = '".(!empty($_GET['pid']))."';";
     $db->query($rx_sql);?>
 <script type="text/javascript">
   $('#loader').hide();
@@ -18,7 +18,7 @@ if($_GET['rx']==1){?>
   }
 }
 
-if($_GET['lomn']==1){?>
+if(!empty($_GET['lomn']) && $_GET['lomn']==1){?>
 
 <div id="loader" style="position:absolute;width:100%; height:98%;">
   <img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
@@ -38,12 +38,14 @@ $('#loader').hide();
   }
 
 function save_insurance_image($file, $imagetypeid) {
+  $db = new Db();
+
 // Set title based on category
   if ($imagetypeid == 6) $title = "RX Image";
   if ($imagetypeid == 7) $title = "LOMN Image";
   if ($imagetypeid == 8) $title = "Clinical Notes Image";
   if ((array_search($file["type"], $dss_file_types) !== false) && ($file["size"] < DSS_FILE_MAX_SIZE)) {
-    if($file["name"] <> '') {
+    if(!empty($file["name"])) {
       $fname = $file["name"];
       $lastdot = strrpos($fname,".");
       $name = substr($fname,0,$lastdot);
@@ -67,8 +69,7 @@ function save_insurance_image($file, $imagetypeid) {
       adddate = now(),
       ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-      $db->query($ins_sql) or die($ins_sql." | ".mysql_error());
-      return mysql_insert_id();
+      return $db->getInsertId($ins_sql);
     }
   } else { ?>
 <script type="text/javascript">
@@ -78,7 +79,7 @@ alert("Invalid File Type or File too Large");
   }
 }
 
-$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
+$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' LIMIT 1;";
 $flow = $db->getRow($flowquery);
 if(!$flow){
   $rx = false;
@@ -110,7 +111,7 @@ if ($patient_info) {
   $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".$_GET['pid']."'";
   $pat_r = $db->getRow($pat_sql);
 
-  $b_sql = "SELECT * FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $b_sql = "SELECT * FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,(!empty($_SESSION['docid']) ? $_SESSION['docid'] : ''))."'";
   $b_q = $db->getRow($b_sql);
   if($b_q && $b_q['exclusive']){
     $exclusive_billing = $b_r['exclusive'];
@@ -131,7 +132,7 @@ if ($patient_info) {
     $ins_error = true;
   }elseif($exclusive_billing){
     $ins_error = false;
-  }elseif($pat_r['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  }elseif(!empty($_SESSION['user_type']) && !empty($pat_r['p_m_dss_file']) && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
     $ins_error = false;
   }elseif($pat_r['p_m_dss_file']!=1){
     $ins_error = true;
@@ -155,7 +156,7 @@ if ($patient_info) {
   } 
  // $vrt_sql = "SELECT c.vob_require_test FROM companies c
  //                JOIN dental_users u ON u.billing_company_id=c.id
- //                WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+ //                WHERE u.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
  // $vrt_q = mysql_query($vrt_sql) or die(mysql_error());
  // $vrt = mysql_fetch_assoc($vrt_q);
  // if($vrt['vob_require_test']!='1'){
@@ -224,15 +225,15 @@ if ($patient_info) {
 
 <?php
 $api_sql = "SELECT use_eligible_api FROM dental_users
-              WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+              WHERE userid='".mysqli_real_escape_string($con,(!empty($_SESSION['docid']) ? $_SESSION['docid'] : ''))."'";
 $api_r = $db->getRow($api_sql);
   if($api_r['use_eligible_api']==1){?>
 
 <br /><br />
 
 <?php 
-    $vob_sql = "SELECT * FROM dental_insurance_preauth WHERE doc_id='".mysql_real_escape_string($_SESSION['docid'])."'
-                  AND patient_id='".mysql_real_escape_string($_GET['pid'])."'";
+    $vob_sql = "SELECT * FROM dental_insurance_preauth WHERE doc_id='".mysqli_real_escape_string($con,$_SESSION['docid'])."'
+                  AND patient_id='".mysqli_real_escape_string($con,$_GET['pid'])."'";
     $vob_q = $db->getResults($vob_sql);
     $num_vob = count($vob_q);
     if($num_vob>1){ ?>
@@ -261,7 +262,7 @@ $api_r = $db->getRow($api_sql);
     </tr>
 
 <?php 
-    $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+    $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
     $q = $db->getResults($s);
     if ($q) {
       foreach ($q as $r) {?>

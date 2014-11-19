@@ -1,7 +1,7 @@
 <?php 
 	include "admin/includes/main_include.php";
 
-	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+	$pat_sql = "select * from dental_patients where patientid='".s_for(((!empty($_GET['pid']) ? $_GET['pid'] : '')))."'";
 
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
@@ -16,7 +16,7 @@
 		die();
 	}
 
-	$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
+	$ref_sql = "select * from dental_q_recipients where patientid='".((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
 	$ref_myarray = $db->getRow($ref_sql);
 	$referring_physician = st($ref_myarray['referring_physician']);
@@ -31,7 +31,7 @@
 		$age = 'N/A';
 	}
 
-	$q3_sql = "select * from dental_q_page3 where patientid='".$_GET['pid']."'";
+	$q3_sql = "select * from dental_q_page3 where patientid='".((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 	
 	$q3_myarray = $db->getRow($q3_sql);
 	$history = st($q3_myarray['history']);
@@ -64,7 +64,7 @@
 		}
 	}
 
-	$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+	$q2_sql = "select * from dental_q_page2 where patientid='".((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 	
 	$q2_myarray = $db->getRow($q2_sql);
 	$polysomnographic = st($q2_myarray['polysomnographic']);
@@ -76,7 +76,7 @@
 	$type_study = st($q2_myarray['type_study']);
 	$custom_diagnosis = st($q2_myarray['custom_diagnosis']);
 
-	$e5_sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+	$e5_sql = "select * from dental_ex_page5 where patientid='".((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 	
 	$e5_myarray = $db->getRow($e5_sql);
 	$protrusion_equal = st($e5_myarray['protrusion_equal']);
@@ -84,7 +84,7 @@
 
 	$sleeplab_myarray = $db->getRow($sleeplab_sql);
 	$sleeplab_name = st($sleeplab_myarray['company']);
-	$sum_sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
+	$sum_sql = "select * from dental_summary where patientid='".((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
 	$sum_myarray = $db->getRow($sum_sql);
 	$sti_o2_1 = st($sum_myarray['sti_o2_1']);
@@ -106,7 +106,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
+		<meta name="keywords" content="<?php echo st((!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : ''));?>" />
 		<title><?php echo $sitename;?> | <?php echo $name;?> - DSS referral thank you pt waiting on</title>
 		<link href="css/admin.css" rel="stylesheet" type="text/css" />
 		<script language="javascript" type="text/javascript" src="script/validation.js"></script>

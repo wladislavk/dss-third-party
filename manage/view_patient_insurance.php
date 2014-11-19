@@ -1,6 +1,5 @@
 <?php 
-session_start();
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 //include "includes/general_functions.php";
 //include "includes/top.htm";
@@ -23,10 +22,10 @@ include("includes/sescheck.php");
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
-if($_POST["contactsub"] == 1){
+if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
     $ins_sql = "insert into dental_contact set company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', contacttypeid = '11', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
     $pc_id = $db->getInsertId($ins_sql);
-    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".mysql_real_escape_string($_REQUEST['id'])."'";
+    $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".mysqli_real_escape_string($con,$_REQUEST['id'])."'";
     $pcr = $db->getRow($pcsql);
     $psql = "UPDATE dental_patients SET ";
     switch($pcr['insurancetype']){
@@ -40,7 +39,7 @@ if($_POST["contactsub"] == 1){
     $psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
     //echo $psql;
     $db->query($psql);
-    $d = "DELETE FROM dental_patient_insurance where id='".mysql_real_escape_string($_REQUEST['id'])."'";
+    $d = "DELETE FROM dental_patient_insurance where id='".mysqli_real_escape_string($con,$_REQUEST['id'])."'";
     $db->query($d);?>
     <script type="text/javascript">
         parent.window.location = "patient_changes.php?pid=<?php echo $pcr['patientid']; ?>";
@@ -62,7 +61,7 @@ if($_POST["contactsub"] == 1){
 <body width="98%"> */ ?>
 
 <?php
-$thesql = "select * from dental_patient_insurance where id='".mysql_real_escape_string($_REQUEST["id"])."'";
+$thesql = "select * from dental_patient_insurance where id='".mysqli_real_escape_string($con,(!empty($_REQUEST["id"]) ? $_REQUEST["id"] : ''))."'";
 $themyarray = $db->getRow($thesql);
 
 $lastname = st($themyarray['lastname']);
@@ -91,13 +90,13 @@ $but_text = "Add ";
 	
 <br /><br />
 
-<?php if($msg != '') { ?>
+<?php if(!empty($msg)) { ?>
     <div align="center" class="red">
         <?php echo $msg;?>
     </div>
 <?php } ?>
 <form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" onSubmit="return patinsabc(this)">
-    <input type="hidden" name="contact_type" value="<?php echo $_GET['ctype']; ?>" />
+    <input type="hidden" name="contact_type" value="<?php echo (!empty($_GET['ctype']) ? $_GET['ctype'] : ''); ?>" />
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>
             <td colspan="2" class="cat_head">
@@ -110,7 +109,7 @@ $but_text = "Add ";
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
                             <span>
-                            <span style="color:#000000">Company <?php echo ($_GET['ctype']=='ins')?'<span id="req_0" class="req">*</span>':''; ?></span>
+                            <span style="color:#000000">Company <?php echo (!empty($_GET['ctype']) && $_GET['ctype']=='ins')?'<span id="req_0" class="req">*</span>':''; ?></span>
                             <input id="company" name="company" type="text" class="field text addr tbox" value="<?php echo $company;?>" tabindex="5" style="width:575px;"  maxlength="255"/>
                             </span>
                         </label>
@@ -219,8 +218,8 @@ $but_text = "Add ";
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="tbox" tabindex="22">
-                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if(!empty($status) && $status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if(!empty($status) && $status == 2) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>

@@ -9,12 +9,12 @@
 
 	include "admin/includes/main_include.php";
 
-	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+	$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 	
 	$pat_myarray = $db->getRow($pat_sql);
-	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
-	$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
-	if($pat_myarray['patientid'] == '') {
+	$name = st((!empty($pat_myarray['salutation']) ? $pat_myarray['salutation'] : ''))." ".st((!empty($pat_myarray['firstname']) ? $pat_myarray['firstname'] : ''))." ".st((!empty($pat_myarray['middlename']) ? $pat_myarray['middlename'] : ''))." ".st((!empty($pat_myarray['lastname']) ? $pat_myarray['lastname'] : ''));
+	$name1 = st((!empty($pat_myarray['salutation']) ? $pat_myarray['salutation'] : ''))." ".st((!empty($pat_myarray['firstname']) ? $pat_myarray['firstname'] : ''));
+	if(empty($pat_myarray['patientid'])) {
 ?>
 		<script type="text/javascript">
 			window.location = 'manage_patient.php';
@@ -23,21 +23,21 @@
 		die();
 	}
 
-	$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
+	$ref_sql = "select * from dental_q_recipients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$ref_myarray = $db->getRow($ref_sql);
-	$referring_physician = st($ref_myarray['referring_physician']);
+	$referring_physician = st((!empty($ref_myarray['referring_physician']) ? $ref_myarray['referring_physician'] : ''));
 	$a_arr = explode('
 	',$referring_physician);
-	if(st($pat_myarray['dob']) <> '' ) {
+	if(!empty($pat_myarray['dob'])) {
 		$dob_y = date('Y',strtotime(st($pat_myarray['dob'])));
 		$cur_y = date('Y');
 		$age = $cur_y - $dob_y;
-	} else 
+	} else { 
 		$age = 'N/A';
 	}
 
-	if(st($pat_myarray['gender']) == 'Female') {
+	if(!empty($pat_myarray['gender']) && st($pat_myarray['gender']) == 'Female') {
 		$h_h =  "Her";
 		$s_h =  "She";
 		$h_h1 =  "her";

@@ -8,7 +8,7 @@
 	<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 	<script type="text/javascript" src="/manage/js/edit_letter.js"></script>
 <?php
-	$letterid = mysql_real_escape_string($_GET['lid']);
+	$letterid = mysqli_real_escape_string($con,(!empty($_GET['lid']) ? $_GET['lid'] : ''));
 	// Select Letter
 	$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
 	
@@ -50,26 +50,26 @@
 		}
 	}
 	// Get Letter Subject
-	$template_query = "SELECT name FROM dental_letter_templates WHERE id = ".$templateid.";";
+	$template_query = "SELECT name FROM dental_letter_templates WHERE id = ".(!empty($templateid) ? $templateid : '').";";
 	
 	$template_result = $db->getRow($template_query);
-	$title = $template_result['name'];
+	$title = (!empty($template_result['name']) ? $template_result['name'] : '');
 	// Get Franchisee Name
 	$franchisee_query = "SELECT name FROM dental_users WHERE userid = '".$_SESSION['docid']."';";
 	
 	$franchisee_result = $db->getRow($franchisee_query);
 	$franchisee_name = $franchisee_result['name'];
 	// Get Patient Information
-	$patient_query = "SELECT salutation, firstname, middlename, lastname, gender, dob FROM dental_patients WHERE patientid = '".$patientid."';";
+	$patient_query = "SELECT salutation, firstname, middlename, lastname, gender, dob FROM dental_patients WHERE patientid = '".(!empty($patientid) ? $patientid : '')."';";
 	
 	$patient_result = $db->getResults($patient_query);
 	$patient_info = array();
 	if ($patient_result) foreach ($patient_result as $row) {
 		$patient_info = $row;
 	}
-	$patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926);
+	$patient_info['age'] = floor((time() - strtotime((!empty($patient_info['dob']) ? $patient_info['dob'] : '')))/31556926);
 	// Get Medical Information
-	$q3_sql = "SELECT history, medications from dental_q_page3 WHERE patientid = '".$patientid."';";
+	$q3_sql = "SELECT history, medications from dental_q_page3 WHERE patientid = '".(!empty($patientid) ? $patientid : '')."';";
 	
 	$q3_myarray = $db->getRow($q3_sql);
 	$history = $q3_myarray['history'];
@@ -115,7 +115,7 @@
 		}
 	}
 
-	$q2_sql = "SELECT date, sleeptesttype, ahi, diagnosis, place FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
+	$q2_sql = "SELECT date, sleeptesttype, ahi, diagnosis, place FROM dental_summ_sleeplab WHERE patiendid='".(!empty($patientid) ? $patientid : '')."' ORDER BY id DESC LIMIT 1;";
 	
 	$q2_myarray = $db->getRow($q2_sql);
 	$sleep_study_date = st($q2_myarray['date']);
@@ -128,7 +128,7 @@
 	$sleeplab_myarray = $db->getRow($sleeplab_sql);
 	$sleeplab_name = st($sleeplab_myarray['company']);
 	// Appointment Date
-	$appt_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 4 ORDER BY stepid DESC LIMIT 1;";
+	$appt_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".(!empty($patientid) ? $patientid : '')."' AND segmentid = 4 ORDER BY stepid DESC LIMIT 1;";
 	
 	$appt_result = $db->getRow($appt_query);
 	$appt_date = date('F d, Y', strtotime($appt_result['date_scheduled']));
@@ -140,15 +140,15 @@
 	</span>
 	<br />
 	&nbsp;&nbsp;
-	<a href="<?php print ($_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
+	<a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
 		<b>&lt;&lt;Back</b></a>
 	<br /><br>
 
 <?php
-	if ($topatient) {
+	if (!empty($topatient)) {
 	  $contact_info = get_contact_info($patientid, $md_list, $md_referral_list);
 	} else {
-	  $contact_info = get_contact_info('', $md_list, $md_referral_list);
+	  $contact_info = get_contact_info('', (!empty($md_list) ? $md_list : ''), (!empty($md_referral_list) ? $md_referral_list : ''));
 	}
 
 	$letter_contacts = array();
@@ -201,7 +201,7 @@
 		<br />
 		cc:  %other_mds%</p>";
 ?>
-	<form action="/manage/dss_referral_treating_mutual_patient.php?pid=<?php echo $patientid?>&lid=<?php echo $letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
+	<form action="/manage/dss_referral_treating_mutual_patient.php?pid=<?php echo (!empty($patientid) ? $patientid : '')?>&lid=<?php echo $letterid?><?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
 		<input type="hidden" name="numletters" value="<?php echo $numletters?>" />
 		<?php
 		if ($_POST != array()) {
@@ -476,7 +476,7 @@
 </table>
 
 <?php
-	if($_GET['backoffice'] == '1') {
+	if(!empty($_GET['backoffice']) && $_GET['backoffice'] == '1') {
 	  	include 'admin/includes/bottom.htm';
 	} else {
 		include 'includes/bottom.htm';

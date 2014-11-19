@@ -10,7 +10,7 @@
 		</td>
 	</tr>
 <?php 
-$s = "SELECT * FROM dental_document WHERE categoryid='".mysql_real_escape_string($_GET['cat'])."'";
+$s = "SELECT * FROM dental_document WHERE categoryid='".mysqli_real_escape_string($con,(!empty($_GET['cat']) ? $_GET['cat'] : ''))."'";
 $sq = $db->getResults($s);
 foreach ($sq as $doc) { ?>
 	<tr>
@@ -18,7 +18,7 @@ foreach ($sq as $doc) { ?>
 			<?php echo $doc['name']; ?>
 		</td>
 		<td>
-			<a target="_blank" href="display_file.php?f=<?= $doc['filename']; ?>">View</a>
+			<a target="_blank" href="display_file.php?f=<?php echo $doc['filename']; ?>">View</a>
 		</td>
 	</tr>
 <?php } ?>

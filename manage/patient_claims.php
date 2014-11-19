@@ -3,8 +3,8 @@
 $sql = "select i.*,
          (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid) num_notes,
          (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid AND create_type='1') num_fo_notes 
-      	 from dental_insurance i where (i.status=".DSS_CLAIM_PENDING." OR i.status=".DSS_CLAIM_SEC_PENDING.") AND i.docid='".$_SESSION['docid']."' and i.patientid='".s_for($_GET['pid'])."' order by i.adddate DESC";
-$my = $db->getResults($sql) or die(mysql_error());
+      	 from dental_insurance i where (i.status=".DSS_CLAIM_PENDING." OR i.status=".DSS_CLAIM_SEC_PENDING.") AND i.docid='".(!empty($_SESSION['docid']) ? $_SESSION['docid'] : '')."' and i.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' order by i.adddate DESC";
+$my = $db->getResults($sql);
 ?>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -65,7 +65,7 @@ if(count($my) == 0){ ?>
 
 <?php
 $sql = "select * from dental_insurance where status!=".DSS_CLAIM_PENDING." AND status!=".DSS_CLAIM_SEC_PENDING." AND docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate DESC";
-$my = $db->getResults($sql) or die(mysql_error());
+$my = $db->getResults($sql);
 ?>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -114,7 +114,7 @@ if(count($my) == 0){ ?>
             <?php echo $dss_claim_status_labels[$myarray['status']];?>
         </td>
         <td valign="top">
-            <a href="view_claim.php?claimid=<?php echo $myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" class="editlink" title="View Claim and Notes">
+            <a href="view_claim.php?claimid=<?php echo $myarray["insuranceid"];?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="editlink" title="View Claim and Notes">
                 View 
             </a>
         </td>

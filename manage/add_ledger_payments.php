@@ -221,47 +221,51 @@ if(mysql_num_rows($p_sql)==0){
 ?><div style="margin-left:50px;">No Previous Payments</div><?php
 }else{
 ?>
-<div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:83px;">Payment Date</span>
-<span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;" >Entry Date</span>
-<span style="width:190px;margin: 0 10px 0 0; float:left;">Description</span>
-<span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;">Paid By</span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width: 100px;">Payment Type</span>
-<span style="float:left;font-weight:bold;width:100px;">Amount</span>
-<span style="float:left;font-weight:bold;width:100px;">Allowed</span>
-<span style="float:left;font-weight:bold;width:100px;">Ins. Paid</span>
-<span style="clear:both;float:left;font-weight:bold;width:100px;">Deductible</span>
-<span style="float:left;font-weight:bold;width:100px;">Copay</span>
-<span style="float:left;font-weight:bold;width:100px;">CoIns</span>
-<span style="float:left;font-weight:bold;width:100px;">Overpaid</span>
-<span style="float:left;font-weight:bold;width:100px;">Follow-up</span>
-<span style="float:left;font-weight:bold;width:100px;">Note</span>
-
-</div>
+<table style="width: 98%" border="1">
+<tr>
+<th>Payment Date</th>
+<th>Entry Date</th>
+<th>Description</th>
+<th>Paid By</th>
+<th>Payment Type</th>
+<th>Amount</th>
+<th>Allowed</th>
+<th>Ins. Paid</th>
+<th>Deductible</th>
+<th>Copay</th>
+<th>CoIns</th>
+<th>Overpaid</th>
+<th>Follow-up</th>
+<th>Note</th>
+</tr>
 <?php
 while($p = mysql_fetch_array($p_sql)){
 ?>
-<div style="clear:both;margin-left:9px; margin-top: 10px; width:98%; ">
-<span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:80px;"><?= date('m/d/Y', strtotime($p['entry_date'])); ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:190px;"><?= $p['description']; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:80px;"><?= $dss_trxn_payer_labels[$p['payer']]; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['amount']; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['amount_allowed']; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['ins_paid']; ?></span>
-<span style="margin: 0 10px 0 0; clear:both; float:left;width:100px;"><?= $p['deductible']; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['copay']; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['coins']; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['overpaid']; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['followup']; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['note']; ?></span>
-<div style="clear:both;"></div>
-</div>
+<td><?= date('m/d/Y', strtotime($p['payment_date'])); ?></td>
+<td><?= date('m/d/Y', strtotime($p['entry_date'])); ?></dt>
+<td><?= $p['description']; ?></td>
+<td><?= $dss_trxn_payer_labels[$p['payer']]; ?></td>
+<td><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></td>
+<td><?= ($p['amount'] > 0 ? $p['amount'] : ""); ?></td>
+<td><?= ($p['amount_allowed'] > 0 ? $p['amount_allowed'] : ""); ?></td>
+<td><?= ($p['ins_paid'] > 0 ?  $p['ins_paid'] : ""); ?></td>
+<td><?= ($p['deductible'] > 0 ? $p['deductible'] : ""); ?></td>
+<td><?= ($p['copay'] > 0 ? $p['copay'] : ""); ?></td>
+<td><?= ($p['coins'] > 0 ? $p['coins'] : ""); ?></td>
+<td><?= ($p['overpaid'] > 0 ? $p['overpaid'] : ""); ?></td>
+<td><?= $p['followup']; ?></td>
+<td><?= $p['note']; ?></td>
+</tr>
 <?php 
 }
+?>
+</table>
+</br>
+</br>
+</br>
+<?php 
 }
- ?>
+?>
 <script type="text/javascript">
 
 function updateType(payer){

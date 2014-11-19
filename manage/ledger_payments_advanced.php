@@ -218,21 +218,23 @@ while($p = mysql_fetch_array($p_sql)){
 <td><?= $p['description']; ?></td>
 <td><?= $dss_trxn_payer_labels[$p['payer']]; ?></td>
 <td><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></td>
-<td><?= $p['amount']; ?></td>
-<td><?= $p['amount_allowed']; ?></td>
-<td><?= $p['ins_paid']; ?></td>
-<td><?= $p['deductible']; ?></td>
-<td><?= $p['copay']; ?></td>
-<td><?= $p['coins']; ?></td>
-<td><?= $p['overpaid']; ?></td>
+<td><?= ($p['amount'] > 0 ? $p['amount'] : ""); ?></td>
+<td><?= ($p['amount_allowed'] > 0 ? $p['amount_allowed'] : ""); ?></td>
+<td><?= ($p['ins_paid'] > 0 ?  $p['ins_paid'] : ""); ?></td>
+<td><?= ($p['deductible'] > 0 ? $p['deductible'] : ""); ?></td>
+<td><?= ($p['copay'] > 0 ? $p['copay'] : ""); ?></td>
+<td><?= ($p['coins'] > 0 ? $p['coins'] : ""); ?></td>
+<td><?= ($p['overpaid'] > 0 ? $p['overpaid'] : ""); ?></td>
 <td><?= $p['followup']; ?></td>
 <td><?= $p['note']; ?></td>
 </tr>
-
 <?php 
 }
 ?>
 </table>
+</br>
+</br>
+</br>
 <?php 
 }
  ?>

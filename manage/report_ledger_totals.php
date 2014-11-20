@@ -52,7 +52,7 @@
               cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b
               cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c
             ) a
-            where a.Date between '".$start_date."' AND '".$end_date."' 
+            where a.Date between '".(!empty($start_date) ? $start_date : '')."' AND '".(!empty($end_date) ? $end_date : '')."' 
             ORDER BY a.Date";
 
     $q = $db->getResults($sql);
@@ -67,16 +67,16 @@
       if($i == 0){
 	?>
 
-        charges.push([ <?= date('U',strtotime($r['ledger_date']))*1000; ?> , 0]);
+        charges.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , 0]);
         
-        credits.push([ <?= date('U',strtotime($r['ledger_date']))*1000; ?> , 0]);
+        credits.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , 0]);
 
   <?php
 		    $i++;
 	    }
   ?>
-      charges.push([ <?= date('U',strtotime($r['ledger_date']))*1000; ?> , <?= $total_charge; ?>]);
-      credits.push([ <?= date('U',strtotime($r['ledger_date']))*1000; ?> , <?= $total_credits; ?>]);
+      charges.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo  $total_charge; ?>]);
+      credits.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo  $total_credits; ?>]);
   <?php
     }
   ?>

@@ -1,6 +1,6 @@
 <?php 
 if (isset($_POST['newnotesubmit'])) {
-    $query = "UPDATE dental_patients SET patient_notes='".mysql_real_escape_string($_POST['notecontent'])."' WHERE patientid='".$_GET['pid']."';";
+    $query = "UPDATE dental_patients SET patient_notes='".mysqli_real_escape_string($con,$_POST['notecontent'])."' WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
     
     if (!$db->query($query)) {
         echo "Could not add note! Please contact the system administrator or try again.";
@@ -9,7 +9,7 @@ if (isset($_POST['newnotesubmit'])) {
 
 <form method="POST" action="#" style="width:100%;">
 <?php
-$query = "SELECT patient_notes FROM dental_patients WHERE patientid='".$_GET['pid']."';";
+$query = "SELECT patient_notes FROM dental_patients WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
 $array = $db->getResults($query);
 
 foreach ($array as $notes) { ?>

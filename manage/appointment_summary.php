@@ -13,10 +13,10 @@
             <span class="title">Test</span>
         </td>
         <td class="letters">
-            <a href="dss_summ.php?sect=leters&pid=<?php echo $_GET['pid']; ?>" class="btn btn-info btn-sm"><?php echo $letter_count; ?> Letters</a>
+            <a href="dss_summ.php?sect=leters&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="btn btn-info btn-sm"><?php echo $letter_count; ?> Letters</a>
         </td>
         <td>
-            <a href="#" onclick="return delete_segment('<?php echo $id; ?>');" class="addButton deleteButton btn btn-danger btn-sm">Delete</a>
+            <a href="#" onclick="return delete_segment('<?php echo (!empty($id) ? $id : ''); ?>');" class="addButton deleteButton btn btn-danger btn-sm">Delete</a>
         </td>
     </tr>
 <?php
@@ -37,12 +37,13 @@ $segments[6] = "Refused Treatment";
 $segments[13] = "Termination";
 $segments[1] = "Initial Contact";
 
-$flow_pg2_info_query = "SELECT * FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY date_completed DESC, id DESC;";
+$flow_pg2_info_query = "SELECT * FROM dental_flow_pg2_info WHERE patientid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY date_completed DESC, id DESC;";
 $flow_pg2_info_res = $db->getResults($flow_pg2_info_query);
 
 foreach ($flow_pg2_info_res as $row) {
-    $datesched = ($row['date_scheduled']!='')?date('m/d/Y', $row['date_scheduled']):'';
-    $datecomp = ($row['date_completed']!='')?date('m/d/Y', strtotime($row['date_completed'])):'';
+    $datesched = (!empty($row['date_scheduled']))?date('m/d/Y', strtotime($row['date_scheduled'])):'';   
+    
+    $datecomp = (!empty($row['date_completed']))?date('m/d/Y', strtotime($row['date_completed'])):'';
     $id = $row['id'];
 
     if ($datecomp !='') { ?>
@@ -82,7 +83,7 @@ foreach ($flow_pg2_info_res as $row) {
                 <option <?php print ($row['delay_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
             </select>
             <br />
-            <a id="reason_btn<?php echo $id; ?>" <?php echo ($row['delay_reason']!='other')?'style="display:none;"':''; ?> onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo $id?>&pid=<?php echo $_GET['pid']?>&sid=5');" href="Javascript: ;">Show Reason</a>
+            <a id="reason_btn<?php echo $id; ?>" <?php echo ($row['delay_reason']!='other')?'style="display:none;"':''; ?> onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo $id?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&sid=5');" href="Javascript: ;">Show Reason</a>
     <?php
                 break;
             case 9: // ?>
@@ -95,7 +96,7 @@ foreach ($flow_pg2_info_res as $row) {
                 <option <?php print ($row['noncomp_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
             </select>
             <br />
-            <a id="reason_btn<?php echo $id; ?>" <?php echo ($row['noncomp_reason']!='other')?'style="display:none;"':''; ?> onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo $id?>&pid=<?php echo $_GET['pid']?>&sid=9');" href="Javascript: ;">Show Reason</a>
+            <a id="reason_btn<?php echo $id; ?>" <?php echo ($row['noncomp_reason']!='other')?'style="display:none;"':''; ?> onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo $id?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&sid=9');" href="Javascript: ;">Show Reason</a>
     <?php
                 break;               
             case 4:
@@ -117,7 +118,7 @@ foreach ($flow_pg2_info_res as $row) {
         <td class="letters">
     <?php
             
-        $dental_letters_query = "SELECT topatient, md_list, md_referral_list, status FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND info_id ='".$id."' AND deleted=0 ORDER BY stepid ASC;";
+        $dental_letters_query = "SELECT topatient, md_list, md_referral_list, status FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' AND info_id ='".$id."' AND deleted=0 ORDER BY stepid ASC;";
         $dlq = $db->getResults($dental_letters_query);
         $letter_count = 0;
         $sent = false;
@@ -135,7 +136,7 @@ foreach ($flow_pg2_info_res as $row) {
         }
          
         if ($letter_count > 0) { ?>
-            <a href="dss_summ.php?sect=letters&pid=<?php echo $_GET['pid']; ?>" class="btn btn-info btn-sm"><?php echo $letter_count; ?> Letters</a>
+            <a href="dss_summ.php?sect=letters&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="btn btn-info btn-sm"><?php echo $letter_count; ?> Letters</a>
         <?php } else { ?>
             <a class="btn btn-info btn-sm" disabled>0 Letters</a>
         <?php } ?>
@@ -166,7 +167,7 @@ foreach ($flow_pg2_info_res as $row) {
         <option <?php print ($row['delay_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
     </select>
     <br />
-    <a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo $id?>&pid=<?php echo $_GET['pid']?>&sid=5');" href="Javascript: ;">Show Reason</a>
+    <a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo $id?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&sid=5');" href="Javascript: ;">Show Reason</a>
 </div>
 
 <div id="noncomp_reason_tmp" style="display:none;">
@@ -178,7 +179,7 @@ foreach ($flow_pg2_info_res as $row) {
         <option <?php print ($row['noncomp_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
     </select>
     <br />
-    <a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo $id?>&pid=<?php echo $_GET['pid']?>&sid=9');" href="Javascript: ;">Show Reason</a>
+    <a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo $id?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&sid=9');" href="Javascript: ;">Show Reason</a>
 </div>
 
 <div id="sleep_study_titration_tmp" style="display:none;">

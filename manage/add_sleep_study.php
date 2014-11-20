@@ -1,19 +1,19 @@
 <?php
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include_once("includes/sescheck.php"); 
-require_once('includes/constants.inc');
-require_once('includes/dental_patient_summary.php');
-require_once('includes/general_functions.php');
+include_once('includes/constants.inc');
+include_once('includes/dental_patient_summary.php');
+include_once('includes/general_functions.php');
 include("includes/calendarinc.php");
 // Determine Type of Appliance
-$sql = "SELECT dentaldevice FROM dental_summ_sleeplab WHERE patiendid ='".s_for($_GET['pid'])."' ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC LIMIT 1;";
+$sql = "SELECT dentaldevice FROM dental_summ_sleeplab WHERE patiendid ='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC LIMIT 1;";
 $result = $db->getResults($sql);
 if ($result) foreach ($result as $row) {
   $deviceid = $row['dentaldevice'];
 }
-update_patient_summary($_GET['pid'], 'appliance', $deviceid);
+update_patient_summary((!empty($_GET['pid']) ? $_GET['pid'] : ''), 'appliance', $deviceid);
 
-$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC";
+$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC";
 $num_labs = $db->getNumberRows($s_lab_query);
 if(isset($_POST['submitnewsleeplabsumm'])){ 
   $num_labs++;?>
@@ -58,7 +58,7 @@ if(isset($_POST['submitdeletesleeplabsumm'])){
   $needed = s_for($_POST['needed']);
   $scheddate = s_for($_POST['scheddate']);
   $completed = s_for($_POST['completed']);
-  $patientid = $_GET['pid']; 
+  $patientid = (!empty($_GET['pid']) ? $_GET['pid'] : ''); 
 
   $s = "SELECT filename, image_id from dental_summ_sleeplab WHERE id='".$id."'";
   $prevfile_result = $db->getResults($s);
@@ -90,7 +90,7 @@ if(isset($_POST['submitdeletesleeplabsumm'])){
       }
   	}else{
       $ins_sql = " insert into dental_q_image set 
-                    patientid = '".s_for($_GET['pid'])."',
+                    patientid = '".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."',
                     title = '".$sleeptesttype." ".$date."',
                     imagetypeid = '1',
                     image_file = '".s_for($banner1)."',
@@ -161,7 +161,7 @@ if(isset($_POST['submitdeletesleeplabsumm'])){
   $needed = s_for($_POST['needed']);
   $scheddate = s_for($_POST['scheddate']);
   $completed = s_for($_POST['completed']);
-  $patientid = $_GET['pid'];
+  $patientid = (!empty($_GET['pid']) ? $_GET['pid'] : '');
 
   if($_FILES["ss_file"]["name"] <> ''){
     $fname = $_FILES["ss_file"]["name"];
@@ -177,7 +177,7 @@ if(isset($_POST['submitdeletesleeplabsumm'])){
 
     $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
     $ins_sql = " insert into dental_q_image set 
-                  patientid = '".s_for($_GET['pid'])."',
+                  patientid = '".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."',
                   title = '".$sleeptesttype. " " .$date."',
                   imagetypeid = '1',
                   image_file = '".s_for($banner1)."',
@@ -233,20 +233,20 @@ $sleepstudies = "SELECT ss.* FROM dental_summ_sleeplab ss
                   WHERE                                 
                   (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                   (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                  ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+                  ss.filename IS NOT NULL AND ss.patiendid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
 
 $numsleepstudy = $db->getNumberRows($sleepstudies);
 $sleepstudy = ($numsleepstudy > 0)?true:false;
-$show_yellow = ($_GET['yellow'])?true:false;
+$show_yellow = (!empty($_GET['yellow']))?true:false;
 ?>
 
 <link rel="stylesheet" href="css/add_sleep_study.css" type="text/css" media="screen" />
 
 <?php
-$pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$_GET['pid']."';";
+$pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
 $pat_r = $db->getRow($pat_sql);
 ?>
-<form id="new_sleep_study_form" action="dss_summ.php?pid=<?php echo $_GET['pid'];?>&addtopat=1" method="POST" style="float:left; width:185px;display:none;" enctype="multipart/form-data">
+<form id="new_sleep_study_form" action="dss_summ.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&addtopat=1" method="POST" style="float:left; width:185px;display:none;" enctype="multipart/form-data">
   <table class="sleeplabstable new_table <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
   	<tr>
   		<td valign="top" class="odd">
@@ -360,7 +360,7 @@ if($pat_r['p_m_ins_type']==1){?>
     <tr>	
   		<td valign="top" class="even" style="height:25px;">
 <?php
-$sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$sqlex = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarrayex = $db->getRow($sqlex);
 $dentaldevice = st($myarrayex['dentaldevice']);
 ?>
@@ -397,7 +397,7 @@ foreach ($device_my as $device_myarray) {?>
 </form>
 
 <?php 
-$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC";
+$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC";
 $s_lab_result = $db->getResults($s_lab_query);
 
 if($s_lab_result){
@@ -411,7 +411,7 @@ if($s_lab_result){
     $device_result = $db->getRow($device_query);
     $device = $device_result['device'];
 ?>
-<form action="dss_summ.php?pid=<?php echo $_GET['pid'];?>&addtopat=1" style="float:left;" method="post" enctype="multipart/form-data">
+<form action="dss_summ.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&addtopat=1" style="float:left;" method="post" enctype="multipart/form-data">
   <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
   <table id="sleepstudycrolltable" class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
   	<tr>

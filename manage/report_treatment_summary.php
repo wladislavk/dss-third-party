@@ -41,7 +41,7 @@
    <?php
 
   	$sql1 = "select DATE(generated_date) as letter_date, count(letterid) num_letter FROM dental_letters 
-  		       WHERE generated_date BETWEEN '".$start_date."' AND '".$end_date."'
+  		       WHERE generated_date BETWEEN '".(!empty($start_date) ? $start_date : '')."' AND '".(!empty($end_date) ? $end_date : '')."'
   		       group by letter_date ORDER BY letter_date";
 
     $sql = "select a.Date as treatment_date,
@@ -59,13 +59,13 @@
               cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b
               cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c
             ) a
-            where a.Date between '".$start_date."' AND '".$end_date."' 
+            where a.Date between '".(!empty($start_date) ? $start_date : '')."' AND '".(!empty($end_date) ? $end_date : '')."' 
             ORDER BY a.Date";
 
     $q = $db->getResults($sql);
     foreach ($q as $r) {
-  	  ?>consult.push({x: <?= date('U',strtotime($r['treatment_date'])); ?>, y: <?= $r['num_consult']; ?>});<?php 
-  	  ?>impressions.push({x: <?= date('U',strtotime($r['treatment_date'])); ?>, y: <?= $r['num_impressions']; ?>});<?php
+  	  ?>consult.push({x: <?php echo  date('U',strtotime($r['treatment_date'])); ?>, y: <?php echo  $r['num_consult']; ?>});<?php 
+  	  ?>impressions.push({x: <?php echo  date('U',strtotime($r['treatment_date'])); ?>, y: <?php echo  $r['num_impressions']; ?>});<?php
   	}
  ?> 
    return [

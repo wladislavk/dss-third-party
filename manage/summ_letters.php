@@ -1,6 +1,6 @@
 <?php
-require_once('includes/patient_info.php');
-require_once('admin/includes/general.htm');
+  include_once('includes/patient_info.php');
+  include_once('admin/includes/general.htm');
 ?>
 <link rel="stylesheet" href="css/letters.css" />
 <?php
@@ -103,11 +103,11 @@ if ($patient_info) {
   $filter = "%";
 
   if (isset($_GET['filter'])) {
-    $filter = mysql_real_escape_string($_GET['filter']);
+    $filter = mysqli_real_escape_string($con,$_GET['filter']);
   }
   if(!isset($_REQUEST['sort'])){
     $_REQUEST['sort'] = 'generated_date';
-  	if ($status == 'sent') {
+  	if (!empty($status) && $status == 'sent') {
   		$_REQUEST['sortdir'] = 'DESC';
   	} else {
     	$_REQUEST['sortdir'] = 'ASC';
@@ -121,8 +121,8 @@ if ($patient_info) {
   $sort = $_REQUEST['sort'];
   $sortdir = $_REQUEST['sortdir'];
   $patientid = $_REQUEST['pid'];
-  $page1 = $_REQUEST['page1'];
-  $page2 = $_REQUEST['page2'];
+  $page1 = (!empty($_REQUEST['page1']) ? $_REQUEST['page1'] : '');
+  $page2 = (!empty($_REQUEST['page2']) ? $_REQUEST['page2'] : '');
   // Get doctor id
   $docid = $_SESSION['docid'];
 
@@ -166,9 +166,9 @@ if ($patient_info) {
     		$dental_letters[$key]['subject'] = "User Generated";
     	}
     	// Get Recipients for Sent to Column
-      $s = "SELECT referred_source FROM dental_patients where patientid=".mysql_real_escape_string($letter['patientid'])." LIMIT 1";
+      $s = "SELECT referred_source FROM dental_patients where patientid=".mysqli_real_escape_string($con,$letter['patientid'])." LIMIT 1";
       $r = $db->getRow($s);
-      $source = $r['referred_source'];
+      $source = (!empty($r['referred_source']) ? $r['referred_source'] : '');
 
     	$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $letter['pat_referral_list']);
 
@@ -179,38 +179,39 @@ if ($patient_info) {
       if ($master_q) {
         foreach ($master_q as $master_r) {
           $master_contacts = get_contact_info((($master_r['topatient'] == "1") ? $master_r['patientid'] : ''), $master_r['md_list'],$master_r['md_referral_list'], $master_r['pat_referral_list'], $master_r['letterid']);
-          if(count($contacts['patient']) && count($master_contacts['patient'])){
+          if(isset($contacts['patient']) && count($contacts['patient']) && count($master_contacts['patient'])){
             //$contacts['patient'] = array_merge($contacts['patient'], $master_contacts['patient']);
-          }elseif(count($master_contacts['patient'])){
+          }elseif(isset($master_contacts['patient']) && count($master_contacts['patient'])){
             $contacts['patient'] = $master_contacts['patient'];
           }
-          if(count($contacts['mds']) && count($master_contacts['mds'])){
+          if(isset($contacts['mds']) && count($contacts['mds']) && isset($master_contacts['mds']) && count($master_contacts['mds'])){
             $contacts['mds'] = array_merge($contacts['mds'], $master_contacts['mds']);
-          }elseif(count($master_contacts['mds'])){
+          }elseif(isset($master_contacts['mds']) && count($master_contacts['mds'])){
             $contacts['mds'] = $master_contacts['mds'];
           }
-          if(count($contacts['md_referrals']) && count($master_contacts['md_referrals'])){
+          if(isset($contacts['md_referrals']) && isset($contacts['md_referrals']) && count($contacts['md_referrals']) && isset($master_contacts['md_referrals']) && count($master_contacts['md_referrals'])){
             $contacts['md_referrals'] = array_merge($contacts['md_referrals'], $master_contacts['md_referrals']);
-          }elseif(count($master_contacts['md_referrals'])){
+          }elseif(isset($master_contacts['md_referrals']) && count($master_contacts['md_referrals'])){
              $contacts['md_referrals'] = $master_contacts['md_referrals'];
           }
 
-          if(count($contacts['pat_referrals']) && count($master_contacts['pat_referrals'])){
+          if(isset($contacts['pat_referrals']) && count($contacts['pat_referrals']) && count($master_contacts['pat_referrals'])){
             $contacts['pat_referrals'] = array_merge($contacts['pat_referrals'], $master_contacts['pat_referrals']);
-          }elseif(count($master_contacts['pat_referrals'])){
+          }elseif(isset($master_contacts['pat_referrals']) && count($master_contacts['pat_referrals'])){
              $contacts['pat_referrals'] = $master_contacts['pat_referrals'];
           }
         }
       }
     	//print_r($contacts); print "<br />";
-    	$total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']) + count($contacts['pat_referrals']);
+
+     	$total_contacts = count((!empty($contacts['patient']) ? $contacts['patient'] : null)) + count((!empty($contacts['mds']) ? $contacts['mds'] : null)) + count((!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : null)) + count((!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : null));
     		$dental_letters[$key]['total_contacts'] = $total_contacts;
     	if ($total_contacts > 1) {
     		$dental_letters[$key]['sentto'] = $total_contacts . " Contacts";
-    		$dental_letters[$key]['patient'] = $contacts['patient'];
-    		$dental_letters[$key]['mds'] = $contacts['mds'];
-    		$dental_letters[$key]['md_referrals'] = $contacts['md_referrals'];
-    		$dental_letters[$key]['pat_referrals'] = $contacts['pat_referrals'];
+    		$dental_letters[$key]['patient'] = (!empty($contacts['patient']) ? $contacts['patient'] : '');
+    		$dental_letters[$key]['mds'] = (!empty($contacts['mds']) ? $contacts['mds'] : '');
+    		$dental_letters[$key]['md_referrals'] = (!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : '');
+    		$dental_letters[$key]['pat_referrals'] = (!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : '');
     	} elseif ($total_contacts == 0) {
     		$dental_letters[$key]['sentto'] = "<span class=\"red\">No Contacts</span>";
     	} else {
@@ -218,14 +219,18 @@ if ($patient_info) {
     		$dental_letters[$key]['sentto'] = '';
     		$dental_letters[$key]['sentto'] .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname']. (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'patient', '".$contacts['patient'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
     		// MD: Salutation Lastname, Firstname - Contact Type
-    		$dental_letters[$key]['sentto'] .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['firstname'] . (($contacts['mds']['contacttype']) ? (" - " . $contacts['mds']['contacttype']) : ("")). (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md', '".$contacts['mds'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
+    		$dental_letters[$key]['sentto'] .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['firstname'] . ((!empty($contacts['mds']['contacttype'])) ? (" - " . $contacts['mds']['contacttype']) : ("")). (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md', '".$contacts['mds'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
     		// MD Referral: Salutation Lastname, Firstname - Contact Type
-    		$dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : ("")). (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
+    		$dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . ((!empty($contacts['md_referrals']['contacttype'])) ? (" - " . $contacts['md_referrals']['contacttype']) : ("")). (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
         // Pat Referral: Salutation Lastname, Firstname - Contact Type
         $dental_letters[$key]['sentto'] .= (isset($contacts['pat_referrals'][0])) ? ($contacts['pat_referrals'][0]['lastname'] . ", " . $contacts['pat_referrals'][0]['salutation'] . " " . $contacts['pat_referrals'][0]['firstname'] .  (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'pat_referral', '".$contacts['pat_referrals'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
     	}
       // Determine if letter is older than 7 days
-      if (floor((time() - $letter['generated_date']) / $seconds_per_day) > 7 && $status == "pending") {
+      if (!isset($seconds_per_day)) {
+        $seconds_per_day = 1;
+      }
+
+      if (floor((time() - $letter['generated_date']) / $seconds_per_day) > 7 && !empty($status) && $status == "pending") {
         $dental_letters[$key]['old'] = true;
       }
     }
@@ -332,7 +337,7 @@ if ($patient_info) {
 
 
   //print_r($dental_letters);
-  $f_sql = "SELECT * FROM dental_faxes WHERE sfax_completed=1 AND sfax_status=2 AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND viewed=0;";
+  $f_sql = "SELECT * FROM dental_faxes WHERE sfax_completed=1 AND sfax_status=2 AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND viewed=0;";
   $f_num = $db->getNumberRows($f_sql);
   if($f_num > 0){?>
           <br /><br />
@@ -342,7 +347,7 @@ if ($patient_info) {
   <div style="padding-left: 15px;">
   	<h1 class="blue" style="width: 300px; float:left;">Patient Letters</h1>
 <?php
-  $let_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $let_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
   $let_r = $db->getRow($let_sql);
   if($let_r['use_letters']){
   ?>
@@ -404,7 +409,7 @@ if ($patient_info) {
     $generated = ($pending_letters[$i]['generated_date']) ? date('m/d/Y', $pending_letters[$i]['generated_date']) : '';
     if($pending_letters[$i]['sfax_status']=='2' AND $pending_letters[$i]['fax_viewed']=='0'){
       $alert = " bgcolor=\"#FFFF33\"";
-    }elseif ($pending_letters[$i]['old']) {
+    }elseif (!empty($pending_letters[$i]['old'])) {
       $alert = " bgcolor=\"#FF9696\"";
     } else {
       $alert = null;
@@ -486,7 +491,7 @@ if ($patient_info) {
     $delivered = ($sent_letters[$i]['delivery_date'] != '' )?date('m/d/Y', $sent_letters[$i]['delivery_date']):'';
     $id = $sent_letters[$i]['id'];
     $mailed = $sent_letters[$i]['mailed'];
-    if ($sent_letters[$i]['old']) {
+    if (!empty($sent_letters[$i]['old'])) {
       $alert = " bgcolor=\"#FF9696\"";
     } else {
       $alert = null;

@@ -1,5 +1,5 @@
 <?php
-$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY id DESC";
+$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC";
 $num_labs = $db->getNumberRows($s_lab_query);
 if(isset($_POST['submitnewsleeplabsumm'])){ 
   $num_labs++; 

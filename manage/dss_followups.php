@@ -1,6 +1,5 @@
 <?php
-session_start();
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 
 if(isset($_POST['submitaddfu'])){
@@ -20,8 +19,7 @@ if(isset($_POST['submitaddfu'])){
   $hours_sleepadd = $_POST['hours_sleepadd'];
   $appt_notesadd = $_POST['appt_notesadd'];
   $insertquery = "INSERT INTO dentalsummfu (`patientid`, `ep_dateadd`,`devadd`,`dsetadd`,`nightsperweek`,`ep_eadd`,`ep_tsadd`,`ep_sadd`,`ep_eladd`,`sleep_qualadd`,`ep_hadd`,`ep_wadd`,`wapnadd`,`hours_sleepadd`,`appt_notesadd`) VALUES (".$patientid.", '".$ep_dateadd."', '".$devadd."','".$dsetadd."','".$nightsperweek."','".$ep_eadd."','".$ep_tsadd."','".$ep_sadd."','".$ep_eladd."','".$sleep_qualadd."','".$ep_hadd."','".$ep_wadd."','".$wapnadd."','".$hours_sleepadd."','".$appt_notesadd."');";
-  $insert = $db->query($insertquery);
-  $fu_id = mysql_insert_id();
+  $fu_id = $db->getInsertId($insertquery);
   if(!$insert){
     echo "Could not insert follow up, please try again!";
   }else{
@@ -31,7 +29,7 @@ if(isset($_POST['submitaddfu'])){
       $i = "INSERT INTO dentalsummfu_ess SET
               epworthid='".$epworth_myarray['epworthid']."',
               followupid='".$fu_id."',
-              answer='".mysql_real_escape_string($_POST['epworth_new_'.$epworth_myarray['epworthid']])."',
+              answer='".mysqli_real_escape_string($con,$_POST['epworth_new_'.$epworth_myarray['epworthid']])."',
               adddate=now(),
               ip_address='".$_SERVER['REMOTE_ADDR']."'";
       $db->query($i);
@@ -40,7 +38,7 @@ if(isset($_POST['submitaddfu'])){
       $i = "INSERT INTO dentalsummfu_tss SET
               thorntonid='".$thorntonid."',
               followupid='".$fu_id."',
-              answer='".mysql_real_escape_string($_POST['thornton_new_'.$thorntonid])."',
+              answer='".mysqli_real_escape_string($con,$_POST['thornton_new_'.$thorntonid])."',
               adddate=now(),
               ip_address='".$_SERVER['REMOTE_ADDR']."'";
       $db->query($i);
@@ -85,7 +83,7 @@ if(isset($_POST['submitaddfu'])){
     echo "Could not update follow up, please try again!";
   }else{
 
-    $d = "DELETE FROM dentalsummfu_ess WHERE followupid = '".mysql_real_escape_string($id)."'";
+    $d = "DELETE FROM dentalsummfu_ess WHERE followupid = '".mysqli_real_escape_string($con,$id)."'";
     $db->query($d);
     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
     $epworth_my = $db->getResults($epworth_sql);
@@ -93,18 +91,18 @@ if(isset($_POST['submitaddfu'])){
   		$i = "INSERT INTO dentalsummfu_ess SET
         			epworthid='".$epworth_myarray['epworthid']."',
         			followupid='".$id."',
-        			answer='".mysql_real_escape_string($_POST['epworth_'.$id.'_'.$epworth_myarray['epworthid']])."',
+        			answer='".mysqli_real_escape_string($con,$_POST['epworth_'.$id.'_'.$epworth_myarray['epworthid']])."',
         			adddate=now(),
         			ip_address='".$_SERVER['REMOTE_ADDR']."'";
   		$db->query($i);
   	}
-    $d = "DELETE FROM dentalsummfu_tss WHERE followupid = '".mysql_real_escape_string($id)."'";
+    $d = "DELETE FROM dentalsummfu_tss WHERE followupid = '".mysqli_real_escape_string($con,$id)."'";
     $db->query($d);
   	for($thorntonid=1;$thorntonid<=5;$thorntonid++){
       $i = "INSERT INTO dentalsummfu_tss SET
               thorntonid='".$thorntonid."',
               followupid='".$id."',
-              answer='".mysql_real_escape_string($_POST['thornton_'.$id.'_'.$thorntonid])."',
+              answer='".mysqli_real_escape_string($con,$_POST['thornton_'.$id.'_'.$thorntonid])."',
               adddate=now(),
               ip_address='".$_SERVER['REMOTE_ADDR']."'";
       $db->query($i);
@@ -112,18 +110,18 @@ if(isset($_POST['submitaddfu'])){
   }
 }elseif(isset($_POST['submitdeletefu'])){
   $id = $_POST['id'];
-  $delsql = "DELETE FROM dentalsummfu WHERE followupid='".mysql_real_escape_string($id)."'";
+  $delsql = "DELETE FROM dentalsummfu WHERE followupid='".mysqli_real_escape_string($con,$id)."'";
   $db->query($delsql);
 }
 
-$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY ep_dateadd DESC";
+$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY ep_dateadd DESC";
 $numf = $db->getNumberRows($fuquery_sql);
 $bodywidth = ($numf*160)+320;
 ?>
 
 <!--<body style="width:<?php echo $bodywidth; ?>px;background:none;">-->
 <div style="width:<?php echo $bodywidth; ?>px;">
-<form id="sleepstudyadd" style="float:left; display:none;" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
+<form id="sleepstudyadd" style="float:left; display:none;" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
   <link rel="stylesheet" href="css/dss_followups.css" type="text/css" media="screen" />
 	<table id="sleepstudyscrolltable" style="margin-top:-3px;">
     <tr style="background: #444;height: 30px;">
@@ -137,7 +135,7 @@ $bodywidth = ($numf*160)+320;
     <tr >
 	    <td >
 <?php
-$sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$sqlex = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarrayex = $db->getRow($sqlex);
 $dentaldevice = st($myarrayex['dentaldevice']);
 ?>
@@ -169,7 +167,7 @@ foreach ($device_my as $device_myarray) {?>
   	</tr>
     <tr >
 	    <td >
-        <input type="text" size="12" id="ep_eadd_new" name="ep_eadd_new" onclick="loadPopup('summ_subj_ess.php?pid=<?php echo $_GET['pid']; ?>&id=new');return false;" />
+        <input type="text" size="12" id="ep_eadd_new" name="ep_eadd_new" onclick="loadPopup('summ_subj_ess.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&id=new');return false;" />
       </td>
     </tr>
  <!--- ESS ANSWERS -->
@@ -185,7 +183,7 @@ foreach ($epworth_my as $epworth_myarray) { ?>
     </tr>
     <tr >
 	    <td >
-        <input type="text" size="12" id="ep_tsadd_new" name="ep_tsadd_new" onclick="loadPopup('summ_subj_tss.php?pid=<?php echo $_GET['pid']; ?>&id=new');return false;" />
+        <input type="text" size="12" id="ep_tsadd_new" name="ep_tsadd_new" onclick="loadPopup('summ_subj_tss.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&id=new');return false;" />
       </td>
     </tr>
     <tr style="display:none;">
@@ -258,7 +256,7 @@ foreach ($epworth_my as $epworth_myarray) { ?>
     </tr>
     <tr>
 	    <td >
-    	  <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
+    	  <input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
         <input type="submit" name="submitaddfu" onclick="window.onbeforeunload=false;" value="Submit Follow Up" id="submitaddfu" style="width:120px;" />
         <input type="button" value="cancel" onclick="$('#sleepstudyadd').hide(); parent.show_new_but(); return false;" value="Cancel" style="width:120px;" /> 
       </td>
@@ -267,7 +265,7 @@ foreach ($epworth_my as $epworth_myarray) { ?>
 </form>
 
 <?php
-$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY ep_dateadd DESC";
+$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY ep_dateadd DESC";
 $fuquery_array = $db->getResults($fuquery_sql);
 if($fuquery_array){
   $numrows = count($fuquery_array);
@@ -278,7 +276,7 @@ if($fuquery_array){
     $device = $device_result['device'];
     if($numrows){ ?>
 
-<form style="float:left;" id="sleepstdyupdate_<?php echo $fuquery['followupid'];?>" class="sleepstudyupdate" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
+<form style="float:left;" id="sleepstdyupdate_<?php echo $fuquery['followupid'];?>" class="sleepstudyupdate" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
   <input type="hidden" name="id" value="<?php echo $fuquery['followupid'];?>" /> 
   <table id="sleepstudyscrolltable" style="padding:0;margin-top:-3px">
     <tr style="background: #444;height: 30px;">
@@ -321,7 +319,7 @@ if($fuquery_array){
     </tr>
     <tr>
       <td style="background: #E4FFCF;">
-        <input type="text" size="12" id="ep_eadd_<?php echo $fuquery['followupid'];?>" name="ep_eadd" value="<?php echo $fuquery['ep_eadd'];?>" onclick="loadPopup('summ_subj_ess.php?pid=<?php echo $_GET['pid']; ?>&id=<?php echo $fuquery['followupid'];?>');return false;"  />
+        <input type="text" size="12" id="ep_eadd_<?php echo $fuquery['followupid'];?>" name="ep_eadd" value="<?php echo $fuquery['ep_eadd'];?>" onclick="loadPopup('summ_subj_ess.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&id=<?php echo $fuquery['followupid'];?>');return false;"  />
       </td>
     </tr>
       <!--- ESS ANSWERS -->
@@ -329,7 +327,7 @@ if($fuquery_array){
       <td style="background: #E4FFCF;">
   <?php
       $epworth_sql = "select e.*, fu.answer from dental_epworth e 
-                        LEFT JOIN dentalsummfu_ess fu ON fu.epworthid=e.epworthid AND fu.followupid='".mysql_real_escape_string($fuquery['followupid'])."'
+                        LEFT JOIN dentalsummfu_ess fu ON fu.epworthid=e.epworthid AND fu.followupid='".mysqli_real_escape_string($con,$fuquery['followupid'])."'
                         where e.status=1 order by e.sortby";
       $epworth_my = $db->getResults($epworth_sql);
       $epworth_number = count($epworth_my);
@@ -341,7 +339,7 @@ if($fuquery_array){
     </tr>
     <tr>
       <td style="background: #F9FFDF;">
-        <input type="text" size="12" id="ep_tsadd_<?php echo $fuquery['followupid'];?>" name="ep_tsadd" value="<?php echo $fuquery['ep_tsadd'];?>" onclick="loadPopup('summ_subj_tss.php?pid=<?php echo $_GET['pid']; ?>&id=<?php echo $fuquery['followupid'];?>');return false;" />
+        <input type="text" size="12" id="ep_tsadd_<?php echo $fuquery['followupid'];?>" name="ep_tsadd" value="<?php echo $fuquery['ep_tsadd'];?>" onclick="loadPopup('summ_subj_tss.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&id=<?php echo $fuquery['followupid'];?>');return false;" />
       </td>
     </tr>
     <tr style="display:none;">
@@ -349,7 +347,7 @@ if($fuquery_array){
   <?php
       for($thorntonid=1;$thorntonid<=5;$thorntonid++){
         $t_sql = "SELECT answer FROM dentalsummfu_tss
-                    WHERE followupid='".mysql_real_escape_string($fuquery['followupid'])."' 
+                    WHERE followupid='".mysqli_real_escape_string($con,$fuquery['followupid'])."' 
                     AND thorntonid='".$thorntonid."'";
         $thornton_myarray = $db->getRow($t_sql);?>
         <input type="text" size="12" id="thornton_<?php echo $fuquery['followupid'];?>_<?php echo $thorntonid; ?>" name="thornton_<?php echo $fuquery['followupid'];?>_<?php echo $thorntonid; ?>" value="<?php echo $thornton_myarray['answer']; ?>" /><br />
@@ -422,7 +420,7 @@ if($fuquery_array){
     </tr>
     <tr>
       <td style="background: #E4FFCF;">
-        <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
+        <input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
         <input type="submit" name="submitupdatefu" onclick="window.onbeforeunload=false;" value="Save Follow Up" id="submitupdatefu_<?php echo $fuquery['followupid'];?>" style="width:120px;" />
         <input type="submit" name="submitdeletefu" onclick="return confirm('Are you sure you want to delete this follow up?');" value="Delete" id="submitdeletefu" style="width:120px;" />
       </td>
@@ -434,25 +432,25 @@ if($fuquery_array){
   }
 }
 
-$q_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$q_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $q_row = $db->getRow($q_sql);
 
-$t_sql = "SELECT tot_score FROM dental_thorton WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$t_sql = "SELECT tot_score FROM dental_thorton WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $t_row = $db->getRow($t_sql);
 
-$s_sql = "SELECT analysis FROM dental_q_sleep WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$s_sql = "SELECT analysis FROM dental_q_sleep WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $s_row = $db->getRow($s_sql);
 $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
 ?>
 
-<form style="float:left;" class="sleepstudybaseline" id="sleepstudybaseline" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
+<form style="float:left;" class="sleepstudybaseline" id="sleepstudybaseline" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
   <input type="hidden" name="id" value="baseline" />
   <table id="sleepstudyscrolltable" style="padding:0;margin-top:-3px">
     <tr style="background: #444;height: 30px;">
       <td colspan="4" style="background: #444;"><span style="color: #ccc;">Baseline</span></td>
     </tr>
 <?php
-$s = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$s = "SELECT * FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $r = $db->getRow($s);?>
     <tr>
       <td style="background: #F9FFDF;">
@@ -466,20 +464,20 @@ $r = $db->getRow($s);?>
 $device_sql = "select * from dental_device where status=1 order by sortby";
 $device_my = $db->getResults($device_sql);
 foreach ($device_my as $device_myarray) {?>
-          <option <?php echo ($device==$device_myarray['device'])?'selected="selected"':''; ?>value="<?php echo st($device_myarray['deviceid'])?>"><?php echo st($device_myarray['device']);?></option>
+          <option <?php echo (!empty($device) && $device==$device_myarray['device'])?'selected="selected"':''; ?>value="<?php echo st($device_myarray['deviceid'])?>"><?php echo st($device_myarray['device']);?></option>
 <?php }?>
         </select>
       </td>
     </tr>
     <tr>
       <td style="background: #F9FFDF;">
-        <input type="text" size="12" name="dsetadd" class="no_questionnaire" value="<?php echo $fuquery['dsetadd'];?>" />
+        <input type="text" size="12" name="dsetadd" class="no_questionnaire" value="<?php echo (!empty($fuquery['dsetadd']) ? $fuquery['dsetadd'] : '');?>" />
       </td>
     <tr>
       <td style="background: #E4FFCF;">
         <select name="nightsperweek" class="no_questionnaire" style="width:150px;">
 <?php for ($i = 0; $i <= 7; $i++){
-  print ($i == $fuquery['nightsperweek']) ? "<option selected value=\"$i\">$i</option>" : "<option value=\"$i\">$i</option>";
+  print (!empty($fuquery['nightsperweek']) && $i == $fuquery['nightsperweek']) ? "<option selected value=\"$i\">$i</option>" : "<option value=\"$i\">$i</option>";
 }?>
         </select>
       </td>
@@ -552,12 +550,12 @@ foreach ($device_my as $device_myarray) {?>
     </tr>
     <tr>
       <td style="background: #E4FFCF;">
-        <input type="text" size="12" name="appt_notesadd" value="<?php echo $fuquery['appt_notesadd']; ?>" style="width:100px;" />
+        <input type="text" size="12" name="appt_notesadd" value="<?php echo (!empty($fuquery['appt_notesadd']) ? $fuquery['appt_notesadd'] : ''); ?>" style="width:100px;" />
       </td>
     </tr>
     <tr>
       <td style="background: #E4FFCF;">
-        <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
+        <input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
         <input type="button" value="Edit Baseline" onclick="gotoQuestionnaire();" style="width:120px;" />
       </td>
     </tr>

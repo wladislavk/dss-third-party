@@ -30,7 +30,7 @@ if(!$fuinsert_qry){
 */
 
 
-$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY ep_dateadd DESC";
+$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY ep_dateadd DESC";
 $fuquery_array = $db->getResults($fuquery_sql);
 
 ?>

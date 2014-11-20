@@ -1,5 +1,5 @@
 <?php
-$s_sql = "SELECT * FROM dental_screener WHERE patient_id='".mysql_real_escape_string($_GET['pid'])."'";
+$s_sql = "SELECT * FROM dental_screener WHERE patient_id='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $myarray = $db->getRow($s_sql);
 if($myarray){?>
 <div style="float:right; margin:20px;">
@@ -11,7 +11,7 @@ if($myarray){?>
 $ep_sql = "SELECT se.response, e.epworth 
             FROM dental_screener_epworth se
             JOIN dental_epworth e ON se.epworth_id =e.epworthid
-            WHERE se.response > 0 AND se.screener_id='".mysql_real_escape_string($myarray['id'])."'";
+            WHERE se.response > 0 AND se.screener_id='".mysqli_real_escape_string($con,$myarray['id'])."'";
 $ep_q = $db->getResults($ep_sql);
 foreach ($ep_q as $ep_r) {
     echo $ep_r['response'] . ' - <strong>' . $ep_r['epworth'] . '</strong><br />';

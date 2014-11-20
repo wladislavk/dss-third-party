@@ -1,5 +1,5 @@
 <?php
-$sql = "select * from dental_q_page3 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_page3 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $q_page3id = st($myarray['q_page3id']);
@@ -31,7 +31,7 @@ $no_medications = st($myarray['no_medications']);
 $no_history = st($myarray['no_history']);
 $orthodontics = st($myarray['orthodontics']);
 
-$psql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$psql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pmyarray = $db->getRow($psql);
 
 $premedcheck = st($pmyarray["premedcheck"]);
@@ -256,7 +256,7 @@ if($completed_future == 'Yes' || $future_dental_det != ''){ ?>
         </tr>
 <?php 
 }
-if($clinch_teeth == 'Yes' || $clinch_grind_text != ''){ ?>
+if(!empty($clinch_teeth) && ($clinch_teeth == 'Yes' || $clinch_grind_text != '')){ ?>
         <tr>
             <td>Do you clinch or grind your teeth?</td>
             <td><?php echo $clinch_grind; ?></td>
@@ -359,7 +359,7 @@ if($additional_paragraph != ''){ ?>
 </div>
 <?php
 
-$sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_ex_page4 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page4id = st($myarray['ex_page4id']);
@@ -400,7 +400,7 @@ $crossbite = st($myarray['crossbite']);
     </span>
 </div>
 <div id="perio_chart" style="display:none;">
-    <iframe name="perio_iframe" id="perio_iframe" src="missing_teeth_form.php?pid=<?php echo $_GET['pid']?>&mt=<?php echo $missing ?>" width="920" height="840"></iframe>
+    <iframe name="perio_iframe" id="perio_iframe" src="missing_teeth_form.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&mt=<?php echo $missing ?>" width="920" height="840"></iframe>
 </div>
 <br />
 <?php } ?>
@@ -585,7 +585,7 @@ if($deistema != ''){ ?>
 <?php 
 }
 
-$sql = "select * from dental_ex_page1 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_ex_page1 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page1id = st($myarray['ex_page1id']);
@@ -596,7 +596,7 @@ $neck_measurement = st($myarray['neck_measurement']);
 $additional_paragraph = st($myarray['additional_paragraph']);
 $tongue = st($myarray['tongue']);
 
-$bmi_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";
+$bmi_sql = "select * from dental_patients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $bmi_myarray = $db->getRow($bmi_sql);
 
 $bmi = st($bmi_myarray['bmi']);
@@ -719,7 +719,7 @@ $tongue_my = $db->getResults($tongue_sql);
     }
 }
 
-$sql = "select * from dental_ex_page2 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_ex_page2 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page2id = st($myarray['ex_page2id']);
@@ -872,7 +872,7 @@ if($tonsils_grade != ''){ ?>
 </div>
 
 <?php
-$sql = "select * from dental_ex_page3 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_ex_page3 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page3id = st($myarray['ex_page3id']);
@@ -1069,7 +1069,7 @@ if($nasal_passages!=''||$other_nasal_passages!=''){ ?>
     }
 }
 
-$sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $ex_page5id = st($myarray['ex_page5id']);
@@ -1107,34 +1107,34 @@ $deflection_r_l = st($myarray['deflection_r_l']);
 
 if($palpationid <> '')
 {
-    $pal_arr1 = split('~',$palpationid);
+    $pal_arr1 = explode('~',$palpationid);
     foreach($pal_arr1 as $i => $val)
     {
         $pal_arr2 = explode('|',$val);
         $palid[$i] = $pal_arr2[0];
-        $palseq[$i] = $pal_arr2[1];
+        $palseq[$i] = (!empty($pal_arr2[1]) ? $pal_arr2[1] : '');
     }
 }
 
 if($palpationRid <> '')
 {
-    $palR_arr1 = split('~',$palpationRid);
+    $palR_arr1 = explode('~',$palpationRid);
     foreach($palR_arr1 as $i => $val)
     {
         $palR_arr2 = explode('|',$val);
         $palRid[$i] = $palR_arr2[0];
-        $palRseq[$i] = $palR_arr2[1];
+        $palRseq[$i] = (!empty($palR_arr2[1]) ? $palR_arr2[1] : '');
     }
 }
 
 if($jointid <> '')
 {
-    $jo_arr1 = split('~',$jointid);
+    $jo_arr1 = explode('~',$jointid);
     foreach($jo_arr1 as $i => $val)
     {
         $jo_arr2 = explode('|',$val);
         $joid[$i] = $jo_arr2[0];
-        $joseq[$i] = $jo_arr2[1];
+        $joseq[$i] = (!empty($jo_arr2[1]) ? $jo_arr2[1] : '');
     }
 }
 ?>
@@ -1178,16 +1178,17 @@ if($jointid <> '')
 <?php
 $palpation_sql = "select * from dental_palpation where status=1 order by sortby";
 $palpation_my = $db->getResults($palpation_sql);
+
 foreach ($palpation_my as $palpation_myarray) {
     if(@array_search($palpation_myarray['palpationid'],$palid) === false){
         $chk = '';
     }else{
-        $chk = $palseq[@array_search($palpation_myarray['palpationid'],$palid)];
+        $chk = (!empty($palseq) ? $palseq[@array_search($palpation_myarray['palpationid'],$palid)] : '');
     }
     if(@array_search($palpation_myarray['palpationid'],$palRid) === false){
         $chkR = '';
     }else{
-        $chkR = $palRseq[@array_search($palpation_myarray['palpationid'],$palRid)];
+        $chkR = (!empty($palRseq) ? $palRseq[@array_search($palpation_myarray['palpationid'],$palRid)] : '');
     }
     if($chk != '' || $chkR != ''){ ?>
             <tr>
@@ -1262,7 +1263,7 @@ foreach ($joint_my as $joint_myarray) {
     if(@array_search($joint_myarray['jointid'],$joid) === false){
         $chkJ = '';
     }else{
-        $chkJ = $joseq[@array_search($joint_myarray['jointid'],$joid)];
+        $chkJ = (!empty($joseq) ? $joseq[@array_search($joint_myarray['jointid'],$joid)] : '');
     }
     if($chkJ != ''){ ?>
                         <tr>

@@ -2,14 +2,11 @@
 if(!isset($_GET['print'])){
 	include "includes/top.htm";
 }else{
-//include "includes/top.htm";
-
-	session_start();
-	require_once('admin/includes/main_include.php');
+	//include "includes/top.htm";
+	include_once('admin/includes/main_include.php');
 	include("includes/sescheck.php");
-	require_once('includes/constants.inc');
-	require_once('admin/includes/access.php');
-
+	include_once('includes/constants.inc');
+	include_once('admin/includes/access.php');
 ?>
 <html>
 <body>
@@ -18,7 +15,7 @@ if(!isset($_GET['print'])){
 
 $rec_disp = 200;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -35,7 +32,7 @@ $sql = "SELECT  "
      . " LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."' "
      . " LEFT JOIN (SELECT patientid, SUM(paid_amount) amount FROM dental_ledger group by patientid) a ON a.patientid=dl.patientid "
      . "WHERE dl.docid='".$_SESSION['docid']."'  "
-     . " AND tc.type!='".mysql_real_escape_string(DSS_TRXN_TYPE_ADJ)."' "
+     . " AND tc.type!='".mysqli_real_escape_string($con,DSS_TRXN_TYPE_ADJ)."' "
      . "GROUP BY dl.patientid";
 $my = $db->getResults($sql);
 /*
@@ -71,10 +68,10 @@ $num_users = count($my);
 <br />
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<?php if($total_rec > $rec_disp) {?>
+	<?php if(!empty($total_rec) && $total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -144,7 +141,7 @@ $num_users = count($my);
 				
 				$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
 				
-				if($myarray["status"] == 1){
+				if(!empty($myarray["status"]) && $myarray["status"] == 1){
 					$tr_class = "tr_active";
 				} else {
 					$tr_class = "tr_inactive";

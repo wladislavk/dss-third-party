@@ -52,7 +52,7 @@
                 cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b
                 cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c
               ) a
-              where a.Date between '".$start_date."' AND '".$end_date."' 
+              where a.Date between '".(!empty($start_date) ? $start_date : '')."' AND '".(!empty($end_date) ? $end_date : '')."' 
               ORDER BY a.Date";
 
       $q = $db->getResults($sql);
@@ -62,8 +62,8 @@
 
       foreach ($q as $r) {
   ?>
-        charges.push([ <?= date('U',strtotime($r['ledger_date']))*1000; ?> , <?= $r['charge']; ?>]);
-        credits.push([ <?= date('U',strtotime($r['ledger_date']))*1000; ?> , <?= $r['credit']; ?>]);
+        charges.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo  $r['charge']; ?>]);
+        credits.push([ <?php echo  date('U',strtotime($r['ledger_date']))*1000; ?> , <?php echo  $r['credit']; ?>]);
   <?php
       }
   ?>

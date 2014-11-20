@@ -3,15 +3,15 @@ include "includes/top.htm";
 include_once "includes/constants.inc";
 
 if(isset($_GET['rid'])){
-  $u_sql = "UPDATE dental_support_tickets SET viewed=0 WHERE id='".mysql_real_escape_string($_GET['rid'])."' AND create_type=0 ";
+  $u_sql = "UPDATE dental_support_tickets SET viewed=0 WHERE id='".mysqli_real_escape_string($con,$_GET['rid'])."' AND create_type=0 ";
   $db->query($u_sql);
-  $u_sql = "UPDATE dental_support_responses SET viewed=0 WHERE ticket_id='".mysql_real_escape_string($_GET['rid'])."' AND response_type=0 ";
+  $u_sql = "UPDATE dental_support_responses SET viewed=0 WHERE ticket_id='".mysqli_real_escape_string($con,$_GET['rid'])."' AND response_type=0 ";
   $db->query($u_sql);
 }
 if(isset($_GET['urid'])){
-  $u_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE id='".mysql_real_escape_string($_GET['urid'])."' AND create_type=0 ";
+  $u_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE id='".mysqli_real_escape_string($con,$_GET['urid'])."' AND create_type=0 ";
   $db->query($u_sql);
-  $u_sql = "UPDATE dental_support_responses SET viewed=1 WHERE ticket_id='".mysql_real_escape_string($_GET['urid'])."' AND response_type=0 ";
+  $u_sql = "UPDATE dental_support_responses SET viewed=1 WHERE ticket_id='".mysqli_real_escape_string($con,$_GET['urid'])."' AND response_type=0 ";
   $db->query($u_sql);
 }
 ?>
@@ -25,7 +25,7 @@ $t_sql = "SELECT t.*,
       		response.last_response
       		 FROM dental_support_tickets t
                       LEFT JOIN (SELECT MAX(r2.adddate) as last_response, r2.ticket_id FROM dental_support_responses r2 GROUP BY r2.ticket_id ) response ON response.ticket_id=t.id
-      		WHERE t.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND
+      		WHERE t.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND
       		(t.status IN (".DSS_TICKET_STATUS_OPEN.", ".DSS_TICKET_STATUS_REOPENED.") OR
       		  (t.status IN (".DSS_TICKET_STATUS_CLOSED.") AND ( 
       			(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=0 ORDER BY r.viewed ASC LIMIT 1)=0)
@@ -117,7 +117,7 @@ if ($t_q) {
 $t_sql = "SELECT t.*, 
             (SELECT name FROM companies WHERE companies.id=t.company_id LIMIT 1) as company_name FROM dental_support_tickets t
         		LEFT JOIN (SELECT MAX(r2.adddate) as last_response, r2.ticket_id FROM dental_support_responses r2 GROUP BY r2.ticket_id ) response ON response.ticket_id=t.id
-                        WHERE t.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND
+                        WHERE t.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND
                         t.status IN (".DSS_TICKET_STATUS_CLOSED.") AND
         		((SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=0 ORDER BY r.viewed ASC LIMIT 1)=1 OR
         			(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=0 ORDER BY r.viewed ASC LIMIT 1) IS NULL)

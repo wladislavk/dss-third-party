@@ -33,13 +33,13 @@ function screened_data(){
     $u_sql = "SELECT u.userid, u.name FROM dental_users u
     		      JOIN dental_screener s ON u.userid = s.userid
     		      WHERE 
-    		      (u.docid = '".mysql_real_escape_string($_SESSION['docid'])."'
-    		      OR u.userid = '".mysql_real_escape_string($_SESSION['docid'])."') GROUP BY u.userid";
+    		      (u.docid = '".mysqli_real_escape_string($con,$_SESSION['docid'])."'
+    		      OR u.userid = '".mysqli_real_escape_string($con,$_SESSION['docid'])."') GROUP BY u.userid";
     $u_q = $db->getResults($u_sql);
     foreach ($u_q as $user) {
   ?>
 
-      s = '{ "key": "<?= $user['name'];?>","color":"#'+Math.floor(Math.random()*16777215).toString(16)+'", "values": [';
+      s = '{ "key": "<?php echo  $user['name'];?>","color":"#'+Math.floor(Math.random()*16777215).toString(16)+'", "values": [';
       screened = [];
 
       <?php
@@ -53,13 +53,13 @@ function screened_data(){
                   cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b
                   cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c
                 ) a
-                where a.Date between '".$start_date."' AND '".$end_date."' 
+                where a.Date between '".(!empty($start_date) ? $start_date : '')."' AND '".(!empty($end_date) ? $end_date : '')."' 
                 ORDER BY a.Date";
         $q = $db->getResults($sql);
         foreach ($q as $r) {
       ?>
 
-          s += '{"x": "<?= date('U',strtotime($r['screened_date'])); ?>", "y": <?= $r['num_screened']; ?>},';
+          s += '{"x": "<?php echo  date('U',strtotime($r['screened_date'])); ?>", "y": <?php echo  $r['num_screened']; ?>},';
       <?php } ?>
 
       	s = s.slice(0, -1);

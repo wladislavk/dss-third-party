@@ -1,11 +1,11 @@
 <link rel="stylesheet" href="css/ledger.css" />
 <?php
-  $sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($_GET['cid'])."' ORDER BY adddate DESC";
+  $sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' ORDER BY adddate DESC";
   $my = $db->getResults($sql);
   $total_rec = count($my);
   $num_users = $total_rec;
 
-  $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysql_real_escape_string($_GET['cid']);
+  $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''));
   $claim = $db->getRow($csql);
 ?>
 
@@ -19,7 +19,7 @@
   <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
     <?php
 		  if($r['reference_id']!='') {
-        $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysql_real_escape_string($r['reference_id'])."' ORDER BY adddate DESC";
+        $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysqli_real_escape_string($con,$r['reference_id'])."' ORDER BY adddate DESC";
         $w_q = $db->getResults($w_sql);
         foreach ($w_q as $w_r) {
     ?>
@@ -39,7 +39,12 @@
 		<h3>Claim Electronically filed on <?php echo  $r['adddate']; ?></h3>
 		<?php
  			$d = json_decode($r['response']);
-			$success = $d->{"success"};
+      if (!empty($d)) {
+        $success = $d->{"success"}; 
+      } else {
+        $success = '';
+      }
+			
 			if ($success == "true"){
 		?>
         <p><strong>Success Response:</strong><br />
@@ -48,7 +53,12 @@
     ?>
         <p><strong>Error Response:</strong><br />
           <?php
-              $errors = $d->{"errors"}->{"messages"};
+              if (!empty($errors)) {
+                $errors = $d->{"errors"}->{"messages"};
+              } else {
+                $errors = array();
+              }
+              
               foreach($errors as $error){
                 echo $error."<br />";
               }
@@ -65,7 +75,7 @@
 </span>
 
 <?php
-  $sql = "SELECT * FROM dental_insurance_history WHERE insuranceid='".mysql_real_escape_string($_GET['cid'])."'";
+  $sql = "SELECT * FROM dental_insurance_history WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."'";
   $q = $db->getResults($sql);
   if ($q) foreach($q as $r) {
 ?>

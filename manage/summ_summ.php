@@ -1,14 +1,14 @@
 <?php
-$sql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$sql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 $r = $db->getRow($sql);
 
-$pid = $_GET['pid'];
+$pid = (!empty($_GET['pid']) ? $_GET['pid'] : '');
 $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
 $itype_my = $db->getResults($itype_sql);
 $num_face = count($itype_my);
 
 if($num_face==0){ ?>
-    <a href="#" style="float:right;" onclick="loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>&it=4&return=patinfo&return_field=profile');return false;" >
+    <a href="#" style="float:right;" onclick="loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : '');?>&it=4&return=patinfo&return_field=profile');return false;" >
         <img src="images/add_patient_photo.png" />
     </a>
 <?php 
@@ -18,7 +18,7 @@ if($num_face==0){ ?>
     }
 }
 
-$sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_page1 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $q_page1id = st($myarray['q_page1id']);
@@ -104,7 +104,7 @@ if(isset($_POST['device_submit'])){
   	}
 }
 
-$sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$sqlex = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarrayex = $db->getRow($sqlex);
 
 $i_opening_from = st($myarrayex['i_opening_from']);
@@ -114,7 +114,7 @@ $protrusion_equal = st($myarrayex['protrusion_equal']);
 $r_lateral_from = st($myarrayex['r_lateral_from']);
 $l_lateral_from = st($myarrayex['l_lateral_from']);
 
-$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
 $imp_r = $db->getRow($imp_s);
 if($imp_r){
     $dentaldevice = st($imp_r['device_id']);
@@ -124,7 +124,7 @@ if($imp_r){
     $dentaldevice_date = st(($myarrayex['dentaldevice_date']!='')?date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])):'');
 }
 
-$sqls = "select * from dental_summary where patientid='".$_GET['pid']."'";
+$sqls = "select * from dental_summary where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarrays = $db->getRow($sqls);
 $initial_device_titration_1 = $myarrays['initial_device_titration_1'];
 $initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
@@ -157,7 +157,7 @@ echo $years ." years old";
 <?php } ?>
     </select>
 <?php
-$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysql_real_escape_string($pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysqli_real_escape_string($con,$pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
 $imp_r = $db->getRow($imp_s);
 if($imp_r['segmentid']=='4'){ ?> 
     Not delivered. Impressions taken <?php echo ($imp_r['date_completed'])?date('m/d/Y',strtotime($imp_r['date_completed'])):''; ?>
@@ -175,8 +175,8 @@ if($imp_r['segmentid']=='4'){ ?>
 }?>
 <br />
 <?php
-    $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysql_real_escape_string($_GET['pid'])."'";
-    $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=1 AND patientid = '".$_GET['pid']."' ORDER BY date_completed DESC, id DESC;";
+    $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+    $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=1 AND patientid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY date_completed DESC, id DESC;";
     $last_r = $db->getRow($last_sql);
 ?>
 <div class="half">
@@ -193,22 +193,22 @@ if($imp_r['segmentid']=='4'){ ?>
 <div class="box">
     <strong>Reason for seeking tx:</strong>
 <?php
-$c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $c_r = $db->getRow($c_sql);
 echo $c_r['chief_complaint_text'];
 if($complaintid <> '')
 {
-    $comp_arr1 = split('~',$complaintid);
+    $comp_arr1 = explode('~',$complaintid);
     foreach($comp_arr1 as $i => $val){
         $comp_arr2 = explode('|',$val);
 
         $compid[$i] = $comp_arr2[0];
-        $compseq[$i] = $comp_arr2[1];
+        $compseq[$i] = (!empty($comp_arr2[1]) ? $comp_arr2[1] : '');
     }
 } ?>
 <br /><br />
 
-<?php if($complaintid != '' || (is_array($compid) && in_array('0', $compid))){ ?>
+<?php if(!empty($complaintid) || (!empty($compid) && is_array($compid) && in_array('0', $compid))){ ?>
     <strong>Other Complaints</strong>
     <ul>
 <?php 
@@ -267,7 +267,7 @@ if($complaintid <> '')
 <?php } ?>
     <br />
     <strong>History of Surgery or other Treatment Attempts:</strong><br />
-    <?php echo $other_therapy_att;?>
+    <?php echo (!empty($other_therapy_att) ? $other_therapy_att : '');?>
 </div>
 
 </div>
@@ -300,13 +300,14 @@ if($last_r['date_completed']!=''){ ?>
     <?php echo ($last_r['date_completed']!='')?date('m/d/Y', strtotime($last_r['date_completed'])):'';
 } ?>
     <strong>For:</strong> 
-    <?php echo ($last_r['segmentid']!='')?$segments[$last_r['segmentid']]:''; 
-$next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysql_real_escape_string($_GET['pid'])."' ORDER BY date_scheduled DESC";
+    <?php echo (!empty($last_r['segmentid']))?$segments[$last_r['segmentid']]:''; 
+$next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' ORDER BY date_scheduled DESC";
 $next_r = $db->getRow($next_sql);
 ?>
     <br />
-    <strong>Next appt:</strong> 
-    <?php echo $segments[$next_r['segmentid']]; ?> - <?php echo ($next_r['date_scheduled']!=''&&$next_r['date_scheduled']!='0000-00-00')?date('m/d/Y', strtotime($next_r['date_scheduled'])):''; ?>
+    <strong>Next appt:</strong>
+
+    <?php echo (!empty($segments[$next_r['segmentid']]) ? $segments[$next_r['segmentid']] : ''); ?> - <?php echo (!empty($next_r['date_scheduled']) && $next_r['date_scheduled'] != '0000-00-00')?date('m/d/Y', strtotime($next_r['date_scheduled'])):''; ?>
     <br />
     <strong>Referred By:</strong> 
 <?php
@@ -317,7 +318,7 @@ if($rs == DSS_REFERRED_PHYSICIAN){
                         WHERE dc.status=1 AND contactid='".st($r['referred_by'])."'";
     $referredby_myarray = $db->getRow($referredby_sql);
 
-    $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
+    $referredbythis = st((!empty($referredby_myarray['salutation']) ? $referredby_myarray['salutation'] : ''))." ".st((!empty($referredby_myarray['firstname']) ? $referredby_myarray['firstname'] : ''))." ".st((!empty($referredby_myarray['middlename']) ? $referredby_myarray['middlename'] : ''))." ".st($referredby_myarray['lastname']);
     $referredbythis .= " - ". $referredby_myarray['contacttype'];
     echo $referredbythis;
 }elseif($rs == DSS_REFERRED_PATIENT){
@@ -327,7 +328,7 @@ if($rs == DSS_REFERRED_PHYSICIAN){
     $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
     echo $referredbythis ." - Patient";
 }else{
-    echo $dss_referred_labels[$rs].": ".$r['referred_notes'];
+    echo (!empty($rs) ? $dss_referred_labels[$rs] : '').": ".$r['referred_notes'];
 }?>
 
 </div>
@@ -342,7 +343,7 @@ $baseline_sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
                             WHERE 
                               (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
                               (ss.sleeptesttype='PSG Baseline' OR ss.sleeptesttype='HST Baseline') AND
-                              ss.patiendid = '".$_GET['pid']."' ORDER BY STR_TO_DATE(ss.date, '%m/%d/%Y') DESC;";
+                              ss.patiendid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY STR_TO_DATE(ss.date, '%m/%d/%Y') DESC;";
 $baseline_sleepstudy = $db->getRow($baseline_sleepstudies);
 if($baseline_sleepstudy){
 }else{
@@ -353,7 +354,7 @@ if($baseline_sleepstudy){
             WHERE 
                     (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
                     (ss.sleeptesttype='PSG' OR ss.sleeptesttype='HST') AND
-                    ss.patiendid = '".$_GET['pid']."' ORDER BY ss.id ASC;";
+                    ss.patiendid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY ss.id ASC;";
     $baseline_sleepstudy = $db->getRow($sleepstudies);
 }?>
     <strong>Baseline Sleep Test?</strong> 
@@ -394,7 +395,7 @@ $sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
                   WHERE 
                   (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
                   (ss.sleeptesttype!='PSG' AND ss.sleeptesttype!='HST' AND ss.sleeptesttype!='PSG Baseline' AND ss.sleeptesttype!='HST Baseline') AND
-                  ss.patiendid = '".$_GET['pid']."' ORDER BY ss.date DESC;";
+                  ss.patiendid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY ss.date DESC;";
 $sleepstudy = $db->getRow($sleepstudies);?>
 
     <br />
@@ -431,7 +432,7 @@ if($sleepstudy['date']!=''){ ?>
 <h4>CPAP</h4>
 <div class="box">
 <?php
-$pat_sql = "select cpap from dental_q_page2 where patientid='".s_for($_GET['pid'])."'";
+$pat_sql = "select cpap from dental_q_page2 where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql);
 if($pat_myarray['cpap']=="No"){ ?>
     Patient has not previously attempted CPAP therapy.
@@ -442,12 +443,12 @@ if($pat_myarray['cpap']=="No"){ ?>
     <label>
     <br />
     <span style="font-weight:bold;">Problems w/ CPAP</span><br />
-    <?php echo $problem_cpap;?>
+    <?php echo (!empty($problem_cpap) ? $problem_cpap : '');?>
     </label>
 <?php 
 } 
 
-$sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_page2 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $q_page2id = st($myarray['q_page2id']);
@@ -615,7 +616,7 @@ if($other_intolerance != ''){ ?>
                 <input type="text" name="ir_max" id="ir_max" size="5" value="<?php echo $protrusion_to; ?>" onchange="checkIncisal()"  />
             </td>
         </tr>
-<?php if($sect == 'summ'){ ?>
+<?php if(!empty($sect) && $sect == 'summ'){ ?>
 <script src="js/summ_summ_check.js" type="text/javascript"></script>
 <?php } ?>
         <tr>
@@ -643,7 +644,7 @@ if($other_intolerance != ''){ ?>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 Distance from minimum range
                 <input disabled="disabled" type="text" name="initial_device_titration_equal_h" id="initial_device_titration_equal_h" size="5" value="<?php echo $initial_device_titration_equal_h; ?>" />mm
-                (<input type="text" name="i_perc" id="i_perc" size="2" disabled="disabled" value="<?php echo $initialdevsettingp; ?>" />%)
+                (<input type="text" name="i_perc" id="i_perc" size="2" disabled="disabled" value="<?php echo (!empty($initialdevsettingp) ? $initialdevsettingp : ''); ?>" />%)
             </td>
         </tr>
     </table>
@@ -737,7 +738,7 @@ $num_face = mysql_num_rows($itype_my);
 </tr>
 <tr>
   <?php
-     $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysql_real_escape_string($_GET['pid'])."'";
+     $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
      $last_q = mysql_query($last_sql);
      $last_r = mysql_fetch_assoc($last_q);
 ?>
@@ -758,7 +759,7 @@ $num_face = mysql_num_rows($itype_my);
 </td>
   <td rowspan="2">Reason for Tx:
 <?php
-$c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 $c_q = mysql_query($c_sql);
 $c_r = mysql_fetch_assoc($c_q);
 echo $c_r['chief_complaint_text'];

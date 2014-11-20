@@ -1,9 +1,9 @@
 <?php 
 // require_once 'admin/includes/config.php';
-require_once 'admin/includes/main_include.php';
-require_once 'admin/includes/general.htm';
+include_once 'admin/includes/main_include.php';
+include_once 'admin/includes/general.htm';
 
-if($_POST['q_sleepsub'] == 1)
+if(!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1)
 {
 	$epworth_sql = "select * from dental_epworth where status=1 order by sortby";
 	$epworth_my = $db->getResults($epworth_sql);
@@ -43,12 +43,12 @@ if($_POST['q_sleepsub'] == 1)
 		die();
 }
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
-if($pat_myarray['patientid'] == '')
+if(empty($pat_myarray['patientid']))
 {?>
 	<script type="text/javascript">
 		window.location = 'manage_patient.php';
@@ -57,7 +57,7 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 
-$sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_sleep where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
 $q_sleepid = st($myarray['q_sleepid']);
@@ -66,12 +66,12 @@ $analysis = st($myarray['analysis']);
 
 if($epworthid <> '')
 {	
-	$epworth_arr1 = split('~',$epworthid);
+	$epworth_arr1 = explode('~',$epworthid);
 	foreach($epworth_arr1 as $i => $val)
 	{
 		$epworth_arr2 = explode('|',$val);
 		$epid[$i] = $epworth_arr2[0];
-		$epseq[$i] = $epworth_arr2[1];
+		$epseq[$i] = (!empty($epworth_arr2[1]) ? $epworth_arr2[1] : '');
 	}
 }?>
 
@@ -83,7 +83,7 @@ if($epworthid <> '')
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 
-<form id="q_sleepfrm" name="q_sleepfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>&id=<?php echo $_GET['id']; ?>" method="post">
+<form id="q_sleepfrm" name="q_sleepfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&id=<?php echo (!empty($_GET['id']) ? $_GET['id'] : ''); ?>" method="post">
 	<input type="hidden" name="q_sleepsub" value="1" />
 	<div align="right">
 		<input type="submit" name="q_sleepbtn" value="Save" />
@@ -119,7 +119,7 @@ $epworth_number = count($epworth_my);
 foreach ($epworth_my as $epworth_myarray) {
 	$a_sql = "SELECT answer FROM dentalsummfu_ess
 				WHERE epworthid='".$epworth_myarray['epworthid']."' AND
-				followupid='".mysql_real_escape_string($_GET['id'])."';";
+				followupid='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."';";
 	$a = $db->getRow($a_sql);
 	$chk = $a['answer'];?>
 										<tr>

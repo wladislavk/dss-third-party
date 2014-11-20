@@ -171,7 +171,7 @@ if(isset($_POST['submitbut'])){
                                 			$c = "Other Physician";
                                 			break;
                                 	}
-                                	$cts = "SELECT contacttypeid FROM dental_contacttype WHERE contacttype='".mysql_real_escape_string($c)."'";
+                                	$cts = "SELECT contacttypeid FROM dental_contacttype WHERE contacttype='".mysqli_real_escape_string($con,$c)."'";
                                 	$ctr = $db->getRow($ctq);
                                 	if($ctr['contacttypeid']!=''){
                                 		$s .= $field . " = '" .$ctr['contacttypeid']."', ";
@@ -184,8 +184,8 @@ if(isset($_POST['submitbut'])){
                                 	break;
                             }
                 		}
-                		$s .= " notes='".mysql_real_escape_string($notes)."', ";
-                		$s .= " docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+                		$s .= " notes='".mysqli_real_escape_string($con,$notes)."', ";
+                		$s .= " docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
                 		//echo $s."<br />";
                 		$cid = $db->getInsertId($s);
                    		$row++;

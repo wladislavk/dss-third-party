@@ -47,7 +47,7 @@
                                         <?php if(st($myarray["signed_id"]) == '') { ?>
                                                         Status: 
                                                         <span style="font-size:14px;">Unsigned</span>
-                                                <?php if($office_type == DSS_OFFICE_TYPE_FRONT){ ?>
+                                                <?php if(!empty($office_type) && $office_type == DSS_OFFICE_TYPE_FRONT){ ?>
                                                         <a href="#" onclick="loadPopup('add_notes.php?pid=<?php echo $_GET['pid']; ?>&ed=<?php echo $myarray['notesid']; ?>');return false;">Edit</a>
                                                         <?php if($myarray["docid"]==$_SESSION['userid']){ ?>
                                                         /

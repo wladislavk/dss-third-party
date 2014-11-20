@@ -280,6 +280,10 @@ function updateType(payer){
 }
 
 </script>
+<span class="admin_head">
+Add New Claim Payment
+</span>
+</br>
 <div id="form_div">
 <div id="select_fields" style="margin: 10px;">
 <label>Paid By</label>

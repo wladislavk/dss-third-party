@@ -5,7 +5,9 @@ include_once "includes/constants.inc";
 $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
 $p_sql = mysql_query($sql);
 $payments = mysql_fetch_array($p_sql);
-$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['cid']."';";
+$csql = "SELECT i.*, CONCAT(p.firstname, ' ',p.lastname) name FROM dental_insurance i 
+  JOIN dental_patients p ON p.patientid=i.patientid
+  WHERE i.insuranceid='".$_GET['cid']."';";
 $cq = mysql_query($csql);
 $claim = mysql_fetch_array($cq);
 
@@ -22,6 +24,11 @@ $num_sa = mysql_num_rows($saq);
 
 ?>
 <div class="fullwidth">
+<br />
+<span class="admin_head">
+Claim Payment - Claim <?= $_GET['cid']; ?> - <?= $claim['name']; ?>
+</span>
+<br /><br />
 <script type="text/javascript">
 //CHECK LEDGER PAYMENT SUBMISSION
 function validSubmission(f){
@@ -252,6 +259,10 @@ function updateType(payer){
 }
 
 </script>
+<span class="admin_head">
+Add Advanced Claim Payment
+</span>
+</br>
 <div id="form_div">
 <div id="select_fields" style="margin: 10px;">
 <label>Paid By</label>

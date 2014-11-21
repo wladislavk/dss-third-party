@@ -17,7 +17,7 @@
   $cvc = $_REQUEST['cvc'];
   $zip = $_REQUEST['zip'];
 
-  $key_sql = "SELECT stripe_secret_key FROM companies WHERE id='".mysql_real_escape_string($companyid)."'";
+  $key_sql = "SELECT stripe_secret_key FROM companies WHERE id='".mysqli_real_escape_string($con, $companyid)."'";
   
   $key_r= $db->getRow($key_sql);
 
@@ -74,11 +74,11 @@
 
   $recover_hash = hash('sha256', $id.$email.rand());
 
-  $sql = "UPDATE dental_users SET cc_id='".mysql_real_escape_string($customer->id)."', 
+  $sql = "UPDATE dental_users SET cc_id='".mysqli_real_escape_string($con, $customer->id)."', 
       		status=2,
       		recover_hash='".$recover_hash."',
       		recover_time=NOW()
-      	 	WHERE userid='".mysql_real_escape_string($id)."'";
+      	 	WHERE userid='".mysqli_real_escape_string($con, $id)."'";
 
   $db->query($sql);
 
@@ -108,7 +108,7 @@
   $subject = "Dental Sleep Solutions Account Activation";
   $mail = mail($email, $subject, $m, $headers);
   if($mail){
-    $e_sql = "UPDATE dental_users SET registration_email_date=now() WHERE userid='".mysql_real_escape_string($id)."'";
+    $e_sql = "UPDATE dental_users SET registration_email_date=now() WHERE userid='".mysqli_real_escape_string($con, $id)."'";
     $db->query($e_sql);
   }
 

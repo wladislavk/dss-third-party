@@ -8,37 +8,37 @@
     include_once '../../includes/help_functions.php';	
 
     $sql = "UPDATE dental_users set
-            first_name = '".mysql_real_escape_string($_POST['first_name'])."',
-            last_name = '".mysql_real_escape_string($_POST['last_name'])."',
-            email= '".mysql_real_escape_string($_POST['email'])."',
-            phone = '".mysql_real_escape_string(num($_POST['phone']))."',
-            fax = '".mysql_real_escape_string(num($_POST['fax']))."',
-	        practice = '".mysql_real_escape_string($_POST['practice'])."',
-            address = '".mysql_real_escape_string($_POST['address'])."',
-            city = '".mysql_real_escape_string($_POST['city'])."',
-            state = '".mysql_real_escape_string($_POST['state'])."',
-            zip = '".mysql_real_escape_string($_POST['zip'])."',
-	        npi = '".mysql_real_escape_string($_POST['npi'])."',
-            medicare_npi = '".mysql_real_escape_string($_POST['medicare_npi'])."',
-            medicare_ptan = '".mysql_real_escape_string($_POST['medicare_ptan'])."',
-            tax_id_or_ssn = '".mysql_real_escape_string($_POST['tax_id_or_ssn'])."',
-            ein = '".mysql_real_escape_string($_POST['ein'])."',
-            ssn = '".mysql_real_escape_string($_POST['ssn'])."',
-        	use_service_npi = '".mysql_real_escape_string($_POST['use_service_npi'])."',
-        	service_name = '".mysql_real_escape_string($_POST['service_name'])."',
-        	service_address = '".mysql_real_escape_string($_POST['service_address'])."',
-        	service_city = '".mysql_real_escape_string($_POST['service_city'])."',
-        	service_state = '".mysql_real_escape_string($_POST['service_state'])."',
-        	service_zip = '".mysql_real_escape_string($_POST['service_zip'])."',
-        	service_phone = '".mysql_real_escape_string($_POST['service_phone'])."',
-        	service_fax = '".mysql_real_escape_string($_POST['service_fax'])."',
-        	service_npi = '".mysql_real_escape_string($_POST['service_npi'])."',
-            service_medicare_npi = '".mysql_real_escape_string($_POST['service_medicare_npi'])."',
-            service_medicare_ptan = '".mysql_real_escape_string($_POST['service_medicare_ptan'])."',
-            service_tax_id_or_ssn = '".mysql_real_escape_string($_POST['service_tax_id_or_ssn'])."',
-            service_ein = '".mysql_real_escape_string($_POST['service_ein'])."',
-            service_ssn = '".mysql_real_escape_string($_POST['service_ssn'])."',
-		    username = '".mysql_real_escape_string($_POST['username'])."'";
+            first_name = '".mysqli_real_escape_string($con, $_POST['first_name'])."',
+            last_name = '".mysqli_real_escape_string($con, $_POST['last_name'])."',
+            email= '".mysqli_real_escape_string($con, $_POST['email'])."',
+            phone = '".mysqli_real_escape_string($con, num($_POST['phone']))."',
+            fax = '".mysqli_real_escape_string($con, num($_POST['fax']))."',
+	        practice = '".mysqli_real_escape_string($con, $_POST['practice'])."',
+            address = '".mysqli_real_escape_string($con, $_POST['address'])."',
+            city = '".mysqli_real_escape_string($con, $_POST['city'])."',
+            state = '".mysqli_real_escape_string($con, $_POST['state'])."',
+            zip = '".mysqli_real_escape_string($con, $_POST['zip'])."',
+	        npi = '".mysqli_real_escape_string($con, $_POST['npi'])."',
+            medicare_npi = '".mysqli_real_escape_string($con, $_POST['medicare_npi'])."',
+            medicare_ptan = '".mysqli_real_escape_string($con, $_POST['medicare_ptan'])."',
+            tax_id_or_ssn = '".mysqli_real_escape_string($con, $_POST['tax_id_or_ssn'])."',
+            ein = '".mysqli_real_escape_string($con, $_POST['ein'])."',
+            ssn = '".mysqli_real_escape_string($con, $_POST['ssn'])."',
+        	use_service_npi = '".mysqli_real_escape_string($con, $_POST['use_service_npi'])."',
+        	service_name = '".mysqli_real_escape_string($con, $_POST['service_name'])."',
+        	service_address = '".mysqli_real_escape_string($con, $_POST['service_address'])."',
+        	service_city = '".mysqli_real_escape_string($con, $_POST['service_city'])."',
+        	service_state = '".mysqli_real_escape_string($con, $_POST['service_state'])."',
+        	service_zip = '".mysqli_real_escape_string($con, $_POST['service_zip'])."',
+        	service_phone = '".mysqli_real_escape_string($con, $_POST['service_phone'])."',
+        	service_fax = '".mysqli_real_escape_string($con, $_POST['service_fax'])."',
+        	service_npi = '".mysqli_real_escape_string($con, $_POST['service_npi'])."',
+            service_medicare_npi = '".mysqli_real_escape_string($con, $_POST['service_medicare_npi'])."',
+            service_medicare_ptan = '".mysqli_real_escape_string($con, $_POST['service_medicare_ptan'])."',
+            service_tax_id_or_ssn = '".mysqli_real_escape_string($con, $_POST['service_tax_id_or_ssn'])."',
+            service_ein = '".mysqli_real_escape_string($con, $_POST['service_ein'])."',
+            service_ssn = '".mysqli_real_escape_string($con, $_POST['service_ssn'])."',
+		    username = '".mysqli_real_escape_string($con, $_POST['username'])."'";
 
 	if($_POST['password'] != '' && $_POST['password'] == $_POST['confirm_password']){
 		$salt = create_salt();
@@ -47,7 +47,7 @@
 			     , salt='".$salt."'";
 	}	
     
-    $sql .= " WHERE userid='".mysql_real_escape_string($_POST['userid'])."'";
+    $sql .= " WHERE userid='".mysqli_real_escape_string($con, $_POST['userid'])."'";
 
     $q = $db->query($sql);
 	$loc_s = "SELECT * FROM dental_locations WHERE default_location=1 AND docid = '".$_POST['userid']."'";
@@ -66,7 +66,7 @@
                     phone = '".s_for(num($_POST["mailing_phone"]))."',
                     fax = '".s_for(num($_POST["fax"]))."'
 			        WHERE 
-                    id = '".mysql_real_escape_string($loc_r['id'])."'"; 
+                    id = '".mysqli_real_escape_string($con, $loc_r['id'])."'"; 
 	} else {
         $loc_sql = "INSERT INTO dental_locations SET
                     location = '".s_for($_POST['mailing_practice'])."', 
@@ -91,7 +91,7 @@
     $co_sql = "SELECT c.id, c.name from companies c
                JOIN dental_user_company uc ON c.id = uc.companyid
                JOIN dental_users u ON u.userid = uc.userid
-               WHERE u.userid='".mysql_real_escape_string($userid)."'";
+               WHERE u.userid='".mysqli_real_escape_string($con, $userid)."'";
 
     $co_r = $db->getRow($co_sql);
     $cid = $co_r['id'];

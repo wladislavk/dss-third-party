@@ -6,8 +6,8 @@
   $hash = $_REQUEST['hash'];
 
   $s = "SELECT * FROM dental_users WHERE
-      	userid=".mysql_real_escape_string($id)." AND
-      	recover_hash='".mysql_real_escape_string($hash)."'";
+      	userid=".mysqli_real_escape_string($con, $id)." AND
+      	recover_hash='".mysqli_real_escape_string($con, $hash)."'";
 
   $r = $db->getRow($s);
   if($r['text_num'] >= 5 && strtotime($r['text_date'])>(time()-3600)){

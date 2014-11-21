@@ -12,7 +12,7 @@ class Db
 	{
 		if($query_string)
 		{
-			$result = mysqli_query($this->con, $query_string) /*or die($query_string . ' ' . mysqli_error($this->con))*/;
+			$result = mysqli_query($this->con, $query_string) or die($query_string . ' ' . mysqli_error($this->con));
 			return $result;
 		}
 		return;
@@ -49,7 +49,12 @@ class Db
 	public function getNumberRows($query_string)
 	{
 		$result = $this->query($query_string);
-		return mysqli_num_rows($result);
+		if ($result) {
+			$return = mysqli_num_rows($result);
+		} else {
+			$return = 0;
+		}
+		return $return;
 	}
 
 	public function getInsertId($query_string)

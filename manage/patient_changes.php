@@ -5,10 +5,10 @@ include "includes/top.htm";
 <?php
 $num_changes = 0;
 
-$psql = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$psql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 $p = $db->getRow($psql);
 
-$csql = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$csql = "SELECT * FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 $c = $db->getRow($csql);
 
 $fields = array();
@@ -88,11 +88,11 @@ if(isset($_POST['submit'])){
                 $docsql .= ", "; 
             }
             if($field=='home_phone' || $field=='cell_phone' || $field=='work_phone' || $field=='emp_phone' || $field=='emergency_number' || $field=='emp_fax' ){
-                $docsql .= $field . " = '" . mysql_real_escape_string(num($_POST['value_'.$field]))."'";
+                $docsql .= $field . " = '" . mysqli_real_escape_string($con, num($_POST['value_'.$field]))."'";
             }elseif($field=='ssn'){
-                $docsql .= $field . " = '" . mysql_real_escape_string(num($_POST['value_'.$field], false))."'";
+                $docsql .= $field . " = '" . mysqli_real_escape_string($con, num($_POST['value_'.$field], false))."'";
             }else{
-                $docsql .= $field . " = '" . mysql_real_escape_string($_POST['value_'.$field])."'";
+                $docsql .= $field . " = '" . mysqli_real_escape_string($con, $_POST['value_'.$field])."'";
             }
             $docchange = true;
         }elseif($_POST['accepted_'.$field]=='pat'){
@@ -103,11 +103,11 @@ if(isset($_POST['submit'])){
                 $patsql .= ", "; 
             }
             if($field=='home_phone' || $field=='cell_phone' || $field=='work_phone' || $field=='emp_phone' || $field=='emergency_number' || $field=='emp_fax' ){
-                $patsql .= $field . " = '" . mysql_real_escape_string(num($_POST['value_'.$field]))."'";
+                $patsql .= $field . " = '" . mysqli_real_escape_string($con, num($_POST['value_'.$field]))."'";
             }elseif($field=='ssn'){
-                $patsql .= $field . " = '" . mysql_real_escape_string(num($_POST['value_'.$field], false))."'";
+                $patsql .= $field . " = '" . mysqli_real_escape_string($con, num($_POST['value_'.$field], false))."'";
             }else{
-                $patsql .= $field . " = '" . mysql_real_escape_string($_POST['value_'.$field])."'";
+                $patsql .= $field . " = '" . mysqli_real_escape_string($con, $_POST['value_'.$field])."'";
             }
             $patchange = true;
         }elseif($_POST['accepted_'.$field]!='none'){
@@ -115,8 +115,8 @@ if(isset($_POST['submit'])){
         }
     }
 
-    $docsql .= " WHERE parent_patientid='".mysql_real_escape_string($_POST['patientid'])."'";
-    $patsql .= " WHERE patientid='".mysql_real_escape_string($_POST['patientid'])."'";
+    $docsql .= " WHERE parent_patientid='".mysqli_real_escape_string($con, $_POST['patientid'])."'";
+    $patsql .= " WHERE patientid='".mysqli_real_escape_string($con, $_POST['patientid'])."'";
     if($docchange){ 
         $db->query($docsql); 
     }
@@ -124,7 +124,7 @@ if(isset($_POST['submit'])){
         $db->query($patsql); 
     }
     if($completed){ 
-        $db->query("DELETE FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_POST['patientid'])."'"); 
+        $db->query("DELETE FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con, $_POST['patientid'])."'"); 
     }
 ?>
 <script type="text/javascript">
@@ -314,7 +314,7 @@ if($c){
 <?php
 if($num_changes == 0){
     //DELETE EXTRA ROW
-    $db->query("DELETE FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'");
+    $db->query("DELETE FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'");
   ?>
 <script type="text/javascript">
   alert("Patient Portal data is synced with your data");

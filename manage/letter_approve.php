@@ -19,7 +19,7 @@ $jpg = substr( $file, 0, -4 ) . '';
 exec('gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -r300 -sOutputFile='.$jpg.'-%01d.jpg '. $file)
 ?>
 
-<div style="float:left;"><a href="#" onclick="send_letter('<?=$_GET['id']; ?>')">Looks Good! SEND!</a> | <a href="#" onclick="reload_parent();">Cancel/Revise</a></div>
+<div style="float:left;"><a href="#" onclick="send_letter('<?=$_GET['id']; ?>')">Looks Good! SEND!</a> | <a href="#" onclick="parent.disablePopupClean();">Cancel/Revise</a></div>
 <?php
   $fsql = "SELECT fax, preferredcontact from dental_contact WHERE contactid='".mysql_real_escape_string($r['md_list'])."' OR 
 contactid='".mysql_real_escape_string($r['md_referral_list'])."'";

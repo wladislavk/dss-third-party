@@ -967,11 +967,11 @@ claim_history_update($primary_claim_id, $_SESSION['userid'], $_SESSION['adminuse
 		
 	    print '<script type="text/javascript">';
 		if(isset($_POST['ex_pagebtn_elec'])){ 
-        print '  window.location="' . $called_from . '?status=0&insid='.$_POST['ed'].'&type='.$fdf_type.'&sendins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+        print '  window.location="' . $called_from . '?status=0&insid='.$_POST['ed'].'&type=primary&sendins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
 		}elseif(isset($_POST['elec_save'])){ 
         print '  window.location="'.$electronic_form.'"';
 		}else{
-        print '  window.location="' . $called_from . '?status=0&insid='.$_POST['ed'].'&type='.$fdf_type.'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+        print '  window.location="' . $called_from . '?status=0&insid='.$_POST['ed'].'&type=primary&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
 		}
         print '</script>';
 
@@ -1433,7 +1433,21 @@ input{text-transform:uppercase;}
   <a href="manage_claims.php">
 	<b>&lt;&lt;Back to Manage Claims Page</b></a>
 <?php } ?>
-
+<?php if($is_front_office){ ?>
+<?php if($is_secondary){ ?>
+        <h4>Secondary Claim (<a href="insurance_v2.php?insid=<?php echo $orig_claim_id; ?>&pid=<?php echo $_GET['pid']; ?>">Primary is <?php echo $orig_claim_id; ?></a>)</h4>
+<?php }else{
+  $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id='".mysql_real_escape_string($_GET['insid'])."'";
+  $sec_q = mysql_query($sec_sql);
+  $sec_r = mysql_fetch_assoc($sec_q);
+?>
+        <h4>Primary Claim
+        <?php if(mysql_num_rows($sec_q)){ ?>
+                (<a href="insurance_v2.php?insid=<?php echo $sec_r['insuranceid']; ?>&pid=<?php echo $_GET['pid']; ?>">Secondary is <?php echo $sec_r['insuranceid']; ?></a>)
+        <?php } ?>
+        </h4>
+<?php } ?>
+<?php }else{ ?>
 <?php if($is_secondary){ ?>
 	<h4>Secondary Claim (<a href="insurance_claim_v2.php?insid=<?php echo $orig_claim_id; ?>&pid=<?php echo $_GET['pid']; ?>">Primary is <?php echo $orig_claim_id; ?></a>)</h4>
 <?php }else{ 
@@ -1447,7 +1461,7 @@ input{text-transform:uppercase;}
 	<?php } ?>
 	</h4>
 <?php } ?>
-
+<?php } ?>
 <form name="insurancefrm" action="<?=$_SERVER['PHP_SELF'];?>?insid=<?=$_GET['insid']?>&pid=<?=$_GET['pid']?>" method="post">
 	<input type="hidden" name="insurancesub" value="1" />
 	<input type="hidden" name="ed" value="<?=$insuranceid;?>" />

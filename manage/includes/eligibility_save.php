@@ -15,7 +15,7 @@ $s = "INSERT INTO dental_eligibility SET
 	eligible_id='".mysql_real_escape_string($d['eligible_id'])."',
 	adddate=now(),
         ip_address='".$_SERVER['REMOTE_ADDR']."',
-	response='".$_REQUEST['response']."'";
+	response='".mysql_real_escape_string($_REQUEST['response'])."'";
 /*
 	pi_name='".mysql_real_escape_string($pi['name'])."',
         pi_id='".mysql_real_escape_string($pi['id'])."',

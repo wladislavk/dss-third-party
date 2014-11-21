@@ -912,8 +912,11 @@ function deliver_created_letter($letterid){
 			return true;
 
                 }else{
-                        $letter_query = "UPDATE dental_letters SET status='2' WHERE letterid='".s_for($letterid)."';";
+                        $letter_query = "UPDATE dental_letters SET status='2', parentid=null WHERE letterid='".s_for($letterid)."';";
                         $letter_result = mysql_query($letter_query);
+                        $letter_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".s_for($letterid)."';";
+                        $letter_result = mysql_query($letter_query);
+
                         return "Letter could not be sent.";
                 }
 

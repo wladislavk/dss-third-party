@@ -369,12 +369,12 @@ while ($row = mysql_fetch_assoc($company_result)) {
 
 
 // Consult Appointment Date
-$consult_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 2 ORDER BY stepid DESC LIMIT 1;";
+$consult_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 2 ORDER BY stepid DESC LIMIT 1;";
 $consult_result = mysql_query($consult_query);
 $consult_date = date('F d, Y', strtotime(mysql_result($consult_result, 0)));
 
 // Impressions Appointment Date
-$impressions_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 4 ORDER BY stepid DESC LIMIT 1;";
+$impressions_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 4 ORDER BY stepid DESC LIMIT 1;";
 $impressions_result = mysql_query($impressions_query);
 $impressions_date = date('F d, Y', strtotime(mysql_result($impressions_result, 0)));
 

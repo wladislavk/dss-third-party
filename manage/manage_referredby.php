@@ -1,7 +1,7 @@
 <?php
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "")
+if(!empty($_REQUEST["delid"]))
 {
 	$del_sql = "delete from dental_referredby where referredbyid='".$_REQUEST["delid"]."'";
 	$db->query($del_sql);
@@ -64,7 +64,7 @@ $sql = "select
                 AND p.referred_source=".DSS_REFERRED_PATIENT."
 		GROUP BY dp.patientid
 ";
-switch($_GET['sort']){
+if (!empty($_GET['sort'])) switch($_GET['sort']){
   case 'type':
     $sql .= " ORDER BY referral_type ".$_GET['sortdir'];
     break;
@@ -115,7 +115,7 @@ $num_referredby = count($my);
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <div id="pager" class="pager">
@@ -175,10 +175,10 @@ $num_referredby = count($my);
 		else
 		{
 			foreach ($my as $myarray) {
-				$pat_sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and referred_by='".$myarray["referredbyid"]."'";
+				$pat_sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and referred_by='".(!empty($myarray["referredbyid"]) ? $myarray["referredbyid"] : '')."'";
 				$pat_my = $db->getResults($pat_sql);
 				
-				if($myarray["status"] == 1)
+				if(!empty($myarray["status"]) && $myarray["status"] == 1)
 				{
 					$tr_class = "tr_active";
 				}

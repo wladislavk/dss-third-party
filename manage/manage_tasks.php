@@ -1,9 +1,9 @@
 <?php 
-require_once('includes/constants.inc');
 include "includes/top.htm";
+include_once('includes/constants.inc');
 
 if(isset($_GET['delid'])){
-  $del_sql = "UPDATE dental_task SET status=2 WHERE id='".mysql_real_escape_string($_GET['delid'])."'";
+  $del_sql = "UPDATE dental_task SET status=2 WHERE id='".mysqli_real_escape_string($con,$_GET['delid'])."'";
   $db->query($del_sql);
   ?>
   <script type="text/javascript">
@@ -18,10 +18,10 @@ $sql = "select dt.*, CONCAT(du.first_name, ' ', du.last_name) as name, p.firstna
         	LEFT JOIN dental_patients p ON p.patientid=dt.patientid
            WHERE (dt.status = '0' OR
         	dt.status IS NULL) AND ";
-if($_GET['mine']==1){ 
-  $sql .= " dt.responsibleid='".mysql_real_escape_string($_SESSION['userid'])."' ";
+if(!empty($_GET['mine']) && $_GET['mine']==1){ 
+  $sql .= " dt.responsibleid='".mysqli_real_escape_string($con,$_SESSION['userid'])."' ";
 }else{
-  $sql .= " (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') ";
+  $sql .= " (du.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' OR du.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."') ";
 }
 
 if(isset($_REQUEST['sort1']) && $_REQUEST['sort1'] != ''){
@@ -50,7 +50,7 @@ if(isset($_REQUEST['sortdir1']) && $_REQUEST['sortdir1']){
 
 $rec_disp = 10;
 
-if($_REQUEST["page1"] != "")
+if((!empty($_REQUEST["page1"])))
   $index_val = $_REQUEST["page1"];
 else
   $index_val = 0;
@@ -75,18 +75,18 @@ $my = $db->getResults($sql);
 <br />
 &nbsp;
 <button onclick="loadPopup('add_task.php');" class="addButton" style="float:right; margin-right: 10px;">Add Task</button>
-<?php if($_GET['mine']==1){ ?>
+<?php if(!empty($_GET['mine']) && $_GET['mine']==1){ ?>
   <button onclick="window.location='manage_tasks.php'" class="addButton" style="float:right; margin-right: 10px;">Show All</button>
 <?php }else{ ?>
   <button onclick="window.location='manage_tasks.php?mine=1'" class="addButton" style="float:right; margin-right: 10px;">Assigned to me</button>
 <?php } ?>
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <span style="float:right; margin-right:20px;">
   Pages:
-  <?php paging1($no_pages,$index_val,"sort1=".$_GET['sort1']."&sortdir1=".$_GET['sortdir1']."&page2=".$_GET['page2']."&sort2=".$_GET['sort2']."&sortdir2=".$_GET['sortdir2']);?>
+  <?php paging1($no_pages,$index_val,"sort1=".(!empty($_GET['sort1']) ? $_GET['sort1'] : '')."&sortdir1=".(!empty($_GET['sortdir1']) ? $_GET['sortdir1'] : '')."&page2=".(!empty($_GET['page2']) ? $_GET['page2'] : '')."&sort2=".(!empty($_GET['sort2']) ? $_GET['sort2'] : '')."&sortdir2=".(!empty($_GET['sortdir2']) ? $_GET['sortdir2'] : ''));?>
 </span>
 
 
@@ -95,13 +95,13 @@ $my = $db->getResults($sql);
 		<td width="2%" class="col_head">
 		</td>
     <td valign="top" class="col_head  <?php echo ($_REQUEST['sort1'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir1']):''; ?>" width="45%">
-      <a href="manage_tasks.php?sort2=<?php echo $_GET['sort2']; ?>&sortdir2=<?php echo $_GET['sortdir2']; ?>&page2=<?php echo $_GET['page2']; ?>&sort1=task&sortdir1=<?php echo ($_REQUEST['sort1']=='task'&&$_REQUEST['sortdir1']=='ASC')?'DESC':'ASC'; ?>">Task</a>
+      <a href="manage_tasks.php?sort2=<?php echo (!empty($_GET['sort2']) ? $_GET['sort2'] : ''); ?>&sortdir2=<?php echo (!empty($_GET['sortdir2']) ? $_GET['sortdir2'] : ''); ?>&page2=<?php echo (!empty($_GET['page2']) ? $_GET['page2'] : ''); ?>&sort1=task&sortdir1=<?php echo ($_REQUEST['sort1']=='task'&&$_REQUEST['sortdir1']=='ASC')?'DESC':'ASC'; ?>">Task</a>
     </td>
     <td valign="top" class="col_head  <?php echo ($_REQUEST['sort1'] == 'due_date')?'arrow_'.strtolower($_REQUEST['sortdir1']):''; ?>" width="20%">
-      <a href="manage_tasks.php?sort2=<?php echo $_GET['sort2']; ?>&sortdir2=<?php echo $_GET['sortdir2']; ?>&page2=<?php echo $_GET['page2']; ?>&sort1=due_date&sortdir1=<?php echo ($_REQUEST['sort1']=='due_date'&&$_REQUEST['sortdir1']=='ASC')?'DESC':'ASC'; ?>">Due Date</a>
+      <a href="manage_tasks.php?sort2=<?php echo (!empty($_GET['sort2']) ? $_GET['sort2'] : ''); ?>&sortdir2=<?php echo (!empty($_GET['sortdir2']) ? $_GET['sortdir2'] : ''); ?>&page2=<?php echo (!empty($_GET['page2']) ? $_GET['page2'] : ''); ?>&sort1=due_date&sortdir1=<?php echo ($_REQUEST['sort1']=='due_date'&&$_REQUEST['sortdir1']=='ASC')?'DESC':'ASC'; ?>">Due Date</a>
     </td>
     <td valign="top" class="col_head  <?php echo ($_REQUEST['sort1'] == 'responsible')?'arrow_'.strtolower($_REQUEST['sortdir1']):''; ?>" width="20%">
-      <a href="manage_tasks.php?sort2=<?php echo $_GET['sort2']; ?>&sortdir2=<?php echo $_GET['sortdir2']; ?>&page2=<?php echo $_GET['page2']; ?>&sort1=responsible&sortdir1=<?php echo ($_REQUEST['sort1']=='responsible'&&$_REQUEST['sortdir1']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
+      <a href="manage_tasks.php?sort2=<?php echo (!empty($_GET['sort2']) ? $_GET['sort2'] : ''); ?>&sortdir2=<?php echo (!empty($_GET['sortdir2']) ? $_GET['sortdir2'] : ''); ?>&page2=<?php echo (!empty($_GET['page2']) ? $_GET['page2'] : ''); ?>&sort1=responsible&sortdir1=<?php echo ($_REQUEST['sort1']=='responsible'&&$_REQUEST['sortdir1']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
     </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -165,10 +165,10 @@ $sql = "select dt.*, CONCAT(du.first_name, ' ', du.last_name) as name, p.firstna
           JOIN dental_users du ON dt.responsibleid=du.userid
           LEFT JOIN dental_patients p ON p.patientid=dt.patientid
           WHERE dt.status = '1' AND ";
-if($_GET['mine']==1){
-  $sql .= " dt.responsibleid='".mysql_real_escape_string($_SESSION['userid'])."' ";
+if(!empty($_GET['mine']) && $_GET['mine']==1){
+  $sql .= " dt.responsibleid='".mysqli_real_escape_string($con,$_SESSION['userid'])."' ";
 }else{
-  $sql .= " (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') ";
+  $sql .= " (du.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' OR du.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."') ";
 }
 
 if(isset($_REQUEST['sort2']) && $_REQUEST['sort2'] != ''){
@@ -197,7 +197,7 @@ $sql .= "ORDER BY ".$sort." ".$dir;
 
 $rec_disp = 10;
 
-if($_REQUEST["page2"] != "")
+if(!empty($_REQUEST["page2"]))
   $index_val = $_REQUEST["page2"];
 else
   $index_val = 0;
@@ -215,18 +215,18 @@ $my = $db->getResults($sql);
 <span class="admin_head">Completed</span>
 <span style="float:right; margin-right:20px;">
   Pages:
-  <?php paging2($no_pages,$index_val,"sort1=".$_GET['sort1']."&sortdir1=".$_GET['sortdir1']."&page1=".$_GET['page1']."&sort2=".$_GET['sort2']."&sortdir2=".$_GET['sortdir2']);?>
+  <?php paging2($no_pages,$index_val,"sort1=".(!empty($_GET['sort1']) ? $_GET['sort1'] : '')."&sortdir1=".(!empty($_GET['sortdir1']) ? $_GET['sortdir1'] : '')."&page1=".(!empty($_GET['page1']) ? $_GET['page1'] : '')."&sort2=".(!empty($_GET['sort2']) ? $_GET['sort2'] : '')."&sortdir2=".(!empty($_GET['sortdir2']) ? $_GET['sortdir2'] : ''));?>
 </span>
 <table id="completed_tasks" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
   <tr class="tr_bg_h">
     <td valign="top" class="col_head  <?php echo ($_REQUEST['sort2'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir2']):''; ?>" width="45%">
-      <a href="manage_tasks.php?sort1=<?php echo $_GET['sort1']; ?>&sortdir1=<?php echo $_GET['sortdir1']; ?>&page1=<?php echo $_GET['page1']; ?>&sort2=task&sortdir2=<?php echo ($_REQUEST['sort2']=='task'&&$_REQUEST['sortdir2']=='ASC')?'DESC':'ASC'; ?>">Task</a>
+      <a href="manage_tasks.php?sort1=<?php echo (!empty($_GET['sort1']) ? $_GET['sort1'] : ''); ?>&sortdir1=<?php echo (!empty($_GET['sortdir1']) ? $_GET['sortdir1'] : ''); ?>&page1=<?php echo (!empty($_GET['page1']) ? $_GET['page1'] : ''); ?>&sort2=task&sortdir2=<?php echo ($_REQUEST['sort2']=='task'&&$_REQUEST['sortdir2']=='ASC')?'DESC':'ASC'; ?>">Task</a>
     </td>
     <td valign="top" class="col_head  <?php echo ($_REQUEST['sort2'] == 'due_date')?'arrow_'.strtolower($_REQUEST['sortdir2']):''; ?>" width="20%">
-      <a href="manage_tasks.php?sort1=<?php echo $_GET['sort1']; ?>&sortdir1=<?php echo $_GET['sortdir1']; ?>&page1=<?php echo $_GET['page1']; ?>&sort2=due_date&sortdir2=<?php echo ($_REQUEST['sort2']=='due_date'&&$_REQUEST['sortdir2']=='ASC')?'DESC':'ASC'; ?>">Due Date</a>
+      <a href="manage_tasks.php?sort1=<?php echo (!empty($_GET['sort1']) ? $_GET['sort1'] : ''); ?>&sortdir1=<?php echo (!empty($_GET['sortdir1']) ? $_GET['sortdir1'] : ''); ?>&page1=<?php echo (!empty($_GET['page1']) ? $_GET['page1'] : ''); ?>&sort2=due_date&sortdir2=<?php echo ($_REQUEST['sort2']=='due_date'&&$_REQUEST['sortdir2']=='ASC')?'DESC':'ASC'; ?>">Due Date</a>
     </td>
     <td valign="top" class="col_head  <?php echo ($_REQUEST['sort2'] == 'responsible')?'arrow_'.strtolower($_REQUEST['sortdir2']):''; ?>" width="20%">
-      <a href="manage_tasks.php?sort1=<?php echo $_GET['sort1']; ?>&sortdir1=<?php echo $_GET['sortdir1']; ?>&page1=<?php echo $_GET['page1']; ?>&sort2=responsible&sortdir2=<?php echo ($_REQUEST['sort2']=='responsible'&&$_REQUEST['sortdir2']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
+      <a href="manage_tasks.php?sort1=<?php echo (!empty($_GET['sort1']) ? $_GET['sort1'] : ''); ?>&sortdir1=<?php echo (!empty($_GET['sortdir1']) ? $_GET['sortdir1'] : ''); ?>&page1=<?php echo (!empty($_GET['page1']) ? $_GET['page1'] : ''); ?>&sort2=responsible&sortdir2=<?php echo ($_REQUEST['sort2']=='responsible'&&$_REQUEST['sortdir2']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
     </td>
     <td valign="top" class="col_head" width="15%">
       Action
@@ -242,7 +242,7 @@ if(count($my) == 0){ ?>
 <?php
 } else {
   foreach ($my as $myarray) {?>
-  <tr class="<?php echo $tr_class;?> ">
+  <tr class="<?php echo (!empty($tr_class) ? $tr_class : '');?> ">
     <td valign="top">
       <?php echo st($myarray["task"]);?>&nbsp;
       <?php 

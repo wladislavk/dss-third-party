@@ -1,4 +1,4 @@
-<? 
+<?php 
 	include "includes/top.htm";
 	include_once "includes/constants.inc";
 
@@ -27,14 +27,14 @@
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head <?php echo  ($_GET['sort2'] == 'adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="40%">
-			<a href="?filter=<?php echo  $_GET['filter']; ?>&sort1=<?php echo  $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=adddate&dir2=<?php echo  ($_GET['sort2']=='adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
+		<td valign="top" class="col_head <?php echo  (!empty($_GET['sort2']) && $_GET['sort2'] == 'adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="40%">
+			<a href="?filter=<?php echo  (!empty($_GET['filter']) ? $_GET['filter'] : ''); ?>&sort1=<?php echo  (!empty($_GET['sort1']) ? $_GET['sort1'] : ''); ?>&dir1=<?php echo (!empty($_GET['dir1']) ? $_GET['dir1'] : ''); ?>&sort2=adddate&dir2=<?php echo  (!empty($_GET['sort2']) && $_GET['sort2']=='adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
 		</td>
-		<td valign="top" class="col_head <?php echo  ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
-			<a href="?filter=<?php echo  $_GET['filter']; ?>&sort1=<?php echo  $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=patient&dir2=<?php echo  ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
+		<td valign="top" class="col_head <?php echo  (!empty($_GET['sort2']) && $_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+			<a href="?filter=<?php echo  (!empty($_GET['filter']) ? $_GET['filter'] : ''); ?>&sort1=<?php echo  (!empty($_GET['sort1']) ? $_GET['sort1'] : ''); ?>&dir1=<?php echo (!empty($_GET['dir1']) ? $_GET['dir1'] : ''); ?>&sort2=patient&dir2=<?php echo  (!empty($_GET['sort2']) && $_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
 		</td>
-		<td valign="top" class="col_head <?php echo  ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
-			<a href="?filter=<?php echo  $_GET['filter']; ?>&sort1=<?php echo  $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=status&dir2=<?php echo  ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
+		<td valign="top" class="col_head <?php echo  (!empty($_GET['sort2']) && $_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+			<a href="?filter=<?php echo  (!empty($_GET['filter']) ? $_GET['filter'] : ''); ?>&sort1=<?php echo  (!empty($_GET['sort1']) ? $_GET['sort1'] : ''); ?>&dir1=<?php echo (!empty($_GET['dir1']) ? $_GET['dir1'] : ''); ?>&sort2=status&dir2=<?php echo  (!empty($_GET['sort2']) && $_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action
@@ -79,7 +79,7 @@
 				<tr>
 					<td colspan="4">
 			    		<?php 
-							$e_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."' ORDER BY adddate DESC LIMIT 1";
+							$e_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con,$myarray['insuranceid'])."' ORDER BY adddate DESC LIMIT 1";
 							$e_q = $db->getResults($e_sql);
 							foreach ($e_q as $electronic) {
 								$r = json_decode($electronic['response']);
@@ -89,7 +89,7 @@
 								  echo $error."<br />";
 								}
 
-								$r_sql = "SELECT * FROM dental_eligible_response WHERE reference_id !='' AND reference_id='".mysql_real_escape_string($electronic['reference_id'])."'";
+								$r_sql = "SELECT * FROM dental_eligible_response WHERE reference_id !='' AND reference_id='".mysqli_real_escape_string($con,$electronic['reference_id'])."'";
 								$r_q = $db->getResults($r_sql);
 
 								if ($r_q) foreach($r_q as $response){

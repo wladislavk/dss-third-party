@@ -1,19 +1,17 @@
 <?php 
-session_start();
-
 if(isset($_GET['addtopat'])){
 	$addtopat = $_GET['addtopat'];
 }
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");?>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
-if($_POST["referredbysub"] == 1)
+if(!empty($_POST["referredbysub"]) && $_POST["referredbysub"] == 1)
 {
 	if($_POST["ed"] != "")
 	{
 		$ed_sql = "update dental_referredby set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."',  notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."', preferredcontact = '".s_for($_POST["preferredcontact"])."' where referredbyid='".$_POST["ed"]."'";
-		$db->query($ed_sql) or die($ed_sql." | ".mysql_error());
+		$db->query($ed_sql);
 
 		// Check if required information is filled out on update
 		$referredby_info = 0;
@@ -21,9 +19,8 @@ if($_POST["referredbysub"] == 1)
 			$referredby_info = 1;
 		}
 		$sql = "UPDATE dental_referredby SET referredby_info = '".$referredby_info."' WHERE referredbyid = '".$_POST["ed"]."'";
-		$result = $db->query($sql) or die($sql." | ".mysql_error());
+		$result = $db->query($sql);
 
-		//echo $ed_sql.mysql_error();
 		$msg = "Edited Successfully";
 		$addedtopat = $_POST['addedtopat'];
 
@@ -101,10 +98,10 @@ if($_POST["referredbysub"] == 1)
 <body>
 
 <?php
-$thesql = "select * from dental_referredby where referredbyid='".$_REQUEST["ed"]."'";
+$thesql = "select * from dental_referredby where referredbyid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 $themyarray = $db->getRow($thesql);
 
-if($msg != ''){
+if(!empty($msg)){
 	$salutation = $_POST['salutation'];
 	$firstname = $_POST['firstname'];
 	$middlename = $_POST['middlename'];
@@ -163,13 +160,13 @@ if($themyarray["referredbyid"] != ''){
 <br /><br />
 	
 <?php 
-if($msg != '') {?>
+if(!empty($msg)) {?>
 <div align="center" class="red">
     <?php echo $msg;?>
 </div>
 <?php 
 }?>
-<form name="referredbyfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&addtopat=1&from=<?php echo $_GET['from']; ?>&from_id=<?php echo $_GET['from_id']; ?>" method="post" onSubmit="return referredbyabc(this)">
+<form name="referredbyfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&addtopat=1&from=<?php echo (!empty($_GET['from']) ? $_GET['from'] : ''); ?>&from_id=<?php echo (!empty($_GET['from_id']) ? $_GET['from_id'] : ''); ?>" method="post" onSubmit="return referredbyabc(this)">
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -399,8 +396,8 @@ if ($qualifier_my) foreach ($qualifier_my as $qualifier_myarray) {?>
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="tbox" tabindex="22">
-                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if(!empty($status) && $status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if(!empty($status) && $status == 2) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>
@@ -412,7 +409,7 @@ if ($qualifier_my) foreach ($qualifier_my as $qualifier_myarray) {?>
                 </span><br />
                 <input type="hidden" name="referredbysub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["referredbyid"]?>" />
-                <input type="hidden" name="addedtopat" value="<?php echo $_GET['addtopat']; ?>">
+                <input type="hidden" name="addedtopat" value="<?php echo (!empty($_GET['addtopat']) ? $_GET['addtopat'] : ''); ?>">
                 <input type="submit" value=" <?php echo $but_text?> Referred By" class="button" />
             </td>
         </tr>

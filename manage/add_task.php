@@ -1,22 +1,21 @@
 <?php
-session_start();
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <?php
 include("includes/calendarinc.php");
 
-if($_POST["taskadd"] == 1){
+if(!empty($_POST["taskadd"]) && $_POST["taskadd"] == 1){
 
-	$due_date = ($_POST['due_date']!='')?date('Y-m-d', strtotime($_POST['due_date'])):'';
+	$due_date = (!empty($_POST['due_date']))?date('Y-m-d', strtotime($_POST['due_date'])):'';
 	$sql = "INSERT INTO dental_task SET
-                task = '".mysql_real_escape_string($_POST['task'])."',
-                due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($due_date)))."',
-                userid = '".mysql_real_escape_string($_SESSION['userid'])."',
-                status = '".mysql_real_escape_string($_POST['status'])."',
-                patientid = '".mysql_real_escape_string($_POST['patientid'])."',
-                responsibleid = '".mysql_real_escape_string($_POST['responsibleid'])."'";
+                task = '".mysqli_real_escape_string($con,$_POST['task'])."',
+                due_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($due_date)))."',
+                userid = '".mysqli_real_escape_string($con,$_SESSION['userid'])."',
+                status = '".mysqli_real_escape_string($con,(!empty($_POST['status']) ? $_POST['status'] : ''))."',
+                patientid = '".mysqli_real_escape_string($con,$_POST['patientid'])."',
+                responsibleid = '".mysqli_real_escape_string($con,$_POST['responsibleid'])."'";
 	$db->query($sql);
 	$msg = "Task Added!";
 	?>
@@ -27,16 +26,16 @@ if($_POST["taskadd"] == 1){
 </script>
 
 <?php
-}elseif($_POST["taskedit"] == 1){
+}elseif(!empty($_POST["taskedit"]) && $_POST["taskedit"] == 1){
 
     $due_date = ($_POST['due_date']!='')?date('Y-m-d', strtotime($_POST['due_date'])):'';
     $sql = "UPDATE dental_task SET
-                task = '".mysql_real_escape_string($_POST['task'])."',
-                due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($due_date)))."',
-                userid = '".mysql_real_escape_string($_SESSION['userid'])."',
-                status = '".mysql_real_escape_string($_POST['status'])."',
-                responsibleid = '".mysql_real_escape_string($_POST['responsibleid'])."'
-                WHERE id='".mysql_real_escape_string($_POST['task_id'])."'";
+                task = '".mysqli_real_escape_string($con,$_POST['task'])."',
+                due_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($due_date)))."',
+                userid = '".mysqli_real_escape_string($con,$_SESSION['userid'])."',
+                status = '".mysqli_real_escape_string($con,$_POST['status'])."',
+                responsibleid = '".mysqli_real_escape_string($con,$_POST['responsibleid'])."'
+                WHERE id='".mysqli_real_escape_string($con,$_POST['task_id'])."'";
     $db->query($sql);
     $msg = "Task Added!";
         ?>
@@ -52,7 +51,7 @@ if(isset($_GET['id'])){
 
 $t_sql = "SELECT dt.*, p.firstname, p.lastname from dental_task dt 
             LEFT JOIN dental_patients p ON p.patientid=dt.patientid
-            WHERE dt.id='".mysql_real_escape_string($_GET['id'])."'";
+            WHERE dt.id='".mysqli_real_escape_string($con,$_GET['id'])."'";
 $task = $db->getRow($t_sql);
 }?>
 
@@ -66,21 +65,21 @@ $task = $db->getRow($t_sql);
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 
-<form name="notesfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid']?>" method="post" >
-    <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>" />
+<form name="notesfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>" method="post" >
+    <input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" />
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td class="cat_head" style="font-size:20px;">
 <?php
 if(isset($_GET['pid'])){
-    $p_sql = "SELECT firstname, lastname FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+    $p_sql = "SELECT firstname, lastname FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
     $pat = $db->getRow($p_sql);
     echo "Add a task about " . $pat['firstname'] . " " . $pat['lastname']; ?>
 <?php 
 }else{ ?>
             	Add new task	
 <?php 
-    if($task['firstname']!='' || $task['lastname']!=''){
+    if(!empty($task['firstname']) || !empty($task['lastname'])){
 		echo "(".$task['firstname']." ".$task['lastname'].")";
 	}
 } ?>
@@ -90,14 +89,14 @@ if(isset($_GET['pid'])){
             <td valign="top" class="frmhead">
                 <label>Task</label>
                 <span class="red">*</span>
-                <input style="width:500px;" type="text" name="task" value="<?php echo $task['task']; ?>" />
+                <input style="width:500px;" type="text" name="task" value="<?php echo (!empty($task['task']) ? $task['task'] : ''); ?>" />
             </td>
        	</tr>
         <tr>
             <td valign="top" class="frmhead">
                 <label>Due Date</label>
                 <span class="red">*</span>
-                <input type="text" name="due_date" id="due_date" class="calendar" value="<?php echo ($task['due_date'])?date('m/d/Y', strtotime($task['due_date'])):date('m/d/Y'); ?>" />
+                <input type="text" name="due_date" id="due_date" class="calendar" value="<?php echo (!empty($task['due_date']))?date('m/d/Y', strtotime($task['due_date'])):date('m/d/Y'); ?>" />
             </td>
         </tr>
         <tr>
@@ -106,10 +105,10 @@ if(isset($_GET['pid'])){
                 <span class="red">*</span>
                 <select name="responsibleid">
 <?php 
-$responsibleid = ($task['responsibleid'])?$task['responsibleid']:$_SESSION['userid'];
+$responsibleid = (!empty($task['responsibleid']))?$task['responsibleid']:$_SESSION['userid'];
 $r_sql = "SELECT * FROM dental_users
-            WHERE (userid='".mysql_real_escape_string($_SESSION['docid'])."' OR
-            docid='".mysql_real_escape_string($_SESSION['docid'])."') AND status=1 ";
+            WHERE (userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' OR
+            docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."') AND status=1 ";
 
 $r_q = $db->getResults($r_sql);
 foreach ($r_q as $responsible) {?>
@@ -121,7 +120,7 @@ foreach ($r_q as $responsible) {?>
         <tr>
             <td valign="top" class="frmhead">
                 <label>Completed:</label>
-                <input type="checkbox" value="1" name="status" <?php echo ($task['status']==1)?'checked="checked"':''; ?> />
+                <input type="checkbox" value="1" name="status" <?php echo (!empty($task['status']) && $task['status']==1)?'checked="checked"':''; ?> />
             </td>
         </tr>
 	<tr>

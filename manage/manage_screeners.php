@@ -1,33 +1,33 @@
 <?php 
-	require_once('includes/constants.inc');
 	include "includes/top.htm";
 	include "includes/similar.php";
+	include_once('includes/constants.inc');
 ?>
 
 <link rel="stylesheet" href="css/screener.css" />
 
 <?php
 	if (isset($_REQUEST['delid'])) {
-	  $sql = "DELETE FROM dental_screener where docid='".mysql_real_escape_string($_SESSION['docid'])."' AND id='".mysql_real_escape_string($_REQUEST['delid'])."'";
+	  $sql = "DELETE FROM dental_screener where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND id='".mysqli_real_escape_string($con,$_REQUEST['delid'])."'";
 	  $db->query($sql);
 	}
 
 	if(isset($_REQUEST['hst'])){
-	  $sql = "SELECT * FROM dental_screener WHERE id='".mysql_real_escape_string($_REQUEST['hst'])."'";
+	  $sql = "SELECT * FROM dental_screener WHERE id='".mysqli_real_escape_string($con,$_REQUEST['hst'])."'";
 	  $r = $db->getRow($sql);
 
-	  $sql = "SELECT * FROM dental_hst WHERE screener_id='".mysql_real_escape_string($r['id'])."'";
+	  $sql = "SELECT * FROM dental_hst WHERE screener_id='".mysqli_real_escape_string($con,$r['id'])."'";
 	  $h = $db->getRow($sql);
 
 	  $dob = ($h['patient_dob'] != '') ? date('m/d/Y', strtotime($h['patient_dob'])) : '';
 
 	  $pat_sql = "INSERT INTO dental_patients SET
-				  docid='".mysql_real_escape_string($r['docid'])."',
-				  firstname = '".mysql_real_escape_string($r['first_name'])."',
-	              lastname = '".mysql_real_escape_string($r['last_name'])."',
-	              cell_phone = '".mysql_real_escape_string($r['phone'])."',
-				  email = '".mysql_real_escape_string($h['patient_email'])."',
-				  dob = '".mysql_real_escape_string($dob)."',
+				  docid='".mysqli_real_escape_string($con,$r['docid'])."',
+				  firstname = '".mysqli_real_escape_string($con,$r['first_name'])."',
+	              lastname = '".mysqli_real_escape_string($con,$r['last_name'])."',
+	              cell_phone = '".mysqli_real_escape_string($con,$r['phone'])."',
+				  email = '".mysqli_real_escape_string($con,$h['patient_email'])."',
+				  dob = '".mysqli_real_escape_string($con,$dob)."',
 				  status='1',
 				  adddate = now(),
 				  ip_address = '".$_SERVER['REMOTE_ADDR']."'";
@@ -38,14 +38,14 @@
 	  $hst_sql = "UPDATE dental_hst SET
 				  patient_id = '".$pat_id."',
 				  status='".DSS_HST_PENDING."'
-				  WHERE screener_id=".mysql_real_escape_string($r['id']);
+				  WHERE screener_id=".mysqli_real_escape_string($con,$r['id']);
 
 	  $db->query($hst_sql);
 			
 	  $screener_sql = "UPDATE dental_screener SET
 					   patient_id = '".$pat_id."',
 					   contacted = '1'
-					   WHERE id=".mysql_real_escape_string($r['id']);
+					   WHERE id=".mysqli_real_escape_string($con,$r['id']);
 
 	  $db->query($screener_sql);
 ?>
@@ -61,7 +61,7 @@
 <?php
 	$rec_disp = 20;
 
-	if ($_REQUEST["page"] != "") {
+	if (!empty($_REQUEST["page"])) {
 		$index_val = $_REQUEST["page"];
 	} else {
 		$index_val = 0;
@@ -103,15 +103,15 @@
 			WHERE s.docid='".$_SESSION['docid']."' ";
 
 	if (isset($_GET['risk']) && $_GET['risk'] != '') {
-	  $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysql_real_escape_string($_GET['risk'])." ";
+	  $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysqli_real_escape_string($con,$_GET['risk'])." ";
 	}
 
 	if (isset($_GET['contacted']) && $_GET['contacted'] != '') {
-	  $sql .= " AND contacted = ".mysql_real_escape_string($_GET['contacted'])." ";
+	  $sql .= " AND contacted = ".mysqli_real_escape_string($con,$_GET['contacted'])." ";
 	}
 
 	if (isset($_GET['contacted_risk']) && $_GET['contacted_risk'] != '') {
-	  $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysql_real_escape_string($_GET['contacted_risk'])." ";
+	  $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysqli_real_escape_string($con,$_GET['contacted_risk'])." ";
 	  $sql .= " AND contacted = 0 ";
 	}
 
@@ -137,12 +137,12 @@
 <br /><br />&nbsp;<br />
 
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <div style="margin-left:20px;margin-bottom:10px;">
 
-	<?php if ($_GET['risk'] >= 10) { ?>
+	<?php if (!empty($_GET['risk']) && $_GET['risk'] >= 10) { ?>
 		<a href="manage_screeners.php" class="addButton">Show All</a>
 	<?php } else { ?>
 		<a href="manage_screeners.php?risk=10" class="addButton">Show High/Severe</a>
@@ -154,7 +154,7 @@
 		<a href="manage_screeners.php?contacted=0" class="addButton">Show Not Contacted</a>
 	<?php } ?>
 
-	<?php if ($_GET['contacted_risk'] >= 10) { ?>
+	<?php if (!empty($_GET['contacted_risk']) && $_GET['contacted_risk'] >= 10) { ?>
 		<a href="manage_screeners.php" class="addButton">Show All</a>
 	<?php } else { ?>
 		<a href="manage_screeners.php?contacted_risk=10" class="addButton">Show High/Severe NOT Contacted</a>
@@ -163,11 +163,11 @@
 </div>
 
 <div style="font-weight:bold; font-size: 14px; margin:0 auto; width: 300px; text-align:center;">
-	<?php if ($_GET['risk'] >= 10) { ?>
+	<?php if (!empty($_GET['risk']) && $_GET['risk'] >= 10) { ?>
 		<p>Showing High/Severe Patients only</p>
 	<?php } elseif (isset($_GET['contacted']) && $_GET['contacted'] == '0') { ?>
 		<p>Showing NOT contacted patients only</p>
-	<?php } elseif ($_GET['contacted_risk'] >= 10) { ?>
+	<?php } elseif (!empty($_GET['contacted_risk']) && $_GET['contacted_risk'] >= 10) { ?>
 	        <p>Showing High/Severe NOT contacted patients only</p>
 	<?php } else { ?>
 		<p>Showing ALL Patients</p>
@@ -181,7 +181,7 @@
 				<td align="right" colspan="15" class="bp">
 					Pages:
 					<?php
-						paging($no_pages,$index_val,"contacted=".$_GET['contacted']."&contacted_risk=".$_GET['contacted_risk']."&risk=".$_GET['risk']."&sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
+						paging($no_pages,$index_val,"contacted=".(!empty($_GET['contacted']) ? $_GET['contacted'] : '')."&contacted_risk=".(!empty($_GET['contacted_risk']) ? $_GET['contacted_risk'] : '')."&risk=".(!empty($_GET['risk']) ? $_GET['risk'] : '')."&sort=".(!empty($_GET['sort']) ? $_GET['sort'] : '')."&sortdir=".(!empty($_GET['sortdir']) ? $_GET['sortdir'] : ''));
 					?>
 				</td>
 			</tr>
@@ -267,11 +267,11 @@
 	                        <?php echo  st($myarray["phone"]); ?> 
 	                    </td>
 
-				        <?php if ($survey_total > 15 || $ep['ep_total'] > 18 || $sect3_total > 3) {	?>
+				        <?php if ($survey_total > 15 || !empty($ep) && $ep['ep_total'] > 18 || $sect3_total > 3) {	?>
 				        	<td valign="top" class="risk_severe"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">Severe</a></td>
-				        <?php } elseif ($survey_total > 11 || $ep['ep_total'] > 14 || $sect3_total > 2) { ?>
+				        <?php } elseif ($survey_total > 11 || !empty($ep) && $ep['ep_total'] > 14 || $sect3_total > 2) { ?>
 							<td valign="top" class="risk_high"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">High</a></td>
-						<?php } else if($survey_total > 7 || $ep['ep_total'] > 9 || $sect3_total > 1) { ?>
+						<?php } else if($survey_total > 7 || !empty($ep) && $ep['ep_total'] > 9 || $sect3_total > 1) { ?>
 							<td valign="top" class="risk_moderate"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">Moderate</a></td>
 						<?php } else { ?>
 							<td valign="top" class="risk_low"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">Low</a></td>
@@ -282,7 +282,7 @@
 						</td>
 
 	                    <td valign="top">
-							<?php echo  st($ep['ep_total']); ?>
+							<?php echo  st((!empty($ep['ep_total']) ? $ep['ep_total'] : '')); ?>
 	                    </td>
 
 						<td valign="top">
@@ -353,7 +353,7 @@
 								if($myarray['hst_status'] == DSS_HST_REQUESTED){
 							?>
 	                        	<?php
-									$sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+									$sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 									$sign_r = $db->getRow($sign_sql);
 									$user_sign = $sign_r['sign_notes'];
 
@@ -382,7 +382,7 @@
 						</td>
 
 						<td>
-							<a href="manage_screeners.php?delid=<?php echo  $myarray['id']; ?>&page=<?php echo  $_REQUEST['page']; ?>" onclick="return confirm('Are you sure you want to delete this screener?');">Delete</a>
+							<a href="manage_screeners.php?delid=<?php echo  $myarray['id']; ?>&page=<?php echo  (!empty($_REQUEST['page']) ? $_REQUEST['page'] : ''); ?>" onclick="return confirm('Are you sure you want to delete this screener?');">Delete</a>
 						</td>
 					</tr>
 
@@ -394,7 +394,7 @@
 								$ep_sql = "SELECT se.response, e.epworth 
 										   FROM dental_screener_epworth se
 										   JOIN dental_epworth e ON se.epworth_id =e.epworthid
-										   WHERE se.response > 0 AND se.screener_id='".mysql_real_escape_string($myarray['id'])."'";
+										   WHERE se.response > 0 AND se.screener_id='".mysqli_real_escape_string($con,$myarray['id'])."'";
 								
 								$ep_q = $db->getResults($ep_sql);
 								if (count($ep_q)) foreach ($ep_q as $ep_r) {

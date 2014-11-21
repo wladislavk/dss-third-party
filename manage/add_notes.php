@@ -40,12 +40,9 @@ if($_POST["notesub"] == 1)
 		        $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysql_real_escape_string($_POST['username'])."'";
         		$salt_q = mysql_query($salt_sql);
         		$salt_row = mysql_fetch_assoc($salt_q);
-
         		$pass = gen_password($_POST['password'], $salt_row['salt']);
-
-        		$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND sign_notes=1";
+        		$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
         		$check_my = mysql_query($check_sql);
-
         		if(mysql_num_rows($check_my) == 1)
         		{
 				$check_myarray = mysql_fetch_array($check_my);
@@ -108,10 +105,8 @@ if($_POST["notesub"] == 1)
                         $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysql_real_escape_string($_POST['username'])."'";
                         $salt_q = mysql_query($salt_sql);
                         $salt_row = mysql_fetch_assoc($salt_q);
-
                         $pass = gen_password($_POST['password'], $salt_row['salt']);
-
-                        $check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND sign_notes=1";
+                        $check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
                         $check_my = mysql_query($check_sql);
 
                         if(mysql_num_rows($check_my) == 1)

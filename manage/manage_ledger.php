@@ -566,7 +566,7 @@ return s;
 			<tr 
 			<?php if($myarray[0]=="claim"){ 
 				if(isset($_GET['inspay']) && $_GET['inspay']==1){
-					echo 'onclick="window.location=\'view_claim.php?inspay=1&claimid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; 
+					echo 'onclick="window.location=\'add_ledger_payments.php?cid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; 
 				}else{
 					echo 'onclick="window.location=\'view_claim.php?claimid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; 
 				} } ?>

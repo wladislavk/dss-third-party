@@ -1,7 +1,7 @@
 <?php
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "")
+if(!empty($_REQUEST["delid"]))
 {
 	$del_sql = "delete from dental_locations where id='".$_REQUEST["delid"]."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
 	$db->query($del_sql);
@@ -25,7 +25,7 @@ if(isset($_REQUEST['did'])){
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -59,7 +59,7 @@ $num_contact = count($my);
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
@@ -94,7 +94,7 @@ $num_contact = count($my);
 		{
 			foreach ($my as $myarray) {
 
-				if($myarray["status"] == 1)
+				if(!empty($myarray["status"]) && $myarray["status"] == 1)
 				{
 					$tr_class = "tr_active";
 				}

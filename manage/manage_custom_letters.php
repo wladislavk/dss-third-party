@@ -4,7 +4,7 @@ include "includes/top.htm";
 if(isset($_GET['delid']) && $_GET['delid']){
 
   $d = "UPDATE dental_letter_templates_custom SET status=2 WHERE docid='".$_SESSION['docid']."'
-  		AND id='".mysql_real_escape_string($_GET['delid'])."'";
+  		AND id='".mysqli_real_escape_string($con,$_GET['delid'])."'";
   $db->query($d);
 }
 
@@ -34,7 +34,7 @@ $num_contact = count($my);
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
@@ -58,10 +58,10 @@ $num_contact = count($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		if (!empty($my)) foreach ($my as $myarray)
 		{
 		?>
-			<tr class="<?php echo $tr_class;?>">
+			<tr class="<?php echo (!empty($tr_class) ? $tr_class : '');?>">
 				<td valign="top">
 					<?php echo st($myarray["name"]);?>
 				</td>

@@ -263,7 +263,7 @@ if (!isset($_SESSION['userid'])) {
   $hideallblocks = 0;
   if($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php" || $_SERVER['PHP_SELF'] == "/manage/manage_flowsheet4.php")
     {
-      $getstepqrysql = "SELECT * FROM dental_flow_pg2 WHERE patientid='".$_GET['pid']."' LIMIT 1;";
+      $getstepqrysql = "SELECT * FROM dental_flow_pg2 WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' LIMIT 1;";
 
       $stepquery = $db->getRow($getstepqrysql);
       $stepquery = array($stepquery['steparray']);
@@ -711,10 +711,10 @@ if (!isset($_SESSION['userid'])) {
 
           <?php if (isset($_GET['pid']) && $_GET['pid'] != '') { ?>
 
-            <div id="patient_name_div" <?php echo  (strlen($thename)>20)?'style="font-size:14px"':''; ?>>
+            <div id="patient_name_div" <?php echo  (!empty($thename) && strlen($thename)>20)?'style="font-size:14px"':''; ?>>
               <div id="patient_name_inner">
 
-               <?php if ($medicare) { ?>
+               <?php if (!empty($medicare)) { ?>
                  <img src="images/medicare_logo_small.png" /> 
 
                  <span class="medicare_name">
@@ -722,10 +722,10 @@ if (!isset($_SESSION['userid'])) {
                  <span class="name">
                <?php } ?>
 
-               <?php echo  $thename; ?>
+               <?php echo  (!empty($thename) ? $thename : ''); ?>
 
                <?php
-                  if ($premed == 1 || $allergen == 1) {
+                  if (!empty($premed) && $premed == 1 || !empty($allergen) && $allergen == 1) {
                     echo "<a href=\"q_page3.php?pid=".$_GET['pid']."\" title=\"".$title."\" style=\"font-weight:bold; font-size:18px; color:#FF0000;\">*Med</a>";
                   }
                ?>

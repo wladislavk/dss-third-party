@@ -7,7 +7,7 @@
     <script type="text/javascript" src="js/masks.js"></script>
 
 <?php
-    if($_POST["contactsub"] == 1) {
+    if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1) {
     	if($_POST["ed"] != "") {
     		$ed_sql = "update dental_locations set 
     				    location = '".mysql_real_escape_string($_POST["location"])."', 
@@ -66,7 +66,7 @@
             $thesql = "select * from dental_locations where id='".$_REQUEST["ed"]."'";
         	$themyarray = $db->getRow($thesql);
         	
-        	if($msg != '') {
+        	if(!empty($msg)) {
         		$location = $_POST['location'];
         		$name = $_POST['name'];
         		$address = $_POST['address'];
@@ -95,7 +95,7 @@
     	?>
 	    <br /><br />
 	
-	    <?php if($msg != '') { ?>
+	    <?php if(!empty($msg)) { ?>
             <div align="center" class="red">
                 <?php echo $msg;?>
             </div>
@@ -104,7 +104,7 @@
         <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
             <tr>
                 <td colspan="2" class="cat_head">
-                   <?php echo $but_text?> <?php echo $_GET['heading']; ?> Location 
+                   <?php echo $but_text?> <?php echo (!empty($_GET['heading']) ? $_GET['heading'] : ''); ?> Location 
                    <?php if($location <> "") { ?>
                    		&quot;<?php echo $location;?>&quot;
                    <?php } ?>
@@ -228,7 +228,7 @@
                         * Required Fields					
                     </span><br />
                     <input type="hidden" name="contactsub" value="1" />
-    		        <input type="hidden" name="docid" value="<?php echo  $_GET['docid']; ?>" />
+    		        <input type="hidden" name="docid" value="<?php echo  (!empty($_GET['docid']) ? $_GET['docid'] : ''); ?>" />
                     <input type="hidden" name="ed" value="<?php echo $themyarray["id"]?>" />
                     <input type="submit" value=" <?php echo $but_text?> Location" class="button" />
     		        <?php  if($themyarray["id"] != '') { ?>

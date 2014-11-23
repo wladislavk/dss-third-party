@@ -85,7 +85,7 @@ if(isset($_REQUEST['useid'])){
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -139,7 +139,7 @@ if($total_rec > 0){
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 
@@ -187,7 +187,7 @@ if($total_rec > 0){
 	{
 		foreach ($my as $myarray) {
 			$sim = similar_insurance($myarray['id']); ?>
-	<tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
+	<tr class="<?php echo (!empty($tr_class) ? $tr_class : '');?> <?php echo (!empty($myarray['viewed']))?'':'unviewed'; ?>">
 		<td valign="top">
 			<?php echo st($myarray["company"]);?> 
 		</td>

@@ -31,7 +31,7 @@ if ($rxlomnimgid != "") {
 }?>
 
 <div style="width:400px; clear:both; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">Insurance Documents</div>
-    <table width="100%" <?php print (!$medins  ? 'class="yellow"' : ''); ?> align="center">
+    <table width="100%" <?php print (empty($medins)  ? 'class="yellow"' : ''); ?> align="center">
         <tr style="vertical-align:middle;">
             <td>
                 <h3>Procedure</h3>

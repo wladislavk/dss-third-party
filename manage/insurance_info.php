@@ -1,7 +1,7 @@
 <div style="clear:both;"></div>
 <?php
 $status_sql = "SELECT status FROM dental_insurance
-                WHERE insuranceid='".mysql_real_escape_string($_GET['id'])."'";
+                WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."'";
 $status_r = $db->getRow($status_sql);
 $status = $status_r['status'];
 
@@ -13,15 +13,15 @@ $is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE
 $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
 $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED);
 
-$sql = "select * from dental_insurance where insuranceid='".$_GET['id']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_insurance where insuranceid='".(!empty($_GET['id']) ? $_GET['id'] : '')."' and patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarray = $db->getRow($sql);
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql);
 $docid = $pat_myarray['docid'];
 if($is_pri_pending){
   // Load patient info from dental_patients table using pid on query string
-  $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+  $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
   $pat_myarray = $db->getRow($pat_sql);
 
   $p_m_dss_file = $pat_myarray['p_m_dss_file'];
@@ -166,7 +166,7 @@ if($is_pri_pending){
 }
 $total_charge = st($myarray['total_charge']);
 
-$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['id'])."'";
+$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."'";
 $prod_r = $db->getRow($prod_s);
 
 $claim_producer = $prod_r['producer'];
@@ -186,31 +186,31 @@ if($userinfo){
 }
 $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
 $docinfo = $db->getRow($getdocinfo);
-if($phone == ""){ 
+if(empty($phone)){ 
   $phone = $docinfo['phone']; 
 }
-if($doc == ""){ 
+if(empty($doc)){ 
   $doc = $docinfo['first_name']." ".$docinfo['last_name']; 
 }
-if($practice == ""){ 
+if(empty($practice)){ 
   $practice = $docinfo['practice']; 
 }
-if($address == ""){ 
+if(empty($address)){ 
   $address = $docinfo['address']; 
 }
-if($city == ""){ 
+if(empty($city)){ 
   $city = $docinfo['city']; 
 }
-if($state == ""){ 
+if(empty($state)){ 
   $state = $docinfo['state']; 
 }
-if($zip == ""){
+if(empty($zip)){
   $zip = $docinfo['zip']; 
 }
-if($npi == ""){ 
+if(empty($npi)){ 
   $npi = $docinfo['npi']; 
 }
-if($medicare_npi == ""){ 
+if(empty($medicare_npi)){ 
   $medicare_npi = $docinfo['medicare_npi']; 
 }
 
@@ -260,8 +260,8 @@ $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS pla
      . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
      . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
      . "WHERE "
-     . "  ledger.primary_claim_id = '" . $_GET['id'] . "' "
-     . "  AND ledger.patientid = '" . $_GET['pid'] . "' "
+     . "  ledger.primary_claim_id = '" . (!empty($_GET['id']) ? $_GET['id'] : '') . "' "
+     . "  AND ledger.patientid = '" . (!empty($_GET['pid']) ? $_GET['pid'] : '') . "' "
      . "  AND ledger.docid = '" . $docid . "' "
      . "  AND trxn_code.docid = '" . $docid . "' "
      . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -280,7 +280,7 @@ if ($is_pending) {
            . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
            . "WHERE "
            . "  ledger.status = " . DSS_TRXN_PENDING . " "
-           . "  AND ledger.patientid = " . $_GET['pid'] . " "
+           . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
            . "  AND ledger.docid = " . $docid . " "
            . "  AND trxn_code.docid = " . $docid . " "
            . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -299,19 +299,19 @@ if ($is_pending) {
          . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
          . "WHERE "
          . "  ledger.status = " . DSS_TRXN_PENDING . " "
-         . "  AND ledger.patientid = " . $_GET['pid'] . " "
+         . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
          . "  AND ledger.docid = " . $docid . " "
          . "  AND trxn_code.docid = " . $docid . " "
          . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
          . "ORDER BY "
          . "  ledger.service_date ASC";
-  if($_GET['instype']==2 && $status == DSS_CLAIM_SEC_PENDING){
+  if(!empty($_GET['instype']) && $_GET['instype']==2 && $status == DSS_CLAIM_SEC_PENDING){
     $sql = "SELECT
             sum(dlp.amount) as amount_paid
             from dental_ledger dl
             LEFT JOIN dental_users p ON dl.producerid=p.userid
             LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-            where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."'
+            where dl.docid='".$docid."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
             AND primary_claim_id=".$_GET['insid']."
             AND dlp.amount != 0
             AND dlp.payer = 0
@@ -356,8 +356,8 @@ if ($is_pending) {
     <li><label>Billing Addr:</label> <span class="value"><?php echo $address; ?> <?php echo $city;?>, <?php echo $state;?> <?php echo $zip;?></span></li>
     <li><label>Billing Tax ID:</label> <span class="value"><?php echo $tax_id_or_ssn; ?></span></li>
     <li><label>Billing NPI:</label> <span class="value"><?php echo ($insurancetype == '1')?$medicare_npi:$npi; ?></span></li>
-    <li><label>Medicare Billing NPI:</label> <span class="value"><?php echo $medicare_npi; ?></span></li>
-    <li><label>Medicare PTAN:</label> <span class="value"><?php echo $medicare_ptan; ?></span></li>
+    <li><label>Medicare Billing NPI:</label> <span class="value"><?php echo (!empty($medicare_npi) ? $medicare_npi : ''); ?></span></li>
+    <li><label>Medicare PTAN:</label> <span class="value"><?php echo (!empty($medicare_ptan) ? $medicare_ptan : ''); ?></span></li>
   </ul>
 
   <ul>

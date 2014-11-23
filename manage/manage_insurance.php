@@ -3,8 +3,8 @@ include "includes/top.htm";
 include_once "includes/constants.inc";
 
 if(isset($_GET['vobdel'])){
-  $d = "DELETE FROM dental_insurance_preauth WHERE id='".mysql_real_escape_string($_GET['vobdel'])."'
-    		AND doc_id = '".mysql_real_escape_string($_SESSION['docid'])."'";
+  $d = "DELETE FROM dental_insurance_preauth WHERE id='".mysqli_real_escape_string($con,$_GET['vobdel'])."'
+    		AND doc_id = '".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
   $db->query($d);
 }?>
 
@@ -12,7 +12,7 @@ if(isset($_GET['vobdel'])){
 
 <div id="ins_info" class="fullwidth" style="display:none;">
   <a href="#" style="float:right;margin-right:20px;" onclick="$('#ins_info').hide(500);$('#ins_info_but').show();return false;" class="button"> Hide Ins. Info </a>
-  <a href="add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>#p_m_ins" style="float:right;margin-right:20px;" class="button"> Edit Insurance </a>
+  <a href="add_patient.php?ed=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&preview=1&addtopat=1&pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>#p_m_ins" style="float:right;margin-right:20px;" class="button"> Edit Insurance </a>
 
 <?php include 'insurance_info.php'; ?>
 

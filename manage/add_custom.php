@@ -2,7 +2,7 @@
     include_once('admin/includes/main_include.php');
     include("includes/sescheck.php");
 
-    if($_POST["customsub"] == 1) {
+    if(!empty($_POST["customsub"]) && $_POST["customsub"] == 1) {
     	if($_POST["ed"] != "") {
     		$ed_sql = "update dental_custom set title = '".s_for($_POST["title"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."' where customid='".$_POST["ed"]."'";
     		
@@ -41,11 +41,11 @@
 
     <body>
     <?php
-        $thesql = "select * from dental_custom where customid='".$_REQUEST["ed"]."'";
+        $thesql = "select * from dental_custom where customid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
     	
     	$themyarray = $db->getRow($thesql);
     	
-    	if($msg != '') {
+    	if(!empty($msg)) {
     		$title = $_POST['title'];
     		$description = $_POST['description'];
     	} else {
@@ -62,7 +62,7 @@
     	}
 	?>
 	<br /><br />
-	<?php if($msg != '') {?>
+	<?php if(!empty($msg)) {?>
         <div align="center" class="red">
             <?php echo $msg;?>
         </div>

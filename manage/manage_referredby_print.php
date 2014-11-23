@@ -1,5 +1,4 @@
 <?php 
-session_start();
 include_once "admin/includes/main_include.php";
 include_once 'includes/constants.inc';
 $sql = "select 
@@ -44,28 +43,30 @@ $sql = "select
                 AND p.referred_source=".DSS_REFERRED_PATIENT."
 		GROUP BY dp.patientid
 ";
-switch($_GET['sort']){
-  case 'type':
-    $sql .= " ORDER BY referral_type ".$_GET['sortdir'];
-    break;
-  case 'total':
-    $sql .= " ORDER BY num_ref ".$_GET['sortdir'];
-    break;
-  case 'thirty':
-    $sql .= " ORDER BY num_ref30 ".$_GET['sortdir'];
-    break;
-  case 'sixty':
-    $sql .= " ORDER BY num_ref60 ".$_GET['sortdir'];
-    break;
-  case 'ninty':
-    $sql .= " ORDER BY num_ref90 ".$_GET['sortdir'];
-    break;
-  case 'nintyplus':
-    $sql .= " ORDER BY num_ref90plus ".$_GET['sortdir'];
-    break;
-  default:
-    $sql .= " ORDER BY lastname ".$_GET['sortdir'].", firstname ".$_GET['sortdir'];
-    break;
+if (!empty($_GET['sort'])) {
+	switch($_GET['sort']){
+	  case 'type':
+	    $sql .= " ORDER BY referral_type ".$_GET['sortdir'];
+	    break;
+	  case 'total':
+	    $sql .= " ORDER BY num_ref ".$_GET['sortdir'];
+	    break;
+	  case 'thirty':
+	    $sql .= " ORDER BY num_ref30 ".$_GET['sortdir'];
+	    break;
+	  case 'sixty':
+	    $sql .= " ORDER BY num_ref60 ".$_GET['sortdir'];
+	    break;
+	  case 'ninty':
+	    $sql .= " ORDER BY num_ref90 ".$_GET['sortdir'];
+	    break;
+	  case 'nintyplus':
+	    $sql .= " ORDER BY num_ref90plus ".$_GET['sortdir'];
+	    break;
+	  default:
+	    $sql .= " ORDER BY lastname ".$_GET['sortdir'].", firstname ".$_GET['sortdir'];
+	    break;
+	}
 }
 
 $my = $db->getResults($sql);
@@ -84,7 +85,7 @@ $num_referredby = count($my);?>
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <link rel="stylesheet" href="css/manage.css" type="text/css" media="screen" />
@@ -92,25 +93,25 @@ $num_referredby = count($my);?>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 	<table width="98%" cellpadding="5" cellspacing="0" border="1" bgcolor="#FFFFFF" align="center" >
 		<tr class="tr_bg_h">
-			<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+			<td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 			Name
 			</td>
-			<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+			<td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 			Physician Type
 			</td>
-			<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'total')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'total')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			Total Referrals
 			</td>
-			<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'thirty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+			<td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'thirty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 				30 Days
 			</td>
-			<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'sixty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+			<td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'sixty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 				60 Days
 			</td>
-			<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+			<td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 				90 Days
 			</td>
-			<td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+			<td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 				90+ Days
 			</td>
 		</tr>
@@ -124,10 +125,10 @@ if($total_rec == 0){ ?>
 <?php 
 } else {
 	foreach ($my as $myarray) {
-		$pat_sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and referred_by='".$myarray["referredbyid"]."'";
+		$pat_sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and referred_by='".(!empty($myarray["referredbyid"]) ? $myarray["referredbyid"] : '')."'";
 		$pat_my = $db->getRow($pat_sql);
 		
-		if($myarray["status"] == 1){
+		if(!empty($myarray["status"]) && $myarray["status"] == 1){
 			$tr_class = "tr_active";
 		} else {
 			$tr_class = "tr_inactive";

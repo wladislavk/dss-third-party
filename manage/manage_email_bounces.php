@@ -1,6 +1,6 @@
 <?php 
-require_once('includes/constants.inc');
 include "includes/top.htm";
+include_once('includes/constants.inc');
 
 if(isset($_GET['rid'])){
 	$s = sprintf("UPDATE dental_patients SET email_bounce=0 WHERE patientid=%s AND docid=%s",$_REQUEST['rid'], $_SESSION['docid']);
@@ -8,7 +8,7 @@ if(isset($_GET['rid'])){
 }
 
 $rec_disp = 20;
-$sql = "SELECT * from dental_patients where email_bounce=1 AND docid=".mysql_real_escape_string($_SESSION['docid'])." ORDER BY lastname ASC, firstname ASC";
+$sql = "SELECT * from dental_patients where email_bounce=1 AND docid=".mysqli_real_escape_string($con,$_SESSION['docid'])." ORDER BY lastname ASC, firstname ASC";
 $total_rec = $db->getNumberRows($sql);
 $my = $db->getResults($sql);
 ?>
@@ -24,7 +24,7 @@ $my = $db->getResults($sql);
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 

@@ -1,10 +1,10 @@
-<? 
-require_once('includes/constants.inc');
+<?php 
 include "includes/top.htm";
+include_once('includes/constants.inc');
 
 if(isset($_GET['ceid']) && $_GET['ceid']!=''){
   $up_sql = "UPDATE dental_faxes SET viewed='1'
-	WHERE id='".mysql_real_escape_string($_GET['ceid'])."'
+	WHERE id='".mysqli_real_escape_string($con,$_GET['ceid'])."'
 	";
   $db->query($up_sql);
 }
@@ -23,7 +23,7 @@ $sql = "SELECT f.*,
         LEFT JOIN dental_patients p ON p.patientid = f.patientid
         LEFT JOIN dental_letters l ON l.letterid = f.letterid
         LEFT JOIN dental_fax_error_codes ec ON ec.error_code = f.sfax_error_code
-        WHERE f.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND
+        WHERE f.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND
         sfax_completed=1 AND sfax_status=2 AND
         viewed = 0";
 $sql .= " ORDER BY adddate DESC";
@@ -92,7 +92,7 @@ if (count($my)) {
             <?php if($myarray['pdf_path'] && $myarray['letter_status']!=DSS_LETTER_PENDING){ ?>
                 <a href="letterpdfs/<?php echo $myarray['pdf_path']; ?>"><?php echo $title; ?></a>
             <?php }else{ ?>
-                <a href="edit_letter.php?pid=<?php echo $myarray['patientid'];?>&lid=<?php echo $myarray['letterid']; ?>"><?php echo $title; ?></a>
+                <a href="edit_letter.php?pid=<?php echo $myarray['patientid'];?>&lid=<?php echo $myarray['letterid']; ?>"><?php echo $title['name']; ?></a>
             <?php } ?>
             </td>
             <td valign="top">
@@ -143,7 +143,7 @@ $sql = "SELECT f.*,
 	LEFT JOIN dental_letters l ON l.letterid = f.letterid
 	LEFT JOIN dental_letter_templates t ON t.id=l.templateid
 	LEFT JOIN dental_letter_templates_custom tc ON tc.id=l.templateid
-	WHERE f.docid='".mysql_real_escape_string($_SESSION['docid'])."' ";
+	WHERE f.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' ";
 
 if(isset($_REQUEST['filter'])){
     if($_REQUEST['filter'] == 'success'){
@@ -184,10 +184,10 @@ if(count($my)){
         <TD  colspan="3" class="bp">
             <label style="margin-left:20px;">Filter by status</label>
             <select onchange="updateFaxes(this.value)">
-                <option value="all"  <?php echo ($_GET['filter']== 'all')?'selected="selected"':''; ?>>All</option>
-                <option value="success" <?php echo ($_GET['filter']== 'success')?'selected="selected"':''; ?>>Success</option>
-                <option value="fail" <?php echo ($_GET['filter']== 'fail')?'selected="selected"':''; ?>>Fail</option>
-                <option value="deleted" <?php echo ($_GET['filter']== 'deleted')?'selected="selected"':''; ?>>Deleted</option>
+                <option value="all"  <?php echo (!empty($_GET['filter']) && $_GET['filter']== 'all')?'selected="selected"':''; ?>>All</option>
+                <option value="success" <?php echo (!empty($_GET['filter']) && $_GET['filter']== 'success')?'selected="selected"':''; ?>>Success</option>
+                <option value="fail" <?php echo (!empty($_GET['filter']) && $_GET['filter']== 'fail')?'selected="selected"':''; ?>>Fail</option>
+                <option value="deleted" <?php echo (!empty($_GET['filter']) && $_GET['filter']== 'deleted')?'selected="selected"':''; ?>>Deleted</option>
             </select>
 
 <script type="text/javascript">

@@ -1,10 +1,10 @@
 <?php
-require_once('includes/constants.inc');
 include "includes/top.htm";
+require_once('includes/constants.inc');
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -35,7 +35,7 @@ if(isset($_REQUEST['sortdir'])){
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT pc.parent_patientid, pc.firstname, pc.lastname FROM dental_patients pc 
 	JOIN dental_patients p ON p.patientid = pc.parent_patientid
-	WHERE p.docid=".mysql_real_escape_string($_SESSION['docid'])." AND pc.parent_patientid IS NOT NULL AND pc.parent_patientid != ''";
+	WHERE p.docid=".mysqli_real_escape_string($con,$_SESSION['docid'])." AND pc.parent_patientid IS NOT NULL AND pc.parent_patientid != ''";
 $sql .= "ORDER BY ".$sort." ".$dir;
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
@@ -56,7 +56,7 @@ $my = $db->getResults($sql);
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 
@@ -91,7 +91,7 @@ $my = $db->getResults($sql);
 	else
 	{
 		foreach ($my as $myarray) {?>
-	<tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
+	<tr class="<?php echo (!empty($tr_class) ? $tr_class : '');?> <?php echo (!empty($myarray['viewed']))?'':'unviewed'; ?>">
 		<td valign="top">
 			<?php echo st($myarray["firstname"]);?>&nbsp;
 			<?php echo st($myarray["lastname"]);?> 

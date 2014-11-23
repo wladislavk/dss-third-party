@@ -1,7 +1,7 @@
 <?php
 include "includes/top.htm";
-require_once('includes/dental_patient_summary.php');
-require_once('includes/patient_info.php');
+include_once('includes/dental_patient_summary.php');
+include_once('includes/patient_info.php');
 
 if ($patient_info)
 $sql = "SELECT  "
@@ -27,7 +27,7 @@ if(!isset($_GET['sort'])){
   $_GET['sortdir'] = 'desc';
 }
 
-if($_REQUEST["delid"] != "")
+if(!empty($_REQUEST["delid"]))
 {
   $pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
   $pat_my2 = $db->getResults($pat_sql2);
@@ -56,7 +56,7 @@ if($_REQUEST["delid"] != "")
 }
 
 if(isset($_REQUEST["delstatementid"]) && $_REQUEST["delstatementid"] != ""){
-  $sql = "DELETE FROM dental_ledger_statement WHERE id='".mysql_real_escape_string($_REQUEST['delstatementid'])."' AND patientid='".mysql_real_escape_string($_REQUEST['pid'])."'";
+  $sql = "DELETE FROM dental_ledger_statement WHERE id='".mysqli_real_escape_string($con,$_REQUEST['delstatementid'])."' AND patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
   $db->query($sql);
   $msg = "Deleted Successfully";
           ?>
@@ -67,7 +67,7 @@ if(isset($_REQUEST["delstatementid"]) && $_REQUEST["delstatementid"] != ""){
         die();
 }
 
-if($_REQUEST["delclaimid"] != "")
+if(!empty($_REQUEST["delclaimid"]))
 {
   $sql = "SELECT * FROM dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
   $q = $db->getResults($sql);
@@ -95,10 +95,10 @@ if($_REQUEST["delclaimid"] != "")
   
 }
 
-if($_REQUEST["delnoteid"] != "")
+if(!empty($_REQUEST["delnoteid"]))
 {
 
-  $sql = "DELETE FROM dental_ledger_note WHERE id='".mysql_real_escape_string($_REQUEST['delnoteid'])."' AND patientid='".mysql_real_escape_string($_REQUEST['pid'])."'";
+  $sql = "DELETE FROM dental_ledger_note WHERE id='".mysqli_real_escape_string($con,$_REQUEST['delnoteid'])."' AND patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
         $q = mysql_query($sql);
          if($q){
 
@@ -126,7 +126,7 @@ $pat_myarray = $db->getRow($pat_sql);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
 
-if($pat_myarray['patientid'] == '')
+if(empty($pat_myarray['patientid']))
 {
   ?>
   <script type="text/javascript">
@@ -138,13 +138,13 @@ if($pat_myarray['patientid'] == '')
 
 $rec_disp = 2000;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
   $index_val = $_REQUEST["page"];
 else
   $index_val = 0;
   
 $i_val = $index_val * $rec_disp;
-if($_GET['openclaims']==1){
+if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
   $sql = "SELECT
             'claim',
             i.insuranceid as ledgerid,
@@ -408,7 +408,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 </script>
 
 <div align="right">
-<?php if($_GET['openclaims']==1){ ?>
+<?php if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){ ?>
   <button onclick="Javascript: window.location='manage_ledger.php?<?php echo 'pid='.$_GET['pid'];?>';" class="addButton">
     View All 
   </button>
@@ -444,7 +444,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 <?php if(isset($_GET['inspay']) && $_GET['inspay']==1){ ?>
   Please select claim below to apply insurance payment.
 <?php }else{ ?>
-  <b><?php echo $_GET['msg'];?></b>
+  <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 <?php } ?>
 </div>
 
@@ -460,31 +460,31 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 <?php }?>
     <tr class="tr_bg_h">
       <td valign="top" class="col_head  <?php echo ($_GET['sort'] == 'service_date')?'arrow_'.strtolower($_GET['sortdir']):''; ?>" width="10%">
-        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=service_date&sortdir=<?php echo ($_GET['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
+        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=service_date&sortdir=<?php echo ($_GET['sort']=='service_date'&&(!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
       </td>
-      <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>
+      <td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower((!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')):''; ?>" width="10%">
+        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=entry_date&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='entry_date'&&(!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>
       </td>
-      <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'producer')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
-        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=producer&sortdir=<?php echo ($_REQUEST['sort']=='producer'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Producer</a>
+      <td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'producer')?'arrow_'.strtolower((!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')):''; ?>" width="30%">
+        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=producer&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='producer'&&(!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')=='ASC')?'DESC':'ASC'; ?>">Producer</a>
       </td>
-      <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'description')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
-        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description</a>
+      <td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'description')?'arrow_'.strtolower((!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')):''; ?>" width="30%">
+        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=description&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='description'&&(!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')=='ASC')?'DESC':'ASC'; ?>">Description</a>
       </td>
-      <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=amount&sortdir=<?php echo ($_REQUEST['sort']=='amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Charges</a>
+      <td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'amount')?'arrow_'.strtolower((!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')):''; ?>" width="10%">
+        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=amount&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='amount'&&(!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')=='ASC')?'DESC':'ASC'; ?>">Charges</a>
       </td>
-      <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits</a>
+      <td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower((!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')):''; ?>" width="10%">
+        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=paid_amount&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='paid_amount'&&(!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')=='ASC')?'DESC':'ASC'; ?>">Credits</a>
       </td>
-      <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Adjustments</a>
+      <td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower((!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')):''; ?>" width="10%">
+        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=paid_amount&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='paid_amount'&&(!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')=='ASC')?'DESC':'ASC'; ?>">Adjustments</a>
       </td>
       <td valign="top" class="col_head" width="10%">
         Balance
       </td>
-      <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
-        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
+      <td valign="top" class="col_head <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'status')?'arrow_'.strtolower((!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : '')):''; ?>" width="5%">
+        <a href="manage_ledger.php?pid=<?php echo $_GET['pid'] ?>&sort=status&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
       </td>
       <td valign="top" class="col_head" width="20%">
         History
@@ -689,7 +689,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       if($myarray['ledger'] == 'ledger_paid'){
         echo $dss_trxn_status_labels[$myarray["status"]]; 
       }elseif($myarray['ledger']=='claim' || $myarray['ledger'] == 'ledger'){
-        echo $dss_claim_status_labels[$myarray["status"]];
+        echo (!empty($dss_claim_status_labels[$myarray["status"]]) ? $dss_claim_status_labels[$myarray["status"]] : '');
       }
             //if($myarray["status"] == '0'){echo "Pend.";}
             //if($myarray["status"] == '1'){echo "Sent ";}
@@ -711,7 +711,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       // column 'edit_ledger_entries' is exist in 'dental_users' table
       // $pla_sql = "SELECT edit_ledger_entries FROM dental_users where userid='".$_SESSION['userid']."'";
       // $pla = $db->getRow($pla_sql);
-        if($pla['edit_ledger_entries'] != '1' && $_SESSION['docid']!=$_SESSION['userid']){?>
+        if(!empty($pla) && $pla['edit_ledger_entries'] != '1' && $_SESSION['docid']!=$_SESSION['userid']){?>
                                     onclick="alert('You do not have permission to edit ledger entries.  Please contact your office manager to resolve this issue.');" 
 <?php 
         }else{ ?>
@@ -798,11 +798,12 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       LEFT JOIN admin a ON a.adminid=dl.updated_by_admin
                           where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
                           and (dl.paid_amount IS NULL || dl.paid_amount = 0)
-                  AND dl.ledgerid = '".mysql_real_escape_string($myarray['ledgerid'])."'
+                  AND dl.ledgerid = '".mysqli_real_escape_string($con,$myarray['ledgerid'])."'
       ORDER BY dl.updated_at ASC
       ";
-        $h_q = $db->getResults($h_sql);
-        if ($h_q) {
+        //$h_q = $db->getResults($h_sql);
+        //Table 'dentalsl_site_dev.dental_ledger_history' doesn't exist
+        if (!empty($h_q)) {
           foreach ($h_q as $h_r) {?>  
     <tr class="history_<?php echo $myarray['ledgerid']; ?>" style="display:none;">
       <td><?php echo $h_r['updated_at']; ?></td>

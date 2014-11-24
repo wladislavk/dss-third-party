@@ -1,3 +1,5 @@
+<?php include_once 'admin/includes/main_include.php';
+      include_once 'includes/constants.inc' ?>
 
 <div class="fullwidth">
   <h3>Charges</h3>
@@ -8,7 +10,7 @@
                 JOIN dental_patients p ON p.patientid=dl.patientid
                 WHERE amount != '' 
                 AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' 
-            		".$lpsql." ".$l_date."
+            		".(!empty($lpsql) ? $lpsql : '')." ".(!empty($l_date) ? $l_date : '')."
                 ";
 	if(isset($_GET['pid'])){
 		$ch_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
@@ -34,7 +36,7 @@
                 WHERE dlp.amount != '' 
                 AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'
 		AND tc.type != '".DSS_TRXN_TYPE_ADJ."'
-		".$lpsql." ".$p_date."
+		".(!empty($lpsql) ? $lpsql : '')." ".(!empty($p_date) ? $p_date : '')."
 		";
         if(isset($_GET['pid'])){
                 $cr_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
@@ -53,7 +55,7 @@
                 WHERE paid_amount != '' 
                 AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' 
                 AND tc.type != '".DSS_TRXN_TYPE_ADJ."'
-                ".$lpsql." ".$l_date."
+                ".(!empty($lpsql) ? $lpsql : '')." ".(!empty($l_date) ? $l_date : '')."
                 ";
   if(isset($_GET['pid'])){
     $cr2_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
@@ -79,7 +81,7 @@
                 WHERE paid_amount != '' 
                 AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' 
                 AND tc.type = '".DSS_TRXN_TYPE_ADJ."'
-            		".$lpsql." ".$l_date."
+            		".(!empty($lpsql) ? $lpsql : '')." ".(!empty($l_date) ? $l_date : '')."
                 ";
   if(isset($_GET['pid'])){
     $adj_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";

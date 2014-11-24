@@ -6,29 +6,29 @@
 ?>
   <script type="text/javascript" src="../admin/script/jquery-1.6.2.min.js"></script>
 <?php if(isset($_REQUEST['submit'])) {
-        $sql = "SELECT * FROM dental_ex_page5 where patientid='".$_GET['pid']."'";
+        $sql = "SELECT * FROM dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
         
         if($db->getNumberRows($sql) == 0){
           $sqlex = "INSERT INTO dental_ex_page5 set 
-                    dentaldevice='".mysql_real_escape_string($_REQUEST['dentaldevice'])."', 
-                    patientid='".$_GET['pid']."',
+                    dentaldevice='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."', 
+                    patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."',
                     userid = '".s_for($_SESSION['userid'])."',
                     docid = '".s_for($_SESSION['docid'])."',
                     adddate = now(),
                     ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
         } else {
-          $sqlex = "update dental_ex_page5 set dentaldevice='".mysql_real_escape_string($_REQUEST['dentaldevice'])."' where patientid='".$_GET['pid']."'";
+          $sqlex = "update dental_ex_page5 set dentaldevice='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."' where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
         }
 
         $qex = $db->query($sqlex);
         $flow_sql = "UPDATE dental_flow_pg2_info SET
-                		 device_id='".mysql_real_escape_string($_REQUEST['dentaldevice'])."'
-                		 WHERE id='".mysql_real_escape_string($_GET['id'])."'";
+                		 device_id='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."'
+                		 WHERE id='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."'";
         
         $db->query($flow_sql);
 ?>
         <script type="text/javascript">
-          parent.updateDentalDevice('<?php echo  $_GET['id']; ?>', '<?php echo  $_REQUEST['dentaldevice']; ?>');
+          parent.updateDentalDevice('<?php echo  (!empty($_GET['id']) ? $_GET['id'] : ''); ?>', '<?php echo  $_REQUEST['dentaldevice']; ?>');
           parent.disablePopup1();
         </script>
 <?php } ?>
@@ -43,15 +43,15 @@
   </head>
   <body>
     <?php
-      $s = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_GET['pid'])."'";
+      $s = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
       $r = $db->getRow($s);
     ?>
 
     <h2 style="margin-top:20px;">What device will you make for <?php echo  $r['firstname']." ".$r['lastname']; ?>?</h2>
-    <a href="device_guide.php?pid=<?php echo  $_GET['pid']; ?>&id=<?php echo  $_GET['id']; ?>">Help me decide</a>
+    <a href="device_guide.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&id=<?php echo  (!empty($_GET['id']) ? $_GET['id'] : ''); ?>">Help me decide</a>
     <?php
-      $sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+      $sqlex = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
       $myarrayex = $db->getRow($sqlex);
       $dentaldevice = st($myarrayex['dentaldevice']);

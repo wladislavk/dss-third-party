@@ -1,11 +1,11 @@
 <?php
 	include_once '../admin/includes/main_include.php';
 
-	$f = $_POST['field'];
-	$v = $_POST['val'];
-	$p = $_POST['pid'];
-	$t = $_POST['table'];
-	$s = "UPDATE ".mysql_real_escape_string($t)." SET ".mysql_real_escape_string($f)."='".mysql_real_escape_string($v)."' WHERE patientid='".mysql_real_escape_string($p)."' OR parent_patientid='".mysql_real_escape_string($p)."'";
+	$f = (!empty($_POST['field']) ? $_POST['field'] : '');
+	$v = (!empty($_POST['val']) ? $_POST['val'] : '');
+	$p = (!empty($_POST['pid']) ? $_POST['pid'] : '');
+	$t = (!empty($_POST['table']) ? $_POST['table'] : '');
+	$s = "UPDATE ".mysqli_real_escape_string($con,$t)." SET ".mysqli_real_escape_string($con,$f)."='".mysqli_real_escape_string($con,$v)."' WHERE patientid='".mysqli_real_escape_string($con,$p)."' OR parent_patientid='".mysqli_real_escape_string($con,$p)."'";
 	
 	$q = $db->query($s);
 	if($q){

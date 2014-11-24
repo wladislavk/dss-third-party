@@ -2,27 +2,27 @@
   include_once '../admin/includes/main_include.php';
   include_once 'letter_triggers.php';
 
-  $id = $_REQUEST['id'];
-  $pid = $_REQUEST['pid'];
+  $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
+  $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
   $numsteps = null;
   $impression = true;
   $letterid = array();
   $create = true;
 
 
-  $let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 
   $let_r = $db->getRow($let_sql);
   $create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
   if($id == "7" || $id == "4"){  //device deliver - check if impressions are done
 
-    $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysql_real_escape_string($pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+    $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysqli_real_escape_string($con,$pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
     $imp_q = $db->getResults($imp_s);
     $imp_n = count($imp_q);
     if($imp_n == 0){
   	  $impression=false;
     }else{
-      $imp_r = $imp_q[0];
+      $imp_r = (!empty($imp_q[0]) ? $imp_q[0] : array());
       $impression = $imp_r['device_id'];
     }
   }
@@ -45,13 +45,13 @@
 
   }
 
-if($create){
+if(!empty($create)){
   $s = "INSERT INTO dental_flow_pg2_info SET
         patientid= ".$pid.",
         segmentid = ".$id.",
 		    appointment_type = 1,";
 
-  if($impression){
+  if(!empty($impression)){
 		$s .= " device_id='".$impression."',";
 	}
 
@@ -59,15 +59,16 @@ if($create){
   $q = $db->query($s);
   $insert_id = $db->getInsertId($s);
 
-	if($q){ 
-	  $db->query("DELETE FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysql_real_escape_string($pid)."'");
+	if(!empty($q)){ 
+	  $db->query("DELETE FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysqli_real_escape_string($con,$pid)."'");
 	}
 
-  if($create_letters){
+  if(!empty($create_letters)){
     if ($id == "8") { // Follow-Up/Check
       $trigger_query = "SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2_info WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2_info.patientid = '".$pid."';";
 
       $numrows = ($db->getNumberRows($trigger_query));
+      $letterid = array();
       if ($numrows > 0) {
         $letterid[] = trigger_letter16($pid, $insert_id);
       }
@@ -94,7 +95,7 @@ if($create){
     }
 	}
 
-  if($create_letters){ 
+  if(!empty($create_letters)){ 
     // Delaying Treatment / Waiting
     if ($consulted == true && $id == "5") {
       $letterid[] = trigger_letter10($pid, $insert_id);
@@ -125,7 +126,7 @@ if($create){
     }
   }
 
-  if($letterid){
+  if(!empty($letterid)){
   	$letterid = array_unique($letterid);
     while(($key = array_search('0', $letterid)) !== false) {
       unset($letterid[$key]);
@@ -139,14 +140,14 @@ if($create){
     $dental_letters_query = "SELECT patientid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$pid."' AND (letterid IN(".$letteridlist.") OR parentid IN(".$letteridlist.")) ;";
     $dental_letters_res = $db->getResults($dental_letters_query);
     $dental_letters = array();
-    if ($dental_letters_res) foreach ($dental_letters_res as $row) {
+    if (!empty($dental_letters_res)) foreach ($dental_letters_res as $row) {
       $dental_letters[] = $row;
       $contacts = get_contact_info((($row['topatient'] == "1") ? $row['patientid'] : ''), $row['md_list'], $row['md_referral_list']);
       $letter_count += count($contacts['patient'])+count($contacts['md_referrals'])+count($contacts['mds']);
 	  }
   }
 
-  $segments = Array();
+  $segments = array();
   $segments[1] = "Initial Contact";
   $segments[15] = "Baseline Sleep Test";
   $segments[2] = "Consult";
@@ -168,17 +169,17 @@ if($create){
   $next = "<option value=''>SELECT NEXT STEP</option>";
   $next_sql = "SELECT steps.* FROM dental_flowsheet_steps steps
           JOIN dental_flowsheet_steps_next next ON steps.id = next.child_id
-          WHERE next.parent_id='".mysql_real_escape_string($id)."'
+          WHERE next.parent_id='".mysqli_real_escape_string($con,$id)."'
           ORDER BY next.sort_by ASC";
 
   $next_q = $db->getResults($next_sql);
-  if ($next_q) foreach ($next_q as $next_r){
+  if (!empty($next_q)) foreach ($next_q as $next_r){
     $next .= "<option value='".$next_r['id']."'>".$next_r['name']."</option>";
   }
 }
 
-$impression_json = ($impression)?$impression:'false';
-if($s){
+$impression_json = (!empty($impression)) ? $impression : 'false';
+if(!empty($s)){
   echo '{"success":true, "datecomp":"'.date('m/d/Y').'", "id":"'.$insert_id.'", "next_steps":"'.$next.'", "title":"'.$title.'", "letters":"'.$letter_count.'", "impression":'.$impression_json.'}';
 }else{
   echo '{"error":true}';

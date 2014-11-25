@@ -113,7 +113,7 @@ if ($patient_info) {
 
   $b_sql = "SELECT * FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,(!empty($_SESSION['docid']) ? $_SESSION['docid'] : ''))."'";
   $b_q = $db->getRow($b_sql);
-  if($b_q && $b_q['exclusive']){
+  if(!empty($b_q) && !empty($b_q['exclusive'])){
     $exclusive_billing = $b_r['exclusive'];
   }else{
     $exclusive_billing = 0;

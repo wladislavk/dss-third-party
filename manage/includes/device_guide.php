@@ -15,20 +15,20 @@
       
       if($db->getNumberRows($sql) == 0) {
         $sqlex = "INSERT INTO dental_ex_page5 set 
-                  dentaldevice='".mysql_real_escape_string($_REQUEST['dentaldevice'])."', 
+                  dentaldevice='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."', 
                   patientid='".$_GET['pid']."',
                   userid = '".s_for($_SESSION['userid'])."',
                   docid = '".s_for($_SESSION['docid'])."',
                   adddate = now(),
                   ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
       }else{
-        $sqlex = "update dental_ex_page5 set dentaldevice='".mysql_real_escape_string($_REQUEST['dentaldevice'])."' where patientid='".$_GET['pid']."'";
+        $sqlex = "update dental_ex_page5 set dentaldevice='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."' where patientid='".$_GET['pid']."'";
       }
 
       $qex = $db->query($sqlex);
       $flow_sql = "UPDATE dental_flow_pg2_info SET
-                   device_id='".mysql_real_escape_string($_REQUEST['dentaldevice'])."'
-                   WHERE id='".mysql_real_escape_string($_GET['id'])."'";
+                   device_id='".mysqli_real_escape_string($con,$_REQUEST['dentaldevice'])."'
+                   WHERE id='".mysqli_real_escape_string($con,$_GET['id'])."'";
 
       $db->query($flow_sql);
 ?>
@@ -66,7 +66,7 @@
   </div>
 
   <?php
-    $s = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_GET['pid'])."'";
+    $s = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
     $r = $db->getRow($s);
   ?>
 
@@ -97,7 +97,7 @@
           <input type="hidden" name="setting<?php echo  $s_r['id'];?>" id="input_opt_<?php echo  $s_r['id'];?>" />
           
           <?php
-            $o_sql = "SELECT * FROM dental_device_guide_setting_options WHERE setting_id='".mysql_real_escape_string($s_r['id'])."' ORDER BY option_id ASC";
+            $o_sql = "SELECT * FROM dental_device_guide_setting_options WHERE setting_id='".mysqli_real_escape_string($con,$s_r['id'])."' ORDER BY option_id ASC";
             
             $o_q = $db->getResults($o_sql);
             $setting_options = count($o_q);

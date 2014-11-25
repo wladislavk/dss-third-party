@@ -3,7 +3,7 @@
 	include("includes/sescheck.php");
 	include_once('admin/includes/password.php');
 
-	$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+	$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 	
 	$r = $db->getRow($sql);
 	if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1) {
@@ -20,9 +20,9 @@
 	<link rel="stylesheet" href="/manage/admin/css/jquery-ui-1.8.22.custom.css" />
 	<link rel="stylesheet" href="css/modal.css" />
 <?php
-	if($_POST["staffsub"] == 1) {
+	if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
 		$classname = strtolower(str_replace('.','',str_replace('/','',str_replace(' ', '_', $_POST['name']))));
-		$sel_check = "select * from dental_appt_types where docid='".mysql_real_escape_string($_SESSION['docid'])."' AND (name = '".s_for($_POST["name"]) . "' or classname='" . $classname . "') and id <> '" . $_POST['ed']."'";
+		$sel_check = "select * from dental_appt_types where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND (name = '".s_for($_POST["name"]) . "' or classname='" . $classname . "') and id <> '" . $_POST['ed']."'";
 		
 		if($db->getNumberRows($sel_check)>0)
 		{
@@ -35,7 +35,7 @@
 <?php
 		} else {
 			if($_POST["ed"] != "") {
-	            $old_sql = "SELECT name, classname FROM dental_appt_types WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND id='".mysql_real_escape_string($_POST["ed"])."'";
+	            $old_sql = "SELECT name, classname FROM dental_appt_types WHERE docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND id='".mysqli_real_escape_string($con,$_POST["ed"])."'";
 	            
 	            $old_r = $db->getRow($old_sql);
 	            $old_name = $old_r['name'];
@@ -48,7 +48,7 @@
 
 				$db->query($ed_sql);
 
-				$update_sql = "update dental_calendar SET category='".mysql_real_escape_string($classname)."' WHERE category='".mysql_real_escape_string($old_class)."' and docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+				$update_sql = "update dental_calendar SET category='".mysqli_real_escape_string($con,$classname)."' WHERE category='".mysqli_real_escape_string($con,$old_class)."' and docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 				$db->query($update_sql);
 				$msg = "Edited Successfully" . $_POST['name'];
 ?>
@@ -58,7 +58,7 @@
 <?php
 				die();
 			} else {
-				$ins_sql = "insert into dental_appt_types (name, color, classname, docid) values ('".s_for($_POST["name"])."', '" . $_POST['color'] . "', '" . $classname . "', '".mysql_real_escape_string($_SESSION['docid'])."')";
+				$ins_sql = "insert into dental_appt_types (name, color, classname, docid) values ('".s_for($_POST["name"])."', '" . $_POST['color'] . "', '" . $classname . "', '".mysqli_real_escape_string($con,$_SESSION['docid'])."')";
 	            $userid = $db->getInsertId($ins_sql);
 				$msg = "Added Successfully";
 ?>
@@ -82,11 +82,11 @@
 
 	<body>
 	    <?php
-		    $thesql = "select * from dental_appt_types where id='".$_REQUEST["ed"]."'";
+		    $thesql = "select * from dental_appt_types where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 			
 			$themyarray = $db->getRow($thesql);
 			
-			if($msg != '') {
+			if(!empty($msg)) {
 				$name = $_POST['name'];
 				$color = $_POST['color'];
 			} else {
@@ -102,7 +102,7 @@
 		?>
 			<br /><br />
 	
-		<?php if($msg != '') { ?>
+		<?php if(!empty($msg)) { ?>
 		    <div align="center" class="red">
 		        <?php echo $msg;?>
 		    </div>
@@ -145,7 +145,7 @@
 			                <input type="submit" value=" <?php echo $but_text?> Appointment Type" class="button" />
 							<?php if($themyarray["id"] != '') { ?>
 								<?php
-								  $l_sql = "SELECT * from dental_login WHERE userid='".mysql_real_escape_string($themyarray['id'])."'";
+								  $l_sql = "SELECT * from dental_login WHERE userid='".mysqli_real_escape_string($con,$themyarray['id'])."'";
 								  
 								  $logins = $db->getNumberRows($l_sql);
 								?>

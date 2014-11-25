@@ -29,8 +29,7 @@
 	$nights_wear_cpap = st($q2_myarray['nights_wear_cpap']);
 	$percent_night_cpap = st($q2_myarray['percent_night_cpap']);
 	$sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
-	
-	$my = mysql_query($sql);
+
 	$myarray = $db->getRow($sql);
 	$summaryid = st($myarray['summaryid']);
 	$patient_name = st($myarray['patient_name']);
@@ -237,8 +236,7 @@ $main_disp .= $m_val."
 				asort($c_seq );
 				foreach($c_seq as $i=>$val) {
 					$comp_sql = "select * from dental_complaint where status=1 and complaintid='".$c_id[$i]."'";
-					$comp_my = mysql_query($comp_sql);
-					$comp_myarray = mysql_fetch_array($comp_my);		
+					$comp_myarray = $db->getRow($comp_sql);		
 					$reason_seeking_tx .= st($comp_myarray['complaint'])."\n";
 				}
 				

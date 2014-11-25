@@ -5,7 +5,7 @@
     include('includes/edx_functions.php');
     include_once 'includes/help_functions.php';
 
-    $sql = "SELECT manage_staff FROM dental_users WHERE userid = '".mysql_real_escape_string($_SESSION['userid'])."'";
+    $sql = "SELECT manage_staff FROM dental_users WHERE userid = '".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
     
     $r = $db->getRow($sql);
     if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1) {
@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="css/modal.css" />
 
 <?php
-    if($_POST["staffsub"] == 1) {
+    if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
     	$sel_check = "select * from dental_users where username = '" . s_for($_POST["username"]) . "' and userid <> '" . s_for($_POST['ed']) . "'";
         $sel_check2 = "select * from dental_users where email = '" . s_for($_POST["email"]) . "' and userid <> '" . s_for($_POST['ed']) . "'";
     	
@@ -45,7 +45,7 @@
 <?php
         } else {
     		if($_POST["ed"] != "") {
-                $old_sql = "SELECT username FROM dental_users WHERE userid='".mysql_real_escape_string($_POST["ed"])."'";
+                $old_sql = "SELECT username FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_POST["ed"])."'";
                 
                 $old_r = $db->getRow($old_sql);
                 $old_username = $old_r['username'];
@@ -78,7 +78,7 @@
             				edit_ledger_entries = ".$ele.", 
             				use_course = ".$c.", ";
 
-                $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+                $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
  
                 $r = $db->getRow($sql);
                 if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff']==1) {
@@ -99,16 +99,16 @@
 		    } else {
                 $salt = create_salt();
                 $password = gen_password($_POST['password'], $salt);
-                $p = ($_POST['producer'] == 1) ? 1 : 0;
-                $pla = ($_POST['post_ledger_adjustments'] == 1) ? 1 : 0;
-                $ele = ($_POST['edit_ledger_entries'] == 1) ? 1 : 0;
-			    $pf = ($_POST['producer_files'] == 1) ? 1 : 0;
-                $n = ($_POST['sign_notes'] == 1) ? 1 : 0;
-			    $c = ($_POST['use_course'] == 1) ? 1 : 0;
-                $s = ($_POST['manage_staff'] == 1) ? 1 : 0;
-                $ein = ($_POST['ein'] == 1) ? 1 : 0;
-                $ssn = ($_POST['ssn'] == 1) ? 1 : 0;
-			    $ins_sql = "insert into dental_users set user_access=1, docid='".$_SESSION['docid']."', username = '".s_for($_POST["username"])."', password = '".mysql_real_escape_string($password)."', salt='".$salt."', 
+                $p = (!empty($_POST['producer']) && $_POST['producer'] == 1) ? 1 : 0;
+                $pla = (!empty($_POST['post_ledger_adjustments']) && $_POST['post_ledger_adjustments'] == 1) ? 1 : 0;
+                $ele = (!empty($_POST['edit_ledger_entries']) && $_POST['edit_ledger_entries'] == 1) ? 1 : 0;
+			    $pf = (!empty($_POST['producer_files']) && $_POST['producer_files'] == 1) ? 1 : 0;
+                $n = (!empty($_POST['sign_notes']) && $_POST['sign_notes'] == 1) ? 1 : 0;
+			    $c = (!empty($_POST['use_course']) && $_POST['use_course'] == 1) ? 1 : 0;
+                $s = (!empty($_POST['manage_staff']) && $_POST['manage_staff'] == 1) ? 1 : 0;
+                $ein = (!empty($_POST['ein']) && $_POST['ein'] == 1) ? 1 : 0;
+                $ssn = (!empty($_POST['ssn']) && $_POST['ssn'] == 1) ? 1 : 0;
+			    $ins_sql = "insert into dental_users set user_access=1, docid='".$_SESSION['docid']."', username = '".s_for($_POST["username"])."', password = '".mysqli_real_escape_string($con,$password)."', salt='".$salt."', 
 				            first_name = '".s_for($_POST["first_name"])."', 
             				last_name = '".s_for($_POST["last_name"])."', 
             				email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.",
@@ -127,7 +127,6 @@
             				edit_ledger_entries = ".$ele.", 
             				use_course = ".$c.", ";
                 $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
-
                 $r = $db->getRow($sql);
                 if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff']==1) {
                     $ins_sql .= " manage_staff = ".$s.", ";
@@ -135,21 +134,21 @@
                 
                 $ins_sql .= " sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
                 $userid = $db->getInsertId($ins_sql);
-                $docname_sql = "SELECT name from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+                $docname_sql = "SELECT name from dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 
                 $docname_r = $db->getRow($docname_sql);
                 $docname = $docname_r['name'];
                 $co_sql = "SELECT c.id, c.name from companies c
                             JOIN dental_user_company uc ON c.id = uc.companyid
                             JOIN dental_users u ON u.userid = uc.userid
-                            WHERE u.userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+                            WHERE u.userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 
                 $co_r = $db->getRow($co_sql);
                 $cid = $co_r['id'];
                 $cname = $co_r['name'];
 
     			edx_user_update($userid);
-    			help_user_update($userid, $help_con);
+    			help_user_update($userid, (!empty($help_con) ? $help_con : ''));
 		
 			    $msg = "Added Successfully";
 ?>
@@ -173,10 +172,10 @@
 
     <body>
         <?php
-            $thesql = "select * from dental_users where userid='".$_REQUEST["ed"]."'";
+            $thesql = "select * from dental_users where userid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 
         	$themyarray = $db->getRow($thesql);
-        	if($msg != '') {
+        	if(!empty($msg)) {
         		$username = $_POST['username'];
         		$password = $_POST['password'];
         		$first_name = $_POST['first_name'];
@@ -244,7 +243,7 @@
 	
 	    <br /><br />
 	
-	    <?php if($msg != '') { ?>
+	    <?php if(!empty($msg)) { ?>
             <div align="center" class="red">
                 <?php echo $msg;?>
             </div>
@@ -440,7 +439,7 @@
                 </tr>
 
                 <?php
-                    $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+                    $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
                     
                     $r = $db->getRow($sql);
                     if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff']==1) {
@@ -504,7 +503,7 @@
                         <input type="submit" value=" <?php echo $but_text?> Staff" class="button" />
                         <?php if($themyarray["userid"] != '') { ?>
                             <?php
-                                $l_sql = "SELECT * from dental_login WHERE userid='".mysql_real_escape_string($themyarray['userid'])."'";
+                                $l_sql = "SELECT * from dental_login WHERE userid='".mysqli_real_escape_string($con,$themyarray['userid'])."'";
                                 
                                 $logins = $db->getNumberRows($l_sql);
                             ?>

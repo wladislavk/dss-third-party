@@ -3,7 +3,7 @@
 	include("includes/sescheck.php");
 	include_once('admin/includes/password.php');
 
-	$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+	$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 	
 	$r = $db->getRow($sql);
 	if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1) {
@@ -19,7 +19,7 @@
 	<link rel="stylesheet" href="/manage/admin/css/jquery-ui-1.8.22.custom.css" />
 	<link rel="stylesheet" href="css/modal.css" />
 <?php
-	if($_POST["staffsub"] == 1) {
+	if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
 		$sel_check = "select * from dental_resources where docid='".$_SESSION['docid']."' AND name = '".s_for($_POST["name"]) . "' and id <> " . $_POST['ed'];
 		
 		if($db->getNumberRows($sel_check)>0) {
@@ -40,7 +40,7 @@
 <?php
 		} else {
 			if($_POST["ed"] != "") {
-	            $old_sql = "SELECT name FROM dental_resources WHERE docid='".$_SESSION['docid']."' AND id='".mysql_real_escape_string($_POST["ed"])."'";
+	            $old_sql = "SELECT name FROM dental_resources WHERE docid='".$_SESSION['docid']."' AND id='".mysqli_real_escape_string($con,$_POST["ed"])."'";
 	            
 	            $old_r = $db->getRow($old_sql);
 	            $old_username = $old_r['name'];
@@ -81,11 +81,11 @@
 	
 	<body>
     <?php
-	    $thesql = "select * from dental_resources where docid=".mysql_real_escape_string($_SESSION['docid'])." AND id='".$_REQUEST["ed"]."'";
+	    $thesql = "select * from dental_resources where docid=".mysqli_real_escape_string($con,$_SESSION['docid'])." AND id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 		
 		$themyarray = $db->getRow($thesql);
 		
-		if($msg != '') {
+		if(!empty($msg)) {
 			$name = $_POST['name'];
 			$rank = $_POST['rank'];
 		} else {
@@ -102,7 +102,7 @@
 	
 		<br /><br />
 	
-	<?php if($msg != ''){ ?>
+	<?php if(!empty($msg)){ ?>
 	    <div align="center" class="red">
 	        <?php echo $msg;?>
 	    </div>
@@ -145,7 +145,7 @@
 		                <input type="submit" value=" <?php echo $but_text?> Resource" class="button" />
 						<?php if($themyarray["id"] != '') { ?>
 							<?php
-							  $l_sql = "SELECT * from dental_login WHERE userid='".mysql_real_escape_string($themyarray['id'])."'";
+							  $l_sql = "SELECT * from dental_login WHERE userid='".mysqli_real_escape_string($con,$themyarray['id'])."'";
 							  
 							  $logins = $db->getNumberRows($l_sql);
 							?>

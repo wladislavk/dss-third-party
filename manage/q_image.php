@@ -42,14 +42,14 @@
 		$sql = "select i.*,
 				CASE 
 					WHEN i.userid!=''
-					THEN CONCAT(u.first_name, ' ',u.last_name)
-					WHEN i.adminid!=''
-					THEN CONCAT(a.first_name, ' ',a.last_name)
-				END added_by
+					THEN CONCAT(u.first_name, ' ',u.last_name)" .
+					// WHEN i.adminid!=''
+					// THEN CONCAT(a.first_name, ' ',a.last_name)
+				"END added_by
 					from dental_q_image i
-					LEFT join dental_users u ON u.userid=i.userid
-					LEFT join admin a ON a.adminid=i.adminid
-					where i.patientid='".$_GET['pid']."'";
+					LEFT join dental_users u ON u.userid=i.userid" .
+					// LEFT join admin a ON a.adminid=i.adminid
+				"	where i.patientid='".$_GET['pid']."'";
 
 		if ($_GET['sh'] <> '') {
 			$sql .= " and imagetypeid='".$_GET['sh']."' ";

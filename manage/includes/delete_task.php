@@ -1,9 +1,9 @@
 <?php
 	include_once '../admin/includes/main_include.php';
 
-	$id = $_REQUEST['id'];
+	$id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
 	$s = "UPDATE dental_task SET status = 2
-		  WHERE id = '".mysql_real_escape_string($id)."'";
+		  WHERE id = '".mysqli_real_escape_string($con,$id)."'";
 
 	if($db->query($s)){
 		echo '{"success":true}';

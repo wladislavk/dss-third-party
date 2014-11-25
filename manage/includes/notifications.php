@@ -34,5 +34,4 @@ function find_patient_notifications($p){
   return $not;
 }
 
-
 ?>

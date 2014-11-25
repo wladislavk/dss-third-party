@@ -1,6 +1,5 @@
-<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-<? 
-include "admin/includes/main_include.php";
+<?php
+include_once "admin/includes/main_include.php";
 
 if($_POST['missingsub'] == 1)
 {
@@ -235,7 +234,7 @@ $mob_arr = explode('~',$mob);
 										}?>
 
 										<b><?php echo $i;?></b>
-										<table width="50" cellpadding="0" cellspacing="0" border="0">
+										<table width="60" cellpadding="0" cellspacing="0" border="0">
 											<tr>
 												<td valign="top" align="center">
 												<?php $pck_c++;?>
@@ -396,7 +395,7 @@ $mob_arr = explode('~',$mob);
 									<?php if(in_array($i,$mt_arr)){ 
 											$miss=1;	
 										}?>
-										<table width="50" cellpadding="0" cellspacing="0" border="0">
+										<table width="60" cellpadding="0" cellspacing="0" border="0">
 											<tr>
 												<td valign="top" align="center">
 												<?php if($miss == 1) {?>

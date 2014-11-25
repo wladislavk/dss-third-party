@@ -16,7 +16,7 @@ include "includes/top.htm";
 	$sql = "SELECT e.*, CONCAT(t.transaction_type,' - ',t.description) as transaction_type 
 			FROM dental_eligible_enrollment e
 			LEFT JOIN dental_enrollment_transaction_type t ON e.transaction_type_id = t.id
-			WHERE e.user_id = '".mysql_real_escape_string($_SESSION['docid'])."'";
+			WHERE e.user_id = '".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 	$my = $db->getResults($sql);
 ?>
 <div style="margin-left:10px;margin-right:10px;">
@@ -27,7 +27,7 @@ include "includes/top.htm";
 </div>
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 	<table class="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -64,7 +64,7 @@ include "includes/top.htm";
 			<td valign="top">
 				<?php echo st($dss_enrollment_labels[$myarray["status"]]);?>
 				<?php
-					$w_sql = "SELECT * from dental_eligible_response where reference_id='".mysql_real_escape_string($myarray['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
+					$w_sql = "SELECT * from dental_eligible_response where reference_id='".mysqli_real_escape_string($con,$myarray['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
 					$w_r = $db->getRow($w_sql);
 					if($w_r['adddate'] !=''){
 						echo " - ".date('m/d/Y h:i a', strtotime($w_r['adddate']));

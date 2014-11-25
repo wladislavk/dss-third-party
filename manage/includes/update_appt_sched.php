@@ -1,12 +1,12 @@
 <?php
   include_once '../admin/includes/main_include.php';
 
-  $id = $_REQUEST['id'];
-  $sched = ($_REQUEST['sched']!='')?date('Y-m-d', strtotime($_REQUEST['sched'])):'';
-  $pid = $_REQUEST['pid'];
+  $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
+  $sched = (!empty($_REQUEST['sched'])) ? date('Y-m-d', strtotime((!empty($_REQUEST['sched']) ? $_REQUEST['sched'] : ''))) : '';
+  $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
 
   clean_steps($db, $pid);
-  $let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 
   $let_r = $db->getRow($let_sql);
   $create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
@@ -48,7 +48,9 @@
 <?php
   function clean_steps($db, $pid)
   { //Deletes not completed steps and clears scheduled
-    $s = "DELETE FROM dental_flow_pg2_info where patientid='".mysql_real_escape_string($pid)."' AND appointment_type=0";
+    $con = $GLOBALS['con'];
+    
+    $s = "DELETE FROM dental_flow_pg2_info where patientid='".mysqli_real_escape_string($con,$pid)."' AND appointment_type=0";
     $db->query($s);
   }
 

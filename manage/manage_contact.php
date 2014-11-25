@@ -4,7 +4,7 @@
 
 <?php
 
-	if ($_REQUEST["delid"] != "") {
+	if (!empty($_REQUEST["delid"])) {
 		delete_contact_letters($_REQUEST["delid"]);
 		delete_contact_from_patients($_REQUEST["delid"]);
 		$del_sql = "delete from dental_contact where contactid='" . $_REQUEST["delid"] . "'";
@@ -21,7 +21,7 @@
 ?>
 
 <?php 
-	if ($_REQUEST["inactiveid"] != "") {
+	if (!empty($_REQUEST["inactiveid"])) {
 	    $in_sql = "update dental_contact set status='2'  where contactid='" . $_REQUEST["inactiveid"] . "'";
 	    $db->query($in_sql);
 	    delete_contact_letters($_REQUEST["inactiveid"]);
@@ -38,39 +38,41 @@
 <?php
 	$rec_disp = 50;
 
-	if ($_REQUEST["page"] != "") {
+	if (!empty($_REQUEST["page"])) {
 		$index_val = $_REQUEST["page"];
 	} else {
 		$index_val = 0;
 	}
 		
 	$i_val = $index_val * $rec_disp;
-	$contact_type_holder = $_GET['contacttype'];
+	$contact_type_holder = (!empty($_GET['contacttype']) ? $_GET['contacttype'] : '');
 
 	if (isset($contact_type_holder) && $contact_type_holder != '') {
 		$sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='" . $_SESSION['docid'] . "' and dct.contacttypeid='" . $contact_type_holder . "' AND merge_id IS NULL AND dc.status=1 ";
 	} elseif (isset($_GET['status']) && $_GET['status'] != '') {
-		$sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='" . $_SESSION['docid'] . "' AND merge_id IS NULL AND dc.status=" . mysql_real_escape_string($_GET['status']) . " ";
+		$sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='" . $_SESSION['docid'] . "' AND merge_id IS NULL AND dc.status=" . mysqli_real_escape_string($con,$_GET['status']) . " ";
 	} else {
 		$sql = "select dc.*
 	 		from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='" . $_SESSION['docid'] . "' AND merge_id IS NULL AND dc.status=1 ";
 	}
 
 	if (isset($_GET['letter'])) {
-	  $sql .= "AND (dc.lastname LIKE '" . mysql_real_escape_string($_GET['letter']) . "%' OR
-		(dc.lastname='' AND dc.company LIKE  '" . mysql_real_escape_string($_GET['letter']) . "%'))";
+	  $sql .= "AND (dc.lastname LIKE '" . mysqli_real_escape_string($con,$_GET['letter']) . "%' OR
+		(dc.lastname='' AND dc.company LIKE  '" . mysqli_real_escape_string($con,$_GET['letter']) . "%'))";
 	}
 
-	switch ($_GET['sort']) {
-	  case 'company':
-	    $sql .= " ORDER BY company " . $_GET['sortdir'];
-	    break;
-	  case 'type':
-	    $sql .= " ORDER BY dct.contacttype " . $_GET['sortdir'];
-	    break;
-	  default:
-	    $sql .= " ORDER BY lastname " . $_GET['sortdir'] . ", firstname " . $_GET['sortdir'];
-	    break;
+	if (!empty($_GET['sort'])) { 
+		switch ($_GET['sort']) {
+		  case 'company':
+		    $sql .= " ORDER BY company " . $_GET['sortdir'];
+		    break;
+		  case 'type':
+		    $sql .= " ORDER BY dct.contacttype " . $_GET['sortdir'];
+		    break;
+		  default:
+		    $sql .= " ORDER BY lastname " . $_GET['sortdir'] . ", firstname " . $_GET['sortdir'];
+		    break;
+		}
 	}
 
 	$total_rec = $db->getNumberRows($sql);
@@ -110,7 +112,7 @@
 		     	<option value="manage_contact.php">Display All</option>
 
 		      	<?php foreach ($ctype_myarray as $value): ?>
-		            <option value="manage_contact.php?contacttype=<?php echo st($ctype_myarray['contacttypeid']); ?>">
+		            <option value="manage_contact.php?contacttype=<?php echo st((!empty($ctype_myarray['contacttypeid']) ? $ctype_myarray['contacttypeid'] : '')); ?>">
 		               	<?php echo st($value['contacttype']); ?>
 		            </option>
 		        <?php endforeach ?>
@@ -141,7 +143,7 @@
 	<br />
 
 	<div align="center" class="red">
-		<b><?php echo $_GET['msg']; ?></b>
+		<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : ''); ?></b>
 	</div>
 
 	<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
@@ -153,7 +155,7 @@
 					  		$letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
 					  		foreach ($letters as $let):
 					    ?>
-					    	<a <?php echo ($_GET['letter'] == $let) ? 'class="selected_letter"' : ''; ?> href="manage_contact.php?letter=<?php echo $let; ?>&status=<?php echo $_GET['status']; ?>&sort=<?php echo $_GET['sort']; ?>&sortdir=<?php echo $_GET['sortdir']; ?>&contacttype=<?php echo $_GET['contacttype']; ?>"><?php echo $let; ?></a>
+					    	<a <?php echo (!empty($_GET['letter']) && $_GET['letter'] == $let) ? 'class="selected_letter"' : ''; ?> href="manage_contact.php?letter=<?php echo $let; ?>&status=<?php echo (!empty($_GET['status']) ? $_GET['status'] : ''); ?>&sort=<?php echo (!empty($_GET['sort']) ? $_GET['sort'] : ''); ?>&sortdir=<?php echo (!empty($_GET['sortdir']) ? $_GET['sortdir'] : ''); ?>&contacttype=<?php echo (!empty($_GET['contacttype']) ? $_GET['contacttype'] : ''); ?>"><?php echo $let; ?></a>
 						<?php
 						  	endforeach;
 
@@ -169,22 +171,22 @@
 						Pages:
 
 						<?php
-							paging($no_pages, $index_val, "letter=" . $_GET['letter'] . "&status=" . $_GET['status'] . "&sort=" . $_GET['sort'] . "&sortdir=" . $_GET['sortdir'] . "&contacttype=" . $_GET['contacttype']);
+							paging($no_pages, $index_val, "letter=" . (!empty($_GET['letter']) ? $_GET['letter'] : '') . "&status=" . (!empty($_GET['status']) ? $_GET['status'] : '') . "&sort=" . (!empty($_GET['sort']) ? $_GET['sort'] : '') . "&sortdir=" . (!empty($_GET['sortdir']) ? $_GET['sortdir'] : '') . "&contacttype=" . (!empty($_GET['contacttype']) ? $_GET['contacttype'] : ''));
 						?>
 					<?php endif ?>
 				</td>        
 			</tr>
 			<tr class="tr_bg_h">
-	            <td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'name') ? 'arrow_' . strtolower($_REQUEST['sortdir']) : ''; ?>" width="20%">
-	                <a href="manage_contact.php?sort=name&sortdir=<?php echo ($_REQUEST['sort'] == 'name' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Name</a>
+	            <td valign="top" class="col_head  <?php echo  (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'name') ? 'arrow_' . strtolower($_REQUEST['sortdir']) : ''; ?>" width="20%">
+	                <a href="manage_contact.php?sort=name&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'name' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Name</a>
 	            </td>
 
-	            <td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'company') ? 'arrow_' . strtolower($_REQUEST['sortdir']) : ''; ?>" width="25%">
-	                <a href="manage_contact.php?sort=company&sortdir=<?php echo ($_REQUEST['sort'] == 'company' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Company</a>
+	            <td valign="top" class="col_head  <?php echo  (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'company') ? 'arrow_' . strtolower($_REQUEST['sortdir']) : ''; ?>" width="25%">
+	                <a href="manage_contact.php?sort=company&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'company' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Company</a>
 	            </td>
 
-	            <td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'type') ? 'arrow_' . strtolower($_REQUEST['sortdir']) : ''; ?>" width="25%">
-	                <a href="manage_contact.php?sort=type&sortdir=<?php echo ($_REQUEST['sort'] == 'type' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Contact Type</a>
+	            <td valign="top" class="col_head  <?php echo  (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'type') ? 'arrow_' . strtolower($_REQUEST['sortdir']) : ''; ?>" width="25%">
+	                <a href="manage_contact.php?sort=type&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'type' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Contact Type</a>
 	            </td>
 
 				<td valign="top" class="col_head" width="10%">
@@ -229,12 +231,12 @@
 						</td>
 
 						<td valign="top" width="25%">
-							<?php print ($contact_type[$myarray["contacttypeid"]]) ? $contact_type[$myarray["contacttypeid"]] : "Contact Type Not Set"; ?>
+							<?php print (!empty($contact_type[$myarray["contacttypeid"]])) ? $contact_type[$myarray["contacttypeid"]] : "Contact Type Not Set"; ?>
 			      		</td>
 
 						<td valign="top" width="10%">
 							<?php
-							    $ref_sql = "SELECT * FROM dental_patients WHERE (parent_patientid IS NULL OR parent_patientid='') AND referred_source=2 AND referred_by='" . mysql_real_escape_string($myarray['contactid']) . "'";
+							    $ref_sql = "SELECT * FROM dental_patients WHERE (parent_patientid IS NULL OR parent_patientid='') AND referred_source=2 AND referred_by='" . mysqli_real_escape_string($con,$myarray['contactid']) . "'";
 							    $ref_q = $db->getResults($ref_sql);
 							    $num_ref = count($ref_q);
 							?>
@@ -244,7 +246,7 @@
 
 	                    <td valign="top" width="10%">
 							<?php
-							    $pat_sql = "SELECT * FROM dental_patients WHERE (parent_patientid IS NULL OR parent_patientid='') AND (docpcp='" . mysql_real_escape_string($myarray['contactid']) . "' OR docent = '" . mysql_real_escape_string($myarray['contactid']) . "' OR docsleep='" . mysql_real_escape_string($myarray['contactid']) . "' OR docdentist='" . mysql_real_escape_string($myarray['contactid']) . "' OR docmdother='" . mysql_real_escape_string($myarray['contactid']) . "' OR docmdother2 = '" . mysql_real_escape_string($myarray['contactid']) . "' OR docmdother3='" . mysql_real_escape_string($myarray['contactid']) . "')";
+							    $pat_sql = "SELECT * FROM dental_patients WHERE (parent_patientid IS NULL OR parent_patientid='') AND (docpcp='" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docent = '" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docsleep='" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docdentist='" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docmdother='" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docmdother2 = '" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docmdother3='" . mysqli_real_escape_string($con,$myarray['contactid']) . "')";
 							    $pat_q = $db->getResults($pat_sql);
 							    $num_pat = count($pat_q);
 							?>

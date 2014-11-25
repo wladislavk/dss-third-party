@@ -1,22 +1,23 @@
-<?php include "includes/top.htm";
-require_once('includes/constants.inc');
-require_once('includes/dental_patient_summary.php');
-require_once('includes/preauth_functions.php');
+<?php
+include "includes/top.htm";
+include_once('includes/constants.inc');
+include_once('includes/dental_patient_summary.php');
+include_once('includes/preauth_functions.php');
 
 $last_sql = "SELECT * FROM dental_flow_pg2_info info
 		JOIN dental_flowsheet_steps steps on info.segmentid = steps.id
-		 WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysql_real_escape_string($_GET['pid'])."' ORDER BY date_completed DESC, info.id DESC";
+		 WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' ORDER BY date_completed DESC, info.id DESC";
 $last = $db->getRow($last_sql);
 
 if($last['section']==1){
     $final_sql = "SELECT * FROM dental_flow_pg2_info info
     		JOIN dental_flowsheet_steps steps on info.segmentid = steps.id
-    		WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND section=1
+    		WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND section=1
     		order by steps.section DESC, steps.sort_by DESC";
 }else{
     $final_sql = "SELECT * FROM dental_flow_pg2_info info
                     JOIN dental_flowsheet_steps steps on info.segmentid = steps.id
-                    WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysql_real_escape_string($_GET['pid'])."' order by steps.section DESC, steps.sort_by DESC";
+                    WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' order by steps.section DESC, steps.sort_by DESC";
 }
 
 $final = $db->getRow($final_sql);
@@ -32,7 +33,7 @@ foreach ($rank_query as $rank_r) {
 }
 $arrow_height = ($final_rank*20);
 
-$sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=0 and segmentid!='' AND date_scheduled != '' AND date_scheduled != '0000-00-00' AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=0 and segmentid!='' AND date_scheduled != '' AND date_scheduled != '0000-00-00' AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $sched_q = $db->getResults($sched_sql);
 $sched_appt = (count($sched_q)>0);
 
@@ -41,24 +42,24 @@ $sched_appt = (count($sched_q)>0);
 <div style="width:100%;">
 <?php
 $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-              JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
+              JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'
               WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
 $bu_q = $db->getResults($bu_sql);
 if(count($bu_q)>0){
-    if($pat_hst_num_uncompleted>0){ ?>
+    if(!empty($pat_hst_num_uncompleted) && $pat_hst_num_uncompleted>0){ ?>
     <a href="#" style="float:right; margin-right:20px;" onclick="alert('Patient has existing HST with status <?= $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;" class="button">
         Order HST
     </a>
     <?php
     }else{
     ?>
-    <a href="hst_request_co.php?ed=<?php echo $_GET['pid']; ?>" style="float:right; margin-right:20px;" class="button" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');">
+    <a href="hst_request_co.php?ed=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" style="float:right; margin-right:20px;" class="button" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');">
         Order HST
     </a>
     <?php
     }
 } ?>
-    <a href="calendar_pat.php?pid=<?= $_GET['pid'];?>" style="float:right; margin-right:20px;" class="button">View Calendar Appts</a>
+    <a href="calendar_pat.php?pid=<?= (!empty($_GET['pid']) ? $_GET['pid'] : '');?>" style="float:right; margin-right:20px;" class="button">View Calendar Appts</a>
 </div>
 <div id="treatment_div">
     <h3>1) What did you do today?*</h3>
@@ -113,11 +114,11 @@ foreach ($step_q as $step) {
     <h3>2) What will you do next?*</h3>
     <div id="sched_div" <?= (!$sched_appt)?'class="current_step"':''; ?>>
 <?php
-$sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND appointment_type=0";
+$sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND appointment_type=0";
 $sched_r = $db->getRow($sched_sql);
 $next_sql = "SELECT steps.* FROM dental_flowsheet_steps steps
           		JOIN dental_flowsheet_steps_next next ON steps.id = next.child_id
-          		WHERE next.parent_id='".mysql_real_escape_string($last['segmentid'])."'
+          		WHERE next.parent_id='".mysqli_real_escape_string($con,$last['segmentid'])."'
           		ORDER BY next.sort_by ASC"; 
 $next_q = $db->getResults($next_sql);
 ?>
@@ -183,7 +184,7 @@ foreach($segments as $segment => $label){
   </td>
   <td>
 <?php
-  $s = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND segmentid='".$segment."' ORDER BY date_completed DESC";
+  $s = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND segmentid='".$segment."' ORDER BY date_completed DESC";
   $q = mysql_query($s);
   $r = mysql_fetch_assoc($q);
 if($r){
@@ -201,7 +202,7 @@ if($r){
   $completed = false;
 }
 
-  $s_sched = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND segmentid='".$segment."' ORDER BY date_scheduled DESC";
+  $s_sched = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND segmentid='".$segment."' ORDER BY date_scheduled DESC";
   $q_sched = mysql_query($s_sched);
   $r_sched = mysql_fetch_assoc($q_sched);
   $datesched = ($r_sched['date_scheduled']!='0' && $r_sched['date_scheduled']!='' && $r_sched['date_scheduled']!='0000-00-00')?date('m/d/Y', strtotime($r_sched['date_scheduled'])):'';

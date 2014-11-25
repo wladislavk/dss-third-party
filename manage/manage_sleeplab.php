@@ -1,7 +1,7 @@
 <?php 
 include "includes/top.htm";
 
-if ($_REQUEST["delid"] != "") {
+if (!empty($_REQUEST["delid"])) {
 	$del_sql = "delete from dental_sleeplab where sleeplabid='" . $_REQUEST["delid"] . "'";
 	$db->query($del_sql);
 	
@@ -18,7 +18,7 @@ if ($_REQUEST["delid"] != "") {
 
 $rec_disp = 20;
 
-if ($_REQUEST["page"] != "") {
+if (!empty($_REQUEST["page"])) {
 	$index_val = $_REQUEST["page"];
 } else {
 	$index_val = 0;
@@ -49,7 +49,7 @@ if (isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']) {
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_sleeplab where docid='" . $_SESSION['docid'] . "' ";
 if (isset($_GET['letter'])) {
-	$sql .= " AND company like '" . mysql_real_escape_string($_GET['letter']) . "%' ";
+	$sql .= " AND company like '" . mysqli_real_escape_string($con,$_GET['letter']) . "%' ";
 }
 	$sql .= "ORDER BY " . $sort . " " . $dir;
 
@@ -84,7 +84,7 @@ $num_sleeplab = count($my);
   $letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
   foreach ($letters as $let) {
 ?>
-	<a href="manage_sleeplab.php?letter=<?php echo $let;?>&sort=<?php echo $_GET['sort'];?>&sortdir=<?php echo $_GET['sortdir'];?>"><?php echo $let;?></a>
+	<a href="manage_sleeplab.php?letter=<?php echo $let;?>&sort=<?php echo (!empty($_GET['sort']) ? $_GET['sort'] : '');?>&sortdir=<?php echo (!empty($_GET['sortdir']) ? $_GET['sortdir'] : '');?>"><?php echo $let;?></a>
 <?php
   }
 ?>
@@ -92,7 +92,7 @@ $num_sleeplab = count($my);
 </div><br />
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
@@ -157,7 +157,7 @@ $num_sleeplab = count($my);
 					<?php
 						$pat_sql = "SELECT p.* FROM dental_patients p
 								INNER JOIN dental_summ_sleeplab s ON s.patiendid=p.patientid
-								WHERE s.place = '".mysql_real_escape_string($myarray['sleeplabid'])."' GROUP BY p.patientid";
+								WHERE s.place = '".mysqli_real_escape_string($con,$myarray['sleeplabid'])."' GROUP BY p.patientid";
 						$pat_q = $db->getResults($pat_sql);
 						$pat_num = count($pat_q);
 					?>

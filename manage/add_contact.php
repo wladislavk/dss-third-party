@@ -1,6 +1,5 @@
 <?php 
-session_start();
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 //include "includes/general_functions.php";
 include_once "admin/includes/general.htm";
@@ -24,8 +23,8 @@ include_once "includes/constants.inc";
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
-if($_POST["contactsub"] == 1){
-	if($_POST["ed"] != ""){
+if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
+	if(!empty($_POST["ed"])){
 		$ed_sql = "update dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."', preferredcontact = '".s_for($_POST["preferredcontact"])."' where contactid='".$_POST["ed"]."'";
 		$db->query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
@@ -133,10 +132,10 @@ if ($pq) foreach ($pq as $pr) {
 }
 $physician_types = implode(',', $physician_array);
 
-$thesql = "select * from dental_contact where contactid='".$_REQUEST["ed"]."'";
+$thesql = "select * from dental_contact where contactid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 $themyarray = $db->getRow($thesql);
 
-if($msg != ''){
+if(!empty($msg)){
 	$salutation = $_POST['salutation'];
 	$firstname = $_POST['firstname'];
 	$middlename = $_POST['middlename'];
@@ -197,13 +196,13 @@ if($themyarray["contactid"] != '') {
 <br /><br />
 
 <?php 
-if($msg != '') {?>
+if(!empty($msg)) {?>
 <div align="center" class="red">
     <?php echo $msg;?>
 </div>
 <?php 
 }
-if($_GET['search'] != ''){
+if(!empty($_GET['search'])){
 	if(strpos($_GET['search'], ' ')){
 		$firstname = ucfirst(substr($_GET['search'], 0, strpos($_GET['search'], ' ')));
 		$lastname = ucfirst(substr($_GET['search'], strpos($_GET['search'],' ')+1));
@@ -213,18 +212,18 @@ if($_GET['search'] != ''){
 }
 ?>
 
-<form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&activePat=<?php echo $_GET['activePat']; ?>&from=<?php echo $_GET['from']; ?>&from_id=<?php echo $_GET['from_id']; ?>&in_field=<?php echo $_GET['in_field']; ?>&id_field=<?php echo $_GET['id_field']; ?>" method="post" onSubmit="return contactabc(this)" style="width:99%;">
+<form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&activePat=<?php echo (!empty($_GET['activePat']) ? $_GET['activePat'] : ''); ?>&from=<?php echo (!empty($_GET['from']) ? $_GET['from'] : ''); ?>&from_id=<?php echo (!empty($_GET['from_id']) ? $_GET['from_id'] : ''); ?>&in_field=<?php echo (!empty($_GET['in_field']) ? $_GET['in_field'] : ''); ?>&id_field=<?php echo (!empty($_GET['id_field']) ? $_GET['id_field'] : ''); ?>" method="post" onSubmit="return contactabc(this)" style="width:99%;">
     <input type="hidden" id="physician_types" value="<?php echo $physician_types; ?>" />
-    <input type="hidden" name="contact_type" value="<?php echo $_GET['ctype']; ?>" />
+    <input type="hidden" name="contact_type" value="<?php echo (!empty($_GET['ctype']) ? $_GET['ctype'] : ''); ?>" />
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>
             <td colspan="2" class="cat_head">
 <?php 
-if($_GET['ctype']=='ins'){ ?>
+if(!empty($_GET['ctype']) && $_GET['ctype']=='ins'){ ?>
 			Add Insurance Company
 <?php 
 }else{
-	echo $but_text . $_GET['heading'] . 'Contact';
+	echo $but_text . (!empty($_GET['heading']) ? $_GET['heading'] : '') . 'Contact';
 	if($name <> "") {?>
        		&quot;<?php echo $name;?>&quot;
 <?php 
@@ -249,7 +248,7 @@ $ctype_my = $db->getResults($ctype_sql);?>
 			                        <option value="">Select a contact type</option>
 <?php 
 if ($ctype_my) foreach ($ctype_my as $ctype_myarray) {?>
-									<option <?php if($ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if($ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?php echo st($ctype_myarray['contacttypeid']);?>">
+									<option <?php if(!empty($ctid['contacttypeid']) && $ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if(!empty($_GET['type']) && $ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?php echo st($ctype_myarray['contacttypeid']);?>">
 <?php 
 										echo st($ctype_myarray['contacttype']);?>
 							        </option>
@@ -269,7 +268,7 @@ if ($ctype_my) foreach ($ctype_my as $ctype_myarray) {?>
                     <li id="foli8" class="complex">	
                         <label class="desc" id="title0" for="Field0">
                             Name
-                            <?php echo ($_GET['ctype']!='ins')?'<span id="req_0" class="req">*</span>':''; ?>
+                            <?php echo (!empty($_GET['ctype']) && $_GET['ctype']!='ins')?'<span id="req_0" class="req">*</span>':''; ?>
                         </label>
                         <div>
                         	<span>
@@ -305,7 +304,7 @@ if ($ctype_my) foreach ($ctype_my as $ctype_myarray) {?>
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
                             <span>
-	                            <span style="color:#000000">Company <?php echo ($_GET['ctype']=='ins')?'<span id="req_0" class="req">*</span>':''; ?></span>
+	                            <span style="color:#000000">Company <?php echo (!empty($_GET['ctype']) && $_GET['ctype']=='ins')?'<span id="req_0" class="req">*</span>':''; ?></span>
 	                            <input id="company" name="company" type="text" class="field text addr tbox" value="<?php echo $company;?>" tabindex="5" style="width:575px;"  maxlength="255"/>
                             </span>
                         </label>

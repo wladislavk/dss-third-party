@@ -1,9 +1,9 @@
 <?php
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "")
+if(!empty($_REQUEST["delid"]))
 {
-	$del_sql = "delete from dental_appt_types where docid='".mysql_real_escape_string($_SESSION['docid'])."' AND id='".$_REQUEST["delid"]."'";
+	$del_sql = "delete from dental_appt_types where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND id='".$_REQUEST["delid"]."'";
 	$db->query($del_sql);
 	
 	$msg= "Deleted Successfully";
@@ -18,13 +18,13 @@ if($_REQUEST["delid"] != "")
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_appt_types WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' order by name";
+$sql = "select * from dental_appt_types WHERE docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' order by name";
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
@@ -44,7 +44,7 @@ $num_users = count($my);
 <br />
 &nbsp;
 <?php
-$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 $r = $db->getRow($sql);
 if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 <div align="right">
@@ -56,7 +56,7 @@ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 <?php } ?>
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
@@ -130,7 +130,7 @@ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 */ ?>
 		<td valign="top">
 		<?php
-		$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+		$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 		$r = $db->getRow($sql);
 		if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 			<a href="Javascript:;"  onclick="Javascript: loadPopup('add_appt.php?ed=<?php echo $myarray["id"];?>');" class="editlink" title="EDIT">

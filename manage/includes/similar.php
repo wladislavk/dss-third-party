@@ -1,5 +1,5 @@
 <?php
-include_once('../admin/includes/main_include.php');
+include_once('/../admin/includes/main_include.php');
 
 function similar_doctors($id){
     $db = new Db();

@@ -1,12 +1,12 @@
-<? 
+<?php 
 include "includes/top.htm";
 
 if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))
 {
 
   $in_sql = "UPDATE dental_users SET
-		claim_margin_top = '".mysql_real_escape_string($_POST['claim_margin_top'])."',
-                claim_margin_left = '".mysql_real_escape_string($_POST['claim_margin_left'])."'
+		claim_margin_top = '".mysqli_real_escape_string($con,$_POST['claim_margin_top'])."',
+                claim_margin_left = '".mysqli_real_escape_string($con,$_POST['claim_margin_left'])."'
         WHERE userid='".$_SESSION['docid']."'";
   $db->query($in_sql);
   if(isset($_POST['margins_test'])){ ?>
@@ -28,7 +28,7 @@ if(isset($_POST["margins_reset"]))
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -56,11 +56,11 @@ $num_custom = count($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <?php
-  $p_sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $p_sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
   $practice = $db->getRow($p_sql);
 
 ?>

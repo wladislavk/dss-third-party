@@ -1,7 +1,6 @@
 <?php 
-include 'includes/constants.inc';
 include "includes/top.htm";
-include "includes/constants.inc";
+include_once "includes/constants.inc";
 
 if(isset($_GET['rid'])){
   $s = sprintf("UPDATE dental_hst SET viewed=1 WHERE id=%s AND doc_id=%s",$_REQUEST['rid'], $_SESSION['docid']);
@@ -42,49 +41,50 @@ $sql = "select hst.*, p.firstname, p.lastname,
 		WHERE hst.doc_id = ".$_SESSION['docid']." ";
 
 if(isset($_GET['status']) && $_GET['status']!=''){
-  $sql .= " AND hst.status = '".mysql_real_escape_string($_GET['status'])."' ";
+  $sql .= " AND hst.status = '".mysqli_real_escape_string($con,$_GET['status'])."' ";
 }
 if(isset($_GET['viewed'])){
   if($_GET['viewed']==1){
-  	$sql .= " AND hst.viewed = '".mysql_real_escape_string($_GET['viewed'])."' ";
+  	$sql .= " AND hst.viewed = '".mysqli_real_escape_string($con,$_GET['viewed'])."' ";
   }else{
 	$sql .= " AND (hst.viewed = '0' OR hst.viewed IS NULL) ";
   }
 }
-
-switch($_GET['sort']){
-  case 'requested_date':
-    $sql .= "ORDER BY adddate ".$_GET['sortdir'];
-    break;
-  case 'patient_name':
-    $sql .= "ORDER BY patient_lastname ".$_GET['sortdir'].", patient_firstname ".$_GET['sortdir'];
-    break;
-  case 'status':
-    $sql .= "ORDER BY sort_status ".$_GET['sortdir'];
-    break;
-  case 'authorize':
-    $sql .= "ORDER BY authorizeddate ".$_GET['sortdir'];
-    break;
-  default:
-    $sql .= "ORDER BY adddate ".$_GET['sortdir'];
-    break;
+if (!empty($_GET['sort'])) {
+  switch($_GET['sort']){
+    case 'requested_date':
+      $sql .= "ORDER BY adddate ".$_GET['sortdir'];
+      break;
+    case 'patient_name':
+      $sql .= "ORDER BY patient_lastname ".$_GET['sortdir'].", patient_firstname ".$_GET['sortdir'];
+      break;
+    case 'status':
+      $sql .= "ORDER BY sort_status ".$_GET['sortdir'];
+      break;
+    case 'authorize':
+      $sql .= "ORDER BY authorizeddate ".$_GET['sortdir'];
+      break;
+    default:
+      $sql .= "ORDER BY adddate ".$_GET['sortdir'];
+      break;
+  }
 }
 
 if(isset($_REQUEST['authorize'])){
 
-  $sql = "SELECT s.* FROM dental_screener s JOIN dental_hst h ON h.screener_id = s.id WHERE h.id='".mysql_real_escape_string($_REQUEST['authorize'])."'";
+  $sql = "SELECT s.* FROM dental_screener s JOIN dental_hst h ON h.screener_id = s.id WHERE h.id='".mysqli_real_escape_string($con,$_REQUEST['authorize'])."'";
   $r = $db->getRow($sql);
-  $sql = "SELECT * FROM dental_hst WHERE screener_id='".mysql_real_escape_string($r['id'])."'";
+  $sql = "SELECT * FROM dental_hst WHERE screener_id='".mysqli_real_escape_string($con,$r['id'])."'";
   $h = $db->getRow($sql);
 
   $dob = ($h['patient_dob']!='')?date('m/d/Y', strtotime($h['patient_dob'])):'';
   $pat_sql = "INSERT INTO dental_patients SET
-                docid='".mysql_real_escape_string($r['docid'])."',
-                firstname = '".mysql_real_escape_string($r['first_name'])."',
-                lastname = '".mysql_real_escape_string($r['last_name'])."',
-                cell_phone = '".mysql_real_escape_string($r['phone'])."',
-                email = '".mysql_real_escape_string($h['patient_email'])."',
-                dob = '".mysql_real_escape_string($dob)."',
+                docid='".mysqli_real_escape_string($con,$r['docid'])."',
+                firstname = '".mysqli_real_escape_string($con,$r['first_name'])."',
+                lastname = '".mysqli_real_escape_string($con,$r['last_name'])."',
+                cell_phone = '".mysqli_real_escape_string($con,$r['phone'])."',
+                email = '".mysqli_real_escape_string($con,$h['patient_email'])."',
+                dob = '".mysqli_real_escape_string($con,$dob)."',
                 status='1',
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
@@ -94,10 +94,10 @@ if(isset($_REQUEST['authorize'])){
   $hst_sql = "UPDATE dental_hst SET
                 patient_id = '".$pat_id."',
                 status='".DSS_HST_PENDING."',
-                authorized_id='".mysql_real_escape_string($_SESSION['userid'])."',
+                authorized_id='".mysqli_real_escape_string($con,$_SESSION['userid'])."',
 		authorizeddate=now(),
                 updatedate=now()
-                WHERE id=".mysql_real_escape_string($_REQUEST['authorize']);
+                WHERE id=".mysqli_real_escape_string($con,$_REQUEST['authorize']);
   $db->query($hst_sql);
 
   $unsent_sql = "SELECT count(*) num_unsent FROM dental_hst WHERE doc_id = ".$_SESSION['docid']." AND status='".DSS_HST_REQUESTED."'";
@@ -117,8 +117,7 @@ if(isset($_REQUEST['authorize'])){
   }
 }  
 
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$total_rec = $db->getNumberRows($sql);
 /* $rec_disp is null that's why */ $rec_disp = $total_rec; 
 $no_pages = $total_rec/$rec_disp;
 
@@ -134,9 +133,9 @@ $my = $db->getResults($sql);
 	Manage Home Sleep Tests
 </span>
 <?php if(isset($_GET['viewed']) && $_GET['viewed']==0){ ?>
-  <a href="manage_hst.php?pid=<?php echo $_GET['pid'] ?>&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">Show All</a>
+  <a href="manage_hst.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=<?php echo (!empty($_REQUEST['sort']) ? $_REQUEST['sort'] : ''); ?>&sortdir=<?php echo (!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : ''); ?>" style="float:right; margin-right:10px;" class="addButton">Show All</a>
 <?php }else{ ?>
-  <a href="manage_hst.php?pid=<?php echo $_GET['pid'] ?>&viewed=0&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">Show Unread</a>
+  <a href="manage_hst.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&viewed=0&sort=<?php echo (!empty($_REQUEST['sort']) ? $_REQUEST['sort'] : ''); ?>&sortdir=<?php echo (!empty($_REQUEST['sortdir']) ? $_REQUEST['sortdir'] : ''); ?>" style="float:right; margin-right:10px;" class="addButton">Show Unread</a>
 <?php } ?>
 <br />
 <br />
@@ -145,12 +144,12 @@ $my = $db->getResults($sql);
     Status:
     <select name="status">
       <?php 
-        $requested_selected = ($_REQUEST['status'] == '0') ? 'selected' : '';
-        $pending_selected = ($_REQUEST['status'] == DSS_HST_PENDING) ? 'selected' : '';
-        $contacted_selected = ($_REQUEST['status'] == DSS_HST_CONTACTED) ? 'selected' : '';
-        $scheduled_selected = ($_REQUEST['status'] == DSS_HST_SCHEDULED) ? 'selected' : '';
-        $complete_selected = ($_REQUEST['status'] == DSS_HST_COMPLETE) ? 'selected' : '';
-        $rejected_selected = ($_REQUEST['status'] == DSS_HST_REJECTED) ? 'selected' : ''; 
+        $requested_selected = (!empty($_REQUEST['status'])) ? 'selected' : '';
+        $pending_selected = (!empty($_REQUEST['status']) && $_REQUEST['status'] == DSS_HST_PENDING) ? 'selected' : '';
+        $contacted_selected = (!empty($_REQUEST['status']) && $_REQUEST['status'] == DSS_HST_CONTACTED) ? 'selected' : '';
+        $scheduled_selected = (!empty($_REQUEST['status']) && $_REQUEST['status'] == DSS_HST_SCHEDULED) ? 'selected' : '';
+        $complete_selected = (!empty($_REQUEST['status']) && $_REQUEST['status'] == DSS_HST_COMPLETE) ? 'selected' : '';
+        $rejected_selected = (!empty($_REQUEST['status']) && $_REQUEST['status'] == DSS_HST_REJECTED) ? 'selected' : ''; 
       ?>
       <option value="">Any</option>
       <option value="<?php echo DSS_HST_REQUESTED?>" <?php echo $requested_selected?>><?php echo $dss_hst_status_labels[DSS_HST_REQUESTED]?></option>
@@ -160,15 +159,15 @@ $my = $db->getResults($sql);
       <option value="<?php echo DSS_HST_COMPLETE?>" <?php echo $complete_selected?>><?php echo $dss_hst_status_labels[DSS_HST_COMPLETE]?></option>
       <option value="<?php echo DSS_HST_REJECTED?>" <?php echo $rejected_selected?>><?php echo $dss_hst_status_labels[DSS_HST_REJECTED]?></option>
     </select>
-    <input type="hidden" name="sort_by" value="<?php echo $sort_by?>"/>
-    <input type="hidden" name="sort_dir" value="<?php echo $sort_dir?>"/>
+    <input type="hidden" name="sort_by" value="<?php echo (!empty($sort_by) ? $sort_by : ''); ?>"/>
+    <input type="hidden" name="sort_dir" value="<?php echo (!empty($sort_dir) ? $sort_dir : ''); ?>"/>
     <input type="submit" value="Filter List"/>
     <input type="button" value="Reset" onclick="window.location='<?php echo $_SERVER['PHP_SELF']?>'"/>
   </form>
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 
@@ -185,26 +184,26 @@ $my = $db->getResults($sql);
   	</TR>
   	<?php }?>
   	<tr class="tr_bg_h">
-  		<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'request_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
-  			<a href="manage_hst.php?pid=<?php echo $_GET['pid'] ?>&sort=request_date&sortdir=<?php echo ($_REQUEST['sort']=='request_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
+  		<td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'request_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+  			<a href="manage_hst.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=request_date&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='request_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
           Requested
         </a>
   		</td>
-  		<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
-  			<a href="manage_hst.php?pid=<?php echo $_GET['pid'] ?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
+  		<td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+  			<a href="manage_hst.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=patient_name&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
           Patient Name
         </a>
   		</td>
-  		<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
-  			<a href="manage_hst.php?pid=<?php echo $_GET['pid'] ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
+  		<td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+  			<a href="manage_hst.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=status&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
           Status
         </a>	
   		</td>
   		<td valign="top" class="col_head" width="15%">
   			Action
   		</td>
-	  	<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'authorize')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
-        <a href="manage_hst.php?pid=<?php echo $_GET['pid'] ?>&sort=authorize&sortdir=<?php echo ($_REQUEST['sort']=='authorize'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
+	  	<td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'authorize')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+        <a href="manage_hst.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=authorize&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='authorize'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
           Authorize
         </a>
   		</td>
@@ -221,7 +220,7 @@ $my = $db->getResults($sql);
   	else
   	{
       foreach ($my as $myarray){	?>
-      <tr class="<?php echo $tr_class;?> <?php echo (!$myarray['viewed'] && ($myarray['status'] == DSS_HST_COMPLETE || $myarray['status']==DSS_HST_REJECTED))?'unviewed':''; ?>">
+      <tr class="<?php echo (!empty($tr_class) ? $tr_class : '');?> <?php echo (!$myarray['viewed'] && ($myarray['status'] == DSS_HST_COMPLETE || $myarray['status']==DSS_HST_REJECTED))?'unviewed':''; ?>">
         <td valign="top">
           <?php echo date('m/d/Y h:i a',strtotime($myarray["adddate"]));?>&nbsp;
         </td>
@@ -265,7 +264,7 @@ $my = $db->getResults($sql);
         </td>
         <td valign="top">
           <?php
-          $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+          $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
           $sign_r = $db->getRow($sign_sql);
           $user_sign = $sign_r['sign_notes'];
 

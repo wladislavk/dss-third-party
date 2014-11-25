@@ -407,7 +407,7 @@ Claim <?= $_GET['claimid']; ?>
   				</td>
   				<td <?php if($myarray['ledger']=="eob"){ echo 'onclick="window.location=\'display_file.php?f='.$myarray['filename'].'\'"'; } ?> valign="top">
             <?php
-               echo $dss_claim_status_labels[$myarray["status"]]; 
+               echo (!empty($dss_claim_status_labels[$myarray["status"]]) ? $dss_claim_status_labels[$myarray["status"]] : ''); 
             ?>       	
   				</td>
   				<td valign="top">

@@ -9,7 +9,7 @@ $my = $db->getResults($sql);
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <?php 
-if($total_rec > $rec_disp) {?>
+if(!empty($total_rec) && $total_rec > $rec_disp) {?>
     <TR bgColor="#ffffff">
         <TD  align="right" colspan="15" class="bp">
             Pages:
@@ -70,7 +70,7 @@ $my = $db->getResults($sql);
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <?php 
-if($total_rec > $rec_disp) {?>
+if(!empty($total_rec) && $total_rec > $rec_disp) {?>
     <TR bgColor="#ffffff">
         <TD  align="right" colspan="15" class="bp">
           Pages:

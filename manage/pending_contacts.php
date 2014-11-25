@@ -8,13 +8,13 @@ include "includes/similar.php";
 
 <?php
 //SQL to search for possible duplicates
-$simsql = "(select count(*) FROM dental_contact dc WHERE dc.status=1 AND dc.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND 
+$simsql = "(select count(*) FROM dental_contact dc WHERE dc.status=1 AND dc.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND 
 		((dc.firstname=c.firstname AND dc.lastname=c.lastname) OR
 		(dc.add1=c.add1 AND dc.city=c.city AND dc.state=c.state AND dc.zip=c.zip))
 		)";
 
 if(isset($_REQUEST['deleteid'])){
-    $dsql = "DELETE FROM dental_contact WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND contactid='".mysql_real_escape_string($_REQUEST['deleteid'])."'";
+    $dsql = "DELETE FROM dental_contact WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND contactid='".mysqli_real_escape_string($con, $_REQUEST['deleteid'])."'";
     $db->query($dsql);
 ?>  
 <script type="text/javascript">
@@ -22,7 +22,7 @@ if(isset($_REQUEST['deleteid'])){
 </script>
 <?php
 }elseif(isset($_REQUEST['createid'])){
-    $sql = "UPDATE dental_contact SET status= CASE status WHEN 4 THEN 2 ELSE 1 END WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND contactid='".mysql_real_escape_string($_REQUEST['createid'])."'";
+    $sql = "UPDATE dental_contact SET status= CASE status WHEN 4 THEN 2 ELSE 1 END WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND contactid='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
     $db->query($sql);
 ?>  
 <script type="text/javascript">
@@ -32,11 +32,11 @@ if(isset($_REQUEST['deleteid'])){
 }elseif(isset($_REQUEST['createtype'])){
 	//createtype for duplicates or not
 	if($_REQUEST['createtype']=='yes'){
-        $sql3 = "SELECT c.contactid FROM dental_contact c WHERE status='3' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
-        $sql4 = "SELECT c.contactid FROM dental_contact c WHERE status='4' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
+        $sql3 = "SELECT c.contactid FROM dental_contact c WHERE status='3' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
+        $sql4 = "SELECT c.contactid FROM dental_contact c WHERE status='4' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
 	}elseif($_REQUEST['createtype']=='no'){
-        $sql3 = "SELECT c.contactid FROM dental_contact c WHERE status='3' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
-        $sql4 = "SELECT c.contactid FROM dental_contact c WHERE status='4' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
+        $sql3 = "SELECT c.contactid FROM dental_contact c WHERE status='3' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
+        $sql4 = "SELECT c.contactid FROM dental_contact c WHERE status='4' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
 	}
     $q3 = $db->getResults($sql3);
     $ids3 = array();
@@ -59,9 +59,9 @@ if(isset($_REQUEST['deleteid'])){
 <?php
 }elseif(isset($_REQUEST['deletetype'])){
     if($_REQUEST['deletetype']=='yes'){
-        $sql = "SELECT c.contactid FROM dental_contact c WHERE (status='3' || status='4' ) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
+        $sql = "SELECT c.contactid FROM dental_contact c WHERE (status='3' || status='4' ) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
     }elseif($_REQUEST['deletetype']=='no'){
-        $sql = "SELECT c.contactid FROM dental_contact c WHERE (status='3' || status='4' ) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
+        $sql = "SELECT c.contactid FROM dental_contact c WHERE (status='3' || status='4' ) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
     }
     $q = $db->getResults($sql);
     $ids = array();
@@ -76,7 +76,7 @@ if(isset($_REQUEST['deleteid'])){
 </script>
 <?php
 }
-$sql = "SELECT c.* FROM dental_contact c WHERE status IN (3,4) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0 ";
+$sql = "SELECT c.* FROM dental_contact c WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0 ";
 $sql .= "ORDER BY c.lastname ASC"; 
 $my = $db->getResults($sql);
 ?>
@@ -188,7 +188,7 @@ $my = $db->getResults($sql);
 </table>
 
 <?php
-$sql = "SELECT c.* FROM dental_contact c WHERE status IN (3,4) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0 ";
+$sql = "SELECT c.* FROM dental_contact c WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0 ";
 $sql .= "ORDER BY c.lastname ASC";
 $my = $db->getResults($sql);
 ?>

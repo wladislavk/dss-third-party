@@ -1,5 +1,5 @@
-<?
-require_once('admin/includes/main_include.php');
+<?php
+include_once('admin/includes/main_include.php');
 include_once('admin/includes/password.php');
 include_once('includes/constants.inc');
 
@@ -8,7 +8,7 @@ include_once('includes/constants.inc');
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
+<meta name="keywords" content="<?php echo st(!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : '');?>" />
 <title><?php echo $sitename;?></title>
 <link href="css/login.css" rel="stylesheet" type="text/css" />
 
@@ -17,8 +17,8 @@ include_once('includes/constants.inc');
 
 <?php
 
-if($_POST["emailsub"] == 1){
-	$check_sql = "SELECT userid, username, email FROM dental_users WHERE email='".mysql_real_escape_string($_POST['email'])."'";
+if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1){
+	$check_sql = "SELECT userid, username, email FROM dental_users WHERE email='".mysqli_real_escape_string($con,$_POST['email'])."'";
 	$check_myarray = $db->getRow($check_sql);
 	
 	if($check_myarray) {
@@ -69,7 +69,7 @@ http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray
 			</td>
 		</tr>
 
-		<?php if($_GET['msg']!=""){?> 
+		<?php if(!empty($_GET['msg'])){?> 
 	        <tr bgcolor="#FFFFFF">
 	            <td colspan="2" >
 	                <span class="red">

@@ -1,4 +1,4 @@
-<? 
+<?php
 session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
@@ -70,7 +70,7 @@ $num_users = count($my);
 </table>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<?php if(count($my) == 0)
+	<?php if($num_users == 0)
 	{ ?>
 	<tr class="tr_bg">
 		<td valign="top" class="col_head" colspan="10" align="center">

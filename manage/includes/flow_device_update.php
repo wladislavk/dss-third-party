@@ -1,13 +1,13 @@
 <?php
   include_once '../admin/includes/main_include.php';
 
-  $id = $_REQUEST['id'];
-  $d = $_REQUEST['device'];
-  $pid = $_REQUEST['pid'];
+  $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
+  $d = (!empty($_REQUEST['device']) ? $_REQUEST['device'] : '');
+  $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
 
   $info_sql = "UPDATE dental_flow_pg2_info SET
-          		 device_id='".mysql_real_escape_string($d)."'
-          		 WHERE id='".mysql_real_escape_string($id)."'";
+          		 device_id='".mysqli_real_escape_string($con,$d)."'
+          		 WHERE id='".mysqli_real_escape_string($con,$id)."'";
 
   $q = $db->query($info_sql);
 
@@ -23,18 +23,18 @@
 
     if($db->getNumberRows($sql)==0){
       $s = "INSERT INTO dental_ex_page5 set 
-            dentaldevice='".mysql_real_escape_string($d)."', 
+            dentaldevice='".mysqli_real_escape_string($con,$d)."', 
             patientid='".$pid."',
             userid = '".s_for($_SESSION['userid'])."',
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
     } else {
-      $sql = "update dental_ex_page5 set dentaldevice='".mysql_real_escape_string($d)."' where patientid='".$pid."'";
+      $sql = "update dental_ex_page5 set dentaldevice='".mysqli_real_escape_string($con,$d)."' where patientid='".$pid."'";
     }
   $q = $db->query($sql);
   }
-  if($q){
+  if(!empty($q)){
     echo '{"success":true}';
   }else{
     echo '{"error":true}';

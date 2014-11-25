@@ -49,7 +49,7 @@ if(isset($_GET['sort2'])){
 if(isset($_GET['notes']) && $_GET['notes']==1){
     $pend_sql .= " AND num_notes > 0 ";
 }
-$pend_sql .= " ORDER BY " . mysql_real_escape_string($sort);
+$pend_sql .= " ORDER BY " . mysqli_real_escape_string($con,$sort);
 $pend_my = $db->getResults($pend_sql);
 
 $sql = "select i.*, p.firstname, p.lastname,
@@ -63,7 +63,7 @@ if($_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE){
     $sql .= " AND i.status NOT  IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_SEC_REJECTED.")";
 }
 if(isset($_GET['unpaid'])){
-    $sql .= " AND i.status NOT IN  (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_SEC_PATIENT.") AND i.adddate < DATE_SUB(NOW(), INTERVAL ".mysql_real_escape_string($_GET['unpaid'])." day) ";
+    $sql .= " AND i.status NOT IN  (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_SEC_PATIENT.") AND i.adddate < DATE_SUB(NOW(), INTERVAL ".mysqli_real_escape_string($con,$_GET['unpaid'])." day) ";
 }
 if(isset($_GET['notes']) && $_GET['notes']==1){
     $sql .= " AND num_notes > 0 ";
@@ -78,7 +78,7 @@ if(isset($_GET['sort2'])){
         $sort = $_GET['sort2']." ".$_GET['dir2'];
     }
 }
-$sql .= " ORDER BY " . mysql_real_escape_string($sort);
+$sql .= " ORDER BY " . mysqli_real_escape_string($con,$sort);
  
 $my = $db->getResults($sql);
 

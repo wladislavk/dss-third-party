@@ -7,9 +7,9 @@ $ch_total = 0;
 $ch_sql = "SELECT dl.description, sum(dl.amount) amount FROM dental_ledger dl
         		JOIN dental_patients p ON p.patientid=dl.patientid
         		WHERE amount != '' 
-        		AND p.docid='".mysql_real_escape_string($_SESSION['docid'])."' ";
+        		AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' ";
 if(isset($_GET['pid'])){
-  $ch_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
+  $ch_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
 }
 	$ch_sql .= " GROUP BY dl.description";
 $ch_q = $db->getResults($ch_sql);
@@ -31,7 +31,7 @@ $cr_sql = "SELECT dl.description, sum(dl.paid_amount) amount FROM dental_ledger 
             AND tc.type != '".DSS_TRXN_TYPE_ADJ."'
             ";
 if(isset($_GET['pid'])){
-  $cr_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
+  $cr_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
 }
 $cr_sql .= " GROUP BY dl.description";
 $cr_q = $db->getResults($cr_sql);
@@ -48,7 +48,7 @@ $cr_sql = "SELECT dlp.payment_type, sum(dlp.amount) amount FROM dental_ledger_pa
             WHERE dlp.amount != '' 
             ";
 if(isset($_GET['pid'])){
-  $cr_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
+  $cr_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
 }
 $cr_sql .= " GROUP BY dlp.payment_type";
 $cr_q = $db->getResults($cr_sql);
@@ -69,7 +69,7 @@ $adj_sql = "SELECT dl.description, sum(dl.paid_amount) amount FROM dental_ledger
               AND tc.type = '".DSS_TRXN_TYPE_ADJ."'
               ";
 if(isset($_GET['pid'])){
-  $adj_sql .= " AND dl.patientid='".mysql_real_escape_string($_GET['pid'])."' ";
+  $adj_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
 }
 $adj_sql .= " GROUP BY dl.description";
 $adj_q = $db->getResults($adj_sql);

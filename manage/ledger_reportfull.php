@@ -1,9 +1,9 @@
-<? 
+<?php 
 include "includes/top.htm";
 
 $rec_disp = 200;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -11,7 +11,7 @@ else
 $i_val = $index_val * $rec_disp;
 
 $sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."'";
-        if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1){ 
+        if(!empty($_POST['dailysub']) && $_POST['dailysub'] != 1 && !empty($_POST['monthlysub']) && $_POST['monthlysub'] != 1){ 
 $sql = "
 select 
 		'ledger',
@@ -123,20 +123,20 @@ $num_users = count($my);
 
 <span class="admin_head">
 	Today's Ledger Report
-	<?php if($_POST['dailysub'] == 1){ ?>
+	<?php if(!empty($_POST['dailysub']) && $_POST['dailysub'] == 1){ ?>
 	    (<i><?php echo $_POST['d_mm']?>-<?php echo $_POST['d_dd']?>-<?php echo $_POST['d_yy']?></i>)
 	<?php }
 	
-	if($_POST['monthlysub'] == 1){ ?>
+	if(!empty($_POST['monthlysub']) && $_POST['monthlysub'] == 1){ ?>
 		(<i><?php echo $_POST['d_mm']?>-<?php echo $_POST['d_yy']?></i>)
 	<?php }
 	
-	if($_GET['pid'] <> '')
+	if(!empty($_GET['pid']))
 	{?>
 		(<i><?php echo $thename;?></i>)
 	<?php }?>
 
-	<?php if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1){ ?>
+	<?php if(!empty($_POST['dailysub']) && $_POST['dailysub'] != 1 && !empty($_POST['monthlysub']) && $_POST['monthlysub'] != 1){ ?>
 	   (<i><?php echo  date('m/d/Y'); ?></i>)
 	<?php } ?>
 
@@ -148,7 +148,7 @@ $num_users = count($my);
         Claim Aging
     </a>
 &nbsp;&nbsp;&nbsp;&nbsp;
-	<a href="print_ledger_reportfull.php?dailysub=<?php echo $_POST['dailysub'];?>&monthlysub=<?php echo $_POST['monthlysub'];?>&d_mm=<?php echo $_POST['d_mm'];?>&d_dd=<?php echo $_POST['d_dd'];?>&d_yy=<?php echo $_POST['d_yy'];?>&pid=<?php echo $_GET['pid'];?>" target="_blank" class="addButton">
+	<a href="print_ledger_reportfull.php?dailysub=<?php echo (!empty($_POST['dailysub']) ? $_POST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_POST['monthlysub']) ? $_POST['monthlysub'] : '');?>&d_mm=<?php echo (!empty($_POST['d_mm']) ? $_POST['d_mm'] : '');?>&d_dd=<?php echo (!empty($_POST['d_dd']) ? $_POST['d_dd'] : '');?>&d_yy=<?php echo (!empty($_POST['d_yy']) ? $_POST['d_yy'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>" target="_blank" class="addButton">
 		Print Ledger
 	</a>
         &nbsp;&nbsp;&nbsp;&nbsp;
@@ -164,10 +164,10 @@ $num_users = count($my);
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<? if($total_rec > $rec_disp) {?>
+	<? if(!empty($total_rec) && $total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -221,7 +221,7 @@ $num_users = count($my);
 		$tot_charges = 0;
 		$tot_credit = 0;
 		$tot_adj = 0;
-		
+
 		foreach ($my as $myarray) {
 
 			$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
@@ -247,20 +247,20 @@ $num_users = count($my);
         	<?php echo date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
 		</td>
 		<td valign="top" width="10%">
-        	<a href="manage_ledger.php?pid=<?php echo $myarray['patientid']; ?>&addtopat=1"><?php echo st($myarray['lastname'].", ".$myarray['firstname']);?></a>
+        	<a href="manage_ledger.php?pid=<?php echo $myarray['patientid']; ?>&addtopat=1"><?php echo st((!empty($myarray['lastname']) ? $myarray['lastname'] : '').", ".(!empty($myarray['firstname']) ? $myarray['firstname'] : ''));?></a>
 		</td>
 		<td valign="top" width="10%">
         	<?php echo st($myarray['name']);?>
 		</td>
 		<td valign="top" width="30%">
-			<?php echo  (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
-            <?php echo (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
-            <?php echo (($myarray[0] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":''; ?>
-            <?php echo $myarray["description"];?>
+			<?php echo  (($myarray['ledgerid'] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
+        <?php echo  (($myarray['ledgerid'] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
+      	<?php echo  (($myarray['ledgerid'] == 'ledger'))?$myarray["description"]:'';?>
+        <?php echo $myarray["description"];?>
 		</td>
 		<td valign="top" align="right" width="10%">
 		<?php
-			if($myarray[0] == 'ledger'){
+			if($myarray['ledgerid'] == 'ledger'){
 				if($myarray["amount"] <> 0){
 					echo number_format($myarray["amount"],2);
 					$tot_charges += $myarray["amount"];
@@ -269,11 +269,11 @@ $num_users = count($my);
 		?>
 			&nbsp;
 		</td>
-			<?php if($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
+			<?php if($myarray['ledgerid'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
         <td>
         </td>
 			<?php
-				if($myarray[0]!='claim'){
+				if($myarray['ledgerid']!='claim'){
 				$tot_adj += st($myarray["paid_amount"]);
 				}
 			} ?>
@@ -284,8 +284,8 @@ $num_users = count($my);
 			}?>
 			&nbsp;
 		</td>
-			<?php if(!($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
-				if($myarray[0]!='claim'){
+			<?php if(!($myarray['ledgerid'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
+				if($myarray['ledgerid']!='claim'){
 					$tot_credit += st($myarray["paid_amount"]);
 				}
 			?>
@@ -323,16 +323,28 @@ $num_users = count($my);
 			$myarray = $db->getRow($ledgerquery);
 			$myarray2 = $db->getRow($ledgerquery2);
 
+			if (!isset($cur_bal)) {
+				$cur_bal = 0;
+			}
+
 			if(st($myarray["amount"]) <> 0) {
 				$cur_bal += st($myarray["amount"]);
 			}
 
 			$i = 0;
 
+			if (!isset($ledgerres2)) {
+				$ledgerres2 = array();
+			}
+
 			if($i < count($ledgerres2)){
 				$cur_bal2 = $myarray2['paid_amount'];
 			}
 			$i++;
+
+			if (!isset($cur_bal2)) {
+				$cur_bal2 = 0;
+			}
 
 			$cur_balfinal = $cur_bal - $cur_bal2;
 			?>

@@ -11,7 +11,7 @@ if(isset($_REQUEST['useid'])){
 	$u = $_REQUEST['useid'];
 	$pc = $_REQUEST['pcid'];
 
-	$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($pc)."'";
+	$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysqli_real_escape_string($con, $pc)."'";
 	$pcr = $db->getRow($pcsql);
 	$psql = "UPDATE dental_patients SET ";
 	switch($pcr['contacttype']){
@@ -34,7 +34,7 @@ if(isset($_REQUEST['useid'])){
 	$psql .= " = '".$u."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
 	$db->query($psql);
 
-	$dsql = "DELETE FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($pc)."'";
+	$dsql = "DELETE FROM dental_patient_contacts WHERE id='".mysqli_real_escape_string($con, $pc)."'";
 	$db->query($dsql);?>
 	<script type="text/javascript">
 		window.location = "patient_changes.php?pid=<?php echo $pcr['patientid']; ?>";
@@ -61,12 +61,12 @@ if(isset($_REQUEST['useid'])){
 		state,
 		zip,
 		phone,
-		'".mysql_real_escape_string($_SESSION['docid'])."'
+		'".mysqli_real_escape_string($con, $_SESSION['docid'])."'
 	FROM dental_patient_contacts
-		WHERE id='".mysql_real_escape_string($_REQUEST['createid'])."'";
+		WHERE id='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
   $pc_id = $db->getInsertId($s);
 
-	$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($_REQUEST['createid'])."'";
+	$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
 	$pcr = $db->getRow($pcsql);
 	$psql = "UPDATE dental_patients SET ";
 	switch($pcr['contacttype']){
@@ -89,16 +89,16 @@ if(isset($_REQUEST['useid'])){
 
 	$psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
 	$db->query($psql);
-	$d = "DELETE FROM dental_patient_contacts where id='".mysql_real_escape_string($_REQUEST['createid'])."'";
+	$d = "DELETE FROM dental_patient_contacts where id='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
 	$db->query($d);?>
 	<script type="text/javascript">
 		//window.location = "add_contact.php?ed=<?php echo $pc_id; ?>";
 	</script>
  <?php
 }elseif(isset($_REQUEST['delid'])){
-	$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($_REQUEST['delid'])."'";
+	$pcsql = "SELECT patientid, contacttype FROM dental_patient_contacts WHERE id='".mysqli_real_escape_string($con, $_REQUEST['delid'])."'";
 	$pcr = $db->getRow($pcsql);
-	$dsql = "DELETE FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($_REQUEST['delid'])."'";
+	$dsql = "DELETE FROM dental_patient_contacts WHERE id='".mysqli_real_escape_string($con, $_REQUEST['delid'])."'";
 	$db->query($dsql);?>
 	<script type="text/javascript">
 		window.location = "patient_changes.php?pid=<?php echo $pcr['patientid']; ?>";

@@ -1,4 +1,4 @@
-<? 
+<?php
 include 'includes/constants.inc';
 include "includes/top.htm";
 include "includes/similar.php";
@@ -9,21 +9,21 @@ include "includes/similar.php";
 <?php
  
 //SQL to search for possible duplicates
-$simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND 
+$simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND 
 		((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
 		(dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
 		)";
 
 
 if(isset($_REQUEST['deleteid'])){
-    $dsql = "DELETE FROM dental_patients WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND patientid='".mysql_real_escape_string($_REQUEST['deleteid'])."'";
+    $dsql = "DELETE FROM dental_patients WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND patientid='".mysqli_real_escape_string($con, $_REQUEST['deleteid'])."'";
     $db->query($dsql);?>
 <script type="text/javascript">
     window.location = "pending_patient.php";
 </script>
 <?php
 }elseif(isset($_REQUEST['createid'])){
-	$sql = "UPDATE dental_patients SET status= CASE status WHEN 4 THEN 2 ELSE 1 END WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND patientid='".mysql_real_escape_string($_REQUEST['createid'])."'";
+	$sql = "UPDATE dental_patients SET status= CASE status WHEN 4 THEN 2 ELSE 1 END WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND patientid='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
 	$db->query($sql);
 ?>
 <script type="text/javascript">
@@ -33,11 +33,11 @@ if(isset($_REQUEST['deleteid'])){
 }elseif(isset($_REQUEST['createtype'])){
 	//createtype for duplicates or not
 	if($_REQUEST['createtype']=='yes'){
-        $sql3 = "SELECT p.patientid FROM dental_patients p WHERE status='3' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
-        $sql4 = "SELECT p.patientid FROM dental_patients p WHERE status='4' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
+        $sql3 = "SELECT p.patientid FROM dental_patients p WHERE status='3' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
+        $sql4 = "SELECT p.patientid FROM dental_patients p WHERE status='4' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
 	}elseif($_REQUEST['createtype']=='no'){
-        $sql3 = "SELECT p.patientid FROM dental_patients p WHERE status='3' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
-        $sql4 = "SELECT p.patientid FROM dental_patients p WHERE status='4' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
+        $sql3 = "SELECT p.patientid FROM dental_patients p WHERE status='3' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
+        $sql4 = "SELECT p.patientid FROM dental_patients p WHERE status='4' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
 	}
     $q3 = $db->getResults($sql3);
 	$ids3 = array();
@@ -61,9 +61,9 @@ if(isset($_REQUEST['deleteid'])){
 
 }elseif(isset($_REQUEST['deletetype'])){
         if($_REQUEST['deletetype']=='yes'){
-            $sql = "SELECT p.patientid FROM dental_patients p WHERE (status='3' || status='4' ) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
+            $sql = "SELECT p.patientid FROM dental_patients p WHERE (status='3' || status='4' ) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
         }elseif($_REQUEST['deletetype']=='no'){
-            $sql = "SELECT p.patientid FROM dental_patients p WHERE (status='3' || status='4' ) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
+            $sql = "SELECT p.patientid FROM dental_patients p WHERE (status='3' || status='4' ) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
         }
         $q = $db->getResults($sql);
         $ids = array();
@@ -78,7 +78,7 @@ if(isset($_REQUEST['deleteid'])){
 </script>
 <?php
 }
-$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0 ";
+$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0 ";
 $sql .= "ORDER BY p.lastname ASC"; 
 $my = $db->getResults($sql);
 ?>
@@ -98,8 +98,8 @@ $my = $db->getResults($sql);
 </span>
 <br />
 <br />
-<a href="<?= $_SERVER['PHP_SELF']; ?>?deletetype=yes" style="margin-right:10px;float:right;" onclick="return confirm('Are you sure you want to delete all?');">Delete All</a>
-<a href="<?= $_SERVER['PHP_SELF']; ?>?createtype=yes" style="margin-right:10px;float:right;">Create All</a>
+<a href="<?php echo $_SERVER['PHP_SELF']; ?>?deletetype=yes" style="margin-right:10px;float:right;" onclick="return confirm('Are you sure you want to delete all?');">Delete All</a>
+<a href="<?php echo $_SERVER['PHP_SELF']; ?>?createtype=yes" style="margin-right:10px;float:right;">Create All</a>
 <br />
 <div align="center" class="red">
 	<b><?php echo $_GET['msg'];?></b>
@@ -136,29 +136,29 @@ $my = $db->getResults($sql);
 	{
         foreach ($my as $myarray) {
 			$sim = similar_patients($myarray['patientid']); ?>
-	<tr class="<?=$tr_class;?> <?= ($myarray['viewed'])?'':'unviewed'; ?>">
+	<tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
 		<td valign="top">
-            <?=st($myarray["firstname"]);?>&nbsp;
-            <?=st($myarray["lastname"]);?> 
+            <?php echo st($myarray["firstname"]);?>&nbsp;
+            <?php echo st($myarray["lastname"]);?> 
 		</td>
 		<td valign="top">
-            <?= st($myarray["add1"]); ?>
-            <?= st($myarray["add2"]); ?>
-            <?= st($myarray["city"]); ?>,
-            <?= st($myarray["state"]); ?>
-            <?= st($myarray["zip"]); ?>
+            <?php echo st($myarray["add1"]); ?>
+            <?php echo st($myarray["add2"]); ?>
+            <?php echo st($myarray["city"]); ?>,
+            <?php echo st($myarray["state"]); ?>
+            <?php echo st($myarray["zip"]); ?>
 		</td>
         <td valign="top">
-            <?= st($myarray["phone"]); ?>
+            <?php echo st($myarray["phone"]); ?>
         </td>
 		<td valign="top">
-			<a href="#" onclick="$('.sim_<?= $myarray['patientid']; ?>').toggle();return false;"><?= count($sim); ?></a>
+			<a href="#" onclick="$('.sim_<?php echo $myarray['patientid']; ?>').toggle();return false;"><?php echo count($sim); ?></a>
 		</td>
 		<td valign="top">
-			<a href="pending_patient.php?createid=<?= $myarray["patientid"]; ?>" class="editlink" title="EDIT">
+			<a href="pending_patient.php?createid=<?php echo $myarray["patientid"]; ?>" class="editlink" title="EDIT">
 			        Create
 			</a> 
-            <a href="pending_patient.php?deleteid=<?= $myarray["patientid"]; ?>" onclick="return confirm('Are you sure you want to delete <?= $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
+            <a href="pending_patient.php?deleteid=<?php echo $myarray["patientid"]; ?>" onclick="return confirm('Are you sure you want to delete <?php echo $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
                     Delete 
             </a>
 		</td>
@@ -166,15 +166,15 @@ $my = $db->getResults($sql);
 			<?php 
 			if(count($sim) > 0){ 
 			    foreach($sim as $s){ ?>
-    <tr class="similar sim_<?= $myarray['patientid']; ?>">
+    <tr class="similar sim_<?php echo $myarray['patientid']; ?>">
         <td valign="top">
-            <?=st($s["name"]);?>
+            <?php echo st($s["name"]);?>
         </td>
         <td valign="top">
-            <?= st($s["address"]); ?>
+            <?php echo st($s["address"]); ?>
         </td>
         <td valign="top">
-            <?= st($s["phone"]); ?>
+            <?php echo st($s["phone"]); ?>
         </td>
         <td>
         </td>
@@ -189,7 +189,7 @@ $my = $db->getResults($sql);
 </table>
 
 <?php
-$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0 ";
+$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0 ";
 $sql .= "ORDER BY p.lastname ASC";
 $my = $db->getResults($sql);
 ?>
@@ -198,8 +198,8 @@ $my = $db->getResults($sql);
 </span>
 <br />
 <br />
-<a href="<?= $_SERVER['PHP_SELF']; ?>?deletetype=no" style="margin-right:10px;float:right;" onclick="return confirm('Are you sure you want to delete all?');">Delete All</a>
-<a href="<?= $_SERVER['PHP_SELF']; ?>?createtype=no" style="margin-right:10px;float:right;">Create All</a>
+<a href="<?php echo $_SERVER['PHP_SELF']; ?>?deletetype=no" style="margin-right:10px;float:right;" onclick="return confirm('Are you sure you want to delete all?');">Delete All</a>
+<a href="<?php echo $_SERVER['PHP_SELF']; ?>?createtype=no" style="margin-right:10px;float:right;">Create All</a>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
     <tr class="tr_bg_h">
@@ -229,26 +229,26 @@ $my = $db->getResults($sql);
         {
             foreach ($my as $myarray) {
                 $sim = similar_doctors($myarray['patientid']); ?>
-    <tr class="<?=$tr_class;?> <?= ($myarray['viewed'])?'':'unviewed'; ?>">
+    <tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
         <td valign="top">
-            <?=st($myarray["firstname"]);?>&nbsp;
-            <?=st($myarray["lastname"]);?>
+            <?php echo st($myarray["firstname"]);?>&nbsp;
+            <?php echo st($myarray["lastname"]);?>
         </td>
         <td valign="top">
-            <?= st($myarray["add1"]); ?>
-            <?= st($myarray["add2"]); ?>
-            <?= st($myarray["city"]); ?>,
-            <?= st($myarray["state"]); ?>
-            <?= st($myarray["zip"]); ?>
+            <?php echo st($myarray["add1"]); ?>
+            <?php echo st($myarray["add2"]); ?>
+            <?php echo st($myarray["city"]); ?>,
+            <?php echo st($myarray["state"]); ?>
+            <?php echo st($myarray["zip"]); ?>
         </td>
         <td valign="top">
-            <?= st($myarray["phone"]); ?>
+            <?php echo st($myarray["phone"]); ?>
         </td>
         <td valign="top">
-            <a href="pending_patient.php?createid=<?= $myarray["patientid"]; ?>" class="editlink" title="EDIT">
+            <a href="pending_patient.php?createid=<?php echo $myarray["patientid"]; ?>" class="editlink" title="EDIT">
                 Create
             </a>
-            <a href="pending_patient.php?deleteid=<?= $myarray["patientid"]; ?>" onclick="return confirm('Are you sure you want to delete <?= $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
+            <a href="pending_patient.php?deleteid=<?php echo $myarray["patientid"]; ?>" onclick="return confirm('Are you sure you want to delete <?php echo $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
                 Delete 
             </a>
         </td>

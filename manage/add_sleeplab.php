@@ -1,10 +1,9 @@
 <?php 
-session_start();
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-require_once('includes/general_functions.php');
+include_once('includes/general_functions.php');
 
-if($_POST["sleeplabsub"] == 1){
+if(!empty($_POST["sleeplabsub"]) && $_POST["sleeplabsub"] == 1){
 	if($_POST["ed"] != ""){
 		$ed_sql = "update dental_sleeplab 
             		set 
@@ -26,7 +25,7 @@ if($_POST["sleeplabsub"] == 1){
             		status = '".s_for($_POST["status"])."' 
             		where 
             		sleeplabid='".$_POST["ed"]."'";
-		$db->query($ed_sql) or die($ed_sql." | ".mysql_error());
+		$db->query($ed_sql);
 		
 		//echo $ed_sql.mysql_error();
 		$msg = "Edited Successfully";
@@ -59,8 +58,8 @@ if($_POST["sleeplabsub"] == 1){
             		docid='".$_SESSION['docid']."', 
             		adddate=now(),
             		ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		$db->query($ins_sql) or die($ins_sql.mysql_error());
-		$id = mysql_insert_id();
+
+		$id = $db->getInsertId($ins_sql);
 		$msg = "Added Successfully";
         if($_GET['r']=='flowsheet'){ ?>
 			<script type="text/javascript">
@@ -95,10 +94,10 @@ if($_POST["sleeplabsub"] == 1){
 <body>
 
 <?php 
-$thesql = "select * from dental_sleeplab where sleeplabid='".$_REQUEST["ed"]."'";
+$thesql = "select * from dental_sleeplab where sleeplabid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 $themyarray = $db->getRow($thesql);
 
-if($msg != ''){
+if(!empty($msg)){
 	$salutation = $_POST['salutation'];
 	$firstname = $_POST['firstname'];
 	$middlename = $_POST['middlename'];
@@ -144,12 +143,12 @@ if($themyarray["sleeplabid"] != ''){
 	
 <br /><br />
 	
-	<?php if($msg != '') {?>
+	<?php if(!empty($msg)) {?>
     <div align="center" class="red">
         <?php echo $msg;?>
     </div>
     <?php }?>
-    <form name="sleeplabfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&r=<?php echo $_GET['r']; ?>&s=<?php echo $_GET['s']; ?>" method="post" onSubmit="return sleeplababc(this)">
+    <form name="sleeplabfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&r=<?php echo (!empty($_GET['r']) ? $_GET['r'] : ''); ?>&s=<?php echo (!empty($_GET['s']) ? $_GET['s'] : ''); ?>" method="post" onSubmit="return sleeplababc(this)">
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -296,8 +295,8 @@ if($themyarray["sleeplabid"] != ''){
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="tbox" tabindex="22">
-                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if(!empty($status) && $status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if(!empty($status) && $status == 2) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>

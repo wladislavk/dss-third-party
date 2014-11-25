@@ -119,7 +119,7 @@ if (isset($_GET['page'])) {
 }
 
 if (isset($_GET['filter'])) {
-  $filter = mysql_real_escape_string($_GET['filter']);
+  $filter = mysqli_real_escape_string($con,$_GET['filter']);
 }
 
 if (!isset($_REQUEST['sort'])) {
@@ -221,14 +221,14 @@ if (!empty($dental_letters)){
     $dental_letters[$key]['subject'] = $correspondance['name'];
     // Get Recipients for Sent to Column
     if(isset($letter['patientid'])){
-      $s = "SELECT referred_source FROM dental_patients where patientid=" . mysql_real_escape_string($letter['patientid']) . " LIMIT 1";
+      $s = "SELECT referred_source FROM dental_patients where patientid=" . mysqli_real_escape_string($con,$letter['patientid']) . " LIMIT 1";
       $r = $db->getRow($s);
       $source = $r['referred_source'];
     } else {
       $source = '';
     }
 
-    $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $letter['pat_referral_list']);
+    $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], (!empty($letter['pat_referral_list']) ? $letter['pat_referral_list'] : ''));
 
     $total_contacts = 0;
     $total_contacts += (isset($contacts['patient'])) ? count($contacts['patient']) : 0;
@@ -474,9 +474,9 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
       $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
       $sent = (isset($dental_letters[$i]['date_sent']))?date('m/d/Y', $dental_letters[$i]['date_sent']):'';
       $id = $dental_letters[$i]['id'];
-      $mailed = $dental_letters[$i]['mailed_date'];
+      $mailed = (!empty($dental_letters[$i]['mailed_date']) ? $dental_letters[$i]['mailed_date'] : '');
       $total_contacts = $dental_letters[$i]['total_contacts'];
-      if ($dental_letters[$i]['old']) {
+      if (!empty($dental_letters[$i]['old'])) {
         $alert = " bgcolor=\"#FF9696\"";
       } else {
         $alert = null;
@@ -487,7 +487,7 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
             <?php echo $name;?>
           </td>
           <td>
-            <a <?php echo (end(explode('.', $url)) == "pdf" ? "target=\"_blank\" " : "" ); ?> href="<?php echo  $url; ?>"><?php echo  $subject; ?></a>
+            <a <?php $mas = explode('.', $url); echo (array_pop($mas) == "pdf" ? "target=\"_blank\" " : "" ); ?> href="<?php echo  $url; ?>"><?php echo  $subject; ?></a>
           </td>
           <td>
             <?php if($total_contacts>1){ ?>

@@ -7,7 +7,7 @@
 	<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <?php
 	if(isset($_REQUEST['submit'])) {
-		$sqlex = "update dental_flow_pg2_info set delay_reason='".mysql_real_escape_string($_REQUEST['delay_reason'])."' where id='".mysql_real_escape_string($_GET['id'])."' AND patientid='".$_GET['pid']."'";
+		$sqlex = "update dental_flow_pg2_info set delay_reason='".mysqli_real_escape_string($con,$_REQUEST['delay_reason'])."' where id='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 		$qex = $db->query($sqlex);
 ?>
 		<script type="text/javascript">
@@ -31,7 +31,7 @@
 
 	<body>
 		<?php
-		  $s = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_GET['pid'])."'";
+		  $s = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 		  
 		  $r = $db->getRow($s);
 		?>
@@ -39,7 +39,7 @@
 		<h2 style="margin-top:20px;">What is the reason for delaying treatment for <?php echo  $r['firstname']." ".$r['lastname']; ?>?</h2>
 
 		<?php
-			$sql = "select * from dental_flow_pg2_info where id='".$_GET['id']."' AND patientid='".$_GET['pid']."'";
+			$sql = "select * from dental_flow_pg2_info where id='".(!empty($_GET['id']) ? $_GET['id'] : '')."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
 			$r = $db->getRow($sql);
 			$sid = st($r['segmentid']);

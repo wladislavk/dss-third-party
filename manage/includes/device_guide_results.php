@@ -22,7 +22,7 @@
           $show = false;
       	}
       } else {
-        $s_val = $_POST['setting'.$s['id']];
+        $s_val = (!empty($_POST['setting'.$s['id']]) ? $_POST['setting'.$s['id']] : '');
         $val = $s_val*$s['value'];
         if(isset($_POST['setting_imp_'.$s['id']])){
           $val *= 1.75;

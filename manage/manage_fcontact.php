@@ -1,7 +1,7 @@
 <?php
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "")
+if(!empty($_REQUEST["delid"]))
 {
 	$del_sql = "delete from dental_fcontact where contactid='".$_REQUEST["delid"]."'";
 	$db->query($del_sql);
@@ -18,7 +18,7 @@ if($_REQUEST["delid"] != "")
 
 $rec_disp = 10;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -28,16 +28,18 @@ $sql = "select c.*, ct.contacttype from dental_contact c
 	LEFT JOIN dental_contacttype ct ON ct.contacttypeid=c.contacttypeid
 	WHERE c.corporate=1 ";
 
-switch($_GET['sort']){
-  case 'company':
-    $sql .= " ORDER BY company ".$_GET['sortdir'];
-    break;
-  case 'type':
-    $sql .= " ORDER BY ct.contacttype ".$_GET['sortdir'];
-    break;
-  default:
-    $sql .= " ORDER BY lastname ".$_GET['sortdir'].", firstname ".$_GET['sortdir'];
-    break;
+if (!empty($_GET['sort'])) {
+	switch($_GET['sort']){
+	  case 'company':
+	    $sql .= " ORDER BY company ".$_GET['sortdir'];
+	    break;
+	  case 'type':
+	    $sql .= " ORDER BY ct.contacttype ".$_GET['sortdir'];
+	    break;
+	  default:
+	    $sql .= " ORDER BY lastname ".$_GET['sortdir'].", firstname ".$_GET['sortdir'];
+	    break;
+	}
 }
 
 $total_rec = $db->getNumberRows($sql);
@@ -63,7 +65,7 @@ $num_contact = count($my);
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 
@@ -80,14 +82,14 @@ $num_contact = count($my);
 	</TR>
 	<?php }?>
 	<tr class="tr_bg_h">
-        <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
-	        <a href="manage_fcontact.php?sort=company&sortdir=<?php echo ($_REQUEST['sort']=='company'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
+        <td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+	        <a href="manage_fcontact.php?sort=company&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='company'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
 		</td>
-        <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-            <a href="manage_fcontact.php?sort=type&sortdir=<?php echo ($_REQUEST['sort']=='type'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Type</a>
+        <td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+            <a href="manage_fcontact.php?sort=type&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='type'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Type</a>
 		</td>
-        <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
-            <a href="manage_fcontact.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
+        <td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+            <a href="manage_fcontact.php?sort=name&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action

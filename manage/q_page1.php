@@ -3,12 +3,12 @@
 	require_once('includes/patient_info.php');
 	if ($patient_info) {
 		if($_GET['own']==1){
-			$c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";  $c_q = mysql_query($c_sql);  $changed = mysql_num_rows($c_q);
-			$own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+			$c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";  $c_q = mysql_query($c_sql);  $changed = mysql_num_rows($c_q);
+			$own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 			$db->query($own_sql);
 
 			if($_GET['own_completed']==1){
-				$q1_sql = "SELECT q_page1id from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+				$q1_sql = "SELECT q_page1id from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
 				if($db->getNumberRows($q1_sql) == 0){
 					$ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
@@ -187,7 +187,7 @@
 		die();
 	}
 
-    $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+    $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
     
     $exist_row = $db->getRow($exist_sql);
     if($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $exist_row['treatments_status'] == 0 && $exist_row['history_status'] == 0) {
@@ -314,7 +314,7 @@
 		<div style="clear:both;"></div>
 
 		<?php
-		    $patient_sql = "SELECT * FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";    
+		    $patient_sql = "SELECT * FROM dental_q_page1 WHERE parent_patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";    
 
 			$pat_row = $db->getRow($patient_sql);
 		    if($db->getNumberRows($patient_sql) == 0){
@@ -358,7 +358,7 @@
 					> 5 indicates snoring is significantly affecting quality of life.
 					
 					<?php
-						$sleep_sql = "SELECT * FROM dental_q_sleep WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+						$sleep_sql = "SELECT * FROM dental_q_sleep WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 						if($db->getNumberRows($sleep_sql) == 0){
 					?>
 							<br />

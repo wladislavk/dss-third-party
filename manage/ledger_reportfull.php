@@ -33,6 +33,31 @@ select
 		LEFT JOIN dental_users as p ON dl.producerid=p.userid 
 	where dl.docid='".$_SESSION['docid']."' 
 	AND dl.service_date=CURDATE()
+and (dl.paid_amount IS NULL || dl.paid_amount = 0)
+                GROUP BY dl.ledgerid
+ UNION
+  	select
+                'ledger_paid',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                dl.amount,
+                dl.paid_amount,
+                dl.status, 
+                dl.description,
+                CONCAT(p.first_name,' ',p.last_name), 
+                pat.patientid,
+                pat.firstname, 
+                pat.lastname,
+                tc.type,
+		''
+        from dental_ledger dl 
+                JOIN dental_patients as pat ON dl.patientid = pat.patientid
+                LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+		LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
+        where dl.docid='".$_SESSION['docid']."' 
+	AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+        AND dl.service_date=CURDATE()
  UNION
         select 
                 'ledger_payment',
@@ -229,8 +254,9 @@ $num_users = count($my);
 		</td>
 		<td valign="top" width="30%">
 			<?php echo  (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
-            <?php echo  (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
-        	<?php echo  (($myarray[0] == 'ledger'))?$myarray["description"]:'';?>
+            <?php echo (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
+            <?php echo (($myarray[0] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":''; ?>
+            <?php echo $myarray["description"];?>
 		</td>
 		<td valign="top" align="right" width="10%">
 		<?php
@@ -273,7 +299,6 @@ $num_users = count($my);
 			}else{
 				echo "Pend";
 			}
-
 			//$tot_credit += st($myarray["paid_amount"]);
 		}?>       	
 		</td>

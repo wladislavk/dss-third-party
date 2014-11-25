@@ -8,17 +8,28 @@
 <?php
 }else{
         foreach ($my as $myarray) {
-                if($myarray["signed_id"] != ''){
+                if($myarray["signed_id"] != '')
+                {
                         $tr_class = "tr_active";
-                }else{
+                        $bg_color = "";
+                        $status = "Signed";
+                }
+                else if($myarray["status"]==2){
+                        $tr_class = "tr_draft";
+                        $bg_color = "#FFFF99";
+                        $status = 'Draft';
+                }
+                else
+                {
                         $tr_class = "tr_inactive";
+                        $bg_color = "#FF9999";
+                        $status = "Unsigned";
                 }
                 $tr_class = "tr_active";
-
                 $user_sql = "SELECT * FROM dental_users where userid='".st($myarray["userid"])."'";
                 $user_myarray = $db->getRow($user_sql);
 ?>
-        <tr id="note_<?php echo $myarray['notesid'];?>" class="<?php echo $tr_class;?>" <?php if(st($myarray["signed_id"]) == '') {?> style="background-color:#FF9999" <?php }?>>
+        <tr id="note_<?php echo $myarray['notesid'];?>" class="<?php echo $tr_class;?>" <?php if($bg_color != '') {?> style="background-color:<?php echo $bg_color?>" ?>>
                 <td valign="top" style="border:solid 1px #000;">
                         <table width="100%" cellpadding="2" cellspacing="1" border="0">
                                 <tr>
@@ -44,9 +55,9 @@
                                         </td>
                                         <td valign="top" width="30%">
                                                 <span id="note_edit_<?php echo $myarray['notesid'];?>">
-                                        <?php if(st($myarray["signed_id"]) == '') { ?>
+                                        <?php if($status == 'Unsigned' || $status == 'Draft')) { ?>
                                                         Status: 
-                                                        <span style="font-size:14px;">Unsigned</span>
+                                                        <span style="font-size:14px;"><?php echo $status; ?></span>
                                                 <?php if(!empty($office_type) && $office_type == DSS_OFFICE_TYPE_FRONT){ ?>
                                                         <a href="#" onclick="loadPopup('add_notes.php?pid=<?php echo $_GET['pid']; ?>&ed=<?php echo $myarray['notesid']; ?>');return false;">Edit</a>
                                                         <?php if($myarray["docid"]==$_SESSION['userid']){ ?>

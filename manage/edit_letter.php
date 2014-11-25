@@ -395,22 +395,21 @@ foreach ($master_q as $master_r) {
   }
 
   // Consult Appointment Date
-  $consult_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 2 ORDER BY stepid DESC LIMIT 1;";
+  $consult_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 2 ORDER BY stepid DESC LIMIT 1;";
   
-  $consult_result = $db->getRow($consult_query)['date_scheduled'];
+  $consult_result = $db->getRow($consult_query)['date_completed'];
   $consult_date = date('F d, Y', strtotime($consult_result));
 
   // Impressions Appointment Date
-  $impressions_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 4 ORDER BY stepid DESC LIMIT 1;";
+  $impressions_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 4 ORDER BY stepid DESC LIMIT 1;";
   
-  $impressions_result = $db->getRow($impressions_query)['date_scheduled'];
+  $impressions_result = $db->getRow($impressions_query)['date_completed'];
   $impressions_date = date('F d, Y', strtotime($impressions_result));
 
   // Get Medical Information
   $q3_sql = "SELECT other_history, other_medications, medicationscheck from dental_q_page3 WHERE patientid = '".$patientid."';";
   
   $q3_myarray = $db->getRow($q3_sql);
-
   $history_disp = ($q3_myarray['other_history'])?$q3_myarray['other_history']:"none provided";
 
   if ($q3_myarray['medicationscheck']) {

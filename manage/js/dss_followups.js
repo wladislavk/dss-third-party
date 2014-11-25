@@ -3,26 +3,40 @@ function show_new_followup(){
 }
 
 function gotoQuestionnaire(){
-	parent.window.location = 'q_page1.php?pid=' + getParameterByName('pid');
+  parent.window.location = 'q_page1.php?pid=<?= $_GET['pid']; ?>';
 }
 
 function update_ess(f, v){
-	$('#'+f).val(v);
+  $('#'+f).val(v);
 }
-
 function update_ess_total(f, v){
-	$('#ep_eadd_'+f).val(v);
-	$('#submitupdatefu_'+f).click();
+
+  $('#ep_eadd_'+f).val(v);
+  if (f=='new')
+  {
+    $('#submitaddfu').click();
+  }
+  else
+  {
+    $('#submitupdatefu_'+f).click();
+  }
 }
 
 function update_tss(f, one, two, three, four, five, total){
-	$('#thornton_'+f+'_1').val(one);
-	$('#thornton_'+f+'_2').val(two);
-	$('#thornton_'+f+'_3').val(three);
-	$('#thornton_'+f+'_4').val(four);
-	$('#thornton_'+f+'_5').val(five);
-	$('#ep_tsadd_'+f).val(total);
-	$('#submitupdatefu_'+f).click();
+  $('#thornton_'+f+'_1').val(one);
+  $('#thornton_'+f+'_2').val(two);
+  $('#thornton_'+f+'_3').val(three);
+  $('#thornton_'+f+'_4').val(four);
+  $('#thornton_'+f+'_5').val(five);
+  $('#ep_tsadd_'+f).val(total);
+  if (f=='new')
+  {
+    $('#submitaddfu').click();
+  }
+  else
+  {
+    $('#submitupdatefu_'+f).click();
+  }
 }
 
 $(document).ready(function(){

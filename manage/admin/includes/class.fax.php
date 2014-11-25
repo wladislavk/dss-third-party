@@ -17,7 +17,6 @@ class FTSSamples
                 $key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($_SESSION['companyid'])."'";
                 $key_q = mysql_query($key_sql);
                 $keys = mysql_fetch_assoc($key_q);
-	
 		$this->apiKey = $keys['sfax_app_key'];//Required Key	
 	}
   /* 	
@@ -91,7 +90,7 @@ $header = substr($responseBody, 0, $header_size);
 $raw = substr($responseBody, $header_size);
 $body = json_decode(substr($responseBody, $header_size), true);	
 		curl_close ($ch);
-				
+
 		//get headers and response data
 		$helper = new FTSHelper();
 		$headers = $helper->GetHeaders($responseBody, $responseInfo);
@@ -200,10 +199,10 @@ $body = json_decode(substr($responseBody, $header_size), true);
 		{			
 			//get additional information from XML payload
 			//response data xml payload
-			$xResponseData = $helper->GetResponseData($responseBody, $responseInfo);
+			$xResponseData = $helper->ReturnResponseData($responseBody, $responseInfo);
 			if ($xResponseData != null)
 			{
-				
+				return $xResponseData;	
 			}			
 		}
 		else
@@ -256,8 +255,16 @@ class FTSHelper
 	public static function GetResponseData($responseBody, $responseInfo)
 	{
         	$body = "" . substr($responseBody, $responseInfo['header_size']);
-        	echo "SendFaxResponse: " . $body;
+		echo "SendFaxResponse: " . $body;
 	}
+
+        public static function ReturnResponseData($responseBody, $responseInfo)
+        {
+                $body = "" . substr($responseBody, $responseInfo['header_size']);
+                return $body;
+        }
+
+
 	public static function WriteResponseToFile($responseBody, $responseInfo, $localFileName)
 	{
 		$data = substr($responseBody, $responseInfo['header_size']);

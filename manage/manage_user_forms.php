@@ -294,6 +294,30 @@ include "includes/top.htm";
         </td>
     </tr>
 
+                        <tr class="tr_active">
+                                <td valign="top">
+                                        Proof of Delivery
+                                </td>
+                                <td valign="top">
+                                                <?php
+                                                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+                                                $loc_q = mysql_query($loc_sql);
+                                                $num_loc = mysql_num_rows($loc_q);
+                                                if($num_loc > 1){
+                                                while($loc_r = mysql_fetch_assoc($loc_q)){
+                                                ?>
+                                        <a href="view_user_form.php?file=proof_of_delivery&locid=<?= $loc_r['id']; ?>&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                                                View <?= $loc_r['location']; ?><br />
+                                        </a>
+                                                        <?php } ?>
+                                                <?php }else{ ?>
+                                        <a href="view_user_form.php?file=proof_of_delivery&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                                                View
+                                        </a>
+                                                <?php } ?>
+                                </td>
+                        </tr>
+
 </table>
 </form>
 

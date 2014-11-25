@@ -87,6 +87,7 @@
 				$ed_sql .= " sign_notes=".$n."  where userid='".$_POST["ed"]."'";
                 $db->query($ed_sql);
     			edx_user_update($_POST['ed']);
+                //help_user_update will fail in dev environments since help site is not setup. Only in production
     			help_user_update($_POST['ed'] ,$help_con);	
     			$msg = "Edited Successfully";
 ?>
@@ -125,7 +126,6 @@
             				post_ledger_adjustments = ".$pla.", 
             				edit_ledger_entries = ".$ele.", 
             				use_course = ".$c.", ";
-
                 $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
 
                 $r = $db->getRow($sql);

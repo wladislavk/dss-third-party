@@ -222,14 +222,12 @@ $myarray = $db->getRow($sql);
 
 <div class="data">
   <label>Ledger Charges</label>
-
-  <span class="value">$<?php echo  number_format($total_charge,2); ?></span>
+  <span class="value">$<?php echo  number_format($total_charge_sum,2); ?></span>
 </div>
 
 <div class="data">
   <label>Ledger Credits</label>
-  
-  <span class="value">$<?php echo  number_format($total_credits,2); ?></span>
+  <span class="value">$<?php echo  number_format($total_credits_sum,2); ?></span>
 </div>
 
 <div style="clear:both;">&nbsp;</div>

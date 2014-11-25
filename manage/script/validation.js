@@ -282,7 +282,7 @@ function staffabc(fa)
 		fa.username.focus();
 		return false;
 	}
-	if(trim(fa.password.value) == "" )
+	if(fa.password && trim(fa.password.value) == "" )
 	{
 		alert("Password is Required");
 		fa.password.focus();

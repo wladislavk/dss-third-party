@@ -27,10 +27,9 @@
 			  	$ins_sql .= " signed_id='".s_for($_SESSION['userid'])."', signed_on=now(),";
 			}elseif(isset($_POST['signstaff'])) {
 		        $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysql_real_escape_string($_POST['username'])."'";
-
         		$salt_row = $db->getRow($salt_sql);
         		$pass = gen_password($_POST['password'], $salt_row['salt']);
-        		$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND sign_notes=1";
+        		$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
         		
         		$check_my = $db->getResults($check_sql);
         		if(count($check_my) == 1) {
@@ -80,7 +79,6 @@
 		                procedure_date = '".s_for($procedure_date)."',
 		                userid = '".s_for($_SESSION['userid'])."',
 		                docid = '".s_for($_SESSION['docid'])."',";
-
             if(isset($_POST['sign']) && ($_SESSION['docid']==$_SESSION['userid'] || $user_sign==1)) {
               	$ins_sql .= " signed_id='".s_for($_SESSION['userid'])."', signed_on=now(), ";
             } elseif(isset($_POST['signstaff'])) {
@@ -88,7 +86,7 @@
 	            
 	            $salt_row = $db->getRow($salt_sql);
 				$pass = gen_password($_POST['password'], $salt_row['salt']);
-				$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND sign_notes=1";
+				$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
                       
                 $check_my = $db->getResults($check_sql);
                 if(count($check_my) == 1)
@@ -179,14 +177,14 @@
 		<script type="text/javascript" src="script/wufoo.js"></script>
 	</head>
 
+<<<<<<< HEAD
 	<body>
 		<script language="JavaScript" src="calendar1.js"></script>
 		<script language="JavaScript" src="calendar2.js"></script>
     	<?php
-		    $thesql = "select n.*, CONCAT(u.first_name,' ',u.last_name) added_name from dental_notes n
-						LEFT JOIN dental_users u on u.userid=n.userid
-						where notesid='".$_REQUEST["ed"]."'";
-
+		  $thesql = "select n.*, CONCAT(u.first_name,' ',u.last_name) added_name from dental_notes n
+					LEFT JOIN dental_users u on u.userid=n.userid
+					where notesid='".$_REQUEST["ed"]."'";
 			$themyarray = $db->getRow($thesql);
 			$notes = st($themyarray['notes']);
 			$editor_initials = st($themyarray['editor_initials']);
@@ -221,7 +219,8 @@
 					   	-
 		   				Patient <i><?php echo $name;?></i>
 						Entry Date: <?php echo  date('m/d/Y', strtotime($procedure_date)); ?>
-		            </td>
+		            <span id="autosave_note" style="float:right; font-size:14px; font-weight:400;"><span>
+                </td>
 		        </tr>
 		        <tr>
 		        	<td valign="top" colspan="2" class="frmhead">
@@ -272,7 +271,7 @@
 		        </tr>
 		        <tr>
 		        	<td valign="top" class="frmdata">
-						Editor Initials: <input type="text" name="editor_initials" value="<?php echo $editor_initials ?>" maxlength="3" />
+						Editor Initials: <input type="text" id="editor_initials" name="editor_initials" value="<?php echo $editor_initials ?>" maxlength="3" />
 		            </td>
 		        	<td class="frmdata">
 						Procedure Date: <span class="red">*</span> <input type="text" id="procedure_date" name="procedure_date" value="<?php echo $procedure_date ?>" class="calendar_top" />

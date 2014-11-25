@@ -8,6 +8,7 @@ $sql = "SELECT f.*, c.companyid FROM dental_faxes f
 		WHERE sfax_completed=0 AND sfax_transmission_id IS NOT NULL";
 $q = mysql_query($sql);
 while($r = mysql_fetch_assoc($q)){
+$_SESSION['companyid'] = $r['companyid'];
 $fts = new FTSSamples($r['companyid']);
 $fax_status = $fts->OutboundFaxStatus($r['sfax_transmission_id']);
 $items = $fax_status['RecipientFaxStatusItems'];

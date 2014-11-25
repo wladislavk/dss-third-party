@@ -3,10 +3,8 @@
     include_once "includes/constants.inc";
 
     $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
-
     $payments = $db->getRow($sql);
-    $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."';";
-
+    $csql = "SELECT i.*, CONCAT(p.firstname, ' ',p.lastname) name FROM dental_insurance i JOIN dental_patients p ON p.patientid=i.patientid WHERE i.insuranceid='".$_GET['cid']."';";
     $claim = $db->getRow($csql);
     $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
     		  (status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE.")";
@@ -19,6 +17,11 @@
 ?>
 
     <div class="fullwidth">
+      <br />
+      <span class="admin_head">
+        Claim Payment - Claim <?= $_GET['cid']; ?> - <?= $claim['name']; ?>
+      </span>
+      <br /><br />
         <script type="text/javascript">
             var DISPUTE_OR_SEC_DISPUTE_OR_PATIENT_DISPUTE_OR_SEC_PATIENT_DISPUTE = <?php echo  ($claim['status']==DSS_CLAIM_DISPUTE || $claim['status']==DSS_CLAIM_SEC_DISPUTE || $claim['status']==DSS_CLAIM_PATIENT_DISPUTE || $claim['status']==DSS_CLAIM_SEC_PATIENT_DISPUTE) ? 1 : 0; ?>;
             var PENDING_OR_SEC_PENDING = <?php echo  ($claim['status']==DSS_CLAIM_PENDING || $claim['status']==DSS_CLAIM_SEC_PENDING) ? 1 : 0; ?>;
@@ -50,46 +53,56 @@
             <?php
                 }else{
             ?>
-                    <div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
-                        <span style="margin: 0pt 10px 0pt 0pt; float: left; width:83px;">Payment Date</span>
-                        <span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;" >Entry Date</span>
-                        <span style="width:190px;margin: 0 10px 0 0; float:left;">Description</span>
-                        <span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;">Paid By</span>
-                        <span style="margin: 0pt 10px 0pt 0pt; float: left; width: 100px;">Payment Type</span>
-                        <span style="float:left;font-weight:bold;width:100px;">Amount</span>
-                        <span style="float:left;font-weight:bold;width:100px;">Allowed</span>
-                        <span style="float:left;font-weight:bold;width:100px;">Ins. Paid</span>
-                        <span style="clear:both;float:left;font-weight:bold;width:100px;">Deductible</span>
-                        <span style="float:left;font-weight:bold;width:100px;">Copay</span>
-                        <span style="float:left;font-weight:bold;width:100px;">CoIns</span>
-                        <span style="float:left;font-weight:bold;width:100px;">Overpaid</span>
-                        <span style="float:left;font-weight:bold;width:100px;">Follow-up</span>
-                        <span style="float:left;font-weight:bold;width:100px;">Note</span>
-                    </div>
+                <table style="width: 98%" border="1">
+                  <tr>
+                    <th>Payment Date</th>
+                    <th>Entry Date</th>
+                    <th>Description</th>
+                    <th>Paid By</th>
+                    <th>Payment Type</th>
+                    <th>Amount</th>
+                    <th>Allowed</th>
+                    <th>Ins. Paid</th>
+                    <th>Deductible</th>
+                    <th>Copay</th>
+                    <th>CoIns</th>
+                    <th>Overpaid</th>
+                    <th>Follow-up</th>
+                    <th>Note</th>
+                  </tr>
             <?php
                     if ($p_sql) foreach ($p_sql as $p){
             ?>
-                        <div style="clear:both;margin-left:9px; margin-top: 10px; width:98%; ">
-                            <span style="margin: 0 10px 0 0; float:left;width:83px;"><?php echo  date('m/d/Y', strtotime($p['payment_date'])); ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:80px;"><?php echo  date('m/d/Y', strtotime($p['entry_date'])); ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:190px;"><?php echo  $p['description']; ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:80px;"><?php echo  $dss_trxn_payer_labels[$p['payer']]; ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:100px;"><?php echo  $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:100px;"><?php echo  $p['amount']; ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:100px;"><?php echo  $p['amount_allowed']; ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:100px;"><?php echo  $p['ins_paid']; ?></span>
-                            <span style="margin: 0 10px 0 0; clear:both; float:left;width:100px;"><?php echo  $p['deductible']; ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:100px;"><?php echo  $p['copay']; ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:100px;"><?php echo  $p['coins']; ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:100px;"><?php echo  $p['overpaid']; ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:100px;"><?php echo  $p['followup']; ?></span>
-                            <span style="margin: 0 10px 0 0; float:left;width:100px;"><?php echo  $p['note']; ?></span>
-                            <div style="clear:both;"></div>
-                        </div>
+                  <tr>
+                    <td><?= date('m/d/Y', strtotime($p['payment_date'])); ?></td>
+                    <td><?= date('m/d/Y', strtotime($p['entry_date'])); ?></dt>
+                    <td><?= $p['description']; ?></td>
+                    <td><?= $dss_trxn_payer_labels[$p['payer']]; ?></td>
+                    <td><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></td>
+                    <td><?= ($p['amount'] > 0 ? $p['amount'] : ""); ?></td>
+                    <td><?= ($p['amount_allowed'] > 0 ? $p['amount_allowed'] : ""); ?></td>
+                    <td><?= ($p['ins_paid'] > 0 ?  $p['ins_paid'] : ""); ?></td>
+                    <td><?= ($p['deductible'] > 0 ? $p['deductible'] : ""); ?></td>
+                    <td><?= ($p['copay'] > 0 ? $p['copay'] : ""); ?></td>
+                    <td><?= ($p['coins'] > 0 ? $p['coins'] : ""); ?></td>
+                    <td><?= ($p['overpaid'] > 0 ? $p['overpaid'] : ""); ?></td>
+                    <td><?= $p['followup']; ?></td>
+                    <td><?= $p['note']; ?></td>
+                  </tr>
             <?php 
                     }
+            ?>
+                </table>
+                </br>
+                </br>
+                </br>
+            <?php
                 }
             ?>
+                <span class="admin_head">
+                  Add Advanced Claim Payment
+                </span>
+                </br>
                 <div id="form_div">
                     <div id="select_fields" style="margin: 10px;">
                         <label>Paid By</label>

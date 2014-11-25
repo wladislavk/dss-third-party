@@ -1212,7 +1212,6 @@ if(isset($msg) && $msg != ''){
   }else{
     $docdentist_name = "";
   }
-
   $docent = st($themyarray["docent"]);
   if($docent && $docent!='Not Set'){
     $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
@@ -2236,7 +2235,7 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
               <span>
                 <label style="display:inline;">Does patient have secondary insurance?</label>
                 <input type="radio" value="Yes" <?php echo ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-                <input type="radio" value="No" <?php echo ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); clearInfo();" /> No
+                <input type="radio" value="No" <?php echo ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide(); clearInfo();" /> No
               </span>
             </div>
           </li>
@@ -2311,7 +2310,7 @@ if($api_r['use_eligible_api']==1){
             </div>
           </li>
         </ul>
-        <ul id="s_m_address_fields" <?php echo ($s_m_same_address == "1")?'style="display:none;"':''; ?>>
+        <ul id="s_m_address_fields" <?php echo ($s_m_same_address == "1" || $has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
           <li id="foli8" class="complex">
             <div>
               <span>
@@ -2666,6 +2665,5 @@ if(!isset($_GET['noheaders'])){?>
   $('input:submit, input:button, button, a').hide();
 </script>
 <?php } ?>
-
 </body>
 </html>

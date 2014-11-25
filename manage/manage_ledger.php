@@ -314,7 +314,7 @@ if($_GET['openclaims']==1){
           where i2.insuranceid=i.insuranceid),
       sum(pay.amount),
       i.status,
-      i.insuranceid,
+      i.primary_claim_id,
       '',
       '',
       '',
@@ -449,6 +449,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 </div>
 
 <form name="edit_mult_form" id="edit_mult_form" />
+<<<<<<< HEAD
   <table  class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <?php if($total_rec > $rec_disp) {?>
     <TR bgColor="#ffffff">
@@ -595,7 +596,10 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 <?php echo ($myarray['ledger'] == 'note' && $myarray['status']==1)?"(P) ":'';
       echo (($myarray['ledger'] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":'';
       echo $myarray["description"];
-      echo (($myarray['ledger'] == 'ledger' || $myarray['ledger'] =='claim') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":'';
+      echo (($myarray['ledger'] == 'ledger') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":'';
+      echo (($myarray['ledger'] =='claim') && $myarray['ledgerid'])?"(".$myarray['ledgerid'].") ":'';
+      echo (($myarray['ledger'] =='claim') && $myarray['primary_claim_id'])?"Secondary to (".$myarray['primary_claim_id'].") ":'';
+
       echo (($myarray['ledger'] =='claim') && $myarray['num_notes'] > 0)?" - Notes (".$myarray['num_notes'].") ":'';
       echo ($myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING)?' (Click to file)':'';
       echo (($myarray['ledger'] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":'';

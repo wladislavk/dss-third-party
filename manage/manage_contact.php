@@ -174,7 +174,6 @@
 					<?php endif ?>
 				</td>        
 			</tr>
-
 			<tr class="tr_bg_h">
 	            <td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'name') ? 'arrow_' . strtolower($_REQUEST['sortdir']) : ''; ?>" width="20%">
 	                <a href="manage_contact.php?sort=name&sortdir=<?php echo ($_REQUEST['sort'] == 'name' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Name</a>
@@ -254,13 +253,15 @@
 	                    </td>
 
 						<td valign="top" width="20%">
-					        <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $myarray["contactid"];?>')" class="editlink" title="EDIT">
-	                            Quick View
-	                        </a>
-							|
-							<a href="#" onclick="loadPopup('add_contact.php?ed=<?php echo $myarray["contactid"];?>')" class="editlink" title="EDIT">
-								Edit 
-							</a>    
+									<div class="actions" style="display:none;">
+						        <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $myarray["contactid"];?>')" class="editlink" title="EDIT">
+	                    Quick View
+		                </a>
+										|
+										<a href="#" onclick="loadPopup('add_contact.php?ed=<?php echo $myarray["contactid"];?>')" class="editlink" title="EDIT">
+											Edit 
+										</a>
+									</div>
 						</td>
 					</tr>
 
@@ -306,5 +307,9 @@
 	<div id="backgroundPopupRef"></div>
 
 	<br /><br />
-
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.actions').show();
+  });
+</script>
 <?php include "includes/bottom.htm"; ?>

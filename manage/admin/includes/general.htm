@@ -836,6 +836,7 @@ function deliver_created_letter($letterid){
         $contactid = $id;
       }
 
+<<<<<< HEAD
       $to_name = $firstname . " " . $lastname;
       $send_method = $row['send_method'];
       $patientid = $row['patientid'];
@@ -875,6 +876,11 @@ function deliver_created_letter($letterid){
     $fts = new FTSSamples($doc_company);
     $fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
     if($fax_send["status"] !== true){
+      ?>
+        <script type="text/javascript">
+          alert('Unable to send fax.');
+        </script>
+      <?php
       if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
         $send_success = false;
       }else{
@@ -904,7 +910,9 @@ function deliver_created_letter($letterid){
     }
     return true;
   }else{
-    $letter_query = "UPDATE dental_letters SET status='2' WHERE letterid='".s_for($letterid)."';";
+    $letter_query = "UPDATE dental_letters SET status='2', parentid=null WHERE letterid='".s_for($letterid)."';";
+    $letter_result = $db->query($letter_query);
+    $letter_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".s_for($letterid)."';";
     $letter_result = $db->query($letter_query);
     return "Letter could not be sent.";
   }

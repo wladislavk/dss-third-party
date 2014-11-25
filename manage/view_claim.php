@@ -65,7 +65,6 @@
 <?php
     }
   }
-
   $rec_disp = 200;
 
   if(!empty($_REQUEST["page"])) {
@@ -80,8 +79,8 @@
           dl.amount, '' as paid_amount, di.status, '' AS filename, '' as payer, '' as payment_type
           from dental_ledger dl 
           INNER JOIN dental_insurance di ON dl.primary_claim_id = di.insuranceid
-          LEFT JOIN dental_users p ON dl.producerid=p.userid 
-          LEFT JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
+          JOIN dental_users p ON dl.producerid=p.userid 
+          JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
           where dl.primary_claim_id=".(!empty($_GET['claimid']) ? $_GET['claimid'] : '')."  AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' 
           GROUP BY dl.ledgerid 
           UNION
@@ -121,7 +120,21 @@
   $psql = "SELECT * FROM dental_patients WHERE patientid=".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''));
   $pat = $db->getRow($psql);
 ?>
-  <span style="float:right; font-size: 26px; margin-right: 20px; font-weight: bold; color:#f00;">Claim <?php echo  (!empty($_GET['claimid']) ? $_GET['claimid'] : '')." - ".(!empty($thename) ? $thename : ''); ?></span>
+<span style="float:right; font-size: 26px; margin-right: 20px; font-weight: bold; color:#f00;">
+<?php
+  $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id='".mysql_real_escape_string($_GET['claimid'])."'";
+  $sec_q = mysql_query($sec_sql);
+  $sec_r = mysql_fetch_assoc($sec_q);
+  if(mysql_num_rows($sec_q)>0){
+?>
+Primary Claim <?= $_GET['claimid']; ?> - (<a href="view_claim.php?claimid=<?php echo $sec_r['insuranceid']; ?>&pid=<?php echo $_GET['pid']; ?>">Secondary is <?php echo $sec_r['insuranceid']; ?></a>) 
+<?php
+  }else{
+?>
+Claim <?= $_GET['claimid']; ?>
+<?php echo (($claim['primary_claim_id'])?' - (<a href="view_claim.php?claimid='.$claim['primary_claim_id'].'&pid='.$_GET['pid'].'">Secondary to '.$claim['primary_claim_id'].'</a>)':''); ?>
+  <?php } ?>
+<?= " - ".$thename; ?></span>
 
   <span class="admin_head">
     Ledger Card
@@ -442,7 +455,7 @@
 <?php 
   if(isset($_GET['inspay']) && $_GET['inspay']==1){ ?>
     <script type="text/javascript">
-	    loadPopup('add_ledger_payments.php?cid=<?php echo $_GET["claimid"];?>&pid=<?php echo $_GET['pid'];?>');
+    	window.location('add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>');
     </script>
 <?php } ?>
 

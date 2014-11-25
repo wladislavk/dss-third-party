@@ -211,11 +211,9 @@
 	        <td valign="top" class="col_head" width="10%">
 				Epworth
 	        </td>
-
 	        <td valign="top" class="col_head" width="10%">
 				Results	
 	        </td>
-
 	        <td valign="top" class="col_head" width="10%">
 	            HST
 	        </td>

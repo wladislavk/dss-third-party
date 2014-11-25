@@ -561,7 +561,6 @@ foreach ($device_my as $device_myarray) {?>
     </tr>
   </table>
 </form>
-
 <script src="js/dss_followups.js" type="text/javascript"></script>
 
 </div> 

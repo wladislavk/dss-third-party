@@ -1,7 +1,6 @@
 <?php
     include "includes/top.htm";
     include_once '3rdParty/stripe/lib/Stripe.php';
-
     $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
     
     $r = $db->getRow($sql);
@@ -13,7 +12,7 @@
     }
 
     $sql = "SELECT pi.* FROM dental_percase_invoice pi
-    	    WHERE pi.docid=".mysqli_real_escape_string($con,$_SESSION['docid'])." ORDER BY adddate DESC";
+    	    WHERE pi.status != '".DSS_INVOICE_PENDING."'AND pi.docid=".mysql_real_escape_string($_SESSION['docid'])." ORDER BY adddate DESC";
     
     if (!isset($rec_disp)) {
         $rec_disp = 1;
@@ -78,7 +77,7 @@
 		    ?>
         			<tr>
         				<td valign="top">
-        					<?php echo st(date('m/d/Y g:i a', strtotime($myarray["adddate"])));?>
+        					<?php echo ($myarray["due_date"])?st(date('m/d/Y', strtotime($myarray["due_date"]))):($myarray["adddate"])?st(date('m/d/Y', strtotime($myarray["adddate"]))):'';?>
         				</td>
         				<td valign="top">
         					<a href="display_file.php?f=percase_invoice_<?php echo  $myarray['docid'];?>_<?php echo  $myarray['id']; ?>.pdf" class="button" title="EDIT" style="padding:3px 5px;" target="_blank">

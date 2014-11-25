@@ -94,6 +94,7 @@
  }
 
 </script>
-
+<?php $total_charge_sum = $total_charge; ?>
+<?php $total_credits_sum = $total_credits; ?>
 
 

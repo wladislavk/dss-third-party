@@ -105,7 +105,6 @@
                 
                 <?php                   if ($r['use_eligible_api'] == 1):
                 ?>
-
                   <li><a href="manage_enrollment.php">Enrollments</a></li>
                 
                 <?php endif ?>

@@ -755,6 +755,7 @@
         << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".((!empty($outside_lab) && $outside_lab == "YES")?1:'').") >>
         << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".((!empty($outside_lab) && $outside_lab == "NO")?1:'').") >>
         << /T(".$field_path.".charges_fill[0]) /V(".(!empty($s_charges) ? $s_charges : '').") >>
+        << /T(".$field_path.".icd_ind[0]) /V(".(!empty($icd_ind) ?$icd_ind: ''.") >>
         << /T(".$field_path.".diagnosis_a[0]) /V(".(!empty($diagnosis_a) ? $diagnosis_a : '').") >>
         << /T(".$field_path.".diagnosis_b[0]) /V(".(!empty($diagnosis_b) ? $diagnosis_b : '').") >>
         << /T(".$field_path.".diagnosis_c[0]) /V(".(!empty($diagnosis_c) ? $diagnosis_c : '').") >>
@@ -917,7 +918,135 @@
     >>
     %%EOF
     ";
+  }
+  $fdf .= "
+  << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".$array['placeofservice'].") >>
+  << /T(".$field_path.".".$p."_EMG_fill[0]) /V(".$array['emg'].") >>
+  << /T(".$field_path.".".$p."_CPT_fill[0]) /V(".$array['transaction_code'] .") >>
+  << /T(".$field_path.".".$p."_modifier_one_fill[0]) /V(".$array['modcode'].") >>
+  << /T(".$field_path.".".$p."_modifier_two_fill[0]) /V(".$array['modcode2'].") >>
+  << /T(".$field_path.".".$p."_modifier_three_fill[0]) /V(".$array['modcode3'].") >>
+  << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V(".$array['modcode4'].") >>
+  << /T(".$field_path.".".$p."_diagnosis_pointer_fill[0]) /V(".$diagnosis_array[$array['diagnosispointer']].") >> 
+  << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format($array['amount'],0,'.','').") >>
+  << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents(floor(($array['amount']-floor($array['amount']))*100)).") >>
+  << /T(".$field_path.".".$p."_days_or_units_fill[0]) /V(".$array['daysorunits'].") >>
+  << /T(".$field_path.".".$p."_EPSDT_fill[0]) /V(".$array['epsdt'].") >>
+  << /T(".$field_path.".".$p."_rendering_provider_fill[0]) /V(".$array['provider_id'].") >> ";
+}
 
+  // re-calculate balance due
+  //$balance_due = $total_charge - $amount_paid;
+
+if($userinfo['tax_id_or_ssn'] != ''){
+  $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
+}else{
+  $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
+}
+
+if($userinfo['ssn'] != '' && $userinfo['producer_files']==1){
+  $ssn = $userinfo['ssn'];
+}else{
+  $ssn = $docinfo['ssn'];
+}
+
+if($userinfo['ein'] != '' && $userinfo['producer_files']==1){                                                                                                        
+  $ein = $userinfo['ein'];                                                                              
+}else{
+  $ein = $docinfo['ein'];                                                                                                  
+} 
+
+$fdf .= "
+  << /T(".$field_path.".fed_tax_id_number_fill[0]) /V(".$tax_id_or_ssn.") >>
+  << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".(($ssn == "1")?1:'').") >>
+  << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".(($ein == "1")?1:'').") >>
+  << /T(".$field_path.".pt_account_number_fill[0]) /V(".$patient_account_no.") >>
+  << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".((strtolower($accept_assignment) == "yes")?1:'').") >>
+  << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".((strtolower($accept_assignment) == "no")?1:'').") >>
+  
+  << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format($total_charge,0,'.','').") >>
+  << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents(floor(($total_charge-floor($total_charge))*100)).") >>
+  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format($amount_paid,0,'.','').") >>
+  << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".fill_cents(floor(($amount_paid-floor($amount_paid))*100)).") >>
+  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($balance_due,0,'.','').") >>
+  << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents(floor(($balance_due-floor($balance_due))*100)).") >>
+  
+  << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($service_facility_info_name)."\n".strtoupper($service_facility_info_address)."\n".strtoupper($service_facility_info_city).") >>
+  << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".$billing_provider_phone_code.") >>
+  << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".$billing_provider_phone.") >>
+  << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper($billing_provider_name)."\n".strtoupper($billing_provider_address)."\n".strtoupper($billing_provider_city).") >>
+  << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".$signature_physician.") >>  
+  << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/y').") >>
+  << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".$service_info_a.") >>
+  << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".$service_info_b_other.") >>
+  << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".(($insurancetype == '1')?$medicare_npi:$npi).") >>
+  << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".$billing_provider_b_other.") >>
+";
+
+
+$fdf .= "
+]
+/F (".$pdf_doc.") 
+>>
+>>
+endobj
+trailer
+<<
+/Root 1 0 R
+
+>>
+%%EOF
+";
+$d = date('YmdHms');
+$file = "fdf_".$_GET['insid']."_".$_GET['pid']."_".$d.".fdf";
+if($_REQUEST['type']=="secondary"){
+  $fdf_field = "secondary_fdf";
+}else{
+  $fdf_field = "primary_fdf";
+}
+invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
+$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysql_real_escape_string($file)."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+mysql_query($sql);
+            // this is where you'd do any custom handling of the data
+	    // if you wanted to put it in a database, email t
+            // FDF data, push ti back to the user with a header() call, etc.
+
+            // write the file out
+            //echo  $fdf;
+	  $handle = fopen("../../../shared/q_file/".$file, 'x+');
+	fwrite($handle, $fdf);
+	fclose($handle);
+
+		$xfdf_file_path = '../../../shared/q_file/'.$file;
+$pdf_template_path = 'claim_v2.pdf';
+$pdftk = '/usr/bin/pdftk';
+$pdf_name = substr( $xfdf_file_path, 0, -4 ) . '.pdf';
+$result_pdf = $pdf_name;
+$command = "$pdftk $pdf_template_path fill_form $xfdf_file_path output $result_pdf flatten";
+
+
+exec( $command, $output, $ret );
+
+
+require_once '3rdParty/tcpdf/tcpdf.php';
+require_once '3rdParty/fpdi/fpdi.php';
+
+
+class PDF extends FPDI {
+    /**
+     * "Remembers" the template id of the imported page
+     */
+    var $_tplIdx;
+    var $_template;
+    
+    /**
+     * include a background template for every page
+     */
+    function Header() {
+        if (is_null($this->_tplIdx)) {
+            $this->setSourceFile($this->_template);
+            $this->_tplIdx = $this->importPage(1);
+        }
     $d = date('YmdHms');
     $file = "fdf_".(!empty($_GET['insid']) ? $_GET['insid'] : '')."_".(!empty($_GET['pid']) ? $_GET['pid'] : '')."_".$d.".fdf";
     if(!empty($_REQUEST['type']) && $_REQUEST['type']=="secondary"){

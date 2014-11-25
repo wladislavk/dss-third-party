@@ -30,6 +30,7 @@ if(isset($_REQUEST["delid"]))
 }
 
 $pend_sql = "select i.*, p.firstname, p.lastname,
+	p.p_m_dss_file, p.docid,
 	COALESCE(notes.num_notes, 0) num_notes,
         (SELECT e.adddate FROM dental_claim_electronic e WHERE e.claimid=i.insuranceid ORDER by e.adddate DESC LIMIT 1) electronic_adddate
  from dental_insurance i left join dental_patients p on i.patientid=p.patientid 
@@ -112,20 +113,21 @@ if(isset($_GET['msg'])){
 } 
 ?>
 <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<<<<<<< HEAD
     <tr class="tr_bg_h">
-        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="40%">
+        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
             <a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=electronic_adddate&dir2=<?php echo ($_GET['sort2']=='electronic_adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
         </td>
         <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
            <a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=patient&dir2=<?php echo ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
         </td>
-        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="30%">
            <a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=status&dir2=<?php echo ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
         </td>
-        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="30%">
             <a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=notes&dir2=<?php echo ($_GET['sort2']=='notes' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Notes</a>
         </td>
-        <td valign="top" class="col_head" width="20%">
+        <td valign="top" class="col_head" width="15%">
             Action
         </td>
     </tr>
@@ -162,6 +164,21 @@ if(isset($_GET['msg'])){
         <td valign="top">
             <?php echo $dss_claim_status_labels[$pend_myarray['status']];?>
         </td>
+            <?php
+            if($pend_myarray['p_m_dss_file']!=2){
+                $b_sql = "SELECT c.name, c.exclusive FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($pend_myarray['docid'])."'";
+                $b_q = mysql_query($b_sql);
+                if(mysql_num_rows($b_q)>0){
+                    $b_r = mysql_fetch_assoc($b_q);
+                    $exclusive_billing = $b_r['exclusive'];
+                    $billing_co = $b_r['name'];
+                }else{
+                    $exclusive_billing = 0;
+                    $billing_co = "DSS";
+                }
+                echo "(".$billing_co." filing)";
+            }
+            ?>
         <td valign="top">
             <a href="view_claim.php?claimid=<?php echo $pend_myarray['insuranceid']; ?>&pid=<?php echo $pend_myarray['patientid']; ?>#notes">View (<?php echo $pend_myarray['num_notes'];?>)</a>
         </td>

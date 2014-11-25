@@ -8,14 +8,13 @@
     //print_r($d);
 
     $pi = $d['primary_insurance'];
-
     $s = "INSERT INTO dental_eligibility SET
     	patientid='".mysql_real_escape_string($pid)."',
     	userid='".mysql_real_escape_string($_SESSION['userid'])."',
     	eligible_id='".mysql_real_escape_string($d['eligible_id'])."',
     	adddate=now(),
             ip_address='".$_SERVER['REMOTE_ADDR']."',
-    	response='".$_REQUEST['response']."'";
+    	response='".mysql_real_escape_string($_REQUEST['response'])."'";
 
     $eid = $db->getInsertId($s);
     $type = (isset($_REQUEST['type']))?$_REQUEST['type']:'1';

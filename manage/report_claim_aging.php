@@ -1,5 +1,9 @@
 <?php 
-  include "includes/top.htm";
+  if(!isset($_GET['print'])){ 
+    include "includes/top.htm";
+  } else {
+    $office_type = DSS_OFFICE_TYPE_FRONT;
+  }
 ?>
 
 <link rel="stylesheet" href="css/ledger.css" />

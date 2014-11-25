@@ -344,11 +344,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $ssn = ($_POST['billing_provider']['tax_id_type']=="SY")?'1':'';
         $ein = ($_POST['billing_provider']['tax_id_type']=="EI")?'1':'';
         // NO NAME $patient_account_no = $_POST['patient_account_no'];
-        $accept_assignment = $_POST['claim']['accept_assignmenti_code'];
+        $accept_assignment = $_POST['claim']['accept_assignment_code'];
         $total_charge = $_POST['claim']['total_charge'];
         $amount_paid = $_POST['claim']['patient_amount_paid'];
         $signature_physician = $_POST['claim']['provider_signature_on_file'];
-        // NO NAME $physician_signed_date = (($_POST['physician_signed_date']!=date('m/d/Y'))?$_POST['physician_signed_date']:'');
+        $physician_signed_date = (($_POST['claim']['signature_date']!=date('m/d/Y'))?$_POST['claim']['signature_date']:'');
         $service_facility_info_name = $_POST['service_facility']['name'];
         $service_facility_info_address = $_POST['service_facility']['address']['street_line_1'];
         $service_facility_info_city = $_POST['service_facility']['address']['city'];

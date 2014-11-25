@@ -17,6 +17,8 @@
 	  	</script>
 <?php
 	}
+	else
+	{
 
 	$sql = "select * from dental_thorton where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
@@ -177,3 +179,7 @@
 	</form>
 
 	<script type="text/javascript" src="/manage/js/summ_subj_tss.js"></script>
+
+<?php 
+}
+?>

@@ -1,18 +1,18 @@
 <?php
 	include_once '../admin/includes/main_include.php';
 
-	$id = $_REQUEST['id'];
-	$r = $_REQUEST['reason'];
-	$pid = $_REQUEST['pid'];
+	$id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
+	$r = (!empty($_REQUEST['reason']) ? $_REQUEST['reason'] : '');
+	$pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
 
     $s = "UPDATE dental_flow_pg2_info SET
-          noncomp_reason = '".mysql_real_escape_string($r)."'
+          noncomp_reason = '".mysqli_real_escape_string($con,$r)."'
           WHERE
-          patientid = ".mysql_real_escape_string($pid)." AND
-          id = ".mysql_real_escape_string($id);
+          patientid = ".mysqli_real_escape_string($con,$pid)." AND
+          id = ".mysqli_real_escape_string($con,$id);
 
 	$q = $db->query($s);
-	if($q){
+	if(!empty($q)){
 	  echo '{"success":true}';
 	}else{
 	  echo '{"error":true}';

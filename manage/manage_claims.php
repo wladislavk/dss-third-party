@@ -113,7 +113,6 @@ if(isset($_GET['msg'])){
 } 
 ?>
 <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-<<<<<<< HEAD
     <tr class="tr_bg_h">
         <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
             <a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=electronic_adddate&dir2=<?php echo ($_GET['sort2']=='electronic_adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
@@ -166,10 +165,10 @@ if(isset($_GET['msg'])){
         </td>
             <?php
             if($pend_myarray['p_m_dss_file']!=2){
-                $b_sql = "SELECT c.name, c.exclusive FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($pend_myarray['docid'])."'";
-                $b_q = mysql_query($b_sql);
-                if(mysql_num_rows($b_q)>0){
-                    $b_r = mysql_fetch_assoc($b_q);
+                $b_sql = "SELECT c.name, c.exclusive FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,$pend_myarray['docid'])."'";
+                $b_q = $db->getRow($b_sql);
+                if(!empty($b_q)){
+                    $b_r = $b_q;
                     $exclusive_billing = $b_r['exclusive'];
                     $billing_co = $b_r['name'];
                 }else{

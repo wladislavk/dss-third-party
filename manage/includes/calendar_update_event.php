@@ -21,7 +21,7 @@
 		start_date='".$sd."',
 		end_date='".$ed."',
 		event_id='".$e_id."',
-		description='".mysql_real_escape_string($de)."',
+		description='".mysqli_real_escape_string($con,$de)."',
 		category='".$cat."',
 		producer_id=".$pi.",
 		res_id=".$res.",

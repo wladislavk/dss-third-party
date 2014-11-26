@@ -2,19 +2,19 @@
   include_once '../admin/includes/main_include.php';
   include_once 'constants.inc';
 
-  $npi = $_REQUEST['npi'];
-  $payer = $_REQUEST['payer'];
+  $npi = (!empty($_REQUEST['npi']) ? $_REQUEST['npi'] : '');
+  $payer = (!empty($_REQUEST['payer']) ? $_REQUEST['payer'] : '');
   $payer_id = substr($payer,0,strpos($payer, '-'));
 
   $sql = "SELECT e.* from dental_eligible_enrollment e
   	JOIN dental_enrollment_transaction_type t ON t.id = e.transaction_type_id
   	WHERE t.transaction_type='835'
-  		AND e.npi='".mysql_real_escape_string($npi)."'
-  		AND e.payer_id = '".mysql_real_escape_string($payer_id)."'";
+  		AND e.npi='".mysqli_real_escape_string($con,$npi)."'
+  		AND e.payer_id = '".mysqli_real_escape_string($con,$payer_id)."'";
   $q = $db->getResults($sql);
   $r = $q[0];
 
-  $u_sql ="SELECT userid FROM dental_users where npi='".mysql_real_escape_string($npi)."' OR service_npi='".mysql_real_escape_string($npi)."'";
+  $u_sql ="SELECT userid FROM dental_users where npi='".mysqli_real_escape_string($con,$npi)."' OR service_npi='".mysqli_real_escape_string($con,$npi)."'";
   $u_r = $db->getRow($u_sql);
 
   if(count($q) == 0){

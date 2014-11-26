@@ -44,7 +44,7 @@
             </script>
 <?php
         } else {
-    		if($_POST["ed"] != "") {
+    		if(!empty($_POST["ed"])) {
                 $old_sql = "SELECT username FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_POST["ed"])."'";
                 
                 $old_r = $db->getRow($old_sql);

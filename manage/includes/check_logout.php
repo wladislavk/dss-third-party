@@ -4,7 +4,7 @@
 	$id = $_SESSION['userid'];
 	$logout_time = 60*60;
 	$s = "SELECT last_accessed_date FROM dental_users
-		WHERE userid='".mysql_real_escape_string($id)."'";
+		WHERE userid='".mysqli_real_escape_string($con,$id)."'";
 
 	$r = $db->getRow($s);
 	$lat = strtotime($r['last_accessed_date']);

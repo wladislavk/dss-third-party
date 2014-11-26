@@ -14,7 +14,7 @@
     $jpg = substr( $file, 0, -4 ) . '';
 ?>
     <br />
-<div style="float:left;"><a href="#" onclick="send_letter('<?=$_GET['id']; ?>')">Looks Good! SEND!</a> | <a href="#" onclick="parent.disablePopupClean();">Cancel/Revise</a></div>
+<div style="float:left;"><a href="#" onclick="send_letter('<?php echo (!empty($_GET['id']) ? $_GET['id'] : ''); ?>')">Looks Good! SEND!</a> | <a href="#" onclick="parent.disablePopupClean();">Cancel/Revise</a></div>
 <?php
     exec('gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -r300 -sOutputFile='.$jpg.'-%01d.jpg '. $file)
 ?>
@@ -24,11 +24,11 @@
     if(isset($_REQUEST['parent'])){
         if($_REQUEST['goto']!=''){
             if($_REQUEST['goto']=='flowsheet'){
-                $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
+                $page = 'manage_flowsheet3.php?pid='.(!empty($_GET['pid']) ? $_GET['pid'] : '').'&addtopat=1';
             }elseif($_REQUEST['goto']=='letter'){
-                $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
+                $page = 'dss_summ.php?sect=letters&pid='.(!empty($_GET['pid']) ? $_GET['pid'] : '').'&addtopat=1';
             }elseif($_REQUEST['goto']=='new_letter'){
-                $page = 'new_letter.php?pid='.$_GET['pid'];
+                $page = 'new_letter.php?pid='.(!empty($_GET['pid']) ? $_GET['pid'] : '');
             }elseif($_REQUEST['goto']=='faxes'){
                 $page = 'manage_faxes.php';
             }

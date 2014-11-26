@@ -30,7 +30,7 @@ $body_width = ($num_labs*185)+215;
 <?php 
 if(isset($_POST['submitdeletesleeplabsumm'])){
   $id = s_for($_POST['sleeplabid']);
-  $q = "DELETE FROM dental_summ_sleeplab WHERE id=".mysql_real_escape_string($id);
+  $q = "DELETE FROM dental_summ_sleeplab WHERE id=".mysqli_real_escape_string($con,$id);
   if(!$db->query($q)){
     echo "Could not delete sleep lab... Please try again.";
   }else{
@@ -84,7 +84,7 @@ if(isset($_POST['submitdeletesleeplabsumm'])){
                     WHERE imageid='".$image_id."'
                     AND patientid='".$patientid."'
                     ;";
-      $db->query($ins_sql) or die($ins_sql." | ".mysql_error());
+      $db->query($ins_sql);
       if (file_exists("../../../shared/q_file/" . $prev_filename)) {
         unlink("../../../shared/q_file/" . $prev_filename);
       }
@@ -99,8 +99,7 @@ if(isset($_POST['submitdeletesleeplabsumm'])){
                     adddate = now(),
                     ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-      $db->query($ins_sql) or die($ins_sql." | ".mysql_error());
-  		$image_id = mysql_insert_id();
+  		$image_id = $db->getInsertId($ins_sql);
   	}
   }else{
     $banner1 = $prev_filename;
@@ -110,7 +109,7 @@ if(isset($_POST['submitdeletesleeplabsumm'])){
         `date` = '".$date."',
         `sleeptesttype`  = '".$sleeptesttype."',
         `place`  = '".$place."',
-        `diagnosising_doc` = '".mysql_real_escape_string($diagnosising_doc)."',
+        `diagnosising_doc` = '".mysqli_real_escape_string($con,$diagnosising_doc)."',
         `diagnosising_npi` = '".$diagnosising_npi."',
         `ahi`  = '".$ahi."',
         `ahisupine`  = '".$ahisupine."',
@@ -185,8 +184,7 @@ if(isset($_POST['submitdeletesleeplabsumm'])){
                   adddate = now(),
                   ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-    $db->query($ins_sql) or die($ins_sql." | ".mysql_error());
-    $image_id = mysql_insert_id();
+    $image_id = $db->getInsertId($ins_sql);
   }else{
     $banner1 = ''; 
     $image_id = '';
@@ -216,13 +214,13 @@ if(isset($_POST['submitdeletesleeplabsumm'])){
           `patiendid`,
           `image_id`
           )
-          VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".mysql_real_escape_string($diagnosising_doc)."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$patientid."','".$image_id."')";
+          VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".mysqli_real_escape_string($con,$diagnosising_doc)."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$patientid."','".$image_id."')";
   $run_q = $db->query($q);
   if(!$run_q){
     echo "Could not add sleep lab... Please try again.";
   }else{
     if($uploaded){
-      $ins_id = mysql_insert_id();
+      $ins_id = mysqli_insert_id($con);
     }
     $msg = "Successfully added sleep lab". $uploaded;
   }

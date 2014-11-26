@@ -16,7 +16,7 @@ if ($result) foreach ($result as $row) {
   $ledger_balance -= $row['amount'];
   $ledger_balance += $row['paid_amount'];
 }
-update_patient_summary($_GET['pid'], 'ledger', $ledger_balance);
+update_patient_summary((!empty($_GET['pid']) ? $_GET['pid'] : ''), 'ledger', $ledger_balance);
 ?>
 
 <link rel="stylesheet" href="css/ledger.css" />
@@ -121,7 +121,7 @@ if(!empty($_REQUEST["delnoteid"]))
 }
 
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql); 
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
@@ -130,10 +130,10 @@ if(empty($pat_myarray['patientid']))
 {
   ?>
   <script type="text/javascript">
-    window.location = 'manage_patient.php';
+    //window.location = 'manage_patient.php';
   </script>
   <?php
-  die();
+  //die();
 }
 
 $rec_disp = 2000;
@@ -161,7 +161,7 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
             from dental_insurance i
             LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
             LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
-            where i.patientid='".s_for($_GET['pid'])."'
+            where i.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
             AND i.status NOT IN (".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")
             GROUP BY i.insuranceid
   ";
@@ -187,7 +187,7 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
       LEFT JOIN dental_users p ON dl.producerid=p.userid 
       LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
       LEFT JOIN dental_insurance di on di.insuranceid = dl.primary_claim_id
-        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' 
         and (dl.paid_amount IS NULL || dl.paid_amount = 0)
       GROUP BY dl.ledgerid
    UNION
@@ -211,7 +211,7 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
           from dental_ledger dl 
                   LEFT JOIN dental_users p ON dl.producerid=p.userid 
                   LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                          where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+                          where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' 
         AND dlp.amount != 0
     UNION
     select 
@@ -235,7 +235,7 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
                   LEFT JOIN dental_users p ON dl.producerid=p.userid 
                   LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
       LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
-                          where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+                          where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' 
         AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
     UNION
       select 
@@ -257,7 +257,7 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
                   ''  
     from dental_ledger_note n
       JOIN dental_users p on n.producerid=p.userid
-        where n.patientid='".s_for($_GET['pid'])."'       
+        where n.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'       
     UNION
           select 
                   'statement',
@@ -278,7 +278,7 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
                   ''
           from dental_ledger_statement s
                   JOIN dental_users p on s.producerid=p.userid
-                          where s.patientid='".s_for($_GET['pid'])."'
+                          where s.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
     UNION
           select 
                   'note',
@@ -299,7 +299,7 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
       ''      
           from dental_ledger_note n
                   JOIN admin p on n.admin_producerid=p.adminid
-                          where n.patientid='".s_for($_GET['pid'])."'       
+                          where n.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'       
 
     UNION
     select
@@ -324,7 +324,7 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
     from dental_insurance i
       LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
       LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
-      where i.patientid='".s_for($_GET['pid'])."'
+      where i.patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."'
     GROUP BY i.insuranceid
   ";
 }
@@ -449,7 +449,6 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 </div>
 
 <form name="edit_mult_form" id="edit_mult_form" />
-<<<<<<< HEAD
   <table  class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <?php if($total_rec > $rec_disp) {?>
     <TR bgColor="#ffffff">

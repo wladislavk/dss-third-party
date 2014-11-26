@@ -1,10 +1,10 @@
 <?php
 	include_once '../admin/includes/main_include.php';
 
-	$id = $_SESSION['userid'];
+	$id = (!empty($_SESSION['userid']) ? $_SESSION['userid'] : '');
 	$logout_time = 4*60*60;
 	$s = "SELECT last_accessed_date FROM dental_users
-		WHERE userid='".mysql_real_escape_string($id)."'";
+		WHERE userid='".mysqli_real_escape_string($con,$id)."'";
 	
 	$r = $db->getRow($s);
 	$lat = strtotime($r['last_accessed_date']);

@@ -55,7 +55,7 @@
                                         </td>
                                         <td valign="top" width="30%">
                                                 <span id="note_edit_<?php echo $myarray['notesid'];?>">
-                                        <?php if($status == 'Unsigned' || $status == 'Draft')) { ?>
+                                        <?php if($status == 'Unsigned' || $status == 'Draft') { ?>
                                                         Status: 
                                                         <span style="font-size:14px;"><?php echo $status; ?></span>
                                                 <?php if(!empty($office_type) && $office_type == DSS_OFFICE_TYPE_FRONT){ ?>
@@ -89,5 +89,6 @@
                 <td style="line-height:2px;">&nbsp;</td>
         </tr>
         <?php      }
+}
 }?>
 </table>

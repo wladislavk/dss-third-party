@@ -122,10 +122,9 @@
 ?>
 <span style="float:right; font-size: 26px; margin-right: 20px; font-weight: bold; color:#f00;">
 <?php
-  $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id='".mysql_real_escape_string($_GET['claimid'])."'";
-  $sec_q = mysql_query($sec_sql);
-  $sec_r = mysql_fetch_assoc($sec_q);
-  if(mysql_num_rows($sec_q)>0){
+  $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id='".mysqli_real_escape_string($con,$_GET['claimid'])."'";
+  $sec_r = $db->getRow($sec_sql);
+  if(!empty($sec_r)){
 ?>
 Primary Claim <?= $_GET['claimid']; ?> - (<a href="view_claim.php?claimid=<?php echo $sec_r['insuranceid']; ?>&pid=<?php echo $_GET['pid']; ?>">Secondary is <?php echo $sec_r['insuranceid']; ?></a>) 
 <?php

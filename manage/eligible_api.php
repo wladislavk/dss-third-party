@@ -3,13 +3,13 @@
   $s = "SELECT p.*, c.company, u.name as doc_name, u.npi from dental_patients p
         LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
         LEFT JOIN dental_users u ON u.userid = p.docid
-   	    WHERE p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+   	    WHERE p.patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
   $r = $db->getRow($s);
   $doc_name = $r['doc_name'];
   $doc_array = explode(' ',$doc_name);
   $doc_first_name = $doc_array[0];
-  $doc_last_name = $doc_array[1];
+  $doc_last_name = (!empty($doc_array[1]) ? $doc_array[1] : '');
 ?>
 <form method="post">
   <div id="eligible_api" >

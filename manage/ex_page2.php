@@ -5,10 +5,10 @@
 ?>
     <script type="text/javascript" src="js/ex_page2.js"></script>
 <?php
-        if($_POST['ex_page2sub'] == 1){
-        	$mallampati = $_POST['mallampati'];
-        	$tonsils = $_POST['tonsils'];
-        	$tonsils_grade = $_POST['tonsils_grade'];
+        if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1){
+        	$mallampati = (!empty($_POST['mallampati']) ? $_POST['mallampati'] : '');
+        	$tonsils = (!empty($_POST['tonsils']) ? $_POST['tonsils'] : '');
+        	$tonsils_grade = (!empty($_POST['tonsils_grade']) ? $_POST['tonsils_grade'] : '');
         	$tonsils_arr = '';
 
         	if(is_array($tonsils))
@@ -26,7 +26,7 @@
         		$ins_sql = " insert into dental_ex_page2 set 
         		patientid = '".s_for($_GET['pid'])."',
         		mallampati = '".s_for($mallampati)."',
-        		additional_notes = '".mysql_real_escape_string($_POST['additional_notes'])."',
+        		additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
         		tonsils = '".s_for($tonsils_arr)."',
         		tonsils_grade = '".s_for($tonsils_grade)."',
         		userid = '".s_for($_SESSION['userid'])."',
@@ -53,7 +53,7 @@
 	        } else {
         		$ed_sql = " update dental_ex_page2 set 
         		mallampati = '".s_for($mallampati)."',
-                        additional_notes = '".mysql_real_escape_string($_POST['additional_notes'])."',
+                        additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
         		tonsils = '".s_for($tonsils_arr)."',
         		tonsils_grade = '".s_for($tonsils_grade)."'
         		where ex_page2id = '".s_for($_POST['ed'])."'";
@@ -114,7 +114,7 @@
 
     <br /><br>
     <div align="center" class="red">
-    	<b><?php echo $_GET['msg'];?></b>
+    	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
     </div>
     <form id="ex_page2frm" class="ex_form" name="ex_page2frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">
         <input type="hidden" name="ex_page2sub" value="1" />

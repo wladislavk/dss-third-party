@@ -1,11 +1,11 @@
 <?php
-	include "includes/top.htm";
-	require_once('includes/patient_info.php');
+	include_once "includes/top.htm";
+	include_once('includes/patient_info.php');
 	if ($patient_info) {
 ?>
 	<script type="text/javascript" src="js/ex_page4.js"></script>
 <?php
-	if($_POST['ex_page4sub'] == 1) {
+	if(!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1) {
 		$exam_teeth = $_POST['exam_teeth'];
 		$other_maxilla = $_POST['other_maxilla'];
 		$other_exam_teeth = $_POST['other_exam_teeth'];
@@ -156,12 +156,12 @@
 	<a name="top"></a>
 	&nbsp;&nbsp;
 
-	<?php include("includes/form_top.htm"); ?>
+	<?php include_once("includes/form_top.htm"); ?>
 
 	<br /><br>
 
 	<div align="center" class="red">
-		<b><?php  echo $_GET['msg'];?></b>
+		<b><?php  echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 	</div>
 
 	<form id="ex_page4frm" class="ex_form" name="ex_page4frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">
@@ -456,7 +456,7 @@
 		</div>
 	</form>
 	<br />
-		<?php  include("includes/form_bottom.htm");?>
+		<?php  include_once("includes/form_bottom.htm");?>
 	<br />
 	<div id="popupRefer" style="width:750px;">
 	    <a id="popupReferClose">
@@ -480,4 +480,4 @@
 	}
 ?>
 
-<?php  include "includes/bottom.htm";?>
+<?php  include_once "includes/bottom.htm";?>

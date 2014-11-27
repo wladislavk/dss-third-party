@@ -22,7 +22,7 @@
         . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
         . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
         . "WHERE "
-        . "  p.patientid = ".$_GET['ed'];
+        . "  p.patientid = ".(!empty($_GET['ed']) ? $_GET['ed'] : '');
 
     $pat = $db->getRow($sql);
 ?>
@@ -35,7 +35,7 @@
     </h3>
     <?php
         $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-                    JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
+                    JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'
                     WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
         
         $bu_q = $db->getResults($bu_sql);
@@ -50,6 +50,6 @@
         }
     ?>
 </form>
-    <a style="float:right;margin-right:20px;" href="add_patient.php?ed=<?php echo  $_GET['ed']; ?>&pid=<?php echo $_GET['ed'];?>" onclick="return confirm('Are you sure you want to cancel?');">Cancel</a>
+    <a style="float:right;margin-right:20px;" href="add_patient.php?ed=<?php echo  (!empty($_GET['ed']) ? $_GET['ed'] : ''); ?>&pid=<?php echo (!empty($_GET['ed']) ? $_GET['ed'] : '');?>" onclick="return confirm('Are you sure you want to cancel?');">Cancel</a>
 <br />
 <?php include "includes/bottom.htm";?>

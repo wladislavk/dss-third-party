@@ -5,7 +5,7 @@
 ?>
 <script type="text/javascript" src="js/ex_page1.js"></script>
 <?php
-    if($_POST['ex_page1sub'] == 1) {
+    if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1) {
     	$blood_pressure = $_POST['blood_pressure'];
     	$pulse = $_POST['pulse'];
     	$neck_measurement = $_POST['neck_measurement'];
@@ -145,7 +145,7 @@
 
     <br /><br>
     <div align="center" class="red">
-    	<b><?php echo $_GET['msg'];?></b>
+    	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
     </div>
 
     <form id="ex_page1frm" class="ex_form" name="ex_page1frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">
@@ -219,7 +219,7 @@
                             <?php } ?>
                         </select>
                         <?php
-                            showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
+                            showPatientValue('dental_patients', $_GET['pid'], 'feet', (!empty($pat_row['feet']) ? $pat_row['feet'] : ''), $feet, true, (!empty($showEdits) ? $showEdits : ''));
                         ?>
                         <label for="feet">Feet</label>
                     </li>

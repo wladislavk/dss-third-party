@@ -1,7 +1,7 @@
 <?php
 include_once "admin/includes/main_include.php";
 
-if($_POST['missingsub'] == 1)
+if(!empty($_POST['missingsub']) && $_POST['missingsub'] == 1)
 {
 	$rec = '~';
 	$rec1 = '~';
@@ -50,7 +50,7 @@ if($_POST['missingsub'] == 1)
 						adddate = now(),
 						ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		$db->query($ins_sql) or die($ins_sql." | ".mysql_error());
+		$db->query($ins_sql);
 		
 		$msg = "Added Successfully";
 		?>
@@ -75,7 +75,7 @@ if($_POST['missingsub'] == 1)
 						s6 = '".s_for($_POST['s6'])."'
 						where missingid = '".s_for($_POST['ed'])."'";
 		
-		$db->query($ed_sql) or die($ed_sql." | ".mysql_error());
+		$db->query($ed_sql);
 		
 		$msg = "Edited Successfully";
 		?>
@@ -125,7 +125,7 @@ $mob_arr = explode('~',$mob);
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-	<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
+	<meta name="keywords" content="<?php echo st(!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : '');?>" />
 	<title><?php echo $sitename;?></title>
 	<link href="css/admin.css" rel="stylesheet" type="text/css" />
 	<script language="javascript" type="text/javascript" src="script/validation.js"></script>
@@ -153,14 +153,14 @@ $mob_arr = explode('~',$mob);
 					
 					Exam Date: 
 					&nbsp;&nbsp;
-					<?php echo date('m/d/Y', strtotime(st($form_myarray['adddate'])));?>
+					<?php echo date('m/d/Y', strtotime(st(!empty($form_myarray['adddate']) ? $form_myarray['adddate'] : '')));?>
 					&nbsp;&nbsp;&nbsp;
 				</b>
 			</div>
 			<br />
 			
 			<div align="center" class="red">
-				<b><?php echo $_GET['msg'];?></b>
+				<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 			</div>
 			<form name="missingfrm" id="missingfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>&mt=<?php echo $_GET['mt']?>" method="post" >
 				<input type="hidden" name="missingsub" value="1" />

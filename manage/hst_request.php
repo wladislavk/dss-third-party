@@ -3,7 +3,7 @@ require_once('includes/constants.inc');
 
 if(isset($_POST['submit'])){
 
-  $thorton_sql = "SELECT * FROM dental_thorton WHERE patientid = '".mysql_real_escape_string($_GET['ed'])."'";
+  $thorton_sql = "SELECT * FROM dental_thorton WHERE patientid = '".mysqli_real_escape_string($con,$_GET['ed'])."'";
   $thorton = $db->getRow($thorton_sql);
 
   $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND filename IS NOT NULL AND patiendid = '".$pid."' ORDER BY id DESC LIMIT 1;";
@@ -22,53 +22,53 @@ if(isset($_POST['submit'])){
        . "  snore_1, snore_2, snore_3, snore_4, snore_5, "
        . "  status, authorized_id, authorizeddate, adddate, ip_address "
        . ") VALUES ("
-       . "  " . mysql_real_escape_string($_GET['ed']) . ", "
-       . "  " . mysql_real_escape_string($_SESSION['docid']) . ", "
-       . "  '" . mysql_real_escape_string($_SESSION['userid']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['company_id']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['ins_co_id']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['ins_phone']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_ins_group_id']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_ins_id']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_firstname']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_lastname']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_add1']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_add2']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_city']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_state']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_zip']) . "', "
-       . "  '" . mysql_real_escape_string(date('Y-m-d', strtotime($_POST['patient_dob']))) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_cell_phone']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_home_phone']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['patient_email']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['diagnosis_id']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['hst_type']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['provider_firstname']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['provider_lastname']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['provider_address']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['provider_city']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['provider_state']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['provider_zip']) . "', "
-       . "  '" . mysql_real_escape_string($_POST['provider_signature']) . "', "
-       . "  '" . mysql_real_escape_string(date('Y-m-d', strtotime($_POST['provider_date']))) . "', "
-       . "  '" . mysql_real_escape_string($thorton['snore_1']) . "', "
-       . "  '" . mysql_real_escape_string($thorton['snore_2']) . "', "
-       . "  '" . mysql_real_escape_string($thorton['snore_3']) . "', "
-       . "  '" . mysql_real_escape_string($thorton['snore_4']) . "', "
-       . "  '" . mysql_real_escape_string($thorton['snore_5']) . "', ";
+       . "  " . mysqli_real_escape_string($con,$_GET['ed']) . ", "
+       . "  " . mysqli_real_escape_string($con,$_SESSION['docid']) . ", "
+       . "  '" . mysqli_real_escape_string($con,$_SESSION['userid']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['company_id']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['ins_co_id']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['ins_phone']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_ins_group_id']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_ins_id']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_firstname']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_lastname']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_add1']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_add2']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_city']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_state']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_zip']) . "', "
+       . "  '" . mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['patient_dob']))) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_cell_phone']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_home_phone']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['patient_email']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['diagnosis_id']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['hst_type']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['provider_firstname']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['provider_lastname']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['provider_address']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['provider_city']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['provider_state']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['provider_zip']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$_POST['provider_signature']) . "', "
+       . "  '" . mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['provider_date']))) . "', "
+       . "  '" . mysqli_real_escape_string($con,$thorton['snore_1']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$thorton['snore_2']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$thorton['snore_3']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$thorton['snore_4']) . "', "
+       . "  '" . mysqli_real_escape_string($con,$thorton['snore_5']) . "', ";
 
-  $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+  $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
   $sign_r = $db->getRow($sign_sql);
   $user_sign = $sign_r['sign_notes'];
   if($user_sign || $_SESSION['docid']==$_SESSION['userid']){ 
      $sql .= DSS_HST_PENDING . ", 
-    		'".mysql_real_escape_string($_SESSION['userid'])."', now(), ";
+    		'".mysqli_real_escape_string($con,$_SESSION['userid'])."', now(), ";
   }else{
      $sql .= DSS_HST_REQUESTED . ", 
               null, null, ";
   }
   $sql .= "  now(), "
-         . "  '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."' "
+         . "  '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."' "
          . ")";
   $hst_id = $db->getInsertId($sql);
 
@@ -103,11 +103,11 @@ if(isset($_POST['submit'])){
 
     if($chk != ''){
       $hst_sql = "INSERT INTO dental_hst_epworth SET
-                        hst_id = '".mysql_real_escape_string($hst_id)."',
-                        epworth_id = '".mysql_real_escape_string($epworth_myarray['epworthid'])."',
-                        response = '".mysql_real_escape_string($chk)."',
+                        hst_id = '".mysqli_real_escape_string($con,$hst_id)."',
+                        epworth_id = '".mysqli_real_escape_string($con,$epworth_myarray['epworthid'])."',
+                        response = '".mysqli_real_escape_string($con,$chk)."',
                         adddate = now(),
-                        ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
+                        ip_address = '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
       $db->query($hst_sql);
     }
   }
@@ -122,7 +122,7 @@ if(isset($_POST['submit'])){
                  'X-Mailer: PHP/' . phpversion();
 
     $subject = "New HST Order Created";
-  	$user_sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  	$user_sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
   	$user = $db->getRow($user_sql);
 		$m = "<html><body><center>
   <table width='600'>
@@ -148,7 +148,7 @@ if(isset($_POST['submit'])){
 $sql = "SELECT u.* FROM 
           dental_patients p 
           JOIN dental_users u ON p.docid = u.userid 
-          WHERE p.patientid = '".mysql_real_escape_string($_GET['ed'])."'
+          WHERE p.patientid = '".mysqli_real_escape_string($con,!empty($_GET['ed']) ? $_GET['ed'] : '')."'
                       ";
 
 $user_info = $db->getRow($sql);
@@ -173,15 +173,15 @@ $sql = "SELECT "
      . "  LEFT JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
      . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
      . "WHERE "
-     . "  p.patientid = ".$_GET['ed'];
+     . "  p.patientid = ".(!empty($_GET['ed']) ? $_GET['ed'] : '');
 
 $pat = $db->getRow($sql);?>
 
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#" onsubmit="return check_fields(this);">
 <?php
 $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-            JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
-            WHERE h.id='".mysql_real_escape_string($_GET['hst_co'])."' AND h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+            JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'
+            WHERE h.id='".mysqli_real_escape_string($con,(!empty($_GET['hst_co']) ? $_GET['hst_co'] : ''))."' AND h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
 $bu_r = $db->getRow($bu_sql); ?>
 
   <input type="hidden" name="company_id" value="<?php echo $bu_r['id']; ?>"  />
@@ -225,7 +225,7 @@ $bu_r = $db->getRow($bu_sql); ?>
 $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
 $ins_contact_qry_run = $db->getResults($ins_contact_qry);
 foreach ($ins_contact_qry_run as $kins_contact_res) {?>
-      <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($pat['p_m_ins_co'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>
+      <option value="<?php echo (!empty($ins_contact_res['contactid']) ? $ins_contact_res['contactid'] : ''); ?>" <?php if(!empty($ins_contact_res['contactid']) && $pat['p_m_ins_co'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes(!empty($ins_contact_res['company']) ? $ins_contact_res['company'] : ''); ?></option>
 <?php 
 } ?>
     </select>

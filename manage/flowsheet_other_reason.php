@@ -2,7 +2,7 @@
 	include_once('admin/includes/main_include.php');
 	include("includes/sescheck.php");
 
-	if($_POST["other_reason"] == 1) {
+	if(!empty($_POST["other_reason"]) && $_POST["other_reason"] == 1) {
 		$ed_sql = "update dental_flow_pg2_info 
 					set 
 					description = '".s_for($_POST['reason'])."'
@@ -31,7 +31,7 @@
 
 	<body>
 		<?php
-			$thesql = "SELECT id, segmentid, description from dental_flow_pg2_info WHERE id='".$_REQUEST['ed']."' AND patientid='".$_REQUEST['pid']."';";
+			$thesql = "SELECT id, segmentid, description from dental_flow_pg2_info WHERE id='".(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '')."' AND patientid='".(!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '')."';";
 			
 			$segment = $db->getRow($thesql);
 			if ($segment['segmentid'] == '5') {
@@ -41,11 +41,11 @@
 			}	
 		?>	
 		<br /><br />
-	    <form name="flowsheet_other_reason" action="/manage/flowsheet_other_reason.php?pid=<?php echo $_REQUEST['pid']?>&ed=<?php echo $_REQUEST['ed']?>&sid=<?php echo $_REQUEST['sid']?>" method="post">
+	    <form name="flowsheet_other_reason" action="/manage/flowsheet_other_reason.php?pid=<?php echo (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '')?>&ed=<?php echo (!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '')?>&sid=<?php echo (!empty($_REQUEST['sid']) ? $_REQUEST['sid'] : '')?>" method="post">
 	    	<table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 	    		<tr>
 			      	<td colspan="2" class="cat_head">
-			        	Reason for <?php echo $segmenttype?>
+			        	Reason for <?php echo (!empty($segmenttype) ? $segmenttype : ''); ?>
 			        </td>
 	      		</tr>
 	      		<tr> 

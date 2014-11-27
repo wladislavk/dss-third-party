@@ -7,14 +7,14 @@
 <script type="text/javascript" src="js/ex_page5.js"></script>
 
 <?php
-		if($_POST['ex_page5sub'] == 1)
+		if(!empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1)
 		{
 			$additional_paragraph_pal = $_POST['additional_paragraph_pal'];
-			$caries = $_POST['caries'];
+			$caries = (!empty($_POST['caries']) ? $_POST['caries'] : '');
 			$joint_exam = $_POST['joint_exam'];
 			$i_opening_from = $_POST['i_opening_from'];
-			$i_opening_to = $_POST['i_opening_to'];
-			$i_opening_equal = $_POST['i_opening_equal'];
+			$i_opening_to = (!empty($_POST['i_opening_to']) ? $_POST['i_opening_to'] : '');
+			$i_opening_equal = (!empty($_POST['i_opening_equal']) ? $_POST['i_opening_equal'] : '');
 			$protrusion_from = $_POST['protrusion_from'];
 			$protrusion_to = $_POST['protrusion_to'];
 			if($protrusion_from !='' && $protrusion_to != ''){
@@ -24,20 +24,20 @@
 			}
 	
 			$l_lateral_from = $_POST['l_lateral_from'];
-			$l_lateral_to = $_POST['l_lateral_to'];
-			$l_lateral_equal = $_POST['l_lateral_equal'];
+			$l_lateral_to = (!empty($_POST['l_lateral_to']) ? $_POST['l_lateral_to'] : '');
+			$l_lateral_equal = (!empty($_POST['l_lateral_equal']) ? $_POST['l_lateral_equal'] : '');
 			$r_lateral_from = $_POST['r_lateral_from'];
-			$r_lateral_to = $_POST['r_lateral_to'];
-			$r_lateral_equal = $_POST['r_lateral_equal'];
-			$deviation_from = $_POST['deviation_from'];
-			$deviation_to = $_POST['deviation_to'];
-			$deviation_equal = $_POST['deviation_equal'];
+			$r_lateral_to = (!empty($_POST['r_lateral_to']) ? $_POST['r_lateral_to'] : '');
+			$r_lateral_equal = (!empty($_POST['r_lateral_equal']) ? $_POST['r_lateral_equal'] : '');
+			$deviation_from = (!empty($_POST['deviation_from']) ? $_POST['deviation_from'] : '');
+			$deviation_to = (!empty($_POST['deviation_to']) ? $_POST['deviation_to'] : '');
+			$deviation_equal = (!empty($_POST['deviation_equal']) ? $_POST['deviation_equal'] : '');
 			$deflection_from = $_POST['deflection_from'];
-			$deflection_to = $_POST['deflection_to'];
-			$deflection_equal = $_POST['deflection_equal'];
-			$range_normal = $_POST['range_normal'];
-			$normal = $_POST['normal'];
-			$other_range_motion = $_POST['other_range_motion'];
+			$deflection_to = (!empty($_POST['deflection_to']) ? $_POST['deflection_to'] : '');
+			$deflection_equal = (!empty($_POST['deflection_equal']) ? $_POST['deflection_equal'] : '');
+			$range_normal = (!empty($_POST['range_normal']) ? $_POST['range_normal'] : '');
+			$normal = (!empty($_POST['normal'])) ? $_POST['normal'] : '';
+			$other_range_motion = (!empty($_POST['other_range_motion']) ? $_POST['other_range_motion'] : '');
 			$additional_paragraph_rm = $_POST['additional_paragraph_rm'];
 			$deviation_r_l = $_POST['deviation_r_l'];
 			$deflection_r_l = $_POST['deflection_r_l'];
@@ -75,6 +75,10 @@
 			$join_exam_arr = '';
 			if(is_array($joint_exam))
 			{
+				if (!isset($joint_exam_arr)) {
+					$joint_exam_arr = "";
+				}
+
 				foreach($joint_exam as $val)
 				{
 					if(trim($val) <> '')
@@ -107,7 +111,7 @@
 	        }else{
                 $ed_sql = "update dental_summary set 
                 initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
-                initial_device_titration_equal_h = '".s_for($_POST['initial_device_titration_equal_h'])."',
+                initial_device_titration_equal_h = '".s_for(!empty($_POST['initial_device_titration_equal_h']) ? $_POST['initial_device_titration_equal_h'] : '')."',
                 initial_device_titration_equal_v = '".s_for($_POST['initial_device_titration_equal_v'])."',
                 optimum_echovision_ver = '".s_for($_POST['optimum_echovision_ver'])."',
                 optimum_echovision_hor = '".s_for($_POST['optimum_echovision_hor'])."'
@@ -115,7 +119,7 @@
                 
                 $db->query($ed_sql);
 	        }
-	
+
 			if($_POST['ed'] == '') {
 				$ins_sql = " insert into dental_ex_page5 set 
 				patientid = '".s_for($_GET['pid'])."',
@@ -283,40 +287,40 @@
 
 		if($palpationid <> '')
 		{	
-			$pal_arr1 = split('~',$palpationid);
+			$pal_arr1 = explode('~',$palpationid);
 			
 			foreach($pal_arr1 as $i => $val)
 			{
 				$pal_arr2 = explode('|',$val);
 				
 				$palid[$i] = $pal_arr2[0];
-				$palseq[$i] = $pal_arr2[1];
+				$palseq[$i] = (!empty($pal_arr2[1]) ? $pal_arr2[1] : '');
 			}
 		}
 
 		if($palpationRid <> '')
 		{	
-			$palR_arr1 = split('~',$palpationRid);
+			$palR_arr1 = explode('~',$palpationRid);
 			
 			foreach($palR_arr1 as $i => $val)
 			{
 				$palR_arr2 = explode('|',$val);
 				
 				$palRid[$i] = $palR_arr2[0];
-				$palRseq[$i] = $palR_arr2[1];
+				$palRseq[$i] = (!empty($palR_arr2[1]) ? $palR_arr2[1] : '');
 			}
 		}
 
 		if($jointid <> '')
 		{	
-			$jo_arr1 = split('~',$jointid);
+			$jo_arr1 = explode('~',$jointid);
 			
 			foreach($jo_arr1 as $i => $val)
 			{
 				$jo_arr2 = explode('|',$val);
 				
 				$joid[$i] = $jo_arr2[0];
-				$joseq[$i] = $jo_arr2[1];
+				$joseq[$i] = (!empty($jo_arr2[1]) ? $jo_arr2[1] : '');
 			}
 		}
 ?>
@@ -334,7 +338,7 @@
 
 	<br /><br>
 	<div align="center" class="red">
-		<b><?php echo $_GET['msg'];?></b>
+		<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 	</div>
 
 	<form id="ex_page5frm" class="ex_form" name="ex_page5frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post" >
@@ -397,13 +401,13 @@
 												if(@array_search($palpation_myarray['palpationid'],$palid) === false){
 													$chk = '';
 												} else {
-													$chk = $palseq[@array_search($palpation_myarray['palpationid'],$palid)];
+													$chk = (!empty($palseq[@array_search($palpation_myarray['palpationid'],$palid)]) ? $palseq[@array_search($palpation_myarray['palpationid'],$palid)] : '');
 												}
 												
 												if(@array_search($palpation_myarray['palpationid'],$palRid) === false) {
 													$chkR = '';
 												} else {
-													$chkR = $palRseq[@array_search($palpation_myarray['palpationid'],$palRid)];
+													$chkR = (!empty($palRseq[@array_search($palpation_myarray['palpationid'],$palRid)]) ? $palRseq[@array_search($palpation_myarray['palpationid'],$palRid)] : '');
 												}
 										?>
 			                                <tr>
@@ -514,7 +518,7 @@
 															if(@array_search($joint_myarray['jointid'],$joid) === false) {
 																$chkJ = '';
 															} else {
-																$chkJ = $joseq[@array_search($joint_myarray['jointid'],$joid)];
+																$chkJ = (!empty($joseq[@array_search($joint_myarray['jointid'],$joid)]) ? $joseq[@array_search($joint_myarray['jointid'],$joid)] : '');
 															}
 													?>
 			                                            	<tr>

@@ -52,7 +52,7 @@
     $tot_charges = 0;
 	$tot_credit = 0;
 	if(isset($_GET['pid'])) {
-        $newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".$_GET['pid']."'";
+        $newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	} else {
         $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
     }

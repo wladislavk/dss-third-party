@@ -1,6 +1,5 @@
 <?php
-session_start();
-require_once '../admin/includes/main_include.php';
+include_once '../admin/includes/main_include.php';
 include_once '../admin/includes/invoice_functions.php';
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
@@ -25,14 +24,14 @@ include_once '../includes/calendarinc.php';
   $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
          LEFT JOIN dental_users u ON u.userid = p.docid
-         WHERE p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+         WHERE p.patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
   $r = $db->getRow($s);
-  $doc_name = $r['doc_name'];
+  $doc_name = (!empty($r['doc_name']) ? $r['doc_name'] : '');
   $doc_array = explode(' ',$doc_name);
   $doc_first_name = $doc_array[0];
-  $doc_last_name = $doc_array[1];
+  $doc_last_name = (!empty($doc_array[1]) ? $doc_array[1] : '');
 
-  $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$_GET['docid']."'";
+  $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".(!empty($_GET['docid']) ? $_GET['docid'] : '')."'";
   $docinfo = $db->getRow($getdocinfo);
   $phone = $docinfo['phone'];
   $practice = $docinfo['practice'];
@@ -91,7 +90,7 @@ include_once '../includes/calendarinc.php';
     $d_zip = '';
   }
 
-  $s = "SELECT eligible_test FROM dental_users where userid='".$_GET['docid']."'";
+  $s = "SELECT eligible_test FROM dental_users where userid='".(!empty($_GET['docid']) ? $_GET['docid'] : '')."'";
   $row = $db->getRow($s);
   if($row['eligible_test']=="1"){?>
 
@@ -497,7 +496,7 @@ include_once '../includes/calendarinc.php';
 
     <div style="clear:both;" class="form-group">
       <div class="col-lg-offset-2 col-lg-10">
-	<input type="hidden" name="pid" id="pid" value="<?php echo $_GET['pid']; ?>" />
+	<input type="hidden" name="pid" id="pid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
         <button type="submit" class="btn btn-primary btn-lg">Submit</button>
       </div>
@@ -515,7 +514,7 @@ include_once '../includes/calendarinc.php';
   </tr>
 
 <?php 
-  $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+  $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
   $q = $db->getResults($s);
   if ($q) {
     foreach ($q as $r) {?>

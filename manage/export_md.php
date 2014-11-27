@@ -1,7 +1,6 @@
 <?php
-session_start();
-require 'admin/includes/main_include.php';
-require 'includes/constants.inc';
+include_once 'admin/includes/main_include.php';
+include_once 'includes/constants.inc';
 header("Content-type: text/csv");
 header("Content-Disposition: attachment; filename=dss_md_export.csv");
 header("Pragma: no-cache");

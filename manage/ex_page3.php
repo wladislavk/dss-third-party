@@ -7,7 +7,7 @@
 	<script type="text/javascript" src="js/ex_page3.js"></script>
 
 <?php
-		if($_POST['ex_page3sub'] == 1) {
+		if(!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1) {
 			$maxilla = $_POST['maxilla'];
 			$other_maxilla = $_POST['other_maxilla'];
 			$mandible = $_POST['mandible'];
@@ -206,7 +206,7 @@
 
 	<br /><br>
 	<div align="center" class="red">
-		<b><?php  echo $_GET['msg'];?></b>
+		<b><?php  echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 	</div>
 
 	<form id="ex_page3frm" class="ex_form" name="ex_page3frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">

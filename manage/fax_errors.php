@@ -24,7 +24,7 @@
 		    $thesql = "select f.*, ec.description, ec.resolution
 						FROM dental_faxes f
 						LEFT JOIN dental_fax_error_codes ec ON ec.error_code = f.sfax_error_code
-						where f.id='".$_REQUEST["id"]."'";
+						where f.id='".(!empty($_REQUEST["id"]) ? $_REQUEST["id"] : '')."'";
 
 			$themyarray = $db->getRow($thesql);
 		?>

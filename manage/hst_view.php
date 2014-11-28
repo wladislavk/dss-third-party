@@ -2,7 +2,7 @@
     include "includes/top.htm";
     include_once('includes/constants.inc');
 
-    $sql = "SELECT * FROM dental_hst WHERE id='".mysql_real_escape_string($_GET['hst_id'])."'";
+    $sql = "SELECT * FROM dental_hst WHERE id='".mysqli_real_escape_string($con, $_GET['hst_id'])."'";
 
     $hst = $db->getRow($sql);
 ?>
@@ -15,7 +15,7 @@
         <h3 align="center">Home Sleep Test Order Form</h3>
         <?php
             $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
+                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'
                         WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
 
             $bu_q = $db->getResults($bu_sql);
@@ -58,7 +58,7 @@
             <label for="patient_ins_name">Insurance Company</label>
 
             <?php
-              $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."' AND contactid='".mysql_real_escape_string($hst['ins_co_id'])."'";
+              $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."' AND contactid='".mysqli_real_escape_string($con, $hst['ins_co_id'])."'";
               
               $ins_contact_res = $db->getRow($ins_contact_qry);
             ?>
@@ -77,7 +77,7 @@
         <hr />
         <p align="left">
             <?php
-                $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby AND ins_diagnosisid='".mysql_real_escape_string($hst['diagnosis_id'])."'";
+                $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby AND ins_diagnosisid='".mysqli_real_escape_string($con, $hst['diagnosis_id'])."'";
 
                 $ins_diag_myarray = $db->getRow($ins_diag_sql);
             ?>

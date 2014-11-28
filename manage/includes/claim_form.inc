@@ -1,6 +1,7 @@
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
   <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>
 <?php
+
 $status_sql = "SELECT status FROM dental_insurance 
 		WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'
 			AND patientid='".mysql_real_escape_string($_GET['pid'])."'";

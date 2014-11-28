@@ -8,7 +8,7 @@
   $cid = $_GET['cid'];
   $prod = $_GET['prod'];
   $sql = "SELECT * from dental_insurance 
-  		WHERE insuranceid='".mysql_real_escape_string($cid)."'";
+  		WHERE insuranceid='".mysqli_real_escape_string($con, $cid)."'";
 
   $r = $db->getRow($sql);
 

@@ -2,7 +2,7 @@
 	include 'admin/includes/main_include.php';
 	include("includes/sescheck.php");
 
-	$u_sql = "SELECT edx_id FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+	$u_sql = "SELECT edx_id FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
 
 	$u = $db->getRow($u_sql);
 	$userid = $u['edx_id'];

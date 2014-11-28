@@ -1,13 +1,13 @@
 <?php
 	include 'includes/top.htm';
 
-	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+	$pat_sql = "select * from dental_patients where patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 	$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 
-	if($pat_myarray['patientid'] == '') {
+	if(empty($pat_myarray['patientid'])) {
 ?>
 		<script type="text/javascript">
 			window.location = 'manage_patient.php';
@@ -16,7 +16,7 @@
 		die();
 	}
 
-	$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
+	$ref_sql = "select * from dental_q_recipients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$ref_myarray = $db->getRow($ref_sql);
 	$referring_physician = st($ref_myarray['referring_physician']);
@@ -30,7 +30,7 @@
 		$age = 'N/A';
 	}
 
-	$q3_sql = "select * from dental_q_page3 where patientid='".$_GET['pid']."'";
+	$q3_sql = "select * from dental_q_page3 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$q3_myarray = $db->getRow($q3_sql);
 	$history = st($q3_myarray['history']);
@@ -63,7 +63,7 @@
 		}
 	}
 
-	$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+	$q2_sql = "select * from dental_q_page2 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$q2_myarray = $db->getRow($q2_sql);
 	$polysomnographic = st($q2_myarray['polysomnographic']);
@@ -74,7 +74,7 @@
 	$ahi = st($q2_myarray['ahi']);
 	$type_study = st($q2_myarray['type_study']);
 	$custom_diagnosis = st($q2_myarray['custom_diagnosis']);
-	$e5_sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+	$e5_sql = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
 	$e5_myarray = $db->getRow($e5_sql);
 	$protrusion_equal = st($e5_myarray['protrusion_equal']);
@@ -82,7 +82,7 @@
 	
 	$sleeplab_myarray = $db->getRow($sleeplab_sql);
 	$sleeplab_name = st($sleeplab_myarray['company']);
-	$sum_sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
+	$sum_sql = "select * from dental_summary where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$sum_myarray = $db->getRow($sum_sql);
 	$sti_o2_1 = st($sum_myarray['sti_o2_1']);
@@ -105,16 +105,16 @@
 	</span>
 	<br />
 	&nbsp;&nbsp;
-	<a href="dss_letters.php?pid=<?php echo $_GET['pid'];?>" class="editlink" title="EDIT">
+	<a href="dss_letters.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>" class="editlink" title="EDIT">
 		<b>&lt;&lt;Back</b></a>
 	<br /><br>
 
 	<div align="right">
-		<button class="addButton" onclick="Javascript: window.open('dss_referral_thank_you_pt_scheduled_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="Javascript: window.open('dss_referral_thank_you_pt_scheduled_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
 			Print Letter 
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_referral_thank_you_pt_scheduled_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="Javascript: window.open('dss_referral_thank_you_pt_scheduled_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
 			Word Document
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;

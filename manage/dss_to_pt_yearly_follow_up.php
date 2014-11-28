@@ -10,7 +10,7 @@
 	<script type="text/javascript" src="/manage/js/edit_letter.js"></script>
 
 <?php
-	$letterid = mysql_real_escape_string($_GET['lid']);
+	$letterid = mysqli_real_escape_string($con, !empty($_GET['lid']) ? $_GET['lid'] : '');
 
 	// Select Letter
 	$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
@@ -104,7 +104,7 @@
 	$ahi = st($q2_myarray['ahi']);
 	$type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
 	$dentaldevice = st($q2_myarray['dentaldevice']);
-	$sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."';";
+	$sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".(!empty($sleep_center_name) ? $sleep_center_name : '')."';";
 	
 	$sleeplab_myarray = $db->getRow($sleeplab_sql);
 	$sleeplab_name = st($sleeplab_myarray['company']);
@@ -122,7 +122,7 @@
 	</span>
 	<br />
 	&nbsp;&nbsp;
-	<a href="<?php print ($_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
+	<a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
 		<b>&lt;&lt;Back</b></a>
 	<br /><br>
 
@@ -134,14 +134,14 @@
 	}
 
 	$letter_contacts = array();
-	if ($contact_info) {
-		foreach ($contact_info['patient'] as $contact) {
+	if (!empty($contact_info)) {
+		if (!empty($contact_info['patient'])) foreach ($contact_info['patient'] as $contact) {
 		  $letter_contacts[] = array_merge(array('type' => 'patient'), $contact);
 		}
 		foreach ($contact_info['mds'] as $contact) {
 		  $letter_contacts[] = array_merge(array('type' => 'md'), $contact);
 		}
-		foreach ($contact_info['md_referrals'] as $contact) {
+		if (!empty($contact_info['md_referrals'])) foreach ($contact_info['md_referrals'] as $contact) {
 		  $letter_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
 		}
 	}
@@ -172,11 +172,11 @@
 		<br />
 		Dr. %franchisee_fullname%</p>";
 ?>
-	<form action="/manage/dss_to_pt_yearly_follow_up.php?pid=<?php echo $patientid?>&lid=<?php echo $letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
+	<form action="/manage/dss_to_pt_yearly_follow_up.php?pid=<?php echo $patientid?>&lid=<?php echo $letterid?><?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
 		<input type="hidden" name="numletters" value="<?php echo $numletters?>" />
 		<?php
 		if ($_POST != array()) {
-			foreach ($_POST['duplicate_letter'] as $key => $value) {
+			foreach (!empty($_POST['duplicate_letter']) as $key => $value) {
 		    	$dupekey = $key;
 		  	}
 			// Check for updated templates
@@ -339,7 +339,7 @@
 			}
 			$replace[] = "<strong>" . $other_mds . "</strong>";
 				
-		 	if ($new_template[$key] != null) {
+		 	if (!empty($new_template[$key])) {
 			  	$letter[$key] = str_replace($search, $replace, $new_template[$key]);
 				$new_template[$key] = htmlentities($new_template[$key]);
 			} else {
@@ -347,7 +347,7 @@
 		 	}
 
 			// Catch Post Send Submit Button and Send letters Here
-			if ($_POST['send_letter'][$key] != null && $numletters == $_POST['numletters']) {
+			if (!empty($_POST['send_letter'][$key]) && $numletters == $_POST['numletters']) {
 				if (count($letter_contacts) == 1) {
 						$parent = true;
 				}
@@ -373,7 +373,7 @@
     			continue;
   			}
 			// Catch Post Delete Button and Delete letters Here
-  			if ($_POST['delete_letter'][$key] != null && $numletters == $_POST['numletters']) {
+  			if (!empty($_POST['delete_letter'][$key]) && $numletters == $_POST['numletters']) {
 			    if (count($letter_contacts) == 1) {
 			  		$parent = true;
 			    }
@@ -398,11 +398,11 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="submit" name="duplicate_letter[<?php echo $key?>]" class="addButton" value="Duplicate" />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
+				<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
 					Print Letter 
 				</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
+				<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
 					Word Document
 				</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;
@@ -416,7 +416,7 @@
 						<div id="letter<?php echo $key?>">
 							<?php print $letter[$key]; ?>
 						</div>
-						<input type="hidden" name="new_template[<?php echo $key?>]" value="<?php echo $new_template[$key]?>" />
+						<input type="hidden" name="new_template[<?php echo $key?>]" value="<?php echo (!empty($new_template[$key]) ? $new_template[$key] : '')?>" />
 					</td>
 				</tr>
 			</table>
@@ -439,7 +439,7 @@
 </table>
 
 <?php
-	if($_GET['backoffice'] == '1') {
+	if(!empty($_GET['backoffice']) && $_GET['backoffice'] == '1') {
 	  	include 'admin/includes/bottom.htm';
 	} else {
 		include 'includes/bottom.htm';

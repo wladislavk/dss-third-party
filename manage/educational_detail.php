@@ -2,13 +2,13 @@
 	include_once('admin/includes/main_include.php');
 	include("includes/sescheck.php");
 
-	$sql = "select * from dental_doc_educational where doc_educationalid='".s_for($_GET['id'])."'";
+	$sql = "select * from dental_doc_educational where doc_educationalid='".s_for(!empty($_GET['id']) ? $_GET['id'] : '')."'";
 	
 	$my = $db->getResults($sql);
-	$myarray = $my[0];
+	$myarray = (!empty($my[0]) ? $my[0] : '');
 	$num_users = count($my);
 
-	if(st($myarray['title']) == '') {
+	if(empty($myarray['title'])) {
 ?>
 		<script type="text/javascript">	
 			parent.disablePopup1();

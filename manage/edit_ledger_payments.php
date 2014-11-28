@@ -26,10 +26,11 @@
 				<span style="float:left;font-weight:bold;">Amount</span>
 			</div>
 			<?php
-				$sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".$_GET['ed']."' ;";
+				$sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".(!empty($_GET['ed']) ? $_GET['ed'] : '')."' ;";
 				
 				$p_sql = $db->getResults($sql);
-				$payments = $p_sql[0];
+
+				$payments = (!empty($p_sql) ? $p_sql[0] : '');
  
 				if ($p_sql) foreach ($p_sql as $p) {
 			?>
@@ -67,14 +68,14 @@
 				}
 			?>
 			<div id="FormFields" style="margin: 20px 10px;"></div>
-			<input type="hidden" name="ledgerid" value="<?php echo $_GET['ed']; ?>">
-			<input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
+			<input type="hidden" name="ledgerid" value="<?php echo (!empty($_GET['ed']) ? $_GET['ed'] : ''); ?>">
+			<input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
 			<input type="hidden" name="producer" value="<?php echo $_SESSION['username']; ?>">
 			<input type="hidden" name="userid" value="<?php echo $_SESSION['userid']; ?>">
 			<input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">
 			<input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
 			<div style="width:200px;float:right;margin-right:10px;text-align:right;" id="submitButton">
-				<input type="submit" onclick="validate(<?php $_COOKIE['tempforledgerentry']; ?>)" value="Edit Payments" />
+				<input type="submit" onclick="validate(<?php (!empty($_COOKIE['tempforledgerentry']) ? $_COOKIE['tempforledgerentry'] : ''); ?>)" value="Edit Payments" />
 			</div>
 		</form>
 	</body>

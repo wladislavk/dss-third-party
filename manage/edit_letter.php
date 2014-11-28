@@ -12,7 +12,7 @@
     include 'admin/includes/invoice_functions.php';
   }
 
-  if($_GET['lid'] == '' || $_GET['lid'] == '0'){
+  if(/*empty($_GET['lid']) || $_GET['lid'] == '0'*/0){
 ?>
     <h2>Unable to find letter.</h2>
   <?php
@@ -25,17 +25,17 @@
 
 <?php
   $status_sql = "SELECT status, docid FROM dental_letters
-		WHERE letterid='".mysql_real_escape_string($_GET['lid'])."'";
+		WHERE letterid='".mysqli_real_escape_string($con, (!empty($_GET['lid']) ? $_GET['lid'] : ''))."'";
 
   $status_r = $db->getRow($status_sql);
   $parent_status = $status_r['status'];
   $letter_doc = $status_r['docid'];
 
-  $pat_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+  $pat_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
   
   $pat = $db->getRow($pat_sql);
 
-  $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".mysql_real_escape_string($_GET['pid'])." ORDER BY adddate DESC LIMIT 1";
+  $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))." ORDER BY adddate DESC LIMIT 1";
   
   $itype = $db->getRow($itype_sql);
   $patient_photo = $itype['image_file'];
@@ -53,8 +53,8 @@
   $masterid = $_GET['lid'];
 
   $master_sql = "SELECT * FROM dental_letters l
-  		  WHERE (l.letterid='".mysql_real_escape_string($_GET['lid'])."'
-  			OR l.parentid='".mysql_real_escape_string($_GET['lid'])."')
+  		  WHERE (l.letterid='".mysqli_real_escape_string($con, $_GET['lid'])."'
+  			OR l.parentid='".mysqli_real_escape_string($con, $_GET['lid'])."')
   			AND status='".$parent_status."' AND deleted=0 ORDER BY edit_date DESC";
 
   $master_c = $db->getResults($master_sql);
@@ -245,7 +245,7 @@ foreach ($master_q as $master_r) {
 
 <?php
   if ($status == DSS_LETTER_PENDING) {
-    $f_sql = "SELECT * FROM dental_faxes WHERE letterid='".mysql_real_escape_string($letterid)."';";
+    $f_sql = "SELECT * FROM dental_faxes WHERE letterid='".mysqli_real_escape_string($con, $letterid)."';";
     
     $f_q = $db->getResults($f_sql);
     if ($f_q) foreach ($f_q as $f_r) {
@@ -259,7 +259,7 @@ foreach ($master_q as $master_r) {
   }
 
   // Get Contact Info for Recipients
-  $s = "SELECT referred_source FROM dental_patients where patientid=".mysql_real_escape_string($_GET['pid'])." LIMIT 1";
+  $s = "SELECT referred_source FROM dental_patients where patientid=".mysqli_real_escape_string($con, $_GET['pid'])." LIMIT 1";
   
   $r = $db->getRow($s);
   $source = $r['referred_source'];
@@ -371,14 +371,14 @@ foreach ($master_q as $master_r) {
     $header_space = true;
   }
 
-  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($_GET['pid'])."'";
+  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 
   $loc_r = $db->getRow($loc_sql);
 
   if ($_GET['pid']!='' && $loc_r['location'] != '' && $loc_r['location'] != '0') {
-    $location_query = "SELECT * FROM dental_locations WHERE id='".mysql_real_escape_string($loc_r['location'])."' AND docid='".mysql_real_escape_string($docid)."'";
+    $location_query = "SELECT * FROM dental_locations WHERE id='".mysqli_real_escape_string($con, $loc_r['location'])."' AND docid='".mysqli_real_escape_string($con, $docid)."'";
   } else {
-    $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
+    $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($con, $docid)."'";
   }
 
   error_log($location_query);
@@ -522,7 +522,7 @@ foreach ($master_q as $master_r) {
   	$subj1 = $row;
   }
 
-  $s = "SELECT ess as ep_eadd, snoring_sound as ep_sadd, energy_level as ep_eladd, sleep_qual as sleep_qualadd FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+  $s = "SELECT ess as ep_eadd, snoring_sound as ep_sadd, energy_level as ep_eladd, sleep_qual as sleep_qualadd FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
   
   $r = $db->getRow($s);
   $subj1 = $r;
@@ -563,7 +563,7 @@ foreach ($master_q as $master_r) {
   
   $reason_seeking_tx = $db->getRow($reason_query)['reason_seeking_tx'];
 
-  $cc_sql = "select chief_complaint_text from dental_q_page1 WHERE patientid=".mysql_real_escape_string($patientid);
+  $cc_sql = "select chief_complaint_text from dental_q_page1 WHERE patientid=".mysqli_real_escape_string($con, $patientid);
   
   $cc_row = $db->getRow($cc_sql);
   $reason_seeking_tx = $cc_row['chief_complaint_text'];
@@ -664,16 +664,16 @@ foreach ($master_q as $master_r) {
 
   $noncomp['description'] = $noncomp['description'];
 
-  $sign_sql = "SELECT * FROM dental_user_signatures WHERE user_id='".mysql_real_escape_string($_SESSION['userid'])."' ORDER BY adddate DESC LIMIT 1";
+  $sign_sql = "SELECT * FROM dental_user_signatures WHERE user_id='".mysqli_real_escape_string($con, $_SESSION['userid'])."' ORDER BY adddate DESC LIMIT 1";
 
   $sign = $db->getRow($sign_sql);
   $signature_file = 'signature_'.$_SESSION['userid'].'_'.$sign['id'].'.png';
 
   // Load $template
   if ($template_type == '0') {
-    $letter_sql = "SELECT body FROM dental_letter_templates WHERE companyid='".mysql_real_escape_string($companyid)."' AND triggerid='".mysql_real_escape_string($templateid)."'";
+    $letter_sql = "SELECT body FROM dental_letter_templates WHERE companyid='".mysqli_real_escape_string($con, $companyid)."' AND triggerid='".mysqli_real_escape_string($con, $templateid)."'";
   } else {
-    $letter_sql = "SELECT body FROM dental_letter_templates_custom WHERE id='".mysql_real_escape_string($templateid)."'";
+    $letter_sql = "SELECT body FROM dental_letter_templates_custom WHERE id='".mysqli_real_escape_string($con, $templateid)."'";
   }
 
   $letter_r = $db->getRow($letter_sql);
@@ -2011,9 +2011,12 @@ foreach ($master_q as $master_r) {
 
 <?php
   function is_physician($id) {
-    $sql = "SELECT physician FROM dental_contacttype where contacttypeid='".mysql_real_escape_string($id)."'";
-    $q = mysql_query($sql);
-    $r = mysql_fetch_assoc($q);
+    $db = new Db();
+    $con = $GLOBALS['con'];
+
+    $sql = "SELECT physician FROM dental_contacttype where contacttypeid='".mysqli_real_escape_string($con, $id)."'";
+
+    $r = $db->getRow($sql);
     return $r['physician'] == 1;
   }
 

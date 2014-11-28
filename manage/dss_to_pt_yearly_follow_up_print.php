@@ -6,7 +6,7 @@
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 	$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
-	if($pat_myarray['patientid'] == '') {
+	if(empty($pat_myarray['patientid'])) {
 ?>
 		<script type="text/javascript">
 			window.location = 'manage_patient.php';
@@ -58,7 +58,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
+		<meta name="keywords" content="<?php echo st(!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : '');?>" />
 		<title><?php echo $sitename;?> | <?php echo $name;?> - DSS to pt no treatment</title>
 		<link href="css/admin.css" rel="stylesheet" type="text/css" />
 		<script language="javascript" type="text/javascript" src="script/validation.js"></script>

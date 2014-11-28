@@ -38,7 +38,7 @@
 				<span style="float:left;font-weight:bold;">Amount</span>
 			</div>
 			<?php
-				$sql = "SELECT * FROM dental_ledger_payment WHERE id='".$_GET['ed']."' ;";
+				$sql = "SELECT * FROM dental_ledger_payment WHERE id='".(!empty($_GET['ed']) ? $_GET['ed'] : '')."' ;";
 				
 				$p_sql = $db->getResults($sql);
 				if ($p_sql) foreach ($p_sql as $p){
@@ -77,15 +77,15 @@
 				}
 			?>
 			<div id="FormFields" style="margin: 20px 10px;"></div>
-			<input type="hidden" name="id" value="<?php echo $_GET['ed']; ?>">
-			<input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
+			<input type="hidden" name="id" value="<?php echo (!empty($_GET['ed']) ? $_GET['ed'] : ''); ?>">
+			<input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
 			<input type="hidden" name="producer" value="<?php echo $_SESSION['username']; ?>">
 			<input type="hidden" name="userid" value="<?php echo $_SESSION['userid']; ?>">
 			<input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">
 			<input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
-			<a href="?delid=<?php echo  $_GET['ed']; ?>&pid=<?php echo  $_GET['pid']; ?>" onclick="return confirm('Are you sure you want to delete this payment? This cannot be undone.');" class="dellink">Delete</a>
+			<a href="?delid=<?php echo  (!empty($_GET['ed']) ? $_GET['ed'] : ''); ?>&pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" onclick="return confirm('Are you sure you want to delete this payment? This cannot be undone.');" class="dellink">Delete</a>
 			<div style="width:200px;float:right;margin-right:10px;text-align:right;" id="submitButton">
-				<input type="submit" onclick="validate(<?php $_COOKIE['tempforledgerentry']; ?>)" value="Edit Payment" />
+				<input type="submit" onclick="validate(<?php (!empty($_COOKIE['tempforledgerentry']) ? $_COOKIE['tempforledgerentry'] : ''); ?>)" value="Edit Payment" />
 			</div>
 		</form>
 	</body>

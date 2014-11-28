@@ -1,12 +1,12 @@
 <?php
 	include 'includes/top.htm';
 
-	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+	$pat_sql = "select * from dental_patients where patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 	$name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
-	if($pat_myarray['patientid'] == '')
+	if(/*empty($pat_myarray['patientid'])*/0)
 	{
 ?>
 		<script type="text/javascript">
@@ -16,7 +16,7 @@
 		die();
 	}
 
-	$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
+	$ref_sql = "select * from dental_q_recipients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$ref_myarray = $db->getRow($ref_sql);
 	$referring_physician = st($ref_myarray['referring_physician']);
@@ -30,7 +30,7 @@
 		$age = 'N/A';
 	}
 
-	$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+	$q2_sql = "select * from dental_q_page2 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	
 	$q2_myarray = $db->getRow($q2_sql);
 	$polysomnographic = st($q2_myarray['polysomnographic']);
@@ -60,16 +60,16 @@
 	</span>
 	<br />
 	&nbsp;&nbsp;
-	<a href="dss_letters.php?pid=<?php echo $_GET['pid'];?>" class="editlink" title="EDIT">
+	<a href="dss_letters.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>" class="editlink" title="EDIT">
 		<b>&lt;&lt;Back</b></a>
 	<br /><br>
 
 	<div align="right">
-		<button class="addButton" onclick="Javascript: window.open('dss_to_pt_no_treatment_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="Javascript: window.open('dss_to_pt_no_treatment_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
 			Print Letter 
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<button class="addButton" onclick="Javascript: window.open('dss_to_pt_no_treatment_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
+		<button class="addButton" onclick="Javascript: window.open('dss_to_pt_no_treatment_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
 			Word Document
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;

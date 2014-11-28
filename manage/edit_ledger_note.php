@@ -3,7 +3,7 @@
     include("includes/sescheck.php");
     include("includes/calendarinc.php");
    
-    $sql = "SELECT * FROM dental_ledger_note where id=".$_GET['ed'];
+    $sql = "SELECT * FROM dental_ledger_note where id=".(!empty($_GET['ed']) ? $_GET['ed'] : '');
 
     $n = $db->getRow($sql);
 ?>
@@ -61,7 +61,7 @@
                 </tr>
                 <tr>
 		            <td class="frmhead">
-                        <a href="/manage/manage_ledger.php?delnoteid=<?php echo  $_GET['ed']; ?>&amp;pid=<?php echo  $_GET['pid']; ?>" target="_parent" style="font-weight:bold;" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                        <a href="/manage/manage_ledger.php?delnoteid=<?php echo  (!empty($_GET['ed']) ? $_GET['ed'] : ''); ?>&amp;pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" target="_parent" style="font-weight:bold;" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                             Delete 
                         </a>
                     </td>
@@ -70,8 +70,8 @@
                     </td>
 	            </tr>
             </table>
-            <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
-            <input type="hidden" name="id" value="<?php echo $_GET['ed']; ?>">
+            <input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
+            <input type="hidden" name="id" value="<?php echo (!empty($_GET['ed']) ? $_GET['ed'] : ''); ?>">
         </form>
 
         <script type="text/javascript">

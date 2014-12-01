@@ -30,7 +30,7 @@
 	<script src="admin/popup/popup.js" type="text/javascript"></script>
 
 	<div style="margin-left:20px;">
-		<form action="delete_insurance.php?pid=<?php echo $_GET['pid'];?>&delid=<?php echo $_REQUEST['delid'];?>" method="post">
+		<form action="delete_insurance.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&delid=<?php echo (!empty($_REQUEST['delid']) ? $_REQUEST['delid'] : '');?>" method="post">
 		    This claim will be deleted. Do you want to delete the corresponding ledger entries as well?
 			<input type="submit" name="yes_but" value="Yes" />
 			<input type="submit" name="no_but" value="No" />  

@@ -1,6 +1,6 @@
 <?php include "admin/includes/main_include.php";
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql);
 
 $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
@@ -15,7 +15,7 @@ if($pat_myarray['patientid'] == ''){?>
 	die();
 }
 
-$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
+$ref_sql = "select * from dental_q_recipients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $ref_myarray = $db->getRow($ref_sql);
 
 $referring_physician = st($ref_myarray['referring_physician']);
@@ -47,7 +47,7 @@ if(st($pat_myarray['gender']) == 'Female'){
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
+<meta name="keywords" content="<?php echo st(!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : '');?>" />
 <title><?php echo $sitename;?> | <?php echo $name;?> - DSS referral thank you pt did not come in</title>
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>

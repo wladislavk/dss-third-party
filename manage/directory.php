@@ -60,7 +60,7 @@
         
             <?php
               $sqlddlist = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
-              if($_GET['sh'] != 2) {
+              if(!empty($_GET['sh']) && $_GET['sh'] != 2) {
               	$sqlddlist .= " and status = 1";
               }
               $sqlddlist .= " order by lastname, firstname";
@@ -74,7 +74,7 @@
               <select id="mySelect" onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}" style="width:260px;">
                 <?php
                   $sqlddlist2 = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
-                  if($_GET['sh'] != 2) {
+                  if(!empty($_GET['sh']) && $_GET['sh'] != 2) {
                   	$sqlddlist2 .= " and status = 1";
                   }
                   $sqlddlist2 .= " order by lastname, firstname";
@@ -101,7 +101,7 @@
               <SELECT id="mySelect" onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}" style="width:260px;">
                 <?php
                   $sqlddlist3 = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
-                  if($_GET['sh'] != 2) {
+                  if(!empty($_GET['sh']) && $_GET['sh'] != 2) {
                   	$sqlddlist3 .= " and status = 1";
                   }
                   $sqlddlist3 .= " order by lastname, firstname";
@@ -128,7 +128,7 @@
               <select id="mySelect" onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}" style="width:260px;">
                 <?php
                   $sqlddlist4 = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
-                  if($_GET['sh'] != 2) {
+                  if(!empty($_GET['sh']) && $_GET['sh'] != 2) {
                   	$sqlddlist4 .= " and status = 1";
                   }
                   $sqlddlist4 .= " order by lastname, firstname";

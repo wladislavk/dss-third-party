@@ -1,6 +1,6 @@
 <?php
-include 'includes/constants.inc';
 include "includes/top.htm";
+include_once 'includes/constants.inc';
 include "includes/similar.php";
 ?>
 

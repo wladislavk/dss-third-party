@@ -585,7 +585,7 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
     }
   }
     if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
-    $letter_query = "UPDATE dental_letters SET parentid=null, status='1', date_sent = NOW(), send_method='".s_for($send_method)."', template='".s_for($template)."' WHERE letterid='".s_for($letterid)."';";
+    $letter_query = "UPDATE dental_letters SET parentid=null, status='1', date_sent = NOW(), send_method='".s_for(!empty($send_method) ? $send_method : '')."', template='".s_for($template)."' WHERE letterid='".s_for($letterid)."';";
     $letter_result = $db->query($letter_query);
     $parent_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".$letterid."';";
     $parent_result = $db->query($parent_query);
@@ -1491,7 +1491,7 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
   $c_sql = "SELECT patientid, topatient, md_list, md_referral_list, pat_referral_list FROM dental_letters WHERE letterid='".mysqli_real_escape_string($GLOBALS['con'],$letterid)."'";
   $c_r = $db->getRow($c_sql);
   $contacts = get_contact_info((($c_r['topatient'] == "1") ? $c_r['patientid'] : ''), $c_r['md_list'], $c_r['md_referral_list'], $c_r['pat_referral_list']);
-  $total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']) + count($contacts['pat_referrals']);
+  $total_contacts = count(!empty($contacts['patient']) ? $contacts['patient'] : array()) + count($contacts['mds']) + count(!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : array()) + count(!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : array());
   if (!isset($letterid)) {
 		return false;
   } elseif ( $total_contacts == 1) {

@@ -1,7 +1,7 @@
 <?php
 	include "admin/includes/main_include.php";
 
-	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+	$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 	
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
@@ -20,7 +20,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
+		<meta name="keywords" content="<?php echo st(!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : '');?>" />
 		<title><?php echo $sitename;?> | <?php echo $name;?> - DSS intro to MD from DSS</title>
 		<link href="css/admin.css" rel="stylesheet" type="text/css" />
 		<script language="javascript" type="text/javascript" src="script/validation.js"></script>
@@ -36,7 +36,7 @@
 					</span>
 					<br />
 					&nbsp;&nbsp;
-					<a href="dss_letters.php?pid=<?php echo $_GET['pid'];?>" class="editlink" title="EDIT">
+					<a href="dss_letters.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>" class="editlink" title="EDIT">
 						<b>&lt;&lt;Back</b></a>
 					<br /><br>
 					<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">

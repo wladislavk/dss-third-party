@@ -3,15 +3,17 @@
   include_once('admin/includes/main_include.php');
   include_once('admin/includes/invoice_functions.php');
 
-  $file = $_GET['f'];
+  $file = (!empty($_GET['f']) ? $_GET['f'] : '');
   // this is where you'd do any custom handling of the data
 	// if you wanted to put it in a database, email t
   // FDF data, push ti back to the user with a header() call, etc.
   // write the file out
 
-	$handle = fopen("../../../shared/q_file/".$file, 'x+');
-	fwrite($handle, $fdf);
-	fclose($handle);
+	if (file_exists("../../../shared/q_file/".$file)) {
+    $handle = fopen("../../../shared/q_file/".$file, 'x+');
+  	fwrite($handle, $fdf);
+  	fclose($handle);
+  }
 
 	$xfdf_file_path = '../../../shared/q_file/'.$file;
   $pdf_template_path = 'claim_v2.pdf';

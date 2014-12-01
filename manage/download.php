@@ -66,7 +66,7 @@
     }
 
 
-    $id = $_GET['id'];
+    $id = (!empty($_GET['id']) ? $_GET['id'] : '');
     $query = "select id, name, size, type, ext, content from filemanager where id=".$id;
 
     $results = $db->getResults($query);

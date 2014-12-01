@@ -10,7 +10,7 @@
 	<script type="text/javascript" src="/manage/js/edit_letter.js"></script>
 
 <?php
-	$letterid = mysql_real_escape_string($_GET['lid']);
+	$letterid = mysqli_real_escape_string($con, !empty($_GET['lid']) ? $_GET['lid'] : '');
 
 	// Select Letter
 	$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
@@ -47,7 +47,7 @@
 		foreach ($contacts['mds'] as $contact) {
 		  $md_contacts[] = array_merge(array('type' => 'md'), $contact);
 		}
-		foreach ($contacts['md_referrals'] as $contact) {
+		if (!empty($contacts['md_referrals'])) foreach ($contacts['md_referrals'] as $contact) {
 		  $md_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
 		}
 	}
@@ -194,7 +194,7 @@
 	</span>
 	<br />
 	&nbsp;&nbsp;
-	<a href="<?php print ($_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
+	<a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
 		<b>&lt;&lt;Back</b></a>
 	<br /><br>
 
@@ -306,7 +306,7 @@
 		<br />
 		cc:  %patient_fullname%</p>";
 ?>
-	<form action="/manage/dss_to_md_pt_treatment_complete.php?pid=<?php echo $patientid?>&lid=<?php echo $letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
+	<form action="/manage/dss_to_md_pt_treatment_complete.php?pid=<?php echo $patientid?>&lid=<?php echo $letterid?><?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
 		<input type="hidden" name="numletters" value="<?php echo $numletters?>" />
 		<?php
 			if ($_POST != array()) {
@@ -664,7 +664,7 @@
 </table>
 
 <?php
-	if($_GET['backoffice'] == '1') {
+	if(!empty($_GET['backoffice']) && $_GET['backoffice'] == '1') {
 		include 'admin/includes/bottom.htm';
 	} else {
 		include 'includes/bottom.htm';

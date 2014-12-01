@@ -1,7 +1,7 @@
 <?php
 	include 'includes/top.htm';
 
-	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+	$pat_sql = "select * from dental_patients where patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
@@ -28,16 +28,16 @@
 </span>
 <br />
 &nbsp;&nbsp;
-<a href="dss_letters.php?pid=<?php echo $_GET['pid'];?>" class="editlink" title="EDIT">
+<a href="dss_letters.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>" class="editlink" title="EDIT">
 	<b>&lt;&lt;Back</b></a>
 <br /><br>
 
 <div align="right">
-	<button class="addButton" onclick="Javascript: window.open('dss_appeal_letter_to_ins_com_print.php?pid=<?php echo $_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
+	<button class="addButton" onclick="Javascript: window.open('dss_appeal_letter_to_ins_com_print.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','Print_letter','width=800,height=500,scrollbars=1');" >
 		Print Letter 
 	</button>
 	&nbsp;&nbsp;&nbsp;&nbsp;
-	<button class="addButton" onclick="Javascript: window.open('dss_appeal_letter_to_ins_com_word.php?pid=<?php echo $_GET['pid'];?>','word_letter','width=800,height=500,scrollbars=1');" >
+	<button class="addButton" onclick="Javascript: window.open('dss_appeal_letter_to_ins_com_word.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>','word_letter','width=800,height=500,scrollbars=1');" >
 		Word Document
 	</button>
 	&nbsp;&nbsp;&nbsp;&nbsp;

@@ -10,7 +10,7 @@ header("Expires: 0");
 
 include "admin/includes/main_include.php";
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $pat_myarray = $db->getRow($pat_sql);
 
 $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
@@ -25,7 +25,7 @@ if($pat_myarray['patientid'] == ''){?>
 	die();
 }
 
-$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
+$ref_sql = "select * from dental_q_recipients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $ref_myarray = $db->getRow($ref_sql);
 
 $referring_physician = st($ref_myarray['referring_physician']);

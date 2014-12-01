@@ -29,7 +29,7 @@ if($pat_myarray['patientid'] == '')
 	die();
 }*/
 
-$letterid = mysql_real_escape_string($_GET['lid']);
+$letterid = mysqli_real_escape_string($con, !empty($_GET['lid']) ? $_GET['lid'] : '');
 
 // Select Letter
 $letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
@@ -63,7 +63,7 @@ $contacts = get_contact_info('', $full_md_list, $full_md_referral_list);
 if ($contacts['mds']) foreach ($contacts['mds'] as $contact) {
 	$md_contacts[] = array_merge(array('type' => 'md'), $contact);
 }
-if ($contacts['md_referrals']) foreach ($contacts['md_referrals'] as $contact) {
+if (!empty($contacts['md_referrals'])) foreach ($contacts['md_referrals'] as $contact) {
 	$md_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
 }
 
@@ -92,7 +92,7 @@ $appt_date = ($appt_result) ? array_shift($appt_result) : '';
 </span>
 <br />
 &nbsp;&nbsp;
-<a href="<?php print ($_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
+<a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
 	<b>&lt;&lt;Back</b></a>
 <br /><br>
 
@@ -106,13 +106,13 @@ if ($topatient) {
 }
 
 $letter_contacts = array();
-if ($contact_info['patient']) foreach ($contact_info['patient'] as $contact) {
+if (!empty($contact_info['patient'])) foreach ($contact_info['patient'] as $contact) {
 	$letter_contacts[] = array_merge(array('type' => 'patient'), $contact);
 }
-if ($contact_info['mds']) foreach ($contact_info['mds'] as $contact) {
+if (!empty($contact_info['mds'])) foreach ($contact_info['mds'] as $contact) {
 	$letter_contacts[] = array_merge(array('type' => 'md'), $contact);
 }
-if ($contact_info['md_referrals']) foreach ($contact_info['md_referrals'] as $contact) {
+if (!empty($contact_info['md_referrals'])) foreach ($contact_info['md_referrals'] as $contact) {
 	$letter_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
 }
 $numletters = count($letter_contacts);
@@ -153,7 +153,7 @@ Dr. %franchisee_fullname%</p>
 <p>cc:  %other_mds%</p>";
 
 ?>
-<form action="/manage/dss_referral_thank_you_pt_did_not_come_in.php?pid=<?php echo $patientid?>&lid=<?php echo $letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
+<form action="/manage/dss_referral_thank_you_pt_did_not_come_in.php?pid=<?php echo $patientid?>&lid=<?php echo $letterid?><?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
 <input type="hidden" name="numletters" value="<?php echo $numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -412,7 +412,7 @@ foreach ($letter_contacts as $key => $contact) {
 
 
 <?php
-if($_GET['backoffice'] == '1') {
+if(!empty($_GET['backoffice']) && $_GET['backoffice'] == '1') {
 	include 'admin/includes/bottom.htm';
 } else {
 	include 'includes/bottom.htm';

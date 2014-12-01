@@ -2,7 +2,7 @@
 	include_once('admin/includes/main_include.php');
 	include("admin/includes/sescheck.php");
 
-	if($_POST["palpationsub"] == 1) {
+	if(!empty($_POST["palpationsub"]) && $_POST["palpationsub"] == 1) {
 		$sel_check = "select * from dental_palpation where palpation = '".s_for($_POST["palpation"])."' and palpationid <> '".s_for($_POST['ed'])."'";
 			
 		if($db->getNumberRows($sel_check) > 0) {
@@ -55,10 +55,10 @@
 
 	<body>
 	    <?php
-		    $thesql = "select * from dental_palpation where palpationid='".$_REQUEST["ed"]."'";
-			$themyarray = $dd->getRow($thesql);
+		    $thesql = "select * from dental_palpation where palpationid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+			$themyarray = $db->getRow($thesql);
 		
-			if($msg != '') {
+			if(!empty($msg)) {
 				$palpation = $_POST['palpation'];
 				$sortby = $_POST['sortby'];
 				$status = $_POST['status'];
@@ -80,13 +80,13 @@
 
 		<br /><br />
 	
-		<?php if($msg != '') { ?>
+		<?php if(!empty($msg)) { ?>
 		    <div align="center" class="red">
 		        <?php echo $msg; ?>
 		    </div>
     	<?php } ?>
 
-	    <form name="palpationfrm" action="<?php echo $_SERVER['admin/PHP_SELF'];?>?add=1" method="post" onSubmit="return palpationabc(this)">
+	    <form name="palpationfrm" action="<?php echo (!empty($_SERVER['admin/PHP_SELF']) ? $_SERVER['admin/PHP_SELF'] : '');?>?add=1" method="post" onSubmit="return palpationabc(this)">
 		    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 		        <tr>
 		            <td colspan="2" class="cat_head">

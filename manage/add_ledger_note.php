@@ -1,6 +1,5 @@
 <?php
-session_start();
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include("includes/calendarinc.php");
 ?>
@@ -67,7 +66,7 @@ foreach ($p_query as $p) {
     		<td class="frmhead"><input type="submit" value="Add Note" /></td>
     	</tr>
     </table>
-    <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
+    <input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
     <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
     <input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>" />
 </form>

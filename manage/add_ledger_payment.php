@@ -3,7 +3,7 @@
   include("includes/sescheck.php");
   include_once('includes/constants.inc');
   
-  $sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".$_GET['ed']."' ;";
+  $sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".(!empty($_GET['ed']) ? $_GET['ed'] : '')."' ;";
 
   $payments = $db->getRow($sql);
 ?>
@@ -66,7 +66,7 @@
       </div>
 
       <?php
-        $sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".$_GET['ed']."' ;";
+        $sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".(!empty($_GET['ed']) ? $_GET['ed'] : '')."' ;";
         $p_sql = $db->getResults($sql);
         if ($p_sql) foreach ($p_sql as $p) {
       ?>
@@ -81,8 +81,8 @@
       <?php } ?>
 
       <div id="FormFields" style="margin: 20px 10px;"></div>
-        <input type="hidden" name="ledgerid" value="<?php echo $_GET['ed']; ?>">
-        <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
+        <input type="hidden" name="ledgerid" value="<?php echo (!empty($_GET['ed']) ? $_GET['ed'] : ''); ?>">
+        <input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">
         <input type="hidden" name="producer" value="<?php echo $_SESSION['username']; ?>">
         <input type="hidden" name="userid" value="<?php echo $_SESSION['userid']; ?>">
         <input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">

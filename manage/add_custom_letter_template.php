@@ -2,22 +2,22 @@
     include "includes/top.htm";
 
     if(isset($_POST['update_btn'])){
-        if($_GET['ed']!= ''){
+        if(!empty($_GET['ed'])){
             $s = "UPDATE dental_letter_templates_custom SET
-            	  name='".mysql_real_escape_string($_POST['name'])."',
-            	  body='".mysql_real_escape_string($_POST['body'])."'
+            	  name='".mysqli_real_escape_string($con,$_POST['name'])."',
+            	  body='".mysqli_real_escape_string($con,$_POST['body'])."'
             	  WHERE 
-            	  docid='".mysql_real_escape_string($_SESSION['docid'])."' AND
-            	  id='".mysql_real_escape_string($_GET['ed'])."'";
+            	  docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND
+            	  id='".mysqli_real_escape_string($con,$_GET['ed'])."'";
 
             $db->query($s);
         }else{
             $s = "INSERT INTO dental_letter_templates_custom SET
-                  name='".mysql_real_escape_string($_POST['name'])."',
-                  body='".mysql_real_escape_string($_POST['body'])."',
-                  docid='".mysql_real_escape_string($_SESSION['docid'])."',
+                  name='".mysqli_real_escape_string($con,$_POST['name'])."',
+                  body='".mysqli_real_escape_string($con,$_POST['body'])."',
+                  docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."',
             	  adddate=now(),
-            	  ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
+            	  ip_address = '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
                   
             $db->query($s);
         }
@@ -28,14 +28,14 @@
 <?php
     }
 
-    $sql = "select * from dental_letter_templates_custom WHERE id='".mysql_real_escape_string($_GET['ed'])."' ";
+    $sql = "select * from dental_letter_templates_custom WHERE id='".mysqli_real_escape_string($con,!empty($_GET['ed']) ? $_GET['ed'] : '')."' ";
     $r = $db->getRow($sql);
 
     if(isset($_GET['cid'])){
         if($_GET['cid'][0]!='C'){
-            $c_sql = "SELECT body FROM dental_letter_templates WHERE id = ".mysql_real_escape_string($_GET['cid']).";";
+            $c_sql = "SELECT body FROM dental_letter_templates WHERE id = ".mysqli_real_escape_string($con,$_GET['cid']).";";
         } else {
-            $c_sql = "SELECT body FROM dental_letter_templates_custom WHERE id = ".mysql_real_escape_string(substr($_GET['cid'],1)).";";
+            $c_sql = "SELECT body FROM dental_letter_templates_custom WHERE id = ".mysqli_real_escape_string($con,substr($_GET['cid'],1)).";";
         }
 
         $c_r = $db->getRow($c_sql);
@@ -72,7 +72,7 @@
             <p>NOTE: You CANNOT modify or customize any of the existing DS3 letter templates that are triggered from the Tracker page (you can only create your own new letter templates). You CANNOT presently create automatic triggers for your letters from the Tracker page.</p> 
             </p>
         </div>
-        <form style="display:block;" action="?ed=<?php echo  $_GET['ed'];?>" method="post" onsubmit="return customlettertemplateabc(this)">
+        <form style="display:block;" action="?ed=<?php echo  (!empty($_GET['ed']) ? $_GET['ed'] : '');?>" method="post" onsubmit="return customlettertemplateabc(this)">
             <br />
             <div style="margin-left:20px;width:930px;">
                 Name: <input type="text" id="name" name="name" value="<?php echo  $r['name']; ?>" />

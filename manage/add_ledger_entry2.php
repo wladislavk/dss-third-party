@@ -13,6 +13,10 @@
       $i = $_COOKIE['tempforledgerentry'];
       $d = 1;
 
+      if (!isset($sqlinsertqry)) {
+        $sqlinsertqry = "";
+      }
+
       $sqlinsertqry .= "INSERT INTO `dental_ledger` (
                         `ledgerid` ,
                         `patientid` ,
@@ -32,7 +36,7 @@
                         `status`
                         ) VALUES ";
 
-      if ($_POST['form']) foreach($_POST['form'] as $form){
+      if (!empty($_POST['form'])) foreach($_POST['form'] as $form){
         if($d <= $i){
           if($form['status'] == "on") {
             $status = "Sent";

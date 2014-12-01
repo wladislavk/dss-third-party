@@ -1,12 +1,11 @@
 <?php
-    include_once('admin/includes/main_include.php');
-    include("includes/sescheck.php");
-    include "includes/top.htm"; 
+    include "includes/top.htm";
+    include_once ("includes/sescheck.php");
 
     if(isset($_GET['ed'])){
         $patid = $_GET['ed'];
     } else {
-        $patid = $_POST['patid'];
+        $patid = (!empty($_POST['patid']) ? $_POST['patid'] : '');
     }
 /*
     $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;

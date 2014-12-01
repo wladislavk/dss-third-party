@@ -1,6 +1,5 @@
 <?php 
-session_start();
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 //include "includes/general_functions.php";
 include_once "admin/includes/general.htm";
@@ -24,16 +23,16 @@ include_once 'includes/constants.inc';
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
-if($_POST["ticketsub"] == 1){
+if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1){
 	$ins_sql = "insert into dental_support_tickets set 
-                    title = '".mysql_real_escape_string($_POST['title'])."',
-                    category_id = '".mysql_real_escape_string($_POST['category_id'])."',
-                    company_id = '".mysql_real_escape_string($_POST['company_id'])."',
-                    body = '".mysql_real_escape_string($_POST['body'])."',
-                    userid = '".mysql_real_escape_string($_SESSION['userid'])."',
-                    docid = '".mysql_real_escape_string($_SESSION['docid'])."',
+                    title = '".mysqli_real_escape_string($con, $_POST['title'])."',
+                    category_id = '".mysqli_real_escape_string($con, $_POST['category_id'])."',
+                    company_id = '".mysqli_real_escape_string($con, $_POST['company_id'])."',
+                    body = '".mysqli_real_escape_string($con, $_POST['body'])."',
+                    userid = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
+                    docid = '".mysqli_real_escape_string($con, $_SESSION['docid'])."',
                     create_type = '1',
-                    creator_id = '".mysql_real_escape_string($_SESSION['userid'])."',
+                    creator_id = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
                     adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 
 	$t_id = $db->getInsertId($ins_sql);
@@ -45,15 +44,15 @@ if($_POST["ticketsub"] == 1){
             move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../shared/q_file/" . $attachment);
 	
             $a_sql = "INSERT INTO dental_support_attachment SET
-                        filename = '".mysql_real_escape_string($attachment)."',
-                        ticket_id=".mysql_real_escape_string($t_id);
+                        filename = '".mysqli_real_escape_string($con, $attachment)."',
+                        ticket_id=".mysqli_real_escape_string($con, $t_id);
             $db->query($a_sql);
         }
 	}
 
 	$u_sql = "SELECT a.* FROM admin a 
                 JOIN dental_support_category_admin ca ON ca.adminid=a.adminid
-                WHERE ca.category_id = '".mysql_real_escape_string($_POST['category_id'])."'";
+                WHERE ca.category_id = '".mysqli_real_escape_string($con, $_POST['category_id'])."'";
 	$u_q = $db->getResults($u_sql);
 	$admins = array();
     if ($u_q) {
@@ -62,7 +61,7 @@ if($_POST["ticketsub"] == 1){
         }
     }
 
-	$info_sql = "SELECT u.* FROM dental_users u WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+	$info_sql = "SELECT u.* FROM dental_users u WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
 	$info_r = $db->getRow($info_sql);
 
 	$html = "Support ticket has been opened by ".$info_r['name'].".";
@@ -98,13 +97,13 @@ if($_POST["ticketsub"] == 1){
 <br /><br />
 <?php
 
-$title = $_POST['title'];
-$category_id = $_POST['category_id'];
-$company_id = $_POST['company_id'];
-$body = $_POST['body'];
+$title = (!empty($_POST['title']) ? $_POST['title'] : '');
+$category_id = (!empty($_POST['category_id']) ? $_POST['category_id'] : '');
+$company_id = (!empty($_POST['company_id']) ? $_POST['company_id'] : '');
+$body = (!empty($_POST['body']) ? $_POST['body'] : '');
 $but_text = "Add ";
 	
-if($msg != '') {?>
+if(!empty($msg)) {?>
 <div align="center" class="red">
 <?php echo $msg;?>
 </div>
@@ -155,7 +154,7 @@ if($msg != '') {?>
 $c_sql = "SELECT c.* FROM companies c
             JOIN dental_users u ON u.billing_company_id=c.id
             WHERE c.use_support=1 
-            AND u.userid='".mysql_real_escape_string($_SESSION['docid'])."'
+            AND u.userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'
             ORDER BY c.name ASC;";
 $c_q = $db->getResults($c_sql);
 if ($c_q) 

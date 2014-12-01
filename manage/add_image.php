@@ -1,9 +1,8 @@
 <?php 
-session_start();
-require_once('admin/includes/main_include.php');
-require_once('includes/constants.inc');
+include_once('admin/includes/main_include.php');
+include_once('includes/constants.inc');
 include("includes/sescheck.php");
-require_once('includes/general_functions.php');
+include_once('includes/general_functions.php');
 
 if(isset($_POST['submitnewsleeplabsumm'])){
     $date = s_for($_POST['date']);
@@ -60,8 +59,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
                           adddate = now(),
                           ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
           
-            $db->query($ins_sql) or die($ins_sql." | ".mysql_error());
-            $image_id = mysql_insert_id();
+            $image_id = $db->getInsertId($ins_sql);
   			}
     }else{
         $banner1 = '';
@@ -77,17 +75,17 @@ if(isset($_POST['submitnewsleeplabsumm'])){
             $rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".
             $banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."', '".$image_id."')";
     error_log($q);
-    $run_q = $db->query($q) or die(mysql_error());
-    if(!$run_q){
+    $run_q = $db->getInsertId($q);
+    if(empty($run_q)){
         echo "Could not add sleep lab... Please try again.";
     }else{
         if($uploaded){
-            $ins_id = mysql_insert_id();
+            $ins_id = $run_q;
         }
        $msg = "Successfully added sleep lab". $uploaded;
 ?>
 <script type="text/javascript">
-parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>';
+parent.window.location='q_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>';
 </script>
 <?php
         die();
@@ -97,7 +95,7 @@ parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>';
 <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 
 <?php
-if($_POST["imagesub"] == 1){
+if(!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1){
     $title = $_POST['title'];
     $imagetypeid = $_POST['imagetypeid'];
     if((isset($_FILES['image_file']['tmp_name']) && $_FILES['image_file']['tmp_name']!='') || $_POST['ed'] == ''){
@@ -222,7 +220,7 @@ if($_POST["imagesub"] == 1){
                       title = '".s_for($title)."',
                       imagetypeid = '".s_for($imagetypeid)."' ";
         $ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
-        $db->query($ed_sql) or die($ed_sql." | ".mysql_error());
+        $db->query($ed_sql);
 
         $msg = "Edited Successfully";?>
 <script type="text/javascript">
@@ -241,7 +239,7 @@ if($_POST["imagesub"] == 1){
         			  $ed_sql .= ", image_file = '".s_for($banner1)."' ";
       			}
       			$ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
-      			$db->query($ed_sql) or die($ed_sql." | ".mysql_error());
+      			$db->query($ed_sql);
 
       			$msg = "Edited Successfully";?>
 
@@ -261,8 +259,7 @@ if($_POST["imagesub"] == 1){
                       			adddate = now(),
                       			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-            $db->query($ins_sql) or die($ins_sql." | ".mysql_error());
-            $imageid = mysql_insert_id();
+            $imageid = $db->getInsertId($ins_sql);
             if($_POST['imagetypeid']==6){
                 $rx_sql = "SELECT rx_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
                 $rx_r = $db->getRow($rx_sql);
@@ -343,10 +340,10 @@ if($_POST["imagesub"] == 1){
     <img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
 </div>
 <?php
-$thesql = "select * from dental_q_image where imageid='".$_REQUEST["ed"]."'";
+$thesql = "select * from dental_q_image where imageid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 $themyarray = $db->getRow($thesql);
 
-if($msg != ''){
+if(!empty($msg)){
   	$title = $_POST['title'];
 		$imagetypeid = $_POST['imagetypeid'];
 }else{
@@ -368,14 +365,14 @@ if($themyarray["contactid"] != ''){
 <br /><br />
 	
 <?php 
-if($msg != '') {?>
+if(!empty($msg)) {?>
 <div align="center" class="red">
     <?php echo $msg;?>
 </div>
 <?php 
 }?>
 <form name="imagefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>" method="post" onSubmit="return imageabc(this);" enctype="multipart/form-data">
-		<input name="flow" type="hidden" value="<?php echo $_GET['flow'];?>" />
+		<input name="flow" type="hidden" value="<?php echo (!empty($_GET['flow']) ? $_GET['flow'] : '');?>" />
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -395,7 +392,7 @@ if($msg != '') {?>
 <?php
 $itype_sql = "select * from dental_imagetype where status=1 order by sortby";
 $itype_my = $db->getResults($itype_sql);
-if($_GET['itro']==1){?>
+if(!empty($_GET['itro']) && $_GET['itro']==1){?>
                             <input type="hidden" id="imagetypeid" name="imagetypeid" value="<?php echo $_GET['sh']; ?>" />
 <?php
     foreach ($itype_my as $itype_myarray) {
@@ -513,7 +510,7 @@ for($i=1;$i<=9;$i++){ ?>
                 <input type="hidden" name="imagesub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["imageid"]?>" />
             		<input type="hidden" name="return" value="<?php echo $_REQUEST['return']; ?>" />
-                <input type="hidden" name="return_field" value="<?php echo $_REQUEST['return_field']; ?>" />
+                <input type="hidden" name="return_field" value="<?php echo (!empty($_REQUEST['return_field']) ? $_REQUEST['return_field'] : ''); ?>" />
                 <input type="submit" value=" <?php echo $but_text?> Image" class="button" />
             </td>
         </tr>

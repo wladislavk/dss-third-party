@@ -5,7 +5,7 @@
   include_once 'includes/general_functions.php';
   include_once 'admin/includes/form_updates.php';
 
-  if($_POST["compsub"] == 1) {
+  if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1) {
 ?>
     <img  id="loading_gif" src="images/DSS-ajax-animated_loading-gif.gif" />
 <?php
@@ -116,7 +116,7 @@
       @chmod($file_path,0777);
 
 			$ed_sql = "update dental_users set 
-				         logo = '".mysql_real_escape_string($file_name)."',
+				         logo = '".mysqli_real_escape_string($con, $file_name)."',
 				         updated_at=now()
 			           where userid='".$_SESSION["docid"]."'";
 
@@ -151,14 +151,14 @@
     	$themyarray = $db->getRow($thesql);
    	  $name = st($themyarray['name']);
 
-    	if($msg != '') {
+    	if(!empty($msg)) {
     		$logo = $_POST['logo'];
     	} else {
     		$logo = st($themyarray['logo']);
     		$but_text = "Add ";
     	}
   	
-    	if($themyarray["id"] != '') {
+    	if(!empty($themyarray["id"])) {
     		$but_text = "Edit ";
     	} else {
     		$but_text = "Add ";
@@ -167,7 +167,7 @@
 	
 	  <br /><br />
 	
-	  <?php if($msg != '') { ?>
+	  <?php if(!empty($msg)) { ?>
       <div align="center" class="red">
         <?php echo $msg;?>
       </div>

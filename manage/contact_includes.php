@@ -1,5 +1,5 @@
 <?php
-	$pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$_GET['ed']." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$_GET['ed'];
+	$pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".(!empty($_GET['ed']) ? $_GET['ed'] : '')." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".(!empty($_GET['ed']) ? $_GET['ed'] : '');
 
 	$pcont_array = $db->getResults($pcont_qry);
 ?>

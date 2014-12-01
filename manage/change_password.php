@@ -11,7 +11,7 @@
 		die();
 	}
 
-	if($_POST['passsub'] == 1) {
+	if(!empty($_POST['passsub']) && $_POST['passsub'] == 1) {
 		$chk_sql = "select * from dental_users where userid='".s_for($_SESSION['userid'])."' and password='".s_for($_POST['old_pass'])."'";
 		
 		if($db->getNumberRows($chk_sql) == 0) {
@@ -23,7 +23,7 @@
 <?php
 			die();
 		} else {
-			$up_sql = "update dental_users set password='".mysql_real_escape_string($_POST['new_pass'])."' where userid='".s_for($_SESSION['userid'])."'";
+			$up_sql = "update dental_users set password='".mysqli_real_escape_string($con, $_POST['new_pass'])."' where userid='".s_for($_SESSION['userid'])."'";
 			
 			$db->query($up_sql);
 			$msg = "Password Changed Successfully.";
@@ -44,7 +44,7 @@
 	<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 		<tr>
 			<td colspan="2" align="center" class="red">
-				<b><?php echo $_GET['msg'];?></b>
+				<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : ''); ?></b>
 			</td>
 		</tr>
 		<tr>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
+		<meta name="keywords" content="<?php echo st(!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : '');?>" />
 		<title><?php echo $sitename;?></title>
 		<link href="css/admin.css" rel="stylesheet" type="text/css" />
 		<script language="javascript" type="text/javascript" src="script/validation.js"></script>
@@ -12,7 +12,7 @@
 
 	<body>
 	<?php 
-		if($_REQUEST["delid"] != "") {
+		if(!empty($_REQUEST["delid"])) {
 			$del_sql = "delete from dental_palpation where palpationid='" . $_REQUEST["delid"] . "'";
 			
 			$db->query($del_sql);
@@ -27,7 +27,7 @@
 
 		$rec_disp = 20;
 
-		if($_REQUEST["page"] != "") {
+		if(!empty($_REQUEST["page"])) {
 			$index_val = $_REQUEST["page"];
 		} else {
 			$index_val = 0;
@@ -43,7 +43,7 @@
 		$my = $db->getResults($sql);
 		$num_users = count($my);
 
-		if($_POST['sortsub'] == 1) {
+		if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1) {
 			foreach($_POST['sortby'] as $val) {
 				$smyarray = $my[0];
 				if($val == '' || is_numeric($val) === false) {
@@ -79,7 +79,7 @@
 	</div>
 	<br />
 	<div align="center" class="red">
-		<b><?php echo $_GET['msg'];?></b>
+		<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 	</div>
 
 	&nbsp;

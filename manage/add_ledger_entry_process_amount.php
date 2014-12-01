@@ -2,11 +2,11 @@
 	include_once('admin/includes/main_include.php');
 	include("includes/sescheck.php");
 
-	$q = $_GET["q"];
-	$pco = $_GET["pco"];
-	$t = $_GET['t'];
+	$q = (!empty($_GET["q"]) ? $_GET["q"] : '');
+	$pco = (!empty($_GET["pco"]) ? $_GET["pco"] : '');
+	$t = (!empty($_GET['t']) ? $_GET['t'] : '');
 
-	$sql = sprintf("SELECT transaction_code from dental_transaction_code WHERE transaction_codeid=%s", mysql_real_escape_string($q));
+	$sql = sprintf("SELECT transaction_code from dental_transaction_code WHERE transaction_codeid=%s", mysqli_real_escape_string($con,$q));
 	
 	$ro = $db->getRow($sql); 
 	$tc = $ro['transaction_code'];

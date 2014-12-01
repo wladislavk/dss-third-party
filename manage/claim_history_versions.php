@@ -1,5 +1,5 @@
 <?php
-  $s = "SELECT * FROM dental_insurance_history WHERE insuranceid='".mysql_real_escape_string($_GET['cid'])."'";
+  $s = "SELECT * FROM dental_insurance_history WHERE insuranceid='".mysqli_real_escape_string($con, !empty($_GET['cid']) ? $_GET['cid'] : '')."'";
   
   $q = $db->getResults($s);
 ?>

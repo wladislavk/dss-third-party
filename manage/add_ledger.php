@@ -11,7 +11,7 @@
 	include("includes/calendarinc.php");
 	include("includes/preauth_functions.php");
 
-	$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
+	$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' LIMIT 1;";
 
     $flow = $db->getRow($flowquery);
     $copyreqdate = $flow['copyreqdate'];
@@ -36,7 +36,7 @@
     $preauth2 = $flow['preauth2'];
     $insverbendate1 = $flow['insverbendate1'];
 
-	if($_POST["ledgerub"] == 1) {
+	if(!empty($_POST["ledgerub"]) && $_POST["ledgerub"] == 1) {
 		$service_date = $_POST['service_date'];
 		$entry_date = $_POST['entry_date'];
 		$description = $_POST['description'];
@@ -107,15 +107,16 @@
 		$pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
     	$pat_my2 = $db->getResults($pat_sql2);
     	if ($pat_my2) foreach ($pat_my2 as $pat_myarray2) {   
-		    $pat_sql3 = $db->query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".$_GET['pid']."','".$pat_myarray2['service_date']."','".$pat_myarray2['description']."','".$pat_myarray2['amount']."','".$pat_myarray2['paid_amount']."','".$pat_myarray2['transaction_code']."','".$pat_myarray2['ip_address']."','".$pat_myarray2['transaction_type']."');");
+		    $pat_sql3 = $db->query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".(!empty($_GET['pid']) ? $_GET['pid'] : '')."','".(!empty($pat_myarray2['service_date']) ? $pat_myarray2['service_date'] : '')."','".(!empty($pat_myarray2['description']) ? $pat_myarray2['description'] : '')."','".(!empty($pat_myarray2['amount']) ? $pat_myarray2['amount'] : '')."','".(!empty($pat_myarray2['paid_amount']) ? $pat_myarray2['paid_amount'] : '')."','".(!empty($pat_myarray2['transaction_code']) ? $pat_myarray2['transaction_code'] : '')."','".(!empty($pat_myarray2['ip_address']) ? $pat_myarray2['ip_address'] : '')."','".(!empty($pat_myarray2['transaction_type']) ? $pat_myarray2['transaction_type'] : '')."');");
 		    if(!$pat_sql3){
 		    	echo "There was an error updating the ledger record.  Please contact your system administrator.";
 		    }
    
-			$service_date = date('Y-m-d', strtotime($_POST['service_date']));
-			$entry_date = date('Y-m-d', strtotime($_POST['entry_date']));
-			$transaction_type = $_POST['transaction_type'];
-			$transaction_code = $_POST['proccode'];;
+			$service_date = date('Y-m-d', strtotime((!empty($_POST['service_date']) ? $_POST['service_date'] : '')));
+			$entry_date = date('Y-m-d', strtotime((!empty($_POST['entry_date']) ? $_POST['entry_date'] : '')));
+			$transaction_type = (!empty($_POST['transaction_type']) ? $_POST['transaction_type'] : '');
+			$transaction_code = (!empty($_POST['proccode']) ? $_POST['proccode'] : '');;
+			
 			$tsql = "SELECT transaction_code, description from dental_transaction_code where transaction_codeid=".$transaction_code;
 			
 			$trow = $db->getRow($tsql);
@@ -128,7 +129,7 @@
 			
 			$claim_r = $db->getRow($claim_sql);
 			if(($claim_r['primary_claim_id']=='' || $claim_r['primary_claim_id']==0) && $status==DSS_TRXN_PENDING){
-				$pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysql_real_escape_string($claim_r['producerid'])."'";
+				$pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$claim_r['producerid'])."'";
 				
 				$pf = $db->getRow($pf_sql);
 				if($pf['producer_files'] == '1'){
@@ -137,7 +138,7 @@
 					$claim_producer = $_SESSION['docid'];
 				}
 
-				$s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+				$s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
 				
 				$q = $db->getResults($s);
 				$n = count($q);
@@ -171,11 +172,11 @@
 			$db->query($up_sql);
 			// ledger_history_update($_POST['ed'], $_SESSION['docid'], '');
 			if(($claim_r['primary_claim_id']!='' && $claim_r['primary_claim_id']!=0) && $status==DSS_TRXN_NA){
-			  $c_sql = "SELECT COUNT(*) as num_trxn FROM dental_ledger where primary_claim_id='".mysql_real_escape_string($claim_r['primary_claim_id'])."'";
+			  $c_sql = "SELECT COUNT(*) as num_trxn FROM dental_ledger where primary_claim_id='".mysqli_real_escape_string($con,$claim_r['primary_claim_id'])."'";
 			  
 			  $c_r = $db->getRow($c_sql);
 			  if($c_r['num_trxn'] == 0) {
-				$del_sql = "DELETE FROM dental_insurance where insuranceid='".mysql_real_escape_string($claim_r['primary_claim_id'])."'";
+				$del_sql = "DELETE FROM dental_insurance where insuranceid='".mysqli_real_escape_string($con,$claim_r['primary_claim_id'])."'";
 				$db->query($del_sql);
 			  }
 			}
@@ -341,7 +342,7 @@
 									  FROM dental_ledger_history h 
 								 	  LEFT JOIN dental_users u ON u.userid=h.updated_by_user
 									  LEFT JOIN admin a ON a.adminid=h.updated_by_admin
-									  WHERE h.ledgerid='".mysql_real_escape_string($_GET['ed'])."' ORDER BY h.updated_at ASC LIMIT 1";
+									  WHERE h.ledgerid='".mysqli_real_escape_string($con,$_GET['ed'])."' ORDER BY h.updated_at ASC LIMIT 1";
 							
 							$h_r = $db->getRow($h_sql);
 							if($h_r['doc_name']!=''){
@@ -364,7 +365,7 @@
                                       FROM dental_ledger_history h 
                                       LEFT JOIN dental_users u ON u.userid=h.updated_by_user
                                       LEFT JOIN admin a ON a.adminid=h.updated_by_admin
-                                      WHERE h.ledgerid='".mysql_real_escape_string($_GET['ed'])."' ORDER BY h.updated_at DESC LIMIT 1";
+                                      WHERE h.ledgerid='".mysqli_real_escape_string($con,$_GET['ed'])."' ORDER BY h.updated_at DESC LIMIT 1";
                             
                             $h_r = $db->getRow($h_sql);
                             if($h_r['doc_name']!=''){
@@ -772,8 +773,8 @@ function create_claim($pid, $prod)
                 billing_provider_a = '".s_for($billing_provider_a)."',
                 billing_provider_dd = '".s_for($billing_provider_dd)."',
                 billing_provider_b_other = '".s_for($billing_provider_b_other)."',
-                p_m_eligible_payer_id = '".mysql_real_escape_string($p_m_eligible_payer_id)."',
-                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
+                p_m_eligible_payer_id = '".mysqli_real_escape_string($con,$p_m_eligible_payer_id)."',
+                p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
                 status = '".s_for(DSS_CLAIM_PENDING)."',
                 userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',

@@ -16,8 +16,8 @@
 
     exec( $command, $output, $ret );
 
-    require_once '3rdParty/tcpdf/tcpdf.php';
-    require_once '3rdParty/fpdi/fpdi.php';
+    include_once '3rdParty/tcpdf/tcpdf.php';
+    include_once '3rdParty/fpdi/fpdi.php';
 
     class PDF extends FPDI {
         /**
@@ -45,17 +45,21 @@
         function Footer() {}
     }
 
-    // initiate PDF
-    $pdf = new PDF();
-    $pdf->_template = $result_pdf;
-    $pdf->SetMargins(0, 0, 0);
-    $pdf->SetAutoPageBreak(true, 40);
-    $pdf->setFontSubsetting(false);
+    if (file_exists($result_pdf)) {
 
-    // add a page
-    $pdf->AddPage();
+        // initiate PDF
+        $pdf = new PDF();
+        $pdf->_template = $result_pdf;
+        $pdf->SetMargins(0, 0, 0);
+        $pdf->SetAutoPageBreak(true, 40);
+        $pdf->setFontSubsetting(false);
 
-    $pdf->Output('margin_test.pdf', 'D');
+        // add a page
+        $pdf->AddPage();
 
-    //echo $fdf;
+        $pdf->Output('margin_test.pdf', 'D');
+
+        //echo $fdf;
+
+    }
 ?>

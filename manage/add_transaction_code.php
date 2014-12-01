@@ -12,8 +12,8 @@
     <head>
 
     <?php
-        if($_POST["mult_transaction_codesub"] == 1) {
-        	$op_arr = split("\n",trim($_POST['transaction_code']));			
+        if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesub"] == 1) {
+        	$op_arr = explode("\n",trim($_POST['transaction_code']));			
         	
             foreach($op_arr as $i=>$val) {
         		if($val <> '') {
@@ -35,7 +35,7 @@
 	        die();
         }
 
-        if($_POST["transaction_codesub"] == 1) {
+        if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1) {
         	$sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid <> '".s_for($_POST['ed'])."' AND docid ='".$_SESSION['docid']."';";
         	
         	if($db->getNumberRows($sel_check) > 0) {
@@ -100,7 +100,7 @@
 
     <body>
         <?php
-            $thesql = "select * from dental_transaction_code where transaction_codeid='".$_REQUEST["ed"]."' AND docid ='".$_SESSION['docid']."'";
+            $thesql = "select * from dental_transaction_code where transaction_codeid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."' AND docid ='".$_SESSION['docid']."'";
 
             $themyarray = $db->getRow($thesql);
         	if($themyarray) {
@@ -141,7 +141,7 @@
 
     	<br /><br />
 
-    	<?php if($msg != '') {?>
+    	<?php if(!empty($msg)) {?>
             <div align="center" class="red">
                 <?php echo $msg;?>
             </div>
@@ -151,8 +151,8 @@
             <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">
-                       <?php echo $but_text?> Transaction Code 
-                       <?php if($transaction_code <> "") { ?>
+                       <?php echo (!empty($but_text) ? $but_text : '')?> Transaction Code 
+                       <?php if(!empty($transaction_code)) { ?>
                        		&quot;<?php echo $transaction_code;?>&quot;
                        <?php } ?>
                     </td>
@@ -162,7 +162,7 @@
                         Transaction Code
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="transaction_code" value="<?php echo $transaction_code?>" class="tbox" /> 
+                        <input type="text" name="transaction_code" value="<?php echo (!empty($transaction_code) ? $transaction_code : '')?>" class="tbox" /> 
                         <span class="red">*</span>				
                     </td>
                 </tr>
@@ -172,12 +172,12 @@
                     </td>
                     <td valign="top" class="frmdata">
                         <select name="type" class="tbox" />
-                          <option value="1" <?php if($type == "1"){echo " selected='selected'";} ?>> Medical Code </option>
-                          <option value="2" <?php if($type == "2"){echo " selected='selected'";} ?>> Patient Payment Code </option>
-                          <option value="3" <?php if($type == "3"){echo " selected='selected'";} ?>> Insurance Payment Code </option>
-                          <option value="4" <?php if($type == "4"){echo " selected='selected'";} ?>> Diagnostic Code </option>
-                          <option value="5" <?php if($type == "5"){echo " selected='selected'";} ?>> Modifier Code </option>
-                          <option value="6" <?php if($type == "6"){echo " selected='selected'";} ?>> Adjustment Code </option>              
+                          <option value="1" <?php if(!empty($type) && $type == "1"){echo " selected='selected'";} ?>> Medical Code </option>
+                          <option value="2" <?php if(!empty($type) && $type == "2"){echo " selected='selected'";} ?>> Patient Payment Code </option>
+                          <option value="3" <?php if(!empty($type) && $type == "3"){echo " selected='selected'";} ?>> Insurance Payment Code </option>
+                          <option value="4" <?php if(!empty($type) && $type == "4"){echo " selected='selected'";} ?>> Diagnostic Code </option>
+                          <option value="5" <?php if(!empty($type) && $type == "5"){echo " selected='selected'";} ?>> Modifier Code </option>
+                          <option value="6" <?php if(!empty($type) && $type == "6"){echo " selected='selected'";} ?>> Adjustment Code </option>              
                         </select> 
                         <span class="red">*</span>				
                     </td>
@@ -194,7 +194,7 @@
                                 $pmy = $db->getResults($psql);
                                 if ($pmy) foreach ($pmy as $prow){
                             ?>
-                                    <option value="<?php echo  $prow['place_serviceid']; ?>" <?php if($place == $prow['place_serviceid']){echo " selected='selected'";} ?>><?php echo  $prow['place_service']." ".$prow['description']; ?></option>
+                                    <option value="<?php echo  $prow['place_serviceid']; ?>" <?php if(!empty($place) && $place == $prow['place_serviceid']){echo " selected='selected'";} ?>><?php echo  $prow['place_service']." ".$prow['description']; ?></option>
                             <?php } ?>
                         </select>
                     </td>
@@ -211,7 +211,7 @@
                                 $pmy = $db->getResults($psql);
                                 if ($pmy) foreach ($pmy as $prow){
                             ?>
-                                    <option value="<?php echo  $prow['modifier_code']; ?>" <?php if($modifier_code_1 == $prow['modifier_code']){echo " selected='selected'";} ?>><?php echo  $prow['modifier_code']." ".$prow['description']; ?></option>
+                                    <option value="<?php echo  $prow['modifier_code']; ?>" <?php if(!empty($modifier_code_1) && $modifier_code_1 == $prow['modifier_code']){echo " selected='selected'";} ?>><?php echo  $prow['modifier_code']." ".$prow['description']; ?></option>
                             <?php } ?>
                         </select>
                     </td>
@@ -228,7 +228,7 @@
                                 $pmy = $db->getResults($psql);
                                 if ($pmy) foreach ($pmy as $prow){
                             ?>
-                                    <option value="<?php echo  $prow['modifier_code']; ?>" <?php if($modifier_code_2 == $prow['modifier_code']){echo " selected='selected'";} ?>><?php echo  $prow['modifier_code']." ".$prow['description']; ?></option>
+                                    <option value="<?php echo  (!empty($prow['modifier_code']) ? $prow['modifier_code'] : ''); ?>" <?php if(!empty($modifier_code_2) && $modifier_code_2 == $prow['modifier_code']){echo " selected='selected'";} ?>><?php echo  $prow['modifier_code']." ".$prow['description']; ?></option>
                             <?php } ?>
                         </select>
                     </td>
@@ -238,7 +238,7 @@
                        Default Days/Units
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="days_units" value="<?php echo $days_units;?>" class="tbox singlenumber" style="width:30px"/>
+                        <input type="text" name="days_units" value="<?php echo (!empty($days_units) ? $days_units : '');?>" class="tbox singlenumber" style="width:30px"/>
                     </td>
                 </tr>
                 <tr bgcolor="#FFFFFF">
@@ -246,7 +246,7 @@
                         Sort By
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="sortby" value="<?php echo $sortby;?>" class="tbox" style="width:30px"/>		
+                        <input type="text" name="sortby" value="<?php echo (!empty($sortby) ? $sortby : '');?>" class="tbox" style="width:30px"/>		
                     </td>
                 </tr>
                 <tr bgcolor="#FFFFFF">
@@ -254,7 +254,7 @@
                        Price
                     </td>
                     <td valign="top" class="frmdata">
-                        $<input type="text" name="amount" value="<?php echo $amount;?>" class="tbox" style="width:100px"/>
+                        $<input type="text" name="amount" value="<?php echo (!empty($amount) ? $amount : '');?>" class="tbox" style="width:100px"/>
                     </td>
                 </tr>
                 <tr bgcolor="#FFFFFF">
@@ -263,8 +263,8 @@
                     </td>
                     <td valign="top" class="frmdata">
                     	<select name="status" class="tbox">
-                        	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
-                        	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
+                        	<option value="1" <?php if(!empty($status) && $status == 1) echo " selected";?>>Active</option>
+                        	<option value="2" <?php if(!empty($status) && $status == 2) echo " selected";?>>In-Active</option>
                         </select>
                     </td>
                 </tr>
@@ -274,9 +274,9 @@
                     </td>
                     <td valign="top" class="frmdata">
                         <select name="amount_adjust" class="tbox">
-                            <option value="<?php echo  DSS_AMOUNT_ADJUST_USER; ?>" <?php if($amount_adjust == DSS_AMOUNT_ADJUST_USER) echo " selected";?>><?php echo  $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_USER]; ?></option>
-                            <option value="<?php echo  DSS_AMOUNT_ADJUST_NEGATIVE; ?>" <?php if($amount_adjust == DSS_AMOUNT_ADJUST_NEGATIVE) echo " selected";?>><?php echo  $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_NEGATIVE]; ?></option>
-                            <option value="<?php echo  DSS_AMOUNT_ADJUST_POSITIVE; ?>" <?php if($amount_adjust == DSS_AMOUNT_ADJUST_POSITIVE) echo " selected";?>><?php echo  $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_POSITIVE]; ?></option>
+                            <option value="<?php echo  DSS_AMOUNT_ADJUST_USER; ?>" <?php if(!empty($amount_adjust) && $amount_adjust == DSS_AMOUNT_ADJUST_USER) echo " selected";?>><?php echo  $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_USER]; ?></option>
+                            <option value="<?php echo  DSS_AMOUNT_ADJUST_NEGATIVE; ?>" <?php if(!empty($amount_adjust) && $amount_adjust == DSS_AMOUNT_ADJUST_NEGATIVE) echo " selected";?>><?php echo  $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_NEGATIVE]; ?></option>
+                            <option value="<?php echo  DSS_AMOUNT_ADJUST_POSITIVE; ?>" <?php if(!empty($amount_adjust) && $amount_adjust == DSS_AMOUNT_ADJUST_POSITIVE) echo " selected";?>><?php echo  $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_POSITIVE]; ?></option>
                         </select>
                     </td>
                 </tr>
@@ -285,7 +285,7 @@
                         Description
                     </td>
                     <td valign="top" class="frmdata">
-                    	<textarea class="tbox" name="description" style="width:100%;"><?php echo $description;?></textarea>
+                    	<textarea class="tbox" name="description" style="width:100%;"><?php echo (!empty($description) ? $description : '');?></textarea>
                     </td>
                 </tr>
                 <tr>
@@ -295,7 +295,7 @@
                         </span><br />
                         <input type="hidden" name="transaction_codesub" value="1" />
                         <input type="hidden" name="ed" value="<?php echo $themyarray["transaction_codeid"]?>" />
-                        <input type="submit" value=" <?php echo $but_text?> Transaction Code" class="button" />
+                        <input type="submit" value=" <?php echo (!empty($but_text) ? $but_text : '')?> Transaction Code" class="button" />
                 		<?php if($themyarray["transaction_codeid"]) { ?>
                             <a href="manage_transaction_code.php?delid=<?php echo $themyarray["transaction_codeid"];?>" target="_parent" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right;"class="dellink" title="DELETE">
                                 Delete

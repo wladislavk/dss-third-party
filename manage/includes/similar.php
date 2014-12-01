@@ -95,7 +95,7 @@ function similar_patients($id){
         $docs[$c]['id'] = $r2['patientid'];
         $docs[$c]['name'] = $r2['firstname']. " " .$r2['lastname'];
         $docs[$c]['address'] = $r2['add1']. " " . $r2['add2']. " " . $r2['city']. " " . $r2['state']. " " . $r2['zip'];
-        $docs[$c]['phone'] = $r2['phone1'];
+        $docs[$c]['phone'] = (!empty($r2['phone1']) ? $r2['phone1'] : '');
         $c++;
     }
 

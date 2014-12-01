@@ -6,12 +6,12 @@
 ?>
 	<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <?php
-    $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+    $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 
     $sign_r = $db->getRow($sign_sql);
     $user_sign = $sign_r['sign_notes'];
 
-	if($_POST["notesub"] == 1) {
+	if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
 		$notes = $_POST['notes'];
 	   	$procedure_date = ($_POST['procedure_date']!='')?date('Y-m-d', strtotime($_POST['procedure_date'])):'';	
 		$editor_initials = $_POST['editor_initials'];
@@ -26,10 +26,10 @@
 			if(isset($_POST['sign']) && ($_SESSION['docid']==$_SESSION['userid'] || $user_sign==1)) {
 			  	$ins_sql .= " signed_id='".s_for($_SESSION['userid'])."', signed_on=now(),";
 			}elseif(isset($_POST['signstaff'])) {
-		        $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysql_real_escape_string($_POST['username'])."'";
+		        $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."'";
         		$salt_row = $db->getRow($salt_sql);
         		$pass = gen_password($_POST['password'], $salt_row['salt']);
-        		$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
+        		$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysqli_real_escape_string($con,$_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
         		
         		$check_my = $db->getResults($check_sql);
         		if(count($check_my) == 1) {
@@ -82,11 +82,11 @@
             if(isset($_POST['sign']) && ($_SESSION['docid']==$_SESSION['userid'] || $user_sign==1)) {
               	$ins_sql .= " signed_id='".s_for($_SESSION['userid'])."', signed_on=now(), ";
             } elseif(isset($_POST['signstaff'])) {
-	            $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysql_real_escape_string($_POST['username'])."'";
+	            $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."'";
 	            
 	            $salt_row = $db->getRow($salt_sql);
 				$pass = gen_password($_POST['password'], $salt_row['salt']);
-				$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
+				$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysqli_real_escape_string($con,$_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
                       
                 $check_my = $db->getResults($check_sql);
                 if(count($check_my) == 1)
@@ -161,7 +161,7 @@
 	    $desc_str = substr($desc_str, 0, strlen($desc_str) - 2);
 	    $desc_str = addslashes($desc_str);
 
-	    $doc_sql = "SELECT name from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+	    $doc_sql = "SELECT name from dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 		$doc_r = $db->getRow($doc_sql);
 	?>	
 
@@ -176,15 +176,13 @@
 		<link rel="stylesheet" href="css/form.css" type="text/css" />
 		<script type="text/javascript" src="script/wufoo.js"></script>
 	</head>
-
-<<<<<<< HEAD
 	<body>
 		<script language="JavaScript" src="calendar1.js"></script>
 		<script language="JavaScript" src="calendar2.js"></script>
     	<?php
 		  $thesql = "select n.*, CONCAT(u.first_name,' ',u.last_name) added_name from dental_notes n
 					LEFT JOIN dental_users u on u.userid=n.userid
-					where notesid='".$_REQUEST["ed"]."'";
+					where notesid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 			$themyarray = $db->getRow($thesql);
 			$notes = st($themyarray['notes']);
 			$editor_initials = st($themyarray['editor_initials']);
@@ -202,7 +200,7 @@
 			}
 		?>	
 		<?php
-			if($msg != '') {
+			if(!empty($msg)) {
 		?>
 			    <div align="center" class="red">
 			        <?php echo $msg;?>
@@ -215,7 +213,7 @@
 		    <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 		        <tr>
 		            <td colspan="2" class="cat_head" style="font-size:16px;">
-		               	<?php echo $but_text?> Progress Notes
+		               	<?php echo (!empty($but_text) ? $but_text : ''); ?> Progress Notes
 					   	-
 		   				Patient <i><?php echo $name;?></i>
 						Entry Date: <?php echo  date('m/d/Y', strtotime($procedure_date)); ?>
@@ -244,12 +242,12 @@
 						<span style="float:right;">
 							<?php
 								$r_sql = "SELECT n.parentid, u.name FROM dental_notes n LEFT JOIN dental_users u ON n.userid=u.userid
-										WHERE parentid=(select parentid from dental_notes where notesid='".mysql_real_escape_string($_REQUEST['ed'])."')
-										AND notesid != '".mysql_real_escape_string($_REQUEST['ed'])."'";
+										WHERE parentid=(select parentid from dental_notes where notesid='".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''))."')
+										AND notesid != '".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''))."'";
 								
 								$r_q = $db->getResults($r_sql);
 								$num_r = count($r_q);
-								$r = $r_q[0];
+								$r = (!empty($r_q[0]) ? $r_q[0] : '');
 								if($num_r == 1) {
 							?>
 									Last Edited By:
@@ -280,7 +278,7 @@
 							if(isset($_REQUEST['ed'])){
 								echo $themyarray["added_name"];
 							}else{
-								$s = "SELECT first_name, last_name from dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+								$s = "SELECT first_name, last_name from dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 		
 								$r = $db->getRow($s);
 								echo $r['first_name']." ".$r['last_name'];

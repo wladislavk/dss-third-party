@@ -1,7 +1,7 @@
 <?php
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include("includes/calendarinc.php");
-$pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$_GET['pid']."';";
+$pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
 $pat_r = $db->getRow($pat_sql);
 ?>
 <script type="text/javascript" src="script/autocomplete.js"></script>
@@ -92,7 +92,7 @@ $pat_r = $db->getRow($pat_sql);
     </tr>
 </table>
 <form action="#" method="POST" style="float:left; width:185px;" enctype="multipart/form-data" onsubmit="return validate_image();">
-    <table class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
+    <table class="sleeplabstable <?php print (!empty($show_yellow) && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
         <tr>
             <td valign="top" class="odd">
                 <input type="text" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox calendar" name="date" id="date" value="<?php echo date('m/d/Y'); ?>">

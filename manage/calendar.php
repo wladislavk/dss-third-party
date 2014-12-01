@@ -46,7 +46,7 @@ if(!empty($_GET['msg'])) {
         .dhx_cal_event.event_deliver_device div{background-color: #FBA16C !important; }
 	*/
 <?php
-$appt_t_sql = "select * from dental_appt_types WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$appt_t_sql = "select * from dental_appt_types WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 $appt_t_qu = $db->getResults($appt_t_sql);
 foreach ($appt_t_qu as $appt_t_r) {
 	$str = str_replace('&amp;_','',str_replace('.','',str_replace('/','',str_replace(' ', '_', strtolower($appt_t_r['name'])))));
@@ -198,7 +198,7 @@ foreach ($p_query as $p) {?>
 
 	var category = [
 <?php
-$p_sql = "SELECT * FROM dental_appt_types where docid='".mysql_real_escape_string($_SESSION['docid'])."' order by name asc";
+$p_sql = "SELECT * FROM dental_appt_types where docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' order by name asc";
 $p_query = $db->getResults($p_sql);
 foreach ($p_query as $p) {?>
 		{ 	key: '<?php echo $p["classname"]; ?>', 
@@ -534,7 +534,7 @@ $(document).ready( function(){
 </span>
 
 <form method="get" id="cal_search" action="calendar_pat.php" style="width:48%;float:left;">
-	<input type="text" id="pat_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="pat_name" value="<?php echo ($pat_name!='')?$pat_name:'Search Calendar'; ?>" />
+	<input type="text" id="pat_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="pat_name" value="<?php echo (!empty($pat_name))?$pat_name:'Search Calendar'; ?>" />
 	<br />
 	<div id="pat_hints" class="search_hints" style="display:none;">
 		<ul id="pat_list" class="search_list">

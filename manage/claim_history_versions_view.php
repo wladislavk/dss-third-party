@@ -1,7 +1,7 @@
 <?php 
 	include 'includes/top.htm';
 
-	$s = "SELECT * FROM dental_insurance_history WHERE id='".mysql_real_escape_string($_GET['id'])."'";
+	$s = "SELECT * FROM dental_insurance_history WHERE id='".mysqli_real_escape_string($con, !empty($_GET['id']) ? $_GET['id'] : '')."'";
 	
 	$r = $db->getRow($s);
 ?>

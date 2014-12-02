@@ -2,7 +2,7 @@
 include "includes/top.htm";
 include_once "includes/constants.inc";
 require "includes/calendarinc.php";
-$sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
+$sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".$_GET['cid']."'  or dl.secondary_claim_id=".$_GET['cid'].");";
 $p_sql = mysql_query($sql);
 $payments = mysql_fetch_array($p_sql);
 $csql = "SELECT i.*, CONCAT(p.firstname, ' ',p.lastname) name FROM dental_insurance i 
@@ -215,7 +215,7 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 </div>
 
 <?php
-$sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
+$sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".$_GET['cid']."'  or dl.secondary_claim_id=".$_GET['cid'].");";
 $p_sql = mysql_query($sql);
 if(mysql_num_rows($p_sql)==0){
 ?><div style="margin-left:50px;">No Previous Payments</div><?php
@@ -313,7 +313,7 @@ Add New Claim Payment
 <span style="float:left;font-weight:bold;">Paid Amount <span class="req">*</span></span>
 </div>
 <?php
-$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_GET['cid'];
+$lsql = "SELECT * FROM dental_ledger WHERE (primary_claim_id=".$_GET['cid']."  or secondary_claim_id=".$_GET['cid'].")";
 $lq = mysql_query($lsql);
 while($row = mysql_fetch_assoc($lq)){
 ?>

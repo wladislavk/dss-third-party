@@ -613,10 +613,10 @@ $fdf = "
   << /T(".$field_path.".pt_sex_f_chkbox[0]) /V(".(($patient_sex == "F" || $patient_sex == "Female")?1:'').") >>
   << /T(".$field_path.".insured_name_ln_fn_mi_fill[0]) /V(".$insured_lastname.", ".$insured_firstname.((trim($insured_middle)!='')?", ".$insured_middle:'').") >>
   << /T(".$field_path.".pt_address_fill[0]) /V(".$insured_address.") >>
-  << /T(".$field_path.".pt_relation_self_chkbox[0]) /V(".(($patient_relation_insured == "Self")?1:'').") >>
-  << /T(".$field_path.".pt_relation_spouse_chkbox[0]) /V(".(($patient_relation_insured == "Spouse")?1:'').") >>
-  << /T(".$field_path.".pt_relation_child_chkbox[0]) /V(".(($patient_relation_insured == "Child")?1:'').") >>
-  << /T(".$field_path.".pt_relation_other_chkbox[0]) /V(".(($patient_relation_insured == "Others")?1:'').") >>
+  << /T(".$field_path.".pt_relation_self_chkbox[0]) /V(".(($patient_relation_insured == "SELF")?1:'').") >>
+  << /T(".$field_path.".pt_relation_spouse_chkbox[0]) /V(".(($patient_relation_insured == "SPOUSE")?1:'').") >>
+  << /T(".$field_path.".pt_relation_child_chkbox[0]) /V(".(($patient_relation_insured == "CHILD")?1:'').") >>
+  << /T(".$field_path.".pt_relation_other_chkbox[0]) /V(".(($patient_relation_insured == "OTHERS")?1:'').") >>
   << /T(".$field_path.".insured_address_fill[0]) /V(".$insured_address.") >>
   << /T(".$field_path.".pt_city_fill[0]) /V(".$insured_city.") >>
   << /T(".$field_path.".pt_state_fill[0]) /V(".$insured_state.") >>

@@ -603,7 +603,14 @@ return s;
 			<?= (($myarray[0] == 'ledger') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
                         <?= (($myarray[0] =='claim') && $myarray['ledgerid'])?"(".$myarray['ledgerid'].") ":''; ?>
                         <?= (($myarray[0] =='claim') && $myarray['primary_claim_id'])?"Secondary to (".$myarray['primary_claim_id'].") ":''; ?>
-
+			<?php 
+				if($myarray[0] =='claim'){
+				$p_sql = "SELECT insuranceid FROM dental_insurance WHERE primary_claim_id = '".mysql_real_escape_string($myarray['ledgerid'])."'";
+				$p_q = mysql_query($p_sql);
+				while($p_r = mysql_fetch_assoc($p_q)){
+					?>Primary to (<?php echo $p_r['insuranceid']; ?>)<?php
+				}
+				} ?>
 			<?= (($myarray[0] =='claim') && $myarray['num_notes'] > 0)?" - Notes (".$myarray['num_notes'].") ":''; ?>
 			<?= ($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING)?' (Click to file)':''; ?>
 			<?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>

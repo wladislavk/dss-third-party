@@ -32,7 +32,7 @@ $sqlinsertqry = "INSERT INTO `dental_ledger_payment` (
 `payment_type` ,
 `payer`
 ) VALUES ";
-$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_POST['claimid'];
+$lsql = "SELECT * FROM dental_ledger WHERE (primary_claim_id=".$_POST['claimid']."  or secondary_claim_id=".$_POST['claimid'].")";
 $lq = mysql_query($lsql);
 while($row = mysql_fetch_assoc($lq)){
 $id = $row['ledgerid'];

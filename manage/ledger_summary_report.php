@@ -42,7 +42,8 @@
 
   $cr_q = mysql_query($cr_sql) or die(mysql_error());
   while($cr_r = mysql_fetch_assoc($cr_q)){ ?>
-  <li><label><?= $dss_trxn_pymt_type_labels[$cr_r['description']]; ?></label> $<?= number_format($cr_r['amount'],2); ?></li>
+	<?php $description = ($dss_trxn_pymt_type_labels[$cr_r['description']]=='Check')?'Ins. Checks':$dss_trxn_pymt_type_labels[$cr_r['description']]; ?>
+  <li><label><?= $description; ?></label> $<?= number_format($cr_r['amount'],2); ?></li>
         <?php $cr_total += $cr_r['amount']; ?>
   <?php } 
   $cr2_sql = "SELECT dl.description, sum(dl.paid_amount) amount FROM dental_ledger dl
@@ -59,6 +60,7 @@
                 $cr2_sql .= " GROUP BY dl.description";
   $cr2_q = mysql_query($cr2_sql);
   while($cr2_r = mysql_fetch_assoc($cr2_q)){ ?>
+	<?php $cr2_r['description'] = ($cr2_r['description']=='Check')?'Pers Checks':$cr2_r['description']; ?>
   <li><label><?= $cr2_r['description']; ?></label> $<?= number_format($cr2_r['amount'],2); ?></li>
         <?php $cr_total += $cr2_r['amount']; ?>
   <?php } ?>

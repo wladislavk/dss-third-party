@@ -763,7 +763,7 @@ mysql_query($s1);
     $thesql = "select * from dental_patients where patientid='".$_REQUEST["pid"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
-	
+ 	$docid = $themyarray['docid'];	
 	if(isset($msg) && $msg != '')
 	{
 		$firstname = $_POST['firstname'];
@@ -1971,7 +1971,7 @@ $image = mysql_fetch_assoc($itype_my);
                                 }
                                 insurance_nums = [];
                             <?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
+                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$docid."'";
                             $ins_contact_qry_run = mysql_query($ins_contact_qry);
                             while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
                             ?>
@@ -2144,7 +2144,7 @@ $image = mysql_fetch_assoc($itype_my);
                                 }
                                 insurance_nums = []; 
                             <?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
+                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$docid."'";
                             $ins_contact_qry_run = mysql_query($ins_contact_qry);
                             while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
                             ?>

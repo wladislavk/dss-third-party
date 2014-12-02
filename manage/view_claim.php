@@ -92,7 +92,7 @@ $sql = "select
 		INNER JOIN dental_insurance di ON dl.primary_claim_id = di.insuranceid
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
 		LEFT JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
-			where dl.primary_claim_id=".$_GET['claimid']."  AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+			where (dl.primary_claim_id=".$_GET['claimid']." or dl.secondary_claim_id=".$_GET['claimid'].")  AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
 		GROUP BY dl.ledgerid 
  UNION
         select 
@@ -112,7 +112,7 @@ $sql = "select
                 JOIN dental_users p ON dl.producerid=p.userid 
                 JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
-                        AND primary_claim_id=".$_GET['claimid']." 
+                        AND (primary_claim_id=".$_GET['claimid']." or secondary_claim_id=".$_GET['claimid'].") 
   UNION
 	SELECT
 		'eob',

@@ -1,7 +1,7 @@
 <?php 
 	include "admin/includes/main_include.php";
 
-	if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1) {
+	if(/*$_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1*/0) {
 ?>
 		<script type="text/javascript">
 			window.location = 'patient_report.php';
@@ -11,7 +11,7 @@
 	}
 
 	$rec_disp = 200;
-	if($_REQUEST["page"] != "") {
+	if(!empty($_REQUEST["page"])) {
 		$index_val = $_REQUEST["page"];
 	} else {
 		$index_val = 0;
@@ -20,12 +20,12 @@
 	$i_val = $index_val * $rec_disp;
 	$sql = "select * from dental_forms where docid='".$_SESSION['docid']."' ";
 
-	if($_POST['d_mm'] != '') {
+	if(!empty($_POST['d_mm'])) {
 		$from_date = $_POST['d_yy']."-".$_POST['d_mm']."-".$_POST['d_dd'];
 		$sql .= " and adddate >= '".s_for($from_date)."' ";
 	}
 
-	if($_POST['d_mm1'] != '') {
+	if(!empty($_POST['d_mm1'])) {
 		$to_date = $_POST['d_yy1']."-".$_POST['d_mm1']."-".$_POST['d_dd1'];
 		$sql .= " and adddate <= '".s_for($to_date)."' ";
 	}
@@ -45,8 +45,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
-		<title><?php echo $sitename;?> | <?php echo $name;?> - Ledger Card</title>
+		<meta name="keywords" content="<?php echo st(!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : '');?>" />
+		<title><?php echo $sitename;?> | <?php echo (!empty($name) ? $name : '');?> - Ledger Card</title>
 		<link href="css/admin.css" rel="stylesheet" type="text/css" />
 		<script language="javascript" type="text/javascript" src="script/validation.js"></script>
 	</head>
@@ -64,12 +64,12 @@
 						<td  align="right" colspan="15" class="cat_head">
 							<?php echo $total_rec;?> Form(s) found for 
 							
-							<?php if($_POST['d_mm'] <> '') { ?>
+							<?php if(!empty($_POST['d_mm'])) { ?>
 								&nbsp;&nbsp;
 								<i>Date From :</i>
 								<?php echo $_POST['d_mm'];?> - <?php echo $_POST['d_dd'];?> - <?php echo $_POST['d_yy'];?>
 							<?php } ?>
-							<?php if($_POST['d_mm1'] <> '') { ?>
+							<?php if(!empty($_POST['d_mm1'])) { ?>
 								&nbsp;&nbsp;
 								<i>Date To :</i>
 								<?php echo $_POST['d_mm1'];?> - <?php echo $_POST['d_dd1'];?> - <?php echo $_POST['d_yy1'];?>
@@ -104,12 +104,12 @@
 					<?php
 						} else {
 							foreach ($my as $myarray) {
-								$name = st($myarray['lastname']) . " " . st($myarray['middlename']) . " " . st($myarray['firstname']);
+								$name = st(!empty($myarray['lastname']) ? $myarray['lastname'] : '') . " " . st(!empty($myarray['middlename']) ? $myarray['middlename'] : '') . " " . st(!empty($myarray['firstname']) ? $myarray['firstname'] : '');
 								$patient_sql = "select * from dental_patients where patientid='" . $myarray['patientid'] . "'";
 								
 								$patient_myarray = $db->getRow($patient_sql);
 								$pat_name = st($patient_myarray['lastname']) . " " . st($patient_myarray['middlename']) . " " . st($patient_myarray['firstname']);
-								if($myarray["status"] == 1) {
+								if(!empty($myarray["status"]) && $myarray["status"] == 1) {
 									$tr_class = "tr_active";
 								} else {
 									$tr_class = "tr_inactive";

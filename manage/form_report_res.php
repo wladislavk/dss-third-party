@@ -1,7 +1,7 @@
 <?php
 	include "includes/top.htm";
 
-	if ($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1) {
+	if (!empty($_POST['dailysub']) && $_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1) {
 ?>
 		<script type="text/javascript">
 			window.location = 'patient_report.php';
@@ -11,18 +11,18 @@
 	}
 
 	$rec_disp = 200;
-	if($_REQUEST["page"] != "") {
+	if(!empty($_REQUEST["page"])) {
 		$index_val = $_REQUEST["page"];
 	} else {
 		$index_val = 0;
 	}
 	$i_val = $index_val * $rec_disp;
 	$sql = "select * from dental_forms where docid='".$_SESSION['docid']."' ";
-	if($_POST['d_mm'] != '') {
+	if(!empty($_POST['d_mm'])) {
 		$from_date = $_POST['d_yy']."-".$_POST['d_mm']."-".$_POST['d_dd'];
 		$sql .= " and adddate >= '".s_for($from_date)."' ";
 	}
-	if($_POST['d_mm1'] != '') {
+	if(!empty($_POST['d_mm1'])) {
 		$to_date = $_POST['d_yy1']."-".$_POST['d_mm1']."-".$_POST['d_dd1'];
 		$sql .= " and adddate <= '".s_for($to_date)."' ";
 	}
@@ -49,12 +49,12 @@
 	<br />
 	<div align="right">
 		<form name="formreportfrm" action="form_report_print.php" method="post" target="_blank">
-			<input type="hidden" name="d_mm" value="<?php echo $_POST['d_mm']?>" />
-			<input type="hidden" name="d_dd" value="<?php echo $_POST['d_dd']?>" />
-			<input type="hidden" name="d_yy" value="<?php echo $_POST['d_yy']?>" />
-			<input type="hidden" name="d_mm1" value="<?php echo $_POST['d_mm1']?>" />
-			<input type="hidden" name="d_dd1" value="<?php echo $_POST['d_dd1']?>" />
-			<input type="hidden" name="d_yy1" value="<?php echo $_POST['d_yy1']?>" />
+			<input type="hidden" name="d_mm" value="<?php echo (!empty($_POST['d_mm']) ? $_POST['d_mm'] : '')?>" />
+			<input type="hidden" name="d_dd" value="<?php echo (!empty($_POST['d_dd']) ? $_POST['d_dd'] : '')?>" />
+			<input type="hidden" name="d_yy" value="<?php echo (!empty($_POST['d_yy']) ? $_POST['d_yy'] : '')?>" />
+			<input type="hidden" name="d_mm1" value="<?php echo (!empty($_POST['d_mm1']) ? $_POST['d_mm1'] : '')?>" />
+			<input type="hidden" name="d_dd1" value="<?php echo (!empty($_POST['d_dd1']) ? $_POST['d_dd1'] : '')?>" />
+			<input type="hidden" name="d_yy1" value="<?php echo (!empty($_POST['d_yy1']) ? $_POST['d_yy1'] : '')?>" />
 			<input type="hidden" name="monthlysub" value="1" />
 			<input type="submit" class="addButton" value="Print Report" />
 			&nbsp;&nbsp;
@@ -62,19 +62,19 @@
 	</div>
 	<br />
 	<div align="center" class="red">
-		<b><?php echo $_GET['msg'];?></b>
+		<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 	</div>
 	<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 		<tr bgColor="#ffffff">
 			<td align="right" colspan="15" class="cat_head">
 				<?php echo $total_rec;?> Form(s) found for 
 				
-				<?php if($_POST['d_mm'] <> '') { ?>
+				<?php if(!empty($_POST['d_mm'])) { ?>
 					&nbsp;&nbsp;
 					<i>Date From :</i>
 					<?php echo $_POST['d_mm'];?> - <?php echo $_POST['d_dd'];?> - <?php echo $_POST['d_yy'];?>
 				<?php } ?>
-				<?php if($_POST['d_mm1'] <> '') { ?>
+				<?php if(!empty($_POST['d_mm1'])) { ?>
 					&nbsp;&nbsp;
 					<i>Date To :</i>
 					<?php echo $_POST['d_mm1'];?> - <?php echo $_POST['d_dd1'];?> - <?php echo $_POST['d_yy1'];?>
@@ -108,12 +108,12 @@
 			</tr>
 		<?php } else {
 				foreach ($my as $myarray) {
-					$name = st($myarray['lastname'])." ".st($myarray['middlename'])." ".st($myarray['firstname']);
+					$name = st(!empty($myarray['lastname']) ? $myarray['lastname'] : '')." ".st(!empty($myarray['middlename']) ? $myarray['middlename'] : '')." ".st(!empty($myarray['firstname']) ? $myarray['firstname'] : '');
 					$patient_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
 					
 					$patient_myarray = $db->getRow($patient_sql);
 					$pat_name = st($patient_myarray['lastname'])." ".st($patient_myarray['middlename'])." ".st($patient_myarray['firstname']);	
-					if($myarray["status"] == 1) {
+					if(!empty($myarray["status"]) && $myarray["status"] == 1) {
 						$tr_class = "tr_active";
 					} else {
 						$tr_class = "tr_inactive";

@@ -1,7 +1,7 @@
 <?php
   $status_sql = "SELECT status FROM dental_insurance
-                 WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'
-                 AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+                 WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
+                 AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
   $status_r = $db->getRow($status_sql);
   $status = $status_r['status'];
@@ -13,13 +13,13 @@
   $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
   $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED);
 
-  $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+  $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
   
   $pat_myarray = $db->getRow($pat_sql);
   $docid = $pat_myarray['docid'];
   if($is_pri_pending){
     // Load patient info from dental_patients table using pid on query string
-    $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+    $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
     
     $pat_myarray = $db->getRow($pat_sql);
     $p_m_dss_file = $pat_myarray['p_m_dss_file'];
@@ -57,16 +57,16 @@
   $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
   // In the case where we have first come to this page, load the claim form
   // info from dental_insurance and place them into variables.
-  $sql = "select * from dental_insurance where insuranceid='".$_GET['insid']."' and patientid='".$_GET['pid']."'";
+  $sql = "select * from dental_insurance where insuranceid='".(!empty($_GET['insid']) ? $_GET['insid'] : '')."' and patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
   $my = $db->getResults($sql);
-  $myarray = $my[0];
+  $myarray = (!empty($my[0]) ? $my[0] : '');
   $dent_rows = count($my);
-  $insuranceid = st($myarray['insuranceid']);
-  $p_m_eligible_payer_id = $myarray['p_m_eligible_payer_id'];
-  $p_m_eligible_payer_name = $myarray['p_m_eligible_payer_name'];
-  $s_m_eligible_payer_id = $myarray['s_m_eligible_payer_id'];
-  $s_m_eligible_payer_name = $myarray['s_m_eligible_payer_name'];
+  $insuranceid = st(!empty($myarray['insuranceid']) ? $myarray['insuranceid'] : '');
+  $p_m_eligible_payer_id = (!empty($myarray['p_m_eligible_payer_id']) ? $myarray['p_m_eligible_payer_id'] : '');
+  $p_m_eligible_payer_name = (!empty($myarray['p_m_eligible_payer_name']) ? $myarray['p_m_eligible_payer_name'] : '');
+  $s_m_eligible_payer_id = (!empty($myarray['s_m_eligible_payer_id']) ? $myarray['s_m_eligible_payer_id'] : '');
+  $s_m_eligible_payer_name = (!empty($myarray['s_m_eligible_payer_name']) ? $myarray['s_m_eligible_payer_name'] : '');
   if(!$is_pri_pending){
     $pica1 = st($myarray['pica1']);
     $pica2 = st($myarray['pica2']);
@@ -342,10 +342,10 @@
   	$insured_phone = split_phone($pat_myarray['home_phone'], false);
   	$patient_status = $pat_myarray['marital_status'];	
   	$insured_id_number = $pat_myarray['p_m_ins_id'];
-  	$insured_address = $myarray['insured_address'];
-  	$insured_city = $myarray['insured_city'];
-  	$insured_state = $myarray['insured_state'];
-  	$insured_zip = $myarray['insured_zip'];
+  	$insured_address = (!empty($myarray['insured_address']) ? $myarray['insured_address'] : '');
+  	$insured_city = (!empty($myarray['insured_city']) ? $myarray['insured_city'] : '');
+  	$insured_state = (!empty($myarray['insured_state']) ? $myarray['insured_state'] : '');
+  	$insured_zip = (!empty($myarray['insured_zip']) ? $myarray['insured_zip'] : '');
   	$insured_dob = $pat_myarray['ins_dob'];	
   	$patient_relation_insured = $pat_myarray['p_m_relation'];
   	$insured_employer_school_name = $pat_myarray['employer'];
@@ -364,7 +364,7 @@
                      WHERE                                 
                      (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                       (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                      ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+                      ss.filename IS NOT NULL AND ss.patiendid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC LIMIT 1;";
 
     $d = $db->getRow($sleepstudies);
     $diagnosis_1 = $d['diagnosis'];
@@ -374,7 +374,7 @@
                      WHERE                                 
                       (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                       (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                      ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+                      ss.filename IS NOT NULL AND ss.patiendid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC LIMIT 1;";
 
     $d = $db->getRow($sleepstudies);
     $referring_provider = $d['diagnosising_doc'];
@@ -397,7 +397,7 @@
            . "FROM "
            . "  dental_insurance_preauth "
            . "WHERE "
-           . "  patient_id = '" . $_GET['pid'] . "' "
+           . "  patient_id = '" . (!empty($_GET['pid']) ? $_GET['pid'] : '') . "' "
            . "  AND status = " . DSS_PREAUTH_COMPLETE . " "
            . "ORDER BY "
            . "  date_completed desc "
@@ -411,7 +411,7 @@
       }
   }
 
-  $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+  $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
 
   $prod_r = $db->getRow($prod_s);
   $claim_producer = $prod_r['producer'];
@@ -431,14 +431,14 @@
   $getdocinfo = "SELECT * FROM dental_users WHERE userid = '".$docid."'";
 
   $docinfo = $db->getRow($getdocinfo);
-  if($phone == ""){ $phone = $docinfo['phone']; }
-  if($practice == ""){ $practice = $docinfo['practice']; }
-  if($address == ""){ $address = $docinfo['address']; }
-  if($city == ""){ $city = $docinfo['city']; }
-  if($state == ""){ $state = $docinfo['state']; }
-  if($zip == ""){ $zip = $docinfo['zip']; }
-  if($npi == ""){ $npi = $docinfo['npi']; }
-  if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
+  if(empty($phone) ? $phone : ''){ $phone = $docinfo['phone']; }
+  if(empty($practice) ? $practice : ''){ $practice = $docinfo['practice']; }
+  if(empty($address) ? $address : ''){ $address = $docinfo['address']; }
+  if(empty($city) ? $city : ''){ $city = $docinfo['city']; }
+  if(empty($state) ? $state : ''){ $state = $docinfo['state']; }
+  if(empty($zip) ? $zip : ''){ $zip = $docinfo['zip']; }
+  if(empty($npi) ? $npi : ''){ $npi = $docinfo['npi']; }
+  if(empty($medicare_npi) ? $medicare_npi : ''){ $medicare_npi = $docinfo['medicare_npi']; }
   if($docinfo['use_service_npi']==1){
     $service_npi = $docinfo['service_npi'];
     $service_practice = $docinfo['service_name'];
@@ -448,13 +448,13 @@
     $service_zip = $docinfo['service_zip'];
     $service_medicare_npi = $docinfo['service_medicare_npi'];
   } else {
-    $service_npi = $npi;
-    $service_practice = $practice;
-    $service_address = $address;
-    $service_city = $city;
-    $service_state = $state;
-    $service_zip = $zip;
-    $service_medicare_npi = $medicare_npi;
+    $service_npi = (!empty($npi) ? $npi : '');
+    $service_practice = (!empty($practice) ? $practice : '');
+    $service_address = (!empty($address) ? $address : '');
+    $service_city = (!empty($city) ? $city : '');
+    $service_state = (!empty($state) ? $state : '');
+    $service_zip = (!empty($zip) ? $zip : '');
+    $service_medicare_npi = (!empty($medicare_npi) ? $medicare_npi : '');
   }
 
   if($insurancetype == 1){
@@ -495,18 +495,18 @@
     </div>
     <input type="button" onclick="change_form(<?php echo  $v2_form; ?>);" value="Switch to Paper File" style="float:right;margin-right:20px;" />
     <?php if ($is_front_office) { ?>
-      <input type="button" onclick="window.location='view_claim.php?claimid=<?php echo $_GET['insid'];?>&pid=<?php echo $_GET['pid']?>'; return false;" value="Back to Insurance Page" style="float:right;">
+      <input type="button" onclick="window.location='view_claim.php?claimid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>'; return false;" value="Back to Insurance Page" style="float:right;">
     <?php } elseif ($is_back_office) { ?>
       <input type="button" onclick="window.location='manage_claims.php'; return false;" value="Back to Insurance Page" style="float:right;">
     <?php } ?>
     <?php if($is_rejected) { ?>
       <div style="clear:both;margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
         <?php
-          $r_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($_GET['insid'])."' ORDER BY adddate DESC LIMIT 1";
+          $r_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."' ORDER BY adddate DESC LIMIT 1";
 
           $r = $db->getRow($r_sql);
           if($r['reference_id']){
-            $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysql_real_escape_string($r['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
+            $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysqli_real_escape_string($con,$r['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
 
             $w_r = $db->getRow($w_sql);
             if($w_r['response']!=''){
@@ -549,27 +549,34 @@
 }
 ?>
 <?php if($is_secondary){ ?>
-        <h4>Secondary Claim (<a href="insurance_claim_eligible.php?insid=<?php echo $orig_claim_id; ?>&pid=<?php echo $_GET['pid']; ?>">Primary is <?php echo $orig_claim_id; ?></a>)</h4>
+        <h4>Secondary Claim (<a href="insurance_claim_eligible.php?insid=<?php echo $orig_claim_id; ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">Primary is <?php echo $orig_claim_id; ?></a>)</h4>
 <?php }else{ 
-  $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id='".mysql_real_escape_string($_GET['insid'])."'";
-  $sec_q = mysql_query($sec_sql);
-  $sec_r = mysql_fetch_assoc($sec_q);
+  $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
+  $sec_r = $db->getRow($sec_sql);
 ?>
         <h4>Primary Claim
-        <?php if(mysql_num_rows($sec_q)){ ?>
-                (<a href="insurance_claim_eligible.php?insid=<?php echo $sec_r['insuranceid']; ?>&pid=<?php echo $_GET['pid']; ?>">Secondary is <?php echo $sec_r['insuranceid']; ?></a>)
+        <?php if(!empty($sec_r)){ ?>
+                (<a href="insurance_claim_eligible.php?insid=<?php echo $sec_r['insuranceid']; ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">Secondary is <?php echo $sec_r['insuranceid']; ?></a>)
         <?php } ?>
         </h4>
 <?php } ?>
 
-    <form style="clear:both;" action="claim_handler.php?insid=<?= $_REQUEST['insid']; ?>&pid=<?= $_REQUEST['pid']; ?>" method="POST">
+    <form style="clear:both;" action="claim_handler.php?insid=<?php echo  (!empty($_REQUEST['insid']) ? $_REQUEST['insid'] : ''); ?>&pid=<?php echo  $_REQUEST['pid']; ?>" method="POST">
 
         <div id="eligibleapi-claim-1500-form"></div>
 
     </form>
 
-<?php } ?>
-  <form style="clear:both;" action="claim_handler.php?insid=<?php echo  $_REQUEST['insid']; ?>&pid=<?php echo  $_REQUEST['pid']; ?>" method="POST">
+<?php 
+  /**
+
+  */
+  //}
+  /**
+
+  */
+  ?>
+  <form style="clear:both;" action="claim_handler.php?insid=<?php echo  (!empty($_REQUEST['insid']) ? $_REQUEST['insid'] : ''); ?>&pid=<?php echo  $_REQUEST['pid']; ?>" method="POST">
       <div id="eligibleapi-claim-1500-form"></div>
   </form>
 
@@ -680,7 +687,7 @@
     $('input[name="claim[prior_authorization_number]"]').val("<?php echo  $prior_authorization_number; ?>");
 
     <?php
-      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_1)."'";
+      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con,$diagnosis_1)."'";
 
       $ins_diag = $db->getRow($ins_diag_sql);
     ?>
@@ -688,7 +695,7 @@
     $('input[name="claim[diagnosis_codes][1]"]').val("<?php echo  $ins_diag['ins_diagnosis']; ?>");
 
     <?php
-      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_2)."'";
+      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con,$diagnosis_2)."'";
 
       $ins_diag = $db->getRow($ins_diag_sql);
     ?>
@@ -696,7 +703,7 @@
     $('input[name="claim[diagnosis_codes][2]"]').val("<?php echo  $ins_diag['ins_diagnosis']; ?>");
 
     <?php
-      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_3)."'";
+      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con,$diagnosis_3)."'";
   // get total_charge
   if($is_pri_pending){
     $sql = "SELECT "
@@ -706,7 +713,7 @@
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
        . "  ledger.status = " . DSS_TRXN_PENDING . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
+       . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
        . "  AND ledger.docid = " . $docid . " "
        . "  AND trxn_code.docid = " . $docid . " "
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -726,7 +733,7 @@
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
        . "  ledger.primary_claim_id = " . $orig_claim_id . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
+       . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
        . "  AND ledger.docid = " . $docid . " "
        . "  AND trxn_code.docid = " . $docid . " "
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -747,7 +754,7 @@
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
        . "  ledger.status = " . DSS_TRXN_PENDING . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
+       . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
        . "  AND ledger.docid = " . $docid . " "
        . "  AND trxn_code.docid = " . $docid . " "
        . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
@@ -759,15 +766,15 @@
         from dental_ledger dl
                 LEFT JOIN dental_users p ON dl.producerid=p.userid
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."'
+                        where dl.docid='".$docid."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
                         AND primary_claim_id=".$orig_claim_id."
                         AND dlp.amount != 0
                         AND dlp.payer = 0
         ";
   }
-  $paid_my = mysql_query($sql);
-  if ($paid_my && (mysql_num_rows($paid_my) > 0)) {
-    $paid_row = mysql_fetch_array($paid_my);
+  $paid_my = $db->getRow($sql);
+  if (!empty($paid_my)) {
+    $paid_row = $paid_my;
     $amount_paid = $paid_row['amount_paid'];
   }
 
@@ -777,7 +784,7 @@
     $('input[name="claim[diagnosis_codes][3]"]').val("<?php echo  $ins_diag['ins_diagnosis']; ?>");
 
     <?php
-      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_4)."'";
+      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con,$diagnosis_4)."'";
       $ins_diag = $db->getRow($ins_diag_sql);
     ?>
 
@@ -813,7 +820,7 @@
              . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
              . "WHERE "
              . "  ledger.status = " . DSS_TRXN_PENDING . " "
-             . "  AND ledger.patientid = " . $_GET['pid'] . " "
+             . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
              . "  AND ledger.docid = " . $docid . " "
              . "  AND trxn_code.docid = " . $docid . " "
              . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -841,7 +848,7 @@
              . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
              . "WHERE "
              . "  ledger.primary_claim_id = " . $insuranceid . " "
-             . "  AND ledger.patientid = " . $_GET['pid'] . " "
+             . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
              . "  AND ledger.docid = '" . $docid . "' "
              . "  AND trxn_code.docid = '" . $docid . "' "
              . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -937,7 +944,7 @@
              . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
              . "WHERE "
              . "  ledger.status = " . DSS_TRXN_PENDING . " "
-           . "  AND ledger.patientid = " . $_GET['pid'] . " "
+           . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
            . "  AND ledger.docid = " . $docid . " "
            . "  AND trxn_code.docid = " . $docid . " "
            . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -958,7 +965,7 @@
              . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
              . "WHERE "
              . "  ledger.status = " . DSS_TRXN_PENDING . " "
-             . "  AND ledger.patientid = " . $_GET['pid'] . " "
+             . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
              . "  AND ledger.docid = " . $docid . " "
              . "  AND trxn_code.docid = " . $docid . " "
              . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
@@ -970,8 +977,8 @@
                   from dental_ledger dl
                   LEFT JOIN dental_users p ON dl.producerid=p.userid
                   LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                  where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."'
-                  AND primary_claim_id=".$_GET['insid']."
+                  where dl.docid='".$docid."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
+                  AND primary_claim_id=".(!empty($_GET['insid']) ? $_GET['insid'] : '')."
                   AND dlp.amount != 0
                   AND dlp.payer = 0";
         }

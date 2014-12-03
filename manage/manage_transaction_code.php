@@ -9,7 +9,7 @@ if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1){ ?>
 	die();
 }
 
-if($_REQUEST["delid"] != "")
+if(!empty($_REQUEST["delid"]))
 {
 	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."' AND docid='".$_SESSION['docid']."';";
 	$db->query($del_sql);
@@ -26,7 +26,7 @@ if($_REQUEST["delid"] != "")
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -40,7 +40,7 @@ $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
 $num_users = count($my);
 
-if($_POST['sortsub'] == 1)
+if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 {
 	foreach($_POST['sortby'] as $key => $val)
 	{
@@ -83,7 +83,7 @@ if($_POST['sortsub'] == 1)
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 &nbsp;

@@ -1,6 +1,6 @@
 <?php
-include_once 'includes/constants.inc';
 include 'includes/top.htm';
+include_once 'includes/constants.inc';
 ?>
 
 <script src="js/manual.js" type="text/javascript"></script>

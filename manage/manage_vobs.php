@@ -1,6 +1,6 @@
 <?php
-include 'includes/constants.inc';
 include "includes/top.htm";
+include_once 'includes/constants.inc';
 
 if(isset($_GET['rid'])){
   $s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s",$_REQUEST['rid'], $_REQUEST['pid'], $_SESSION['docid']);
@@ -84,7 +84,7 @@ function insert_preauth_row($patient_id) {
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -141,9 +141,9 @@ $my = $db->getResults($sql);
 	Manage Verification of Benefits
 </span>
 <?php if(isset($_GET['viewed']) && $_GET['viewed']==0){ ?>
-  <a href="manage_vobs.php?pid=<?php echo $_GET['pid'] ?>&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">Show All</a>
+  <a href="manage_vobs.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">Show All</a>
 <?php }else{ ?>
-  <a href="manage_vobs.php?pid=<?php echo $_GET['pid'] ?>&viewed=0&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">Show Unread</a>
+  <a href="manage_vobs.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&viewed=0&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">Show Unread</a>
 <?php } ?>
 <br />
 <br />
@@ -151,7 +151,7 @@ $my = $db->getResults($sql);
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 
@@ -169,13 +169,13 @@ $my = $db->getResults($sql);
 	<?php }?>
   	<tr class="tr_bg_h">
   		<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'request_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
-  			<a href="manage_vobs.php?pid=<?php echo $_GET['pid'] ?>&sort=request_date&sortdir=<?php echo ($_REQUEST['sort']=='request_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Requested</a>
+  			<a href="manage_vobs.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=request_date&sortdir=<?php echo ($_REQUEST['sort']=='request_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Requested</a>
   		</td>
   		<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
-  			<a href="manage_vobs.php?pid=<?php echo $_GET['pid'] ?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient Name</a>
+  			<a href="manage_vobs.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient Name</a>
   		</td>
   		<td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
-  			<a href="manage_vobs.php?pid=<?php echo $_GET['pid'] ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Status</a>	
+  			<a href="manage_vobs.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Status</a>	
   		</td>
   		<td valign="top" class="col_head" width="40%">
   			Comments
@@ -196,7 +196,7 @@ $my = $db->getResults($sql);
 	else
 	{
     foreach ($my as $myarray) { ?>
-		<tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed']||$myarray['status']==DSS_PREAUTH_PENDING)?'':'unviewed'; ?>">
+		<tr class="<?php echo (!empty($tr_class) ? $tr_class : '');?> <?php echo ($myarray['viewed']||$myarray['status']==DSS_PREAUTH_PENDING)?'':'unviewed'; ?>">
 			<td valign="top">
 				<?php echo($myarray["front_office_request_date"]);?>&nbsp;
 			</td>

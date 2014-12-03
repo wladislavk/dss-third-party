@@ -151,7 +151,7 @@ $t_q = $db->getResults($t_sql);?>
 <?php
 if ($t_q) {
   foreach ($t_q as $r) {
-    $latest = ($r['last_response']!='')?$r['last_response']:$r['adddate'];?>
+    $latest = (!empty($r['last_response'])) ? $r['last_response'] : $r['adddate'];?>
     <tr> 
       <td><?php echo $r['title']; ?></td>
       <td><?php echo substr($r['body'], 0, 50); ?></td>

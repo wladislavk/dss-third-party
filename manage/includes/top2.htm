@@ -1,12 +1,12 @@
 <?php
 
-require_once('admin/includes/main_include.php');
+include_once('admin/includes/main_include.php');
 include_once("includes/sescheck.php");
-require_once('includes/constants.inc');
-require_once('includes/authorization_functions.php');
-require_once('includes/general_functions.php');
-require_once('includes/notifications.php');
-require_once('includes/patient_changes.php');
+include_once('includes/constants.inc');
+include_once('includes/authorization_functions.php');
+include_once('includes/general_functions.php');
+include_once('includes/notifications.php');
+include_once('includes/patient_changes.php');
 
   if( $_SESSION['userid'] == '') {
 ?>
@@ -200,7 +200,7 @@ require_once('includes/patient_changes.php');
 
 <!-- onload = disableBackspace(); -->
 
-<body onload="<?php if ($hideallblocks == 2) { echo "hideallblocks();"; } elseif ($hideallblocks == 1) { echo "hideallblocksForFlowsheet($step_json);"; } else { echo ""; } ?>document.getElementById('future_dental_det').style.display = 'none';parent.frames[0].document.getElementById('hideshow1').style.display='block';parent.frames[0].document.getElementById('hideshow2').style.display='none';parent.frames[0].document.getElementById('hideshow3').style.display='none';parent.frames[0].document.getElementById('hideshow4').style.display='none';parent.frames[0].document.getElementById('hideshow5').style.display='none';<?php if(isset($_GET['preview']) && $_GET['preview'] == '1'){?>check();<?php } if(isset($_GET['page']) && $_GET['page'] == 'page2'){ echo "document.getElementById('flowsheet_page1').style.display='none';";
+<body onload="<?php if (!empty($hideallblocks) && $hideallblocks == 2) { echo "hideallblocks();"; } elseif (!empty($hideallblocks) && $hideallblocks == 1) { echo "hideallblocksForFlowsheet($step_json);"; } else { echo ""; } ?>document.getElementById('future_dental_det').style.display = 'none';parent.frames[0].document.getElementById('hideshow1').style.display='block';parent.frames[0].document.getElementById('hideshow2').style.display='none';parent.frames[0].document.getElementById('hideshow3').style.display='none';parent.frames[0].document.getElementById('hideshow4').style.display='none';parent.frames[0].document.getElementById('hideshow5').style.display='none';<?php if(isset($_GET['preview']) && $_GET['preview'] == '1'){?>check();<?php } if(isset($_GET['page']) && $_GET['page'] == 'page2'){ echo "document.getElementById('flowsheet_page1').style.display='none';";
  echo "document.getElementById('flowsheet_page2').style.display='block';";
 }?>">
 
@@ -225,7 +225,7 @@ require_once('includes/patient_changes.php');
         $title .= "Pre-medication: " . $myarray['premed']."\n";
       }
 
-      $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid=".mysql_real_escape_string($_GET['pid']);
+      $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid=".mysqli_real_escape_string($con,$_GET['pid']);
 
       $myq3array = $db->getRow($sqlq3);
       $allergen = $myq3array['allergenscheck'];
@@ -335,7 +335,7 @@ require_once('includes/patient_changes.php');
               JOIN dental_users du ON dt.responsibleid=du.userid
               LEFT JOIN dental_patients p ON p.patientid=dt.patientid
               WHERE (dt.status = '0' OR dt.status IS NULL) AND
-              dt.responsibleid='".mysql_real_escape_string($_SESSION['userid'])."'";
+              dt.responsibleid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 
           $num_tasks = $db->getNumberRows($task_sql);
         ?>
@@ -568,7 +568,7 @@ require_once('includes/patient_changes.php');
 
           <?php
             if ($_SESSION['docid'] == $_SESSION['userid']) {
-              $course_sql = "SELECT use_course FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+              $course_sql = "SELECT use_course FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 
               $course_r = $db->getRow($course_sql);
 
@@ -580,7 +580,7 @@ require_once('includes/patient_changes.php');
             } else {
               $course_sql = "SELECT s.use_course, d.use_course_staff FROM dental_users s
             		JOIN dental_users d ON d.userid = s.docid
-            		WHERE s.userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+            		WHERE s.userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 
               $course_r = $db->getRow($course_sql);
 
@@ -650,7 +650,7 @@ require_once('includes/patient_changes.php');
 
                   <?php
                     $t_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt JOIN dental_users du ON dt.responsibleid=du.userid LEFT JOIN dental_patients p ON p.patientid=dt.patientid WHERE (dt.status = '0' OR
-                      dt.status IS NULL) AND (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') AND dt.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+                      dt.status IS NULL) AND (du.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' OR du.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."') AND dt.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
                     $t_num_sql = $t_sql;
                     $num_pat_tasks = $db->getNumberRows($t_num_sql);
@@ -971,7 +971,7 @@ require_once('includes/patient_changes.php');
 
     <?php
       if (isset($_GET['pid'])) {
-	      $s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
+	      $s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
         $n = $db->getNumberRows($q);
         $pat = $db->getRow($q);
@@ -982,13 +982,13 @@ require_once('includes/patient_changes.php');
           FROM dental_patient_contacts pc 
           INNER JOIN dental_patients p ON pc.patientid=p.patientid
           WHERE p.docid='".$_SESSION['docid']."' AND
-          p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+          p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
         $total_contacts = $db->getNumberRows($contacts_sql);
 
         $insurance_sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname FROM dental_patient_insurance pi INNER JOIN dental_patients p ON pi.patientid=p.patientid 
           WHERE p.docid='".$_SESSION['docid']."' AND
-          p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+          p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
         $total_insurance = $db->getNumberRows($insurance_sql);
 
@@ -998,7 +998,7 @@ require_once('includes/patient_changes.php');
             <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
           </a>
     <?php } 
-        $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+        $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
         $exist_row = $db->getRow($exist_sql);
 
@@ -1008,7 +1008,7 @@ require_once('includes/patient_changes.php');
             <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
           </a>	  
     <?php }
-      $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+      $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
       if ($db->getNumberRows($email_sql)>0) { 
     ?>
@@ -1018,7 +1018,7 @@ require_once('includes/patient_changes.php');
     <?php }
       }
 
-      $sql = "SELECT use_letters from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+      $sql = "SELECT use_letters from dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 
       $r = $db->getRow($sql);
       $use_letters = ($r['use_letters']=='1');

@@ -5,7 +5,7 @@ include('admin/includes/password.php');
 //$page_my = mysql_query($page_sql);
 //$page_myarray = mysql_fetch_array($page_my);
 
-if(isset($_SESSION['loginid']) &&$_SESSION['loginid'] <> '')
+if(!empty($_SESSION['loginid']))
 {
 	$cur_page_full =  $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
 	$cur_ins_sql = "insert into dental_login_detail (loginid,userid,cur_page,adddate,ip_address) values('".$_SESSION['loginid']."','".$_SESSION['userid']."','".$cur_page_full."',now(),'".$_SERVER['REMOTE_ADDR']."')";
@@ -43,7 +43,7 @@ if(isset($_POST["loginsub"]))
 	
 	$check_myarray = $db->getRow($check_sql);
 
-	if($check_myarray) 
+	if(!empty($check_myarray)) 
 	{
 		if($check_myarray['status']=='3'){
 			$msg='This account has been suspended.';
@@ -87,7 +87,7 @@ if(isset($_POST["loginsub"]))
 	}
 }
 
-if($msg=='' && isset($_GET['msg']))
+if(!empty($_GET['msg']))
 { 
 	$msg = $_GET['msg'];
 }
@@ -120,7 +120,7 @@ if($msg=='' && isset($_GET['msg']))
 		        </td>
 		    </tr>
 			<?php
-			if( isset($msg) && $msg!="" ){
+			if(!empty($msg)){
 		    ?> 
 		        <tr bgcolor="#FFFFFF">
 		            <td colspan="2" >

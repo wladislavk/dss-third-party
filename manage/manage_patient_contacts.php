@@ -1,6 +1,6 @@
-<?php 
-require_once('includes/constants.inc');
+<?php
 include "includes/top.htm";
+include_once('includes/constants.inc');
 include "includes/similar.php";
 ?>
 
@@ -108,7 +108,7 @@ if(isset($_REQUEST['useid'])){
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -162,7 +162,7 @@ $my = $db->getResults($sql);
 
 <br />
 <div align="center" class="red">
-	<b><?php echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 

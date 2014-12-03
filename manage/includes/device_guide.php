@@ -66,7 +66,7 @@
   </div>
 
   <?php
-    $s = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+    $s = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
     $r = $db->getRow($s);
   ?>
 
@@ -85,8 +85,8 @@
   ?>
 
   <form action="device_guide_results.php" method="post" id="device_form" style="border:solid 2px #cce3fc;padding:0 10px 0 25px; width:24%; margin-left:2%; float:left;">
-    <input type="hidden" name="id" value="<?php echo  $_GET['id']; ?>" />
-    <input type="hidden" name="pid" value="<?php echo  $_GET['pid']; ?>" />
+    <input type="hidden" name="id" value="<?php echo  (!empty($_GET['id']) ? $_GET['id'] : ''); ?>" />
+    <input type="hidden" name="pid" value="<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" />
     <?php if ($s_q) foreach ($s_q as $s_r){ ?>
       <div class="setting" id="setting_<?php echo  $s_r['id']; ?>" style="padding: 5px 0;">
         <strong style="padding: 5px 0;display:block;"><?php echo  $s_r['name']; ?></strong>

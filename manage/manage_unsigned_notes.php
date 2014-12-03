@@ -1,6 +1,6 @@
 <?php
-    include_once 'includes/constants.inc';
     include 'includes/top.htm';
+    include_once 'includes/constants.inc';
 
     //NEEDS OPTIMIZED
     $unsigned_query = "select distinct(patientid) from (select n.*, u.name signed_name, p.adddate as parent_adddate from

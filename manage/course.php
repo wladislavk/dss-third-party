@@ -2,7 +2,7 @@
 	include 'admin/includes/main_include.php';
 	include 'includes/sescheck.php';
 
-	$u_sql = "SELECT * FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+	$u_sql = "SELECT * FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 	$u_r = $db->getRow($u_sql);
 
     //COOKIES FOR COURSE SITE
@@ -18,16 +18,16 @@
 		setcookie("dss_login_key", $val, $expire, "/", "xforty.com", false);
 	}
 
-	$login_sql = "SELECT * FROM x40_dss_login WHERE user='".mysql_real_escape_string($user)."'";
+	$login_sql = "SELECT * FROM x40_dss_login WHERE user='".mysqli_real_escape_string($con,$user)."'";
 
 	if($db->getNumberRows($login_sql)==0){
-      $course_sql = "INSERT INTO x40_dss_login SET keyval1='".mysql_real_escape_string($val)."', keyval2='".mysql_real_escape_string($pass)."', user='".mysql_real_escape_string($user)."'";
+      $course_sql = "INSERT INTO x40_dss_login SET keyval1='".mysqli_real_escape_string($con,$val)."', keyval2='".mysqli_real_escape_string($con,$pass)."', user='".mysqli_real_escape_string($con,$user)."'";
  	  $db->query($course_sql);
 	} else {
-      $course_sql = "UPDATE x40_dss_login SET keyval1='".mysql_real_escape_string($val)."', keyval2='".mysql_real_escape_string($pass)."' WHERE user='".mysql_real_escape_string($user)."'";
+      $course_sql = "UPDATE x40_dss_login SET keyval1='".mysqli_real_escape_string($con,$val)."', keyval2='".mysqli_real_escape_string($con,$pass)."' WHERE user='".mysqli_real_escape_string($con,$user)."'";
       $db->query($course_sql);
 	}
-	$user_sql = "UPDATE users SET pass='".mysql_real_escape_string($md5_pass)."' WHERE name='".mysql_real_escape_string($user)."'";
+	$user_sql = "UPDATE users SET pass='".mysqli_real_escape_string($con,$md5_pass)."' WHERE name='".mysqli_real_escape_string($con,$user)."'";
 	$db->query($user_sql);
 ?>
 

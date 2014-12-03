@@ -5,7 +5,7 @@ require(dirname(__FILE__).'/config.php');
 
 $sql = "SELECT f.*, c.companyid FROM dental_faxes f
                 JOIN dental_user_company c ON c.userid = f.docid
-                WHERE sfax_completed=0 AND sfax_transmission_id IS NOT NULL LIMIT 5";
+                WHERE sfax_completed=0 AND sfax_transmission_id IS NOT NULL";
 $q = mysql_query($sql);
 while($r = mysql_fetch_assoc($q)){
 $_SESSION['companyid'] = $r['companyid'];

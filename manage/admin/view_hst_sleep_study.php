@@ -1,7 +1,7 @@
 <?php
 $pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$_GET['pid']."';";
-$pat_q = mysql_query($pat_sql);
-$pat_r = mysql_fetch_assoc($pat_q);
+$pat_q = mysqli_query($con,$pat_sql);
+$pat_r = mysqli_fetch_assoc($pat_q);
 ?>
 <style type="text/css">
 .sleeplabstable tr{height:28px; }
@@ -153,9 +153,9 @@ function addstudylab(v){
                 <select name="place" class="place_select" onchange="addstudylab(this.value)">
 <option>SELECT</option>
                 <?php
-     $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
-     $lab_place_r = mysql_query($lab_place_q);
-     while($lab_place = mysql_fetch_array($lab_place_r)){
+     $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".(!empty($_SESSION['docid']) ? $_SESSION['docid'] : '')."' ORDER BY sleeplabid DESC";
+     $lab_place_r = mysqli_query($con,$lab_place_q);
+     while($lab_place = mysqli_fetch_array($lab_place_r)){
     ?>
                   <option value="<?php echo $lab_place['sleeplabid']; ?>"><?php echo $lab_place['company']; ?></option>
     <?php
@@ -171,9 +171,9 @@ function addstudylab(v){
                                 <option value="">SELECT</option>
                         <?php
                                 $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
-                                                                           $ins_diag_my = mysql_query($ins_diag_sql);
+                                                                           $ins_diag_my = mysqli_query($con,$ins_diag_sql);
 
-                                                                                while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
+                                                                                while($ins_diag_myarray = mysqli_fetch_array($ins_diag_my))
                                                                                 {
                                                                                 ?>
                                                                                         <option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" >
@@ -250,9 +250,9 @@ function addstudylab(v){
 <option value="">SELECT</option>
         <?php
         $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
-                                                                $device_my = mysql_query($device_sql);
+                                                                $device_my = mysqli_query($con,$device_sql);
 
-                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                while($device_myarray = mysqli_fetch_array($device_my))
                                                                 {
                 ?>
                                                                  <option value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>

@@ -15,7 +15,7 @@ define('SORT_BY_USER', 4);
 define('SORT_BY_INSURANCE', 5);
 define('SORT_BY_COMPANY', 6);
 define('SORT_BY_AUTHORIZED', 7);
-$sort_dir = strtolower($_REQUEST['sort_dir']);
+$sort_dir = strtolower(!empty($_REQUEST['sort_dir']) ? $_REQUEST['sort_dir'] : '');
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
 $sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
@@ -49,7 +49,7 @@ switch ($sort_by) {
 
 $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
 
-if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
+if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_insurance_preauth where id='".$_REQUEST["delid"]."'";
 	mysqli_query($con,$del_sql);
@@ -66,7 +66,7 @@ if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -152,7 +152,7 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid))
 
 $sql .= "ORDER BY " . $sort_by_sql;
 $my = mysqli_query($con,$sql);
-$total_rec = mysql_num_rows($my);
+$total_rec = mysqli_num_rows($my);
 
 if(isset($_GET['status']) && isset($_GET['from']) && $_GET['from']=='view' && $total_rec == 0){
   ?>
@@ -178,7 +178,7 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 
 <br />
 <div align="center" class="red">
-	<b><?php  echo $_GET['msg'];?></b>
+	<b><?php  echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <div style="width:98%;margin:auto;">
@@ -274,7 +274,7 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 			Action
 		</td>
 	</tr>
-	<?php  if(mysql_num_rows($my) == 0)
+	<?php  if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="6" align="center">

@@ -1,4 +1,3 @@
-
 <?php include 'includes/top.htm'; 
 
 function franchisee_asc($a, $b) {
@@ -154,10 +153,12 @@ $sortdir = $_REQUEST['sortdir'];
 
 // Letters count and Oldest letter
 //$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' ORDER BY generated_date ASC;";
-$dental_letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.pat_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters, mailed_date FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ".$doc_filter." ORDER BY dental_letters.letterid ASC;";
-$dental_letters_res = mysqli_query($con,$dental_letters_query);
-$pending_letters = mysql_num_rows($dental_letters_res);
-$generated_date = mysqli_fetch_array($dental_letters_res);
+$dental_letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.pat_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters.mailed_date FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ".$doc_filter." ORDER BY dental_letters.letterid ASC;";
+
+$dental_letters_res = $db->getResults($dental_letters_query);
+
+$pending_letters = count($dental_letters_res);
+$generated_date = (!empty($dental_letters_res[0]) ? $dental_letters_res[0] : '');
 $seconds_per_day = 86400;
 if($generated_date){
 $oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day);
@@ -231,28 +232,28 @@ if ($status == 'pending') {
 
   }else{
   $letters_query = "SELECT dental_letters.letterid, 
-			dental_letters.templateid, 
-			dental_letters.patientid, 
-			UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
-			UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
-			UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date,
-			dental_letters.pdf_path,
-			dental_letters.topatient, 
-			dental_letters.md_list, 
-			dental_letters.md_referral_list, 
-			dental_letters.pat_referral_list,
-			dental_letters.docid, 
-			dental_letters.userid, 
-			dental_letters.send_method, 
-			dental_patients.firstname, 
-			dental_patients.lastname, 
-			dental_patients.middlename, 
-			dental_letters.status,
-			dental_letters.template_type
-				FROM dental_letters 
-	JOIN dental_user_company uc ON uc.userid = dental_letters.docid
-	JOIN dental_users u ON u.userid = dental_letters.docid
-	LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
+                			dental_letters.templateid, 
+                			dental_letters.patientid, 
+                			UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
+                			UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
+                			UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date,
+                			dental_letters.pdf_path,
+                			dental_letters.topatient, 
+                			dental_letters.md_list, 
+                			dental_letters.md_referral_list, 
+                			dental_letters.pat_referral_list,
+                			dental_letters.docid, 
+                			dental_letters.userid, 
+                			dental_letters.send_method, 
+                			dental_patients.firstname, 
+                			dental_patients.lastname, 
+                			dental_patients.middlename, 
+                			dental_letters.status,
+                			dental_letters.template_type
+				            FROM dental_letters
+                      JOIN dental_user_company uc ON uc.userid = dental_letters.docid
+                    	JOIN dental_users u ON u.userid = dental_letters.docid
+	                  LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
 		WHERE uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' AND
 			((dental_letters.status = '1' AND dental_letters.delivered=0) 
                                         OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
@@ -263,13 +264,12 @@ if ($status == 'pending') {
 		ORDER BY dental_letters.letterid ASC;";
 
   }
-  $letters_res = mysqli_query($con,$letters_query);
-  if (!$letters_res) {
-    print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
+
+  $letters_res = $db->getResults($letters_query);
+  if (!empty($letters_res)) foreach ($letters_res as $row) {
+    $dental_letters[] = $row;
   } else {
-    while ($row = mysqli_fetch_assoc($letters_res)) {
-      $dental_letters[] = $row;
-    }
+    $dental_letters = array();
   }
 }
 
@@ -302,24 +302,14 @@ LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid
   }else{
 
   }
-  $letters_res = mysqli_query($con,$letters_query);
-  if (!$letters_res) {
-    print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
+
+  $letters_res = $db->getResults($letters_query); 
+  if (!empty($letters_res)) foreach ($letters_res as $row) {
+    $dental_letters[] = $row;
   } else {
-    while ($row = mysqli_fetch_assoc($letters_res)) {
-      $dental_letters[] = $row;
-    }
+    $dental_letters = array();
   }
 }
-
-
-/* Calculate oldest letter age
-foreach ($dental_letters as $key => $row) {
-  $generated_date[$key] = $row['generated_date'];
-}
-arsort($generated_date);
-$seconds_per_day = 86400;
-$oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day);*/
 
 // Calculate numer of pages
 $num_pages = floor(count($dental_letters) / $page_limit);
@@ -335,21 +325,23 @@ foreach ($dental_letters as $key => $letter) {
   $dental_letters[$key]['status'] = $letter['status'];
   $dental_letters[$key]['date_sent'] = $letter['date_sent'];
   $franchisee_query = "SELECT dental_users.name FROM dental_users WHERE userid='".$letter['docid']."'";
-  $result = mysqli_query($con,$franchisee_query);
-  $dental_letters[$key]['franchisee'] = mysql_result($result, 0);
+  
+  $result = $db->getRow($franchisee_query);
+  $dental_letters[$key]['franchisee'] = $result['dental_users.name'];
 	// Get Username
 	$username_query = "SELECT name from dental_users WHERE userid = '" . $letter['userid'] . "';";
-	$username_result = mysqli_query($con,$username_query);
-	$dental_letters[$key]['username'] = mysql_result($username_result, 0);
+	
+  $username_result = $db->getRow($username_query);
+	$dental_letters[$key]['username'] = $username_result['name'];
   // Get Correspondance Column
   if($letter['template_type']=='0'){
     $template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '".$letter['templateid']."';";
   }else{
     $template_sql = "SELECT name FROM dental_letter_templates_custom WHERE id = '".$letter['templateid']."';";
   }
-  $template_res = mysqli_query($con,$template_sql);
+
   $correspondance = array();
-  $correspondance = mysqli_fetch_assoc($template_res);
+  $correspondance = $db->getRow($template_sql);
 	if (!empty($letter['pdf_path'])) {
     $dental_letters[$key]['url'] = "/manage/letterpdfs/" . $letter['pdf_path'];
     $dental_letters[$key]['url_target'] = "_blank";
@@ -365,10 +357,10 @@ foreach ($dental_letters as $key => $letter) {
   $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $letter['pat_referral_list']);
   //print_r($contacts); print "<br />";
   $total_contacts = 0;
-    $total_contacts += (isset($contacts['patient']))?count($contacts['patient']):0;
-    $total_contacts += (isset($contacts['mds']))?count($contacts['mds']):0;
-    $total_contacts += (isset($contacts['md_referrals']))?count($contacts['md_referrals']):0;
-    $total_contacts += (isset($contacts['pat_referrals']))?count($contacts['pat_referrals']):0;
+    $total_contacts += (isset($contacts['patient'])) ? count($contacts['patient']):0;
+    $total_contacts += (isset($contacts['mds'])) ? count($contacts['mds']):0;
+    $total_contacts += (isset($contacts['md_referrals'])) ? count($contacts['md_referrals']):0;
+    $total_contacts += (isset($contacts['pat_referrals'])) ? count($contacts['pat_referrals']):0;
   if ($total_contacts > 1) {
     $dental_letters[$key]['sentto'] = $total_contacts . " Contacts";
   } elseif ($total_contacts == 0) {
@@ -479,26 +471,7 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
 
 ?>
 
-<style>
-.redbg{
-background:red;
-color: white;
-}
-tr.redbg > td{
-color: white;
-}
-.yellowbg{
-background: yellow;
-}
-
-.greenbg{
-background:green;
-color: white;
-}
-tr.greenbg > td{
-color: white;
-}
-</style>
+<link href="/manage/admin/css/manage_letters.css" rel="stylesheet" type="text/css" />
 
 <div class="letters-tryptych1">
   <h1 class="blue"><?php echo ($status == 'pending') ? "Pending" : "Sent" ?> Letters (<?php echo count($dental_letters); ?>)</h1>
@@ -507,8 +480,8 @@ color: white;
   Filter by type: <select name="filter"> <!-- onchange="document.filter_letters.submit();">-->
     <option value="%"></option>
     <?php     $templates = "SELECT id, name FROM dental_letter_templates ORDER BY id ASC;";
-    $result = mysqli_query($con,$templates);
-    while ($row = mysqli_fetch_assoc($result)) {
+    $result = $db->getResults($templates);
+    if (!empty($result)) foreach ($result as $row) {
       print "<option " . (($filter == $row['id']) ? "selected " : "") . "value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
     }
     ?>
@@ -537,8 +510,8 @@ color: white;
       </select>
       &nbsp;&nbsp;&nbsp;
     <?php } ?>
-    <input type="hidden" name="sort_by" value="<?php echo $sort_by?>"/>
-    <input type="hidden" name="sort_dir" value="<?php echo $sort_dir?>"/>
+    <input type="hidden" name="sort_by" value="<?php echo (!empty($sort_by) ? $sort_by : ''); ?>"/>
+    <input type="hidden" name="sort_dir" value="<?php echo (!empty($sort_dir) ? $sort_dir : ''); ?>"/>
     <input type="submit" value="Filter List" class="btn btn-primary">
     <input type="button" value="Reset" onclick="window.location='<?php echo $_SERVER['PHP_SELF']?>'" class="btn btn-primary">
   </form>
@@ -614,27 +587,7 @@ color: white;
 </table>
 
 </div>
-<script type="text/javascript">
-  $('.mailed_chk').click( function(){
-    lid = $(this).val();
-    c = $(this).is(':checked');
-                                   $.ajax({
-                                        url: "../includes/letter_mail.php",
-                                        type: "post",
-                                        data: {lid: lid, mailed: c},
-                                        success: function(data){
-                                                var r = $.parseJSON(data);
-                                                if(r.error){
-                                                }else{
-                                                        //window.location.reload();
-                                                }
-                                        },
-                                        failure: function(data){
-                                                //alert('fail');
-                                        }
-                                  });
 
-  });
-</script>
+<script type="text/javascript" src="/manage/admin/js/manage_letters.js"></script>
 
 <?php include 'includes/bottom.htm'; ?>

@@ -12,11 +12,11 @@ if (isset($_REQUEST['ed'])) {
          . "  JOIN dental_patients p ON p.patientid = hst.patient_id "
          . "WHERE "
          . "  hst.id = " . $_REQUEST['ed'];
-		$my = mysql_query($sql) or die(mysql_error());
-		$hst = mysql_fetch_array($my);
-    $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($hst['patient_id'])."'";
-    $pat_q = mysql_query($pat_sql);
-    $pat = mysql_fetch_assoc($pat_q);
+		$my = mysqli_query($con, $sql);
+		$hst = mysqli_fetch_array($my);
+    $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$hst['patient_id'])."'";
+    $pat_q = mysqli_query($con,$pat_sql);
+    $pat = mysqli_fetch_assoc($pat_q);
 
 } else {
     $sql = "SELECT "
@@ -26,8 +26,8 @@ if (isset($_REQUEST['ed'])) {
          . "  JOIN dental_patients p ON p.patientid = hst.patient_id "
          . "WHERE "
          . "  hst.id = " . $_POST['hst_id'];
-                $my = mysql_query($sql) or die(mysql_error());
-                $hst = mysql_fetch_array($my);
+                $my = mysqli_query($con,$sql) or die(mysql_error());
+                $hst = mysqli_fetch_array($my);
 
 
 
@@ -85,26 +85,26 @@ if($_POST['status'] == DSS_HST_COMPLETE){
 if($hst['sleep_study_id']){
   $sleepid=$hst['sleep_study_id'];
   $q = "update `dental_summ_sleeplab` set
-`date` = '".mysql_real_escape_string($date)."',
-`sleeptesttype`  = '".mysql_real_escape_string($sleeptesttype)."',
-`place`  = '".mysql_real_escape_string($place)."',
-`diagnosising_doc` = '".mysql_real_escape_string($diagnosising_doc)."',
-`diagnosising_npi` = '".mysql_real_escape_string($diagnosising_npi)."',
-`ahi` = '".mysql_real_escape_string($ahi)."',
-`ahisupine` = '".mysql_real_escape_string($ahisupine)."',
-`rdi` = '".mysql_real_escape_string($rdi)."',
-`rdisupine` = '".mysql_real_escape_string($rdisupine)."',
-`o2nadir` = '".mysql_real_escape_string($o2nadir)."',
-`t9002` = '".mysql_real_escape_string($t9002)."',
-`dentaldevice` = '".mysql_real_escape_string($dentaldevice)."',
-`devicesetting` = '".mysql_real_escape_string($devicesetting)."',
-`diagnosis` = '".mysql_real_escape_string($diagnosis)."',
-`filename` = '".mysql_real_escape_string($banner1)."',
-`notes` = '".mysql_real_escape_string($notes)."',
-`testnumber` = '".mysql_real_escape_string($testnumber)."',
-`sleeplab` = '".mysql_real_escape_string($sleeplab)."'
-WHERE id='".mysql_real_escape_string($sleepid)."'";
-mysql_query($q);
+`date` = '".mysqli_real_escape_string($con,$date)."',
+`sleeptesttype`  = '".mysqli_real_escape_string($con,$sleeptesttype)."',
+`place`  = '".mysqli_real_escape_string($con,$place)."',
+`diagnosising_doc` = '".mysqli_real_escape_string($con,$diagnosising_doc)."',
+`diagnosising_npi` = '".mysqli_real_escape_string($con,$diagnosising_npi)."',
+`ahi` = '".mysqli_real_escape_string($con,$ahi)."',
+`ahisupine` = '".mysqli_real_escape_string($con,$ahisupine)."',
+`rdi` = '".mysqli_real_escape_string($con,$rdi)."',
+`rdisupine` = '".mysqli_real_escape_string($con,$rdisupine)."',
+`o2nadir` = '".mysqli_real_escape_string($con,$o2nadir)."',
+`t9002` = '".mysqli_real_escape_string($con,$t9002)."',
+`dentaldevice` = '".mysqli_real_escape_string($con,$dentaldevice)."',
+`devicesetting` = '".mysqli_real_escape_string($con,$devicesetting)."',
+`diagnosis` = '".mysqli_real_escape_string($con,$diagnosis)."',
+`filename` = '".mysqli_real_escape_string($con,$banner1)."',
+`notes` = '".mysqli_real_escape_string($con,$notes)."',
+`testnumber` = '".mysqli_real_escape_string($con,$testnumber)."',
+`sleeplab` = '".mysqli_real_escape_string($con,$sleeplab)."'
+WHERE id='".mysqli_real_escape_string($con,$sleepid)."'";
+mysqli_query($con,$q);
 }else{
   $q = "INSERT INTO `dental_summ_sleeplab` (
 `id` ,
@@ -129,7 +129,7 @@ mysql_query($q);
 `patiendid`
 )
 VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."')";
-  $run_q = mysql_query($q);
+  $run_q = mysqli_query($con,$q);
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
   }else{
@@ -145,7 +145,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                                         adddate = now(),
                                         ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                                        mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+                                        mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
 	}
 
    }
@@ -183,7 +183,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 	}
     }
     $sql .= "WHERE id = '" . $_POST["hst_id"] . "'";
-    mysql_query($sql) or die($sql." | ".mysql_error());
+    mysqli_query($con,$sql) or die($sql." | ".mysql_error());
     
     //echo $ed_sql.mysql_error();
     $msg = "HST Updated Successfully";
@@ -221,7 +221,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<? if(!empty($msg)) {?>
     <div align="center" class="red">
         <? echo $msg;?>
     </div>
@@ -247,8 +247,8 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 	  <select name="ins_co_id" class="readonly" onclick="return false;" readonly="readonly">
 <?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hst['doc_id']."'";
-                            $ins_contact_qry_run = mysql_query($ins_contact_qry);
-                            while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
+                            $ins_contact_qry_run = mysqli_query($con,$ins_contact_qry);
+                            while($ins_contact_res = mysqli_fetch_array($ins_contact_qry_run)){
                             ?>
                                 <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($hst['ins_co_id'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>;
                                 
@@ -260,8 +260,8 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
           <select name="pat_ins_co_id" class="readonly" onclick="return false;" readonly="readonly">
 <?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hst['doc_id']."'";
-                            $ins_contact_qry_run = mysql_query($ins_contact_qry);
-                            while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
+                            $ins_contact_qry_run = mysqli_query($con,$ins_contact_qry);
+                            while($ins_contact_res = mysqli_fetch_array($ins_contact_qry_run)){
                             ?>
                                 <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($pat['p_m_ins_co'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>;
 

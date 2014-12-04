@@ -3,8 +3,8 @@
 	include_once 'includes/password.php';
 	include_once '../includes/constants.inc';
 
-	if($_POST["emailsub"] == 1) {
-        $check_sql = "SELECT adminid, username, email FROM admin WHERE email='".mysql_real_escape_string($_POST['email'])."'";
+	if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1) {
+        $check_sql = "SELECT adminid, username, email FROM admin WHERE email='".mysqli_real_escape_string($con,$_POST['email'])."'";
         
         $check_my = $db->getResults($check_sql);
         if(count($check_my) >= 1) {
@@ -31,32 +31,32 @@
             <script type="text/javascript">
                 window.location.replace('index.php?msg=Email sent');
             </script>
-<?php
-            die();
+<?php             die();
         } else {
             $msg = 'Email address not found';
 ?>
             <script type="text/javascript">
                 window.location.replace('index.php?msg=<?php echo  $msg;?>');
             </script>
-<?php
-            die();
+<?php             die();
         }
 	}
 
 	if (isset($_POST["loginsub"])) {
 		
 	    if ($_POST['security_code'] == $_SESSION['security_code']) {
-	        $salt_sql = "SELECT salt FROM admin WHERE username='".mysql_real_escape_string($_POST['username'])."' AND status=1";
+	        $salt_sql = "SELECT salt FROM admin WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."' AND status=1";
 	        
 	        $salt_row = $db->getRow($salt_sql);
+
 	        $pass = gen_password($_POST['password'], $salt_row['salt']);
+
 	        $check_sql = "SELECT a.*, ac.companyid  FROM admin a
 	            		  LEFT JOIN admin_company ac ON a.adminid = ac.adminid
-	            		  where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."'";
+	            		  where username='".mysqli_real_escape_string($con,$_POST['username'])."' and password='".$pass."'";
 	        
 	        $check_my = $db->getResults($check_sql);
-	        
+       
 	        if (count($check_my) == 1) {
 	            $check_myarray = $check_my[0];
 	            
@@ -68,23 +68,20 @@
 		        <script type="text/javascript">
 		            window.location.replace('home.php');
 		        </script>
-<?php
-            	die();
+<?php             	die();
         	} else {
 ?>
 		        <script type="text/javascript">
 		            window.location.replace('index.php?msg=Wrong+username+or+password');
 		        </script>
-<?php
-            	die();
+<?php             	die();
         	}
     	} else {
 ?>
 	        <script type="text/javascript">
 	            window.location.replace('index.php?msg=Incorrect+security+code');
 	        </script>
-<?php
-        	die();
+<?php         	die();
     	}
 	}
 ?>

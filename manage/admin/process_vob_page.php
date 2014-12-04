@@ -1,11 +1,10 @@
 <?php 
-session_start();
-require_once('../includes/constants.inc');
-require_once('includes/main_include.php');
+include_once('../includes/constants.inc');
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
-require_once('../includes/dental_patient_summary.php');
-require_once('../includes/general_functions.php');
-require_once('includes/invoice_functions.php');
+include_once('../includes/dental_patient_summary.php');
+include_once('../includes/general_functions.php');
+include_once('includes/invoice_functions.php');
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
@@ -20,8 +19,8 @@ $sql = "SELECT "
 		 . "  dental_insurance_preauth preauth "
 		 . "WHERE "
 		 . "  preauth.id = " . $_GET['ed'];
-$result = mysql_query($sql);
-$pid = mysql_result($result, 0);
+$result = $db->getRow($sql);
+$pid = (!empty($result['patient_id']) ? $result['patient_id'] : '');
 
 if (isset($_GET['ed'])) {
     // load preauth
@@ -34,9 +33,9 @@ if (isset($_GET['ed'])) {
          . "  LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
 	 . "  LEFT OUTER JOIN dental_ins_diagnosis id ON id.ins_diagnosisid = preauth.diagnosis_code "
          . "WHERE "
-         . "  preauth.id = " . $_GET['ed'];
-		$my = mysql_query($sql) or die(mysql_error());
-		$preauth = mysql_fetch_array($my);
+         . "  preauth.id = " . (!empty($_GET['ed']) ? $_GET['ed'] : '');
+
+		$preauth = $db->getRow($sql);
 		// load dynamic preauth info
 		$sql = "SELECT "
 		 . "  i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
@@ -60,8 +59,7 @@ if (isset($_GET['ed'])) {
 		 . "WHERE "
 		 . "  p.patientid = ".$preauth['patientid'];
 
-		$my = mysql_query($sql);
-		$my_array = mysql_fetch_array($my);
+		$my_array = $db->getRow($sql);
 		$preauth = array_merge($preauth, $my_array);
 } else {
     // update preauth
@@ -228,7 +226,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
 <script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<? if(!empty($msg)) {?>
     <div align="center" class="red">
         <? echo $msg;?>
     </div>

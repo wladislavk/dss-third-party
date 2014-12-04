@@ -99,7 +99,7 @@
 	<!---<script src="admin/template/assets/plugins/gritter/js/jquery.gritter.js" type="text/javascript"></script>---><!---displays momentary custom boxes on screen  --->
 	<!-- IMPORTANT! fullcalendar depends on jquery-ui-1.10.3.custom.min.js for drag & drop support -->
 	<script src="admin/template/assets/plugins/fullcalendar/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
-	<script src="admin/template/assets/plugins/jquery-easypiechart/jquery.easypiechart.js" type="text/javascript"></script>
+	<script src="admin/template/assets/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.js" type="text/javascript"></script>
 	<script src="admin/template/assets/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
 	<!-- END PAGE LEVEL PLUGINS -->
 	<!-- BEGIN PAGE LEVEL SCRIPTS -->
@@ -116,22 +116,8 @@
 	
 	<!-- END PAGE LEVEL SCRIPTS -->
 
-	<script>
-jQuery(document).ready(function() {    
-   //Metronic.init(); // init metronic core componets
-   Layout.init(); // init layout
-   QuickSidebar.init() // init quick sidebar
-   Index.init();   
-   Index.initDashboardDaterange();
-   Index.initJQVMAP(); // init index page's custom scripts
-   Index.initCalendar(); // init index page's custom scripts
-   Index.initCharts(); // init index page's custom scripts
-   Index.initChat();
-   Index.initMiniCharts();
-   //Index.initIntro();
-   Tasks.initDashboardWidget();
-});
-</script>
+	<script type="text/javascript" src="/manage/admin/js/include_bottom.js"></script>
+	
 	<!-- END JAVASCRIPTS -->
 
  <?php
@@ -143,128 +129,6 @@ jQuery(document).ready(function() {
 	</script>";
 		
    ?>   
-	<script type="text/javascript">
-						
-	jQuery(document).ready(function() {    
-	   Metronic.init();
-	   UIIdleTimeout.init();
-	    
-	  
-	   var queryst = window.location.search;
-	   var addr="<?php echo $address[3]; ?>";
-	   var path_name=addr+queryst;
-	   //alert(addr);
-	   var redirUrl_path='extra_lock.php?id='+userid+'&&addr='+path_name;
-	    $.idleTimeout('#idle-timeout-dialog', '.modal-content button:last', {
-                idleAfter: 900, // 5 seconds 900
-                timeout: 2100, //30 seconds to timeout 2100000
-                pollingInterval: 5, // 5 seconds 900 
-                //keepAliveURL: 'demo/idletimeout_keepalive.php',
-                serverResponseEquals: 'OK',
-                onTimeout: function(){
-                    window.location = 'logout.php';
-                },
-                onIdle: function(){
-                    $('#idle-timeout-dialog').modal('show');
-                    $countdown = $('#idle-timeout-counter');
-
-                    $('#idle-timeout-dialog-keepalive').on('click', function () { 
-                        $('#idle-timeout-dialog').modal('hide');
-                    });
-
-                    $('#idle-timeout-dialog-logout').on('click', function () { 
-                        $('#idle-timeout-dialog').modal('hide');
-                        $.idleTimeout.options.onTimeout.call(this);
-                    });
-                },
-                onCountdown: function(counter){
-                    $countdown.html(counter); // update the counter
-                }
-            });
-		
-		 
-	   // initialize session timeout settings
-	   /*
-	   $.sessionTimeout({
-		title: 'Session Timeout Notification',
-		message: 'Your session is about to expire.',
-		keepAliveUrl: 'admin/template/demo/timeout-keep-alive.php',
-		redirUrl:redirUrl_path,
-		logoutUrl: 'index.php',
-		warnAfter: 780000, //warn after 5 seconds
-		redirAfter: 900000//redirect after 10 seconds
-		 
-	   });
-	   */
-	     
-	});
-	</script>
-
-	<script>
-		jQuery(document).ready(function(){  
-			//handles sidebar and content height	
-		var handleSidebarAndContentHeight = function () {
-        var content = $('.page-content');
-        var sidebar = $('.page-sidebar');
-        var body = $('body');
-        var height;
-
-        if (body.hasClass("page-footer-fixed") === true && body.hasClass("page-sidebar-fixed") === false) {
-            var available_height = Metronic.getViewPort().height - $('.page-footer').outerHeight() - $('.page-header').outerHeight();
-            if (content.height() < available_height) {
-                content.attr('style', 'min-height:' + available_height + 'px');
-            }
-        } else {
-            if (body.hasClass('page-sidebar-fixed')) {
-                height = _calculateFixedSidebarViewportHeight();
-                if (body.hasClass('page-footer-fixed') === false) {
-                    height = height - $('.page-footer').outerHeight();
-                }
-            } else {
-                var headerHeight = $('.page-header').outerHeight();
-                var footerHeight = $('.page-footer').outerHeight();
-
-                if (Metronic.getViewPort().width < 992) {
-                    height = Metronic.getViewPort().height - headerHeight - footerHeight;
-                } else {
-                    height = sidebar.height() + 20;
-                }
-
-                if ($(window).width() > 1024 && (height + headerHeight + footerHeight) < Metronic.getViewPort().height) {
-                    height = Metronic.getViewPort().height - headerHeight - footerHeight;
-                }
-            }
-
-            content.attr('style', 'min-height:' + height + 'px');
-        }
-    }
-			
-				//handles sidebar and content height		
-			
-			
-			  
-		var path=window.location.pathname;
-		var query = window.location.search;
-		var pathname=path+query;
-			//alert(pathname);
-			$('.page-sidebar-menu').find('li a[href$="' + pathname + '"]').parents('li').addClass('active').each(function(){
-            var $this = $(this);
-          	$this.parents('ul').parents('li').each(function(){
-					
-				   $(this).addClass('active');
-				   $(this).find('a > span.arrow').addClass('open');
-				   $(this).find('a > span.arrow').append('<span class="selected"></span>');
-				   $(this).children().find('a > span.arrow').addClass('open'); 
-				    handleSidebarAndContentHeight();
-				   
-			});
-		
-		});
-	
-	});
-		
-	</script>
-	
 
 </body>
 </html>

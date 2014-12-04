@@ -1,38 +1,25 @@
 <?php
 include "includes/top.htm";
-require_once('../includes/constants.inc');
-require_once('../includes/dental_patient_summary.php');
-require_once('includes/password.php');
+include_once('../includes/constants.inc');
+include_once('../includes/dental_patient_summary.php');
+include_once('includes/password.php');
 
 
-include "includes/similar.php";
+include "../includes/similar.php";
 
 ?>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$(':input:not(#patient_search)').change(function() { 
-			window.onbeforeunload = confirmExit;
-		});
-		$('#patientfrm').submit(function() {
-			window.onbeforeunload = null;
-		});
-$('input,select').keypress(function() { return event.keyCode != 13; });
-updateNumber('p_m_ins_phone');
-updateNumber2('s_m_ins_phone');
-	});
-  function confirmExit()
-  {
-    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
-  }
-</script>
+<script type="text/javascript" src="/manage/admin/js/view_patient.js"></script>
 <?php
   /*=======================================================
 	TRIGGERING LETTERS
   =======================================================*/
   // Trigger Letter 1 and 2 if New MD was added
   function trigger_letter1and2($pid) {
+    $db = new Db();
+    $con = $GLOBALS['con'];
+
     $letter1id = "1";
     $letter2id = "2";
     $mdcontacts = array();
@@ -47,18 +34,14 @@ updateNumber2('s_m_ins_phone');
     foreach ($mdcontacts as $contact) {
       if ($contact != "Not Set") {
         $letter_query = "SELECT md_list FROM dental_letters WHERE md_list IS NOT NULL AND CONCAT(',', md_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letter1id.",".$letter2id.");";
-        $letter_result = mysql_query($letter_query);
-        $num_rows = mysql_num_rows($letter_result);
-        if(!$letter_result) {
-          print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
-	  die();
-        }
-        if ($num_rows == 0 && $contact != "") {
-	  $c_sql = "select * from dental_contact where contactid='".mysql_real_escape_string($contact)."' and status=1";
-	  $c_q = mysql_query($c_sql);
-	  if(mysql_num_rows($c_q)>0){
-  	    $recipients[] = $contact;
-	  }
+        $letter_result = $db->getRow($letter_query);
+
+        if (empty($letter_result) && !empty($contact)) {
+      	  $c_sql = "select * from dental_contact where contactid='".mysqli_real_escape_string($con,$contact)."' and status=1";
+      	  $c_q = $db->getRow($c_sql);
+	        if(!empty($c_q)) {
+  	        $recipients[] = $contact;
+	        }
         }
       }
     } 
@@ -99,36 +82,41 @@ function trigger_letter3($pid) {
 // Sends registration email to patient
 */
 function sendRegEmail($id, $e, $l, $old_email=''){
-    $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($id)."'";
-    $q = mysql_query($s);
-      $r = mysql_fetch_assoc($q);
+    $db = new Db();
+    $con = $GLOBALS['con'];
+
+    $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$id)."'";
+
+    $r = $db->getRow($s);
 	if($r['recover_hash']=='' || $e!=$old_email){
-                $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
-                $ins_sql = "UPDATE dental_patients set text_num=0, access_type=1, text_date=NOW(), access_code='', registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
-                mysql_query($ins_sql);
+    $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
+    $ins_sql = "UPDATE dental_patients set text_num=0, access_type=1, text_date=NOW(), access_code='', registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
+    
+    $db->query($ins_sql);
 	}else{
 		$ins_sql = "UPDATE dental_patients set access_type=1, registration_senton=NOW(), registration_status=1 WHERE patientid='".$r['patientid']."'";
-                mysql_query($ins_sql);
+    
+    $db->query($ins_sql);
 		$recover_hash = $r['recover_hash'];
 	}
   $usql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
-                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-	where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
-$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($r['patientid'])."'";
-$loc_q = mysql_query($loc_sql);
-$loc_r = mysql_fetch_assoc($loc_q);
+           LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+	         where p.patientid='".mysqli_real_escape_string($con,$r['patientid'])."'";
+  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($con,$r['patientid'])."'";
+  
+  $loc_r = $db->getRow($loc_sql);
 if($loc_r['location'] != '' && $loc_r['location'] != '0'){
   $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
 from dental_users u inner join dental_patients p on u.userid=p.docid 
                 LEFT JOIN dental_locations l ON l.docid = u.userid
-	WHERE l.id='".mysql_real_escape_string($loc_r['location'])."' AND l.docid='".mysql_real_escape_string($r['docid'])."'";
+	WHERE l.id='".mysqli_real_escape_string($con,$loc_r['location'])."' AND l.docid='".mysqli_real_escape_string($con,$r['docid'])."'";
 }else{
   $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
                 LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-        where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+        where p.patientid='".mysqli_real_escape_string($con,$r['patientid'])."'";
 }
-  $uq = mysql_query($location_query);
-  $ur = mysql_fetch_assoc($uq);
+
+  $ur = $db->getRow($location_query);
   $n = $ur['mailing_phone'];
   if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
     $logo = "/manage/q_file/".$ur['logo'];
@@ -222,24 +210,27 @@ $headers = 'From: "Dental Sleep Solutions" <Patient@dentalsleepsolutions.com>' .
 // Sends reminder email to patient
 */
 function sendRemEmail($id, $e){
-    $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($id)."'";
-    $q = mysql_query($s);
-      $r = mysql_fetch_assoc($q);
-$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($r['patientid'])."'";
-$loc_q = mysql_query($loc_sql);
-$loc_r = mysql_fetch_assoc($loc_q);
-if($loc_r['location'] != '' && $loc_r['location'] != '0'){
-  $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
-from dental_users u inner join dental_patients p on u.userid=p.docid 
-                LEFT JOIN dental_locations l ON l.docid = u.userid
-        WHERE l.id='".mysql_real_escape_string($loc_r['location'])."' AND l.docid='".mysql_real_escape_string($r['docid'])."'";
-}else{
-  $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
-                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-        where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
-}
-  $uq = mysql_query($location_query);
-  $ur = mysql_fetch_assoc($uq);
+  $db = new Db();
+  $con = $GLOBALS['con'];
+
+  $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$id)."'";
+  
+  $r = $db->getRow($s);
+  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($con,$r['patientid'])."'";
+  
+  $loc_r = $db->getRow($loc_sql);
+  if($loc_r['location'] != '' && $loc_r['location'] != '0'){
+    $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
+                       from dental_users u inner join dental_patients p on u.userid=p.docid 
+                       LEFT JOIN dental_locations l ON l.docid = u.userid
+                       WHERE l.id='".mysqli_real_escape_string($con,$loc_r['location'])."' AND l.docid='".mysqli_real_escape_string($con,$r['docid'])."'";
+  }else{
+    $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
+                       LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+                       where p.patientid='".mysqli_real_escape_string($con,$r['patientid'])."'";
+  }
+
+  $ur = $db->getRow($location_query);
   $n = $ur['mailing_phone'];
   if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
     $logo = "/manage/q_file/".$ur['logo'];
@@ -291,7 +282,7 @@ $headers = 'From: Dental Sleep Solutions <patient@dentalsleepsolutions.com>' . "
 /*==========================================
   	FORM SUBMISSION
 ==========================================*/
-if($_POST["patientsub"] == 1)
+if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 {
 
 	if($_POST['p_m_eligible_payer']!=''){
@@ -305,9 +296,9 @@ if($_POST["patientsub"] == 1)
 	if($_POST["ed"] != "") //existing patient (update)
 	{
 		$s_sql = "SELECT referred_by, referred_source, email, password, registration_status FROM dental_patients
-			WHERE patientid=".mysql_real_escape_string($_GET['pid']);
-		$s_q = mysql_query($s_sql);
-		$s_r = mysql_fetch_assoc($s_q);
+			WHERE patientid=".mysqli_real_escape_string($con,$_GET['pid']);
+		
+		$s_r = $db->getRow($s_sql);
 		$old_referred_by = $s_r['referred_by'];
 		$old_referred_source = $s_r['referred_source'];
 		if($s_r['registration_status']==2 && $_POST['email'] != $s_r['email']){ //if registered attempt to send update email
@@ -384,7 +375,7 @@ $ed_sql .="
 		p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
 		p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
 		p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
+                p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
 		has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -436,45 +427,47 @@ $ed_sql .="
 		preferredcontact = '".s_for($_POST["preferredcontact"])."'
 		where 
 		patientid='".$_POST["ed"]."'";
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-	        mysql_query("UPDATE dental_patients set email='".mysql_real_escape_string($_POST['email'])."' WHERE parent_patientid='".mysql_real_escape_string($_POST["ed"])."'");	
+		$db->query($ed_sql);
+	  $db->query("UPDATE dental_patients set email='".mysqli_real_escape_string($con,$_POST['email'])."' WHERE parent_patientid='".mysqli_real_escape_string($con,$_POST["ed"])."'");	
 	
 		if(isset($_POST['location'])){
 			$ds_sql = "SELECT * FROM dental_summary where patientid='".$_GET['pid']."';";
-			$ds_q = mysql_query($ds_sql);
-			if(mysql_num_rows($ds_q) > 0){
-			  $loc_query = "UPDATE dental_summary SET location='".mysql_real_escape_string($_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+
+			if($db->getNumberRows($ds_sql) > 0){
+			  $loc_query = "UPDATE dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
 			}else{
-                          $loc_query = "INSERT INTO dental_summary SET location='".mysql_real_escape_string($_POST['location'])."', patientid='".$_GET['pid']."';";
+        $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='".$_GET['pid']."';";
 			}
-			mysql_query($loc_query);
+			$db->query($loc_query);
 		}
 
-		$lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
-		$lq = mysql_query($lsql);
-		$l = mysql_fetch_assoc($lq);
+		$lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$_POST['ed'])."'";
+		
+		$l = $db->getRow($lsql);
 		$login = $l['login'];
 		$pass = $l['password'];
 		if($login == ''){
 	                $clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
 			$clogin = ereg_replace("[^A-Za-z]", "", $clogin);
         	        $csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
-                	$cq = mysql_query($csql);
+                	
+                  $cq = $db->getResults($csql);
 	                $carray = array();
-        	        while($c = mysql_fetch_assoc($cq)){
-                	        array_push($carray, $c['login']);
+        	        if (!empty($cq)) foreach ($cq as $c){
+                    array_push($carray, $c['login']);
                 	}
                 	if(in_array($clogin, $carray)){
-                  	  	$count = 1;
-                  		while(in_array($clogin.$count, $carray)){
-                    			$count++;
+                  	$count = 1;
+                  	
+                    while(in_array($clogin.$count, $carray)){
+                    	$count++;
                  	 	}
-                  		$login = strtolower($clogin.$count);
+                  	$login = strtolower($clogin.$count);
                 	}else{
-                  		$login = strtolower($clogin);
+                  	$login = strtolower($clogin);
                 	}
-			$ilsql = "UPDATE dental_patients set login='".mysql_real_escape_string($login)."'  WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
-			mysql_query($ilsql);
+			$ilsql = "UPDATE dental_patients set login='".mysqli_real_escape_string($con,$login)."'  WHERE patientid='".mysqli_real_escape_string($con,$_POST['ed'])."'";
+			$db->query($ilsql);
 		}
 		if(isset($_POST['sendReg']) && $doc_patient_portal && $_POST['use_patient_portal']){
 		if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
@@ -484,16 +477,16 @@ $ed_sql .="
 		}
 		}
 
-	$s1 = "UPDATE dental_flow_pg2_info SET date_completed = '".date('Y-m-d', strtotime($_POST['copyreqdate']))."' WHERE patientid='".$_POST['ed']."' AND stepid='1';";
-mysql_query($s1);
+  	$s1 = "UPDATE dental_flow_pg2_info SET date_completed = '".date('Y-m-d', strtotime($_POST['copyreqdate']))."' WHERE patientid='".$_POST['ed']."' AND stepid='1';";
+    $db->query($s1);
 	
 		if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
 			if($_POST['referred_by']){
-				$sql = "UPDATE dental_letters SET md_referral_list=".$_POST["referred_by"]." WHERE patientid=".mysql_real_escape_string($_POST['ed'])."";
+				$sql = "UPDATE dental_letters SET md_referral_list=".$_POST["referred_by"]." WHERE patientid=".mysqli_real_escape_string($con,$_POST['ed'])."";
 			}else{
-				$sql = "DELETE FROM dental_letters where patientid=".mysql_real_escape_string($_POST['ed'])." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
+				$sql = "DELETE FROM dental_letters where patientid=".mysqli_real_escape_string($con,$_POST['ed'])." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
 			}
-			mysql_query($sql);
+			$db->query($sql);
 		}
 
 		trigger_letter1and2($_POST['ed']);
@@ -505,7 +498,7 @@ mysql_query($s1);
 		if(isset($_POST['add_ref_but'])) {
 			?>
 			<script type="text/javascript">
-			window.location = "add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>";
+			 window.location = "add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>";
 			</script>
 			<?php
 		}
@@ -536,8 +529,8 @@ mysql_query($s1);
 		}
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			parent.window.location='add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>&msg=<?=$msg;?><?= $sendPin; ?>';
+			//alert("<?php echo $msg;?>");
+			parent.window.location='add_patient.php?ed=<?php echo  $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?php echo  $_GET['pid']; ?>&msg=<?php echo $msg;?><?php echo  $sendPin; ?>';
 		</script>
 		<?
 		die();
@@ -548,9 +541,9 @@ mysql_query($s1);
 		$clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
 		$clogin = ereg_replace("[^A-Za-z]", "", $clogin);
 		$csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
-		$cq = mysql_query($csql);
+		$cq = $db->getResults($csql);
 		$carray = array();
-		while($c = mysql_fetch_assoc($cq)){
+		if (!empty($cq)) foreach ($cq as $c){
 			array_push($carray, $c['login']);
 		}
 		if(in_array($clogin, $carray)){
@@ -581,7 +574,7 @@ mysql_query($s1);
                 preferred_name = '".s_for($_POST["preferred_name"])."',
 		login = '".$login."',
 		salt = '".$salt."',
-		password = '".mysql_real_escape_string($password)."',
+		password = '".mysqli_real_escape_string($con,$password)."',
 		salutation = '".s_for($_POST["salutation"])."',
     member_no = '".s_for($_POST['member_no'])."',
 	  group_no = '".s_for($_POST['group_no'])."',
@@ -627,7 +620,7 @@ mysql_query($s1);
 		p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
 		p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
+                p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
 		has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -687,12 +680,12 @@ mysql_query($s1);
 		adddate=now(),
 		ip_address='".$_SERVER['REMOTE_ADDR']."',
 		preferredcontact='".s_for($_POST["preferredcontact"])."';";
-		mysql_query($ins_sql) or die($ins_sql.mysql_error());
-		$pid = mysql_insert_id();
+
+		$pid = $db->getInsertId($ins_sql);
 		
 		if(isset($_POST['location'])){
-                	$loc_query = "INSERT INTO dental_summary SET location='".mysql_real_escape_string($_POST['location'])."', patientid='".$_GET['pid']."';";
-                	mysql_query($loc_query);
+                	$loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='".$_GET['pid']."';";
+                	$db->query($loc_query);
 		}
 
    		trigger_letter1and2($pid);
@@ -709,11 +702,11 @@ mysql_query($s1);
 		  trigger_letter3($pid);
 		}
       $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`pid`) VALUES (NULL,'".s_for($_POST["copyreqdate"])."','".$pid."');";
-      $flowinsert = mysql_query($flowinsertqry);
-      if(!$flowinsert){
+      $flowinsert = $db->query($flowinsertqry);
+      if(empty($flowinsert)){
         //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting flowsheet record, please try again!1";
       }else{
-        $referred_result = mysql_query($referredbyqry);
+        $referred_result = $db->query($referredbyqry);
         $message = "Successfully updated flowsheet!2";
       }
 
@@ -723,19 +716,16 @@ mysql_query($s1);
       $scheduled = strtotime($copyreqdate);
       $gen_date = date('Y-m-d H:i:s', strtotime($_POST["copyreqdate"]));
       $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$gen_date."');";
-      $flow_pg2_info_insert = mysql_query($flow_pg2_info_query);
-      if (!$flow_pg2_info_insert) {
-        $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact Information to Flowsheet Page 2";
-      }
+      $flow_pg2_info_insert = $db->query($flow_pg2_info_query);
 
-		$sim = similar_patients($pid);
-                        if(count($sim) > 0){
-                ?>
-                <script type="text/javascript">
-                        parent.window.location='duplicate_patients.php?pid=<?= $pid; ?>';
-                </script>
-                <?
-                die();
+		  $sim = similar_patients($pid);
+      if(count($sim) > 0){
+  ?>
+        <script type="text/javascript">
+          parent.window.location='duplicate_patients.php?pid=<?php echo  $pid; ?>';
+        </script>
+  <?
+      die();
 
 		}else{
 		$msg = "Patient ".$_POST["firstname"]." ".$_POST["lastname"]." added Successfully";
@@ -746,8 +736,8 @@ mysql_query($s1);
                 }
 		?>
 		<script type="text/javascript">
-			alert("<?=$msg;?>");
-			parent.window.location='add_patient.php?pid=<?= $pid; ?>&ed=<?=$pid; ?>&addtopat=1<?= $sendPin; ?>';
+			alert("<?php echo $msg;?>");
+			parent.window.location='add_patient.php?pid=<?php echo  $pid; ?>&ed=<?php echo $pid; ?>&addtopat=1<?php echo  $sendPin; ?>';
 		</script>
 		<?
 		die();
@@ -760,9 +750,9 @@ mysql_query($s1);
 
 
     <?
-    $thesql = "select * from dental_patients where patientid='".$_REQUEST["pid"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_patients where patientid='".(!empty($_REQUEST["pid"]) ? $_REQUEST["pid"] : '')."'";
+
+	$themyarray = $db->getRow($thesql);
 	
 	if(isset($msg) && $msg != '')
 	{
@@ -876,9 +866,9 @@ mysql_query($s1);
 	}
 	else
 	{
-$docsql = "SELECT use_patient_portal, username FROM dental_users WHERE userid='".mysql_real_escape_string($themyarray['docid'])."'";
-$docq = mysql_query($docsql);
-$docr = mysql_fetch_assoc($docq);
+$docsql = "SELECT use_patient_portal, username FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$themyarray['docid'])."'";
+
+$docr = $db->getRow($docsql);
 $doc_patient_portal = $docr['use_patient_portal'];
 $doc_username = $docr['username'];
 		$firstname = st($themyarray['firstname']);
@@ -975,8 +965,8 @@ $doc_username = $docr['username'];
 		  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docsleep;
-                  $dq = mysql_query($dsql);
-                  $d = mysql_fetch_assoc($dq);
+
+                  $d = $db->getRow($dsql);
                   $docsleep_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docsleep_name = "";
@@ -987,8 +977,7 @@ $doc_username = $docr['username'];
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docpcp;
-                  $dq = mysql_query($dsql);
-                  $d = mysql_fetch_assoc($dq);
+                  $d = $db->getRow($dsql);
                   $docpcp_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docpcp_name = "";
@@ -999,8 +988,8 @@ $doc_username = $docr['username'];
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docdentist;
-                  $dq = mysql_query($dsql);
-                  $d = mysql_fetch_assoc($dq);
+
+                  $d = $db->getRow($dsql);
                   $docdentist_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docdentist_name = "";
@@ -1011,8 +1000,8 @@ $doc_username = $docr['username'];
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docent;
-                  $dq = mysql_query($dsql);
-                  $d = mysql_fetch_assoc($dq);
+
+                  $d = $db->getRow($dsql);
                   $docent_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docent_name = "";
@@ -1023,8 +1012,8 @@ $doc_username = $docr['username'];
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
 				LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
 			WHERE contactid=".$docmdother;
-                  $dq = mysql_query($dsql);
-                  $d = mysql_fetch_assoc($dq);
+
+                  $d = $db->getRow($dsql);
                   $docmdother_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docmdother_name = "";
@@ -1035,8 +1024,7 @@ $doc_username = $docr['username'];
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docmdother2;
-                  $dq = mysql_query($dsql);
-                  $d = mysql_fetch_assoc($dq);
+                  $d = $db->getRow($dsql);
                   $docmdother2_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docmdother2_name = "";
@@ -1047,8 +1035,8 @@ $doc_username = $docr['username'];
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docmdother3;
-                  $dq = mysql_query($dsql);
-                  $d = mysql_fetch_assoc($dq);
+                  
+                  $d = $db->getRow($dsql);
                   $docmdother3_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docmdother3_name = "";
@@ -1064,15 +1052,15 @@ $doc_username = $docr['username'];
 		$referred_notes = st($themyarray["referred_notes"]);
 		if($referred_source==DSS_REFERRED_PATIENT){
 		  $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referred_by;
-		  $rq = mysql_query($rsql);
-		  $r = mysql_fetch_assoc($rq);
+		  
+		  $r = $db->getRow($rsql);
 		  $referred_name = $r['lastname'].", ".$r['firstname'] . " - Patient";
 		}elseif($referred_source==DSS_REFERRED_PHYSICIAN){
                   $rsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
 			LEFT JOIN dental_contacttype dct on dc.contacttypeid=dct.contacttypeid
 			WHERE contactid=".$referred_by;
-                  $rq = mysql_query($rsql);
-                  $r = mysql_fetch_assoc($rq);
+
+                  $r = $db->getRow($rsql);
                   $referred_name = $r['lastname'].", ".$r['firstname'];
 		  if($r['contacttype'] != ''){
     			$referred_name .= " - " . $r['contacttype'];
@@ -1084,9 +1072,9 @@ $doc_username = $docr['username'];
 		$referred_notes = st($themyarray["referred_notes"]);
 		$name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 
-		$loc_sql = "SELECT location from dental_summary WHERE patientid='".$_GET['pid']."';";
-		$loc_q = mysql_query($loc_sql);
-		$loc_r = mysql_fetch_assoc($loc_q);
+		$loc_sql = "SELECT location from dental_summary WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
+
+		$loc_r = $db->getRow($loc_sql);
 		$location = $loc_r['location'];
 		
 		$but_text = "Add ";
@@ -1109,204 +1097,31 @@ $doc_username = $docr['username'];
   if (!empty($email)) {
 		$patientemail = true;
 	}
-	if (($patientemail || $patientphone) && !empty($add1) && !empty($city) && !empty($state) && !empty($zip) && !empty($dob) && !empty($gender)) {
+	if ((!empty($patientemail) || !empty($patientphone)) && !empty($add1) && !empty($city) && !empty($state) && !empty($zip) && !empty($dob) && !empty($gender)) {
 		$complete_info = 1;
 	}
 	// Determine Whether Patient Info has been set
-	update_patient_summary($_GET['ed'], 'patient_info', $complete_info);
+	update_patient_summary((!empty($_GET['ed']) ? $_GET['ed'] : ''), 'patient_info', $complete_info);
 
 	?>
 	
-<?php if ($msg != '') { ?>
+<?php if (!empty($msg)) { ?>
 <div class="alert alert-success text-center">
-    <?= $msg ?>
+    <?php echo  $msg ?>
 </div>
-<?php } ?>
-
-<script type="text/javascript">
-var clickedBut;
-$(document).ready(function() {
-$('#patientfrm :submit').click(function() { 
-clickedBut = $(this).attr("name");  
-}); 
-});
-function validate_add_patient(fa){
-if(clickedBut == "sendPin"){
-    return  pinabc(fa);
-}
-p = patientabc(fa);
-var valid = true;
-                                  $.ajax({
-                                        url: "includes/check_email.php",
-                                        type: "post",
-                                        data: {email: fa.email.value<?= (isset($_GET['pid']))?", id: ".$_GET['pid']:''; ?>},
-                                        async: false,
-                                        success: function(data){
-						var r = $.parseJSON(data);
-                                                if(r.error){
-                                                  alert("Error: The email address you entered is already associated with another patient. Please enter a different email address.");
-						  valid = false; 
-                                                }
-                                        },
-                                        failure: function(data){
-                                                //alert('fail');
-                                        }
-                                  });
-if(!valid){ return false; }
-var sendEmail = false;
-var emailConfirm = false;
-                                  $.ajax({
-                                        url: "includes/check_send.php",
-                                        type: "post",
-                                        data: {email: fa.email.value<?= (isset($_GET['pid']))?", id: ".$_GET['pid']:''; ?>},
-                                        async: false,
-                                        success: function(data){
-                                                var r = $.parseJSON(data);
-                                                if(r.success){                                                          
-							emailConfirm = true;
-							c = confirm("You have changed the patient's email address. The patient must be notified via email or he/she will not be able to access the Patient Portal. Send email notification and proceed?");
-                                                        if(!c){ sendEmail = true; }
-                                                }
-                                        },
-                                        failure: function(data){
-                                                //alert('fail');
-                                        }
-                                  });
-if(sendEmail){ return false; }
-if(clickedBut == "sendReg" && !emailConfirm){
-    if(!regabc(fa)){ return false; }
-}else if(clickedBut == "sendRem" && !emailConfirm){
-    if(!remabc(fa)){ return false; }
-}
-if(p){
-  if(document.getElementById('s_m_dss_file_yes').checked){
-    i2 = validateDate('ins2_dob');
-  }else{
-    i2 = true;
-  }
-  if(document.getElementById('p_m_dss_file_yes').checked){
-    i = validateDate('ins_dob');
-  }else{
-    i = true;
-  }
-  /*d = validateDate('dob');*/
-}
-if(p){
-  result = true;
-  if( /*d &&*/ i && i2 && clickedBut != "sendReg" && clickedBut != "sendRem"){
-		var result = true;
-		info = required_info(fa);
-		if (info.length == 0) {
-			result = true;
-		} else {
-			m = 'Warning! Patient info is incomplete. Software functionality will be disabled for this patient until all required fields are entered. Are you sure you want to continue?\n\n';
-			m += "Missing fields:";
-			for(i=0;i<info.length;i++){
-			  m += "\n"+info[i];
-			}
-			result = confirm(m);
-		}
-	if(!result){
-    		return result;
-	}
-  }
-
-                if(trim(fa.p_m_partyfname.value) != "" || 
-			trim(fa.p_m_partylname.value) != "" ||
-                	trim(fa.p_m_relation.value) != "" ||
-                	trim(fa.ins_dob.value) != "" ||
-                	trim(fa.p_m_ins_co.value) != "" ||
-                	trim(fa.p_m_party.value) != "" ||
-                	trim(fa.p_m_ins_grp.value) != "" ||
-                	trim(fa.p_m_ins_plan.value) != "" ||
-                	trim(fa.p_m_ins_type.value) != "Select Type"){ 
-
-if(document.getElementById('p_m_dss_file_yes').checked || document.getElementById('p_m_dss_file_no').checked){
-  //ok
-}else{
-  if($('#p_m_relation').val()!='' ||
-	$('#p_m_partyfname').val()!='' ||
-        $('#p_m_partymname').val()!='' ||
-        $('#p_m_partylname').val()!='' ||
-        $('#ins_dob').val()!='' ||
-        $('#p_m_ins_co').val()!='' ||
-        $('#p_m_party').val()!='' ||
-        $('#p_m_ins_grp').val()!='' ||
-        $('#p_m_ins_plan').val()!='' ||
-        $('#p_m_ins_type').val()!=''){
-
-  alert('Is DSS filing insurance?  Please select Yes or No.');
-  return false;
-  }
-}
-
-}
-if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementById('p_m_dss_file_yes').checked){
-  alert('DSS must file Primary Insurance in order to file Secondary Insurance.');
-  return false;
-}
-
-if($('#s_m_ins_type').val() == 1){
-  alert("Warning! It is very rare that Medicare is listed as a patient’s Secondary Insurance.  Please verify that Medicare is the secondary payer for this patient before proceeding.");
-  return false;
-}
-
-return result;
-
-//workaround for settimeout being called in conditionals even if not true
-var err = '';
-if(!d){
-  err = "dob" 
-}else if(!i){
-  err = "ins_dob"
-}else if(!i2){
-  err = "ins2_dob"
-}
-if(err != ''){
-el = document.getElementById(err);
-setTimeout("el.focus()", 0);
-}
-}
-return false;
-
-}
-
-</script>
-
-<?php
+<?php }
 
 /*$notifications = find_patient_notifications($_GET['pid']);
 foreach($notifications AS $not){
 ?>
-<div id="not_<?= $not['id']; ?>" class="warning <?= $not['notification_type']; ?>">
-<span><?= $not['notification']; ?> <?= ($not['notification_date'])?"- ".date('m/d/Y h:i a', strtotime($not['notification_date'])):''; ?></span>
-<a href="#" class="close_but" onclick="remove_notification('<?= $not['id']; ?>');return false;">X</a>
+<div id="not_<?php echo  $not['id']; ?>" class="warning <?php echo  $not['notification_type']; ?>">
+<span><?php echo  $not['notification']; ?> <?php echo  ($not['notification_date'])?"- ".date('m/d/Y h:i a', strtotime($not['notification_date'])):''; ?></span>
+<a href="#" class="close_but" onclick="remove_notification('<?php echo  $not['id']; ?>');return false;">X</a>
 </div>
 <?php
 }
 */
-?>
-<script type="text/javascript">
-function remove_notification(id){
-  $.ajax({
-    url: 'includes/notifications_remove.php',
-    type: 'post',
-    data: 'id='+id,
-    success: function( data ) {
-        var r = $.parseJSON(data);
-        if(r.success){
-           $('#not_'+id).hide('slow');
-        }else{
-		//alert('Error');
-        }
-    }
-  });
-
-
-}
-</script>
-<?php
-        if(isset($_GET['search']) && $_GET['search'] != ''){
+  if(isset($_GET['search']) && $_GET['search'] != ''){
 	  if(strpos($_GET['search'], ' ')){
             $firstname = ucfirst(substr($_GET['search'], 0, strpos($_GET['search'], ' ')));
             $lastname = ucfirst(substr($_GET['search'], strpos($_GET['search'],' ')+1));
@@ -1316,16 +1131,14 @@ function remove_notification(id){
         }
 
 ?>
-    <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
-
-    
+    <form name="patientfrm" id="patientfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
    
 <?php include 'includes/patient_nav.php'; ?> 
     
     <table class="table table-bordered table-hover">
 	<tr>
               <td >
-            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION - <?= $firstname." ".$lastname; ?> - <?= $doc_username; ?></font>
+            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION - <?php echo  $firstname." ".$lastname; ?> - <?php echo  $doc_username; ?></font>
               </td>
 
 		<td  align="right">
@@ -1337,18 +1150,18 @@ function remove_notification(id){
                     <li id="foli8" class="complex">	
 <div id="profile_image" style="float:right; width:270px;">
 <?php
-                                $pid = $_GET['pid'];
+                                $pid = (!empty($_GET['pid']) ? $_GET['pid'] : '');
   $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-  $itype_my = mysql_query($itype_sql);
-$num_face = mysql_num_rows($itype_my);
+  $itype_my = $db->getResults($itype_sql);
+$num_face = count($itype_my);
 ?>
 <span style="float:right">
-<?php if($num_face==0){ ?>
-        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
+<?php if($num_face == 0){ ?>
+        <a href="#" onclick="loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
 		<img src="images/add_patient_photo.png" />
         </a>
 <?php }else{ 
-  while($image = mysql_fetch_array($itype_my)){
+  foreach ($itype_my as $image){
    echo "<img src='/manage/admin/display_file.php?type=image&f=".$image['image_file']."' style='max-height:150px;max-width:200px;' style='float:right;' />";
   }
 
@@ -1371,39 +1184,39 @@ $num_face = mysql_num_rows($itype_my);
                                 <label for="salutation">Salutation</label>
                             </span>
                             <span>
-                                <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?=$firstname?>" maxlength="255" style="width:150px;" />
+                                <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?php echo $firstname?>" maxlength="255" style="width:150px;" />
                                 <label for="firstname">First Name</label>
                             </span>
                             <span>
-                                <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?=$lastname?>" maxlength="255" style="width:190px;" />
+                                <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?php echo $lastname?>" maxlength="255" style="width:190px;" />
                                 <label for="lastname">Last Name</label>
                             </span>
                             <span>
-                                <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?=$middlename?>" style="width:30px;" maxlength="1" />
+                                <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?php echo $middlename?>" style="width:30px;" maxlength="1" />
                                 <label for="middlename">MI</label>
                             </span>
                             <span>
-                                <input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="<?=$preferred_name?>" maxlength="255" style="width:150px" />
+                                <input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="<?php echo $preferred_name?>" maxlength="255" style="width:150px" />
                                 <label for="preferred_name">Preferred Name</label>
                             </span>
                        </div>   
 		        <div style="float:left">
                             <span>
-                                <input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:100px;" />
+                                <input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?php echo $home_phone?>"  maxlength="255" style="width:100px;" />
                                 <label for="home_phone">Home Phone
                                                                                                                                 <span id="req_0" class="req">*</span>
                                                                                                                                 </label>
                             </span>
                             <span>
-                                <input id="cell_phone" name="cell_phone" type="text" class="phonemask field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:100px;" />
+                                <input id="cell_phone" name="cell_phone" type="text" class="phonemask field text addr tbox" value="<?php echo $cell_phone?>"  maxlength="255" style="width:100px;" />
                                 <label for="cell_phone">Cell Phone</label>
                             </span>
                             <span>
-                                <input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:150px;" />
+                                <input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="<?php echo $work_phone?>" maxlength="255" style="width:150px;" />
                                 <label for="work_phone">Work Phone</label>
                             </span>
                             <span>
-                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:275px;" />
+                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?php echo $email?>"  maxlength="255" style="width:275px;" />
                                 <label for="email">Email/Pt. Portal Login</label>
 
                             </span>
@@ -1413,25 +1226,25 @@ $num_face = mysql_num_rows($itype_my);
 			    <span style="width:140px;">
 				<select id="best_time" name="best_time">
 					<option value="">Please Select</option>
-					<option value="morning" <?= ($best_time=='morning')?'selected="selected"':''; ?>>Morning</option>
-                                        <option value="midday" <?= ($best_time=='midday')?'selected="selected"':''; ?>>Mid-Day</option>
-                                        <option value="evening" <?= ($best_time=='evening')?'selected="selected"':''; ?>>Evening</option>
+					<option value="morning" <?php echo  ($best_time=='morning')?'selected="selected"':''; ?>>Morning</option>
+                                        <option value="midday" <?php echo  ($best_time=='midday')?'selected="selected"':''; ?>>Mid-Day</option>
+                                        <option value="evening" <?php echo  ($best_time=='evening')?'selected="selected"':''; ?>>Evening</option>
 				</select>
 				<label for="best_time">Best time to contact</label>
 			    </span>
 			    <span style="width:150px;">
                                 <select id="best_number" name="best_number">
                                         <option value="">Please Select</option>
-                                        <option value="home" <?= ($best_number=='home')?'selected="selected"':''; ?>>Home Phone</option>
-                                        <option value="work" <?= ($best_number=='work')?'selected="selected"':''; ?>>Work Phone</option>
-                                        <option value="cell" <?= ($best_number=='cell')?'selected="selected"':''; ?>>Cell Phone</option>
+                                        <option value="home" <?php echo  ($best_number=='home')?'selected="selected"':''; ?>>Home Phone</option>
+                                        <option value="work" <?php echo  ($best_number=='work')?'selected="selected"':''; ?>>Work Phone</option>
+                                        <option value="cell" <?php echo  ($best_number=='cell')?'selected="selected"':''; ?>>Cell Phone</option>
                                 </select>
                                 <label for="best_number">Best number to contact</label>
 			    </span>
 			    <span style="width:160px;">
                 <select id="preferredcontact" name="preferredcontact" >
-                        <option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
-                        <option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
+                        <option value="paper" <?php if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
+                        <option value="email" <?php if($preferredcontact == 'email') echo " selected";?>>Email</option>
                 </select>
 				<label>Preferred Contact Method</label>
 			    </span>
@@ -1457,7 +1270,7 @@ $num_face = mysql_num_rows($itype_my);
                                 </span>
 <br />
 <?php if($themyarray['registration_status']==1){
- ?>PIN Code: <?= $themyarray['access_code']; ?> 
+ ?>PIN Code: <?php echo  $themyarray['access_code']; ?> 
 <?php } ?>
             </div>            </div>
                     </li>
@@ -1478,7 +1291,7 @@ $num_face = mysql_num_rows($itype_my);
                                 
                             </span>
                             <span>
-                                <textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" <?php if($premedcheck == 0){ echo "disabled";} ?>><?=$premeddet;?></textarea>
+                                <textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" <?php if($premedcheck == 0){ echo "disabled";} ?>><?php echo $premeddet;?></textarea>
                             </span>
                           
                        </div>   
@@ -1496,37 +1309,37 @@ $num_face = mysql_num_rows($itype_my);
                         </label>
                         <div>
                             <span>
-                                <input id="add1" name="add1" type="text" class="field text addr tbox" value="<?=$add1?>" style="width:225px;"  maxlength="255"/>
+                                <input id="add1" name="add1" type="text" class="field text addr tbox" value="<?php echo $add1?>" style="width:225px;"  maxlength="255"/>
                                 <label for="add1">Address1</label>
                             </span>
                             <span>
-                                <input id="add2" name="add2" type="text" class="field text addr tbox" value="<?=$add2?>" style="width:175px;" maxlength="255" />
+                                <input id="add2" name="add2" type="text" class="field text addr tbox" value="<?php echo $add2?>" style="width:175px;" maxlength="255" />
                                 <label for="add2">Address2</label>
                             </span>
                             <span>
-                                <input id="city" name="city" type="text" class="field text addr tbox" value="<?=$city?>" style="width:200px;" maxlength="255" />
+                                <input id="city" name="city" type="text" class="field text addr tbox" value="<?php echo $city?>" style="width:200px;" maxlength="255" />
                                 <label for="city">City</label>
                             </span>
                             <span>
-                                <input id="state" name="state" type="text" class="field text addr tbox" value="<?=$state?>" style="width:25px;" maxlength="2" />
+                                <input id="state" name="state" type="text" class="field text addr tbox" value="<?php echo $state?>" style="width:25px;" maxlength="2" />
                                 <label for="state">State</label>
                             </span>
                             <span>
-                                <input id="zip" name="zip" type="text" class="field text addr tbox" value="<?=$zip?>" style="width:80px;" maxlength="255" />
+                                <input id="zip" name="zip" type="text" class="field text addr tbox" value="<?php echo $zip?>" style="width:80px;" maxlength="255" />
                                 <label for="zip">Zip / Post Code </label>
                             </span>
 				<?php
-				$loc_sql = "SELECT * FROM dental_locations WHERE docid='".$docid."'";
-                		$loc_q = mysql_query($loc_sql);
-				$num_loc = mysql_num_rows($loc_q);
+				$loc_sql = "SELECT * FROM dental_locations WHERE docid='".(!empty($docid) ? $docid : '')."'";
+                		$loc_q = $db->getResults($loc_sql);
+				$num_loc = count($loc_q);
 				if($num_loc > 1){
 				?>
 			    <span>
 				<select name="location">
                         		<option value="">Select</option>
         			<?php
-                		while($loc_r = mysql_fetch_assoc($loc_q)){
-                        		?><option <?= ($location==$loc_r['id'] || ($loc_r['default_location'] == 1 && !isset($_GET['pid'])))?'selected="selected"':''; ?>value="<?= $loc_r['id']; ?>"><?= $loc_r['location']; ?></option><?php
+                		foreach ($loc_q as $loc_r){
+                        		?><option <?php echo  ($location==$loc_r['id'] || ($loc_r['default_location'] == 1 && !isset($_GET['pid'])))?'selected="selected"':''; ?>value="<?php echo  $loc_r['id']; ?>"><?php echo  $loc_r['location']; ?></option><?php
                 		}
         			?>
                 		</select>
@@ -1544,51 +1357,29 @@ $num_face = mysql_num_rows($itype_my);
             		<li id="foli8" class="complex">	
                         <div>
                             <span>
-                                <input id="dob" name="dob" type="text" class="field text addr tbox calendar" value="<?=$dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+                                <input id="dob" name="dob" type="text" class="field text addr tbox calendar" value="<?php echo $dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
                                 <label for="dob">Birthday</label>
                             </span>
                             <span>
                             	<select name="gender" id="gender" class="field text addr tbox" style="width:100px;" >
                                 	<option value="">Select</option>
-                                    <option value="Male" <? if($gender == 'Male') echo " selected";?>>Male</option>
-                                    <option value="Female" <? if($gender == 'Female') echo " selected";?>>Female</option>
+                                    <option value="Male" <?php if($gender == 'Male') echo " selected";?>>Male</option>
+                                    <option value="Female" <?php if($gender == 'Female') echo " selected";?>>Female</option>
                                 </select><span id="req_0" class="req">*</span>
                                 <label for="gender">Gender</label>
                             </span>
                             <span style="width:150px">
-                                <input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="<?=$ssn?>"  maxlength="255" style="width:100px;" />
+                                <input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="<?php echo $ssn?>"  maxlength="255" style="width:100px;" />
                                 <label for="ssn">Social Security No.</label>
                             </span>
-                <script type="text/javascript">
-                                function cal_bmi()
-                                {
-                                        fa = document.patientfrm;
-                                        if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0)
-                                        {
-                                                var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
-                                                //alert(inc);
-                                                
-                                                var inc_sqr = parseInt(inc) * parseInt(inc);
-                                                var wei = parseInt(fa.weight.value) * 703;
-                                                var bmi = parseInt(wei) / parseInt(inc_sqr);
-                                                
-                                                //alert("BMI " + bmi.toFixed(2));
-                                                fa.bmi.value = bmi.toFixed(1);
-                                        }
-                                        else
-                                        {
-                                                fa.bmi.value = '';
-                                        }
-                                }
-                        </script>
 
 <span>
                             <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
                                 <option value="0">Feet</option>
-                                <? for($i=1;$i<9;$i++)
+                                <?php for($i=1;$i<9;$i++)
                                                                 {
                                                                 ?>
-                                                                        <option value="<?=$i?>" <? if($feet == $i) echo " selected";?>><?=$i?></option>
+                                                                        <option value="<?php echo $i?>" <?php if($feet == $i) echo " selected";?>><?php echo $i?></option>
                                                                 <?
                                                                 }?>
                             </select>
@@ -1601,10 +1392,10 @@ $num_face = mysql_num_rows($itype_my);
                         <span>
                             <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
                                 <option value="-1">Inches</option>
-                                <? for($i=0;$i<12;$i++)
+                                <?php for($i=0;$i<12;$i++)
                                                                 {
                                                                 ?>
-                                                                        <option value="<?=$i?>" <? if($inches!='' && $inches == $i) echo " selected";?>><?=$i?></option>
+                                                                        <option value="<?php echo $i?>" <?php if($inches!='' && $inches == $i) echo " selected";?>><?php echo $i?></option>
                                                                 <?
                                                                 }?>
                             </select>
@@ -1617,10 +1408,10 @@ $num_face = mysql_num_rows($itype_my);
                         <span>
                             <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
                                 <option value="0">Weight</option>
-                                <? for($i=80;$i<=500;$i++)
+                                <?php for($i=80;$i<=500;$i++)
                                                                 {
                                                                 ?>
-                                                                        <option value="<?=$i?>" <? if($weight == $i) echo " selected";?>><?=$i?></option>
+                                                                        <option value="<?php echo $i?>" <?php if($weight == $i) echo " selected";?>><?php echo $i?></option>
                                                                 <?
                                                                 }?>
                             </select>
@@ -1633,7 +1424,7 @@ $num_face = mysql_num_rows($itype_my);
 
                         <span>
                                 <span style="color:#000000; padding-top:2px;">BMI</span>
-                                <input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?=$bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
+                                <input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?php echo $bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
                         </span>
                         <span>
                                 <label for="inches">
@@ -1661,15 +1452,15 @@ $num_face = mysql_num_rows($itype_my);
                             <span>
                                 <select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" >
                                         <option value="">Select</option>
-                                    <option value="Married" <? if($marital_status == 'Married') echo " selected";?>>Married</option>
-                                    <option value="Single" <? if($marital_status == 'Single') echo " selected";?>>Single</option>
-                                                                        <option value="Life Partner" <? if($marital_status == 'Life Partner') echo " selected";?>>Life Partner</option>
-                                    <option value="Minor" <? if($marital_status == 'Minor') echo " selected";?>>Minor</option>
+                                    <option value="Married" <?php if($marital_status == 'Married') echo " selected";?>>Married</option>
+                                    <option value="Single" <?php if($marital_status == 'Single') echo " selected";?>>Single</option>
+                                                                        <option value="Life Partner" <?php if($marital_status == 'Life Partner') echo " selected";?>>Life Partner</option>
+                                    <option value="Minor" <?php if($marital_status == 'Minor') echo " selected";?>>Minor</option>
                                 </select>
                                 <label for="marital_status">Marital Status</label>
                             </span>
                                                         <span>
-                                <input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="<?=$partner_name?>"  maxlength="255" />
+                                <input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="<?php echo $partner_name?>"  maxlength="255" />
                                 <label for="partner_name">Partner/Guardian Name</label>
                             </span>
                         </div>
@@ -1684,7 +1475,7 @@ $num_face = mysql_num_rows($itype_my);
                         </label>-->
 			  <div>
                             <span>
-                            	<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?=$patient_notes;?></textarea>
+                            	<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?php echo $patient_notes;?></textarea>
                                 <label for="patient_notes">Patient Notes</label>
                             </span>
                         </div>
@@ -1701,15 +1492,15 @@ $num_face = mysql_num_rows($itype_my);
                         </label>
                         <div>
                             <span>
-                                <input id="emergency_name" name="emergency_name" type="text" class="field text addr tbox" value="<?=$emergency_name?>" maxlength="255" style="width:200px;" />
+                                <input id="emergency_name" name="emergency_name" type="text" class="field text addr tbox" value="<?php echo $emergency_name?>" maxlength="255" style="width:200px;" />
                                 <label for="home_phone">Name</label>
                             </span>
                             <span>
-                                <input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="<?=$emergency_relationship?>" maxlength="255" style="width:150px;" />
+                                <input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="<?php echo $emergency_relationship?>" maxlength="255" style="width:150px;" />
                                 <label for="home_phone">Relationship</label>
                             </span>
                             <span>
-                                <input id="emergency_number" name="emergency_number" type="text" class="extphonemask field text addr tbox" value="<?=$emergency_number?>" maxlength="255" style="width:150px;" />
+                                <input id="emergency_number" name="emergency_number" type="text" class="extphonemask field text addr tbox" value="<?php echo $emergency_number?>" maxlength="255" style="width:150px;" />
                                 <label for="emergency_number">Number</label>
                             </span>
 						</div>
@@ -1741,47 +1532,31 @@ $num_face = mysql_num_rows($itype_my);
 </style>
 				<div style="float:left;" id="referred_source_div">
 				
-				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person
-				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?= DSS_REFERRED_MEDIA; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_MEDIA]; ?>
-                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_FRANCHISE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?>
-                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_DSSOFFICE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?>
-                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_OTHER; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
+				<input name="referred_source_r" <?php echo  ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person
+				<input name="referred_source_r" <?php echo  ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?php echo  DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?php echo  DSS_REFERRED_MEDIA; ?>)" /> <?php echo  $dss_referred_labels[DSS_REFERRED_MEDIA]; ?>
+                                <input name="referred_source_r" <?php echo  ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?php echo  DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?php echo  DSS_REFERRED_FRANCHISE; ?>)" /> <?php echo  $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?>
+                                <input name="referred_source_r" <?php echo  ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?php echo  DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?php echo  DSS_REFERRED_DSSOFFICE; ?>)" /> <?php echo  $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?>
+                                <input name="referred_source_r" <?php echo  ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?php echo  DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?php echo  DSS_REFERRED_OTHER; ?>)" /> <?php echo  $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
 
 				</div>
-<script type="text/javascript">
-function show_referredby(t, rs){
-	if(t=='person'){
-                document.getElementById('referred_notes').style.display="none";
-                document.getElementById('referred_person').style.display="block";
-	}else{
-                document.getElementById('referred_notes').style.display="block";
-		document.getElementById('referred_person').style.display="none";
-	}
-                $('#referred_source').val(rs);
-}
-</script>
 				<div style="clear:both;float:left;">
-					<div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;margin-left:100px;"':'style="margin-left:100px"'; ?>>	
-					<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?= ($referred_name!='')?$referred_name:'Type referral name'; ?>" style="width:300px;" />
+					<div id="referred_person" <?php echo  ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;margin-left:100px;"':'style="margin-left:100px"'; ?>>	
+					<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?php echo  (!empty($referred_name))?$referred_name:'Type referral name'; ?>" style="width:300px;" />
 <br />
         <div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
                 <ul id="referredby_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
                 </ul>
         </div>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php', 'referrer', '<?= $_GET['pid']; ?>');
-});
-</script>
-					</div>
-					<div id="referred_notes" <?= ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;margin-left:200px;"':'style="margin-left:200px;"'; ?>>
-						<textarea name="referred_notes" style="width:300px;"><?= $referred_notes; ?></textarea> 	
-					</div>
-<input type="hidden" name="referred_by" id="referred_by" value="<?=$referred_by;?>" />
-<input type="hidden" name="referred_source" id="referred_source" value="<?=$referred_source;?>" />
 
-                               <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
+					</div>
+					<div id="referred_notes" <?php echo  ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;margin-left:200px;"':'style="margin-left:200px;"'; ?>>
+						<textarea name="referred_notes" style="width:300px;"><?php echo  $referred_notes; ?></textarea> 	
+					</div>
+<input type="hidden" name="referred_by" id="referred_by" value="<?php echo $referred_by;?>" />
+<input type="hidden" name="referred_source" id="referred_source" value="<?php echo $referred_source;?>" />
+
+                               <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?php echo $referred_by?>" maxlength="255" style="width:300px;" /> -->
                             </div>
                     </li>
 				</ul>
@@ -1807,34 +1582,34 @@ $(document).ready(function(){
                                 <label for="add1">Employer</label>
                             </span>
                                                         <span>
-                                <input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="<?=$emp_phone?>"  style="width:150px;" maxlength="255" />
+                                <input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="<?php echo $emp_phone?>"  style="width:150px;" maxlength="255" />
                                 <label for="state">&nbsp;&nbsp;Phone</label>
                             </span>
                                                         <span>
-                                <input id="emp_fax" name="emp_fax" type="text" class="phonemask field text addr tbox" value="<?=$emp_fax?>"  style="width:120px;" maxlength="255" />
+                                <input id="emp_fax" name="emp_fax" type="text" class="phonemask field text addr tbox" value="<?php echo $emp_fax?>"  style="width:120px;" maxlength="255" />
                                 <label for="state">Fax</label>
                             </span>
 
                         </div>
                         <div>
                             <span>
-                                <input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?=$emp_add1?>" style="width:225px;"  maxlength="255"/>
+                                <input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?php echo $emp_add1?>" style="width:225px;"  maxlength="255"/>
                                 <label for="add1">Address1</label>
                             </span>
                             <span>
-                                <input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?=$emp_add2?>" style="width:175px;" maxlength="255" />
+                                <input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?php echo $emp_add2?>" style="width:175px;" maxlength="255" />
                                 <label for="add2">Address2</label>
                             </span>
                             <span>
-                                <input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="<?=$emp_city?>" style="width:200px;" maxlength="255" />
+                                <input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="<?php echo $emp_city?>" style="width:200px;" maxlength="255" />
                                 <label for="city">City</label>
                             </span>
                             <span>
-                                <input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?=$emp_state?>"  style="width:80px;" maxlength="255" />
+                                <input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?php echo $emp_state?>"  style="width:80px;" maxlength="255" />
                                 <label for="state">State</label>
                             </span>
                             <span>
-                                <input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="<?=$emp_zip?>" style="width:80px;" maxlength="255" />
+                                <input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="<?php echo $emp_zip?>" style="width:80px;" maxlength="255" />
                                 <label for="zip">Zip Code </label>
                             </span>
                         </div>
@@ -1858,27 +1633,22 @@ $(document).ready(function(){
 	  </tr>
 <?php
   $api_sql = "SELECT use_eligible_api FROM dental_users
-                WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-  $api_q = mysql_query($api_sql);
-  $api_r = mysql_fetch_assoc($api_q);
+                WHERE userid='".mysqli_real_escape_string($con,(!empty($_SESSION['docid']) ? $_SESSION['docid'] : ''))."'";
+
+  $api_r = $db->getRow($api_sql);
   if($api_r['use_eligible_api']==1){
 ?>
 	                <tr>
                 <td valign="top" colspan="2" class="frmhead">
 		Insurance Co.
-                                        <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
+                                        <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?php echo  ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
 <br />
         <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
                 <ul id="ins_payer_list" class="search_list">
                         <li class="template" style="display:none"></li>
                 </ul>
         </div>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'list_ins_payers.php', 'ins_payer');
-});
-</script>
-<input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />
+<input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?php echo $p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />
 		</td></tr>	
 <?php } ?>
 		<tr> 
@@ -1886,36 +1656,36 @@ $(document).ready(function(){
             	<ul>
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
-                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="p_m_dss_file_yes" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="p_m_dss_file_yes" type="radio" name="p_m_dss_file" value="1" <?php if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" name="p_m_dss_file" value="2" <?php if($p_m_dss_file == '2') echo "checked='checked'";?>>No
                         </label>
                         <div>
                             <span>
                                                                 <select id="p_m_relation" name="p_m_relation" class="field text addr tbox" style="width:200px;">
-                                                                        <option value="" <? if($p_m_relation == '') echo " selected";?>>None</option>
-                                                                        <option value="Self" <? if($p_m_relation == 'Self') echo " selected";?>>Self</option>
-                                                                        <option value="Spouse" <? if($p_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
-                                                                        <option value="Child" <? if($p_m_relation == 'Child') echo " selected";?>>Child</option>
-                                                                        <option value="Other" <? if($p_m_relation == 'Other') echo " selected";?>>Other</option>
+                                                                        <option value="" <?php if($p_m_relation == '') echo " selected";?>>None</option>
+                                                                        <option value="Self" <?php if($p_m_relation == 'Self') echo " selected";?>>Self</option>
+                                                                        <option value="Spouse" <?php if($p_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
+                                                                        <option value="Child" <?php if($p_m_relation == 'Child') echo " selected";?>>Child</option>
+                                                                        <option value="Other" <?php if($p_m_relation == 'Other') echo " selected";?>>Other</option>
                                                                 </select>
                                 <label for="work_phone">Relationship to insured party</label>
                             </span>
 
                             <span>
-                                <input id="p_m_partyfname" name="p_m_partyfname" type="text" class="field text addr tbox" value="<?=$p_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="p_m_partymname" name="p_m_partymname" type="text" class="field text addr tbox" value="<?=$p_m_partymname?>" maxlength="255" style="width:50px;" /><input id="p_m_partylname" name="p_m_partylname" type="text" class="field text addr tbox" value="<?=$p_m_partylname?>" maxlength="255" style="width:150px;" />
+                                <input id="p_m_partyfname" name="p_m_partyfname" type="text" class="field text addr tbox" value="<?php echo $p_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="p_m_partymname" name="p_m_partymname" type="text" class="field text addr tbox" value="<?php echo $p_m_partymname?>" maxlength="255" style="width:50px;" /><input id="p_m_partylname" name="p_m_partylname" type="text" class="field text addr tbox" value="<?php echo $p_m_partylname?>" maxlength="255" style="width:150px;" />
                                 <label for="p_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
                             </span>
                             <span>
-                                <input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox calendar" value="<?=$ins_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins_dob');" />
+                                <input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox calendar" value="<?php echo $ins_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins_dob');" />
                                 <label for="ins_dob">Insured Date of Birth</label>
                             </span>
 			    <span>
 <?php
   $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-  $itype_my = mysql_query($itype_sql);
-$num_face = mysql_num_rows($itype_my);
-if($num_face == 0){ ?>
+  $itype_my = $db->getRow($itype_sql);
+
+if(empty($itype_my)){ ?>
 <?php }else{
-$image = mysql_fetch_assoc($itype_my);
+$image = $itype_my;
  ?>
 
 <?php } ?>
@@ -1962,29 +1732,22 @@ $image = mysql_fetch_assoc($itype_my);
                         <div>
                             <span>
                                 <select id="p_m_ins_co" name="p_m_ins_co" class="field text addr tbox" maxlength="255" onchange="updateNumber('p_m_ins_phone');" style="width:200px;" />
-																	<option value="">Select Insurance Company</option>
-<script type="text/javascript">
-                                function updateNumber(f){
-                                   var selectBox = document.getElementById("p_m_ins_co");
-    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-                                   document.getElementById(f).innerHTML = insurance_nums[selectedValue];
-                                }
-                                insurance_nums = [];
-                            <?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
-                            $ins_contact_qry_run = mysql_query($ins_contact_qry);
-                            while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
-                            ?>
-                                document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($p_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>');
-                                
-                                <?php } ?>
-				</script>
+																	  <option value="">Select Insurance Company</option>
+                                    <?php
+                                      $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".(!empty($_SESSION['docid']) ? $_SESSION['docid'] : '')."'";
+                                      $ins_contact_qry_run = $db->getResults($ins_contact_qry);
+                                      if (!empty($ins_contact_qry_run)) foreach ($ins_contact_qry_run as $ins_contact_res){
+                                    ?>
+                                      <script type="text/javascript">
+                                        document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($p_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>');
+                                      </script>
+                                    <?php } ?>
                                 </select>
                                 <label for="p_m_ins_co">Insurance Co.</label><br />
 																<!--<input class="btn btn-primary" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />-->
                             </span>
                             <span>
-								 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p_m_ins_id?>" maxlength="255" style="width:190px;" />
+								 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?php echo $p_m_ins_id?>" maxlength="255" style="width:190px;" />
                                 <label for="home_phone">Insurance ID.</label>
                             </span>
                             <span>
@@ -1992,7 +1755,7 @@ $image = mysql_fetch_assoc($itype_my);
 					<?php if($p_m_ins_type == '1'){?>
 					  value="NONE" readonly="readonly"
 					<?php }else{ ?>
-					  value="<?=$p_m_ins_grp?>" 
+					  value="<?php echo $p_m_ins_grp?>" 
 					<?php } ?>
 					maxlength="255" style="width:100px;" />
                                 <label for="home_phone">Group #</label>
@@ -2003,7 +1766,7 @@ $image = mysql_fetch_assoc($itype_my);
                                         <?php if($p_m_ins_type == '1'){?>
                                           value="" readonly="readonly"
                                         <?php }else{ ?>
-					  value="<?=$p_m_ins_plan?>" 
+					  value="<?php echo $p_m_ins_plan?>" 
 					<?php } ?>
 					maxlength="255" style="width:200px;" />
                                 <label for="home_phone">Plan Name</label>
@@ -2045,50 +1808,41 @@ $image = mysql_fetch_assoc($itype_my);
                         <div style="height:40px;display:block;">
                             <span>
 				<label style="display:inline;">Does patient have secondary insurance?</label>
-                                <input type="radio" value="Yes" <?= ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-                                <input type="radio" value="No" <?= ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); clearInfo();" /> No
+                                <input type="radio" value="Yes" <?php echo  ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
+                                <input type="radio" value="No" <?php echo  ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); clearInfo();" /> No
                             </span>
                         </div>
 
-		<script type="text/javascript">
-			function clearInfo(){
-				$('.s_m_ins_div input[type="text"]').val('');
-				$('.s_m_ins_div select option[value=]').attr('selected', 'selected');
-				$('.s_m_ins_div input[type="radio"]').removeAttr("checked");
-			}
-
-		</script>
-                    	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
-                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="s_m_dss_file_yes" type="radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
+                    	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?php echo  ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="s_m_dss_file_yes" type="radio" name="s_m_dss_file" value="1" <?php if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" name="s_m_dss_file" value="2" <?php if($s_m_dss_file == '2') echo "checked='checked'";?>>No
                         </label>
-                        <div class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                        <div class="s_m_ins_div" <?php echo  ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>
                                                                 <select id="s_m_relation" name="s_m_relation" class="field text addr tbox" style="width:200px;">
-                                                                        <option value="" <? if($s_m_relation == '') echo " selected";?>>None</option>
-                                                                        <option value="Self" <? if($s_m_relation == 'Self') echo " selected";?>>Self</option>
-                                                                        <option value="Spouse" <? if($s_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
-                                                                        <option value="Child" <? if($s_m_relation == 'Child') echo " selected";?>>Child</option>
-                                                                        <option value="Other" <? if($s_m_relation == 'Other') echo " selected";?>>Other</option>
+                                                                        <option value="" <?php if($s_m_relation == '') echo " selected";?>>None</option>
+                                                                        <option value="Self" <?php if($s_m_relation == 'Self') echo " selected";?>>Self</option>
+                                                                        <option value="Spouse" <?php if($s_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
+                                                                        <option value="Child" <?php if($s_m_relation == 'Child') echo " selected";?>>Child</option>
+                                                                        <option value="Other" <?php if($s_m_relation == 'Other') echo " selected";?>>Other</option>
                                                                 </select>
                                 <label for="work_phone">Relationship to insured party</label>
                             </span>
                             <span>
-                                <input id="s_m_partyfname" name="s_m_partyfname" type="text" class="field text addr tbox" value="<?=$s_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="s_m_partymname" name="s_m_partymname" type="text" class="field text addr tbox" value="<?=$s_m_partymname?>" maxlength="255" style="width:50px;" /><input id="s_m_partylname" name="s_m_partylname" type="text" class="field text addr tbox" value="<?=$s_m_partylname?>" maxlength="255" style="width:150px;" />
+                                <input id="s_m_partyfname" name="s_m_partyfname" type="text" class="field text addr tbox" value="<?php echo $s_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="s_m_partymname" name="s_m_partymname" type="text" class="field text addr tbox" value="<?php echo $s_m_partymname?>" maxlength="255" style="width:50px;" /><input id="s_m_partylname" name="s_m_partylname" type="text" class="field text addr tbox" value="<?php echo $s_m_partylname?>" maxlength="255" style="width:150px;" />
                                 <label for="s_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
                             </span>
                             <span>
-                                <input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox calendar" value="<?=$ins2_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins2_dob');" />
+                                <input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox calendar" value="<?php echo $ins2_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins2_dob');" />
                                 <label for="ins2_dob">Insured Date of Birth</label>
                             </span>
 			    <span>
 <?php
   $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-  $itype_my = mysql_query($itype_sql);
-$num_face = mysql_num_rows($itype_my);
-if($num_face == 0){ ?>
+  $itype_my = $db->getRow($itype_sql);
+if(empty($itype_my)){ ?>
 
 <?php }else{
-$image = mysql_fetch_assoc($itype_my);
+$image = $itype_my;
  ?>
 
 <?php } ?>
@@ -2103,7 +1857,7 @@ $image = mysql_fetch_assoc($itype_my);
                 <ul>
                         <li id="foli8" class="complex">
 
-                        <div  class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                        <div  class="s_m_ins_div" <?php echo  ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>
                                 <select id="s_m_ins_type" name="s_m_ins_type" onchange="checkMedicare()" class="field text addr tbox" maxlength="255" style="width:200px;" />
                                      <option value="">Select Type</option>
@@ -2132,56 +1886,50 @@ $image = mysql_fetch_assoc($itype_my);
 
             	<ul>
             		<li id="foli8" class="complex">	
-                        <div class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
-                            <span>
-                             <select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" onchange="updateNumber2('s_m_ins_phone')" />
-															<option value="">Select Insurance Company</option>
-<script type="text/javascript">
-                                function updateNumber2(f){
-                                   var selectBox = document.getElementById("s_m_ins_co");
-    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-                                   document.getElementById(f).innerHTML = insurance_nums[selectedValue];
-                                }
-                                insurance_nums = []; 
-                            <?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
-                            $ins_contact_qry_run = mysql_query($ins_contact_qry);
-                            while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
-                            ?>
-					insurance_nums[<?= $ins_contact_res['contactid']; ?>] = "<?= $ins_contact_res['add1']; ?>\n<?= $ins_contact_res['add2']; ?><?= ($ins_contact_res['add2'])?'\n':''; ?><?= $ins_contact_res['city']; ?> <?= $ins_contact_res['state']; ?> <?= $ins_contact_res['zip']; ?>\n<?= $ins_contact_res['phone1']; ?>"
-                                document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($s_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>');
-                                
-                                <?php } ?>
-				</script>
-                                </select>
-                                <label for="s_m_ins_co">Insurance Co.</label><br />
-                            </span>
-
-                            <span>
-								 <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$s_m_ins_id?>" maxlength="255" style="width:190px;" />
-                                <label for="s_m_ins_id">Insurance ID.</label>
-                            </span>
-                            <span>
-                                 <input id="s_m_ins_grp" name="s_m_ins_grp" type="text" class="field text addr tbox" value="<?=$s_m_ins_grp?>" maxlength="255" style="width:100px;" />
-                                <label for="s_m_ins_grp">Group #</label>
-                            </span>
-                            
-                            <span>
-                                 <input id="s_m_ins_plan" name="s_m_ins_plan" type="text" class="field text addr tbox" value="<?=$s_m_ins_plan?>" maxlength="255" style="width:200px;" />
-                                <label for="s_m_ins_plan">Plan Name</label>
-                            </span>
-<span>
-                                                                 <textarea id="s_m_ins_phone" name="s_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" style="width:190px;height:60px;background:#ccc;"></textarea>
-                                <label for="s_m_ins_phone">Address</label>
-                            </span>
-						</div>
-						<div>
-                            
-						</div>
-                    </li>
-				</ul>
+                  <div class="s_m_ins_div" <?php echo  ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                      <span>
+                       <select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" onchange="updateNumber2('s_m_ins_phone')" />
+												  <option value="">Select Insurance Company</option>
+                          <script type="text/javascript">
+                            var insurance_nums = [];
+                          </script>
+                          <?php
+                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".(!empty($_SESSION['docid']) ? $_SESSION['docid'] : '')."'";
+                            $ins_contact_qry_run = $db->getResults($ins_contact_qry);
+                            if (!empty($ins_contact_qry_run)) foreach ($ins_contact_qry_run as $ins_contact_res){
+                          ?>
+                            <script type="text/javascript">
+		                          insurance_nums[<?php echo  $ins_contact_res['contactid']; ?>] = "<?php echo  $ins_contact_res['add1']; ?>\n<?php echo  $ins_contact_res['add2']; ?><?php echo  ($ins_contact_res['add2'])?'\n':''; ?><?php echo  $ins_contact_res['city']; ?> <?php echo  $ins_contact_res['state']; ?> <?php echo  $ins_contact_res['zip']; ?>\n<?php echo  $ins_contact_res['phone1']; ?>"
+                              document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($s_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>');
+                            </script>
+                          <?php } ?>
+                       </select>
+                       <label for="s_m_ins_co">Insurance Co.</label><br />
+                      </span>
+                      <span>
+					                <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?php echo $s_m_ins_id?>" maxlength="255" style="width:190px;" />
+                          <label for="s_m_ins_id">Insurance ID.</label>
+                      </span>
+                      <span>
+                           <input id="s_m_ins_grp" name="s_m_ins_grp" type="text" class="field text addr tbox" value="<?php echo $s_m_ins_grp?>" maxlength="255" style="width:100px;" />
+                          <label for="s_m_ins_grp">Group #</label>
+                      </span>
+                      
+                      <span>
+                          <input id="s_m_ins_plan" name="s_m_ins_plan" type="text" class="field text addr tbox" value="<?php echo $s_m_ins_plan?>" maxlength="255" style="width:200px;" />
+                          <label for="s_m_ins_plan">Plan Name</label>
+                      </span>
+                      <span>
+                          <textarea id="s_m_ins_phone" name="s_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" style="width:190px;height:60px;background:#ccc;"></textarea>
+                          <label for="s_m_ins_phone">Address</label>
+                      </span>
+			            </div>
+			            <div>          
+			            </div>
+                </li>
+				      </ul>
             </td>
-        </tr>
+          </tr>
         
         
         
@@ -2245,22 +1993,17 @@ $image = mysql_fetch_assoc($itype_my);
                        <ul>
                         <li  id="foli8" class="complex">
                          <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
-					<div id="docpcp_static_info" style="<?= ($docpcp!='')?'':'display:none'; ?>"><span id="docpcp_name_static" style="width:300px;"><?= $docpcp_name; ?></span>
+					<div id="docpcp_static_info" style="<?php echo  ($docpcp!='')?'':'display:none'; ?>"><span id="docpcp_name_static" style="width:300px;"><?php echo  $docpcp_name; ?></span>
 					</div>
-                                        <input type="text" id="docpcp_name" style="width:300px;<?= ($docpcp!='')?'display:none;':'';?>" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?= ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
+              <input type="text" id="docpcp_name" style="width:300px;<?php echo  ($docpcp!='')?'display:none;':'';?>" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?php echo  ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
 <br />        <div id="docpcp_hints" class="search_hints" style="display:none;">
                 <ul id="docpcp_list" class="search_list">
-                        <li class="template" style="display:none">Doe, John S</li>
+                  <li class="template" style="display:none">Doe, John S</li>
                 </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('docpcp_name', 'docpcp_hints', 'docpcp', '', 'list_contacts.php');
-});
-</script>
-                                        </div>
-<input type="hidden" name="docpcp" id="docpcp" value="<?=$docpcp;?>" />
-                         </li>
-                         </ul>
+              </div>
+              <input type="hidden" name="docpcp" id="docpcp" value="<?php echo $docpcp;?>" />
+            </li>
+          </ul>
 
                          </td>
                          </tr>
@@ -2275,21 +2018,16 @@ $(document).ready(function(){
                        <ul>
                         <li  id="foli8" class="complex">
                          <label style="display: block; float: left; width: 110px;">ENT</label>
-                                       <div id="docent_static_info" style="<?= ($docent!='')?'':'display:none'; ?>"><span id="docent_name_static" style="width:300px;"><?= $docent_name; ?></span>
+                                       <div id="docent_static_info" style="<?php echo  ($docent!='')?'':'display:none'; ?>"><span id="docent_name_static" style="width:300px;"><?php echo  $docent_name; ?></span>
                                         </div>
 
-                                        <input type="text" id="docent_name" style="width:300px;<?= ($docent!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?= ($docent!='')?$docent_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docent_name" style="width:300px;<?php echo  ($docent!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?php echo  ($docent!='')?$docent_name:'Type contact name'; ?>" />
 <br />        <div id="docent_hints" class="search_hints" style="display:none;">
                 <ul id="docent_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
                 </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('docent_name', 'docent_hints', 'docent', '', 'list_contacts.php');
-});
-</script>
-                                        </div>
-<input type="hidden" name="docent" id="docent" value="<?=$docent;?>" />
+              </div>
+              <input type="hidden" name="docent" id="docent" value="<?php echo $docent;?>" />
 
                          </li>
                          </ul>
@@ -2305,22 +2043,17 @@ $(document).ready(function(){
             <ul>
 		        <li  id="foli8" class="complex">
 		        <label style="display: block; float: left; width: 110px;">Sleep MD</label>
-                                       <div id="docsleep_static_info" style="<?= ($docsleep!='')?'':'display:none'; ?>"><span id="docsleep_name_static" style="width:300px;"><?= $docsleep_name; ?></span>
+                                       <div id="docsleep_static_info" style="<?php echo  ($docsleep!='')?'':'display:none'; ?>"><span id="docsleep_name_static" style="width:300px;"><?php echo  $docsleep_name; ?></span>
                                         </div>
 
 
-                                        <input type="text" id="docsleep_name" style="width:300px;<?= ($docsleep!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docsleep_name" value="<?= ($docsleep!='')?$docsleep_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docsleep_name" style="width:300px;<?php echo  ($docsleep!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docsleep_name" value="<?php echo  ($docsleep!='')?$docsleep_name:'Type contact name'; ?>" />
 <br />        <div id="docsleep_hints" class="search_hints" style="display:none;">
                 <ul id="docsleep_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
                 </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('docsleep_name', 'docsleep_hints', 'docsleep', '', 'list_contacts.php', 'contact', '<?= $_GET['pid']; ?>');
-});
-</script>
-                                        </div>
-<input type="hidden" name="docsleep" id="docsleep" value="<?=$docsleep;?>" />
+              </div>
+              <input type="hidden" name="docsleep" id="docsleep" value="<?php echo $docsleep;?>" />
 		         </li>
 		         </ul>
 		          </td>
@@ -2340,20 +2073,15 @@ $(document).ready(function(){
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Dentist</label>
-                                       <div id="docdentist_static_info" style="<?= ($docdentist!='')?'':'display:none'; ?>"><span id="docdentist_name_static" style="width:300px;"><?= $docdentist_name; ?></span>
+                                       <div id="docdentist_static_info" style="<?php echo  ($docdentist!='')?'':'display:none'; ?>"><span id="docdentist_name_static" style="width:300px;"><?php echo  $docdentist_name; ?></span>
 
-                                        <input type="text" id="docdentist_name" style="width:300px;<?= ($docdentist!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="<?= ($docdentist!='')?$docdentist_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docdentist_name" style="width:300px;<?php echo  ($docdentist!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="<?php echo  ($docdentist!='')?$docdentist_name:'Type contact name'; ?>" />
 <br />        <div id="docdentist_hints" class="search_hints" style="display:none;">
                 <ul id="docdentist_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
                 </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('docdentist_name', 'docdentist_hints', 'docdentist', '', 'list_contacts.php', 'contact', '<?= $_GET['pid']; ?>');
-});
-</script>
-                                        </div>
-<input type="hidden" name="docdentist" id="docdentist" value="<?=$docdentist;?>" />
+              </div>
+              <input type="hidden" name="docdentist" id="docdentist" value="<?php echo $docdentist;?>" />
 
 		         </li>
 		         </ul>
@@ -2384,73 +2112,41 @@ $(document).ready(function(){
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Other MD</label>
-                                       <div id="docmdother_static_info" style="<?= ($docmdother!='')?'':'display:none;'; ?>height:25px;"><span id="docmdother_name_static" style="width:300px;"><?= $docmdother_name; ?></span>
+                                       <div id="docmdother_static_info" style="<?php echo  ($docmdother!='')?'':'display:none;'; ?>height:25px;"><span id="docmdother_name_static" style="width:300px;"><?php echo  $docmdother_name; ?></span>
 
-                                        <input type="text" id="docmdother_name" style="width:300px;<?= ($docmdother!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="<?= ($docmdother!='')?$docmdother_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docmdother_name" style="width:300px;<?php echo  ($docmdother!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="<?php echo  ($docmdother!='')?$docmdother_name:'Type contact name'; ?>" />
 			<?php if($docmdother2=='' || $docmdother3==''){ ?>
 			<?php } ?>
 <br />        <div id="docmdother_hints" class="search_hints" style="display:none;">
                 <ul id="docmdother_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
                 </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('docmdother_name', 'docmdother_hints', 'docmdother', '', 'list_contacts.php', 'contact', '<?= $_GET['pid']; ?>');
-});
-</script>
-                                        </div>
-<input type="hidden" name="docmdother" id="docmdother" value="<?=$docmdother;?>" />
+              </div>
+<input type="hidden" name="docmdother" id="docmdother" value="<?php echo $docmdother;?>" />
 
 		         </li>
 		         </ul>
 		          
 		         </td>
-		         </tr>
-		         
-<script type="text/javascript">
-
-  function add_md(){		      
-    if($('#docmdother2_tr').css('display') == 'none'){
-      $('#docmdother2_tr').css('display', 'table-row');
-    }else if($('#docmdother3_tr').css('display') == 'none'){
-      $('#docmdother3_tr').css('display', 'table-row');
-    }    
-
-    if($('#docmdother2_tr').css('display') != 'none' && $('#docmdother3_tr').css('display') != 'none'){
-	$('#add_new_md').hide();
-    }
-
-  }
-
-  function cancel_md(md){
-    $('#'+md).val('');
-    $('#'+md+'_name').val('');
-    $('#'+md+'_tr').hide();
-  }
-</script>		        
+		         </tr>  
 		
-                         <tr height="35" id="docmdother2_tr" <?= ($docmdother2=='')?'style="display:none;"':''; ?>>
+                         <tr height="35" id="docmdother2_tr" <?php echo  ($docmdother2=='')?'style="display:none;"':''; ?>>
 
                        <td>
 
                        <ul>
                         <li  id="foli8" class="complex">
                          <label style="display: block; float: left; width: 110px;">Other MD 2</label>
-                                       <div id="docmdother2_static_info" style="<?= ($docmdother2!='')?'':'display:none'; ?>"><span id="docmdother2_name_static" style="width:300px;"><?= $docmdother2_name; ?></span>
+                                       <div id="docmdother2_static_info" style="<?php echo  ($docmdother2!='')?'':'display:none'; ?>"><span id="docmdother2_name_static" style="width:300px;"><?php echo  $docmdother2_name; ?></span>
                                         </div>
 
-                                        <input type="text" id="docmdother2_name" style="width:300px;<?= ($docmdother2!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="<?= ($docmdother2!='')?$docmdother2_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docmdother2_name" style="width:300px;<?php echo  ($docmdother2!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="<?php echo  ($docmdother2!='')?$docmdother2_name:'Type contact name'; ?>" />
 <br />        <div id="docmdother2_hints" class="search_hints" style="display:none;">
                 <ul id="docmdother2_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
                 </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('docmdother2_name', 'docmdother2_hints', 'docmdother2', '', 'list_contacts.php', 'contact', '<?= $_GET['pid']; ?>');
-});
-</script>
-                                        </div>
-<input type="hidden" name="docmdother2" id="docmdother2" value="<?=$docmdother2;?>" />
+              </div>
+<input type="hidden" name="docmdother2" id="docmdother2" value="<?php echo $docmdother2;?>" />
 
                          </li>
                          </ul>
@@ -2461,28 +2157,23 @@ $(document).ready(function(){
 		        
 
 
-                         <tr height="35" id="docmdother3_tr" <?= ($docmdother3=='')?'style="display:none;"':''; ?>>
+                         <tr height="35" id="docmdother3_tr" <?php echo  ($docmdother3=='')?'style="display:none;"':''; ?>>
 
                        <td>
 
                        <ul>
                         <li  id="foli8" class="complex">
                          <label style="display: block; float: left; width: 110px;">Other MD 3</label>
-                                      <div id="docmdother3_static_info" style="<?= ($docmdother3!='')?'':'display:none'; ?>"><span id="docmdother3_name_static" style="width:300px;"><?= $docmdother3_name; ?></span>
+                                      <div id="docmdother3_static_info" style="<?php echo  ($docmdother3!='')?'':'display:none'; ?>"><span id="docmdother3_name_static" style="width:300px;"><?php echo  $docmdother3_name; ?></span>
                                         </div>
-                                        <input type="text" id="docmdother3_name" style="width:300px;<?= ($docmdother3!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother3_name" value="<?= ($docmdother3!='')?$docmdother3_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docmdother3_name" style="width:300px;<?php echo  ($docmdother3!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother3_name" value="<?php echo  ($docmdother3!='')?$docmdother3_name:'Type contact name'; ?>" />
 
 <br />        <div id="docmdother3_hints" class="search_hints" style="display:none;">
                 <ul id="docmdother3_list" class="search_list">
-                        <li class="template" style="display:none">Doe, John S</li>
+                  <li class="template" style="display:none">Doe, John S</li>
                 </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('docmdother3_name', 'docmdother3_hints', 'docmdother3', '', 'list_contacts.php', 'contact', '<?= $_GET['pid']; ?>');
-});
-</script>
-                                        </div>
-<input type="hidden" name="docmdother3" id="docmdother3" value="<?=$docmdother3;?>" />
+              </div>
+<input type="hidden" name="docmdother3" id="docmdother3" value="<?php echo $docmdother3;?>" />
 
                          </li>
                          </ul>
@@ -2523,32 +2214,24 @@ $(document).ready(function(){
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" id="status" class="tbox" onchange="updatePPAlert()";>
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>
         </tr>
-<script type="text/javascript">
-function updatePPAlert(){
-  if($('#status').val()==2){
-	$('#ppAlert').show();
-  }else{
-	$('#ppAlert').hide();
-  }
-}
-</script>
+
 <?php if($doc_patient_portal){ ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Portal Status
 		<br />
-		<span id="ppAlert" style="font-weight:normal;font-size:12px; <?= ($status == 2)?'':'display:none;'; ?>">Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
+		<span id="ppAlert" style="font-weight:normal;font-size:12px; <?php echo  ($status == 2)?'':'display:none;'; ?>">Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
             </td>
             <td valign="top" class="frmdata">
                 <select name="use_patient_portal" class="tbox" >
-                        <option value="1" <? if($use_patient_portal == 1) echo " selected";?>>Active</option>
-                        <option value="0" <? if($use_patient_portal!='' && $use_patient_portal == 0) echo " selected";?>>In-Active</option>
+                        <option value="1" <?php if($use_patient_portal == 1) echo " selected";?>>Active</option>
+                        <option value="0" <?php if($use_patient_portal!='' && $use_patient_portal == 0) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>
@@ -2558,13 +2241,13 @@ function updatePPAlert(){
        <td valign="top">
 				<?php
 					$sql = "SELECT generated_date FROM dental_letters WHERE templateid = '3' AND deleted = '0' AND patientid = '". $_GET['pid'] ."' ORDER BY generated_date ASC LIMIT 1;";
-					$result = mysql_query($sql);
-					if (mysql_num_rows($result) == 0) {
+					$result = $db->getRow($sql);
+					if (empty($result)) {
 				?>
          <input id="introletter" name="introletter" type="checkbox" value="1"> Send Intro Letter to DSS patient
 				<?php
 					} else {
-						$date_generated = mysql_result($result, 0);
+						$date_generated = $result['generated_date'];
 						print "DSS Intro Letter Sent to Patient $date_generated";
 					}
 				?>
@@ -2576,7 +2259,7 @@ function updatePPAlert(){
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="patientsub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["patientid"]?>" />
+                <input type="hidden" name="ed" value="<?php echo $themyarray["patientid"]?>" />
             </td>
         </tr>
 

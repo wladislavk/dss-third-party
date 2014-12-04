@@ -1,7 +1,7 @@
 <?php  
 include "includes/top.htm";
-require_once('../includes/constants.inc');
-require_once "includes/general.htm";
+include_once('../includes/constants.inc');
+include_once "includes/general.htm";
 
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 $pid = (isset($_GET['pid']))?$_GET['pid']:'';
@@ -9,20 +9,20 @@ $iid = (isset($_GET['iid']))?$_GET['iid']:'';
 
 if($fid!=''){
   $account_sql = "SELECT * FROM dental_users where userid='".$fid."'";
-  $account_q = mysqli_query($con,$account_sql);
-  $account_r = mysqli_fetch_assoc($account_q);
+
+  $account_r = $db->getRow($account_sql);
   $account_name = $account_r['last_name'].', '.$account_r['first_name'];
 }
 if($pid!=''){
   $account_sql = "SELECT * FROM dental_patients where patientid='".$pid."'";
-  $account_q = mysqli_query($con,$account_sql);
-  $account_r = mysqli_fetch_assoc($account_q);
+
+  $account_r = $db->getRow($account_sql);
   $patient_name = $account_r['lastname'].', '.$account_r['firstname'];
 }
 if($iid!=''){
   $account_sql = "SELECT * FROM dental_contact where contactid='".$iid."'";
-  $account_q = mysqli_query($con,$account_sql);
-  $account_r = mysqli_fetch_assoc($account_q);
+
+  $account_r = $db->getRow($account_sql);
   $insurance_name = $account_r['company'];
 }
 
@@ -51,8 +51,7 @@ function insert_preauth_row($patient_id) {
        . "WHERE " 
        . "  p.patientid = $patient_id";
   
-  $my = mysqli_query($con,$sql);
-  $my_array = mysqli_fetch_array($my);
+  $my_array = $db->getRow($sql);
   
   $sql = "INSERT INTO dental_insurance_preauth ("
        . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
@@ -89,10 +88,10 @@ function insert_preauth_row($patient_id) {
        . "  '" . date('Y-m-d H:i:s') . "', "
        . DSS_PREAUTH_PENDING
        . ")";
-  $my = mysqli_query($con,$sql);
+  $my = $db->query($sql);
 }
 
-if ($_REQUEST['gen_preauth'] == 1) {
+if (!empty($_REQUEST['gen_preauth']) && $_REQUEST['gen_preauth'] == 1) {
   insert_preauth_row($_REQUEST['patient_id']);
 }
 
@@ -104,7 +103,7 @@ define('SORT_BY_USER', 4);
 define('SORT_BY_INSURANCE', 5);
 define('SORT_BY_BC', 6);
 define('SORT_BY_EDIT', 7);
-$sort_dir = strtolower($_REQUEST['sort_dir']);
+$sort_dir = strtolower(!empty($_REQUEST['sort_dir']) ? $_REQUEST['sort_dir'] : '');
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
 $sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
@@ -139,10 +138,10 @@ switch ($sort_by) {
 
 $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
 
-if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
+if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_insurance_preauth where id='".$_REQUEST["delid"]."'";
-	mysqli_query($con,$del_sql);
+	$db->query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -156,7 +155,7 @@ if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -244,12 +243,12 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid))
 }
 
 $sql .= "ORDER BY " . $sort_by_sql;
-$my = mysqli_query($con,$sql) or die(mysql_error());
-$total_rec = mysql_num_rows($my);
+
+$total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con,$sql) or die(mysql_error());
+$my = $db->getResults($sql);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -259,7 +258,7 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 	Manage Verification of Benefits
 </div>
 <div align="center" class="red">
-	<b><?php  echo $_GET['msg'];?></b>
+	<b><?php  echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <div style="width:98%;margin:auto;">
@@ -281,11 +280,7 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
                 <ul id="account_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
                 </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('account_name', 'account_hints', 'fid', '', 'list_accounts.php', 'contact', '<?php echo  $_GET['pid']; ?>');
-});
-</script>
+<script type="text/javascript" src="/manage/admin/js/manage_vobs.js"></script>
                                         </div>
 <input type="hidden" name="fid" id="fid" value="<?php echo $fid;?>" />
 
@@ -358,7 +353,7 @@ $(document).ready(function(){
 	</TR>
 	<?php  }?>
 	<?php     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
-             . "&status=" . $_REQUEST['status'] . "&sort_by=%s&sort_dir=%s";
+             . "&status=" . (!empty($_REQUEST['status']) ? $_REQUEST['status'] : '') . "&sort_by=%s&sort_dir=%s";
     ?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
@@ -390,7 +385,7 @@ $(document).ready(function(){
 			Action
 		</td>
 	</tr>
-	<?php  if(mysql_num_rows($my) == 0)
+	<?php  if(count($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="6" align="center">
@@ -401,7 +396,7 @@ $(document).ready(function(){
 	}
 	else
 	{
-		while($myarray = mysqli_fetch_array($my))
+		foreach ($my as $myarray)
 		{
 		?>
 			<tr class="<?php echo  (isset($tr_class))?$tr_class:'';?>">

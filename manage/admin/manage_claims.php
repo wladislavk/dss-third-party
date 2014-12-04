@@ -323,7 +323,7 @@ AND
 $sql .= " 
 ORDER BY " . $sort_by_sql;
 $my = mysqli_query($con,$sql) or die(mysql_error());
-$total_rec = mysql_num_rows($my);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
@@ -398,15 +398,15 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 <?php } ?>
 
 <?php if(isset($_GET['closedby']) && $_GET['closedby']==1){ ?>
-<a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?php echo $_GET['status'];?>&fid=<?php echo $_GET['fid'];?>&pid=<?php echo $_GET['pid'];?>&sort_by=<?php echo  $_GET['sort_by']; ?>&sort_dir=<?php echo $_GET['sort_dir']; ?>" class="btn btn-primary"> Show All Claims </a>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?php echo (!empty($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary"> Show All Claims </a>
 <?php }else{ ?>
-<a style="float:right;margin-right:3px;"  href="manage_claims.php?closedby=1&status=<?php echo $_GET['status'];?>&fid=<?php echo $_GET['fid'];?>&pid=<?php echo $_GET['pid'];?>&sort_by=<?php echo  $_GET['sort_by']; ?>&sort_dir=<?php echo $_GET['sort_dir']; ?>" class="btn btn-primary" title="Show only claims closed by frontoffice (not backoffice) user."> Frontoffice Closed </a>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?closedby=1&status=<?php echo (!empty($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary" title="Show only claims closed by frontoffice (not backoffice) user."> Frontoffice Closed </a>
 <?php } ?>
 
 <?php if(isset($_GET['notes']) && $_GET['notes']==1){ ?>
-<a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?php echo $_GET['status'];?>&fid=<?php echo $_GET['fid'];?>&pid=<?php echo $_GET['pid'];?>&sort_by=<?php echo  $_GET['sort_by']; ?>&sort_dir=<?php echo $_GET['sort_dir']; ?>" class="btn btn-primary"> Show All Claims </a>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?php echo (!empty($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary"> Show All Claims </a>
 <?php }else{ ?>
-<a style="float:right;margin-right:3px;"  href="manage_claims.php?notes=1&status=<?php echo $_GET['status'];?>&fid=<?php echo $_GET['fid'];?>&pid=<?php echo $_GET['pid'];?>&sort_by=<?php echo  $_GET['sort_by']; ?>&sort_dir=<?php echo $_GET['sort_dir']; ?>" class="btn btn-primary" title="Show only claims that have notes"> Show Claim w Notes </a>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?notes=1&status=<?php echo (!empty($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary" title="Show only claims that have notes"> Show Claim w Notes </a>
 <?php } ?>
 <div style="clear:both;"></div>
 </div>
@@ -418,7 +418,7 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?php 
-				 paging($no_pages,$index_val,"status=".$_GET['status']."&notes=".$_GET['notes']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
+				 paging($no_pages,$index_val,"status=".$_GET['status']."&notes=".(!empty($_GET['notes']) ? $_GET['notes'] : '')."&fid=".(!empty($_GET['fid']) ? $_GET['fid'] : '')."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : '')."&sort_by=".(!empty($_GET['sort_by']) ? $_GET['sort_by'] : '')."&sort_dir=".(!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''));
 			?>
 		</TD>
 	</TR>
@@ -458,7 +458,7 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 			Mailed
 		</td>
 	</tr>
-	<?php  if(mysql_num_rows($my) == 0)
+	<?php  if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="7" align="center">
@@ -551,7 +551,7 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 <?php if($myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysqli_real_escape_string($con,$myarray['insuranceid'])."'";
             $sq = mysqli_query($con,$s);
-            if(mysql_num_rows($sq)>0){
+            if(mysqli_num_rows($sq)>0){
             $file = mysqli_fetch_assoc($sq);
             ?>
 	   <br />
@@ -563,7 +563,7 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 	 <?php           }elseif($myarray['status'] == DSS_CLAIM_SEC_DISPUTE || $myarray['status'] == DSS_CLAIM_SEC_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysqli_real_escape_string($con,$myarray['insuranceid'])."'";
             $sq = mysqli_query($con,$s);
-            if(mysql_num_rows($sq)>0){
+            if(mysqli_num_rows($sq)>0){
             $file = mysqli_fetch_assoc($sq);
             ?>
 	   <br />

@@ -4,6 +4,7 @@
 
   <script src="eligible_check/js/eligible.js"></script>
   <script src="eligible_check/js/sample_1.js"></script>
+  <script type="text/javascript" src="/manage/admin/js/eligible_check.js"></script>
 
 <div  style="width:100%;" class="container eligible_check">
 
@@ -14,18 +15,18 @@
   $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
          LEFT JOIN dental_users u ON u.userid = p.docid
-         WHERE p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
-  $q = mysql_query($s);
-  $r = mysql_fetch_assoc($q);
-  $doc_name = $r['doc_name'];
+         WHERE p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+
+  $r = $db->getRow($s);
+  $doc_name = (!empty($r['doc_name']) ? $r['doc_name'] : '');
   $doc_array = explode(' ',$doc_name);
   $doc_first_name = $doc_array[0];
-  $doc_last_name = $doc_array[1];
+  $doc_last_name = (!empty($doc_array[1]) ? $doc_array[1] : '');
 ?>
 <?php
                       $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$r['docid']."'";
-                      $docquery = mysql_query($getdocinfo);
-                      $docinfo = mysql_fetch_array($docquery);
+
+                      $docinfo = $db->getRow($getdocinfo);
                         $phone = $docinfo['phone'];
                         $practice = $docinfo['practice'];
                         $address = $docinfo['address'];
@@ -135,7 +136,7 @@
       <label for="date" class="col-lg-2 control-label">Patient Insurance</label>
 
       <div class="col-lg-10">
-	<?= $r['company']; ?>
+	<?php echo  $r['company']; ?>
       </div>
     </div>
 
@@ -150,11 +151,7 @@
                 <li class="template" style="display:none"></li>
         </ul>
 </div>
-<script type="text/javascript">
-$(document).ready(function(){
-setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', '', true, false);
-});
-</script>
+
 <input type="hidden" name="payer_id" id="payer_id" />
       </div>
     </div>
@@ -163,7 +160,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       <label for="date" class="col-lg-2 control-label">Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control calendar" id="date" value="<?= date('m/d/Y'); ?>">
+        <input type="text" class="form-control calendar" id="date" value="<?php echo  date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -171,7 +168,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       <label for="from_date" class="col-lg-2 control-label">From Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control calendar" id="from_date" value="<?= date('m/d/Y'); ?>">
+        <input type="text" class="form-control calendar" id="from_date" value="<?php echo  date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -179,7 +176,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       <label for="to_date" class="col-lg-2 control-label">To Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control calendar" id="to_date" value="<?= date('m/d/Y'); ?>">
+        <input type="text" class="form-control calendar" id="to_date" value="<?php echo  date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -199,7 +196,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="provider_npi" class="col-lg-2 control-label">NPI</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_npi" value="<?= $r['npi']; ?>">
+          <input type="text" class="form-control" id="provider_npi" value="<?php echo  $r['npi']; ?>">
         </div>
       </div>
 
@@ -207,7 +204,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="provider_last_name" class="col-lg-2 control-label">Last Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_last_name" value="<?= $r['doc_lastname']; ?>">
+          <input type="text" class="form-control" id="provider_last_name" value="<?php echo  $r['doc_lastname']; ?>">
         </div>
       </div>
 
@@ -215,7 +212,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="provider_first_name" class="col-lg-2 control-label">First Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_first_name" value="<?= $r['doc_firstname']; ?>" >
+          <input type="text" class="form-control" id="provider_first_name" value="<?php echo  $r['doc_firstname']; ?>" >
         </div>
       </div>
 
@@ -223,7 +220,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="provider_organization_name" class="col-lg-2 control-label">Organization Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_organization_name" value="<?= $r['practice']; ?>">
+          <input type="text" class="form-control" id="provider_organization_name" value="<?php echo  $r['practice']; ?>">
         </div>
       </div>
 
@@ -231,7 +228,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="provider_tax_id" class="col-lg-2 control-label">Tax ID</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_tax_id" value="<?= $r['tax_id_or_ssn']; ?>">
+          <input type="text" class="form-control" id="provider_tax_id" value="<?php echo  $r['tax_id_or_ssn']; ?>">
         </div>
       </div>
 
@@ -254,7 +251,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="provider_street_line_1" class="col-lg-2 control-label">Street Line 1</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_street_line_1" value="<?= $service_address; ?>">
+          <input type="text" class="form-control" id="provider_street_line_1" value="<?php echo  $service_address; ?>">
         </div>
       </div>
 
@@ -270,7 +267,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="provider_city" class="col-lg-2 control-label">City</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_city" value="<?= $service_city; ?>">
+          <input type="text" class="form-control" id="provider_city" value="<?php echo  $service_city; ?>">
         </div>
       </div>
 
@@ -278,7 +275,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="provider_state" class="col-lg-2 control-label">State</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_state" value="<?= $service_state; ?>">
+          <input type="text" class="form-control" id="provider_state" value="<?php echo  $service_state; ?>">
         </div>
       </div>
 
@@ -286,7 +283,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="provider_zip" class="col-lg-2 control-label">ZIP</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_zip" value="<?= $service_zip; ?>">
+          <input type="text" class="form-control" id="provider_zip" value="<?php echo  $service_zip; ?>">
         </div>
       </div>
 
@@ -300,7 +297,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="member_id" class="col-lg-2 control-label">ID</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_id" value="<?= $r['p_m_ins_id']; ?>">
+          <input type="text" class="form-control" id="member_id" value="<?php echo  $r['p_m_ins_id']; ?>">
         </div>
       </div>
 
@@ -308,7 +305,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="member_last_name" class="col-lg-2 control-label">Last Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_last_name" value="<?= $r['p_m_partylname']; ?>">
+          <input type="text" class="form-control" id="member_last_name" value="<?php echo  $r['p_m_partylname']; ?>">
         </div>
       </div>
 
@@ -316,7 +313,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="member_first_name" class="col-lg-2 control-label">First Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_first_name" value="<?= $r['p_m_partyfname']; ?>">
+          <input type="text" class="form-control" id="member_first_name" value="<?php echo  $r['p_m_partyfname']; ?>">
         </div>
       </div>
 
@@ -324,7 +321,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="member_dob" class="col-lg-2 control-label">DOB</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_dob" value="<?= $r['ins_dob']; ?>">
+          <input type="text" class="form-control" id="member_dob" value="<?php echo  $r['ins_dob']; ?>">
         </div>
       </div>
 
@@ -332,7 +329,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="member_ssn" class="col-lg-2 control-label">SSN</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_ssn" value="<?= $r['ssn']; ?>">
+          <input type="text" class="form-control" id="member_ssn" value="<?php echo  $r['ssn']; ?>">
         </div>
       </div>
 
@@ -348,7 +345,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="member_gender" class="col-lg-2 control-label">Gender</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_gender" value="<?= $r['p_m_gender']; ?>">
+          <input type="text" class="form-control" id="member_gender" value="<?php echo  $r['p_m_gender']; ?>">
         </div>
       </div>
 
@@ -356,7 +353,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="member_group_id" class="col-lg-2 control-label">Group ID</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_group_id" value="<?= $r['p_m_ins_grp']; ?>">
+          <input type="text" class="form-control" id="member_group_id" value="<?php echo  $r['p_m_ins_grp']; ?>">
         </div>
       </div>
 
@@ -364,7 +361,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="member_state" class="col-lg-2 control-label">State</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_state" value="<?= $s_state; ?>">
+          <input type="text" class="form-control" id="member_state" value="<?php echo  $s_state; ?>">
         </div>
       </div>
 
@@ -372,7 +369,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="member_city" class="col-lg-2 control-label">City</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_city" value="<?= $s_city; ?>">
+          <input type="text" class="form-control" id="member_city" value="<?php echo  $s_city; ?>">
         </div>
       </div>
 
@@ -380,7 +377,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="member_zip" class="col-lg-2 control-label">ZIP</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_zip" value="<?= $s_zip; ?>">
+          <input type="text" class="form-control" id="member_zip" value="<?php echo  $s_zip; ?>">
         </div>
       </div>
 
@@ -401,7 +398,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="dependent_last_name" class="col-lg-2 control-label">Last Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_last_name" value="<?= $d_last_name; ?>">
+          <input type="text" class="form-control" id="dependent_last_name" value="<?php echo  $d_last_name; ?>">
         </div>
       </div>
 
@@ -409,7 +406,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="dependent_first_name" class="col-lg-2 control-label">First Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_first_name" value="<?= $d_first_name; ?>">
+          <input type="text" class="form-control" id="dependent_first_name" value="<?php echo  $d_first_name; ?>">
         </div>
       </div>
 
@@ -417,7 +414,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="dependent_dob" class="col-lg-2 control-label">DOB</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_dob" value="<?= $d_dob; ?>">
+          <input type="text" class="form-control" id="dependent_dob" value="<?php echo  $d_dob; ?>">
         </div>
       </div>
 
@@ -425,7 +422,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="dependent_ssn" class="col-lg-2 control-label">SSN</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_ssn" value="<?= $d_ssn; ?>">
+          <input type="text" class="form-control" id="dependent_ssn" value="<?php echo  $d_ssn; ?>">
         </div>
       </div>
 
@@ -441,7 +438,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="dependent_gender" class="col-lg-2 control-label">Gender</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_gender" value="<?= $d_gender; ?>">
+          <input type="text" class="form-control" id="dependent_gender" value="<?php echo  $d_gender; ?>">
         </div>
       </div>
 
@@ -457,7 +454,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="dependent_state" class="col-lg-2 control-label">State</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_state" value="<?= $d_state; ?>">
+          <input type="text" class="form-control" id="dependent_state" value="<?php echo  $d_state; ?>">
         </div>
       </div>
 
@@ -465,7 +462,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="dependent_city" class="col-lg-2 control-label">City</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_city" value="<?= $d_city; ?>">
+          <input type="text" class="form-control" id="dependent_city" value="<?php echo  $d_city; ?>">
         </div>
       </div>
 
@@ -473,7 +470,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
         <label for="dependent_zip" class="col-lg-2 control-label">ZIP</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_zip" value="<?= $d_zip; ?>">
+          <input type="text" class="form-control" id="dependent_zip" value="<?php echo  $d_zip; ?>">
         </div>
       </div>
 
@@ -481,7 +478,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
 
     <div  style="clear:both;" class="form-group">
       <div class="col-lg-offset-2 col-lg-10">
-	<input type="hidden" name="pid" id="pid" value="<?= $_GET['pid']; ?>" />
+	<input type="hidden" name="pid" id="pid" value="<?php echo  $_GET['pid']; ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
         <button type="submit" class="btn btn-primary btn-lg">Submit</button>
       </div>
@@ -498,13 +495,14 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
     <th>View</th>
   </tr>
 
-  <?php $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
-    $q = mysql_query($s);
-    while($r = mysql_fetch_assoc($q)){
+  <?php $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+    
+    $q = $db->getResults($s);
+    if (!empty($q)) foreach ($q as $r){
       ?>
 	<tr>
-	  <td><?= $r['adddate']; ?></td>
-          <td><a href="view_eligibility_response.php?id=<?=$r['id']; ?>">View</a></td>
+	  <td><?php echo  $r['adddate']; ?></td>
+          <td><a href="view_eligibility_response.php?id=<?php echo $r['id']; ?>">View</a></td>
         </tr>
 
 <?php
@@ -513,18 +511,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
    }
 ?>
 </table>
-<script type="text/javascript">
-function view_coverage(response){
-  var coverage = new Coverage(response);
-  if (coverage.hasError()) {
-    buildError(coverage.parseError());
-  } else {
-    buildCoverageHTML(coverage);
-  }
-}
-</script>
 
-<style type="text/css">
-  fieldset{ float:left; width:47%; margin:0 1%; }
-</style>
+<link href="/manage/admin/css/eligible_check.css" rel="stylesheet" media="screen">
+
 <?php //include 'new.php'; ?> 

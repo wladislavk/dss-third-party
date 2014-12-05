@@ -700,9 +700,7 @@
     if(!empty($patient_signature)){
         $fdf .= "<< /T(".$field_path.".pt_signature_date_fill[0]) /V(".$patient_signed_date.") >>";
     }
-    $fdf .= "
-        << /T(".$field_path.".insured_signature_fill[0]) /V(".((!empty($insured_signature))?'SIGNATURE ON FILE':'').") >>
-        ";
+    $fdf .= "<< /T(".$field_path.".insured_signature_fill[0]) /V(".((!empty($insured_signature))?'SIGNATURE ON FILE':'').") >>";
     if(!empty($date_current)){
         $fdf .= "
           << /T(".$field_path.".date_of_current_mm_fill[0]) /V(".date('m', strtotime($date_current)).") >>
@@ -750,28 +748,26 @@
           << /T(".$field_path.".hospitalization_date_to_yy_fill[0]) /V(".date('y', strtotime($hospitalization_date_to)).") >>
         ";
     }
-    $fdf .= "
-        << /T(".$field_path.".reserved_for_local_fill[0]) /V(".(!empty($reserved_local_use1) ? $reserved_local_use1 : '').") >>
-        << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".((!empty($outside_lab) && $outside_lab == "YES")?1:'').") >>
-        << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".((!empty($outside_lab) && $outside_lab == "NO")?1:'').") >>
-        << /T(".$field_path.".charges_fill[0]) /V(".(!empty($s_charges) ? $s_charges : '').") >>
-        << /T(".$field_path.".icd_ind[0]) /V(".(!empty($icd_ind) ?$icd_ind: ''.") >>
-        << /T(".$field_path.".diagnosis_a[0]) /V(".(!empty($diagnosis_a) ? $diagnosis_a : '').") >>
-        << /T(".$field_path.".diagnosis_b[0]) /V(".(!empty($diagnosis_b) ? $diagnosis_b : '').") >>
-        << /T(".$field_path.".diagnosis_c[0]) /V(".(!empty($diagnosis_c) ? $diagnosis_c : '').") >>
-        << /T(".$field_path.".diagnosis_d[0]) /V(".(!empty($diagnosis_d) ? $diagnosis_d : '').") >>
-        << /T(".$field_path.".diagnosis_e[0]) /V(".(!empty($diagnosis_e) ? $diagnosis_e : '').") >>
-        << /T(".$field_path.".diagnosis_f[0]) /V(".(!empty($diagnosis_f) ? $diagnosis_f : '').") >>
-        << /T(".$field_path.".diagnosis_g[0]) /V(".(!empty($diagnosis_g) ? $diagnosis_g : '').") >>
-        << /T(".$field_path.".diagnosis_h[0]) /V(".(!empty($diagnosis_h) ? $diagnosis_h : '').") >>
-        << /T(".$field_path.".diagnosis_i[0]) /V(".(!empty($diagnosis_i) ? $diagnosis_i : '').") >>
-        << /T(".$field_path.".diagnosis_j[0]) /V(".(!empty($diagnosis_j) ? $diagnosis_j : '').") >>
-        << /T(".$field_path.".diagnosis_k[0]) /V(".(!empty($diagnosis_k) ? $diagnosis_k : '').") >>
-        << /T(".$field_path.".diagnosis_l[0]) /V(".(!empty($diagnosis_l) ? $diagnosis_l : '').") >>
-        << /T(".$field_path.".resubmission_code_fill[0]) /V(".(!empty($resubmission_code) ? $resubmission_code : '').") >>
-        << /T(".$field_path.".orignial_ref_no_fill[0]) /V(".(!empty($original_ref_no) ? $original_ref_no : '').") >>
-        << /T(".$field_path.".prior_auth_number_fill[0]) /V(".(!empty($prior_authorization_number) ? $prior_authorization_number : '').") >>
-        ";
+    $fdf .= "<< /T(".$field_path.".reserved_for_local_fill[0]) /V(".(!empty($reserved_local_use1) ? $reserved_local_use1 : '').") >>
+            << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".((!empty($outside_lab) && $outside_lab == "YES")?1:'').") >>
+            << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".((!empty($outside_lab) && $outside_lab == "NO")?1:'').") >>
+            << /T(".$field_path.".charges_fill[0]) /V(".(!empty($s_charges) ? $s_charges : '').") >>
+            << /T(".$field_path.".icd_ind[0]) /V(".(!empty($icd_ind) ?$icd_ind: ''.") >>
+            << /T(".$field_path.".diagnosis_a[0]) /V(".(!empty($diagnosis_a) ? $diagnosis_a : '').") >>
+            << /T(".$field_path.".diagnosis_b[0]) /V(".(!empty($diagnosis_b) ? $diagnosis_b : '').") >>
+            << /T(".$field_path.".diagnosis_c[0]) /V(".(!empty($diagnosis_c) ? $diagnosis_c : '').") >>
+            << /T(".$field_path.".diagnosis_d[0]) /V(".(!empty($diagnosis_d) ? $diagnosis_d : '').") >>
+            << /T(".$field_path.".diagnosis_e[0]) /V(".(!empty($diagnosis_e) ? $diagnosis_e : '').") >>
+            << /T(".$field_path.".diagnosis_f[0]) /V(".(!empty($diagnosis_f) ? $diagnosis_f : '').") >>
+            << /T(".$field_path.".diagnosis_g[0]) /V(".(!empty($diagnosis_g) ? $diagnosis_g : '').") >>
+            << /T(".$field_path.".diagnosis_h[0]) /V(".(!empty($diagnosis_h) ? $diagnosis_h : '').") >>
+            << /T(".$field_path.".diagnosis_i[0]) /V(".(!empty($diagnosis_i) ? $diagnosis_i : '').") >>
+            << /T(".$field_path.".diagnosis_j[0]) /V(".(!empty($diagnosis_j) ? $diagnosis_j : '').") >>
+            << /T(".$field_path.".diagnosis_k[0]) /V(".(!empty($diagnosis_k) ? $diagnosis_k : '').") >>
+            << /T(".$field_path.".diagnosis_l[0]) /V(".(!empty($diagnosis_l) ? $diagnosis_l : '').") >>
+            << /T(".$field_path.".resubmission_code_fill[0]) /V(".(!empty($resubmission_code) ? $resubmission_code : '').") >>
+            << /T(".$field_path.".orignial_ref_no_fill[0]) /V(".(!empty($original_ref_no) ? $original_ref_no : '').") >>
+            << /T(".$field_path.".prior_auth_number_fill[0]) /V(".(!empty($prior_authorization_number) ? $prior_authorization_number : '').") >>";
 
     $prefix = array( 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX');
 

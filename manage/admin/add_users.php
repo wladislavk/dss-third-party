@@ -10,32 +10,33 @@ require_once 'includes/form_updates.php';
 require_once 'includes/edx_functions.php';
 include_once '../includes/help_functions.php';
 include_once 'includes/javascript_includes.php';
-if($_POST["usersub"] == 1)
+
+if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
 {
 
 	if(isset($_POST['save_but']) || $_POST['username']!=''){
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con,$sel_check);
 
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Username already exist. So please give another Username.";
 		?>
 		<script type="text/javascript">
-			alert("<?=$msg;?>");
+			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
 		<?
 	} 
 	}
         $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_POST['ed'])."'";
-        $query_check2=mysql_query($sel_check2);
-	if(mysql_num_rows($query_check2)>0)
+        $query_check2=mysqli_query($con,$sel_check2);
+	if(mysqli_num_rows($query_check2)>0)
         {
                 $msg="Email already exist. So please give another Email.";
                 ?>
                 <script type="text/javascript">
-                        alert("<?=$msg;?>");
+                        alert("<?php echo $msg;?>");
                         window.location="#add";
                 </script>
                 <?
@@ -45,9 +46,9 @@ if($_POST["usersub"] == 1)
 		if($_POST["ed"] != "")
 		{
 
-			$old_sql = "SELECT status, username, recover_hash FROM dental_users WHERE userid='".mysql_real_escape_string($_POST["ed"])."'";
-                        $old_q = mysql_query($old_sql);
-			$old_r = mysql_fetch_assoc($old_q);
+			$old_sql = "SELECT status, username, recover_hash FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_POST["ed"])."'";
+                        $old_q = mysqli_query($con,$old_sql);
+			$old_r = mysqli_fetch_assoc($old_q);
 			$old_username = $old_r['username'];
 			$old_status = $old_r['status'];
 
@@ -83,20 +84,20 @@ if($_POST["usersub"] == 1)
 				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST['user_type'])."',
 				status = '".s_for($_POST["status"])."',
-        use_service_npi = '".mysql_real_escape_string($_POST['use_service_npi'])."',
-        service_name = '".mysql_real_escape_string($_POST['service_name'])."',
-        service_address = '".mysql_real_escape_string($_POST['service_address'])."',
-        service_city = '".mysql_real_escape_string($_POST['service_city'])."',
-        service_state = '".mysql_real_escape_string($_POST['service_state'])."',
-        service_zip = '".mysql_real_escape_string($_POST['service_zip'])."',
-        service_phone = '".mysql_real_escape_string($_POST['service_phone'])."',
-        service_fax = '".mysql_real_escape_string($_POST['service_fax'])."',
-        service_npi = '".mysql_real_escape_string($_POST['service_npi'])."',
-        service_medicare_npi = '".mysql_real_escape_string($_POST['service_medicare_npi'])."',
-        service_medicare_ptan = '".mysql_real_escape_string($_POST['service_medicare_ptan'])."',
-        service_tax_id_or_ssn = '".mysql_real_escape_string($_POST['service_tax_id_or_ssn'])."',
-        service_ssn = '".mysql_real_escape_string($_POST['service_ssn'])."',
-        service_ein = '".mysql_real_escape_string($_POST['service_ein'])."',
+        use_service_npi = '".mysqli_real_escape_string($con,$_POST['use_service_npi'])."',
+        service_name = '".mysqli_real_escape_string($con,$_POST['service_name'])."',
+        service_address = '".mysqli_real_escape_string($con,$_POST['service_address'])."',
+        service_city = '".mysqli_real_escape_string($con,$_POST['service_city'])."',
+        service_state = '".mysqli_real_escape_string($con,$_POST['service_state'])."',
+        service_zip = '".mysqli_real_escape_string($con,$_POST['service_zip'])."',
+        service_phone = '".mysqli_real_escape_string($con,$_POST['service_phone'])."',
+        service_fax = '".mysqli_real_escape_string($con,$_POST['service_fax'])."',
+        service_npi = '".mysqli_real_escape_string($con,$_POST['service_npi'])."',
+        service_medicare_npi = '".mysqli_real_escape_string($con,$_POST['service_medicare_npi'])."',
+        service_medicare_ptan = '".mysqli_real_escape_string($con,$_POST['service_medicare_ptan'])."',
+        service_tax_id_or_ssn = '".mysqli_real_escape_string($con,$_POST['service_tax_id_or_ssn'])."',
+        service_ssn = '".mysqli_real_escape_string($con,$_POST['service_ssn'])."',
+        service_ein = '".mysqli_real_escape_string($con,$_POST['service_ein'])."',
 				";
 				if($old_status!=3 && $_POST['status']==3){
 				  $ed_sql.= "
@@ -110,7 +111,7 @@ if($_POST["usersub"] == 1)
                                 billing_plan_id = '".$_POST['billing_plan_id']."',
 				access_code_id = '".$_POST['access_code_id']."'
 			where userid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
 			$loc_sql = "UPDATE dental_locations SET
                                 location = '".s_for($_POST['mailing_practice'])."', 
                                 name = '".s_for($_POST["mailing_name"])."', 
@@ -122,7 +123,7 @@ if($_POST["usersub"] == 1)
                                 phone = '".s_for(num($_POST["mailing_phone"]))."',
 				fax = '".s_for(num($_POST["mailing_fax"]))."'
 				where default_location=1 AND docid='".$_POST["ed"]."'";
-			mysql_query($loc_sql);
+			mysqli_query($con,$loc_sql);
                         edx_user_update($_POST['ed']);
 			help_user_update($_POST['ed'], $help_con);
 			form_update_all($_POST['ed'], true);
@@ -132,19 +133,19 @@ if($_POST["usersub"] == 1)
                         }else{
                           $cid = $SESSION["companyid"];
                         }
-                        $cname_sql = "SELECT name from companies WHERE id='".mysql_real_escape_string($cid)."'";
-                        $cname_q = mysql_query($cname_sql);
-                        $cname_r = mysql_fetch_assoc($cname_q);
+                        $cname_sql = "SELECT name from companies WHERE id='".mysqli_real_escape_string($con,$cid)."'";
+                        $cname_q = mysqli_query($con,$cname_sql);
+                        $cname_r = mysqli_fetch_assoc($cname_q);
                         $cname = $cname_r['name'];
 
 			if(is_super($_SESSION['admin_access'])){
-			  mysql_query("DELETE FROM dental_user_company WHERE userid='".mysql_real_escape_string($_POST["ed"])."'");
-			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
+			  mysqli_query($con,"DELETE FROM dental_user_company WHERE userid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
+			  mysqli_query($con,"INSERT INTO dental_user_company SET userid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");
 			}
 
-		mysql_query("DELETE FROM dental_user_hst_company WHERE userid='".mysql_real_escape_string($_POST["ed"])."'");
+		mysqli_query($con,"DELETE FROM dental_user_hst_company WHERE userid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
 		foreach($_POST['hst_company'] as $hst_company){
-		  mysql_query("INSERT INTO dental_user_hst_company SET userid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($hst_company)."', adddate=now(), ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'");
+		  mysqli_query($con,"INSERT INTO dental_user_hst_company SET userid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$hst_company)."', adddate=now(), ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'");
 		}
                 if(isset($_POST['reg_but'])){
 		$userid = $_POST['ed'];
@@ -174,8 +175,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 $subject = "Dental Sleep Solutions Account Activation";
                 $mail = mail($_POST['email'], $subject, $m, $headers);
                 if($mail){
-                  $e_sql = "UPDATE dental_users SET recover_time = now(), registration_email_date=now() WHERE userid='".mysql_real_escape_string($userid)."'";
-                  mysql_query($e_sql);
+                  $e_sql = "UPDATE dental_users SET recover_time = now(), registration_email_date=now() WHERE userid='".mysqli_real_escape_string($con,$userid)."'";
+                  mysqli_query($con,$e_sql);
                 }
 
 		}
@@ -184,8 +185,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_users.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_users.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -204,10 +205,10 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				medicare_npi = '".s_for($_POST["medicare_npi"])."',
                                 medicare_ptan = '".s_for($_POST["medicare_ptan"])."',
 				tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', 
-				ssn = '".s_for($_POST['ssn'])."',
-				ein = '".s_for($_POST['ein'])."',
+				ssn = '".s_for(!empty($_POST['ssn']) ? $_POST['ssn'] : '')."',
+				ein = '".s_for(!empty($_POST['ein']) ? $_POST['ein'] : '')."',
 				practice = '".s_for($_POST['practice'])."', 
-				password = '".mysql_real_escape_string($password)."', 
+				password = '".mysqli_real_escape_string($con,$password)."', 
 				salt = '".$salt."',
 				first_name = '".s_for($_POST["first_name"])."', 
                                 last_name = '".s_for($_POST["last_name"])."',
@@ -223,31 +224,31 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				use_letters = '".s_for($_POST['use_letters'])."',
                                 tracker_letters = '".s_for($_POST['tracker_letters'])."',
                                 intro_letters = '".s_for($_POST['intro_letters'])."',
-				use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
-				eligible_test = '".s_for($_POST['eligible_test'])."',
-                                use_course = '".s_for($_POST['use_course'])."',
+				use_eligible_api = '".s_for(!empty($_POST['use_eligible_api']) ? $_POST['use_eligible_api'] : '')."',
+				eligible_test = '".s_for(!empty($_POST['eligible_test']) ? $_POST['eligible_test'] : '')."',
+                                use_course = '".s_for(!empty($_POST['use_course']) ? $_POST['use_course'] : '')."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
                                 homepage = '".s_for($_POST['homepage'])."',
 				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST["user_type"])."',
                                 billing_company_id = '".$_POST['billing_company_id']."',
                                 plan_id = '".$_POST['plan_id']."',
-                                billing_plan_id = '".$_POST['billing_plan_id']."',
+                                billing_plan_id = '".(!empty($_POST['billing_plan_id']) ? $_POST['billing_plan_id'] : '')."',
 				access_code_id = '".$_POST['access_code_id']."',
-        use_service_npi = '".mysql_real_escape_string($_POST['use_service_npi'])."',
-        service_name = '".mysql_real_escape_string($_POST['service_name'])."',
-        service_address = '".mysql_real_escape_string($_POST['service_address'])."',
-        service_city = '".mysql_real_escape_string($_POST['service_city'])."',
-        service_state = '".mysql_real_escape_string($_POST['service_state'])."',
-        service_zip = '".mysql_real_escape_string($_POST['service_zip'])."',
-        service_phone = '".mysql_real_escape_string($_POST['service_phone'])."',
-        service_fax = '".mysql_real_escape_string($_POST['service_fax'])."',
-        service_npi = '".mysql_real_escape_string($_POST['service_npi'])."',
-        service_medicare_npi = '".mysql_real_escape_string($_POST['service_medicare_npi'])."',
-        service_medicare_ptan = '".mysql_real_escape_string($_POST['service_medicare_ptan'])."',
-        service_tax_id_or_ssn = '".mysql_real_escape_string($_POST['service_tax_id_or_ssn'])."',
-        service_ssn = '".mysql_real_escape_string($_POST['service_ssn'])."',
-        service_ein = '".mysql_real_escape_string($_POST['service_ein'])."',
+        use_service_npi = '".mysqli_real_escape_string($con,(!empty($_POST['use_service_npi']) ? $_POST['use_service_npi'] : ''))."',
+        service_name = '".mysqli_real_escape_string($con,$_POST['service_name'])."',
+        service_address = '".mysqli_real_escape_string($con,$_POST['service_address'])."',
+        service_city = '".mysqli_real_escape_string($con,$_POST['service_city'])."',
+        service_state = '".mysqli_real_escape_string($con,$_POST['service_state'])."',
+        service_zip = '".mysqli_real_escape_string($con,$_POST['service_zip'])."',
+        service_phone = '".mysqli_real_escape_string($con,$_POST['service_phone'])."',
+        service_fax = '".mysqli_real_escape_string($con,$_POST['service_fax'])."',
+        service_npi = '".mysqli_real_escape_string($con,$_POST['service_npi'])."',
+        service_medicare_npi = '".mysqli_real_escape_string($con,$_POST['service_medicare_npi'])."',
+        service_medicare_ptan = '".mysqli_real_escape_string($con,$_POST['service_medicare_ptan'])."',
+        service_tax_id_or_ssn = '".mysqli_real_escape_string($con,$_POST['service_tax_id_or_ssn'])."',
+        service_ssn = '".mysqli_real_escape_string($con,(!empty($_POST['service_ssn']) ? $_POST['service_ssn'] : ''))."',
+        service_ein = '".mysqli_real_escape_string($con,(!empty($_POST['service_ein']) ? $_POST['service_ein'] : ''))."',
 				";
 		                if(isset($_POST['reg_but'])){
 					$ins_sql .= " recover_hash='".$recover_hash."',
@@ -262,7 +263,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				}
 				$ins_sql .= " adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con,$ins_sql) or die($ins_sql.mysql_error());
                         $userid = mysql_insert_id();			
                         $loc_sql = "INSERT INTO dental_locations SET
                                 location = '".s_for($_POST['mailing_practice'])."', 
@@ -278,7 +279,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
  				docid='".$userid."',
                                 adddate=now(),
                                 ip_address='".$_SERVER['REMOTE_ADDR']."'";
-                        mysql_query($loc_sql);
+                        mysqli_query($con,$loc_sql);
 			edx_user_update($userid);
 			//help_user_update($userid, $edx_con);
 		if(isset($_POST['save_but'])){
@@ -288,36 +289,36 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                           $cid = $SESSION["companyid"];
                         }
 
-			$cname_sql = "SELECT name from companies WHERE id='".mysql_real_escape_string($cid)."'";
-			$cname_q = mysql_query($cname_sql);
-			$cname_r = mysql_fetch_assoc($cname_q);
+			$cname_sql = "SELECT name from companies WHERE id='".mysqli_real_escape_string($con,$cid)."'";
+			$cname_q = mysqli_query($con,$cname_sql);
+			$cname_r = mysqli_fetch_assoc($cname_q);
 			$cname = $cname_r['name'];
 
 		}
 
 
-			mysql_query("INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('General', 'FFF9CF', 'general', ".$userid.")");
-			mysql_query("INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('Follow-up', 'D6CFFF', 'follow-up', ".$userid.")");
-			mysql_query("INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('Sleep Test', 'CFF5FF', 'sleep_test', ".$userid.")");
-			mysql_query("INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('Impressions', 'DFFFCF', 'impressions', ".$userid.")");
-			mysql_query("INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('New Pt', 'FFCFCF', 'new_pt', ".$userid.")");
-			mysql_query("INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('Deliver Device', 'FBA16C', 'deliver_device', ".$userid.")");
+			mysqli_query($con,"INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('General', 'FFF9CF', 'general', ".$userid.")");
+			mysqli_query($con,"INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('Follow-up', 'D6CFFF', 'follow-up', ".$userid.")");
+			mysqli_query($con,"INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('Sleep Test', 'CFF5FF', 'sleep_test', ".$userid.")");
+			mysqli_query($con,"INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('Impressions', 'DFFFCF', 'impressions', ".$userid.")");
+			mysqli_query($con,"INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('New Pt', 'FFCFCF', 'new_pt', ".$userid.")");
+			mysqli_query($con,"INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('Deliver Device', 'FBA16C', 'deliver_device', ".$userid.")");
 
-			mysql_query("INSERT INTO `dental_resources` (name, rank, docid) VALUES ('Chair 1', 1, ".$userid.")");
+			mysqli_query($con,"INSERT INTO `dental_resources` (name, rank, docid) VALUES ('Chair 1', 1, ".$userid.")");
 
 
                         $code_sql = "insert into dental_transaction_code (transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, docid, amount_adjust) SELECT transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, ".$userid.", amount_adjust FROM dental_transaction_code WHERE default_code=1";
-                        mysql_query($code_sql) or die($code_sql.mysql_error());
+                        mysqli_query($con,$code_sql) or die($code_sql.mysql_error());
                         $custom_sql = "insert into dental_custom (title, description, docid) SELECT title, description, ".$userid." FROM dental_custom WHERE default_text=1";
-                        mysql_query($custom_sql) or die($custom_sql.mysql_error());
+                        mysqli_query($con,$custom_sql) or die($custom_sql.mysql_error());
 			
 			if(is_super($_SESSION['admin_access'])){
-			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($userid)."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
+			  mysqli_query($con,"INSERT INTO dental_user_company SET userid='".mysqli_real_escape_string($con,$userid)."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");
 			}else{
-  			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($userid)."', companyid='".mysql_real_escape_string($_SESSION["companyid"])."'");
+  			  mysqli_query($con,"INSERT INTO dental_user_company SET userid='".mysqli_real_escape_string($con,$userid)."', companyid='".mysqli_real_escape_string($con,$_SESSION["companyid"])."'");
 			}		
                 foreach($_POST['hst_company'] as $hst_company){
-                  mysql_query("INSERT INTO dental_user_hst_company SET userid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($hst_company)."', adddate=now(), ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'");
+                  mysqli_query($con,"INSERT INTO dental_user_hst_company SET userid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$hst_company)."', adddate=now(), ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'");
                 }
 
 		if(isset($_POST['reg_but'])){
@@ -346,14 +347,14 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 $subject = "Dental Sleep Solutions Account Activation";
                 $mail = mail($_POST['email'], $subject, $m, $headers);
                 if($mail){
-                  $e_sql = "UPDATE dental_users SET registration_email_date=now() WHERE userid='".mysql_real_escape_string($userid)."'";
-                  mysql_query($e_sql);
+                  $e_sql = "UPDATE dental_users SET registration_email_date=now() WHERE userid='".mysqli_real_escape_string($con,$userid)."'";
+                  mysqli_query($con,$e_sql);
                 }
                         $msg = "Added Successfully";
                         ?>
                         <script type="text/javascript">
-                                //alert("<?=$msg;?>");
-                                parent.window.location='manage_users.php?msg=<?=$msg;?>';
+                                //alert("<?php echo $msg;?>");
+                                parent.window.location='manage_users.php?msg=<?php echo $msg;?>';
                         </script>
                         <?
                         die();
@@ -361,8 +362,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_users.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_users.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -379,21 +380,21 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
     $thesql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.email as mailing_email, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
 		LEFT JOIN dental_user_company c ON u.userid = c.userid
 		LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-		where u.userid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+		where u.userid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$username = $_POST['username'];
 		$npi = $_POST['npi'];
 		$medicare_npi = $_POST['medicare_npi'];
                 $medicare_ptan = $_POST['medicare_ptan'];
 		$tax_id_or_ssn = $_POST['tax_id_or_ssn'];
-		$ssn = $_POST['ssn'];
-		$ein = $_POST['ein'];
+		$ssn = (!empty($_POST['ssn']) ? $_POST['ssn'] : '');
+		$ein = (!empty($_POST['ein']) ? $_POST['ein'] : '');
 		$practice = $_POST['practice'];
-		$password = $_POST['password'];
+		$password = (!empty($_POST['password']) ? $_POST['password'] : '');
 		$first_name = $_POST['first_name'];
 		$last_name = $_POST['last_name'];
 		$email = $_POST['email'];
@@ -421,21 +422,21 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$use_letters = $_POST['use_letters'];
 		$tracker_letters = $_POST['tracker_letters'];
 		$intro_letters = $_POST['intro_letters'];
-		$use_eligible_api = $_POST['use_eligible_api'];
-		$eligible_test = $_POST['eligible_test'];
-		$use_course = $_POST['use_course'];
+		$use_eligible_api = (!empty($_POST['use_eligible_api']) ? $_POST['use_eligible_api'] : '');
+		$eligible_test = (!empty($_POST['eligible_test']) ? $_POST['eligible_test'] : '');
+		$use_course = (!empty($_POST['use_course']) ? $_POST['use_course'] : '');
 		$use_course_staff = $_POST['use_course_staff'];
 		$use_letter_header = $_POST['use_letter_header'];
 		$homepage = $_POST['homepage'];
 		$companyid = $_POST['companyid'];
 		$user_type = $_POST['user_type'];
 		$billing_company_id = $_POST['billing_company_id'];
-		$hst_company_id = $_POST['hst_company_id'];
+		$hst_company_id = (!empty($_POST['hst_company_id']) ? $_POST['hst_company_id'] : '');
 		$access_code_id = $_POST['access_code_id'];
 		$plan_id = $_POST['plan_id'];
-		$billing_plan_id = $_POST['billing_plan_id'];
+		$billing_plan_id = (!empty($_POST['billing_plan_id']) ? $_POST['billing_plan_id'] : '');
 
-		$use_service_npi = $_POST['use_service_npi'];
+		$use_service_npi = (!empty($_POST['use_service_npi']) ? $_POST['use_service_npi'] : '');
 		$service_name = $_POST['service_name'];
 		$service_address = $_POST['service_address'];
 		$service_city = $_POST['service_city'];
@@ -447,8 +448,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$service_medicare_npi = $_POST['service_medicare_npi'];
 		$service_medicare_ptan = $_POST['service_medicare_ptan'];
 		$service_tax_id_or_ssn = $_POST['service_tax_id_or_ssn'];
-		$service_ein = $_POST['service_ein'];
-		$service_ssn = $_POST['service_ssn'];
+		$service_ein = (!empty($_POST['service_ein']) ? $_POST['service_ein'] : '');
+		$service_ssn = (!empty($_POST['service_ssn']) ? $_POST['service_ssn'] : '');
 
 	}
 	else
@@ -549,58 +550,58 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
     <div class="col-md-6 col-md-offset-3">
         <?php if (isset($_GET['msg'])) { ?>
         <div class="alert alert-danger text-center">
-            <strong><?= $_GET['msg'] ?></strong>
+            <strong><?php echo  $_GET['msg'] ?></strong>
         </div>
         <?php } ?>
         
-        <?php if ($msg != '') { ?>
+        <?php if (!empty($msg)) { ?>
         <div class="alert alert-success text-center">
-            <?= $msg ?>
+            <?php echo  $msg ?>
         </div>
         <?php } ?>
         
         <div class="page-header">
             <h1>
-                <?= $but_text ?>
-                <?= $_GET['heading'] ?>
+                <?php echo  $but_text ?>
+                <?php echo  (!empty($_GET['heading']) ? $_GET['heading'] : '') ?>
                 Contact
-                <?php if (trim($name) != "") { ?>
-                    &quot;<?=$name;?>&quot;
+                <?php if (!empty($name) && trim($name) != "") { ?>
+                    &quot;<?php echo $name;?>&quot;
                 <?php } ?>
             </h1>
         </div>
-        <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" class="form-horizontal">
+        <form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" class="form-horizontal">
             <div class="page-header expanded">
                 <strong>ID and Access Details</strong>
             </div>
             <div class="form-group expanded">
                 <label for="username" class="col-md-3 control-label">Username</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="username" id="username" placeholder="Username" value="<?= $username ?>">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Username" value="<?php echo  $username ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="npi" class="col-md-3 control-label">NPI Number</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="npi" id="npi" placeholder="NPI Number" value="<?= $npi ?>">
+                    <input type="text" class="form-control" name="npi" id="npi" placeholder="NPI Number" value="<?php echo  $npi ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="medicare_npi" class="col-md-3 control-label">Medicare Provider (NPI/DME) Number</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="medicare_npi" id="medicare_npi" placeholder="Medicare Provider (NPI/DME) Number" value="<?= $medicare_npi ?>">
+                    <input type="text" class="form-control" name="medicare_npi" id="medicare_npi" placeholder="Medicare Provider (NPI/DME) Number" value="<?php echo  $medicare_npi ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="medicare_ptan" class="col-md-3 control-label">Medicare PTAN Number</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="medicare_ptan" id="medicare_ptan" placeholder="Medicare PTAN Number" value="<?= $medicare_ptan ?>">
+                    <input type="text" class="form-control" name="medicare_ptan" id="medicare_ptan" placeholder="Medicare PTAN Number" value="<?php echo  $medicare_ptan ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="tax_id_or_ssn" class="col-md-3 control-label">Tax ID or SSN</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="tax_id_or_ssn" id="tax_id_or_ssn" placeholder="Tax ID/SSN" value="<?= $tax_id_or_ssn ?>">
+                    <input type="text" class="form-control" name="tax_id_or_ssn" id="tax_id_or_ssn" placeholder="Tax ID/SSN" value="<?php echo  $tax_id_or_ssn ?>">
                 </div>
             </div>
             <div class="form-group expanded">
@@ -608,20 +609,20 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <div class="col-md-2 col-md-push-3 checkbox">
                     <label>
                         EIN
-                        <input id="ein" type="checkbox" name="ein" value="1" <?= ($ein)?'checked="checked"':''; ?>>
+                        <input id="ein" type="checkbox" name="ein" value="1" <?php echo  ($ein)?'checked="checked"':''; ?>>
                     </label>
                 </div>
                 <div class="col-md-2 col-md-push-3 checkbox">
                     <label>
                         SSN
-                        <input id="ssn" type="checkbox" name="ssn" value="1" <?= ($ssn)?'checked="checked"':''; ?>>
+                        <input id="ssn" type="checkbox" name="ssn" value="1" <?php echo  ($ssn)?'checked="checked"':''; ?>>
                     </label>
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="practice" class="col-md-3 control-label">Practice</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="practice" id="practice" placeholder="Practice" value="<?= $practice ?>">
+                    <input type="text" class="form-control" name="practice" id="practice" placeholder="Practice" value="<?php echo  $practice ?>">
                 </div>
             </div>
             <?php if (!isset($_REQUEST['ed'])) { ?>
@@ -645,55 +646,55 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             <div class="form-group">
                 <label for="first_name" class="col-md-3 control-label">First Name</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First name" value="<?= $first_name ?>">
+                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First name" value="<?php echo  $first_name ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="last_name" class="col-md-3 control-label">Last Name</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last name" value="<?= $last_name ?>">
+                    <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last name" value="<?php echo  $last_name ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="email" class="col-md-3 control-label">Email</label>
                 <div class="col-md-9">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="<?= $email ?>">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="<?php echo  $email ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="address" class="col-md-3 control-label">Address</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="address" id="address" placeholder="Address" value="<?= $address ?>">
+                    <input type="text" class="form-control" name="address" id="address" placeholder="Address" value="<?php echo  $address ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="city" class="col-md-3 control-label">City</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="city" id="city" placeholder="City" value="<?= $city ?>">
+                    <input type="text" class="form-control" name="city" id="city" placeholder="City" value="<?php echo  $city ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="state" class="col-md-3 control-label">State</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?= $state ?>">
+                    <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?php echo  $state ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="zip" class="col-md-3 control-label">Zip/Postal Code</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip/Postal Code" value="<?= $zip ?>">
+                    <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip/Postal Code" value="<?php echo  $zip ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="phone" class="col-md-3 control-label">Phone</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control extphonemask" name="phone" id="phone" placeholder="Phone number" value="<?= $phone ?>">
+                    <input type="text" class="form-control extphonemask" name="phone" id="phone" placeholder="Phone number" value="<?php echo  $phone ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="fax" class="col-md-3 control-label">Fax</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control phonemask" name="fax" id="fax" placeholder="Fax number" value="<?= $fax ?>">
+                    <input type="text" class="form-control phonemask" name="fax" id="fax" placeholder="Fax number" value="<?php echo  $fax ?>">
                 </div>
             </div>
             
@@ -703,136 +704,136 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             <div class="form-group expanded">
                 <label for="mailing_practice" class="col-md-3 control-label">Practice</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="mailing_practice" id="mailing_practice" placeholder="Practice" value="<?= $mailing_practice ?>">
+                    <input type="text" class="form-control" name="mailing_practice" id="mailing_practice" placeholder="Practice" value="<?php echo  $mailing_practice ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="mailing_name" class="col-md-3 control-label">Name</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="mailing_name" id="mailing_name" placeholder="Name" value="<?= $mailing_name ?>">
+                    <input type="text" class="form-control" name="mailing_name" id="mailing_name" placeholder="Name" value="<?php echo  $mailing_name ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="mailing_email" class="col-md-3 control-label">Email</label>
                 <div class="col-md-9">
-                    <input type="email" class="form-control" name="mailing_email" id="mailing_email" placeholder="Email" value="<?= $mailing_email ?>">
+                    <input type="email" class="form-control" name="mailing_email" id="mailing_email" placeholder="Email" value="<?php echo  $mailing_email ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="mailing_address" class="col-md-3 control-label">Address</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="mailing_address" id="mailing_address" placeholder="Address" value="<?= $mailing_address ?>">
+                    <input type="text" class="form-control" name="mailing_address" id="mailing_address" placeholder="Address" value="<?php echo  $mailing_address ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="mailing_city" class="col-md-3 control-label">City</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="mailing_city" id="mailing_city" placeholder="City" value="<?= $mailing_city ?>">
+                    <input type="text" class="form-control" name="mailing_city" id="mailing_city" placeholder="City" value="<?php echo  $mailing_city ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="mailing_state" class="col-md-3 control-label">State</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="mailing_state" id="mailing_state" placeholder="State" value="<?= $mailing_state ?>">
+                    <input type="text" class="form-control" name="mailing_state" id="mailing_state" placeholder="State" value="<?php echo  $mailing_state ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="mailing_zip" class="col-md-3 control-label">Zip/Postal Code</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="mailing_zip" id="mailing_zip" placeholder="Zip/Postal Code" value="<?= $mailing_zip ?>">
+                    <input type="text" class="form-control" name="mailing_zip" id="mailing_zip" placeholder="Zip/Postal Code" value="<?php echo  $mailing_zip ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="mailing_phone" class="col-md-3 control-label">Phone</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control extphonemask" name="mailing_phone" id="mailing_phone" placeholder="Phone number" value="<?= $mailing_phone ?>">
+                    <input type="text" class="form-control extphonemask" name="mailing_phone" id="mailing_phone" placeholder="Phone number" value="<?php echo  $mailing_phone ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="mailing_fax" class="col-md-3 control-label">Fax</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control phonemask" name="mailing_fax" id="mailing_fax" placeholder="Fax number" value="<?= $mailing_fax ?>">
+                    <input type="text" class="form-control phonemask" name="mailing_fax" id="mailing_fax" placeholder="Fax number" value="<?php echo  $mailing_fax ?>">
                 </div>
             </div>
             <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Use Service NPI?</label>
            	<div class="col-md-9">
-                     <input type="checkbox" name="use_service_npi" id="use_service_npi" value="1" <? if($use_service_npi == 1) echo " checked='checked'";?> />
+                     <input type="checkbox" name="use_service_npi" id="use_service_npi" value="1" <?php if($use_service_npi == 1) echo " checked='checked'";?> />
 		</div>
 	    </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Name</label>
                 <div class="col-md-9">
 
-                <input id="service_name" class="form-control" type="text" name="service_name" value="<?=$service_name;?>" class="tbox" />
+                <input id="service_name" class="form-control" type="text" name="service_name" value="<?php echo $service_name;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Address</label>
                 <div class="col-md-9">
-                <input id="service_address" class="form-control" type="text" name="service_address" value="<?=$service_address;?>" class="tbox" />
+                <input id="service_address" class="form-control" type="text" name="service_address" value="<?php echo $service_address;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service City</label>
                 <div class="col-md-9">
-                <input id="service_city" class="form-control" type="text" name="service_city" value="<?=$service_city;?>" class="tbox" />
+                <input id="service_city" class="form-control" type="text" name="service_city" value="<?php echo $service_city;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service State</label>
                 <div class="col-md-9">
-                <input id="service_state" class="form-control" type="text" name="service_state" value="<?=$service_state;?>" class="tbox" />
+                <input id="service_state" class="form-control" type="text" name="service_state" value="<?php echo $service_state;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Zip</label>
                 <div class="col-md-9">
-                <input id="service_zip" class="form-control" type="text" name="service_zip" value="<?=$service_zip;?>" class="tbox" />
+                <input id="service_zip" class="form-control" type="text" name="service_zip" value="<?php echo $service_zip;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Phone</label>
                 <div class="col-md-9">
-                <input id="service_phone" class="form-control extphonemask" type="text" name="service_phone" value="<?=$service_phone;?>" class="tbox" />
+                <input id="service_phone" class="form-control extphonemask" type="text" name="service_phone" value="<?php echo $service_phone;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Fax</label>
                 <div class="col-md-9">
-                <input id="service_fax" class="form-control phonemask" type="text" name="service_fax" value="<?=$service_fax;?>" class="tbox" />
+                <input id="service_fax" class="form-control phonemask" type="text" name="service_fax" value="<?php echo $service_fax;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service NPI</label>
                 <div class="col-md-9">
-                <input id="service_npi" class="form-control" type="text" name="service_npi" value="<?=$service_npi;?>" class="tbox" />
+                <input id="service_npi" class="form-control" type="text" name="service_npi" value="<?php echo $service_npi;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Medicare NPI</label>
                 <div class="col-md-9">
-                <input id="service_medicare_npi" class="form-control" type="text" name="service_medicare_npi" value="<?=$service_medicare_npi;?>" class="tbox" />
+                <input id="service_medicare_npi" class="form-control" type="text" name="service_medicare_npi" value="<?php echo $service_medicare_npi;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Medicare PTAN</label>
                 <div class="col-md-9">
-                <input id="service_medicare_ptan" class="form-control" type="text" name="service_medicare_ptan" value="<?=$service_medicare_ptan;?>" class="tbox" />
+                <input id="service_medicare_ptan" class="form-control" type="text" name="service_medicare_ptan" value="<?php echo $service_medicare_ptan;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Tax ID or SSN</label>
                 <div class="col-md-9">
-                <input id="service_tax_id_or_ssn" class="form-control" type="text" name="service_tax_id_or_ssn" value="<?=$service_tax_id_or_ssn;?>" class="tbox" />
+                <input id="service_tax_id_or_ssn" class="form-control" type="text" name="service_tax_id_or_ssn" value="<?php echo $service_tax_id_or_ssn;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service EIN or SSN</label>
                 <div class="col-md-9">
-                <input id="service_ein" type="checkbox" name="service_ein" value="1" <?= ($service_ein)?'checked="checked"':''; ?> class="tbox" />
+                <input id="service_ein" type="checkbox" name="service_ein" value="1" <?php echo  ($service_ein)?'checked="checked"':''; ?> class="tbox" />
                 EIN
-                <input id="service_ssn" type="checkbox" name="service_ssn" value="1" <?= ($service_ssn)?'checked="checked"':''; ?> class="tbox" />
+                <input id="service_ssn" type="checkbox" name="service_ssn" value="1" <?php echo  ($service_ssn)?'checked="checked"':''; ?> class="tbox" />
                 SSN
                 </div>
             </div>
@@ -844,15 +845,15 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <label class="col-md-3 control-label">Active services</label>
                 <div class="col-md-9">
                     <label class="col-md-4">
-                        <input type="checkbox" name="use_patient_portal" value="1" <? if($use_patient_portal == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="use_patient_portal" value="1" <?php if($use_patient_portal == 1) echo " checked='checked'";?>>
                         Patient Portal
                     </label>
                     <label class="col-md-4">
-                        <input type="checkbox" name="use_digital_fax" value="1" <? if($use_digital_fax == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="use_digital_fax" value="1" <?php if($use_digital_fax == 1) echo " checked='checked'";?>>
                         Digital Fax
                     </label>
                     <label class="col-md-4">
-                        <input type="checkbox" name="use_letters" value="1" <? if($use_letters == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="use_letters" value="1" <?php if($use_letters == 1) echo " checked='checked'";?>>
                         Letters
                     </label>
                 </div>
@@ -860,15 +861,15 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             <div class="form-group">
                 <div class="col-md-9 col-md-push-3">
                     <label class="col-md-4">
-                        <input type="checkbox" name="use_eligible_api" value="1" <? if($use_eligible_api == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="use_eligible_api" value="1" <?php if($use_eligible_api == 1) echo " checked='checked'";?>>
                         Eligible API
                     </label>
                     <label class="col-md-4">
-                        <input type="checkbox" name="use_course" value="1" <? if($use_course == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="use_course" value="1" <?php if($use_course == 1) echo " checked='checked'";?>>
                         Course
                     </label>
                     <label class="col-md-4">
-                        <input type="checkbox" name="use_course_staff" value="1" <? if($use_course_staff == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="use_course_staff" value="1" <?php if($use_course_staff == 1) echo " checked='checked'";?>>
                         Staff Course
                     </label>
                 </div>
@@ -876,7 +877,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             <div class="form-group">
                 <div class="col-md-9 col-md-push-3">
                     <label class="col-md-4">
-                        <input type="checkbox" name="eligible_test" value="1" <? if($eligible_test == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="eligible_test" value="1" <?php if($eligible_test == 1) echo " checked='checked'";?>>
                         Eligible Test?
                     </label>
                 </div>
@@ -886,11 +887,11 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <label class="col-md-3 control-label">Automated services</label>
                 <div class="col-md-9">
                     <label class="col-md-4">
-                        <input type="checkbox" name="tracker_letters" value="1" <? if($tracker_letters == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="tracker_letters" value="1" <?php if($tracker_letters == 1) echo " checked='checked'";?>>
                         Tracker Letters 
                     </label>
                     <label class="col-md-4">
-                        <input type="checkbox" name="intro_letters" value="1" <? if($intro_letters == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="intro_letters" value="1" <?php if($intro_letters == 1) echo " checked='checked'";?>>
                         Intro Letters 
                     </label>
                 </div>
@@ -899,11 +900,11 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <label class="col-md-3 control-label">Visuals to use</label>
                 <div class="col-md-9">
                     <label class="col-md-4">
-                        <input type="checkbox" name="homepage" value="1" <? if($homepage == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="homepage" value="1" <?php if($homepage == 1) echo " checked='checked'";?>>
                         New Homepage
                     </label>
                     <label class="col-md-4">
-                        <input type="checkbox" name="use_letter_header" value="1" <? if($use_letter_header == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="use_letter_header" value="1" <?php if($use_letter_header == 1) echo " checked='checked'";?>>
                         Letter Header 
                     </label>
                 </div>
@@ -920,10 +921,10 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                        <?php
                        
                        $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_SOFTWARE."' ORDER BY name ASC";
-                       $bu_q = mysql_query($bu_sql);
+                       $bu_q = mysqli_query($con,$bu_sql);
                        
-                       while ($bu_r = mysql_fetch_assoc($bu_q)) { ?>
-                       <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $companyid)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
+                       while ($bu_r = mysqli_fetch_assoc($bu_q)) { ?>
+                       <option value="<?php echo  $bu_r['id']; ?>" <?php echo  ($bu_r['id'] == $companyid)?'selected="selected"':''; ?>><?php echo  $bu_r['name']; ?></option>
                        <?php } ?>
                     </select>
                 </div>
@@ -932,8 +933,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <label for="user_type" class="col-md-3 control-label">User Type</label>
                 <div class="col-md-9">
                     <select name="user_type" id="user_type" class="form-control">
-                       <option value="<?= DSS_USER_TYPE_FRANCHISEE; ?>" <?= ($user_type == DSS_USER_TYPE_FRANCHISEE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_FRANCHISEE]; ?></option>
-                       <option value="<?= DSS_USER_TYPE_SOFTWARE; ?>" <?= ($user_type == DSS_USER_TYPE_SOFTWARE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_SOFTWARE]; ?></option>
+                       <option value="<?php echo  DSS_USER_TYPE_FRANCHISEE; ?>" <?php echo  ($user_type == DSS_USER_TYPE_FRANCHISEE)?'selected="selected"':''; ?>><?php echo  $dss_user_type_labels[DSS_USER_TYPE_FRANCHISEE]; ?></option>
+                       <option value="<?php echo  DSS_USER_TYPE_SOFTWARE; ?>" <?php echo  ($user_type == DSS_USER_TYPE_SOFTWARE)?'selected="selected"':''; ?>><?php echo  $dss_user_type_labels[DSS_USER_TYPE_SOFTWARE]; ?></option>
                     </select>
                 </div>
             </div>
@@ -950,10 +951,10 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         <?php
                         
                         $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_BILLING."' ORDER BY name ASC";
-                        $bu_q = mysql_query($bu_sql);
+                        $bu_q = mysqli_query($con,$bu_sql);
                         
-                        while ($bu_r = mysql_fetch_assoc($bu_q)) { ?>
-                        <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $billing_company_id)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
+                        while ($bu_r = mysqli_fetch_assoc($bu_q)) { ?>
+                        <option value="<?php echo  $bu_r['id']; ?>" <?php echo  ($bu_r['id'] == $billing_company_id)?'selected="selected"':''; ?>><?php echo  $bu_r['name']; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -964,14 +965,14 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     <?php
                     
                     $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-                    LEFT JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_GET['ed'])."'
+                    LEFT JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con,!empty($_GET['ed']) ? $_GET['ed'] : '')."'
                     WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
-                    $bu_q = mysql_query($bu_sql);
+                    $bu_q = mysqli_query($con,$bu_sql);
                     
-                    while ($bu_r = mysql_fetch_assoc($bu_q)) { ?>
+                    while ($bu_r = mysqli_fetch_assoc($bu_q)) { ?>
                     <label class="checkbox">
-                        <input type="checkbox" name="hst_company[]" value="<?= $bu_r['id']; ?>"  <?= ($bu_r['uhc_id'])?'checked="checked"':''; ?>>
-                        <?= $bu_r['name']; ?>
+                        <input type="checkbox" name="hst_company[]" value="<?php echo  $bu_r['id']; ?>"  <?php echo  ($bu_r['uhc_id'])?'checked="checked"':''; ?>>
+                        <?php echo  $bu_r['name']; ?>
                     </label>
                     <?php } ?>
                 </div>
@@ -983,10 +984,10 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         <?php
                         
                         $p_sql = "SELECT * FROM dental_access_codes ORDER BY access_code ASC";
-                        $p_q = mysql_query($p_sql);
+                        $p_q = mysqli_query($con,$p_sql);
                         
-                        while ($p_r = mysql_fetch_assoc($p_q)) { ?>
-                        <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $access_code_id)?'selected="selected"':''; ?>><?= $p_r['access_code']; ?><?= ($p_r['status']=='2')?" - inactive":'';?></option>
+                        while ($p_r = mysqli_fetch_assoc($p_q)) { ?>
+                        <option value="<?php echo  $p_r['id']; ?>" <?php echo  ($p_r['id'] == $access_code_id)?'selected="selected"':''; ?>><?php echo  $p_r['access_code']; ?><?php echo  ($p_r['status']=='2')?" - inactive":'';?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -998,10 +999,10 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         <?php
                         
                         $p_sql = "SELECT * FROM dental_plans WHERE office_type='1' ORDER BY name ASC";
-                        $p_q = mysql_query($p_sql);
+                        $p_q = mysqli_query($con,$p_sql);
                         
-                        while ($p_r = mysql_fetch_assoc($p_q)) { ?>
-                        <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $plan_id)?'selected="selected"':''; ?>><?= $p_r['name']; ?></option>
+                        while ($p_r = mysqli_fetch_assoc($p_q)) { ?>
+                        <option value="<?php echo  $p_r['id']; ?>" <?php echo  ($p_r['id'] == $plan_id)?'selected="selected"':''; ?>><?php echo  $p_r['name']; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -1013,10 +1014,10 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         <?php
 
                         $p_sql = "SELECT * FROM dental_plans WHERE office_type='3' ORDER BY name ASC";
-                        $p_q = mysql_query($p_sql);
+                        $p_q = mysqli_query($con,$p_sql);
 
-                        while ($p_r = mysql_fetch_assoc($p_q)) { ?>
-                        <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $billing_plan_id)?'selected="selected"':''; ?>><?= $p_r['name']; ?></option>
+                        while ($p_r = mysqli_fetch_assoc($p_q)) { ?>
+                        <option value="<?php echo  $p_r['id']; ?>" <?php echo  ($p_r['id'] == $billing_plan_id)?'selected="selected"':''; ?>><?php echo  $p_r['name']; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -1028,9 +1029,9 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <label for="status" class="col-md-3 control-label">Status</label>
                 <div class="col-md-9">
                     <select id="status" name="status" class="form-control" onchange="showSuspended();">
-                        <option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                        <option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
-                        <option value="3" <? if($status == 3) echo " selected";?>>Suspended</option>
+                        <option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                        <option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
+                        <option value="3" <?php if($status == 3) echo " selected";?>>Suspended</option>
                     </select>
                 </div>
             </div>
@@ -1044,23 +1045,23 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
   }
 </script>
 
-            <div id="suspended_reason" class="form-group" <?= ($status!=3)?'style="display:none;"':''; ?>>
+            <div id="suspended_reason" class="form-group" <?php echo  ($status!=3)?'style="display:none;"':''; ?>>
                 <label for="suspended_reason" class="col-md-3 control-label">Suspended Reason</label>
                 <div class="col-md-9">
-                    <textarea name="suspended_reason" id="suspended_reason" class="form-control"><?= $suspended_reason ?></textarea>
+                    <textarea name="suspended_reason" id="suspended_reason" class="form-control"><?php echo  $suspended_reason ?></textarea>
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-md-9 col-md-offset-3">
                     <input type="hidden" name="usersub" value="1">
-                    <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>">
-                    <input type="submit" name="save_but" onclick="return userabc_warn(this.form);" value=" <?=$but_text?> User" class="btn btn-primary">
+                    <input type="hidden" name="ed" value="<?php echo $themyarray["userid"]?>">
+                    <input type="submit" name="save_but" onclick="return userabc_warn(this.form);" value=" <?php echo $but_text?> User" class="btn btn-primary">
                 <?php if ($themyarray["userid"] != '' && $_SESSION['admin_access']==1 && $themyarray['status']!=3) { ?>
-                    <a href="javascript:parent.window.location='manage_users.php?delid=<?=$themyarray["userid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
+                    <a href="javascript:parent.window.location='manage_users.php?delid=<?php echo $themyarray["userid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
                         Delete
                     </a>
-                    <a href="reset_password.php?id=<?=$themyarray["userid"];?>" class="btn btn-default pull-right">Reset Password</a>
+                    <a href="reset_password.php?id=<?php echo $themyarray["userid"];?>" class="btn btn-default pull-right">Reset Password</a>
                     <?php if ($themyarray['status']==2) { ?>
                     <input type="submit" class="btn btn-info" name="reg_but" onclick="return userregabc(this.form)" value="Send Registration Email">
                     <?php } ?>
@@ -1071,7 +1072,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <?php if($themyarray['status']==2){
                         $registration_link = "http://".$_SERVER['HTTP_HOST']."/manage/register/activate.php?id=".$themyarray['userid']."&hash=".$themyarray['recover_hash'];
                         ?>
-                        <a href="#" onclick="alert('<?= $registration_link; ?>');return false;">Registration Link</a>
+                        <a href="#" onclick="alert('<?php echo  $registration_link; ?>');return false;">Registration Link</a>
                 <?php } ?>
                 </div>
             </div>

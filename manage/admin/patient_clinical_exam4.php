@@ -4,26 +4,26 @@ include "includes/patient_nav.php";
 ?>
 <ul class="nav nav-tabs nav-justified">
         <li>
-            <a href="patient_clinical_exam.php?pid=<?= $_GET['pid']; ?>" id="link_summ">Dental Exam</a>
+            <a href="patient_clinical_exam.php?pid=<?php echo  $_GET['pid']; ?>" id="link_summ">Dental Exam</a>
         </li>
         <li>
-            <a href="patient_clinical_exam2.php?pid=<?= $_GET['pid']; ?>" id="link_notes">Vital Data/Tongue</a>
+            <a href="patient_clinical_exam2.php?pid=<?php echo  $_GET['pid']; ?>" id="link_notes">Vital Data/Tongue</a>
         </li>
         <li>
-            <a href="patient_clinical_exam3.php?pid=<?= $_GET['pid']; ?>" id="link_treatment">Mallampati/Tonsils</a>
+            <a href="patient_clinical_exam3.php?pid=<?php echo  $_GET['pid']; ?>" id="link_treatment">Mallampati/Tonsils</a>
         </li>
         <li class="active">
-            <a href="patient_clinical_exam4.php?pid=<?= $_GET['pid']; ?>" id="link_treatment">Airway Evaluation</a>
+            <a href="patient_clinical_exam4.php?pid=<?php echo  $_GET['pid']; ?>" id="link_treatment">Airway Evaluation</a>
         </li>
         <li>
-            <a href="patient_clinical_exam5.php?pid=<?= $_GET['pid']; ?>" id="link_treatment">TMJ/ROM</a>
+            <a href="patient_clinical_exam5.php?pid=<?php echo  $_GET['pid']; ?>" id="link_treatment">TMJ/ROM</a>
         </li>
     </ul>
 
     <p>&nbsp;</p>
 
 <?php
-if($_POST['ex_page3sub'] == 1)
+if(!empty($_POST['ex_page3sub']) && $_POST['ex_page3sub'] == 1)
 {
 	$maxilla = $_POST['maxilla'];
 	$other_maxilla = $_POST['other_maxilla'];
@@ -145,22 +145,22 @@ if($_POST['ex_page3sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
 		
 		$msg = "Added Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?=$msg;?>");
-                        window.location='ex_page5.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                        //alert("<?php echo $msg;?>");
+                        window.location='ex_page5.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
                 }else{
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			//alert("<?php echo $msg;?>");
+			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
 		}
@@ -183,22 +183,22 @@ if($_POST['ex_page3sub'] == 1)
 		other_nasal_passages = '".s_for($other_nasal_passages)."'
 		where ex_page3id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		$msg = "Edited Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?=$msg;?>");
-                        window.location='ex_page5.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                        //alert("<?php echo $msg;?>");
+                        window.location='ex_page5.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
                 }else{
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			//alert("<?php echo $msg;?>");
+			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
 		}
@@ -208,8 +208,8 @@ if($_POST['ex_page3sub'] == 1)
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con,$pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -224,8 +224,8 @@ if($pat_myarray['patientid'] == '')
 }
 
 $sql = "select * from dental_ex_page3 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con,$sql);
+$myarray = mysqli_fetch_array($my);
 
 $ex_page3id = st($myarray['ex_page3id']);
 $maxilla = st($myarray['maxilla']);
@@ -252,19 +252,19 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 <a name="top"></a>
 &nbsp;&nbsp;
 
-<? include("includes/form_top.htm");?>
+<?php include("../includes/form_top.htm");?>
 
 <br />
 <br>
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
-<form id="ex_page3frm" class="ex_form" name="ex_page3frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
+<form id="ex_page3frm" class="ex_form" name="ex_page3frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post">
 <input type="hidden" name="ex_page3sub" value="1" />
-<input type="hidden" name="ed" value="<?=$ex_page3id;?>" />
-<input type="hidden" name="goto_p" value="<?=$cur_page?>" />
+<input type="hidden" name="ed" value="<?php echo $ex_page3id;?>" />
+<input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
 
 <table style="clear:both;" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 	<tr>
@@ -293,14 +293,14 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                     	<span>
                         	<?
 							$maxilla_sql = "select * from dental_maxilla where status=1 order by sortby";
-							$maxilla_my = mysql_query($maxilla_sql);
+							$maxilla_my = mysqli_query($con,$maxilla_sql);
 							
-							while($maxilla_myarray = mysql_fetch_array($maxilla_my))
+							while($maxilla_myarray = mysqli_fetch_array($maxilla_my))
 							{
 							?>
-								<input type="checkbox" id="maxilla" name="maxilla[]" value="<?=st($maxilla_myarray['maxillaid'])?>" <? if(strpos($maxilla,'~'.st($maxilla_myarray['maxillaid']).'~') === false) {} else { echo " checked";}?> />
+								<input type="checkbox" id="maxilla" name="maxilla[]" value="<?php echo st($maxilla_myarray['maxillaid'])?>" <?php if(strpos($maxilla,'~'.st($maxilla_myarray['maxillaid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
-                                <?=st($maxilla_myarray['maxilla']);?><br />
+                                <?php echo st($maxilla_myarray['maxilla']);?><br />
 							<?
 							}
 							?>
@@ -312,7 +312,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                             	Other Items<br />
                             </span>
                             (Enter Each on Different Line)<br />
-                            <textarea name="other_maxilla" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_maxilla;?></textarea>
+                            <textarea name="other_maxilla" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_maxilla;?></textarea>
                         </span>
                     </div>
                     <br />
@@ -334,14 +334,14 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                     	<span>
                         	<?
 							$mandible_sql = "select * from dental_mandible where status=1 order by sortby";
-							$mandible_my = mysql_query($mandible_sql);
+							$mandible_my = mysqli_query($con,$mandible_sql);
 							
-							while($mandible_myarray = mysql_fetch_array($mandible_my))
+							while($mandible_myarray = mysqli_fetch_array($mandible_my))
 							{
 							?>
-								<input type="checkbox" id="mandible" name="mandible[]" value="<?=st($mandible_myarray['mandibleid'])?>" <? if(strpos($mandible,'~'.st($mandible_myarray['mandibleid']).'~') === false) {} else { echo " checked";}?> />
+								<input type="checkbox" id="mandible" name="mandible[]" value="<?php echo st($mandible_myarray['mandibleid'])?>" <?php if(strpos($mandible,'~'.st($mandible_myarray['mandibleid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
-                                <?=st($mandible_myarray['mandible']);?><br />
+                                <?php echo st($mandible_myarray['mandible']);?><br />
 							<?
 							}
 							?>
@@ -353,7 +353,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                             	Other Items<br />
                             </span>
                             (Enter Each on Different Line)<br />
-                            <textarea name="other_mandible" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_mandible;?></textarea>
+                            <textarea name="other_mandible" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_mandible;?></textarea>
                         </span>
                     </div>
                     <br />
@@ -375,14 +375,14 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                     	<span>
                         	<?
 							$soft_palate_sql = "select * from dental_soft_palate where status=1 order by sortby";
-							$soft_palate_my = mysql_query($soft_palate_sql);
+							$soft_palate_my = mysqli_query($con,$soft_palate_sql);
 							
-							while($soft_palate_myarray = mysql_fetch_array($soft_palate_my))
+							while($soft_palate_myarray = mysqli_fetch_array($soft_palate_my))
 							{
 							?>
-								<input type="checkbox" id="soft_palate" name="soft_palate[]" value="<?=st($soft_palate_myarray['soft_palateid'])?>" <? if(strpos($soft_palate,'~'.st($soft_palate_myarray['soft_palateid']).'~') === false) {} else { echo " checked";}?> />
+								<input type="checkbox" id="soft_palate" name="soft_palate[]" value="<?php echo st($soft_palate_myarray['soft_palateid'])?>" <?php if(strpos($soft_palate,'~'.st($soft_palate_myarray['soft_palateid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
-                                <?=st($soft_palate_myarray['soft_palate']);?><br />
+                                <?php echo st($soft_palate_myarray['soft_palate']);?><br />
 							<?
 							}
 							?>
@@ -394,7 +394,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                             	Other Items<br />
                             </span>
                             (Enter Each on Different Line)<br />
-                            <textarea name="other_soft_palate" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_soft_palate;?></textarea>
+                            <textarea name="other_soft_palate" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_soft_palate;?></textarea>
                         </span>
                     </div>
                     <br />
@@ -416,8 +416,8 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                     	<span>
                        <?php
 							$uvula_sql = "select * from dental_uvula where status=1 order by sortby";
-							$uvula_my = mysql_query($uvula_sql);
-							//$uvula_prearray = mysql_fetch_array($uvula_my);
+							$uvula_my = mysqli_query($con,$uvula_sql);
+							//$uvula_prearray = mysqli_fetch_array($uvula_my);
 							
 							?>
                       <!--<input type="checkbox" name="uvula[]" id="uvula" onclick="showMe('uvuladiv')" value="1" <?php if(in_array("1", $uvula_prearray)){ echo "checked=\"checked\""; }?> >&nbsp;&nbsp;&nbsp;&nbsp;Not Clinically Present<br />
@@ -426,12 +426,12 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                       -->
                         	<?
 							  
-							while($uvula_myarray = mysql_fetch_array($uvula_my))
+							while($uvula_myarray = mysqli_fetch_array($uvula_my))
 							{
 							?>
-								<input type="checkbox" id="uvula" name="uvula[]" value="<?=st($uvula_myarray['uvulaid'])?>" <? if(strpos($uvula,'~'.st($uvula_myarray['uvulaid']).'~') === false) {} else { echo " checked";}?> />
+								<input type="checkbox" id="uvula" name="uvula[]" value="<?php echo st($uvula_myarray['uvulaid'])?>" <?php if(strpos($uvula,'~'.st($uvula_myarray['uvulaid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
-                                <?=st($uvula_myarray['uvula']);?><br />
+                                <?php echo st($uvula_myarray['uvula']);?><br />
 							<?
 							}
 							?> <!--</div>-->
@@ -444,7 +444,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                             	Other Items<br />
                             </span>
                             (Enter Each on Different Line)<br />
-                            <textarea name="other_uvula" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_uvula;?></textarea>
+                            <textarea name="other_uvula" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_uvula;?></textarea>
                         </span>
                     </div>
                     <br />
@@ -466,14 +466,14 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                     	<span>
                         	<?
 							$gag_reflex_sql = "select * from dental_gag_reflex where status=1 order by sortby";
-							$gag_reflex_my = mysql_query($gag_reflex_sql);
+							$gag_reflex_my = mysqli_query($con,$gag_reflex_sql);
 							
-							while($gag_reflex_myarray = mysql_fetch_array($gag_reflex_my))
+							while($gag_reflex_myarray = mysqli_fetch_array($gag_reflex_my))
 							{
 							?>
-								<input type="checkbox" id="gag_reflex" name="gag_reflex[]" value="<?=st($gag_reflex_myarray['gag_reflexid'])?>" <? if(strpos($gag_reflex,'~'.st($gag_reflex_myarray['gag_reflexid']).'~') === false) {} else { echo " checked";}?> />
+								<input type="checkbox" id="gag_reflex" name="gag_reflex[]" value="<?php echo st($gag_reflex_myarray['gag_reflexid'])?>" <?php if(strpos($gag_reflex,'~'.st($gag_reflex_myarray['gag_reflexid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
-                                <?=st($gag_reflex_myarray['gag_reflex']);?><br />
+                                <?php echo st($gag_reflex_myarray['gag_reflex']);?><br />
 							<?
 							}
 							?>
@@ -485,7 +485,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                             	Other Items<br />
                             </span>
                             (Enter Each on Different Line)<br />
-                            <textarea name="other_gag_reflex" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_gag_reflex;?></textarea>
+                            <textarea name="other_gag_reflex" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_gag_reflex;?></textarea>
                         </span>
                     </div>
                     <br />
@@ -507,14 +507,14 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                     	<span>
                         	<?
 							$nasal_passages_sql = "select * from dental_nasal_passages where status=1 order by sortby";
-							$nasal_passages_my = mysql_query($nasal_passages_sql);
+							$nasal_passages_my = mysqli_query($con,$nasal_passages_sql);
 							
-							while($nasal_passages_myarray = mysql_fetch_array($nasal_passages_my))
+							while($nasal_passages_myarray = mysqli_fetch_array($nasal_passages_my))
 							{
 							?>
-								<input type="checkbox" id="nasal_passages" name="nasal_passages[]" value="<?=st($nasal_passages_myarray['nasal_passagesid'])?>" <? if(strpos($nasal_passages,'~'.st($nasal_passages_myarray['nasal_passagesid']).'~') === false) {} else { echo " checked";}?> />
+								<input type="checkbox" id="nasal_passages" name="nasal_passages[]" value="<?php echo st($nasal_passages_myarray['nasal_passagesid'])?>" <?php if(strpos($nasal_passages,'~'.st($nasal_passages_myarray['nasal_passagesid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
-                                <?=st($nasal_passages_myarray['nasal_passages']);?><br />
+                                <?php echo st($nasal_passages_myarray['nasal_passages']);?><br />
 							<?
 							}
 							?>
@@ -526,7 +526,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                             	Other Items<br />
                             </span>
                             (Enter Each on Different Line)<br />
-                            <textarea name="other_nasal_passages" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_nasal_passages;?></textarea>
+                            <textarea name="other_nasal_passages" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_nasal_passages;?></textarea>
                         </span>
                     </div>
                     <br />
@@ -543,11 +543,11 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 </form>
 
 <br />
-<? include("includes/form_bottom.htm");?>
+<?php include("../includes/form_bottom.htm");?>
 <br />
 
 
 
 ?>
 
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

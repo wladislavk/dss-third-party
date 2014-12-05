@@ -10,7 +10,7 @@ include_once "includes/general.htm";
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
-if($_POST["notesub"] == 1)
+if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
 {
   if($_POST['nid']==''){
 
@@ -22,7 +22,7 @@ if($_POST["notesub"] == 1)
 				create_type = '0',
 				creator_id = '".mysql_real_escape_string($_SESSION['adminuserid'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysql_query($ins_sql) or die($ins_sql.mysql_error());
+		mysqli_query($con,$ins_sql) or die($ins_sql.mysql_error());
 		$n_id = mysql_insert_id();
 
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
@@ -34,7 +34,7 @@ if($_POST["notesub"] == 1)
                   $a_sql = "INSERT INTO dental_claim_note_attachment SET
                                 filename = '".mysql_real_escape_string($attachment)."',
                                 note_id=".mysql_real_escape_string($n_id);
-                  mysql_query($a_sql);
+                  mysqli_query($con,$a_sql);
                 }
                 }
 
@@ -42,9 +42,9 @@ if($_POST["notesub"] == 1)
 		?>
 		<script type="text/javascript">
 			<?php if(isset($_POST['close']) && $_POST['close']==1){ ?>
-			  parent.window.location='claim_payments_advanced.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&close=1';
+			  parent.window.location='claim_payments_advanced.php?id=<?php echo  $_POST['claim_id'];?>&pid=<?php echo  $_POST['pid']; ?>&close=1';
 			<?php }else{ ?>
-			  parent.window.location='claim_notes.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';
+			  parent.window.location='claim_notes.php?id=<?php echo  $_POST['claim_id'];?>&pid=<?php echo  $_POST['pid']; ?>&msg=<?php echo $msg;?>';
 			<?php } ?>
 		</script>
 		<?
@@ -54,7 +54,7 @@ if($_POST["notesub"] == 1)
                 $up_sql = "update dental_claim_notes set 
                                 note = '".mysql_real_escape_string($_POST['note'])."'
                                 WHERE id='".mysql_real_escape_string($_POST['nid'])."'";
-                mysql_query($up_sql) or die($up_sql.mysql_error());
+                mysqli_query($con,$up_sql) or die($up_sql.mysql_error());
 		$n_id = $_POST['nid'];
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
                 if($_FILES['attachment']['tmp_name'][$i]!=''){
@@ -65,16 +65,16 @@ if($_POST["notesub"] == 1)
                   $a_sql = "INSERT INTO dental_claim_note_attachment SET
                                 filename = '".mysql_real_escape_string($attachment)."',
                                 note_id=".mysql_real_escape_string($n_id);
-                  mysql_query($a_sql);
+                  mysqli_query($con,$a_sql);
                 }
                 }
 
                 ?>
                 <script type="text/javascript">
 			<?php if(isset($_POST['close']) && $_POST['close']==1){ ?>
-			  parent.window.location='claim_payments_advanced.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&close=1';
+			  parent.window.location='claim_payments_advanced.php?id=<?php echo  $_POST['claim_id'];?>&pid=<?php echo  $_POST['pid']; ?>&close=1';
 			<?php }else{ ?>
-                          parent.window.location='claim_notes.php?id=<?= $_POST['claim_id'];?>&pid=<?= $_POST['pid']; ?>&msg=<?=$msg;?>';
+                          parent.window.location='claim_notes.php?id=<?php echo  $_POST['claim_id'];?>&pid=<?php echo  $_POST['pid']; ?>&msg=<?php echo $msg;?>';
 			<?php } ?>
                 </script>
                 <?
@@ -84,8 +84,8 @@ if($_POST["notesub"] == 1)
 }
 
 
-$sql = "select * from dental_claim_text WHERE default_text=1 OR companyid = '".mysql_real_escape_string($_SESSION['admincompanyid'])."' order by Title";
-$my = mysql_query($sql);
+$sql = "select * from dental_claim_text WHERE default_text=1 OR companyid = '".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."' order by Title";
+$my = mysqli_query($con,$sql);
 
 ?>
 <script type="text/javascript">
@@ -98,11 +98,11 @@ $my = mysql_query($sql);
                         
                         <? $i=0;
                         //$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
-                        //$my = mysql_query($sql);
+                        //$my = mysqli_query($con,$sql);
                         while($myarray = mysql_fetch_array($my))
                         {?>
-                                title_arr[<?=$i;?>] = "<?=st(addslashes($myarray['title']));?>";
-                                desc_arr[<?=$i;?>] = "<?=st(trim( preg_replace( '/\n\r|\r\n/','%n%',addslashes($myarray['description']))));?>";
+                                title_arr[<?php echo $i;?>] = "<?php echo st(addslashes($myarray['title']));?>";
+                                desc_arr[<?php echo $i;?>] = "<?php echo st(trim( preg_replace( '/\n\r|\r\n/','%n%',addslashes($myarray['description']))));?>";
                         <?
                                 $i++;                        }?>
                         document.getElementById("note").value = desc_arr[fa].replace(/\%n\%/g,'\r\n').replace(/&amp;/g,'&');;
@@ -118,7 +118,7 @@ $my = mysql_query($sql);
 
         if(isset($_GET['nid'])){
                 $s = "SELECT * FROM dental_claim_notes WHERE id='".$_GET['nid']."'";
-                $q = mysql_query($s);
+                $q = mysqli_query($con,$s);
                 $r = mysql_fetch_assoc($q);
                 $note = $r['note'];
         }else{
@@ -127,7 +127,7 @@ $my = mysql_query($sql);
 
 		$but_text = "Add ";
 	
-	 if($msg != '') {?>
+	 if(!empty($msg)) {?>
     <div align="center" class="red">
         <? echo $msg;?>
     </div>
@@ -138,7 +138,7 @@ $my = mysql_query($sql);
             </h1>
         </div>
 
-    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" enctype="multipart/form-data" onsubmit="return adminclaimnoteabc(this)">
+    <form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" enctype="multipart/form-data" onsubmit="return adminclaimnoteabc(this)">
 
 	<div class="form-group">
                 <label for="docid" class="col-md-3 control-label">Text Templates</label>
@@ -147,11 +147,11 @@ $my = mysql_query($sql);
                 <option value="">Select</option>
                 <?
                                 $j=0;
-                                $my = mysql_query($sql);
+                                $my = mysqli_query($con,$sql);
                                 while($myarray = mysql_fetch_array($my))
                                 { ?>
-                                        <option value="<?=$j;?>">
-                        <?=st($myarray['title']);?>
+                                        <option value="<?php echo $j;?>">
+                        <?php echo st($myarray['title']);?>
                     </option>
                                 <?
                                         $j++;
@@ -162,7 +162,7 @@ $my = mysql_query($sql);
             <div class="form-group">
                 <label for="body" class="col-md-3 control-label">Note</label>
                 <div class="col-md-9">
-                            	<textarea name="note" id="note" placeholder="Claim Text" class="form-control"><?=$note?></textarea>
+                            	<textarea name="note" id="note" placeholder="Claim Text" class="form-control"><?php echo $note?></textarea>
 		</div>
 	</div>
             <div class="form-group">
@@ -195,10 +195,10 @@ $my = mysql_query($sql);
 	<div class="form-group">
 		<div class="col-md-9 col-md-offset-3">
                 <input type="hidden" name="notesub" value="1" />
-		<input type="hidden" name="claim_id" value="<?= $_REQUEST['claim_id']; ?>" />
-		<input type="hidden" name="pid" value="<?= $_REQUEST['pid']; ?>" />
-		<input type="hidden" name="nid" value="<?= $_REQUEST['nid']; ?>" />
-                <input type="submit" value=" <?=$but_text?> Note" class="btn btn-primary" />
+		<input type="hidden" name="claim_id" value="<?php echo  $_REQUEST['claim_id']; ?>" />
+		<input type="hidden" name="pid" value="<?php echo  $_REQUEST['pid']; ?>" />
+		<input type="hidden" name="nid" value="<?php echo  (!empty($_REQUEST['nid']) ? $_REQUEST['nid'] : ''); ?>" />
+                <input type="submit" value=" <?php echo $but_text?> Note" class="btn btn-primary" />
             </td>
         </tr>
     </table>

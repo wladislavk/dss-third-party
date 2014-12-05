@@ -1,14 +1,16 @@
-<? 
-	if($_SESSION["adminuserid"] == "")
+<?php
+	include_once 'main_include.php';
+
+	if(empty($_SESSION["adminuserid"]))
 	{
 		?>
 		<script type="text/javascript">
 			window.location = "index.php";
 		</script>
-		<?
+		<?php 
 		die();
 	}else{
-		mysql_query("UPDATE admin SET last_accessed_date = NOW() WHERE adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'");
+		$query = "UPDATE admin SET last_accessed_date = NOW() WHERE adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
+		mysqli_query($con, $query);
 	}
-
 ?>

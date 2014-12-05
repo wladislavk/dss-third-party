@@ -18,6 +18,9 @@ $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SE
 
 //confirm ledger transactions and make sure they haven't changed.
 function confirm_ledger_trxns(){
+	$db = new Db();
+	$con = $GLOBALS['con'];
+
     $num = 0;
     $return_val = true;
     while ($num <= ($_POST['ledgercount']-1)) {
@@ -50,6 +53,9 @@ function confirm_ledger_trxns(){
 // update and changes to ledger trxns
 // (updating associated claim id and status later w/ claim form insert and update)
 function update_ledger_trxns($primary_claim_id, $trxn_status) {
+    $db = new Db();
+    $con = $GLOBALS['con'];
+
     $num = 0;
     $added_ledger_ids = array();
     while ($num <= ($_POST['ledgercount']-1)) {
@@ -185,8 +191,8 @@ die();
 	$patient_address = $_POST['patient_address'];
 	$patient_city = $_POST['patient_city'];
 	$patient_state = $_POST['patient_state'];
-	$patient_status = $_POST['patient_status'];
-	$work_status = $_POST['work_status'];
+	$patient_status = (!empty($_POST['patient_status']) ? $_POST['patient_status'] : '');
+	$work_status = (!empty($_POST['work_status']) ? $_POST['work_status'] : '');
 	$patient_zip = $_POST['patient_zip'];
 	$patient_phone_code = num($_POST['patient_phone_code']);
 	$patient_phone = num($_POST['patient_phone'], false);
@@ -205,21 +211,21 @@ die();
 	$other_insured_firstname = $_POST['other_insured_firstname'];
 	$other_insured_lastname = $_POST['other_insured_lastname'];
 	$other_insured_middle = $_POST['other_insured_middle'];
-	$employment = $_POST['employment'];
-	$auto_accident = $_POST['auto_accident'];
+	$employment = (!empty($_POST['employment']) ? $_POST['employment'] : '');
+	$auto_accident = (!empty($_POST['auto_accident']) ? $_POST['auto_accident'] : '');
 	$auto_accident_place = $_POST['auto_accident_place'];
-	$other_accident = $_POST['other_accident'];
+	$other_accident = (!empty($_POST['other_accident']) ? $_POST['other_accident'] : '');
 	$insured_policy_group_feca = $_POST['insured_policy_group_feca'];
 	$other_insured_policy_group_feca = $_POST['other_insured_policy_group_feca'];
 	$insured_dob = $_POST['insured_dob'];
 	$insured_sex = $_POST['insured_sex'];
-	$other_insured_dob = $_POST['other_insured_dob'];
-	$other_insured_sex = $_POST['other_insured_sex'];
-	$insured_employer_school_name = $_POST['insured_employer_school_name'];
-	$other_insured_employer_school_name = $_POST['other_insured_employer_school_name'];
+	$other_insured_dob = (!empty($_POST['other_insured_dob']) ? $_POST['other_insured_dob'] : '');
+	$other_insured_sex = (!empty($_POST['other_insured_sex']) ? $_POST['other_insured_sex'] : '');
+	$insured_employer_school_name = (!empty($_POST['insured_employer_school_name']) ? $_POST['insured_employer_school_name'] : '');
+	$other_insured_employer_school_name = (!empty($_POST['other_insured_employer_school_name']) ? $_POST['other_insured_employer_school_name'] : '');
 	$insured_insurance_plan = $_POST['insured_insurance_plan'];
 	$other_insured_insurance_plan = $_POST['other_insured_insurance_plan'];
-	$reserved_local_use = $_POST['reserved_local_use'];
+	$reserved_local_use = (!empty($_POST['reserved_local_use']) ? $_POST['reserved_local_use'] : '');
 	$another_plan = $_POST['another_plan'];
 	$patient_signature = $_POST['patient_signature'];
 	$patient_signed_date = $_POST['patient_signed_date'];
@@ -236,12 +242,12 @@ die();
 	$hospitalization_date_from = $_POST['hospitalization_date_from'];
 	$hospitalization_date_to = $_POST['hospitalization_date_to'];
 	$reserved_local_use1 = $_POST['reserved_local_use1'];
-	$outside_lab = $_POST['outside_lab'];
+	$outside_lab = (!empty($_POST['outside_lab']) ? $_POST['outside_lab'] : '');
 	$s_charges = $_POST['s_charges'];
-	$diagnosis_1 = $_POST['diagnosis_1'];
-	$diagnosis_2 = $_POST['diagnosis_2'];
-	$diagnosis_3 = $_POST['diagnosis_3'];
-	$diagnosis_4 = $_POST['diagnosis_4'];
+	$diagnosis_1 = (!empty($_POST['diagnosis_1']) ? $_POST['diagnosis_1'] : '');
+	$diagnosis_2 = (!empty($_POST['diagnosis_2']) ? $_POST['diagnosis_2'] : '');
+	$diagnosis_3 = (!empty($_POST['diagnosis_3']) ? $_POST['diagnosis_3'] : '');
+	$diagnosis_4 = (!empty($_POST['diagnosis_4']) ? $_POST['diagnosis_4'] : '');
 	$icd_ind = $_POST['icd_ind'];
 	$diagnosis_a = $_POST['diagnosis_a'];
 	$diagnosis_b = $_POST['diagnosis_b'];
@@ -255,113 +261,113 @@ die();
 	$diagnosis_j = $_POST['diagnosis_j'];
 	$diagnosis_k = $_POST['diagnosis_k'];
 	$diagnosis_l = $_POST['diagnosis_l'];
-	$medicaid_resubmission_code = $_POST['medicaid_resubmission_code'];
+	$medicaid_resubmission_code = (!empty($_POST['medicaid_resubmission_code']) ? $_POST['medicaid_resubmission_code'] : '');
 	$original_ref_no = $_POST['original_ref_no'];
 	$prior_authorization_number = $_POST['prior_authorization_number'];
-	$service_date1_from = $_POST['service_date1_from'];
-	$service_date1_to = $_POST['service_date1_to'];
-	$place_of_service1 = $_POST['place_of_service1'];
-	$emg1 = $_POST['emg1'];
-	$cpt_hcpcs1 = $_POST['cpt_hcpcs1'];
-	$modifier1_1 = $_POST['modifier1_1'];
-	$modifier1_2 = $_POST['modifier1_2'];
-	$modifier1_3 = $_POST['modifier1_3'];
-	$modifier1_4 = $_POST['modifier1_4'];
-	$diagnosis_pointer1 = $_POST['diagnosis_pointer1'];
-	$s_charges1_1 = $_POST['s_charges1_1'];
-	$s_charges1_2 = $_POST['s_charges1_2'];
-	$days_or_units1 = $_POST['days_or_units1'];
-	$epsdt_family_plan1 = $_POST['epsdt_family_plan1'];
-	$id_qua1 = $_POST['id_qua1'];
-	$rendering_provider_id1 = $_POST['rendering_provider_id1'];
-	$service_date2_from = $_POST['service_date2_from'];
-	$service_date2_to = $_POST['service_date2_to'];
-	$place_of_service2 = $_POST['place_of_service2'];
-	$emg2 = $_POST['emg2'];
-	$cpt_hcpcs2 = $_POST['cpt_hcpcs2'];
-	$modifier2_1 = $_POST['modifier2_1'];
-	$modifier2_2 = $_POST['modifier2_2'];
-	$modifier2_3 = $_POST['modifier2_3'];
-	$modifier2_4 = $_POST['modifier2_4'];
-	$diagnosis_pointer2 = $_POST['diagnosis_pointer2'];
-	$s_charges2_1 = $_POST['s_charges2_1'];
-	$s_charges2_2 = $_POST['s_charges2_2'];
-	$days_or_units2 = $_POST['days_or_units2'];
-	$epsdt_family_plan2 = $_POST['epsdt_family_plan2'];
-	$id_qua2 = $_POST['id_qua2'];
-	$rendering_provider_id2 = $_POST['rendering_provider_id2'];
-	$service_date3_from = $_POST['service_date3_from'];
-	$service_date3_to = $_POST['service_date3_to'];
-	$place_of_service3 = $_POST['place_of_service3'];
-	$emg3 = $_POST['emg3'];
-	$cpt_hcpcs3 = $_POST['cpt_hcpcs3'];
-	$modifier3_1 = $_POST['modifier3_1'];
-	$modifier3_2 = $_POST['modifier3_2'];
-	$modifier3_3 = $_POST['modifier3_3'];
-	$modifier3_4 = $_POST['modifier3_4'];
-	$diagnosis_pointer3 = $_POST['diagnosis_pointer3'];
-	$s_charges3_1 = $_POST['s_charges3_1'];
-	$s_charges3_2 = $_POST['s_charges3_2'];
-	$days_or_units3 = $_POST['days_or_units3'];
-	$epsdt_family_plan3 = $_POST['epsdt_family_plan3'];
-	$id_qua3 = $_POST['id_qua3'];
-	$rendering_provider_id3 = $_POST['rendering_provider_id3'];
-	$service_date4_from = $_POST['service_date4_from'];
-	$service_date4_to = $_POST['service_date4_to'];
-	$place_of_service4 = $_POST['place_of_service4'];
-	$emg4 = $_POST['emg4'];
-	$cpt_hcpcs4 = $_POST['cpt_hcpcs4'];
-	$modifier4_1 = $_POST['modifier4_1'];
-	$modifier4_2 = $_POST['modifier4_2'];
-	$modifier4_3 = $_POST['modifier4_3'];
-	$modifier4_4 = $_POST['modifier4_4'];
-	$diagnosis_pointer4 = $_POST['diagnosis_pointer4'];
-	$s_charges4_1 = $_POST['s_charges4_1'];
-	$s_charges4_2 = $_POST['s_charges4_2'];
-	$days_or_units4 = $_POST['days_or_units4'];
-	$epsdt_family_plan4 = $_POST['epsdt_family_plan4'];
-	$id_qua4 = $_POST['id_qua4'];
-	$rendering_provider_id4 = $_POST['rendering_provider_id4'];
-	$service_date5_from = $_POST['service_date5_from'];
-	$service_date5_to = $_POST['service_date5_to'];
-	$place_of_service5 = $_POST['place_of_service5'];
-	$emg5 = $_POST['emg5'];
-	$cpt_hcpcs5 = $_POST['cpt_hcpcs5'];
-	$modifier5_1 = $_POST['modifier5_1'];
-	$modifier5_2 = $_POST['modifier5_2'];
-	$modifier5_3 = $_POST['modifier5_3'];
-	$modifier5_4 = $_POST['modifier5_4'];
-	$diagnosis_pointer5 = $_POST['diagnosis_pointer5'];
-	$s_charges5_1 = $_POST['s_charges5_1'];
-	$s_charges5_2 = $_POST['s_charges5_2'];
-	$days_or_units5 = $_POST['days_or_units5'];
-	$epsdt_family_plan5 = $_POST['epsdt_family_plan5'];
-	$id_qua5 = $_POST['id_qua5'];
-	$rendering_provider_id5 = $_POST['rendering_provider_id5'];
-	$service_date6_from = $_POST['service_date6_from'];
-	$service_date6_to = $_POST['service_date6_to'];
-	$place_of_service6 = $_POST['place_of_service6'];
-	$emg6 = $_POST['emg6'];
-	$cpt_hcpcs6 = $_POST['cpt_hcpcs6'];
-	$modifier6_1 = $_POST['modifier6_1'];
-	$modifier6_2 = $_POST['modifier6_2'];
-	$modifier6_3 = $_POST['modifier6_3'];
-	$modifier6_4 = $_POST['modifier6_4'];
-	$diagnosis_pointer6 = $_POST['diagnosis_pointer6'];
-	$s_charges6_1 = $_POST['s_charges6_1'];
-	$s_charges6_2 = $_POST['s_charges6_2'];
-	$days_or_units6 = $_POST['days_or_units6'];
-	$epsdt_family_plan6 = $_POST['epsdt_family_plan6'];
-	$id_qua6 = $_POST['id_qua6'];
-	$rendering_provider_id6 = $_POST['rendering_provider_id6'];
-	$federal_tax_id_number = num($_POST['federal_tax_id_number'], false);
-	$ssn = ($_POST['ssnein']=="ssn")?'1':'';
-	$ein = ($_POST['ssnein']=="ein")?'1':'';
+	$service_date1_from = (!empty($_POST['service_date1_from']) ? $_POST['service_date1_from'] : '');
+	$service_date1_to = (!empty($_POST['service_date1_to']) ? $_POST['service_date1_to'] : '');
+	$place_of_service1 = (!empty($_POST['place_of_service1']) ? $_POST['place_of_service1'] : '');
+	$emg1 = (!empty($_POST['emg1']) ? $_POST['emg1'] : '');
+	$cpt_hcpcs1 = (!empty($_POST['cpt_hcpcs1']) ? $_POST['cpt_hcpcs1'] : '');
+	$modifier1_1 = (!empty($_POST['modifier1_1']) ? $_POST['modifier1_1'] : '');
+	$modifier1_2 = (!empty($_POST['modifier1_2']) ? $_POST['modifier1_2'] : '');
+	$modifier1_3 = (!empty($_POST['modifier1_3']) ? $_POST['modifier1_3'] : '');
+	$modifier1_4 = (!empty($_POST['modifier1_4']) ? $_POST['modifier1_4'] : '');
+	$diagnosis_pointer1 = (!empty($_POST['diagnosis_pointer1']) ? $_POST['diagnosis_pointer1'] : '');
+	$s_charges1_1 = (!empty($_POST['s_charges1_1']) ? $_POST['s_charges1_1'] : '');
+	$s_charges1_2 = (!empty($_POST['s_charges1_2']) ? $_POST['s_charges1_2'] : '');
+	$days_or_units1 = (!empty($_POST['days_or_units1']) ? $_POST['days_or_units1'] : '');
+	$epsdt_family_plan1 = (!empty($_POST['epsdt_family_plan1']) ? $_POST['epsdt_family_plan1'] : '');
+	$id_qua1 = (!empty($_POST['id_qua1']) ? $_POST['id_qua1'] : '');
+	$rendering_provider_id1 = (!empty($_POST['rendering_provider_id1']) ? $_POST['rendering_provider_id1'] : '');
+	$service_date2_from = (!empty($_POST['service_date2_from']) ? $_POST['service_date2_from'] : '');
+	$service_date2_to = (!empty($_POST['service_date2_to']) ? $_POST['service_date2_to'] : '');
+	$place_of_service2 = (!empty($_POST['place_of_service2']) ? $_POST['place_of_service2'] : '');
+	$emg2 = (!empty($_POST['emg2']) ? $_POST['emg2'] : '');
+	$cpt_hcpcs2 = (!empty($_POST['cpt_hcpcs2']) ? $_POST['cpt_hcpcs2'] : '');
+	$modifier2_1 = (!empty($_POST['modifier2_1']) ? $_POST['modifier2_1'] : '');
+	$modifier2_2 = (!empty($_POST['modifier2_2']) ? $_POST['modifier2_2'] : '');
+	$modifier2_3 = (!empty($_POST['modifier2_3']) ? $_POST['modifier2_3'] : '');
+	$modifier2_4 = (!empty($_POST['modifier2_4']) ? $_POST['modifier2_4'] : '');
+	$diagnosis_pointer2 = (!empty($_POST['diagnosis_pointer2']) ? $_POST['diagnosis_pointer2'] : '');
+	$s_charges2_1 = (!empty($_POST['s_charges2_1']) ? $_POST['s_charges2_1'] : '');
+	$s_charges2_2 = (!empty($_POST['s_charges2_2']) ? $_POST['s_charges2_2'] : '');
+	$days_or_units2 = (!empty($_POST['days_or_units2']) ? $_POST['days_or_units2'] : '');
+	$epsdt_family_plan2 = (!empty($_POST['epsdt_family_plan2']) ? $_POST['epsdt_family_plan2'] : '');
+	$id_qua2 = (!empty($_POST['id_qua2']) ? $_POST['id_qua2'] : '');
+	$rendering_provider_id2 = (!empty($_POST['rendering_provider_id2']) ? $_POST['rendering_provider_id2'] : '');
+	$service_date3_from = (!empty($_POST['service_date3_from']) ? $_POST['service_date3_from'] : '');
+	$service_date3_to = (!empty($_POST['service_date3_to']) ? $_POST['service_date3_to'] : '');
+	$place_of_service3 = (!empty($_POST['place_of_service3']) ? $_POST['place_of_service3'] : '');
+	$emg3 = (!empty($_POST['emg3']) ? $_POST['emg3'] : '');
+	$cpt_hcpcs3 = (!empty($_POST['cpt_hcpcs3']) ? $_POST['cpt_hcpcs3'] : '');
+	$modifier3_1 = (!empty($_POST['modifier3_1']) ? $_POST['modifier3_1'] : '');
+	$modifier3_2 = (!empty($_POST['modifier3_2']) ? $_POST['modifier3_2'] : '');
+	$modifier3_3 = (!empty($_POST['modifier3_3']) ? $_POST['modifier3_3'] : '');
+	$modifier3_4 = (!empty($_POST['modifier3_4']) ? $_POST['modifier3_4'] : '');
+	$diagnosis_pointer3 = (!empty($_POST['diagnosis_pointer3']) ? $_POST['diagnosis_pointer3'] : '');
+	$s_charges3_1 = (!empty($_POST['s_charges3_1']) ? $_POST['s_charges3_1'] : '');
+	$s_charges3_2 = (!empty($_POST['s_charges3_2']) ? $_POST['s_charges3_2'] : '');
+	$days_or_units3 = (!empty($_POST['days_or_units3']) ? $_POST['days_or_units3'] : '');
+	$epsdt_family_plan3 = (!empty($_POST['epsdt_family_plan3']) ? $_POST['epsdt_family_plan3'] : '');
+	$id_qua3 = (!empty($_POST['id_qua3']) ? $_POST['id_qua3'] : '');
+	$rendering_provider_id3 = (!empty($_POST['rendering_provider_id3']) ? $_POST['rendering_provider_id3'] : '');
+	$service_date4_from = (!empty($_POST['service_date4_from']) ? $_POST['service_date4_from'] : '');
+	$service_date4_to = (!empty($_POST['service_date4_to']) ? $_POST['service_date4_to'] : '');
+	$place_of_service4 = (!empty($_POST['place_of_service4']) ? $_POST['place_of_service4'] : '');
+	$emg4 = (!empty($_POST['emg4']) ? $_POST['emg4'] : '');
+	$cpt_hcpcs4 = (!empty($_POST['cpt_hcpcs4']) ? $_POST['cpt_hcpcs4'] : '');
+	$modifier4_1 = (!empty($_POST['modifier4_1']) ? $_POST['modifier4_1'] : '');
+	$modifier4_2 = (!empty($_POST['modifier4_2']) ? $_POST['modifier4_2'] : '');
+	$modifier4_3 = (!empty($_POST['modifier4_3']) ? $_POST['modifier4_3'] : '');
+	$modifier4_4 = (!empty($_POST['modifier4_4']) ? $_POST['modifier4_4'] : '');
+	$diagnosis_pointer4 = (!empty($_POST['diagnosis_pointer4']) ? $_POST['diagnosis_pointer4'] : '');
+	$s_charges4_1 = (!empty($_POST['s_charges4_1']) ? $_POST['s_charges4_1'] : '');
+	$s_charges4_2 = (!empty($_POST['s_charges4_2']) ? $_POST['s_charges4_2'] : '');
+	$days_or_units4 = (!empty($_POST['days_or_units4']) ? $_POST['days_or_units4'] : '');
+	$epsdt_family_plan4 = (!empty($_POST['epsdt_family_plan4']) ? $_POST['epsdt_family_plan4'] : '');
+	$id_qua4 = (!empty($_POST['id_qua4']) ? $_POST['id_qua4'] : '');
+	$rendering_provider_id4 = (!empty($_POST['rendering_provider_id4']) ? $_POST['rendering_provider_id4'] : '');
+	$service_date5_from = (!empty($_POST['service_date5_from']) ? $_POST['service_date5_from'] : '');
+	$service_date5_to = (!empty($_POST['service_date5_to']) ? $_POST['service_date5_to'] : '');
+	$place_of_service5 = (!empty($_POST['place_of_service5']) ? $_POST['place_of_service5'] : '');
+	$emg5 = (!empty($_POST['emg5']) ? $_POST['emg5'] : '');
+	$cpt_hcpcs5 = (!empty($_POST['cpt_hcpcs5']) ? $_POST['cpt_hcpcs5'] : '');
+	$modifier5_1 = (!empty($_POST['modifier5_1']) ? $_POST['modifier5_1'] : '');
+	$modifier5_2 = (!empty($_POST['modifier5_2']) ? $_POST['modifier5_2'] : '');
+	$modifier5_3 = (!empty($_POST['modifier5_3']) ? $_POST['modifier5_3'] : '');
+	$modifier5_4 = (!empty($_POST['modifier5_4']) ? $_POST['modifier5_4'] : '');
+	$diagnosis_pointer5 = (!empty($_POST['diagnosis_pointer5']) ? $_POST['diagnosis_pointer5'] : '');
+	$s_charges5_1 = (!empty($_POST['s_charges5_1']) ? $_POST['s_charges5_1'] : '');
+	$s_charges5_2 = (!empty($_POST['s_charges5_2']) ? $_POST['s_charges5_2'] : '');
+	$days_or_units5 = (!empty($_POST['days_or_units5']) ? $_POST['days_or_units5'] : '');
+	$epsdt_family_plan5 = (!empty($_POST['epsdt_family_plan5']) ? $_POST['epsdt_family_plan5'] : '');
+	$id_qua5 = (!empty($_POST['id_qua5']) ? $_POST['id_qua5'] : '');
+	$rendering_provider_id5 = (!empty($_POST['rendering_provider_id5']) ? $_POST['rendering_provider_id5'] : '');
+	$service_date6_from = (!empty($_POST['service_date6_from']) ? $_POST['service_date6_from'] : '');
+	$service_date6_to = (!empty($_POST['service_date6_to']) ? $_POST['service_date6_to'] : '');
+	$place_of_service6 = (!empty($_POST['place_of_service6']) ? $_POST['place_of_service6'] : '');
+	$emg6 = (!empty($_POST['emg6']) ? $_POST['emg6'] : '');
+	$cpt_hcpcs6 = (!empty($_POST['cpt_hcpcs6']) ? $_POST['cpt_hcpcs6'] : '');
+	$modifier6_1 = (!empty($_POST['modifier6_1']) ? $_POST['modifier6_1'] : '');
+	$modifier6_2 = (!empty($_POST['modifier6_2']) ? $_POST['modifier6_2'] : '');
+	$modifier6_3 = (!empty($_POST['modifier6_3']) ? $_POST['modifier6_3'] : '');
+	$modifier6_4 = (!empty($_POST['modifier6_4']) ? $_POST['modifier6_4'] : '');
+	$diagnosis_pointer6 = (!empty($_POST['diagnosis_pointer6']) ? $_POST['diagnosis_pointer6'] : '');
+	$s_charges6_1 = (!empty($_POST['s_charges6_1']) ? $_POST['s_charges6_1'] : '');
+	$s_charges6_2 = (!empty($_POST['s_charges6_2']) ? $_POST['s_charges6_2'] : '');
+	$days_or_units6 = (!empty($_POST['days_or_units6']) ? $_POST['days_or_units6'] : '');
+	$epsdt_family_plan6 = (!empty($_POST['epsdt_family_plan6']) ? $_POST['epsdt_family_plan6'] : '');
+	$id_qua6 = (!empty($_POST['id_qua6']) ? $_POST['id_qua6'] : '');
+	$rendering_provider_id6 = (!empty($_POST['rendering_provider_id6']) ? $_POST['rendering_provider_id6'] : '');
+	$federal_tax_id_number = num((!empty($_POST['federal_tax_id_number']) ? $_POST['federal_tax_id_number'] : ''), false);
+	$ssn = (!empty($_POST['ssnein']) && $_POST['ssnein']=="ssn")?'1':'';
+	$ein = (!empty($_POST['ssnein']) && $_POST['ssnein']=="ein")?'1':'';
 	$patient_account_no = $_POST['patient_account_no'];
 	$accept_assignment = $_POST['accept_assignment'];
 	$total_charge = $_POST['total_charge'];
 	$amount_paid = $_POST['amount_paid'];
-	$balance_due = $_POST['balance_due'];
+	$balance_due = (!empty($_POST['balance_due']) ? $_POST['balance_due'] : '');
 	$signature_physician = $_POST['signature_physician'];
 	$physician_signed_date = (($_POST['physician_signed_date']!=date('m/d/Y'))?$_POST['physician_signed_date']:'');
 	$service_facility_info_name = $_POST['service_facility_info_name'];
@@ -378,10 +384,10 @@ die();
 	$billing_provider_a = $_POST['billing_provider_a'];
 	$billing_provider_dd = $_POST['billing_provider_dd'];
 	$billing_provider_b_other = $_POST['billing_provider_b_other'];
-	$reject_reason = $_POST['reject_reason'];
+	$reject_reason = (!empty($_POST['reject_reason']) ? $_POST['reject_reason'] : '');
 	$nucc_8a = $_POST['nucc_8a'];
 	$nucc_8b = $_POST['nucc_8b'];
-	$nucc_9a = $_POST['nucc_9a'];
+	$nucc_9a = (!empty($_POST['nucc_9a']) ? $_POST['nucc_9a'] : '');
 	$nucc_9b = $_POST['nucc_9b'];
 	$claim_codes = $_POST['claim_codes'];
 	$other_claim_id = $_POST['other_claim_id'];
@@ -1040,14 +1046,14 @@ $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
 $p_m_dss_file = $pat_myarray['p_m_dss_file'];
-if($pat_myarray['exclusive']){ $p_m_dss_file = 1; }
+if(!empty($pat_myarray['exclusive'])){ $p_m_dss_file = 1; }
 $s_m_dss_file = $pat_myarray['s_m_dss_file'];
 $patient_lastname = st($myarray['patient_lastname']);
 $patient_firstname = st($myarray['patient_firstname']);
 $patient_middle = st($myarray['patient_middle']);
 $patient_dob = st($myarray['patient_dob']);
 $patient_sex = st($myarray['patient_sex']);
-if($_GET['instype']==2){
+if(!empty($_GET['instype']) && $_GET['instype']==2){
   $insurancetype = st($myarray['other_insurance_type']);
   $other_insurancetype = $myarray['insurance_type'];
   $other_insured_firstname = st($myarray['insured_firstname']);
@@ -1421,14 +1427,14 @@ input{text-transform:uppercase;}
   </script>
 <?php } ?>
 
-<?php if ($is_front_office) { ?>
+<?php if (!empty($is_front_office)) { ?>
   <a href="view_claim.php?claimid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '');?>&pid=<?php echo $_GET['pid']?>">
 	<b>&lt;&lt;Back to Manage Insurance Page</b></a>
 <?php } else if ($is_back_office) { ?>
   <a href="manage_claims.php">
 	<b>&lt;&lt;Back to Manage Claims Page</b></a>
 <?php } ?>
-<?php if($is_front_office){ ?>
+<?php if(!empty($is_front_office)){ ?>
 <?php if($is_secondary){ ?>
         <h4>Secondary Claim (<a href="insurance_v2.php?insid=<?php echo $orig_claim_id; ?>&pid=<?php echo $_GET['pid']; ?>">Primary is <?php echo $orig_claim_id; ?></a>)</h4>
 <?php }else{
@@ -1541,7 +1547,7 @@ if (!empty($is_back_office)){
 ?>
 
 <?php
-if($is_front_office && $fdf_file!=''){
+if(!empty($is_front_office) && $fdf_file!=''){
 ?>
 		<a href="display_fdf_v2.php?f=<?php echo $fdf_file; ?>" class="print-button" >Print Claim Form</a>
 <?php
@@ -1648,14 +1654,14 @@ if (!empty($is_back_office) || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWAR
                       $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
 
                       $docinfo = $db->getRow($getdocinfo);
-                        if($phone == ""){ $phone = $docinfo['phone']; }
-                        if($practice == ""){ $practice = $docinfo['practice']; }
-                        if($address == ""){ $address = $docinfo['address']; }
-                        if($city == ""){ $city = $docinfo['city']; }
-                        if($state == ""){ $state = $docinfo['state']; }
-                        if($zip == ""){ $zip = $docinfo['zip']; }
-                        if($npi == ""){ $npi = $docinfo['npi']; }
-                        if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
+                        if(empty($phone)){ $phone = $docinfo['phone']; }
+                        if(empty($practice)){ $practice = $docinfo['practice']; }
+                        if(empty($address)){ $address = $docinfo['address']; }
+                        if(empty($city)){ $city = $docinfo['city']; }
+                        if(empty($state)){ $state = $docinfo['state']; }
+                        if(empty($zip)){ $zip = $docinfo['zip']; }
+                        if(empty($npi)){ $npi = $docinfo['npi']; }
+                        if(empty($medicare_npi)){ $medicare_npi = $docinfo['medicare_npi']; }
 
 ?>
 <script type="text/javascript">
@@ -1671,7 +1677,7 @@ $(document).ready(function(){
 
 <?php
 if (!empty($is_back_office) || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && (!empty($is_sec_pending) || !empty($is_sec_rejected)) && $p_m_dss_file == '2')){ 
-                $p_m_ins_payer_id = st($pat_myarray["s_m_eligible_id"]);
+                $p_m_ins_payer_id = st(!empty($pat_myarray["s_m_eligible_id"]) ? $pat_myarray["s_m_eligible_id"] : '');
                 if($p_m_ins_payer_id){
                   $dsql = "SELECT name, payer_id FROM dental_ins_payer
                         WHERE id=".mysqli_real_escape_string($con,$s_m_ins_payer_id);

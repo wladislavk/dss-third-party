@@ -4,32 +4,32 @@ include "includes/patient_nav.php";
 ?>
 <ul class="nav nav-tabs nav-justified">
         <li class="active">
-            <a href="patient_questionnaire.php?pid=<?= $_GET['pid']; ?>" id="link_summ">Symptoms</a>
+            <a href="patient_questionnaire.php?pid=<?php echo  $_GET['pid']; ?>" id="link_summ">Symptoms</a>
         </li>
         <li>
-            <a href="patient_questionnaire2.php?pid=<?= $_GET['pid']; ?>" id="link_notes">Previous Treatments</a>
+            <a href="patient_questionnaire2.php?pid=<?php echo  $_GET['pid']; ?>" id="link_notes">Previous Treatments</a>
         </li>
         <li>
-            <a href="patient_questionnaire3.php?pid=<?= $_GET['pid']; ?>" id="link_treatment">Health Hx.</a>
+            <a href="patient_questionnaire3.php?pid=<?php echo  $_GET['pid']; ?>" id="link_treatment">Health Hx.</a>
         </li>
     </ul>
     <p>&nbsp;</p>
 <?php
 
 
-if($_GET['own']==1){
-  $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";  $c_q = mysql_query($c_sql);  $changed = mysql_num_rows($c_q);
-  $own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
-  mysql_query($own_sql);
+if(!empty($_GET['own']) && $_GET['own']==1){
+  $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";  $c_q = mysqli_query($con,$c_sql);  $changed = mysqli_num_rows($c_q);
+  $own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+  mysqli_query($con,$own_sql);
  if($_GET['own_completed']==1){
-  $q1_sql = "SELECT q_page1id from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
-  $q1_q = mysql_query($q1_sql);
-  if(mysql_num_rows($q1_q) == 0){
+  $q1_sql = "SELECT q_page1id from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+  $q1_q = mysqli_query($con,$q1_sql);
+  if(mysqli_num_rows($q1_q) == 0){
     $ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
-    mysql_query($ed_sql);
+    mysqli_query($con,$ed_sql);
   }else{
     $ed_sql = "UPDATE dental_q_page1 SET exam_date=now() WHERE patientid='".$_GET['pid']."'";
-    mysql_query($ed_sql);
+    mysqli_query($con,$ed_sql);
   }
  }
                 ?>
@@ -38,7 +38,7 @@ if($_GET['own']==1){
                                 alert("Warning! Patient has made changes to the Questionnaire. Please review the patient's ENTIRE questionnaire for changes.");
                         <?php } ?>
 
-                        window.location='q_page1.php?pid=<?=$_GET['pid']?>&addtopat=1';
+                        window.location='q_page1.php?pid=<?php echo $_GET['pid']?>&addtopat=1';
                 </script>
                 <?
                 die();
@@ -68,18 +68,18 @@ if($_GET['own']==1){
 </script>
 <?php
 $todaysdate=date("m/d/Y");
-if($_POST['q_page1sub'] == 1)
+if(!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1)
 {
         $exam_date = ($_POST['exam_date']!='')?date('Y-m-d', strtotime($_POST['exam_date'])):'';
 	$ess = $_POST['ess'];
 	$tss = $_POST['tss'];
         $chief_complaint_text = $_POST['chief_complaint_text'];	
 	$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-	$complaint_my = mysql_query($complaint_sql);
+	$complaint_my = mysqli_query($con,$complaint_sql);
 	
 	$comp_arr = '';
 	
-	while($complaint_myarray = mysql_fetch_array($complaint_my))
+	while($complaint_myarray = mysqli_fetch_array($complaint_my))
 	{
 		if($_POST['complaint_'.$complaint_myarray['complaintid']] <> '')
 		{
@@ -172,22 +172,22 @@ if($_POST['q_page1sub'] == 1)
 		adddate = '".date('m/d/Y')."',
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
 		
 		$msg = "Added Successfully";
                 if(isset($_POST['q_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?=$msg;?>");
-                        window.location='q_page2.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                        //alert("<?php echo $msg;?>");
+                        window.location='q_page2.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
                 }else{
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>#form';
+			//alert("<?php echo $msg;?>");
+			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>#form';
 		</script>
 		<?
 		}
@@ -218,22 +218,22 @@ if($_POST['q_page1sub'] == 1)
 		main_reason_other = '".s_for($main_reason_other)."'
 		where q_page1id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		$msg = "Edited Successfully";
                 if(isset($_POST['q_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?=$msg;?>");
-                        window.location='q_page2.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                        //alert("<?php echo $msg;?>");
+                        window.location='q_page2.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
                 }else{
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>#form';
+			//alert("<?php echo $msg;?>");
+			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>#form';
 		</script>
 		<?
 		}
@@ -243,8 +243,8 @@ if($_POST['q_page1sub'] == 1)
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con,$pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -252,8 +252,8 @@ $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st(
 $sql = "select p1.*, s.analysis from dental_q_page1 p1 
 	LEFT JOIN dental_q_sleep s ON s.patientid=p1.patientid
 	where p1.patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con,$sql);
+$myarray = mysqli_fetch_array($my);
 
 $q_page1id = st($myarray['q_page1id']);
 $exam_date = st($myarray['exam_date']);
@@ -281,14 +281,14 @@ $sleep_qual = st($myarray['sleep_qual']);
 
 if($complaintid <> '')
 {	
-	$comp_arr1 = split('~',$complaintid);
+	$comp_arr1 = explode('~',$complaintid);
 	
 	foreach($comp_arr1 as $i => $val)
 	{
 		$comp_arr2 = explode('|',$val);
 		
 		$compid[$i] = $comp_arr2[0];
-		$compseq[$i] = $comp_arr2[1];
+		$compseq[$i] = (!empty($comp_arr2[1]) ? $comp_arr2[1] : '');
 	}
 }
 
@@ -306,13 +306,13 @@ if($complaintid <> '')
 <a name="top"></a>
 &nbsp;&nbsp;
 
-<? include("includes/form_top.htm");?>
+<?php include("../includes/form_top.htm");?>
 
 <br />
 <br>
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <script type="text/javascript">
@@ -321,15 +321,15 @@ if($complaintid <> '')
 		fa = document.q_page1frm;
 		
 		same = 0;
-		<? 
+		<?php 
 		$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-		$complaint_my = mysql_query($complaint_sql);
+		$complaint_my = mysqli_query($con,$complaint_sql);
 		
-		while($complaint_myarray = mysql_fetch_array($complaint_my))
+		while($complaint_myarray = mysqli_fetch_array($complaint_my))
 		{?>
-		if(comp_id != <?=st($complaint_myarray['complaintid']);?>)
+		if(comp_id != <?php echo st($complaint_myarray['complaintid']);?>)
 		{
-			if(fa.complaint_<?=st($complaint_myarray['complaintid']);?>.value == sel_val && fa.complaint_<?=st($complaint_myarray['complaintid']);?>.value != '')
+			if(fa.complaint_<?php echo st($complaint_myarray['complaintid']);?>.value == sel_val && fa.complaint_<?php echo st($complaint_myarray['complaintid']);?>.value != '')
 			{
 				same = 1;
 			}
@@ -349,15 +349,15 @@ if($complaintid <> '')
 </script>
 
 <input type="hidden" name="q_page1sub" value="1" />
-<input type="hidden" name="ed" value="<?=$q_page1id;?>" />
-<input type="hidden" name="goto_p" value="<?=$cur_page?>" />
+<input type="hidden" name="ed" value="<?php echo $q_page1id;?>" />
+<input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
 
 <div style="clear:both;"></div>
 <?php
-        $patient_sql = "SELECT * FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";    
-        $patient_q = mysql_query($patient_sql);
-	$pat_row = mysql_fetch_assoc($patient_q);
-        if(mysql_num_rows($patient_q) == 0){
+        $patient_sql = "SELECT * FROM dental_q_page1 WHERE parent_patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";    
+        $patient_q = mysqli_query($con,$patient_sql);
+	$pat_row = mysqli_fetch_assoc($patient_q);
+        if(mysqli_num_rows($patient_q) == 0){
 		$showEdits = false;
 		//echo "Patient edits.";
 	}else{
@@ -367,7 +367,7 @@ if($complaintid <> '')
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
     <tr>
         <td colspan="2">
-           Exam date: <input type="text" id="exam_date" name="exam_date" class="calendar" value="<?= ($exam_date!='')?date('m/d/Y', strtotime($exam_date)):date('m/d/Y'); ?>" />
+           Exam date: <input type="text" id="exam_date" name="exam_date" class="calendar" value="<?php echo  ($exam_date!='')?date('m/d/Y', strtotime($exam_date)):date('m/d/Y'); ?>" />
            <script type="text/javascript">
              var cal_exam = new calendar2(document.getElementById('exam_date'));
            </script>
@@ -381,15 +381,15 @@ if($complaintid <> '')
     
     <tr>
 	<td valign="top" class="frmhead">
-	  Baseline Epworth Sleepiness Score: <input type="text" id="ess" style="width:30px;" name="ess" onclick="window.location = 'q_sleep.php?pid=<?=$_GET['pid']; ?>';" readonly="readonly" value="<?= $ess; ?>" />
+	  Baseline Epworth Sleepiness Score: <input type="text" id="ess" style="width:30px;" name="ess" onclick="window.location = 'q_sleep.php?pid=<?php echo $_GET['pid']; ?>';" readonly="readonly" value="<?php echo  $ess; ?>" />
                             <?php
 				if($pat_row['ess']!=''){
                                   showPatientValue('dental_q_page1', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
 				}
                             ?>
-<?= $analysis; ?>
+<?php echo  $analysis; ?>
 	  <br /><br />
-	  Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" style="width:30px;" onclick="window.location = 'q_sleep.php?pid=<?=$_GET['pid']; ?>';" readonly="readonly" value="<?= $tss; ?>" />
+	  Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" style="width:30px;" onclick="window.location = 'q_sleep.php?pid=<?php echo $_GET['pid']; ?>';" readonly="readonly" value="<?php echo  $tss; ?>" />
                             <?php
 				if($pat_row['tss']!=''){
                                   showPatientValue('dental_q_page1', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
@@ -397,12 +397,12 @@ if($complaintid <> '')
                             ?>
 > 5 indicates snoring is significantly affecting quality of life.
 	<?php
-	  $sleep_sql = "SELECT * FROM dental_q_sleep WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
-	  $sleep_q = mysql_query($sleep_sql);
-	  if(mysql_num_rows($sleep_q) == 0){
+	  $sleep_sql = "SELECT * FROM dental_q_sleep WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+	  $sleep_q = mysqli_query($con,$sleep_sql);
+	  if(mysqli_num_rows($sleep_q) == 0){
 	 	?>
 		<br />
-		<a href="q_sleep.php?pid=<?= $_GET['pid']; ?>">Complete sleep section</a>
+		<a href="q_sleep.php?pid=<?php echo  $_GET['pid']; ?>">Complete sleep section</a>
 		<?php
 	  }else{
 		?>
@@ -414,8 +414,8 @@ if($complaintid <> '')
                         <h3>Epworth</h3>
 		    <?php
 			$sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
-			$my = mysql_query($sql);
-			$myarray = mysql_fetch_array($my);
+			$my = mysqli_query($con,$sql);
+			$myarray = mysqli_fetch_array($my);
 
 			$q_sleepid = st($myarray['q_sleepid']);
 			$epworthid = st($myarray['epworthid']);
@@ -436,12 +436,12 @@ if($complaintid <> '')
 
 
                                         $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-                                        $epworth_my = mysql_query($epworth_sql);
-                                        $epworth_number = mysql_num_rows($epworth_my);
+                                        $epworth_my = mysqli_query($con,$epworth_sql);
+                                        $epworth_number = mysqli_num_rows($epworth_my);
                                         ?>
 
                     <?
-                                        while($epworth_myarray = mysql_fetch_array($epworth_my))                                        {
+                                        while($epworth_myarray = mysqli_fetch_array($epworth_my))                                        {
                                                 if(@array_search($epworth_myarray['epworthid'],$epid) === false)
                                                 {
                                                         $chk = '';
@@ -451,22 +451,22 @@ if($complaintid <> '')
                                                 }
 
 					?>
-					<?= $chk; ?>
+					<?php echo  $chk; ?>
 					-	
-					<?=st($epworth_myarray['epworth']);?>
+					<?php echo st($epworth_myarray['epworth']);?>
 					<br />
 					<?php
 					}
 			?>
-			<?= $ess; ?> - Total
+			<?php echo  $ess; ?> - Total
 
 		  </div>
 		  <div style="width:48%; float:left;">
 			<h3>Thornton</h3>
 		    <?php
 			$sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
-			$my = mysql_query($sql);
-			$myarray = mysql_fetch_array($my);
+			$my = mysqli_query($con,$sql);
+			$myarray = mysqli_fetch_array($my);
 
 			$thortonid = st($myarray['thortonid']);
 			$snore_1 = st($myarray['snore_1']);
@@ -476,13 +476,13 @@ if($complaintid <> '')
 			$snore_5 = st($myarray['snore_5']);
 
 			?>
-			<?= $snore_1; ?> - My snoring affects my relationship with my partner<br />
-			<?= $snore_2; ?> - My snoring causes my partner to be irritable or tired<br />
-			<?= $snore_3; ?> - My snoring requires us to sleep in separate rooms<br />
-			<?= $snore_4; ?> - My snoring is loud<br />
-			<?= $snore_5; ?> - My snoring affects people when I am sleeping away from home<br />
+			<?php echo  $snore_1; ?> - My snoring affects my relationship with my partner<br />
+			<?php echo  $snore_2; ?> - My snoring causes my partner to be irritable or tired<br />
+			<?php echo  $snore_3; ?> - My snoring requires us to sleep in separate rooms<br />
+			<?php echo  $snore_4; ?> - My snoring is loud<br />
+			<?php echo  $snore_5; ?> - My snoring affects people when I am sleeping away from home<br />
 
-			<?=$tss; ?> - Total
+			<?php echo $tss; ?> - Total
 			<?php
 
 		    ?>
@@ -500,7 +500,7 @@ if($complaintid <> '')
                     <label style="display:block;">
                         What is the main reason you are seeking treatment? 
                     </label>
-                        <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?= $chief_complaint_text; ?></textarea>
+                        <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?php echo  $chief_complaint_text; ?></textarea>
                             <?php
                                 showPatientValue('dental_q_page1', $_GET['pid'], 'chief_complaint_text', $pat_row['chief_complaint_text'], $chief_complaint_text, true, $showEdits);
                             ?>
@@ -519,10 +519,10 @@ if($complaintid <> '')
                                 showPatientValue('dental_q_page1', $_GET['pid'], 'complaintid', $pat_row['complaintid'], $complaintid, false, $showEdits);
                             ?>
                     </label>
-                    <? 
+                    <?php 
 					$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-					$complaint_my = mysql_query($complaint_sql);
-					$complaint_number = mysql_num_rows($complaint_my);
+					$complaint_my = mysqli_query($con,$complaint_sql);
+					$complaint_number = mysqli_num_rows($complaint_my);
 					?>
                     <span class="form_info">
 			Please check any other complaints below.
@@ -564,19 +564,19 @@ function in_array(needle, haystack)
 				update_c_chb();
 			});
 		    </script>
-                    <? 
+                    <?php 
 
-        $patcomp_arr1 = split('~',$pat_row['complaintid']);
+        $patcomp_arr1 = explode('~',$pat_row['complaintid']);
 
         foreach($patcomp_arr1 as $i => $val)
         {
                 $patcomp_arr2 = explode('|',$val);
 
                 $patcompid[$i] = $patcomp_arr2[0];
-                $patcompseq[$i] = $patcomp_arr2[1];
+                $patcompseq[$i] = (!empty($patcomp_arr2[1]) ? $patcomp_arr2[1] : '');
         }
 
-					while($complaint_myarray = mysql_fetch_array($complaint_my))
+					while($complaint_myarray = mysqli_fetch_array($complaint_my))
 					{
 						if(@array_search($complaint_myarray['complaintid'],$compid) === false)
 						{
@@ -598,25 +598,25 @@ function in_array(needle, haystack)
 
                     <div style="width:48%;float:left;">
                         <span>
-                    <!--    	<select id="complaint_<?=st($complaint_myarray['complaintid']);?>" name="complaint_<?=st($complaint_myarray['complaintid']);?>" class="complaint_chb field text addr tbox" style="width:50px;" onchange="update_c_chb(); chk_chief(this.value,<?=st($complaint_myarray['complaintid']);?>)">
+                    <!--    	<select id="complaint_<?php echo st($complaint_myarray['complaintid']);?>" name="complaint_<?php echo st($complaint_myarray['complaintid']);?>" class="complaint_chb field text addr tbox" style="width:50px;" onchange="update_c_chb(); chk_chief(this.value,<?php echo st($complaint_myarray['complaintid']);?>)">
                             	<option value=""></option>
-                            	<? 
+                            	<?php 
 								for($i=1;$i<=$complaint_number;$i++)
 								{?>
-                            		<option value="<?=$i;?>" <? if($chk == $i) echo " selected";?>><?=$i;?></option>
-                                <? }?>
+                            		<option value="<?php echo $i;?>" <?php if($chk == $i) echo " selected";?>><?php echo $i;?></option>
+                                <?php }?>
                             </select>-->
-			    <input type="checkbox" name="complaint_<?=st($complaint_myarray['complaintid']);?>" id="complaint_<?=st($complaint_myarray['complaintid']);?>" value="1" <? if($chk == 1) echo 'checked="checked"'; ?> />
+			    <input type="checkbox" name="complaint_<?php echo st($complaint_myarray['complaintid']);?>" id="complaint_<?php echo st($complaint_myarray['complaintid']);?>" value="1" <?php if($chk == 1) echo 'checked="checked"'; ?> />
 <?php if($pat_row['complaintid'] !=  $complaintid && $showEdits){ ?>
-<input type="checkbox" <? if($patchk == 1) echo 'checked="checked"'; ?> disabled="disabled" style="background:#c333;" />
+<input type="checkbox" <?php if($patchk == 1) echo 'checked="checked"'; ?> disabled="disabled" style="background:#c333;" />
 <?php } ?>
                             &nbsp;&nbsp;
-                            <?=st($complaint_myarray['complaint']);?>
+                            <?php echo st($complaint_myarray['complaint']);?>
 
 				<br />&nbsp;
                         </span>
                     </div>
-                    <? }?>
+                    <?php }?>
                     <div style="width:48%;float:left;">
                         <span>
 				<?php
@@ -628,7 +628,7 @@ function in_array(needle, haystack)
                                                         $chk = $compseq[@array_search(0,$compid)];
                                                 }
 				?>
-                            <input type="checkbox" id="complaint_0" onclick="chk_other_comp()" name="complaint_0" value="1" <? if($chk == 1) echo 'checked="checked"'; ?> />
+                            <input type="checkbox" id="complaint_0" onclick="chk_other_comp()" name="complaint_0" value="1" <?php if($chk == 1) echo 'checked="checked"'; ?> />
                             &nbsp;&nbsp;
                             Other<br />&nbsp;
                         </span>
@@ -640,7 +640,7 @@ function in_array(needle, haystack)
                             	Additional Complaints<br />
                             </span>
                             (Enter Each Complaint on Different Line)<br />
-                            <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_complaint;?></textarea>
+                            <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_complaint;?></textarea>
                             <?php
                                 showPatientValue('dental_q_page1', $_GET['pid'], 'other_complaint', $pat_row['other_complaint'], $other_complaint, true, $showEdits);
                             ?>
@@ -683,10 +683,10 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="energy_level" id="energy_level" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=0;$i<11;$i++)
+                                            <?php for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($energy_level!='' && $energy_level == $i) echo " selected";?>><?=$i;?></option>
-                                            <? }?>
+                                                <option value="<?php echo $i;?>" <?php if($energy_level!='' && $energy_level == $i) echo " selected";?>><?php echo $i;?></option>
+                                            <?php }?>
                                         </select>
                             <?php
                                 showPatientValue('dental_q_page1', $_GET['pid'], 'energy_level', $pat_row['energy_level'], $energy_level, true, $showEdits);
@@ -701,10 +701,10 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                         <select name="sleep_qual" id="sleep_qual" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=0;$i<11;$i++)
+                                            <?php for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($sleep_qual!=''&&$sleep_qual == $i){echo " selected";}?>><?=$i;?></option>
-                                            <? }?>
+                                                <option value="<?php echo $i;?>" <?php if($sleep_qual!=''&&$sleep_qual == $i){echo " selected";}?>><?php echo $i;?></option>
+                                            <?php }?>
                                         </select>
                             <?php
                                 showPatientValue('dental_q_page1', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual, true, $showEdits);
@@ -719,16 +719,16 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="told_you_snore" id="told_you_snore" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <option value="Yes" <? if($told_you_snore== 'Yes') echo " selected";?>>
+                                            <option value="Yes" <?php if($told_you_snore== 'Yes') echo " selected";?>>
                                             	Yes
                                             </option>
-                                            <option value="No" <? if($told_you_snore == 'No') echo " selected";?>>
+                                            <option value="No" <?php if($told_you_snore == 'No') echo " selected";?>>
                                             	No
                                             </option>
-                                            <option value="Sometimes" <? if($told_you_snore == 'Sometimes') echo " selected";?>>
+                                            <option value="Sometimes" <?php if($told_you_snore == 'Sometimes') echo " selected";?>>
                                             	Sometimes
                                             </option>
-                                            <option value="Don't know" <? if($told_you_snore == "Don't know") echo " selected";?>>
+                                            <option value="Don't know" <?php if($told_you_snore == "Don't know") echo " selected";?>>
                                                 Don't know
                                             </option>
 
@@ -746,10 +746,10 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="snoring_sound" id="snoring_sound" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=0;$i<11;$i++)
+                                            <?php for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($snoring_sound == $i && $snoring_sound!='') echo " selected";?>><?=$i;?></option>
-                                            <? }?>
+                                                <option value="<?php echo $i;?>" <?php if($snoring_sound == $i && $snoring_sound!='') echo " selected";?>><?php echo $i;?></option>
+                                            <?php }?>
                                             <option value="Don't know">Don't know</option>
                                         </select>
                             <?php
@@ -764,10 +764,10 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="wake_night" id="wake_night" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=0;$i<11;$i++)
+                                            <?php for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($wake_night!='' && $wake_night == $i) echo " selected";?>><?=$i;?></option>
-                                            <? }?>
+                                                <option value="<?php echo $i;?>" <?php if($wake_night!='' && $wake_night == $i) echo " selected";?>><?php echo $i;?></option>
+                                            <?php }?>
                                         </select>
                             <?php
                                 showPatientValue('dental_q_page1', $_GET['pid'], 'wake_night', $pat_row['wake_night'], $wake_night, true, $showEdits);
@@ -782,10 +782,10 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="breathing_night" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=0;$i<11;$i++)
+                                            <?php for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($breathing_night!='' && $breathing_night == $i) echo " selected";?>><?=$i;?></option>
-                                            <? }?>
+                                                <option value="<?php echo $i;?>" <?php if($breathing_night!='' && $breathing_night == $i) echo " selected";?>><?php echo $i;?></option>
+                                            <?php }?>
                                         </select>
                                     </td>
                                 </tr> -->
@@ -796,10 +796,10 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="hours_sleep" id="hours_sleep" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=0;$i<16;$i++)
+                                            <?php for($i=0;$i<16;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($hours_sleep == $i && $hours_sleep != '') echo " selected";?>><?=$i;?></option>
-                                            <? }?>
+                                                <option value="<?php echo $i;?>" <?php if($hours_sleep == $i && $hours_sleep != '') echo " selected";?>><?php echo $i;?></option>
+                                            <?php }?>
                                         </select>
                             <?php
                                 showPatientValue('dental_q_page1', $_GET['pid'], 'hours_sleep', $pat_row['hours_sleep'], $hours_sleep, true, $showEdits);
@@ -813,40 +813,40 @@ function in_array(needle, haystack)
                                     <td valign="top">
 					<select name="morning_headaches" id="morning_headaches" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <option value="0" <? if($morning_headaches == '0') echo " selected";?>>
+                                            <option value="0" <?php if($morning_headaches == '0') echo " selected";?>>
                                                 Everyday
                                             </option>
-                                            <option value="1" <? if($morning_headaches == '1') echo " selected";?>>
+                                            <option value="1" <?php if($morning_headaches == '1') echo " selected";?>>
                                                 Often
                                             </option>
-                                            <option value="2" <? if($morning_headaches == '2') echo " selected";?>>
+                                            <option value="2" <?php if($morning_headaches == '2') echo " selected";?>>
                                                 Sometimes
                                             </option>
-                                            <option value="3" <? if($morning_headaches == '3') echo " selected";?>>
+                                            <option value="3" <?php if($morning_headaches == '3') echo " selected";?>>
                                                 Rarely
                                             </option>
-                                            <option value="4" <? if($morning_headaches == '4') echo " selected";?>>
+                                            <option value="4" <?php if($morning_headaches == '4') echo " selected";?>>
                                                 Never
                                             </option>
                                         </select>
                                         <!--<select name="morning_headaches" id="morning_headaches" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <option value="Most Mornings" <? if($morning_headaches == 'Most Mornings') echo " selected";?>>
+                                            <option value="Most Mornings" <?php if($morning_headaches == 'Most Mornings') echo " selected";?>>
                                                 Most Mornings
                                             </option>
-                                            <option value="Several times per week" <? if($morning_headaches == 'Several times per week') echo " selected";?>>
+                                            <option value="Several times per week" <?php if($morning_headaches == 'Several times per week') echo " selected";?>>
                                                 Several times per week
                                             </option>
-                                            <option value="Several times per month" <? if($morning_headaches == 'Several times per month') echo " selected";?>>
+                                            <option value="Several times per month" <?php if($morning_headaches == 'Several times per month') echo " selected";?>>
                                                 Several times per month
                                             </option>
-                                            <option value="Occasionally" <? if($morning_headaches == 'Occasionally') echo " selected";?>>
+                                            <option value="Occasionally" <?php if($morning_headaches == 'Occasionally') echo " selected";?>>
                                                 Occasionally
                                             </option>
-                                            <option value="Rarely" <? if($morning_headaches == 'Rarely') echo " selected";?>>
+                                            <option value="Rarely" <?php if($morning_headaches == 'Rarely') echo " selected";?>>
                                                 Rarely
                                             </option>
-                                            <option value="Never" <? if($morning_headaches == 'Never') echo " selected";?>>
+                                            <option value="Never" <?php if($morning_headaches == 'Never') echo " selected";?>>
                                                 Never
                                             </option>
                                         </select>-->
@@ -863,13 +863,13 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="bed_time_partner" id="bed_time_partner" class="field text addr tbox" style="width:150px;" onchange="disableenable()">
                                             <option value=""></option>
-                                            <option value="Yes" <? if($bed_time_partner== 'Yes') echo " selected";?>>
+                                            <option value="Yes" <?php if($bed_time_partner== 'Yes') echo " selected";?>>
                                             	Yes
                                             </option>
-                                            <option value="No" <? if($bed_time_partner == 'No') echo " selected";?>>
+                                            <option value="No" <?php if($bed_time_partner == 'No') echo " selected";?>>
                                             	No
                                             </option>
-                                            <option value="Sometimes" <? if($bed_time_partner == 'Sometimes') echo " selected";?>>
+                                            <option value="Sometimes" <?php if($bed_time_partner == 'Sometimes') echo " selected";?>>
                                             	Sometimes
                                             </option>
                                         </select>
@@ -890,13 +890,13 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="sleep_same_room" id="sleep_same_room" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <option value="Yes" <? if($sleep_same_room== 'Yes') echo " selected";?>>
+                                            <option value="Yes" <?php if($sleep_same_room== 'Yes') echo " selected";?>>
                                             	Yes
                                             </option>
-                                            <option value="No" <? if($sleep_same_room == 'No') echo " selected";?>>
+                                            <option value="No" <?php if($sleep_same_room == 'No') echo " selected";?>>
                                             	No
                                             </option>
-                                            <option value="Sometimes" <? if($sleep_same_room == 'Sometimes') echo " selected";?>>
+                                            <option value="Sometimes" <?php if($sleep_same_room == 'Sometimes') echo " selected";?>>
                                             	Sometimes
                                             </option>
                                         </select>
@@ -913,22 +913,22 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="quit_breathing" id="quit_breathing" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <option value="Several times per night" <? if($quit_breathing== 'Several times per night') echo " selected";?>>
+                                            <option value="Several times per night" <?php if($quit_breathing== 'Several times per night') echo " selected";?>>
                                             	Several times per night
                                             </option>
-                                            <option value="One time per night" <? if($quit_breathing == 'One time per night') echo " selected";?>>
+                                            <option value="One time per night" <?php if($quit_breathing == 'One time per night') echo " selected";?>>
                                             	One time per night
                                             </option>
-                                            <option value="Several times per week" <? if($quit_breathing == 'Several times per week') echo " selected";?>>
+                                            <option value="Several times per week" <?php if($quit_breathing == 'Several times per week') echo " selected";?>>
                                             	Several times per week
                                             </option>
-                                            <option value="Occasionally" <? if($quit_breathing == 'Occasionally') echo " selected";?>>
+                                            <option value="Occasionally" <?php if($quit_breathing == 'Occasionally') echo " selected";?>>
                                             	Occasionally
                                             </option>
-                                            <option value="Seldom" <? if($quit_breathing == 'Seldom') echo " selected";?>>
+                                            <option value="Seldom" <?php if($quit_breathing == 'Seldom') echo " selected";?>>
                                             	Seldom
                                             </option>
-                                            <option value="Never" <? if($quit_breathing == 'Never') echo " selected";?>>
+                                            <option value="Never" <?php if($quit_breathing == 'Never') echo " selected";?>>
                                             	Never
                                             </option>
                                         </select>
@@ -967,15 +967,15 @@ function in_array(needle, haystack)
                                     	<select multiple="multiple" id="main_reason" name="main_reason[]" class="field text addr tbox" onchange="showOtherBox()" style="width:350px;" size="7">
                                     	      <?php
                                             $cmp_query = "SELECT * FROM dental_complaint WHERE status=1";
-                                            $cmp_array = mysql_query($cmp_query);
-                                            while($cmp_res = mysql_fetch_array($cmp_array)){
+                                            $cmp_array = mysqli_query($con,$cmp_query);
+                                            while($cmp_res = mysqli_fetch_array($cmp_array)){
                                             ?>
                                     	
                                            	<option value="<?php echo $cmp_res['complaint']; ?><?php// echo $cmp_res['complaintid']; ?>" <?php if($main_reason == "~".$cmp_res['complaint']."~"){ echo "selected=\"selected\""; } ?>>
 												                    <?php echo $cmp_res['complaint']; ?>
                                             </option>
 											                      <?php } ?>
-                                            <option value="other" <? if(strpos($main_reason,'~other~') === false) {} else { echo " selected";}?> >
+                                            <option value="other" <?php if(strpos($main_reason,'~other~') === false) {} else { echo " selected";}?> >
 												Other - Fill in below
 											</option>
                                         </select>
@@ -983,7 +983,7 @@ function in_array(needle, haystack)
 						<br /><br />
 										Other Main Reason for Seeking Treatment:
 										<br />
-										<input id="main_reason_other" name="main_reason_other" type="text" class="tbox" value="<?=$main_reason_other?>" maxlength="255" />
+										<input id="main_reason_other" name="main_reason_other" type="text" class="tbox" value="<?php echo $main_reason_other?>" maxlength="255" />
 				</div>
                                     </td>
                                 </tr>
@@ -1019,10 +1019,10 @@ $('document').ready( function(){
 
 
 <br />
-<? include("includes/form_bottom.htm");?>
+<?php include("../includes/form_bottom.htm");?>
 <br />
 
 
 
 
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

@@ -33,8 +33,8 @@ if(isset($_POST['submitnewsleeplabsumm'])){
   $sleeplab = s_for($_POST['sleeplab']);
   $patientid = $_GET['pid'];
   $doc_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysql_real_escape_string($patientid)."'";
-  $doc_q = mysql_query($doc_sql);
-  $doc = mysql_fetch_assoc($doc_q);
+  $doc_q = mysqli_query($con,$doc_sql);
+  $doc = mysqli_fetch_assoc($doc_q);
                 if($_FILES["ss_file"]["name"] <> '')
                 {
                         $fname = $_FILES["ss_file"]["name"];
@@ -60,7 +60,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
                                         adddate = now(),
                                         ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                                        mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+                                        mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
 					$image_id = mysql_insert_id();
 			}
                 }
@@ -94,7 +94,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
 )
 VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."', '".$image_id."')";
 error_log($q);
-  $run_q = mysql_query($q) or die(mysql_error());
+  $run_q = mysqli_query($con,$q) or die(mysql_error());
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
   }else{
@@ -104,7 +104,7 @@ error_log($q);
    $msg = "Successfully added sleep lab". $uploaded;
 ?>
 <script type="text/javascript">
-parent.window.location='patient_images.php?pid=<?=$_GET['pid'];?>';
+parent.window.location='patient_images.php?pid=<?php echo $_GET['pid'];?>';
 </script>
 <?php
 die();
@@ -120,7 +120,7 @@ die();
 ?>
 <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <?php
-if($_POST["imagesub"] == 1)
+if(!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1)
 {
 
 $title = $_POST['title'];
@@ -242,7 +242,7 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
         } else {
                 ?>
                         <script type="text/javascript">
-				//alert('<?=$_FILES["image_file"]["type"];?>');
+				//alert('<?php echo $_FILES["image_file"]["type"];?>');
                                 alert("Invalid File Type");
                         </script>
                 <?php
@@ -253,12 +253,12 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
                         title = '".s_for($title)."',
                         imagetypeid = '".s_for($imagetypeid)."' ";
                         $ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
-                        mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+                        mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
 
                         $msg = "Edited Successfully";
                         ?>
                         <script type="text/javascript">
-                                parent.window.location='patient_images.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>';
+                                parent.window.location='patient_images.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
                         </script>
                         <?
                         die();
@@ -274,12 +274,12 @@ if($uploaded ){
 			  $ed_sql .= ", image_file = '".s_for($banner1)."' ";
 			}
 			$ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				parent.window.location='patient_images.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>';
+				parent.window.location='patient_images.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
 			</script>
 			<?
 			die();
@@ -296,37 +296,37 @@ if($uploaded ){
 			adddate = now(),
 			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 			
-			mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+			mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
 			$imageid = mysql_insert_id();
 			if($_POST['imagetypeid']==6){
 			  $rx_sql = "SELECT rx_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
-			  $rx_q = mysql_query($rx_sql);
-			  $rx_r = mysql_fetch_assoc($rx_q);
+			  $rx_q = mysqli_query($con,$rx_sql);
+			  $rx_r = mysqli_fetch_assoc($rx_q);
 			  if($rx_r['rx_imgid']=='' || $_POST['rx_update']==1){
 			      $rx_sql = "UPDATE dental_flow_pg1 SET rx_imgid='".$imageid."', rxrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
-      			    mysql_query($rx_sql);
+      			    mysqli_query($con,$rx_sql);
 
 			  }
 			}
 
                         if($_POST['imagetypeid']==7){
                           $lomn_sql = "SELECT lomn_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
-                          $lomn_q = mysql_query($lomn_sql);
-                          $lomn_r = mysql_fetch_assoc($lomn_q);
+                          $lomn_q = mysqli_query($con,$lomn_sql);
+                          $lomn_r = mysqli_fetch_assoc($lomn_q);
                           if($lomn_r['lomn_imgid']=='' || $_POST['lomn_update']==1){
                             $lomn_sql = "UPDATE dental_flow_pg1 SET lomn_imgid='".$imageid."', lomnrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
-                            mysql_query($lomn_sql);
+                            mysqli_query($con,$lomn_sql);
 
                           }
                         }
 
                         if($_POST['imagetypeid']==14){
                           $rxlomn_sql = "SELECT rxlomn_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
-                          $rxlomn_q = mysql_query($rxlomn_sql);
-                          $rxlomn_r = mysql_fetch_assoc($rxlomn_q);
+                          $rxlomn_q = mysqli_query($con,$rxlomn_sql);
+                          $rxlomn_r = mysqli_fetch_assoc($rxlomn_q);
                           if($rxlomn_r['rxlomn_imgid']=='' || $_POST['rxlomn_update']==1){
                             $rxlomn_sql = "UPDATE dental_flow_pg1 SET rxlomn_imgid='".$imageid."', rxlomnrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
-                            mysql_query($rxlomn_sql);
+                            mysqli_query($con,$rxlomn_sql);
 
                           }
                         }
@@ -335,7 +335,7 @@ if($uploaded ){
 			if ($_REQUEST['flow'] == "1") {
 				?>
 				<script type="text/javascript">
-					parent.window.location="/manage/manage_flowsheet3.php?pid=<?=$_GET['pid'];?>"
+					parent.window.location="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid'];?>"
 				</script>
 				<?
 				die();
@@ -343,11 +343,11 @@ if($uploaded ){
 				?>
                                 <script type="text/javascript">
 					<? if($_REQUEST['return_field']=='profile'){ ?>
-						parent.updateProfileImage('<?= $banner1; ?>');
+						parent.updateProfileImage('<?php echo  $banner1; ?>');
 					<? }elseif($_POST['imagetypeid']==10){ ?>
-						parent.updateInsCard('<?= $banner1; ?>', 'p_m_ins_card');
+						parent.updateInsCard('<?php echo  $banner1; ?>', 'p_m_ins_card');
 					<? }elseif($_POST['imagetypeid']==12){ ?>
-                                                parent.updateInsCard('<?= $banner1; ?>', 's_m_ins_card');
+                                                parent.updateInsCard('<?php echo  $banner1; ?>', 's_m_ins_card');
                                         <? } ?>
 					parent.disablePopupClean();
                                 </script>
@@ -357,7 +357,7 @@ if($uploaded ){
 			} else {
 				?>
 				<script type="text/javascript">
-					parent.window.location='patient_images.php?pid=<?=$_GET['pid'];?>';
+					parent.window.location='patient_images.php?pid=<?php echo $_GET['pid'];?>';
 				</script>
 				<?
 				die();
@@ -389,11 +389,11 @@ if($uploaded ){
 <img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
 </div>
     <?
-    $thesql = "select * from dental_q_image where imageid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_q_image where imageid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$title = $_POST['title'];
 		$imagetypeid = $_POST['imagetypeid'];
@@ -408,7 +408,7 @@ if($uploaded ){
 	}
 	
 	if($imagetypeid == '')
-		$imagetypeid = $_GET['sh'];
+		$imagetypeid = (!empty($_GET['sh']) ? $_GET['sh'] : '');
 		
 	if($themyarray["contactid"] != '')
 	{
@@ -422,20 +422,20 @@ if($uploaded ){
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<? if(!empty($msg)) {?>
     <div align="center" class="red">
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="imagefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>" method="post" onSubmit="return imageabc(this);" enctype="multipart/form-data">
+    <form name="imagefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : '');?>" method="post" onSubmit="return imageabc(this);" enctype="multipart/form-data">
  
-		<input name="flow" type="hidden" value="<?=$_GET['flow'];?>" />
+		<input name="flow" type="hidden" value="<?php echo (!empty($_GET['flow']) ? $_GET['flow'] : '');?>" />
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
-               <?=$but_text?> Image
+               <?php echo $but_text?> Image
                <? if($title <> "") {?>
-               		&quot;<?=$title;?>&quot;
+               		&quot;<?php echo $title;?>&quot;
                <? }?>
             </td>
         </tr>
@@ -448,10 +448,10 @@ if($uploaded ){
 							&nbsp;&nbsp;
 							<? 
 							$itype_sql = "select * from dental_imagetype where status=1 order by sortby";
-							$itype_my = mysql_query($itype_sql);
-							if($_GET['itro']==1){
-							  ?><input type="hidden" id="imagetypeid" name="imagetypeid" value="<?= $_GET['sh']; ?>" /><?php
-							  while($itype_myarray = mysql_fetch_array($itype_my)){
+							$itype_my = mysqli_query($con,$itype_sql);
+							if(!empty($_GET['itro']) && $_GET['itro']==1){
+							  ?><input type="hidden" id="imagetypeid" name="imagetypeid" value="<?php echo  $_GET['sh']; ?>" /><?php
+							  while($itype_myarray = mysqli_fetch_array($itype_my)){
                                                                 if($imagetypeid == st($itype_myarray['imagetypeid'])){
                                                                                 echo $itype_myarray['imagetype'];
                                                                 }
@@ -460,10 +460,10 @@ if($uploaded ){
 							?>
 							<select id="imagetypeid" name="imagetypeid" class="field text addr tbox" >
 								<option value=""></option>
-								<? while($itype_myarray = mysql_fetch_array($itype_my))
+								<? while($itype_myarray = mysqli_fetch_array($itype_my))
 								{?>
-									<option value="<?=st($itype_myarray['imagetypeid']);?>" <? if($imagetypeid == st($itype_myarray['imagetypeid']) || $_GET['it']==$itype_myarray['imagetypeid']) echo " selected"; ?>>
-										<?=st($itype_myarray['imagetype']);?>
+									<option value="<?php echo st($itype_myarray['imagetypeid']);?>" <? if($imagetypeid == st($itype_myarray['imagetypeid']) || !empty($_GET['it']) && $_GET['it']==$itype_myarray['imagetypeid']) echo " selected"; ?>>
+										<?php echo st($itype_myarray['imagetype']);?>
 									</option>
 								<? }?>
 								<option value="0">Clinical Photos (Pre-Tx Batch)</option>
@@ -515,12 +515,12 @@ if($uploaded ){
 
 <?php
 $rl_sql = "SELECT rx_imgid, lomn_imgid, rxlomn_imgid FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."'";
-$rl_q = mysql_query($rl_sql);
-if(mysql_num_rows($rl_q)){
-  $rl_r = mysql_fetch_assoc($rl_q);
+$rl_q = mysqli_query($con,$rl_sql);
+if(mysqli_num_rows($rl_q)){
+  $rl_r = mysqli_fetch_assoc($rl_q);
   if($rl_r['lomn_imgid']!=''){
 ?>
-<tr class="image_sect lomn_update" <?= ($_GET['sh']==7)?'':'style="display:none;"'; ?>>
+<tr class="image_sect lomn_update" <?php echo  (!empty($_GET['sh']) && $_GET['sh']==7)?'':'style="display:none;"'; ?>>
   <td valign="top" colspan="2" class="frmhead">
     <input type="checkbox" value="1" name="lomn_update" /> Use this LOMN for insurance claims
   </td>
@@ -529,7 +529,7 @@ if(mysql_num_rows($rl_q)){
  }
 if($rl_r['rx_imgid']!=''){ 
 ?>
-<tr class="image_sect rx_update" <?= ($_GET['sh']==6)?'':'style="display:none;"'; ?>>
+<tr class="image_sect rx_update" <?php echo  (!empty($_GET['sh']) && $_GET['sh']==6)?'':'style="display:none;"'; ?>>
   <td valign="top" colspan="2" class="frmhead">
     <input type="checkbox" value="1" name="rx_update" /> Use this RX for insurance claims
   </td>
@@ -539,7 +539,7 @@ if($rl_r['rx_imgid']!=''){
 }
 if($rl_r['rxlomn_imgid']!=''){
 ?>
-<tr class="image_sect rxlomn_update" <?= ($_GET['sh']==14)?'':'style="display:none;"'; ?>>
+<tr class="image_sect rxlomn_update" <?php echo  (!empty($_GET['sh']) && $_GET['sh']==14)?'':'style="display:none;"'; ?>>
   <td valign="top" colspan="2" class="frmhead">
     <input type="checkbox" value="1" name="rxlomn_update" /> Use this LOMN / Rx. for insurance claims
   </td>
@@ -556,7 +556,7 @@ if($rl_r['rxlomn_imgid']!=''){
 						<span>
 							Title
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<input id="title" name="title" type="text" class="field text addr tbox" value="<?=$title;?>" maxlength="255"/>
+							<input id="title" name="title" type="text" class="field text addr tbox" value="<?php echo $title;?>" maxlength="255"/>
 						</span>
 						<span id="req_0" class="req">*</span>
                     </li>
@@ -572,12 +572,12 @@ if($rl_r['rxlomn_imgid']!=''){
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<? if($image_file <> '') {?>
-                                <a href="display_file.php?f=<?=$image_file?>" target="_blank">
+                                <a href="display_file.php?f=<?php echo $image_file?>" target="_blank">
                                     <b>Preview</b></a>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                             <? }?>
                             <input type="file" name="image_file" value="" size="26" />
-                            <input type="hidden" name="image_file_old" value="<?=$image_file;?>" />
+                            <input type="hidden" name="image_file_old" value="<?php echo $image_file;?>" />
 						</span>
 						<span id="req_0" class="req">*</span>
                     </li>
@@ -590,8 +590,8 @@ if($rl_r['rxlomn_imgid']!=''){
 			$labels = array('', 'Facial Right', 'Facial Front', 'Facial Left', 'Retracted Right', 'Retracted Frontal', 'Retracted Left', 'Occlusal Upper', 'Mallampati', 'Occlusal Lower');
 		?>
 			<?php for($i=1;$i<=9;$i++){ ?>
-			<label style="width:100px; float:left; display:block;"><?= $labels[$i]; ?></label>
-				<input type="file" name="image_file_<?= $i; ?>" value="" size="26" /><br />
+			<label style="width:100px; float:left; display:block;"><?php echo  $labels[$i]; ?></label>
+				<input type="file" name="image_file_<?php echo  $i; ?>" value="" size="26" /><br />
 			<?php } ?>
 		</td>
 	</tr>
@@ -601,10 +601,10 @@ if($rl_r['rxlomn_imgid']!=''){
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="imagesub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["imageid"]?>" />
-		<input type="hidden" name="return" value="<?= $_REQUEST['return']; ?>" />
-                <input type="hidden" name="return_field" value="<?= $_REQUEST['return_field']; ?>" />
-                <input type="submit" value=" <?=$but_text?> Image" class="button" />
+                <input type="hidden" name="ed" value="<?php echo $themyarray["imageid"]?>" />
+		<input type="hidden" name="return" value="<?php echo  (!empty($_REQUEST['return']) ? $_REQUEST['return'] : ''); ?>" />
+                <input type="hidden" name="return_field" value="<?php echo  (!empty($_REQUEST['return_field']) ? $_REQUEST['return_field'] : ''); ?>" />
+                <input type="submit" value=" <?php echo $but_text?> Image" class="button" />
             </td>
         </tr>
 </table>

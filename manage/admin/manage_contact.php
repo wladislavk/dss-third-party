@@ -1,16 +1,16 @@
 <? 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "")
+if(!empty($_REQUEST["delid"]))
 {
 	$del_sql = "delete from dental_contact where userid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&docid=<?=$_GET['docid']?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&docid=<?php echo $_GET['docid']?>";
 	</script>
 	<?
 	die();
@@ -18,20 +18,20 @@ if($_REQUEST["delid"] != "")
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_contact where docid='".$_GET['docid']."' order by lastname";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$sql = "select * from dental_contact where docid='".(!empty($_GET['docid']) ? $_GET['docid'] : '')."' order by lastname";
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_contact=mysql_num_rows($my);
+$my=mysqli_query($con,$sql);
+$num_contact=mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -47,7 +47,7 @@ $num_contact=mysql_num_rows($my);
 	<b>&lt;&lt; Back</b></a>
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_contact.php?docid=<?=$_GET['docid']?>');" class="btn btn-success">
+	<button onclick="Javascript: loadPopup('add_contact.php?docid=<?php echo (!empty($_GET['docid']) ? $_GET['docid'] : '')?>');" class="btn btn-success">
 		Add New Contact
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -59,7 +59,7 @@ $num_contact=mysql_num_rows($my);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
@@ -85,7 +85,7 @@ $num_contact=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -96,7 +96,7 @@ $num_contact=mysql_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{
@@ -107,20 +107,20 @@ $num_contact=mysql_num_rows($my);
 				$tr_class = "tr_inactive";
 			}
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?php echo $tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["lastname"]);?>
-                    <?=st($myarray["middlename"]);?>,
-                    <?=st($myarray["firstname"]);?>
+					<?php echo st($myarray["lastname"]);?>
+                    <?php echo st($myarray["middlename"]);?>,
+                    <?php echo st($myarray["firstname"]);?>
 				</td>
 				<td valign="top">
-					<?=st($myarray["company"]);?>
+					<?php echo st($myarray["company"]);?>
 				</td>
 				<td valign="top">
-					<?= ($myarray['referrer']==1)?'X':''; ?>
+					<?php echo  (!empty($myarray['referrer']) && $myarray['referrer']==1)?'X':''; ?>
 				</td>
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_contact.php?ed=<?=$myarray["contactid"];?>&docid=<?=$_GET['docid']?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_contact.php?ed=<?php echo $myarray["contactid"];?>&docid=<?php echo (!empty($_GET['docid']) ? $_GET['docid'] : '')?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     

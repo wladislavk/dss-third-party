@@ -79,7 +79,7 @@
     $patient_dob = st($myarray['patient_dob']);
     $patient_sex = st($myarray['patient_sex']);
 
-    if($_GET['instype']==2){
+    if(!empty($_GET['instype']) && $_GET['instype']==2){
       $insurancetype = st($myarray['other_insurance_type']);
       $other_insurancetype = $myarray['insurance_type'];
       $other_insured_firstname = st($myarray['insured_firstname']);
@@ -135,7 +135,7 @@
     $patient_city = st($myarray['patient_city']);
     $patient_state = st($myarray['patient_state']);
     $patient_status = st($myarray['patient_status']);
-    $patient_status_array = split('~',$patient_status);
+    $patient_status_array = explode('~',$patient_status);
     $patient_zip = st($myarray['patient_zip']);
     $patient_phone_code = st($myarray['patient_phone_code']);
     $patient_phone = st($myarray['patient_phone']);
@@ -431,14 +431,14 @@
   $getdocinfo = "SELECT * FROM dental_users WHERE userid = '".$docid."'";
 
   $docinfo = $db->getRow($getdocinfo);
-  if(empty($phone) ? $phone : ''){ $phone = $docinfo['phone']; }
-  if(empty($practice) ? $practice : ''){ $practice = $docinfo['practice']; }
-  if(empty($address) ? $address : ''){ $address = $docinfo['address']; }
-  if(empty($city) ? $city : ''){ $city = $docinfo['city']; }
-  if(empty($state) ? $state : ''){ $state = $docinfo['state']; }
-  if(empty($zip) ? $zip : ''){ $zip = $docinfo['zip']; }
-  if(empty($npi) ? $npi : ''){ $npi = $docinfo['npi']; }
-  if(empty($medicare_npi) ? $medicare_npi : ''){ $medicare_npi = $docinfo['medicare_npi']; }
+  if(empty($phone)){ $phone = $docinfo['phone']; }
+  if(empty($practice)){ $practice = $docinfo['practice']; }
+  if(empty($address)){ $address = $docinfo['address']; }
+  if(empty($city)){ $city = $docinfo['city']; }
+  if(empty($state)){ $state = $docinfo['state']; }
+  if(empty($zip)){ $zip = $docinfo['zip']; }
+  if(empty($npi)){ $npi = $docinfo['npi']; }
+  if(empty($medicare_npi)){ $medicare_npi = $docinfo['medicare_npi']; }
   if($docinfo['use_service_npi']==1){
     $service_npi = $docinfo['service_npi'];
     $service_practice = $docinfo['service_name'];
@@ -494,7 +494,7 @@
       Instructions to E-File: Enter electronic Payer ID or Name in Box 1.  Verify all claim details.  Click “Submit” on bottom left of claim to e-file your claim.
     </div>
     <input type="button" onclick="change_form(<?php echo  $v2_form; ?>);" value="Switch to Paper File" style="float:right;margin-right:20px;" />
-    <?php if ($is_front_office) { ?>
+    <?php if (!empty($is_front_office)) { ?>
       <input type="button" onclick="window.location='view_claim.php?claimid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>'; return false;" value="Back to Insurance Page" style="float:right;">
     <?php } elseif ($is_back_office) { ?>
       <input type="button" onclick="window.location='manage_claims.php'; return false;" value="Back to Insurance Page" style="float:right;">

@@ -1272,7 +1272,7 @@ input{text-transform:uppercase;}
   </script>
 <?php } ?>
 
-<?php if ($is_front_office) { ?>
+<?php if (!empty($is_front_office)) { ?>
   <a href="view_claim.php?claimid=<?php echo  (!empty($_GET['insid']) ? $_GET['insid'] : ''); ?>&pid=<?php echo $_REQUEST['pid']?>">
 	<b>&lt;&lt;Back to Manage Insurance Page</b></a>
 <?php } else if ($is_back_office) { ?>

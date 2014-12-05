@@ -1,21 +1,21 @@
-<? 
+<?php 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
+if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."' OR parent_patientid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$del_sql = "delete from dental_patient_contacts where patientid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
         $del_sql = "delete from dental_patient_insurance where patientid='".$_REQUEST["delid"]."'";
-        mysql_query($del_sql);
+        mysqli_query($con,$del_sql);
 
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&docid=<?=$_GET['docid']?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&docid=<?php echo $_GET['docid']?>";
 	</script>
 	<?
 	die();
@@ -26,23 +26,23 @@ $doc_sql = "select * from dental_users where user_access=2 order by username";
 }else{
   $doc_sql = "SELECT u.* FROM dental_users u 
                 INNER JOIN dental_user_company uc ON uc.userid = u.userid
-                WHERE u.user_access=2 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'
+                WHERE u.user_access=2 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'
                 ORDER BY username";
 }
 
-$doc_my = mysql_query($doc_sql);
+$doc_my = mysqli_query($con,$doc_sql);
 
-$doc_my1 = mysql_query($doc_sql) or die(mysql_error());
-$doc_myarray1 = mysql_fetch_array($doc_my1);
+$doc_my1 = mysqli_query($con,$doc_sql);
+$doc_myarray1 = mysqli_fetch_array($doc_my1);
 
-if($_GET['docid'] == '')
+if(empty($_GET['docid']))
 {
 	$_GET['docid'] = $doc_myarray1['userid'];
 }
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -54,24 +54,24 @@ $sql = "select * from dental_patients order by lastname, firstname";
 $sql = "select p.* from dental_patients p 
 	JOIN dental_users u ON u.userid=p.docid 
    	JOIN dental_user_company uc ON uc.userid = u.userid
-	where uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' order by p.lastname, p.firstname";
+	where uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' order by p.lastname, p.firstname";
 }elseif(is_billing($_SESSION['admin_access'])){
   $a_sql = "SELECT ac.companyid FROM admin_company ac
                         JOIN admin a ON a.adminid = ac.adminid
-                        WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
-  $a_q = mysql_query($a_sql);
+                        WHERE a.adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
+  $a_q = mysqli_query($con,$a_sql);
   $admin = mysql_fetch_assoc($a_q);
 $sql = "select p.* from dental_patients p 
 	JOIN dental_users u ON u.userid=p.docid 
-	where u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."' order by p.lastname, p.firstname";
+	where u.billing_company_id='".mysqli_real_escape_string($con,$admin['companyid'])."' order by p.lastname, p.firstname";
 }
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my=mysqli_query($con,$sql);
+$num_users=mysqli_num_rows($my);
 
 ?>
 
@@ -82,13 +82,13 @@ $num_users=mysql_num_rows($my);
 <div class="page-header">
 	Manage Patient
    <!-- -
-    <select class="tbox" onchange="Javascript: window.location='<?=$_SERVER['PHP_SELF'];?>?docid='+this.value;">
-        <? while($doc_myarray = mysql_fetch_array($doc_my))
+    <select class="tbox" onchange="Javascript: window.location='<?php echo $_SERVER['PHP_SELF'];?>?docid='+this.value;">
+        <?php while($doc_myarray = mysqli_fetch_array($doc_my))
 		{?>
-    		<option value="<?=st($doc_myarray['userid']);?>" <? if(st($doc_myarray['userid']) == $_GET['docid']) echo " selected";?>>
-            	<?=st($doc_myarray['username']);?> [ <?=st($doc_myarray['name']);?> ]
+    		<option value="<?php echo st($doc_myarray['userid']);?>" <?php if(st($doc_myarray['userid']) == $_GET['docid']) echo " selected";?>>
+            	<?php echo st($doc_myarray['username']);?> [ <?php echo st($doc_myarray['name']);?> ]
             </option>
-        <? }?>
+        <?php }?>
     </select>-->
 </div>
 
@@ -338,7 +338,7 @@ $num_users=mysql_num_rows($my);
 &nbsp;
 <?php if(!is_billing($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_patient.php?docid=<?=$_GET['docid']?>');" class="btn btn-success">
+	<button onclick="Javascript: loadPopup('add_patient.php?docid=<?php echo $_GET['docid']?>');" class="btn btn-success">
 		Add New Patient
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -347,12 +347,12 @@ $num_users=mysql_num_rows($my);
 <?php } ?>
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -361,7 +361,7 @@ $num_users=mysql_num_rows($my);
 			?>
 		</TD>
 	</TR>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="90%">
 			Name
@@ -370,18 +370,18 @@ $num_users=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{
@@ -392,20 +392,20 @@ $num_users=mysql_num_rows($my);
 				$tr_class = "tr_inactive";
 			}
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?php echo $tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["firstname"]);?>&nbsp;
-                    <?=st($myarray["middlename"]);?>.&nbsp;
-                    <?=st($myarray["lastname"]);?> 
+					<?php echo st($myarray["firstname"]);?>&nbsp;
+                    <?php echo st($myarray["middlename"]);?>.&nbsp;
+                    <?php echo st($myarray["lastname"]);?> 
 				</td>
 				<td valign="top">
-					<a href="view_patient.php?pid=<?=$myarray["patientid"];?>" title="Edit" class="btn btn-primary btn-sm">
+					<a href="view_patient.php?pid=<?php echo $myarray["patientid"];?>" title="Edit" class="btn btn-primary btn-sm">
 						View
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 </form>
@@ -418,4 +418,4 @@ $num_users=mysql_num_rows($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

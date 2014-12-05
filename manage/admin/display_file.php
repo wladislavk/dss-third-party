@@ -7,9 +7,13 @@ $basepath = dirname(__FILE__) . '/../../../../shared/q_file';
 
 $filename = $_GET['f'];
 //$filename = preg_replace('@[\./\\]+@','_',$filename);
-$filetype = mime_content_type($basepath . '/' . $filename);
+if (file_exists($basepath . '/' . $filename)) {
+    $filetype = mime_content_type($basepath . '/' . $filename);  
+} else {
+    $filetype = '';
+}
 
-if (!file_exists($basepath . '/' . $filename) && $_GET['type'] === 'image') {
+if (!file_exists($basepath . '/' . $filename) && !empty($_GET['type']) && $_GET['type'] === 'image') {
     $filetype = 'image/gif';
 }
 
@@ -32,6 +36,8 @@ switch ($filetype) {
     default:
         header('Content-type: '.$filetype);
         header('Content-Disposition: attachment; filename="' . $filename . '"');
-        readfile($basepath . '/' . $filename);
+        if (file_exists($basepath . '/' . $filename)) {
+            readfile($basepath . '/' . $filename);
+        }
         break;
 }

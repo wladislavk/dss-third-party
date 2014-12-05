@@ -1,16 +1,16 @@
-<? 
+<?php 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && is_admin($_SESSION['admin_access']))
+if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access']))
 {
 	$del_sql = "delete from companies where id='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
 	die();
@@ -18,7 +18,7 @@ if($_REQUEST["delid"] != "" && is_admin($_SESSION['admin_access']))
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]) ? $_REQUEST["page"] : '')
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -31,13 +31,13 @@ $sql = "select c.*, count(a.adminid) as num_admin, count(b.adminid) as num_users
 	 LEFT JOIN dental_plans p ON p.id = c.plan_id
 	 group by c.id
 	 order by name ASC";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my=mysqli_query($con,$sql);
+$num_users=mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -60,11 +60,11 @@ $num_users=mysql_num_rows($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -73,7 +73,7 @@ $num_users=mysql_num_rows($my);
 			?>
 		</TD>        
 	</TR>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="40%">
 			Name
@@ -101,80 +101,80 @@ $num_users=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="3" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 
 		?>
-			<tr <?= ($myarray['status']==2)?'class="warning"':''; ?>>
+			<tr <?php echo  ($myarray['status']==2)?'class="warning"':''; ?>>
 				<td valign="top">
-					<?=st($myarray["name"]);?>
+					<?php echo st($myarray["name"]);?>
 				</td>
 				<td valign="top">
-					<a href="manage_backoffice.php?cid=<?=$myarray['id'];?>"><?= st($myarray["num_admin"]); ?></a>
+					<a href="manage_backoffice.php?cid=<?php echo $myarray['id'];?>"><?php echo  st($myarray["num_admin"]); ?></a>
 				</td>	
 				<td valign="top">
-                                        <a href="manage_backoffice.php?cid=<?=$myarray['id'];?>"><?= st($myarray["num_users"]); ?></a>
+                                        <a href="manage_backoffice.php?cid=<?php echo $myarray['id'];?>"><?php echo  st($myarray["num_users"]); ?></a>
                                 </td>	
 				<td valign="top">
 				  <?php 
 					if($myarray['company_type']==DSS_COMPANY_TYPE_BILLING){
-					$u_sql = "SELECT userid FROM dental_users WHERE billing_company_id='".mysql_real_escape_string($myarray["id"])."'";
-					$u_q = mysql_query($u_sql);
-					$num_users = mysql_num_rows($u_q);
+					$u_sql = "SELECT userid FROM dental_users WHERE billing_company_id='".mysqli_real_escape_string($con,$myarray["id"])."'";
+					$u_q = mysqli_query($con,$u_sql);
+					$num_users = mysqli_num_rows($u_q);
 					?>
-					<a href="billing_company_users.php?id=<?= $myarray['id']; ?>"><?= $num_users; ?></a>
+					<a href="billing_company_users.php?id=<?php echo  $myarray['id']; ?>"><?php echo  $num_users; ?></a>
 					<?php
 					}elseif($myarray['company_type']==DSS_COMPANY_TYPE_HST){
-                                        $u_sql = "SELECT u.userid FROM dental_users u join dental_user_hst_company uhc ON uhc.userid=u.userid WHERE uhc.companyid='".mysql_real_escape_string($myarray["id"])."'";
-                                        $u_q = mysql_query($u_sql);
-                                        $num_users = mysql_num_rows($u_q);
+                                        $u_sql = "SELECT u.userid FROM dental_users u join dental_user_hst_company uhc ON uhc.userid=u.userid WHERE uhc.companyid='".mysqli_real_escape_string($con,$myarray["id"])."'";
+                                        $u_q = mysqli_query($con,$u_sql);
+                                        $num_users = mysqli_num_rows($u_q);
                                         ?>
-                                        <a href="hst_company_users.php?id=<?= $myarray['id']; ?>"><?= $num_users; ?></a>
+                                        <a href="hst_company_users.php?id=<?php echo  $myarray['id']; ?>"><?php echo  $num_users; ?></a>
                                         <?php
                                         }else{
-                                        $u_sql = "SELECT id FROM dental_user_company WHERE companyid='".mysql_real_escape_string($myarray["id"])."'";
-                                        $u_q = mysql_query($u_sql);
-                                        $num_users = mysql_num_rows($u_q);
+                                        $u_sql = "SELECT id FROM dental_user_company WHERE companyid='".mysqli_real_escape_string($con,$myarray["id"])."'";
+                                        $u_q = mysqli_query($con,$u_sql);
+                                        $num_users = mysqli_num_rows($u_q);
                                         ?>
-                                        <a href="software_company_users.php?id=<?= $myarray['id']; ?>"><?= $num_users; ?></a>
+                                        <a href="software_company_users.php?id=<?php echo  $myarray['id']; ?>"><?php echo  $num_users; ?></a>
                                         <?php
 
 					}
 				  ?>
 				</td>
 				<td valign="top">
-					<?= $myarray["plan_name"];?>
+					<?php echo  $myarray["plan_name"];?>
 				</td>
 				<td valign="top">
-					<?= $dss_company_type_labels[$myarray["company_type"]];?>
+					<?php echo  $dss_company_type_labels[$myarray["company_type"]];?>
 				</td>
                                 <td valign="top">
-                                        <a href="Javascript:;"  onclick="Javascript: loadPopup('add_company_logo.php?ed=<?=$myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+                                        <a href="Javascript:;"  onclick="Javascript: loadPopup('add_company_logo.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
                                                 Edit
                                          <span class="glyphicon glyphicon-pencil"></span></a>
 
                                 </td>
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_company.php?ed=<?=$myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_company.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
-                                        <a href="invoice_bo_additional.php?show=1&coid=<?=$myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
+                                        <a href="invoice_bo_additional.php?show=1&coid=<?php echo $myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
                                                 Invoice
                                          <span class="glyphicon glyphicon-pencil"></span></a> 
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 
@@ -186,4 +186,4 @@ $num_users=mysql_num_rows($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

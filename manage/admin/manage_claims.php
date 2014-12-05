@@ -418,7 +418,7 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?php 
-				 paging($no_pages,$index_val,"status=".$_GET['status']."&notes=".(!empty($_GET['notes']) ? $_GET['notes'] : '')."&fid=".(!empty($_GET['fid']) ? $_GET['fid'] : '')."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : '')."&sort_by=".(!empty($_GET['sort_by']) ? $_GET['sort_by'] : '')."&sort_dir=".(!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''));
+				 paging($no_pages,$index_val,"status=".(!empty($_GET['status']) ? $_GET['status'] : '')."&notes=".(!empty($_GET['notes']) ? $_GET['notes'] : '')."&fid=".(!empty($_GET['fid']) ? $_GET['fid'] : '')."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : '')."&sort_by=".(!empty($_GET['sort_by']) ? $_GET['sort_by'] : '')."&sort_dir=".(!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''));
 			?>
 		</TD>
 	</TR>
@@ -558,8 +558,8 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
            <a href="javascript:alert('Dispute Reason:\n<?php echo  $file['description']; ?>');">Reason</a>
 		<br />
 	 <?php } ?>
-		<a href="manage_claims.php?status=<?php echo  $_GET['status']; ?>&sendid=<?php echo  $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a>
-                <a href="manage_claims.php?status=<?php echo  $_GET['status']; ?>&cancelid=<?php echo  $myarray['insuranceid']; ?>" onclick="return confirm('This will CANCEL the disputed claim and notify the frontoffice. Proceed?')">Cancel Dispute</a>
+		<a href="manage_claims.php?status=<?php echo  (!empty($_GET['status']) ? $_GET['status'] : ''); ?>&sendid=<?php echo  $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a>
+                <a href="manage_claims.php?status=<?php echo  (!empty($_GET['status']) ? $_GET['status'] : ''); ?>&cancelid=<?php echo  $myarray['insuranceid']; ?>" onclick="return confirm('This will CANCEL the disputed claim and notify the frontoffice. Proceed?')">Cancel Dispute</a>
 	 <?php           }elseif($myarray['status'] == DSS_CLAIM_SEC_DISPUTE || $myarray['status'] == DSS_CLAIM_SEC_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysqli_real_escape_string($con,$myarray['insuranceid'])."'";
             $sq = mysqli_query($con,$s);
@@ -570,7 +570,7 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
            <a href="javascript:alert('Dispute Reason:\n<?php echo  $file['description']; ?>');">Reason</a>
 	   <br />
         <?php }
-		?><a href="manage_claims.php?status=<?php echo  $_GET['status']; ?>&sendid=<?php echo  $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a><?php            } ?>
+		?><a href="manage_claims.php?status=<?php echo  (!empty($_GET['status']) ? $_GET['status'] : ''); ?>&sendid=<?php echo  $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a><?php            } ?>
 
 				</td>
 	<td valign="top" <?php echo  ($myarray['num_fo_notes']>0)?'class="info"':''; ?>>

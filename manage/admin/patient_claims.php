@@ -6,11 +6,11 @@ include 'includes/patient_nav.php';
 
 
 if(isset($_GET['upstatus'])){
-  $old_sql = "SELECT status FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
-  $old_q = mysql_query($old_sql);
-  $old = mysql_fetch_assoc($old_q);
-  $sql = "UPDATE dental_insurance SET status='".mysql_real_escape_string($_GET['upstatus'])."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
-  mysql_query($sql);
+  $old_sql = "SELECT status FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";
+  $old_q = mysqli_query($con,$old_sql);
+  $old = mysqli_fetch_assoc($old_q);
+  $sql = "UPDATE dental_insurance SET status='".mysqli_real_escape_string($con,$_GET['upstatus'])."' WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";
+  mysqli_query($con,$sql);
   claim_status_history_update($_GET['ins_id'], $old['status'], $_GET['upstatus'], '', $_SESSION['adminuserid']);
 }
 
@@ -54,7 +54,7 @@ $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUES
 
 if(isset($_REQUEST["delid"])  && $_SESSION['admin_access']==1) {
 	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -71,26 +71,26 @@ if(isset($_REQUEST['sendid'])){
   $sendid = $_REQUEST['sendid'];
   $send_sql = "SELECT i.*, f.description AS dispute_description FROM dental_insurance i
 		LEFT JOIN dental_insurance_file f ON f.claimid=i.insuranceid
-		WHERE insuranceid='".mysql_real_escape_string($sendid)."'
+		WHERE insuranceid='".mysqli_real_escape_string($con,$sendid)."'
 		ORDER BY f.id DESC";
-  $send_q = mysql_query($send_sql);
-  $send_r = mysql_fetch_assoc($send_q);
+  $send_q = mysqli_query($con,$send_sql);
+  $send_r = mysqli_fetch_assoc($send_q);
   $status = $send_r['status'];
   if($status == DSS_CLAIM_DISPUTE){
-    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
-    mysql_query($new_sql);
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysqli_real_escape_string($con,$sendid)."'";
+    mysqli_query($con,$new_sql);
     claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_SENT, '', $_SESSION['adminuserid']);
   }elseif( $status == DSS_CLAIM_PATIENT_DISPUTE){
-    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
-    mysql_query($new_sql);
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_PATIENT."' WHERE insuranceid='".mysqli_real_escape_string($con,$sendid)."'";
+    mysqli_query($con,$new_sql);
     claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_PAID_PATIENT, '', $_SESSION['adminuserid']);
   }elseif($status == DSS_CLAIM_SEC_DISPUTE){
-    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SEC_SENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
-    mysql_query($new_sql);
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SEC_SENT."' WHERE insuranceid='".mysqli_real_escape_string($con,$sendid)."'";
+    mysqli_query($con,$new_sql);
     claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_SEC_SENT, '', $_SESSION['adminuserid']);
   }elseif($status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
-    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_SEC_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
-    mysql_query($new_sql);
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_SEC_PATIENT."' WHERE insuranceid='".mysqli_real_escape_string($con,$sendid)."'";
+    mysqli_query($con,$new_sql);
     claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_PAID_SEC_PATIENT, '', $_SESSION['adminuserid']);
   }
 
@@ -102,30 +102,30 @@ if(isset($_REQUEST['sendid'])){
 		patientid = '".$send_r['patientid']."',
 		admin_producerid = '".$_SESSION['adminuserid']."',
 		note = 'Disputed insurance claim ".$sendid." re-filed with insurance company.'";
-  mysql_query($note_sql);
+  mysqli_query($con,$note_sql);
 }
 }
 if(isset($_REQUEST['cancelid'])){
   $cancelid = $_REQUEST['cancelid'];
-  $cancel_sql = "SELECT * FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
-  $cancel_q = mysql_query($cancel_sql);
-  $cancel_r = mysql_fetch_assoc($cancel_q);
+  $cancel_sql = "SELECT * FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,$cancelid)."'";
+  $cancel_q = mysqli_query($con,$cancel_sql);
+  $cancel_r = mysqli_fetch_assoc($cancel_q);
   $status = $cancel_r['status'];
   if($status == DSS_CLAIM_DISPUTE){
-    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
-    mysql_query($new_sql);
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysqli_real_escape_string($con,$cancelid)."'";
+    mysqli_query($con,$new_sql);
     claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_SENT, '', $_SESSION['adminuserid']);
   }elseif( $status == DSS_CLAIM_PATIENT_DISPUTE){
-    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
-    mysql_query($new_sql);
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_PATIENT."' WHERE insuranceid='".mysqli_real_escape_string($con,$cancelid)."'";
+    mysqli_query($con,$new_sql);
     claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_PAID_PATIENT, '', $_SESSION['adminuserid']);
   }elseif($status == DSS_CLAIM_SEC_DISPUTE){
-    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SEC_SENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
-    mysql_query($new_sql);
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SEC_SENT."' WHERE insuranceid='".mysqli_real_escape_string($con,$cancelid)."'";
+    mysqli_query($con,$new_sql);
     claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_SEC_SENT, '', $_SESSION['adminuserid']);
   }elseif($status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
-    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_SEC_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
-    mysql_query($new_sql);
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_SEC_PATIENT."' WHERE insuranceid='".mysqli_real_escape_string($con,$cancelid)."'";
+    mysqli_query($con,$new_sql);
     claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_PAID_SEC_PATIENT, '', $_SESSION['adminuserid']);
   }
   $note_sql = "INSERT INTO dental_ledger_note SET
@@ -136,7 +136,7 @@ if(isset($_REQUEST['cancelid'])){
                 patientid = '".$cancel_r['patientid']."',
                 admin_producerid = '".$_SESSION['adminuserid']."',
                 note = 'Disputed insurance claim ".$cancelid." canceled after communication with office.'";
-  mysql_query($note_sql);
+  mysqli_query($con,$note_sql);
 }
 
 $rec_disp = 20;
@@ -200,7 +200,7 @@ $sql = "SELECT "
      . "FROM "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
-     . "  JOIN dental_users users ON claim.docid = users.userid AND users.billing_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."'"
+     . "  JOIN dental_users users ON claim.docid = users.userid AND users.billing_company_id='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'"
      . "  JOIN dental_user_company uc ON uc.userid = claim.docid " 
      . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
 }
@@ -228,7 +228,7 @@ $sql = "SELECT "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
-     . "  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'"
+     . "  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'"
      . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
 }
 // . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
@@ -245,12 +245,12 @@ $sql .= " AND
    END = '1'
 ORDER BY " . $sort_by_sql;
 //print $sql;
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
+$my=mysqli_query($con,$sql);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -312,7 +312,7 @@ if(isset($_GET['msg'])){
 			Mailed
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="7" align="center">
@@ -323,7 +323,7 @@ if(isset($_GET['msg'])){
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 		?>
 			<tr class="<?= (isset($tr_class))?$tr_class:'';?>">
@@ -395,16 +395,16 @@ if(isset($_GET['msg'])){
 					<a href="<?= $primary_link; ?>" title="Edit" class="btn btn-primary btn-sm">View <span class="glyphicon glyphicon-pencil"></span></a>
 				<?php } ?>
 				<?php 
-					$eobsql = "SELECT * FROM dental_insurance_file WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
-					$eobq = mysql_query($eobsql);
-					while($eobr = mysql_fetch_assoc($eobq)){
+					$eobsql = "SELECT * FROM dental_insurance_file WHERE claimid='".mysqli_real_escape_string($con,$myarray['insuranceid'])."'";
+					$eobq = mysqli_query($con,$eobsql);
+					while($eobr = mysqli_fetch_assoc($eobq)){
 						?><br /><a href="display_file.php?f=<?= $eobr['filename']; ?>" title="Edit" class="btn btn-primary btn-sm">View <?= $eobr['claimtype']; ?> EOB <span class="glyphicon glyphicon-pencil"></span></a>
 				<?php } ?>
 <?php if($myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE){
-            $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
-            $sq = mysql_query($s);
-            if(mysql_num_rows($sq)>0){
-            $file = mysql_fetch_assoc($sq);
+            $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysqli_real_escape_string($con,$myarray['insuranceid'])."'";
+            $sq = mysqli_query($con,$s);
+            if(mysqli_num_rows($sq)>0){
+            $file = mysqli_fetch_assoc($sq);
             ?>
 	   <br />
            <a href="javascript:alert('Dispute Reason:\n<?= $file['description']; ?>');">Reason</a>
@@ -414,10 +414,10 @@ if(isset($_GET['msg'])){
                 <a href="manage_claims.php?status=<?= $_GET['status']; ?>&cancelid=<?= $myarray['insuranceid']; ?>" onclick="return confirm('This will CANCEL the disputed claim and notify the frontoffice. Proceed?')">Cancel Dispute</a>
 	 <?php
           }elseif($myarray['status'] == DSS_CLAIM_SEC_DISPUTE || $myarray['status'] == DSS_CLAIM_SEC_PATIENT_DISPUTE){
-            $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
-            $sq = mysql_query($s);
-            if(mysql_num_rows($sq)>0){
-            $file = mysql_fetch_assoc($sq);
+            $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysqli_real_escape_string($con,$myarray['insuranceid'])."'";
+            $sq = mysqli_query($con,$s);
+            if(mysqli_num_rows($sq)>0){
+            $file = mysqli_fetch_assoc($sq);
             ?>
 	   <br />
            <a href="javascript:alert('Dispute Reason:\n<?= $file['description']; ?>');">Reason</a>
@@ -460,9 +460,9 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
   $api_sql = "SELECT u.use_eligible_api, p.p_m_eligible_id FROM dental_users u
 		JOIN dental_insurance i ON i.docid = u.userid
  		JOIN dental_patients p ON p.patientid=i.patientid
-                WHERE i.insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
-  $api_q = mysql_query($api_sql);
-  $api_r = mysql_fetch_assoc($api_q);
+                WHERE i.insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";
+  $api_q = mysqli_query($con,$api_sql);
+  $api_r = mysqli_fetch_assoc($api_q);
   if($api_r['use_eligible_api']==1 && $api_r['p_m_eligible_id']!=''){
     include '../insurance_electronic_file.php';
   } */

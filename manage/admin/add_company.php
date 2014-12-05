@@ -5,41 +5,41 @@ include("includes/sescheck.php");
 include_once('includes/password.php');
 require_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
-if($_POST["compsub"] == 1)
+if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 {
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update companies set 
-				name = '".mysql_real_escape_string($_POST["name"])."',
-                                add1 = '".mysql_real_escape_string($_POST["add1"])."', 
-                                add2 = '".mysql_real_escape_string($_POST["add2"])."', 
-                                city = '".mysql_real_escape_string($_POST["city"])."', 
-                                state = '".mysql_real_escape_string($_POST["state"])."', 
-                                zip = '".mysql_real_escape_string($_POST["zip"])."', 
-                                phone = '".mysql_real_escape_string(num($_POST["phone"]))."', 
-                                fax = '".mysql_real_escape_string(num($_POST["fax"]))."', 
-                                email = '".mysql_real_escape_string($_POST["email"])."', 
-				eligible_api_key= '".mysql_real_escape_string($_POST['eligible_api_key'])."',
-				stripe_secret_key = '".mysql_real_escape_string($_POST['stripe_secret_key'])."',
-                                stripe_publishable_key = '".mysql_real_escape_string($_POST['stripe_publishable_key'])."',
-				sfax_security_context = '".mysql_real_escape_string($_POST['sfax_security_context'])."',
-				sfax_app_id = '".mysql_real_escape_string($_POST['sfax_app_id'])."',
-				sfax_app_key = '".mysql_real_escape_string($_POST['sfax_app_key'])."',
-				sfax_encryption_key = '".mysql_real_escape_string($_POST['sfax_encryption_key'])."',
-				sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
-				plan_id = '".mysql_real_escape_string($_POST['plan_id'])."',
-				status = '".mysql_real_escape_string($_POST["status"])."',
-				use_support = '".mysql_real_escape_string($_POST["use_support"])."',
-				exclusive = '".mysql_real_escape_string($_POST["exclusive"])."',
-				company_type = '".mysql_real_escape_string($_POST['company_type'])."',
-				vob_require_test = '".mysql_real_escape_string($_POST['vob_require_test'])."'
+				name = '".mysqli_real_escape_string($con,$_POST["name"])."',
+                                add1 = '".mysqli_real_escape_string($con,$_POST["add1"])."', 
+                                add2 = '".mysqli_real_escape_string($con,$_POST["add2"])."', 
+                                city = '".mysqli_real_escape_string($con,$_POST["city"])."', 
+                                state = '".mysqli_real_escape_string($con,$_POST["state"])."', 
+                                zip = '".mysqli_real_escape_string($con,$_POST["zip"])."', 
+                                phone = '".mysqli_real_escape_string($con,num($_POST["phone"]))."', 
+                                fax = '".mysqli_real_escape_string($con,num($_POST["fax"]))."', 
+                                email = '".mysqli_real_escape_string($con,$_POST["email"])."', 
+				eligible_api_key= '".mysqli_real_escape_string($con,$_POST['eligible_api_key'])."',
+				stripe_secret_key = '".mysqli_real_escape_string($con,$_POST['stripe_secret_key'])."',
+                                stripe_publishable_key = '".mysqli_real_escape_string($con,$_POST['stripe_publishable_key'])."',
+				sfax_security_context = '".mysqli_real_escape_string($con,$_POST['sfax_security_context'])."',
+				sfax_app_id = '".mysqli_real_escape_string($con,$_POST['sfax_app_id'])."',
+				sfax_app_key = '".mysqli_real_escape_string($con,$_POST['sfax_app_key'])."',
+				sfax_encryption_key = '".mysqli_real_escape_string($con,$_POST['sfax_encryption_key'])."',
+				sfax_init_vector = '".mysqli_real_escape_string($con,$_POST['sfax_init_vector'])."',
+				plan_id = '".mysqli_real_escape_string($con,$_POST['plan_id'])."',
+				status = '".mysqli_real_escape_string($con,$_POST["status"])."',
+				use_support = '".mysqli_real_escape_string($con,$_POST["use_support"])."',
+				exclusive = '".mysqli_real_escape_string($con,$_POST["exclusive"])."',
+				company_type = '".mysqli_real_escape_string($con,$_POST['company_type'])."',
+				vob_require_test = '".mysqli_real_escape_string($con,$_POST['vob_require_test'])."'
 			where id='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
 
 			$course_sql = "update content_type_profile SET
-					field_companyname_value='".mysql_real_escape_string($_POST["name"])."'
+					field_companyname_value='".mysqli_real_escape_string($con,$_POST["name"])."'
                         		where field_companyid_value='".$_POST["ed"]."'";
-			mysql_query($course_sql, $course_con);			
+			mysqli_query($con,$course_sql, $course_con);			
 
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -56,38 +56,38 @@ if($_POST["compsub"] == 1)
 
 
 			$ins_sql = "insert into companies set 
-				name = '".mysql_real_escape_string($_POST["name"])."', 
-                                add1 = '".mysql_real_escape_string($_POST["add1"])."', 
-                                add2 = '".mysql_real_escape_string($_POST["add2"])."', 
-                                city = '".mysql_real_escape_string($_POST["city"])."', 
-                                state = '".mysql_real_escape_string($_POST["state"])."', 
-                                zip = '".mysql_real_escape_string($_POST["zip"])."', 
-                                phone = '".mysql_real_escape_string(num($_POST["phone"]))."', 
-                                fax = '".mysql_real_escape_string(($_POST["fax"]))."', 
-                                email = '".mysql_real_escape_string($_POST["email"])."', 
-				eligible_api_key= '".mysql_real_escape_string($_POST['eligible_api_key'])."',
-                                stripe_secret_key = '".mysql_real_escape_string($_POST['stripe_secret_key'])."',
-                                stripe_publishable_key = '".mysql_real_escape_string($_POST['stripe_publishable_key'])."',
-				sfax_security_context = '".mysql_real_escape_string($_POST['sfax_security_context'])."',
-                                sfax_app_id = '".mysql_real_escape_string($_POST['sfax_app_id'])."',
-                                sfax_app_key = '".mysql_real_escape_string($_POST['sfax_app_key'])."',
-                                sfax_encryption_key = '".mysql_real_escape_string($_POST['sfax_encryption_key'])."',
-                                sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
-				plan_id = '".mysql_real_escape_string($_POST['plan_id'])."',
-				status = '".mysql_real_escape_string($_POST['status'])."',
-				use_support = '".mysql_real_escape_string($_POST["use_support"])."',
-				exclusive = '".mysql_real_escape_string($_POST["exclusive"])."',
-                                company_type = '".mysql_real_escape_string($_POST['company_type'])."',
-				vob_require_test = '".mysql_real_escape_string($_POST['vob_require_test'])."',
+				name = '".mysqli_real_escape_string($con,$_POST["name"])."', 
+                                add1 = '".mysqli_real_escape_string($con,$_POST["add1"])."', 
+                                add2 = '".mysqli_real_escape_string($con,$_POST["add2"])."', 
+                                city = '".mysqli_real_escape_string($con,$_POST["city"])."', 
+                                state = '".mysqli_real_escape_string($con,$_POST["state"])."', 
+                                zip = '".mysqli_real_escape_string($con,$_POST["zip"])."', 
+                                phone = '".mysqli_real_escape_string($con,num($_POST["phone"]))."', 
+                                fax = '".mysqli_real_escape_string($con,($_POST["fax"]))."', 
+                                email = '".mysqli_real_escape_string($con,$_POST["email"])."', 
+				eligible_api_key= '".mysqli_real_escape_string($con,$_POST['eligible_api_key'])."',
+                                stripe_secret_key = '".mysqli_real_escape_string($con,$_POST['stripe_secret_key'])."',
+                                stripe_publishable_key = '".mysqli_real_escape_string($con,$_POST['stripe_publishable_key'])."',
+				sfax_security_context = '".mysqli_real_escape_string($con,$_POST['sfax_security_context'])."',
+                                sfax_app_id = '".mysqli_real_escape_string($con,$_POST['sfax_app_id'])."',
+                                sfax_app_key = '".mysqli_real_escape_string($con,$_POST['sfax_app_key'])."',
+                                sfax_encryption_key = '".mysqli_real_escape_string($con,$_POST['sfax_encryption_key'])."',
+                                sfax_init_vector = '".mysqli_real_escape_string($con,$_POST['sfax_init_vector'])."',
+				plan_id = '".mysqli_real_escape_string($con,(!empty($_POST['plan_id']) ? $_POST['plan_id'] : ''))."',
+				status = '".mysqli_real_escape_string($con,$_POST['status'])."',
+				use_support = '".mysqli_real_escape_string($con,(!empty($_POST["use_support"]) ? $_POST["use_support"] : ''))."',
+				exclusive = '".mysqli_real_escape_string($con,(!empty($_POST["exclusive"]) ? $_POST["exclusive"] : ''))."',
+                                company_type = '".mysqli_real_escape_string($con,$_POST['company_type'])."',
+				vob_require_test = '".mysqli_real_escape_string($con,(!empty($_POST['vob_require_test']) ? $_POST['vob_require_test'] : ''))."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
-                        $companyid = mysql_insert_id();			
+			mysqli_query($con,$ins_sql);
+                        $companyid = mysqli_insert_id($con);			
 
 			$l_sql = "INSERT INTO dental_letter_templates (name, body, companyid, triggerid) SELECT name, body, '".$companyid."', id FROM dental_letter_templates WHERE default_letter=1";
-			mysql_query($l_sql);
+			mysqli_query($con,$l_sql);
 			$ct_sql = "insert into dental_claim_text (title, description, companyid) SELECT title, description, ".$companyid." FROM dental_claim_text WHERE default_text=1";
-                        mysql_query($ct_sql);
+                        mysqli_query($con,$ct_sql);
 
 			$msg = "Added Successfully";
 			?>
@@ -105,11 +105,11 @@ if($_POST["compsub"] == 1)
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
-    $thesql = "select * from companies where id='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from companies where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$name = $_POST['name'];
 		$add1 = $_POST['add1'];
@@ -175,7 +175,7 @@ if($_POST["compsub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<? if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
@@ -361,9 +361,9 @@ if($_POST["compsub"] == 1)
                         <?php
 
                         $p_sql = "SELECT * FROM dental_plans WHERE office_type='2' ORDER BY name ASC";
-                        $p_q = mysql_query($p_sql);
+                        $p_q = mysqli_query($con,$p_sql);
 
-                        while ($p_r = mysql_fetch_assoc($p_q)) { ?>
+                        while ($p_r = mysqli_fetch_assoc($p_q)) { ?>
                         <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $plan_id)?'selected="selected"':''; ?>><?= $p_r['name']; ?></option>
                         <?php } ?>
                     </select>

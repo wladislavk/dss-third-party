@@ -1,7 +1,7 @@
 <?php
-$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY id DESC";
-$s_lab_result = mysql_query($s_lab_query);
-$num_labs = mysql_num_rows($s_lab_result);
+$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC";
+$s_lab_result = mysqli_query($con,$s_lab_query);
+$num_labs = mysqli_num_rows($s_lab_result);
 if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++; }
 $body_width = ($num_labs*245)+245;
 
@@ -143,7 +143,7 @@ function show_study_table(){
 		<div style="border: medium none; overflow: hidden;width:<?= $body_width; ?>px;">
 		<?php include '../add_sleep_study.php'; ?>
 		</div>
-                    <!--<iframe id="sleepstudies" height="532" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>-->
+                    <!--<iframe id="sleepstudies" height="532" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&yellow=1">Iframes must be enabled to view this area.</iframe>-->
 
         </div>
 

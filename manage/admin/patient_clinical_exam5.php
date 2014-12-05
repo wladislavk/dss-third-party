@@ -4,35 +4,35 @@ include "includes/patient_nav.php";
 ?>
 <ul class="nav nav-tabs nav-justified">
         <li>
-            <a href="patient_clinical_exam.php?pid=<?= $_GET['pid']; ?>" id="link_summ">Dental Exam</a>
+            <a href="patient_clinical_exam.php?pid=<?php echo  $_GET['pid']; ?>" id="link_summ">Dental Exam</a>
         </li>
         <li>
-            <a href="patient_clinical_exam2.php?pid=<?= $_GET['pid']; ?>" id="link_notes">Vital Data/Tongue</a>
+            <a href="patient_clinical_exam2.php?pid=<?php echo  $_GET['pid']; ?>" id="link_notes">Vital Data/Tongue</a>
         </li>
         <li>
-            <a href="patient_clinical_exam3.php?pid=<?= $_GET['pid']; ?>" id="link_treatment">Mallampati/Tonsils</a>
+            <a href="patient_clinical_exam3.php?pid=<?php echo  $_GET['pid']; ?>" id="link_treatment">Mallampati/Tonsils</a>
         </li>
         <li>
-            <a href="patient_clinical_exam4.php?pid=<?= $_GET['pid']; ?>" id="link_treatment">Airway Evaluation</a>
+            <a href="patient_clinical_exam4.php?pid=<?php echo  $_GET['pid']; ?>" id="link_treatment">Airway Evaluation</a>
         </li>
         <li class="active">
-            <a href="patient_clinical_exam5.php?pid=<?= $_GET['pid']; ?>" id="link_treatment">TMJ/ROM</a>
+            <a href="patient_clinical_exam5.php?pid=<?php echo  $_GET['pid']; ?>" id="link_treatment">TMJ/ROM</a>
         </li>
     </ul>
 
     <p>&nbsp;</p>
 
 <?php
-if($_POST['ex_page5sub'] == 1)
+if(!empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1)
 {
 	$additional_paragraph_pal = $_POST['additional_paragraph_pal'];
-	$caries = $_POST['caries'];
+	$caries = (!empty($_POST['caries']) ? $_POST['caries'] : '');
 	$joint_exam = $_POST['joint_exam'];
 	$i_opening_from = $_POST['i_opening_from'];
-	$i_opening_to = $_POST['i_opening_to'];
-	$i_opening_equal = $_POST['i_opening_equal'];
-	$protrusion_from = $_POST['protrusion_from'];
-	$protrusion_to = $_POST['protrusion_to'];
+	$i_opening_to = (!empty($_POST['i_opening_to']) ? $_POST['i_opening_to'] : '');
+	$i_opening_equal = (!empty($_POST['i_opening_equal']) ? $_POST['i_opening_equal'] : '');
+	$protrusion_from = (!empty($_POST['protrusion_from']) ? $_POST['protrusion_from'] : '');
+	$protrusion_to = (!empty($_POST['protrusion_to']) ? $_POST['protrusion_to'] : '');
 	if($protrusion_from !='' && $protrusion_to != ''){
 	  $protrusion_equal = abs($protrusion_to-$protrusion_from);
 	}else{
@@ -59,11 +59,11 @@ if($_POST['ex_page5sub'] == 1)
 	$deflection_r_l = $_POST['deflection_r_l'];
 	
 	$palpation_sql = "select * from dental_palpation where status=1 order by sortby";
-	$palpation_my = mysql_query($palpation_sql);
+	$palpation_my = mysqli_query($con,$palpation_sql);
 	
 	$pal_arr = '';
 	$palR_arr = '';
-	while($palpation_myarray = mysql_fetch_array($palpation_my))
+	while($palpation_myarray = mysqli_fetch_array($palpation_my))
 	{
 		if($_POST['palpation_'.$palpation_myarray['palpationid']] <> '')
 		{
@@ -77,10 +77,10 @@ if($_POST['ex_page5sub'] == 1)
 	}
 	
 	$joint_sql = "select * from dental_joint where status=1 order by sortby";
-	$joint_my = mysql_query($joint_sql);
+	$joint_my = mysqli_query($con,$joint_sql);
 	
 	$joi_arr = '';
-	while($joint_myarray = mysql_fetch_array($joint_my))
+	while($joint_myarray = mysqli_fetch_array($joint_my))
 	{
 		if($_POST['joint_'.$joint_myarray['jointid']] <> '')
 		{
@@ -135,9 +135,9 @@ if($_POST['ex_page5sub'] == 1)
 
 
 $sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
-$q = mysql_query($sql);
-$row = mysql_fetch_assoc($q);
-$num = mysql_num_rows($q);
+$q = mysqli_query($con,$sql);
+$row = mysqli_fetch_assoc($q);
+$num = mysqli_num_rows($q);
 
         if($num==0)
         {
@@ -152,7 +152,7 @@ $num = mysql_num_rows($q);
                 docid = '".s_for($_SESSION['docid'])."',
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-                mysql_query($ins_sql);
+                mysqli_query($con,$ins_sql);
         }else{
                 $ed_sql = "update dental_summary set 
                 initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
@@ -161,7 +161,7 @@ $num = mysql_num_rows($q);
                 optimum_echovision_ver = '".s_for($_POST['optimum_echovision_ver'])."',
                 optimum_echovision_hor = '".s_for($_POST['optimum_echovision_hor'])."'
                  where patientid = '".s_for($_GET['pid'])."'";
-                mysql_query($ed_sql);
+                mysqli_query($con,$ed_sql);
         }
 
 
@@ -206,22 +206,22 @@ $num = mysql_num_rows($q);
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con,$ins_sql);
 		
 		$msg = "Added Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?=$msg;?>");
-                        window.location='ex_page4.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                        //alert("<?php echo $msg;?>");
+                        window.location='ex_page4.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
                 }else{
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			//alert("<?php echo $msg;?>");
+			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
 		}
@@ -261,22 +261,22 @@ $num = mysql_num_rows($q);
 		deflection_r_l = '".s_for($deflection_r_l)."'
 		where ex_page5id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con,$ed_sql);
 		
 		$msg = "Edited Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
                 ?>
                 <script type="text/javascript">
-                        //alert("<?=$msg;?>");
-                        window.location='ex_page4.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                        //alert("<?php echo $msg;?>");
+                        window.location='ex_page4.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
                 <?
                 }else{
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			//alert("<?php echo $msg;?>");
+			window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
 		}
@@ -285,8 +285,8 @@ $num = mysql_num_rows($q);
 }
 
 $sqls = "select * from dental_summary where patientid='".$_GET['pid']."'";
-$mys = mysql_query($sqls);
-$myarrays = mysql_fetch_array($mys);
+$mys = mysqli_query($con,$sqls);
+$myarrays = mysqli_fetch_array($mys);
 $initial_device_titration_1 = $myarrays['initial_device_titration_1'];
 $initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
 $initial_device_titration_equal_v = $myarrays['initial_device_titration_equal_v'];
@@ -294,8 +294,8 @@ $optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
 $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con,$pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -310,8 +310,8 @@ if($pat_myarray['patientid'] == '')
 }
 
 $sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con,$sql);
+$myarray = mysqli_fetch_array($my);
 
 $ex_page5id = st($myarray['ex_page5id']);
 $palpationid = st($myarray['palpationid']);
@@ -347,7 +347,7 @@ $deflection_r_l = st($myarray['deflection_r_l']);
 
 if($palpationid <> '')
 {	
-	$pal_arr1 = split('~',$palpationid);
+	$pal_arr1 = explode('~',$palpationid);
 	
 	foreach($pal_arr1 as $i => $val)
 	{
@@ -360,7 +360,7 @@ if($palpationid <> '')
 
 if($palpationRid <> '')
 {	
-	$palR_arr1 = split('~',$palpationRid);
+	$palR_arr1 = explode('~',$palpationRid);
 	
 	foreach($palR_arr1 as $i => $val)
 	{
@@ -373,14 +373,14 @@ if($palpationRid <> '')
 
 if($jointid <> '')
 {	
-	$jo_arr1 = split('~',$jointid);
+	$jo_arr1 = explode('~',$jointid);
 	
 	foreach($jo_arr1 as $i => $val)
 	{
 		$jo_arr2 = explode('|',$val);
 		
 		$joid[$i] = $jo_arr2[0];
-		$joseq[$i] = $jo_arr2[1];
+		$joseq[$i] = (!empty($jo_arr2[1]) ? $jo_arr2[1] : '');
 	}
 }
 
@@ -395,13 +395,13 @@ if($jointid <> '')
 <a name="top"></a>
 &nbsp;&nbsp;
 
-<? include("includes/form_top.htm");?>
+<?php include("../includes/form_top.htm");?>
 
 <br />
 <br>
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <script type="text/javascript">
@@ -439,10 +439,10 @@ if($jointid <> '')
 	}
 </script>
 
-<form id="ex_page5frm" class="ex_form" name="ex_page5frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post" >
+<form id="ex_page5frm" class="ex_form" name="ex_page5frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post" >
 <input type="hidden" name="ex_page5sub" value="1" />
-<input type="hidden" name="ed" value="<?=$ex_page5id;?>" />
-<input type="hidden" name="goto_p" value="<?=$cur_page?>" />
+<input type="hidden" name="ed" value="<?php echo $ex_page5id;?>" />
+<input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
 
 <table style="clear:both;" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 	
@@ -491,9 +491,9 @@ if($jointid <> '')
                                 
                                 <?
 								$palpation_sql = "select * from dental_palpation where status=1 order by sortby";
-								$palpation_my = mysql_query($palpation_sql);
+								$palpation_my = mysqli_query($con,$palpation_sql);
 								
-								while($palpation_myarray = mysql_fetch_array($palpation_my))
+								while($palpation_myarray = mysqli_fetch_array($palpation_my))
 								{
 									if(@array_search($palpation_myarray['palpationid'],$palid) === false)
 									{
@@ -501,7 +501,7 @@ if($jointid <> '')
 									}
 									else
 									{
-										$chk = $palseq[@array_search($palpation_myarray['palpationid'],$palid)];
+										$chk = (!empty($palseq[@array_search($palpation_myarray['palpationid'],$palid)]) ? $palseq[@array_search($palpation_myarray['palpationid'],$palid)] : '');
 									}
 									
 									if(@array_search($palpation_myarray['palpationid'],$palRid) === false)
@@ -510,42 +510,42 @@ if($jointid <> '')
 									}
 									else
 									{
-										$chkR = $palRseq[@array_search($palpation_myarray['palpationid'],$palRid)];
+										$chkR = (!empty($palRseq[@array_search($palpation_myarray['palpationid'],$palRid)]) ? $palRseq[@array_search($palpation_myarray['palpationid'],$palRid)] : '');
 									}
 									
 								?>
                                 <tr>
                                 	<td valign="top">
-										<select id="palpation_<?=st($palpation_myarray['palpationid']);?>" name="palpation_<?=st($palpation_myarray['palpationid']);?>" class="field text addr tbox" style="width:50px;">
+										<select id="palpation_<?php echo st($palpation_myarray['palpationid']);?>" name="palpation_<?php echo st($palpation_myarray['palpationid']);?>" class="field text addr tbox" style="width:50px;">
 											<option value=""></option>
-											<option value="0" <? if($chk == '0') echo " selected";?> class="ex_p5_0">
+											<option value="0" <?php if($chk == '0') echo " selected";?> class="ex_p5_0">
 												0
 											</option>
-											<option value="1" <? if($chk == '1') echo " selected";?> class="ex_p5_1">
+											<option value="1" <?php if($chk == '1') echo " selected";?> class="ex_p5_1">
 												1
 											</option>
-											<option value="2" <? if($chk == '2') echo " selected";?> class="ex_p5_2">
+											<option value="2" <?php if($chk == '2') echo " selected";?> class="ex_p5_2">
 												2
 											</option>
-											<option value="3" <? if($chk == '3') echo " selected";?> class="ex_p5_3">
+											<option value="3" <?php if($chk == '3') echo " selected";?> class="ex_p5_3">
 												3
 											</option>
 											
 										</select>
                                      </td>
                                      <td valign="top">
-                                     	<select id="palpationR_<?=st($palpation_myarray['palpationid']);?>" name="palpationR_<?=st($palpation_myarray['palpationid']);?>" class="field text addr tbox" style="width:50px;">
+                                     	<select id="palpationR_<?php echo st($palpation_myarray['palpationid']);?>" name="palpationR_<?php echo st($palpation_myarray['palpationid']);?>" class="field text addr tbox" style="width:50px;">
 											<option value=""></option>
-											<option value="0" <? if($chkR == '0') echo " selected";?> class="ex_p5_0">
+											<option value="0" <?php if($chkR == '0') echo " selected";?> class="ex_p5_0">
 												0
 											</option>
-											<option value="1" <? if($chkR == '1') echo " selected";?> class="ex_p5_1">
+											<option value="1" <?php if($chkR == '1') echo " selected";?> class="ex_p5_1">
 												1
 											</option>
-											<option value="2" <? if($chkR == '2') echo " selected";?> class="ex_p5_2">
+											<option value="2" <?php if($chkR == '2') echo " selected";?> class="ex_p5_2">
 												2
 											</option>
-											<option value="3" <? if($chkR == '3') echo " selected";?> class="ex_p5_3">
+											<option value="3" <?php if($chkR == '3') echo " selected";?> class="ex_p5_3">
 												3
 											</option>
 											
@@ -553,11 +553,11 @@ if($jointid <> '')
                                      </td>
                                      <td valign="top">
                                      	<span>
-										<?=st($palpation_myarray['palpation']);?>
+										<?php echo st($palpation_myarray['palpation']);?>
                                         </span>
                                      </td>
                                   </tr>	
-								<? 
+								<?php 
 								}?>
                                 <tr>
                                 	<td valign="top" colspan="3" align="right">
@@ -585,7 +585,7 @@ if($jointid <> '')
                     
                     <div>
                     	<span>
-                        	<textarea name="additional_paragraph_pal" class="field text addr tbox" style="width:650px; height:100px;"><?=$additional_paragraph_pal;?></textarea>
+                        	<textarea name="additional_paragraph_pal" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $additional_paragraph_pal;?></textarea>
                         </span>
                     </div>
                     <br />
@@ -620,14 +620,14 @@ if($jointid <> '')
                                 	<td valign="top" width="40%"><span>
                                     	<?
 										$joint_exam_sql = "select * from dental_joint_exam where status=1 order by sortby";
-										$joint_exam_my = mysql_query($joint_exam_sql);
+										$joint_exam_my = mysqli_query($con,$joint_exam_sql);
 										
-										while($joint_exam_myarray = mysql_fetch_array($joint_exam_my))
+										while($joint_exam_myarray = mysqli_fetch_array($joint_exam_my))
 										{
 										?>
-											<input type="checkbox" id="joint_exam" name="joint_exam[]" value="<?=st($joint_exam_myarray['joint_examid'])?>" <? if(strpos($joint_exam,'~'.st($joint_exam_myarray['joint_examid']).'~') === false) {} else { echo " checked";}?> style="width:10px;" />
+											<input type="checkbox" id="joint_exam" name="joint_exam[]" value="<?php echo st($joint_exam_myarray['joint_examid'])?>" <?php if(strpos($joint_exam,'~'.st($joint_exam_myarray['joint_examid']).'~') === false) {} else { echo " checked";}?> style="width:10px;" />
 											&nbsp;&nbsp;
-											<?=st($joint_exam_myarray['joint_exam']);?><br />
+											<?php echo st($joint_exam_myarray['joint_exam']);?><br />
 										<?
 										}
 										?></span>
@@ -635,9 +635,9 @@ if($jointid <> '')
                                     <td valign="top">
                                     	<table width="100%" cellpadding="3" cellspacing="1">                                        	<?
 											$joint_sql = "select * from dental_joint where status=1 order by sortby";
-											$joint_my = mysql_query($joint_sql);
+											$joint_my = mysqli_query($con,$joint_sql);
 											
-											while($joint_myarray = mysql_fetch_array($joint_my))
+											while($joint_myarray = mysqli_fetch_array($joint_my))
 											{
 												if(@array_search($joint_myarray['jointid'],$joid) === false)
 												{
@@ -650,21 +650,21 @@ if($jointid <> '')
 											?>
                                             	<tr>
                                                 	<td valign="top" width="40%"> <span>
-														<?=st($joint_myarray['joint']);?></span>
+														<?php echo st($joint_myarray['joint']);?></span>
                                                     </td>
                                                     <td valign="top">
-                                                        <select class="jointdd" id="joint_<?=st($joint_myarray['jointid']);?>" name="joint_<?=st($joint_myarray['jointid']);?>" class="field text addr tbox" style="width:60px;">
+                                                        <select class="jointdd" id="joint_<?php echo st($joint_myarray['jointid']);?>" name="joint_<?php echo st($joint_myarray['jointid']);?>" class="field text addr tbox" style="width:60px;">
                                                             <option value=""></option>
-                                                            <option value="L" <? if($chkJ == 'L') echo " selected";?> >
+                                                            <option value="L" <?php if($chkJ == 'L') echo " selected";?> >
                                                                 L
                                                             </option>
-                                                            <option value="R" <? if($chkJ == 'R') echo " selected";?>>
+                                                            <option value="R" <?php if($chkJ == 'R') echo " selected";?>>
                                                                 R
                                                             </option>
-                                                            <option value="B" <? if($chkJ == 'B') echo " selected";?>>
+                                                            <option value="B" <?php if($chkJ == 'B') echo " selected";?>>
                                                                 B
                                                             </option>
-                                                            <option value="WNL" <? if($chkJ == 'WNL') echo " selected";?>>
+                                                            <option value="WNL" <?php if($chkJ == 'WNL') echo " selected";?>>
                                                                 WNL
                                                             </option>
 
@@ -706,7 +706,7 @@ if($jointid <> '')
                                     </td>
                                     <td valign="top">
                                     	<span>
-                                        <input type="text" name="i_opening_from" class="field text addr tbox" style="width:50px;" value="<?=$i_opening_from;?>">
+                                        <input type="text" name="i_opening_from" class="field text addr tbox" style="width:50px;" value="<?php echo $i_opening_from;?>">
                                         </span>
                                     </td>
                                 </tr>
@@ -724,11 +724,11 @@ if($jointid <> '')
                                     <span>George Scale</span>
                                     </td>
                                         <td valign="top">
-                                        <input type="text" id="protrusion_from" name="protrusion_from" onkeyup="updateProtrusion();" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_from;?>">
+                                        <input type="text" id="protrusion_from" name="protrusion_from" onkeyup="updateProtrusion();" class="field text addr tbox" style="width:50px;" value="<?php echo $protrusion_from;?>">
                                         &nbsp;&nbsp;&nbsp;
                                         to
                                         &nbsp;&nbsp;&nbsp;
-                                        <input type="text" id="protrusion_to" name="protrusion_to" onkeyup="updateProtrusion();" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_to;?>">
+                                        <input type="text" id="protrusion_to" name="protrusion_to" onkeyup="updateProtrusion();" class="field text addr tbox" style="width:50px;" value="<?php echo $protrusion_to;?>">
 
                                         </span>
                                     </td>
@@ -753,7 +753,7 @@ if($jointid <> '')
                                     </td>
                                     <td valign="top">
                                     	<span>
-                                    	<input type="text" name="l_lateral_from" class="field text addr tbox" style="width:50px;" value="<?=$l_lateral_from;?>">
+                                    	<input type="text" name="l_lateral_from" class="field text addr tbox" style="width:50px;" value="<?php echo $l_lateral_from;?>">
                                         </span>
                                     </td>
                                 </tr>
@@ -766,7 +766,7 @@ if($jointid <> '')
                                     </td>
                                     <td valign="top">
                                     	<span>
-                                    	<input type="text" name="r_lateral_from" class="field text addr tbox" style="width:50px;" value="<?=$r_lateral_from;?>">
+                                    	<input type="text" name="r_lateral_from" class="field text addr tbox" style="width:50px;" value="<?php echo $r_lateral_from;?>">
                                         </span>
                                     </td>
                                 </tr>
@@ -779,17 +779,17 @@ if($jointid <> '')
 										&nbsp;&nbsp;
 										<select id="deviation_r_l" name="deviation_r_l" class="field text addr tbox" style="width:60px;">
 											<option value=""></option>
-											<option value="Right" <? if($deviation_r_l == 'Right') echo " selected";?> >
+											<option value="Right" <?php if($deviation_r_l == 'Right') echo " selected";?> >
 												Right
 											</option>
-											<option value="Left" <? if($deviation_r_l == 'Left') echo " selected";?>>
+											<option value="Left" <?php if($deviation_r_l == 'Left') echo " selected";?>>
 												Left
 											</option>
 										</select>
                                     </td>
                                     <td valign="top">
                                     	<span>
-                                    	<input type="text" name="deviation_from" class="field text addr tbox" style="width:50px;" value="<?=$deviation_from;?>">
+                                    	<input type="text" name="deviation_from" class="field text addr tbox" style="width:50px;" value="<?php echo $deviation_from;?>">
                                         </span>
                                     </td>
                                 </tr>
@@ -802,17 +802,17 @@ if($jointid <> '')
 										&nbsp;
 										<select id="deflection_r_l" name="deflection_r_l" class="field text addr tbox" style="width:60px;">
 											<option value=""></option>
-											<option value="Right" <? if($deflection_r_l == 'Right') echo " selected";?> >
+											<option value="Right" <?php if($deflection_r_l == 'Right') echo " selected";?> >
 												Right
 											</option>
-											<option value="Left" <? if($deflection_r_l == 'Left') echo " selected";?>>
+											<option value="Left" <?php if($deflection_r_l == 'Left') echo " selected";?>>
 												Left
 											</option>
 										</select>
                                     </td>
                                     <td valign="top">
                                     	<span>
-                                    	<input type="text" name="deflection_from" class="field text addr tbox" style="width:50px;" value="<?=$deflection_from;?>">
+                                    	<input type="text" name="deflection_from" class="field text addr tbox" style="width:50px;" value="<?php echo $deflection_from;?>">
                                         </span>
                                     </td>
                                 </tr>    
@@ -847,7 +847,7 @@ if($jointid <> '')
 				</tr>
                             </table>
                             
-                            <input type="checkbox" name="range_normal" value="1" <? if($range_normal == 1) echo " checked"; ?>/>
+                            <input type="checkbox" name="range_normal" value="1" <?php if($range_normal == 1) echo " checked"; ?>/>
                             Within normal limits
                             
                             <br /><br />
@@ -868,7 +868,7 @@ if($jointid <> '')
                     
                     <div>
                     	<span>
-                        	<textarea name="additional_paragraph_rm" class="field text addr tbox" style="width:650px; height:100px;"><?=$additional_paragraph_rm;?></textarea>
+                        	<textarea name="additional_paragraph_rm" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $additional_paragraph_rm;?></textarea>
                         </span>
                     </div>
                     <br />
@@ -889,7 +889,7 @@ if($jointid <> '')
 
 
 <br />
-<? include("includes/form_bottom.htm");?>
+<?php include("../includes/form_bottom.htm");?>
 <br />
 
 
@@ -909,4 +909,4 @@ function check_georges(f){
 
 </script>
 
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

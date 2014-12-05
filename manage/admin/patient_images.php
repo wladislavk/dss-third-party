@@ -7,8 +7,8 @@ include 'includes/patient_nav.php';
 
 //$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con,$pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -35,7 +35,7 @@ $sql = "select i.*,
         LEFT join dental_users u ON u.userid=i.userid
         LEFT join admin a ON a.adminid=i.adminid
         where i.patientid='".$_GET['pid']."'";
-if($_GET['sh'] <> '')
+if(!empty($_GET['sh']))
         $sql .= " and imagetypeid='".$_GET['sh']."' ";
 
 If(!isset($_REQUEST['sort'])){
@@ -45,7 +45,7 @@ If(!isset($_REQUEST['sortdir'])){
   $_REQUEST['sortdir'] = 'DESC';
 }
 $sql .= " order by ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
-$my = mysql_query($sql);
+$my = mysqli_query($con,$sql);
 
 ?>
  <div align="right">

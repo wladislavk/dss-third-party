@@ -21,7 +21,7 @@ include "includes/patient_nav.php";
     </ul>
     <p>&nbsp;</p>
 <?php
-if($_POST['ex_page4sub'] == 1)
+if(!empty($_POST['ex_page4sub']) && $_POST['ex_page4sub'] == 1)
 {
 	$exam_teeth = $_POST['exam_teeth'];
 	$other_maxilla = $_POST['other_maxilla'];
@@ -97,7 +97,7 @@ if($_POST['ex_page4sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
 		
 		$msg = "Added Successfully";
 		if(isset($_POST['ex_pagebtn_proceed'])){
@@ -138,7 +138,7 @@ if($_POST['ex_page4sub'] == 1)
 		crossbite = '".s_for($crossbite)."'
 		where ex_page4id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		$msg = "Edited Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
@@ -162,8 +162,8 @@ if($_POST['ex_page4sub'] == 1)
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con,$pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -178,8 +178,8 @@ if($pat_myarray['patientid'] == '')
 }
 
 $sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con,$sql);
+$myarray = mysqli_fetch_array($my);
 
 $ex_page4id = st($myarray['ex_page4id']);
 $exam_teeth = st($myarray['exam_teeth']);
@@ -211,13 +211,13 @@ $crossbite = st($myarray['crossbite']);
 <a name="top"></a>
 &nbsp;&nbsp;
 
-<? include("includes/form_top.htm");?>
+<?php include("../includes/form_top.htm");?>
 
 <br />
 <br>
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form id="ex_page4frm" class="ex_form" name="ex_page4frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
@@ -274,12 +274,12 @@ $crossbite = st($myarray['crossbite']);
                     	<span>
                         	<?
 							$exam_teeth_sql = "select * from dental_exam_teeth where status=1 order by sortby";
-							$exam_teeth_my = mysql_query($exam_teeth_sql);
+							$exam_teeth_my = mysqli_query($con,$exam_teeth_sql);
 							
-							while($exam_teeth_myarray = mysql_fetch_array($exam_teeth_my))
+							while($exam_teeth_myarray = mysqli_fetch_array($exam_teeth_my))
 							{
 							?>
-								<input type="checkbox" id="exam_teeth" name="exam_teeth[]" value="<?=st($exam_teeth_myarray['exam_teethid'])?>" <? if(strpos($exam_teeth,'~'.st($exam_teeth_myarray['exam_teethid']).'~') === false) {} else { echo " checked";}?> />
+								<input type="checkbox" id="exam_teeth" name="exam_teeth[]" value="<?=st($exam_teeth_myarray['exam_teethid'])?>" <?php if(strpos($exam_teeth,'~'.st($exam_teeth_myarray['exam_teethid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
                                 <?=st($exam_teeth_myarray['exam_teeth']);?><br />
 							<?
@@ -381,30 +381,30 @@ $crossbite = st($myarray['crossbite']);
                                 </tr>
                                 <tr>
                                 	<td valign="top">
-                                    	<input type="radio" name="dental_class_right" value="I (normal)" <? if($dental_class_right == 'I (normal)') echo " checked";?> style="width:10px;" />
+                                    	<input type="radio" name="dental_class_right" value="I (normal)" <?php if($dental_class_right == 'I (normal)') echo " checked";?> style="width:10px;" />
                                         I (normal)
                                     </td>
                                     <td valign="top">
-                                    	<input type="radio" name="dental_division_right" value="1" <? if($dental_division_right == '1') echo " checked";?> style="width:10px;" />
+                                    	<input type="radio" name="dental_division_right" value="1" <?php if($dental_division_right == '1') echo " checked";?> style="width:10px;" />
                                         1
                                     </td>
                                 </tr>
                                 <tr>
                                 	<td valign="top">
-                                    	<input type="radio" name="dental_class_right" value="II (Retrognathic)(Retruded Lower Jaw)" <? if($dental_class_right == 'II (Retrognathic)(Retruded Lower Jaw)') echo " checked";?> style="width:10px;" />
+                                    	<input type="radio" name="dental_class_right" value="II (Retrognathic)(Retruded Lower Jaw)" <?php if($dental_class_right == 'II (Retrognathic)(Retruded Lower Jaw)') echo " checked";?> style="width:10px;" />
                                         II (Retrognathic)
                                         <br />
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         (Retruded Lower Jaw)
                                     </td>
                                     <td valign="top">
-                                    	<input type="radio" name="dental_division_right" value="2" <? if($dental_division_right == '2') echo " checked";?> style="width:10px;" />
+                                    	<input type="radio" name="dental_division_right" value="2" <?php if($dental_division_right == '2') echo " checked";?> style="width:10px;" />
                                         2
                                     </td>
                                 </tr>
                                 <tr>
                                 	<td valign="top">
-                                    	<input type="radio" name="dental_class_right" value="III (Prognathic)(Protruded Lower Jaw)" <? if($dental_class_right == 'III (Prognathic)(Protruded Lower Jaw)') echo " checked";?> style="width:10px;" />
+                                    	<input type="radio" name="dental_class_right" value="III (Prognathic)(Protruded Lower Jaw)" <?php if($dental_class_right == 'III (Prognathic)(Protruded Lower Jaw)') echo " checked";?> style="width:10px;" />
                                         III (Prognathic)
                                         <br />
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -435,30 +435,30 @@ $crossbite = st($myarray['crossbite']);
                                 </tr>
                                 <tr>
                                 	<td valign="top">
-                                    	<input type="radio" name="dental_class_left" value="I (normal)" <? if($dental_class_left == 'I (normal)') echo " checked";?> style="width:10px;" />
+                                    	<input type="radio" name="dental_class_left" value="I (normal)" <?php if($dental_class_left == 'I (normal)') echo " checked";?> style="width:10px;" />
                                         I (normal)
                                     </td>
                                     <td valign="top">
-                                    	<input type="radio" name="dental_division_left" value="1" <? if($dental_division_left == '1') echo " checked";?> style="width:10px;" />
+                                    	<input type="radio" name="dental_division_left" value="1" <?php if($dental_division_left == '1') echo " checked";?> style="width:10px;" />
                                         1
                                     </td>
                                 </tr>
                                 <tr>
                                 	<td valign="top">
-                                    	<input type="radio" name="dental_class_left" value="II (Retrognathic)(Retruded Lower Jaw)" <? if($dental_class_left == 'II (Retrognathic)(Retruded Lower Jaw)') echo " checked";?> style="width:10px;" />
+                                    	<input type="radio" name="dental_class_left" value="II (Retrognathic)(Retruded Lower Jaw)" <?php if($dental_class_left == 'II (Retrognathic)(Retruded Lower Jaw)') echo " checked";?> style="width:10px;" />
                                         II (Retrognathic)
                                         <br />
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         (Retruded Lower Jaw)
                                     </td>
                                     <td valign="top">
-                                    	<input type="radio" name="dental_division_left" value="2" <? if($dental_division_right == '2') echo " checked";?> style="width:10px;" />
+                                    	<input type="radio" name="dental_division_left" value="2" <?php if($dental_division_right == '2') echo " checked";?> style="width:10px;" />
                                         2
                                     </td>
                                 </tr>
                                 <tr>
                                 	<td valign="top">
-                                    	<input type="radio" name="dental_class_left" value="III (Prognathic)(Protruded Lower Jaw)" <? if($dental_class_left == 'III (Prognathic)(Protruded Lower Jaw)') echo " checked";?> style="width:10px;" />
+                                    	<input type="radio" name="dental_class_left" value="III (Prognathic)(Protruded Lower Jaw)" <?php if($dental_class_left == 'III (Prognathic)(Protruded Lower Jaw)') echo " checked";?> style="width:10px;" />
                                         III (Prognathic)
                                         <br />
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -551,8 +551,8 @@ $crossbite = st($myarray['crossbite']);
 </form>
 
 <br />
-<? include("includes/form_bottom.htm");?>
+<?php include("../includes/form_bottom.htm");?>
 <br />
 
 
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

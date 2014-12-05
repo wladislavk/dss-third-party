@@ -10,7 +10,7 @@ include 'includes/patient_nav.php';
             <a href="#sect_summ" id="link_summ" data-toggle="tab">SUMMARY</a>
         </li>
         <li>
-            <a href="#sect_notes" id="link_notes" data-toggle="tab">PROG NOTES <?= ($num_unsigned_notes>0)?"(".$num_unsigned_notes.")":''; ?></a>
+            <a href="#sect_notes" id="link_notes" data-toggle="tab">PROG NOTES <?php echo  (!empty($num_unsigned_notes) && $num_unsigned_notes>0)?"(".$num_unsigned_notes.")":''; ?></a>
         </li>
         <li>
             <a href="#sect_treatment" id="link_treatment" data-toggle="tab">TREATMENT Hx</a>
@@ -19,7 +19,7 @@ include 'includes/patient_nav.php';
             <a href="#sect_health" id="link_health" data-toggle="tab">HEALTH Hx</a>
         </li>
         <li>
-            <a href="#sect_letters" id="link_letters" data-toggle="tab">LETTERS <?= ($pending_letters>0)?"(".$pending_letters.")":''; ?></a>
+            <a href="#sect_letters" id="link_letters" data-toggle="tab">LETTERS <?php echo  ($pending_letters>0)?"(".$pending_letters.")":''; ?></a>
         </li>
         <li>
             <a href="#sect_sleep" id="link_sleep" data-toggle="tab">SLEEP TESTS</a>
@@ -30,9 +30,9 @@ include 'includes/patient_nav.php';
     </div>
     <p>&nbsp;</p>
 <?php
-if($_GET['sect']!=''){
+if(!empty($_GET['sect'])){
   $sect = $_GET['sect'];
- }elseif($_COOKIE['summ_sect'] && $_COOKIE['pid'] == $_GET['pid']){
+ }elseif($_COOKIE['summ_sect'] && !empty($_GET['pid']) && $_COOKIE['pid'] == $_GET['pid']){
   $sect = $_COOKIE['summ_sect'];
  }else{
   $sect = 'summ';

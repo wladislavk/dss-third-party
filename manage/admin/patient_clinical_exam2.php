@@ -23,7 +23,7 @@ include "includes/patient_nav.php";
     <p>&nbsp;</p>
 
 <?php
-if($_POST['ex_page1sub'] == 1)
+if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1)
 {
 	$blood_pressure = $_POST['blood_pressure'];
 	$pulse = $_POST['pulse'];
@@ -70,7 +70,7 @@ if($_POST['ex_page1sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
 
 		$pat_sql = "UPDATE dental_patients SET
 		feet = '".s_for($feet)."',
@@ -78,7 +78,7 @@ if($_POST['ex_page1sub'] == 1)
                 weight = '".s_for($weight)."',
                 bmi = '".s_for($bmi)."'
 		WHERE patientid='".s_for($_GET['pid'])."'";
-		mysql_query($pat_sql);
+		mysqli_query($con,$pat_sql);
 		
 		$msg = "Added Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
@@ -109,7 +109,7 @@ if($_POST['ex_page1sub'] == 1)
 		tongue = '".s_for($tongue_arr)."'
 		where ex_page1id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
 
                 $pat_sql = "UPDATE dental_patients SET
                 feet = '".s_for($feet)."',
@@ -117,7 +117,7 @@ if($_POST['ex_page1sub'] == 1)
                 weight = '".s_for($weight)."',
                 bmi = '".s_for($bmi)."'
                 WHERE patientid='".s_for($_GET['pid'])."'";
-                mysql_query($pat_sql);
+                mysqli_query($con,$pat_sql);
 	
 		$msg = "Edited Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
@@ -141,8 +141,8 @@ if($_POST['ex_page1sub'] == 1)
 }
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con,$pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -157,16 +157,16 @@ if($pat_myarray['patientid'] == '')
 }
 
 $bmi_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";
-$bmi_my = mysql_query($bmi_sql);
-$bmi_myarray = mysql_fetch_array($bmi_my);
+$bmi_my = mysqli_query($con,$bmi_sql);
+$bmi_myarray = mysqli_fetch_array($bmi_my);
 $bmi = st($bmi_myarray['bmi']);
 $feet = st($bmi_myarray['feet']);
 $inches = st($bmi_myarray['inches']);
 $weight = st($bmi_myarray['weight']);
 
 $sql = "select * from dental_ex_page1 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con,$sql);
+$myarray = mysqli_fetch_array($my);
 
 $ex_page1id = st($myarray['ex_page1id']);
 $blood_pressure = st($myarray['blood_pressure']);
@@ -184,13 +184,13 @@ $tongue = st($myarray['tongue']);
 <a name="top"></a>
 &nbsp;&nbsp;
 
-<? include("includes/form_top.htm");?>
+<? include("../includes/form_top.htm");?>
 
 <br />
 <br>
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form id="ex_page1frm" class="ex_form" name="ex_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
@@ -294,7 +294,7 @@ $tongue = st($myarray['tongue']);
                                                                 }?>
                             </select>
                             <?php
-                                showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
+                                showPatientValue('dental_patients', $_GET['pid'], 'feet', (!empty($pat_row['feet']) ? $pat_row['feet'] : ''), $feet, true, (!empty($showEdits) ? $showEdits : ''));
                             ?>
                             <label for="feet">Feet</label>
 		</li>
@@ -359,9 +359,9 @@ $tongue = st($myarray['tongue']);
                         <span>
                         	<?
 							$tongue_sql = "select * from dental_tongue where status=1 order by sortby";
-							$tongue_my = mysql_query($tongue_sql);
+							$tongue_my = mysqli_query($con,$tongue_sql);
 							
-							while($tongue_myarray = mysql_fetch_array($tongue_my))
+							while($tongue_myarray = mysqli_fetch_array($tongue_my))
 							{
 							?>
 								<input type="checkbox" id="tongue" name="tongue[]" value="<?=st($tongue_myarray['tongueid'])?>" tabindex="9" <? if(strpos($tongue,'~'.st($tongue_myarray['tongueid']).'~') === false) {} else { echo " checked";}?> />
@@ -398,7 +398,7 @@ $tongue = st($myarray['tongue']);
 
 
 <br />
-<? include("includes/form_bottom.htm");?>
+<? include("../includes/form_bottom.htm");?>
 <br />
 
 

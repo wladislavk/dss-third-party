@@ -5,7 +5,8 @@ include("includes/sescheck.php");
 include_once('includes/password.php');
 require_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
-if($_POST["compsub"] == 1)
+
+if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 {
 
   $image = $_FILES['logo'];
@@ -19,8 +20,11 @@ if($_POST["compsub"] == 1)
   $file_path = "../../../q_file/".$file_name;
   $max_width = 230;
   $max_height = 50;
-  list($width,$height)=getimagesize($uploadedfile);
-  if(($width>$max_width || $height>$max_height) || $filesize > DSS_IMAGE_MAX_SIZE ){
+  if (file_exists($uploadedfile)) {
+    list($width,$height)=getimagesize($uploadedfile);
+  }
+
+  if((!empty($width) && $width>$max_width || !empty($height) && $height>$max_height) || $filesize > DSS_IMAGE_MAX_SIZE ){
 
     if(strtolower($extension)=="jpg" || strtolower($extension)=="jpeg" )
     {
@@ -92,9 +96,9 @@ if($_POST["compsub"] == 1)
 
 
 			$ed_sql = "update companies set 
-				logo = '".mysql_real_escape_string($file_name)."'
+				logo = '".mysqli_real_escape_string($con,$file_name)."'
 			where id='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql);
 
 
 			//echo $ed_sql.mysql_error();
@@ -113,11 +117,11 @@ if($_POST["compsub"] == 1)
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
-    $thesql = "select * from companies where id='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from companies where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
  	 $name = st($themyarray['name']);	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$logo = $_POST['logo'];
 	}
@@ -139,7 +143,7 @@ if($_POST["compsub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<? if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>

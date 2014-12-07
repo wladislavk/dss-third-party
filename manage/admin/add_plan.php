@@ -132,6 +132,7 @@ if($_POST["plansub"] == 1)
                 $vob_fee = $themyarray['vob_fee'];
                 $free_vob = $themyarray['free_vob'];
 		$producer_fee = $themyarray['producer_fee'];
+		$user_fee = $themyarray['user_fee'];
 		$patient_fee = $themyarray['patient_fee'];
 		$duration = $themyarray['duration'];
                 $office_type = $themyarray['office_type'];

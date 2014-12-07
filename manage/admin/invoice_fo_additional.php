@@ -124,7 +124,6 @@ if($num_docs == 0){
   <?php
 }
 $user = mysql_fetch_assoc($q);
-
 $s = "SELECT id FROM dental_percase_invoice WHERE docid='".$user['userid']."' AND status='".DSS_INVOICE_PENDING."' AND invoice_type=".DSS_INVOICE_TYPE_BC_FO;
 $q = mysql_query($s) or die(mysql_error());
 if(mysql_num_rows($q) > 0){
@@ -487,8 +486,8 @@ if(mysql_num_rows($doc_q) == 0){
   $doc_q = mysql_query($doc_sql);
 
 }
-  $doc = mysql_fetch_assoc($doc_q);
 
+  $doc = mysql_fetch_assoc($doc_q);
         if($user['last_monthly_fee_date']){
           $date = $user['last_monthly_fee_date'];
           $newdate = strtotime ( '+1 month' , strtotime ( $date ) ) ;

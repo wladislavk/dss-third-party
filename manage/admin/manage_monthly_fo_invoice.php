@@ -206,6 +206,7 @@ $num_users=mysql_num_rows($my);
 </table>
 </form>
 
+<?php /*
 <br /><br />
 <table class="table table-bordered table-hover">
         <tr class="tr_bg_h">
@@ -249,6 +250,8 @@ $num_users=mysql_num_rows($my);
 
 
 </table>
+
+*/ ?>
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>

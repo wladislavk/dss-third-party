@@ -1,7 +1,7 @@
-<? 
+<?php 
 include "includes/top.htm";
-require_once('../includes/constants.inc');
-require_once "includes/general.htm";
+include_once('../includes/constants.inc');
+include_once "includes/general.htm";
 
 if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT "
@@ -54,7 +54,7 @@ $sql = "SELECT "
      . "FROM "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
-     . "  JOIN dental_users users ON claim.docid = users.userid AND users.billing_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."'"
+     . "  JOIN dental_users users ON claim.docid = users.userid AND users.billing_company_id='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'"
      . "  JOIN dental_user_company uc ON uc.userid = claim.docid " 
      . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
 }
@@ -82,7 +82,7 @@ $sql = "SELECT "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
-     . "  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'"
+     . "  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'"
      . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
 }
 // . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
@@ -105,7 +105,7 @@ $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 
 $sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : 'adddate';
 $sort_by_sql = $sort_by ." ".$sort_dir;
 $sql .= " ORDER BY ".$sort_by_sql;
-$my=mysql_query($sql) or die(mysql_error());
+$my = mysqli_query($con,$sql);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -121,7 +121,7 @@ $my=mysql_query($sql) or die(mysql_error());
 if(isset($_GET['msg'])){
 ?>
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 <?php } ?>
 <div style="float:right; margin-right:20px;">
@@ -131,7 +131,7 @@ if(isset($_GET['msg'])){
 <br />
 <form name="pagefrm" id="oa_form" action="insurance_officeally.php" method="post" target="_blank" onsubmit="setTimeout(function () { window.location.reload(); }, 500)">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if(!empty($total_rec) && $total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -140,9 +140,9 @@ if(isset($_GET['msg'])){
 			?>
 		</TD>
 	</TR>
-	<? }?>
+	<?php }?>
 	<?php
-    $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
+    $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . (!empty($fid) ? $fid : '') . "&pid=" . (!empty($pid) ? $pid : '')
              . "&status=" . ((isset($_REQUEST['status']))?$_REQUEST['status']:'') . "&sort_by=%s&sort_dir=%s";
     ?>
 	<tr class="tr_bg_h">
@@ -168,18 +168,18 @@ if(isset($_GET['msg'])){
 			Select	
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="7" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 		?>
 			<tr class="<?= (isset($tr_class))?$tr_class:'';?>">
@@ -208,7 +208,7 @@ if(isset($_GET['msg'])){
         <input type="checkbox" name="claim[]" value="<?= $myarray['insuranceid']; ?>" 
 /></td>
 			</tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 
@@ -219,7 +219,7 @@ if(isset($_GET['msg'])){
 </form>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>
 <?php
 if(isset($_GET['sendins'])&&$_GET['sendins']==1){
   include '../insurance_electronic_file.php';
@@ -232,8 +232,8 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
   $api_sql = "SELECT u.use_eligible_api, p.p_m_eligible_id FROM dental_users u
 		JOIN dental_insurance i ON i.docid = u.userid
  		JOIN dental_patients p ON p.patientid=i.patientid
-                WHERE i.insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
-  $api_q = mysql_query($api_sql);
+                WHERE i.insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";
+  $api_q = mysqli_query($con,$api_sql);
   $api_r = mysql_fetch_assoc($api_q);
   if($api_r['use_eligible_api']==1 && $api_r['p_m_eligible_id']!=''){
     include '../insurance_electronic_file.php';

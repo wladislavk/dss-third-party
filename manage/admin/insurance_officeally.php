@@ -1,24 +1,22 @@
 <?php
-
-session_start();
-require_once('../includes/constants.inc');
-require_once('includes/main_include.php');
+include_once('../includes/constants.inc');
+include_once('includes/main_include.php');
 
 $data = array();
-foreach($_POST['claim'] as $claimid){
+if (!empty($_POST['claim'])) foreach($_POST['claim'] as $claimid){
 $claim_sql = "SELECT i.* FROM dental_insurance i 
 	JOIN dental_patients p on p.patientid=i.patientid
-	WHERE i.insuranceid='".mysql_real_escape_string($claimid)."'";
-$claim_q = mysql_query($claim_sql);
-if($claim = mysql_fetch_assoc($claim_q)){
+	WHERE i.insuranceid='".mysqli_real_escape_string($con,$claimid)."'";
+$claim_q = mysqli_query($con,$claim_sql);
+if($claim = mysqli_fetch_assoc($claim_q)){
   if($_POST['claims_sent']=='1'){
-    $status_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysql_real_escape_string($claim['insuranceid'])."'";
-    $status_q = mysql_query($status_sql);
+    $status_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysqli_real_escape_string($con,$claim['insuranceid'])."'";
+    $status_q = mysqli_query($con,$status_sql);
   }
 $row = array();
-  $pat_sql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($claim['patientid'])."'";
-  $pat_q = mysql_query($pat_sql);
-  $pat = mysql_fetch_assoc($pat_q);
+  $pat_sql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,$claim['patientid'])."'";
+  $pat_q = mysqli_query($con,$pat_sql);
+  $pat = mysqli_fetch_assoc($pat_q);
 
 	$other_insured_insurance_plan = strtoupper(st($pat['s_m_ins_plan']));
         if($pat['p_m_ins_type']==1){
@@ -38,8 +36,8 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND
                         ss.filename IS NOT NULL AND ss.patiendid = '".$claim['patientid']."';";
 
-  $result = mysql_query($sleepstudies);
-  $d = mysql_fetch_assoc($result);
+  $result = mysqli_query($con,$sleepstudies);
+  $d = mysqli_fetch_assoc($result);
   $referring_provider = $d['diagnosising_doc'];
   $diagnosising_npi = $d['diagnosising_npi'];
 $insurancetype = $claim['insurance_type'];
@@ -50,15 +48,15 @@ if($insurancetype!=1){
 
 $row[] = "9"; //New ICD field for new cms 1500 form
 $ins_sql = "SELECT * FROM dental_contact where contactid='".$pat['p_m_ins_co']."'";
-$ins_q = mysql_query($ins_sql);
-$ins_co = mysql_fetch_assoc($ins_q);
+$ins_q = mysqli_query($con,$ins_sql);
+$ins_co = mysqli_fetch_assoc($ins_q);
 
 $row[] = $ins_co['company'];
 $row[] = ''; //Insurance Payer ID
 
-	$ins_sql = "SELECT * FROM dental_contact WHERE contactid='".mysql_real_escape_string($pat['p_m_ins_co'])."'";
-	$ins_q = mysql_query($ins_sql);
-	$ins = mysql_fetch_assoc($ins_q);
+	$ins_sql = "SELECT * FROM dental_contact WHERE contactid='".mysqli_real_escape_string($con,$pat['p_m_ins_co'])."'";
+	$ins_q = mysqli_query($con,$ins_sql);
+	$ins = mysqli_fetch_assoc($ins_q);
 
 $row[] = $ins['add1'];
 $row[] = $ins['city'];
@@ -181,7 +179,7 @@ if($pat['p_m_relation'] == "Self"){
 }
 
 $patient_status = st($claim['patient_status']);
-$patient_status_array = split('~', $patient_status);
+$patient_status_array = explode('~', $patient_status);
 
 
 if(in_array("Single", $patient_status_array)){
@@ -328,12 +326,12 @@ $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND
                         ss.filename IS NOT NULL AND ss.patiendid = '".$claim['patientid']."';";
 
-  $result = mysql_query($sleepstudies);
-  $d = mysql_fetch_assoc($result);
+  $result = mysqli_query($con,$sleepstudies);
+  $d = mysqli_fetch_assoc($result);
   $diagnosis_1 = $d['diagnosis'];
 $diag_sql = "SELECT ins_diagnosis FROM dental_ins_diagnosis WHERE ins_diagnosisid='".$diagnosis_1."'";
-$diag_q = mysql_query($diag_sql);
-$diag = mysql_fetch_assoc($diag_q);
+$diag_q = mysqli_query($con,$diag_sql);
+$diag = mysqli_fetch_assoc($diag_q);
 $row[] = $diag['ins_diagnosis'];
 $row[] = $claim['diagnosis_2'];
 $row[] = $claim['diagnosis_3'];
@@ -382,8 +380,8 @@ $diagnosis_pointer[4] = $diagnosis_4;
         $claim_producer = $claim['producer'];
 
                       $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
-                      $userquery = mysql_query($getuserinfo);
-                      if($userinfo = mysql_fetch_array($userquery)){
+                      $userquery = mysqli_query($con,$getuserinfo);
+                      if($userinfo = mysqli_fetch_array($userquery)){
                         $producer_last_name = $userinfo['last_name'];
                         $producer_first_name = $userinfo['first_name'];
                         $phone = $userinfo['phone'];
@@ -399,8 +397,8 @@ $diagnosis_pointer[4] = $diagnosis_4;
                         $ein = $userinfo['ein'];
                       }
                       $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$claim['docid']."'";
-                      $docquery = mysql_query($getdocinfo);
-                      $docinfo = mysql_fetch_array($docquery);
+                      $docquery = mysqli_query($con,$getdocinfo);
+                      $docinfo = mysqli_fetch_array($docquery);
                         if($producer_last_name == ""){ $producer_last_name = $docinfo['last_name']; }
                         if($producer_first_name == ""){ $producer_first_name = $docinfo['first_name']; }
                         if($phone == ""){ $phone = $docinfo['phone']; }
@@ -439,10 +437,10 @@ if($insurancetype == '1'){
        . "ORDER BY "
        . "  ledger.service_date ASC";
 
-$query = mysql_query($sql);
+$query = mysqli_query($con,$sql);
 $c=0;
 $claim_lines = array();
-while ($ledger = mysql_fetch_assoc($query)) {
+while ($ledger = mysqli_fetch_assoc($query)) {
 if($ledger['diagnosispointer']!=''){
   if(isset($diagnosis_pointer[$ledger['diagnosispointer']])){
     $diagnosis = $diagnosis_pointer[$array['diagnosispointer']];
@@ -530,9 +528,9 @@ if($claim['accept_assignment'] == "No"){
        . "ORDER BY "
        . "  ledger.service_date ASC";
 
-  $charge_my = mysql_query($sql);
-  if ($charge_my && (mysql_num_rows($charge_my) > 0)) {
-    $charge_row = mysql_fetch_array($charge_my);
+  $charge_my = mysqli_query($con,$sql);
+  if ($charge_my && (mysqli_num_rows($charge_my) > 0)) {
+    $charge_row = mysqli_fetch_array($charge_my);
     $total_charge = $charge_row['total_charge'];
   }
 
@@ -551,9 +549,9 @@ if($claim['accept_assignment'] == "No"){
        . "ORDER BY "
        . "  ledger.service_date ASC";
 
-  $paid_my = mysql_query($sql);
-  if ($paid_my && (mysql_num_rows($paid_my) > 0)) {
-    $paid_row = mysql_fetch_array($paid_my);
+  $paid_my = mysqli_query($con,$sql);
+  if ($paid_my && (mysqli_num_rows($paid_my) > 0)) {
+    $paid_row = mysqli_fetch_array($paid_my);
     $amount_paid = $paid_row['amount_paid'];
   }
 

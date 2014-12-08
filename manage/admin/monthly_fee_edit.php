@@ -1,26 +1,24 @@
 <?php 
-session_start();
-require_once('includes/main_include.php');
+
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
-require_once('../includes/constants.inc');
+include_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
-if($_POST["compsub"] == 1)
+if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 {
 			$ed_sql = "update companies set 
-				monthly_fee = '".mysql_real_escape_string($_POST["monthly_fee"])."',
-				fax_fee = '".mysql_real_escape_string($_POST["fax_fee"])."',
-				free_fax = '".mysql_real_escape_string($_POST["free_fax"])."'
+				monthly_fee = '".mysqli_real_escape_string($con,$_POST["monthly_fee"])."',
+				fax_fee = '".mysqli_real_escape_string($con,$_POST["fax_fee"])."',
+				free_fax = '".mysqli_real_escape_string($con,$_POST["free_fax"])."'
 			where id='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql);;
 
-
-			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_percase_invoice.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_percase_invoice.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -28,14 +26,14 @@ if($_POST["compsub"] == 1)
 
 ?>
 
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+<?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from companies where id='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$name = $themyarray['name'];
 		$monthly_fee = $_POST['monthly_fee'];
@@ -55,19 +53,19 @@ if($_POST["compsub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<?php if(!empty($msg)) {?>
     <div align="center" class="red">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
-    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
+    <?php }?>
+    <form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" >
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
-               <?=$but_text?> Fees 
-               <? if($name <> "") {?>
-               		&quot;<?=$name;?>&quot;
-               <? }?>
+               <?php echo $but_text?> Fees 
+               <?php if($name <> "") {?>
+               		&quot;<?php echo $name;?>&quot;
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -75,7 +73,7 @@ if($_POST["compsub"] == 1)
                 Monthly Fee
             </td>
             <td valign="top" class="frmdata">
-                <input id="monthly_fee" type="text" name="monthly_fee" value="<?=$monthly_fee;?>" class="tbox" />
+                <input id="monthly_fee" type="text" name="monthly_fee" value="<?php echo $monthly_fee;?>" class="tbox" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -84,7 +82,7 @@ if($_POST["compsub"] == 1)
                 Fax Fee
             </td>
             <td valign="top" class="frmdata">
-                <input id="fax_fee" type="text" name="fax_fee" value="<?=$fax_fee;?>" class="tbox" />
+                <input id="fax_fee" type="text" name="fax_fee" value="<?php echo $fax_fee;?>" class="tbox" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -93,7 +91,7 @@ if($_POST["compsub"] == 1)
                 Free Fax
             </td>
             <td valign="top" class="frmdata">
-                <input id="free_fax" type="text" name="free_fax" value="<?=$free_fax;?>" class="tbox" />
+                <input id="free_fax" type="text" name="free_fax" value="<?php echo $free_fax;?>" class="tbox" />
             </td>
         </tr>
         <tr>
@@ -102,8 +100,8 @@ if($_POST["compsub"] == 1)
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="compsub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Fees" class="btn btn-warning">
+                <input type="hidden" name="ed" value="<?php echo $themyarray["id"]?>" />
+                <input type="submit" value=" <?php echo $but_text?> Fees" class="btn btn-warning">
             </td>
         </tr>
     </table>

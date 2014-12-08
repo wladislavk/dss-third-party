@@ -1,9 +1,9 @@
 <?php 
-session_start();
-require_once('includes/main_include.php');
+
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
-if($_POST["custom_textsub"] == 1)
+if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 {
 		if($_POST["ed"] != "")
 		{
@@ -11,14 +11,13 @@ if($_POST["custom_textsub"] == 1)
 			title = '".s_for($_POST["title"])."', 
 			description = '".s_for($_POST["description"])."' 
 			where customid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql);
 			
-			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_custom_text.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_custom_text.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -26,17 +25,17 @@ if($_POST["custom_textsub"] == 1)
 		else
 		{
 			$ins_sql = "insert into dental_custom SET
-			title='".mysql_real_escape_string($_POST["title"])."', 
-			description = '".mysql_real_escape_string($_POST["description"])."', 
+			title='".mysqli_real_escape_string($con,$_POST["title"])."', 
+			description = '".mysqli_real_escape_string($con,$_POST["description"])."', 
 			adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', 
 			default_text = 1";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con,$ins_sql);
 			
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_custom_text.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_custom_text.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -48,11 +47,11 @@ if($_POST["custom_textsub"] == 1)
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
-    $thesql = "select * from dental_custom where customid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_custom where customid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$title = $_POST['title'];
 		$description = $_POST['description'];
@@ -76,19 +75,19 @@ if($_POST["custom_textsub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
-    <form name="transaction_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
+    <?php }?>
+    <form name="transaction_codefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
-               <?=$but_text?> Custom Text 
-               <? if($title <> "") {?>
-               		&quot;<?=$title;?>&quot;
-               <? }?>
+               <?php echo $but_text?> Custom Text 
+               <?php if($title <> "") {?>
+               		&quot;<?php echo $title;?>&quot;
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -96,7 +95,7 @@ if($_POST["custom_textsub"] == 1)
                 Title
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="title" name="title" value="<?=$title?>" class="form-control" /> 
+                <input type="text" id="title" name="title" value="<?php echo $title?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -105,7 +104,7 @@ if($_POST["custom_textsub"] == 1)
                 Description
             </td>
             <td valign="top" class="frmdata">
-            	<textarea class="form-control" name="description" style="width:100%;"><?=$description;?></textarea>
+            	<textarea class="form-control" name="description" style="width:100%;"><?php echo $description;?></textarea>
             </td>
         </tr>
         <tr>
@@ -114,10 +113,10 @@ if($_POST["custom_textsub"] == 1)
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="custom_textsub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["customid"]?>" />
-                <input type="submit" value="<?=$but_text?> Custom Text" class="btn btn-primary">
+                <input type="hidden" name="ed" value="<?php echo $themyarray["customid"]?>" />
+                <input type="submit" value="<?php echo $but_text?> Custom Text" class="btn btn-primary">
 		<?php if($themyarray["customid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_custom_text.php?delid=<?=$themyarray["customid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
+                    <a href="manage_custom_text.php?delid=<?php echo $themyarray["customid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

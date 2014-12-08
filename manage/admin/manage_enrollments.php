@@ -3,7 +3,7 @@ include "includes/top.htm";
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
         $index_val = $_REQUEST["page"];
 else
         $index_val = 0;
@@ -13,14 +13,14 @@ $i_val = $index_val * $rec_disp;
   $sql = "SELECT e.*, CONCAT(t.transaction_type,' - ',t.description) as transaction_type 
         FROM dental_eligible_enrollment e
         LEFT JOIN dental_enrollment_transaction_type t ON e.transaction_type_id = t.id
-        WHERE e.user_id = '".mysql_real_escape_string($_GET['ed'])."'";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+        WHERE e.user_id = '".mysqli_real_escape_string($con,$_GET['ed'])."'";
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 //$sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_users = mysqli_num_rows($my);
 
 
 
@@ -57,7 +57,7 @@ $num_users=mysql_num_rows($my);
 </div>
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <table class="table table-bordered table-hover">
@@ -97,7 +97,7 @@ $num_users=mysql_num_rows($my);
 			Get Form
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -108,7 +108,7 @@ $num_users=mysql_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			
 			if($myarray["status"] == 1)
@@ -148,9 +148,9 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
  <?=st($dss_enrollment_labels[$myarray["status"]]);?>
                                         <?php
-                                                $w_sql = "SELECT * from dental_eligible_response where reference_id='".mysql_real_escape_string($myarray['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
-                                                $w_q = mysql_query($w_sql);
-                                                $w_r = mysql_fetch_assoc($w_q);
+                                                $w_sql = "SELECT * from dental_eligible_response where reference_id='".mysqli_real_escape_string($con,$myarray['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
+                                                $w_q = mysqli_query($con,$w_sql);
+                                                $w_r = mysqli_fetch_assoc($w_q);
                                                 if($w_r['adddate'] !=''){
                                                         echo " - ".date('m/d/Y h:i a', strtotime($w_r['adddate']));
                                                 }else{

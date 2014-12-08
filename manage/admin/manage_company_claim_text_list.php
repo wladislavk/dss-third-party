@@ -1,9 +1,9 @@
-<? 
+<?php 
 include "includes/top.htm";
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -14,16 +14,16 @@ $sql = "select * from companies order by name";
 }else{
   $sql = "select u.* from dental_users u 
         JOIN dental_user_company uc ON uc.userid = u.userid
-        where uc.companyid = '".mysql_real_escape_string($_SESSION['admincompanyid'])."' AND u.user_access=2 order by u.username";
+        where uc.companyid = '".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' AND u.user_access=2 order by u.username";
 }
 
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_users = mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -38,11 +38,11 @@ $num_users=mysql_num_rows($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -51,7 +51,7 @@ $num_users=mysql_num_rows($my);
 			?>
 		</TD>        
 	</TR>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="40%">
 			Name
@@ -64,22 +64,22 @@ $num_users=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			$con_sql = "select count(id) as ct_count from dental_claim_text where companyid=".$myarray['id'];
-			$con_my = mysql_query($con_sql) or die(mysql_error()." | ".$con_sql);
-			$con_myarray = mysql_fetch_array($con_my);
+			$con_my = mysqli_query($con,$con_sql);
+			$con_myarray = mysqli_fetch_array($con_my);
 
 			if($myarray["status"] == 1)
 			{
@@ -90,21 +90,21 @@ $num_users=mysql_num_rows($my);
 				$tr_class = "tr_inactive";
 			}
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?php echo $tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["name"]);?>
+					<?php echo st($myarray["name"]);?>
 				</td>
 				<td valign="top" align="center">
-         				<?= $con_myarray['ct_count']; ?> 
+         				<?php echo  $con_myarray['ct_count']; ?> 
 				</td>	
 						
 				<td valign="top">
-					<a href="manage_company_claim_text.php?companyid=<?= st($myarray['id']); ?>">
+					<a href="manage_company_claim_text.php?companyid=<?php echo  st($myarray['id']); ?>">
 					        View Texts
 					</a>
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 
@@ -116,4 +116,4 @@ $num_users=mysql_num_rows($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

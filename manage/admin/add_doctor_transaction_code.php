@@ -1,6 +1,6 @@
 <?php 
 //session_start();
-require_once('includes/main_include.php');
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include '../includes/constants.inc';
 ?>
@@ -9,7 +9,7 @@ include '../includes/constants.inc';
     <script type="text/javascript" src="../script/masks.js"></script>
 
 <?php
-if($_POST["mult_transaction_codesub"] == 1)
+if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesub"] == 1)
 {
 	$op_arr = split("\n",trim($_POST['transaction_code']));
 				
@@ -18,12 +18,12 @@ if($_POST["mult_transaction_codesub"] == 1)
 		if($val <> '')
 		{
 			$sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($val)."'";
-			$query_check=mysql_query($sel_check);
+			$query_check=mysqli_query($con,$sel_check);
 			
-			if(mysql_num_rows($query_check) == 0)
+			if(mysqli_num_rows($query_check) == 0)
 			{
 				$ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysql_query($ins_sql) or die($ins_sql.mysql_error());
+				mysqli_query($con,$ins_sql) or die($ins_sql.mysql_error());
 			}
 			
 		}
@@ -32,24 +32,24 @@ if($_POST["mult_transaction_codesub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
-		parent.window.location='manage_transaction_code.php?msg=<?=$msg;?>';
+		//alert("<?php echo $msg;?>");
+		parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
 	die();
 }
 
-if($_POST["transaction_codesub"] == 1)
+if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
 {
 	$sel_check = "select * from dental_transaction_code where docid=". $_GET['docid'] ." AND  transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check = mysqli_query($con,$sel_check);
 
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
-		$msg="Transaction Code already exist. So please give another Transaction Code.";
+		$msg = "Transaction Code already exist. So please give another Transaction Code.";
 		?>
 		<script type="text/javascript">
-			alert("<?=$msg;?>");
+			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
 		<?
@@ -73,14 +73,14 @@ if($_POST["transaction_codesub"] == 1)
                                 days_units = '".s_for($_POST['days_units'])."',
 				amount_adjust = '".s_for($_POST['amount_adjust'])."',
 				sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."' where transaction_codeid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_doctor_transaction_code.php?docid=<?= $_GET['docid']; ?>&msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_doctor_transaction_code.php?docid=<?php echo  $_GET['docid']; ?>&msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -93,13 +93,13 @@ if($_POST["transaction_codesub"] == 1)
                                 days_units = '".s_for($_POST['days_units'])."',
                                 amount_adjust = '".s_for($_POST['amount_adjust'])."',
 				sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', docid=".$_GET['docid'];
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con,$ins_sql) or die($ins_sql.mysql_error());
 			
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_doctor_transaction_code.php?docid=<?= $_GET['docid']; ?>&msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_doctor_transaction_code.php?docid=<?php echo  $_GET['docid']; ?>&msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -112,11 +112,11 @@ if($_POST["transaction_codesub"] == 1)
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
-    $thesql = "select * from dental_transaction_code where transaction_codeid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_transaction_code where transaction_codeid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$transaction_code = $_POST['transaction_code'];
     		$type = $_POST['type'];		
@@ -158,19 +158,19 @@ if($_POST["transaction_codesub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
-    <form name="transaction_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&docid=<?= $_GET['docid']; ?>" method="post" onSubmit="return transaction_codeabc(this)">
+    <?php }?>
+    <form name="transaction_codefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&docid=<?php echo  $_GET['docid']; ?>" method="post" onSubmit="return transaction_codeabc(this)">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
-               <?=$but_text?> Transaction Code 
-               <? if($transaction_code <> "") {?>
-               		&quot;<?=$transaction_code;?>&quot;
-               <? }?>
+               <?php echo $but_text?> Transaction Code 
+               <?php if($transaction_code <> "") {?>
+               		&quot;<?php echo $transaction_code;?>&quot;
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -178,7 +178,7 @@ if($_POST["transaction_codesub"] == 1)
                 Transaction Code
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="transaction_code" value="<?=$transaction_code?>" class="form-control" /> 
+                <input type="text" name="transaction_code" value="<?php echo $transaction_code?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -207,10 +207,10 @@ if($_POST["transaction_codesub"] == 1)
                   <option value=""></option>
                   <?php
                         $psql = "select * from dental_place_service order by sortby";
-                        $pmy = mysql_query($psql);
-                        while($prow = mysql_fetch_assoc($pmy)){
+                        $pmy = mysqli_query($con,$psql);
+                        while($prow = mysqli_fetch_assoc($pmy)){
                   ?>
-                  <option value="<?= $prow['place_serviceid']; ?>" <?php if($place == $prow['place_serviceid']){echo " selected='selected'";} ?>><?= $prow['place_service']." ".$prow['description']; ?></option>
+                  <option value="<?php echo  $prow['place_serviceid']; ?>" <?php if($place == $prow['place_serviceid']){echo " selected='selected'";} ?>><?php echo  $prow['place_service']." ".$prow['description']; ?></option>
                   <?php } ?>
                 </select>
             </td>
@@ -223,10 +223,10 @@ if($_POST["transaction_codesub"] == 1)
                   <option value=""></option>
                   <?php
                         $psql = "select * from dental_modifier_code order by sortby";
-                        $pmy = mysql_query($psql);
-                        while($prow = mysql_fetch_assoc($pmy)){
+                        $pmy = mysqli_query($con,$psql);
+                        while($prow = mysqli_fetch_assoc($pmy)){
                   ?>
-                  <option value="<?= $prow['modifier_code']; ?>" <?php if($modifier_code_1 == $prow['modifier_code']){echo " selected='selected'";} ?>><?= $prow['modifier_code']." ".$prow['description'];
+                  <option value="<?php echo  $prow['modifier_code']; ?>" <?php if($modifier_code_1 == $prow['modifier_code']){echo " selected='selected'";} ?>><?php echo  $prow['modifier_code']." ".$prow['description'];
  ?></option>
                   <?php } ?>
                 </select>
@@ -240,9 +240,9 @@ if($_POST["transaction_codesub"] == 1)
                   <option value=""></option>
                   <?php
                         $psql = "select * from dental_modifier_code order by sortby";
-                        $pmy = mysql_query($psql);
-                        while($prow = mysql_fetch_assoc($pmy)){
-                  ?>                  <option value="<?= $prow['modifier_code']; ?>" <?php if($modifier_code_2 == $prow['modifier_code']){echo " selected='selected'";} ?>><?= $prow['modifier_code']." ".$prow['description'];
+                        $pmy = mysqli_query($con,$psql);
+                        while($prow = mysqli_fetch_assoc($pmy)){
+                  ?>                  <option value="<?php echo  $prow['modifier_code']; ?>" <?php if($modifier_code_2 == $prow['modifier_code']){echo " selected='selected'";} ?>><?php echo  $prow['modifier_code']." ".$prow['description'];
  ?></option>
                   <?php } ?>
                 </select>
@@ -252,7 +252,7 @@ if($_POST["transaction_codesub"] == 1)
                Default Days/Units
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="days_units" value="<?=$days_units;?>" class="tbox singlenumber" style="width:30px"/>
+                <input type="text" name="days_units" value="<?php echo $days_units;?>" class="tbox singlenumber" style="width:30px"/>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -260,7 +260,7 @@ if($_POST["transaction_codesub"] == 1)
                 Sort By
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="sortby" value="<?=$sortby;?>" class="form-control" style="width:30px"/>		
+                <input type="text" name="sortby" value="<?php echo $sortby;?>" class="form-control" style="width:30px"/>		
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -268,7 +268,7 @@ if($_POST["transaction_codesub"] == 1)
                Price 
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" name="amount" value="<?=$amount;?>" class="form-control" style="width:100px"/>
+                $<input type="text" name="amount" value="<?php echo $amount;?>" class="form-control" style="width:100px"/>
             </td>
         </tr>
 
@@ -278,8 +278,8 @@ if($_POST["transaction_codesub"] == 1)
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="form-control">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>
@@ -289,9 +289,9 @@ if($_POST["transaction_codesub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <select name="amount_adjust" class="form-control">
-                        <option value="<?= DSS_AMOUNT_ADJUST_USER; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_USER) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_USER]; ?></option>
-                        <option value="<?= DSS_AMOUNT_ADJUST_NEGATIVE; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_NEGATIVE) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_NEGATIVE]; ?></option>
-                        <option value="<?= DSS_AMOUNT_ADJUST_POSITIVE; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_POSITIVE) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_POSITIVE]; ?></option>
+                        <option value="<?php echo  DSS_AMOUNT_ADJUST_USER; ?>" <?php if($amount_adjust == DSS_AMOUNT_ADJUST_USER) echo " selected";?>><?php echo  $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_USER]; ?></option>
+                        <option value="<?php echo  DSS_AMOUNT_ADJUST_NEGATIVE; ?>" <?php if($amount_adjust == DSS_AMOUNT_ADJUST_NEGATIVE) echo " selected";?>><?php echo  $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_NEGATIVE]; ?></option>
+                        <option value="<?php echo  DSS_AMOUNT_ADJUST_POSITIVE; ?>" <?php if($amount_adjust == DSS_AMOUNT_ADJUST_POSITIVE) echo " selected";?>><?php echo  $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_POSITIVE]; ?></option>
                 </select>
             </td>
         </tr>
@@ -300,7 +300,7 @@ if($_POST["transaction_codesub"] == 1)
                 Description
             </td>
             <td valign="top" class="frmdata">
-            	<textarea class="form-control" name="description" style="width:100%;"><?=$description;?></textarea>
+            	<textarea class="form-control" name="description" style="width:100%;"><?php echo $description;?></textarea>
             </td>
         </tr>
         <tr>
@@ -309,10 +309,10 @@ if($_POST["transaction_codesub"] == 1)
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="transaction_codesub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["transaction_codeid"]?>" />
-                <input type="submit" value="<?=$but_text?> Transaction Code" class="btn btn-primary">
+                <input type="hidden" name="ed" value="<?php echo $themyarray["transaction_codeid"]?>" />
+                <input type="submit" value="<?php echo $but_text?> Transaction Code" class="btn btn-primary">
 		<?php if($themyarray["transaction_codeid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_doctor_transaction_code.php?delid=<?=$themyarray["transaction_codeid"];?>&docid=<?= $_GET['docid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
+                    <a href="manage_doctor_transaction_code.php?delid=<?php echo $themyarray["transaction_codeid"];?>&docid=<?php echo  $_GET['docid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

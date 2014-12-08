@@ -1,16 +1,16 @@
-<? 
+<?php 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
+if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 {
 	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
 	die();
@@ -18,26 +18,26 @@ if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_transaction_code where default_code=1 order by sortby";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_users = mysqli_num_rows($my);
 
-if($_POST['sortsub'] == 1)
+if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 {
 	foreach($_POST['sortby'] as $val)
 	{
-		$smyarray = mysql_fetch_array($my);
+		$smyarray = mysqli_fetch_array($my);
 		
 		if($val == '' || is_numeric($val) === false)
 		{
@@ -45,13 +45,13 @@ if($_POST['sortsub'] == 1)
 		}
 		
 		$up_sort_sql = "update dental_transaction_code set sortby='".s_for($val)."' where transaction_codeid='".$smyarray["transaction_codeid"]."'";
-		mysql_query($up_sort_sql);
+		mysqli_query($con,$up_sort_sql);
 	}
 	$msg = "Sort By Changed Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
-		window.location.replace("<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>");
+		//alert("<?php echo $msg;?>");
+		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
 	</script>
 	<?
 	die();
@@ -80,14 +80,14 @@ if(is_super($_SESSION['admin_access'])){
 <?php } ?>
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 &nbsp;
-<b>Total Records: <?=$total_rec;?></b>
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<b>Total Records: <?php echo $total_rec;?></b>
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -96,7 +96,7 @@ if(is_super($_SESSION['admin_access'])){
 			?>
 		</TD>        
 	</TR>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="10%">
 			TX Code		
@@ -114,18 +114,18 @@ if(is_super($_SESSION['admin_access'])){
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{
@@ -136,12 +136,12 @@ if(is_super($_SESSION['admin_access'])){
 				$tr_class = "tr_inactive";
 			}
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?php echo $tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["transaction_code"]);?>
+					<?php echo st($myarray["transaction_code"]);?>
 				</td>
 				<td valign="top">
-					<?=st(substr($myarray["description"], 0, 25));?>
+					<?php echo st(substr($myarray["description"], 0, 25));?>
 				</td>
 				<td valign="top">
                   
@@ -166,21 +166,21 @@ if(is_super($_SESSION['admin_access'])){
 				</td>
 				<td valign="top" align="center">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					  <input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="form-control text-center" style="width:5em"/>
+					  <input type="text" name="sortby[]" value="<?php echo st($myarray['sortby'])?>" class="form-control text-center" style="width:5em"/>
 					<?php }else{ ?>
-					  <?=st($myarray['sortby'])?>
+					  <?php echo st($myarray['sortby'])?>
 					<?php } ?>
 				</td>	
 						
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_transaction_code.php?ed=<?=$myarray["transaction_codeid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_transaction_code.php?ed=<?php echo $myarray["transaction_codeid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 		?>
 		<tr>
 			<td valign="top" class="col_head" colspan="3">&nbsp;
@@ -206,4 +206,4 @@ if(is_super($_SESSION['admin_access'])){
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

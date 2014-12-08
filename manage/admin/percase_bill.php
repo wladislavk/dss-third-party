@@ -1,27 +1,27 @@
 <?php
-session_start();
-require_once('includes/main_include.php');
+
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
 include_once '../includes/general_functions.php';
-require_once '../includes/constants.inc';
-require_once 'includes/access.php';
+include_once '../includes/constants.inc';
+include_once 'includes/access.php';
 ?>
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 <?php
 require_once '../3rdParty/stripe/lib/Stripe.php';
 $id = $_GET['docid'];
 $sql = "SELECT * FROM dental_users
-	WHERE userid='".mysql_real_escape_string($id)."'";
-$q = mysql_query($sql);
-$r = mysql_fetch_assoc($q);
+	WHERE userid='".mysqli_real_escape_string($con,$id)."'";
+$q = mysqli_query($con,$sql);
+$r = mysqli_fetch_assoc($q);
 
 $key_sql = "SELECT stripe_secret_key FROM companies c 
                 JOIN dental_user_company uc
                         ON c.id = uc.companyid
-                 WHERE uc.userid='".mysql_real_escape_string($id)."'";
-$key_q = mysql_query($key_sql);
-$key_r= mysql_fetch_assoc($key_q);
+                 WHERE uc.userid='".mysqli_real_escape_string($con,$id)."'";
+$key_q = mysqli_query($con,$key_sql);
+$key_r= mysqli_fetch_assoc($key_q);
 
 Stripe::setApiKey($key_r['stripe_secret_key']);
 
@@ -93,20 +93,20 @@ try{
   $stripe_customer = $charge->customer;
   $stripe_card_fingerprint = $charge->card->fingerprint;
   $charge_sql = "INSERT INTO dental_charge SET
-			amount='".mysql_real_escape_string(str_replace(',','',$_POST['amount']))."',
-                        userid='".mysql_real_escape_string($id)."',
-                        adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."',
+			amount='".mysqli_real_escape_string($con,str_replace(',','',$_POST['amount']))."',
+                        userid='".mysqli_real_escape_string($con,$id)."',
+                        adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',
                         charge_date=NOW(),
-                        stripe_customer='".mysql_real_escape_string($stripe_customer)."',
-                        stripe_charge='".mysql_real_escape_string($stripe_charge)."',
-                        stripe_card_fingerprint='".mysql_real_escape_string($stripe_card_fingerprint)."',
-			invoice_id='".mysql_real_escape_string((isset($_REQUEST['invoice']) && $_REQUEST['invoice']!='')?$_REQUEST['invoice']:'')."',
+                        stripe_customer='".mysqli_real_escape_string($con,$stripe_customer)."',
+                        stripe_charge='".mysqli_real_escape_string($con,$stripe_charge)."',
+                        stripe_card_fingerprint='".mysqli_real_escape_string($con,$stripe_card_fingerprint)."',
+			invoice_id='".mysqli_real_escape_string($con,(isset($_REQUEST['invoice']) && $_REQUEST['invoice']!='')?$_REQUEST['invoice']:'')."',
                         adddate=NOW(),
-                        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";	
-  	mysql_query($charge_sql); 
+                        ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";	
+  	mysqli_query($con,$charge_sql); 
   if(isset($_REQUEST['invoice']) && $_REQUEST['invoice']!=''){
-    $i_sql = "UPDATE dental_percase_invoice SET status=1 WHERE id='".mysql_real_escape_string($_REQUEST['invoice'])."'";
-    mysql_query($i_sql);
+    $i_sql = "UPDATE dental_percase_invoice SET status=1 WHERE id='".mysqli_real_escape_string($con,$_REQUEST['invoice'])."'";
+    mysqli_query($con,$i_sql);
   }
     ?><h3><?= $r['first_name']; ?> <?= $r['last_name']; ?> billed <?= $_POST['amount']; ?>.</h3><?php
      ?><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
@@ -120,9 +120,9 @@ try{
 }
 
   if(isset($_GET['invoice']) && $_GET['invoice']!=''){
-    $a_sql = "SELECT id, monthly_fee_amount, docid FROM dental_percase_invoice WHERE id='".mysql_real_escape_string($_GET['invoice'])."'";
-    $a_q = mysql_query($a_sql);
-    $myarray = mysql_fetch_assoc($a_q);
+    $a_sql = "SELECT id, monthly_fee_amount, docid FROM dental_percase_invoice WHERE id='".mysqli_real_escape_string($con,$_GET['invoice'])."'";
+    $a_q = mysqli_query($con,$a_sql);
+    $myarray = mysqli_fetch_assoc($a_q);
     $total_charge = $myarray['monthly_fee_amount'];
 $case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl                 JOIN dental_patients dp ON dl.patientid=dp.patientid
         WHERE 
@@ -141,8 +141,8 @@ SELECT CONCAT('Insurance Verification Services – ', patient_firstname, ' ', pa
 SELECT description,             
 start_date, end_date, amount, id FROM dental_fax_invoice        WHERE
                 invoice_id='".$myarray['id']."'";
-$case_q = mysql_query($case_sql);
-while($case_r = mysql_fetch_assoc($case_q)){
+$case_q = mysqli_query($con,$case_sql);
+while($case_r = mysqli_fetch_assoc($case_q)){
 $total_charge += $case_r['percase_amount'];
 }
  

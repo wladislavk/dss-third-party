@@ -1,6 +1,6 @@
-<? 
+<?php 
 include "includes/top.htm";
-  require_once '../3rdParty/stripe/lib/Stripe.php';
+  include_once '../3rdParty/stripe/lib/Stripe.php';
 include '../includes/calendarinc.php';
 include 'includes/invoice_functions.php';
 
@@ -13,7 +13,7 @@ include 'includes/invoice_functions.php';
                 JOIN companies c ON c.id=uc.companyid
                 JOIN dental_plans plan ON plan.id = du.plan_id
                 WHERE du.status=1 AND du.docid=0
-		AND du.userid='".mysql_real_escape_string($_GET['docid'])."'
+		AND du.userid='".mysqli_real_escape_string($con,$_GET['docid'])."'
  ";
 
 
@@ -27,8 +27,8 @@ include 'includes/invoice_functions.php';
 		JOIN dental_plans plan ON plan.id = du.plan_id
                 WHERE du.status=1 AND du.docid=0
 AND 
-                ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-                        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
+                ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
+                        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysqli_real_escape_string($con,DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
  ";
 /*
         $sql = "SELECT du.*, c.name AS company_name, c.id AS company_id, p.name as plan_name,
@@ -55,10 +55,10 @@ AND
                 WHERE pi.status='".DSS_INVOICE_PENDING."' ";
 */
   if(isset($_GET['company']) && $_GET['company'] != ""){
-    	$sql .= " AND c.id='".mysql_real_escape_string($_GET['company'])."' ";
+    	$sql .= " AND c.id='".mysqli_real_escape_string($con,$_GET['company'])."' ";
   }
   if(isset($_GET['uid']) && $_GET['uid'] != ""){
-        $sql .= " AND du.userid > '".mysql_real_escape_string($_GET['uid'])."' ";
+        $sql .= " AND du.userid > '".mysqli_real_escape_string($con,$_GET['uid'])."' ";
   }
   if(isset($_GET['show']) && $_GET['show']=='all'){
    	$sql .= " ORDER BY du.userid ASC ";
@@ -107,11 +107,11 @@ AND
 		*/
   }
 }
-$count_q = mysql_query($sql);
-$num_docs = mysql_num_rows($count_q);
+$count_q = mysqli_query($con,$sql);
+$num_docs = mysqli_num_rows($count_q);
 
 $sql .= " limit 1";
-$q = mysql_query($sql) or die(mysql_error());
+$q = mysqli_query($con,$sql);
 $count_invoices = (isset($_GET['ci']) && $_GET['ci']!='')?$_GET['ci']:$num_docs;
 $count_current = (isset($_GET['cc']) && $_GET['cc']!='')?$_GET['cc']:1;
 if($num_docs == 0){
@@ -121,12 +121,12 @@ if($num_docs == 0){
     </script>
   <?php
 }
-$user = mysql_fetch_assoc($q);
+$user = mysqli_fetch_assoc($q);
 
 $s = "SELECT id FROM dental_percase_invoice WHERE docid='".$user['userid']."' AND status='".DSS_INVOICE_PENDING."' AND invoice_type=1";
-$q = mysql_query($s);
-if(mysql_num_rows($q) > 0){
-$r = mysql_fetch_assoc($q);
+$q = mysqli_query($con,$s);
+if(mysqli_num_rows($q) > 0){
+$r = mysqli_fetch_assoc($q);
 $invoice_id = $r['id'];
 $efile_sql = "SELECT dp.firstname, dp.lastname, e.id, e.adddate FROM 
                 dental_claim_electronic e
@@ -136,7 +136,7 @@ $efile_sql = "SELECT dp.firstname, dp.lastname, e.id, e.adddate FROM
                 i.docid='".$user['userid']."' 
 		and e.percase_invoice = '".$invoice_id."'
 ";
-$efile_q = mysql_query($efile_sql);
+$efile_q = mysqli_query($con,$efile_sql);
 	
 $fax_sql = "SELECT count(*) as total_faxes, MIN(sent_date) as start_date, MAX(sent_date) as end_date, f.fax_invoice_id FROM dental_faxes f
 		JOIN dental_fax_invoice fi ON fi.id = f.fax_invoice_id
@@ -144,8 +144,8 @@ $fax_sql = "SELECT count(*) as total_faxes, MIN(sent_date) as start_date, MAX(se
                 f.docid='".$user['userid']."' AND
                 fi.invoice_id = '".$invoice_id."'
 ";
-$fax_q = mysql_query($fax_sql);
-$fax = mysql_fetch_assoc($fax_q);
+$fax_q = mysqli_query($con,$fax_sql);
+$fax = mysqli_fetch_assoc($fax_q);
 
 
 $ec_sql = "SELECT count(*) as total_ec, MIN(e.adddate) as start_date, MAX(e.adddate) as end_date FROM dental_eligibility e
@@ -154,8 +154,8 @@ $ec_sql = "SELECT count(*) as total_ec, MIN(e.adddate) as start_date, MAX(e.addd
                 e.userid='".$user['userid']."'
 		and ei.invoice_id = '".$invoice_id."'
 ";
-$ec_q = mysql_query($ec_sql);
-$ec = mysql_fetch_assoc($ec_q);
+$ec_q = mysqli_query($con,$ec_sql);
+$ec = mysqli_fetch_assoc($ec_q);
 
 $enroll_sql = "SELECT count(*) as total_enrollments, MIN(e.adddate) as start_date, MAX(e.adddate) as end_date FROM dental_eligible_enrollment e
 		JOIN dental_enrollment_invoice ei on ei.id = e.enrollment_invoice_id
@@ -163,47 +163,47 @@ $enroll_sql = "SELECT count(*) as total_enrollments, MIN(e.adddate) as start_dat
                 e.user_id='".$user['userid']."'
 		and ei.invoice_id = '".$invoice_id."'
 ";
-$enroll_q = mysql_query($enroll_sql);
-$enroll = mysql_fetch_assoc($enroll_q);
+$enroll_q = mysqli_query($con,$enroll_sql);
+$enroll = mysqli_fetch_assoc($enroll_q);
 }
 
 $producer_sql = "SELECT count(*) as total_producers FROM dental_users u
-                WHERE u.docid = '".mysql_real_escape_string($user['id'])."'
+                WHERE u.docid = '".mysqli_real_escape_string($con,(!empty($user['id']) ? $user['id'] : ''))."'
                         and u.status = 1 and u.producer=1";
-$producer_q = mysql_query($producer_sql);
+$producer_q = mysqli_query($con,$producer_sql);
 
 
 if(isset($_POST['submit'])){
 
-  if(mysql_num_rows($q) > 0){
+  if(mysqli_num_rows($q) > 0){
 
       $in_sql = "update dental_percase_invoice SET
 			adminid = '".$_SESSION['adminuserid']."',
-			due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['due_date'])))."',
+			due_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['due_date'])))."',
 			status = '0' ";
 	if(isset($_POST['amount_monthly'])){
-			$in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."',
-			monthly_fee_amount = '".mysql_real_escape_string($_POST['amount_monthly'])."' "; 
+			$in_sql .= ", monthly_fee_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['monthly_date'])))."',
+			monthly_fee_amount = '".mysqli_real_escape_string($con,$_POST['amount_monthly'])."' "; 
 	  $total_amount = $_POST['amount_monthly'];
         }
         if(isset($_POST['producer_amount'])){
-                        $in_sql .= ", producer_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['producer_date'])))."',
-                        producer_fee_amount = '".mysql_real_escape_string($_POST['producer_amount'])."' ";
+                        $in_sql .= ", producer_fee_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['producer_date'])))."',
+                        producer_fee_amount = '".mysqli_real_escape_string($con,$_POST['producer_amount'])."' ";
           $total_amount = $_POST['producer_monthly'];
         }
  	$in_sql .= " WHERE id = '".$invoice_id."'";
-    mysql_query($in_sql) OR die(mysql_error());
+    mysqli_query($con,$in_sql);
 
-  while($efile = mysql_fetch_assoc($efile_q)){
+  while($efile = mysqli_fetch_assoc($efile_q)){
     $id = $efile['id'];
     if(isset($_POST['adddate_'.$id])){
       $up_sql = "UPDATE dental_claim_electronic SET " .
         " percase_date = '".date('Y-m-d', strtotime($_POST['adddate_'.$id]))."', " .
-        " percase_name = '".mysql_real_escape_string($_POST['name_'.$id])."', " .
-        " percase_amount = '".mysql_real_escape_string($_POST['amount_'.$id])."', " .
+        " percase_name = '".mysqli_real_escape_string($con,$_POST['name_'.$id])."', " .
+        " percase_amount = '".mysqli_real_escape_string($con,$_POST['amount_'.$id])."', " .
         " percase_status = '".DSS_PERCASE_INVOICED."' " .
         " WHERE id = '".$id."'";
-      mysql_query($up_sql);
+      mysqli_query($con,$up_sql);
     }else{
       invoice_add_efile('1',$user['userid'],$id);
     }
@@ -215,19 +215,19 @@ if(isset($_POST['submit'])){
 
     $in_sql = "INSERT into dental_fax_invoice SET
 		invoice_id = '".$invoice_id."', 
-                description = '".mysql_real_escape_string($_POST['free_fax_desc'])."',
-                start_date = '".mysql_real_escape_string($free_fax_start_date)."',
-                end_date = '".mysql_real_escape_string($free_fax_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['free_fax_amount'])."',
+                description = '".mysqli_real_escape_string($con,$_POST['free_fax_desc'])."',
+                start_date = '".mysqli_real_escape_string($con,$free_fax_start_date)."',
+                end_date = '".mysqli_real_escape_string($con,$free_fax_end_date)."',
+                amount = '".mysqli_real_escape_string($con,$_POST['free_fax_amount'])."',
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-    mysql_query($in_sql);
-    $fax_invoice_id = mysql_insert_id();
+    mysqli_query($con,$in_sql);
+    $fax_invoice_id = mysqli_insert_id($con);
 	$total_amount += $_POST['free_fax_amount'];
     $up_sql = "UPDATE dental_faxes SET
                 status = '1'
-                WHERE status='0' AND docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
-    mysql_query($up_sql);
+                WHERE status='0' AND docid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+    mysqli_query($con,$up_sql);
   }
 
   if(isset($_POST['fax_desc'])){
@@ -235,25 +235,25 @@ if(isset($_POST['submit'])){
     $fax_end_date = ($_POST['fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
 
     $in_sql = "UPDATE dental_fax_invoice SET
-		description = '".mysql_real_escape_string($_POST['fax_desc'])."',
-                start_date = '".mysql_real_escape_string($fax_start_date)."',
-                end_date = '".mysql_real_escape_string($fax_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['fax_amount'])."'
+		description = '".mysqli_real_escape_string($con,$_POST['fax_desc'])."',
+                start_date = '".mysqli_real_escape_string($con,$fax_start_date)."',
+                end_date = '".mysqli_real_escape_string($con,$fax_end_date)."',
+                amount = '".mysqli_real_escape_string($con,$_POST['fax_amount'])."'
 		WHERE invoice_id = '".$invoice_id."'";
-    mysql_query($in_sql);
-    $fax_invoice_id = mysql_insert_id();
+    mysqli_query($con,$in_sql);
+    $fax_invoice_id = mysqli_insert_id($con);
     $total_amount += $_POST['fax_amount'];
 
     $up_sql = "UPDATE dental_faxes SET
 		status = '1'
-		WHERE fax_invoice_id = '".$fax['fax_invoice_id']."' AND docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
-    mysql_query($up_sql);
+		WHERE fax_invoice_id = '".$fax['fax_invoice_id']."' AND docid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+    mysqli_query($con,$up_sql);
   }else{
     $i_id = invoice_find('1',$user['userid']);
     $up_sql = "UPDATE dental_fax_invoice SET
-		invoice_id = '".mysql_real_escape_string($i_id)."'
+		invoice_id = '".mysqli_real_escape_string($con,$i_id)."'
 		WHERE invoice_id = '".$invoice_id."'";
-    mysql_query($up_sql);
+    mysqli_query($con,$up_sql);
     
   }
 
@@ -262,20 +262,20 @@ if(isset($_POST['submit'])){
     $ec_end_date = ($_POST['free_ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_eligibility_invoice SET
-                invoice_id = '".mysql_real_escape_string($invoice_id)."',
-                description = '".mysql_real_escape_string($_POST['free_ec_desc'])."',
-                start_date = '".mysql_real_escape_string($free_ec_start_date)."',
-                end_date = '".mysql_real_escape_string($free_ec_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['free_ec_amount'])."',
+                invoice_id = '".mysqli_real_escape_string($con,$invoice_id)."',
+                description = '".mysqli_real_escape_string($con,$_POST['free_ec_desc'])."',
+                start_date = '".mysqli_real_escape_string($con,$free_ec_start_date)."',
+                end_date = '".mysqli_real_escape_string($con,$free_ec_end_date)."',
+                amount = '".mysqli_real_escape_string($con,$_POST['free_ec_amount'])."',
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-    mysql_query($in_sql);
-    $ec_invoice_id = mysql_insert_id();
+    mysqli_query($con,$in_sql);
+    $ec_invoice_id = mysqli_insert_id($con);
 
     $up_sql = "UPDATE dental_eligibility SET
                 eligibility_invoice_id = '".$ec_invoice_id."' 
-                WHERE eligibility_invoice_id IS NULL AND userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
-    mysql_query($up_sql);
+                WHERE eligibility_invoice_id IS NULL AND userid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+    mysqli_query($con,$up_sql);
   }
 
   if(isset($_POST['ec_desc'])){
@@ -283,23 +283,23 @@ if(isset($_POST['submit'])){
     $ec_end_date = ($_POST['ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
 
     $in_sql = "update dental_eligibility_invoice SET
-                description = '".mysql_real_escape_string($_POST['ec_desc'])."',
-                start_date = '".mysql_real_escape_string($ec_start_date)."',
-                end_date = '".mysql_real_escape_string($ec_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['ec_amount'])."'
+                description = '".mysqli_real_escape_string($con,$_POST['ec_desc'])."',
+                start_date = '".mysqli_real_escape_string($con,$ec_start_date)."',
+                end_date = '".mysqli_real_escape_string($con,$ec_end_date)."',
+                amount = '".mysqli_real_escape_string($con,$_POST['ec_amount'])."'
 		WHERE invoice_id ='".$invoice_id."'";
-    mysql_query($in_sql);
-    $ec_invoice_id = mysql_insert_id();
+    mysqli_query($con,$in_sql);
+    $ec_invoice_id = mysqli_insert_id($con);
     $up_sql = "UPDATE dental_eligibility SET
                 eligibility_invoice_id = '".$ec_invoice_id."' 
-                WHERE eligibility_invoice_id IS NULL AND userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
-    //mysql_query($up_sql);
+                WHERE eligibility_invoice_id IS NULL AND userid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+    //mysqli_query($con,$up_sql);
   }else{
     $i_id = invoice_find('1',$user['userid']);
     $up_sql = "UPDATE dental_eligibility_invoice SET
-                invoice_id = '".mysql_real_escape_string($i_id)."'
+                invoice_id = '".mysqli_real_escape_string($con,$i_id)."'
                 WHERE invoice_id = '".$invoice_id."'";
-    mysql_query($up_sql);
+    mysqli_query($con,$up_sql);
     
   }
 
@@ -313,20 +313,20 @@ if(isset($_POST['submit'])){
     $enrollment_end_date = ($_POST['free_enrollment_end_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_enrollment_invoice SET
-                invoice_id = '".mysql_real_escape_string($invoice_id)."',
-                description = '".mysql_real_escape_string($_POST['free_enrollment_desc'])."',
-                start_date = '".mysql_real_escape_string($free_enrollment_start_date)."',
-                end_date = '".mysql_real_escape_string($free_enrollment_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['free_enrollment_amount'])."',
+                invoice_id = '".mysqli_real_escape_string($con,$invoice_id)."',
+                description = '".mysqli_real_escape_string($con,$_POST['free_enrollment_desc'])."',
+                start_date = '".mysqli_real_escape_string($con,$free_enrollment_start_date)."',
+                end_date = '".mysqli_real_escape_string($con,$free_enrollment_end_date)."',
+                amount = '".mysqli_real_escape_string($con,$_POST['free_enrollment_amount'])."',
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-    mysql_query($in_sql);
-    $enrollment_invoice_id = mysql_insert_id();
+    mysqli_query($con,$in_sql);
+    $enrollment_invoice_id = mysqli_insert_id($con);
 
     $up_sql = "UPDATE dental_eligible_enrollment SET
                 fax_invoice_id = '".$enrollment_invoice_id."' 
-                WHERE enrollment_invoice_id IS NULL AND user_id='".mysql_real_escape_string($_REQUEST['docid'])."'";
-    mysql_query($up_sql);
+                WHERE enrollment_invoice_id IS NULL AND user_id='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+    mysqli_query($con,$up_sql);
   }
 
 
@@ -335,24 +335,24 @@ if(isset($_POST['submit'])){
     $enrollment_end_date = ($_POST['enrollment_end_date'])?date('Y-m-d', strtotime($_POST['enrollment_end_date'])):'';
 
     $in_sql = "update dental_enrollment_invoice SET
-                description = '".mysql_real_escape_string($_POST['enrollment_desc'])."',
-                start_date = '".mysql_real_escape_string($enrollment_start_date)."',
-                end_date = '".mysql_real_escape_string($enrollment_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['enrollment_amount'])."'
+                description = '".mysqli_real_escape_string($con,$_POST['enrollment_desc'])."',
+                start_date = '".mysqli_real_escape_string($con,$enrollment_start_date)."',
+                end_date = '".mysqli_real_escape_string($con,$enrollment_end_date)."',
+                amount = '".mysqli_real_escape_string($con,$_POST['enrollment_amount'])."'
 		WHERE invoice_id='".$invoice_id."'";
-    mysql_query($in_sql);
-    $enrollment_invoice_id = mysql_insert_id();
+    mysqli_query($con,$in_sql);
+    $enrollment_invoice_id = mysqli_insert_id($con);
 
     $up_sql = "UPDATE dental_eligible_enrollment SET
                 enrollment_invoice_id = '".$enrollment_invoice_id."' 
-                WHERE enrollment_invoice_id is NULL AND user_id='".mysql_real_escape_string($_REQUEST['docid'])."'";
-    mysql_query($up_sql);
+                WHERE enrollment_invoice_id is NULL AND user_id='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+    mysqli_query($con,$up_sql);
   }else{
     $i_id = invoice_find('1',$user['userid']);
     $up_sql = "UPDATE dental_enrollment_invoice SET
-                invoice_id = '".mysql_real_escape_string($i_id)."'
+                invoice_id = '".mysqli_real_escape_string($con,$i_id)."'
                 WHERE invoice_id = '".$invoice_id."'";
-    mysql_query($up_sql);
+    mysqli_query($con,$up_sql);
     
   }
 
@@ -361,23 +361,23 @@ if(isset($_POST['submit'])){
       $in_sql = "insert into dental_percase_invoice SET
                         adminid = '".$_SESSION['adminuserid']."',
                         docid = '".$_POST['docid']."',
-			due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['due_date'])))."',
+			due_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['due_date'])))."',
                         status = '0',
                         adddate = now(),
                         ip_address = '".$_SERVER['REMOTE_ADDR']."' ";
         if(isset($_POST['amount_monthly'])){
-                        $in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."',
-                        monthly_fee_amount = '".mysql_real_escape_string($_POST['amount_monthly'])."' ";
+                        $in_sql .= ", monthly_fee_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['monthly_date'])))."',
+                        monthly_fee_amount = '".mysqli_real_escape_string($con,$_POST['amount_monthly'])."' ";
           $total_amount = $_POST['amount_monthly'];
         }
         if(isset($_POST['producer_amount'])){
-                        $in_sql .= ", producer_fee_desc = '".mysql_real_escape_string($_POST['producer_desc'])."', producer_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['producer_date'])))."',
-                        producer_fee_amount = '".mysql_real_escape_string($_POST['producer_amount'])."' ";
+                        $in_sql .= ", producer_fee_desc = '".mysqli_real_escape_string($con,$_POST['producer_desc'])."', producer_fee_date = '".mysqli_real_escape_string($con,date('Y-m-d', strtotime($_POST['producer_date'])))."',
+                        producer_fee_amount = '".mysqli_real_escape_string($con,$_POST['producer_amount'])."' ";
           $total_amount += $_POST['producer_amount'];
         }
 
-    mysql_query($in_sql);
-    $invoice_id = mysql_insert_id();
+    mysqli_query($con,$in_sql);
+    $invoice_id = mysqli_insert_id($con);
 
 }
 
@@ -390,13 +390,13 @@ if(isset($_POST['submit'])){
 	$amount = $_POST['extra_amount_'.$i];
 	$sql = "INSERT INTO dental_percase_invoice_extra SET" .
         " percase_date = '".$service_date."', " .
-        " percase_name = '".mysql_real_escape_string($name)."', " .
-        " percase_amount = '".mysql_real_escape_string($amount)."', " .
+        " percase_name = '".mysqli_real_escape_string($con,$name)."', " .
+        " percase_amount = '".mysqli_real_escape_string($con,$amount)."', " .
         " percase_status = '".DSS_PERCASE_INVOICED."', " .
         " percase_invoice = '".$invoice_id."', " .
 	" adddate = NOW(), " .
   	" ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-      mysql_query($sql);
+      mysqli_query($con,$sql);
       $total_amount += $amount;
     }
   }
@@ -407,19 +407,19 @@ if(isset($_POST['submit'])){
                   bill_card($user['cc_id'] ,$total_amount, $user['userid'], $invoice_id);
                 }else{
 		    $charge_sql = "INSERT INTO dental_charge SET
-                        amount='".mysql_real_escape_string(str_replace(',','',$total_amount))."',
-                        userid='".mysql_real_escape_string($user['userid'])."',
-                        adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."',
+                        amount='".mysqli_real_escape_string($con,str_replace(',','',$total_amount))."',
+                        userid='".mysqli_real_escape_string($con,$user['userid'])."',
+                        adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',
                         charge_date=NOW(),
                         status='2',
                         adddate=NOW(),
-                        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
-        		mysql_query($charge_sql);
+                        ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
+        		mysqli_query($con,$charge_sql);
                      $i_sql = "UPDATE dental_percase_invoice set status=2 WHERE id='".$invoice_id."'";
-                        mysql_query($i_sql);
+                        mysqli_query($con,$i_sql);
                   ?>
                     <script type="text/javascript">
-                      alert('<?= $user['first_name']." ".$user['last_name']; ?> does not have a credit card on record.');
+                      alert('<?php echo  $user['first_name']." ".$user['last_name']; ?> does not have a credit card on record.');
                     </script>
                   <?php
                 }
@@ -433,14 +433,14 @@ if(isset($_POST['submit'])){
   if(isset($_GET['show']) && $_GET['show']=='1'){
   ?>
   <script type="text/javascript">
-    window.location = 'manage_percase_invoice_history.php?docid=<?=$_GET['docid'];?>';
+    window.location = 'manage_percase_invoice_history.php?docid=<?php echo $_GET['docid'];?>';
   </script>
   <?php
   }else{
   ?>
   <script type="text/javascript">
-    window.location = 'invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?><?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?= $user['userid']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>';
-    //window.location = 'percase_invoice_pdf.php?invoice_id=<?= $invoiceid; ?>';
+    window.location = 'invoice_additional.php?show=<?php echo $_GET['show'];?>&bill=<?php echo  $_GET['bill']; ?><?php echo  (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?php echo  $user['userid']; ?>&cc=<?php echo  ($count_current+1); ?>&ci=<?php echo  $count_invoices; ?>';
+    //window.location = 'percase_invoice_pdf.php?invoice_id=<?php echo  $invoiceid; ?>';
   </script>
   <?php
   }
@@ -455,20 +455,20 @@ if(isset($_POST['submit'])){
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
 		JOIN dental_plans p ON p.id=u.plan_id
-		WHERE u.userid='".mysql_real_escape_string($user['userid'])."'";
-  $doc_q = mysql_query($doc_sql);
-if(mysql_num_rows($doc_q) == 0){
+		WHERE u.userid='".mysqli_real_escape_string($con,$user['userid'])."'";
+  $doc_q = mysqli_query($con,$doc_sql);
+if(mysqli_num_rows($doc_q) == 0){
   //If no plan get company fees
   $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type, c.name as company_name, p.name as plan_name
                 FROM dental_users u
                 JOIN dental_user_company uc ON uc.userid = u.userid
                 JOIN companies c ON uc.companyid = c.id
-                WHERE u.userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
-  $doc_q = mysql_query($doc_sql);
+                WHERE u.userid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+  $doc_q = mysqli_query($con,$doc_sql);
 
 }
 
-  $doc = mysql_fetch_assoc($doc_q);
+  $doc = mysqli_fetch_assoc($doc_q);
 
         if($user['last_monthly_fee_date']){
           $date = $user['last_monthly_fee_date'];
@@ -493,25 +493,25 @@ if(mysql_num_rows($doc_q) == 0){
 
 ?>
 <div class="page-header">
-	<h2>Invoicing <small>- <?= $doc['name']; ?>	
-        - <?= $doc['company_name']; ?>
-        - Plan: <?= $doc['plan_name']; ?>
+	<h2>Invoicing <small>- <?php echo  $doc['name']; ?>	
+        - <?php echo  $doc['company_name']; ?>
+        - Plan: <?php echo  $doc['plan_name']; ?>
 </small></h2></div>
 
-<? if($_GET['msg'] != '') {?>
+<?php if(!empty($_GET['msg'])) {?>
 <div class="alert alert-danger text-center">
-    <? echo $_GET['msg'];?>
+    <?php echo $_GET['msg'];?>
 </div>
-<? } ?>
+<?php } ?>
 
 <div class="panel panel-default">
     <div class="panel-body">
-        <h3><?= $count_current; ?> of <?= $count_invoices; ?></h3>
-        <form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&company=<?=$_GET['company'];?>&bill=<?=$_GET['bill'];?>&docid=<?= $_GET['docid']; ?>&uid=<?=$_GET['uid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
-            <input type="hidden" name="docid" value="<?=$user["userid"];?>">
+        <h3><?php echo  $count_current; ?> of <?php echo  $count_invoices; ?></h3>
+        <form name="sortfrm" id="invoice" action="<?php echo $_SERVER['PHP_SELF']?>?show=<?php echo (!empty($_GET['show']) ? $_GET['show'] : ''); ?>&company=<?php echo (!empty($_GET['company']) ? $_GET['company'] : '');?>&bill=<?php echo (!empty($_GET['bill']) ? $_GET['bill'] : '');?>&docid=<?php echo  (!empty($_GET['docid']) ? $_GET['docid'] : ''); ?>&uid=<?php echo (!empty($_GET['uid']) ? $_GET['uid'] : '');?>&cc=<?php echo  ($count_current); ?>&ci=<?php echo  $count_invoices; ?>" method="post">
+            <input type="hidden" name="docid" value="<?php echo $user["userid"];?>">
 <div class="input-group date pull-right">
 Invoice Due Date:
-<input type="text" name="due_date" id="due_date" class="form-control text-center datepicker" value="<?=  date('m/d/Y'); ?>" />
+<input type="text" name="due_date" id="due_date" class="form-control text-center datepicker" value="<?php echo   date('m/d/Y'); ?>" />
                             <span class="input-group-addon">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
@@ -542,7 +542,7 @@ Invoice Due Date:
                     </td>
                     <td>
                         <div class="input-append datepicker input-group date">
-                            <input type="text" id="extra_service_date_{row}" class="form-control text-center" name="extra_service_date_{row}" value="<?= date('m/d/Y') ?>">
+                            <input type="text" id="extra_service_date_{row}" class="form-control text-center" name="extra_service_date_{row}" value="<?php echo  date('m/d/Y') ?>">
                             <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
@@ -566,7 +566,7 @@ Invoice Due Date:
                     </td>
                     <td>
                         <div class="input-append datepicker input-group date">
-                            <input type="text" id="monthly_date" name="monthly_date" class="form-control text-center" value="<?=$monthly_date;?>">
+                            <input type="text" id="monthly_date" name="monthly_date" class="form-control text-center" value="<?php echo $monthly_date;?>">
                             <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
@@ -575,13 +575,13 @@ Invoice Due Date:
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="amount_monthly" value="<?= $doc['monthly_fee']; ?>">
+                            <input type="text" class="amount form-control" name="amount_monthly" value="<?php echo  $doc['monthly_fee']; ?>">
                         </div>
                     </td>
                 </tr>
 
 
-                <?php $producer_r = mysql_fetch_assoc($producer_q); ?>
+                <?php $producer_r = mysqli_fetch_assoc($producer_q); ?>
 		<?php if($producer_r['total_producers']>0){ ?>
                 <tr id="user_row">
                     <td>
@@ -590,11 +590,11 @@ Invoice Due Date:
                         </a>
                     </td>
                     <td>
-                        <input type="text" name="producer_desc" value="Producers – <?= $producer_r['total_producers']." at $".$doc['producer_fee']." each "; ?>" class="form-control">
+                        <input type="text" name="producer_desc" value="Producers – <?php echo  $producer_r['total_producers']." at $".$doc['producer_fee']." each "; ?>" class="form-control">
                     </td>
                     <td>
                         <div class="input-group input-append date datepicker">
-                            <input type="text" id="producer_date" class="form-control text-center" name="producer_date" value="<?=date('m/d/Y');?>">
+                            <input type="text" id="producer_date" class="form-control text-center" name="producer_date" value="<?php echo date('m/d/Y');?>">
                             <span class="add-on input-group-addon">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
@@ -603,24 +603,24 @@ Invoice Due Date:
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="producer_amount" value="<?= $users_r['total_producers']*$doc['producer_fee']; ?>">
+                            <input type="text" class="amount form-control" name="producer_amount" value="<?php echo  $users_r['total_producers']*$doc['producer_fee']; ?>">
                         </div>
                     </td>
                 </tr>
 		<?php } ?>
-                <?php while ($case = mysql_fetch_array($case_q)) { ?>
-                <tr id="case_row_<?= $case['ledgerid'] ?>">
+                <?php if (!empty($case_q)) while ($case = mysqli_fetch_array($case_q)) { ?>
+                <tr id="case_row_<?php echo  $case['ledgerid'] ?>">
                     <td>
                         <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
                     <td>
-                        <input type="text" name="name_<?= $case['ledgerid'] ?>" value="<?=st($case["firstname"]." ".$case["lastname"]);?>" class="form-control">
+                        <input type="text" name="name_<?php echo  $case['ledgerid'] ?>" value="<?php echo st($case["firstname"]." ".$case["lastname"]);?>" class="form-control">
                     </td>
                     <td>
                         <div class="input-append datepicker input-group date">
-                            <input type="text" id="service_date_<?= $case['ledgerid'] ?>" class="form-control text-center" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>">
+                            <input type="text" id="service_date_<?php echo  $case['ledgerid'] ?>" class="form-control text-center" name="service_date_<?php echo  $case['ledgerid'] ?>" value="<?php echo date('m/d/Y', strtotime(st($case["service_date"])));?>">
                             <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
@@ -629,27 +629,27 @@ Invoice Due Date:
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="amount_<?= $case['ledgerid'] ?>" value="195.00">
+                            <input type="text" class="amount form-control" name="amount_<?php echo  $case['ledgerid'] ?>" value="195.00">
                         </div>
                     </td>
                 </tr>
-	           <? } ?>
+	           <?php } ?>
 
 
 		<?php $free_efile = 1; ?>
-                <?php while ($efile = mysql_fetch_array($efile_q)) { ?>
-                <tr id="efile_row_<?= $efile['id'] ?>">
+                <?php while ($efile = mysqli_fetch_array($efile_q)) { ?>
+                <tr id="efile_row_<?php echo  $efile['id'] ?>">
                     <td>
                         <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
                     <td>
-                        <input type="text" name="name_<?= $efile['id'] ?>" value="E-File: <?=st($efile["firstname"]." ".$efile["lastname"]);?>" class="form-control">
+                        <input type="text" name="name_<?php echo  $efile['id'] ?>" value="E-File: <?php echo st($efile["firstname"]." ".$efile["lastname"]);?>" class="form-control">
                     </td>
                     <td>
                         <div class="input-append datepicker input-group date">
-                            <input type="text" id="adddate_<?= $efile['id'] ?>" class="form-control text-center" name="adddate_<?= $efile['id'] ?>" value="<?=date('m/d/Y', strtotime(st($efile["adddate"])));?>">
+                            <input type="text" id="adddate_<?php echo  $efile['id'] ?>" class="form-control text-center" name="adddate_<?php echo  $efile['id'] ?>" value="<?php echo date('m/d/Y', strtotime(st($efile["adddate"])));?>">
                             <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
@@ -665,28 +665,28 @@ Invoice Due Date:
 				$efile_fee = $doc['efile_fee'];
 			    }
 			    ?>
-                            <input type="text" class="amount form-control" name="amount_<?= $efile['id'] ?>" value="<?= $efile_fee; ?>">
+                            <input type="text" class="amount form-control" name="amount_<?php echo  $efile['id'] ?>" value="<?php echo  $efile_fee; ?>">
                         </div>
                     </td>
                 </tr>
-                   <? } ?>
+                   <?php } ?>
 
 
 
             <?php if ($doc['user_type']==DSS_USER_TYPE_SOFTWARE) { ?>
-                <?php while ($vob = mysql_fetch_array($vob_q)) { ?>
-                <tr id="vob_row_<?= $vob['id'] ?>">
+                <?php if (!empty($vob_q)) while ($vob = mysqli_fetch_array($vob_q)) { ?>
+                <tr id="vob_row_<?php echo  $vob['id'] ?>">
                     <td>
                         <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
                     <td>
-                        Insurance Verification Services – <?= $vob['patient_firstname']." ".$vob['patient_lastname']; ?>
+                        Insurance Verification Services – <?php echo  $vob['patient_firstname']." ".$vob['patient_lastname']; ?>
                     </td>
                     <td>
                         <div class="input-append datepicker input-group date">
-                            <input type="text" name="vob_date_completed_<?= $vob['id'] ?>" id="vob_date_completed_<?= $vob['id'] ?>" class="form-control text-center" value="<?=date('m/d/Y', strtotime(st($vob["date_completed"])));?>">
+                            <input type="text" name="vob_date_completed_<?php echo  $vob['id'] ?>" id="vob_date_completed_<?php echo  $vob['id'] ?>" class="form-control text-center" value="<?php echo date('m/d/Y', strtotime(st($vob["date_completed"])));?>">
                             <span class="input-group-addon add-on">
                                 <i class="glyphicon glyphicon-calendar"></i>
                             </span>
@@ -695,11 +695,11 @@ Invoice Due Date:
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="vob_amount_<?= $vob['id'] ?>" value="<?= $vob['invoice_amount']; ?>">
+                            <input type="text" class="amount form-control" name="vob_amount_<?php echo  $vob['id'] ?>" value="<?php echo  $vob['invoice_amount']; ?>">
                         </div>
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
             <?php } ?>
             
             <?php if ($fax['total_faxes'] > 0) { ?>
@@ -722,13 +722,13 @@ Invoice Due Date:
                         </a>
                     </td>
                     <td>
-                        <input type="text" name="free_fax_desc" value="Free Faxes – <?= $free_fax." at $0.00 each "; ?>" style="width:100%;" class="form-control">
+                        <input type="text" name="free_fax_desc" value="Free Faxes – <?php echo  $free_fax." at $0.00 each "; ?>" style="width:100%;" class="form-control">
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="free_fax_start_date" class="datepicker date form-control text-center" name="free_fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>">
+                            <input type="text" id="free_fax_start_date" class="datepicker date form-control text-center" name="free_fax_start_date" value="<?php echo date('m/d/Y', strtotime(st($fax["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="free_fax_end_date" class="datepicker date form-control text-center" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>">
+                            <input type="text" id="free_fax_end_date" class="datepicker date form-control text-center" name="free_fax_end_date" value="<?php echo date('m/d/Y', strtotime(st($fax["end_date"])));?>">
                         </div>
                     </td>
                     <td>
@@ -746,19 +746,19 @@ Invoice Due Date:
                         </a>
                     </td>
                     <td>
-                        <input type="text" name="fax_desc" value="Faxes – <?= $bill_faxes." at $".$doc['fax_fee']." each "; ?>" class="form-control">
+                        <input type="text" name="fax_desc" value="Faxes – <?php echo  $bill_faxes." at $".$doc['fax_fee']." each "; ?>" class="form-control">
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="fax_start_date" class="datepicker date form-control text-center" name="fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>">
+                            <input type="text" id="fax_start_date" class="datepicker date form-control text-center" name="fax_start_date" value="<?php echo date('m/d/Y', strtotime(st($fax["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="fax_end_date" class="datepicker date form-control text-center" name="fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>">
+                            <input type="text" id="fax_end_date" class="datepicker date form-control text-center" name="fax_end_date" value="<?php echo date('m/d/Y', strtotime(st($fax["end_date"])));?>">
                         </div>
                     </td>
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="fax_amount" value="<?= $bill_faxes*$doc['fax_fee']; ?>">
+                            <input type="text" class="amount form-control" name="fax_amount" value="<?php echo  $bill_faxes*$doc['fax_fee']; ?>">
                         </div>
                     </td>
                 </tr>
@@ -788,13 +788,13 @@ Invoice Due Date:
                         </a>
                     </td>
                     <td>
-                        <input type="text" name="free_ec_desc" value="Free Eligibility Check – <?= $free_ec." at $0.00 each "; ?>" style="width:100%;" class="form-control">
+                        <input type="text" name="free_ec_desc" value="Free Eligibility Check – <?php echo  $free_ec." at $0.00 each "; ?>" style="width:100%;" class="form-control">
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="free_ec_start_date" class="datepicker date form-control text-center" name="free_ec_start_date" value="<?=date('m/d/Y', strtotime(st($ec["start_date"])));?>">
+                            <input type="text" id="free_ec_start_date" class="datepicker date form-control text-center" name="free_ec_start_date" value="<?php echo date('m/d/Y', strtotime(st($ec["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="free_ec_end_date" class="datepicker date form-control text-center" name="free_ec_end_date" value="<?=date('m/d/Y', strtotime(st($ec["end_date"])));?>">
+                            <input type="text" id="free_ec_end_date" class="datepicker date form-control text-center" name="free_ec_end_date" value="<?php echo date('m/d/Y', strtotime(st($ec["end_date"])));?>">
                         </div>
                     </td>
                     <td>
@@ -812,19 +812,19 @@ Invoice Due Date:
                         </a>
                     </td>
                     <td>
-                        <input type="text" name="ec_desc" value="Eligibility Checks – <?= $bill_ec." at $".$doc['eligibility_fee']." each "; ?>" class="form-control">
+                        <input type="text" name="ec_desc" value="Eligibility Checks – <?php echo  $bill_ec." at $".$doc['eligibility_fee']." each "; ?>" class="form-control">
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="ec_start_date" class="datepicker date form-control text-center" name="ec_start_date" value="<?=date('m/d/Y', strtotime(st($ec["start_date"])));?>">
+                            <input type="text" id="ec_start_date" class="datepicker date form-control text-center" name="ec_start_date" value="<?php echo date('m/d/Y', strtotime(st($ec["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="ec_end_date" class="datepicker date form-control text-center" name="ec_end_date" value="<?=date('m/d/Y', strtotime(st($ec["end_date"])));?>">
+                            <input type="text" id="ec_end_date" class="datepicker date form-control text-center" name="ec_end_date" value="<?php echo date('m/d/Y', strtotime(st($ec["end_date"])));?>">
                         </div>
                     </td>
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="ec_amount" value="<?= $bill_ec*$doc['eligibility_fee']; ?>">
+                            <input type="text" class="amount form-control" name="ec_amount" value="<?php echo  $bill_ec*$doc['eligibility_fee']; ?>">
                         </div>
                     </td>
                 </tr>
@@ -859,13 +859,13 @@ Invoice Due Date:
                         </a>
                     </td>
                     <td>
-                        <input type="text" name="free_enrollment_desc" value="Free Enrollments – <?= $free_en." at $0.00 each "; ?>" style="width:100%;" class="form-control">
+                        <input type="text" name="free_enrollment_desc" value="Free Enrollments – <?php echo  $free_en." at $0.00 each "; ?>" style="width:100%;" class="form-control">
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="free_enrollment_start_date" class="datepicker date form-control text-center" name="free_enrollment_start_date" value="<?=date('m/d/Y', strtotime(st($enroll["start_date"])));?>">
+                            <input type="text" id="free_enrollment_start_date" class="datepicker date form-control text-center" name="free_enrollment_start_date" value="<?php echo date('m/d/Y', strtotime(st($enroll["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="free_enrollment_end_date" class="datepicker date form-control text-center" name="free_enrollment_end_date" value="<?=date('m/d/Y', strtotime(st($enroll["end_date"])));?>">
+                            <input type="text" id="free_enrollment_end_date" class="datepicker date form-control text-center" name="free_enrollment_end_date" value="<?php echo date('m/d/Y', strtotime(st($enroll["end_date"])));?>">
                         </div>
                     </td>
                     <td>
@@ -883,19 +883,19 @@ Invoice Due Date:
                         </a>
                     </td>
                     <td>
-                        <input type="text" name="enrollment_desc" value="Enrollments – <?= $bill_en." at $".$doc['enrollment_fee']." each "; ?>" class="form-control">
+                        <input type="text" name="enrollment_desc" value="Enrollments – <?php echo  $bill_en." at $".$doc['enrollment_fee']." each "; ?>" class="form-control">
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" id="enrollment_start_date" class="datepicker date form-control text-center" name="enrollment_start_date" value="<?=date('m/d/Y', strtotime(st($enroll["start_date"])));?>">
+                            <input type="text" id="enrollment_start_date" class="datepicker date form-control text-center" name="enrollment_start_date" value="<?php echo date('m/d/Y', strtotime(st($enroll["start_date"])));?>">
                             <span class="input-group-addon">to</span>
-                            <input type="text" id="enrollment_end_date" class="datepicker date form-control text-center" name="enrollment_end_date" value="<?=date('m/d/Y', strtotime(st($enroll["end_date"])));?>">
+                            <input type="text" id="enrollment_end_date" class="datepicker date form-control text-center" name="enrollment_end_date" value="<?php echo date('m/d/Y', strtotime(st($enroll["end_date"])));?>">
                         </div>
                     </td>
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="enrollment_amount" value="<?= $bill_en*$doc['enrollment_fee']; ?>">
+                            <input type="text" class="amount form-control" name="enrollment_amount" value="<?php echo  $bill_en*$doc['enrollment_fee']; ?>">
                         </div>
                     </td>
                 </tr>
@@ -924,13 +924,13 @@ Invoice Due Date:
                     </td>
                     <td class="text-center">
                         <input type="hidden" name="extra_total" id="extra_total" value="0">
-                        <strong id="total">$<?= number_format((mysql_num_rows($case_q)*195)+695,2); ?></strong>
+                        <strong id="total">$<?php echo  number_format((mysqli_num_rows($case_q)*195)+695,2); ?></strong>
                     </td>
                 </tr>
             </table>
             <div class="text-center">
                 <a href="manage_monthly_invoice.php" class="btn btn-danger">Cancel</a>
-                <a href="invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?><?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?= $user['userid']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>" class="btn btn-default">Skip</a>
+                <a href="invoice_additional.php?show=<?php echo (!empty($_GET['show']) ? $_GET['show'] : '');?>&bill=<?php echo  (!empty($_GET['bill']) ? $_GET['bill'] : ''); ?><?php echo  (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?php echo  $user['userid']; ?>&cc=<?php echo  ($count_current+1); ?>&ci=<?php echo  $count_invoices; ?>" class="btn btn-default">Skip</a>
                 <input type="submit" name="submit" value="Create Invoice" class="btn btn-success pull-right">
             </div>
         </form>
@@ -1040,7 +1040,7 @@ function check_billed () {
     return false;
 }
 </script>
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>
 
 
 <?php
@@ -1049,10 +1049,10 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
     $key_sql = "SELECT stripe_secret_key FROM companies c
         JOIN dental_user_company uc
         ON c.id = uc.companyid
-        WHERE uc.userid='".mysql_real_escape_string($userid)."'";
+        WHERE uc.userid='".mysqli_real_escape_string($con,$userid)."'";
     
-    $key_q = mysql_query($key_sql);
-    $key_r= mysql_fetch_assoc($key_q);
+    $key_q = mysqli_query($con,$key_sql);
+    $key_r= mysqli_fetch_assoc($key_q);
     
     Stripe::setApiKey($key_r['stripe_secret_key']);
     $status = 1;
@@ -1067,49 +1067,49 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
     catch (Stripe_CardError $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
-            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+            WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
         
-        mysql_query($invoice_sql);
+        mysqli_query($con,$invoice_sql);
         $status = 2;
     }
     catch (Stripe_InvalidRequestError $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
-            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+            WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
         
-        mysql_query($invoice_sql);
+        mysqli_query($con,$invoice_sql);
         $status = 2;
     }
     catch (Stripe_AuthenticationError $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
-            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+            WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
         
-        mysql_query($invoice_sql);
+        mysqli_query($con,$invoice_sql);
         $status = 2;
     }
     catch (Stripe_ApiConnectionError $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
-            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+            WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
         
-        mysql_query($invoice_sql);
+        mysqli_query($con,$invoice_sql);
         $status = 2;
     }
     catch (Stripe_Error $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
-            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+            WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
         
-        mysql_query($invoice_sql);
+        mysqli_query($con,$invoice_sql);
         $status = 2;
     }
     catch (Exception $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
-            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+            WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
         
-        mysql_query($invoice_sql);
+        mysqli_query($con,$invoice_sql);
         $status = 2;
     }
 
@@ -1117,25 +1117,25 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
     $stripe_customer = $charge->customer;
     $stripe_card_fingerprint = $charge->card->fingerprint;
     $charge_sql = "INSERT INTO dental_charge SET
-        amount='".mysql_real_escape_string(str_replace(',','',$amount))."',
-        userid='".mysql_real_escape_string($userid)."',
-        adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."',
+        amount='".mysqli_real_escape_string($con,str_replace(',','',$amount))."',
+        userid='".mysqli_real_escape_string($con,$userid)."',
+        adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',
         charge_date=NOW(),
-        stripe_customer='".mysql_real_escape_string($stripe_customer)."',
-        stripe_charge='".mysql_real_escape_string($stripe_charge)."',
-        stripe_card_fingerprint='".mysql_real_escape_string($stripe_card_fingerprint)."',
-        status='".mysql_real_escape_string($status)."',
+        stripe_customer='".mysqli_real_escape_string($con,$stripe_customer)."',
+        stripe_charge='".mysqli_real_escape_string($con,$stripe_charge)."',
+        stripe_card_fingerprint='".mysqli_real_escape_string($con,$stripe_card_fingerprint)."',
+        status='".mysqli_real_escape_string($con,$status)."',
         adddate=NOW(),
-        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
+        ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
     
-    mysql_query($charge_sql);
+    mysqli_query($con,$charge_sql);
     
     if ($status == 1) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=1
-            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+            WHERE id='".mysqli_real_escape_string($con,$invoiceid)."'";
         
-        mysql_query($invoice_sql);
+        mysqli_query($con,$invoice_sql);
     }
     
     return true;

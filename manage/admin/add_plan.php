@@ -1,43 +1,42 @@
 <?php 
-session_start();
-require_once('includes/main_include.php');
+
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
-if($_POST["plansub"] == 1)
+if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
 {
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_plans set 
-				name = '".mysql_real_escape_string($_POST['name'])."',
-                                monthly_fee = '".mysql_real_escape_string($_POST['monthly_fee'])."',
-                                trial_period = '".mysql_real_escape_string($_POST['trial_period'])."',
-                                fax_fee = '".mysql_real_escape_string($_POST['fax_fee'])."',
-                                free_fax = '".mysql_real_escape_string($_POST['free_fax'])."',
-                		eligibility_fee = '".mysql_real_escape_string($_POST['eligibility_fee'])."',
-                		free_eligibility = '".mysql_real_escape_string($_POST['free_eligibility'])."',
-               	 		enrollment_fee = '".mysql_real_escape_string($_POST['enrollment_fee'])."',
-                		free_enrollment = '".mysql_real_escape_string($_POST['free_enrollment'])."',
-                		claim_fee = '".mysql_real_escape_string($_POST['claim_fee'])."',
-                		free_claim = '".mysql_real_escape_string($_POST['free_claim'])."',
-                		efile_fee = '".mysql_real_escape_string($_POST['efile_fee'])."',
-                		free_efile = '".mysql_real_escape_string($_POST['free_efile'])."',
-                		vob_fee = '".mysql_real_escape_string($_POST['vob_fee'])."',
-                		free_vob = '".mysql_real_escape_string($_POST['free_vob'])."',
-				producer_fee = '".mysql_real_escape_string($_POST['producer_fee'])."',
-				user_fee = '".mysql_real_escape_string($_POST['user_fee'])."',
-				patient_fee = '".mysql_real_escape_string($_POST['patient_fee'])."',
-				duration = '".mysql_real_escape_string($_POST['duration'])."',
-                		office_type = '".mysql_real_escape_string($_POST['office_type'])."',
-                                status = '".mysql_real_escape_string($_POST['status'])."'
-				WHERE id = '".mysql_real_escape_string($_POST['ed'])."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+				name = '".mysqli_real_escape_string($con,$_POST['name'])."',
+                                monthly_fee = '".mysqli_real_escape_string($con,$_POST['monthly_fee'])."',
+                                trial_period = '".mysqli_real_escape_string($con,$_POST['trial_period'])."',
+                                fax_fee = '".mysqli_real_escape_string($con,$_POST['fax_fee'])."',
+                                free_fax = '".mysqli_real_escape_string($con,$_POST['free_fax'])."',
+                		eligibility_fee = '".mysqli_real_escape_string($con,$_POST['eligibility_fee'])."',
+                		free_eligibility = '".mysqli_real_escape_string($con,$_POST['free_eligibility'])."',
+               	 		enrollment_fee = '".mysqli_real_escape_string($con,$_POST['enrollment_fee'])."',
+                		free_enrollment = '".mysqli_real_escape_string($con,$_POST['free_enrollment'])."',
+                		claim_fee = '".mysqli_real_escape_string($con,$_POST['claim_fee'])."',
+                		free_claim = '".mysqli_real_escape_string($con,$_POST['free_claim'])."',
+                		efile_fee = '".mysqli_real_escape_string($con,$_POST['efile_fee'])."',
+                		free_efile = '".mysqli_real_escape_string($con,$_POST['free_efile'])."',
+                		vob_fee = '".mysqli_real_escape_string($con,$_POST['vob_fee'])."',
+                		free_vob = '".mysqli_real_escape_string($con,$_POST['free_vob'])."',
+				producer_fee = '".mysqli_real_escape_string($con,$_POST['producer_fee'])."',
+				user_fee = '".mysqli_real_escape_string($con,$_POST['user_fee'])."',
+				patient_fee = '".mysqli_real_escape_string($con,$_POST['patient_fee'])."',
+				duration = '".mysqli_real_escape_string($con,$_POST['duration'])."',
+                		office_type = '".mysqli_real_escape_string($con,$_POST['office_type'])."',
+                                status = '".mysqli_real_escape_string($con,$_POST['status'])."'
+				WHERE id = '".mysqli_real_escape_string($con,$_POST['ed'])."'";
+			mysqli_query($con,$ed_sql);
 			
-			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_plans.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_plans.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -45,35 +44,35 @@ if($_POST["plansub"] == 1)
 		else
 		{
 			$ins_sql = "insert into dental_plans SET
-                                name = '".mysql_real_escape_string($_POST['name'])."',
-                                monthly_fee = '".mysql_real_escape_string($_POST['monthly_fee'])."',
-                                trial_period = '".mysql_real_escape_string($_POST['trial_period'])."',
-                                fax_fee = '".mysql_real_escape_string($_POST['fax_fee'])."',
-                                free_fax = '".mysql_real_escape_string($_POST['free_fax'])."',
-                                eligibility_fee = '".mysql_real_escape_string($_POST['eligibility_fee'])."',
-                                free_eligibility = '".mysql_real_escape_string($_POST['free_eligibility'])."',
-                                enrollment_fee = '".mysql_real_escape_string($_POST['enrollment_fee'])."',
-                                free_enrollment = '".mysql_real_escape_string($_POST['free_enrollment'])."',
-                                claim_fee = '".mysql_real_escape_string($_POST['claim_fee'])."',
-                                free_claim = '".mysql_real_escape_string($_POST['free_claim'])."',
-                                efile_fee = '".mysql_real_escape_string($_POST['efile_fee'])."',
-                                free_efile = '".mysql_real_escape_string($_POST['free_efile'])."',
-                                vob_fee = '".mysql_real_escape_string($_POST['vob_fee'])."',
-                                free_vob = '".mysql_real_escape_string($_POST['free_vob'])."',
-				producer_fee = '".mysql_real_escape_string($_POST['producer_fee'])."',
-				user_fee = '".mysql_real_escape_string($_POST['user_fee'])."',
-				patient_fee = '".mysql_real_escape_string($_POST['patient_fee'])."',
-				duration = '".mysql_real_escape_string($_POST['duration'])."',
-                                office_type = '".mysql_real_escape_string($_POST['office_type'])."',
-                                status = '".mysql_real_escape_string($_POST['status'])."',
+                                name = '".mysqli_real_escape_string($con,$_POST['name'])."',
+                                monthly_fee = '".mysqli_real_escape_string($con,$_POST['monthly_fee'])."',
+                                trial_period = '".mysqli_real_escape_string($con,$_POST['trial_period'])."',
+                                fax_fee = '".mysqli_real_escape_string($con,$_POST['fax_fee'])."',
+                                free_fax = '".mysqli_real_escape_string($con,$_POST['free_fax'])."',
+                                eligibility_fee = '".mysqli_real_escape_string($con,$_POST['eligibility_fee'])."',
+                                free_eligibility = '".mysqli_real_escape_string($con,$_POST['free_eligibility'])."',
+                                enrollment_fee = '".mysqli_real_escape_string($con,$_POST['enrollment_fee'])."',
+                                free_enrollment = '".mysqli_real_escape_string($con,$_POST['free_enrollment'])."',
+                                claim_fee = '".mysqli_real_escape_string($con,$_POST['claim_fee'])."',
+                                free_claim = '".mysqli_real_escape_string($con,$_POST['free_claim'])."',
+                                efile_fee = '".mysqli_real_escape_string($con,$_POST['efile_fee'])."',
+                                free_efile = '".mysqli_real_escape_string($con,$_POST['free_efile'])."',
+                                vob_fee = '".mysqli_real_escape_string($con,$_POST['vob_fee'])."',
+                                free_vob = '".mysqli_real_escape_string($con,$_POST['free_vob'])."',
+				producer_fee = '".mysqli_real_escape_string($con,$_POST['producer_fee'])."',
+				user_fee = '".mysqli_real_escape_string($con,$_POST['user_fee'])."',
+				patient_fee = '".mysqli_real_escape_string($con,$_POST['patient_fee'])."',
+				duration = '".mysqli_real_escape_string($con,$_POST['duration'])."',
+                                office_type = '".mysqli_real_escape_string($con,$_POST['office_type'])."',
+                                status = '".mysqli_real_escape_string($con,$_POST['status'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con,$ins_sql);
 			
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_plans.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location = 'manage_plans.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -86,11 +85,11 @@ if($_POST["plansub"] == 1)
 <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput.min.js"></script>
 	<script type="text/javascript" src="/manage/script/masks.js"></script>
     <?
-    $thesql = "select * from dental_plans where id='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_plans where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$name = $_POST['name'];
 		$monthly_fee = $_POST['monthly_fee'];
@@ -151,19 +150,19 @@ if($_POST["plansub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
-    <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
+    <?php }?>
+    <form name="planfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
-               <?=$but_text?> Plan
-               <? if($name <> "") {?>
-               		&quot;<?=$name;?>&quot;
-               <? }?>
+               <?php echo $but_text?> Plan
+               <?php if($name <> "") {?>
+               		&quot;<?php echo $name;?>&quot;
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -171,7 +170,7 @@ if($_POST["plansub"] == 1)
                 Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="name" value="<?=$name?>" class="form-control validate" /> 
+                <input type="text" name="name" value="<?php echo $name?>" class="form-control validate" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -180,7 +179,7 @@ if($_POST["plansub"] == 1)
                 Monthly Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="monthly_fee" value="<?=$monthly_fee?>" class="moneymask form-control validate" />          
+                <input type="text" name="monthly_fee" value="<?php echo $monthly_fee?>" class="moneymask form-control validate" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -189,7 +188,7 @@ if($_POST["plansub"] == 1)
                 Trial Period (days)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="trial_period" value="<?=$trial_period?>" class="numbermask form-control validate" />          
+                <input type="text" name="trial_period" value="<?php echo $trial_period?>" class="numbermask form-control validate" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -198,7 +197,7 @@ if($_POST["plansub"] == 1)
                 Fax Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="fax_fee" value="<?=$fax_fee?>" class="moneymask form-control validate" />          
+                <input type="text" name="fax_fee" value="<?php echo $fax_fee?>" class="moneymask form-control validate" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -207,7 +206,7 @@ if($_POST["plansub"] == 1)
                 Free Fax (Monthly)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_fax" value="<?=$free_fax?>" class="numbermask form-control validate" />          
+                <input type="text" name="free_fax" value="<?php echo $free_fax?>" class="numbermask form-control validate" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -216,7 +215,7 @@ if($_POST["plansub"] == 1)
                 Eligibility Check Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="eligibility_fee" value="<?=$eligibility_fee?>" class="moneymask form-control validate" />
+                <input type="text" name="eligibility_fee" value="<?php echo $eligibility_fee?>" class="moneymask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -225,7 +224,7 @@ if($_POST["plansub"] == 1)
                 Free Eligibility Checks (Monthly)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_eligibility" value="<?=$free_eligibility?>" class="numbermask form-control validate" />
+                <input type="text" name="free_eligibility" value="<?php echo $free_eligibility?>" class="numbermask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -234,7 +233,7 @@ if($_POST["plansub"] == 1)
                 Enrollment Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="enrollment_fee" value="<?=$enrollment_fee?>" class="moneymask form-control validate" />
+                <input type="text" name="enrollment_fee" value="<?php echo $enrollment_fee?>" class="moneymask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -243,7 +242,7 @@ if($_POST["plansub"] == 1)
                 Free Enrollments (Monthly)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_enrollment" value="<?=$free_enrollment?>" class="numbermask form-control validate" />
+                <input type="text" name="free_enrollment" value="<?php echo $free_enrollment?>" class="numbermask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -253,7 +252,7 @@ if($_POST["plansub"] == 1)
                 Claim E-File Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="efile_fee" value="<?=$efile_fee?>" class="moneymask form-control validate" />
+                <input type="text" name="efile_fee" value="<?php echo $efile_fee?>" class="moneymask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -263,7 +262,7 @@ if($_POST["plansub"] == 1)
                 Free E-Claims (Monthly)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_efile" value="<?=$free_efile?>" class="moneymask form-control validate" />
+                <input type="text" name="free_efile" value="<?php echo $free_efile?>" class="moneymask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -273,7 +272,7 @@ if($_POST["plansub"] == 1)
                 Claim Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="claim_fee" value="<?=$claim_fee?>" class="moneymask form-control validate" />
+                <input type="text" name="claim_fee" value="<?php echo $claim_fee?>" class="moneymask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -282,7 +281,7 @@ if($_POST["plansub"] == 1)
                 Free Claims (Lifetime)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_claim" value="<?=$free_claim?>" class="numbermask form-control validate" />
+                <input type="text" name="free_claim" value="<?php echo $free_claim?>" class="numbermask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -291,7 +290,7 @@ if($_POST["plansub"] == 1)
                 VOB Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="vob_fee" value="<?=$vob_fee?>" class="moneymask form-control validate" />
+                <input type="text" name="vob_fee" value="<?php echo $vob_fee?>" class="moneymask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -300,7 +299,7 @@ if($_POST["plansub"] == 1)
                 Free VOBs (Lifetime)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_vob" value="<?=$free_vob?>" class="numbermask form-control validate" />
+                <input type="text" name="free_vob" value="<?php echo $free_vob?>" class="numbermask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -309,7 +308,7 @@ if($_POST["plansub"] == 1)
                 Plan Length (months)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="duration" value="<?=$duration?>" class="numbermask form-control validate" />
+                <input type="text" name="duration" value="<?php echo $duration?>" class="numbermask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -318,7 +317,7 @@ if($_POST["plansub"] == 1)
                 Producer Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="producer_fee" value="<?=$producer_fee?>" class="moneymask form-control validate" />
+                <input type="text" name="producer_fee" value="<?php echo $producer_fee?>" class="moneymask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -327,7 +326,7 @@ if($_POST["plansub"] == 1)
                 User Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="user_fee" value="<?=$user_fee?>" class="moneymask form-control validate" />
+                <input type="text" name="user_fee" value="<?php echo (!empty($user_fee) ? $user_fee : ''); ?>" class="moneymask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -336,7 +335,7 @@ if($_POST["plansub"] == 1)
                 New Patient Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_fee" value="<?=$patient_fee?>" class="moneymask form-control validate" />
+                <input type="text" name="patient_fee" value="<?php echo $patient_fee?>" class="moneymask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -348,9 +347,9 @@ if($_POST["plansub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <select name="office_type" class="form-control validate" />
-			<option <?= ($office_type==1)?'selected="selected"':''; ?> value="1">Super->FO</option>
-			<option <?= ($office_type==2)?'selected="selected"':''; ?> value="2">Super->BO</option>
-			<option <?= ($office_type==3)?'selected="selected"':''; ?> value="3">BO Ins Co->FO</option>
+			<option <?php echo  ($office_type==1)?'selected="selected"':''; ?> value="1">Super->FO</option>
+			<option <?php echo  ($office_type==2)?'selected="selected"':''; ?> value="2">Super->BO</option>
+			<option <?php echo  ($office_type==3)?'selected="selected"':''; ?> value="3">BO Ins Co->FO</option>
 		</select>
             </td>
         </tr>
@@ -362,8 +361,8 @@ if($_POST["plansub"] == 1)
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="form-control validate">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>
@@ -373,22 +372,22 @@ if($_POST["plansub"] == 1)
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="plansub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value="<?=$but_text?> Plan" class="btn btn-primary">
+                <input type="hidden" name="ed" value="<?php echo $themyarray["id"]?>" />
+                <input type="submit" value="<?php echo $but_text?> Plan" class="btn btn-primary">
 		<?php if($themyarray["id"] != '' && $_SESSION['admin_access']==1){ ?>
-		<?php $u_sql = "SELECT userid, first_name, last_name FROM dental_users where plan_id='".mysql_real_escape_string($themyarray["id"])."'";
-		      $u_q = mysql_query($u_sql);
-		      if(mysql_num_rows($u_q)>0){ 
-			$names == '';
-			while($u_r = mysql_fetch_assoc($u_q)){
+		<?php $u_sql = "SELECT userid, first_name, last_name FROM dental_users where plan_id='".mysqli_real_escape_string($con,$themyarray["id"])."'";
+		      $u_q = mysqli_query($con,$u_sql);
+		      if(mysqli_num_rows($u_q)>0){ 
+			$names = '';
+			while($u_r = mysqli_fetch_assoc($u_q)){
 			  $names .= $u_r['first_name']." ".$u_r['last_name'].", ";
 			}
 			?>
-                    <a href="#" onclick="javascript: alert('This plan is associated with the following users and cannot be deleted: <?= $names; ?>'); return false;" class="editdel btn btn-danger pull-right" title="DELETE">
+                    <a href="#" onclick="javascript: alert('This plan is associated with the following users and cannot be deleted: <?php echo  $names; ?>'); return false;" class="editdel btn btn-danger pull-right" title="DELETE">
 						Delete
 					</a>
 		  <?php }else{ ?>
-                    <a href="manage_plans.php?delid=<?=$themyarray["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
+                    <a href="manage_plans.php?delid=<?php echo $themyarray["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php }

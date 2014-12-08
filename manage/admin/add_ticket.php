@@ -1,6 +1,6 @@
 <?php 
-session_start();
-require_once 'includes/main_include.php';
+
+include_once 'includes/main_include.php';
 include_once 'includes/sescheck.php';
 include_once '../includes/general_functions.php';
 include_once 'includes/general.htm';
@@ -11,42 +11,42 @@ include_once 'includes/general.htm';
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
-if($_POST["ticketsub"] == 1)
+if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1)
 {
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
-    $c_q = mysql_query($c_sql);
-    $c = mysql_fetch_assoc($c_q);
+    $c_q = mysqli_query($con,$c_sql);
+    $c = mysqli_fetch_assoc($c_q);
 		$ins_sql = "insert into dental_support_tickets set 
-				title = '".mysql_real_escape_string($_POST['title'])."',
-				category_id = '".mysql_real_escape_string($_POST['category_id'])."',
-				body = '".mysql_real_escape_string($_POST['body'])."',
-				userid = '".mysql_real_escape_string($_POST['userid'])."',
-				docid = '".mysql_real_escape_string($_POST['docid'])."',
+				title = '".mysqli_real_escape_string($con,$_POST['title'])."',
+				category_id = '".mysqli_real_escape_string($con,$_POST['category_id'])."',
+				body = '".mysqli_real_escape_string($con,$_POST['body'])."',
+				userid = '".mysqli_real_escape_string($con,$_POST['userid'])."',
+				docid = '".mysqli_real_escape_string($con,$_POST['docid'])."',
 				create_type = '0',
                 company_id = '".$c['companyid']."',
-				creator_id = '".mysql_real_escape_string($_SESSION['adminuserid'])."',
+				creator_id = '".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysql_query($ins_sql) or die($ins_sql.mysql_error());
-		$t_id = mysql_insert_id();
+		mysqli_query($con,$ins_sql);
+		$t_id = mysqli_insert_id($con);
 
 
-                for($i=0;$i < count($_FILES['attachment']['name']); $i++){
+                for($i=0;$i < count(!empty($_FILES['attachment']) ? $_FILES['attachment']['name'] : null); $i++){
                 if($_FILES['attachment']['tmp_name'][$i]!=''){
                   $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
                   $attachment = "support_attachment_".$t_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
                   move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 
                   $a_sql = "INSERT INTO dental_support_attachment SET
-                                filename = '".mysql_real_escape_string($attachment)."',
-                                ticket_id=".mysql_real_escape_string($t_id);
-                  mysql_query($a_sql);
+                                filename = '".mysqli_real_escape_string($con,$attachment)."',
+                                ticket_id=".mysqli_real_escape_string($con,$t_id);
+                  mysqli_query($con,$a_sql);
                 }
                 }
 
 
-		$info_sql = "SELECT u.* FROM dental_users u WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
-		$info_q = mysql_query($info_sql);
-		$info_r = mysql_fetch_assoc($info_q);
+		$info_sql = "SELECT u.* FROM dental_users u WHERE userid='".mysqli_real_escape_string($con,(!empty($_SESSION['userid']) ? $_SESSION['userid'] : ''))."'";
+		$info_q = mysqli_query($con,$info_sql);
+		$info_r = mysqli_fetch_assoc($info_q);
 		$e = $info_r['email'];
 
 		$m = "Support ticket has been opened. Please go to http://dentalsleepsolutions.com/manage to view.";
@@ -61,9 +61,9 @@ if($_POST["ticketsub"] == 1)
 
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
+			//alert("<?php echo $msg;?>");
 			alert('Thank you for your submission! We will respond promptly to you inquiry.');
-			parent.window.location='manage_support_tickets.php?msg=<?=$msg;?>';
+			parent.window.location='manage_support_tickets.php?msg=<?php echo $msg;?>';
 		</script>
 		<?
 		
@@ -75,13 +75,13 @@ if($_POST["ticketsub"] == 1)
     <div class="col-md-6 col-md-offset-3">
         <?php if (isset($_GET['msg'])) { ?>
         <div class="alert alert-danger text-center">
-            <strong><?= $_GET['msg'] ?></strong>
+            <strong><?php echo  $_GET['msg'] ?></strong>
         </div>
         <?php } ?>
         
-        <?php if ($msg != '') { ?>
+        <?php if (!empty($msg)) { ?>
         <div class="alert alert-success text-center">
-            <?= $msg ?>
+            <?php echo  $msg ?>
         </div>
         <?php } ?>
         
@@ -90,7 +90,7 @@ if($_POST["ticketsub"] == 1)
                 Add Support Ticket
             </h1>
         </div>
-        <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" enctype="multipart/form-data" onsubmit="return adminticketabc(this)" class="form-horizontal">
+        <form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" enctype="multipart/form-data" onsubmit="return adminticketabc(this)" class="form-horizontal">
             <div class="page-header">
                 <strong>Account details</strong>
             </div>
@@ -102,10 +102,10 @@ if($_POST["ticketsub"] == 1)
                         <?php
                         
                         $c_sql = "SELECT * FROM dental_users WHERE status=1 AND docid=0 ORDER BY last_name ASC, first_name ASC;";
-                        $c_q = mysql_query($c_sql);
+                        $c_q = mysqli_query($con,$c_sql);
                         
-                        while ($c_r = mysql_fetch_array($c_q)) { ?>
-                        <option value="<?= st($c_r['userid']) ?>"><?= st("$c_r[first_name] $c_r[last_name]") ?></option>
+                        while ($c_r = mysqli_fetch_array($c_q)) { ?>
+                        <option value="<?php echo  st($c_r['userid']) ?>"><?php echo  st("$c_r[first_name] $c_r[last_name]") ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -126,10 +126,10 @@ if($_POST["ticketsub"] == 1)
                         <?php
                         
                         $c_sql = "SELECT * FROM dental_support_categories WHERE status=0 ORDER BY title ASC;";
-                        $c_q = mysql_query($c_sql);
+                        $c_q = mysqli_query($con,$c_sql);
                         
-                        while ($c_r = mysql_fetch_array($c_q)) { ?>
-                        <option <?php if($category_id == $c_r['id']){ echo " selected='selected'";} ?> value="<?=st($c_r['id']);?>"><?=st($c_r['title']);?></option>
+                        while ($c_r = mysqli_fetch_array($c_q)) { ?>
+                        <option <?php if(!empty($category_id) && $category_id == $c_r['id']){ echo " selected='selected'";} ?> value="<?php echo st($c_r['id']);?>"><?php echo st($c_r['title']);?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -141,13 +141,13 @@ if($_POST["ticketsub"] == 1)
             <div class="form-group">
                 <label for="title" class="col-md-3 control-label">Title</label>
                 <div class="col-md-9">
-                    <input type="text" name="title" id="title" class="form-control" placeholder="Title of the ticket" value="<?= $title ?>">
+                    <input type="text" name="title" id="title" class="form-control" placeholder="Title of the ticket" value="<?php echo  (!empty($title) ? $title : ''); ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="body" class="col-md-3 control-label">Message</label>
                 <div class="col-md-9">
-                    <textarea name="body" id="body" class="form-control" placeholder="Description of the ticket"><?= $body ?></textarea>
+                    <textarea name="body" id="body" class="form-control" placeholder="Description of the ticket"><?php echo  (!empty($body) ? $body : ''); ?></textarea>
                 </div>
             </div>
             <div class="form-group">

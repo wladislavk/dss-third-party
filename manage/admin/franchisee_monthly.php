@@ -1,16 +1,16 @@
-<? 
+<?php 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
+if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 {
 	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
 	die();
@@ -18,7 +18,7 @@ if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -48,26 +48,26 @@ if(is_super($_SESSION['admin_access'])){
 }elseif(is_software($_SESSION['admin_access'])){
   $sql = "SELECT du.* FROM dental_users du 
 		JOIN dental_user_company uc ON uc.userid = du.userid
-		WHERE du.docid=0 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+		WHERE du.docid=0 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'";
 }elseif(is_billing($_SESSION['admin_access'])){
   $a_sql = "SELECT ac.companyid FROM admin_company ac
                         JOIN admin a ON a.adminid = ac.adminid
-                        WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
-  $a_q = mysql_query($a_sql);
-  $admin = mysql_fetch_assoc($a_q);
+                        WHERE a.adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
+  $a_q = mysqli_query($con,$a_sql);
+  $admin = mysqli_fetch_assoc($a_q);
   $sql = "SELECT du.*, count(s.id) AS num_screened FROM dental_users du 
                 LEFT JOIN dental_screener s ON du.userid = s.docid AND s.adddate BETWEEN '".$start_date."' AND '".$end_date."'
                 WHERE du.docid=0 
-		AND du.billing_company_id = '".mysql_real_escape_string($admin['companyid'])."'
+		AND du.billing_company_id = '".mysqli_real_escape_string($con,$admin['companyid'])."'
                 GROUP BY du.userid
                 ";
 }
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_users = mysqli_num_rows($my);
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -81,18 +81,18 @@ $num_users=mysql_num_rows($my);
 <form method="post" class="form-inline">
     <div class="row">
         <div class="col-md-4">
-            <div class="input-append datepicker input-group date" id="start_date" data-date="<?= date('m/d/Y', strtotime($start_date)); ?>" data-date-format="mm/dd/yyyy">
+            <div class="input-append datepicker input-group date" id="start_date" data-date="<?php echo  date('m/d/Y', strtotime($start_date)); ?>" data-date-format="mm/dd/yyyy">
                 <span class="input-group-addon">Start date:</span>
-                <input class="form-control text-center" type="text" name="start_date" value="<?= date('m/d/Y', strtotime($start_date)); ?>">
+                <input class="form-control text-center" type="text" name="start_date" value="<?php echo  date('m/d/Y', strtotime($start_date)); ?>">
                 <span class="input-group-addon add-on">
                     <i class="glyphicon glyphicon-calendar"></i>
                 </span>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="input-append datepicker input-group date" id="end_date" data-date="<?= date('m/d/Y', strtotime($end_date)); ?>" data-date-format="mm/dd/yyyy">
+            <div class="input-append datepicker input-group date" id="end_date" data-date="<?php echo  date('m/d/Y', strtotime($end_date)); ?>" data-date-format="mm/dd/yyyy">
                 <span class="input-group-addon">End date:</span>
-                <input class="form-control text-center" type="text" name="end_date" value="<?= date('m/d/Y', strtotime($end_date)); ?>">
+                <input class="form-control text-center" type="text" name="end_date" value="<?php echo  date('m/d/Y', strtotime($end_date)); ?>">
                 <span class="input-group-addon add-on">
                     <i class="glyphicon glyphicon-calendar"></i>
                 </span>
@@ -102,14 +102,14 @@ $num_users=mysql_num_rows($my);
     </div>
 </form>
 
-<? if($_GET['msg'] != '') {?>
+<?php if(!empty($_GET['msg'])) {?>
 <div class="alert alert-danger text-center">
-    <? echo $_GET['msg'];?>
+    <?php echo $_GET['msg'];?>
 </div>
-<? } ?>
+<?php } ?>
 
 &nbsp;
-<b>Total Records: <?=$total_rec;?></b>
+<b>Total Records: <?php echo $total_rec;?></b>
 <table class="sort_table table table-bordered table-hover" id="monthly_table">
 <thead>
 	<tr class="tr_bg_h">
@@ -156,26 +156,26 @@ $num_users=mysql_num_rows($my);
 	</tr>
 </thead>
 <tbody>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 
 
 		$co_sql = "SELECT c.name FROM companies c 
 				JOIN dental_user_company uc ON uc.companyid = c.id
 				WHERE uc.userid='".$myarray['userid']."'";
-		$co_q = mysql_query($co_sql);
-		$co_r = mysql_fetch_assoc($co_q);
+		$co_q = mysqli_query($con,$co_sql);
+		$co_r = mysqli_fetch_assoc($co_q);
 		$company = $co_r['name'];
 
 		$screen_sql = "SELECT u.username, COUNT(s.id) AS num_screened FROM dental_screener s 
@@ -185,7 +185,7 @@ $num_users=mysql_num_rows($my);
 		s.adddate BETWEEN '".$start_date."' AND '".$end_date."' 
 		group by u.username
 ";
-$screen_q = mysql_query($screen_sql);
+$screen_q = mysqli_query($con,$screen_sql);
 $sleepstudies = "SELECT count(ss.id) as num_ss FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
                 WHERE                                 
@@ -194,116 +194,116 @@ $sleepstudies = "SELECT count(ss.id) as num_ss FROM dental_summ_sleeplab ss
                         ss.filename IS NOT NULL AND p.docid = '".$myarray['userid']."'
 			AND str_to_date(ss.date, '%m/%d/%Y') BETWEEN '".$start_date."' AND '".$end_date."' 
 		;";
-  $ss_q = mysql_query($sleepstudies);
-  $ss = mysql_fetch_assoc($ss_q);
+  $ss_q = mysqli_query($con,$sleepstudies);
+  $ss = mysqli_fetch_assoc($ss_q);
 
 
 $consult_sql = "SELECT count(i.id) as num_consult FROM dental_flow_pg2_info i
 			JOIN dental_patients p ON p.patientid = i.patientid
 			WHERE i.segmentid=2
- 				AND p.docid='".mysql_real_escape_string($myarray['userid'])."'
+ 				AND p.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
  				AND i.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
-$consult_q = mysql_query($consult_sql);
-$consult = mysql_fetch_assoc($consult_q); 
+$consult_q = mysqli_query($con,$consult_sql);
+$consult = mysqli_fetch_assoc($consult_q); 
 
 $imp_sql = "SELECT count(i.id) as num_imp FROM dental_flow_pg2_info i
                         JOIN dental_patients p ON p.patientid = i.patientid
                         WHERE i.segmentid=4
-				AND p.docid='".mysql_real_escape_string($myarray['userid'])."'
+				AND p.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
                                 AND i.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
-$imp_q = mysql_query($imp_sql);
-$imp = mysql_fetch_assoc($imp_q);
+$imp_q = mysqli_query($con,$imp_sql);
+$imp = mysqli_fetch_assoc($imp_q);
 
 $dd_sql = "SELECT count(i.id) as num_dd FROM dental_flow_pg2_info i
                         JOIN dental_patients p ON p.patientid = i.patientid
                         WHERE i.segmentid=7
-                                AND p.docid='".mysql_real_escape_string($myarray['userid'])."'
+                                AND p.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
                                 AND i.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
-$dd_q = mysql_query($dd_sql);
-$dd = mysql_fetch_assoc($dd_q);
+$dd_q = mysqli_query($con,$dd_sql);
+$dd = mysqli_fetch_assoc($dd_q);
 
 $letters_sql = "SELECT count(l.letterid) as num_sent FROM dental_letters l 
                         WHERE 
-                                l.docid='".mysql_real_escape_string($myarray['userid'])."'
+                                l.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
                                 AND l.date_sent BETWEEN '".$start_date."' AND '".$end_date."'";
-$letters_q = mysql_query($letters_sql);
-$letters = mysql_fetch_assoc($letters_q);
+$letters_q = mysqli_query($con,$letters_sql);
+$letters = mysqli_fetch_assoc($letters_q);
 
 $vob_sql = "SELECT count(p.id) as num_completed FROM dental_insurance_preauth p
                         WHERE 
-                                p.doc_id='".mysql_real_escape_string($myarray['userid'])."'
+                                p.doc_id='".mysqli_real_escape_string($con,$myarray['userid'])."'
                                 AND p.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
-$vob_q = mysql_query($vob_sql);
-$vob = mysql_fetch_assoc($vob_q);
+$vob_q = mysqli_query($con,$vob_sql);
+$vob = mysqli_fetch_assoc($vob_q);
 
 $ins_sent_sql = "SELECT count(h.id) as num_sent FROM dental_insurance i
 			JOIN dental_insurance_status_history h ON i.insuranceid=h.insuranceid
                         WHERE 
-                                i.docid='".mysql_real_escape_string($myarray['userid'])."'
-				AND (h.status = '".mysql_real_escape_string(DSS_CLAIM_SENT)."'
-					OR h.status = '".mysql_real_escape_string(DSS_CLAIM_SEC_SENT)."')
+                                i.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
+				AND (h.status = '".mysqli_real_escape_string($con,DSS_CLAIM_SENT)."'
+					OR h.status = '".mysqli_real_escape_string($con,DSS_CLAIM_SEC_SENT)."')
                                 AND h.adddate BETWEEN '".$start_date." 00:00' AND '".$end_date." 23:59'";
-$ins_sent_q = mysql_query($ins_sent_sql);
-$ins_sent = mysql_fetch_assoc($ins_sent_q);
+$ins_sent_q = mysqli_query($con,$ins_sent_sql);
+$ins_sent = mysqli_fetch_assoc($ins_sent_q);
 
 $ins_paid_sql = "SELECT count(h.id) as num_paid FROM dental_insurance i
                         JOIN dental_insurance_status_history h ON i.insuranceid=h.insuranceid
                         WHERE 
-                                i.docid='".mysql_real_escape_string($myarray['userid'])."'
-                                AND h.status IN (".mysql_real_escape_string(DSS_CLAIM_PAID_INSURANCE).",
-						".mysql_real_escape_string(DSS_CLAIM_PAID_PATIENT).",
-						".mysql_real_escape_string(DSS_CLAIM_PAID_SEC_INSURANCE).",
-						".mysql_real_escape_string(DSS_CLAIM_PAID_SEC_PATIENT).")
+                                i.docid='".mysqli_real_escape_string($con,$myarray['userid'])."'
+                                AND h.status IN (".mysqli_real_escape_string($con,DSS_CLAIM_PAID_INSURANCE).",
+						".mysqli_real_escape_string($con,DSS_CLAIM_PAID_PATIENT).",
+						".mysqli_real_escape_string($con,DSS_CLAIM_PAID_SEC_INSURANCE).",
+						".mysqli_real_escape_string($con,DSS_CLAIM_PAID_SEC_PATIENT).")
                                 AND h.adddate BETWEEN '".$start_date." 00:00' AND '".$end_date." 23:59'";
-$ins_paid_q = mysql_query($ins_paid_sql);
-$ins_paid = mysql_fetch_assoc($ins_paid_q);
+$ins_paid_q = mysqli_query($con,$ins_paid_sql);
+$ins_paid = mysqli_fetch_assoc($ins_paid_q);
 		?>
 			<tr>
 				<td valign="top">
-					<?=st($myarray["username"]);?>
+					<?php echo st($myarray["username"]);?>
 				</td>
 				<td valign="top">
-					<?= $company; ?>
+					<?php echo  $company; ?>
 				</td>
                                 <td valign="top">
-                                        <?=st($myarray["first_name"]." ".$myarray["last_name"]);?>
+                                        <?php echo st($myarray["first_name"]." ".$myarray["last_name"]);?>
                                 </td>
 				<td valign="top" style="text-align:center;">
-					<?=st($myarray["num_screened"]);?>
+					<?php echo st($myarray["num_screened"]);?>
 				</td>
 				<td valign="top" style="text-align:center;">
 					<?php
-					  while($screen = mysql_fetch_assoc($screen_q)){
+					  while($screen = mysqli_fetch_assoc($screen_q)){
  					    echo $screen['username']." - ".$screen['num_screened']."<br />";
 					  }
 					?>
 				</td>
 				<td valign="top" align="center">
-				  <?= $ss['num_ss']; ?>
+				  <?php echo  $ss['num_ss']; ?>
 				</td>	
 			        <td valign="top" align="center">
-                                  <?= $consult['num_consult']; ?>
+                                  <?php echo  $consult['num_consult']; ?>
                                 </td>	
 				<td valign="top" align="center">
-				  <?= $imp['num_imp']; ?>
+				  <?php echo  $imp['num_imp']; ?>
 				</td>
 				<td valign="top" align="center">
-				  <?= $dd['num_dd']; ?>
+				  <?php echo  $dd['num_dd']; ?>
 				</td>
                                 <td valign="top" align="center">
-                                  <?= $letters['num_sent']; ?>
+                                  <?php echo  $letters['num_sent']; ?>
                                 </td>
                                 <td valign="top" align="center">
-                                  <?= $vob['num_completed']; ?>
+                                  <?php echo  $vob['num_completed']; ?>
                                 </td>
 				<td valign="top" align="center">
-				  <?= $ins_sent['num_sent']; ?>
+				  <?php echo  $ins_sent['num_sent']; ?>
 				</td>
                                 <td valign="top" align="center">
-                                  <?= $ins_paid['num_paid']; ?>
+                                  <?php echo  $ins_paid['num_paid']; ?>
                                 </td>
 			</tr>
-	<? 	}
+	<?php 	}
 
 	}?>
 </tbody>
@@ -317,4 +317,4 @@ $ins_paid = mysql_fetch_assoc($ins_paid_q);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

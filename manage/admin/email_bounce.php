@@ -1,4 +1,4 @@
-<? 
+<?php
 include "includes/top.htm";
 if(is_billing($_SESSION['admin_access'])){
   ?><h2>You are not authorized to view this page.</h2><?php
@@ -7,14 +7,14 @@ if(is_billing($_SESSION['admin_access'])){
 
 if(isset($_GET['bounce'])){
   $s = "UPDATE dental_patients SET email_bounce='1'
-		WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'
-			AND docid='".mysql_real_escape_string($_GET['docid'])."'";
-  $q = mysql_query($s);
+		WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'
+			AND docid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+  $q = mysqli_query($con,$s);
   if($q){
-  $s = "SELECT * from dental_patients where patientid='".mysql_real_escape_string($_GET['pid'])."'
-                        AND docid='".mysql_real_escape_string($_GET['docid'])."'";
-  $q = mysql_query($s);
-  if($r = mysql_fetch_assoc($q)){
+  $s = "SELECT * from dental_patients where patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'
+                        AND docid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+  $q = mysqli_query($con,$s);
+  if($r = mysqli_fetch_assoc($q)){
     $msg = "Bounce marked for ".$r['firstname']." ".$r['lastname'];
   }
   }
@@ -31,10 +31,10 @@ if(isset($_GET['bounce'])){
 <br />
 
 <div align="center" class="red">
-	<b><? echo $msg;?></b>
+	<b><?php echo (!empty($msg) ? $msg : ''); ?></b>
 </div>
 <form action="email_bounce.php" method="post">
- Email: <input type="text" name="email" value="<?= $_REQUEST['email']; ?>" />
+ Email: <input type="text" name="email" value="<?php echo  (!empty($_REQUEST['email']) ? $_REQUEST['email'] : ''); ?>" />
 <input type="submit" value="Search" class="btn btn-primary">
 
 </form>
@@ -55,10 +55,10 @@ if(isset($_REQUEST['email'])){
 		JOIN dental_user_company uc ON uc.userid = p.docid
 		LEFT JOIN dental_users u ON u.userid = p.docid
 		LEFT JOIN companies c ON c.id=uc.companyid
-		WHERE uc.companyid = '".mysql_real_escape_string($_SESSION['admincompanyid'])."' AND p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL ORDER BY p.email ASC";
+		WHERE uc.companyid = '".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' AND p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL ORDER BY p.email ASC";
 	}
-	$q = mysql_query($s);
-	if(mysql_num_rows($q)==0){
+	$q = mysqli_query($con,$s);
+	if(mysqli_num_rows($q)==0){
 		?><h3>NO RESULTS</h3><?php
 	}else{
 	?><table class="table table-bordered table-hover">
@@ -70,17 +70,17 @@ if(isset($_REQUEST['email'])){
 			<th>Action</th>
 		</tr>
 	<?php
-	while($r = mysql_fetch_assoc($q)){
+	while($r = mysqli_fetch_assoc($q)){
 		?><tr> 
-			<td><?= $r['firstname']." ".$r['lastname']; ?></td>
-			<td><?= $r['email']; ?></td>
-			<td><?= $r['user_name']; ?></td>
-			<Td><?= $r['company_name']; ?></td>
-			<td><a style="margin-right:20px;" href="#" onclick="Javascript: loadPopup('add_patient.php?ed=<?= $r['patientid']; ?>&amp;docid=<?= $r['docid']; ?>');" title="Edit" class="btn btn-primary btn-sm">
+			<td><?php echo  $r['firstname']." ".$r['lastname']; ?></td>
+			<td><?php echo  $r['email']; ?></td>
+			<td><?php echo  $r['user_name']; ?></td>
+			<Td><?php echo  $r['company_name']; ?></td>
+			<td><a style="margin-right:20px;" href="#" onclick="Javascript: loadPopup('add_patient.php?ed=<?php echo  $r['patientid']; ?>&amp;docid=<?php echo  $r['docid']; ?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
 				
-				<a href="email_bounce.php?pid=<?= $r['patientid']; ?>&amp;docid=<?= $r['docid']; ?>&bounce=1&email=<?= urlencode($_REQUEST['email']); ?>" title="Edit" class="btn btn-primary btn-sm">
+				<a href="email_bounce.php?pid=<?php echo  $r['patientid']; ?>&amp;docid=<?php echo  $r['docid']; ?>&bounce=1&email=<?php echo  urlencode($_REQUEST['email']); ?>" title="Edit" class="btn btn-primary btn-sm">
                                                 Mark Bounce 
                                          <span class="glyphicon glyphicon-pencil"></span></a>
 			</td>
@@ -98,4 +98,4 @@ if(isset($_REQUEST['email'])){
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

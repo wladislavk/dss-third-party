@@ -1,20 +1,20 @@
-<? 
+<?php 
 include "includes/top.htm";
 if(is_billing($_SESSION['admin_access'])){
   ?><h2>You are not authorized to view this page.</h2><?php
   die();
 }
 
-if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
+if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 {
 	$del_sql = "delete from dental_pages where pageid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
 	die();
@@ -22,20 +22,20 @@ if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_pages order by title";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_pages=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_pages = mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -57,12 +57,12 @@ $num_pages=mysql_num_rows($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -71,7 +71,7 @@ $num_pages=mysql_num_rows($my);
 			?>
 		</TD>        
 	</TR>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="90%">
 			Title
@@ -80,18 +80,18 @@ $num_pages=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{
@@ -102,23 +102,23 @@ $num_pages=mysql_num_rows($my);
 				$tr_class = "tr_inactive";
 			}
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?php echo $tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["title"]);?>
+					<?php echo st($myarray["title"]);?>
 				</td>	
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_page.php?ed=<?=$myarray["pageid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_page.php?ed=<?php echo $myarray["pageid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
 				</td>
 			</tr>
-            <tr class="<?=$tr_class;?>">
+            <tr class="<?php echo $tr_class;?>">
 				<td valign="top" colspan="2">
-					<b><?=$base_path?>pages.php?pid=<?=$myarray["pageid"]?></b>
+					<b><?php echo $base_path?>pages.php?pid=<?php echo $myarray["pageid"]?></b>
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 </form>
@@ -131,4 +131,4 @@ $num_pages=mysql_num_rows($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

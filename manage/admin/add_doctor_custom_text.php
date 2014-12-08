@@ -1,19 +1,18 @@
 <?php 
-session_start();
-require_once('includes/main_include.php');
+
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
-if($_POST["custom_textsub"] == 1)
+if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 {
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_custom set 
-			title = '".mysql_real_escape_string($_POST["title"])."', 
-			description = '".mysql_real_escape_string($_POST["description"])."'
+			title = '".mysqli_real_escape_string($con,$_POST["title"])."', 
+			description = '".mysqli_real_escape_string($con,$_POST["description"])."'
 			where customid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-			
-			//echo $ed_sql.mysql_error();
+			mysqli_query($con,$ed_sql);
+
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -26,10 +25,10 @@ if($_POST["custom_textsub"] == 1)
 		else
 		{
 			$ins_sql = "insert into dental_custom set 
-			title = '".mysql_real_escape_string($_POST["title"])."',
-			description = '".mysql_real_escape_string($_POST["description"])."',
+			title = '".mysqli_real_escape_string($con,$_POST["title"])."',
+			description = '".mysqli_real_escape_string($con,$_POST["description"])."',
 			adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', docid=".$_GET['docid'];
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con,$ins_sql);
 			
 			$msg = "Added Successfully";
 			?>
@@ -47,11 +46,11 @@ if($_POST["custom_textsub"] == 1)
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
-    $thesql = "select * from dental_custom where customid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_custom where customid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$title = $_POST['title'];
 		$description = $_POST['description'];
@@ -75,7 +74,7 @@ if($_POST["custom_textsub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<? if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>

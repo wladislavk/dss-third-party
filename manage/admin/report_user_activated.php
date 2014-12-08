@@ -58,8 +58,8 @@ from (
 ) a
 where a.Date between '".$start_date."' AND '".$end_date."' 
 ORDER BY a.Date";
-        $q = mysql_query($sql);
-        while($r = mysql_fetch_assoc($q)){
+        $q = mysqli_query($con,$sql);
+        while($r = mysqli_fetch_assoc($q)){
           ?>activate.push({x: <?= date('U',strtotime($r['activation_date'])); ?>, y: <?= $r['num_activated']; ?>});<?php 
 	  ?>suspend.push({x: <?= date('U',strtotime($r['activation_date'])); ?>, y: <?= $r['num_suspended']; ?>});<?php
         }
@@ -77,8 +77,8 @@ ORDER BY a.Date";
 	WHERE activation_date >= DATE_SUB(now(), INTERVAL 830 DAY)
         group by activation_date";
 
-	$q = mysql_query($sql);
-	while($r = mysql_fetch_assoc($q)){
+	$q = mysqli_query($con,$sql);
+	while($r = mysqli_fetch_assoc($q)){
 	  ?>activate.push({x: <?= date('U',strtotime($r['activation_date'])); ?>, y: <?= $r['num_activated']; ?>});<?php 
 	}
 $sql = "SELECT count(*) num_suspended, suspended_date
@@ -87,8 +87,8 @@ $sql = "SELECT count(*) num_suspended, suspended_date
         AND suspended_date >= DATE_SUB(now(), INTERVAL 830 DAY)
         group by suspended_date";
 
-        $q = mysql_query($sql);
-        while($r = mysql_fetch_assoc($q)){
+        $q = mysqli_query($con,$sql);
+        while($r = mysqli_fetch_assoc($q)){
           ?>suspend.push({x: <?= date('U',strtotime($r['suspended_date'])); ?>, y: <?= $r['num_suspended']; ?>});<?php
         }
 */

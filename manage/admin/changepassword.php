@@ -3,23 +3,23 @@
 <?
 include_once('includes/password.php');
 
-if($_POST['passsub'] == 1)
+if(!empty($_POST['passsub']) && $_POST['passsub'] == 1)
 {
         $salt_sql = "SELECT salt FROM admin WHERE adminid='".s_for($_SESSION['adminuserid'])."'";
-        $salt_q = mysql_query($salt_sql);
-        $salt_row = mysql_fetch_assoc($salt_q);
+        $salt_q = mysqli_query($con,$salt_sql);
+        $salt_row = mysqli_fetch_assoc($salt_q);
 
         $old_pass = gen_password($_POST['old_pass'], $salt_row['salt']);
 	$chk_sql = "select * from admin where adminid='".s_for($_SESSION['adminuserid'])."' and password='".$old_pass."'";
-	$chk_my = mysql_query($chk_sql);
+	$chk_my = mysqli_query($con,$chk_sql);
 	
-	if(mysql_num_rows($chk_my) == 0)
+	if(mysqli_num_rows($chk_my) == 0)
 	{
-		$msg="Incorrect Old Password, Please Try Again.";
+		$msg = "Incorrect Old Password, Please Try Again.";
 		?>
 		<script type="text/javascript">
-			alert("<?=$msg;?>");
-			window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>";
+			alert("<?php echo $msg;?>");
+			window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>";
 		</script>
 		<?
 		die();
@@ -29,14 +29,14 @@ if($_POST['passsub'] == 1)
                 $salt = create_salt();
                 $new_pass = gen_password($_POST['new_pass'], $salt);
 
-                $up_sql = "update admin set password='".mysql_real_escape_string($new_pass)."', salt='".$salt."' where adminid='".s_for($_SESSION['adminuserid'])."'";
-		mysql_query($up_sql);
+                $up_sql = "update admin set password='".mysqli_real_escape_string($con,$new_pass)."', salt='".$salt."' where adminid='".s_for($_SESSION['adminuserid'])."'";
+		mysqli_query($con,$up_sql);
 		
 		$msg="Password Changed Successfully.";
 		?>
 		<script type="text/javascript">
-			alert("<?=$msg;?>");
-			window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>";
+			alert("<?php echo $msg;?>");
+			window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>";
 		</script>
 		<?
 		die();
@@ -48,8 +48,8 @@ if($_POST['passsub'] == 1)
 	<h2>Change Password <small>- 
 <?php
  $a_sql = "SELECT * FROM admin WHERE adminid='".$_SESSION['adminuserid']."'";
- $a_q = mysql_query($a_sql);
- $a_r = mysql_fetch_assoc($a_q);
+ $a_q = mysqli_query($con,$a_sql);
+ $a_r = mysqli_fetch_assoc($a_q);
  echo $a_r['username']; 
 ?>
 </small></h2></div>
@@ -57,10 +57,10 @@ if($_POST['passsub'] == 1)
 
 <br /><br />
 <div align="center" class="red">
-	<? echo $_GET['msg'];?>
+	<?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?>
 </div>
 		
-<form name="passfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onsubmit="return passabc(this)">
+<form name="passfrm" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" onsubmit="return passabc(this)">
 <table class="table table-bordered table-hover">
 	<tr>
 		<td colspan="2" class="cat_head">
@@ -107,4 +107,4 @@ if($_POST['passsub'] == 1)
 </form>
 
 
-<? include 'includes/bottom.htm';?>
+<?php include 'includes/bottom.htm';?>

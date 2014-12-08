@@ -8,14 +8,14 @@ include_once "includes/invoice_functions.php";
 if(isset($_POST["enrollsub"]))
 {
 
-  $sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_GET['docid'])."'";
-  $q = mysql_query($sql);
-  $r = mysql_fetch_assoc($q);
+  $sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+  $q = mysqli_query($con,$sql);
+  $r = mysqli_fetch_assoc($q);
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
 $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
-        $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."'";
-        $t_q = mysql_query($t_sql);
-        $t_r = mysql_fetch_assoc($t_q);
+        $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysqli_real_escape_string($con,$_POST['transaction_type'])."'";
+        $t_q = mysqli_query($con,$t_sql);
+        $t_r = mysqli_fetch_assoc($t_q);
 $data = array();
 $data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
 if(isset($_POST['test']) && $_POST['test'] == "1"){
@@ -61,41 +61,41 @@ if(isset($json_response->{"error"})){
   $error = $json_response->{"error"};
   ?>
     <script type="text/javascript">
-      alert("<?= $error; ?>");
+      alert("<?php echo  $error; ?>");
     </script>
   <?php
 }else{
   $ref_id = $json_response->{"enrollment_npi"}->{"id"};
   $success = $json_response->{"success"};
   $up_sql = "INSERT INTO dental_eligible_enrollment SET 
-        user_id = '".mysql_real_escape_string($_GET['docid'])."',
-        payer_id = '".mysql_real_escape_string($payer_id)."',
-        payer_name = '".mysql_real_escape_string($payer_name)."',
-        reference_id = '".mysql_real_escape_string($ref_id)."',
-        response='".mysql_real_escape_string($result)."',
-        transaction_type_id='".mysql_real_escape_string($_POST['transaction_type'])."',
+        user_id = '".mysqli_real_escape_string($con,$_GET['docid'])."',
+        payer_id = '".mysqli_real_escape_string($con,$payer_id)."',
+        payer_name = '".mysqli_real_escape_string($con,$payer_name)."',
+        reference_id = '".mysqli_real_escape_string($con,$ref_id)."',
+        response='".mysqli_real_escape_string($con,$result)."',
+        transaction_type_id='".mysqli_real_escape_string($con,$_POST['transaction_type'])."',
         status='0',
-        facility_name = '".mysql_real_escape_string($_POST['facility_name'])."',
-        provider_name = '".mysql_real_escape_string($_POST['provider_name'])."',
-        tax_id = '".mysql_real_escape_string($_POST['tax_id'])."',
-        address = '".mysql_real_escape_string($_POST['address'])."',
-        city = '".mysql_real_escape_string($_POST['city'])."',
-        state = '".mysql_real_escape_string($_POST['state'])."',
-        zip = '".mysql_real_escape_string($_POST['zip'])."',
-        first_name = '".mysql_real_escape_string($_POST['first_name'])."',
-        last_name = '".mysql_real_escape_string($_POST['last_name'])."',
-        contact_number = '".mysql_real_escape_string($_POST['contact_number'])."',
-        email = '".mysql_real_escape_string($_POST['email'])."',
+        facility_name = '".mysqli_real_escape_string($con,$_POST['facility_name'])."',
+        provider_name = '".mysqli_real_escape_string($con,$_POST['provider_name'])."',
+        tax_id = '".mysqli_real_escape_string($con,$_POST['tax_id'])."',
+        address = '".mysqli_real_escape_string($con,$_POST['address'])."',
+        city = '".mysqli_real_escape_string($con,$_POST['city'])."',
+        state = '".mysqli_real_escape_string($con,$_POST['state'])."',
+        zip = '".mysqli_real_escape_string($con,$_POST['zip'])."',
+        first_name = '".mysqli_real_escape_string($con,$_POST['first_name'])."',
+        last_name = '".mysqli_real_escape_string($con,$_POST['last_name'])."',
+        contact_number = '".mysqli_real_escape_string($con,$_POST['contact_number'])."',
+        email = '".mysqli_real_escape_string($con,$_POST['email'])."',
         adddate=now(),
-        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
+        ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'
         ";
 
-  mysql_query($up_sql) or die(mysql_error());
+  mysqli_query($con,$up_sql) or die(mysql_error());
   $eid = mysql_insert_id();
   invoice_add_enrollment('2', $_SESSION['admincompanyid'], $eid);
   ?>
   <script type="text/javascript">
-    parent.window.location = "manage_enrollments.php?ed=<?=$_GET['docid']; ?>";
+    parent.window.location = "manage_enrollments.php?ed=<?php echo $_GET['docid']; ?>";
   </script>
   <?php
   die();
@@ -109,29 +109,29 @@ if(isset($json_response->{"error"})){
  <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
  <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>	
 <link href="/manage/css/search-hints.css" rel="stylesheet" type="text/css">
-	<? if($msg != '') {?>
+	<? if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&docid=<?=$_GET['docid'];?>" method="post" onsubmit="return check_add();">
+    <form name="planfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&docid=<?php echo $_GET['docid'];?>" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                Add Enrollment
-               <? if($name <> "") {?>
-               		&quot;<?=$name;?>&quot;
+               <? if(!empty($name)) {?>
+               		&quot;<?php echo $name;?>&quot;
                <? }?>
             </td>
         </tr>
   <?php $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE status=1 ORDER BY transaction_type ASC";
-        $t_q = mysql_query($t_sql);
+        $t_q = mysqli_query($con,$t_sql);
   ?>
 
         <?php
                 $s = "SELECT eligible_test FROM dental_users where userid='".$_GET['docid']."'";
-                $q = mysql_query($s);
-                $r = mysql_fetch_assoc($q);
+                $q = mysqli_query($con,$s);
+                $r = mysqli_fetch_assoc($q);
                 if($r['eligible_test']=="1"){
         ?>
         <tr bgcolor="#FFFFFF">
@@ -150,8 +150,8 @@ if(isset($json_response->{"error"})){
             </td>
             <td valign="top" class="frmdata">
         <select id="transaction_type" class="form-control" name="transaction_type" onchange="update_list()">
-            <?php while($t = mysql_fetch_assoc($t_q)){ ?>
-                <option value="<?= $t['id']; ?>"><?= $t['transaction_type']; ?> - <?= $t['description']; ?></option>
+            <?php while($t = mysqli_fetch_assoc($t_q)){ ?>
+                <option value="<?php echo  $t['id']; ?>"><?php echo  $t['transaction_type']; ?> - <?php echo  $t['description']; ?></option>
             <?php } ?>
         </select>
             </td>
@@ -175,13 +175,15 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'h
         </tr>
 <?php
   $sql = "SELECT * FROM dental_users WHERE (docid='".$_GET['docid']."' OR userid='".$_GET['docid']."') AND npi !='' AND (producer=1 OR docid=0) ORDER BY docid ASC";
-  $q = mysql_query($sql);
-  //$r = mysql_fetch_assoc($q);
-$payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
-$payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
-        $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."'";
-        $t_q = mysql_query($t_sql);
-        $t_r = mysql_fetch_assoc($t_q);
+  $q = mysqli_query($con,$sql);
+  //$r = mysqli_fetch_assoc($q);
+
+  $payer_id_post = (!empty($_POST['payer_id']) ? $_POST['payer_id'] : '');
+$payer_id = substr($payer_id_post,0,strpos($payer_id_post, '-'));
+$payer_name = substr($payer_id_post,strpos($payer_id_post, '-')+1);
+        $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysqli_real_escape_string($con,!empty($_POST['transaction_type']) ? $_POST['transaction_type'] : '')."'";
+        $t_q = mysqli_query($con,$t_sql);
+        $t_r = mysqli_fetch_assoc($t_q);
 ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
@@ -189,9 +191,9 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
             </td>
             <td valign="top" class="frmdata">
         <select id="provider_select" name="provider_select" class="form-control">
-        <?php while($r = mysql_fetch_assoc($q)){ ?>
-		<?php $us_sql = "SELECT * FROM dental_user_signatures where user_id='".mysql_real_escape_string($_GET['docid'])."'";
-		  $us_q = mysql_query($us_sql);
+        <?php while($r = mysqli_fetch_assoc($q)){ ?>
+		<?php $us_sql = "SELECT * FROM dental_user_signatures where user_id='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+		  $us_q = mysqli_query($con,$us_sql);
 		  $signature = mysql_num_rows($us_q);
 		?>
           <?php if($r['docid']==0){
@@ -200,10 +202,10 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
                 }
                 $json ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
           ?>
-          <option value='<?= $json; ?>'><?= $r['npi']; ?> - <?= $r['first_name']." ".$r['last_name']; ?></option>
+          <option value='<?php echo  $json; ?>'><?php echo  $r['npi']; ?> - <?php echo  $r['first_name']." ".$r['last_name']; ?></option>
         <?php } ?>
-          <?php if($snpi != ''){ ?>
-            <option value='<?= $sjson; ?>'><?= $snpi; ?> - Service Facility</option>
+          <?php if(!empty($snpi)){ ?>
+            <option value='<?php echo  $sjson; ?>'><?php echo  $snpi; ?> - Service Facility</option>
           <?php } ?>
         </select>
 
@@ -215,7 +217,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
                 Facility Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="facility_name" name="facility_name" value="<?=$r['practice'];?>" class="form-control validate" readonly="readonly" />          
+                <input type="text" id="facility_name" name="facility_name" value="<?php echo $r['practice'];?>" class="form-control validate" readonly="readonly" />          
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -223,7 +225,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
                 Provider Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="provider_name" name="provider_name" value="<?=$r['first_name']." ".$r['last_name'];?>" class="form-control validate" readonly="readonly" />          
+                <input type="text" id="provider_name" name="provider_name" value="<?php echo $r['first_name']." ".$r['last_name'];?>" class="form-control validate" readonly="readonly" />          
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -231,7 +233,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Tax ID
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="tax_id" name="tax_id" value="<?=$r['tax_id_or_ssn'];?>" class="form-control " readonly="readonly" />          
+                <input type="text" id="tax_id" name="tax_id" value="<?php echo $r['tax_id_or_ssn'];?>" class="form-control " readonly="readonly" />          
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -239,7 +241,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Address
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="address" name="address" value="<?=$r['address'];?>" class="form-control " readonly="readonly" />
+                <input type="text" id="address" name="address" value="<?php echo $r['address'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -247,7 +249,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		City
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="city" name="city" value="<?=$r['city'];?>" class="form-control " readonly="readonly" />
+                <input type="text" id="city" name="city" value="<?php echo $r['city'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -255,7 +257,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		State
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="state" name="state" value="<?=$r['state'];?>" class="form-control " readonly="readonly" />
+                <input type="text" id="state" name="state" value="<?php echo $r['state'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -263,7 +265,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Zip
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="zip" name="zip" value="<?=$r['zip'];?>" class="form-control " readonly="readonly" />
+                <input type="text" id="zip" name="zip" value="<?php echo $r['zip'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
 	<!-- new -->
@@ -272,7 +274,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		NPI
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="npi" name="npi" value="<?=$r['npi']?>" class="moneymask form-control validate" readonly="readonly" />
+                <input type="text" id="npi" name="npi" value="<?php echo $r['npi']?>" class="moneymask form-control validate" readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -280,7 +282,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		First Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="first_name" name="first_name" value="<?=$r['first_name'];?>" class="form-control " readonly="readonly" />
+                <input type="text" id="first_name" name="first_name" value="<?php echo $r['first_name'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
 
@@ -289,7 +291,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="last_name" name="last_name" value="<?=$r['last_name'];?>" class="form-control " readonly="readonly" />
+                <input type="text" id="last_name" name="last_name" value="<?php echo $r['last_name'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -297,7 +299,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Contact Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="contact_number" name="contact_number" value="<?=$r['phone']?>" class="form-control " readonly="readonly" />
+                <input type="text" id="contact_number" name="contact_number" value="<?php echo $r['phone']?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -305,13 +307,13 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Email
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="email" name="email" value="<?=$email?>" class="form-control " readonly="readonly" />
+                <input type="text" id="email" name="email" value="<?php echo (!empty($email) ? $email : '')?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr>
             <td  colspan="2" align="center">
                 <input type="hidden" name="enrollsub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
+                <input type="hidden" name="ed" value="<?php echo (!empty($themyarray["id"]) ? $themyarray["id"] : '')?>" />
                 <input type="submit" value="Add Enrollment" class="btn btn-primary">
             </td>
         </tr>

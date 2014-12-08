@@ -1,16 +1,19 @@
-<? 
+<?php 
 include "includes/top.htm";
 include_once "../includes/constants.inc";
-if(!is_super($_SESSION['admin_access']) && !is_software($_SESSION['admin_access']) && !is_billing($_SESSION['admin_access'])){
-  ?><h2>You are not authorized to view this page.</h2><?php
-  die();
-}
+
+    if(!is_super($_SESSION['admin_access']) && !is_software($_SESSION['admin_access']) && !is_billing($_SESSION['admin_access'])){
+?>
+        <h2>You are not authorized to view this page.</h2>
+<?php
+        die();
+    }
 
 if(isset($_GET['rid'])){
-  $u_sql = "UPDATE dental_support_tickets SET viewed=0 WHERE id='".mysql_real_escape_string($_GET['rid'])."' AND create_type=1 ";
-  mysql_query($u_sql);
-  $u_sql = "UPDATE dental_support_responses SET viewed=0 WHERE ticket_id='".mysql_real_escape_string($_GET['rid'])."' AND response_type=1 ";
-  mysql_query($u_sql);
+  $u_sql = "UPDATE dental_support_tickets SET viewed=0 WHERE id='".mysqli_real_escape_string($con,$_GET['rid'])."' AND create_type=1 ";
+  mysqli_query($con,$u_sql);
+  $u_sql = "UPDATE dental_support_responses SET viewed=0 WHERE ticket_id='".mysqli_real_escape_string($con,$_GET['rid'])."' AND response_type=1 ";
+  mysqli_query($con,$u_sql);
 }
 $sql = "select t.*,
 	CONCAT(u.first_name,' ',u.last_name) as user,
@@ -34,16 +37,16 @@ $sql = "select t.*,
    	WHERE t.status IN (".DSS_TICKET_STATUS_OPEN.", ".DSS_TICKET_STATUS_REOPENED.") ";
 if(is_billing($_SESSION['admin_access'])){
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
-    $c_q = mysql_query($c_sql);
-    $c = mysql_fetch_assoc($c_q);
+    $c_q = mysqli_query($con,$c_sql);
+    $c = mysqli_fetch_assoc($c_q);
   $sql .= " AND t.company_id='".$c['companyid']."' ";
 }
 if(isset($_REQUEST['catid'])){
-  $sql .= " AND t.category_id = ".mysql_real_escape_string($_REQUEST['catid']);
+  $sql .= " AND t.category_id = ".mysqli_real_escape_string($con,$_REQUEST['catid']);
 }
 $sql .= " order by COALESCE(response.last_response, t.adddate) DESC";
-$my = mysql_query($sql) or die(mysql_error());
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 
 ?>
 
@@ -59,7 +62,7 @@ $total_rec = mysql_num_rows($my);
 </button>
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <table class="sort_table table table-bordered table-hover" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -92,18 +95,18 @@ $total_rec = mysql_num_rows($my);
 	</tr>
 	</thead>
 	<tbody>
-<? if(mysql_num_rows($my) == 0)
+<?php if(mysqli_num_rows($my) == 0)
 { ?>
 	<tr class="tr_bg">
 		<td valign="top" class="col_head" colspan="4" align="center">
 		No Records
 		</td>
 		</tr>
-		<? 
+		<?php 
 }
 else
 {
-	while($myarray = mysql_fetch_array($my))
+	while($myarray = mysqli_fetch_array($my))
 	{
   if($myarray['create_type']=="1" && $myarray['viewed']=="1"){
     $ticket_read = true;
@@ -112,48 +115,48 @@ else
   }
 		$latest = ($myarray['last_response']!='')?$myarray['last_response']:$myarray['adddate'];
 		?>
-			<tr class="<?=  (is_admin($_SESSION['admin_access']) && $myarray['company_id']!=0)?'low ':''; ?><?= (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"info":""; ?>">
+			<tr class="<?php echo   (is_admin($_SESSION['admin_access']) && $myarray['company_id']!=0)?'low ':''; ?><?php echo  (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"info":""; ?>">
 			<td valign="top">
-			<?=st($myarray["title"]);?>
+			<?php echo st($myarray["title"]);?>
             <?php if($myarray['attachment']!='' || $myarray['response_attachment'] !='' || $myarray['ticket_attachment'] !=''){ ?>
                     <span class="attachment badge glyphicon glyphicon-paperclip pull-right" title="This ticket contains attachments"> <!-- space needed --></span>
                     <?php } ?>
 			</td>
 			<td valign="top">
-			<?= st($myarray["user"]); ?>
+			<?php echo  st($myarray["user"]); ?>
 			</td>	
                         <td valign="top">
-                        <?= st($myarray["account"]); ?>
+                        <?php echo  st($myarray["account"]); ?>
                         </td>	
 			<td valign="top">
 			<?php if($myarray["company_id"]==0){ ?>
 				Dental Sleep Solutions
 			<?php }else{ ?>
-			<?= $myarray["ticket_company"];?>
+			<?php echo  $myarray["ticket_company"];?>
 			<?php } ?>
 			</td>
 			<td valign="top">
-		 		<?= $myarray['category']; ?>	
+		 		<?php echo  $myarray['category']; ?>	
 			</td>
 			<td valign="top">
-				<?= date('m/d/Y h:i:s a', strtotime($latest)); ?>
+				<?php echo  date('m/d/Y h:i:s a', strtotime($latest)); ?>
 			</td>
 			<td valign="top">
-				<?= $dss_ticket_status_labels[$myarray['status']]; ?>	
+				<?php echo  $dss_ticket_status_labels[$myarray['status']]; ?>	
 			</td>
 			<td valign="top">
-			<a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" title="View Ticket" class="btn btn-primary btn-sm">
+			<a href="view_support_ticket.php?ed=<?php echo $myarray["id"];?>" title="View Ticket" class="btn btn-primary btn-sm">
 			View
 			 <span class="glyphicon glyphicon-pencil"></span></a>
         <?php if(($ticket_read && $myarray["response_viewed"]!='0') || $myarray['response_viewed'] == '1' ){ ?>
-						<a href="?rid=<?= $myarray['id']; ?>" class="btn btn-default btn-sm">
+						<a href="?rid=<?php echo  $myarray['id']; ?>" class="btn btn-default btn-sm">
                             Mark Unread
                             <span class="glyphicon glyphicon-eye-close"></span>
                         </a>
 							<?php } ?>
 							</td>
 							</tr>
-							<? 	}
+							<?php 	}
 }?>
 </tbody>
 </table>
@@ -179,16 +182,16 @@ $sql = "select t.*,
 WHERE t.status IN (".DSS_TICKET_STATUS_CLOSED.") ";
 if(is_billing($_SESSION['admin_access'])){
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
-    $c_q = mysql_query($c_sql);
-    $c = mysql_fetch_assoc($c_q);
+    $c_q = mysqli_query($con,$c_sql);
+    $c = mysqli_fetch_assoc($c_q);
   $sql .= " AND t.company_id='".$c['companyid']."' ";
 }
 if(isset($_REQUEST['catid'])){
-	$sql .= " AND category_id = ".mysql_real_escape_string($_REQUEST['catid']);
+	$sql .= " AND category_id = ".mysqli_real_escape_string($con,$_REQUEST['catid']);
 }
 $sql .= " order by adddate DESC";
-$my = mysql_query($sql) or die(mysql_error());
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 
 ?>
 <div class="page-header">
@@ -224,7 +227,7 @@ Resolved
         </tr>
 	</thead>
 	<tbody>
-<? if(mysql_num_rows($my) == 0)
+<?php if(mysqli_num_rows($my) == 0)
 { ?>
 	<tr class="tr_bg">
 		<td valign="top" class="col_head" colspan="4" align="center">
@@ -235,52 +238,52 @@ Resolved
 }
 else
 {
-        while($myarray = mysql_fetch_array($my))
+        while($myarray = mysqli_fetch_array($my))
         {
                 $latest = ($myarray['last_response']!='')?$myarray['last_response']:$myarray['adddate'];
                 ?>
-                        <tr class="<?= (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"unviewed":""; ?>">
+                        <tr class="<?php echo  (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"unviewed":""; ?>">
                         <td valign="top">
-                        <?=st($myarray["title"]);?>
-                        <?php if($myarray['attachment']!='' || $myarray['response_attachment'] !='' || $myarray['ticket_attachment'] !=''){ ?>
+                        <?php echo st($myarray["title"]);?>
+                        <?php if(!empty($myarray['attachment']) || !empty($myarray['response_attachment']) || !empty($myarray['ticket_attachment'])){ ?>
                         <span class="attachment badge glyphicon glyphicon-paperclip pull-right" title="This ticket contains attachments"> <!-- space needed --></span>
                         <?php } ?>
                         </td>
                         <td valign="top">
-                        <?= st($myarray["user"]); ?>
+                        <?php echo  st($myarray["user"]); ?>
                         </td>
                         <td valign="top">
-                        <?= st($myarray["account"]); ?>
+                        <?php echo  st($myarray["account"]); ?>
                         </td>
                         <td valign="top">
                         <?php if($myarray["company_id"]==0){ ?>
                                 Dental Sleep Solutions
                         <?php }else{ ?>
-                        <?= $myarray["ticket_company"];?>
+                        <?php echo  $myarray["ticket_company"];?>
                         <?php } ?>
                         </td>
                         <td valign="top">
-                                <?= $myarray['category']; ?>
+                                <?php echo  $myarray['category']; ?>
                         </td>
                         <td valign="top">
-                                <?= date('m/d/Y h:i:s a', strtotime($latest)); ?>
+                                <?php echo  date('m/d/Y h:i:s a', strtotime($latest)); ?>
                         </td>
                         <td valign="top">
-                                <?= $dss_ticket_status_labels[$myarray['status']]; ?> 
+                                <?php echo  $dss_ticket_status_labels[$myarray['status']]; ?> 
                         </td>
                         <td valign="top">
-                        <a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
+                        <a href="view_support_ticket.php?ed=<?php echo $myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
                         View
                          <span class="glyphicon glyphicon-pencil"></span></a>
                                         <?php if($myarray["viewed"]!='0' && $myarray["response_viewed"]!='0'){ ?>
-                                                <a href="?rid=<?= $myarray['id']; ?>" class="btn btn-default btn-sm">
+                                                <a href="?rid=<?php echo  $myarray['id']; ?>" class="btn btn-default btn-sm">
                                                     Unread
                                                     <span class="glyphicon glyphicon-eye-close"></span>
                                                 </a>
                                                         <?php } ?>
                                                         </td>
                                                         </tr>
-                                                        <?      }
+                                                        <?php      }
 
 }?>
 	</tbody>
@@ -298,4 +301,4 @@ else
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

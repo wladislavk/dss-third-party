@@ -1,22 +1,24 @@
-<? 
+<?php 
 include "includes/top.htm";
 
-if(is_billing($_SESSION['admin_access'])){
-  ?><h2>You are not authorized to view this page.</h2><?php
-  die();
-}
+	if(is_billing($_SESSION['admin_access'])){
+?>
+		<h2>You are not authorized to view this page.</h2>
+<?php
+  		die();
+	}
 
 
-if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
+if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 {
 	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
 	die();
@@ -24,7 +26,7 @@ if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -49,15 +51,15 @@ if(is_super($_SESSION['admin_access'])){
 		FROM dental_users du 
 		JOIN dental_user_company uc ON uc.userid = du.userid
 		JOIN companies c ON c.id=uc.companyid
-		WHERE du.docid=0 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+		WHERE du.docid=0 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'";
 }
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 //$sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_users = mysqli_num_rows($my);
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -69,15 +71,15 @@ $num_users=mysql_num_rows($my);
 <br />
 
 
-<? if($_GET['msg'] != '') {?>
+<?php if(!empty($_GET['msg'])) {?>
 <div class="alert alert-danger text-center">
-    <? echo $_GET['msg'];?>
+    <?php echo $_GET['msg'];?>
 </div>
-<? } ?>
+<?php } ?>
 
 &nbsp;
-<b>Total Records: <?=$total_rec;?></b>
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<b>Total Records: <?php echo $total_rec;?></b>
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="sort_table table table-bordered table-hover" id="fax_table">
 <thead>
 	<tr class="tr_bg_h">
@@ -105,46 +107,46 @@ $num_users=mysql_num_rows($my);
 	</tr>
 </thead>
 <tbody>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 		$fax_sql = "SELECT COUNT(*) AS num_faxes, SUM(pages) AS pages FROM dental_faxes df 
         WHERE 
                 df.docid='".$myarray['userid']."' AND
                 df.status = '0'
 ";
-$fax_q = mysql_query($fax_sql);
-		$fax = mysql_fetch_assoc($fax_q);
+$fax_q = mysqli_query($con,$fax_sql);
+		$fax = mysqli_fetch_assoc($fax_q);
                 $fax30_sql = "SELECT COUNT(*) AS num_faxes, SUM(pages) AS pages FROM dental_faxes df 
         WHERE 
                 df.docid='".$myarray['userid']."' AND
                 df.sent_date > DATE_SUB(now(), INTERVAL 30 DAY) 
 ";
-$fax30_q = mysql_query($fax30_sql);
-                $fax30 = mysql_fetch_assoc($fax30_q);
+$fax30_q = mysqli_query($con,$fax30_sql);
+                $fax30 = mysqli_fetch_assoc($fax30_q);
 		?>
 			<tr>
 				<td valign="top">
-					<?=st($myarray["username"]);?>
+					<?php echo st($myarray["username"]);?>
 				</td>
                                 <td valign="top">
-                                        <?=st($myarray["company_name"]);?>
+                                        <?php echo st($myarray["company_name"]);?>
                                 </td>
                                 <td valign="top">
-                                        <?=st($myarray["name"]);?>
+                                        <?php echo st($myarray["name"]);?>
                                 </td>
 				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
-					<?=st($fax30["num_faxes"]);?>
+					<?php echo st($fax30["num_faxes"]);?>
 				</td>
 				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
 					<?php
@@ -160,7 +162,7 @@ $fax30_q = mysql_query($fax30_sql);
 					    echo st($fax["pages"]); ?>
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 
 	}?>
 </tbody>
@@ -181,4 +183,4 @@ $(document).ready(function()
 ); 
 </script>
 
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

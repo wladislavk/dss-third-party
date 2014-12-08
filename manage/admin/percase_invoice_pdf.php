@@ -1,14 +1,14 @@
 <?php
-require_once('../3rdParty/tcpdf/config/lang/eng.php');
-require_once('../3rdParty/tcpdf/tcpdf.php');
-require_once('includes/main_include.php');
-require_once('../includes/constants.inc');
+include_once('../3rdParty/tcpdf/config/lang/eng.php');
+include_once('../3rdParty/tcpdf/tcpdf.php');
+include_once('includes/main_include.php');
+include_once('../includes/constants.inc');
 
 $invoice_sql = "SELECT pi.*, u.name, u.address, u.city, u.state, u.zip, u.phone, u.user_type FROM dental_percase_invoice pi
 	JOIN dental_users u ON u.userid=pi.docid
-	WHERE id='".mysql_real_escape_string($_GET['invoice_id'])."'";
-$invoice_q = mysql_query($invoice_sql);
-$invoice = mysql_fetch_assoc($invoice_q);
+	WHERE id='".mysqli_real_escape_string($con,$_GET['invoice_id'])."'";
+$invoice_q = mysqli_query($con,$invoice_sql);
+$invoice = mysqli_fetch_assoc($invoice_q);
 
 $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -40,6 +40,7 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 							<!-- table column with logo -->
 							<td height="133" align="center" valign="middle" style="padding: 0px;">';
 							if($invoice['user_type']==DSS_USER_TYPE_SOFTWARE){
+								//not found images/invoice/invoice_logo_ds3.png
 								$html .= '<a href="" title="" target="_blank"><img src="images/invoice/invoice_logo_ds3.png" alt="logo header" border="no" style="margin: 0px; padding: 0px; "/></a>';
 							}else{
 								$html .= '<a href="" title="" target="_blank"><img src="images/invoice/invoice_logo.jpg" alt="logo header" border="no" style="margin: 0px; padding: 0px; "/></a>';
@@ -180,8 +181,8 @@ $case_sql_e0486 = "SELECT percase_name, percase_date as start_date, '' as end_da
                 dl.transaction_code='E0486' AND
                 dl.docid='".$invoice['docid']."' AND
                 dl.percase_invoice='".$invoice['id']."'";
-$case_q_e0486 = mysql_query($case_sql_e0486);
-$num_case_e0486 = mysql_num_rows($case_q_e0486);
+$case_q_e0486 = mysqli_query($con,$case_sql_e0486);
+$num_case_e0486 = mysqli_num_rows($case_q_e0486);
 
 
 $case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl 
@@ -220,8 +221,8 @@ start_date, end_date, amount, id FROM dental_enrollment_invoice
                 invoice_id='".$invoice['id']."'
 
 ";
-$case_q = mysql_query($case_sql);
-$num_case = mysql_num_rows($case_q);
+$case_q = mysqli_query($con,$case_sql);
+$num_case = mysqli_num_rows($case_q);
 
 if($num_case_e0486 > 0){
 $html .= '<tr>
@@ -236,7 +237,7 @@ $html .= '<tr>
                                                                         <td height="30" width="90" align="right" valign="middle" style="text-align: right; font-size:24px;border-bottom: 1px dotted #DDDDDD; padding-right: 10px;"></td>
                                                                         </tr>';
 }
-while($case = mysql_fetch_assoc($case_q)){
+while($case = mysqli_fetch_assoc($case_q)){
 $total_charge += $case['percase_amount'];
 $html .= '<tr>
                                                                         <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 2px dotted #DDDDDD;"></td>
@@ -343,7 +344,7 @@ $html .= '
 							if($invoice['user_type']==DSS_USER_TYPE_SOFTWARE){
 							  $html .= date('m/d/Y');
 							}else{
-							  $html .= date('m/d/Y', strtotime(date() . " +7 day"));
+							  $html .= date('m/d/Y', strtotime(date('m/d/Y') . " +7 day"));
 							}
 							$html .='. DO NOT send a check or payment. If you dispute the amount above please contact us immediately.';
 							if($invoice['user_type']!=DSS_USER_TYPE_SOFTWARE){
@@ -393,7 +394,7 @@ Please SIGN AND RETURN this Verification page. DO NOT send a check or payment.
 om: 10px;">
 Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
                                                                         Invoice Date: '.date('m/d/Y').'<br />
-                                                                        Payment Charged: '.date('m/d/Y', strtotime(date() . " +7 day")).'
+                                                                        Payment Charged: '.date('m/d/Y', strtotime(date('m/d/Y') . " +7 day")).'
                                                                         </td>
                                                                         </tr>                                                   
                                                                 </table>                                                        </td>
@@ -543,10 +544,14 @@ $title = "test";
         $pdf->AddPage();
 
         // output the HTML content
+
         $pdf->writeHTML($html, true, false, true, false, '');
 	
         $filename = 'percase_invoice_'.$invoice['docid'].'_'.$_GET['invoice_id'].'.pdf';
-        $pdf->Output('../../../../shared/q_file/'.$filename, 'F');
+		
+		if (file_exists('../../../../shared/q_file/'.$filename)) {
+			$pdf->Output('../../../../shared/q_file/'.$filename, 'F');
+		}
 //$pdf->Output('example_001.pdf', 'I');
 if(!isset($redirect) || $redirect){
 ?>

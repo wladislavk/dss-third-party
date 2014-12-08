@@ -1,16 +1,17 @@
-<? 
+<?php 
 include "includes/top.htm";
-include '../includes/constants.inc';
-if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
+include_once '../includes/constants.inc';
+
+if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 {
 	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
-	$msg= "Deleted Successfully";
+	$msg = "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
 	die();
@@ -18,7 +19,7 @@ if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -84,19 +85,19 @@ if(is_super($_SESSION['admin_access'])){
 
 }
 
-$_REQUEST['sort'] = ($_REQUEST['sort'])?$_REQUEST['sort']:'username';
-$_REQUEST['sortdir'] = ($_REQUEST['sortdir'])?$_REQUEST['sortdir']:'ASC';
+$_REQUEST['sort'] = (!empty($_REQUEST['sort']))?$_REQUEST['sort']:'username';
+$_REQUEST['sortdir'] = (!empty($_REQUEST['sortdir']))?$_REQUEST['sortdir']:'ASC';
 
-$sort = ' ORDER BY '.mysql_real_escape_string($_REQUEST['sort']).' '.$_REQUEST['sortdir'];
+$sort = ' ORDER BY '.mysqli_real_escape_string($con,$_REQUEST['sort']).' '.$_REQUEST['sortdir'];
 
 
 
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$my=mysql_query($sql . $sort) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con,$sql . $sort);
+$num_users = mysqli_num_rows($my);
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -114,21 +115,21 @@ $num_users=mysql_num_rows($my);
             		 sum(case when status='2' AND (username='' OR username IS NULL) THEN 1 ELSE 0 END) as num_unregistered
             		FROM dental_users WHERE docid=0";
 
-              $count_q = mysql_query($count_sql);
-          $count_r = mysql_fetch_assoc($count_q);
+              $count_q = mysqli_query($con,$count_sql);
+          $count_r = mysqli_fetch_assoc($count_q);
         ?>
         <ul class="list-group">
             <li class="list-group-item">
                 Active Users
-                <span class="badge"><?= intval($count_r['num_active']) ?></span>
+                <span class="badge"><?php echo  intval($count_r['num_active']) ?></span>
             </li>
             <li class="list-group-item">
                 Unregistered
-                <span class="badge"><?= intval($count_r['num_unregistered']) ?></span>
+                <span class="badge"><?php echo  intval($count_r['num_unregistered']) ?></span>
             </li>
             <li class="list-group-item">
                 Suspended
-                <span class="badge"><?= intval($count_r['num_suspended']) ?></span>
+                <span class="badge"><?php echo  intval($count_r['num_suspended']) ?></span>
             </li>
         </ul>
     </div>
@@ -150,21 +151,21 @@ $num_users=mysql_num_rows($my);
                     ) u
                     ";
 
-          $count_q = mysql_query($count_sql);
-          $count_r = mysql_fetch_assoc($count_q);
+          $count_q = mysqli_query($con,$count_sql);
+          $count_r = mysqli_fetch_assoc($count_q);
         ?>
         <ul class="list-group">
             <li class="list-group-item">
                 Activated last 30 days
-                <span class="badge"><?= intval($count_r['num_30']) ?></span>
+                <span class="badge"><?php echo  intval($count_r['num_30']) ?></span>
             </li>
             <li class="list-group-item">
                 30-60 days
-                <span class="badge"><?= intval($count_r['num_60']) ?></span>
+                <span class="badge"><?php echo  intval($count_r['num_60']) ?></span>
             </li>
             <li class="list-group-item">
                 60+
-                <span class="badge"><?= intval($count_r['num_plus']) ?></span>
+                <span class="badge"><?php echo  intval($count_r['num_plus']) ?></span>
             </li>
         </ul>
     </div>
@@ -190,10 +191,10 @@ $num_users=mysql_num_rows($my);
 
                 WHERE du.docid=0 AND status=1 AND
          (i.ledger_amount + i1.monthly_amount + i2.extra_amount + i3.vob_amount) > 0";
-  $count_q = mysql_query($count_sql);
-  $count_r = mysql_fetch_assoc($count_q);
+  $count_q = mysqli_query($con,$count_sql);
+  $count_r = mysqli_fetch_assoc($count_q);
 ?>
-Total Paid Active Users: <?= $count_r['num_paid']; ?>
+Total Paid Active Users: <?php echo  $count_r['num_paid']; ?>
 <br />
 
 <?php
@@ -217,20 +218,20 @@ Total Paid Active Users: <?= $count_r['num_paid']; ?>
 
                 WHERE du.docid=0 AND status=1 AND
          COALESCE((i.ledger_amount + i1.monthly_amount + i2.extra_amount + i3.vob_amount), 0) <= 0";
-  $count_q = mysql_query($count_sql);
-  $count_r = mysql_fetch_assoc($count_q);
+  $count_q = mysqli_query($con,$count_sql);
+  $count_r = mysqli_fetch_assoc($count_q);
 ?>
 
-Total Unpaid Active Users: <?= $count_r['num_paid']; ?>
+Total Unpaid Active Users: <?php echo  $count_r['num_paid']; ?>
 <br />
 <?php
   $count_sql = "SELECT COALESCE(sum(dc.amount),0) cc_paid from dental_charge dc
                 WHERE charge_date >= DATE_SUB(now(), INTERVAL 30 DAY)";
-  $count_q = mysql_query($count_sql);
-  $count_r = mysql_fetch_assoc($count_q);
+  $count_q = mysqli_query($con,$count_sql);
+  $count_r = mysqli_fetch_assoc($count_q);
 ?>
 
-Credit Card Billing Last 30 days: $<?= $count_r['cc_paid']; ?>
+Credit Card Billing Last 30 days: $<?php echo  $count_r['cc_paid']; ?>
 <br />
 <?php
   $total_charge = 0;
@@ -238,13 +239,13 @@ Credit Card Billing Last 30 days: $<?= $count_r['cc_paid']; ?>
 	WHERE adddate >= DATE_SUB(now(), INTERVAL 30 DAY)
 	AND NOT EXISTS (SELECT dc.invoice_id FROM dental_charge dc WHERE dc.invoice_id=pi.id)
 	";
-  $q = mysql_query($sql);
-  while($myarray = mysql_fetch_assoc($q)){
+  $q = mysqli_query($con,$sql);
+  while($myarray = mysqli_fetch_assoc($q)){
 $total_charge += $myarray['monthly_fee_amount'];
 $case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl                 JOIN dental_patients dp ON dl.patientid=dp.patientid
         WHERE 
                 dl.transaction_code='E0486' AND
-                dl.docid='".$myarray['docid']."' AND                dl.percase_invoice='".$myarray['id']."'
+                dl.docid='".(!empty($myarray['docid']) ? $myarray['docid'] : '')."' AND                dl.percase_invoice='".(!empty($myarray['id']) ? $myarray['id'] : '')."'
         UNION
 SELECT percase_name, percase_date, '', percase_amount, id FROM dental_percase_invoice_extra dl         WHERE 
                 dl.percase_invoice='".$myarray['id']."'
@@ -256,15 +257,15 @@ SELECT CONCAT('Insurance Verification Services – ', patient_firstname, ' ', pa
 SELECT description,
 start_date, end_date, amount, id FROM dental_fax_invoice        WHERE
                 invoice_id='".$myarray['id']."'";
-$case_q = mysql_query($case_sql);
-while($case_r = mysql_fetch_assoc($case_q)){
+$case_q = mysqli_query($con,$case_sql);
+while($case_r = mysqli_fetch_assoc($case_q)){
 $total_charge += $case_r['percase_amount'];
 }
 }
 ?>
-Other Invoices Last 30 days: $<?= $total_charge; ?>
+Other Invoices Last 30 days: $<?php echo  $total_charge; ?>
 <br />
-Total CC + Invoice Last 30 days: $<?= $total_charge + $count_r['cc_paid']; ?>
+Total CC + Invoice Last 30 days: $<?php echo  $total_charge + $count_r['cc_paid']; ?>
 </div>
 
 
@@ -278,11 +279,11 @@ Total CC + Invoice Last 30 days: $<?= $total_charge + $count_r['cc_paid']; ?>
 
 
 <div align="center" class="red" style="clear:both;">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 &nbsp;
-<b>Total Records: <?=$total_rec;?></b>
+<b>Total Records: <?php echo $total_rec;?></b>
 <table class="sort_table table table-bordered table-hover" id="tracking_table">
 <thead>
 	<tr class="tr_bg_h">
@@ -323,78 +324,78 @@ Total CC + Invoice Last 30 days: $<?= $total_charge + $count_r['cc_paid']; ?>
 	</tr>
 </thead>
 <tbody>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 
 		?>
-			<tr class="status_<?= $myarray['status']; ?>">
+			<tr class="status_<?php echo  $myarray['status']; ?>">
 				<td valign="top">
-					<?=st($myarray["username"]);?>
+					<?php echo st($myarray["username"]);?>
 				</td>
 				<td valign="top">
-					<?= $myarray['doc_name']; ?>
+					<?php echo  $myarray['doc_name']; ?>
 				</td>
 				<td valign="top">
-					<?= $myarray['company_name']; ?>
+					<?php echo  $myarray['company_name']; ?>
 				</td>
                                 <td valign="top">
 				<?php
 					$hst_sql = "SELECT hst.name FROM companies hst
 								INNER JOIN dental_user_hst_company uhc ON uhc.companyid=hst.id
-								WHERE uhc.userid='".mysql_real_escape_string($myarray['userid'])."'";
-					$hst_q = mysql_query($hst_sql);
-					while($hst_r = mysql_fetch_assoc($hst_q)){
+								WHERE uhc.userid='".mysqli_real_escape_string($con,$myarray['userid'])."'";
+					$hst_q = mysqli_query($con,$hst_sql);
+					while($hst_r = mysqli_fetch_assoc($hst_q)){
 						echo $hst_r['name']."<br />";
 					}
 				?>
                                 </td>
 				<td valign="top" style="text-align:center;">
-					<?=st($myarray["billing_name"]);?>
+					<?php echo st($myarray["billing_name"]);?>
 				</td>
 				<td valign="top" style="text-align:center;">
-					<?= $myarray['num_staff'];?>
+					<?php echo  $myarray['num_staff'];?>
 				</td>
 				<td valign="top" align="center">
-				  <?= $myarray['num_patient']; ?>
+				  <?php echo  $myarray['num_patient']; ?>
 				</td>	
 			        <td valign="top" align="center">
-                                  <?= $myarray['num_contact']; ?>
+                                  <?php echo  $myarray['num_contact']; ?>
                                 </td>	
 				<td valign="top" align="center">
-				  <?= $myarray['access_code']; ?>
+				  <?php echo  $myarray['access_code']; ?>
 				</td>
                                 <td valign="top" align="center">
-                                  <?= $myarray['plan_name']; ?>
+                                  <?php echo  $myarray['plan_name']; ?>
                                 </td>
                                 <td valign="top" align="center">
-                                  <?= ($myarray['adddate'])?date('m/d/Y',strtotime($myarray['adddate'])):''; ?>
+                                  <?php echo  ($myarray['adddate'])?date('m/d/Y',strtotime($myarray['adddate'])):''; ?>
                                 </td>
 				<td valign="top" align="center">
-				  <?= $myarray['duration']; ?>
+				  <?php echo  $myarray['duration']; ?>
 				</td>
                                 <td valign="top" align="center">
-                                  <?= $myarray['paid']; ?>
+                                  <?php echo  $myarray['paid']; ?>
                                 </td>
 				<td valign="top" align="center">
 				  <?php if($myarray['status']==DSS_USER_STATUS_SUSPENDED){ ?>
-					<a href="#" onclick="return false;" title="<?= $myarray['suspended_reason']; ?>"><?= $dss_user_status_labels[$myarray['status']]; ?></a>	
+					<a href="#" onclick="return false;" title="<?php echo  $myarray['suspended_reason']; ?>"><?php echo  $dss_user_status_labels[$myarray['status']]; ?></a>	
 				  <?php }else{ ?>
-				  <?= $dss_user_status_labels[$myarray['status']]; ?>
+				  <?php echo  $dss_user_status_labels[$myarray['status']]; ?>
 				  <?php } ?>
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 
 	}?>
 </tbody>
@@ -415,4 +416,4 @@ $(document).ready(function()
     } 
 ); 
 </script>
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

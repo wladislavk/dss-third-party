@@ -1,4 +1,4 @@
-<? 
+<?php 
 include "includes/top.htm";
 
 if(is_billing($_SESSION['admin_access'])){
@@ -8,13 +8,13 @@ if(is_billing($_SESSION['admin_access'])){
 
 
 if(isset($_GET['did']) && $_GET['did']!=''){
-  $s = "UPDATE dental_percase_invoice SET status=3 WHERE id='".mysql_real_escape_string($_GET['did'])."'";
-  mysql_query($s);
+  $s = "UPDATE dental_percase_invoice SET status=3 WHERE id='".mysqli_real_escape_string($con,$_GET['did'])."'";
+  mysqli_query($con,$s);
 }
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -48,7 +48,7 @@ if(is_super($_SESSION['admin_access'])){
 		FROM dental_users du 
 		JOIN dental_user_company uc ON uc.userid = du.userid
 		JOIN companies c ON c.id=uc.companyid
-		WHERE du.docid=0 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+		WHERE du.docid=0 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'";
 }
 
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
@@ -80,13 +80,13 @@ switch ($sort_by) {
 
 $sql .= " ORDER BY ".$sort_by_sql;
 
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_users = mysqli_num_rows($my);
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -97,14 +97,14 @@ $num_users=mysql_num_rows($my);
 </div>
 <br />
 <div align="center" class="red" style="clear:both;">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : ''); ?></b>
 </div>
 
 &nbsp;
-<b>Total Records: <?=$total_rec;?></b>
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<b>Total Records: <?php echo $total_rec;?></b>
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class=" sort_table table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -113,7 +113,7 @@ $num_users=mysql_num_rows($my);
 			?>
 		</TD>        
 	</TR>
-	<? }?>
+	<?php }?>
 <thead>
 	<tr class="tr_bg_h">
                 <th class="col_head" width="14%">
@@ -147,24 +147,24 @@ $num_users=mysql_num_rows($my);
 	</tr>
 </thead>
 <tbody>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 $total_charge = $myarray['monthly_fee_amount'];
 $case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl                 JOIN dental_patients dp ON dl.patientid=dp.patientid
         WHERE 
                 dl.transaction_code='E0486' AND
-                dl.docid='".$myarray['userid']."' AND
+                dl.docid='".(!empty($myarray['userid']) ? $myarray['userid'] : '')."' AND
                 dl.percase_invoice='".$myarray['id']."'
         UNION
 SELECT percase_name, percase_date, '', percase_amount, id FROM dental_percase_invoice_extra dl
@@ -178,50 +178,50 @@ SELECT CONCAT('Insurance Verification Services – ', patient_firstname, ' ', pa
 SELECT description,
 start_date, end_date, amount, id FROM dental_fax_invoice        WHERE
                 invoice_id='".$myarray['id']."'";
-$case_q = mysql_query($case_sql);
-while($case_r = mysql_fetch_assoc($case_q)){
+$case_q = mysqli_query($con,$case_sql);
+while($case_r = mysqli_fetch_assoc($case_q)){
 $total_charge += $case_r['percase_amount'];
 }
                 ?>
 
-			<tr class="status_<?= $myarray["status"]; ?>">
+			<tr class="status_<?php echo  $myarray["status"]; ?>">
 				<td valign="top">
-					<?=st($myarray["username"]);?>
+					<?php echo st($myarray["username"]);?>
 				</td>
                                 <td valign="top">
-                                        <?=st($myarray["company_name"]);?>
+                                        <?php echo st($myarray["company_name"]);?>
                                 </td>
                                 <td valign="top">
-                                        <?=st($myarray["first_name"]." ".$myarray["last_name"]);?>
+                                        <?php echo st($myarray["first_name"]." ".$myarray["last_name"]);?>
                                 </td>
                                 <td valign="top">
 $<?php
                                             echo number_format($total_charge, 2); ?>
                                 </td>
 				<td valign="top">
-					<?= ($myarray['adddate'])?date('m/d/y', strtotime($myarray['adddate'])):''; ?>
+					<?php echo  ($myarray['adddate'])?date('m/d/y', strtotime($myarray['adddate'])):''; ?>
 				</td>
 				<td valign="top">
-					<?= ($myarray['bill_date'])?date('m/d/y', strtotime($myarray['bill_date'])):''; ?>
+					<?php echo  ($myarray['bill_date'])?date('m/d/y', strtotime($myarray['bill_date'])):''; ?>
 				</td>
 				<td valign="top">
-					<?= $myarray['bill_attempts']; ?>
+					<?php echo  $myarray['bill_attempts']; ?>
 				</td>
 				<td valign="top" align="center">
-					<a href="manage_percase_invoice_history.php?docid=<?=$myarray["docid"];?>">History</a>
+					<a href="manage_percase_invoice_history.php?docid=<?php echo $myarray["docid"];?>">History</a>
 				</td>	
 				<td valign="top">
                                         <?php if($myarray['cc_id']!=''){ ?>
-                                        <a href="#" onclick="loadPopup('percase_bill.php?docid=<?=$myarray["docid"];?>&invoice=<?=$myarray["id"];?>'); return false;" class="btn btn-primary" title="Rebill user" style="padding:3px 5px;">
+                                        <a href="#" onclick="loadPopup('percase_bill.php?docid=<?php echo $myarray["docid"];?>&invoice=<?php echo $myarray["id"];?>'); return false;" class="btn btn-primary" title="Rebill user" style="padding:3px 5px;">
                                                 Rebill 
                                         </a><br /><br />
                                         <?php } ?>
 					<?php if(is_admin($_SESSION['admin_access'])){ ?>
-					  <a href="manage_payment_errors.php?did=<?=$myarray["id"];?>" class="btn btn-warning" title="Delete Charge" onclick="return confirm('This will remove the failed charge from this list and you will no longer be able to access it. Are you sure?');" style="padding:3px 5px;">Delete</a>
+					  <a href="manage_payment_errors.php?did=<?php echo $myarray["id"];?>" class="btn btn-warning" title="Delete Charge" onclick="return confirm('This will remove the failed charge from this list and you will no longer be able to access it. Are you sure?');" style="padding:3px 5px;">Delete</a>
 					<?php } ?>
 				</td>			
 			</tr>
-	<? 	}
+	<?php 	}
 
 	}?>
 </tbody>
@@ -235,4 +235,4 @@ $<?php
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

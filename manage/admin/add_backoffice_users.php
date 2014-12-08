@@ -1,35 +1,37 @@
 <?php 
-session_start();
-require_once('includes/main_include.php');
-include("includes/sescheck.php");
-include_once('includes/password.php');
-require_once('../includes/constants.inc');
-include_once '../includes/general_functions.php';
-require_once 'includes/access.php';
-?>  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script><?php
-if($_POST["usersub"] == 1)
+    include_once('includes/main_include.php');
+    include("includes/sescheck.php");
+    include_once('includes/password.php');
+    include_once('../includes/constants.inc');
+    include_once '../includes/general_functions.php';
+    include_once 'includes/access.php';
+?>
+
+<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script><?php
+
+if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
 {
 	$sel_check = "select * from admin where username = '".s_for($_POST["username"])."' and adminid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con,$sel_check);
         $sel_check2 = "select * from admin where email = '".s_for($_POST["email"])."' and adminid <> '".s_for($_POST['ed'])."'";
-        $query_check2=mysql_query($sel_check2);
+        $query_check2=mysqli_query($con,$sel_check2);
 
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Username already exist. So please give another Username.";
 		?>
 		<script type="text/javascript">
-			alert("<?=$msg;?>");
+			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
 		<?
 	} 
-	elseif(mysql_num_rows($query_check2)>0)
+	elseif(mysqli_num_rows($query_check2)>0)
         {
                 $msg="Email already exist. So please give another Email.";
                 ?>
                 <script type="text/javascript">
-                        alert("<?=$msg;?>");
+                        alert("<?php echo $msg;?>");
                         window.location="#add";
                 </script>
                 <?
@@ -39,29 +41,29 @@ if($_POST["usersub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update admin set 
-				first_name = '".mysql_real_escape_string($_POST["first_name"])."',
-				last_name = '".mysql_real_escape_string($_POST["last_name"])."',
-				username = '".mysql_real_escape_string($_POST["username"])."',
-				admin_access='".mysql_real_escape_string($_POST["admin_access"])."',
-				email = '".mysql_real_escape_string($_POST["email"])."', 
-				status = '".mysql_real_escape_string($_POST["status"])."' 
+				first_name = '".mysqli_real_escape_string($con,$_POST["first_name"])."',
+				last_name = '".mysqli_real_escape_string($con,$_POST["last_name"])."',
+				username = '".mysqli_real_escape_string($con,$_POST["username"])."',
+				admin_access='".mysqli_real_escape_string($con,$_POST["admin_access"])."',
+				email = '".mysqli_real_escape_string($con,$_POST["email"])."', 
+				status = '".mysqli_real_escape_string($con,$_POST["status"])."' 
 			where adminid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql);
 		
 			if(is_super($_SESSION['admin_access'])){
-                          mysql_query("DELETE FROM admin_company WHERE adminid='".mysql_real_escape_string($_POST["ed"])."'");
-                          mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
+                          mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
+                          mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");
                         }elseif(is_super($_SESSION['admin_access'])){
-                          mysql_query("DELETE FROM admin_company WHERE adminid='".mysql_real_escape_string($_POST["ed"])."'");
-                          mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($_SESSION["companyid"])."'");
+                          mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
+                          mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_SESSION["companyid"])."'");
 			}
 			
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_backoffice.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_backoffice.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -73,31 +75,31 @@ if($_POST["usersub"] == 1)
 			$password = gen_password($_POST['password'], $salt);
 
 			$ins_sql = "insert into admin set 
-                                username = '".mysql_real_escape_string($_POST["username"])."',
-                                admin_access='".mysql_real_escape_string($_POST["admin_access"])."',
-                                email = '".mysql_real_escape_string($_POST["email"])."', 
-                                status = '".mysql_real_escape_string($_POST["status"])."', 
-				password = '".mysql_real_escape_string($password)."', 
+                                username = '".mysqli_real_escape_string($con,$_POST["username"])."',
+                                admin_access='".mysqli_real_escape_string($con,$_POST["admin_access"])."',
+                                email = '".mysqli_real_escape_string($con,$_POST["email"])."', 
+                                status = '".mysqli_real_escape_string($con,$_POST["status"])."', 
+				password = '".mysqli_real_escape_string($con,$password)."', 
 				salt = '".$salt."',
-                                first_name = '".mysql_real_escape_string($_POST["first_name"])."',
-                                last_name = '".mysql_real_escape_string($_POST["last_name"])."',
+                                first_name = '".mysqli_real_escape_string($con,$_POST["first_name"])."',
+                                last_name = '".mysqli_real_escape_string($con,$_POST["last_name"])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
-                        $adminid = mysql_insert_id();			
+			mysqli_query($con,$ins_sql); 
+                        $adminid = mysqli_insert_id($con);			
 
                         if(is_super($_SESSION['admin_access'])){
-                          mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($adminid)."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
+                          mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$adminid)."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");
                         }else{
-                          mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($adminid)."', companyid='".mysql_real_escape_string($_SESSION["admincompanyid"])."'");
+                          mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$adminid)."', companyid='".mysqli_real_escape_string($con,$_SESSION["admincompanyid"])."'");
                         }
 
 
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_backoffice.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_backoffice.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -107,16 +109,16 @@ if($_POST["usersub"] == 1)
 
 ?>
 
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+<?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select a.*, ac.companyid from admin  a
 		LEFT JOIN admin_company ac ON a.adminid = ac.adminid
-		where a.adminid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+		where a.adminid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$username = $_POST['username'];
 		$password = $_POST['password'];
@@ -152,18 +154,18 @@ if($_POST["usersub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<? if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
+    <form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
-               <?=$but_text?> Backoffice User 
+               <?php echo $but_text?> Backoffice User 
                <? if($username <> "") {?>
-               		&quot;<?=$username;?>&quot;
+               		&quot;<?php echo $username;?>&quot;
                <? }?>
             </td>
         </tr>
@@ -172,7 +174,7 @@ if($_POST["usersub"] == 1)
                 Username
             </td>
             <td valign="top" class="frmdata">
-                <input id="username" type="text" name="username" value="<?=$username?>" class="form-control validate" /> 
+                <input id="username" type="text" name="username" value="<?php echo $username?>" class="form-control validate" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -182,7 +184,7 @@ if($_POST["usersub"] == 1)
                 Password
             </td>
             <td valign="top" class="frmdata">
-                <input id="password" type="password" name="password" value="<?=$password;?>" class="form-control validate" />
+                <input id="password" type="password" name="password" value="<?php echo $password;?>" class="form-control validate" />
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -191,7 +193,7 @@ if($_POST["usersub"] == 1)
                 Re-type Password
             </td>
             <td valign="top" class="frmdata">
-                <input id="password2" type="password" name="password2" value="<?=$password;?>" class="form-control validate" />
+                <input id="password2" type="password" name="password2" value="<?php echo $password;?>" class="form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -201,7 +203,7 @@ if($_POST["usersub"] == 1)
                 First Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="first_name" type="text" name="first_name" value="<?=$first_name;?>" class="form-control validate" /> 
+                <input id="first_name" type="text" name="first_name" value="<?php echo $first_name;?>" class="form-control validate" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -210,7 +212,7 @@ if($_POST["usersub"] == 1)
                 Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="last_name" type="text" name="last_name" value="<?=$last_name;?>" class="form-control validate" />
+                <input id="last_name" type="text" name="last_name" value="<?php echo $last_name;?>" class="form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -219,7 +221,7 @@ if($_POST["usersub"] == 1)
                 Email
             </td>
             <td valign="top" class="frmdata">
-                <input id="email" type="text" name="email" value="<?=$email;?>" class="form-control validate" /> 
+                <input id="email" type="text" name="email" value="<?php echo $email;?>" class="form-control validate" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -234,9 +236,9 @@ if($_POST["usersub"] == 1)
 			<option value="">Select Company</option>
                         <?php
                         $c_sql = "SELECT * FROM companies ORDER BY name asc";
-                        $c_q = mysql_query($c_sql);
-                        while($c_r = mysql_fetch_assoc($c_q)){ ?>
-                                <option value="<?= $c_r['id']; ?>" <?= ($companyid == $c_r['id'])?'selected="selected"':''; ?>><?= $c_r['name']; ?></option>
+                        $c_q = mysqli_query($con,$c_sql);
+                        while($c_r = mysqli_fetch_assoc($c_q)){ ?>
+                                <option value="<?php echo  $c_r['id']; ?>" <?php echo  ($companyid == $c_r['id'])?'selected="selected"':''; ?>><?php echo  $c_r['name']; ?></option>
                         <?php } ?>
                 </select>
             </td>
@@ -250,20 +252,20 @@ if($_POST["usersub"] == 1)
                 <select id="admin_access" name="admin_access" class="form-control validate">
 			<option value="">Select Access</option>
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
-                        <option value="<?= DSS_ADMIN_ACCESS_SUPER; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_SUPER) echo " selected";?>>Super</option>
+                        <option value="<?php echo  DSS_ADMIN_ACCESS_SUPER; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_SUPER) echo " selected";?>>Super</option>
 			<?php } ?>
 			<?php if(is_admin($_SESSION['admin_access'])){ ?>
-                        <option value="<?= DSS_ADMIN_ACCESS_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_ADMIN) echo " selected";?>>Admin</option>
-                        <option value="<?= DSS_ADMIN_ACCESS_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BASIC) echo " selected";?>>Basic</option>
+                        <option value="<?php echo  DSS_ADMIN_ACCESS_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_ADMIN) echo " selected";?>>Admin</option>
+                        <option value="<?php echo  DSS_ADMIN_ACCESS_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BASIC) echo " selected";?>>Basic</option>
                         <?php } ?>
 
 			<?php if(is_super($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])){ ?>
-                        <option value="<?= DSS_ADMIN_ACCESS_BILLING_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_ADMIN) echo " selected";?>>Billing Admin</option>
-                        <option value="<?= DSS_ADMIN_ACCESS_BILLING_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_BASIC) echo " selected";?>>Billing Basic</option>
+                        <option value="<?php echo  DSS_ADMIN_ACCESS_BILLING_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_ADMIN) echo " selected";?>>Billing Admin</option>
+                        <option value="<?php echo  DSS_ADMIN_ACCESS_BILLING_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_BASIC) echo " selected";?>>Billing Basic</option>
 			<?php } ?>
 			<?php if(is_super($_SESSION['admin_access']) || is_hst($_SESSION['admin_access'])){ ?>
-                        <option value="<?= DSS_ADMIN_ACCESS_HST_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_ADMIN) echo " selected";?>>HST Admin</option>
-                        <option value="<?= DSS_ADMIN_ACCESS_HST_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_BASIC) echo " selected";?>>HST Basic</option>
+                        <option value="<?php echo  DSS_ADMIN_ACCESS_HST_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_ADMIN) echo " selected";?>>HST Admin</option>
+                        <option value="<?php echo  DSS_ADMIN_ACCESS_HST_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_BASIC) echo " selected";?>>HST Basic</option>
 			<?php } ?>
                 </select>
             </td>
@@ -287,10 +289,10 @@ if($_POST["usersub"] == 1)
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="usersub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["adminid"]?>" />
-                <input type="submit" value="<?=$but_text?> User" class="btn btn-primary">
+                <input type="hidden" name="ed" value="<?php echo $themyarray["adminid"]?>" />
+                <input type="submit" value="<?php echo $but_text?> User" class="btn btn-primary">
                 <?php if($themyarray["adminid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a style="float:right;" href="javascript:parent.window.location='manage_backoffice.php?delid=<?=$themyarray["adminid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
+                    <a style="float:right;" href="javascript:parent.window.location='manage_backoffice.php?delid=<?php echo $themyarray["adminid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>
@@ -324,7 +326,7 @@ function update_access(){
 }
 $(document).ready(function(){
 update_access();
-selected_company = '<?= $companyid; ?>';
+selected_company = '<?php echo  $companyid; ?>';
 });
 
 

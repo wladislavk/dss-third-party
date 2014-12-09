@@ -1,20 +1,20 @@
 <?php 
-session_start();
-require_once('includes/main_include.php');
+
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 //include "../includes/general_functions.php";
 include_once "includes/general.htm";
 //include "includes/top.htm";
 ?>
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+<?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
 
     $psql = "select * from dental_contacttype WHERE physician=1";
-    $pq = mysql_query($psql);
+    $pq = mysqli_query($con,$psql);
     $physician_array = array();
-    while($pr = mysql_fetch_assoc($pq)){
+    while($pr = mysqli_fetch_assoc($pq)){
       array_push($physician_array, $pr['contacttypeid']);
     }
     $physician_types = implode(',', $physician_array);
@@ -22,8 +22,8 @@ include_once "includes/general.htm";
     $thesql = "select c.*, ct.contacttype from dental_contact c 
 		LEFT JOIN dental_contacttype ct ON ct.contacttypeid = c.contacttypeid
 		where c.contactid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 		$salutation = st($themyarray['salutation']);
 		$firstname = st($themyarray['firstname']);

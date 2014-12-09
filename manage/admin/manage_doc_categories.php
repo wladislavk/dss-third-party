@@ -1,14 +1,14 @@
-<?
+<?php
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
 if(isset($_GET['delid']) && is_super($_SESSION['admin_access'])){
 
-$del = "DELETE FROM dental_document_category WHERE categoryid='".mysql_real_escape_string($_GET['delid'])."'";
-mysql_query($del);
-$deldoc = "DELETE FROM dental_document WHERE categoryid='".mysql_real_escape_string($_GET['delid'])."'";
-mysql_query($deldoc);
+$del = "DELETE FROM dental_document_category WHERE categoryid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
+mysqli_query($con,$del);
+$deldoc = "DELETE FROM dental_document WHERE categoryid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
+mysqli_query($con,$deldoc);
 }
 
 
@@ -19,12 +19,12 @@ if(isset($_POST['add_cat'])){
 	adddate,
 	ip_address
       ) VALUES (
-	'".mysql_real_escape_string($_POST['name'])."',
-	'".mysql_real_escape_string($_POST['status'])."',
+	'".mysqli_real_escape_string($con,$_POST['name'])."',
+	'".mysqli_real_escape_string($con,$_POST['status'])."',
         now(),
 	'".$_SERVER['REMOTE_ADDR']."'
       );";
-  mysql_query($ins);
+  mysqli_query($con,$ins);
 ?>
 <script type="text/javascript">
   window.location = 'manage_doc_categories.php';
@@ -72,24 +72,24 @@ if(isset($_POST['add_cat'])){
 
 <?php
   $sql = "SELECT * FROM dental_document_category ORDER BY name ASC";
-  $q = mysql_query($sql);
-  while($cat = mysql_fetch_assoc($q)){
+  $q = mysqli_query($con,$sql);
+  while($cat = mysqli_fetch_assoc($q)){
 	?>
-	<tr class="<?= ($cat['status'])?'tr_active':'tr_inactive'; ?>">
+	<tr class="<?php echo  ($cat['status'])?'tr_active':'tr_inactive'; ?>">
 		<td>
-			<?= $cat['name']; ?>
+			<?php echo  $cat['name']; ?>
                 </td>
                 <td>
-			<?= ($cat['status'])?'Active':'Inactive'; ?>
+			<?php echo  ($cat['status'])?'Active':'Inactive'; ?>
                 </td>
 		<td>
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
-			<a href="manage_doc_cat_edit.php?cat=<?= $cat['categoryid'];?>" class="btn btn-primary btn-xs">
+			<a href="manage_doc_cat_edit.php?cat=<?php echo  $cat['categoryid'];?>" class="btn btn-primary btn-xs">
                 <span class="glyphicon glyphicon-pencil"></span>
                 Edit
             </a>
 			<?php } ?>
-			<a href="manage_docs.php?cat=<?= $cat['categoryid']; ?>" class="btn btn-default btn-xs">
+			<a href="manage_docs.php?cat=<?php echo  $cat['categoryid']; ?>" class="btn btn-default btn-xs">
                 <span class="glyphicon glyphicon-eye-open"></span>
                 View
             </a>
@@ -106,5 +106,5 @@ if(isset($_POST['add_cat'])){
 
 </table>
 
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>
 

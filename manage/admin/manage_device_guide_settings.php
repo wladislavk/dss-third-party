@@ -1,13 +1,12 @@
-<? 
+<?php 
 include "includes/top.htm";
 
 
 $sql = "select s.*
 	 FROM dental_device_guide_settings s
 	 order by name ASC";
-$my = mysql_query($sql);
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_users = mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -29,12 +28,12 @@ $num_users=mysql_num_rows($my);
 </div>
 
 <br />
-<div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+<div align="center" class="red"> 
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if(!empty($total_rec) && $total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -43,7 +42,7 @@ $num_users=mysql_num_rows($my);
 			?>
 		</TD>        
 	</TR>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="60%">
 			Name
@@ -55,39 +54,39 @@ $num_users=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="3" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 
 		?>
 			<tr>
 				<td valign="top">
-					<?=st($myarray["name"]);?>
+					<?php echo st($myarray["name"]);?>
 				</td>
 				<td valign="top">
-					<?= st($dss_device_setting_type_labels[$myarray["setting_type"]]); ?>
+					<?php echo  st($dss_device_setting_type_labels[$myarray["setting_type"]]); ?>
 					<?php if($myarray["setting_type"] == DSS_DEVICE_SETTING_TYPE_RANGE){ ?>
-						(<?= $myarray['range_start']; ?> - <?= $myarray['range_end']; ?>)
+						(<?php echo  $myarray['range_start']; ?> - <?php echo  $myarray['range_end']; ?>)
 					<?php } ?>
 				</td>		
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_device_guide_setting.php?ed=<?=$myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_device_guide_setting.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 
@@ -99,4 +98,4 @@ $num_users=mysql_num_rows($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

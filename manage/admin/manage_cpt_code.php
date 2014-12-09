@@ -1,10 +1,10 @@
 <? 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
+if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_cpt_code where cpt_codeid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -18,26 +18,26 @@ if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_cpt_code order by sortby";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_users = mysqli_num_rows($my);
 
-if($_POST['sortsub'] == 1)
+if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 {
 	foreach($_POST['sortby'] as $val)
 	{
-		$smyarray = mysql_fetch_array($my);
+		$smyarray = mysqli_fetch_array($my);
 		
 		if($val == '' || is_numeric($val) === false)
 		{
@@ -45,7 +45,7 @@ if($_POST['sortsub'] == 1)
 		}
 		
 		$up_sort_sql = "update dental_cpt_code set sortby='".s_for($val)."' where cpt_codeid='".$smyarray["cpt_codeid"]."'";
-		mysql_query($up_sort_sql);
+		mysqli_query($con,$up_sort_sql);
 	}
 	$msg = "Sort By Changed Successfully";
 	?>
@@ -78,7 +78,7 @@ if($_POST['sortsub'] == 1)
 <?php } ?>
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 &nbsp;
@@ -106,7 +106,7 @@ if($_POST['sortsub'] == 1)
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -117,7 +117,7 @@ if($_POST['sortsub'] == 1)
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{

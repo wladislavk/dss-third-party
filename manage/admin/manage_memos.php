@@ -1,9 +1,10 @@
-<? 
+<?php 
 include "includes/top.htm";
 include_once "../includes/constants.inc";
+
 $sql = "SELECT * FROM memo_admin order BY off_date ASC";
-$my = mysql_query($sql) or die(mysql_error());
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 
 ?>
 
@@ -19,7 +20,7 @@ $total_rec = mysql_num_rows($my);
 </button>
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <table class="sort_table table table-bordered table-hover" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -40,37 +41,37 @@ $total_rec = mysql_num_rows($my);
 	</tr>
 	</thead>
 	<tbody>
-<? if(mysql_num_rows($my) == 0)
+<?php if(mysqli_num_rows($my) == 0)
 { ?>
 	<tr class="tr_bg">
 		<td valign="top" class="col_head" colspan="4" align="center">
 		No Records
 		</td>
 		</tr>
-		<? 
+		<?php 
 }
 else
 {
-	while($myarray = mysql_fetch_array($my))
+	while($myarray = mysqli_fetch_array($my))
 	{
 		?>
 			<tr>
 			<td valign="top">
-			<?=st($myarray["memo"]);?>
+			<?php echo st($myarray["memo"]);?>
 			</td>
 			<td valign="top">
-			<?= st($myarray["last_update"]); ?>
+			<?php echo  st($myarray["last_update"]); ?>
 			</td>	
                         <td valign="top">
-                        <?= st($myarray["off_date"]); ?>
+                        <?php echo  st($myarray["off_date"]); ?>
 			</td>
 			<td valign="top">
-			<a href="#" onclick="loadPopup('add_memo.php?ed=<?=$myarray["memo_id"];?>');" title="Edit Memo" class="btn btn-primary btn-sm">
+			<a href="#" onclick="loadPopup('add_memo.php?ed=<?php echo $myarray["memo_id"];?>');" title="Edit Memo" class="btn btn-primary btn-sm">
 			 Edit
 			 <span class="glyphicon glyphicon-pencil"></span></a>
 							</td>
 							</tr>
-							<? 	}
+							<?php 	}
 }?>
 </tbody>
 </table>
@@ -85,4 +86,4 @@ else
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

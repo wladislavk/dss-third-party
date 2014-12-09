@@ -1,10 +1,10 @@
-<?
+<?php
 include "includes/top.htm";
-require_once('../includes/constants.inc');
-require_once "includes/general.htm";
+include_once('../includes/constants.inc');
+include_once "includes/general.htm";
 if(isset($_GET['delid']) && is_super($_SESSION['admin_access'])){
-$del = "DELETE FROM dental_document WHERE documentid='".mysql_real_escape_string($_GET['delid'])."'";
-mysql_query($del);
+$del = "DELETE FROM dental_document WHERE documentid='".mysqli_real_escape_string($con,$_GET['delid'])."'";
+mysqli_query($con,$del);
 
 
 }
@@ -31,16 +31,16 @@ if(isset($_POST['add_doc'])){
         adddate,
         ip_address
       ) VALUES (
-        '".mysql_real_escape_string($_POST['name'])."',
-        '".mysql_real_escape_string($_POST['category'])."',
+        '".mysqli_real_escape_string($con,$_POST['name'])."',
+        '".mysqli_real_escape_string($con,$_POST['category'])."',
         '".$banner1."',
         now(),
         '".$_SERVER['REMOTE_ADDR']."'
       );";
-  mysql_query($ins);
+  mysqli_query($con,$ins);
 ?>
 <script type="text/javascript">
-  window.location = 'manage_docs.php<?= (isset($_GET['cat']))?'?cat='.$_GET['cat']:''; ?>';
+  window.location = 'manage_docs.php<?php echo  (isset($_GET['cat']))?'?cat='.$_GET['cat']:''; ?>';
 </script>
 <?php
 
@@ -56,13 +56,13 @@ if(isset($_POST['add_doc'])){
 <label>Name:</label> <input type="text" name="name" id="name" />
  <?php
   if(isset($_GET['cat'])){ ?>
-    <input type="hidden" name="category" value="<?= $_GET['cat']; ?>" />
+    <input type="hidden" name="category" value="<?php echo  $_GET['cat']; ?>" />
   <?php }else{ 
     $cs = "SELECT * FROM dental_document_category ORDER BY name ASC";
-    $cq = mysql_query($cs);
+    $cq = mysqli_query($con,$cs);
     ?><label>Category:</label> <select name="category"><?php
-    while($c = mysql_fetch_assoc($cq)){ ?>
-	<option value="<?= $c['categoryid']; ?>"><?= $c['name']; ?></option>
+    while($c = mysqli_fetch_assoc($cq)){ ?>
+	<option value="<?php echo  $c['categoryid']; ?>"><?php echo  $c['name']; ?></option>
     <?php } ?>	
     </select>
   <?php } ?>
@@ -103,29 +103,29 @@ if(isset($_POST['add_doc'])){
 <?php
   $sql = "SELECT d.*, c.name as categoryname FROM dental_document d INNER JOIN dental_document_category c ON d.categoryid=c.categoryid";
   if(isset($_GET['cat'])){
-    $sql .= " WHERE d.categoryid=".mysql_real_escape_string($_GET['cat'])." ";
+    $sql .= " WHERE d.categoryid=".mysqli_real_escape_string($con,$_GET['cat'])." ";
   }
   $sql .= " ORDER BY d.name ASC";
-  $q = mysql_query($sql);
-  while($doc = mysql_fetch_assoc($q)){
+  $q = mysqli_query($con,$sql);
+  while($doc = mysqli_fetch_assoc($q)){
         ?>
         <tr class="tr_active">
                 <td>
-                        <?= $doc['name']; ?>
+                        <?php echo  $doc['name']; ?>
                 </td>
                 <?php if(!isset($_GET['cat'])){ ?>
                 <td>
-                        <?= $doc['categoryname']; ?>
+                        <?php echo  $doc['categoryname']; ?>
                 </td>
 		<?php } ?>
                 <td>
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
-                        <a href="manage_docs_edit.php?doc=<?= $doc['documentid']; ?>" class="btn btn-primary btn-xs">
+                        <a href="manage_docs_edit.php?doc=<?php echo  $doc['documentid']; ?>" class="btn btn-primary btn-xs">
                           <span class="glyphicon glyphicon-pencil"></span>
                           Edit
                         </a>
 			<?php } ?>
-                        <a target="_blank" href="display_file.php?f=<?= $doc['filename']; ?>" class="btn btn-default btn-xs">
+                        <a target="_blank" href="display_file.php?f=<?php echo  $doc['filename']; ?>" class="btn btn-default btn-xs">
                           <span class="glyphicon glyphicon-eye-open"></span>
                           View
                         </a>
@@ -138,7 +138,7 @@ if(isset($_POST['add_doc'])){
 
 </table>
 
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>
 
 
  

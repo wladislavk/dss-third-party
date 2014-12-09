@@ -22,14 +22,14 @@ if(isset($_POST['respond'])){
     $r_id = mysqli_insert_id($con);
   }
 
-  if($_POST['close']==2){
+  if(!empty($_POST['close']) && $_POST['close']==2){
     $s = "UPDATE dental_support_tickets SET
 		status='2'
 		WHERE id = '".mysqli_real_escape_string($con,$_GET['ed'])."'";
     mysqli_query($con,$s);
   }
 
-  if($_POST['reopen']==1){
+  if(!empty($_POST['reopen']) && $_POST['reopen']==1){
     $s = "UPDATE dental_support_tickets SET
                 status='1'
                 WHERE id = '".mysqli_real_escape_string($con,$_GET['ed'])."'";

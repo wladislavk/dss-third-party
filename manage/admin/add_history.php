@@ -1,23 +1,23 @@
 <?php 
-session_start();
-require_once('includes/main_include.php');
+
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
-if($_POST["mult_historysub"] == 1)
+if(!empty($_POST["mult_historysub"]) && $_POST["mult_historysub"] == 1)
 {
-	$op_arr = split("\n",trim($_POST['history']));
+	$op_arr = explode("\n",trim($_POST['history']));
 				
 	foreach($op_arr as $i=>$val)
 	{
 		if($val <> '')
 		{
 			$sel_check = "select * from dental_history where history = '".s_for($val)."'";
-			$query_check=mysql_query($sel_check);
+			$query_check=mysqli_query($con,$sel_check);
 			
-			if(mysql_num_rows($query_check) == 0)
+			if(mysqli_num_rows($query_check) == 0)
 			{
 				$ins_sql = "insert into dental_history set history = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysql_query($ins_sql) or die($ins_sql.mysql_error());
+				mysqli_query($con,$ins_sql);
 			}
 			
 		}
@@ -26,24 +26,24 @@ if($_POST["mult_historysub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
-		parent.window.location='manage_history.php?msg=<?=$msg;?>';
+		//alert("<?php echo $msg;?>");
+		parent.window.location='manage_history.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
 	die();
 }
 
-if($_POST["historysub"] == 1)
+if(!empty($_POST["historysub"]) && $_POST["historysub"] == 1)
 {
 	$sel_check = "select * from dental_history where history = '".s_for($_POST["history"])."' and historyid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con,$sel_check);
 	
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Medical History already exist. So please give another Medical History.";
 		?>
 		<script type="text/javascript">
-			alert("<?=$msg;?>");
+			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
 		<?
@@ -62,14 +62,13 @@ if($_POST["historysub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_history set history = '".s_for($_POST["history"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where historyid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-			
-			//echo $ed_sql.mysql_error();
+			mysqli_query($con,$ed_sql);
+
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_history.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_history.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -77,13 +76,13 @@ if($_POST["historysub"] == 1)
 		else
 		{
 			$ins_sql = "insert into dental_history set history = '".s_for($_POST["history"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con,$ins_sql);
 			
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_history.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_history.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -96,11 +95,11 @@ if($_POST["historysub"] == 1)
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
-    $thesql = "select * from dental_history where historyid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_history where historyid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$history = $_POST['history'];
 		$sortby = $_POST['sortby'];
@@ -128,19 +127,19 @@ if($_POST["historysub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
-    <form name="historyfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return historyabc(this)">
+    <?php }?>
+    <form name="historyfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return historyabc(this)">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
-               <?=$but_text?> Medical History 
-               <? if($history <> "") {?>
-               		&quot;<?=$history;?>&quot;
-               <? }?>
+               <?php echo $but_text?> Medical History 
+               <?php if($history <> "") {?>
+               		&quot;<?php echo $history;?>&quot;
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -148,7 +147,7 @@ if($_POST["historysub"] == 1)
                 Medical History
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="history" value="<?=$history?>" class="form-control" /> 
+                <input type="text" name="history" value="<?php echo $history?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -157,7 +156,7 @@ if($_POST["historysub"] == 1)
                 Sort By
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="sortby" value="<?=$sortby;?>" class="form-control" style="width:30px"/>		
+                <input type="text" name="sortby" value="<?php echo $sortby;?>" class="form-control" style="width:30px"/>		
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -166,8 +165,8 @@ if($_POST["historysub"] == 1)
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="form-control">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>
@@ -176,7 +175,7 @@ if($_POST["historysub"] == 1)
                 Description
             </td>
             <td valign="top" class="frmdata">
-            	<textarea class="form-control" name="description" style="width:100%;"><?=$description;?></textarea>
+            	<textarea class="form-control" name="description" style="width:100%;"><?php echo $description;?></textarea>
             </td>
         </tr>
         <tr>
@@ -185,10 +184,10 @@ if($_POST["historysub"] == 1)
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="historysub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["historyid"]?>" />
-                <input type="submit" value="<?=$but_text?> Medical History" class="btn btn-primary">
+                <input type="hidden" name="ed" value="<?php echo $themyarray["historyid"]?>" />
+                <input type="submit" value="<?php echo $but_text?> Medical History" class="btn btn-primary">
 		<?php if($themyarray["historyid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_history.php?delid=<?=$themyarray["historyid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
+                    <a href="manage_history.php?delid=<?php echo $themyarray["historyid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>
@@ -197,12 +196,12 @@ if($_POST["historysub"] == 1)
     </table>
     </form>
     
-    <? if($_GET['ed'] == '')
+    <?php if(empty($_GET['ed']))
 	{?>
     	<div class="alert alert-danger text-center">
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
-		<form name="historyfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return historyabc(this)">
+		<form name="historyfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return historyabc(this)">
         <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
@@ -229,6 +228,6 @@ if($_POST["historysub"] == 1)
         </table>
         </form>
     
-    <? }?>
+    <?php }?>
 </body>
 </html>

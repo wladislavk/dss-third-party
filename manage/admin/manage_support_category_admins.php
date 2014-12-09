@@ -1,34 +1,34 @@
-<? 
+<?php 
 include "includes/top.htm";
 
-if($_POST["update"] != "")
+if(!empty($_POST["update"]))
 {
-	$del_sql = "DELETE FROM dental_support_category_admin WHERE category_id='".mysql_real_escape_string($_REQUEST["catid"])."'";
-	mysql_query($del_sql);
+	$del_sql = "DELETE FROM dental_support_category_admin WHERE category_id='".mysqli_real_escape_string($con,$_REQUEST["catid"])."'";
+	mysqli_query($con,$del_sql);
 	$admins = $_POST['admin'];
 
 	foreach($admins as $admin){
-          $ins_sql = "INSERT INTO dental_support_category_admin SET category_id='".mysql_real_escape_string($_REQUEST["catid"])."', adminid='".mysql_real_escape_string($admin)."',
-			adddate=now(), ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
-	  mysql_query($ins_sql);
+          $ins_sql = "INSERT INTO dental_support_category_admin SET category_id='".mysqli_real_escape_string($con,$_REQUEST["catid"])."', adminid='".mysqli_real_escape_string($con,$admin)."',
+			adddate=now(), ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
+	  mysqli_query($con,$ins_sql);
 	}
 	$msg= "Updated Successfully";
         ?>
         <script type="text/javascript">
                 //alert("Deleted Successfully");
-                window.location="manage_support_categories.php?msg=<?=$msg?>";
+                window.location="manage_support_categories.php?msg=<?php echo $msg?>";
         </script>
         <?
         die();
 }
 
 $sql = "select a.*,
-	(SELECT '1' FROM dental_support_category_admin ca WHERE ca.adminid=a.adminid AND ca.category_id='".mysql_real_escape_string($_GET['catid'])."' LIMIT 1) AS selected 
+	(SELECT '1' FROM dental_support_category_admin ca WHERE ca.adminid=a.adminid AND ca.category_id='".mysqli_real_escape_string($con,$_GET['catid'])."' LIMIT 1) AS selected 
 	FROM admin a 
 	WHERE a.status=1
 	 order by a.name ASC";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 
 ?>
 
@@ -36,7 +36,7 @@ $total_rec = mysql_num_rows($my);
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <div class="page-header">
-	<h2>Manage Support Category Admins <small>- <?= $r['title']; ?>
+	<h2>Manage Support Category Admins <small>- <?php echo  (!empty($r['title']) ? $r['title'] : ''); ?>
 </small></h2></div>
 <br />
 <br />
@@ -44,13 +44,13 @@ $total_rec = mysql_num_rows($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
-<form action="<?= $_SERVER['PHP_SELF']; ?>?catid=<?=$_GET['catid'];?>" method="post">
+<form action="<?php echo  $_SERVER['PHP_SELF']; ?>?catid=<?php echo $_GET['catid'];?>" method="post">
 <?php
-  while($a = mysql_fetch_assoc($my)){
+  while($a = mysqli_fetch_assoc($my)){
     ?>
-    <input type="checkbox" name="admin[]" value="<?=$a['adminid'];?>" <?= ($a['selected'])?'checked="checked"':''; ?> /> <?= $a['name']; ?><br />
+    <input type="checkbox" name="admin[]" value="<?php echo $a['adminid'];?>" <?php echo  ($a['selected'])?'checked="checked"':''; ?> /> <?php echo  $a['name']; ?><br />
     <?php
   }
 ?>
@@ -63,4 +63,4 @@ $total_rec = mysql_num_rows($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

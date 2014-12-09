@@ -1,20 +1,20 @@
-<? 
+<?php 
 include "includes/top.htm";
 
 
 if(isset($_REQUEST['order_submit'])){
   $parent_id = $_REQUEST['parent_id'];
-  mysql_query("DELETE FROM dental_flowsheet_steps_next where parent_id='".mysql_real_escape_string($parent_id)."'");
+  mysqli_query($con,"DELETE FROM dental_flowsheet_steps_next where parent_id='".mysqli_real_escape_string($con,$parent_id)."'");
   $steps = "SELECT id from dental_flowsheet_steps";
-  $step_q = mysql_query($steps);
-  while($r = mysql_fetch_assoc($step_q)){
+  $step_q = mysqli_query($con,$steps);
+  while($r = mysqli_fetch_assoc($step_q)){
     $sort = $_REQUEST['next_'.$r['id']];
     if($sort != ''){
       $n = "INSERT INTO dental_flowsheet_steps_next 
-	SET parent_id='".mysql_real_escape_string($parent_id)."',
+	SET parent_id='".mysqli_real_escape_string($con,$parent_id)."',
 	  child_id='".$r['id']."',
 	  sort_by='".$sort."'";
-      mysql_query($n);
+      mysqli_query($con,$n);
     }
   }
 }
@@ -31,19 +31,19 @@ if(isset($_REQUEST['order_submit'])){
 
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 &nbsp;
 <?php
   $sql = "SELECT * FROM dental_flowsheet_steps ORDER BY section ASC, sort_by ASC";
-  $q = mysql_query($sql);
-  $total_rec = mysql_num_rows($q);
+  $q = mysqli_query($con,$sql);
+  $total_rec = mysqli_num_rows($q);
   ?>
-<b>Total Records: <?=$total_rec;?></b>
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<b>Total Records: <?php echo $total_rec;?></b>
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if(!empty($rec_disp) && $total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -52,7 +52,7 @@ if(isset($_REQUEST['order_submit'])){
 			?>
 		</TD>        
 	</TR>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="80%">
 			Insurance Type		
@@ -61,47 +61,47 @@ if(isset($_REQUEST['order_submit'])){
 			Action
 		</td>
 	</tr>
-	<? if($total_rec == 0)
+	<?php if($total_rec == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($q))
+		while($myarray = mysqli_fetch_array($q))
 		{
 		?>
-			<tr class="section_<?= $myarray['section']; ?>">
+			<tr class="section_<?php echo  $myarray['section']; ?>">
 				<td valign="top">
-					<?=st($myarray["name"]);?>
+					<?php echo st($myarray["name"]);?>
 
-					<div id="next_<?=$myarray['id'];?>" style="display:none;">
+					<div id="next_<?php echo $myarray['id'];?>" style="display:none;">
 						<form method="post">
 						<?php
 							$next_sql = "select step.*, lookup.sort_by as next_order from dental_flowsheet_steps step
 								LEFT JOIN dental_flowsheet_steps_next lookup on step.id=lookup.child_id AND lookup.parent_id='".$myarray['id']."'
 								ORDER BY next_order ASC, step.section ASC, step.sort_by ASC";
-							$next_q = mysql_query($next_sql);
-							while($next = mysql_fetch_assoc($next_q)){ ?>
+							$next_q = mysqli_query($con,$next_sql);
+							while($next = mysqli_fetch_assoc($next_q)){ ?>
 								<?php if(is_super($_SESSION['admin_access'])){ ?>
-								<input name="next_<?= $next['id']; ?>" type="text" maxlength="2" style="width:20px;" value="<?= $next['next_order']; ?>" />
-								<?= $next['name']; ?>
+								<input name="next_<?php echo  $next['id']; ?>" type="text" maxlength="2" style="width:20px;" value="<?php echo  $next['next_order']; ?>" />
+								<?php echo  $next['name']; ?>
 									<br />
 								<?php }else{ ?>
 									<?php if($next['next_order']){ ?>
-									<?= $next['next_order']; ?>
-									<?= $next['name']; ?>
+									<?php echo  $next['next_order']; ?>
+									<?php echo  $next['name']; ?>
 									<br />
 									<?php } ?>
 								<?php } ?>
 					<?php		}
 						?>
 						<?php if(is_super($_SESSION['admin_access'])){ ?>
-						<input type="hidden" name="parent_id" value="<?= $myarray['id']; ?>" />
+						<input type="hidden" name="parent_id" value="<?php echo  $myarray['id']; ?>" />
 						<input type="submit" name="order_submit" value="Save order" class="btn btn-primary">
 						<?php } ?>
 						</form>
@@ -110,7 +110,7 @@ if(isset($_REQUEST['order_submit'])){
 				</td>
 						
 				<td valign="top">
-					<a href="Javascript:;"  onclick="$('#next_<?= $myarray['id'];?>').toggle()" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="$('#next_<?php echo  $myarray['id'];?>').toggle()" title="Edit" class="btn btn-primary btn-sm">
 						<?php if(is_super($_SESSION['admin_access'])){ ?>
 							Change Next	
 						<?php }else{ ?>
@@ -120,7 +120,7 @@ if(isset($_REQUEST['order_submit'])){
                     
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 </form>
@@ -133,4 +133,4 @@ if(isset($_REQUEST['order_submit'])){
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

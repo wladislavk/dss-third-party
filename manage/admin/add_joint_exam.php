@@ -1,23 +1,23 @@
 <?php 
-session_start();
-require_once('includes/main_include.php');
+
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
-if($_POST["mult_joint_examsub"] == 1)
+if(!empty($_POST["mult_joint_examsub"]) && $_POST["mult_joint_examsub"] == 1)
 {
-	$op_arr = split("\n",trim($_POST['joint_exam']));
+	$op_arr = explode("\n",trim($_POST['joint_exam']));
 				
 	foreach($op_arr as $i=>$val)
 	{
 		if($val <> '')
 		{
 			$sel_check = "select * from dental_joint_exam where joint_exam = '".s_for($val)."'";
-			$query_check=mysql_query($sel_check);
+			$query_check=mysqli_query($con,$sel_check);
 			
-			if(mysql_num_rows($query_check) == 0)
+			if(mysqli_num_rows($query_check) == 0)
 			{
 				$ins_sql = "insert into dental_joint_exam set joint_exam = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysql_query($ins_sql) or die($ins_sql.mysql_error());
+				mysqli_query($con,$ins_sql);
 			}
 			
 		}
@@ -33,12 +33,12 @@ if($_POST["mult_joint_examsub"] == 1)
 	die();
 }
 
-if($_POST["joint_examsub"] == 1)
+if(!empty($_POST["joint_examsub"]) && $_POST["joint_examsub"] == 1)
 {
 	$sel_check = "select * from dental_joint_exam where joint_exam = '".s_for($_POST["joint_exam"])."' and joint_examid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con,$sel_check);
 	
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Joint Examination already exist. So please give another Joint Examination.";
 		?>
@@ -62,9 +62,8 @@ if($_POST["joint_examsub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_joint_exam set joint_exam = '".s_for($_POST["joint_exam"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where joint_examid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-			
-			//echo $ed_sql.mysql_error();
+			mysqli_query($con,$ed_sql);
+
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -77,7 +76,7 @@ if($_POST["joint_examsub"] == 1)
 		else
 		{
 			$ins_sql = "insert into dental_joint_exam set joint_exam = '".s_for($_POST["joint_exam"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con,$ins_sql);
 			
 			$msg = "Added Successfully";
 			?>
@@ -96,11 +95,11 @@ if($_POST["joint_examsub"] == 1)
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
-    $thesql = "select * from dental_joint_exam where joint_examid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_joint_exam where joint_examid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$joint_exam = $_POST['joint_exam'];
 		$sortby = $_POST['sortby'];
@@ -128,7 +127,7 @@ if($_POST["joint_examsub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<? if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
@@ -197,7 +196,7 @@ if($_POST["joint_examsub"] == 1)
     </table>
     </form>
     
-    <? if($_GET['ed'] == '')
+    <? if(empty($_GET['ed']))
 	{?>
     	<div class="alert alert-danger text-center">
     		<b>--------------------------------- OR ---------------------------------</b>

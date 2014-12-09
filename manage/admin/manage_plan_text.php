@@ -1,19 +1,18 @@
-<? 
+<?php 
 include "includes/top.htm";
 
-if($_POST['plansub'] == 1)
+if(!empty($_POST['plansub']) && $_POST['plansub'] == 1)
 {
 	if($_POST["ed"] != "")
 	{
 		$ed_sql = "update dental_plan_text set plan_text = '".s_for($_POST["plan_text"])."' where plan_textid='".$_POST["ed"]."'";
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-		
-		//echo $ed_sql.mysql_error();
+		mysqli_query($con,$ed_sql);
+
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			parent.window.location='<?=$_SERVER['PHP_SELF'];?>?msg=<?=$msg;?>';
+			//alert("<?php echo $msg;?>");
+			parent.window.location='<?php echo $_SERVER['PHP_SELF'];?>?msg=<?php echo $msg;?>';
 		</script>
 		<?
 		die();
@@ -21,13 +20,13 @@ if($_POST['plansub'] == 1)
 	else
 	{
 		$ins_sql = "insert into dental_plan_text set plan_text = '".s_for($_POST["plan_text"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysql_query($ins_sql) or die($ins_sql.mysql_error());
+		mysqli_query($con,$ins_sql);
 		
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			parent.window.location='<?=$_SERVER['PHP_SELF'];?>?msg=<?=$msg;?>';
+			//alert("<?php echo $msg;?>");
+			parent.window.location='<?php echo $_SERVER['PHP_SELF'];?>?msg=<?php echo $msg;?>';
 		</script>
 		<?
 		die();
@@ -35,8 +34,8 @@ if($_POST['plansub'] == 1)
 }
 
 $sql = "select * from dental_plan_text";
-$my = mysql_query($sql) or die(mysql_error());
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con,$sql);
+$myarray = mysqli_fetch_array($my);
 ?>
 
 <div class="page-header">
@@ -45,19 +44,19 @@ $myarray = mysql_fetch_array($my);
 <br /><br /><br />
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 <br />
 
 &nbsp;&nbsp;
 Use <b>*DD*</b> for Dropdown of Device and <b>*PAT*</b> for Patient Name
-<form name="planfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<form name="planfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
 	<tr class="tr_bg_h">
 		<?php if(is_super($_SESSION['admin_access'])){ ?>
 		<td valign="top" class="col_head">
 			Enter Plan/Progress Text:
-			<textarea name="plan_text" style="width:99%; height:200px;"><?=st($myarray['plan_text']);?></textarea>
+			<textarea name="plan_text" style="width:99%; height:200px;"><?php echo st($myarray['plan_text']);?></textarea>
 		</td>
 			
                         <?php }else{ ?>
@@ -65,7 +64,7 @@ Use <b>*DD*</b> for Dropdown of Device and <b>*PAT*</b> for Patient Name
                         Enter Plan/Progress Text:
 				</td></tr>
 				<tr><td valign="top">
-                                <?= $myarray['plan_text']; ?>
+                                <?php echo  $myarray['plan_text']; ?>
 			</td>
                         <?php } ?>
 
@@ -73,7 +72,7 @@ Use <b>*DD*</b> for Dropdown of Device and <b>*PAT*</b> for Patient Name
 	<tr>
 		<td valign="top" align="center">
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
-			<input type="hidden" name="ed" value="<?=st($myarray['plan_textid']);?>" />
+			<input type="hidden" name="ed" value="<?php echo st($myarray['plan_textid']);?>" />
 			<input type="hidden" name="plansub" value="1" />
 			<input type="submit" name="planbtn" value="Submit" class="btn btn-primary">
 			<?php } ?>
@@ -84,4 +83,4 @@ Use <b>*DD*</b> for Dropdown of Device and <b>*PAT*</b> for Patient Name
 
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

@@ -1,43 +1,42 @@
 <?php 
-session_start();
-require_once('includes/main_include.php');
+
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
-require_once('../includes/constants.inc');
+include_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
-if($_POST["setsub"] == 1)
+
+if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1)
 {
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_device_guide_settings set 
-				name = '".mysql_real_escape_string($_POST["name"])."',
-                                setting_type = '".mysql_real_escape_string($_POST["setting_type"])."', 
-                                range_start = '".mysql_real_escape_string($_POST["range_start"])."', 
-                                range_start_label = '".mysql_real_escape_string($_POST["range_start_label"])."', 
-                                range_end = '".mysql_real_escape_string($_POST['range_end'])."',
-				range_end_label = '".mysql_real_escape_string($_POST['range_end_label'])."',
-				rank = '".mysql_real_escape_string($_POST['rank'])."',
-				options = '".mysql_real_escape_string($_POST['options'])."'
+				name = '".mysqli_real_escape_string($con,$_POST["name"])."',
+                                setting_type = '".mysqli_real_escape_string($con,$_POST["setting_type"])."', 
+                                range_start = '".mysqli_real_escape_string($con,$_POST["range_start"])."', 
+                                range_start_label = '".mysqli_real_escape_string($con,$_POST["range_start_label"])."', 
+                                range_end = '".mysqli_real_escape_string($con,$_POST['range_end'])."',
+				range_end_label = '".mysqli_real_escape_string($con,$_POST['range_end_label'])."',
+				rank = '".mysqli_real_escape_string($con,$_POST['rank'])."',
+				options = '".mysqli_real_escape_string($con,$_POST['options'])."'
 			where id='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql);
 
-			mysql_query("DELETE FROM dental_device_guide_setting_options WHERE setting_id='".mysql_real_escape_string($_POST['ed'])."'");
+			mysqli_query($con,"DELETE FROM dental_device_guide_setting_options WHERE setting_id='".mysqli_real_escape_string($con,$_POST['ed'])."'");
                         for($i=1; $i<=$_POST['options']; $i++){
                           $o_sql = "INSERT INTO dental_device_guide_setting_options SET
                                         option_id='".$i."',
-                                        setting_id='".mysql_real_escape_string($_POST['ed'])."',
+                                        setting_id='".mysqli_real_escape_string($con,$_POST['ed'])."',
                                         label='".$_POST['option_'.$i]."'";
-                          mysql_query($o_sql);
+                          mysqli_query($con,$o_sql);
                         }
 
 
-
-			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_device_guide_settings.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_device_guide_settings.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -47,33 +46,33 @@ if($_POST["setsub"] == 1)
 
 
 			$ins_sql = "insert into dental_device_guide_settings set 
-                                name = '".mysql_real_escape_string($_POST["name"])."',
-                                setting_type = '".mysql_real_escape_string($_POST["setting_type"])."', 
-                                range_start = '".mysql_real_escape_string($_POST["range_start"])."', 
-                                range_start_label = '".mysql_real_escape_string($_POST["range_start_label"])."', 
-                                range_end = '".mysql_real_escape_string($_POST['range_end'])."',
-                                range_end_label = '".mysql_real_escape_string($_POST['range_end_label'])."',
-				rank = '".mysql_real_escape_string($_POST['rank'])."',
-				options = '".mysql_real_escape_string($_POST['options'])."',
+                                name = '".mysqli_real_escape_string($con,$_POST["name"])."',
+                                setting_type = '".mysqli_real_escape_string($con,$_POST["setting_type"])."', 
+                                range_start = '".mysqli_real_escape_string($con,$_POST["range_start"])."', 
+                                range_start_label = '".mysqli_real_escape_string($con,$_POST["range_start_label"])."', 
+                                range_end = '".mysqli_real_escape_string($con,$_POST['range_end'])."',
+                                range_end_label = '".mysqli_real_escape_string($con,$_POST['range_end_label'])."',
+				rank = '".mysqli_real_escape_string($con,$_POST['rank'])."',
+				options = '".mysqli_real_escape_string($con,$_POST['options'])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con,$ins_sql);
 
-			$setting_id = mysql_insert_id();
+			$setting_id = mysqli_insert_id($con);
 
 			for($i=1; $i<=$_POST['options']; $i++){
 			  $o_sql = "INSERT INTO dental_device_guide_setting_options SET
 					option_id='".$i."',
 					setting_id='".$setting_id."',
 					label='".$_POST['option_'.$i]."'";
-			  mysql_query($o_sql);
+			  mysqli_query($con,$o_sql);
 			}
 
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_device_guide_settings.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_device_guide_settings.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -82,14 +81,14 @@ if($_POST["setsub"] == 1)
 
 ?>
 
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+<?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
-    $thesql = "select * from dental_device_guide_settings where id='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_device_guide_settings where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$name = $_POST['name'];
 		$setting_type = $_POST['setting_type'];
@@ -125,19 +124,19 @@ if($_POST["setsub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
-    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
+    <?php }?>
+    <form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
-               <?=$but_text?> Device Setting
-               <? if($name <> "") {?>
-               		&quot;<?=$name;?>&quot;
-               <? }?>
+               <?php echo $but_text?> Device Setting
+               <?php if($name <> "") {?>
+               		&quot;<?php echo $name;?>&quot;
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -145,7 +144,7 @@ if($_POST["setsub"] == 1)
                 Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="name" type="text" name="name" value="<?=$name;?>" class="form-control" /> 
+                <input id="name" type="text" name="name" value="<?php echo $name;?>" class="form-control" /> 
 		<span class="red">*</span>
             </td>
         </tr>
@@ -154,7 +153,7 @@ if($_POST["setsub"] == 1)
                 Rank
             </td>
             <td valign="top" class="frmdata">
-                <input id="rank" type="text" name="rank" value="<?=$rank;?>" class="form-control" />
+                <input id="rank" type="text" name="rank" value="<?php echo $rank;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -163,8 +162,8 @@ if($_POST["setsub"] == 1)
             </td>
             <td valign="top" class="frmdata">
 		<select id="setting_type" name="setting_type">
-			<option value="<?= DSS_DEVICE_SETTING_TYPE_RANGE; ?>" <?= ($setting_type==DSS_DEVICE_SETTING_TYPE_RANGE)?'selected="selected"':''; ?>><?= $dss_device_setting_type_labels[DSS_DEVICE_SETTING_TYPE_RANGE]; ?></option>
-                        <option value="<?= DSS_DEVICE_SETTING_TYPE_FLAG; ?>" <?= ($setting_type==DSS_DEVICE_SETTING_TYPE_FLAG)?'selected="selected"':''; ?>><?= $dss_device_setting_type_labels[DSS_DEVICE_SETTING_TYPE_FLAG]; ?></option>
+			<option value="<?php echo  DSS_DEVICE_SETTING_TYPE_RANGE; ?>" <?php echo  ($setting_type==DSS_DEVICE_SETTING_TYPE_RANGE)?'selected="selected"':''; ?>><?php echo  $dss_device_setting_type_labels[DSS_DEVICE_SETTING_TYPE_RANGE]; ?></option>
+                        <option value="<?php echo  DSS_DEVICE_SETTING_TYPE_FLAG; ?>" <?php echo  ($setting_type==DSS_DEVICE_SETTING_TYPE_FLAG)?'selected="selected"':''; ?>><?php echo  $dss_device_setting_type_labels[DSS_DEVICE_SETTING_TYPE_FLAG]; ?></option>
  		</select>
             </td>
         </tr>
@@ -173,7 +172,7 @@ if($_POST["setsub"] == 1)
                 Range Start
             </td>
             <td valign="top" class="frmdata">
-                <input id="range_start" type="text" name="range_start" value="<?=$range_start;?>" class="form-control" />
+                <input id="range_start" type="text" name="range_start" value="<?php echo $range_start;?>" class="form-control" />
             </td>
         </tr>
 	<tr bgcolor="#FFFFFF">
@@ -181,7 +180,7 @@ if($_POST["setsub"] == 1)
                 Range Start Label
             </td>
             <td valign="top" class="frmdata">
-                <input id="range_start_label" type="text" name="range_start_label" value="<?=$range_start_label;?>" class="form-control" />
+                <input id="range_start_label" type="text" name="range_start_label" value="<?php echo $range_start_label;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -189,7 +188,7 @@ if($_POST["setsub"] == 1)
                 Range End
             </td>
             <td valign="top" class="frmdata">
-                <input id="range_end" type="text" name="range_end" value="<?=$range_end;?>" class="form-control" />
+                <input id="range_end" type="text" name="range_end" value="<?php echo $range_end;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -197,7 +196,7 @@ if($_POST["setsub"] == 1)
                 Range End Label
             </td>
             <td valign="top" class="frmdata">
-                <input id="range_end_label" type="text" name="range_end_label" value="<?=$range_end_label;?>" class="form-control" />
+                <input id="range_end_label" type="text" name="range_end_label" value="<?php echo $range_end_label;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -207,7 +206,7 @@ if($_POST["setsub"] == 1)
             <td valign="top" class="frmdata">
 		<select id="options" name="options" onchange="update_option_labels();">
 		  <?php for($i=1; $i<=10; $i++){ ?>
-		    <option value="<?= $i; ?>" <?= ($options == $i)?'selected="selected"':''; ?>><?= $i; ?></option>
+		    <option value="<?php echo  $i; ?>" <?php echo  ($options == $i)?'selected="selected"':''; ?>><?php echo  $i; ?></option>
 		  <?php } ?>
 		</select>
             </td>
@@ -215,26 +214,26 @@ if($_POST["setsub"] == 1)
                   <?php for($i=1; $i<=10; $i++){ ?>
 		<?php
 			$o_sql = "SELECT label FROM dental_device_guide_setting_options o
-					WHERE option_id='".mysql_real_escape_string($i)."'
-						AND setting_id='".mysql_real_escape_string($_REQUEST['ed'])."'";
-			$o_q = mysql_query($o_sql);
-			$o_r = mysql_fetch_assoc($o_q);
+					WHERE option_id='".mysqli_real_escape_string($con,$i)."'
+						AND setting_id='".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''))."'";
+			$o_q = mysqli_query($con,$o_sql);
+			$o_r = mysqli_fetch_assoc($o_q);
 			
 		?>
-        <tr bgcolor="#FFFFFF" id="option_row_<?=$i;?>" style="display:none;" class="option_row">
+        <tr bgcolor="#FFFFFF" id="option_row_<?php echo $i;?>" style="display:none;" class="option_row">
             <td valign="top" class="frmhead">
-                Option #<?= $i; ?> 
+                Option #<?php echo  $i; ?> 
             </td>
             <td valign="top" class="frmdata">
-		<input id="option_<?= $i; ?>" type="text" name="option_<?= $i; ?>" value="<?=$o_r['label'];?>" class="form-control" />
+		<input id="option_<?php echo  $i; ?>" type="text" name="option_<?php echo  $i; ?>" value="<?php echo $o_r['label'];?>" class="form-control" />
             </td>
         </tr>
 		  <?php } ?>
         <tr>
             <td  colspan="2" align="center">
                 <input type="hidden" name="setsub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value="<?=$but_text?> Setting" class="btn btn-primary">
+                <input type="hidden" name="ed" value="<?php echo $themyarray["id"]?>" />
+                <input type="submit" value="<?php echo $but_text?> Setting" class="btn btn-primary">
             </td>
         </tr>
     </table>

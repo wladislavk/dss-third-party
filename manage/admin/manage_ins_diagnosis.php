@@ -1,16 +1,16 @@
-<? 
+<?php 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
+if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_ins_diagnosis where ins_diagnosisid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
 	die();
@@ -18,26 +18,26 @@ if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_ins_diagnosis order by sortby";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_users = mysqli_num_rows($my);
 
-if($_POST['sortsub'] == 1)
+if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 {
 	foreach($_POST['sortby'] as $val)
 	{
-		$smyarray = mysql_fetch_array($my);
+		$smyarray = mysqli_fetch_array($my);
 		
 		if($val == '' || is_numeric($val) === false)
 		{
@@ -45,13 +45,13 @@ if($_POST['sortsub'] == 1)
 		}
 		
 		$up_sort_sql = "update dental_ins_diagnosis set sortby='".s_for($val)."' where ins_diagnosisid='".$smyarray["ins_diagnosisid"]."'";
-		mysql_query($up_sort_sql);
+		mysqli_query($con,$up_sort_sql);
 	}
 	$msg = "Sort By Changed Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
-		window.location.replace("<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>");
+		//alert("<?php echo $msg;?>");
+		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
 	</script>
 	<?
 	die();
@@ -78,14 +78,14 @@ if($_POST['sortsub'] == 1)
 <?php } ?>
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : ''); ?></b>
 </div>
 
 &nbsp;
-<b>Total Records: <?=$total_rec;?></b>
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<b>Total Records: <?php echo $total_rec;?></b>
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -94,7 +94,7 @@ if($_POST['sortsub'] == 1)
 			?>
 		</TD>        
 	</TR>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="80%">
 			Insurance Diagnosis		
@@ -106,18 +106,18 @@ if($_POST['sortsub'] == 1)
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{
@@ -128,28 +128,28 @@ if($_POST['sortsub'] == 1)
 				$tr_class = "tr_inactive";
 			}
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?php echo $tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["ins_diagnosis"])." ".$myarray["description"];?>
+					<?php echo st($myarray["ins_diagnosis"])." ".$myarray["description"];?>
 				</td>
 				
 				<td valign="top" align="center">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="form-control text-center" style="width:5em"/>
+					<input type="text" name="sortby[]" value="<?php echo st($myarray['sortby'])?>" class="form-control text-center" style="width:5em"/>
 					<?php }else{ ?>
-						<?= $myarray['sortby']; ?>
+						<?php echo  $myarray['sortby']; ?>
 					<?php } ?>
 				</td>	
 						
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_ins_diagnosis.php?ed=<?=$myarray["ins_diagnosisid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_ins_diagnosis.php?ed=<?php echo $myarray["ins_diagnosisid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 		?>
 		<tr>
 			<td valign="top" class="col_head" colspan="1">&nbsp;
@@ -175,4 +175,4 @@ if($_POST['sortsub'] == 1)
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

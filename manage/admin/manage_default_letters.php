@@ -1,12 +1,12 @@
-<? 
+<?php 
 include "includes/top.htm";
 
 if(isset($_POST['update_btn'])){
 
   $s = "UPDATE dental_letter_templates SET
-		body='".mysql_real_escape_string($_POST['body'])."'
-		WHERE id='".mysql_real_escape_string($_POST['letterid'])."'";
-  mysql_query($s);
+		body='".mysqli_real_escape_string($con,$_POST['body'])."'
+		WHERE id='".mysqli_real_escape_string($con,$_POST['letterid'])."'";
+  mysqli_query($con,$s);
 
 
 }
@@ -14,7 +14,7 @@ if(isset($_POST['update_btn'])){
 if(is_super($_SESSION['admin_access'])){ 
 $sql = "select * from dental_letter_templates WHERE default_letter=1 ORDER BY id ASC";
 }elseif(is_admin($_SESSION['admin_access'])){
-$sql = "select * from dental_letter_templates WHERE companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ORDER BY id ASC";
+$sql = "select * from dental_letter_templates WHERE companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."' ORDER BY id ASC";
 }else{
 ?>
 You do not have permission to edit default letters.
@@ -23,7 +23,7 @@ die();
 } 
 
 
-$my = mysql_query($sql);
+$my = mysqli_query($con,$sql);
 ?>
 
 <div class="page-header">
@@ -36,8 +36,8 @@ $my = mysql_query($sql);
     <p class="col-md-6 col-md-push-3">
         <select id="letterid" name="letterid" class="form-control">
             <option value="">Select Letter</option>
-            <?php while ($r = mysql_fetch_assoc($my)) { ?>
-            <option value="<?= $r['id']; ?>" <?= ($_REQUEST['lid']==$r['id'])?'selected=-"selected"':''; ?>><?= $r['id']." - ".$r['name']; ?></option>
+            <?php while ($r = mysqli_fetch_assoc($my)) { ?>
+            <option value="<?php echo  (!empty($r['id']) ? $r['id'] : ''); ?>" <?php echo  ($_REQUEST['lid']==$r['id'])?'selected=-"selected"':''; ?>><?php echo  $r['id']." - ".$r['name']; ?></option>
             <?php } ?>
         </select>
     </p>
@@ -45,22 +45,22 @@ $my = mysql_query($sql);
 <div class="row">
     <?php
     
-    if ($_GET['lid']) {
+    if (!empty($_GET['lid'])) {
         if (is_super($_SESSION['admin_access'])) {
-            $sql = "SELECT body from dental_letter_templates where id='".mysql_real_escape_string($_REQUEST['lid'])."'";
+            $sql = "SELECT body from dental_letter_templates where id='".mysqli_real_escape_string($con,$_REQUEST['lid'])."'";
         }
         else {
-            $sql = "SELECT body from dental_letter_templates where id='".mysql_real_escape_string($_REQUEST['lid'])."' AND companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+            $sql = "SELECT body from dental_letter_templates where id='".mysqli_real_escape_string($con,$_REQUEST['lid'])."' AND companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'";
         }
         
-        $q = mysql_query($sql);
-        $row = mysql_fetch_assoc($q);
+        $q = mysqli_query($con,$sql);
+        $row = mysqli_fetch_assoc($q);
         
         ?>
     <form action="" method="post" class="form-horizontal">
         <div class="col-md-9">
-            <input type="hidden" name="letterid" value="<?= $_REQUEST['lid'] ?>">
-            <textarea id="body" name="body" class="form-control" rows="25"><?= $row['body']; ?></textarea>
+            <input type="hidden" name="letterid" value="<?php echo  $_REQUEST['lid'] ?>">
+            <textarea id="body" name="body" class="form-control" rows="25"><?php echo  $row['body']; ?></textarea>
             <input type="submit" name="update_btn" value="Save" class="btn btn-success col-md-4 col-md-push-4">
         </div>
         <div class="col-md-3">
@@ -200,4 +200,4 @@ $(document).ready(function(){
         .height($('textarea').height());
 });
 </script>
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

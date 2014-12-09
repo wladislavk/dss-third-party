@@ -1,14 +1,14 @@
-<? 
+<?php 
 include "includes/top.htm";
 
 if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))
 {
 
   $in_sql = "UPDATE admin SET
-                claim_margin_top = '".mysql_real_escape_string($_POST['claim_margin_top'])."',
-                claim_margin_left = '".mysql_real_escape_string($_POST['claim_margin_left'])."'
+                claim_margin_top = '".mysqli_real_escape_string($con,$_POST['claim_margin_top'])."',
+                claim_margin_left = '".mysqli_real_escape_string($con,$_POST['claim_margin_left'])."'
         WHERE adminid='".$_SESSION['adminuserid']."'";
-  mysql_query($in_sql);
+  mysqli_query($con,$in_sql);
   if(isset($_POST['margins_test'])){
 
 
@@ -27,7 +27,7 @@ if(isset($_POST["margins_reset"]))
                 claim_margin_top = '0',
                 claim_margin_left = '0'
         WHERE adminid='".$_SESSION['adminuserid']."'";
-  mysql_query($in_sql);
+  mysqli_query($con,$in_sql);
 }
 
 ?>
@@ -44,13 +44,13 @@ if(isset($_POST["margins_reset"]))
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <?php
-  $p_sql = "SELECT * FROM admin where adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
-  $p_q = mysql_query($p_sql);
-  $practice = mysql_fetch_assoc($p_q);
+  $p_sql = "SELECT * FROM admin where adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
+  $p_q = mysqli_query($con,$p_sql);
+  $practice = mysqli_fetch_assoc($p_q);
 
 
 ?>
@@ -75,12 +75,12 @@ if(isset($_POST["margins_reset"]))
   <form action="#" method="post">
   <div class="detail">
     <label>Top:</label>
-    <input class="value" name="claim_margin_top" value="<?= $practice['claim_margin_top']; ?>" />
+    <input class="value" name="claim_margin_top" value="<?php echo  $practice['claim_margin_top']; ?>" />
 	mm. Positive values shift down, negative shift up.
   </div>
   <div class="detail">
     <label>Left:</label>
-    <input class="value" name="claim_margin_left" value="<?= $practice['claim_margin_left']; ?>" />
+    <input class="value" name="claim_margin_left" value="<?php echo  $practice['claim_margin_left']; ?>" />
 	mm. Positive values shift right, negative shift left.
   </div>
   <div class="detail">
@@ -94,4 +94,4 @@ if(isset($_POST["margins_reset"]))
 <div style="clear:both;"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

@@ -3,15 +3,15 @@
 <?
 include_once('includes/password.php');
 
-if($_POST['clsub'] == 1)
+if(!empty($_POST['clsub']) && $_POST['clsub'] == 1)
 {
-                $up_sql = "update dental_change_list set content='".mysql_real_escape_string($_POST['content'])."'";
-		mysql_query($up_sql);
+        $up_sql = "update dental_change_list set content='".mysqli_real_escape_string($con,$_POST['content'])."'";
+		mysqli_query($con,$up_sql);
 		
 		$msg="Change List Updated Successfully.";
 		?>
 		<script type="text/javascript">
-			alert("<?=$msg;?>");
+			alert("<?php echo $msg;?>");
 		</script>
 		<?
 }
@@ -20,19 +20,19 @@ if($_POST['clsub'] == 1)
 	Change List
 <?php
  $a_sql = "SELECT * FROM dental_change_list";
- $a_q = mysql_query($a_sql);
- $a_r = mysql_fetch_assoc($a_q);
+ $a_q = mysqli_query($con,$a_sql);
+ $a_r = mysqli_fetch_assoc( $a_q);
 ?>
 </span>
 <br /><br />
 
 <br /><br />
 <div align="center" class="red">
-	<? echo $_GET['msg'];?>
+	<?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?>
 </div>
 		
-<form name="passfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" >
-<textarea name="content" style="width:98%; height:300px;"><?= $a_r['content']; ?></textarea>
+<form name="passfrm" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" >
+<textarea name="content" style="width:98%; height:300px;"><?php echo  $a_r['content']; ?></textarea>
 			<input type="hidden" name="clsub" value="1" />
 			<input type="submit" value=" Update Change List " class="btn btn-primary" />
 </form>
@@ -57,4 +57,4 @@ $(document).ready(function(){
         .height($('textarea').height());
 });
 </script>
-<? include 'includes/bottom.htm';?>
+<?php include 'includes/bottom.htm';?>

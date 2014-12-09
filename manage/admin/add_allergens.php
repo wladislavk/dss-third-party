@@ -1,23 +1,23 @@
 <?php 
-session_start();
-require_once('includes/main_include.php');
+
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 
-if($_POST["mult_allergenssub"] == 1)
+if(!empty($_POST["mult_allergenssub"]) && $_POST["mult_allergenssub"] == 1)
 {
-	$op_arr = split("\n",trim($_POST['allergens']));
+	$op_arr = explode("\n",trim($_POST['allergens']));
 				
 	foreach($op_arr as $i=>$val)
 	{
 		if($val <> '')
 		{
 			$sel_check = "select * from dental_allergens where allergens = '".s_for($val)."'";
-			$query_check=mysql_query($sel_check);
+			$query_check=mysqli_query($con,$sel_check);
 			
-			if(mysql_num_rows($query_check) == 0)
+			if(mysqli_num_rows($query_check) == 0)
 			{
 				$ins_sql = "insert into dental_allergens set allergens = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysql_query($ins_sql) or die($ins_sql.mysql_error());
+				mysqli_query($con,$ins_sql);
 			}
 			
 		}
@@ -26,24 +26,24 @@ if($_POST["mult_allergenssub"] == 1)
 	$msg = "Added Successfully";
 	?>
 	<script type="text/javascript">
-		//alert("<?=$msg;?>");
-		parent.window.location='manage_allergens.php?msg=<?=$msg;?>';
+		//alert("<?php echo $msg;?>");
+		parent.window.location='manage_allergens.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
 	die();
 }
 
-if($_POST["allergenssub"] == 1)
+if(!empty($_POST["allergenssub"]) && $_POST["allergenssub"] == 1)
 {
 	$sel_check = "select * from dental_allergens where allergens = '".s_for($_POST["allergens"])."' and allergensid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con,$sel_check);
 	
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Allergens already exist. So please give another Allergens.";
 		?>
 		<script type="text/javascript">
-			alert("<?=$msg;?>");
+			alert("<?php echo $msg;?>");
 			window.location="#add";
 		</script>
 		<?
@@ -62,14 +62,13 @@ if($_POST["allergenssub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_allergens set allergens = '".s_for($_POST["allergens"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where allergensid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-			
-			//echo $ed_sql.mysql_error();
+			mysqli_query($con,$ed_sql);
+
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_allergens.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_allergens.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -77,13 +76,13 @@ if($_POST["allergenssub"] == 1)
 		else
 		{
 			$ins_sql = "insert into dental_allergens set allergens = '".s_for($_POST["allergens"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con,$ins_sql);
 			
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
-				//alert("<?=$msg;?>");
-				parent.window.location='manage_allergens.php?msg=<?=$msg;?>';
+				//alert("<?php echo $msg;?>");
+				parent.window.location='manage_allergens.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
 			die();
@@ -96,11 +95,11 @@ if($_POST["allergenssub"] == 1)
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
-    $thesql = "select * from dental_allergens where allergensid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_allergens where allergensid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$allergens = $_POST['allergens'];
 		$sortby = $_POST['sortby'];
@@ -128,19 +127,19 @@ if($_POST["allergenssub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<?php if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+        <?php echo $msg;?>
     </div>
-    <? }?>
-    <form name="allergensfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return allergensabc(this)">
+    <?php }?>
+    <form name="allergensfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return allergensabc(this)">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
-               <?=$but_text?> Allergens 
-               <? if($allergens <> "") {?>
-               		&quot;<?=$allergens;?>&quot;
-               <? }?>
+               <?php echo $but_text?> Allergens 
+               <?php if($allergens <> "") {?>
+               		&quot;<?php echo $allergens;?>&quot;
+               <?php }?>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -148,7 +147,7 @@ if($_POST["allergenssub"] == 1)
                 Allergens
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="allergens" value="<?=$allergens?>" class="form-control" /> 
+                <input type="text" name="allergens" value="<?php echo $allergens?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -157,7 +156,7 @@ if($_POST["allergenssub"] == 1)
                 Sort By
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="sortby" value="<?=$sortby;?>" class="form-control" style="width:30px"/>		
+                <input type="text" name="sortby" value="<?php echo $sortby;?>" class="form-control" style="width:30px"/>		
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -166,8 +165,8 @@ if($_POST["allergenssub"] == 1)
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="form-control">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                	<option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
+                	<option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
             </td>
         </tr>
@@ -176,7 +175,7 @@ if($_POST["allergenssub"] == 1)
                 Description
             </td>
             <td valign="top" class="frmdata">
-            	<textarea class="form-control" name="description" style="width:100%;"><?=$description;?></textarea>
+            	<textarea class="form-control" name="description" style="width:100%;"><?php echo $description;?></textarea>
             </td>
         </tr>
         <tr>
@@ -185,10 +184,10 @@ if($_POST["allergenssub"] == 1)
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="allergenssub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["allergensid"]?>" />
-                <input type="submit" value="<?=$but_text?> Allergens" class="btn btn-primary">
+                <input type="hidden" name="ed" value="<?php echo $themyarray["allergensid"]?>" />
+                <input type="submit" value="<?php echo $but_text?> Allergens" class="btn btn-primary">
 		<?php if($themyarray["allergensid"] != ''  && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_allergens.php?delid=<?=$themyarray["allergensid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
+                    <a href="manage_allergens.php?delid=<?php echo $themyarray["allergensid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>
@@ -197,12 +196,12 @@ if($_POST["allergenssub"] == 1)
     </table>
     </form>
     
-    <? if($_GET['ed'] == '')
+    <?php if(empty($_GET['ed']))
 	{?>
     	<div class="alert alert-danger text-center">
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
-		<form name="allergensfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return allergensabc(this)">
+		<form name="allergensfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return allergensabc(this)">
         <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
@@ -229,6 +228,6 @@ if($_POST["allergenssub"] == 1)
         </table>
         </form>
     
-    <? }?>
+    <?php }?>
 </body>
 </html>

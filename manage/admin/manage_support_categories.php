@@ -1,16 +1,16 @@
-<? 
+<?php 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && is_admin($_SESSION['admin_access']))
+if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access']))
 {
-	$del_sql = "UPDATE dental_support_categories SET status=1 WHERE id='".mysql_real_escape_string($_REQUEST["delid"])."'";
-	mysql_query($del_sql);
+	$del_sql = "UPDATE dental_support_categories SET status=1 WHERE id='".mysqli_real_escape_string($con,$_REQUEST["delid"])."'";
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
 	die();
@@ -22,8 +22,8 @@ $sql = "select c.*,
 	FROM dental_support_categories c
 	WHERE c.status=0
 	 order by c.title ASC";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 
 ?>
 
@@ -47,7 +47,7 @@ $total_rec = mysql_num_rows($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <table class="table table-bordered table-hover">
@@ -65,39 +65,39 @@ $total_rec = mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="3" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 
 		?>
 			<tr>
 				<td valign="top">
-					<?=st($myarray["title"]);?>
+					<?php echo st($myarray["title"]);?>
 				</td>
 				<td valign="top">
-					<a href="manage_support_tickets.php?catid=<?= $myarray['id'];?>"><?= st($myarray["num_tickets"]); ?></a>
+					<a href="manage_support_tickets.php?catid=<?php echo  $myarray['id'];?>"><?php echo  st($myarray["num_tickets"]); ?></a>
 				</td>	
                                 <td valign="top">
-                                        <a href="manage_support_category_admins.php?catid=<?= $myarray['id'];?>"><?= st($myarray["num_admins"]); ?></a>
+                                        <a href="manage_support_category_admins.php?catid=<?php echo  $myarray['id'];?>"><?php echo  st($myarray["num_admins"]); ?></a>
                                 </td>	
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_support_category.php?ed=<?=$myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_support_category.php?ed=<?php echo $myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 
@@ -109,4 +109,4 @@ $total_rec = mysql_num_rows($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

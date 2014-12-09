@@ -1,16 +1,16 @@
-<? 
+<?php 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
+if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_fcontact where contactid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
 	die();
@@ -18,7 +18,7 @@ if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -27,13 +27,13 @@ $i_val = $index_val * $rec_disp;
 $sql = "select c.*, ct.contacttype  from dental_contact c
 	LEFT JOIN dental_contacttype ct ON c.contacttypeid=ct.contacttypeid
 	 where c.corporate=1 order by c.company";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_contact=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_contact = mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -56,13 +56,13 @@ $num_contact=mysql_num_rows($my);
 <?php } ?>
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <div style="overflow:auto; height:400px;">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -71,7 +71,7 @@ $num_contact=mysql_num_rows($my);
 			?>
 		</TD>        
 	</TR>
-	<? }?>
+	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="30%">
 			Company
@@ -86,18 +86,18 @@ $num_contact=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<?php if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
 			</td>
 		</tr>
-	<? 
+	<?php 
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{
@@ -110,28 +110,28 @@ $num_contact=mysql_num_rows($my);
 			
 			$name = st($myarray['lastname'])." ".st($myarray['middlename']).", ".st($myarray['firstname']);
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?php echo $tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["company"]);?>
+					<?php echo st($myarray["company"]);?>
 				</td>
 				<td valign="top">
-					<?=st($myarray["contacttype"]);?>
+					<?php echo st($myarray["contacttype"]);?>
 				</td>
 				<td valign="top">
-					<?=$name;?>
+					<?php echo $name;?>
 				</td>
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('view_contact.php?ed=<?=$myarray["contactid"];?>&corp=1');" title="Quick View" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('view_contact.php?ed=<?php echo $myarray["contactid"];?>&corp=1');" title="Quick View" class="btn btn-primary btn-sm">
                                                 Quick View
                                          <span class="glyphicon glyphicon-pencil"></span></a>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_contact.php?ed=<?=$myarray["contactid"];?>&corp=1');" title="View Full" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_contact.php?ed=<?php echo $myarray["contactid"];?>&corp=1');" title="View Full" class="btn btn-primary btn-sm">
 						View Full 
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>
 				</td>
 			</tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 </div>
@@ -145,4 +145,4 @@ $num_contact=mysql_num_rows($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php include "includes/bottom.htm";?>

@@ -17,22 +17,22 @@ include "includes/patient_nav.php";
 
 
 <?php
-if($_GET['own']==1){
-  $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";  
-  $c_q = mysql_query($c_sql);
-  $changed = mysql_num_rows($c_q);
+if(!empty($_GET['own']) && $_GET['own']==1){
+  $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";  
+  $c_q = mysqli_query($con,$c_sql);
+  $changed = mysqli_num_rows($c_q);
 
-  $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
-  mysql_query($own_sql);
+  $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+  mysqli_query($con,$own_sql);
  if($_GET['own_completed']==1){
-  $q1_sql = "SELECT q_page1id from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
-  $q1_q = mysql_query($q1_sql);
-  if(mysql_num_rows($q1_q) == 0){
+  $q1_sql = "SELECT q_page1id from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+  $q1_q = mysqli_query($con,$q1_sql);
+  if(mysqli_num_rows($q1_q) == 0){
     $ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
-    mysql_query($ed_sql);
+    mysqli_query($con,$ed_sql);
   }else{
     $ed_sql = "UPDATE dental_q_page1 SET exam_date=now() WHERE patientid='".$_GET['pid']."'";
-    mysql_query($ed_sql);
+    mysqli_query($con,$ed_sql);
   }
  }
 
@@ -67,7 +67,7 @@ edited = false;
   }
 </script>
 <?php
-if($_POST['q_page3sub'] == 1)
+if(!empty($_POST['q_page3sub']) && $_POST['q_page3sub'] == 1)
 {
 	$allergens = $_POST['allergens'];
 	$other_allergens = $_POST['other_allergens'];
@@ -265,7 +265,7 @@ $injurytohead = $_POST['injurytohead'];
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
 
 		$ped_sql = "update dental_patients 
                 	set		
@@ -273,7 +273,7 @@ $injurytohead = $_POST['injurytohead'];
                 	premed = '".s_for($_POST["premeddet"])."'
                 	where 
                 	patientid='".$_GET["pid"]."'";
-                mysql_query($ped_sql) or die($ped_sql." | ".mysql_error());
+                mysqli_query($con,$ped_sql) or die($ped_sql." | ".mysql_error());
 
 		$msg = "Added Successfully";
                 if(isset($_POST['q_pagebtn_proceed'])){
@@ -359,14 +359,14 @@ $injurytohead = $_POST['injurytohead'];
                 drymouth_text = '".s_for($drymouth_text)."'
 		where q_page3id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
 		$ped_sql = "update dental_patients 
                         set             
                         premedcheck = '".s_for($_POST["premedcheck"])."',
                         premed = '".s_for($_POST["premeddet"])."' 
                         where 
                         patientid='".$_GET["pid"]."'";
-                mysql_query($ped_sql) or die($ped_sql." | ".mysql_error());
+                mysqli_query($con,$ped_sql) or die($ped_sql." | ".mysql_error());
 		//echo $ed_sql;
 		$msg = "Edited Successfully";
                 if(isset($_POST['q_pagebtn_proceed'])){
@@ -391,20 +391,20 @@ $injurytohead = $_POST['injurytohead'];
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con,$pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 
 
 $sqldpp = "select * from dental_patients where parent_patientid='".$_GET['pid']."'";
-$mydpp = mysql_query($sqldpp);
-$dpp_row = mysql_fetch_array($mydpp);
+$mydpp = mysqli_query($con,$sqldpp);
+$dpp_row = mysqli_fetch_array($mydpp);
 
 $sql = "select * from dental_q_page3 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con,$sql);
+$myarray = mysqli_fetch_array($my);
 
 $q_page3id = st($myarray['q_page3id']);
 $allergens = st($myarray['allergens']);
@@ -434,9 +434,9 @@ $no_allergens = st($myarray['no_allergens']);
 $no_medications = st($myarray['no_medications']);
 $no_history = st($myarray['no_history']);
 $orthodontics = st($myarray['orthodontics']);
-$psql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_GET['pid'])."'";
-$pmy = mysql_query($psql);
-$pmyarray = mysql_fetch_array($pmy);
+$psql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+$pmy = mysqli_query($con,$psql);
+$pmyarray = mysqli_fetch_array($pmy);
 $premedcheck = st($pmyarray["premedcheck"]);
 $allergenscheck = st($myarray["allergenscheck"]);
 $medicationscheck = st($myarray["medicationscheck"]);
@@ -491,13 +491,13 @@ label {
 <a name="top"></a>
 &nbsp;&nbsp;
 
-<? include("includes/form_top.htm");?>
+<? include("../includes/form_top.htm");?>
 
 <br />
 <br>
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <script type="text/javascript">
@@ -596,10 +596,10 @@ label {
 <div style="clear:both;"></div>
 
 <?php
-        $patient_sql = "SELECT * FROM dental_q_page3 WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
-        $patient_q = mysql_query($patient_sql);
-        $pat_row = mysql_fetch_assoc($patient_q);
-        if(mysql_num_rows($patient_q) == 0){
+        $patient_sql = "SELECT * FROM dental_q_page3 WHERE parent_patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+        $patient_q = mysqli_query($con,$patient_sql);
+        $pat_row = mysqli_fetch_assoc($patient_q);
+        if(mysqli_num_rows($patient_q) == 0){
                 $showEdits = false;
                 //echo "Patient edits.";
         }else{
@@ -662,9 +662,9 @@ label {
 <span style="display:block; width:100%; height:20px;">Click any item to add it to the text box below.</span>
 <?
                                                         $allergens_sql = "select * from dental_allergens where status=1 order by sortby";
-                                                        $allergens_my = mysql_query($allergens_sql);
+                                                        $allergens_my = mysqli_query($con,$allergens_sql);
                                                                 $i=0;
-                                                                while($allergens_myarray = mysql_fetch_array($allergens_my))
+                                                                while($allergens_myarray = mysqli_fetch_array($allergens_my))
                                                                 {
                                                                         ?>
                                         <span style="width:32%; float:left; display:block;height:20px;">
@@ -716,9 +716,9 @@ label {
 <span style="display:block; width:100%; height:20px;">Click any item to add it to the text box below.</span>
                                 <?
                                                         $medications_sql = "select * from dental_medications where status=1 order by sortby";
-                                                        $medications_my = mysql_query($medications_sql);
+                                                        $medications_my = mysqli_query($con,$medications_sql);
                                                                 $i=0;
-                                                                while($medications_myarray = mysql_fetch_array($medications_my))
+                                                                while($medications_myarray = mysqli_fetch_array($medications_my))
                                                                 {
                                                                         ?>
                                         <span style="width:32%; float:left; display:block;height:20px;">
@@ -760,9 +760,9 @@ label {
 				<span style="display:block; width:100%; height:20px;">Click any item to add it to the text box below.</span>
                                 <?
                                                         $history_sql = "select * from dental_history where status=1 order by history";
-                                                        $history_my = mysql_query($history_sql);
+                                                        $history_my = mysqli_query($con,$history_sql);
                                                                 $i=0;
-                                                                while($history_myarray = mysql_fetch_array($history_my))
+                                                                while($history_myarray = mysqli_fetch_array($history_my))
                                                                 {
                                                                         ?>
                                         <span style="width:32%; float:left; display:block;height:20px;">
@@ -943,7 +943,7 @@ label {
 
                             				<span id="orthodontics_extra">Year completed: <input id="year_completed" name="year_completed" type="text" class="field text addr tbox" value="<?=$year_completed;?>" maxlength="255" style="width:225px;" />
                             <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'year_completed', $pat_row['year_completed'], $dentures_extra, true, $showEdits);
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'year_completed', $pat_row['year_completed'], (!empty($dentures_extra) ? $dentures_extra : ''), true, $showEdits);
                             ?>
 
 			</span> 
@@ -1339,7 +1339,7 @@ label {
 </script>
 
 <br />
-<? include("includes/form_bottom.htm");?>
+<? include("../includes/form_bottom.htm");?>
 <br />
 
 

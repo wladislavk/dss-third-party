@@ -28,7 +28,7 @@ if (!isset($_SESSION['userid'])) {
   if( $r['homepage'] != '1') {
     include_once 'includes/top2.htm';
   } else {
-    if($_SESSION['loginid'] <> '') {
+    if(!empty($_SESSION['loginid'])) {
       $cur_page_full = $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
       $cur_ins_sql = "insert into dental_login_detail (loginid,userid,cur_page,adddate,ip_address) values('".$_SESSION['loginid']."','".$_SESSION['userid']."','".$cur_page_full."',now(),'".$_SERVER['REMOTE_ADDR']."')";
       $db->query($cur_ins_sql);

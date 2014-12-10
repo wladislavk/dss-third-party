@@ -1,31 +1,30 @@
 <?php
-session_start();
-require_once('includes/main_include.php');
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
 include_once '../includes/general_functions.php';
-require_once '../includes/constants.inc';
-require_once 'includes/access.php';
+include_once '../includes/constants.inc';
+include_once 'includes/access.php';
 ?>
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+<?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 <?php
-require_once '../3rdParty/stripe/lib/Stripe.php';
+include_once '../3rdParty/stripe/lib/Stripe.php';
 $id = $_GET['docid'];
 $sql = "SELECT * FROM dental_users
-	WHERE userid='".mysql_real_escape_string($id)."'";
-$q = mysql_query($sql);
-$r = mysql_fetch_assoc($q);
+	WHERE userid='".mysqli_real_escape_string($con,$id)."'";
+$q = mysqli_query($con,$sql);
+$r = mysqli_fetch_assoc($q);
   $charge_sql = "SELECT * FROM dental_charge
-                        WHERE userid='".mysql_real_escape_string($_GET['docid'])."'
-				AND id='".mysql_real_escape_string($_GET['cid'])."'";
-$charge_q = mysql_query($charge_sql);
-$charge_r = mysql_fetch_assoc($charge_q);
+                        WHERE userid='".mysqli_real_escape_string($con,$_GET['docid'])."'
+				AND id='".mysqli_real_escape_string($con,$_GET['cid'])."'";
+$charge_q = mysqli_query($con,$charge_sql);
+$charge_r = mysqli_fetch_assoc($charge_q);
 $key_sql = "SELECT stripe_secret_key FROM companies c 
                 JOIN dental_user_company uc
                         ON c.id = uc.companyid
-                 WHERE uc.userid='".mysql_real_escape_string($id)."'";
-$key_q = mysql_query($key_sql);
-$key_r= mysql_fetch_assoc($key_q);
+                 WHERE uc.userid='".mysqli_real_escape_string($con,$id)."'";
+$key_q = mysqli_query($con,$key_sql);
+$key_r= mysqli_fetch_assoc($key_q);
 Stripe::setApiKey($key_r['stripe_secret_key']);
 Stripe::setApiVersion("2014-06-17");
 
@@ -39,9 +38,9 @@ if(isset($_POST['bill_submit'])){
   if($charge!=''){
     $amount = (str_replace(',','',$_POST['amount'])*100);
 
-    $csql = "SELECT * FROM dental_charge WHERE id='".mysql_real_escape_string($charge)."'";
-    $cq = mysql_query($csql);
-    $cr = mysql_fetch_assoc($cq);
+    $csql = "SELECT * FROM dental_charge WHERE id='".mysqli_real_escape_string($con,$charge)."'";
+    $cq = mysqli_query($con,$csql);
+    $cr = mysqli_fetch_assoc($cq);
 try{
     $charge = Stripe_Charge::retrieve($cr['stripe_charge']);
     $charge->refunds->create();
@@ -93,14 +92,14 @@ try{
 }
 
   $charge_sql = "INSERT INTO dental_refund SET
-			amount='".mysql_real_escape_string(str_replace(',','',$_POST['amount']))."',
-                        userid='".mysql_real_escape_string($id)."',
-                        adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."',
+			amount='".mysqli_real_escape_string($con,str_replace(',','',$_POST['amount']))."',
+                        userid='".mysqli_real_escape_string($con,$id)."',
+                        adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',
                         refund_date=NOW(),
-                        charge_id='".mysql_real_escape_string($cr['id'])."',
+                        charge_id='".mysqli_real_escape_string($con,$cr['id'])."',
                         adddate=NOW(),
-                        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";	
-  	mysql_query($charge_sql); 
+                        ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";	
+  	mysqli_query($con,$charge_sql); 
     ?><h3><?= $r['first_name']; ?> <?= $r['last_name']; ?> refunded <?= $_POST['amount']; ?>.</h3><?php
      ?><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
 	die();
@@ -125,7 +124,7 @@ try{
             <div class="form-group">
                 <label for="npi" class="col-md-3 control-label">Amount to refund credit card ending <?= $last4; ?> for $<?= $charge_r['amount']; ?> on <?=date('m/d/Y g:i a', strtotime($charge_r['adddate']));?></label>
                 <div class="col-md-9">
-			$<input type="text" id="amount" name="amount" value="<?=$total_charge;?>" />
+			$<input type="text" id="amount" name="amount" value="<?=(!empty($total_charge) ? $total_charge : '');?>" />
 		</div>
 	    </div>
 <span id="amount_notification" style="color:#c33; font-size:12px;"></span>

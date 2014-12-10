@@ -1,6 +1,5 @@
 <?php
-session_start();
-require_once 'includes/main_include.php';
+include_once 'includes/main_include.php';
 include_once 'includes/sescheck.php';
 include_once 'includes/password.php';
 include_once '../includes/general_functions.php';
@@ -10,14 +9,14 @@ include_once '../includes/help_functions.php';
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <?php
 
-if($_POST["staffsub"] == 1)
+if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
 {
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con,$sel_check);
         $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_POST['ed'])."'";
-        $query_check2=mysql_query($sel_check2);
+        $query_check2=mysqli_query($con,$sel_check2);
 
-        if(mysql_num_rows($query_check)>0)
+        if(mysqli_num_rows($query_check)>0)
         {
                 $msg="Username already exist. So please give another Username.";
                 ?>
@@ -27,7 +26,7 @@ if($_POST["staffsub"] == 1)
                 </script>
                 <?
         }
-        elseif(mysql_num_rows($query_check2)>0)
+        elseif(mysqli_num_rows($query_check2)>0)
         {
                 $msg="Email already exist. So please give another Email.";
                 ?>
@@ -42,9 +41,9 @@ if($_POST["staffsub"] == 1)
 		if($_POST["ed"] != "")
 		{
 
-                        $old_sql = "SELECT username FROM dental_users WHERE userid='".mysql_real_escape_string($_POST["ed"])."'";
-                        $old_q = mysql_query($old_sql);
-                        $old_r = mysql_fetch_assoc($old_q);
+                        $old_sql = "SELECT username FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_POST["ed"])."'";
+                        $old_q = mysqli_query($con,$old_sql);
+                        $old_r = mysqli_fetch_assoc($old_q);
                         $old_username = $old_r['username'];
 
 
@@ -72,12 +71,11 @@ if($_POST["staffsub"] == 1)
                                 zip = '".s_for($_POST["zip"])."',
 				use_course = '".$c."',
 				sign_notes=".$n." where userid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql);
 			
 			edx_user_update($_POST['ed'], $edx_con);
 			help_user_update($_POST['ed'], $help_con);
 
-			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -92,13 +90,13 @@ if($_POST["staffsub"] == 1)
 			$salt = create_salt();
                         $password = gen_password($_POST['password'], $salt);
 
-                        $p = ($_POST['producer']==1)?1:0;
-			$pf = ($_POST['producer_files']==1)?1:0;
-			$n = ($_POST['sign_notes']==1)?1:0;
-			$c = ($_POST['use_course']==1)?1:0;
-                        $ein = ($_POST['ein']==1)?1:0;
-                        $ssn = ($_POST['ssn']==1)?1:0;
-			$ins_sql = "insert into dental_users set user_access=1, docid='".$_GET['docid']."', username = '".s_for($_POST["username"])."', password = '".mysql_real_escape_string($password)."', salt='".$salt."', 
+                        $p = (!empty($_POST['producer']) && $_POST['producer']==1)?1:0;
+			$pf = (!empty($_POST['producer_files']) && $_POST['producer_files']==1)?1:0;
+			$n = (!empty($_POST['sign_notes']) && $_POST['sign_notes']==1)?1:0;
+			$c = (!empty($_POST['use_course']) && $_POST['use_course']==1)?1:0;
+                        $ein = (!empty($_POST['ein']) && $_POST['ein']==1)?1:0;
+                        $ssn = (!empty($_POST['ssn']) && $_POST['ssn']==1)?1:0;
+			$ins_sql = "insert into dental_users set user_access=1, docid='".$_GET['docid']."', username = '".s_for($_POST["username"])."', password = '".mysqli_real_escape_string($con,$password)."', salt='".$salt."', 
                                 first_name = '".s_for($_POST["first_name"])."', 
                                 last_name = '".s_for($_POST["last_name"])."',
 				email = '".s_for($_POST["email"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', producer=".$p.", 
@@ -116,21 +114,21 @@ if($_POST["staffsub"] == 1)
                                 zip = '".s_for($_POST["zip"])."',
 				use_course = ".$c.",
 			sign_notes=".$n;
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
-                        $userid = mysql_insert_id();
-			edx_user_update($userid, $edx_con);
-			help_user_update($userid, $help_con);
+			mysqli_query($con,$ins_sql);
+                        $userid = mysqli_insert_id($con);
+			edx_user_update($userid, (!empty($edx_con) ? $edx_con : ''));
+			help_user_update($userid, (!empty($help_con) ? $help_con : ''));
 
-                        $docname_sql = "SELECT name from dental_users WHERE userid='".mysql_real_escape_string($_GET['docid'])."'";
-                        $docname_q = mysql_query($docname_sql);
-                        $docname_r = mysql_fetch_assoc($docname_q);
+                        $docname_sql = "SELECT name from dental_users WHERE userid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+                        $docname_q = mysqli_query($con,$docname_sql);
+                        $docname_r = mysqli_fetch_assoc($docname_q);
                         $docname = $docname_r['name'];
 			$co_sql = "SELECT c.id, c.name from companies c
 					JOIN dental_user_company uc ON c.id = uc.companyid
 					JOIN dental_users u ON u.userid = uc.userid
-					 WHERE u.userid='".mysql_real_escape_string($_GET['docid'])."'";
-                        $co_q = mysql_query($co_sql);
-                        $co_r = mysql_fetch_assoc($co_q);
+					 WHERE u.userid='".mysqli_real_escape_string($con,$_GET['docid'])."'";
+                        $co_q = mysqli_query($con,$co_sql);
+                        $co_r = mysqli_fetch_assoc($co_q);
                         $cid = $co_r['id'];
 			$cname = $co_r['name'];
 
@@ -149,14 +147,14 @@ if($_POST["staffsub"] == 1)
 
 ?>
 
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+<?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
-    $thesql = "select * from dental_users where userid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_users where userid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$username = $_POST['username'];
 		$password = $_POST['password'];
@@ -166,22 +164,22 @@ if($_POST["staffsub"] == 1)
 		$address = $_POST['address'];
 		$phone = $_POST['phone'];
 		$status = $_POST['status'];
-                $producer = $_POST['producer'];
-		$producer_files = $_POST['producer_files'];
+                $producer = (!empty($_POST['producer']) ? $_POST['producer'] : '');
+		$producer_files = (!empty($_POST['producer_files']) ? $_POST['producer_files'] : '');
                 $npi = $_POST['npi'];
                 $medicare_npi = $_POST['medicare_npi'];
                 $medicare_ptan = $_POST['medicare_ptan'];
                 $tax_id_or_ssn = $_POST['tax_id_or_ssn'];
-                $ein = $_POST['ein'];
-                $ssn = $_POST['ssn'];
+                $ein = (!empty($_POST['ein']) ? $_POST['ein'] : '');
+                $ssn = (!empty($_POST['ssn']) ? $_POST['ssn'] : '');
                 $practice = $_POST['practice'];
 		$address = $_POST['address'];
                 $city = $_POST['city'];
                 $state = $_POST['state'];
                 $zip = $_POST['zip'];
                 $phone = $_POST['phone'];
-		$use_course = $_POST['use_course'];
-		$sign_notes = $_POST['sign_notes'];
+		$use_course = (!empty($_POST['use_course']) ? $_POST['use_course'] : '');
+		$sign_notes = (!empty($_POST['sign_notes']) ? $_POST['sign_notes'] : '');
 	}
 	else
 	{
@@ -224,7 +222,7 @@ if($_POST["staffsub"] == 1)
 	
 	<br /><br />
 	
-	<? if($msg != '') {?>
+	<? if(!empty($msg)) {?>
     <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>

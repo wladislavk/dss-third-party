@@ -427,7 +427,7 @@ Epworth Sleep Questionnaire
                                                 }
                                                 else
                                                 {
-                                                        $chk = $epseq[@array_search($epworth_myarray['epworthid'],$epid)];
+                                                        $chk = (!empty($epseq[@array_search($epworth_myarray['epworthid'],$epid)]) ? $epseq[@array_search($epworth_myarray['epworthid'],$epid)] : '');
                                                 }
 
                                         ?>
@@ -602,7 +602,7 @@ if($complaintid <> '')
 ?>
 <br /><br />
 
-<?php if($complaintid != '' || in_array('0', $compid)){ ?>
+<?php if(!empty($complaintid) || !empty($compid) && in_array('0', $compid)){ ?>
 <strong>Other Complaints</strong>
 <ul>
                 <?php if($complaintid != ''){ ?>

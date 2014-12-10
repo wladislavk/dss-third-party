@@ -2,11 +2,11 @@
 include "includes/top.htm";
 
 if(isset($_POST['user_sub'])){
-  $d_sql = "UPDATE dental_users SET billing_company_id=NULL WHERE billing_company_id='".mysql_real_escape_string($_POST['id'])."'";
-  mysql_query($d_sql);
+  $d_sql = "UPDATE dental_users SET billing_company_id=NULL WHERE billing_company_id='".mysqli_real_escape_string($con,$_POST['id'])."'";
+  mysqli_query($con,$d_sql);
   $u = implode(',',$_POST['user']);
-  $up_sql = "UPDATE dental_users set billing_company_id='".mysql_real_escape_string($_POST['id'])."' WHERE userid IN (".$u.")";
-  mysql_query($up_sql);
+  $up_sql = "UPDATE dental_users set billing_company_id='".mysqli_real_escape_string($con,$_POST['id'])."' WHERE userid IN (".$u.")";
+  mysqli_query($con,$up_sql);
   ?>
   <script type="text/javascript">
     window.location='manage_companies.php';
@@ -23,8 +23,8 @@ $u_sql = "SELECT u.*, c.name as billing_company FROM dental_users u
 		WHERE
 		u.docid=0
 		ORDER BY u.first_name ASC, u.last_name ASC, u.username ASC";
-$u_q = mysql_query($u_sql);
-while($user = mysql_fetch_assoc($u_q)){
+$u_q = mysqli_query($con,$u_sql);
+while($user = mysqli_fetch_assoc($u_q)){
 ?>
 
   <input type="checkbox" value="<?= $user['userid'];?>" name="user[]" <?= ($user['billing_company_id']==$_REQUEST['id'])?'checked="checked"':''; ?> <?= ($user['billing_company_id']!='' && $user['billing_company_id']!='0' && $user['billing_company_id']!=$_REQUEST['id'])?'disabled="disabled"':''; ?> />

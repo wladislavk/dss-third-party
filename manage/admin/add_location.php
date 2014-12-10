@@ -1,6 +1,5 @@
-<?php 
-session_start();
-require_once 'includes/main_include.php';
+<?php
+include_once 'includes/main_include.php';
 include_once 'includes/sescheck.php';
 include_once '../includes/general_functions.php';
 ?>
@@ -9,29 +8,28 @@ include_once '../includes/general_functions.php';
 
 <script type="text/javascript" src="../js/masks.js"></script> 
 <?php
-if($_POST["contactsub"] == 1)
+if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
 {
 
 	if($_POST["ed"] != "")
 	{
 		$ed_sql = "update dental_locations set 
-				location = '".mysql_real_escape_string($_POST["location"])."', 
-				name = '".mysql_real_escape_string($_POST["name"])."',
-				address = '".mysql_real_escape_string($_POST["address"])."',
-                                city = '".mysql_real_escape_string($_POST["city"])."',
-                                state = '".mysql_real_escape_string($_POST["state"])."',
-                                zip = '".mysql_real_escape_string($_POST["zip"])."',
-                                phone = '".mysql_real_escape_string(num($_POST["phone"]))."',
-				fax = '".mysql_real_escape_string(num($_POST["fax"]))."'
+				location = '".mysqli_real_escape_string($con,$_POST["location"])."', 
+				name = '".mysqli_real_escape_string($con,$_POST["name"])."',
+				address = '".mysqli_real_escape_string($con,$_POST["address"])."',
+                                city = '".mysqli_real_escape_string($con,$_POST["city"])."',
+                                state = '".mysqli_real_escape_string($con,$_POST["state"])."',
+                                zip = '".mysqli_real_escape_string($con,$_POST["zip"])."',
+                                phone = '".mysqli_real_escape_string($con,num($_POST["phone"]))."',
+				fax = '".mysqli_real_escape_string($con,num($_POST["fax"]))."'
 				where id='".$_POST["ed"]."'";
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-		
-		//echo $ed_sql.mysql_error();
+		mysqli_query($con,$ed_sql);
+
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			parent.window.location='manage_locations.php?docid=<?= $_POST['docid']; ?>&msg=<?=$msg;?>';
+			//alert("<?php echo $msg;?>");
+			parent.window.location='manage_locations.php?docid=<?php echo  $_POST['docid']; ?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
 		die();
@@ -40,22 +38,22 @@ if($_POST["contactsub"] == 1)
 	{
 	
 		$ins_sql = "insert into dental_locations set location = '".s_for($_POST["location"])."',
-                                name = '".mysql_real_escape_string($_POST["name"])."',
-                                address = '".mysql_real_escape_string($_POST["address"])."',
-                                city = '".mysql_real_escape_string($_POST["city"])."',
-                                state = '".mysql_real_escape_string($_POST["state"])."',
-                                zip = '".mysql_real_escape_string($_POST["zip"])."',
-                                phone = '".mysql_real_escape_string(num($_POST["phone"]))."',
-                                fax = '".mysql_real_escape_string(num($_POST["fax"]))."',
+                                name = '".mysqli_real_escape_string($con,$_POST["name"])."',
+                                address = '".mysqli_real_escape_string($con,$_POST["address"])."',
+                                city = '".mysqli_real_escape_string($con,$_POST["city"])."',
+                                state = '".mysqli_real_escape_string($con,$_POST["state"])."',
+                                zip = '".mysqli_real_escape_string($con,$_POST["zip"])."',
+                                phone = '".mysqli_real_escape_string($con,num($_POST["phone"]))."',
+                                fax = '".mysqli_real_escape_string($con,num($_POST["fax"]))."',
 				 docid='".$_POST['docid']."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysql_query($ins_sql) or die($ins_sql.mysql_error());
+		mysqli_query($con,$ins_sql);
 		
 		$msg = "Added Successfully";
 		
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			parent.window.location='manage_locations.php?docid=<?= $_POST['docid']; ?>&msg=<?=$msg;?>';
+			//alert("<?php echo $msg;?>");
+			parent.window.location='manage_locations.php?docid=<?php echo  $_POST['docid']; ?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
 		die();
@@ -63,14 +61,14 @@ if($_POST["contactsub"] == 1)
 }
 ?>
 
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+<?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
-    $thesql = "select * from dental_locations where id='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+    $thesql = "select * from dental_locations where id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	$themy = mysqli_query($con,$thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
-	if($msg != '')
+	if(!empty($msg))
 	{
 		$location = $_POST['location'];
 		$name = $_POST['name'];
@@ -107,38 +105,38 @@ if($_POST["contactsub"] == 1)
     <div class="col-md-6 col-md-offset-3">
         <?php if (isset($_GET['msg'])) { ?>
         <div class="alert alert-danger text-center">
-            <strong><?= $_GET['msg'] ?></strong>
+            <strong><?php echo  $_GET['msg'] ?></strong>
         </div>
         <?php } ?>
         
-        <?php if ($msg != '') { ?>
+        <?php if (!empty($msg)) { ?>
         <div class="alert alert-success text-center">
-            <?= $msg ?>
+            <?php echo  $msg ?>
         </div>
         <?php } ?>
         
         <div class="page-header">
             <h1>
-                <?=$but_text?> <?php echo $_GET['heading']; ?> Location 
+                <?php echo $but_text?> <?php echo (!empty($_GET['heading']) ? $_GET['heading'] : ''); ?> Location 
                 <? if($location <> "") {?>
-                    &quot;<?=$location;?>&quot;
+                    &quot;<?php echo $location;?>&quot;
                 <? }?>
             </h1>
         </div>
-        <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return locationabc(this)" class="form-horizontal">
+        <form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return locationabc(this)" class="form-horizontal">
             <div class="page-header">
                 <strong>Name</strong>
             </div>
             <div class="form-group">
                 <label for="location" class="col-md-3 control-label">Practice Location</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="location" id="location" placeholder="Practice Location" value="<?= $location ?>">
+                    <input type="text" class="form-control" name="location" id="location" placeholder="Practice Location" value="<?php echo  $location ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="name" class="col-md-3 control-label">Doctor Name</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="name" id="name" placeholder="Doctor Name" value="<?= $name ?>">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Doctor Name" value="<?php echo  $name ?>">
                 </div>
             </div>
             
@@ -148,25 +146,25 @@ if($_POST["contactsub"] == 1)
             <div class="form-group">
                 <label for="address" class="col-md-3 control-label">Address</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="address" id="address" placeholder="Address" value="<?= $address ?>">
+                    <input type="text" class="form-control" name="address" id="address" placeholder="Address" value="<?php echo  $address ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="city" class="col-md-3 control-label">City</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="city" id="city" placeholder="City" value="<?= $city ?>">
+                    <input type="text" class="form-control" name="city" id="city" placeholder="City" value="<?php echo  $city ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="state" class="col-md-3 control-label">State</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?= $state ?>">
+                    <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?php echo  $state ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="zip" class="col-md-3 control-label">Zip/Postal Code</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip/Postal Code" value="<?= $zip ?>">
+                    <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip/Postal Code" value="<?php echo  $zip ?>">
                 </div>
             </div>
             
@@ -176,24 +174,24 @@ if($_POST["contactsub"] == 1)
             <div class="form-group">
                 <label for="phone" class="col-md-3 control-label">Phone</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone number" value="<?= $phone ?>">
+                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone number" value="<?php echo  $phone ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="fax" class="col-md-3 control-label">Fax</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="fax" id="fax" placeholder="Fax number" value="<?= $fax ?>">
+                    <input type="text" class="form-control" name="fax" id="fax" placeholder="Fax number" value="<?php echo  $fax ?>">
                 </div>
             </div>
             
             <div class="form-group">
                 <div class="col-md-9 col-md-offset-3">
                     <input type="hidden" name="contactsub" value="1">
-                    <input type="hidden" name="docid" value="<?= $_GET['docid']; ?>">
-                    <input type="hidden" name="ed" value="<?=$themyarray["id"]?>">
-                    <input type="submit" value="<?=$but_text?> Location" class="btn btn-primary">
+                    <input type="hidden" name="docid" value="<?php echo  $_GET['docid']; ?>">
+                    <input type="hidden" name="ed" value="<?php echo $themyarray["id"]?>">
+                    <input type="submit" value="<?php echo $but_text?> Location" class="btn btn-primary">
                     <?php  if($themyarray["id"] != ''){ ?>
-                    <a class="btn btn-danger pull-right" href="javascript:parent.window.location='manage_locations.php?delid=<?=$themyarray["id"];?>&docid=<?=$_GET['docid']?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" title="DELETE">
+                    <a class="btn btn-danger pull-right" href="javascript:parent.window.location='manage_locations.php?delid=<?php echo $themyarray["id"];?>&docid=<?php echo $_GET['docid']?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" title="DELETE">
                         Delete
                     </a>
                     <?php } ?>

@@ -1,10 +1,10 @@
 <? 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "")
+if(!empty($_REQUEST["delid"]))
 {
 	$del_sql = "delete from dental_locations where id='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -17,28 +17,28 @@ if($_REQUEST["delid"] != "")
 }
 
 if(isset($_REQUEST['did'])){
-  $d_sql = "UPDATE dental_locations set default_location=0 where docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
-  mysql_query($d_sql);
-  $d_sql = "UPDATE dental_locations set default_location=1 where id='".mysql_real_escape_string($_REQUEST['did'])."' AND docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
-  mysql_query($d_sql);
+  $d_sql = "UPDATE dental_locations set default_location=0 where docid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+  mysqli_query($con,$d_sql);
+  $d_sql = "UPDATE dental_locations set default_location=1 where id='".mysqli_real_escape_string($con,$_REQUEST['did'])."' AND docid='".mysqli_real_escape_string($con,$_REQUEST['docid'])."'";
+  mysqli_query($con,$d_sql);
 }
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_locations where docid='".$_GET['docid']."' order by location";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_contact=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_contact = mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -63,7 +63,7 @@ $num_contact=mysql_num_rows($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
@@ -86,7 +86,7 @@ $num_contact=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -97,9 +97,9 @@ $num_contact=mysql_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
-			if($myarray["status"] == 1)
+			if(!empty($myarray["status"]) && $myarray["status"] == 1)
 			{
 				$tr_class = "tr_active";
 			}

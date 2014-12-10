@@ -1,6 +1,5 @@
 <?php
-session_start();
-require_once('includes/main_include.php');
+include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
 //include('includes/general_functions.php');
@@ -36,14 +35,14 @@ include_once('includes/password.php');
                         from dental_eligibility e 
                         JOIN dental_patients p on p.patientid=e.patientid
                         where e.id='".$_REQUEST["id"]."'";
-        $themy = mysql_query($thesql) or die(mysql_error());
-        $themyarray = mysql_fetch_array($themy);
+        $themy = mysqli_query($con,$thesql);
+        $themyarray = mysqli_fetch_array($themy);
 ?>
-  <h2>Eligibility for <?= $themyarray['pat_name']; ?> - <?= date('m/d/Y h:ia', strtotime($themyarray['adddate'])); ?></h2>
-  <a href="patient_eligibility.php?pid=<?=$themyarray['patientid'];?>" >Return to chart</a>
+  <h2>Eligibility for <?php echo  $themyarray['pat_name']; ?> - <?php echo  date('m/d/Y h:ia', strtotime($themyarray['adddate'])); ?></h2>
+  <a href="patient_eligibility.php?pid=<?php echo $themyarray['patientid'];?>" >Return to chart</a>
 <script type="text/javascript">
 $(document).ready(function(){
-  var coverage = new Coverage(<?= $themyarray['response']; ?>);
+  var coverage = new Coverage(<?php echo  $themyarray['response']; ?>);
   if (coverage.hasError()) {
     buildError(coverage.parseError());
   } else {

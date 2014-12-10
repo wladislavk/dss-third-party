@@ -32,7 +32,7 @@ include 'includes/patient_nav.php';
 <?php
 if(!empty($_GET['sect'])){
   $sect = $_GET['sect'];
- }elseif($_COOKIE['summ_sect'] && !empty($_GET['pid']) && $_COOKIE['pid'] == $_GET['pid']){
+ }elseif(!empty($_COOKIE['summ_sect']) && !empty($_GET['pid']) && $_COOKIE['pid'] == $_GET['pid']){
   $sect = $_COOKIE['summ_sect'];
  }else{
   $sect = 'summ';

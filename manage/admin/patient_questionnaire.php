@@ -584,7 +584,7 @@ function in_array(needle, haystack)
 						}
 						else
 						{
-							$chk = ($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
+							$chk = !empty($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
 						}
 					        if(@array_search($complaint_myarray['complaintid'],$patcompid) === false)
                                                 {
@@ -625,7 +625,7 @@ function in_array(needle, haystack)
                                                         $chk = '';
                                                 }
                                                 else                                                {
-                                                        $chk = $compseq[@array_search(0,$compid)];
+                                                        $chk = (!empty($compseq[@array_search(0,$compid)]) ? $compseq[@array_search(0,$compid)] : '');
                                                 }
 				?>
                             <input type="checkbox" id="complaint_0" onclick="chk_other_comp()" name="complaint_0" value="1" <?php if($chk == 1) echo 'checked="checked"'; ?> />

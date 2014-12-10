@@ -14,7 +14,7 @@
 
         $loc = $db->getRow($loc_sql);
         $address = $loc['address']." ".$loc['city'].", ".$loc['state']." ".$loc['zip'];
-        if($help_id == '' || $help_id == '0'){
+        if(empty($help_id)){
             $help_sql = "INSERT INTO help_wp.wp_users 
                 		(user_login, 
                 		user_nicename,
@@ -23,7 +23,7 @@
                 		('".mysqli_real_escape_string($GLOBALS['con'], $r['username'])."', 
                 		'".mysqli_real_escape_string($GLOBALS['con'], $r['username'])."',
                 		'".mysqli_real_escape_string($GLOBALS['con'], $r['email'])."',
-                		'".mysqli_real_escape_string($GLOBALS['con'], $r['firstname'].' '.$r['lastname'])."')";
+                		'".mysqli_real_escape_string($GLOBALS['con'], (!empty($r['firstname']) ? $r['firstname'] : '').' '.(!empty($r['lastname']) ? $r['lastname'] : ''))."')";
 
             $help_id = $db->getInsertId($help_sql);  
             //USER ROLES

@@ -7,8 +7,8 @@ function save_image($field = null, $fieldname = null) {
 	$folder = '../../../../shared/q_file';
 	if ((array_search($_FILES[$fieldname]["type"], $dss_image_file_types) !== false) ) {
 		$sql = "select ".st($field)." from dental_users where userid = '".s_for($_POST['uid'])."';";
-		$result = mysql_query($sql);
-		$my = mysql_fetch_array($result);
+		$result = mysqli_query($con,$sql);
+		$my = mysqli_fetch_array($result);
 		$imgname = $my[$field]; 
 
 		if($_FILES[$fieldname]["name"] <> '') {
@@ -33,7 +33,7 @@ function save_image($field = null, $fieldname = null) {
 			".st($field)." = '".s_for($banner1)."'
 			where userid = '".s_for($_POST['uid'])."'";
 			
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());				
+			mysqli_query($con,$ed_sql);				
 
 			return true;
 		} else {
@@ -46,7 +46,7 @@ function save_image($field = null, $fieldname = null) {
 
 // Handle POST
 
-if($_POST["submit_letterhead"]) {
+if(!empty($_POST["submit_letterhead"])) {
 	$result1 = $result2 = $result3 = $result4 = null; 
 
 	if ($_FILES['emailheaderimg']["name"]) $result1 = save_image('email_header', 'emailheaderimg');
@@ -79,15 +79,15 @@ if($_POST["submit_letterhead"]) {
 // Query Database for User Information
 
 $sql = "SELECT name FROM dental_users WHERE user_access = '2' AND userid = '".st($_GET['uid'])."';";
-$result = mysql_query($sql);
-$my = mysql_fetch_array($result);
+$result = mysqli_query($con,$sql);
+$my = mysqli_fetch_array($result);
 $docname = $my['name']; 
 
 // Query Database for Images
 
 $sql = "SELECT email_header, email_footer, fax_header, fax_footer FROM dental_users WHERE userid = '".st($_GET['uid'])."';"; 
-$result = mysql_query($sql);
-$my = mysql_fetch_array($result);
+$result = mysqli_query($con,$sql);
+$my = mysqli_fetch_array($result);
 $email_header_imgname = $my['email_header'];
 $email_footer_imgname = $my['email_footer'];
 $fax_header_imgname = $my['fax_header'];
@@ -113,7 +113,7 @@ $fax_footer_imgname = $my['fax_footer'];
 	<h1>Update Letterhead for <?= $docname ?></h1>
 </div>
 
-<?php if ($msg != '') { ?>
+<?php if (!empty($msg)) { ?>
 <div class="alert alert-success text-center">
     <?= $msg ?>
 </div>

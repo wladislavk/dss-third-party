@@ -17,21 +17,21 @@ include "includes/patient_nav.php";
 
 <?php
 
-if($_GET['own']==1){
-  $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
-  $c_q = mysql_query($c_sql);
-  $changed = mysql_num_rows($c_q);
-  $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
-  mysql_query($own_sql);
+if(!empty($_GET['own']) && $_GET['own']==1){
+  $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+  $c_q = mysqli_query($con,$c_sql);
+  $changed = mysqli_num_rows($c_q);
+  $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+  mysqli_query($con,$own_sql);
  if($_GET['own_completed']==1){
-  $q1_sql = "SELECT q_page1id from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
-  $q1_q = mysql_query($q1_sql);
-  if(mysql_num_rows($q1_q) == 0){
+  $q1_sql = "SELECT q_page1id from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+  $q1_q = mysqli_query($con,$q1_sql);
+  if(mysqli_num_rows($q1_q) == 0){
     $ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
-    mysql_query($ed_sql);
+    mysqli_query($con,$ed_sql);
   }else{
     $ed_sql = "UPDATE dental_q_page1 SET exam_date=now() WHERE patientid='".$_GET['pid']."'";
-    mysql_query($ed_sql);
+    mysqli_query($con,$ed_sql);
   }
  }
 
@@ -67,7 +67,7 @@ edited = false;
 
 
 <?php
-if($_POST['q_page2sub'] == 1)
+if(!empty($_POST['q_page2sub']) && $_POST['q_page2sub'] == 1)
 {
 	$polysomnographic = $_POST['polysomnographic'];
 	$sleep_center_name_text = $_POST['sleep_center_name_text'];
@@ -188,7 +188,7 @@ if($_POST['q_page2sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con,$ins_sql);
 		
 		$msg = "Added Successfully";
                 if(isset($_POST['q_pagebtn_proceed'])){
@@ -241,7 +241,7 @@ if($_POST['q_page2sub'] == 1)
 		surgery = '".s_for($surgery)."'
 		where q_page2id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con,$ed_sql);
 
 		for($i=0;$i<$num_surgery;$i++){
 			if($_POST['surgery_id_'.$i]==0){
@@ -255,7 +255,7 @@ if($_POST['q_page2sub'] == 1)
 					$s = "DELETE FROM dental_q_page2_surgery WHERE id='".$_POST['surgery_id_'.$i]."'";
 				}
 			}	
-			mysql_query($s);
+			mysqli_query($con,$s);
 		}	
 		$msg = "Edited Successfully";
                 if(isset($_POST['q_pagebtn_proceed'])){
@@ -279,8 +279,8 @@ if($_POST['q_page2sub'] == 1)
 }
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con,$pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -295,9 +295,9 @@ if($pat_myarray['patientid'] == '')
 }
 
 
-        $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
-        $exist_q = mysql_query($exist_sql);
-        $exist_row = mysql_fetch_assoc($exist_q);
+        $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+        $exist_q = mysqli_query($con,$exist_sql);
+        $exist_row = mysqli_fetch_assoc($exist_q);
         if($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $exist_row['treatments_status'] == 0 && $exist_row['history_status'] == 0)
         {
                 ?>
@@ -322,8 +322,8 @@ if($pat_myarray['patientid'] == '')
 
                 }
 $sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con,$sql);
+$myarray = mysqli_fetch_array($my);
 
 $q_page2id = st($myarray['q_page2id']);
 
@@ -370,13 +370,13 @@ if($cpap == '')
 <a name="top"></a>
 &nbsp;&nbsp;
 
-<? include("includes/form_top.htm");?>
+<? include("../includes/form_top.htm");?>
 
 <br />
 <br>
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <script>
@@ -505,10 +505,10 @@ if($cpap == '')
 <div style="clear:both;"></div>
 
 <?php
-        $patient_sql = "SELECT * FROM dental_q_page2 WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
-        $patient_q = mysql_query($patient_sql);
-        $pat_row = mysql_fetch_assoc($patient_q);
-        if(mysql_num_rows($patient_q) == 0){
+        $patient_sql = "SELECT * FROM dental_q_page2 WHERE parent_patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+        $patient_q = mysqli_query($con,$patient_sql);
+        $pat_row = mysqli_fetch_assoc($patient_q);
+        if(mysqli_num_rows($patient_q) == 0){
 		$showEdits = false;
                 //echo "Patient edits.";
         }else{
@@ -646,9 +646,9 @@ if($cpap == '')
                             
                             <?
 							$intolerance_sql = "select * from dental_intolerance where status=1 order by sortby";
-							$intolerance_my = mysql_query($intolerance_sql);
+							$intolerance_my = mysqli_query($con,$intolerance_sql);
 							
-							while($intolerance_myarray = mysql_fetch_array($intolerance_my))
+							while($intolerance_myarray = mysqli_fetch_array($intolerance_my))
 							{
 							?>
 								<input type="checkbox" id="intolerance" name="intolerance[]" value="<?=st($intolerance_myarray['intoleranceid'])?>" <? if(strpos($intolerance,'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
@@ -804,10 +804,10 @@ Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (
 	<table id="surgery_table">
 	<tr><th>Date</th><th>Surgeon</th><th>Surgery</th><th></th></tr>	
 		<?php
-		  $s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysql_real_escape_string($_REQUEST['pid'])."'";
-		  $s_q = mysql_query($s_sql);
+		  $s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
+		  $s_q = mysqli_query($con,$s_sql);
 		  $s_count = 0;
-		  while($s_row = mysql_fetch_assoc($s_q)){
+		  while($s_row = mysqli_fetch_assoc($s_q)){
 		?>
 	  <tr id="surgery_row_<?= $s_count; ?>">
 		<td><input type="hidden" name="surgery_id_<?= $s_count; ?>" value="<?= $s_row['id']; ?>" /><input type="text" id="surgery_date_<?= $s_count; ?>" name="surgery_date_<?= $s_count; ?>" value="<?= $s_row['surgery_date']; ?>" /></td>
@@ -886,7 +886,7 @@ Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (
 </form>
 
 <br />
-<? include("includes/form_bottom.htm");?>
+<? include("../includes/form_bottom.htm");?>
 <br />
 
 <div id="popupRefer" style="width:750px;">

@@ -1,10 +1,10 @@
 <? 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "")
+if(!empty($_REQUEST["delid"]))
 {
 	$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con,$del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -17,35 +17,35 @@ if($_REQUEST["delid"] != "")
 }
 
 $doc_sql = "select * from dental_users where userid = '".s_for($_GET['docid'])."'";
-$doc_my = mysql_query($doc_sql);
-$doc_myarray = mysql_fetch_array($doc_my);
+$doc_my = mysqli_query($con,$doc_sql);
+$doc_myarray = mysqli_fetch_array($doc_my);
 
 if(st($doc_myarray['username']) == '')
 {
 	?>
 	<script type="text/javascript">
-		window.location = "manage_users.php?msg=Invalid Information.";
+		// window.location = "manage_users.php?msg=Invalid Information.";
 	</script>
 	<?
-	die();
+	// die();
 }
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_users where user_access=1 and docid='".$doc_myarray['userid']."' order by username";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con,$sql);
+$num_users = mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -68,7 +68,7 @@ $num_users=mysql_num_rows($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
@@ -97,7 +97,7 @@ $num_users=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -108,7 +108,7 @@ $num_users=mysql_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{

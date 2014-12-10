@@ -56,7 +56,7 @@ $num_contact=mysqli_num_rows($my);
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
 
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">

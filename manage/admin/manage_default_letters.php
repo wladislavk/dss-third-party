@@ -37,7 +37,7 @@ $my = mysqli_query($con,$sql);
         <select id="letterid" name="letterid" class="form-control">
             <option value="">Select Letter</option>
             <?php while ($r = mysqli_fetch_assoc($my)) { ?>
-            <option value="<?php echo  (!empty($r['id']) ? $r['id'] : ''); ?>" <?php echo  ($_REQUEST['lid']==$r['id'])?'selected=-"selected"':''; ?>><?php echo  $r['id']." - ".$r['name']; ?></option>
+            <option value="<?php echo  (!empty($r['id']) ? $r['id'] : ''); ?>" <?php echo  (!empty($_REQUEST['lid']) && $_REQUEST['lid']==$r['id'])?'selected=-"selected"':''; ?>><?php echo  $r['id']." - ".$r['name']; ?></option>
             <?php } ?>
         </select>
     </p>

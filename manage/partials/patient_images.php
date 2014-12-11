@@ -64,11 +64,11 @@
                         </td>
 				        <?php if($office_type == DSS_OFFICE_TYPE_FRONT) { ?>
                             <td valign="top">
-                                <a href="Javascript:;"  onclick="Javascript: loadPopupRefer('add_image.php?ed=<?php echo $myarray["imageid"];?>&pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>');" class="editlink btn btn-primary btn-sm" title="EDIT">
+                                <a href="Javascript:;"  onclick="Javascript: loadPopupRefer('add_image.php?ed=<?php echo $myarray["imageid"];?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : ''); ?>');" class="editlink btn btn-primary btn-sm" title="EDIT">
                                     Edit
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 </a>
-                                <a href="<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid'];?>&delid=<?php echo $myarray["imageid"];?>&sh=<?php echo $_GET['sh'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink btn btn-danger btn-sm" title="DELETE">
+                                <a href="<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid'];?>&delid=<?php echo $myarray["imageid"];?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : ''); ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink btn btn-danger btn-sm" title="DELETE">
                                     Delete
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </a>

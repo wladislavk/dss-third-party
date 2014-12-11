@@ -13,8 +13,8 @@ $sql = "SELECT  "
 $result = $db->getResults($sql);
 $ledger_balance = 0;
 if ($result) foreach ($result as $row) {
-  $ledger_balance -= $row['amount'];
-  $ledger_balance += $row['paid_amount'];
+  $ledger_balance -= (!empty($row['amount']) ? $row['amount'] : 0);
+  $ledger_balance += (!empty($row['paid_amount']) ? $row['paid_amount'] : 0);
 }
 update_patient_summary((!empty($_GET['pid']) ? $_GET['pid'] : ''), 'ledger', $ledger_balance);
 ?>
@@ -525,38 +525,38 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       $tr_class = "tr_inactive";
     }
     $tr_class = "tr_active";
-    if($myarray['ledger'] == 'claim'){ 
+    if(!empty($myarray['ledger']) && $myarray['ledger'] == 'claim'){ 
       $tr_class .= ' clickable_row status_'.$myarray['status']; 
     }
-    if($myarray['ledger'] == 'ledger' && $myarray['primary_claim_id']!='' && $myarray['primary_claim_id']!='0'){ 
+    if(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger' && $myarray['primary_claim_id']!='' && $myarray['primary_claim_id']!='0'){ 
       $tr_class .= ' claimed'; 
     }
-    if($myarray['ledger'] == 'ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
+    if(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
       $tr_class .= ' claimless clickable_row'; 
     }
-    if($myarray['ledger'] == 'statement' && $myarray['filename']!=''){ 
+    if(!empty($myarray['ledger']) && $myarray['ledger'] == 'statement' && $myarray['filename']!=''){ 
       $tr_class .= ' statement clickable_row'; 
     }
     if($myarray['status'] == 3 || $myarray['status'] == 5 || $myarray['status'] == 9){ 
       $tr_class .= ' completed'; 
     }
-    if(!isset($_GET['inspay']) || $_GET['inspay']!=1 || $myarray['ledger']=="claim"){?>
+    if(!isset($_GET['inspay']) || $_GET['inspay']!=1 || !empty($myarray['ledger']) && $myarray['ledger']=="claim"){?>
     <tr 
 <?php 
-      if($myarray['ledger']=="claim"){ 
+      if(!empty($myarray['ledger']) && $myarray['ledger']=="claim"){ 
         if(isset($_GET['inspay']) && $_GET['inspay']==1){
           echo 'onclick="window.location=\'view_claim.php?inspay=1&claimid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; 
         }else{
           echo 'onclick="window.location=\'view_claim.php?claimid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; 
         } 
       }
-      if($myarray['filename']!=""){ 
+      if(!empty($myarray['filename'])){ 
         echo 'onclick="window.location=\''.$myarray['filename'].'\'"'; 
       } ?>
-        class="<?php echo $tr_class;?> <?php echo $myarray['ledger']; ?>">
+        class="<?php echo $tr_class;?> <?php echo (!empty($myarray['ledger']) ? $myarray['ledger'] : ''); ?>">
       <td valign="top"
 <?php 
-      if($myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
+      if(!empty($myarray['ledger']) && $myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
         echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; 
       } ?>
           >
@@ -568,7 +568,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       </td>
       <td valign="top"
 <?php 
-      if($myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
+      if(!empty($myarray['ledger']) && $myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
         echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; 
       } ?>
                       >
@@ -580,7 +580,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       </td>
       <td valign="top"
 <?php 
-      if($myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
+      if(!empty($myarray['ledger']) && $myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
         echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; 
       } ?>
                       >
@@ -588,33 +588,33 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       </td>
       <td valign="top"
 <?php 
-      if($myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
+      if(!empty($myarray['ledger']) && $myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
         echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; 
       } ?>
                                   >
-<?php echo ($myarray['ledger'] == 'note' && $myarray['status']==1)?"(P) ":'';
-      echo (($myarray['ledger'] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":'';
+<?php echo (!empty($myarray['ledger']) && $myarray['ledger'] == 'note' && $myarray['status']==1)?"(P) ":'';
+      echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid') && !empty($myarray['payer']))?$dss_trxn_type_labels[$myarray['payer']]." - ":'';
       echo $myarray["description"];
-      echo (($myarray['ledger'] == 'ledger') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":'';
-      echo (($myarray['ledger'] =='claim') && $myarray['ledgerid'])?"(".$myarray['ledgerid'].") ":'';
-      echo (($myarray['ledger'] =='claim') && $myarray['primary_claim_id'])?"Secondary to (".$myarray['primary_claim_id'].") ":'';
+      echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":'';
+      echo ((!empty($myarray['ledger']) && $myarray['ledger'] =='claim') && $myarray['ledgerid'])?"(".$myarray['ledgerid'].") ":'';
+      echo ((!empty($myarray['ledger']) && $myarray['ledger'] =='claim') && $myarray['primary_claim_id'])?"Secondary to (".$myarray['primary_claim_id'].") ":'';
 
-      echo (($myarray['ledger'] =='claim') && $myarray['num_notes'] > 0)?" - Notes (".$myarray['num_notes'].") ":'';
-      echo ($myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING)?' (Click to file)':'';
-      echo (($myarray['ledger'] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":'';
-      echo (($myarray['ledger'] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":'';
-      echo (($myarray['ledger'] == 'ledger_payment') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
+      echo ((!empty($myarray['ledger']) && $myarray['ledger'] =='claim') && $myarray['num_notes'] > 0)?" - Notes (".$myarray['num_notes'].") ":'';
+      echo (!empty($myarray['ledger']) && $myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING)?' (Click to file)':'';
+      echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":'';
+      echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":'';
+      echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
       </td>
       <td valign="top" align="right"
 <?php 
-      if($myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
+      if(!empty($myarray['ledger']) && $myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
         echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; 
       } ?>
                                   >
 <?php 
-      if(st($myarray["amount"]) <> 0 && $myarray['ledger']!='claim') {
+      if(st($myarray["amount"]) <> 0 && !empty($myarray['ledger']) && $myarray['ledger']!='claim') {
         echo number_format(st($myarray["amount"]),2);
-        if($myarray['ledger']!='claim'){
+        if(!empty($myarray['ledger']) && $myarray['ledger']!='claim'){
           if($_GET['sortdir']=='DESC'){
             $cur_bal -= st($myarray["amount"]);
           }else{
@@ -626,7 +626,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
         &nbsp;
       </td>
 <?php 
-      if($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
+      if(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
       <td></td>
 <?php
         if($myarray['ledger']!='claim'){
@@ -640,19 +640,19 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       } ?>
       <td valign="top" align="right"
 <?php 
-      if($myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
+      if(!empty($myarray['ledger']) && $myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
         echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; 
       } ?>
                                   >
 <?php 
-      if(st($myarray["paid_amount"]) <> 0 && $myarray['ledger']!='claim') {
+      if(st($myarray["paid_amount"]) <> 0 && !empty($myarray['ledger']) && $myarray['ledger']!='claim') {
         echo number_format(st($myarray["paid_amount"]),2);
       }?>
         &nbsp;
       </td>
 <?php 
-      if(!($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){
-        if($myarray['ledger']!='claim'){
+      if(!(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){
+        if(!empty($myarray['ledger']) && $myarray['ledger']!='claim'){
           if($_GET['sortdir']=='DESC'){
             $cur_bal += st($myarray["paid_amount"]);
           }else{
@@ -665,11 +665,11 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       } ?>
       <td valign="top" align="right"
 <?php 
-      if($myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
+      if(!empty($myarray['ledger']) && $myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
         echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
                                   >
 <?php 
-      if($myarray['ledger']=='ledger' || $myarray['ledger'] == 'ledger_paid' || $myarray['ledger'] == 'ledger_paid' || $myarray['ledger'] == 'ledger_payment'){
+      if(!empty($myarray['ledger']) && ($myarray['ledger']=='ledger' || $myarray['ledger'] == 'ledger_paid' || $myarray['ledger'] == 'ledger_paid' || $myarray['ledger'] == 'ledger_payment')){
         if($_GET['sort']=='service_date' || $_GET['sort']=='entry_date'){
           $show_bal = $cur_bal;
           if($_GET['sortdir']=='DESC'){
@@ -685,13 +685,13 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       </td>
       <td valign="top"
 <?php 
-      if($myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
+      if(!empty($myarray['ledger']) && $myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
         echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
                                   >
 <?php
-      if($myarray['ledger'] == 'ledger_paid'){
+      if(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid'){
         echo $dss_trxn_status_labels[$myarray["status"]]; 
-      }elseif($myarray['ledger']=='claim' || $myarray['ledger'] == 'ledger'){
+      }elseif(!empty($myarray['ledger']) && ($myarray['ledger']=='claim' || $myarray['ledger'] == 'ledger')){
         echo (!empty($dss_claim_status_labels[$myarray["status"]]) ? $dss_claim_status_labels[$myarray["status"]] : '');
       }
             //if($myarray["status"] == '0'){echo "Pend.";}
@@ -701,14 +701,14 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       </td>
       <td valign="top">
 <?php 
-      if( $myarray['ledger'] == 'ledger' || $myarray['ledger'] == 'ledger_payment'){ ?>
+      if( !empty($myarray['ledger']) && $myarray['ledger'] == 'ledger' || !empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment'){ ?>
         <a href="#" onclick="$('.history_<?php echo $myarray['ledgerid']; ?>').toggle();return false;">View</a>
 <?php 
       } ?>
       </td>
       <td valign="top">
 <?php 
-      if(($myarray['ledger']=='ledger'&&($myarray['claim_status']!=DSS_CLAIM_SENT&&$myarray['claim_status']!=DSS_CLAIM_SEC_SENT))||$myarray['ledger'] == 'ledger_paid'){ ?>
+      if((!empty($myarray['ledger']) && $myarray['ledger']=='ledger'&&($myarray['claim_status']!=DSS_CLAIM_SENT&&$myarray['claim_status']!=DSS_CLAIM_SEC_SENT))||!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid'){ ?>
         <a href="Javascript:;" 
 <?php
       // column 'edit_ledger_entries' is exist in 'dental_users' table
@@ -736,12 +736,12 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
         </a>
 <?php 
         }
-      }elseif($myarray['ledger']=='note'){ ?>
+      }elseif(!empty($myarray['ledger']) && $myarray['ledger']=='note'){ ?>
         <a href="Javascript:;" onclick="javascript: loadPopup('edit_ledger_note.php?ed=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="EDIT">
           Edit 
         </a>
 <?php 
-      }elseif($myarray['ledger']=='claim'){
+      }elseif(!empty($myarray['ledger']) && $myarray['ledger']=='claim'){
         if($myarray['status']!=DSS_CLAIM_SENT && $myarray['status']!=DSS_CLAIM_SEC_SENT && $myarray['status']!=DSS_CLAIM_PAID_INSURANCE && $myarray['status']!=DSS_CLAIM_PAID_PATIENT && $myarray['status']!=DSS_CLAIM_PAID_SEC_INSURANCE ){ ?>
         <a href="insurance.php?insid=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>" class="editlink" title="EDIT">
           Edit 
@@ -754,12 +754,12 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
         </a>
 <?php 
         }
-      }elseif($myarray['ledger']=='ledger_payment'){ ?>
+      }elseif(!empty($myarray['ledger']) && $myarray['ledger']=='ledger_payment'){ ?>
         <a href="Javascript:;" onclick="javascript: loadPopup('edit_ledger_payment.php?ed=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>');" class="editlink" title="PAYMENT">
           Edit 
         </a>
 <?php 
-      }elseif($myarray['ledger']=='statement'){ ?>
+      }elseif(!empty($myarray['ledger']) && $myarray['ledger']=='statement'){ ?>
         <a href="<?php echo $_SERVER['PHP_SELF']?>?delstatementid=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
           Delete 
         </a>
@@ -768,7 +768,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       </td>
     </tr>
 <?php 
-      if( $myarray['ledger'] == 'ledger'){ ?>
+      if( !empty($myarray['ledger']) && $myarray['ledger'] == 'ledger'){ ?>
     <tr class="history_<?php echo $myarray['ledgerid']; ?>" style="display:none;">
       <td>Updated At</td>
       <td>Service Date</td>
@@ -825,7 +825,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 <?php 
           }
         } 
-      }elseif(($myarray['ledger'] == 'ledger_payment')){ ?>
+      }elseif(!empty($myarray['ledger']) && ($myarray['ledger'] == 'ledger_payment')){ ?>
     <tr class="history_<?php echo $myarray['ledgerid']; ?>" style="display:none;">
       <td>Updated At</td>
       <td>Service Date</td>
@@ -899,15 +899,15 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       <td></td>
       <td></td>
       <td></td>
-      <td style="color:#fff;"><?php echo ($cur_cha) ? number_format(st($cur_cha),2) : '0'; ?></td>
-      <td style="color:#fff;"><?php echo ($cur_pay) ? number_format(st($cur_pay),2) : '0'; ?></td>
-      <td style="color:#fff;"><?php echo ($cur_adj) ? number_format(st($cur_adj),2) : '0'; ?></td>
+      <td style="color:#fff;"><?php echo (!empty($cur_cha) ? $cur_cha : '') ? number_format(st($cur_cha),2) : '0'; ?></td>
+      <td style="color:#fff;"><?php echo (!empty($cur_pay) ? $cur_pay : '') ? number_format(st($cur_pay),2) : '0'; ?></td>
+      <td style="color:#fff;"><?php echo (!empty($cur_adj) ? $cur_adj : '') ? number_format(st($cur_adj),2) : '0'; ?></td>
 <?php 
 if($_GET['sortdir']=='DESC'){ ?>
-      <td style="color:#fff;"><?php echo ($orig_bal) ? number_format(st($orig_bal),2) : '0'; ?></td>
+      <td style="color:#fff;"><?php echo (!empty($orig_bal) ? $orig_bal : '') ? number_format(st($orig_bal),2) : '0'; ?></td>
 <?php 
 }else{ ?>
-      <td style="color:#fff;"><?php echo ($cur_bal) ? number_format(st($cur_bal),2) : '0'; ?></td>
+      <td style="color:#fff;"><?php echo (!empty($cur_bal) ? $cur_bal : '') ? number_format(st($cur_bal),2) : '0'; ?></td>
 <?php 
 } ?>
       <td></td>

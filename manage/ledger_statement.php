@@ -395,13 +395,13 @@
 
 	$html .= '<tr>
 		<td colspan="5" align="right">Balance Due</td>
-		<td colspan="2" align="right">'.number_format(st($orig_bal),2).'</td></tr>';
+		<td colspan="2" align="right">'.number_format(st(!empty($orig_bal) ? $orig_bal : 0),2).'</td></tr>';
 	$html .= '<tr>
         <td colspan="5" align="right">- Estimated Insurance:</td>
         <td colspan="2" align="right">0.00</td></tr>';
 	$html .= '<tr>
         <td colspan="5" align="right">>>>>>>>>>Balance Due Now:</td>
-        <td colspan="2" align="right">'.number_format(st($orig_bal),2).'</td></tr>';
+        <td colspan="2" align="right">'.number_format(st(!empty($orig_bal) ? $orig_bal : 0),2).'</td></tr>';
 }
 
 	$head = '<table><tr><td width="60%">';
@@ -501,10 +501,15 @@
 				  ip_address = '".$_SERVER['REMOTE_ADDR']."'";
 
 	$db->query($state_sql);
+
+	if (file_exists($filename)) {
 ?>
-	<script type="text/javascript">
-		window.location = "<?php echo  $filename; ?>";
-	</script>
+		<script type="text/javascript">
+			window.location = "<?php echo  $filename; ?>";
+		</script>
+<?php
+	}
+?>
 <!--
 // Extend the TCPDF class to create custom Header and Footer
 /*class STATEMENTPDF extends TCPDF {

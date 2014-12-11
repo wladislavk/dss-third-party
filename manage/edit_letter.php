@@ -92,9 +92,9 @@
     $full_md_referral_list = implode(",", $md_referral_array);
     $full_pat_referral_list = implode(",", $pat_referral_array);
     $contacts = get_contact_info('', $full_md_list, $full_md_referral_list, $full_pat_referral_list);
-    $master_num += count($contacts['mds']);
-    $master_num += count($contacts['md_referrals']);
-    $master_num += count($contacts['pat_referrals']);
+    $master_num += count(!empty($contacts['mds']) ? $contacts['mds'] : null);
+    $master_num += count(!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : null);
+    $master_num += count(!empty($contacts['pat_referrals']) ? $contacts['pat_referrals'] : null);
 
     if($master_r['topatient']){ 
       $master_num++;
@@ -193,15 +193,15 @@ foreach ($master_q as $master_r) {
   $contacts = get_contact_info('', $full_md_list, $full_md_referral_list, $full_pat_referral_list);
   $md_contacts = array();
 
-  if ($contacts['mds']) foreach ($contacts['mds'] as $contact) {
+  if (!empty($contacts['mds'])) foreach ($contacts['mds'] as $contact) {
     $md_contacts[] = array_merge(array('type' => 'md'), $contact);
   }
 
-  if ($contacts['md_referrals']) foreach ($contacts['md_referrals'] as $contact) {
+  if (!empty($contacts['md_referrals'])) foreach ($contacts['md_referrals'] as $contact) {
     $md_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
   }
 
-  if ($contacts['pat_referrals']) foreach ($contacts['pat_referrals'] as $contact) {
+  if (!empty($contacts['pat_referrals'])) foreach ($contacts['pat_referrals'] as $contact) {
     $md_contacts[] = array_merge(array('type' => 'pat_referral'), $contact);
   }
 
@@ -222,7 +222,7 @@ foreach ($master_q as $master_r) {
 <br />&nbsp;&nbsp;
 
 <?php 
-  if($_REQUEST['goto'] != '') {
+  if(!empty($_REQUEST['goto'])) {
     if($_REQUEST['goto'] == 'flowsheet') {
       $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
     } elseif ($_REQUEST['goto'] == 'letter') {
@@ -237,7 +237,7 @@ foreach ($master_q as $master_r) {
 <?php
   } else {
 ?>
-  <a href="<?php print ($_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
+  <a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
 <?php } ?>
 
 <b>&lt;&lt;Back</b></a>
@@ -306,19 +306,19 @@ foreach ($master_q as $master_r) {
 
   $letter_contacts = array();
 
-  if ($contact_info['patient']) foreach ($contact_info['patient'] as $contact) {
+  if (!empty($contact_info['patient'])) foreach ($contact_info['patient'] as $contact) {
     $letter_contacts[] = array_merge(array('type' => 'patient'), $contact);
   }
 
-  if ($contact_info['md_referrals']) foreach ($contact_info['md_referrals'] as $contact) {
+  if (!empty($contact_info['md_referrals'])) foreach ($contact_info['md_referrals'] as $contact) {
     $letter_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
   }
 
-  if ($contact_info['pat_referrals']) foreach ($contact_info['pat_referrals'] as $contact) {
+  if (!empty($contact_info['pat_referrals'])) foreach ($contact_info['pat_referrals'] as $contact) {
     $letter_contacts[] = array_merge(array('type' => 'pat_referral'), $contact);
   }
 
-  if ($contact_info['mds']) foreach ($contact_info['mds'] as $contact) {
+  if (!empty($contact_info['mds'])) foreach ($contact_info['mds'] as $contact) {
     $letter_contacts[] = array_merge(array('type' => 'md'), $contact);
   }
 
@@ -327,7 +327,7 @@ foreach ($master_q as $master_r) {
   $sql = "select docpcp from dental_patients where patientid = '".s_for($_GET['pid'])."';";
   
   $docpcp = $db->getRow($sql)['docpcp'];
-  if ($contact_info['mds']) foreach ($contact_info['mds'] as $contact) {
+  if (!empty($contact_info['mds'])) foreach ($contact_info['mds'] as $contact) {
   	if ($contact['id'] == $docpcp) {
   		$pcp = $contact;
   	}
@@ -349,8 +349,8 @@ foreach ($master_q as $master_r) {
 
   $c_r = $db->getRow($c_sql);
   $companyid = $c_r['companyid'];
-  $patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926);
-  $did = $patient_info['docid'];
+  $patient_info['age'] = floor((time() - strtotime(!empty($patient_info['dob']) ? $patient_info['dob'] : ''))/31556926);
+  $did = (!empty($patient_info['docid']) ? $patient_info['docid'] : '');
 
   // Get Franchisee Name and Address
   $franchisee_query = "SELECT user_type, mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email, use_digital_fax, use_letter_header, fax, indent_address, header_space FROM dental_users WHERE userid = '".$docid."';";
@@ -551,7 +551,7 @@ foreach ($master_q as $master_r) {
   if ($reason_result) foreach ($reason_result as $row) {
   	$delay = $row;
   }
-  $delay['description'] = $delay['description'];
+  $delay['description'] = (!empty($delay['description']) ? $delay['description'] : '');
 
   // Select BMI
   $bmi_query = "SELECT bmi FROM dental_patients WHERE patientid = '".$patientid."';";
@@ -629,6 +629,10 @@ foreach ($master_q as $master_r) {
   	}
   }
 
+  if (!isset($symptom_list)) {
+    $symptom_list = '';
+  }
+
   if ($symptoms) foreach ($symptoms as $key => $value) {
   	if ($key != count($symptoms) -1 && $key != count($symptoms) -2) {
   		$symptom_list .= $value . ", ";
@@ -662,7 +666,7 @@ foreach ($master_q as $master_r) {
   	$noncomp = $row;
   }
 
-  $noncomp['description'] = $noncomp['description'];
+  $noncomp['description'] = (!empty($noncomp['description']) ? $noncomp['description'] : '');
 
   $sign_sql = "SELECT * FROM dental_user_signatures WHERE user_id='".mysqli_real_escape_string($con, $_SESSION['userid'])."' ORDER BY adddate DESC LIMIT 1";
 
@@ -730,12 +734,12 @@ foreach ($master_q as $master_r) {
   if (!empty($altered_template) && !isset($_POST['reset_letter'])) $template = $altered_template;
 ?>
 
-<form action="/manage/edit_letter.php?pid=<?php echo $patientid?>&lid=<?php echo $masterid?>&goto=<?php echo $_REQUEST['goto'];?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
+<form action="/manage/edit_letter.php?pid=<?php echo $patientid?>&lid=<?php echo $masterid?>&goto=<?php echo (!empty($_REQUEST['goto']) ? $_REQUEST['goto'] : '');?><?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
   <input type="hidden" name="numletters" value="<?php echo $numletters?>" />
     
     <?php
       if ($_POST != array()) {
-        if ($_POST['duplicate_letter']) {
+        if (!empty($_POST['duplicate_letter'])) {
   	      foreach ($_POST['duplicate_letter'] as $key => $value) {
             $dupekey = $key;
           }
@@ -766,7 +770,7 @@ foreach ($master_q as $master_r) {
       		$search[] = '%addr2%';
       		$replace[] = ($contact['add2']) ? ", <strong>" . $contact['add2'] . "</strong>" : "";
       		$search[] = '%insurance_id%';
-      		$replace[] = "<strong>" . $patient_info['p_m_ins_id'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['p_m_ins_id']) ? $patient_info['p_m_ins_id'] : '') . "</strong>";
       		$search[] = '%city%';
       		$replace[] = "<strong>" . $contact['city'] . "</strong>";
       		$search[] = '%state%';
@@ -796,49 +800,49 @@ foreach ($master_q as $master_r) {
       		if (!empty($ref_info['md_referrals'])) {
       			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
       		} else {
-      			$replace[] = "<strong>" . $pcp['lastname'] . "</strong>";
+      			$replace[] = "<strong>" . (!empty($pcp['lastname']) ? $pcp['lastname'] : '') . "</strong>";
       		}
 
       		$search[] = '%referral_practice%';
       		if (!empty($ref_info['md_referrals'])) {
       			$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0]['company'] . "</strong><br />" : "";	
       		} else {
-      			$replace[] = ($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "";	
+      			$replace[] = !empty($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "";	
       		}
 
       		$search[] = '%ref_addr1%';
       		if (!empty($ref_info['md_referrals'])) {
       			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['add1'] . "</strong>";
       		} else {
-      			$replace[] = "<strong>" . $pcp['add1'] . "</strong>";
+      			$replace[] = "<strong>" . (!empty($pcp['add1']) ? $pcp['add1'] : '') . "</strong>";
       		}
 
       		$search[] = '%ref_addr2%';
       		if (!empty($ref_info['md_referrals'])) {
       			$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong>" : "";
       		} else {
-      			$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "";
+      			$replace[] = !empty($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "";
       		}
 
       		$search[] = '%ref_city%';
       		if (!empty($ref_info['md_referrals'])) {
       			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['city'] . "</strong>";
       		} else {
-      			$replace[] = "<strong>" . $pcp['city'] . "</strong>";
+      			$replace[] = "<strong>" . (!empty($pcp['city']) ? $pcp['city'] : '') . "</strong>";
       		}
 
       		$search[] = '%ref_state%';
       		if (!empty($ref_info['md_referrals'])) {
       			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['state'] . "</strong>";
       		} else {
-      			$replace[] = "<strong>" . $pcp['state'] . "</strong>";
+      			$replace[] = "<strong>" . (!empty($pcp['state']) ? $pcp['state'] : '') . "</strong>";
       		}
 
       		$search[] = '%ref_zip%';
       		if (!empty($ref_info['md_referrals'])) {
       			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['zip'] . "</strong>";
       		} else {
-      			$replace[] = "<strong>" . $pcp['zip'] . "</strong>";
+      			$replace[] = "<strong>" . (!empty($pcp['zip']) ? $pcp['zip'] : '') . "</strong>";
       		}
 
       		$search[] = '%ptreferral_fullname%';
@@ -913,9 +917,9 @@ foreach ($master_q as $master_r) {
           $search[] = "%doctor_fullname%";
           $replace[] = "<strong>" . $location_info['name'] . "</strong>";
       		$search[] = "%franchisee_lastname%";
-      		$replace[] = "<strong>" . end(explode(" ", $location_info['name'])) . "</strong>";
+      		$replace[] = "<strong>" . array_pop((explode(" ", $location_info['name']))) . "</strong>";
           $search[] = "%doctor_lastname%";
-          $replace[] = "<strong>" . end(explode(" ", $location_info['name'])) . "</strong>";
+          $replace[] = "<strong>" . array_pop((explode(" ", $location_info['name']))) . "</strong>";
       		$search[] = "%franchisee_practice%";
       		$replace[] = "<strong>" . $location_info['location'] . "</strong>";
           $search[] = "%doctor_practice%";
@@ -931,11 +935,11 @@ foreach ($master_q as $master_r) {
           $search[] = "%signature_image%";
           $replace[] = "<img src=\"display_file.php?f=".$signature_file."\" />";
       		$search[] = "%patient_fullname%";
-      		$replace[] = "<strong>" . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
           $search[] = "%patient_titlefullname%";
-          $replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+          $replace[] = "<strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
       		$search[] = "%patient_lastname%";
-      		$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['lastname'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
       		$search[] = "%ccpatient_fullname%";
 
       		if ($topatient && $contact['type']!='patient') {
@@ -945,13 +949,13 @@ foreach ($master_q as $master_r) {
       		}
 
       		$search[] = "%patient_dob%";
-      		$replace[] = "<strong>" . $patient_info['dob'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['dob']) ? $patient_info['dob'] : '') . "</strong>";
       		$search[] = "%patient_firstname%";
-      		$replace[] = "<strong>" . $patient_info['firstname'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . "</strong>";
       		$search[] = "%patient_age%";
-      		$replace[] = "<strong>" . $patient_info['age'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['age']) ? $patient_info['age'] : '') . "</strong>";
       		$search[] = "%patient_gender%";
-      		$replace[] = "<strong>" . strtolower($patient_info['gender']) . "</strong>";
+      		$replace[] = "<strong>" . strtolower(!empty($patient_info['gender']) ? $patient_info['gender'] : '') . "</strong>";
       		$search[] = "%patient_photo%";
 
       		if($patient_photo!='') {
@@ -961,15 +965,15 @@ foreach ($master_q as $master_r) {
       		}
 
       		$search[] = "%His/Her%";
-      		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
       		$search[] = "%his/her%";
-      		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "his" : "her") . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "his" : "her") . "</strong>";
       		$search[] = "%he/she%";
-      		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "he" : "she") . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "he" : "she") . "</strong>";
       		$search[] = "%him/her%";
-      		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "him" : "her") . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "him" : "her") . "</strong>";
       		$search[] = "%He/She%";
-      		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
       		$search[] = "%history%";
       		$replace[] = "<strong>" . $history_disp . "</strong>";
           $search[] = "%historysentence%";
@@ -985,7 +989,7 @@ foreach ($master_q as $master_r) {
 	        $search[] = "%medicationssentence%";
 
         	if ($medications_disp!='') {
-            $replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> medications include <strong>" . $medications_disp . "</strong>.";
+            $replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> medications include <strong>" . $medications_disp . "</strong>.";
         	} else {
             $replace[] = "";
         	}
@@ -1053,13 +1057,13 @@ foreach ($master_q as $master_r) {
       		$search[] = "%1stQuality%";
       		$replace[] = "<strong>" . $subj1['sleep_qualadd'] . "</strong>";
       		$search[] = "%2ndESS%";
-      		$replace[] = "<strong>" . $subj2['ep_eadd'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($subj2['ep_eadd']) ? $subj2['ep_eadd'] : '') . "</strong>";
       		$search[] = "%2ndSnoring%";
-      		$replace[] = "<strong>" . $subj2['ep_sadd'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($subj2['ep_sadd']) ? $subj2['ep_sadd'] : '') . "</strong>";
       		$search[] = "%2ndEnergy%";
-      		$replace[] = "<strong>" . $subj2['ep_eladd'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($subj2['ep_eladd']) ? $subj2['ep_eladd'] : '') . "</strong>";
       		$search[] = "%2ndQuality%";
-      		$replace[] = "<strong>" . $subj2['sleep_qualadd'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($subj2['sleep_qualadd']) ? $subj2['sleep_qualadd'] : '') . "</strong>";
       		$search[] = "%bmi%";
       		$replace[] = "<strong>" . $bmi . "</strong>";
       		$search[] = "%reason_seeking_tx%";
@@ -1077,27 +1081,27 @@ foreach ($master_q as $master_r) {
       		if ($contact['type']=='md_referral') {
             $replace[] = "Thank you for referring <strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong> to our office for treatment with a dental sleep device.";
       		} else {
-      			$replace[] = "Our mutual patient, <strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>, was referred to our office for treatment with a dental sleep device.";
+      			$replace[] = "Our mutual patient, <strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>, was referred to our office for treatment with a dental sleep device.";
       		}
 
       		$search[] = "%symptoms%";
       		$replace[] = "<strong>" . $symptom_list . "</strong>";
       		$search[] = "%nightsperweek%";
-      		$replace[] = "<strong>" . $followup['nightsperweek'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($followup['nightsperweek']) ? $followup['nightsperweek'] : '') . "</strong>";
       		$search[] = "%esstssupdate%";
 
-        	if ($followup['ep_eadd']!='' || $followup['ep_tsadd']!='') {
+        	if (!empty($followup['ep_eadd']) || !empty($followup['ep_tsadd'])) {
             $replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> Epworth Sleepiness Scale / Thornton Snoring Scale has changed from <strong>" . $initess . "/" . $inittss . "</strong> to <strong>" . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . "</strong>.";
         	} else {
             $replace[] = '';
         	}
 
       		$search[] = "%currESS/TSS%";
-      		$replace[] = "<strong>" . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($followup['ep_eadd']) ? $followup['ep_eadd'] : '') . "/" . (!empty($followup['ep_tsadd']) ? $followup['ep_tsadd'] : '') . "</strong>";
       		$search[] = "%initESS/TSS%";
       		$replace[] = "<strong>" . $initess . "/" . $inittss . "</strong>";
       		$search[] = "%patient_email%";
-      		$replace[] = "<strong>" . $patient_info['email'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($patient_info['email']) ? $patient_info['email'] : '') . "</strong>";
       		$search[] = "%consult_date%";
       		$replace[] = "<strong>" . $consult_date . "</strong>";
       		$search[] = "%impressions_date%";
@@ -1179,7 +1183,7 @@ foreach ($master_q as $master_r) {
       		$count = 1;
 
       		foreach ($md_contacts as $index => $md) {
-      			if ($md['type'] != "md_referral" && $md['contacttype'] != 'Primary Care Physician') {
+      			if ($md['type'] != "md_referral" && !empty($md['contacttype']) && $md['contacttype'] != 'Primary Care Physician') {
       				$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
       				if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
       					$nonpcp_mds .= $md_fullname;
@@ -1199,10 +1203,10 @@ foreach ($master_q as $master_r) {
       			$replace[] = "<strong>" . $other_mds . "</strong>";
       		}
 
-          $new_template[$cur_template_num] = str_replace($replace, $search, $_POST['letter'.$cur_template_num]);
+          $new_template[$cur_template_num] = str_replace($replace, $search, (!empty($_POST['letter'.$cur_template_num]) ? $_POST['letter'.$cur_template_num] : ''));
           
           // Letter hasn't been edited, but a new template exists in hidden field
-       		if ($new_template[$cur_template_num] == null && $_POST['new_template'][$cur_template_num] != null) {
+       		if ($new_template[$cur_template_num] == null && !empty($_POST['new_template'][$cur_template_num])) {
       			$new_template[$cur_template_num] = html_entity_decode($_POST['new_template'][$cur_template_num], ENT_COMPAT | ENT_QUOTES, "UTF-8");
           }
 
@@ -1255,9 +1259,9 @@ foreach ($master_q as $master_r) {
       	$search[] = "%salutation%";
       	$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
       	$search[] = '%practice%';
-      	$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "";	
+      	$replace[] = !empty($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "";	
         $search[] = '%insurance_id%';
-        $replace[] = "<strong>" . $patient_info['p_m_ins_id'] . "</strong>";
+        $replace[] = "<strong>" . (!empty($patient_info['p_m_ins_id']) ? $patient_info['p_m_ins_id'] : '') . "</strong>";
       	$search[] = '%contact_email%';
       	$replace[] = "<strong>" . $letter_contacts[$key]['email'] . "</strong>";
       	$search[] = '%addr1%';
@@ -1293,49 +1297,49 @@ foreach ($master_q as $master_r) {
       	if (!empty($ref_info['md_referrals'])) {
       		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
       	} else {
-      		$replace[] = "<strong>" . $pcp['lastname'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($pcp['lastname']) ? $pcp['lastname'] : '') . "</strong>";
       	}
 
       	$search[] = '%referral_practice%';
       	if (!empty($ref_info['md_referrals'])) {
       		$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0]['company'] . "</strong><br />" : "";	
       	} else {
-      		$replace[] = ($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "";	
+      		$replace[] = !empty($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "";	
       	}
 
       	$search[] = '%ref_addr1%';
       	if (!empty($ref_info['md_referrals'])) {
       		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['add1'] . "</strong>";
       	} else {
-      		$replace[] = "<strong>" . $pcp['add1'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($pcp['add1']) ? $pcp['add1'] : '') . "</strong>";
       	}
 
       	$search[] = '%ref_addr2%';
       	if (!empty($ref_info['md_referrals'])) {
       		$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong>" : "";
       	} else {
-      		$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "";
+      		$replace[] = !empty($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "";
       	}
 
       	$search[] = '%ref_city%';
       	if (!empty($ref_info['md_referrals'])) {
       		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['city'] . "</strong>";
       	} else {
-      		$replace[] = "<strong>" . $pcp['city'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($pcp['city']) ? $pcp['city'] : '') . "</strong>";
       	}
 
       	$search[] = '%ref_state%';
       	if (!empty($ref_info['md_referrals'])) {
       		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['state'] . "</strong>";
       	} else {
-      		$replace[] = "<strong>" . $pcp['state'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($pcp['state']) ? $pcp['state'] : '') . "</strong>";
       	}
 
       	$search[] = '%ref_zip%';
       	if (!empty($ref_info['md_referrals'])) {
       		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['zip'] . "</strong>";
       	} else {
-      		$replace[] = "<strong>" . $pcp['zip'] . "</strong>";
+      		$replace[] = "<strong>" . (!empty($pcp['zip']) ? $pcp['zip'] : '') . "</strong>";
       	}
 
 		    $search[] = '%ptreferral_fullname%';
@@ -1410,9 +1414,9 @@ foreach ($master_q as $master_r) {
         $search[] = "%doctor_fullname%";
         $replace[] = "<strong>" . $location_info['name'] . "</strong>";
       	$search[] = "%franchisee_lastname%";
-      	$replace[] = "<strong>" . end(explode(" ", $location_info['name'])) . "</strong>";
+      	$replace[] = "<strong>" . array_pop((explode(" ", $location_info['name']))) . "</strong>";
         $search[] = "%doctor_lastname%";
-        $replace[] = "<strong>" . end(explode(" ", $location_info['name'])) . "</strong>";
+        $replace[] = "<strong>" . array_pop((explode(" ", $location_info['name']))) . "</strong>";
       	$search[] = "%franchisee_practice%";
       	$replace[] = "<strong>" . $location_info['location'] . "</strong>";
         $search[] = "%doctor_practice%";
@@ -1428,27 +1432,27 @@ foreach ($master_q as $master_r) {
         $search[] = "%doctor_addr%";
         $replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
       	$search[] = "%patient_fullname%";
-      	$replace[] = "<strong>" . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
         $search[] = "%patient_titlefullname%";
-        $replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+        $replace[] = "<strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
       	$search[] = "%patient_lastname%";
-      	$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['lastname'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
       	$search[] = "%ccpatient_fullname%";
 
         if($topatient && $contact['type']!='patient'){
-          $replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+          $replace[] = "<strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
         } else {
           $replace[] = "";
         }
 
       	$search[] = "%patient_dob%";
-      	$replace[] = "<strong>" . $patient_info['dob'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($patient_info['dob']) ? $patient_info['dob'] : '') . "</strong>";
       	$search[] = "%patient_firstname%";
-      	$replace[] = "<strong>" . $patient_info['firstname'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . "</strong>";
       	$search[] = "%patient_age%";
-      	$replace[] = "<strong>" . $patient_info['age'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($patient_info['age']) ? $patient_info['age'] : '') . "</strong>";
       	$search[] = "%patient_gender%";
-      	$replace[] = "<strong>" . strtolower($patient_info['gender']) . "</strong>";
+      	$replace[] = "<strong>" . strtolower((!empty($patient_info['gender'])) ? $patient_info['gender'] : '') . "</strong>";
       	$search[] = "%patient_photo%";
 
         if($patient_photo!=''){
@@ -1458,15 +1462,15 @@ foreach ($master_q as $master_r) {
         }
 
       	$search[] = "%His/Her%";
-      	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
+      	$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
       	$search[] = "%his/her%";
-      	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "his" : "her") . "</strong>";
+      	$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "his" : "her") . "</strong>";
       	$search[] = "%he/she%";
-      	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "he" : "she") . "</strong>";
+      	$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "he" : "she") . "</strong>";
       	$search[] = "%him/her%";
-      	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "him" : "her") . "</strong>";
+      	$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "him" : "her") . "</strong>";
       	$search[] = "%He/She%";
-      	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
+      	$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
       	$search[] = "%history%";
       	$replace[] = "<strong>" . $history_disp . "</strong>";
         $search[] = "%historysentence%";
@@ -1482,7 +1486,7 @@ foreach ($master_q as $master_r) {
         $search[] = "%medicationssentence%";
 
       	if($medications_disp!=''){
-          $replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> medications include <strong>" . $medications_disp . "</strong>.";
+          $replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> medications include <strong>" . $medications_disp . "</strong>.";
       	} else {
       		$replace[] = "";
       	}
@@ -1552,13 +1556,13 @@ foreach ($master_q as $master_r) {
       	$search[] = "%1stQuality%";
       	$replace[] = "<strong>" . $subj1['sleep_qualadd'] . "</strong>";
       	$search[] = "%2ndESS%";
-      	$replace[] = "<strong>" . $subj2['ep_eadd'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($subj2['ep_eadd']) ? $subj2['ep_eadd'] : '') . "</strong>";
       	$search[] = "%2ndSnoring%";
-      	$replace[] = "<strong>" . $subj2['ep_sadd'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($subj2['ep_sadd']) ? $subj2['ep_sadd'] : '') . "</strong>";
       	$search[] = "%2ndEnergy%";
-      	$replace[] = "<strong>" . $subj2['ep_eladd'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($subj2['ep_eladd']) ? $subj2['ep_eladd'] : '') . "</strong>";
       	$search[] = "%2ndQuality%";
-      	$replace[] = "<strong>" . $subj2['sleep_qualadd'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($subj2['sleep_qualadd']) ? $subj2['sleep_qualadd'] : '') . "</strong>";
       	$search[] = "%bmi%";
       	$replace[] = "<strong>" . $bmi . "</strong>";
       	$search[] = "%reason_seeking_tx%";
@@ -1575,34 +1579,34 @@ foreach ($master_q as $master_r) {
         if($contact['type']=='md_referral'){
           $replace[] = "Thank you for referring <strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong> to our office for treatment with a dental sleep device.";
         } else {
-          $replace[] = "Our mutual patient, <strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>, was referred to our office for treatment with a dental sleep device.";
+          $replace[] = "Our mutual patient, <strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>, was referred to our office for treatment with a dental sleep device.";
         }
 
       	$search[] = "%symptoms%";
       	$replace[] = "<strong>" . $symptom_list . "</strong>";
       	$search[] = "%nightsperweek%";
-      	$replace[] = "<strong>" . $followup['nightsperweek'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($followup['nightsperweek']) ? $followup['nightsperweek'] : '') . "</strong>";
         $search[] = "%esstssupdate%";
 
-      	if($followup['ep_eadd']!='' || $followup['ep_tsadd']!=''){	
+      	if(!empty($followup['ep_eadd']) || !empty($followup['ep_tsadd'])){	
           $replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> Epworth Sleepiness Scale / Thornton Snoring Scale has changed from <strong>" . $initess . "/" . $inittss . "</strong> to <strong>" . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . "</strong>.";
       	} else {
       		$replace[] = '';
       	}
 
       	$search[] = "%currESS/TSS%";
-      	$replace[] = "<strong>" . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($followup['ep_eadd']) ? $followup['ep_eadd'] : '') . "/" . (!empty($followup['ep_tsadd']) ? $followup['ep_tsadd'] : '') . "</strong>";
       	$search[] = "%initESS/TSS%";
       	$replace[] = "<strong>" . $initess . "/" . $inittss . "</strong>";
       	$search[] = "%patient_email%";
-      	$replace[] = "<strong>" . $patient_info['email'] . "</strong>";
+      	$replace[] = "<strong>" . (!empty($patient_info['email']) ? $patient_info['email'] : '') . "</strong>";
       	$search[] = "%consult_date%";
       	$replace[] = "<strong>" . $consult_date . "</strong>";
       	$search[] = "%impressions_date%";
       	$replace[] = "<strong>" . $impressions_date . "</strong>";
       	$search[] = "%delay_reason%";
 
-      	switch ($delay['reason']) {
+      	if (!empty($delay['reason'])) switch ($delay['reason']) {
       		case 'insurance':
       			$replace[] = "<strong>insurance problems or issues</strong>";
       			break;
@@ -1627,7 +1631,7 @@ foreach ($master_q as $master_r) {
       	}
 
       	$search[] = "%noncomp_reason%";
-      	switch ($noncomp['reason']) {
+      	if (!empty($noncomp['reason'])) switch ($noncomp['reason']) {
       		case 'pain/discomfort':
       			$replace[] = "<strong>pain and/or discomfort</strong>";
       			break;
@@ -1680,7 +1684,7 @@ foreach ($master_q as $master_r) {
       	$count = 1;
 
       	foreach ($md_contacts as $index => $md) {
-      		if ($md['type'] != "md_referral" && $md['contacttype'] != 'Primary Care Physician') {
+      		if ($md['type'] != "md_referral" && !empty($md['contacttype']) && $md['contacttype'] != 'Primary Care Physician') {
       			$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
       			if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
       				$nonpcp_mds .= $md_fullname;
@@ -1698,13 +1702,13 @@ foreach ($master_q as $master_r) {
       	} else {
       		$replace[] = "<strong>" . $other_mds . "</strong>";
       	}
-       	if ($new_template[$cur_letter_num] != null) {
+       	if (!empty($new_template[$cur_letter_num])) {
       	  $letter[$cur_letter_num] = str_replace($search, $replace, $new_template[$cur_letter_num]);
       	} else {
       	  $letter[$cur_letter_num] = str_replace($search, $replace, $template);
        	}
 
-	      $new_template[$cur_letter_num] = str_replace($search, $replace, $new_template[$cur_letter_num]);
+	      $new_template[$cur_letter_num] = str_replace($search, $replace, (!empty($new_template[$cur_letter_num]) ? $new_template[$cur_letter_num] : ''));
 
 	      // Print Letter Body		
 
@@ -1798,7 +1802,7 @@ foreach ($master_q as $master_r) {
         		<input type="submit" style="display:none;" name="reset_letter[<?php echo $cur_letter_num?>]" class="addButton edit_letter<?php echo $cur_letter_num?>" value="Reset" />
         		&nbsp;&nbsp;&nbsp;&nbsp;
 
-        		<?php if(!($_GET['backoffice'] == "1" && $_SESSION['admin_access']!=1)) { ?>
+        		<?php if(!(!empty($_GET['backoffice']) && $_GET['backoffice'] == "1" && $_SESSION['admin_access']!=1)) { ?>
         		  <input type="submit" name="delete_letter[<?php echo $cur_letter_num?>]" class="addButton" value="Delete" />
         		  &nbsp;&nbsp;&nbsp;&nbsp;
         		<? } ?>
@@ -1858,11 +1862,11 @@ foreach ($master_q as $master_r) {
           }
 
           // Catch Post Send Submit Button and Send letters Here
-          if (($_POST['send_letter'][$cur_letter_num] != null || $_POST['save_letter'][$cur_letter_num] != null
-        	  || $_POST['fax_letter'][$cur_letter_num] != null
-            || $_POST['paper_letter'][$cur_letter_num] != null
-            || $_POST['email_letter'][$cur_letter_num] != null
-            || $_POST['font_submit'][$cur_letter_num] != null
+          if ((!empty($_POST['send_letter'][$cur_letter_num]) || !empty($_POST['save_letter'][$cur_letter_num])
+        	  || !empty($_POST['fax_letter'][$cur_letter_num])
+            || !empty($_POST['paper_letter'][$cur_letter_num])
+            || !empty($_POST['email_letter'][$cur_letter_num])
+            || !empty($_POST['font_submit'][$cur_letter_num])
         	  ) && $numletters == $_POST['numletters']) {
               if (count($letter_contacts) == 1) {
                 $parent = true;
@@ -1922,7 +1926,7 @@ foreach ($master_q as $master_r) {
           }
 
         	// Catch Post Delete Button and Delete letters Here
-          if ($_POST['delete_letter'][$cur_letter_num] != null && $numletters == $_POST['numletters']) {
+          if (!empty($_POST['delete_letter'][$cur_letter_num]) && $numletters == $_POST['numletters']) {
             if (count($letter_contacts) == 1) {
           		$parent = true;
             } else {
@@ -1971,7 +1975,7 @@ foreach ($master_q as $master_r) {
           ?>
 
           <?php
-            if ($parent && !$letter_approve) {
+            if (!empty($parent) && $parent && !$letter_approve) {
               if(isset($_REQUEST['goto']) && $_REQUEST['goto'] != '') {
                 if($_REQUEST['goto'] == 'flowsheet') {
                   $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
@@ -2020,7 +2024,7 @@ foreach ($master_q as $master_r) {
     return $r['physician'] == 1;
   }
 
-  if($_GET['backoffice'] == '1') {
+  if(!empty($_GET['backoffice']) && $_GET['backoffice'] == '1') {
     include 'admin/includes/bottom.htm';
 ?>
 

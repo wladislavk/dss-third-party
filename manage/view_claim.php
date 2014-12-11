@@ -344,7 +344,7 @@ Claim <?= $_GET['claimid']; ?>
             			}
 
             			$tr_class = "tr_active";
-            			if($myarray['status']==DSS_CLAIM_REJECTED && $myarray[0]=='ledger'){
+            			if($myarray['status']==DSS_CLAIM_REJECTED && !empty($myarray[0]) && $myarray[0]=='ledger'){
             			  $style='style="background:#f46;"';
             			} else {
             			  $style="";

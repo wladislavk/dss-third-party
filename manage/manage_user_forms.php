@@ -300,11 +300,11 @@ include "includes/top.htm";
                                 </td>
                                 <td valign="top">
                                                 <?php
-                                                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."'";
-                                                $loc_q = mysql_query($loc_sql);
-                                                $num_loc = mysql_num_rows($loc_q);
+                                                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+                                                $loc_q = mysqli_query($con,$loc_sql);
+                                                $num_loc = mysqli_num_rows($loc_q);
                                                 if($num_loc > 1){
-                                                while($loc_r = mysql_fetch_assoc($loc_q)){
+                                                while($loc_r = mysqli_fetch_assoc($loc_q)){
                                                 ?>
                                         <a href="view_user_form.php?file=proof_of_delivery&locid=<?= $loc_r['id']; ?>&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
                                                 View <?= $loc_r['location']; ?><br />

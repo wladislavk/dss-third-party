@@ -118,7 +118,10 @@ if(isset($_REQUEST['authorize'])){
 }  
 
 $total_rec = $db->getNumberRows($sql);
-/* $rec_disp is null that's why */ $rec_disp = $total_rec; 
+/* $rec_disp is null that's why */ $rec_disp = $total_rec;
+
+$rec_disp = ($rec_disp != 0) ? $rec_disp : 1;
+
 $no_pages = $total_rec/$rec_disp;
 
 //$sql .= " limit ".$i_val.",".$rec_disp;

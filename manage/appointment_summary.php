@@ -13,7 +13,7 @@
             <span class="title">Test</span>
         </td>
         <td class="letters">
-            <a href="dss_summ.php?sect=leters&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="btn btn-info btn-sm"><?php echo $letter_count; ?> Letters</a>
+            <a href="dss_summ.php?sect=leters&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="btn btn-info btn-sm"><?php echo (!empty($letter_count) ? $letter_count : ''); ?> Letters</a>
         </td>
         <td>
             <a href="#" onclick="return delete_segment('<?php echo (!empty($id) ? $id : ''); ?>');" class="addButton deleteButton btn btn-danger btn-sm">Delete</a>
@@ -160,41 +160,41 @@ foreach ($flow_pg2_info_res as $row) {
 <div id="delay_reason_tmp" style="display:none;">
     <input type="hidden" class="old_delay_reason" id="old_delay_reason_" />
     <select class="delay_reason form-control" id="delay_reason_" style="width:94px;">
-        <option <?php print ($row['delay_reason'] == "insurance") ? "selected " : ""; ?>value="insurance">Insurance</option>
-        <option <?php print ($row['delay_reason'] == "dental work") ? "selected " : ""; ?>value="dental work">Dental Work</option>
-        <option <?php print ($row['delay_reason'] == "deciding") ? "selected " : ""; ?>value="deciding">Deciding</option>
-        <option <?php print ($row['delay_reason'] == "sleep study") ? "selected " : ""; ?>value="sleep study">Sleep Study</option>
-        <option <?php print ($row['delay_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
+        <option <?php print (!empty($row['delay_reason']) && $row['delay_reason'] == "insurance") ? "selected " : ""; ?>value="insurance">Insurance</option>
+        <option <?php print (!empty($row['delay_reason']) && $row['delay_reason'] == "dental work") ? "selected " : ""; ?>value="dental work">Dental Work</option>
+        <option <?php print (!empty($row['delay_reason']) && $row['delay_reason'] == "deciding") ? "selected " : ""; ?>value="deciding">Deciding</option>
+        <option <?php print (!empty($row['delay_reason']) && $row['delay_reason'] == "sleep study") ? "selected " : ""; ?>value="sleep study">Sleep Study</option>
+        <option <?php print (!empty($row['delay_reason']) && $row['delay_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
     </select>
     <br />
-    <a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo $id?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&sid=5');" href="Javascript: ;">Show Reason</a>
+    <a class="reason_btn" id="reason_btn<?php echo (!empty($id) ? $id : ''); ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo (!empty($id) ? $id : '')?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&sid=5');" href="Javascript: ;">Show Reason</a>
 </div>
 
 <div id="noncomp_reason_tmp" style="display:none;">
     <input type="hidden" class="old_noncomp_reason" id="old_noncomp_reason_" />
     <select class="noncomp_reason form-control" id="noncomp_reason_" style="width:94px;">
-        <option <?php print ($row['noncomp_reason'] == "pain/discomfort") ? "selected " : ""; ?>value="pain/discomfort">Pain/Discomfort</option>
-        <option <?php print ($row['noncomp_reason'] == "lost device") ? "selected " : ""; ?>value="lost device">Lost Device</option>
-        <option <?php print ($row['noncomp_reason'] == "device not working") ? "selected " : ""; ?>value="device not working">Device Not Working</option>
-        <option <?php print ($row['noncomp_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
+        <option <?php print (!empty($row['noncomp_reason']) && $row['noncomp_reason'] == "pain/discomfort") ? "selected " : ""; ?>value="pain/discomfort">Pain/Discomfort</option>
+        <option <?php print (!empty($row['noncomp_reason']) && $row['noncomp_reason'] == "lost device") ? "selected " : ""; ?>value="lost device">Lost Device</option>
+        <option <?php print (!empty($row['noncomp_reason']) && $row['noncomp_reason'] == "device not working") ? "selected " : ""; ?>value="device not working">Device Not Working</option>
+        <option <?php print (!empty($row['noncomp_reason']) && $row['noncomp_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
     </select>
     <br />
-    <a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo $id?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&sid=9');" href="Javascript: ;">Show Reason</a>
+    <a class="reason_btn" id="reason_btn<?php echo (!empty($id) ? $id : ''); ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?php echo (!empty($id) ? $id : '')?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&sid=9');" href="Javascript: ;">Show Reason</a>
 </div>
 
 <div id="sleep_study_titration_tmp" style="display:none;">
     <select class="study_type form-control" id="study_type_" style="width:150px;">
         <option value="">Select Type</option>
-        <option value="HST Titration" <?php echo ($row['study_type']=="HST Titration")?'selected="selected"':''; ?>>HST Titration</option>
-        <option value="PSG Titration" <?php echo ($row['study_type']=="PSG Titration")?'selected="selected"':''; ?>>PSG Titration</option>
+        <option value="HST Titration" <?php echo (!empty($row['study_type']) && $row['study_type']=="HST Titration")?'selected="selected"':''; ?>>HST Titration</option>
+        <option value="PSG Titration" <?php echo (!empty($row['study_type']) && $row['study_type']=="PSG Titration")?'selected="selected"':''; ?>>PSG Titration</option>
     </select>
 </div>
 
 <div id="sleep_study_baseline_tmp" style="display:none;">
     <select class="study_type form-control" id="study_type_" style="width:150px;">
         <option value="">Select Type</option>
-        <option value="HST Baseline" <?php echo ($row['study_type']=="HST Baseline")?'selected="selected"':''; ?>>HST Baseline</option>
-        <option value="PSG Baseline" <?php echo ($row['study_type']=="PSG Baseline")?'selected="selected"':''; ?>>PSG Baseline</option>
+        <option value="HST Baseline" <?php echo (!empty($row['study_type']) && $row['study_type']=="HST Baseline")?'selected="selected"':''; ?>>HST Baseline</option>
+        <option value="PSG Baseline" <?php echo (!empty($row['study_type']) && $row['study_type']=="PSG Baseline")?'selected="selected"':''; ?>>PSG Baseline</option>
     </select>
 </div>
 
@@ -206,7 +206,7 @@ foreach ($flow_pg2_info_res as $row) {
         $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
         $device_my = $db->getResults($device_sql);
         foreach ($device_my as $device_myarray) {?>
-        <option <?php echo ($device_myarray['deviceid']==$row['device_id'])?'selected="selected"':''; ?>value="<?php echo st($device_myarray['deviceid'])?>"><?php echo st($device_myarray['device']);?></option>
+        <option <?php echo (!empty($row['device_id']) && $device_myarray['deviceid']==$row['device_id'])?'selected="selected"':''; ?>value="<?php echo st($device_myarray['deviceid'])?>"><?php echo st($device_myarray['device']);?></option>
         <?php } ?>
     </select>
 </div>

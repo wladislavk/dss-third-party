@@ -15,12 +15,12 @@ if(isset($_GET['pid'])){
     }
 }
 
-$start_date = $_GET['start_date'];
-$end_date = $_GET['end_date']; 
+$start_date = (!empty($_GET['start_date']) ? $_GET['start_date'] : '');
+$end_date = (!empty($_GET['end_date']) ? $_GET['end_date'] : ''); 
 
 $rec_disp = 200;
 
-if($_REQUEST["page"] != "")
+if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -51,15 +51,15 @@ $num_users = count($my);
 <span class="admin_head">
 	Ledger Report
 <?php 
-if($_REQUEST['dailysub'] == 1){?>
+if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] == 1){?>
     (<i><?php echo date('m-d-Y', strtotime($_REQUEST['start_date'])); ?></i>)
 <?php 
 }
-if($_REQUEST['weeklysub'] == 1){?>
+if(!empty($_REQUEST['weeklysub']) && $_REQUEST['weeklysub'] == 1){?>
     (<i><?php echo date('m-d-Y', strtotime($start_date))?> - <?php echo date('m-d-Y', strtotime($end_date))?></i>)
 <?php 
 }
-if($_REQUEST['monthlysub'] == 1){?>
+if(!empty($_REQUEST['monthlysub']) && $_REQUEST['monthlysub'] == 1){?>
     (<i><?php echo date('m-Y', strtotime($_REQUEST['start_date'])) ?></i>)
 <?php 
 }
@@ -377,16 +377,20 @@ $newqueryid = "select
             <?php echo st($myarray["name"]);?>
         </td>
         <td valign="top" width="30%">
-        <?php echo (($myarray[0] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":'';
+        <?php echo ((!empty($myarray[0]) && $myarray[0] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":'';
               echo $myarray["description"];
-              echo (($myarray[0] == 'ledger' || $myarray[0] =='claim') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":'';
-              echo (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":'';
-              echo (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":'';
-              echo (($myarray[0] == 'ledger_payment') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
+              echo ((!empty($myarray[0]) && $myarray[0] == 'ledger' || !empty($myarray[0]) && $myarray[0] =='claim') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":'';
+              echo ((!empty($myarray[0]) && $myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":'';
+              echo ((!empty($myarray[0]) && $myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":'';
+              echo ((!empty($myarray[0]) && $myarray[0] == 'ledger_payment') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
         </td>
         <td valign="top" align="right" width="10%">
 <?php
-        if($myarray[0]!='claim' && $myarray['amount'] <> 0){
+        if (!isset($tot_charge)) {
+            $tot_charge = 0;
+        }
+
+        if(!empty($myarray[0]) && $myarray[0]!='claim' && $myarray['amount'] <> 0){
             echo number_format($myarray["amount"],2);
             $tot_charge += $myarray["amount"];
         }?>
@@ -394,14 +398,14 @@ $newqueryid = "select
         	&nbsp;
     	</td>
 <?php 
-        if(($myarray[0] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
+        if((!empty($myarray[0]) && $myarray[0] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
 			$tot_adj += st($myarray["paid_amount"]);?>
         <td></td>
 <?php 
         } ?>
 		<td valign="top" align="right" width="10%">
 <?php
-        if($myarray[0]!='claim') {
+        if(!empty($myarray[0]) && $myarray[0]!='claim') {
             if(st($myarray["paid_amount"]) <> 0) {
                 echo number_format(st($myarray["paid_amount"]),2); 
 			}
@@ -409,16 +413,16 @@ $newqueryid = "select
     		&nbsp;
 		</td>
 <?php 
-        if(!($myarray[0] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
+        if(!(!empty($myarray[0]) && $myarray[0] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
 			$tot_credit += st($myarray["paid_amount"]);?>
         <td></td>
 <?php 
         } ?>
 		<td valign="top" width="5%">&nbsp;
 <?php 
-        if($myarray[0] == 'ledger'){
+        if(!empty($myarray[0]) && $myarray[0] == 'ledger'){
             echo $dss_trxn_status_labels[$myarray["status"]];
-        }elseif($myarray[0] == 'claim'){
+        }elseif(!empty($myarray[0]) && $myarray[0] == 'claim'){
             echo $dss_claim_status_labels[$myarray["status"]];
         }
     }?>       	
@@ -447,12 +451,20 @@ if(isset($_GET['pid'])){
 }
 $myarray2 = $db->getRow($ledgerquery2);
 
+if (!isset($cur_bal)) {
+    $cur_bal = 0;
+}
+
 if(st($myarray["amount"]) <> 0) {
     $cur_bal += st($myarray["amount"]);
 }
 
-if($ledgerres2){
+if(!empty($ledgerres2)){
     $cur_bal2 = $myarray2['paid_amount'];
+}
+
+if (!isset($cur_bal2)) {
+    $cur_bal2 = 0;
 }
 
 $cur_balfinal = $cur_bal - $cur_bal2;?>

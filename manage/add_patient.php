@@ -402,9 +402,9 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
                 middlename = '".s_for($_POST["middlename"])."', 
                 preferred_name = '".s_for($_POST["preferred_name"])."',
                 salutation = '".s_for($_POST["salutation"])."',
-                member_no = '".s_for($_POST['member_no'])."',
-                group_no = '".s_for($_POST['group_no'])."',
-                plan_no = '".s_for($_POST["plan_no"])."', 
+                member_no = '".s_for((!empty($_POST['member_no']) ? $_POST['member_no'] : ''))."',
+                group_no = '".s_for((!empty($_POST['group_no']) ? $_POST['group_no'] : ''))."',
+                plan_no = '".s_for((!empty($_POST["plan_no"]) ? $_POST["plan_no"] : ''))."', 
                 add1 = '".s_for($_POST["add1"])."', 
                 add2 = '".s_for($_POST["add2"])."', 
                 city = '".s_for($_POST["city"])."', 
@@ -429,26 +429,26 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     }
     $ed_sql .=" 
       patient_notes = '".s_for($_POST["patient_notes"])."', 
-      p_d_party = '".s_for($_POST["p_d_party"])."', 
-      p_d_relation = '".s_for($_POST["p_d_relation"])."', 
-      p_d_other = '".s_for($_POST["p_d_other"])."', 
-      p_d_employer = '".s_for($_POST["p_d_employer"])."', 
-      p_d_ins_co = '".s_for($_POST["p_d_ins_co"])."', 
-      p_d_ins_id = '".s_for($_POST["p_d_ins_id"])."', 
-      s_d_party = '".s_for($_POST["s_d_party"])."', 
-      s_d_relation = '".s_for($_POST["s_d_relation"])."', 
-      s_d_other = '".s_for($_POST["s_d_other"])."', 
-      s_d_employer = '".s_for($_POST["s_d_employer"])."', 
-      s_d_ins_co = '".s_for($_POST["s_d_ins_co"])."', 
-      s_d_ins_id = '".s_for($_POST["s_d_ins_id"])."', 
+      p_d_party = '".s_for(!empty($_POST["p_d_party"]) ? $_POST["p_d_party"] : '')."', 
+      p_d_relation = '".s_for(!empty($_POST["p_d_relation"]) ? $_POST["p_d_relation"] : '')."', 
+      p_d_other = '".s_for(!empty($_POST["p_d_other"]) ? $_POST["p_d_other"] : '')."', 
+      p_d_employer = '".s_for(!empty($_POST["p_d_employer"]) ? $_POST["p_d_employer"] : '')."', 
+      p_d_ins_co = '".s_for(!empty($_POST["p_d_ins_co"]) ? $_POST["p_d_ins_co"] : '')."', 
+      p_d_ins_id = '".s_for(!empty($_POST["p_d_ins_id"]) ? $_POST["p_d_ins_id"] : '')."', 
+      s_d_party = '".s_for(!empty($_POST["s_d_party"]) ? $_POST["s_d_party"] : '')."', 
+      s_d_relation = '".s_for(!empty($_POST["s_d_relation"]) ? $_POST["s_d_relation"] : '')."', 
+      s_d_other = '".s_for(!empty($_POST["s_d_other"]) ? $_POST["s_d_other"] : '')."', 
+      s_d_employer = '".s_for(!empty($_POST["s_d_employer"]) ? $_POST["s_d_employer"] : '')."', 
+      s_d_ins_co = '".s_for(!empty($_POST["s_d_ins_co"]) ? $_POST["s_d_ins_co"] : '')."', 
+      s_d_ins_id = '".s_for(!empty($_POST["s_d_ins_id"]) ? $_POST["s_d_ins_id"] : '')."', 
       p_m_partyfname = '".s_for($_POST["p_m_partyfname"])."',
       p_m_partymname = '".s_for($_POST["p_m_partymname"])."',
       p_m_partylname = '".s_for($_POST["p_m_partylname"])."',
       p_m_gender = '".s_for($_POST["p_m_gender"])."',
       p_m_ins_grp = '".s_for($_POST["p_m_ins_grp"])."',
       s_m_ins_grp = '".s_for($_POST["s_m_ins_grp"])."',
-      p_m_dss_file = '".s_for($_POST["p_m_dss_file"])."',
-      s_m_dss_file = '".s_for($_POST["s_m_dss_file"])."',
+      p_m_dss_file = '".s_for(!empty($_POST["p_m_dss_file"]) ? $_POST["p_m_dss_file"] : '')."',
+      s_m_dss_file = '".s_for(!empty($_POST["s_m_dss_file"]) ? $_POST["s_m_dss_file"] : '')."',
       p_m_same_address = '".s_for($_POST["p_m_same_address"])."',
       s_m_same_address = '".s_for($_POST["s_m_same_address"])."',
       p_m_address = '".s_for($_POST["p_m_address"])."',
@@ -461,13 +461,13 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       s_m_zip = '".s_for($_POST["s_m_zip"])."',
       p_m_ins_type = '".s_for($_POST["p_m_ins_type"])."',
       s_m_ins_type = '".s_for($_POST["s_m_ins_type"])."',
-      p_m_ins_ass = '".s_for($_POST["p_m_ins_ass"])."',
-      s_m_ins_ass = '".s_for($_POST["s_m_ins_ass"])."',
+      p_m_ins_ass = '".s_for(!empty($_POST["p_m_ins_ass"]) ? $_POST["p_m_ins_ass"] : '')."',
+      s_m_ins_ass = '".s_for(!empty($_POST["s_m_ins_ass"]) ? $_POST["s_m_ins_ass"] : '')."',
       ins_dob = '".s_for($_POST["ins_dob"])."',
       ins2_dob = '".s_for($_POST["ins2_dob"])."',
       p_m_relation = '".s_for($_POST["p_m_relation"])."', 
-      p_m_other = '".s_for($_POST["p_m_other"])."', 
-      p_m_employer = '".s_for($_POST["p_m_employer"])."', 
+      p_m_other = '".s_for(!empty($_POST["p_m_other"]) ? $_POST["p_m_other"] : '')."', 
+      p_m_employer = '".s_for(!empty($_POST["p_m_employer"]) ? $_POST["p_m_employer"] : '')."', 
       p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
       p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
       p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
@@ -480,8 +480,8 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       s_m_partylname = '".s_for($_POST["s_m_partylname"])."', 
       s_m_gender = '".s_for($_POST["s_m_gender"])."',
       s_m_relation = '".s_for($_POST["s_m_relation"])."', 
-      s_m_other = '".s_for($_POST["s_m_other"])."', 
-      s_m_employer = '".s_for($_POST["s_m_employer"])."', 
+      s_m_other = '".s_for(!empty($_POST["s_m_other"]) ? $_POST["s_m_other"] : '')."', 
+      s_m_employer = '".s_for(!empty($_POST["s_m_employer"]) ? $_POST["s_m_employer"] : '')."', 
       s_m_ins_co = '".s_for($_POST["s_m_ins_co"])."', 
       s_m_ins_id = '".s_for($_POST["s_m_ins_id"])."',
       p_m_ins_plan = '".s_for($_POST["p_m_ins_plan"])."',
@@ -494,18 +494,18 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       emp_zip = '".s_for($_POST["emp_zip"])."', 
       emp_phone = '".s_for(num($_POST["emp_phone"]))."', 
       emp_fax = '".s_for(num($_POST["emp_fax"]))."', 
-      plan_name = '".s_for($_POST["plan_name"])."', 
-      group_number = '".s_for($_POST["group_number"])."', 
-      ins_type = '".s_for($_POST["ins_type"])."', 
-      accept_assignment = '".s_for($_POST["accept_assignment"])."', 
-      print_signature = '".s_for($_POST["print_signature"])."', 
-      medical_insurance = '".s_for($_POST["medical_insurance"])."', 
-      mark_yes = '".s_for($_POST["mark_yes"])."',
-      inactive = '".s_for($_POST["inactive"])."',
+      plan_name = '".s_for(!empty($_POST["plan_name"]) ? $_POST["plan_name"] : '')."', 
+      group_number = '".s_for(!empty($_POST["group_number"]) ? $_POST["group_number"] : '')."', 
+      ins_type = '".s_for(!empty($_POST["ins_type"]) ? $_POST["ins_type"] : '')."', 
+      accept_assignment = '".s_for(!empty($_POST["accept_assignment"]) ? $_POST["accept_assignment"] : '')."', 
+      print_signature = '".s_for(!empty($_POST["print_signature"]) ? $_POST["print_signature"] : '')."', 
+      medical_insurance = '".s_for(!empty($_POST["medical_insurance"]) ? $_POST["medical_insurance"] : '')."', 
+      mark_yes = '".s_for(!empty($_POST["mark_yes"]) ? $_POST["mark_yes"] : '')."',
+      inactive = '".s_for(!empty($_POST["inactive"]) ? $_POST["inactive"] : '')."',
       partner_name = '".s_for($_POST["partner_name"])."',
       docsleep = '".s_for($_POST["docsleep"])."',
       docpcp = '".s_for($_POST["docpcp"])."',
-      mark_yes = '".s_for($_POST["mark_yes"])."',
+      mark_yes = '".s_for(!empty($_POST["mark_yes"]) ? $_POST["mark_yes"] : '')."',
       docdentist = '".s_for($_POST["docdentist"])."',
       docent = '".s_for($_POST["docent"])."',
       docmdother = '".s_for($_POST["docmdother"])."',
@@ -536,7 +536,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
      $s_r['p_m_partylname'] != $_POST['p_m_partylname'] ||
      $s_r['ins_dob'] != $_POST['ins_dob'] ||
      $s_r['p_m_ins_type'] != $_POST['p_m_ins_type'] ||
-     $s_r['p_m_ins_ass'] != $_POST['p_m_ins_ass'] ||
+     !empty($s_r['p_m_ins_ass']) && $s_r['p_m_ins_ass'] != $_POST['p_m_ins_ass'] ||
      $s_r['p_m_ins_id'] != $_POST['p_m_ins_id'] ||
      $s_r['p_m_ins_grp'] != $_POST['p_m_ins_grp'] ||
      $s_r['p_m_ins_plan'] != $_POST['p_m_ins_plan']){
@@ -669,7 +669,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
 
     trigger_letter1and2($_POST['ed']);
 
-    if($_POST['introletter'] == 1) {
+    if(!empty($_POST['introletter']) && $_POST['introletter'] == 1) {
       trigger_letter3($_POST['ed']);
     }
 

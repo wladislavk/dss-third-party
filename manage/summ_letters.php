@@ -179,7 +179,7 @@ if ($patient_info) {
       if ($master_q) {
         foreach ($master_q as $master_r) {
           $master_contacts = get_contact_info((($master_r['topatient'] == "1") ? $master_r['patientid'] : ''), $master_r['md_list'],$master_r['md_referral_list'], $master_r['pat_referral_list'], $master_r['letterid']);
-          if(isset($contacts['patient']) && count($contacts['patient']) && count($master_contacts['patient'])){
+          if(!empty($contacts['patient']) && count($contacts['patient']) && count($master_contacts['patient'])){
             //$contacts['patient'] = array_merge($contacts['patient'], $master_contacts['patient']);
           }elseif(isset($master_contacts['patient']) && count($master_contacts['patient'])){
             $contacts['patient'] = $master_contacts['patient'];

@@ -3,7 +3,7 @@ include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]))
 {
-	$del_sql = "delete from dental_locations where id='".$_REQUEST["delid"]."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+	$del_sql = "delete from dental_locations where id='".$_REQUEST["delid"]."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 	$db->query($del_sql);
 	
 	$msg= "Deleted Successfully";
@@ -17,9 +17,9 @@ if(!empty($_REQUEST["delid"]))
 }
 
 if(isset($_REQUEST['did'])){
-	$d_sql = "UPDATE dental_locations set default_location=0 where docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+	$d_sql = "UPDATE dental_locations set default_location=0 where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 	$db->query($d_sql);
-	$d_sql = "UPDATE dental_locations set default_location=1 where id='".mysql_real_escape_string($_REQUEST['did'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+	$d_sql = "UPDATE dental_locations set default_location=1 where id='".mysqli_real_escape_string($con,$_REQUEST['did'])."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 	$db->query($d_sql);
 }
 

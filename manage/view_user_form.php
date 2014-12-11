@@ -32,7 +32,7 @@
             } elseif($_GET['file'] == "financial_agreement_medicare") {
                 $output = "financial_agreement_medicare";
                 if(!file_exists($filename) || $recreate){
-                    update_financial_agreement_medicare_form($_GET['did']);
+                    update_financial_agreement_medicare_form($_GET['did'], '');
                 }
             } elseif($_GET['file'] == "release_liability") {
                 $output = "release_liability";

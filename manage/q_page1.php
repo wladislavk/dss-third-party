@@ -2,7 +2,7 @@
 	include "includes/top.htm";
 	require_once('includes/patient_info.php');
 	if ($patient_info) {
-		if($_GET['own']==1){
+		if(!empty($_GET['own']) && $_GET['own']==1){
 			$c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";  $c_q = mysql_query($c_sql);  $changed = mysql_num_rows($c_q);
 			$own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 			$db->query($own_sql);
@@ -36,7 +36,7 @@
 		<script type="text/javascript" src="js/q_page1.js"></script>
 <?php
 	$todaysdate=date("m/d/Y");
-	if ($_POST['q_page1sub'] == 1) {
+	if (!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
     	$exam_date = ($_POST['exam_date']!='')?date('Y-m-d', strtotime($_POST['exam_date'])):'';
 		$ess = $_POST['ess'];
 		$tss = $_POST['tss'];
@@ -242,7 +242,7 @@
 		$sleep_qual = st($myarray['sleep_qual']);
 
 		if($complaintid <> '') {	
-			$comp_arr1 = split('~',$complaintid);
+			$comp_arr1 = explode('~',$complaintid);
 			foreach($comp_arr1 as $i => $val){
 				$comp_arr2 = explode('|',$val);
 				$compid[$i] = $comp_arr2[0];
@@ -267,7 +267,7 @@
 	<br />
 	<br>
 	<div align="center" class="red">
-		<b><?php echo $_GET['msg'];?></b>
+		<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 	</div>
 
 	<script type="text/javascript">
@@ -379,7 +379,7 @@
 										$analysis = st($myarray['analysis']);
 
 										if ($epworthid <> '') {
-        									$epworth_arr1 = split('~',$epworthid);
+        									$epworth_arr1 = explode('~',$epworthid);
 						        			foreach($epworth_arr1 as $i => $val)
 						        			{
 						                		$epworth_arr2 = explode('|',$val);
@@ -462,13 +462,13 @@
 		                    </span>
                     		<br />
                     		<?php 
-        						$patcomp_arr1 = split('~',$pat_row['complaintid']);
+        						$patcomp_arr1 = explode('~',$pat_row['complaintid']);
 
 						        foreach($patcomp_arr1 as $i => $val)
 						        {
 					                $patcomp_arr2 = explode('|',$val);
 					                $patcompid[$i] = $patcomp_arr2[0];
-					                $patcompseq[$i] = $patcomp_arr2[1];
+					                $patcompseq[$i] = (!empty($patcomp_arr2[1]) ? $patcomp_arr2[1] : '');
 						        }
 
 								foreach ($complaint_my as $complaint_myarray)
@@ -476,7 +476,7 @@
 									if(@array_search($complaint_myarray['complaintid'],$compid) === false) {
 										$chk = '';
 									} else {
-										$chk = ($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
+										$chk = !empty($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
 									}
 
 					        		if(@array_search($complaint_myarray['complaintid'],$patcompid) === false) {
@@ -503,7 +503,7 @@
                                             if(@array_search(0,$compid) === false) {
                                                 $chk = '';
                                             } else {
-                                                $chk = $compseq[@array_search(0,$compid)];
+                                                $chk = (!empty($compseq[@array_search(0,$compid)]) ? $compseq[@array_search(0,$compid)] : '');
                                             }
 										?>
 			                            <input type="checkbox" id="complaint_0" onclick="chk_other_comp()" name="complaint_0" value="1" <?php if($chk == 1) echo 'checked="checked"'; ?> />

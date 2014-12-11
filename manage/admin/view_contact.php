@@ -55,49 +55,49 @@ include_once "includes/general.htm";
 <div>
 <div class="form-group">
                 <label for="firstname" class="col-md-3 control-label">Name:</label> 
-		<div class="col-md-9"><?= $salutation." ".$firstname." ".$middlename." ".$lastname; ?></div>
+		<div class="col-md-9"><?php echo  $salutation." ".$firstname." ".$middlename." ".$lastname; ?></div>
 </div>
 <div class="form-group">
                 <label for="firstname" class="col-md-3 control-label">Company:</label> 
-                <div class="col-md-9"><?= $company; ?> </div>
+                <div class="col-md-9"><?php echo  $company; ?> </div>
 </div>
 <div class="form-group">
                 <label for="firstname" class="col-md-3 control-label">Contact Type:</label> 
-                <div class="col-md-9"><?= $contacttype; ?> </div>
+                <div class="col-md-9"><?php echo  $contacttype; ?> </div>
 </div>
 <div class="form-group">
                 <label for="firstname" class="col-md-3 control-label">Address:</label> 
-                <div class="col-md-9"><?= $add1; ?></div>
+                <div class="col-md-9"><?php echo  $add1; ?></div>
 </div>
 	<div class="form-group">
                 <label for="firstname" class="col-md-3 control-label">&nbsp;</label> 
-                <div class="col-md-9"><?= $add2; ?></div>
+                <div class="col-md-9"><?php echo  $add2; ?></div>
 </div>
 <div class="form-group">
                 <label for="firstname" class="col-md-3 control-label">&nbsp;</label> 
-                <div class="col-md-9"><?= $city." ".$state." ".$zip; ?></div>
+                <div class="col-md-9"><?php echo  $city." ".$state." ".$zip; ?></div>
 </div>
 <div class="form-group">
                 <label for="firstname" class="col-md-3 control-label">Phone:</label> 
-                <div class="col-md-9"><?= format_phone($phone1); ?></div>
+                <div class="col-md-9"><?php echo  format_phone($phone1); ?></div>
 </div>
 <div class="form-group">
                 <label for="firstname" class="col-md-3 control-label">Phone 2:</label>  
-                <div class="col-md-9"><?= format_phone($phone2); ?></div>
+                <div class="col-md-9"><?php echo  format_phone($phone2); ?></div>
 </div>
 <div class="form-group">
                 <label for="firstname" class="col-md-3 control-label">Fax:</label>  
-                <div class="col-md-9"><?= format_phone($fax); ?></div>
+                <div class="col-md-9"><?php echo  format_phone($fax); ?></div>
 </div>
 <div class="form-group">
                 <label for="firstname" class="col-md-3 control-label">Email:</label> 
-                <div class="col-md-9"><?= $email; ?></div>
+                <div class="col-md-9"><?php echo  $email; ?></div>
 </div>
 <div class="form-group">
                 <label for="firstname" class="col-md-3 control-label">Notes:</label>  
-                <div class="col-md-9"><?= $notes; ?></div>
+                <div class="col-md-9"><?php echo  $notes; ?></div>
 </div>
-<a href="add_contact.php?ed=<?= $_REQUEST['ed'];?>&corp=<?=$_GET['corp'];?>" title="View Full" class="btn btn-primary btn-sm">
+// <a href="add_contact.php?ed=<?php echo  (!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '');?>&corp=<?php echo (!empty($_GET['corp']) ? $_GET['corp'] : '');?>" title="View Full" class="btn btn-primary btn-sm">
                                                 View Full 
                                          <span class="glyphicon glyphicon-pencil"></span></a>
  

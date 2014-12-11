@@ -3,7 +3,7 @@
 	require_once('includes/patient_info.php');
 	
 	if ($patient_info) {
-		if($_POST['q_recipientssub'] == 1) {
+		if(!empty($_POST['q_recipientssub']) && $_POST['q_recipientssub'] == 1) {
 ?>
 			<script type="text/javascript">
 				window.location = '<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
@@ -12,7 +12,7 @@
 			die();
 		}
 
-		if($_REQUEST["delid"] != "") {
+		if(!empty($_REQUEST["delid"])) {
 			$del_sql = "delete from dental_q_image where imageid='".$_REQUEST["delid"]."'";
 			$db->query($del_sql);
 			
@@ -51,7 +51,7 @@
 					// LEFT join admin a ON a.adminid=i.adminid
 				"	where i.patientid='".$_GET['pid']."'";
 
-		if ($_GET['sh'] <> '') {
+		if (!empty($_GET['sh'])) {
 			$sql .= " and imagetypeid='".$_GET['sh']."' ";
 		}
 
@@ -85,27 +85,27 @@
 		<select name="imagetypeid" class="field text addr tbox" onchange="Javascript: window.location='<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid'];?>&sh='+this.value;">
 			<option value="">All</option>
 			<?php foreach ($itype_my as $itype_myarray) { ?>
-				<option value="<?php echo st($itype_myarray['imagetypeid']);?>" <?php if($_GET['sh'] == st($itype_myarray['imagetypeid'])) echo " selected";?>>
+				<option value="<?php echo st($itype_myarray['imagetypeid']);?>" <?php if(!empty($_GET['sh']) && $_GET['sh'] == st($itype_myarray['imagetypeid'])) echo " selected";?>>
 					<?php echo st($itype_myarray['imagetype']);?>
 				</option>
 			<? } ?>
 		</select>
 		<br />
 		<div align="right">
-			<button onclick="Javascript: loadPopupRefer('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>&flow=<?php echo $_GET['flow'];?>');" class="addButton">
+			<button onclick="Javascript: loadPopupRefer('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : '');?>&flow=<?php echo (!empty($_GET['flow']) ? $_GET['flow'] : '');?>');" class="addButton">
 				Add New Image
 			</button>
 			&nbsp;&nbsp;
 		</div>
 		<br />
 		<div align="center" class="red">
-			<b><?php echo $_GET['msg'];?></b>
+			<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 		</div>
 
-		<form name="q_imagefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>&sh=<?php echo $_GET['sh'];?>" method="post" >
+		<form name="q_imagefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : '');?>" method="post" >
 			<input type="hidden" name="q_recipientssub" value="1" />
-			<input type="hidden" name="ed" value="<?php echo $q_recipientsid;?>" />
-			<input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
+			<input type="hidden" name="ed" value="<?php echo (!empty($q_recipientsid) ? $q_recipientsid : '');?>" />
+			<input type="hidden" name="goto_p" value="<?php echo (!empty($cur_page) ? $cur_page : '')?>" />
 
 			<?php include 'partials/patient_images.php'; ?>
 		</form>

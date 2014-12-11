@@ -356,7 +356,7 @@ if(!empty($msg)){
 if($imagetypeid == '')
 		$imagetypeid = $_GET['sh'];
 		
-if($themyarray["contactid"] != ''){
+if(!empty($themyarray["contactid"])){
 		$but_text = "Edit ";
 }else{
   	$but_text = "Add ";
@@ -405,7 +405,7 @@ if(!empty($_GET['itro']) && $_GET['itro']==1){?>
                 								<option value=""></option>
 <?php 
     foreach ($itype_my as $itype_myarray) {?>
-              									<option value="<?php echo st($itype_myarray['imagetypeid']);?>" <? if($imagetypeid == st($itype_myarray['imagetypeid']) || $_GET['it']==$itype_myarray['imagetypeid']) echo " selected"; ?>>
+              									<option value="<?php echo st($itype_myarray['imagetypeid']);?>" <? if($imagetypeid == st($itype_myarray['imagetypeid']) || !empty($_GET['it']) && $_GET['it']==$itype_myarray['imagetypeid']) echo " selected"; ?>>
                 										<?php echo st($itype_myarray['imagetype']);?>
               									</option>
 <?php 
@@ -509,7 +509,7 @@ for($i=1;$i<=9;$i++){ ?>
                 </span><br />
                 <input type="hidden" name="imagesub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $themyarray["imageid"]?>" />
-            		<input type="hidden" name="return" value="<?php echo $_REQUEST['return']; ?>" />
+            		<input type="hidden" name="return" value="<?php echo (!empty($_REQUEST['return']) ? $_REQUEST['return'] : ''); ?>" />
                 <input type="hidden" name="return_field" value="<?php echo (!empty($_REQUEST['return_field']) ? $_REQUEST['return_field'] : ''); ?>" />
                 <input type="submit" value=" <?php echo $but_text?> Image" class="button" />
             </td>

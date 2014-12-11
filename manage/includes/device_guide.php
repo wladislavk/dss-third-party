@@ -101,6 +101,7 @@
             
             $o_q = $db->getResults($o_sql);
             $setting_options = count($o_q);
+            $setting_options = (($setting_options != 1) ? $setting_options : 2);
             $range_step = ($s_r['range_end']-$s_r['range_start'])/($setting_options-1);
           ?>
 

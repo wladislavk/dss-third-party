@@ -52,9 +52,15 @@ function confirm_ledger_trxns(){
 // update and changes to ledger trxns
 // (updating associated claim id and status later w/ claim form insert and update)
 function update_ledger_trxns($primary_claim_id, $trxn_status) {
+    $db = new Db();
+    $con = $GLOBALS['con'];
+
     $num = 0;
     $added_ledger_ids = array();
-    while ($num <= ($_POST['ledgercount']-1)) {
+
+	$ledgercount = (!empty($_POST['ledgercount']) ? $_POST['ledgercount'] : 0);
+
+    while ($num <= ($ledgercount-1)) {
         $placeofservicenum =  'placeofservice'.$num;
         $emgnum = 'emg'.$num;
         $diagnosispointernum = 'diagnosispointer'.$num;
@@ -102,7 +108,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     }
 
     $ledger_ids = implode(',', $added_ledger_ids);
-    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
+    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN ('".$ledger_ids."')";
 
     $upr = $db->getRow($upsql);
     if($upr['num_ledger']>0){
@@ -110,7 +116,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 
         $prod_r = $db->getRow($prod_s);
         $claim_producer = $prod_r['producer'];
-  	$s = "SELECT insuranceid from dental_insurance where producer = '".mysqli_real_escape_string($con,$claim_producer)." AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+  	$s = "SELECT insuranceid from dental_insurance where producer = '".mysqli_real_escape_string($con,$claim_producer)."' AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
   	
   	$q = $db->getRow($s);
 
@@ -176,77 +182,77 @@ die();
 	die();
     }
     // Put POST values into variables
-	$pica1 = $_POST['pica1'];
-	$pica2 = $_POST['pica2'];
-	$pica3 = $_POST['pica3'];
-	$insurance_type = $_POST['insurance_type'];
-	$other_insurance_type = $_POST['other_insurance_type'];
-	$patient_lastname = $_POST['patient_lastname'];
-	$patient_firstname = $_POST['patient_firstname'];
-	$patient_middle = $_POST['patient_middle'];
-	$patient_dob = $_POST['patient_dob'];
-	$patient_sex = $_POST['patient_sex'];
-	$patient_address = $_POST['patient_address'];
-	$patient_city = $_POST['patient_city'];
-	$patient_state = $_POST['patient_state'];
+	$pica1 = (!empty($_POST['pica1']) ? $_POST['pica1'] : '');
+	$pica2 = (!empty($_POST['pica2']) ? $_POST['pica2'] : '');
+	$pica3 = (!empty($_POST['pica3']) ? $_POST['pica3'] : '');
+	$insurance_type = (!empty($_POST['insurance_type']) ? $_POST['insurance_type'] : '');
+	$other_insurance_type = (!empty($_POST['other_insurance_type']) ? $_POST['other_insurance_type'] : '');
+	$patient_lastname = (!empty($_POST['patient_lastname']) ? $_POST['patient_lastname'] : '');
+	$patient_firstname = (!empty($_POST['patient_firstname']) ? $_POST['patient_firstname'] : '');
+	$patient_middle = (!empty($_POST['patient_middle']) ? $_POST['patient_middle'] : '');
+	$patient_dob = (!empty($_POST['patient_dob']) ? $_POST['patient_dob'] : '');
+	$patient_sex = (!empty($_POST['patient_sex']) ? $_POST['patient_sex'] : '');
+	$patient_address = (!empty($_POST['patient_address']) ? $_POST['patient_address'] : '');
+	$patient_city = (!empty($_POST['patient_city']) ? $_POST['patient_city'] : '');
+	$patient_state = (!empty($_POST['patient_state']) ? $_POST['patient_state'] : '');
 	$patient_status = (!empty($_POST['patient_status']) ? $_POST['patient_status'] : '');
 	$work_status = (!empty($_POST['work_status']) ? $_POST['work_status'] : '');
-	$patient_zip = $_POST['patient_zip'];
-	$patient_phone_code = num($_POST['patient_phone_code']);
-	$patient_phone = num($_POST['patient_phone'], false);
-	$insured_id_number = $_POST['insured_id_number'];
-	$insured_firstname = $_POST['insured_firstname'];
-	$insured_lastname = $_POST['insured_lastname'];
-	$insured_middle = $_POST['insured_middle'];
-	$patient_relation_insured = $_POST['patient_relation_insured'];
-	$insured_address = $_POST['insured_address'];
-	$insured_state = $_POST['insured_state'];
-	$insured_city = $_POST['insured_city'];
-	$insured_zip = $_POST['insured_zip'];
-	$insured_phone_code = num($_POST['insured_phone_code']);
-	$insured_phone = num($_POST['insured_phone'], false);
-	$other_insured_firstname = $_POST['other_insured_firstname'];
-	$other_insured_lastname = $_POST['other_insured_lastname'];
-	$other_insured_middle = $_POST['other_insured_middle'];
+	$patient_zip = (!empty($_POST['patient_zip']) ? $_POST['patient_zip'] : '');
+	$patient_phone_code = num((!empty($_POST['patient_phone_code']) ? $_POST['patient_phone_code'] : ''));
+	$patient_phone = num((!empty($_POST['patient_phone']) ? $_POST['patient_phone'] : ''), false);
+	$insured_id_number = (!empty($_POST['insured_id_number']) ? $_POST['insured_id_number'] : '');
+	$insured_firstname = (!empty($_POST['insured_firstname']) ? $_POST['insured_firstname'] : '');
+	$insured_lastname = (!empty($_POST['insured_lastname']) ? $_POST['insured_lastname'] : '');
+	$insured_middle = (!empty($_POST['insured_middle']) ? $_POST['insured_middle'] : '');
+	$patient_relation_insured = (!empty($_POST['patient_relation_insured']) ? $_POST['patient_relation_insured'] : '');
+	$insured_address = (!empty($_POST['insured_address']) ? $_POST['insured_address'] : '');
+	$insured_state = (!empty($_POST['insured_state']) ? $_POST['insured_state'] : '');
+	$insured_city = (!empty($_POST['insured_city']) ? $_POST['insured_city'] : '');
+	$insured_zip = (!empty($_POST['insured_zip']) ? $_POST['insured_zip'] : '');
+	$insured_phone_code = num((!empty($_POST['insured_phone_code']) ? $_POST['insured_phone_code'] : ''));
+	$insured_phone = num((!empty($_POST['insured_phone']) ? $_POST['insured_phone'] : ''), false);
+	$other_insured_firstname = (!empty($_POST['other_insured_firstname']) ? $_POST['other_insured_firstname'] : '');
+	$other_insured_lastname = (!empty($_POST['other_insured_lastname']) ? $_POST['other_insured_lastname'] : '');
+	$other_insured_middle = (!empty($_POST['other_insured_middle']) ? $_POST['other_insured_middle'] : '');
 	$employment = (!empty($_POST['employment']) ? $_POST['employment'] : '');
 	$auto_accident = (!empty($_POST['auto_accident']) ? $_POST['auto_accident'] : '');
-	$auto_accident_place = $_POST['auto_accident_place'];
+	$auto_accident_place = (!empty($_POST['auto_accident_place']) ? $_POST['auto_accident_place'] : '');
 	$other_accident = (!empty($_POST['other_accident']) ? $_POST['other_accident'] : '');
-	$insured_policy_group_feca = $_POST['insured_policy_group_feca'];
-	$other_insured_policy_group_feca = $_POST['other_insured_policy_group_feca'];
-	$insured_dob = $_POST['insured_dob'];
-	$insured_sex = $_POST['insured_sex'];
-	$other_insured_dob = $_POST['other_insured_dob'];
+	$insured_policy_group_feca = (!empty($_POST['insured_policy_group_feca']) ? $_POST['insured_policy_group_feca'] : '');
+	$other_insured_policy_group_feca = (!empty($_POST['other_insured_policy_group_feca']) ? $_POST['other_insured_policy_group_feca'] : '');
+	$insured_dob = (!empty($_POST['insured_dob']) ? $_POST['insured_dob'] : '');
+	$insured_sex = (!empty($_POST['insured_sex']) ? $_POST['insured_sex'] : '');
+	$other_insured_dob = (!empty($_POST['other_insured_dob']) ? $_POST['other_insured_dob'] : '');
 	$other_insured_sex = (!empty($_POST['other_insured_sex']) ? $_POST['other_insured_sex'] : '');
-	$insured_employer_school_name = $_POST['insured_employer_school_name'];
-	$other_insured_employer_school_name = $_POST['other_insured_employer_school_name'];
-	$insured_insurance_plan = $_POST['insured_insurance_plan'];
-	$other_insured_insurance_plan = $_POST['other_insured_insurance_plan'];
-	$reserved_local_use = $_POST['reserved_local_use'];
-	$another_plan = $_POST['another_plan'];
-	$patient_signature = $_POST['patient_signature'];
-	$patient_signed_date = $_POST['patient_signed_date'];
-	$insured_signature = $_POST['insured_signature'];
-	$date_current = $_POST['date_current'];
-	$date_same_illness = $_POST['date_same_illness'];
-	$unable_date_from = $_POST['unable_date_from'];
-	$unable_date_to = $_POST['unable_date_to'];
-	$referring_provider = $_POST['referring_provider'];
-	$field_17a_dd = $_POST['field_17a_dd'];
-	$field_17a = $_POST['field_17a'];
-	$field_17b = $_POST['field_17b'];
-	$hospitalization_date_from = $_POST['hospitalization_date_from'];
-	$hospitalization_date_to = $_POST['hospitalization_date_to'];
-	$reserved_local_use1 = $_POST['reserved_local_use1'];
+	$insured_employer_school_name = (!empty($_POST['insured_employer_school_name']) ? $_POST['insured_employer_school_name'] : '');
+	$other_insured_employer_school_name = (!empty($_POST['other_insured_employer_school_name']) ? $_POST['other_insured_employer_school_name'] : '');
+	$insured_insurance_plan = (!empty($_POST['insured_insurance_plan']) ? $_POST['insured_insurance_plan'] : '');
+	$other_insured_insurance_plan = (!empty($_POST['other_insured_insurance_plan']) ? $_POST['other_insured_insurance_plan'] : '');
+	$reserved_local_use = (!empty($_POST['reserved_local_use']) ? $_POST['reserved_local_use'] : '');
+	$another_plan = (!empty($_POST['another_plan']) ? $_POST['another_plan'] : '');
+	$patient_signature = (!empty($_POST['patient_signature']) ? $_POST['patient_signature'] : '');
+	$patient_signed_date = (!empty($_POST['patient_signed_date']) ? $_POST['patient_signed_date'] : '');
+	$insured_signature = (!empty($_POST['insured_signature']) ? $_POST['insured_signature'] : '');
+	$date_current = (!empty($_POST['date_current']) ? $_POST['date_current'] : '');
+	$date_same_illness = (!empty($_POST['date_same_illness']) ? $_POST['date_same_illness'] : '');
+	$unable_date_from = (!empty($_POST['unable_date_from']) ? $_POST['unable_date_from'] : '');
+	$unable_date_to = (!empty($_POST['unable_date_to']) ? $_POST['unable_date_to'] : '');
+	$referring_provider = (!empty($_POST['referring_provider']) ? $_POST['referring_provider'] : '');
+	$field_17a_dd = (!empty($_POST['field_17a_dd']) ? $_POST['field_17a_dd'] : '');
+	$field_17a = (!empty($_POST['field_17a']) ? $_POST['field_17a'] : '');
+	$field_17b = (!empty($_POST['field_17b']) ? $_POST['field_17b'] : '');
+	$hospitalization_date_from = (!empty($_POST['hospitalization_date_from']) ? $_POST['hospitalization_date_from'] : '');
+	$hospitalization_date_to = (!empty($_POST['hospitalization_date_to']) ? $_POST['hospitalization_date_to'] : '');
+	$reserved_local_use1 = (!empty($_POST['reserved_local_use1']) ? $_POST['reserved_local_use1'] : '');
 	$outside_lab = (!empty($_POST['outside_lab']) ? $_POST['outside_lab'] : '');
-	$s_charges = $_POST['s_charges'];
-	$diagnosis_1 = $_POST['diagnosis_1'];
-	$diagnosis_2 = $_POST['diagnosis_2'];
-	$diagnosis_3 = $_POST['diagnosis_3'];
-	$diagnosis_4 = $_POST['diagnosis_4'];
-	$medicaid_resubmission_code = $_POST['medicaid_resubmission_code'];
-	$original_ref_no = $_POST['original_ref_no'];
-	$prior_authorization_number = $_POST['prior_authorization_number'];
+	$s_charges = (!empty($_POST['s_charges']) ? $_POST['s_charges'] : '');
+	$diagnosis_1 = (!empty($_POST['diagnosis_1']) ? $_POST['diagnosis_1'] : '');
+	$diagnosis_2 = (!empty($_POST['diagnosis_2']) ? $_POST['diagnosis_2'] : '');
+	$diagnosis_3 = (!empty($_POST['diagnosis_3']) ? $_POST['diagnosis_3'] : '');
+	$diagnosis_4 = (!empty($_POST['diagnosis_4']) ? $_POST['diagnosis_4'] : '');
+	$medicaid_resubmission_code = (!empty($_POST['medicaid_resubmission_code']) ? $_POST['medicaid_resubmission_code'] : '');
+	$original_ref_no = (!empty($_POST['original_ref_no']) ? $_POST['original_ref_no'] : '');
+	$prior_authorization_number = (!empty($_POST['prior_authorization_number']) ? $_POST['prior_authorization_number'] : '');
 	$service_date1_from = (!empty($_POST['service_date1_from']) ? $_POST['service_date1_from'] : '');
 	$service_date1_to = (!empty($_POST['service_date1_to']) ? $_POST['service_date1_to'] : '');
 	$place_of_service1 = (!empty($_POST['place_of_service1']) ? $_POST['place_of_service1'] : '');
@@ -346,33 +352,33 @@ die();
 	$federal_tax_id_number = num((!empty($_POST['federal_tax_id_number']) ? $_POST['federal_tax_id_number'] : ''), false);
 	$ssn = (!empty($_POST['ssnein']) && $_POST['ssnein']=="ssn")?'1':'';
 	$ein = (!empty($_POST['ssnein']) && $_POST['ssnein']=="ein")?'1':'';
-	$patient_account_no = $_POST['patient_account_no'];
-	$accept_assignment = $_POST['accept_assignment'];
-	$total_charge = $_POST['total_charge'];
-	$amount_paid = $_POST['amount_paid'];
-	$balance_due = $_POST['balance_due'];
-	$signature_physician = $_POST['signature_physician'];
-	$physician_signed_date = (($_POST['physician_signed_date']!=date('m/d/Y'))?$_POST['physician_signed_date']:'');
+	$patient_account_no = (!empty($_POST['patient_account_no']) ? $_POST['patient_account_no'] : '');
+	$accept_assignment = (!empty($_POST['accept_assignment']) ? $_POST['accept_assignment'] : '');
+	$total_charge = (!empty($_POST['total_charge']) ? $_POST['total_charge'] : '');
+	$amount_paid = (!empty($_POST['amount_paid']) ? $_POST['amount_paid'] : '');
+	$balance_due = (!empty($_POST['balance_due']) ? $_POST['balance_due'] : '');
+	$signature_physician = (!empty($_POST['signature_physician']) ? $_POST['signature_physician'] : '');
+	$physician_signed_date = ((!empty($_POST['physician_signed_date']) && $_POST['physician_signed_date']!=date('m/d/Y'))?$_POST['physician_signed_date']:'');
 	$service_facility_info_name = (!empty($_POST['service_facility_info_name']) ? $_POST['service_facility_info_name'] : '');
 	$service_facility_info_address = (!empty($_POST['service_facility_info_address']) ? $_POST['service_facility_info_address'] : '');
 	$service_facility_info_city = (!empty($_POST['service_facility_info_city']) ? $_POST['service_facility_info_city'] : '');
 	$service_info_a = (!empty($_POST['service_info_a']) ? $_POST['service_info_a'] : '');
-	$service_info_dd = $_POST['service_info_dd'];
-	$service_info_b_other = $_POST['service_info_b_other'];
-	$billing_provider_phone_code = $_POST['billing_provider_phone_code'];
-	$billing_provider_phone = $_POST['billing_provider_phone'];
+	$service_info_dd = (!empty($_POST['service_info_dd']) ? $_POST['service_info_dd'] : '');
+	$service_info_b_other = (!empty($_POST['service_info_b_other']) ? $_POST['service_info_b_other'] : '');
+	$billing_provider_phone_code = (!empty($_POST['billing_provider_phone_code']) ? $_POST['billing_provider_phone_code'] : '');
+	$billing_provider_phone = (!empty($_POST['billing_provider_phone']) ? $_POST['billing_provider_phone'] : '');
 	$billing_provider_name = (!empty($_POST['billing_provider_name']) ? $_POST['billing_provider_name'] : '');
 	$billing_provider_address = (!empty($_POST['billing_provider_address']) ? $_POST['billing_provider_address'] : '');
 	$billing_provider_city = (!empty($_POST['billing_provider_city']) ? $_POST['billing_provider_city'] : '');
 	$billing_provider_a = (!empty($_POST['billing_provider_a']) ? $_POST['billing_provider_a'] : '');
-	$billing_provider_dd = $_POST['billing_provider_dd'];
-	$billing_provider_b_other = $_POST['billing_provider_b_other'];
+	$billing_provider_dd = (!empty($_POST['billing_provider_dd']) ? $_POST['billing_provider_dd'] : '');
+	$billing_provider_b_other = (!empty($_POST['billing_provider_b_other']) ? $_POST['billing_provider_b_other'] : '');
 	$reject_reason = (!empty($_POST['reject_reason']) ? $_POST['reject_reason'] : '');
 
 	if(isset($_POST['reject_but'])){
 		$status = DSS_CLAIM_REJECTED;
 	}else{
-		$status = $_POST['status'];
+		$status = (!empty($_POST['status']) ? $_POST['status'] : '');
 	}
 	$insurance_type_arr = $insurance_type;
 	
@@ -382,7 +388,7 @@ die();
 
 	$patient_status_arr = '~'.$patient_status.'~'.$work_status.'~';
 
-        if($_POST['p_m_eligible_payer']!=''){
+        if(!empty($_POST['p_m_eligible_payer'])){
                 $p_m_eligible_payer_id = substr($_POST['p_m_eligible_payer'],0,strpos($_POST['p_m_eligible_payer'], '-'));
                 $p_m_eligible_payer_name = substr($_POST['p_m_eligible_payer'],(strpos($_POST['p_m_eligible_payer'], '-')+1));
         }else{
@@ -608,7 +614,7 @@ die();
 		
     // Update the claim in the dental_insurance table
 	} else {
-             $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid'])))."'" ? $_GET['pid'] : '';
+             $pat_sql = "select * from dental_patients where patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
              $pat_myarray = $db->getRow($pat_sql);
              $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
@@ -807,7 +813,7 @@ die();
 		}elseif($u_status){
 		  $ed_sql .= ", status = '".s_for($u_status)."'";
 		}
-		$ed_sql .= " where insuranceid = '".s_for($_POST['ed'])."'";
+		$ed_sql .= " where insuranceid = '".s_for(!empty($_POST['ed']) ? $_POST['ed'] : '')."'";
 		
 /*
 	//TAKE OUT INSURANCE FIELDS SO THEY KEEP ORIGINAL VALUES
@@ -843,7 +849,7 @@ die();
 		$db->query($ed_sql);
 		// update the ledger trxns passed in with the form
 		$trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
-		update_ledger_trxns($_POST['ed'], $trxn_status);
+		update_ledger_trxns((!empty($_POST['ed']) ? $_POST['ed'] : ''), $trxn_status);
 
 
 		if(isset($_POST['p_m_ins_payer_id'])){
@@ -927,7 +933,7 @@ $patient_firstname = st($myarray['patient_firstname']);
 $patient_middle = st($myarray['patient_middle']);
 $patient_dob = st($myarray['patient_dob']);
 $patient_sex = st($myarray['patient_sex']);
-if($_GET['instype']==2){
+if(!empty($_GET['instype']) && $_GET['instype']==2){
   $insurancetype = st($myarray['other_insurance_type']);
   $other_insurancetype = $myarray['insurance_type'];
   $other_insured_firstname = st($myarray['insured_firstname']);
@@ -1187,12 +1193,15 @@ if($is_pri_pending){
 	  $insured_policy_group_feca = $pat_myarray['p_m_ins_grp'];
 	  $insured_insurance_plan = $pat_myarray['p_m_ins_plan'];	
 	}
+
+	$pid = (!empty($_GET['pid']) ? $_GET['pid'] : '');
+
 $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.filename IS NOT NULL AND ss.patiendid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC LIMIT 1;";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$pid."' ORDER BY id DESC LIMIT 1;";
 
   $d = $db->getRow($sleepstudies);
   $diagnosis_1 = $d['diagnosis'];
@@ -1202,7 +1211,7 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.filename IS NOT NULL AND ss.patiendid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC LIMIT 1;";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$pid."' ORDER BY id DESC LIMIT 1;";
 
   $d = $db->getRow($sleepstudies);
   $referring_provider = $d['diagnosising_doc'];

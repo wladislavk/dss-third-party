@@ -108,7 +108,7 @@
             <?php }
         		if ($case_q) foreach ($case_q as $case) {
 		    ?>
-        			<tr id="case_row_<?php echo  $case['ledgerid'] ?>">
+        			<tr id="case_row_<?php echo  (!empty($case['ledgerid']) ? $case['ledgerid'] : '') ?>">
         				<td valign="top">
         					<?php echo st($case["percase_name"]);?>
         				</td>

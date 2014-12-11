@@ -43,7 +43,7 @@
 
 		$up_sql = "UPDATE dental_contact SET ";
 		foreach($fields as $field){
-			if($w_r[$field]=='' && $l_r[$field]!='') {
+			if(empty($w_r[$field]) && !empty($l_r[$field])) {
 				if(!$first) {
 					$up_sql .= ", ".$field."='".$l_r[$field]."'";
 				} else {

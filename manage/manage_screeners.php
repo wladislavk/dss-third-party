@@ -400,7 +400,7 @@
 								<?php echo  $ep_r['response']; ?> - <strong><?php echo  $ep_r['epworth']; ?></strong><br />
 							<?php } ?>
 
-							<?php echo  $ep['ep_total']; ?> - Total
+							<?php echo  (!empty($ep['ep_total']) ? $ep['ep_total'] : ''); ?> - Total
 						</td>
 
 						<td valign="top" colspan="6">

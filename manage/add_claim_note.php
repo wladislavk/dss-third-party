@@ -17,13 +17,13 @@
     <body>
         <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
     <?php
-        if($_POST["notesub"] == 1) {
+        if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1) {
             if($_POST['nid']=='') {
                 $ins_sql = "insert into dental_claim_notes set 
-    				claim_id = '".mysql_real_escape_string($_POST['claim_id'])."',
-    				note = '".mysql_real_escape_string($_POST['note'])."',
+    				claim_id = '".mysqli_real_escape_string($con,$_POST['claim_id'])."',
+    				note = '".mysqli_real_escape_string($con,$_POST['note'])."',
     				create_type = '1',
-    				creator_id = '".mysql_real_escape_string($_SESSION['userid'])."',
+    				creator_id = '".mysqli_real_escape_string($con,$_SESSION['userid'])."',
     				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
     		    
                 $db->query($ins_sql);
@@ -42,8 +42,8 @@
     		          die();
             } else {
                 $up_sql = "update dental_claim_notes set 
-                           note = '".mysql_real_escape_string($_POST['note'])."'
-		                   WHERE id='".mysql_real_escape_string($_POST['nid'])."'";
+                           note = '".mysqli_real_escape_string($con,$_POST['note'])."'
+		                   WHERE id='".mysqli_real_escape_string($con,$_POST['nid'])."'";
 
                 $db->query($up_sql);
             ?> 
@@ -73,7 +73,7 @@
         		$note = '';
         	}
 	
-            if($msg != '') {
+            if(!empty($msg)) {
             ?>
                 <div align="center" class="red">
                     <?php echo $msg;?>
@@ -104,9 +104,9 @@
                             * Required Fields					
                         </span><br />
                         <input type="hidden" name="notesub" value="1" />
-                		<input type="hidden" name="claim_id" value="<?php echo  $_REQUEST['claim_id']; ?>" />
-                		<input type="hidden" name="nid" value="<?php echo  $_REQUEST['nid']; ?>" />
-                		<input type="hidden" name="pid" value="<?php echo  $_REQUEST['pid']; ?>" />
+                		<input type="hidden" name="claim_id" value="<?php echo  (!empty($_REQUEST['claim_id']) ? $_REQUEST['claim_id'] : ''); ?>" />
+                		<input type="hidden" name="nid" value="<?php echo  (!empty($_REQUEST['nid']) ? $_REQUEST['nid'] : ''); ?>" />
+                		<input type="hidden" name="pid" value="<?php echo  (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : ''); ?>" />
                         <input type="submit" value=" Add/Edit Note" class="button" />
                     </td>
                     </tr>

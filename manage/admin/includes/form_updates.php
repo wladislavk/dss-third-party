@@ -1,12 +1,14 @@
 <?php
 
 function update_financial_agreement_medicare_form($id, $backoffice){
-
+	$db = new Db();
+	$con = $GLOBALS['con'];
+	
 $logo = get_logo($id, $backoffice);
 
-$s = "SELECT amount from dental_transaction_code WHERE transaction_code='E0486' AND docid='".mysql_real_escape_string($id)."'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
+$s = "SELECT amount from dental_transaction_code WHERE transaction_code='E0486' AND docid='".mysqli_real_escape_string($con,$id)."'";
+$q = mysqli_query($con,$s);
+$r = mysqli_fetch_assoc($q);
 
 $html = '
 <html>
@@ -142,22 +144,23 @@ Solutions</small></span></p>
 }
 
 function update_home_care_instructions_form($id, $locid = null, $backoffice = false){
-
+	$db = new Db();
+	$con = $GLOBALS['con'];
 
 $logo = get_logo($id, $backoffice);
 
-$s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
+$s = "SELECT * from dental_users WHERE userid='".mysqli_real_escape_string($con,$id)."'";
+$q = mysqli_query($con,$s);
+$r = mysqli_fetch_assoc($q);
 
 if($locid){
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND id='".mysqli_real_escape_string($con,$locid)."'";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }else{
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND default_location=1";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }
 
 
@@ -321,22 +324,23 @@ Solutions</small></span></p>
 }
 
 function update_non_dentist_of_record_release_form($id, $locid = null, $backoffice=false){
-
+	$db = new Db();
+	$con = $GLOBALS['con'];
 
 $logo = get_logo($id, $backoffice);
 
-$s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
+$s = "SELECT * from dental_users WHERE userid='".mysqli_real_escape_string($con,$id)."'";
+$q = mysqli_query($con,$s);
+$r = mysqli_fetch_assoc($q);
 
 if($locid){
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND id='".mysqli_real_escape_string($con,$locid)."'";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }else{
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND default_location=1";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }
 
 
@@ -532,21 +536,23 @@ Solutions</small></span></p>
 }
 
 function update_sleep_recorder_release_form($id, $locid = null, $backoffice=false){
+	$db = new Db();
+	$con = $GLOBALS['con'];
 
 $logo = get_logo($id, $backoffice);
 
-$s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
+$s = "SELECT * from dental_users WHERE userid='".mysqli_real_escape_string($con,$id)."'";
+$q = mysqli_query($con,$s);
+$r = mysqli_fetch_assoc($q);
 
 if($locid){
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND id='".mysqli_real_escape_string($con,$locid)."'";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }else{
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND default_location=1";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }
 
 if($r['user_type'] == DSS_USER_TYPE_SOFTWARE){
@@ -705,17 +711,19 @@ Solutions</small></span></p>
 
 
 function update_custom_release_form($id, $locid = null, $backoffice=false){
+$db = new Db();
+$con = $GLOBALS['con'];
 
 $logo = get_logo($id, $backoffice);
 
 if($locid){
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND id='".mysqli_real_escape_string($con,$locid)."'";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }else{
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND default_location=1";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }
 
 $html = '
@@ -2298,19 +2306,21 @@ Solutions</small></span></p>
 }
 
 function update_release_liability_form($id, $locid = null, $backoffice=false){
+	$db = new Db();
+	$con = $GLOBALS['con'];
 
 $logo = get_logo($id, $backoffice);
-  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-  $l_q = mysql_query($l_sql);
-  $l_r = mysql_fetch_assoc($l_q);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysqli_real_escape_string($con,$id);
+  $l_q = mysqli_query($con,$l_sql);
+  $l_r = mysqli_fetch_assoc($l_q);
 if($locid){
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND id='".mysqli_real_escape_string($con,$locid)."'";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }else{
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND default_location=1";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }
 
 if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
@@ -2477,19 +2487,21 @@ Name _______________________________________________________</span></p>
 
 
 function update_informed_consent_form($id, $backoffice){
+	$db = new Db();
+	$con = $GLOBALS['con'];
 
 $logo = get_logo($id, $backoffice);
-  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-  $l_q = mysql_query($l_sql);
-  $l_r = mysql_fetch_assoc($l_q);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysqli_real_escape_string($con,$id);
+  $l_q = mysqli_query($con,$l_sql);
+  $l_r = mysqli_fetch_assoc($l_q);
 if($locid){
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND id='".mysqli_real_escape_string($con,$locid)."'";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }else{
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND default_location=1";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }
 
 if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
@@ -3626,19 +3638,21 @@ replacement.</span><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif
 }
 
 function update_patient_notices_form($id, $locid = null, $backoffice=false){
+	$db = new Db();
+	$con = $GLOBALS['con'];
 
 $logo = get_logo($id, $backoffice);
-  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-  $l_q = mysql_query($l_sql);
-  $l_r = mysql_fetch_assoc($l_q);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysqli_real_escape_string($con,$id);
+  $l_q = mysqli_query($con,$l_sql);
+  $l_r = mysqli_fetch_assoc($l_q);
 if($locid){
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND id='".mysqli_real_escape_string($con,$locid)."'";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }else{
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND default_location=1";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }
 
 if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
@@ -3872,26 +3886,30 @@ function create_form_pdf($html, $filename, $title, $backoffice, $fontsize = 10, 
           $pdf->Output('../../../../shared/q_file/' . $filename, 'F');
 	  @chmod('../../../../shared/q_file/'. $filename,0777);
         }else{
-          $pdf->Output('../../../shared/q_file/' . $filename, 'F');
-	  @chmod('../../../shared/q_file/'. $filename,0777);
+        	if (file_exists('../../../shared/q_file/' . $filename)) {
+          		$pdf->Output('../../../shared/q_file/' . $filename, 'F');
+	  			@chmod('../../../shared/q_file/'. $filename,0777);
+	  		}
         }
 }
 
 
 function update_new_patient_form($id, $locid=null, $backoffice=false){
+	$db = new Db();
+	$con = $GLOBALS['con'];
 
 $logo = get_logo($id, $backoffice);
-  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-  $l_q = mysql_query($l_sql);
-  $l_r = mysql_fetch_assoc($l_q);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysqli_real_escape_string($con,$id);
+  $l_q = mysqli_query($con,$l_sql);
+  $l_r = mysqli_fetch_assoc($l_q);
 if($locid){
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND id='".mysqli_real_escape_string($con,$locid)."'";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }else{
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND default_location=1";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }
 
 if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
@@ -4236,19 +4254,21 @@ Date:______</span></b>
 
 
 function update_patient_questionnaire_form($id, $locid = null, $backoffice=false){
+	$db = new Db();
+	$con = $GLOBALS['con'];
 
 $logo = get_logo($id, $backoffice);
-  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-  $l_q = mysql_query($l_sql);
-  $l_r = mysql_fetch_assoc($l_q);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysqli_real_escape_string($con,$id);
+  $l_q = mysqli_query($con,$l_sql);
+  $l_r = mysqli_fetch_assoc($l_q);
 if($locid){
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND id='".mysqli_real_escape_string($con,$locid)."'";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }else{
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND default_location=1";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }
 
 if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
@@ -4445,19 +4465,21 @@ hspace=12>
 }
 
 function update_patient_questionnaire_form_old($id, $locid = null, $backoffice=false){
+	$db = new Db();
+	$con = $GLOBALS['con'];
 
 $logo = get_logo($id, $backoffice);
-  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-  $l_q = mysql_query($l_sql);
-  $l_r = mysql_fetch_assoc($l_q);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysqli_real_escape_string($con,$id);
+  $l_q = mysqli_query($con,$l_sql);
+  $l_r = mysqli_fetch_assoc($l_q);
 if($locid){
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND id='".mysqli_real_escape_string($con,$locid)."'";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }else{
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND default_location=1";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }
 
 if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
@@ -5105,17 +5127,17 @@ Date: _________________</p>
 function update_proof_of_delivery_form($id, $locid = null, $backoffice=false){
 
 $logo = get_logo($id, $backoffice);
-  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-  $l_q = mysql_query($l_sql);
-  $l_r = mysql_fetch_assoc($l_q);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysqli_real_escape_string($con,$id);
+  $l_q = mysqli_query($con,$l_sql);
+  $l_r = mysqli_fetch_assoc($l_q);
 if($locid){
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND id='".mysqli_real_escape_string($con,$locid)."'";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }else{
-  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
-  $loc_q = mysql_query($loc_sql);
-  $loc_r = mysql_fetch_assoc($loc_q);
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysqli_real_escape_string($con,$id)."' AND default_location=1";
+  $loc_q = mysqli_query($con,$loc_sql);
+  $loc_r = mysqli_fetch_assoc($loc_q);
 }
 
 if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
@@ -5599,10 +5621,12 @@ hspace=12>
 
 
 function form_update_all($docid, $backoffice = false){
+	$db = new Db();
+	$con = $GLOBALS['con'];
 
-	$sql = "SELECT id FROM dental_locations where docid='".mysql_real_escape_string($docid)."' AND default_location=1";
-	$q = mysql_query($sql);
-	while($r = mysql_fetch_assoc($q)){
+	$sql = "SELECT id FROM dental_locations where docid='".mysqli_real_escape_string($con,$docid)."' AND default_location=1";
+	$q = mysqli_query($con,$sql);
+	while($r = mysqli_fetch_assoc($q)){
       		update_custom_release_form($docid, $r['id'], $backoffice);
       		update_patient_notices_form($docid, $r['id'], $backoffice);
       		update_new_patient_form($docid, $r['id'], $backoffice);
@@ -5625,10 +5649,12 @@ function form_update_all($docid, $backoffice = false){
 
 
 function get_logo($id, $backoffice){
+	$db = new Db();
+	$con = $GLOBALS['con'];
 
-  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-  $l_q = mysql_query($l_sql);
-  $l_r = mysql_fetch_assoc($l_q);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysqli_real_escape_string($con,$id);
+  $l_q = mysqli_query($con,$l_sql);
+  $l_r = mysqli_fetch_assoc($l_q);
   if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
     if($l_r['logo']!=''){
       if($backoffice && file_exists("../../../../shared/q_file/".$l_r['logo'])){

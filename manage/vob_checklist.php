@@ -201,7 +201,7 @@ if ($patient_info) {
 </a>
 
 <?php 
-    if($vrt['vob_require_test']=='1'){ ?>
+    if(!empty($vrt['vob_require_test']) && $vrt['vob_require_test']=='1'){ ?>
 <a href="dss_summ.php?pid=<?php echo $_GET['pid']; ?>&addtopat=1&sect=sleep"  class="vob_item
 <?php
   if($vob_study_error){

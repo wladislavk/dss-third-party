@@ -95,6 +95,13 @@ if (typeof String.prototype.trim !== 'function') {
     $('*').click(function() {
       $('.search_hints').css('display', 'none');
     });
+
+    $('#future_dental_det').css('display', 'none');
+    $('#hideshow1').css('display', 'block');
+    $('#hideshow2').css('display', 'none');
+    $('#hideshow3').css('display', 'none');
+    $('#hideshow4').css('display', 'none');
+    $('#hideshow5').css('display', 'none');
   });
 
 
@@ -202,7 +209,7 @@ function createCookie(name,value,days)
       
 function readCookie(name) {
   var nameEQ = name + "=";
-  var ca = document.cookie.split(';');
+  var ca = document.cookie.explode(';');
 
         
   for(var i=0;i < ca.length;i++) {
@@ -267,9 +274,9 @@ function validateDate(dtControl)
   if (!validformat.test(input.value)) {
     alert('Invalid Day, Month, or Year range detected. Please correct. Must be MM/DD/YYYY');
   } else { //Detailed check for valid date ranges
-    var monthfield=input.value.split("/")[0]
-    var dayfield=input.value.split("/")[1]
-    var yearfield=input.value.split("/")[2]
+    var monthfield=input.value.explode("/")[0]
+    var dayfield=input.value.explode("/")[1]
+    var yearfield=input.value.explode("/")[2]
     var dayobj = new Date(yearfield, monthfield-1, dayfield)
 
     if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield)) {

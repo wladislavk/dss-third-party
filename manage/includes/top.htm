@@ -191,6 +191,7 @@ if (!isset($_SESSION['userid'])) {
     <script type="text/javascript" src="3rdParty/jquery.tablesorter.pager.js"></script>
     <script type="text/javascript" src="3rdParty/jquery.tablesorter.widgets.js"></script>
     <script type="text/javascript" src="js/masks.js"></script>
+    <script type="text/javascript" src="calendar2.js"></script>
 
     <?php if ($_SERVER['SERVER_NAME'] == "stage.dss-rh.xforty.com") { ?>
       <script type="text/javascript" src="script/logout_timer_long.js"></script>
@@ -254,7 +255,7 @@ if (!isset($_SESSION['userid'])) {
 
 <!-- onload = disableBackspace(); -->
 
-<body onload='<?php if ($hideallblocks == 2) { echo "hideallblocks();"; } elseif ($hideallblocks == 1) { echo "hideallblocksForFlowsheet($step_json);"; } else { echo ""; } ?>document.getElementById("future_dental_det").style.display = "none";parent.frames[0].document.getElementById("hideshow1").style.display="block";parent.frames[0].document.getElementById("hideshow2").style.display="none";parent.frames[0].document.getElementById("hideshow3").style.display="none";parent.frames[0].document.getElementById("hideshow4").style.display="none";parent.frames[0].document.getElementById("hideshow5").style.display="none";<?php if(isset($_GET["preview"]) && $_GET["preview"] == "1"){?>check();<?php } if(isset($_GET["page"]) && $_GET["page"] == "page2"){ echo 'document.getElementById("flowsheet_page1").style.display="none";';
+<body onload='<?php if ($hideallblocks == 2) { echo "hideallblocks();"; } elseif ($hideallblocks == 1) { echo "hideallblocksForFlowsheet($step_json);"; } else { echo ""; } ?><?php if(isset($_GET["preview"]) && $_GET["preview"] == "1"){?>check();<?php } if(isset($_GET["page"]) && $_GET["page"] == "page2"){ echo 'document.getElementById("flowsheet_page1").style.display="none";';
  echo 'document.getElementById("flowsheet_page2").style.display="block";';
 }?>'>
 
@@ -640,12 +641,12 @@ if (!isset($_SESSION['userid'])) {
       <script type="text/javascript" src="script/autocomplete.js"></script>
       <script type="text/javascript" src="script/autocomplete_local.js"></script>
  
-      <div style="height:89px; width:980px; background:url(images/dss_01.png) #0b5c82 no-repeat top left;"> 
+      <div style="height:89px; width:100%; background:url(images/dss_01.png) #0b5c82 no-repeat top left;"> 
         <div style="margin-top:10px; margin-left:20px; float:left;">
           <a href="/manage" id="logo">Dashboard</a>
         </div>
 
-        <div style="float:left; width:600px;">
+        <div style="float:left; width:68%;">
           <form>
             <div id="patient_search_div">
               <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" /><br />

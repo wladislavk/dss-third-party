@@ -1,5 +1,0 @@
-.patient_change{ color:#c33; width:100px; float:none; margin:0 15px 0 3px; }
-.patient_change .accept{ width: 16px; height: 16px; display:block; float:right; background:url(../../reg/images/ok_ico.png) no-repeat 0 0;  }
-.patient_change .reject{ width: 16px; height: 16px; display:block; float:right; background:url(../../reg/images/error.png) no-repeat 0 0;  }
-
-.edits{ background:#c33; }

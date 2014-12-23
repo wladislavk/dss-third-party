@@ -185,7 +185,9 @@ $case_q = mysql_query($case_sql);
 </div>
 <?php
   $charge_sql = "SELECT * FROM dental_charge
-			WHERE userid='".mysql_real_escape_string($_GET['docid'])."'";
+                        WHERE userid='".mysql_real_escape_string($_GET['docid'])."'
+                        AND adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'
+                        ";
   $charge_q = mysql_query($charge_sql);
 ?>
 

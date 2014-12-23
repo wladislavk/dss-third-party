@@ -205,7 +205,12 @@ $sql = "SELECT "
      . "  claim.primary_claim_version, claim.secondary_claim_version, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
      . "  c.name as billing_name, "
-     . "  co.company as ins_name, "
+     . "  
+        CASE WHEN
+          claim.status IN (".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_SEC_SENT.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_PAID_SEC_INSURANCE.") THEN co2.company
+                ELSE co.company 
+        END as ins_name, "
+
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
                 WHEN ".DSS_CLAIM_PENDING." THEN 1
@@ -230,6 +235,7 @@ $sql = "SELECT "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid "
      . "  LEFT JOIN companies c ON c.id = users.billing_company_id "
      . "  LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co "
+     . "  LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co "
      . "  LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=claim.insuranceid "
      . "  LEFT JOIN (SELECT claim_id, MAX(adddate) max_date FROM dental_claim_notes group by claim_id) notes_date ON notes_date.claim_id=claim.insuranceid ";
 

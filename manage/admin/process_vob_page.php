@@ -342,6 +342,33 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
+                Patient's Group Insurance #
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_ins_group_id" value="<?=$preauth['patient_ins_group_id']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Patient's Insurance ID #
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_ins_id" value="<?=$preauth['patient_ins_id']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Patient's DOB
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_dob" value="<?=$preauth['patient_dob']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
                 Insured First Name
             </td>
             <td valign="top" class="frmdata">
@@ -364,33 +391,6 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="insured_dob" value="<?=$preauth['insured_dob']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Patient's Group Insurance #
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_group_id" value="<?=$preauth['patient_ins_group_id']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Patient's Insurance ID #
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_id" value="<?=$preauth['patient_ins_id']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Patient's DOB
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="patient_dob" value="<?=$preauth['patient_dob']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>

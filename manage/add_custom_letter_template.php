@@ -37,7 +37,10 @@ $r = mysql_fetch_assoc($my);
 
 if(isset($_GET['cid'])){
   if($_GET['cid'][0]!='C'){
-    $c_sql = "SELECT body FROM dental_letter_templates WHERE id = ".mysql_real_escape_string($_GET['cid']).";";
+    $c_sql = "SELECT ct.body FROM dental_letter_templates t 
+			INNER JOIN dental_letter_templates ct ON ct.triggerid = t.id
+                                        WHERE ct.companyid='".$_SESSION['companyid']."' AND
+					ct.triggerid = ".mysql_real_escape_string($_GET['cid']).";";
   }else{
     $c_sql = "SELECT body FROM dental_letter_templates_custom WHERE id = ".mysql_real_escape_string(substr($_GET['cid'],1)).";";
   }

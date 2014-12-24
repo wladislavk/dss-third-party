@@ -14,7 +14,6 @@
 Route::get('/', 'WelcomeController@index');
 
 Route::get('home', 'HomeController@index');
-
 /*
 |--------------------------------------------------------------------------
 | Authentication & Password Reset Controllers

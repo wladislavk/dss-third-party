@@ -34,6 +34,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	protected $hidden = ['password'];
 
+	protected $primaryKey = 'userid';
+
 	public static function getSalt($username)
 	{
 		try {
@@ -54,5 +56,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 										 ->first();
 
 		return $user;
+	}
+
+	public static function getType($docId)
+	{
+		try {
+			$user = User::where('userid', '=', $docId)->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			return false;
+		}
+
+		return $user->user_type;
 	}
 }

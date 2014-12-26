@@ -17,6 +17,7 @@ Route::get('home', 'HomeController@index');
 
 Route::get('manage/login', 'AuthController@index');
 Route::post('manage/login', 'AuthController@login');
+
 /*
 |--------------------------------------------------------------------------
 | Authentication & Password Reset Controllers

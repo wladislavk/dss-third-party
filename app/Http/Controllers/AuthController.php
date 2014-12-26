@@ -2,7 +2,10 @@
 
 use Illuminate\Http\Request;
 
+use Auth;
 use Ds3\User;
+use Ds3\Login;
+use Ds3\LoginDetail;
 use Ds3\Libraries\Password;
 
 class AuthController extends Controller
@@ -14,20 +17,61 @@ class AuthController extends Controller
 
 	public function login(Request $request)
 	{
-		$dataUser = $request->all();
+		if (!empty(Auth::user()->loginid)) {
+			$data = array(
+				'loginid' 		=> Auth::user()->loginid,
+				'userid' 		=> Auth::user()->userid,
+				'cur_page' 		=> $request->route()->uri(),
+				'ip_address' 	=> $request->ip()
+			);
+
+			LoginDetail::insert($data);
+		}
+
+		$requestUser = $request->all();
 		
 		$msg = 'Wrong username or password';
-		$username = $dataUser['username'];
+		$username = $requestUser['username'];
 
 		$salt = User::getSalt($username);
 
 		if ($salt) {
-			$currentPassword = Password::genPassword($dataUser['password'], $salt);
+			$hashPassword = Password::genPassword($requestUser['password'], $salt);
+			$dataUser = User::get($username, $hashPassword);
 
-			$user = User::get($username, $currentPassword);
+			if (!empty($dataUser)) {
+				if ($dataUser->status == '3') {
+					$msg = 'This account has been suspended.';
 
-			if (!empty($user)) {
-				return 'Success!'; // change to redirect
+					return view('manage.login', compact('msg', 'username'));
+				} else {
+					if ($dataUser->docid != 0) {
+						$dataUser->user_type = User::getType($dataUser->docid);					 
+					} else {
+						$dataUser->docid = $dataUser->userid;
+					}
+
+					$data = array(
+						'docid' 		=> $dataUser->docid,
+						'userid' 		=> $dataUser->userid,
+						'login_date' 	=> date("Y-m-d H:i:s"),
+						'ip_address' 	=> $request->ip()
+					);
+
+					$dataUser->loginid = Login::getId($data);
+
+					$user = new User();
+
+					foreach ($dataUser as $attribute => $value) {
+						$user->$attribute = $value;
+					}
+
+					Auth::login($user);
+
+					// dd(Auth::user());
+
+					return 'Success!'; // change to redirect
+				}
 			} else {
 				return view('manage.login', compact('msg', 'username'));
 			}

@@ -15,8 +15,10 @@ Route::get('/', 'WelcomeController@index');
 
 Route::get('home', 'HomeController@index');
 
-Route::get('manage/login', 'AuthController@index');
-Route::post('manage/login', 'AuthController@login');
+Route::get('/manage/login', 'AuthController@index');
+Route::post('/manage/login', 'AuthController@login');
+
+Route::get('/manage/index', 'IndexController@index');
 
 /*
 |--------------------------------------------------------------------------

@@ -50,6 +50,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	public static function get($username, $password)
 	{
 		$user = DB::table('dental_users')->leftJoin('dental_user_company', 'dental_user_company.userid', '=', 'dental_users.userid')
+										 ->select('dental_users.*', 'dental_user_company.companyid')
 										 ->where('username', '=', $username)
 										 ->where('password', '=', $password)
 										 ->whereBetween('status', array(1, 3))
@@ -67,5 +68,30 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		}
 
 		return $user->user_type;
+	}
+
+	public static function getValues($docId, $values)
+	{
+		try {
+			$user = User::where('userid', '=', $docId)->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			return false;
+		}
+
+		foreach ($values as $value) {
+			$returnedValues[$value] = $user[$value];
+		}
+
+		return $returnedValues;
+	}
+
+	public static function getCourse($userId)
+	{
+		$course = DB::table('dental_users')->join('dental_users', 'dental_users.userid', '=', 'dental_users.docid')
+										 ->select('use_course', 'use_course_staff')
+										 ->where('userid', '=', $userId)
+										 ->first();
+		
+		return $course;
 	}
 }

@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 
 use Auth;
+use Session;
+
 use Ds3\User;
 use Ds3\Login;
 use Ds3\LoginDetail;
@@ -17,7 +19,7 @@ class AuthController extends Controller
 
 	public function login(Request $request)
 	{
-		if (!empty(Auth::user()->loginid)) {
+		if (!empty(Session::get('loginId'))) {
 			$data = array(
 				'loginid' 		=> Auth::user()->loginid,
 				'userid' 		=> Auth::user()->userid,
@@ -68,9 +70,12 @@ class AuthController extends Controller
 
 					Auth::login($user);
 
-					// dd(Auth::user());
+					Session::put('loginId', $user->loginid);
+					Session::put('companyId', $user->companyid);
+					Session::put('docId', $user->docid);
+					Session::put('userType', $user->user_type);
 
-					return 'Success!'; // change to redirect
+					return redirect('/manage/index');
 				}
 			} else {
 				return view('manage.login', compact('msg', 'username'));

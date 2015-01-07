@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Session;
 
-use Ds3\User;
+use Ds3\Eloquent\Auth\User;
 use Ds3\Login;
 use Ds3\LoginDetail;
 use Ds3\Libraries\Password;

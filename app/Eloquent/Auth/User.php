@@ -1,4 +1,4 @@
-<?php namespace Ds3;
+<?php namespace Ds3\Eloquent\Auth;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;

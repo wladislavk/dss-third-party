@@ -33,9 +33,12 @@ $sql = "SELECT  "
      . "FROM dental_ledger dl  "
      . "JOIN dental_patients p ON p.patientid=dl.patientid "
      . " LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."' "
-     . " LEFT JOIN (SELECT patientid, SUM(paid_amount) amount FROM dental_ledger group by patientid) a ON a.patientid=dl.patientid "
+     . " LEFT JOIN (SELECT patientid, SUM(paid_amount) amount FROM dental_ledger 
+      LEFT JOIN dental_transaction_code tc2 on tc2.transaction_code = dental_ledger.transaction_code AND tc2.docid='".$_SESSION['docid']."' 
+                WHERE tc2.type='".mysql_real_escape_string(DSS_TRXN_TYPE_ADJ)."' 
+                group by patientid) a ON a.patientid=dl.patientid "
      . "WHERE dl.docid='".$_SESSION['docid']."'  "
-     . " AND tc.type!='".mysql_real_escape_string(DSS_TRXN_TYPE_ADJ)."' "
+     . " AND (tc.type!='".mysql_real_escape_string(DSS_TRXN_TYPE_ADJ)."' OR tc.type IS NULL) "
      . "GROUP BY dl.patientid";
 $my = mysql_query($sql) or die(mysql_error());
 /*
@@ -111,6 +114,9 @@ background:#999999;
 		<td valign="top" class="col_head" width="10%">
 			90 Days	
 		</td>	
+    <td valign="top" class="col_head" width="10%">
+      120 Days 
+    </td> 
 		<td valign="top" class="col_head" width="10%">
 			Charges
 		</td>
@@ -143,7 +149,8 @@ background:#999999;
 		$charges_30 = 0;
 		$charges_60 = 0;
 		$charges_90 = 0;
-		
+		$charges_120 = 0;
+
 		while($myarray = mysql_fetch_array($my))
 		{
 $pay_sql = "SELECT  "
@@ -177,9 +184,6 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
                 	<a href="manage_ledger.php?addtopat=1&pid=<?=$myarray['patientid'];?>"><?=st($myarray['lastname'].", ".$myarray['firstname']);?> (Click to View)</a>
-				</td>
-				<td valign="top" width="18%">
-                	<a href="manage_ledger.php?addtopat=1&pid=<?=$myarray['patientid'];?>"><?=st($myarray['lastname'].", ".$myarray['firstname']);?></a>
 				</td>
 				<td>
 	<?php $seg_sql = "SELECT "
@@ -247,6 +251,22 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 		$charges_90 += $seq_r['amount'];
         ?>	
 				</td>
+        <td>
+        <?php $seg_sql = "SELECT "
+                 . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+     . "p.firstname, p.lastname, p.patientid "
+     . "FROM dental_ledger dl  "
+     . "JOIN dental_patients p ON p.patientid=dl.patientid "
+     . "WHERE dl.docid='".$_SESSION['docid']."'  "
+     . "AND p.patientid='".$myarray['patientid']."' "
+     . "AND dl.service_date < DATE_SUB(NOW(), INTERVAL 120 day) "
+     . "GROUP BY dl.patientid";
+                $seg_q = mysql_query($seg_sql);
+                $seq_r = mysql_fetch_assoc($seg_q);
+                echo "$".number_format($seq_r['amount'],2);
+    $charges_120 += $seq_r['amount'];
+        ?>  
+        </td>
 				<td valign="top" align="right" width="18%">
           <?php
           echo "$".number_format($myarray["amount"],2);

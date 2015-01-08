@@ -816,7 +816,7 @@ $c++;
   << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V(".$array['modcode4'].") >>
   << /T(".$field_path.".".$p."_diagnosis_pointer_fill[0]) /V(".$diagnosis_array[$array['diagnosispointer']].") >> 
   << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format($array['amount'],0,'.','').") >>
-  << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents(floor(($array['amount']-floor($array['amount']))*100)).") >>
+  << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents(round(($array['amount']-floor($array['amount']))*100)).") >>
   << /T(".$field_path.".".$p."_days_or_units_fill[0]) /V(".$array['daysorunits'].") >>
   << /T(".$field_path.".".$p."_EPSDT_fill[0]) /V(".$array['epsdt'].") >>
   << /T(".$field_path.".".$p."_rendering_provider_fill[0]) /V(".$array['provider_id'].") >> ";

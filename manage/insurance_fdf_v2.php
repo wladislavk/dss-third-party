@@ -819,7 +819,7 @@ $c++;
   << /T(".$field_path.".".$p."_modifier_three_fill[0]) /V(".$array['modcode3'].") >>
   << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V(".$array['modcode4'].") >>
   << /T(".$field_path.".".$p."_diagnosis_pointer_fill[0]) /V(".$diagnosis_array[$array['diagnosispointer']].") >> 
-  << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format($array['amount'],0,'.','').") >>
+  << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format(floor($array['amount']),0,'.','').") >>
   << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents(round(($array['amount']-floor($array['amount']))*100)).") >>
   << /T(".$field_path.".".$p."_days_or_units_fill[0]) /V(".$array['daysorunits'].") >>
   << /T(".$field_path.".".$p."_EPSDT_fill[0]) /V(".$array['epsdt'].") >>
@@ -855,11 +855,11 @@ $fdf .= "
   << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".((strtolower($accept_assignment) == "yes")?1:'').") >>
   << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".((strtolower($accept_assignment) == "no")?1:'').") >>
   
-  << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format($total_charge,0,'.','').") >>
+  << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format(floor($total_charge),0,'.','').") >>
   << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents(round(($total_charge-floor($total_charge))*100)).") >>
-  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format($amount_paid,0,'.','').") >>
+  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format(floor($amount_paid),0,'.','').") >>
   << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".fill_cents(round(($amount_paid-floor($amount_paid))*100)).") >>
-  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($balance_due,0,'.','').") >>
+  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format(floor($balance_due),0,'.','').") >>
   << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents(round(($balance_due-floor($balance_due))*100)).") >>
   
   << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($service_facility_info_name)."\n".strtoupper($service_facility_info_address)."\n".strtoupper($service_facility_info_city).") >>

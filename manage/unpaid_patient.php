@@ -303,10 +303,10 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 	?> 
 	  
 		<tr>
-			<td valign="top" align="right">
+			<td valign="top" align="left">
 				<b>Totals</b>
 			</td>
-                        <td valign="top" align="right">
+                        <td valign="top" align="left">
 
 
 
@@ -315,13 +315,13 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
                                 &nbsp;
                                 </b>
                         </td>
-                        <td valign="top" align="right">
+                        <td valign="top" align="left">
                                 <b>
                                 <?php echo "$".number_format($charges_30,2);?>
                                 &nbsp;
                                 </b>
                         </td>
-                        <td valign="top" align="right">
+                        <td valign="top" align="left">
 
 
 
@@ -330,13 +330,18 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
                                 &nbsp;
                                 </b>
                         </td>
-                        <td valign="top" align="right">
+                        <td valign="top" align="left">
                                 <b>
                                 <?php echo "$".number_format($charges_90,2);?>
                                 &nbsp;
                                 </b>
                         </td>
-
+                        <td valign="top" align="left">
+                                <b>
+                                <?php echo "$".number_format($charges_120,2);?>
+                                &nbsp;
+                                </b>
+                        </td>
 			<td valign="top" align="right">
 			
                     

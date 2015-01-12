@@ -340,10 +340,9 @@ $icd_ind =strtoupper($myarray['icd_ind']);
 $resubmission_code_fill =strtoupper($myarray['resubmission_code_fill']);
 $name_referring_provider_qualifier=strtoupper($myarray['name_referring_provider_qualifier']);
 if (strrpos( $referring_provider, '-')){
-  $referring_provider =$name_referring_provider_qualifier." ".substr($referring_provider, 0, strrpos( $referring_provider, '-'));
-
+  $referring_provider =substr($referring_provider, 0, strrpos( $referring_provider, '-'));
 }
-
+ $referring_provider = $name_referring_provider_qualifier." ".$referring_provider;
 
 $status =strtoupper($myarray['status']);
 

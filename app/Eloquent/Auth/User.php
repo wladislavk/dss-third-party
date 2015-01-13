@@ -70,7 +70,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return $user->user_type;
 	}
 
-	public static function getValues($userId, $values)
+	public static function getValues($userId, $values = null)
 	{
 		try {
 			$user = User::where('userid', '=', $userId)->firstOrFail();
@@ -78,11 +78,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 			return false;
 		}
 
-		foreach ($values as $value) {
-			$returnedValues[$value] = $user[$value];
-		}
+		if (!empty($values)) {
+			foreach ($values as $value) {
+				$returnedValues[$value] = $user[$value];
+			}
 
-		return $returnedValues;
+			return $returnedValues;
+		} else {
+			return $user;
+		}		
 	}
 
 	public static function getCourseJoin($userId)
@@ -115,5 +119,36 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		}
 
 		return $user->use_letters;
+	}
+
+	public static function getProviderSelect($docId)
+	{
+		$users = User::whereRaw('(docid = ' . $docId . ' OR userid = ' . $docId . ')')->where('npi', '!=', '')
+																					  ->where(function($query){
+																					  	$query->where('producer', '=', 1)
+																					  		  ->orWhere('docid', '=', 0);
+																					  })
+																					  ->orderBy('docid')
+																					  ->get();
+
+		return $users;
+	}
+
+	public static function getProducerOptions($docId)
+	{
+		$producerOptions = User::where('userid', '=', $docId)->orWhereRaw('(docid = ' . $docId . ' AND producer = 1)')
+															 ->get();
+
+		return $producerOptions;
+	}
+
+	public static function getCheck($username, $password, $docId)
+	{
+		$check = User::where('username', '=', $username)->where('password', '=', $password)
+														->where('status', '=', 1)
+														->whereRaw('(sign_notes = 1 OR userid = ' . $docId . ')')
+														->get();
+
+		return $check;
 	}
 }

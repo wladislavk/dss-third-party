@@ -6,8 +6,8 @@ use Auth;
 use Session;
 
 use Ds3\Eloquent\Auth\User;
-use Ds3\Login;
-use Ds3\LoginDetail;
+use Ds3\Eloquent\Login;
+use Ds3\Eloquent\LoginDetail;
 use Ds3\Libraries\Password;
 
 class AuthController extends Controller
@@ -60,7 +60,7 @@ class AuthController extends Controller
 						'ip_address' 	=> $request->ip()
 					);
 
-					$dataUser->loginid = Login::getId($data);
+					$dataUser->loginid = Login::insert($data);
 
 					$user = new User();
 

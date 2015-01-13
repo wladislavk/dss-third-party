@@ -103,7 +103,7 @@ background:#999999;
 			Patient
 		</td>
 		<td valign="top" class="col_head" width="10%">
-			Current	
+			0 Days	
 		</td>	
 		<td valign="top" class="col_head" width="10%">
 			30 Days
@@ -115,7 +115,7 @@ background:#999999;
 			90 Days	
 		</td>	
     <td valign="top" class="col_head" width="10%">
-      120 Days 
+      120+ Days 
     </td> 
 		<td valign="top" class="col_head" width="10%">
 			Charges
@@ -164,7 +164,7 @@ $pay_sql = "SELECT  "
 $pay_q = mysql_query($pay_sql);
 $pay_r = mysql_fetch_assoc($pay_q);
 $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
-			if(round($myarray['amount'],2)!=round($paid_amount,2)){
+			if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2)){
 			$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
 			$pat_my = mysql_query($pat_sql);
 			$pat_myarray = mysql_fetch_array($pat_my);
@@ -243,7 +243,8 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
      . "JOIN dental_patients p ON p.patientid=dl.patientid "
      . "WHERE dl.docid='".$_SESSION['docid']."'  "
      . "AND p.patientid='".$myarray['patientid']."' "
-     . "AND dl.service_date < DATE_SUB(NOW(), INTERVAL 90 day) "
+     . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 90 day) "
+     . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 120 day) "
      . "GROUP BY dl.patientid";
                 $seg_q = mysql_query($seg_sql);
                 $seq_r = mysql_fetch_assoc($seg_q);
@@ -292,8 +293,8 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 					}?>
 				</td>
 				<td valign="top">&nbsp;
-					<?php if($myarray["amount"]>$paid_amount){ ?>
-					<?= number_format(($myarray["amount"]-$paid_amount),2); ?>
+					<?php if($myarray["amount"]>($paid_amount+$myarray['adjusted_amount'])){ ?>
+					<?= number_format(($myarray["amount"]-$paid_amount-$myarray['adjusted_amount']),2); ?>
 					<?php }elseif($myarray["amount"]<$paid_amount){ ?>
 						<span style="color:#070;">(<?= number_format((abs($myarray["amount"]-$paid_amount-$myarray['adjusted_amount'])),2); ?>)</span>
 					<?php }?>

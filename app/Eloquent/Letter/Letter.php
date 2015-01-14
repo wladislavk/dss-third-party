@@ -12,6 +12,27 @@ class Letter extends Model
 
 	protected $primaryKey = 'letterid';
 
+	public static function get($where)
+	{
+		$letters = new Letter();
+
+		foreach ($where as $attribute => $value) {
+			$letters = $letters->where($attribute, '=', $value);
+		}
+
+		return $letters->get();
+	}
+
+	public static function getMdList($contact, $letter1id, $letter2id)
+	{
+		$mdList = Letter::select('md_list')->whereRaw('md_list IS NOT NULL')
+										   ->whereRaw("CONCAT(',', md_list, ',') LIKE CONCAT('%,', '" . $contact . "', ',%')")
+										   ->whereRaw('templateid IN(' . $letter1id . ',' . $letter2id . ')')
+										   ->get();
+
+		return $mdList;						   
+	}
+
 	public static function getGeneratedDates($valuesWhere)
 	{
 		$generatedDates = DB::table('dental_letters')->leftJoin('dental_patients', 'dental_letters.patientid', '=', 'dental_patients.patientid');
@@ -47,4 +68,16 @@ class Letter extends Model
 		return $unmailedLetters;
 	}	
 
+	public static function updateData($where, $values)
+	{
+		$letter = new Letter();
+
+		foreach ($where as $attribute => $value) {
+			$letter = $letter->where($attribute, '=', $value);
+		}
+		
+		$letter = $letter->update($values);
+
+		return $letter;
+	}
 }

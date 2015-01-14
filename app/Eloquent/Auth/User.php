@@ -151,4 +151,25 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
 		return $check;
 	}
+
+	public static function getLocation($where, $defaultLocation = null)
+	{
+		$location = DB::table(DB::raw('dental_users u'))->select(DB::raw('l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip'))
+														->join(DB::raw('dental_patients p'), 'u.userid', '=', 'p.docid');
+
+		if (!empty($defaultLocation)) {
+			$location = $location->leftJoin(DB::raw('dental_locations l'), function($join){
+									$join->on('l.docid', '=', 'u.userid')
+										 ->where('l.default_location', '=', '1');
+								 });
+		} else {
+			$location = $location->leftJoin(DB::raw('dental_locations l'), 'l.docid', '=', 'u.userid');
+		}
+
+		foreach ($where as $attribute => $value) {
+			$location = $location->where($attribute, '=', $value);
+		}
+														
+		return $location->first();
+	}
 }

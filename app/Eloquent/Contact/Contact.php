@@ -13,15 +13,32 @@ class Contact extends Model
 
 	protected $primaryKey = 'contactid';
 
-	public static function get($contactId)
+	public static function get($where)
 	{
+		$contact = new Contact();
+
+		foreach ($where as $attribute => $value) {
+			$contact = $contact->where($attribute, '=', $value);
+		}
+
 		try {
-			$contact = Contact::where('contactid', '=', $contactId)->firstOrFail();
+			$contact = $contact->firstOrFail();
 		} catch (ModelNotFoundException $e) {
 			return false;
 		}
 
 		return $contact;
+	}
+
+	public static function getInsContact($docId)
+	{
+		$insContact = Contact::where('status', '=', 1)->whereNull('merge_id')
+													  ->where('contacttypeid', '=', 11)
+													  ->where('docid', '=', $docId)
+													  ->orderBy('company')
+													  ->get();
+
+		return $insContact;
 	}
 
 	public static function updateData($contactId, $values)
@@ -45,7 +62,7 @@ class Contact extends Model
 			return null;
 		}
 
-		return $contact->id;
+		return $contact->contactid;
 	}
 
 	public static function getNewContacts($docId)
@@ -59,5 +76,15 @@ class Contact extends Model
 												  ->toSql();
 
 		return $newContacts;
+	}
+
+	public static function getDocsleep($contactId)
+	{
+		$docsleep = DB::table(DB::raw('dental_contact dc'))->select(DB::raw('dc.lastname, dc.firstname, dc.middlename, dct.contacttype'))
+														   ->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
+														   ->where('contactid', '=', $contactId)
+														   ->first();
+
+		return $docsleep;
 	}
 }

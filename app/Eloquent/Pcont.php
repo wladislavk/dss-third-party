@@ -20,6 +20,19 @@ class Pcont extends Model
 		return $pconts;
 	}
 
+	public static function getJoin($patientId)
+	{
+		$union = DB::table('dental_contact')->leftJoin('dental_pcont', 'dental_pcont.contact_id', '=', 'dental_contact.contactid')
+											->where('dental_pcont.patient_id', '=', $patientId);
+
+		$pcont = DB::table('dental_pcont')->leftJoin('dental_contact', 'dental_pcont.contact_id', '=', 'dental_contact.contactid')
+										  ->where('dental_pcont.patient_id', '=', $patientId)
+										  ->union($union)
+										  ->get();
+
+		return $pcont;
+	}
+
 	public static function insertData($data)
 	{
 		$pcont = new Pcont();

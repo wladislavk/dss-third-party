@@ -30,4 +30,21 @@ class FlowPg1 extends Model
 
 		return $flowPg1;
 	}
+
+	public static function insertData($data)
+	{
+		$flowPg1 = new FlowPg1();
+
+		foreach ($data as $attribute => $value) {
+			$flowPg1->$attribute = $value;
+		}
+
+		try {
+			$flowPg1->save();
+		} catch (QueryException $e) {
+			return null;
+		}
+
+		return $flowPg1->id;
+	}
 }

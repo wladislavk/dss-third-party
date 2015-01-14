@@ -13,12 +13,16 @@ class InsurancePreauth extends Model
 
 	protected $primaryKey = 'id';
 
-	public static function get($wheres, $order = null)
+	public static function get($where, $status = null, $order = null)
 	{
 		$insurancePreauth = new InsurancePreauth();
 
-		foreach ($wheres as $attribute => $value) {
+		foreach ($where as $attribute => $value) {
 			$insurancePreauth = $insurancePreauth->where($attribute, '=', $value);
+		}
+
+		if (!empty($status)) {
+			$insurancePreauth = $insurancePreauth->whereRaw('(status IN (' . $status . '))');
 		}
 
 		if (!empty($order)) {
@@ -63,5 +67,13 @@ class InsurancePreauth extends Model
 																		 ->get();
 
 		return $rejectedPreauth;
+	}
+
+	public static function updateData($patientId, $DSS_PREAUTH_PENDING, $DSS_PREAUTH_PREAUTH_PENDING, $values)
+	{
+		$insurancePreauth = InsurancePreauth::where('patient_id', '=', $patientId)->whereRaw('(status = ' . $DSS_PREAUTH_PENDING . ' OR status = ' . $DSS_PREAUTH_PREAUTH_PENDING . ')')
+																				  ->update($values);
+
+		return $insurancePreauth;
 	}
 }

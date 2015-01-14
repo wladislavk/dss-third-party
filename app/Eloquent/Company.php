@@ -1,4 +1,4 @@
-<?php namespace Ds3;
+<?php namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -21,5 +21,28 @@ class Company extends Model
 												 ->first();
 
 		return $logo;
+	}
+
+	public static function getBilling($docId)
+	{
+		$billing = DB::table(DB::raw('companies c'))->join(DB::raw('dental_users u'), 'c.id', '=', 'u.billing_company_id')
+													->where('u.userid', '=', $docId)
+													->first();
+
+		return $billing;
+	}
+
+	public static function getJoin($userId, $companyType)
+	{
+		$companies = DB::table(DB::raw('companies h'))->select(DB::raw('h.*, uhc.id as uhc_id'))
+													->join(DB::raw('dental_user_hst_company uhc'), function($join) use ($userId){
+														$join->on('uhc.companyid', '=', 'h.id')
+															 ->where('uhc.userid', '=', $userId);
+													}) 
+													->where('h.company_type', '=', $companyType)
+													->orderBy('name')
+													->get();
+
+		return $companies;												
 	}
 }

@@ -37,11 +37,11 @@ class TransactionCode extends Model
 		return $transactionType;
 	}
 
-	public static function getCodes($wheres, $order = null)
+	public static function getCodes($where, $order = null)
 	{
 		$codes = new TransactionCode();
 
-		foreach ($wheres as $attribute => $value) {
+		foreach ($where as $attribute => $value) {
 			$codes = $codes->where($attribute, '=', $value);
 		}
 

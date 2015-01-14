@@ -24,6 +24,18 @@ class QImage extends Model
 		return $qImage;
 	}
 
+	public static function getImage($imageTypeId, $patientId)
+	{
+		try {
+			$image = QImage::where('imagetypeid', '=', $imageTypeId)->where('patientid', '=', $patientId)
+													  	  ->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			return false;
+		}
+
+		return $image;
+	}
+
 	public static function insertData($data)
 	{
 		$qImage = new QImage();

@@ -1,4 +1,4 @@
-<?php namespace Ds3;
+<?php namespace Ds3\Eloquent\Patient;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -28,6 +28,14 @@ class Patient extends Model
 		return $patients->get();
 	}
 
+	public static function getLogins($clogin)
+	{
+		$logins = Patient::select('login')->whereRaw("login LIKE '" . $clogin . "%'")
+										  ->get();
+
+		return $logins;
+	}
+
 	public static function getJoinPatients($docId)
 	{
 		$joinPatients = DB::table(DB::raw('dental_patients p2'))->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'p2.parent_patientid')
@@ -54,5 +62,35 @@ class Patient extends Model
 																	->get();
 
 		return $pendingDuplicates;
+	}
+
+	public static function insertData($data)
+	{
+		$patient = new Patient();
+
+		foreach ($data as $attribute => $value) {
+			$patient->$attribute = $value;
+		}
+
+		try {
+			$patient->save();
+		} catch (QueryException $e) {
+			return null;
+		}
+
+		return $patient->patientid;
+	}
+
+	public static function updateData($where, $values)
+	{
+		$patient = new Patient();
+
+		foreach ($where as $attribute => $value) {
+			$patient = $patient->where($attribute, '=', $value);
+		}
+		
+		$patient = $patient->update($values);
+
+		return $patient;
 	}
 }

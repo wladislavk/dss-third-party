@@ -24,6 +24,17 @@ class Location extends Model
 		return $location;
 	}
 
+	public static function getWhere($where)
+	{
+		$locations = new Location();
+
+		foreach ($where as $attribute => $value) {
+			$locations = $locations->where($attribute, '=', $value);
+		}
+
+		return $locations->get();
+	}
+
 	public static function updateData($id, $values)
 	{
 		$location = Location::where('id', '=', $id)->update($values);

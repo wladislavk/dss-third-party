@@ -1,0 +1,23 @@
+<?php namespace Ds3\Eloquent;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use Illuminate\Support\Facades\DB;
+
+class ModifierCode extends Model
+{
+	protected $table = 'dental_modifier_code';
+
+	protected $fillable = ['modifier_code', 'description', 'sortby', 'status'];
+
+	protected $primaryKey = 'modifier_codeid';
+
+	public static function get()
+	{
+		$modifierCode = ModifierCode::where('status', '=', 1)->orderBy('sortby')
+															 ->get();
+
+		return $modifierCode;
+	}
+}

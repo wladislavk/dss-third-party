@@ -154,7 +154,7 @@ background:#999999;
 		while($myarray = mysql_fetch_array($my))
 		{
 $pay_sql = "SELECT  "
-                 . "  sum(pay.amount) as paid_amount "
+     . "  sum(pay.amount) as paid_amount "
      . "FROM dental_ledger dl  "
      . "JOIN dental_patients p ON p.patientid=dl.patientid "
      . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
@@ -164,11 +164,137 @@ $pay_sql = "SELECT  "
 $pay_q = mysql_query($pay_sql);
 $pay_r = mysql_fetch_assoc($pay_q);
 $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
-			if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2)){
-			$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
-			$pat_my = mysql_query($pat_sql);
-			$pat_myarray = mysql_fetch_array($pat_my);
-			
+if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2)){
+  $pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
+  $pat_my = mysql_query($pat_sql);
+  $pat_myarray = mysql_fetch_array($pat_my);
+
+  $pat_credits_total = $paid_amount+$myarray['adjusted_amount'];
+
+  $seg_sql = "SELECT "
+     . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+     . "p.firstname, p.lastname, p.patientid "
+     . "FROM dental_ledger dl  "
+     . "JOIN dental_patients p ON p.patientid=dl.patientid "
+     . "WHERE dl.docid='".$_SESSION['docid']."'  "
+     . "AND p.patientid='".$myarray['patientid']."' "
+     . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 30 day) "
+     . "GROUP BY dl.patientid";
+  $seg_q = mysql_query($seg_sql);
+  $seq_r = mysql_fetch_assoc($seg_q);
+  $pat_cur_owed = $seq_r['amount'];
+
+  $seg_sql = "SELECT "
+      . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+      . "p.firstname, p.lastname, p.patientid "
+      . "FROM dental_ledger dl  "
+      . "JOIN dental_patients p ON p.patientid=dl.patientid "
+      . "WHERE dl.docid='".$_SESSION['docid']."'  "
+      . "AND p.patientid='".$myarray['patientid']."' "
+      . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 30 day) "
+      . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 60 day) "
+      . "GROUP BY dl.patientid";
+  $seg_q = mysql_query($seg_sql);
+  $seq_r = mysql_fetch_assoc($seg_q);
+  $pat_30_owed = $seq_r['amount'];
+
+  $seg_sql = "SELECT "
+      . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+      . "p.firstname, p.lastname, p.patientid "
+      . "FROM dental_ledger dl  "
+      . "JOIN dental_patients p ON p.patientid=dl.patientid "
+      . "WHERE dl.docid='".$_SESSION['docid']."'  "
+      . "AND p.patientid='".$myarray['patientid']."' "
+      . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 60 day) "
+      . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 90 day) "
+      . "GROUP BY dl.patientid";
+  $seg_q = mysql_query($seg_sql);
+  $seq_r = mysql_fetch_assoc($seg_q);
+  $pat_60_owed = $seq_r['amount'];
+
+  $seg_sql = "SELECT "
+      . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+      . "p.firstname, p.lastname, p.patientid "
+      . "FROM dental_ledger dl  "
+      . "JOIN dental_patients p ON p.patientid=dl.patientid "
+      . "WHERE dl.docid='".$_SESSION['docid']."'  "
+      . "AND p.patientid='".$myarray['patientid']."' "
+      . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 90 day) "
+      . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 120 day) "
+      . "GROUP BY dl.patientid";
+  $seg_q = mysql_query($seg_sql);
+  $seq_r = mysql_fetch_assoc($seg_q);
+  $pat_90_owed = $seq_r['amount'];
+
+  $seg_sql = "SELECT "
+      . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+      . "p.firstname, p.lastname, p.patientid "
+      . "FROM dental_ledger dl  "
+      . "JOIN dental_patients p ON p.patientid=dl.patientid "
+      . "WHERE dl.docid='".$_SESSION['docid']."'  "
+      . "AND p.patientid='".$myarray['patientid']."' "
+      . "AND dl.service_date < DATE_SUB(NOW(), INTERVAL 120 day) "
+      . "GROUP BY dl.patientid";
+  $seg_q = mysql_query($seg_sql);
+  $seq_r = mysql_fetch_assoc($seg_q);
+  $pat_120_owed = $seq_r['amount'];
+
+  $pat_credits = $pat_credits_total;
+  $pat_120 = $pat_120_owed;
+  $pat_90 = $pat_90_owed;
+  $pat_60 = $pat_60_owed;
+  $pat_30 = $pat_30_owed;
+  $pat_cur = $pat_cur_owed;
+
+  if ($pat_120_owed > $pat_credits){ //patient paid less than their 120+ day total
+    $pat_120 = $pat_120_owed - $pat_credits;
+  } else {
+    if ($pat_90_owed == 0 AND $pat_60_owed == 0 AND $pat_30_owed == 0 AND $pat_cur_owed == 0){ //no charges after 120 days
+      $pat_120 = $pat_120_owed - $pat_credits;
+    } else {
+      $pat_credits = $pat_credits - $pat_120_owed;
+      $pat_120 = 0;
+      if ($pat_90_owed > $pat_credits){  //patient paid less than their 90 day total
+        $pat_90 = $pat_90_owed - $pat_credits;
+      } else {
+        if ($pat_60_owed == 0 AND $pat_30_owed == 0 AND $pat_cur_owed == 0){ // no charges after 90 days
+          $pat_90 = $pat_90_owed - $pat_credits;
+        } else {
+          $pat_credits = $pat_credits - $pat_90_owed;
+          $pat_90 = 0;
+          if ($pat_60_owed > $pat_credits){  //patient paid less than their 60 day total
+            $pat_60 = $pat_60_owed - $pat_credits;
+          } else {
+            if ($pat_30_owed == 0 AND $pat_cur_owed == 0){// no charges after 60 days
+              $pat_60 = $pat_60_owed - $pat_credits;
+              $pat_60 = 0;
+            } else {
+              $pat_credits = $pat_credits - $pat_60_owed;
+              if ($pat_30_owed > $pat_credits){ //patient paid less than their 30 day total
+                $pat_30 = $pat_30_owed - $pat_credits;
+              } else {
+                if ($pat_cur_owed == 0){ // no charges after 30 days
+                  $pat_30 = $pat_30_owed - $pat_credits;
+                } else {
+                  $pat_credits = $pat_credits - $pat_30_owed;
+                  $pat_cur = $pat_cur_owed - $pat_credits;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  $charges_cur += $pat_cur;
+  $charges_30 += $pat_30;
+  $charges_60 += $pat_60;
+  $charges_90 += $pat_90;
+  $charges_120 += $pat_120;
+
+
 			$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
 			
 			if($myarray["status"] == 1)
@@ -186,86 +312,28 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
                 	<a href="manage_ledger.php?addtopat=1&pid=<?=$myarray['patientid'];?>"><?=st($myarray['lastname'].", ".$myarray['firstname']);?> (Click to View)</a>
 				</td>
 				<td>
-	<?php $seg_sql = "SELECT "
-                 . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
-     . "p.firstname, p.lastname, p.patientid "
-     . "FROM dental_ledger dl  "
-     . "JOIN dental_patients p ON p.patientid=dl.patientid "
-     . "WHERE dl.docid='".$_SESSION['docid']."'  "
-     . "AND p.patientid='".$myarray['patientid']."' "
-     . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 30 day) "
-     . "GROUP BY dl.patientid";
-		$seg_q = mysql_query($seg_sql);
-		$seq_r = mysql_fetch_assoc($seg_q);
-		echo "$".number_format($seq_r['amount'],2);
-		$charges_cur += $seq_r['amount'];
-	?>
+          <?php 
+            echo "$".number_format($pat_cur,2);
+          ?>
 				</td>
 				<td>
-	<?php $seg_sql = "SELECT "
-                 . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
-     . "p.firstname, p.lastname, p.patientid "
-     . "FROM dental_ledger dl  "
-     . "JOIN dental_patients p ON p.patientid=dl.patientid "
-     . "WHERE dl.docid='".$_SESSION['docid']."'  "
-     . "AND p.patientid='".$myarray['patientid']."' "
-     . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 30 day) "
-     . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 60 day) "
-     . "GROUP BY dl.patientid";
-                $seg_q = mysql_query($seg_sql);
-                $seq_r = mysql_fetch_assoc($seg_q);
-                echo "$".number_format($seq_r['amount'],2);
-		$charges_30 += $seq_r['amount'];
-        ?>
+          <?php
+            echo "$".number_format($pat_30,2); 
+          ?>
 				</td>
 				<td>
-        <?php $seg_sql = "SELECT "
-                 . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
-     . "p.firstname, p.lastname, p.patientid "
-     . "FROM dental_ledger dl  "
-     . "JOIN dental_patients p ON p.patientid=dl.patientid "
-     . "WHERE dl.docid='".$_SESSION['docid']."'  "
-     . "AND p.patientid='".$myarray['patientid']."' "
-     . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 60 day) "
-     . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 90 day) "
-     . "GROUP BY dl.patientid";
-                $seg_q = mysql_query($seg_sql);
-                $seq_r = mysql_fetch_assoc($seg_q);
-                echo "$".number_format($seq_r['amount'],2);
-		$charges_60 += $seq_r['amount'];
+        <?php
+          echo "$".number_format($pat_60,2);
         ?>	
 				</td>
 				<td>
-        <?php $seg_sql = "SELECT "
-                 . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
-     . "p.firstname, p.lastname, p.patientid "
-     . "FROM dental_ledger dl  "
-     . "JOIN dental_patients p ON p.patientid=dl.patientid "
-     . "WHERE dl.docid='".$_SESSION['docid']."'  "
-     . "AND p.patientid='".$myarray['patientid']."' "
-     . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 90 day) "
-     . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 120 day) "
-     . "GROUP BY dl.patientid";
-                $seg_q = mysql_query($seg_sql);
-                $seq_r = mysql_fetch_assoc($seg_q);
-                echo "$".number_format($seq_r['amount'],2);
-		$charges_90 += $seq_r['amount'];
+        <?php
+          echo "$".number_format($pat_90,2);
         ?>	
 				</td>
         <td>
-        <?php $seg_sql = "SELECT "
-                 . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
-     . "p.firstname, p.lastname, p.patientid "
-     . "FROM dental_ledger dl  "
-     . "JOIN dental_patients p ON p.patientid=dl.patientid "
-     . "WHERE dl.docid='".$_SESSION['docid']."'  "
-     . "AND p.patientid='".$myarray['patientid']."' "
-     . "AND dl.service_date < DATE_SUB(NOW(), INTERVAL 120 day) "
-     . "GROUP BY dl.patientid";
-                $seg_q = mysql_query($seg_sql);
-                $seq_r = mysql_fetch_assoc($seg_q);
-                echo "$".number_format($seq_r['amount'],2);
-    $charges_120 += $seq_r['amount'];
+        <?php 
+          echo "$".number_format($pat_120,2);
         ?>  
         </td>
 				<td valign="top" align="right" width="18%">

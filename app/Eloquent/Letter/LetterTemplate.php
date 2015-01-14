@@ -1,4 +1,4 @@
-<?php namespace Ds3\Eloquent;
+<?php namespace Ds3\Eloquent\Letter;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

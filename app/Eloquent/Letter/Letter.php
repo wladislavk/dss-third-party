@@ -1,4 +1,4 @@
-<?php namespace Ds3;
+<?php namespace Ds3\Eloquent\Letter;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;

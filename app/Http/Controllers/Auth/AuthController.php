@@ -6,8 +6,8 @@ use Auth;
 use Session;
 
 use Ds3\Eloquent\Auth\User;
-use Ds3\Eloquent\Login;
-use Ds3\Eloquent\LoginDetail;
+use Ds3\Eloquent\Login\Login;
+use Ds3\Eloquent\Login\LoginDetail;
 use Ds3\Libraries\Password;
 
 class AuthController extends Controller

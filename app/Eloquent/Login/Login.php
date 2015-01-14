@@ -1,4 +1,4 @@
-<?php namespace Ds3\Eloquent;
+<?php namespace Ds3\Eloquent\Login;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;

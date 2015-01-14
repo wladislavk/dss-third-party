@@ -114,19 +114,19 @@ background:#999999;
 		<td valign="top" class="col_head" width="10%">
 			90 Days	
 		</td>	
-    <td valign="top" class="col_head" width="10%">
+    <td valign="top" class="col_head" width="10 %">
       120+ Days 
     </td> 
 		<td valign="top" class="col_head" width="10%">
 			Charges
 		</td>
-		<td valign="top" class="col_head">
+		<td valign="top" class="col_head"  width="10%">
 			Credits
 		</td>
-		<td valign="top" class="col_head">
+		<td valign="top" class="col_head" width="10%">
 			Adjustments	
 		</td>
-		<td valign="top" class="col_head">
+		<td valign="top" class="col_head"  width="10%">
 			Pt. Balance	
 		</td>
 	</tr>
@@ -336,7 +336,7 @@ if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2
           echo "$".number_format($pat_120,2);
         ?>  
         </td>
-				<td valign="top" align="right" width="18%">
+				<td align="right" width="10%">
           <?php
           echo "$".number_format($myarray["amount"],2);
 	  $tot_charges += $myarray["amount"];
@@ -344,7 +344,7 @@ if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2
 
 					&nbsp;
 				</td>
-				<td valign="top" align="right">
+				<td align="right">
 					<? if(st($paid_amount) <> 0) {?>
 	                	<?=number_format(st($paid_amount),2);?>
 					<? 
@@ -353,14 +353,14 @@ if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2
 					&nbsp;
 	
 				</td>
-				<td valign="top" align="right">
+				<td  align="right">
 					<? if(st($myarray['adjusted_amount']) <> 0) {?>
 	                	<?=number_format(st($myarray['adjusted_amount']),2);?>
 					<? 
 						$tot_adjusted += st($myarray['adjusted_amount']);
 					}?>
 				</td>
-				<td valign="top">&nbsp;
+				<td >&nbsp;
 					<?php if($myarray["amount"]>($paid_amount+$myarray['adjusted_amount'])){ ?>
 					<?= number_format(($myarray["amount"]-$paid_amount-$myarray['adjusted_amount']),2); ?>
 					<?php }elseif($myarray["amount"]<$paid_amount){ ?>

@@ -53,9 +53,15 @@ class QImage extends Model
 		return $qImage->imageid;
 	}
 
-	public static function updateData($id, $values)
+	public static function updateData($where, $values)
 	{
-		$qImage = QImage::where('imageid', '=', $id)->update($values);
+		$qImage = new QImage();
+
+		foreach ($where as $attribute => $value) {
+			$qImage = $qImage->where($attribute, '=', $value);
+		}
+
+		$qImage = $qImage->update($values);
 
 		return $qImage;
 	}

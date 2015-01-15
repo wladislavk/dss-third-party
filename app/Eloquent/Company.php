@@ -23,13 +23,19 @@ class Company extends Model
 		return $logo;
 	}
 
-	public static function getBilling($docId)
+	public static function getBilling($where, $order = null)
 	{
-		$billing = DB::table(DB::raw('companies c'))->join(DB::raw('dental_users u'), 'c.id', '=', 'u.billing_company_id')
-													->where('u.userid', '=', $docId)
-													->first();
+		$billing = DB::table(DB::raw('companies c'))->join(DB::raw('dental_users u'), 'c.id', '=', 'u.billing_company_id');
 
-		return $billing;
+		foreach ($where as $attribute => $value) {
+			$billing = $billing->where($attribute, '=', $value);
+		}
+
+		if (!empty($order)) {
+			$billing = $billing->orderBy($order);
+		}
+
+		return $billing->get();
 	}
 
 	public static function getJoin($userId, $companyType)
@@ -44,5 +50,18 @@ class Company extends Model
 													->get();
 
 		return $companies;												
+	}
+
+	// change the function name
+
+	public static function getCo($userId)
+	{
+		$company = DB::table(DB::raw('companies c'))->select(DB::raw('c.id, c.name'))
+													->join(DB::raw('dental_user_company uc'), 'c.id', '=', 'uc.companyid')
+													->join(DB::raw('dental_users u'), 'u.userid', '=', 'uc.userid')
+													->where('u.userid', '=', $userId)
+													->first();
+
+		return $company;
 	}
 }

@@ -14,7 +14,7 @@ class ApptType extends Model
 
 	protected $primaryKey = 'id';
 
-	public static function get($where)
+	public static function get($where, $order = null)
 	{
 		$apptType = new ApptType();
 
@@ -22,13 +22,11 @@ class ApptType extends Model
 			$apptType = $apptType->where($attribute, '=', $value);
 		}
 
-		try {
-			$apptType = $apptType->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
+		if (!empty($order)) {
+			$apptType = $apptType->orderBy($order);
 		}
 
-		return $apptType;
+		return $apptType->get();
 	}
 
 	public static function getSelCheck($docId, $name, $className, $ed)

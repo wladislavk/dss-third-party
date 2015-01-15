@@ -66,7 +66,20 @@ class Letter extends Model
 													  ->get();
 
 		return $unmailedLetters;
-	}	
+	}
+
+	public static function getJoin($patientId, $infoId)
+	{
+		$letter = DB::table('dental_letters')->select(DB::raw('topatient, md_list, md_referral_list, status'))
+											 ->leftJoin('dental_letter_templates', 'dental_letters.templateid', '=', 'dental_letter_templates.id')
+											 ->where('patientid', '=', $patientId)
+											 ->where('info_id', '=', $infoId)
+											 ->where('deleted', '=', 0)
+											 ->orderBy('stepid')
+											 ->get();
+
+		return $letter;
+	}
 
 	public static function updateData($where, $values)
 	{

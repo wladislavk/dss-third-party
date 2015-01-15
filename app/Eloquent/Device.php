@@ -20,4 +20,16 @@ class Device extends Model
 
 		return $devices;
 	}
+
+	public static function getDevice($deviceId)
+	{
+		try {
+			$device = Device::select('device')->where('deviceid', '=', $deviceId)
+										  	  ->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			return false;
+		}
+
+		return $device;
+	}
 }

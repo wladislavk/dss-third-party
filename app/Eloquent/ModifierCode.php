@@ -13,11 +13,18 @@ class ModifierCode extends Model
 
 	protected $primaryKey = 'modifier_codeid';
 
-	public static function get()
+	public static function get($where = null)
 	{
-		$modifierCode = ModifierCode::where('status', '=', 1)->orderBy('sortby')
-															 ->get();
+		$modifierCode = new ModifierCode();
 
-		return $modifierCode;
+		if (!empty($where)) {
+			foreach ($where as $attribute => $value) {
+				$modifierCode = $modifierCode->where($attribute, '=', $value);
+			}
+		}
+
+		$modifierCode = $modifierCode->orderBy('sortby');															 
+
+		return $modifierCode->get();
 	}
 }

@@ -172,4 +172,50 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 														
 		return $location->first();
 	}
+
+	public static function isUniqueField($field, $userId)
+	{
+		reset($field);
+		$attribute = key($field);
+		$value = $field[$attribute];
+
+		$user = User::where($attribute, '=', $value)->where('userid', '!=', $userId);							
+
+		return $user->get();
+	}
+
+	public static function getResponsible($userId, $docId)
+	{
+		$responsible = User::where('status', '=', 1)->where(function($query) use ($userId, $docId){
+														$query->where('userid', '=', $userId)
+															  ->orWhere('docid', '=', $docId);
+													})
+													->get();
+
+		return $responsible;
+	}
+
+	public static function updateData($userId, $values)
+	{
+		$user = User::where('userid', '=', $userId)->update($values);
+
+		return $user;
+	}
+
+	public static function insertData($data)
+	{
+		$user = new User();
+
+		foreach ($data as $attribute => $value) {
+			$user->$attribute = $value;
+		}
+
+		try {
+			$user->save();
+		} catch (QueryException $e) {
+			return null;
+		}
+
+		return $user->userid;
+	}
 }

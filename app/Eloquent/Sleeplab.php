@@ -13,12 +13,42 @@ class Sleeplab extends Model
 
 	protected $primaryKey = 'sleeplabid';
 
-	public static function get($docId)
+	public static function get($where, $order = null)
 	{
-		$sleeplabs = Sleeplab::where('status', '=', 1)->where('docid', '=', $docId)
-													 ->orderBy('company')
-													 ->get();
+		$sleeplabs = new Sleeplab();
 
-		return $sleeplabs;
+		foreach ($where as $attribute => $value) {
+			$sleeplabs = $sleeplabs->where($attribute, '=', $value);
+		}
+
+		if (!empty($order)) {
+			$sleeplabs = $sleeplabs->orderBy($order);
+		}					 											 
+
+		return $sleeplabs->get();;
+	}
+
+	public static function updateData($sleeplabId, $values)
+	{
+		$sleeplab = Sleeplab::where('sleeplabid', '=', $sleeplabId)->update($values);
+
+		return $sleeplab;
+	}
+
+	public static function insertData($data)
+	{
+		$sleeplab = new Sleeplab();
+
+		foreach ($data as $attribute => $value) {
+			$sleeplab->$attribute = $value;
+		}
+
+		try {
+			$sleeplab->save();
+		} catch (QueryException $e) {
+			return null;
+		}
+
+		return $sleeplab->sleeplabid;
 	}
 }

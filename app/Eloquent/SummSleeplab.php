@@ -13,7 +13,22 @@ class SummSleeplab extends Model
 
 	protected $primaryKey = 'id';
 
-	public static function getSleepStudies($patientId)
+	public static function get($where, $order = null)
+	{
+		$summSleeplab = new SummSleeplab();
+
+		foreach ($where as $attribute => $value) {
+			$summSleeplab = $summSleeplab->where($attribute, '=', $value);
+		}
+
+		if (!empty($order)) {
+			$summSleeplab = $summSleeplab->orderBy(DB::raw($order), 'desc');	
+		}
+		
+		return $summSleeplab->get();
+	}
+
+	public static function getSleepStudies($patientId, $completed = null)
 	{
 		$sleepStudies = DB::table(DB::raw('dental_summ_sleeplab ss'))->join(DB::raw('dental_patients p'), 'ss.patiendid', '=', 'p.patientid')
 																	 ->where(function($query){
@@ -32,13 +47,24 @@ class SummSleeplab extends Model
 																	 ->where(function($query){
 																	 	$query->whereRaw('ss.diagnosis IS NOT NULL')
 																	 		  ->where('ss.diagnosis', '!=', '');
-																	 })
-																	 ->where('ss.completed', '=', 'Yes')
-																	 ->whereRaw('ss.filename IS NOT NULL')
-																	 ->where('ss.patiendid', '=', $patientId)
-																	 ->first();
+																	 });
+
+		if (!empty($completed)) {
+			$sleepStudies = $sleepStudies->where('ss.completed', '=', 'Yes');
+		}
+																	 
+		$sleepStudies = $sleepStudies->whereRaw('ss.filename IS NOT NULL')
+									 ->where('ss.patiendid', '=', $patientId)
+									 ->get();
 
 		return $sleepStudies;
+	}
+
+	public static function updateData($id, $values)
+	{
+		$summSleeplab = SummSleeplab::where('id', '=', $id)->update($values);
+
+		return $summSleeplab;
 	}
 
 	public static function insertData($data)
@@ -56,5 +82,12 @@ class SummSleeplab extends Model
 		}
 
 		return $summSleeplab->id;
+	}
+
+	public static function deleteData($id)
+	{
+		$summSleeplab = SummSleeplab::where('id', '=', $id)->delete();
+
+		return $summSleeplab;
 	}
 }

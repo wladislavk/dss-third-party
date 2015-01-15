@@ -13,11 +13,18 @@ class PlaceService extends Model
 
 	protected $primaryKey = 'place_serviceid';
 
-	public static function get()
+	public static function get($where = null)
 	{
-		$placeServices = PlaceService::where('status', '=', 1)->orderBy('sortby')
-															  ->get();
+		$placeServices = new PlaceService();
 
-		return $placeServices;
+		if (!empty($where)) {
+			foreach ($where as $attribute => $value) {
+				$placeServices = $placeServices->where($attribute, '=', $value);
+			}
+		}
+
+		$placeServices = $placeServices->orderBy('sortby');										  
+
+		return $placeServices->get();
 	}
 }

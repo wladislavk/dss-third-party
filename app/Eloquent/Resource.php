@@ -13,7 +13,7 @@ class Resource extends Model
 
 	protected $primaryKey = 'id';
 
-	public static function get($where)
+	public static function get($where, $orders = null)
 	{
 		$resource = new Resource();
 
@@ -21,13 +21,13 @@ class Resource extends Model
 			$resource = $resource->where($attribute, '=', $value);
 		}
 
-		try {
-			$resource = $resource->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
+		if (!empty($orders)) {
+			foreach ($orders as $order) {
+				$resource = $resource->orderBy($order);
+			}
 		}
 
-		return $resource;
+		return $resource->get();
 	}
 
 	public static function getSelCheck($docId, $name, $ed)

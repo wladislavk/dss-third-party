@@ -13,7 +13,14 @@ class FlowPg2Info extends Model
 
 	protected $primaryKey = 'id';
 
-	public $timestamps = false;
+	public static function get($patientId)
+	{
+		$flowPg2Info = FlowPg2Info::where('patientid', '=', $patientId)->orderBy('date_completed', 'desc')
+																	   ->orderBy('id', 'desc')
+																	   ->get();
+
+		return $flowPg2Info;
+	}
 
 	public static function insertData($data)
 	{

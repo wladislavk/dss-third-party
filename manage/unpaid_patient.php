@@ -27,7 +27,7 @@ $i_val = $index_val * $rec_disp;
 
 
 $sql = "SELECT  "
-                 . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+     . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
      . " a.amount as adjusted_amount, "
      . "p.firstname, p.lastname, p.patientid "
      . "FROM dental_ledger dl  "
@@ -39,7 +39,7 @@ $sql = "SELECT  "
                 group by patientid) a ON a.patientid=dl.patientid "
      . "WHERE dl.docid='".$_SESSION['docid']."'  "
      . " AND (tc.type!='".mysql_real_escape_string(DSS_TRXN_TYPE_ADJ)."' OR tc.type IS NULL) "
-     . "GROUP BY dl.patientid";
+     . "GROUP BY dl.patientid ORDER BY p.lastname ASC";
 $my = mysql_query($sql) or die(mysql_error());
 /*
 $sql .= " order by service_date";
@@ -267,9 +267,9 @@ if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2
           } else {
             if ($pat_30_owed == 0 AND $pat_cur_owed == 0){// no charges after 60 days
               $pat_60 = $pat_60_owed - $pat_credits;
-              $pat_60 = 0;
             } else {
               $pat_credits = $pat_credits - $pat_60_owed;
+              $pat_60 = 0;
               if ($pat_30_owed > $pat_credits){ //patient paid less than their 30 day total
                 $pat_30 = $pat_30_owed - $pat_credits;
               } else {
@@ -277,6 +277,7 @@ if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2
                   $pat_30 = $pat_30_owed - $pat_credits;
                 } else {
                   $pat_credits = $pat_credits - $pat_30_owed;
+                  $pat_30 = 0;
                   $pat_cur = $pat_cur_owed - $pat_credits;
                 }
               }

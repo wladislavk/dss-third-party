@@ -1,4 +1,4 @@
-<?php namespace Ds3;
+<?php namespace Ds3\Eloquent;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -64,5 +64,39 @@ class Task extends Model
 		}						
 
 		return $tasks->get();
+	}
+
+	public static function getJoin($id)
+	{
+		$task = DB::table(DB::raw('dental_task dt'))->select(DB::raw('dt.*, p.firstname, p.lastname'))
+													->leftJoin(DB::raw('dental_patients p'), 'p.patientid', '=', 'dt.patientid')
+													->where('dt.id', '=', $id)
+													->first();
+
+		return $task;
+	}
+
+	public static function updateData($id, $values)
+	{
+		$task = Task::where('id', '=', $id)->update($values);
+
+		return $task;
+	}
+
+	public static function insertData($data)
+	{
+		$task = new Task();
+
+		foreach ($data as $attribute => $value) {
+			$task->$attribute = $value;
+		}
+
+		try {
+			$task->save();
+		} catch (QueryException $e) {
+			return null;
+		}
+
+		return $task->id;
 	}
 }

@@ -1,4 +1,4 @@
-<?php namespace Ds3;
+<?php namespace Ds3\Eloquent\Login;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
@@ -11,7 +11,7 @@ class Login extends Model
 
 	protected $primaryKey = 'loginid';
 
-	public static function getId($data)
+	public static function insert($data)
 	{
 		$login = new Login();
 
@@ -26,5 +26,16 @@ class Login extends Model
 		}
 
 		return $login->loginid;
+	}
+
+	public static function get($where)
+	{
+		$login = new Login();
+
+		foreach ($where as $attribute => $value) {
+			$login = $login->where($attribute, '=', $value);
+		}
+
+		return $login->get();
 	}
 }

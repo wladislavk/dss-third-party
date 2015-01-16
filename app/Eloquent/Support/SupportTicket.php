@@ -1,4 +1,4 @@
-<?php namespace Ds3;
+<?php namespace Ds3\Eloquent\Support;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -22,5 +22,22 @@ class SupportTicket extends Model
 																 ->get();
 
 		return $support;
+	}
+
+	public static function insertData($data)
+	{
+		$supportTicket = new SupportTicket();
+
+		foreach ($data as $attribute => $value) {
+			$supportTicket->$attribute = $value;
+		}
+
+		try {
+			$supportTicket->save();
+		} catch (QueryException $e) {
+			return null;
+		}
+
+		return $supportTicket->id;
 	}
 }

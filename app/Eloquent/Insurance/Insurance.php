@@ -1,8 +1,9 @@
 <?php namespace Ds3\Eloquent\Insurance;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use Illuminate\Support\Facades\DB;
 
 class Insurance extends Model
 {
@@ -12,15 +13,30 @@ class Insurance extends Model
 
 	protected $primaryKey = 'insuranceid';
 
-	public static function get($docId, $status, $valuesWhere)
+	public static function get($docId, $valuesWhere, $status = null)
 	{
-		$pendingClaims = DB::table('dental_insurance')->whereRaw('(status IN (' . $status . '))');
+		$pendingClaims = new Insurance();
 
 		foreach ($valuesWhere as $key => $value) {
 			$pendingClaims = $pendingClaims->where($key, '=', $value);
-		}													  
+		}
+
+		if (!empty($status)) {
+			$pendingClaims = $pendingClaims->whereRaw('(status IN (' . $status . '))');
+		}							  
 
 		return $pendingClaims->get();
+	}
+
+	public static function getClaim($insuranceId)
+	{
+		try {
+			$claim = Insurance::where('insuranceid', '=', $insuranceId)->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			return false;
+		}
+
+		return $claim;
 	}
 
 	public static function getPendingNodssClaims($docId, $input)
@@ -49,5 +65,29 @@ class Insurance extends Model
 													   ->get();
 
 		return $unmailedClaims;
+	}
+
+	public static function insertData($data)
+	{
+		$insurance = new Insurance();
+
+		foreach ($data as $attribute => $value) {
+			$insurance->$attribute = $value;
+		}
+
+		try {
+			$insurance->save();
+		} catch (ModelNotFoundException $e) {
+			return null;
+		}
+
+		return $insurance->insuranceid;
+	}
+
+	public static function deleteData($insuranceId)
+	{
+		$insurance = Insurance::where('insuranceid', '=', $insuranceId)->delete();
+
+		return $insurance;
 	}
 }

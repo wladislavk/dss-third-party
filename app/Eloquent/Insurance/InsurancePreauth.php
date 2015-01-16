@@ -1,8 +1,9 @@
 <?php namespace Ds3\Eloquent\Insurance;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use Illuminate\Support\Facades\DB;
 
 class InsurancePreauth extends Model
 {
@@ -12,15 +13,39 @@ class InsurancePreauth extends Model
 
 	protected $primaryKey = 'id';
 
-	public static function get($docId, $DSS_PREAUTH_COMPLETE)
+	public static function get($where, $status = null, $order = null)
 	{
-		$insurancePreauth = DB::table('dental_insurance_preauth')->where('doc_id', '=', $docId)
-																 ->where('status', '=', $DSS_PREAUTH_COMPLETE)
-																 ->where(function($query){
-																 	$query->whereNull('viewed')
-																 		  ->orWhere('viewed', '!=', 1);
-																 })
-																 ->get();
+		$insurancePreauth = new InsurancePreauth();
+
+		foreach ($where as $attribute => $value) {
+			$insurancePreauth = $insurancePreauth->where($attribute, '=', $value);
+		}
+
+		if (!empty($status)) {
+			$insurancePreauth = $insurancePreauth->whereRaw('(status IN (' . $status . '))');
+		}
+
+		if (!empty($order)) {
+			$insurancePreauth = $insurancePreauth->orderBy($order, 'desc');
+		}
+
+		try {
+			$insurancePreauth = $insurancePreauth->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			return false;
+		}
+
+		return $insurancePreauth;
+	}
+
+	public static function getViewed($docId, $DSS_PREAUTH_COMPLETE)
+	{
+		$insurancePreauth = InsurancePreauth::where('doc_id', '=', $docId)->where('status', '=', $DSS_PREAUTH_COMPLETE)
+																 		  ->where(function($query){
+																 				$query->whereNull('viewed')
+																 		  			  ->orWhere('viewed', '!=', 1);
+																 		  })
+																 		  ->get();
 
 		return $insurancePreauth;
 	}
@@ -42,5 +67,13 @@ class InsurancePreauth extends Model
 																		 ->get();
 
 		return $rejectedPreauth;
+	}
+
+	public static function updateData($patientId, $DSS_PREAUTH_PENDING, $DSS_PREAUTH_PREAUTH_PENDING, $values)
+	{
+		$insurancePreauth = InsurancePreauth::where('patient_id', '=', $patientId)->whereRaw('(status = ' . $DSS_PREAUTH_PENDING . ' OR status = ' . $DSS_PREAUTH_PREAUTH_PENDING . ')')
+																				  ->update($values);
+
+		return $insurancePreauth;
 	}
 }

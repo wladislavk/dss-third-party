@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
 	use Authenticatable, CanResetPassword;
-
 	/**
 	 * The database table used by the model.
 	 *
@@ -20,11 +19,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	protected $table = 'dental_users';
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
+    private $first_name;
+    private $last_name;
+
 	protected $fillable = ['username', 'email', 'password'];
 
 	/**

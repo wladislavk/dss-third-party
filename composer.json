@@ -17,7 +17,9 @@
 			"database"
 		],
 		"psr-4": {
-			"Ds3\\": "app/"
+			"Ds3\\": "app/",
+            "Ds3\\Admin\\Contracts\\": "app/Http/Controllers/Admin/contracts",
+            "Ds3\\Admin\\Repositories\\": "app/Http/Controller/Admin/Repositories"
 		}
 	},
 	"autoload-dev": {

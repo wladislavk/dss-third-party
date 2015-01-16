@@ -116,6 +116,7 @@ return [
 		'Ds3\Providers\AppServiceProvider',
 		'Ds3\Providers\EventServiceProvider',
 		'Ds3\Providers\RouteServiceProvider',
+        'Ds3\Providers\UserServiceProvider',
 
 		/*
 		 * Laravel Framework Service Providers...
@@ -141,7 +142,8 @@ return [
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 
-		'Illuminate\Html\HtmlServiceProvider'
+		'Illuminate\Html\HtmlServiceProvider',
+
 
 
 	],

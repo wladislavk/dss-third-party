@@ -41,6 +41,7 @@ $app->singleton(
 	'Ds3\Exceptions\Handler'
 );
 
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application

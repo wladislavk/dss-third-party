@@ -14,12 +14,12 @@ class RedirectIfAuthenticated implements Middleware {
 	 */
 	protected $auth;
 
-	/**
-	 * Create a new filter instance.
-	 *
-	 * @param  Guard  $auth
-	 * @return void
-	 */
+    /**
+     * Create a new filter instance.
+     *
+     * @param  Guard $auth
+     * @return \Ds3\Http\Middleware\RedirectIfAuthenticated
+     */
 	public function __construct(Guard $auth)
 	{
 		$this->auth = $auth;

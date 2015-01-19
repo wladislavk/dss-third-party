@@ -13,15 +13,18 @@ class Calendar extends Model
 
 	protected $primaryKey = 'id';
 
-	public static function getJoin($docId)
+	public static function getJoin($where)
 	{
 		$calendar = DB::table(DB::raw('dental_calendar as dc'))->select(DB::raw('dc.*, dp.*, dt.name as etype'))
 															   ->leftJoin(DB::raw('dental_patients as dp'), 'dc.patientid', '=', 'dp.patientid')
-															   ->join(DB::raw('dental_appt_types as dt'), 'dc.category', '=', 'dt.classname')
-															   ->where('dc.docid', '=', $docId)
-															   ->where('dt.docid', '=', $docId)
-															   ->orderBy('dc.id')
-															   ->get();
+															   ->join(DB::raw('dental_appt_types as dt'), 'dc.category', '=', 'dt.classname');
+
+		foreach ($where as $attribute => $value) {
+			$calendar = $calendar->where($attribute, '=', $value);
+		}
+
+		$calendar = $calendar->orderBy('dc.id')
+							 ->get();
 
 		return $calendar;
 	}

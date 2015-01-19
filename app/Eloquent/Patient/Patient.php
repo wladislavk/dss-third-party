@@ -13,7 +13,7 @@ class Patient extends Model
 
 	protected $primaryKey = 'patientid';
 
-	public static function get($valuesWhere)
+	public static function get($valuesWhere, $orders = null)
 	{
 		$patients = new Patient();
 
@@ -23,6 +23,12 @@ class Patient extends Model
 			}
 		} else {
 			return false;
+		}
+
+		if (!empty($orders)) {
+			foreach ($orders as $value) {
+				$patients = $patients->orderBy($value);
+			}
 		}
 		
 		return $patients->get();

@@ -13,7 +13,9 @@ class Insurance extends Model
 
 	protected $primaryKey = 'insuranceid';
 
-	public static function get($docId, $valuesWhere, $status = null)
+	public $timestamps = false;
+
+	public static function get($valuesWhere, $status = null)
 	{
 		$pendingClaims = new Insurance();
 
@@ -65,6 +67,24 @@ class Insurance extends Model
 													   ->get();
 
 		return $unmailedClaims;
+	}
+
+	public static function getJoin($patientId)
+	{
+		$insurance = DB::table(DB::raw('dental_insurance i'))->select(DB::raw("CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_name, ' ',u.last_name) doc_name"))
+															 ->join(DB::raw('dental_patients p'), 'i.patientid', '=', 'p.patientid')
+															 ->join(DB::raw('dental_users u'), 'u.userid', '=', 'p.docid')
+															 ->where('p.patientid', '=', $patientId)
+															 ->first();
+
+		return $insurance;
+	}
+
+	public static function updateData($insuranceId, $values)
+	{
+		$insurance = Insurance::where('insuranceid', '=', $insuranceId)->update($values);
+
+		return $insurance;
 	}
 
 	public static function insertData($data)

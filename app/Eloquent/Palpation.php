@@ -24,6 +24,13 @@ class Palpation extends Model
 		return $palpation;
 	}
 
+	public static function getOrderBy()
+	{
+		$palpations = Palpation::orderBy('sortby')->get();
+
+		return $palpations;
+	}
+
 	public static function checkPalpation($palpation, $palpationId)
 	{
 		$palpations = Palpation::where('palpation', '=', $palpation)->where('palpationid', '!=', $palpationId)
@@ -54,5 +61,12 @@ class Palpation extends Model
 		}
 
 		return $palpation->palpationid;
+	}
+
+	public static function deleteData($palpationId)
+	{
+		$palpation = Palpation::where('palpationid', '=', $palpationId)->delete();
+
+		return $palpation;
 	}
 }

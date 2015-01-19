@@ -13,8 +13,6 @@ class Ledger extends Model
 
 	protected $primaryKey = 'ledgerid';
 
-	public $timestamps = false;
-
 	public static function get($id)
 	{
 		try {
@@ -72,6 +70,15 @@ class Ledger extends Model
 		return $pendingClaims;
 	}
 
+	public static function getNumRecords($primaryClaimId, $ledgerIds)
+	{
+		$numRecords = Ledger::select(DB::raw('COUNT(*) as num_ledger'))->where('primary_claim_id', '=', $primaryClaimId)
+																	   ->whereRaw('ledgerid NOT IN (' . $ledgerIds . ')')
+																	   ->first();
+
+		return $numRecords;
+	}
+
 	public static function insertData($data)
 	{
 		$ledger = new Ledger();
@@ -89,9 +96,38 @@ class Ledger extends Model
 		return $ledger->ledgerid;
 	}
 
-	public static function updateData($id, $values)
+	public static function updateData($where, $values)
 	{
-		$ledger = Ledger::where('ledgerid', '=', $id)->update($values);
+		$ledger = new Ledger();
+
+		foreach ($where as $attribute => $value) {
+			$ledger = $ledger->where($attribute, '=', $value);
+		}
+
+		$ledger = $ledger->update($values);
+
+		return $ledger;
+	}
+
+	public static function updatePrimaryClaimId($id, $ledgerIds, $primaryClaimId)
+	{
+		$ledger = Ledger::where('primary_claim_id', '=', $id)->whereRaw('ledgerid NOT IN (' . $ledgerIds . ')')
+															 ->update(array(
+															 	'primary_claim_id' => $primaryClaimId
+															 ));
+
+		return $ledger;
+	}
+
+	public static function deleteData($where)
+	{
+		$ledger = new Ledger();
+
+		foreach ($where as $attribute => $value) {
+			$ledger = $ledger->where($attribute, '=', $value);
+		}
+
+		$ledger = $ledger->delete();
 
 		return $ledger;
 	}

@@ -13,6 +13,13 @@ class Company extends Model
 
 	protected $primaryKey = 'id';
 
+	public static function get()
+	{
+		$companies = Company::select('id')->get();
+
+		return $companies;
+	}
+
 	public static function getLogo($userId)
 	{
 		$logo = DB::table(DB::raw('companies c'))->select(DB::raw('c.logo'))

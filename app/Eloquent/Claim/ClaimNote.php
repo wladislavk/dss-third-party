@@ -1,4 +1,4 @@
-<?php namespace Ds3\Eloquent;
+<?php namespace Ds3\Eloquent\Claim;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -26,6 +26,17 @@ class ClaimNote extends Model
 		} catch (ModelNotFoundException $e) {
 			return false;
 		}
+
+		return $claimNote;
+	}
+
+	public static function getJoin($claimId)
+	{
+		$claimNote = DB::table(DB::raw('dental_claim_notes n'))->select(DB::raw("n.*, CASE WHEN n.create_type='0' THEN CONCAT(a.first_name, ' ', a.last_name) ELSE CONCAT(u.first_name, ' ', u.last_name) END as creator_name"))
+															   ->leftJoin(DB::raw('dental_users u'), 'n.creator_id', '=', 'u.userid')
+															   ->leftJoin(DB::raw('admin a'), 'n.creator_id', '=', 'a.adminid')
+															   ->where('n.claim_id', '=', $claimId)
+															   ->get();
 
 		return $claimNote;
 	}

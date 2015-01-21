@@ -7,11 +7,22 @@ use Illuminate\Support\Facades\DB;
 
 class Admin extends Model
 {
-	protected $table = 'dental_support_tickets';
+	protected $table = 'admin';
 
-	protected $fillable = ['title', 'userid', 'docid', 'body', 'category_id'];
+	protected $fillable = ['name', 'username', 'password', 'status'];
 
-	protected $primaryKey = 'id';
+	protected $primaryKey = 'adminid';
+
+	public static function get($adminId)
+	{
+		try {
+			$admin = Admin::where('adminid', '=', $adminId)->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			return false;
+		}
+
+		return $admin;
+	}
 
 	public static function getJoin($categoryId)
 	{

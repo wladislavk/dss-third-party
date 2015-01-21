@@ -23,4 +23,21 @@ class LetterTemplate extends Model
 
 		return $letterTemplate;
 	}
+
+	public static function insertData($data)
+	{
+		$letterTemplate = new LetterTemplate();
+
+		foreach ($data as $attribute => $value) {
+			$letterTemplate->$attribute = $value;
+		}
+
+		try {
+			$letterTemplate->save();
+		} catch (QueryException $e) {
+			return null;
+		}
+
+		return $letterTemplate->id;
+	}
 }

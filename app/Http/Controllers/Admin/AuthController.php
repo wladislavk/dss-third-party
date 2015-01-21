@@ -47,12 +47,19 @@ class AuthController extends Controller {
                         Session::put('adminuserid',$auth['adminid']);
                         Session::put('admin_access',$auth['admin_access']);
                         Session::put('admincompanyid',$auth['companyid']);
+
+                        return Redirect::to('manage/admin/dashboard')
+                                       ->with('message','Welcome Admin');
                     }else
                     {
-                        return "its bad maaan";
+                        return Redirect::to('manage/admin/login')
+                                       ->with('message','Your Password of wrong');
                     }
                 }
-
+            }else
+            {
+                return Redirect::to('manage/admin/login')
+                                ->with('message','User Not Found');
             }
         }
 

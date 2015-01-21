@@ -3846,7 +3846,7 @@ function create_form_pdf($html, $filename, $title, $backoffice, $fontsize = 10, 
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
         //set margins
-        $pdf->SetMargins(PDF_MARGIN_LEFT, 3, PDF_MARGIN_RIGHT);
+        $pdf->SetMargins(PDF_MARGIN_LEFT, 4, PDF_MARGIN_RIGHT);
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
 

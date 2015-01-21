@@ -7,11 +7,9 @@ interface UserInterface {
 
     public function getUserWithStatus($status);
 
-    public function getUserByName($username);
-
     public function suspendUser($id);
 
-    public function getUserById($id);
+    public function findUser($id);
 
     public function updateUser($id);
 

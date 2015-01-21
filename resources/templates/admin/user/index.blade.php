@@ -2,6 +2,7 @@
 
 @section('content')
 
+    <div style="width: 1000px;margin-left: 200px;">
        <div class="bs-example" data-example-id="simple-table">
            <table class="table">
              <thead>
@@ -41,5 +42,6 @@
              </tbody>
            </table>
          </div>
+    s</div>
 @stop
 @stop

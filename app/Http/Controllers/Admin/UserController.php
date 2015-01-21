@@ -21,7 +21,7 @@ class UserController extends Controller  {
     public function show($id)
     {
         return view('admin.user.edit')
-             ->with('user',$this->user->getUserById($id));
+             ->with('user',$this->user->findUser($id));
 
     }
     public function update($id)

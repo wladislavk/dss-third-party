@@ -32,7 +32,7 @@ class UserRepository  implements UserInterface {
             return 'false';
         }
     }
-    public function getUserById($userId)
+    public function findUser($userId)
     {
         return User::find($userId);
     }
@@ -77,5 +77,6 @@ class UserRepository  implements UserInterface {
             return 'false';
         }
     }
+
 
 } 

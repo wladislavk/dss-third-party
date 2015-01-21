@@ -902,7 +902,8 @@ if($jointid <> '')
 </form>
 
 <script type="text/javascript">
-	chk_normal();
+	//removed check 01/25/2015
+	//chk_normal();
 </script>
 
 

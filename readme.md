@@ -1,4 +1,4 @@
-## Dental Solution
+## DS3 Software
 
 #### How to Install
 ##### Prerequisite

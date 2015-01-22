@@ -53,7 +53,7 @@ class AuthController extends Controller {
                     }else
                     {
                         return Redirect::to('manage/admin/login')
-                                       ->with('message','Your Password of wrong');
+                                       ->with('message','Your Password is wrong');
                     }
                 }
             }else

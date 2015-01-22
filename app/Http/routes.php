@@ -5,10 +5,12 @@ Route::get('/', 'WelcomeController@index');
 
 Route::get('home', 'HomeController@index');
 
-Route::get('/manage/login', 'Auth\AuthController@index');
-Route::post('/manage/login', 'Auth\AuthController@login');
+$router->group(['prefix' => 'manage'], function() use ($router) {
+	$router->get('login', 'AuthController@index');
+	$router->post('login', 'AuthController@login');
 
-Route::get('/manage/index', 'IndexController@index');
+	$router->get('index', 'IndexController@index');
+});
 
 $router->group([],function() use ($router) {
     $router->get('admin/manage/vob','Admin\VobController@index');

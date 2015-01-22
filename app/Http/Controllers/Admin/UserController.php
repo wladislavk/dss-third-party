@@ -31,7 +31,7 @@ class UserController extends Controller  {
             return Redirect::to("manage/admin/users")->with('message','User updated successfully');
         }else
         {
-            return Redirect::to("manage/admin/users")->with('message','User couldn\'t updated');;
+            return Redirect::to("manage/admin/users")->with('message','User could not be updated');;
         }
     }
 
@@ -42,7 +42,7 @@ class UserController extends Controller  {
             return Redirect::to('manage/admin/users')->with('message','User suspended successfully');;
         }else
         {
-            return Redirect::back('manage/admin/users')->with('message','User couldn\'t suspended');;
+            return Redirect::back('manage/admin/users')->with('message','User could not be suspended');;
         }
     }
     public function unSuspend($id)
@@ -62,7 +62,7 @@ class UserController extends Controller  {
             return Redirect::to('manage/admin/users')->with('message','User deleted successfully');
         }else
         {
-            return Redirect::to('manage/admin/users')->with('message','User couldn\'t deleted successfully');
+            return Redirect::to('manage/admin/users')->with('message','User could not be deleted successfully');
         }
     }
 

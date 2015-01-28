@@ -26,15 +26,25 @@
 				        </tr>
 				    @endif
 
+				    @if (!empty($errors->has()))
+				        <tr class="row">
+				            <td colspan="2" >
+				                <span class="red">
+									Wrong username or password
+				                </span>
+				            </td>
+				        </tr>
+				    @endif
+
 				    <tr class="row">
 				        <td class="t_data">
 				        	User name
 				        </td>
 				        <td class="t_data">
 				        	@if (empty($username))
-				        		{!! Form::text('username') !!}
+				        		{!! Form::text('username', null, array('autofocus')) !!}
 				        	@else
-				        		{!! Form::text('username', $username) !!}
+				        		{!! Form::text('username', $username, array('autofocus')) !!}
 				        	@endif
 				        </td>
 				    </tr>

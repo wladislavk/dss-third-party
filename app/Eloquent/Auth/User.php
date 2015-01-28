@@ -37,40 +37,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
 	protected $primaryKey = 'userid';
 
-	public static function get($username, $password)
-	{
-		$user = DB::table('dental_users')->leftJoin('dental_user_company', 'dental_user_company.userid', '=', 'dental_users.userid')
-										 ->select('dental_users.*', 'dental_user_company.companyid')
-										 ->where('username', '=', $username)
-										 ->where('password', '=', $password)
-										 ->whereBetween('status', array(1, 3))
-										 ->first();
-
-		return $user;
-	}
-
-	public static function getSalt($username)
-	{
-		try {
-			$user = User::where('username', '=', $username)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
-
-		return $user->salt;
-	}
-
-	public static function getType($docId)
-	{
-		try {
-			$user = User::where('userid', '=', $docId)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
-
-		return $user->user_type;
-	}
-
 	public static function getValues($userId, $values = null)
 	{
 		try {

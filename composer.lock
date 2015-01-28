@@ -4,71 +4,8 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7d027f721168784cab509c6751b8129f",
+    "hash": "f86448fe9b2bf21a62b7e5aab518fb55",
     "packages": [
-        {
-            "name": "barryvdh/laravel-ide-helper",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "c94012232f1e917455c2e22f8bb40d6a27b14715"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/c94012232f1e917455c2e22f8bb40d6a27b14715",
-                "reference": "c94012232f1e917455c2e22f8bb40d6a27b14715",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/console": "4.x|5.0.x",
-                "illuminate/filesystem": "4.x|5.0.x",
-                "illuminate/support": "4.x|5.0.x",
-                "php": ">=5.3.0",
-                "phpdocumentor/reflection-docblock": "2.0.x",
-                "symfony/class-loader": "~2.3"
-            },
-            "require-dev": {
-                "doctrine/dbal": "~2.3"
-            },
-            "suggest": {
-                "doctrine/dbal": "Load information from the database about models for phpdocs (~2.3)"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.11-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Barryvdh\\LaravelIdeHelper\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Barry vd. Heuvel",
-                    "email": "barryvdh@gmail.com"
-                }
-            ],
-            "description": "Laravel IDE Helper, generates correct PHPDocs for all Facade classes, to improve auto-completion.",
-            "keywords": [
-                "autocomplete",
-                "codeintel",
-                "helper",
-                "ide",
-                "laravel",
-                "netbeans",
-                "phpdoc",
-                "phpstorm",
-                "sublime"
-            ],
-            "time": "2015-01-22 13:33:30"
-        },
         {
             "name": "classpreloader/classpreloader",
             "version": "1.0.2",
@@ -415,12 +352,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "638806a6efaa37b2470133d3be1e8d6945d859ca"
+                "reference": "96c7cdb3a40d9f5476eef6bc6f94cf6c58f013a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/638806a6efaa37b2470133d3be1e8d6945d859ca",
-                "reference": "638806a6efaa37b2470133d3be1e8d6945d859ca",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/96c7cdb3a40d9f5476eef6bc6f94cf6c58f013a6",
+                "reference": "96c7cdb3a40d9f5476eef6bc6f94cf6c58f013a6",
                 "shasum": ""
             },
             "require": {
@@ -528,7 +465,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-01-23 14:49:33"
+            "time": "2015-01-23 02:33:34"
         },
         {
             "name": "league/flysystem",
@@ -536,12 +473,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "efa1d394bb45b0984a863854c608c607b9c2a9a4"
+                "reference": "0ba6b6dfd6f456905ee8d6b0bcaab7ec89419b93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/efa1d394bb45b0984a863854c608c607b9c2a9a4",
-                "reference": "efa1d394bb45b0984a863854c608c607b9c2a9a4",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/0ba6b6dfd6f456905ee8d6b0bcaab7ec89419b93",
+                "reference": "0ba6b6dfd6f456905ee8d6b0bcaab7ec89419b93",
                 "shasum": ""
             },
             "require": {
@@ -575,7 +512,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.0-dev"
                 }
             },
             "autoload": {
@@ -611,7 +548,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-01-23 09:43:34"
+            "time": "2015-01-19 19:19:07"
         },
         {
             "name": "monolog/monolog",
@@ -821,55 +758,6 @@
             "time": "2014-07-23 18:24:17"
         },
         {
-            "name": "phpdocumentor/reflection-docblock",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "fd0ac2007401505fb596fdfb859ec4e103d69e55"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/fd0ac2007401505fb596fdfb859ec4e103d69e55",
-                "reference": "fd0ac2007401505fb596fdfb859ec4e103d69e55",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "suggest": {
-                "dflydev/markdown": "~1.0",
-                "erusev/parsedown": "~1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "phpDocumentor": [
-                        "src/"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mike van Riel",
-                    "email": "mike.vanriel@naenius.com"
-                }
-            ],
-            "time": "2014-09-02 14:26:20"
-        },
-        {
             "name": "predis/predis",
             "version": "dev-master",
             "source": {
@@ -1018,56 +906,6 @@
                 "mailer"
             ],
             "time": "2015-01-18 13:49:36"
-        },
-        {
-            "name": "symfony/class-loader",
-            "version": "2.7.x-dev",
-            "target-dir": "Symfony/Component/ClassLoader",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/ClassLoader.git",
-                "reference": "8aaaa4399d8e3640f6a5a40bb55bebe0b1d474c3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/8aaaa4399d8e3640f6a5a40bb55bebe0b1d474c3",
-                "reference": "8aaaa4399d8e3640f6a5a40bb55bebe0b1d474c3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9"
-            },
-            "require-dev": {
-                "symfony/finder": "~2.0,>=2.0.5|~3.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.7-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\ClassLoader\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                },
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "Symfony ClassLoader Component",
-            "homepage": "http://symfony.com",
-            "time": "2015-01-09 06:51:41"
         },
         {
             "name": "symfony/console",
@@ -1869,6 +1707,121 @@
             "time": "2015-01-16 19:29:51"
         },
         {
+            "name": "mockery/mockery",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/padraic/mockery.git",
+                "reference": "cce38ee95d444190e8aac2d46c6d5e7b94ea44ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/cce38ee95d444190e8aac2d46c6d5e7b94ea44ef",
+                "reference": "cce38ee95d444190e8aac2d46c6d5e7b94ea44ef",
+                "shasum": ""
+            },
+            "require": {
+                "lib-pcre": ">=7.0",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "hamcrest/hamcrest-php": "~1.1",
+                "phpunit/phpunit": "~4.0",
+                "satooshi/php-coveralls": "~0.7@dev"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.9.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Mockery": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Pádraic Brady",
+                    "email": "padraic.brady@gmail.com",
+                    "homepage": "http://blog.astrumfutura.com"
+                },
+                {
+                    "name": "Dave Marshall",
+                    "email": "dave.marshall@atstsolutions.co.uk",
+                    "homepage": "http://davedevelopment.co.uk"
+                }
+            ],
+            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succinct API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
+            "homepage": "http://github.com/padraic/mockery",
+            "keywords": [
+                "BDD",
+                "TDD",
+                "library",
+                "mock",
+                "mock objects",
+                "mockery",
+                "stub",
+                "test",
+                "test double",
+                "testing"
+            ],
+            "time": "2015-01-18 20:11:41"
+        },
+        {
+            "name": "phpdocumentor/reflection-docblock",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
+                "reference": "fd0ac2007401505fb596fdfb859ec4e103d69e55"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/fd0ac2007401505fb596fdfb859ec4e103d69e55",
+                "reference": "fd0ac2007401505fb596fdfb859ec4e103d69e55",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "dflydev/markdown": "~1.0",
+                "erusev/parsedown": "~1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "phpDocumentor": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mike van Riel",
+                    "email": "mike.vanriel@naenius.com"
+                }
+            ],
+            "time": "2014-09-02 14:26:20"
+        },
+        {
             "name": "phpspec/php-diff",
             "version": "v1.0.2",
             "source": {
@@ -2289,12 +2242,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "f975c87a40025a7659ff612360a36af49fa6bbd4"
+                "reference": "61ba52d08c455939d85737a5c324feff1701cec6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f975c87a40025a7659ff612360a36af49fa6bbd4",
-                "reference": "f975c87a40025a7659ff612360a36af49fa6bbd4",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/61ba52d08c455939d85737a5c324feff1701cec6",
+                "reference": "61ba52d08c455939d85737a5c324feff1701cec6",
                 "shasum": ""
             },
             "require": {
@@ -2353,7 +2306,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-01-23 10:26:09"
+            "time": "2015-01-23 07:25:18"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2699,12 +2652,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/recursion-context.git",
-                "reference": "1f31686ddb3d06b16674ba809fc937e45392c25e"
+                "reference": "f2c38b43a4512d23174d8bfabb1274feda44ab6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/1f31686ddb3d06b16674ba809fc937e45392c25e",
-                "reference": "1f31686ddb3d06b16674ba809fc937e45392c25e",
+                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/f2c38b43a4512d23174d8bfabb1274feda44ab6c",
+                "reference": "f2c38b43a4512d23174d8bfabb1274feda44ab6c",
                 "shasum": ""
             },
             "require": {
@@ -2744,7 +2697,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2015-01-23 10:16:59"
+            "time": "2015-01-22 17:18:48"
         },
         {
             "name": "sebastian/version",
@@ -2833,7 +2786,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "illuminate/html": 20,
-        "barryvdh/laravel-ide-helper": 20
+        "mockery/mockery": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

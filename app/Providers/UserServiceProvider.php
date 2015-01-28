@@ -11,6 +11,21 @@ class UserServiceProvider extends ServiceProvider {
             'Ds3\Admin\Contracts\UserInterface',
             'Ds3\Admin\Repositories\UserRepository'
         );
+
+        $this->app->bind(
+        	'Ds3\Contracts\UserInterface',
+        	'Ds3\Repositories\UserRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\LoginInterface',
+            'Ds3\Repositories\LoginRepository'
+        );
+
+        $this->app->bind(
+        	'Ds3\Contracts\LoginDetailInterface',
+        	'Ds3\Repositories\LoginDetailRepository'
+        );
     }
 
 }

@@ -11,7 +11,8 @@
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",
-		"phpspec/phpspec": "~2.1"
+		"phpspec/phpspec": "~2.1",
+		"mockery/mockery": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
@@ -22,6 +23,9 @@
             "Ds3\\Admin\\Contracts\\"	: "app/Http/Controllers/Admin/contracts",
             "Ds3\\Admin\\Repositories\\": "app/Http/Controller/Admin/Repositories",
             "Ds3\\Auth\\"				: "app/Http/Controller/Auth"
+            "Ds3\\Contracts\\"          : "app/Http/Controllers/Contracts",
+            "Ds3\\Repositories\\"       : "app/Http/Controllers/Repositories"
+
 		}
 	},
 	"autoload-dev": {

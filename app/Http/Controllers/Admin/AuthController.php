@@ -7,12 +7,15 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Ds3\Auth\AuthenticateInterface;
+use Ds3\Eloquent\Admin;
+use Ds3\Eloquent\Auth\User;
 
 class AuthController extends Controller {
 
     private $auth;
     private $admin;
-    public function __construct(Auth $auth,AdminInterface $admin)
+    public function __construct(AuthenticateInterface $auth,AdminInterface $admin)
     {
         $this->auth = $auth;
         $this->admin = $admin;
@@ -32,36 +35,32 @@ class AuthController extends Controller {
         $validator = Validator::make($fields,$rules);
         if($validator->fails())
         {
-            return Redirect::to('manage/admin/login');
+            return redirect('manage/admin/login')->withErrors($validator);
         }else
         {
-            $user = $this->admin->getByUsername($fields['username']);
+            try {
+                 $this->auth->attempt($fields['username'],$fields['password'],'User');
+            }catch (Exception $e){
+                    dd($e->getMessage());
+            }
+            $user = 0;
             if($user)
             {
-                $setAndRecoverd = $this->admin->recoverAndSetHash($user->adminid,$user->email);
-                if($setAndRecoverd)
-                {
-                    $auth = $this->admin->attemptAuth($user->username,$fields['password']);
-                    if($auth['status'] == 'true')
-                    {
-                        Session::put('adminuserid',$auth['adminid']);
-                        Session::put('admin_access',$auth['admin_access']);
-                        Session::put('admincompanyid',$auth['companyid']);
-
-                        return Redirect::to('manage/admin/dashboard')
-                                       ->with('message','Welcome Admin');
-                    }else
-                    {
-                        return Redirect::to('manage/admin/login')
-                                       ->with('message','Your Password of wrong');
-                    }
-                }
+                Session::put('admin_user_id',$user->adminid);
+                Session::put('admin_access',$user->admin_access);
+                Session::put('admin_company_id',$user->companyid);
+                return redirect('manage/admin/dashboard');
             }else
             {
                 return Redirect::to('manage/admin/login')
-                                ->with('message','User Not Found');
+                                ->with('errors','User Not Found');
             }
         }
 
+    }
+    public function logout()
+    {
+        Session:flush();
+        return Redirect::to('manage/admin/login');
     }
 } 

@@ -79,6 +79,7 @@ class AuthController extends Controller
 				}
 			} else {
 				return view('manage.login', compact('msg', 'username'));
+
 			}
 		} else {
 			return view('manage.login', compact('msg', 'username'));

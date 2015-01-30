@@ -4,8 +4,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Illuminate\Support\Facades\DB;
+use Ds3\Eloquent\Auth\User;
 
-class Admin extends Model
+class Admin extends User
 {
 	protected $table = 'admin';
 
@@ -13,7 +14,7 @@ class Admin extends Model
 
 	protected $primaryKey = 'adminid';
 
-	public static function get($adminId)
+	public static function getAdmin($adminId)
 	{
 		try {
 			$admin = Admin::where('adminid', '=', $adminId)->firstOrFail();

@@ -1,8 +1,9 @@
 <?php namespace Ds3\Admin\Repositories;
 use Carbon\Carbon;
 use Ds3\Admin\Contracts\AdminInterface;
-use Ds3\Eloquent\Auth\Admin;
+use Ds3\Eloquent\Admin;
 use Ds3\Libraries\Password;
+use Illuminate\Support\Facades\Auth;
 
 class AdminRepository implements AdminInterface  {
 
@@ -27,20 +28,17 @@ class AdminRepository implements AdminInterface  {
                     ->select('salt')
                     ->first();
 
+
         $genPass = Password::genPassword($password,$salt);
 
-        /*SELECT a.*, ac.companyid  FROM admin a
-	            		  LEFT JOIN admin_company ac ON a.adminid = ac.adminid
-	            		  where username='".mysqli_real_escape_string($con,$_POST['username'])."'
-        and password='".$pass."'";*/
-
         $user = Admin::where('admin.username',$username)
-                        ->where('admin.password',$genPass)
-                     ->join('admin_company','admin_company.adminid','=','admin.adminid')
-                     ->select('admin_company.companyid','admin.*')
+                     ->where('admin.password',$genPass)
+                     ->leftJoin('admin_company','admin_company.adminid','=','admin.adminid')
+                     ->select('admin_company.companyid','admin.adminid','admin.admin_access')
                      ->first();
         if(count($user) == 1)
         {
+            Auth::login($user);
             return ['status'=>'true','user'=>$user];
         }else
         {

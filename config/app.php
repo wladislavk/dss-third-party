@@ -118,7 +118,7 @@ return [
 		'Ds3\Providers\RouteServiceProvider',
         'Ds3\Providers\UserServiceProvider',
         'Ds3\Providers\AdminServiceProvider',
-
+        'Ds3\Providers\AuthServiceProvider',
 		/*
 		 * Laravel Framework Service Providers...
 		 */
@@ -145,9 +145,9 @@ return [
 
 		'Illuminate\Html\HtmlServiceProvider',
 		'Barryvdh\Debugbar\ServiceProvider',
+        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider'
 
-
-
+        
 	],
 
 	/*

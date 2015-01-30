@@ -7,12 +7,15 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Ds3\Auth\AuthenticateInterface;
+use Ds3\Eloquent\Admin;
+use Ds3\Eloquent\Auth\User;
 
 class AuthController extends Controller {
 
     private $auth;
     private $admin;
-    public function __construct(Auth $auth,AdminInterface $admin)
+    public function __construct(AuthenticateInterface $auth,AdminInterface $admin)
     {
         $this->auth = $auth;
         $this->admin = $admin;
@@ -32,12 +35,23 @@ class AuthController extends Controller {
         $validator = Validator::make($fields,$rules);
         if($validator->fails())
         {
-            return Redirect::to('manage/admin/login');
+            return redirect('manage/admin/login')->withErrors($validator);
         }else
         {
-            $user = $this->admin->getByUsername($fields['username']);
+            try {
+                 $this->auth->attempt($fields['username'],$fields['password'],'User');
+            }catch (Exception $e){
+                    dd($e->getMessage());
+            }
+            $user = 0;
             if($user)
             {
+
+                Session::put('admin_user_id',$user->adminid);
+                Session::put('admin_access',$user->admin_access);
+                Session::put('admin_company_id',$user->companyid);
+                return redirect('manage/admin/dashboard');
+
                 $setAndRecoverd = $this->admin->recoverAndSetHash($user->adminid,$user->email);
                 if($setAndRecoverd)
                 {
@@ -59,9 +73,15 @@ class AuthController extends Controller {
             }else
             {
                 return Redirect::to('manage/admin/login')
-                                ->with('message','User Not Found');
+                                ->with('errors','User Not Found');
             }
         }
 
     }
+    public function logout()
+    {
+        Session:flush();
+        return Redirect::to('manage/admin/login');
+    }
 } 
+

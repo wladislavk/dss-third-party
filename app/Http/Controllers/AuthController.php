@@ -72,6 +72,7 @@ class AuthController extends Controller
 				Session::put('docId', $authResponse['user']->docid);
 				Session::put('userType', $authResponse['user']->user_type);
 				Session::put('userId', $authResponse['user']->userid);
+				Session::put('username', $authResponse['user']->username);
 
 				return redirect('/manage/index');
 			}

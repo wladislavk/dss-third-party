@@ -7,7 +7,7 @@ use Ds3\Repositories\UserRepository;
 use Ds3\Repositories\LoginRepository;
 use Ds3\Repositories\LoginDetailRepository;
 
-class ManageIndexTest extends TestCase
+class ManageLoginTest extends TestCase
 {
 	private $authController;
 

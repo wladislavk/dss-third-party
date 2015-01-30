@@ -1,9 +1,6 @@
 <?php namespace Ds3;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-use Illuminate\Support\Facades\DB;
 
 class Memo extends Model
 {

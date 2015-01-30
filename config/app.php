@@ -144,6 +144,7 @@ return [
 		'Illuminate\View\ViewServiceProvider',
 
 		'Illuminate\Html\HtmlServiceProvider',
+		'Barryvdh\Debugbar\ServiceProvider',
 
 
 

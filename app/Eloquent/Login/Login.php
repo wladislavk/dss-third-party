@@ -1,7 +1,6 @@
 <?php namespace Ds3\Eloquent\Login;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\QueryException;
 
 class Login extends Model
 {
@@ -9,5 +8,5 @@ class Login extends Model
 
 	protected $primaryKey = 'loginid';
 
-	// public $timestamps = false;
+	public $timestamps = false;
 }

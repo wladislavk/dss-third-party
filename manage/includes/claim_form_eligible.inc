@@ -820,6 +820,14 @@ $query = mysql_query($sql);
 
 	?>
 
+    <? if($accept_assignment=="Yes"){ ?>
+    $('input[name="claim[accept_assignment_code]"][value="A"]').attr("checked", "checked");
+    <?php }elseif($accept_assignment=="No"){ ?>
+    $('input[name="claim[accept_assignment_code]"][value="C"]').attr("checked", "checked");
+    <?php } ?>
+
+
+
     $('input[name="billing_provider[tax_id]"]').val("<?= $tax_id_or_ssn; ?>"); 
     <? if($ssn=="1"){ ?>
     $('input[name="billing_provider[tax_id_type]"][value="SY"]').attr("checked", "checked"); 

@@ -81,4 +81,15 @@ class AuthController extends Controller
 									   ->with('username', $requestUser['username']);
 		}
 	}
+
+	public function logout()
+	{
+		$loginUp = $this->login->updateData(Session::get('loginId'), array(
+			'logout_date' => date('Y-m-d H:i:s')
+		));
+
+		Session::flush();
+
+		return redirect('manage/login');
+	}
 }

@@ -5,6 +5,7 @@
 $router->group(['prefix' => 'manage'], function() use ($router) {
 	$router->get('login', 'AuthController@index');
 	$router->post('login', 'AuthController@login');
+    $router->get('logout', 'AuthController@logout');
 
 	$router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index');  

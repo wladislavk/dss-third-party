@@ -3,6 +3,7 @@
 use Ds3\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 
 use Ds3\Libraries\Constants;
@@ -221,6 +222,8 @@ class TopController extends Controller
 
 			$numSupport = count($this->supportTicket->getSupport(Session::get('docId'), Constants::DSS_TICKET_STATUS_CLOSED));
 
+			$onClick = '';
+
 			if ($request->path() == '/manage/flowsheet3' || $request->path() == '/manage/flowsheet4') {
 				$stepResponse = $this->flowPg2->getStep($patientId);
 
@@ -228,14 +231,19 @@ class TopController extends Controller
 					$stepResponse = array($stepResponse->steparray);
 					$step = explode(',', $stepResponse['0']);
 					$stepJson = json_encode($step);
-					$hideAllBlocks = 1;
+					$onClick .= 'hideallblocksForFlowsheet(' . $step_json. ');';
 				} else {
-					$hideAllBlocks = 2;
+					$onClick .= 'hideallblocks();';
 				}
+			}
+
+			if (isset($this->routeParameters['preview']) && $this->routeParameters['preview'] == '1') {
+				$onClick .= ' check();';
 			}
 
 			if (isset($this->routeParameters['page']) && $this->routeParameters['page'] == 'page2') {
 				$cssForPage2 = true;
+				$onClick .= " $('#flowsheet_page1').css('display', 'none'); $('#flowsheet_page2').css('display', 'block');";
 			} else {
 				$cssForPage2 = false;
 			}
@@ -341,6 +349,7 @@ class TopController extends Controller
 			$showWarningQuestionnaire 	= null;
 			$showWarningBounced 		= null;
 			$rejectedInsurance 			= null;
+			$hideWarnings				= null;
 
 			if (!empty($patientId)) {
 
@@ -391,7 +400,7 @@ class TopController extends Controller
 					'patientid' => $patientId
 				));
 
-				if (!empty($email)) {
+				if (count($email)) {
 					$showWarningBounced = true;
 				}
 
@@ -408,7 +417,12 @@ class TopController extends Controller
 					'patient_id' => $patientId
 				));
 				*/
-
+				
+				if (Cookie::get('hidePatWarnings') == $patientId) {
+					$hideWarnings = true;
+				} else {
+					$hideWarnings = false;
+				}
 			}	
 
 			$useLetters = ($this->user->findUser(Session::get('docId'))->use_letters == '1');
@@ -456,7 +470,10 @@ class TopController extends Controller
 				'numRejectedPreauth'		=> $numRejectedPreauth,
 				'numFaxAlerts'				=> $numFaxAlerts,
 				'numPendingDuplicates'		=> $numPendingDuplicates,
-				'numBounce'					=> $numBounce
+				'numBounce'					=> $numBounce,
+				'onClick'					=> $onClick,
+				'hideWarnings'				=> $hideWarnings,
+				'patientId'					=> $patientId
 			);
 
 			return $responseArray;

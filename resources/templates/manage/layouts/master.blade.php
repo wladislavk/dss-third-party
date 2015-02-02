@@ -59,7 +59,8 @@
 			<!-- ========================================================== -->
 		@show
 	</head>
-	<body>
+
+	<body onload="{!! $onClick !!}">
 		<table width="980" border="0" cellpadding="0" cellspacing="0" align="center">
 			<tr>
 				<td colspan="2" align="right" ></td>
@@ -69,7 +70,7 @@
 					<div class="suckertreemenu2">
 						<ul id="topmenu2">
 							<li>
-								<a href="index.php"> Notifications ({!! $messageCount or '' !!})</a>
+								<a href="index"> Notifications ({!! $messageCount or '' !!})</a>
 							</li>
 
 							@if (!empty($numSupport))
@@ -77,11 +78,11 @@
 							@else
 								<li id="header_support">
 							@endif
-								<a href="support.php">Support ({!! $numSupport or '' !!})</a>
+								<a href="support">Support ({!! $numSupport or '' !!})</a>
 							</li>
 
 							<li>
-								<a href="logout.php">Sign Out</a>
+								<a href="logout">Sign Out</a>
 							</li>
 						</ul>
 					</div>
@@ -247,11 +248,11 @@
             			<a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="help_login" target="_blank">Help</a>
            			@endif
 
-           			<a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="calendar.php">Scheduler</a>
+           			<a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="calendar">Scheduler</a>
 
            			<div style="height:89px; width:100%; background:url(/img/dss_01.png) #0b5c82 no-repeat top left;"> 
 						<div style="margin-top:10px; margin-left:20px; float:left;">
-							<a href="/manage" id="logo">Dashboard</a>
+							<a href="/manage/index" id="logo">Dashboard</a>
 						</div>
 
 						<div style="float:left; width:68%;">
@@ -311,7 +312,7 @@
 										<span id="pat_task_header" style="font-size:14px; font-weight:normal; color:#fff;">Tasks({!! $numPatientTasks !!})</span>
 
 										<div class="task_list" id="pat_task_list" style="display:none;">
-											@if (!empty($overdueTasks))
+											@if (count($overdueTasks))
 												<h4 id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
 												<ul id="pat_task_od_list">
 													@foreach ($overdueTasks as $overdueTask)
@@ -333,8 +334,8 @@
 												</ul>
 											@endif
 
-											@if (!empty($todayTasks))
-												<h4 id="pat_task_tod_header" style="color:red" class="task_tod_header">Overdue</h4>
+											@if (count($todayTasks))
+												<h4 id="pat_task_tod_header" class="task_tod_header">Today</h4>
 												<ul id="pat_task_tod_list">
 													@foreach ($todayTasks as $todayTask)
 														<li class="task_item task_{!! $todayTask->id !!}" style="clear:both;">
@@ -355,8 +356,8 @@
 												</ul>
 											@endif
 
-											@if (!empty($tomorrowTasks))
-												<h4 id="pat_task_tom_header" style="color:red" class="task_tom_header">Overdue</h4>
+											@if (count($tomorrowTasks))
+												<h4 id="pat_task_tom_header" class="task_tom_header">Tomorrow</h4>
 												<ul id="pat_task_tom_list">
 													@foreach ($tomorrowTasks as $tomorrowTask)
 														<li class="task_item task_{!! $tomorrowTask->id !!}" style="clear:both;">
@@ -377,8 +378,8 @@
 												</ul>
 											@endif
 
-											@if (!empty($futureTasks))
-												<h4 id="pat_task_fut_header" style="color:red" class="task_fut_header">Overdue</h4>
+											@if (count($futureTasks))
+												<h4 id="pat_task_fut_header" class="task_fut_header">Future</h4>
 												<ul id="pat_task_fut_list">
 													@foreach ($futureTasks as $futureTask)
 														<li class="task_item task_{!! $futureTask->id !!}" style="clear:both;">
@@ -404,11 +405,13 @@
 							@endif
 
 							@if (!empty($patientId))
-								<?php
-								/**
-
-								*/
-								?>
+								@if (!empty($hideWarnings))
+									<a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="show_patient_warnings" onclick="$.cookie('hidePatWarnings', null);$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
+	         						<a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="hide_patient_warnings" onclick="$.cookie('hidePatWarnings', {!! $patientId !!});$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
+								@else 
+									<a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="show_patient_warnings" onclick="$.cookie('hidePatWarnings', null);$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
+	         						<a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="hide_patient_warnings" onclick="$.cookie('hidePatWarnings', {!! $patientId !!});$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
+								@endif
 							@endif
 
 							<div class="suckertreemenu">
@@ -463,9 +466,17 @@
 
 											<li>
 												@if ($path == '/manage/patient_letters')
-													<a class="nav_active" href="dss_summ/sect/notes/pid/{!! $patientId !!}/addtopat/1">Progress Notes</a>
+													<a class="nav_active" href="dss_summ/sect/letters/pid/{!! $patientId !!}/addtopat/1">Letters</a>
 												@else
-													<a href="dss_summ/sect/notes/pid/{!! $patientId !!}/addtopat/1">Progress Notes</a>
+													<a href="dss_summ/sect/letters/pid/{!! $patientId !!}/addtopat/1">Letters</a>
+												@endif
+											</li>
+
+											<li>
+												@if ($path == '/manage/q_image')
+													<a class="nav_active" href="q_image/pid/{!! $patientId !!}">Images</a>
+												@else
+													<a href="q_image/pid/{!! $patientId !!}">Images</a>
 												@endif
 											</li>
 
@@ -485,7 +496,7 @@
 												@endif
 											</li>
 
-											<li>
+											<li class="last">
 												@if ($path == '/manage/add_patient')
 													<a class="nav_active" href="add_patient/ed/{!! $patientId !!}/preview/1/addtopat/1/pid/{!! $patientId !!}">Patient Info</a>
 												@else

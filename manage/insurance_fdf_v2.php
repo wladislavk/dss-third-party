@@ -30,6 +30,7 @@ $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 $name = strtoupper(st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']));
 $insurancetype =strtoupper($pat_myarray['p_m_ins_type']);
+$insuranceco =$pat_myarray['p_m_ins_co'];
 $insured_firstname = strtoupper(st($pat_myarray['p_m_partyfname']));
 $insured_lastname = strtoupper(st($pat_myarray['p_m_partylname']));
 $insured_middle = strtoupper(st($pat_myarray['p_m_partymname']));
@@ -108,6 +109,10 @@ $other_insured_employer_school_name = strtoupper(st($myarray['other_insured_empl
 
 
 if($_GET['type']=='secondary'){
+$inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";
+$inscoarray = mysql_query($inscoquery);
+$inscoinfo = mysql_fetch_array($inscoarray);
+
   $insurancetype =strtoupper($myarray['other_insurance_type']);
   $other_insurancetype = $myarray['insurance_type'];
   $other_insured_firstname =strtoupper($myarray['insured_firstname']);
@@ -132,6 +137,10 @@ if($_GET['type']=='secondary'){
   $insured_phone =strtoupper($myarray['insured_phone']);
   $insured_sex =strtoupper($myarray['other_insured_sex']);
 }else{
+$inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
+$inscoarray = mysql_query($inscoquery);
+$inscoinfo = mysql_fetch_array($inscoarray);
+
   $insurancetype =strtoupper($myarray['insurance_type']);
   $other_insurancetype = $myarray['other_insurance_type'];
   $other_insured_firstname =strtoupper($myarray['other_insured_firstname']);
@@ -158,7 +167,29 @@ if($_GET['type']=='secondary'){
 }
 
 
+$status_sql = "SELECT status FROM dental_insurance
+                WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'
+                        AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$status_q = mysql_query($status_sql);
+$status_r = mysql_fetch_assoc($status_q);
+$status = $status_r['status'];
+$is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
+$is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
+$is_pri_pending = ($status == DSS_CLAIM_PENDING) ? true : false;
+$is_sec_pending = ($status == DSS_CLAIM_SEC_PENDING) ? true : false;
+$is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
+$is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
+$is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED);
 
+if($is_secondary){
+  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";
+  $inscoarray = mysql_query($inscoquery);
+  $inscoinfo = mysql_fetch_array($inscoarray);
+}else{
+  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
+  $inscoarray = mysql_query($inscoquery);
+  $inscoinfo = mysql_fetch_array($inscoarray);
+}
 
 
 
@@ -342,7 +373,7 @@ $name_referring_provider_qualifier=strtoupper($myarray['name_referring_provider_
 if (strrpos( $referring_provider, '-')){
   $referring_provider =substr($referring_provider, 0, strrpos( $referring_provider, '-'));
 }
- $referring_provider = $name_referring_provider_qualifier." ".$referring_provider;
+// $referring_provider = $name_referring_provider_qualifier." ".$referring_provider;
 
 $status =strtoupper($myarray['status']);
 
@@ -475,9 +506,6 @@ if (empty($prior_authorization_number)) {
     }
 }
 
-$inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
-$inscoarray = mysql_query($inscoquery);
-$inscoinfo = mysql_fetch_array($inscoarray);
 
 $referredby_sql = "select * from dental_contact where `contactid` = ".$referredby." LIMIT 1;";
 $referredby_my = mysql_query($referredby_sql);
@@ -714,6 +742,7 @@ $fdf = "
     ";
   }
   $fdf .= "
+  << /T(".$field_path.".name_referring_provider_qualifier_fill[0]) /V(".$referring_provider_qualifier.") >>
   << /T(".$field_path.".name_referring_provider_fill[0]) /V(".$referring_provider.") >>
   << /T(".$field_path.".seventeenA_fill[0]) /V(".$field_17a.") >>
   << /T(".$field_path.".seventeenb_NPI_fill[0]) /V(".$field_17b.") >>

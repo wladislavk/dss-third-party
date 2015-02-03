@@ -152,7 +152,7 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', '', true, false);
+setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer', '', true, false);
 });
 </script>
 <input type="hidden" name="payer_id" id="payer_id" />

@@ -5,14 +5,14 @@
 	"license": "MIT",
 	"type": "project",
 	"require": {
-		"laravel/framework": "~5.0",
+        "laravel/framework": "5.0.*@dev",
 		"illuminate/html": "~5.0@dev",
-		"barryvdh/laravel-ide-helper": "~1.11@dev"
+		"barryvdh/laravel-ide-helper": "~1.11@dev",
+		"mockery/mockery": "0.9.*"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",
-		"phpspec/phpspec": "~2.1",
-		"mockery/mockery": "dev-master"
+		"phpspec/phpspec": "~2.1"
 	},
 	"autoload": {
 		"classmap": [
@@ -22,7 +22,8 @@
 			"Ds3\\": "app/",
             "Ds3\\Admin\\Contracts\\"	: "app/Http/Controllers/Admin/contracts",
             "Ds3\\Admin\\Repositories\\": "app/Http/Controller/Admin/Repositories",
-            "Ds3\\Auth\\"				: "app/Http/Controller/Auth"
+            "Ds3\\Auth\\"				: "app/Http/Controller/Auth",
+            "Ds3\\Ds3Auth\\"            : "app/Http/Controller/Ds3Auth",
             "Ds3\\Contracts\\"          : "app/Http/Controllers/Contracts",
             "Ds3\\Repositories\\"       : "app/Http/Controllers/Repositories"
 
@@ -48,6 +49,5 @@
 	},
 	"config": {
 		"preferred-install": "dist"
-	},
-	"minimum-stability": "dev"
+	}
 }

@@ -9,10 +9,10 @@
   @if($users[0]->is_super(\Session::get('admin_access')) || $users[0]->is_admin(\Session::get('admin_access')))
 
 <div align="right">
-  <button onclick="Javascript: loadPopup('add_users.php');" class="btn btn-success">
+  <a href="/manage/admin/user/new" class="btn btn-success">
     Add New User
-    <span class="glyphicon glyphicon-plus">
-  </button>
+    <span class="glyphicon glyphicon-plus"></span>
+  </a>
   &nbsp;&nbsp;
 </div>
 @endif

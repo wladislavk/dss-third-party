@@ -1,10 +1,12 @@
 <?php namespace Ds3\Admin\Repositories;
 
 use Carbon\Carbon;
-use Ds3\Eloquent\Admin;
+use Ds3\Eloquent\AccessCode;
 use Ds3\Eloquent\AdminCompany;
 use Ds3\Eloquent\Auth\User;
 use Ds3\Admin\Contracts\UserInterface;
+use Ds3\Eloquent\Company;
+use Ds3\Eloquent\Plan;
 use Ds3\Libraries\Constants;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
@@ -12,12 +14,14 @@ use Illuminate\Support\Facades\Session;
 class UserRepository  implements UserInterface {
 
     private $user;
-   public function __construct(User $user)
+    private $company;
+   public function __construct(User $user,Company $company)
    {
         $this->user = $user;
+       $this->company = $company;
    }
     public function getAllUsers()
-    {  
+    {
         $query = null;
         $access = Session::get('admin_access');
         $cid = Input::get('cid');
@@ -71,7 +75,7 @@ class UserRepository  implements UserInterface {
 
     public function getUserByName($username)
     {
-
+        return 'foo';
     }
     public function suspendUser($userId)
     {
@@ -130,6 +134,21 @@ class UserRepository  implements UserInterface {
             return 'false';
         }
     }
-
+    public function getCompanies($companyType)
+    {
+            return $this->company->where('company_type',$companyType)->orderBy('name','ASC')->lists('name','id','None','null');
+    }
+    public function getUserType()
+    {
+        return Constants::$UserTypeLabel;
+    }
+    public function getAccessCode()
+    {
+        return AccessCode::orderBy('access_code','ASC')->lists('access_code','id');
+    }
+    public function getPlans($planType)
+    {
+        return Plan::where('office_type',$planType)->orderBy('name','ASC')->lists('name','id');
+    }
 
 } 

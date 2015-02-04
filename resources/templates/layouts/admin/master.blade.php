@@ -37,7 +37,7 @@
     <link type="text/css" rel="stylesheet" href="/manage/admin/css/bootstrap-datepicker.css">
     <link type="text/css" rel="stylesheet" href="/manage/admin/css/admin.css">
 
-    <script type="text/javascript" src="/manage/admin/script/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="/js/libs/jquery.js"></script>
     <script type="text/javascript" src="/manage/admin/script/validation.js"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-3.1.0.min.js"></script>
     <script type="text/javascript" src="/manage/js/jquery.cookie.js"></script>
@@ -1012,12 +1012,12 @@
 	<script src="admin/template/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
 	<!-- <script src="admin/template/assets/scripts/core/app.js" type="text/javascript"></script>-->
 	<!-- IMPORTANT! Load jquery-ui-1.10.3.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
-	<script src="/css/admin/template/assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+	<script src="/js/libs/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
 	<script src="/css/admin/template/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="/css/admin/template/assets/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
 	<script src="/css/admin/template/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
 	<script src="/css/admin/template/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
-	<script src="/css/admin/template/assets/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+	<script src="/js/libs/jquery.cokie.min.js" type="text/javascript"></script>
 	<script src="/css/admin/template/assets/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
 	<script src="/css/admin/template/assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 	<!-- END CORE PLUGINS -->
@@ -1033,7 +1033,7 @@
 	<script src="/css/admin/template/assets/plugins/flot/jquery.flot.resize.min.js" type="text/javascript"></script>
 	<script src="/css/admin/template/assets/plugins/flot/jquery.flot.categories.min.js" type="text/javascript"></script>
 	<script src="/css/admin/template/assets/plugins/jquery.pulsate.min.js" type="text/javascript"></script>
-	<script src="/css/admin/template/assets/plugins/bootstrap-daterangepicker/moment.min.js" type="text/javascript"></script>
+	<script src="/js/libs/moment.min.js" type="text/javascript"></script>
 	<script src="/css/admin/template/assets/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-datepicker.js"></script>
 	<!---<script src="admin/template/assets/plugins/gritter/js/jquery.gritter.js" type="text/javascript"></script>---><!---displays momentary custom boxes on screen  --->

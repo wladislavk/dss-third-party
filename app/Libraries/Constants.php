@@ -250,14 +250,14 @@ class Constants
 
 	const DSS_USER_TYPE_FRANCHISEE 	= 1;
 	const DSS_USER_TYPE_SOFTWARE 	= 2;
-/*
-	public static $dss_user_type_labels = array(
+
+	public static $UserTypeLabel = array(
 
 		self::DSS_USER_TYPE_FRANCHISEE 	=> 'Franchisee',
 		self::DSS_USER_TYPE_SOFTWARE 	=> 'Software'
 
 	);
-*/
+
 	const DSS_ADMIN_ACCESS_SUPER 			= 1;
 	const DSS_ADMIN_ACCESS_ADMIN 			= 2;
 	const DSS_ADMIN_ACCESS_BASIC 			= 3;

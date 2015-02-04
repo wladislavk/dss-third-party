@@ -1,22 +1,42 @@
 <?php namespace Ds3\Http\Controllers\Admin;
 
+use Ds3\Eloquent\Company;
 use Ds3\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use Ds3\Admin\Contracts\UserInterface;
+use Ds3\Http\Requests\AddUserRequest;
+use Ds3\Libraries\Constants;
 
 
 class UserController extends Controller  {
 
     private $user;
+
     public function __construct(UserInterface $user)
     {
         $this->user = $user;
     }
 
     public function index()
-    {  
+    {
         return view('admin.user.index')
+
              ->with('users',$this->user->getAllUsers());
+    }
+    public function getNewUser()
+    {
+        return view('admin.user.new')
+            ->with('billingPlans',$this->user->getPlans(3))  // get plan where office_type = 3
+            ->with('softwarePlans',$this->user->getPlans(1)) // get plan where office_type = 1
+            ->with('accessCode',$this->user->getAccessCode())
+            ->with('billingCompanyType',$this->user->getCompanies(Constants::DSS_COMPANY_TYPE_BILLING))
+            ->with('userType',$this->user->getUserType())
+            ->with('adminCompanies',$this->user->getCompanies(Constants::DSS_COMPANY_TYPE_SOFTWARE));
+
+    }
+    public function postNewUser(AddUserRequest $request)
+    {
+        return response('Friend added!');
     }
     public function show($id)
     {

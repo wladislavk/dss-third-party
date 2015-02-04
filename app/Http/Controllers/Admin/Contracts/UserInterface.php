@@ -16,4 +16,13 @@ interface UserInterface {
     public function unSuspendUser($id);
 
     public function deleteUser($id);
-} 
+
+    public function getCompanies($companyType);
+
+    public function getUserType();
+
+    public function getAccessCode();
+
+    public function getPlans($planType);
+}
+

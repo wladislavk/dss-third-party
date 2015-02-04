@@ -1,9 +1,6 @@
 <?php namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-use Illuminate\Support\Facades\DB;
 
 class Summary extends Model
 {
@@ -15,18 +12,20 @@ class Summary extends Model
 
 	public static function get($patientId)
 	{
-		try {
-			$location = Summary::where('patientid', '=', $patientId)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+		$summary = Summary::where('patientid', '=', $patientId)->get();
 
-		return $location;
+		return $summary;
 	}
 
-	public static function updateData($patientId, $values)
+	public static function updateData($where, $values)
 	{
-		$summary = Summary::where('patientid', '=', $patientId)->update($values);
+		$summary = new Summary();
+
+		foreach ($where as $attribute => $value) {
+			$summary = $summary->where($attribute, '=', $value);
+		}
+
+		$summary = $summary->update($values);
 
 		return $summary;
 	}

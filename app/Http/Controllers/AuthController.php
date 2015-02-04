@@ -72,6 +72,7 @@ class AuthController extends Controller
 				Session::put('docId', $authResponse['user']->docid);
 				Session::put('userType', $authResponse['user']->user_type);
 				Session::put('userId', $authResponse['user']->userid);
+				Session::put('username', $authResponse['user']->username);
 
 				return redirect('/manage/index');
 			}
@@ -79,5 +80,16 @@ class AuthController extends Controller
 			return view('manage.login')->with('msg', $msg)
 									   ->with('username', $requestUser['username']);
 		}
+	}
+
+	public function logout()
+	{
+		$loginUp = $this->login->updateData(Session::get('loginId'), array(
+			'logout_date' => date('Y-m-d H:i:s')
+		));
+
+		Session::flush();
+
+		return redirect('manage/login');
 	}
 }

@@ -1,9 +1,6 @@
 <?php namespace Ds3\Eloquent\Ledger;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-use Illuminate\Support\Facades\DB;
 
 class LedgerRec extends Model
 {

@@ -35,4 +35,11 @@ class LoginRepository implements LoginInterface
 
 		return $login->get();
 	}
+
+	public function updateData($loginId, $values)
+	{
+		$login = Login::where('loginid', '=', $loginId)->update($values);
+
+		return $login;
+	}
 }

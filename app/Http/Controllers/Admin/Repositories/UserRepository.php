@@ -136,7 +136,7 @@ class UserRepository  implements UserInterface {
     }
     public function getCompanies($companyType)
     {
-            return $this->company->where('company_type',$companyType)->orderBy('name','ASC')->lists('name','id','None','null');
+        return $this->company->where('company_type',$companyType)->orderBy('name','ASC')->lists('name','id','None','null');
     }
     public function getUserType()
     {

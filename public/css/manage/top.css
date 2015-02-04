@@ -1,0 +1,167 @@
+#logo{ 
+  width:96px;
+  height:77px;
+  background: url(/img/logo.png) no-repeat 0 0;
+  display: block;
+  float: left;
+  padding-left: 100px;
+  color: #fff;
+  }
+
+.suckertreemenu{
+  height: 27px;
+  }
+
+#treemenu1{
+  width: 550px;
+  float: right;
+  height: 37px;
+  }
+
+.homesuckertreemenu #treemenu1{
+  width:auto;
+  float: none;
+  height: auto;
+  }
+
+  
+
+#patient_search_div{
+  float: left;
+  margin: 25px 5px 0 0px;
+  }
+
+#patient_name_div{
+  margin: 4px 0 0 30px;
+  height: 30px;
+  padding-top: 6px;
+  min-width: 317px;
+  float: left;
+  color: #000;
+  font-size: 22px;
+  /*background: #fed68d url(../images/name_bg.gif) no-repeat 0 0;*/
+  background: #fed68d;
+-webkit-border-top-left-radius: 5px;
+-webkit-border-top-right-radius: 5px;
+-moz-border-radius-topleft: 5px;
+-moz-border-radius-topright: 5px;
+border-top-left-radius: 5px;
+border-top-right-radius: 5px;
+  }
+
+#patient_name_div .medicare_name{
+  min-width:238px;
+  padding:0 3px;
+  vertical-align:top;
+  text-align:center;
+  display:block;
+  float:right;
+}
+
+#patient_name_div .name{
+  width:100%;
+  text-align:center;
+  display:block;
+  }
+
+#patient_nav{
+  background: #fed68d;
+  height:30px;
+  width: 100%;
+  margin-top:13px;
+  }
+
+#patient_nav ul{
+  list-style:none;
+  margin:0px;
+  padding-left:15px;
+  height: 30px;
+  }
+
+#patient_nav li{
+  float:left;
+  display:block;
+  margin:0px;
+  height:30px;
+  padding:0;
+  }
+
+#patient_nav li.last a{
+  border-right: none;
+  }
+
+#patient_nav li a{
+  color: #000;
+  font-size: 14px;
+  padding: 7px 7px 7px 7px;
+  border-right: solid 1px #000;
+  height:30px;
+  line-height: 30px;
+  }
+
+#patient_nav li a:hover, #patient_nav li a.nav_active{
+  background: #fff;
+  text-decoration: none;
+}
+
+.suckertreemenu2 .menu_item{
+  font-weight: bold;
+  }
+.suckertreemenu2 .submenu_item{
+  text-indent:20px;
+  height: 18px;
+  padding-top:6px;
+  }
+
+
+.exam_label{ float:left; width:300px; }
+.plus_count{ color:#c33; font-size:14px;font-weight:bold; }
+
+.delete_letter{ float: right; }
+
+
+#warn_logout{
+display:none;
+position:fixed;
+_position:absolute; /* hack for internet explorer 6*/
+height:100%;
+width:100%;
+top:0;
+left:0;
+background:#000000;
+border:1px solid #cecece;
+z-index:1701;
+text-align:center;
+}
+
+#warn_logout h1{
+  color:#ffffff;
+}
+
+#warn_logout a{
+  padding: 20px;
+  margin: 20px;
+  background: #fff;
+  color:#000;
+}
+
+#header_support{
+  width:98px;
+  height:28px;
+  background:url(/img/support_button_blue.png) no-repeat 0 8px;
+  }
+
+#header_support:hover{
+  background:url(/img/support_button_blue_hover.png) no-repeat 0 8px;
+  }
+
+#header_support.pending{
+  background:url(/img/support_button_red.png) no-repeat 0 8px;
+  }
+#header_support.pending:hover{
+  background:url(/img/support_button_red_hover.png) no-repeat 0 8px;
+  }
+
+#header_support a{
+  color: #fff;
+  }

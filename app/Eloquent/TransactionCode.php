@@ -1,9 +1,6 @@
 <?php namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-use Illuminate\Support\Facades\DB;
 
 class TransactionCode extends Model
 {

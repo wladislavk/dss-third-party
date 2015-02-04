@@ -1,9 +1,6 @@
 <?php namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-use Illuminate\Support\Facades\DB;
 
 class FlowPg2Info extends Model
 {
@@ -13,13 +10,21 @@ class FlowPg2Info extends Model
 
 	protected $primaryKey = 'id';
 
-	public static function get($patientId)
+	public static function get($where, $order = null)
 	{
-		$flowPg2Info = FlowPg2Info::where('patientid', '=', $patientId)->orderBy('date_completed', 'desc')
-																	   ->orderBy('id', 'desc')
-																	   ->get();
+		$flowPg2Info = new FlowPg2Info();
 
-		return $flowPg2Info;
+		foreach ($where as $attribute => $value) {
+			$flowPg2Info = $flowPg2Info->where($attribute, '=', $value);
+		}
+
+		if (!empty($order)) {
+			foreach ($order as $attribute) {
+				$flowPg2Info = $flowPg2Info->orderBy($attribute, 'desc');
+			}
+		}														   
+
+		return $flowPg2Info->get();
 	}
 
 	public static function insertData($data)

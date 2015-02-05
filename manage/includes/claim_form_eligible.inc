@@ -624,7 +624,14 @@ if(!$r['reference_id'] || !$w_r['response']){
     $('input[name="dependent[address][state]"]').val("<?= $patient_state;?>");
     $('input[name="dependent[address][zip]"]').val("<?= $patient_zip;?>");
     $('input[name="dependent[phone_number]"]').val("<?= $patient_phone;?>");
-
+	
+    <?php if($patient_relation_insured == 'Spouse'){ ?>
+      $('input[name="dependent[relationship]"][value="01"]').attr("checked", "checked");
+    <?php }elseif($patient_relation_insured == 'Child'){ ?>
+      $('input[name="dependent[relationship]"][value="19"]').attr("checked", "checked");
+    <?php }elseif($patient_relation_insured == 'Other'){ ?>
+      $('input[name="dependent[relationship]"][value="G8"]').attr("checked", "checked");
+    <?php } ?>
     $('input[name="subscriber[last_name]"]').val("<?= $insured_lastname;?>");
     $('input[name="subscriber[first_name]"]').val("<?= $insured_firstname;?>");
     $('input[name="subscriber[middle_name]"]').val("<?= $insured_middle;?>");

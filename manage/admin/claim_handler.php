@@ -605,11 +605,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 	mysql_query($pat_sql);
 
 
-    $url = 'https://gds.eligibleapi.com/v1.3/claims.json';
+    $url = 'https://gds.eligibleapi.com/v1.4/claims.json';
 
     $data = array(); //Initializing parameter array
 
-    $data['api_key'] = 'hCmEKZG7_KQ8mS4ztO3EJWKP1KEWvwW5Bdvx'; //Setting your api key
+    $data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4'; //Setting your api key
 
     $data['eligibleToken'] = $_POST["eligibleToken"]; // Reading eligibleToken and passing to claims endpoint
 

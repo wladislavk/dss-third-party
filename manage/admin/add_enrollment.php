@@ -340,7 +340,7 @@ function update_list(){
   if(t == '1'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=coverage&enrollment_required=true&api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer');
   }else if(t == '2'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=status%20reports&enrollment_required=true&api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=payment%20status&enrollment_required=true&api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer');
   }else if(t == '4'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=payment%20reports&enrollment_required=true&api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer');
   }else if(t == '5'){

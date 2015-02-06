@@ -1,6 +1,6 @@
 <?php
-$PUBLISHABLE_KEY = '-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-';
-$API_KEY = 'hCmEKZG7_KQ8mS4ztO3EJWKP1KEWvwW5Bdvx';
+$PUBLISHABLE_KEY = 'E1q20FOFf0-DcsrnQdltikaQrVI4nwwfhgXZ';
+$API_KEY = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
 
     $user_defined_field1_value = '';
     $user_defined_field2_value = '';

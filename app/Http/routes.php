@@ -27,6 +27,10 @@ $router->group(['prefix' => 'manage'],function() use ($router) {
     $router->post('admin/accesscode/new','Admin\AccessCodeController@postAddAccessCode');
     $router->get('admin/accesscode/{id}/edit',['as'=>'admin.accesscode.update','uses'=>'Admin\AccessCodeController@getUpdateAccessCode']);
     $router->post('admin/accesscode/{id}/update','Admin\AccessCodeController@postUpdateAccessCode');
+    $router->get('admin/accesscode/{id}/delete','Admin\AccessCodeController@getDeleteAccessCode');
+
+//    /manage/admin/accesscode/{{$code->id}}/delete
+    $router->get('admin/backoffice/users','Admin\BackOfficeController@getIndex');
 
 });
 $router->get('manage/admin/login','Admin\SessionController@index');

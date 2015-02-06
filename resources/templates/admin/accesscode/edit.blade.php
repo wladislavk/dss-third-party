@@ -20,7 +20,7 @@
                  Access Code
              </td>
              <td valign="top" class="frmdata">
-                 <input type="text" name="access_code"  class="form-control" value={{ $accesscode->access_code }}>
+                 <input type="text" name="access_code"  class="form-control" value="{{ $accesscode->access_code }}">
                  <span class="red">*</span>
              </td>
          </tr>
@@ -29,7 +29,7 @@
                  Notes
              </td>
              <td valign="top" class="frmdata">
- 		<textarea name="notes">{{ $accesscode->notes }}</textarea>
+ 		<textarea name="notes">"{{ $accesscode->notes }}"</textarea>
              </td>
          </tr>
          <tr bgcolor="#FFFFFF">
@@ -59,7 +59,8 @@
                  <input type="hidden" name="_token" value={!! csrf_token() !!}>
                  <input type="hidden" value="{{ $accesscode->access_code }}" name="current_access_code"/>
                  <input type="submit" name="accesscodesub" value="Update Access Code" class="btn btn-primary">
- 		            </td>
+                 <a href="/manage/admin/accesscode" class="btn btn-success">Back</a>
+             </td>
          </tr>
      </tbody></table>
      </form>

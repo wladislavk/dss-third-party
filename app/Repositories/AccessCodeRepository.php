@@ -35,8 +35,19 @@ class AccessCodeRepository implements AccessCodeInterface {
             return false;
         }
     }
+
+    public function delete($id)
+    {
+        if($this->accesscode->find($id)->delete())
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
     public function getAllAccessCodes()
     {
-        return $this->accesscode->all();
+        return $this->accesscode->orderBy('id','DESC')->paginate(20);
     }
 } 

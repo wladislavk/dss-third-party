@@ -32,6 +32,9 @@
                     <a href="/manage/admin/accesscode/{{$code->id}}/edit" title="" class="btn btn-primary btn-sm" data-original-title="Edit">Edit
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
+                    <a href="/manage/admin/accesscode/{{$code->id}}/delete" title="" class="btn btn-danger btn-sm float-right" data-original-title="Edit">Delete
+                        <span class="glyphicon glyphicon-remove-sign"></span>
+                    </a>
                 </td>
             </tr>
             @foreach($code->users()->get() as $user)
@@ -48,7 +51,7 @@
 
 			</tbody>
 			</table>
-
+    {!! $accessCodes->render() !!}
 @stop
 
 @stop

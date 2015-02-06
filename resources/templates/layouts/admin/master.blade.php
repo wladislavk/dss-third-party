@@ -265,7 +265,7 @@
 									</a>
 								</li>
 																 								<li>
-									<a href="/manage/admin/manage_backoffice.php">
+									<a href="/manage/admin/backoffice/users">
 										<i class="fa fa-user"></i> Backoffice Accounts
 									</a>
 								</li>

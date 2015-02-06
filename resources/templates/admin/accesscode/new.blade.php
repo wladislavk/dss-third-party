@@ -58,7 +58,8 @@
                  <input type="hidden" name="ed" value="">
                  <input type="hidden" name="_token" value={!! csrf_token() !!}>
                  <input type="submit" name="accesscodesub" value=" Add  Access Code" class="btn btn-primary">
- 		            </td>
+                 <a href="/manage/admin/accesscode" class="btn btn-success">Back</a>
+ 		     </td>
          </tr>
      </tbody></table>
      </form>

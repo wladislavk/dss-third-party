@@ -21,8 +21,8 @@
 		],
 		"psr-4": {
 			"Ds3\\": "app/",
-            "Ds3\\Admin\\Contracts\\"	: "app/Http/Controllers/Admin/contracts",
-            "Ds3\\Admin\\Repositories\\": "app/Http/Controller/Admin/Repositories",
+            "Ds3\\Admin\\Contracts\\"	: "app/contracts",
+            "Ds3\\Admin\\Repositories\\": "app/Repositories",
             "Ds3\\Auth\\"				: "app/Http/Controller/Auth",
             "Ds3\\Ds3Auth\\"            : "app/Http/Controller/Ds3Auth",
             "Ds3\\Contracts\\"          : "app/Http/Controllers/Contracts",

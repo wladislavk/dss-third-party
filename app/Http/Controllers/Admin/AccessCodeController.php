@@ -53,5 +53,15 @@ class AccessCodeController extends Controller {
             return redirect()->back()->with('error','Access Code Couldn\'t updated successfully');
         }
     }
+    public function getDeleteAccessCode($id)
+    {
+        if($this->accesscode->delete($id))
+        {
+            return redirect()->back()->with('success','Access Code Successfully deleted');
+        }else
+        {
+            return redirect()->back()->with('error','Access Code Couldn\'t deleted successfully');
+        }
+    }
 
 }

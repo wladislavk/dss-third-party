@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2c5076ba092fbab58caea827677e20d4",
+    "hash": "0ba13e1e1719536dec86a3fb3c1bebda",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
-            "version": "1.x-dev",
+            "version": "v1.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-debugbar.git",
-                "reference": "1b2307ca179a6f2a4339c426dfc4c415f73ec29d"
+                "reference": "1d39c5130fb7ebc9135d5a31467bcc870789acf9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/1b2307ca179a6f2a4339c426dfc4c415f73ec29d",
-                "reference": "1b2307ca179a6f2a4339c426dfc4c415f73ec29d",
+                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/1d39c5130fb7ebc9135d5a31467bcc870789acf9",
+                "reference": "1d39c5130fb7ebc9135d5a31467bcc870789acf9",
                 "shasum": ""
             },
             "require": {
@@ -29,7 +29,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-v1.x": "1.8-dev"
+                    "dev-master": "1.8-dev"
                 }
             },
             "autoload": {
@@ -58,7 +58,7 @@
                 "profiler",
                 "webprofiler"
             ],
-            "time": "2015-02-03 19:47:14"
+            "time": "2015-01-30 08:40:23"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -278,7 +278,7 @@
         },
         {
             "name": "illuminate/html",
-            "version": "dev-master",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/html.git",
@@ -510,16 +510,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "5.0.x-dev",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "f0203bafbf151e815c125a6d77fe79e074af6c49"
+                "reference": "44c61252b5762ff53ad181ed416e3006c50a6a9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/f0203bafbf151e815c125a6d77fe79e074af6c49",
-                "reference": "f0203bafbf151e815c125a6d77fe79e074af6c49",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/44c61252b5762ff53ad181ed416e3006c50a6a9b",
+                "reference": "44c61252b5762ff53ad181ed416e3006c50a6a9b",
                 "shasum": ""
             },
             "require": {
@@ -631,7 +631,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-02-03 22:45:05"
+            "time": "2015-02-04 13:59:07"
         },
         {
             "name": "league/flysystem",
@@ -3015,8 +3015,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "laravel/framework": 20,
-        "illuminate/html": 20,
         "barryvdh/laravel-debugbar": 20
     },
     "prefer-stable": false,

@@ -23,6 +23,8 @@ interface UserInterface {
 
     public function getAccessCode();
 
-    public function getPlans($planType);
+    public function getUserPlansWithStatus($planType);
+
+    public function getAllUserPlans();
 }
 

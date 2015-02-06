@@ -1,6 +1,5 @@
 <?php namespace Ds3\Http\Controllers\Admin;
 
-use Ds3\Eloquent\Company;
 use Ds3\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use Ds3\Admin\Contracts\UserInterface;
@@ -26,8 +25,8 @@ class UserController extends Controller  {
     public function getNewUser()
     {
         return view('admin.user.new')
-            ->with('billingPlans',$this->user->getPlans(3))  // get plan where office_type = 3
-            ->with('softwarePlans',$this->user->getPlans(1)) // get plan where office_type = 1
+            ->with('billingPlans',$this->user->getUserPlansWithStatus(3))  // get plan where office_type = 3
+            ->with('softwarePlans',$this->user->getUserPlansWithStatus(1)) // get plan where office_type = 1
             ->with('accessCode',$this->user->getAccessCode())
             ->with('billingCompanyType',$this->user->getCompanies(Constants::DSS_COMPANY_TYPE_BILLING))
             ->with('userType',$this->user->getUserType())

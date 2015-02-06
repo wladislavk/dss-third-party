@@ -1,7 +1,7 @@
 <?php
 
 // Route::get('/pid/{pid}', array('middleware' => 'header', 'uses' => 'WelcomeController@index'));
-
+$router->get('/',function(){ return redirect('/manage/login'); });
 $router->group(['prefix' => 'manage'], function() use ($router) {
 	$router->get('login', 'AuthController@index');
 	$router->post('login', 'AuthController@login');
@@ -12,17 +12,21 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     });
 });
 
-$router->group([],function() use ($router) {
-    $router->get('admin/manage/vob','Admin\VobController@index');
-    $router->get('manage/admin/users','Admin\UserController@index');
-    $router->get('manage/admin/{id}/user','Admin\UserController@show');
-    $router->get('manage/admin/user/new','Admin\UserController@getNewUser');
-    $router->post('/manage/admin/user/new','Admin\UserController@postNewUser');
-    $router->post('manage/admin/user/{id}/update','Admin\UserController@update');
-    $router->get('/manage/admin/user/{id}/suspend','Admin\UserController@suspend');
-    $router->get('manage/admin/user/{id}/un-suspend','Admin\UserController@unSuspend');
-    $router->get('manage/admin/user/{id}/delete','Admin\UserController@delete');
-    $router->get('manage/admin/dashboard','Admin\DashboardController@index');
+$router->group(['prefix' => 'manage'],function() use ($router) {
+    $router->get('admin/users','Admin\UserController@index');
+    $router->get('admin/{id}/user','Admin\UserController@show');
+    $router->get('admin/user/new','Admin\UserController@getNewUser');
+    $router->post('admin/user/new','Admin\UserController@postNewUser');
+    $router->post('admin/user/{id}/update','Admin\UserController@update');
+    $router->get('admin/user/{id}/suspend','Admin\UserController@suspend');
+    $router->get('admin/user/{id}/un-suspend','Admin\UserController@unSuspend');
+    $router->get('admin/user/{id}/delete','Admin\UserController@delete');
+    $router->get('admin/dashboard','Admin\DashboardController@index');
+    $router->get('admin/accesscode','Admin\AccessCodeController@getIndex');
+    $router->get('admin/accesscode/new','Admin\AccessCodeController@getAddAccessCode');
+    $router->post('admin/accesscode/new','Admin\AccessCodeController@postAddAccessCode');
+    $router->get('admin/accesscode/{id}/edit',['as'=>'admin.accesscode.update','uses'=>'Admin\AccessCodeController@getUpdateAccessCode']);
+    $router->post('admin/accesscode/{id}/update','Admin\AccessCodeController@postUpdateAccessCode');
 
 });
 $router->get('manage/admin/login','Admin\SessionController@index');

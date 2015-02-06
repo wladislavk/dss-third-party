@@ -146,9 +146,14 @@ class UserRepository  implements UserInterface {
     {
         return AccessCode::orderBy('access_code','ASC')->lists('access_code','id');
     }
-    public function getPlans($planType)
+    public function getUserPlansWithStatus($planType)
     {
         return Plan::where('office_type',$planType)->orderBy('name','ASC')->lists('name','id');
     }
 
-} 
+    public function getAllUserPlans()
+    {
+        return Plan::all();
+    }
+
+}

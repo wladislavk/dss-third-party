@@ -270,7 +270,7 @@
 									</a>
 								</li>
 																				<li>
-									<a href="/manage/admin/manage_users.php">
+									<a href="/manage/admin/users">
 										<i class="fa fa-external-link"></i> User Accounts
 									</a>
 								</li>
@@ -291,7 +291,7 @@
 									</a>
 								</li>
 																<li>
-									<a href="/manage/admin/manage_access_codes.php">
+									<a href="/manage/admin/accesscode">
 										<i class="fa fa-bell"></i>Access Codes
 									</a>
 								</li>
@@ -979,7 +979,7 @@
                     <span class="pull-left">
                         Log out in <span id="sleep-time">0 minutes</span>!
                     </span>
-                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                    <a href="/manage/admin/logout" class="btn btn-danger">Logout</a>
                     <a href="#" class="btn btn-default" data-dismiss="modal">Stay logged in</a>
                 </div>
             </div>

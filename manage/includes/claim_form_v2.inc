@@ -1870,8 +1870,8 @@ Medicare
 									Patient's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if($patient_dob!=''){ //$patient_dob = date('m-d-Y', strtotime($patient_dob)); 
-} ?>
+									<?php if($patient_dob!=''){$patient_dob = date('m-d-Y', strtotime($patient_dob)); 
+                  } ?>
 									<input type="text" value="<?=$patient_dob?>" name="patient_dob" class="inbox_line3 datealtfullmask" size="10"/>
 									mm-dd-yyyy
 								</td>
@@ -2116,8 +2116,8 @@ Medicare
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if($insured_dob!=''){ //$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
-} ?>
+									<?php if($insured_dob!=''){ $insured_dob = date('m-d-Y', strtotime($insured_dob)); 
+                  } ?>
 									<input type="text" value="<?=$insured_dob?>" name="insured_dob" class="inbox_line3 datealtfullmask" size="10"/>
 									mm-dd-yyyy
 								</td>

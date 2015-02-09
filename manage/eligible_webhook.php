@@ -4,7 +4,7 @@ $request_body = file_get_contents('php://input');
 $json = json_decode($request_body);
 
 $event = $json->{"event"};
-
+$success = $json->{"success"};
 if($event == "claim_rejected"){
   $ref_id = $json->{"reference_id"};
   $e_sql = "SELECT claim_id FROM dental_claim_electronic WHERE reference_id='".mysql_real_escape_string($ref_id)."'";

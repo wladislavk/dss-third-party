@@ -778,7 +778,7 @@ $up_sql = "INSERT INTO dental_claim_electronic SET
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
 mysql_query($up_sql);
-if($success == "false"){
+if(!$success){
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
   mysql_query($up_sql);
   claim_status_history_update($_GET['ins_id'], '', DSS_CLAIM_REJECTED, $_SESSION['userid']);

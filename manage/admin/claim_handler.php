@@ -647,7 +647,7 @@ $dce_id = mysql_insert_id();
 invoice_add_efile('2', $_SESSION['admincompanyid'], $dce_id);
 invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
 echo $result;
-if($success == "false"){
+if(!$success){
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
   mysql_query($up_sql);
 claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);

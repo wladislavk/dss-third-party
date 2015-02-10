@@ -10,6 +10,14 @@ interface PatientInterface
 
 	public function getPendingDuplicates($docId);
 
+	public function getTransactionCode0486($patientId);
+
+	public function getUserInfo($patientId);
+
+	public function preauthPatient($patientId);
+
+	public function getSimilarPatients($data);
+
 	public function insertData($data);
 
 	public function updateData($where, $values);

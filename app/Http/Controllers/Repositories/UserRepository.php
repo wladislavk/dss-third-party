@@ -160,7 +160,7 @@ class UserRepository implements UserInterface
 
 		try {
 			$user->save();
-		} catch (QueryException $e) {
+		} catch (ModelNotFoundException $e) {
 			return null;
 		}
 

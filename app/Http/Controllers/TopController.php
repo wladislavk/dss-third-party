@@ -25,8 +25,6 @@ use Ds3\Contracts\QPage3Interface;
 use Ds3\Contracts\TaskInterface;
 use Ds3\Contracts\CompanyInterface;
 
-use Illuminate\Support\Facades\DB;
-
 class TopController extends Controller
 {
 	const SITE_NAME = 'Dental';
@@ -98,6 +96,10 @@ class TopController extends Controller
 
 		if (empty(Session::get('userId'))) {
 			return redirect('/manage/login');
+		} else {
+			$this->user->updateData(Session::get('userId'), array(
+				'last_accessed_date' => date('Y-m-d H:i:s')
+			));
 		}
 
 		$user = $this->user->findUser(Session::get('docId'));
@@ -417,11 +419,12 @@ class TopController extends Controller
 					'patient_id' => $patientId
 				));
 				*/
-				
-				if (Cookie::get('hidePatWarnings') == $patientId) {
+
+				if (Session::get('hidePatWarnings') == $patientId) {
 					$hideWarnings = true;
 				} else {
 					$hideWarnings = false;
+					Session::put('hidePatWarnings', null);
 				}
 			}	
 
@@ -477,6 +480,15 @@ class TopController extends Controller
 			);
 
 			return $responseArray;
+		}
+	}
+
+	public function hideWarnings(Request $request)
+	{
+		if ($request->ajax()) {
+			Session::put($request->get('attribute'), $request->get('value'));
+
+			return 'Success';
 		}
 	}
 

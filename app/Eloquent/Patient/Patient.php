@@ -7,4 +7,6 @@ class Patient extends Model
 	protected $table = 'dental_patients';
 
 	protected $primaryKey = 'patientid';
+
+	public $timestamps = false;
 }

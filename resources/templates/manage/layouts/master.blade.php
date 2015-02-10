@@ -406,11 +406,11 @@
 
 							@if (!empty($patientId))
 								@if (!empty($hideWarnings))
-									<a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="show_patient_warnings" onclick="$.cookie('hidePatWarnings', null);$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
-	         						<a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="hide_patient_warnings" onclick="$.cookie('hidePatWarnings', {!! $patientId !!});$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
+									<a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="show_patient_warnings" onclick="hideWarnings('hidePatWarnings', null, '{!! Session::get('_token') !!}');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
+	         						<a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="hide_patient_warnings" onclick="hideWarnings('hidePatWarnings', {!! $patientId !!}, '{!! Session::get('_token') !!}');$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
 								@else 
-									<a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="show_patient_warnings" onclick="$.cookie('hidePatWarnings', null);$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
-	         						<a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="hide_patient_warnings" onclick="$.cookie('hidePatWarnings', {!! $patientId !!});$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
+									<a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="show_patient_warnings" onclick="hideWarnings('hidePatWarnings', null, '{!! Session::get('_token') !!}');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
+	         						<a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="hide_patient_warnings" onclick="hideWarnings('hidePatWarnings', {!! $patientId !!}, '{!! Session::get('_token') !!}');$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
 								@endif
 							@endif
 
@@ -529,10 +529,11 @@
 						<br />
 
 						@if (!empty($patientId))
-							<?php /**
-
-							*/?>
-							<div id="patient_warnings">
+							@if (!empty($hideWarnings))
+								<div id="patient_warnings" style="display:none;">
+							@else
+								<div id="patient_warnings">
+							@endif
 
 								@if (!empty($showWarningProfile))
 									<a class="warning" href="patient_changes/pid/{!! $patientId !!}">
@@ -639,9 +640,5 @@
 			<a href="logout">Logout</a>
 			<a href="#" onclick="reset_interval(0)">Stay logged in</a>
 		</div>
-
-		<?php /**
-
-		*/?>
 	</body>
 </html>

@@ -111,6 +111,56 @@ class UserServiceProvider extends ServiceProvider {
             'Ds3\Contracts\CompanyInterface',
             'Ds3\Repositories\CompanyRepository'
         );
+
+        $this->app->bind(
+            'Ds3\Contracts\ContactInterface',
+            'Ds3\Repositories\ContactRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\SummaryInterface',
+            'Ds3\Repositories\SummaryRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\SummSleeplabInterface',
+            'Ds3\Repositories\SummSleeplabRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\FlowPg1Interface',
+            'Ds3\Repositories\FlowPg1Repository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\FlowPg2InfoInterface',
+            'Ds3\Repositories\FlowPg2InfoRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\PatientSummaryInterface',
+            'Ds3\Repositories\PatientSummaryRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\NotificationInterface',
+            'Ds3\Repositories\NotificationRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\QImageInterface',
+            'Ds3\Repositories\QImageRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\LocationInterface',
+            'Ds3\Repositories\LocationRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\LetterTemplateInterface',
+            'Ds3\Repositories\LetterTemplateRepository'
+        );
     }
 
 }

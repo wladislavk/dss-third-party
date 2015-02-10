@@ -17,4 +17,13 @@ class FlowPg2Repository implements FlowPg2Interface
 
 		return $step; 
 	}
+
+	public function updateData($patientId, $values)
+	{
+		$flowPg2 = FlowPg2::where('patientid', '=', $patientId)
+			->where('stepid', '=', 1)
+			->update($values);
+
+		return $flowPg2;
+	}
 }

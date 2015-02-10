@@ -15,14 +15,14 @@ class IndexController extends Controller
 	private $user;
 	private $documentCategory;
 	private $memoAdmin;
-	private $top;
+	private $request;
 
 	public function __construct(UserInterface $user, DocumentCategoryInterface $documentCategory, MemoAdminInterface $memoAdmin)
 	{
 		$this->user = $user;
 		$this->documentCategory = $documentCategory;
 		$this->memoAdmin = $memoAdmin;
-		$this->top = Request::all();
+		$this->request = Request::all();
 	}
 
 	public function index()
@@ -62,9 +62,9 @@ class IndexController extends Controller
 			}
 		}
 
-		$numPortal = $this->top['numPatientContacts'] + $this->top['numPatientInsurance'] + $this->top['numC'];
+		$numPortal = $this->request['numPatientContacts'] + $this->request['numPatientInsurance'] + $this->request['numC'];
 		
-		if ($this->top['useLetters'] && Session::get('userType') == Constants::DSS_USER_TYPE_SOFTWARE) {
+		if ($this->request['useLetters'] && Session::get('userType') == Constants::DSS_USER_TYPE_SOFTWARE) {
 			$showBlock['unmailedLetters'] = true;
 		}
 		
@@ -83,13 +83,13 @@ class IndexController extends Controller
 				break;
 		}
 
-		$numAlerts = $this->top['numRejectedPreauth'];
+		$numAlerts = $this->request['numRejectedPreauth'];
 
 		$memoAdmins = $this->memoAdmin->get();
 
 		$data = array();
 
-		foreach ($this->top as $name => $value) {
+		foreach ($this->request as $name => $value) {
 			$data[$name] = $value;
 		}
 

@@ -3,4 +3,6 @@
 interface FlowPg2Interface
 {
 	public function getStep($patientId);
+
+	public function updateData($patientId, $values);
 }

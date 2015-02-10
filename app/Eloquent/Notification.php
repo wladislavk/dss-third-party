@@ -2,9 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class FlowPg2Info extends Model
+class Notification extends Model
 {
-	protected $table = 'dental_flow_pg2_info';
+	protected $table = 'dental_notifications';
 
 	protected $primaryKey = 'id';
 }

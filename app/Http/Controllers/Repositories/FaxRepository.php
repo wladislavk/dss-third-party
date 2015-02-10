@@ -14,4 +14,17 @@ class FaxRepository implements FaxInterface
 
 		return $faxAlerts;
 	}
+
+	public function updateData($where, $values)
+	{
+		$fax = new Fax();
+
+		foreach ($where as $attribute => $value) {
+			$fax = $fax->where($attribute, '=', $value);
+		}
+		
+		$fax = $fax->update($values);
+
+		return $fax;
+	}
 }

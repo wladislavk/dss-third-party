@@ -506,3 +506,12 @@ function hideallblocks()
   document.getElementById('homesleeptestrow').style.display = 'none'; 
   document.getElementById('consultrow').style.display = 'none';
  }
+
+function hideWarnings(name, val, token)
+{
+    $.post('/warnings', {
+        _token: token,
+        attribute: name,
+        value: val
+    })
+}

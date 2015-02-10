@@ -1,14 +1,20 @@
 <?php
 
 // Route::get('/pid/{pid}', array('middleware' => 'header', 'uses' => 'WelcomeController@index'));
-$router->get('/',function(){ return redirect('/manage/login'); });
+
+$router->post('/warnings', 'TopController@hideWarnings');
+$router->get('/', function() {
+    return redirect('/manage/login');
+});
+
 $router->group(['prefix' => 'manage'], function() use ($router) {
 	$router->get('login', 'AuthController@index');
 	$router->post('login', 'AuthController@login');
     $router->get('logout', 'AuthController@logout');
 
 	$router->group(['middleware' => 'header'], function() use ($router){
-        $router->get('index', 'IndexController@index');  
+        $router->get('index', 'IndexController@index'); 
+        $router->get('add_patient/{pid?}', 'PatientController@index');
     });
 });
 

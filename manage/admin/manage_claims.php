@@ -532,14 +532,14 @@ if(isset($_GET['msg'])){
 					//$primary_link = ($myarray['primary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['primary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=primary&pid='.$myarray['patientid'];
 					//$secondary_link = ($myarray['secondary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['secondary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=secondary&pid='.$myarray['patientid'];
 					$primary_link = "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'];
-					$secondary_link = "insurance_claim".(($myarray['secondary_claim_version']!="1")?'_eligible':'').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid']."";
+					$secondary_link = "insurance_claim".(($myarray['secondary_claim_version']!="1")?'_eligible':'').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid']."&instype=2";
 					?>
 				    <?php if($myarray["status"] == DSS_CLAIM_PENDING || $myarray["status"] == DSS_CLAIM_REJECTED){ ?>
 				    <a href="insurance_claim<?=($myarray['primary_claim_version']!="1")?'_eligible':''; ?>.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a> 
 				<?php }elseif($myarray["status"] == DSS_CLAIM_SEC_PENDING){ ?>
-                                    <a href="insurance_claim<?=($myarray['secondary_claim_version']!="1")?'_eligible':''; ?>.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>" title="Edit Secondary" class="btn btn-primary btn-sm">
+                                    <a href="insurance_claim<?=($myarray['secondary_claim_version']!="1")?'_eligible':''; ?>.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>&instype=2" title="Edit Secondary" class="btn btn-primary btn-sm">
                                                 Edit Secondary
                                          <span class="glyphicon glyphicon-pencil"></span></a><br />
 					<a href="<?= "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'').".php?insid=".$myarray['primary_claim_id']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'] ?>" title="View Primary" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>

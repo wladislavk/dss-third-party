@@ -1915,7 +1915,7 @@ Medicare
 							<tr>
 								<td align="left" valign="top">
 									<span class="small_cap">Self</span>
-									<input name="patient_relation_insured" type="radio" value="Self" <? if($patient_relation_insured == "Self") echo " checked";?> />
+									<input name="patient_relation_insured" type="radio" value="Self" <? if($patient_relation_insured == "Self" || $patient_relation_insured=="") echo " checked";?> />
 								</td>
 								<td align="left" valign="top">
 									<span class="small_cap">Spouse</span>

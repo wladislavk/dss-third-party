@@ -23,7 +23,7 @@ if(isset($_POST['test']) && $_POST['test'] == "1"){
 }
 $data['enrollment_npi'] = array(
         "payer_id" => $payer_id,
-        "transaction_type" => $t_r['transaction_type'],
+        "endpoint" => $t_r['endpoint_type'],
         "facility_name" => $_POST['facility_name'],
         "provider_name" => $_POST['provide_name'],
         "tax_id" => $_POST['tax_id'],
@@ -45,7 +45,7 @@ $data_string = json_encode($data);
 error_log($data_string);
 //echo $data_string."<br /><br />";
 //$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
-$ch = curl_init('https://gds.eligibleapi.com/v1.3/enrollment_npis');
+$ch = curl_init('https://gds.eligibleapi.com/v1.4/enrollment_npis');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -149,7 +149,7 @@ if(isset($json_response->{"error"})){
                 Transaction Type
             </td>
             <td valign="top" class="frmdata">
-        <select id="transaction_type" class="form-control" name="transaction_type" onchange="update_list()">
+        <select id="transaction_type" class="form-control" name="transaction_type" onchange="update_list">
             <?php while($t = mysql_fetch_assoc($t_q)){ ?>
                 <option value="<?= $t['id']; ?>"><?= $t['transaction_type']; ?> - <?= $t['description']; ?></option>
             <?php } ?>
@@ -169,7 +169,7 @@ if(isset($json_response->{"error"})){
                 <li class="template" style="display:none"></li>
         </ul>
 <script type="text/javascript">
-setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', null, null, false);
+setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=coverage&enrollment_required=true&api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer', null, null, false);
 </script>
             </td>
         </tr>

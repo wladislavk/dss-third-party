@@ -159,129 +159,42 @@ class PatientController extends Controller
 					}
 				}
 
-				$data = array(
-					'firstname' 				=> $this->request['firstname'],
-					'lastname' 					=> $this->request['lastname'],
-					'middlename' 				=> $this->request['middlename'],
-					'preferred_name' 			=> $this->request['preferred_name'],
-					'salutation' 				=> $this->request['salutation'],
-					'member_no' 				=> $this->request['member_no'],
-					'group_no' 					=> $this->request['group_no'],
-					'plan_no' 					=> $this->request['plan_no'], 
-					'add1' 						=> $this->request['add1'], 
-					'add2' 						=> $this->request['add2'], 
-					'city' 						=> $this->request['city'], 
-					'state' 					=> $this->request['state'], 
-					'zip' 						=> $this->request['zip'], 
-					'dob' 						=> $this->request['dob'], 
-					'gender' 					=> $this->request['gender'], 
-					'marital_status' 			=> $this->request['marital_status'],
+				$patientData = array('firstname', 'lastname', 'middlename', 'preferred_name', 'salutation', 'member_no',
+									 'group_no', 'plan_no', 'add1', 'add2', 'city', 'state',
+									 'zip', 'dob', 'gender', 'marital_status', 'feet', 'inches', 'weight', 'bmi',
+									 'best_time', 'best_number', 'email', 'patient_notes', 'p_d_party', 'p_d_relation',
+									 'p_d_other', 'p_d_employer', 'p_d_ins_co', 'p_d_ins_id', 's_d_party', 's_d_relation',
+									 's_d_other', 's_d_employer', 's_d_ins_co', 's_d_ins_id', 'p_m_partyfname',
+									 'p_m_partymname', 'p_m_partylname', 'p_m_gender', 'p_m_ins_grp', 's_m_ins_grp',
+									 'p_m_dss_file', 's_m_dss_file', 'p_m_same_address', 's_m_same_address', 'p_m_address',
+									 'p_m_city', 'p_m_state', 'p_m_zip', 's_m_address', 's_m_city', 's_m_state',
+									 's_m_zip', 'p_m_ins_type', 's_m_ins_type', 'p_m_ins_ass', 's_m_ins_ass', 'ins_dob',
+									 'ins2_dob', 'p_m_relation', 'p_m_other', 'p_m_employer', 'p_m_ins_co', 'p_m_ins_id',
+									 's_m_ins', 's_m_partyfname', 's_m_partymname', 's_m_partylname', 's_m_gender',
+									 's_m_relation', 's_m_other', 's_m_employer', 's_m_ins_co', 's_m_ins_id', 'p_m_ins_plan',
+									 's_m_ins_plan', 'employer', 'emp_add1', 'emp_add2', 'emp_city', 'emp_state', 'emp_zip',
+									 'plan_name', 'group_number', 'ins_type', 'accept_assignment', 'print_signature',
+									 'medical_insurance', 'mark_yes', 'inactive', 'partner_name', 'docsleep', 'docpcp',
+									 'docdentist', 'docent', 'docmdother', 'docmdother2', 'docmdother3', 'emergency_name',
+									 'emergency_relationship', 'referred_source', 'referred_by', 'referred_notes',
+									 'copyreqdate', 'status', 'use_patient_portal', 'preferredcontact');
+
+				foreach ($patientData as $attribute) {
+					$data[$attribute] = $this->request[$attribute];
+				}
+
+				$data = array_merge($data, array(
 					'ssn' 						=> $this->num($this->request['ssn'], false), 
-					'feet'						=> $this->request['feet'],
-					'inches'					=> $this->request['inches'],
-					'weight'					=> $this->request['weight'],
-					'bmi'						=> $this->request['bmi'],
 					'home_phone' 				=> $this->num($this->request['home_phone']), 
 					'work_phone' 				=> $this->num($this->request['work_phone']), 
 					'cell_phone' 				=> $this->num($this->request['cell_phone']),
-					'best_time' 				=> $this->request['best_time'],
-					'best_number' 				=> $this->request['best_number'],
-					'email' 					=> $this->request['email'],
-					'patient_notes' 			=> $this->request['patient_notes'], 
-					'p_d_party' 				=> $this->request['p_d_party'], 
-					'p_d_relation' 				=> $this->request['p_d_relation'], 
-					'p_d_other' 				=> $this->request['p_d_other'], 
-					'p_d_employer' 				=> $this->request['p_d_employer'], 
-					'p_d_ins_co' 				=> $this->request['p_d_ins_co'], 
-					'p_d_ins_id' 				=> $this->request['p_d_ins_id'], 
-					's_d_party' 				=> $this->request['s_d_party'], 
-					's_d_relation' 				=> $this->request['s_d_relation'], 
-					's_d_other' 				=> $this->request['s_d_other'], 
-					's_d_employer' 				=> $this->request['s_d_employer'], 
-					's_d_ins_co' 				=> $this->request['s_d_ins_co'], 
-					's_d_ins_id' 				=> $this->request['s_d_ins_id'], 
-					'p_m_partyfname' 			=> $this->request['p_m_partyfname'],
-					'p_m_partymname' 			=> $this->request['p_m_partymname'],
-					'p_m_partylname' 			=> $this->request['p_m_partylname'],
-					'p_m_gender' 				=> $this->request['p_m_gender'],
-					'p_m_ins_grp' 				=> $this->request['p_m_ins_grp'],
-					's_m_ins_grp' 				=> $this->request['s_m_ins_grp'],
-					'p_m_dss_file' 				=> $this->request['p_m_dss_file'],
-					's_m_dss_file' 				=> $this->request['s_m_dss_file'],
-					'p_m_same_address' 			=> $this->request['p_m_same_address'],
-					's_m_same_address' 			=> $this->request['s_m_same_address'],
-					'p_m_address' 				=> $this->request['p_m_address'],
-					'p_m_city' 					=> $this->request['p_m_city'],
-					'p_m_state' 				=> $this->request['p_m_state'],
-					'p_m_zip' 					=> $this->request['p_m_zip'],
-					's_m_address' 				=> $this->request['s_m_address'],
-					's_m_city' 					=> $this->request['s_m_city'],
-					's_m_state' 				=> $this->request['s_m_state'],
-					's_m_zip' 					=> $this->request['s_m_zip'],
-					'p_m_ins_type' 				=> $this->request['p_m_ins_type'],
-					's_m_ins_type' 				=> $this->request['s_m_ins_type'],
-					'p_m_ins_ass' 				=> $this->request['p_m_ins_ass'],
-					's_m_ins_ass' 				=> $this->request['s_m_ins_ass'],
-					'ins_dob' 					=> $this->request['ins_dob'],
-					'ins2_dob' 					=> $this->request['ins2_dob'],
-					'p_m_relation' 				=> $this->request['p_m_relation'], 
-					'p_m_other' 				=> $this->request['p_m_other'], 
-					'p_m_employer' 				=> $this->request['p_m_employer'], 
-					'p_m_ins_co' 				=> $this->request['p_m_ins_co'], 
-					'p_m_ins_id' 				=> $this->request['p_m_ins_id'], 
 					'p_m_eligible_payer_id' 	=> $PMEligiblePayerId,
 					'p_m_eligible_payer_name' 	=> $PMEligiblePayerName,
-					'has_s_m_ins' 				=> $this->request['s_m_ins'],
-					's_m_partyfname' 			=> $this->request['s_m_partyfname'],
-					's_m_partymname' 			=> $this->request['s_m_partymname'],
-					's_m_partylname' 			=> $this->request['s_m_partylname'], 
-					's_m_gender' 				=> $this->request['s_m_gender'],
-					's_m_relation' 				=> $this->request['s_m_relation'], 
-					's_m_other' 				=> $this->request['s_m_other'], 
-					's_m_employer' 				=> $this->request['s_m_employer'], 
-					's_m_ins_co' 				=> $this->request['s_m_ins_co'], 
-					's_m_ins_id' 				=> $this->request['s_m_ins_id'],
-					'p_m_ins_plan' 				=> $this->request['p_m_ins_plan'],
-					's_m_ins_plan' 				=> $this->request['s_m_ins_plan'], 
-					'employer' 					=> $this->request['employer'], 
-					'emp_add1' 					=> $this->request['emp_add1'], 
-					'emp_add2' 					=> $this->request['emp_add2'], 
-					'emp_city' 					=> $this->request['emp_city'], 
-					'emp_state' 				=> $this->request['emp_state'], 
-					'emp_zip' 					=> $this->request['emp_zip'], 
 					'emp_phone' 				=> $this->num($this->request['emp_phone']), 
 					'emp_fax' 					=> $this->num($this->request['emp_fax']), 
-					'plan_name' 				=> $this->request['plan_name'], 
-					'group_number' 				=> $this->request['group_number'], 
-					'ins_type' 					=> $this->request['ins_type'], 
-					'accept_assignment' 		=> $this->request['accept_assignment'], 
-					'print_signature' 			=> $this->request['print_signature'], 
-					'medical_insurance' 		=> $this->request['medical_insurance'], 
-					'mark_yes' 					=> $this->request['mark_yes'],
-					'inactive' 					=> $this->request['inactive'],
-					'partner_name' 				=> $this->request['partner_name'],
-					'docsleep' 					=> $this->request['docsleep'],
-					'docpcp' 					=> $this->request['docpcp'],
-					'mark_yes' 					=> $this->request['mark_yes'],
-					'docdentist'				=> $this->request['docdentist'],
-					'docent' 					=> $this->request['docent'],
-					'docmdother' 				=> $this->request['docmdother'],
-					'docmdother2' 				=> $this->request['docmdother2'],
-					'docmdother3' 				=> $this->request['docmdother3'],
-					'emergency_name' 			=> $this->request['emergency_name'],
-					'emergency_relationship' 	=> $this->request['emergency_relationship'],
 					'emergency_number' 			=> $this->num($this->request['emergency_number']),
-					'docent'	 				=> $this->request['docent'],
-					'emergency_name' 			=> $this->request['emergency_name'],
-					'emergency_number' 			=> $this->num($this->request['emergency_number']),
-					'referred_source' 			=> $this->request['referred_source'],
-					'referred_by' 				=> $this->request['referred_by'],
-					'referred_notes' 			=> $this->request['referred_notes'],
-					'copyreqdate' 				=> $this->request['copyreqdate'],
-					'status' 					=> $this->request['status'],
-					'use_patient_portal' 		=> $this->request['use_patient_portal'],
-					'preferredcontact' 			=> $this->request['preferredcontact']
-				);
+					'emergency_number' 			=> $this->num($this->request['emergency_number'])
+				));
 
 				if ($this->request['email'] != $patient->email) {
 					$data['email_bounce'] = 0;
@@ -515,133 +428,29 @@ class PatientController extends Controller
 					$password = '';
 				}
 
-				$data = array(
+				foreach ($patientData as $attribute) {
+					$data[$attribute] = $this->request[$attribute];
+				}
+
+				$data = array_merge($data, array(
 					'firstname' 				=> ucfirst($this->request['firstname']),
 					'lastname' 					=> ucfirst($this->request['lastname']),
 					'middlename' 				=> ucfirst($this->request['middlename']),
-					'preferred_name' 			=> $this->request['preferred_name'],
 					'login'						=> $login,
 					'salt'						=> $salt,
 					'password'					=> $password,
-					'salutation' 				=> $this->request['salutation'],
-					'member_no' 				=> $this->request['member_no'],
-					'group_no' 					=> $this->request['group_no'],
-					'plan_no' 					=> $this->request['plan_no'], 
-					'add1' 						=> $this->request['add1'], 
-					'add2' 						=> $this->request['add2'], 
-					'city' 						=> $this->request['city'], 
-					'state' 					=> $this->request['state'], 
-					'zip' 						=> $this->request['zip'], 
-					'dob' 						=> $this->request['dob'], 
-					'gender' 					=> $this->request['gender'], 
-					'marital_status' 			=> $this->request['marital_status'],
 					'ssn' 						=> $this->num($this->request['ssn'], false), 
-					'feet'						=> $this->request['feet'],
-					'inches'					=> $this->request['inches'],
-					'weight'					=> $this->request['weight'],
-					'bmi'						=> $this->request['bmi'],
 					'home_phone' 				=> $this->num($this->request['home_phone']), 
 					'work_phone' 				=> $this->num($this->request['work_phone']), 
 					'cell_phone' 				=> $this->num($this->request['cell_phone']),
-					'best_time' 				=> $this->request['best_time'],
-					'best_number' 				=> $this->request['best_number'],
-					'email' 					=> $this->request['email'],
-					'patient_notes' 			=> $this->request['patient_notes'], 
-					'p_d_party' 				=> $this->request['p_d_party'], 
-					'p_d_relation' 				=> $this->request['p_d_relation'], 
-					'p_d_other' 				=> $this->request['p_d_other'], 
-					'p_d_employer' 				=> $this->request['p_d_employer'], 
-					'p_d_ins_co' 				=> $this->request['p_d_ins_co'], 
-					'p_d_ins_id' 				=> $this->request['p_d_ins_id'], 
-					's_d_party' 				=> $this->request['s_d_party'], 
-					's_d_relation' 				=> $this->request['s_d_relation'], 
-					's_d_other' 				=> $this->request['s_d_other'], 
-					's_d_employer' 				=> $this->request['s_d_employer'], 
-					's_d_ins_co' 				=> $this->request['s_d_ins_co'], 
-					's_d_ins_id' 				=> $this->request['s_d_ins_id'], 
-					'p_m_partyfname' 			=> $this->request['p_m_partyfname'],
-					'p_m_partymname' 			=> $this->request['p_m_partymname'],
-					'p_m_partylname' 			=> $this->request['p_m_partylname'],
-					'p_m_gender' 				=> $this->request['p_m_gender'],
-					'p_m_ins_grp' 				=> $this->request['p_m_ins_grp'],
-					's_m_ins_grp' 				=> $this->request['s_m_ins_grp'],
-					'p_m_dss_file' 				=> $this->request['p_m_dss_file'],
-					's_m_dss_file' 				=> $this->request['s_m_dss_file'],
-					'p_m_same_address' 			=> $this->request['p_m_same_address'],
-					's_m_same_address' 			=> $this->request['s_m_same_address'],
-					'p_m_address' 				=> $this->request['p_m_address'],
-					'p_m_city' 					=> $this->request['p_m_city'],
-					'p_m_state' 				=> $this->request['p_m_state'],
-					'p_m_zip' 					=> $this->request['p_m_zip'],
-					's_m_address' 				=> $this->request['s_m_address'],
-					's_m_city' 					=> $this->request['s_m_city'],
-					's_m_state' 				=> $this->request['s_m_state'],
-					's_m_zip' 					=> $this->request['s_m_zip'],
-					'p_m_ins_type' 				=> $this->request['p_m_ins_type'],
-					's_m_ins_type' 				=> $this->request['s_m_ins_type'],
-					'p_m_ins_ass' 				=> $this->request['p_m_ins_ass'],
-					's_m_ins_ass' 				=> $this->request['s_m_ins_ass'],
-					'ins_dob' 					=> $this->request['ins_dob'],
-					'ins2_dob' 					=> $this->request['ins2_dob'],
-					'p_m_relation' 				=> $this->request['p_m_relation'], 
-					'p_m_other' 				=> $this->request['p_m_other'], 
-					'p_m_employer' 				=> $this->request['p_m_employer'], 
-					'p_m_ins_co' 				=> $this->request['p_m_ins_co'], 
-					'p_m_ins_id' 				=> $this->request['p_m_ins_id'], 
 					'p_m_eligible_payer_id' 	=> $PMEligiblePayerId,
 					'p_m_eligible_payer_name' 	=> $PMEligiblePayerName,
-					'has_s_m_ins' 				=> $this->request['s_m_ins'],
-					's_m_partyfname' 			=> $this->request['s_m_partyfname'],
-					's_m_partymname' 			=> $this->request['s_m_partymname'],
-					's_m_partylname' 			=> $this->request['s_m_partylname'], 
-					's_m_gender' 				=> $this->request['s_m_gender'],
-					's_m_relation' 				=> $this->request['s_m_relation'], 
-					's_m_other' 				=> $this->request['s_m_other'], 
-					's_m_employer' 				=> $this->request['s_m_employer'], 
-					's_m_ins_co' 				=> $this->request['s_m_ins_co'], 
-					's_m_ins_id' 				=> $this->request['s_m_ins_id'],
-					'p_m_ins_plan' 				=> $this->request['p_m_ins_plan'],
-					's_m_ins_plan' 				=> $this->request['s_m_ins_plan'], 
-					'employer' 					=> $this->request['employer'], 
-					'emp_add1' 					=> $this->request['emp_add1'], 
-					'emp_add2' 					=> $this->request['emp_add2'], 
-					'emp_city' 					=> $this->request['emp_city'], 
-					'emp_state' 				=> $this->request['emp_state'], 
-					'emp_zip' 					=> $this->request['emp_zip'], 
 					'emp_phone' 				=> $this->num($this->request['emp_phone']), 
 					'emp_fax' 					=> $this->num($this->request['emp_fax']), 
-					'plan_name' 				=> $this->request['plan_name'], 
-					'group_number' 				=> $this->request['group_number'], 
-					'ins_type' 					=> $this->request['ins_type'], 
-					'accept_assignment' 		=> $this->request['accept_assignment'], 
-					'print_signature' 			=> $this->request['print_signature'], 
-					'medical_insurance' 		=> $this->request['medical_insurance'], 
-					'mark_yes' 					=> $this->request['mark_yes'],
-					'inactive' 					=> $this->request['inactive'],
-					'partner_name' 				=> $this->request['partner_name'],
-					'docsleep' 					=> $this->request['docsleep'],
-					'docpcp' 					=> $this->request['docpcp'],
-					'mark_yes' 					=> $this->request['mark_yes'],
-					'docdentist'				=> $this->request['docdentist'],
-					'docent' 					=> $this->request['docent'],
-					'docmdother' 				=> $this->request['docmdother'],
-					'docmdother2' 				=> $this->request['docmdother2'],
-					'docmdother3' 				=> $this->request['docmdother3'],
-					'emergency_name' 			=> $this->request['emergency_name'],
-					'emergency_relationship' 	=> $this->request['emergency_relationship'],
 					'emergency_number' 			=> $this->num($this->request['emergency_number']),
-					'docent'	 				=> $this->request['docent'],
-					'emergency_name' 			=> $this->request['emergency_name'],
 					'emergency_number' 			=> $this->num($this->request['emergency_number']),
-					'referred_source' 			=> $this->request['referred_source'],
-					'referred_by' 				=> $this->request['referred_by'],
-					'referred_notes' 			=> $this->request['referred_notes'],
-					'copyreqdate' 				=> $this->request['copyreqdate'],
-					'status' 					=> $this->request['status'],
-					'use_patient_portal' 		=> $this->request['use_patient_portal'],
-					'ip_address'				=> Request::ip(),
-					'preferredcontact' 			=> $this->request['preferredcontact']
-				);
+					'ip_address'				=> Request::ip()
+				));
 
 				$insertedPatientId = $this->patient->insertData($data);
 
@@ -743,234 +552,29 @@ class PatientController extends Controller
 
 		$patient = count($patient) ? $patient[0] : null;
 
+		$patientInfo = array();
+
 		if (!empty($message)) {
-			$firstname = $this->request['firstname'];
-			$middlename = $this->request['middlename'];
-			$lastname = $this->request['lastname'];
-			$preferred_name = $this->request['preferred_name'];
-			$salutation = $this->request['salutation'];
-			$login = $this->request['login'];
-			$member_no = $this->request['member_no'];
-			$group_no = $this->request['group_no'];
-			$plan_no = $this->request['plan_no'];
-			$dob = $this->request['dob'];
-			$add1 = $this->request['add1'];
-			$add2= $this->request['add2'];
-			$city = $this->request['city'];
-			$state = $this->request['state'];
-			$zip = $this->request['zip'];
-			$gender = $this->request['gender'];
-			$marital_status = $this->request['marital_status'];
-			$ssn = $this->request['ssn'];
-			$feet = $this->request['feet'];
-			$inches = $this->request['inches'];
-			$weight = $this->request['weight'];
-			$bmi = $this->request['bmi'];
-			$home_phone = $this->request['home_phone'];
-			$work_phone = $this->request['work_phone'];
-			$cell_phone = $this->request['cell_phone'];
-			$best_time = $this->request['best_time'];
-			$best_number = $this->request['best_number'];
-			$email = $this->request['email'];
-			$patient_notes = $this->request['patient_notes'];
-			$p_d_party = $this->request["p_d_party"]; 
-			$p_d_relation = $this->request["p_d_relation"];
-			$p_d_other = $this->request["p_d_other"];
-			$p_d_employer = $this->request["p_d_employer"];
-			$p_d_ins_co = $this->request["p_d_ins_co"];
-			$p_d_ins_id = $this->request["p_d_ins_id"];
-			$s_d_party = $this->request["s_d_party"]; 
-			$s_d_relation = $this->request["s_d_relation"];
-			$s_d_other = $this->request["s_d_other"];
-			$s_d_employer = $this->request["s_d_employer"];
-			$s_d_ins_co = $this->request["s_d_ins_co"];
-			$s_d_ins_id = $this->request["s_d_ins_id"];
-			$p_m_partyfname = $this->request["p_m_partyfname"];
-			$p_m_partymname = $this->request["p_m_partymname"];
-			$p_m_partylname = $this->request["p_m_partylname"]; 
-			$p_m_gender = $this->request['p_m_gender'];
-			$p_m_relation = $this->request["p_m_relation"];
-			$p_m_other = $this->request["p_m_other"];
-			$p_m_employer = $this->request["p_m_employer"];
-			$p_m_ins_co = $this->request["p_m_ins_co"];
-			$p_m_ins_id = $this->request["p_m_ins_id"];
-			$p_m_ins_payer_id = $this->request['p_m_ins_payer_id'];
-			$has_s_m_ins = $this->request["s_m_ins"];
-			$s_m_partyfname = $this->request["s_m_partyfname"];
-			$s_m_partymname = $this->request["s_m_partymname"];
-			$s_m_partylname = $this->request["s_m_partylname"];  
-			$s_m_gender = $this->request['s_m_gender'];
-			$s_m_relation = $this->request["s_m_relation"];
-			$s_m_other = $this->request["s_m_other"];
-			$s_m_employer = $this->request["s_m_employer"];
-			$s_m_ins_co = $this->request["s_m_ins_co"];
-			$s_m_ins_id = $this->request["s_m_ins_id"];
-			$p_m_ins_grp = $this->request["p_m_ins_grp"];
-			$s_m_ins_grp = $this->request["s_m_ins_grp"];
-			$p_m_dss_file = $this->request["p_m_dss_file"];
-			$s_m_dss_file = $this->request["s_m_dss_file"];
-			$p_m_same_address = $this->request["p_m_same_address"];
-			$s_m_same_address = $this->request["s_m_same_address"];
-			$p_m_address = $this->request["p_m_address"];
-			$p_m_city = $this->request["p_m_city"];
-			$p_m_state = $this->request["p_m_state"];
-			$p_m_zip = $this->request["p_m_zip"];
-			$s_m_address = $this->request["s_m_address"];
-			$s_m_city = $this->request["s_m_city"];
-			$s_m_state = $this->request["s_m_state"];
-			$s_m_zip = $this->request["s_m_zip"];
-			$p_m_ins_type = $this->request["p_m_ins_type"];
-			$s_m_ins_type = $this->request["s_m_ins_type"];
-			$p_m_ins_ass = $this->request["p_m_ins_ass"];
-			$s_m_ins_ass = $this->request["s_m_ins_ass"];
-			$p_m_ins_plan = $this->request["p_m_ins_plan"];
-			$s_m_ins_plan = $this->request["s_m_ins_plan"];
-			$ins_dob = $this->request["ins_dob"];
-			$ins2_dob = $this->request["ins2_dob"];
-			$employer = $this->request["employer"];
-			$emp_add1 = $this->request["emp_add1"];
-			$emp_add2 = $this->request["emp_add2"];
-			$emp_city = $this->request["emp_city"];
-			$emp_state = $this->request["emp_state"];
-			$emp_zip = $this->request["emp_zip"];
-			$emp_phone = $this->request["emp_phone"];
-			$docsleep = $this->request["docsleep"];
-			$docpcp = $this->request["docpcp"];
-			$docdentist = $this->request["docdentist"];
-			$docent = $this->request["docent"];
-			$docmdother = $this->request["docmdother"];
-			$docmdother2 = $this->request["docmdother2"];
-			$docmdother3 = $this->request["docmdother3"];
-			$emp_fax = $this->request["emp_fax"];
-			$plan_name = $this->request["plan_name"];
-			$group_number = $this->request["group_number"];
-			$ins_type = $this->request["ins_type"];
-			$status = $this->request["status"];
-			$use_patient_portal = $this->request["use_patient_portal"];
-			$accept_assignment = $this->request["accept_assignment"];
-			$print_signature = $this->request["print_signature"];
-			$medical_insurance = $this->request["medical_insurance"];
-			$mark_yes = $this->request["mark_yes"];
-			$inactive = $this->request["inactive"];
-			$partner_name = $this->request["partner_name"];
-			$emergency_name = $this->request["emergency_name"];
-			$emergency_relationship = $this->request["emergency_relationship"];
-			$emergency_number = $this->request["emergency_number"];
-			$referred_source = $this->request["referred_source"];
-			$referred_by = $this->request["referred_by"];
-			$referred_notes = $this->request["referred_notes"];
-			$copyreqdate = $this->request["copyreqdate"];
-			$preferredcontact = $this->request["preferredcontact"];
-			$location = $this->request["location"];
-		} else {
-			if (!empty($patient)) {
-				$firstname = $patient->firstname;
-				$middlename = $patient->middlename;
-				$lastname = $patient->lastname;
-				$preferred_name = $patient->preferred_name;
-				$salutation = $patient->salutation;
-				$login = $patient->login;
-				$member_no = $patient->member_no;
-				$group_no = $patient->group_no;
-				$plan_no = $patient->plan_no;
-				$dob = $patient->dob;
-				$add1 = $patient->add1;
-				$add2 = $patient->add2;
-				$city = $patient->city;
-				$state = $patient->state;
-				$zip = $patient->zip;
-				$gender = $patient->gender;
-				$marital_status = $patient->marital_status;
-				$ssn = $patient->ssn;
-				$feet = $patient->feet;
-				$inches = $patient->inches;
-				$weight = $patient->weight;
-				$bmi = $patient->bmi;
-				$home_phone = $patient->home_phone;
-				$work_phone = $patient->work_phone;
-				$cell_phone = $patient->cell_phone;
-				$best_time = $patient->best_time;
-				$best_number = $patient->best_number;
-				$email = $patient->email;
-				$patient_notes = $patient->patient_notes;
-				$p_d_party = $patient->p_d_party; 
-				$p_d_relation = $patient->p_d_relation;
-				$p_d_other = $patient->p_d_other;
-				$p_d_employer = $patient->p_d_employer;
-				$p_d_ins_co = $patient->p_d_ins_co;
-				$p_d_ins_id = $patient->p_d_ins_id;
-				$s_d_party = $patient->s_d_party; 
-				$s_d_relation = $patient->s_d_relation;
-				$s_d_other = $patient->s_d_other;
-				$s_d_employer = $patient->s_d_employer;
-				$s_d_ins_co = $patient->s_d_ins_co;
-				$s_d_ins_id = $patient->s_d_ins_id;
-				$p_m_partyfname = $patient->p_m_partyfname;
-				$p_m_partymname = $patient->p_m_partymname;
-				$p_m_partylname = $patient->p_m_partylname;
-				$p_m_relation = $patient->p_m_relation;
-				$p_m_gender = $patient->p_m_gender;
-				$p_m_other = $patient->p_m_other;
-				$p_m_employer = $patient->p_m_employer;
-				$p_m_ins_co = $patient->p_m_ins_co;
-				$p_m_ins_id = $patient->p_m_ins_id;
-				$p_m_eligible_payer_id = $patient->p_m_eligible_payer_id;
-				$p_m_eligible_payer_name = $patient->p_m_eligible_payer_name;
-				$s_m_eligible_payer_id = $patient->s_m_eligible_payer_id;
-				$s_m_eligible_payer_name = $patient->s_m_eligible_payer_name;
-				$has_s_m_ins = $patient->has_s_m_ins;
-				$s_m_partyfname = $patient->s_m_partyfname;
-				$s_m_partymname = $patient->s_m_partymname;
-				$s_m_partylname = $patient->s_m_partylname;
-				$s_m_gender = $patient->s_m_gender;
-				$s_m_relation = $patient->s_m_relation;
-				$s_m_other = $patient->s_m_other;
-				$s_m_employer = $patient->s_m_employer;
-				$s_m_ins_co = $patient->s_m_ins_co;
-				$s_m_ins_id = $patient->s_m_ins_id;
-				$p_m_ins_grp = $patient->p_m_ins_grp;
-				$s_m_ins_grp = $patient->s_m_ins_grp;
-				$p_m_dss_file = $patient->p_m_dss_file;
-				$s_m_dss_file = $patient->s_m_dss_file;
-				$p_m_same_address = $patient->p_m_same_address;
-				$s_m_same_address = $patient->s_m_same_address;
-				$p_m_address = $patient->p_m_address;
-				$p_m_city = $patient->p_m_city;
-				$p_m_state = $patient->p_m_state;
-				$p_m_zip = $patient->p_m_zip;
-				$s_m_address = $patient->s_m_address;
-				$s_m_city = $patient->s_m_city;
-				$s_m_state = $patient->s_m_state;
-				$s_m_zip = $patient->s_m_zip;
-				$p_m_ins_type = $patient->p_m_ins_type;
-				$s_m_ins_type = $patient->s_m_ins_type;
-				$p_m_ins_ass = $patient->p_m_ins_ass;
-				$s_m_ins_ass = $patient->s_m_ins_ass;
-				$p_m_ins_plan = $patient->p_m_ins_plan;
-				$s_m_ins_plan = $patient->s_m_ins_plan;
-				$ins_dob = $patient->ins_dob;
-				$ins2_dob = $patient->ins2_dob;
-				$employer = $patient->employer;
-				$emp_add1 = $patient->emp_add1;
-				$emp_add2 = $patient->emp_add2;
-				$emp_city = $patient->emp_city;
-				$emp_state = $patient->emp_state;
-				$emp_zip = $patient->emp_zip;
-				$emp_phone = $patient->emp_phone;
-				$emp_fax = $patient->emp_fax;
-				$plan_name = $patient->plan_name;
-				$group_number = $patient->group_number;
-				$ins_type = $patient->ins_type;
-				$status = $patient->status;
-				$use_patient_portal = $patient->use_patient_portal;
-				$accept_assignment = $patient->accept_assignment;
-				$print_signature = $patient->print_signature;
-				$medical_insurance = $patient->medical_insurance;
-				$mark_yes = $patient->mark_yes;
-				$docsleep = $patient->docsleep;
+			foreach ($patientData as $attribute) {
+				$patientInfo[$attribute] = $this->request[$attribute];
 			}
 
-			if (!empty($docsleep) && $docsleep != 'Not Set') {
+			$patientInfo['p_m_ins_payer_id'] 	= $this->request['p_m_ins_payer_id'];
+			$patientInfo['location'] 			= $this->request['location'];
+			$patientInfo['home_phone']			= $this->request['home_phone'];
+			$patientInfo['work_phone']			= $this->request['work_phone'];
+			$patientInfo['cell_phone']			= $this->request['cell_phone'];
+		} else {
+			if (!empty($patient)) {
+				foreach ($patientData as $attribute) {
+					$patientInfo[$attribute] = $patient->$attribute;
+				}
+
+				$patientInfo['home_phone']			= $patient->home_phone;
+				$patientInfo['work_phone']			= $patient->work_phone;
+			}
+
+			if (!empty($patientInfo['docsleep']) && $patientInfo['docsleep'] != 'Not Set') {
 				$contact = $this->contact->getDocsleep($docsleep);
 
 				$docsleepName = $contact->lastname . ', ' . $contact->firstname . ' ' . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
@@ -1033,14 +637,14 @@ class PatientController extends Controller
 			}
 
 			if (!empty($patient)) {
-				$inactive 				= $patient->inactive;
-				$partnerName 			= $patient->partner_name;
-				$emergencyName 			= $patient->emergency_name;
-				$emergencyrelationship 	= $patient->emergency_relationship;
-				$emergencyNumber 		= $patient->emergency_number;
-				$referredSource 		= $patient->referred_source;
-				$referredBy 			= $patient->referred_by;
-				$referredNotes 			= $patient->referred_notes;
+				$patientInfo['inactive'] 				= $patient->inactive;
+				$patientInfo['partner_name'] 			= $patient->partner_name;
+				$patientInfo['emergency_name'] 			= $patient->emergency_name;
+				$patientInfo['emergencyrelationship'] 	= $patient->emergency_relationship;
+				$patientInfo['emergency_number'] 		= $patient->emergency_number;
+				$patientInfo['referred_source'] 		= $patient->referred_source;
+				$patientInfo['referred_by'] 			= $patient->referred_by;
+				$patientInfo['referred_notes'] 			= $patient->referred_notes;
 			}
 
 			if (isset($referredSource)) {
@@ -1084,22 +688,22 @@ class PatientController extends Controller
 		}
 
 		// Check if required information is filled out
-		$complete_info = 0;
-		if (!empty($home_phone) || !empty($work_phone) || !empty($cell_phone)) {
+		$completeInfo = 0;
+		if (!empty($patientInfo['home_phone']) || !empty($patientInfo['work_phone']) || !empty($patientInfo['cell_phone'])) {
 			$patientphone = true;
 		}
 
-		if (!empty($email)) {
+		if (!empty($patientInfo['email'])) {
 			$patientemail = true;
 		}
 
-		if ((!empty($patientemail) || !empty($patientphone)) && !empty($add1) && !empty($city) && !empty($state) && !empty($zip) && !empty($dob) && !empty($gender)) {
-			$complete_info = 1;
+		if ((!empty($patientemail) || !empty($patientphone)) && !empty($patientInfo['add1']) && !empty($patientInfo['city']) && !empty($patientInfo['state']) && !empty($patientInfo['zip']) && !empty($patientInfo['dob']) && !empty($patientInfo['gender'])) {
+			$completeInfo = 1;
 		}
 
 		// Determine Whether Patient Info has been set
 		if (!empty($this->request['ed'])) {
-			$this->updatePatientSummary($this->request['ed'], 'patient_info', $complete_info);
+			$this->updatePatientSummary($this->request['ed'], 'patient_info', $completeInfo);
 		}
 
 		/**
@@ -1230,13 +834,26 @@ class PatientController extends Controller
 		if (!empty($this->request['readonly'])) {
 			$showBlock['readOnly'] = true;
 		}
-	}
 
-	public function testView()
-	{
+		// send data to view
+
 		foreach ($this->request as $name => $value) {
 			$data[$name] = $value;
 		}
+
+		$data = array_merge($data, array(
+			'imageType4' 				=> $imageType4,
+			'patientInfo' 				=> $patientInfo,
+			'exclusiveBilling'			=> $exclusiveBilling,
+			'nameBilling'				=> $nameBilling,
+			'patientRequestId'			=> !empty($patient) ? $patient->patientid : null,
+			'butText'					=> $butText,
+			'DSS_REFERRED_MEDIA' 		=> Constants::DSS_REFERRED_MEDIA,
+			'DSS_REFERRED_FRANCHISE'	=> Constants::DSS_REFERRED_FRANCHISE,
+			'DSS_REFERRED_DSSOFFICE'	=> Constants::DSS_REFERRED_DSSOFFICE,
+			'DSS_REFERRED_OTHER'		=> Constants::DSS_REFERRED_OTHER,
+			'dssReferredLabels'			=> Constants::$dss_referred_labels
+		));
 
 		// dd($data);
 
@@ -2006,6 +1623,8 @@ class PatientController extends Controller
 		$patients = $this->patient->get(array(
 			'patientid' => $patientId
 		));
+
+		$contactIdList = null;
 
 		if (count($patients)) {
 			$patient = $patients[0];

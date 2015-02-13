@@ -617,28 +617,30 @@
 			</tr>
 			<!-- Stick Footer Section Here -->
 		</table>
+		
+		@section('footer')
+			<div id="popupContact" style="width:750px;">
+				<a id="popupContactClose"><button>X</button></a>
 
-		<div id="popupContact" style="width:750px;">
-			<a id="popupContactClose"><button>X</button></a>
+				<iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+			</div>
 
-			<iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-		</div>
+			<div id="backgroundPopup"></div>
 
-		<div id="backgroundPopup"></div>
+			<div id="warn_logout">
+				<br /><br />
 
-		<div id="warn_logout">
-			<br /><br />
+				<img src="/img/logo.gif" /><br />
 
-			<img src="/img/logo.gif" /><br />
+				<h1>Your screen has been locked for privacy due to inactivity.<br />Click to reopen your Dental Sleep Solutions software.</h1>
 
-			<h1>Your screen has been locked for privacy due to inactivity.<br />Click to reopen your Dental Sleep Solutions software.</h1>
+				<p style="color:#fff;font-size:20px;">Log out in <span id="logout_time_remaining"></span>!</p>
 
-			<p style="color:#fff;font-size:20px;">Log out in <span id="logout_time_remaining"></span>!</p>
+				<br /><br />
 
-			<br /><br />
-
-			<a href="logout">Logout</a>
-			<a href="#" onclick="reset_interval(0)">Stay logged in</a>
-		</div>
+				<a href="logout">Logout</a>
+				<a href="#" onclick="reset_interval(0)">Stay logged in</a>
+			</div>
+		@show
 	</body>
 </html>

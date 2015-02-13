@@ -68,47 +68,47 @@
 						<div style="float:left; clear:left;">
 							<span>
 								<select name="salutation" style="width:80px;" >
-									<option value="Mr." {!! ($salutation == "Mr.") ? "selected" : '' !!}>Mr.</option>
-									<option value="Mrs." {!! ($salutation == "Mrs.") ? "selected" : '' !!}>Mrs.</option>
-									<option value="Ms." {!! ($salutation == "Ms.") ? "selected" : '' !!}>Ms.</option>
-									<option value="Dr." {!! ($salutation == "Dr.") ? "selected" : '' !!}>Dr.</option>
+									<option value="Mr." {!! (!empty($patientInfo) && $patientInfo['salutation'] == "Mr.") ? "selected" : '' !!}>Mr.</option>
+									<option value="Mrs." {!! (!empty($patientInfo) && $patientInfo['salutation'] == "Mrs.") ? "selected" : '' !!}>Mrs.</option>
+									<option value="Ms." {!! (!empty($patientInfo) && $patientInfo['salutation'] == "Ms.") ? "selected" : '' !!}>Ms.</option>
+									<option value="Dr." {!! (!empty($patientInfo) && $patientInfo['salutation'] == "Dr.") ? "selected" : '' !!}>Dr.</option>
 								</select>
 								<label for="salutation">Salutation</label>
 							</span>
 							<span>
-								<input id="firstname" name="firstname" type="text" class="field text addr tbox" value="{!! $firstname or '' !!}" maxlength="255" style="width:150px;" />
+								<input id="firstname" name="firstname" type="text" class="field text addr tbox" value="{!! $patientInfo['firstname'] or '' !!}" maxlength="255" style="width:150px;" />
 								<label for="firstname">First Name</label>
 							</span>
 							<span>
-								<input id="lastname" name="lastname" type="text" class="field text addr tbox" value="{!! $lastname or '' !!}" maxlength="255" style="width:190px;" />
+								<input id="lastname" name="lastname" type="text" class="field text addr tbox" value="{!! $patientInfo['lastname'] or '' !!}" maxlength="255" style="width:190px;" />
 								<label for="lastname">Last Name</label>
 							</span>
 							<span>
-								<input id="middlename" name="middlename" type="text" class="field text addr tbox" value="{!! $middlename or '' !!}" style="width:30px;" maxlength="1" />
+								<input id="middlename" name="middlename" type="text" class="field text addr tbox" value="{!! $patientInfo['middlename'] or '' !!}" style="width:30px;" maxlength="1" />
 								<label for="middlename">MI</label>
 							</span>
 							<span>
-								<input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="{!! $preferred_name or '' !!}" maxlength="255" style="width:150px" />
+								<input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="{!! $patientInfo['preferred_name'] or '' !!}" maxlength="255" style="width:150px" />
 								<label for="preferred_name">Preferred Name</label>
 							</span>
 						</div>
 						<div style="float:left">
 							<span>
-								<input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="{!! $home_phone or '' !!}"  maxlength="255" style="width:100px;" />
+								<input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="{!! $patientInfo['home_phone'] or '' !!}"  maxlength="255" style="width:100px;" />
 								<label for="home_phone">Home Phone
 									<span id="req_0" class="req">*</span>
 								</label>
 							</span>
 							<span>
-								<input id="cell_phone" name="cell_phone" type="text" class="phonemask field text addr tbox" value="{!! $cell_phone or '' !!}"  maxlength="255" style="width:100px;" />
+								<input id="cell_phone" name="cell_phone" type="text" class="phonemask field text addr tbox" value="{!! $patientInfo['cell_phone'] or '' !!}"  maxlength="255" style="width:100px;" />
 								<label for="cell_phone">Cell Phone</label>
 							</span>
 							<span>
-								<input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="{!! $work_phone or '' !!}" maxlength="255" style="width:150px;" />
+								<input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="{!! $patientInfo['work_phone'] or '' !!}" maxlength="255" style="width:150px;" />
 								<label for="work_phone">Work Phone</label>
 							</span>
 							<span>
-								<input id="email" name="email" type="text" class="field text addr tbox" value="{!! $email or '' !!}"  maxlength="255" style="width:275px;" />
+								<input id="email" name="email" type="text" class="field text addr tbox" value="{!! $patientInfo['email'] or '' !!}"  maxlength="255" style="width:275px;" />
 								<label for="email">Email/Pt. Portal Login</label>
 							</span>
 						</div>
@@ -116,25 +116,25 @@
 							<span style="width:140px;">
 								<select id="best_time" name="best_time">
 									<option value="">Please Select</option>
-									<option value="morning" {!! ($best_time == 'morning') ? 'selected' : '' !!}>Morning</option>
-									<option value="midday" {!! ($best_time == 'midday') ? 'selected' : '' !!}>Mid-Day</option>
-									<option value="evening" {!! ($best_time == 'evening') ? 'selected' : '' !!}>Evening</option>
+									<option value="morning" {!! (!empty($patientInfo) && $patientInfo['best_time'] == 'morning') ? 'selected' : '' !!}>Morning</option>
+									<option value="midday" {!! (!empty($patientInfo) && $patientInfo['best_time'] == 'midday') ? 'selected' : '' !!}>Mid-Day</option>
+									<option value="evening" {!! (!empty($patientInfo) && $patientInfo['best_time'] == 'evening') ? 'selected' : '' !!}>Evening</option>
 								</select>
 								<label for="best_time">Best time to contact</label>
 							</span>
 							<span style="width:150px;">
 								<select id="best_number" name="best_number">
 									<option value="">Please Select</option>
-									<option value="home" {!! ($best_number == 'home') ? 'selected' : '' !!}>Home Phone</option>
-									<option value="work" {!! ($best_number == 'work') ? 'selected' : '' !!}>Work Phone</option>
-									<option value="cell" {!! ($best_number == 'cell') ? 'selected' : '' !!}>Cell Phone</option>
+									<option value="home" {!! (!empty($patientInfo) && $patientInfo['best_number'] == 'home') ? 'selected' : '' !!}>Home Phone</option>
+									<option value="work" {!! (!empty($patientInfo) && $patientInfo['best_number'] == 'work') ? 'selected' : '' !!}>Work Phone</option>
+									<option value="cell" {!! (!empty($patientInfo) && $patientInfo['best_number'] == 'cell') ? 'selected' : '' !!}>Cell Phone</option>
 								</select>
 								<label for="best_number">Best number to contact</label>
 							</span>
 							<span style="width:160px;">
 								<select id="preferredcontact" name="preferredcontact" >
-									<option value="paper" {!! ($preferredcontact == 'paper') ? 'selected' : '' !!}>Paper Mail</option>
-									<option value="email" {!! ($preferredcontact == 'email') ? 'selected' : '' !!}>Email</option>
+									<option value="paper" {!! (!empty($patientInfo) && $patientInfo['preferredcontact'] == 'paper') ? 'selected' : '' !!}>Paper Mail</option>
+									<option value="email" {!! (!empty($patientInfo) && $patientInfo['preferredcontact'] == 'email') ? 'selected' : '' !!}>Email</option>
 								</select>
 								<label>Preferred Contact Method</label>
 							</span>
@@ -168,27 +168,27 @@
 						</label>
 						<div>
 							<span>
-								<input id="add1" name="add1" type="text" class="field text addr tbox" value="{!! $add1 or '' !!}" style="width:225px;"  maxlength="255"/>
+								<input id="add1" name="add1" type="text" class="field text addr tbox" value="{!! $patientInfo['add1'] or '' !!}" style="width:225px;"  maxlength="255"/>
 								<label for="add1">Address1</label>
 							</span>
 							<span>
-								<input id="add2" name="add2" type="text" class="field text addr tbox" value="{!! $add2 or '' !!}" style="width:175px;" maxlength="255" />
+								<input id="add2" name="add2" type="text" class="field text addr tbox" value="{!! $patientInfo['add2'] or '' !!}" style="width:175px;" maxlength="255" />
 								<label for="add2">Address2</label>
 							</span>
 							<span>
-								<input id="city" name="city" type="text" class="field text addr tbox" value="{!! $city or '' !!}" style="width:200px;" maxlength="255" />
+								<input id="city" name="city" type="text" class="field text addr tbox" value="{!! $patientInfo['city'] or '' !!}" style="width:200px;" maxlength="255" />
 								<label for="city">City</label>
 							</span>
 							<span>
-								<input id="state" name="state" type="text" class="field text addr tbox" value="{!! $state or '' !!}" style="width:25px;" maxlength="2" />
+								<input id="state" name="state" type="text" class="field text addr tbox" value="{!! $patientInfo['state'] or '' !!}" style="width:25px;" maxlength="2" />
 								<label for="state">State</label>
 							</span>
 							<span>
-								<input id="zip" name="zip" type="text" class="field text addr tbox" value="{!! $zip or '' !!}" style="width:80px;" maxlength="255" />
+								<input id="zip" name="zip" type="text" class="field text addr tbox" value="{!! $patientInfo['zip'] or '' !!}" style="width:80px;" maxlength="255" />
 								<label for="zip">Zip / Post Code </label>
 							</span>
 
-							@if (count($locations))
+							@if (!empty($locations))
 								<span>
 									<select name="location">
 										<option value="">Select</option>
@@ -215,21 +215,21 @@
 					<li id="foli8" class="complex"> 
 						<div>
 							<span>
-								<input id="dob" name="dob" type="text" class="field text addr tbox calendar" value="{!! $dob or '' !!}" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" />
+								<input id="dob" name="dob" type="text" class="field text addr tbox calendar" value="{!! $patientInfo['dob'] or '' !!}" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" />
 								<span id="req_0" class="req">*</span>
 								<label for="dob">Birthday</label>
 							</span>
 							<span>
 								<select name="gender" id="gender" class="field text addr tbox" style="width:100px;" >
 									<option value="">Select</option>
-									<option value="Male" {!! ($gender == 'Male') ? 'selected' : '' !!}>Male</option>
-									<option value="Female" {!! ($gender == 'Female') ? 'selected' : '' !!}>Female</option>
+									<option value="Male" {!! (!empty($patientInfo) && $patientInfo['gender'] == 'Male') ? 'selected' : '' !!}>Male</option>
+									<option value="Female" {!! (!empty($patientInfo) && $patientInfo['gender'] == 'Female') ? 'selected' : '' !!}>Female</option>
 								</select>
 								<span id="req_0" class="req">*</span>
 								<label for="gender">Gender</label>
 							</span>
 							<span style="width:150px">
-								<input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="{!! $ssn !!}"  maxlength="255" style="width:100px;" />
+								<input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="{!! $patientInfo['ssn'] or '' !!}"  maxlength="255" style="width:100px;" />
 								<label for="ssn">Social Security No.</label>
 							</span>
 							<span>
@@ -237,7 +237,7 @@
 									<option value="0">Feet</option>
 
 									@for ($i = 1; $i < 9; $i++)
-										<option value="{!! $i !!}" {!! ($feet == $i) ? 'selected' : '' !!}>{!! $i !!}</option>
+										<option value="{!! $i !!}" {!! (!empty($patientInfo) && $patientInfo['feet'] == $i) ? 'selected' : '' !!}>{!! $i !!}</option>
 									@endfor
 
 								</select>
@@ -259,7 +259,7 @@
 									<option value="0">Weight</option>
 										
 									@for ($i = 80; $i <= 500; $i++)
-										<option value="{!! $i !!}" {!! ($weight == $i) ? 'selected' : '' !!}>{!! $i !!}</option>
+										<option value="{!! $i !!}" {!! (!empty($patientInfo) && $patientInfo['weight'] == $i) ? 'selected' : '' !!}>{!! $i !!}</option>
 									@endfor
 
 								</select>
@@ -267,7 +267,7 @@
 							</span>
 							<span>
 								<span style="color:#000000; padding-top:2px;">BMI</span>
-								<input id="bmi" name="bmi" type="text" class="field text addr tbox" value="{!! $bmi or '' !!}" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
+								<input id="bmi" name="bmi" type="text" class="field text addr tbox" value="{!! $patientInfo['bmi'] or '' !!}" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
 							</span>
 							<span>
 								<label for="inches">
@@ -295,15 +295,15 @@
 							<span>
 								<select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" >
 									<option value="">Select</option>
-									<option value="Married" {!! ($marital_status == 'Married') ? 'selected' : '' !!}>Married</option>
-									<option value="Single" {!! ($marital_status == 'Single') ? 'selected' : '' !!}>Single</option>
-									<option value="Life Partner" {!! ($marital_status == 'Life Partner') ? 'selected' : '' !!}>Life Partner</option>
-									<option value="Minor" {!! ($marital_status == 'Minor') ? 'selected' : '' !!}>Minor</option>
+									<option value="Married" {!! (!empty($patientInfo) && $patientInfo['marital_status'] == 'Married') ? 'selected' : '' !!}>Married</option>
+									<option value="Single" {!! (!empty($patientInfo) && $patientInfo['marital_status'] == 'Single') ? 'selected' : '' !!}>Single</option>
+									<option value="Life Partner" {!! (!empty($patientInfo) && $patientInfo['marital_status'] == 'Life Partner') ? 'selected' : '' !!}>Life Partner</option>
+									<option value="Minor" {!! (!empty($patientInfo) && $patientInfo['marital_status'] == 'Minor') ? 'selected' : '' !!}>Minor</option>
 								</select>
 								<label for="marital_status">Marital Status</label>
 							</span>
 							<span>
-								<input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="{!! $partner_name or '' !!}"  maxlength="255" />
+								<input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="{!! $patientInfo['partner_name'] or '' !!}"  maxlength="255" />
 								<label for="partner_name">Partner/Guardian Name</label>
 							</span>
 						</div>
@@ -315,7 +315,7 @@
 					<li id="foli8" class="complex"> 
 						<div>
 							<span>
-								<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" >{!! $patient_notes or '' !!}</textarea>
+								<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" >{!! $patientInfo['patient_notes'] or '' !!}</textarea>
 								<label for="patient_notes">Patient Notes</label>
 							</span>
 						</div>
@@ -330,15 +330,15 @@
 						<label class="desc" id="title0" for="Field0">In case of an emergency</label>
 						<div>
 							<span>
-								<input id="emergency_name" name="emergency_name" type="text" class="field text addr tbox" value="{!! $emergency_name !!}" maxlength="255" style="width:200px;" />
+								<input id="emergency_name" name="emergency_name" type="text" class="field text addr tbox" value="{!! $patientInfo['emergency_name'] or '' !!}" maxlength="255" style="width:200px;" />
 								<label for="home_phone">Name</label>
 							</span>
 							<span>
-								<input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="{!! $emergency_relationship !!}" maxlength="255" style="width:150px;" />
+								<input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="{!! $patientInfo['emergency_relationship'] or '' !!}" maxlength="255" style="width:150px;" />
 								<label for="home_phone">Relationship</label>
 							</span>
 							<span>
-								<input id="emergency_number" name="emergency_number" type="text" class="extphonemask field text addr tbox" value="{!! $emergency_number !!}" maxlength="255" style="width:150px;" />
+								<input id="emergency_number" name="emergency_number" type="text" class="extphonemask field text addr tbox" value="{!! $patientInfo['emergency_number'] or '' !!}" maxlength="255" style="width:150px;" />
 								<label for="emergency_number">Number</label>
 							</span>
 						</div>
@@ -358,27 +358,19 @@
 						<label class="desc" id="title0" for="Field0">&nbsp;</label>
 						<div>
 							<div style="float:left;">
-								<input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox calendar" value="{!! $copyReqDate or '' !!}"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" value="example 11/11/1234" />
+								<input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox calendar" value="{!! $patientInfo['copyreqdate'] or '' !!}"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" value="example 11/11/1234" />
 								<label>Date</label>
 							</div>
 							<div style="float:left;" id="referred_source_div">
-								<?php /**
-
-								*/?>
-
-								<input name="referred_source_r" {!! ($referred_source == DSS_REFERRED_PATIENT || $referred_source == DSS_REFERRED_PHYSICIAN) ? 'checked' : '' !!} type="radio" value="person" onclick="show_referredby('person', '')" /> Person
-								<input name="referred_source_r" {!! ($referred_source == DSS_REFERRED_MEDIA) ? 'checked' : '' !!} type="radio" value="{!! $DSS_REFERRED_MEDIA !!}" onclick="show_referredby('notes', {!! $DSS_REFERRED_MEDIA !!})" /> <?php echo $dss_referred_labels[DSS_REFERRED_MEDIA]; ?>
-								<input name="referred_source_r" {!! ($referred_source == DSS_REFERRED_FRANCHISE) ? 'checked' : '' !!} type="radio" value="{!! $DSS_REFERRED_FRANCHISE !!}" onclick="show_referredby('notes', {!! $DSS_REFERRED_FRANCHISE !!})" /> <?php echo $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?>
-								<input name="referred_source_r" {!! ($referred_source == DSS_REFERRED_DSSOFFICE) ? 'checked' : '' !!} type="radio" value="{!! $DSS_REFERRED_DSSOFFICE !!}" onclick="show_referredby('notes', {!! $DSS_REFERRED_DSSOFFICE !!})" /> <?php echo $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?>
-								<input name="referred_source_r" {!! ($referred_source == DSS_REFERRED_OTHER) ? 'checked' : '' !!} type="radio" value="{!! $DSS_REFERRED_OTHER !!}" onclick="show_referredby('notes', {!! $DSS_REFERRED_OTHER !!})" /> <?php echo $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
-							
-								<?php /**
-
-								*/?>
+								<input name="referred_source_r" {!! (!empty($patientInfo) && ($patientInfo['referred_source'] == $DSS_REFERRED_PATIENT || $patientInfo['referred_source'] == $DSS_REFERRED_PHYSICIAN)) ? 'checked' : '' !!} type="radio" value="person" onclick="show_referredby('person', '')" /> Person
+								<input name="referred_source_r" {!! (!empty($patientInfo) && $patientInfo['referred_source'] == $DSS_REFERRED_MEDIA) ? 'checked' : '' !!} type="radio" value="{!! $DSS_REFERRED_MEDIA !!}" onclick="show_referredby('notes', {!! $DSS_REFERRED_MEDIA !!})" /> {!! $dssReferredLabels[$DSS_REFERRED_MEDIA] !!}
+								<input name="referred_source_r" {!! (!empty($patientInfo) && $patientInfo['referred_source'] == $DSS_REFERRED_FRANCHISE) ? 'checked' : '' !!} type="radio" value="{!! $DSS_REFERRED_FRANCHISE !!}" onclick="show_referredby('notes', {!! $DSS_REFERRED_FRANCHISE !!})" /> {!! $dssReferredLabels[$DSS_REFERRED_FRANCHISE] !!}
+								<input name="referred_source_r" {!! (!empty($patientInfo) && $patientInfo['referred_source'] == $DSS_REFERRED_DSSOFFICE) ? 'checked' : '' !!} type="radio" value="{!! $DSS_REFERRED_DSSOFFICE !!}" onclick="show_referredby('notes', {!! $DSS_REFERRED_DSSOFFICE !!})" /> {!! $dssReferredLabels[$DSS_REFERRED_DSSOFFICE] !!}
+								<input name="referred_source_r" {!! (!empty($patientInfo) && $patientInfo['referred_source'] == $DSS_REFERRED_OTHER) ? 'checked' : '' !!} type="radio" value="{!! $DSS_REFERRED_OTHER !!}" onclick="show_referredby('notes', {!! $DSS_REFERRED_OTHER !!})" /> {!! $dssReferredLabels[$DSS_REFERRED_OTHER] !!}
 							</div>
 							<div style="clear:both;float:left;">
-								<div id="referred_person" {!! ($referred_source != DSS_REFERRED_PATIENT && $referred_source != DSS_REFERRED_PHYSICIAN ) ? 'style="display:none;margin-left:100px;"' : 'style="margin-left:100px"' !!}> 
-									<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="{!! $referred_name or 'Type referral name' !!}" style="width:300px;" />
+								<div id="referred_person" {!! (!empty($patientInfo) && $patientInfo['referred_source'] != DSS_REFERRED_PATIENT && $patientInfo['referred_source'] != DSS_REFERRED_PHYSICIAN ) ? 'style="display:none;margin-left:100px;"' : 'style="margin-left:100px"' !!}> 
+									<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="{!! $patientInfo['referred_name'] or 'Type referral name' !!}" style="width:300px;" />
 									<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat={!! $patientId or '' !!}&from=add_patient');" value="+ Create New Contact" />
 									<br />
 									<div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
@@ -387,11 +379,11 @@
 										</ul>
 									</div>
 								</div>
-								<div id="referred_notes" {!! ($referred_source != DSS_REFERRED_MEDIA && $referred_source != DSS_REFERRED_FRANCHISE && $referred_source != DSS_REFERRED_DSSOFFICE && $referred_source != DSS_REFERRED_OTHER) ? 'style="display:none;margin-left:200px;"' : 'style="margin-left:200px;"' !!}>
-									<textarea name="referred_notes" style="width:300px;">{!! $referred_notes !!}</textarea>  
+								<div id="referred_notes" {!! (!empty($patientInfo) && $patientInfo['referred_source'] != DSS_REFERRED_MEDIA && $patientInfo['referred_source'] != DSS_REFERRED_FRANCHISE && $patientInfo['referred_source'] != DSS_REFERRED_DSSOFFICE && $patientInfo['referred_source'] != DSS_REFERRED_OTHER) ? 'style="display:none;margin-left:200px;"' : 'style="margin-left:200px;"' !!}>
+									<textarea name="referred_notes" style="width:300px;">{!! $patientInfo['referred_notes'] or '' !!}</textarea>  
 								</div>
-								<input type="hidden" name="referred_by" id="referred_by" value="{!! $referred_by !!}" />
-								<input type="hidden" name="referred_source" id="referred_source" value="{!! $referred_source !!}" />
+								<input type="hidden" name="referred_by" id="referred_by" value="{!! $patientInfo['referred_by'] or '' !!}" />
+								<input type="hidden" name="referred_source" id="referred_source" value="{!! $patientInfo['referred_source'] or '' !!}" />
 							</div>
 						</div>
 					</li>
@@ -411,37 +403,37 @@
 						<label class="desc" id="title0" for="Field0">Employer Information</label>
 						<div>
 							<span>
-								<input id="employer" name="employer" type="text" class="field text addr tbox" value="{!! $employer !!}" style="width:325px;"  maxlength="255"/>
+								<input id="employer" name="employer" type="text" class="field text addr tbox" value="{!! $patientInfo['employer'] or '' !!}" style="width:325px;"  maxlength="255"/>
 								<label for="add1">Employer</label>
 							</span>
 							<span>
-								<input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="{!! $emp_phone !!}"  style="width:150px;" maxlength="255" />
+								<input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="{!! $patientInfo['emp_phone'] or '' !!}"  style="width:150px;" maxlength="255" />
 								<label for="state">&nbsp;&nbsp;Phone</label>
 							</span>
 							<span>
-								<input id="emp_fax" name="emp_fax" type="text" class="phonemask field text addr tbox" value="{!! $emp_fax !!}"  style="width:120px;" maxlength="255" />
+								<input id="emp_fax" name="emp_fax" type="text" class="phonemask field text addr tbox" value="{!! $patientInfo['emp_fax'] or '' !!}"  style="width:120px;" maxlength="255" />
 								<label for="state">Fax</label>
 							</span>
 						</div>
 						<div>
 							<span>
-								<input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="{!! $emp_add1 !!}" style="width:225px;"  maxlength="255"/>
+								<input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="{!! $patientInfo['emp_add1'] or '' !!}" style="width:225px;"  maxlength="255"/>
 								<label for="add1">Address1</label>
 							</span>
 							<span>
-								<input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="{!! $emp_add2 !!}" style="width:175px;" maxlength="255" />
+								<input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="{!! $patientInfo['emp_add2'] or '' !!}" style="width:175px;" maxlength="255" />
 								<label for="add2">Address2</label>
 							</span>
 							<span>
-								<input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="{!! $emp_city !!}" style="width:200px;" maxlength="255" />
+								<input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="{!! $patientInfo['emp_city'] or '' !!}" style="width:200px;" maxlength="255" />
 								<label for="city">City</label>
 							</span>
 							<span>
-								<input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="{!! $emp_state !!}"  style="width:80px;" maxlength="255" />
+								<input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="{!! $patientInfo['emp_state'] or '' !!}"  style="width:80px;" maxlength="255" />
 								<label for="state">State</label>
 							</span>
 							<span>
-								<input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="{!! $emp_zip !!}" style="width:80px;" maxlength="255" />
+								<input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="{!! $patientInfo['emp_zip'] or '' !!}" style="width:80px;" maxlength="255" />
 								<label for="zip">Zip Code </label>
 							</span>
 						</div>
@@ -480,43 +472,43 @@
 							Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 							@if (!empty($exclusiveBilling))
-								{!! $billingCo . ' filing insurance' !!}
+								{!! $nameBilling . ' filing insurance' !!}
 							@else
-								<a onclick="return false;" class="plain" title="Select YES if you would like {!! $billingCo !!} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended).">{!! $billingCo !!} filing insurance?</a>
-								<input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" {!! ($p_m_dss_file == '1') ? 'checked' : '' !!}>Yes&nbsp;&nbsp;&nbsp;&nbsp;
-								<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" {!! ($p_m_dss_file == '2') ? 'checked' : '' !!}>No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<a onclick="return false;" class="plain" title="Select YES if you would like {!! $nameBilling !!} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended).">{!! $nameBilling !!} filing insurance?</a>
+								<input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" {!! (!empty($patientInfo) && $patientInfo['p_m_dss_file'] == '1') ? 'checked' : '' !!}>Yes&nbsp;&nbsp;&nbsp;&nbsp;
+								<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" {!! (!empty($patientInfo) && $patientInfo['p_m_dss_file'] == '2') ? 'checked' : '' !!}>No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							@endif
 
 							<a onclick="return false" class="plain" title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO.">Insured Address same as Pt. address?</a>
-							<input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" {!! ($p_m_same_address == '1') ? 'checked' !!}> Yes
-							<input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" {!! ($p_m_same_address == '2') ? 'checked' !!}> No
+							<input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" {!! (!empty($patientInfo) && $patientInfo['p_m_same_address'] == '1') ? 'checked' : '' !!}> Yes
+							<input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" {!! (!empty($patientInfo) && $patientInfo['p_m_same_address'] == '2') ? 'checked' : '' !!}> No
 						</label>
 						<div>
 							<span>
 								<select id="p_m_relation" name="p_m_relation" class="field text addr tbox" style="width:200px;">
-									<option value="" {!! ($p_m_relation == '') ? 'selected' !!}>None</option>
-									<option value="Self" {!! ($p_m_relation == 'Self') ? 'selected' !!}>Self</option>
-									<option value="Spouse" {!! ($p_m_relation == 'Spouse') ? 'selected' !!}>Spouse</option>
-									<option value="Child" {!! ($p_m_relation == 'Child') ? 'selected' !!}>Child</option>
-									<option value="Other" {!! ($p_m_relation == 'Other') ? 'selected' !!}>Other</option>
+									<option value="" {!! (!empty($patientInfo) && $patientInfo['p_m_relation'] == '') ? 'selected' : '' !!}>None</option>
+									<option value="Self" {!! (!empty($patientInfo) && $patientInfo['p_m_relation'] == 'Self') ? 'selected' : '' !!}>Self</option>
+									<option value="Spouse" {!! (!empty($patientInfo) && $patientInfo['p_m_relation'] == 'Spouse') ? 'selected' : '' !!}>Spouse</option>
+									<option value="Child" {!! (!empty($patientInfo) && $patientInfo['p_m_relation'] == 'Child') ? 'selected' : '' !!}>Child</option>
+									<option value="Other" {!! (!empty($patientInfo) && $patientInfo['p_m_relation'] == 'Other') ? 'selected' : '' !!}>Other</option>
 								</select>
 								<label for="work_phone">Relationship to insured party</label>
 							</span>
 							<span>
-								<input id="p_m_partyfname" name="p_m_partyfname" type="text" class="field text addr tbox" value="{!! $p_m_partyfname !!}" maxlength="255" style="width:150px;" />
-								<input id="p_m_partymname" name="p_m_partymname" type="text" class="field text addr tbox" value="{!! $p_m_partymname !!}" maxlength="255" style="width:50px;" />
-								<input id="p_m_partylname" name="p_m_partylname" type="text" class="field text addr tbox" value="{!! $p_m_partylname !!}" maxlength="255" style="width:150px;" />
+								<input id="p_m_partyfname" name="p_m_partyfname" type="text" class="field text addr tbox" value="{!! $patientInfo['p_m_partyfname'] or '' !!}" maxlength="255" style="width:150px;" />
+								<input id="p_m_partymname" name="p_m_partymname" type="text" class="field text addr tbox" value="{!! $patientInfo['p_m_partymname'] or '' !!}" maxlength="255" style="width:50px;" />
+								<input id="p_m_partylname" name="p_m_partylname" type="text" class="field text addr tbox" value="{!! $patientInfo['p_m_partylname'] or '' !!}" maxlength="255" style="width:150px;" />
 								<label for="p_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
 							</span>
 							<span>
-								<input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox calendar" value="{!! $ins_dob !!}" maxlength="255" style="width:150px;" onChange="validateDate('ins_dob');" />
+								<input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox calendar" value="{!! $patientInfo['ins_dob'] or '' !!}" maxlength="255" style="width:150px;" onChange="validateDate('ins_dob');" />
 								<label for="ins_dob">Insured Date of Birth</label>
 							</span>
 							<span>
 								<select name="p_m_gender" id="p_m_gender" class="field text addr tbox" style="width:100px;" >
 									<option value="">Select</option>
-									<option value="Male" {!! ($p_m_gender == 'Male') ? 'selected' !!}>Male</option>
-									<option value="Female" {!! ($p_m_gender == 'Female') ? 'selected' !!}>Female</option>
+									<option value="Male" {!! (!empty($patientInfo) && $patientInfo['p_m_gender'] == 'Male') ? 'selected' : '' !!}>Male</option>
+									<option value="Female" {!! (!empty($patientInfo) && $patientInfo['p_m_gender'] == 'Female') ? 'selected' : '' !!}>Female</option>
 								</select>
 								<span id="req_0" class="req">*</span>
 								<label for="gender">Insured Gender</label>
@@ -525,23 +517,23 @@
 						<div></div>
 					</li>
 				</ul>
-				<ul id="p_m_address_fields" {!! ($p_m_same_address == "1") ? 'style="display:none;"'  :'' !!}>
+				<ul id="p_m_address_fields" {!! (!empty($patientInfo) && $patientInfo['p_m_same_address'] == "1") ? 'style="display:none;"'  :'' !!}>
 					<li id="foli8" class="complex">
 						<div>
 							<span>
-								<input id="p_m_address" name="p_m_address" type="text" class="field text addr tbox" value="{!! $p_m_address !!}" style="width:225px;"  maxlength="255"/>
+								<input id="p_m_address" name="p_m_address" type="text" class="field text addr tbox" value="{!! $patientInfo['p_m_address'] or '' !!}" style="width:225px;"  maxlength="255"/>
 								<label for="add">Insured Address</label>
 							</span>
 							<span>
-								<input id="p_m_city" name="p_m_city" type="text" class="field text addr tbox" value="{!! $p_m_city !!}" style="width:200px;" maxlength="255" />
+								<input id="p_m_city" name="p_m_city" type="text" class="field text addr tbox" value="{!! $patientInfo['p_m_city'] or '' !!}" style="width:200px;" maxlength="255" />
 								<label for="city">Insured City</label>
 							</span>
 							<span>
-								<input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="{!! $p_m_state !!}"  style="width:80px;" maxlength="255" />
+								<input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="{!! $patientInfo['p_m_state'] or '' !!}"  style="width:80px;" maxlength="255" />
 								<label for="state">Insured State</label>
 							</span>
 							<span>
-								<input id="p_m_zip" name="p_m_zip" type="text" class="field text addr tbox" value="{!! $p_m_zip !!}" style="width:80px;" maxlength="255" />
+								<input id="p_m_zip" name="p_m_zip" type="text" class="field text addr tbox" value="{!! $patientInfo['p_m_zip'] or '' !!}" style="width:80px;" maxlength="255" />
 								<label for="zip">Insured Zip Code </label>
 							</span>
 						</div>
@@ -554,19 +546,19 @@
 							<span>
 								<select id="p_m_ins_type" name="p_m_ins_type" class="field text addr tbox" onchange="update_insurance_type()" maxlength="255" style="width:200px;" />
 									<option value=""></option>
-									<option value="1" {!! ($p_m_ins_type == '1') ? 'selected' !!}>Medicare</option>
-									<option value="2" {!! ($p_m_ins_type == '2') ? 'selected' !!}>Medicaid</option>
-									<option value="3" {!! ($p_m_ins_type == '3') ? 'selected' !!}>Tricare Champus</option>
-									<option value="4" {!! ($p_m_ins_type == '4') ? 'selected' !!}>Champ VA</option>
-									<option value="5" {!! ($p_m_ins_type == '5') ? 'selected' !!}>Group Health Plan</option>
-									<option value="6" {!! ($p_m_ins_type == '6') ? 'selected' !!}>FECA BLKLUNG</option>
-									<option value="7" {!! ($p_m_ins_type == '7') ? 'selected' !!}>Other</option>
+									<option value="1" {!! (!empty($patientInfo) && $patinetInfo['p_m_ins_type'] == '1') ? 'selected' : '' !!}>Medicare</option>
+									<option value="2" {!! (!empty($patientInfo) && $patinetInfo['p_m_ins_type'] == '2') ? 'selected' : '' !!}>Medicaid</option>
+									<option value="3" {!! (!empty($patientInfo) && $patinetInfo['p_m_ins_type'] == '3') ? 'selected' : '' !!}>Tricare Champus</option>
+									<option value="4" {!! (!empty($patientInfo) && $patinetInfo['p_m_ins_type'] == '4') ? 'selected' : '' !!}>Champ VA</option>
+									<option value="5" {!! (!empty($patientInfo) && $patinetInfo['p_m_ins_type'] == '5') ? 'selected' : '' !!}>Group Health Plan</option>
+									<option value="6" {!! (!empty($patientInfo) && $patinetInfo['p_m_ins_type'] == '6') ? 'selected' : '' !!}>FECA BLKLUNG</option>
+									<option value="7" {!! (!empty($patientInfo) && $patinetInfo['p_m_ins_type'] == '7') ? 'selected' : '' !!}>Other</option>
 								</select>
 								<label for="home_phone">Insurance Type</label>
 							</span>
 							<span>
-								<input class="p_m_ins_ass" id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" {!! ($p_m_ins_ass == 'Yes') ? 'checked' !!}>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;
-								<input class="p_m_ins_ass pay_to_patient_radio" id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" {!! ($p_m_ins_ass == 'No') ? 'checked' !!}>Payment to Patient
+								<input class="p_m_ins_ass" id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" {!! (!empty($patientInfo) && $patientInfo['p_m_ins_ass'] == 'Yes') ? 'checked' : '' !!}>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;
+								<input class="p_m_ins_ass pay_to_patient_radio" id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" {!! (!empty($patientInfo) && $patientInfo['p_m_ins_ass'] == 'No') ? 'checked' : '' !!}>Payment to Patient
 							</span>
 							<span style="float:right">
 
@@ -594,33 +586,33 @@
 
 									@if (!empty($insuranceContacts))
 										@foreach ($insuranceContacts as $insuranceContact)
-											<option value="{!! $insuranceContact->contactid !!}" {!! ($p_m_ins_co == $insuranceContact->contactid) ? 'selected' !!}>{!! $insuranceContact->company !!}</option>
+											<option value="{!! $insuranceContact->contactid !!}" {!! ($p_m_ins_co == $insuranceContact->contactid) ? 'selected' : '' !!}>{!! $insuranceContact->company !!}</option>
 										@endforeach
 									@endif
 								</select>
 								<label for="p_m_ins_co">Insurance Co.</label><br />
-								<input type="button" class="button" style="width:215px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins{!! !empty($patientId) ? '/pid/' . $patientId . '/type/11/ctypeeq/1/activePat/' . $patientId !!}');" value="+ Create New Insurance Company" />
+								<input type="button" class="button" style="width:215px;" onclick="loadPopupRefer('add_contact/from/add_patient/from_id/p_m_ins_co/ctype/ins{!! !empty($patientId) ? '/pid/' . $patientId . '/type/11/ctypeeq/1/activePat/' . $patientId : '' !!}');" value="+ Create New Insurance Company" />
 							</span>
 							<span>
-								<input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="{!! $p_m_ins_id !!}" maxlength="255" style="width:190px;" />
+								<input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="{!! $patientInfo['p_m_ins_id'] or '' !!}" maxlength="255" style="width:190px;" />
 								<label for="home_phone">Insurance ID.</label>
 							</span>
 							<span>
 						
-								@if (!empty($p_m_ins_type) && $p_m_ins_type == '1')
+								@if (!empty($patientInfo) && $patinetInfo['p_m_ins_type'] == '1')
 									<input id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="NONE" readonly maxlength="255" style="width:100px;" />
 								@else
-									<input id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="{!! $p_m_ins_grp !!}" maxlength="255" style="width:100px;" />
+									<input id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="{!! $patientInfo['p_m_ins_grp'] or '' !!}" maxlength="255" style="width:100px;" />
 								@endif
 
 								<label for="home_phone">Group #</label>
 							</span>
 							<span>
 
-								@if (!empty($p_m_ins_type) && $p_m_ins_type == '1')
+								@if (!empty($patientInfo) && $patientInfo['p_m_ins_type'] == '1')
 									<input id="p_m_ins_plan" name="p_m_ins_plan" type="text" class="field text addr tbox" readonly maxlength="255" style="width:200px;" />
 								@else
-									<input id="p_m_ins_plan" name="p_m_ins_plan" type="text" class="field text addr tbox" value="{!! $p_m_ins_plan !!}" maxlength="255" style="width:200px;" />
+									<input id="p_m_ins_plan" name="p_m_ins_plan" type="text" class="field text addr tbox" value="{!! $patientInfo['p_m_ins_plan'] or '' !!}" maxlength="255" style="width:200px;" />
 								@endif
 
 								<label for="home_phone">Plan Name</label>
@@ -645,8 +637,8 @@
 						<div style="height:40px;display:block;">
 							<span>
 								<label style="display:inline;">Does patient have secondary insurance?</label>
-								<input type="radio" value="Yes" {!! ($has_s_m_ins == "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-								<input type="radio" value="No" {!! ($has_s_m_ins != "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide(); clearInfo();" /> No
+								<input type="radio" value="Yes" {!! (!empty($patientInfo) && $patientInfo['has_s_m_ins'] == "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
+								<input type="radio" value="No" {!! (!empty($patientInfo) && $patientInfo['has_s_m_ins'] != "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide(); clearInfo();" /> No
 							</span>
 						</div>
 					</li>
@@ -674,47 +666,47 @@
 			<td valign="top" colspan="2" class="frmhead">
 				<ul>
 					<li id="foli8" class="complex"> 
-						<label class="desc s_m_ins_div" id="title0" for="Field0"  {!! ($has_s_m_ins != "Yes") ? 'style="display:none;"' : '' !!}>
+						<label class="desc s_m_ins_div" id="title0" for="Field0"  {!! (!empty($patientInfo) && $patientInfo['has_s_m_ins'] != "Yes") ? 'style="display:none;"' : '' !!}>
 							Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 							@if (!empty($exclusiveBilling))
-								{!! $billingCo . ' filing insurance' !!}
+								{!! $nameBilling . ' filing insurance' !!}
 							@else
-								<a onclick="return false;" class="plain" title="Select YES if you would like {!! $billingCo !!} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended).">{!! $billingCo !!} filing insurance?</a>
-								<input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" {!! ($s_m_dss_file == '1') ? 'checked' !!}>Yes&nbsp;&nbsp;&nbsp;&nbsp;
-								<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" {!! ($s_m_dss_file == '2') ? 'checked' !!}>No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<a onclick="return false;" class="plain" title="Select YES if you would like {!! $nameBilling !!} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended).">{!! $nameBilling !!} filing insurance?</a>
+								<input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" {!! (!empty($patientInfo) && $patientInfo['s_m_dss_file'] == '1') ? 'checked' : '' !!}>Yes&nbsp;&nbsp;&nbsp;&nbsp;
+								<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" {!! (!empty($patientInfo) && $patientInfo['s_m_dss_file'] == '2') ? 'checked' : '' !!}>No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							@endif
 
 							<a onclick="return false" class="plain" title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO.">Insured Address same as Pt. address?</a>
-							<input type="radio" onclick="$('#s_m_address_fields').hide();" name="s_m_same_address" value="1" {!! ($s_m_same_address == '1') ? 'checked' !!}> Yes
-							<input type="radio" onclick="$('#s_m_address_fields').show();" name="s_m_same_address" value="2" {!! ($s_m_same_address == '2') ? 'checked' !!}> No
+							<input type="radio" onclick="$('#s_m_address_fields').hide();" name="s_m_same_address" value="1" {!! (!empty($patientInfo) && $patientInfo['s_m_same_address'] == '1') ? 'checked' : '' !!}> Yes
+							<input type="radio" onclick="$('#s_m_address_fields').show();" name="s_m_same_address" value="2" {!! (!empty($patientInfo) && $patientInfo['s_m_same_address'] == '2') ? 'checked' : '' !!}> No
 						</label>
-						<div class="s_m_ins_div" {!! ($has_s_m_ins != "Yes") ? 'style="display:none;"' : '' !!}>
+						<div class="s_m_ins_div" {!! (!empty($patientInfo) && $patientInfo['has_s_m_ins'] != "Yes") ? 'style="display:none;"' : '' !!}>
 							<span>
 								<select id="s_m_relation" name="s_m_relation" class="field text addr tbox" style="width:200px;">
-									<option value="" {!! ($s_m_relation == '') ? 'selected' !!}>None</option>
-									<option value="Self" {!! ($s_m_relation == 'Self') ? 'selected' !!}>Self</option>
-									<option value="Spouse" {!! ($s_m_relation == 'Spouse') ? 'selected' !!}>Spouse</option>
-									<option value="Child" {!! ($s_m_relation == 'Child') ? 'selected' !!}>Child</option>
-									<option value="Other" {!! ($s_m_relation == 'Other') ? 'selected' !!}>Other</option>
+									<option value="" {!! (!empty($patientInfo) && $patientInfo['s_m_relation'] == '') ? 'selected' : '' !!}>None</option>
+									<option value="Self" {!! (!empty($patientInfo) && $patientInfo['s_m_relation'] == 'Self') ? 'selected' : '' !!}>Self</option>
+									<option value="Spouse" {!! (!empty($patientInfo) && $patientInfo['s_m_relation'] == 'Spouse') ? 'selected' : '' !!}>Spouse</option>
+									<option value="Child" {!! (!empty($patientInfo) && $patientInfo['s_m_relation'] == 'Child') ? 'selected' : '' !!}>Child</option>
+									<option value="Other" {!! (!empty($patientInfo) && $patientInfo['s_m_relation'] == 'Other') ? 'selected' : '' !!}>Other</option>
 								</select>
 								<label for="work_phone">Relationship to insured party</label>
 							</span>
 							<span>
-								<input id="s_m_partyfname" name="s_m_partyfname" type="text" class="field text addr tbox" value="{!! $s_m_partyfname !!}" maxlength="255" style="width:150px;" />
-								<input id="s_m_partymname" name="s_m_partymname" type="text" class="field text addr tbox" value="{!! $s_m_partymname !!}" maxlength="255" style="width:50px;" />
-								<input id="s_m_partylname" name="s_m_partylname" type="text" class="field text addr tbox" value="{!! $s_m_partylname !!}" maxlength="255" style="width:150px;" />
+								<input id="s_m_partyfname" name="s_m_partyfname" type="text" class="field text addr tbox" value="{!! $patientInfo['s_m_partyfname'] or '' !!}" maxlength="255" style="width:150px;" />
+								<input id="s_m_partymname" name="s_m_partymname" type="text" class="field text addr tbox" value="{!! $patientInfo['s_m_partymname'] or '' !!}" maxlength="255" style="width:50px;" />
+								<input id="s_m_partylname" name="s_m_partylname" type="text" class="field text addr tbox" value="{!! $patientInfo['s_m_partylname'] or '' !!}" maxlength="255" style="width:150px;" />
 								<label for="s_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
 							</span>
 							<span>
-								<input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox calendar" value="{!! $ins2_dob !!}" maxlength="255" style="width:150px;" onChange="validateDate('ins2_dob');" />
+								<input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox calendar" value="{!! $patientInfo['ins2_dob'] or '' !!}" maxlength="255" style="width:150px;" onChange="validateDate('ins2_dob');" />
 								<label for="ins2_dob">Insured Date of Birth</label>
 							</span>
 							<span>
 								<select name="s_m_gender" id="s_m_gender" class="field text addr tbox" style="width:100px;" >
 									<option value="">Select</option>
-									<option value="Male" {!! ($s_m_gender == 'Male') ? 'selected' : '' !!}>Male</option>
-									<option value="Female" {!! ($s_m_gender == 'Female') ? 'selected' : '' !!}>Female</option>
+									<option value="Male" {!! (!empty($patientInfo) && $patinetInfo['s_m_gender'] == 'Male') ? 'selected' : '' !!}>Male</option>
+									<option value="Female" {!! (!empty($patientInfo) && $patinetInfo['s_m_gender'] == 'Female') ? 'selected' : '' !!}>Female</option>
 								</select>
 								<span id="req_0" class="req">*</span>
 								<label for="gender">Insured Gender</label>
@@ -723,23 +715,23 @@
 						<div></div>
 					</li>
 				</ul>
-				<ul id="s_m_address_fields" <?php echo ($s_m_same_address == "1" || $has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+				<ul id="s_m_address_fields" <?php echo (!empty($patientInfo) && ($patientInfo['s_m_same_address'] == "1" || $patientInfo['has_s_m_ins'] != "Yes")) ? 'style="display:none;"':''; ?>>
 					<li id="foli8" class="complex">
 						<div>
 							<span>
-								<input id="s_m_address" name="s_m_address" type="text" class="field text addr tbox" value="{!! $s_m_address !!}" style="width:225px;"  maxlength="255"/>
+								<input id="s_m_address" name="s_m_address" type="text" class="field text addr tbox" value="{!! $patientInfo['s_m_address'] or '' !!}" style="width:225px;"  maxlength="255"/>
 								<label for="add">Insured Address</label>
 							</span>
 							<span>
-								<input id="s_m_city" name="s_m_city" type="text" class="field text addr tbox" value="{!! $s_m_city !!}" style="width:200px;" maxlength="255" />
+								<input id="s_m_city" name="s_m_city" type="text" class="field text addr tbox" value="{!! $patientInfo['s_m_city'] or '' !!}" style="width:200px;" maxlength="255" />
 								<label for="city">Insured City</label>
 							</span>
 							<span>
-								<input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="{!! $s_m_state !!}"  style="width:80px;" maxlength="255" />
+								<input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="{!! $patientInfo['s_m_state'] or '' !!}"  style="width:80px;" maxlength="255" />
 								<label for="state">Insured State</label>
 							</span>
 							<span>
-								<input id="s_m_zip" name="s_m_zip" type="text" class="field text addr tbox" value="{!! $s_m_zip !!}" style="width:80px;" maxlength="255" />
+								<input id="s_m_zip" name="s_m_zip" type="text" class="field text addr tbox" value="{!! $patientInfo['s_m_zip'] or '' !!}" style="width:80px;" maxlength="255" />
 								<label for="zip">Insured Zip Code </label>
 							</span>
 						</div>
@@ -748,23 +740,23 @@
 				</ul>
 				<ul>
 					<li id="foli8" class="complex">
-						<div  class="s_m_ins_div" {!! ($has_s_m_ins != "Yes") ? 'style="display:none;"' : '' !!}>
+						<div  class="s_m_ins_div" {!! (!empty($patientInfo) && $patientInfo['has_s_m_ins'] != "Yes") ? 'style="display:none;"' : '' !!}>
 							<span>
 								<select id="s_m_ins_type" name="s_m_ins_type" onchange="checkMedicare()" class="field text addr tbox" maxlength="255" style="width:200px;" />
 									<option value=""></option>
-									<option value="1" {!! ($s_m_ins_type == '1') ? 'selected' : '' !!}>Medicare</option>
-									<option value="2" {!! ($s_m_ins_type == '2') ? 'selected' : '' !!}>Medicaid</option>
-									<option value="3" {!! ($s_m_ins_type == '3') ? 'selected' : '' !!}>Tricare Champus</option>
-									<option value="4" {!! ($s_m_ins_type == '4') ? 'selected' : '' !!}>Champ VA</option>
-									<option value="5" {!! ($s_m_ins_type == '5') ? 'selected' : '' !!}>Group Health Plan</option>
-									<option value="6" {!! ($s_m_ins_type == '6') ? 'selected' : '' !!}>FECA BLKLUNG</option>
-									<option value="7" {!! ($s_m_ins_type == '7') ? 'selected' : '' !!}>Other</option>
+									<option value="1" {!! (!empty($patientInfo) && $patientInfo['s_m_ins_type'] == '1') ? 'selected' : '' !!}>Medicare</option>
+									<option value="2" {!! (!empty($patientInfo) && $patientInfo['s_m_ins_type'] == '2') ? 'selected' : '' !!}>Medicaid</option>
+									<option value="3" {!! (!empty($patientInfo) && $patientInfo['s_m_ins_type'] == '3') ? 'selected' : '' !!}>Tricare Champus</option>
+									<option value="4" {!! (!empty($patientInfo) && $patientInfo['s_m_ins_type'] == '4') ? 'selected' : '' !!}>Champ VA</option>
+									<option value="5" {!! (!empty($patientInfo) && $patientInfo['s_m_ins_type'] == '5') ? 'selected' : '' !!}>Group Health Plan</option>
+									<option value="6" {!! (!empty($patientInfo) && $patientInfo['s_m_ins_type'] == '6') ? 'selected' : '' !!}>FECA BLKLUNG</option>
+									<option value="7" {!! (!empty($patientInfo) && $patientInfo['s_m_ins_type'] == '7') ? 'selected' : '' !!}>Other</option>
 								</select>
 								<label for="s_m_ins_type">Insurance Type</label>
 							</span>
 							<span>
-								<input id="s_m_ins_ass_yes" type="radio" name="s_m_ins_ass" value="Yes" {!! ($s_m_ins_ass == 'Yes') ? 'checked' : '' !!}>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;
-								<input id="s_m_ins_ass_no pay_to_patient_radio" type="radio" name="s_m_ins_ass" value="No" {!! ($s_m_ins_ass == 'No') ? 'checked' : '' !!}>Payment to Patient
+								<input id="s_m_ins_ass_yes" type="radio" name="s_m_ins_ass" value="Yes" {!! (!empty($patientInfo) && $patientInfo['s_m_ins_ass'] == 'Yes') ? 'checked' : '' !!}>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;
+								<input id="s_m_ins_ass_no pay_to_patient_radio" type="radio" name="s_m_ins_ass" value="No" {!! (!empty($patientInfo) && $patientInfo['s_m_ins_ass'] == 'No') ? 'checked' : '' !!}>Payment to Patient
 							</span>
 							<span style="float:right">
 
@@ -785,7 +777,7 @@
 				</ul>
 				<ul>
 					<li id="foli8" class="complex"> 
-						<div class="s_m_ins_div" {!! ($has_s_m_ins != "Yes") ? 'style="display:none;"' : '' !!}>
+						<div class="s_m_ins_div" {!! (!empty($patientInfo) && $patientInfo['has_s_m_ins'] != "Yes") ? 'style="display:none;"' : '' !!}>
 							<span>
 								<select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" onchange="updateNumber2('s_m_ins_phone')" />
 									<option value="">Select Insurance Company</option>
@@ -798,18 +790,18 @@
 
 								</select>
 								<label for="s_m_ins_co">Insurance Co.</label><br />
-								<input type="button" class="button" style="width:215px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins{!! !empty($patientId) ? '&pid=' . $patientId . '&type=11&ctypeeq=1&activePat=' . $patientId !!}');" value="+ Create New Insurance Company" />
+								<input type="button" class="button" style="width:215px;" onclick="loadPopupRefer('add_contact/from/add_patient/from_id/s_m_ins_co/ctype/ins{!! !empty($patientId) ? '/pid=' . $patientId . '/type/11/ctypeeq/1/activePat/' . $patientId : '' !!}');" value="+ Create New Insurance Company" />
 							</span>
 							<span>
-								<input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="{!! $s_m_ins_id !!}" maxlength="255" style="width:190px;" />
+								<input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="{!! $patientInfo['s_m_ins_id'] or '' !!}" maxlength="255" style="width:190px;" />
 								<label for="s_m_ins_id">Insurance ID.</label>
 							</span>
 							<span>
-								<input id="s_m_ins_grp" name="s_m_ins_grp" type="text" class="field text addr tbox" value="{!! $s_m_ins_grp !!}" maxlength="255" style="width:100px;" />
+								<input id="s_m_ins_grp" name="s_m_ins_grp" type="text" class="field text addr tbox" value="{!! $patientInfo['s_m_ins_grp'] or '' !!}" maxlength="255" style="width:100px;" />
 								<label for="s_m_ins_grp">Group #</label>
 							</span>
 							<span>
-								<input id="s_m_ins_plan" name="s_m_ins_plan" type="text" class="field text addr tbox" value="{!! $s_m_ins_plan !!}" maxlength="255" style="width:200px;" />
+								<input id="s_m_ins_plan" name="s_m_ins_plan" type="text" class="field text addr tbox" value="{!! $patientInfo['s_m_ins_plan'] or '' !!}" maxlength="255" style="width:200px;" />
 								<label for="s_m_ins_plan">Plan Name</label>
 							</span>
 							<span>
@@ -840,18 +832,18 @@
 								<li id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">Primary Care MD</label>
 									<div id="docpcp_static_info" style="{!! (!empty($docpcp)) ? '' : 'display:none' !!}">
-										<span id="docpcp_name_static" style="width:300px;">{!! $docpcp_name !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $docpcp !!}');return false;" class="addButton">Quick View</a>
+										<span id="docpcp_name_static" style="width:300px;">{!! $patientInfo['docpcp_name'] or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docpcp'] or '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docpcp_static_info').hide();$('#docpcp_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
-									<input type="text" id="docpcp_name" style="width:300px;{!! ($docpcp != '') ? 'display:none;' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="{!! (!empty($docpcp)) ? $docpcp_name : 'Type contact name' !!}" />
+									<input type="text" id="docpcp_name" style="width:300px;{!! (!empty($patientInfo) && $patientInfo['docpcp'] != '') ? 'display:none;' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="{!! !empty($patientInfo['docpcp']) ? $patientInfo['docpcp_name'] : 'Type contact name' !!}" />
 									<br />
 									<div id="docpcp_hints" class="search_hints" style="display:none;">
 										<ul id="docpcp_list" class="search_list">
 											<li class="template" style="display:none">Doe, John S</li>
 										</ul>
 									</div>
-									<input type="hidden" name="docpcp" id="docpcp" value="{!! $docpcp !!}" />
+									<input type="hidden" name="docpcp" id="docpcp" value="{!! $patientInfo['docpcp'] or '' !!}" />
 								</li>
 							</ul>
 						</td>
@@ -862,18 +854,18 @@
 								<li id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">ENT</label>
 									<div id="docent_static_info" style="{!! (!empty($docent)) ? '' : 'display:none' !!}">
-										<span id="docent_name_static" style="width:300px;">{!! $docent_name !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $docent !!}');return false;" class="addButton">Quick View</a>
+										<span id="docent_name_static" style="width:300px;">{!! $patientInfo['docent_name'] or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docent'] or '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docent_static_info').hide();$('#docent_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
-									<input type="text" id="docent_name" style="width:300px;{!! (!empty($docent)) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docent_name" value="{!! (!empty($docent)) ? $docent_name : 'Type contact name' !!}" />
+									<input type="text" id="docent_name" style="width:300px;{!! (!empty($patientInfo['docent'])) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docent_name" value="{!! (!empty($patientInfo['docent'])) ? $patientInfo['docent_name'] : 'Type contact name' !!}" />
 									<br />
 									<div id="docent_hints" class="search_hints" style="display:none;">
 										<ul id="docent_list" class="search_list">
 											<li class="template" style="display:none">Doe, John S</li>
 										</ul>
 									</div>
-									<input type="hidden" name="docent" id="docent" value="{!! $docent !!}" />
+									<input type="hidden" name="docent" id="docent" value="{!! $patientInfo['docent'] or '' !!}" />
 								</li>
 							</ul>
 						</td>
@@ -884,8 +876,8 @@
 								<li id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">Sleep MD</label>
 									<div id="docsleep_static_info" style="{!! (!empty($docsleep)) ? '' : 'display:none' !!}">
-										<span id="docsleep_name_static" style="width:300px;">{!! $docsleep_name !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $docsleep !!}');return false;" class="addButton">Quick View</a>
+										<span id="docsleep_name_static" style="width:300px;">{!! $patientInfo['docsleep_name'] or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docsleep'] or '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docsleep_static_info').hide();$('#docsleep_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
 									<input type="text" id="docsleep_name" style="width:300px;{!! (!empty($docsleep)) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docsleep_name" value="{!! !empty($docsleep) ? $docsleep_name : 'Type contact name' !!}" />
@@ -895,7 +887,7 @@
 											<li class="template" style="display:none">Doe, John S</li>
 										</ul>
 									</div>
-									<input type="hidden" name="docsleep" id="docsleep" value="{!! $docsleep !!}" />
+									<input type="hidden" name="docsleep" id="docsleep" value="{!! $patientInfo['docsleep'] or '' !!}" />
 								</li>
 							</ul>
 						</td>
@@ -906,8 +898,8 @@
 								<li id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">Dentist</label>
 									<div id="docdentist_static_info" style="{!! !empty($docdentist) ? '' : 'display:none' !!}">
-										<span id="docdentist_name_static" style="width:300px;">{!! $docdentist_name !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $docdentist !!}');return false;" class="addButton">Quick View</a>
+										<span id="docdentist_name_static" style="width:300px;">{!! $patientInfo['docdentist_name'] or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docdentist'] or '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docdentist_static_info').hide();$('#docdentist_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
 									<input type="text" id="docdentist_name" style="width:300px;{!! !empty($docdentist) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="{!! !empty($docdentist) ? $docdentist_name : 'Type contact name' !!}" />
@@ -917,7 +909,7 @@
 												<li class="template" style="display:none">Doe, John S</li>
 											</ul>
 										</div>
-									<input type="hidden" name="docdentist" id="docdentist" value="{!! $docdentist !!}" />
+									<input type="hidden" name="docdentist" id="docdentist" value="{!! $patientInfo['docdentist'] or '' !!}" />
 								</li>
 							</ul>
 						</td>
@@ -928,13 +920,13 @@
 								<li id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">Other MD</label>
 									<div id="docmdother_static_info" style="{!! !empty($docmdother) ? '' : 'display:none;' !!}height:25px;">
-										<span id="docmdother_name_static" style="width:300px;">{!! $docmdother_name !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $docmdother !!}');return false;" class="addButton">Quick View</a>
+										<span id="docmdother_name_static" style="width:300px;">{!! $patientInfo['docmdother_name'] or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docmdother'] or '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docmdother_static_info').hide();$('#docmdother_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
-									<input type="text" id="docmdother_name" style="width:300px;{!! !empty($docmdother) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="{!! !empty($docmdother) ? $docmdother_name : 'Type contact name' !!}" />
+									<input type="text" id="docmdother_name" style="width:300px;{!! !empty($patientInfo['docmdother']) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="{!! !empty($patientInfo['docmdother']) ? $patientInfo['docmdother_name'] : 'Type contact name' !!}" />
 									
-									@if ($docmdother2 == '' || $docmdother3 == '')
+									@if (!empty($patientInfo) && ($patientInfo['docmdother2'] == '' || $patientInfo['docmdother3'] == ''))
 										<a href="#" id="add_new_md" onclick="add_md(); return false;"  style="clear:both" class="addButton">+ Add Additional MD</a>
 									@endif
 									
@@ -944,7 +936,7 @@
 												<li class="template" style="display:none">Doe, John S</li>
 										</ul>
 									</div>
-									<input type="hidden" name="docmdother" id="docmdother" value="{!! $docmdother !!}" />
+									<input type="hidden" name="docmdother" id="docmdother" value="{!! $patientInfo['docmdother'] or '' !!}" />
 								</li>
 							</ul>
 						</td>
@@ -955,26 +947,110 @@
 								<li  id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">Other MD 2</label>
 									<div id="docmdother2_static_info" style="{!! !empty($docmdother2) ? '' : 'display:none' !!}">
-										<span id="docmdother2_name_static" style="width:300px;">{!! $docmdother2_name !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $docmdother2 !!}');return false;" class="addButton">Quick View</a>
+										<span id="docmdother2_name_static" style="width:300px;">{!! $patientInfo['docmdother2_name'] or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docmdother2'] or '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docmdother2_static_info').hide();$('#docmdother2_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
-									<input type="text" id="docmdother2_name" style="width:300px;{!! !empty($docmdother2) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="{!! !empty($docmdother2) ? $docmdother2_name : 'Type contact name' !!}" />
+									<input type="text" id="docmdother2_name" style="width:300px;{!! !empty($patientInfo['docmdother2']) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="{!! !empty($patientInfo['docmdother2']) ? $patientInfo['docmdother2_name'] : 'Type contact name' !!}" />
 									<br />
 									<div id="docmdother2_hints" class="search_hints" style="display:none;">
 										<ul id="docmdother2_list" class="search_list">
 											<li class="template" style="display:none">Doe, John S</li>
 										</ul>
 									</div>
-									<input type="hidden" name="docmdother2" id="docmdother2" value="{!! $docmdother2 !!}" />
+									<input type="hidden" name="docmdother2" id="docmdother2" value="{!! $patientInfo['docmdother2'] or '' !!}" />
 								</li>
 							</ul>
 						</td>
 					</tr>
+					<tr height="35" id="docmdother3_tr" {!! empty($docmdother3) ? 'style="display:none;"' : '' !!}>
+						<td>
+							<ul>
+								<li id="foli8" class="complex">
+									<label style="display: block; float: left; width: 110px;">Other MD 3</label>
+									<div id="docmdother3_static_info" style="{!! !empty($patientInfo['docmdother3']) ? '' : 'display:none' !!}">
+										<span id="docmdother3_name_static" style="width:300px;">{!! $patientInfo['docmdother3_name'] or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docmdother3'] or '' !!}');return false;" class="addButton">Quick View</a>                                     
+										<a href="#" onclick="$('#docmdother3_static_info').hide();$('#docmdother3_name').show();return false;" class="addButton">Change Contact</a>                          
+									</div>
+									<input type="text" id="docmdother3_name" style="width:300px;{!! !empty($patientInfo['docmdother3']) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docmdother3_name" value="{!! !empty($patientInfo['docmdother3']) ? $patientInfo['docmdother3_name'] : 'Type contact name' !!}" />
+									<br />
+									<div id="docmdother3_hints" class="search_hints" style="display:none;">
+										<ul id="docmdother3_list" class="search_list">
+											<li class="template" style="display:none">Doe, John S</li>
+										</ul>
+									</div>
+									<input type="hidden" name="docmdother3" id="docmdother3" value="{!! $patientInfo['docmdother3'] or '' !!}" />
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr bgcolor="#FFFFFF">
+			<td valign="top" class="frmhead">
+				Patient Status
+			</td>
+			<td valign="top" class="frmdata">
+				<select name="status" id="status" class="tbox" onchange="updatePPAlert()";>
+					<option value="1" {!! (!empty($patientInfo) && $patientInfo['status'] == 1) ? 'selected' : '' !!}>Active</option>
+					<option value="2" {!! (!empty($patientInfo) && $patientInfo['status'] == 2) ? 'selected' : '' !!}>In-Active</option>
+				</select>
+				<br />&nbsp;
+			</td>
+		</tr>
 
-					<?php /**
+		@if (!empty($docPatientPortal))
+			<tr bgcolor="#FFFFFF">
+				<td valign="top" class="frmhead">
+					Portal Status<br />
+					<span id="ppAlert" style="font-weight:normal;font-size:12px; {!! ($status == 2) ? '' : 'display:none;' !!}">Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
+				</td>
+				<td valign="top" class="frmdata">
+					<select name="use_patient_portal" class="tbox" >
+						<option value="1" {!! (!empty($patientInfo) && $patientInfo['use_patient_portal'] == 1) ? 'selected' : '' !!}>Active</option>
+						<option value="0" {!! (!empty($patientInfo) && $patientInfo['use_patient_portal'] == 0) ? 'selected' : '' !!}>In-Active</option>
+					</select>
+					<br />&nbsp;
+				</td>
+			</tr>
+		@endif
 
-					*/?>
+		<tr>
+			<td valign="top">
+
+				@if (empty($showBlock['introLetter']))
+					<input id="introletter" name="introletter" type="checkbox" value="1"> Send Intro Letter to DSS patient
+				@else
+					{!! $showBlock['introLetter'] !!}
+				@endif
+
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" align="right">
+				<span class="red">
+					* Required Fields         
+				</span><br />
+				<input type="hidden" name="patientsub" value="1" />
+				<input type="hidden" name="ed" value="{!! $patientRequestId !!}" />
+				<input type="submit" value="{!! $butText !!} Patient" class="button" />
+			</td>
+		</tr>
+	</table>
 </form>
 
+@stop
+
+@section('footer')
+	@parent
+
+	<div id="popupRefer" style="height:550px; width:750px;">
+		<a id="popupReferClose">
+			<button>X</button>
+		</a>
+		<iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+	</div>
+	<div id="backgroundPopupRef"></div>
 @stop

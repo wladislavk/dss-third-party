@@ -395,6 +395,8 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
              }
                if( $patient_lastname != ''){
                 $ed_sql = " update dental_insurance set
+                pica2 = '".s_for($pica2)."',
+                pica3 = '".s_for($pica3)."',
                 patient_lastname = '".s_for($patient_lastname)."',
                 patient_firstname = '".s_for($patient_firstname)."',
                 patient_middle = '".s_for($patient_middle)."',
@@ -419,6 +421,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 insured_zip = '".s_for($insured_zip)."',
                 insured_phone_code = '".s_for($insured_phone_code)."',
                 insured_phone = '".s_for($insured_phone)."',
+                other_insured_id_number = '".s_for($other_insured_id_number)."',
                 other_insured_firstname = '".s_for($other_insured_firstname)."',
                 other_insured_lastname = '".s_for($other_insured_lastname)."',
                 other_insured_middle = '".s_for($other_insured_middle)."',
@@ -445,6 +448,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 date_same_illness = '".s_for($date_same_illness)."',
                 unable_date_from = '".s_for($unable_date_from)."',
                 unable_date_to = '".s_for($unable_date_to)."',
+                name_referring_provider_qualifier = '".s_for($name_referring_provider_qualifier)."',
                 referring_provider = '".s_for($referring_provider)."',
                 field_17a_dd = '".s_for($field_17a_dd)."',
                 field_17a = '".s_for($field_17a)."',
@@ -458,6 +462,19 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 diagnosis_2 = '".s_for($diagnosis_2)."',
                 diagnosis_3 = '".s_for($diagnosis_3)."',
                 diagnosis_4 = '".s_for($diagnosis_4)."',
+                icd_ind = '".s_for($icd_ind)."',
+                diagnosis_a = '".s_for($diagnosis_a)."',
+                diagnosis_b = '".s_for($diagnosis_b)."',
+                diagnosis_c = '".s_for($diagnosis_c)."',
+                diagnosis_d = '".s_for($diagnosis_d)."',
+                diagnosis_e = '".s_for($diagnosis_e)."',
+                diagnosis_f = '".s_for($diagnosis_f)."',
+                diagnosis_g = '".s_for($diagnosis_g)."',
+                diagnosis_h = '".s_for($diagnosis_h)."',
+                diagnosis_i = '".s_for($diagnosis_i)."',
+                diagnosis_j = '".s_for($diagnosis_j)."',
+                diagnosis_k = '".s_for($diagnosis_k)."',
+                diagnosis_l = '".s_for($diagnosis_l)."',
                 medicaid_resubmission_code = '".s_for($medicaid_resubmission_code)."',
                 original_ref_no = '".s_for($original_ref_no)."',
                 prior_authorization_number = '".s_for($prior_authorization_number)."',
@@ -565,6 +582,8 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 total_charge = '".s_for($total_charge)."',
                 amount_paid = '".s_for($amount_paid)."',
                 balance_due = '".s_for($balance_due)."',
+                claim_codes = '".s_for($claim_codes)."',
+                other_claim_id = '".s_for($other_claim_id)."',
                 signature_physician = '".s_for($signature_physician)."',
                 physician_signed_date = '".s_for($physician_signed_date)."',
                 service_facility_info_name = '".s_for($service_facility_info_name)."',
@@ -581,9 +600,10 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 billing_provider_a = '".s_for($billing_provider_a)."',
                 billing_provider_dd = '".s_for($billing_provider_dd)."',
                 billing_provider_b_other = '".s_for($billing_provider_b_other)."',
-		eligible_token = '".mysql_real_escape_string($_POST["eligibleToken"])."',
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."'";
+                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
+                s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
+                s_m_eligible_payer_name = '".mysql_real_escape_string($s_m_eligible_payer_name)."'";
                 if(isset($_POST['reject_but'])){
                   $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
                   $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Ds3\Contracts\LetterTemplateInterface;
 use Ds3\Eloquent\Letter\LetterTemplate;
 
-class LetterTempalteRepository implements LetterTemplateInterface
+class LetterTemplateRepository implements LetterTemplateInterface
 {
 	public function findLetterTemplate($id)
 	{

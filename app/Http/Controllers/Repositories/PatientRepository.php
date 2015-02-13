@@ -38,14 +38,16 @@ class PatientRepository implements PatientInterface
 		return $logins;
 	}
 
-	public function getJoinPatients($docId)
+	public function getJoinPatients($where, $join)
 	{
 		$joinPatients = DB::table(DB::raw('dental_patients p2'))
-					->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'p2.parent_patientid')
-					->whereRaw('p.docid = ' . $docId)
-					->get();
+					->join(DB::raw('dental_patients p'), 'p.' . $join[0], '=', 'p2.' . $join[1]);
+		
+		foreach ($where as $attribute => $value) {
+			$joinPatients = $joinPatients->where($attribute, '=', $value);
+		}					
 
-		return $joinPatients;
+		return $joinPatients->get();
 	}
 
 	public function getPendingDuplicates($docId)

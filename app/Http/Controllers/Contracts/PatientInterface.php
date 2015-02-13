@@ -6,7 +6,7 @@ interface PatientInterface
 
 	public function getLogins($clogin);
 
-	public function getJoinPatients($docId);
+	public function getJoinPatients($where, $join);
 
 	public function getPendingDuplicates($docId);
 

@@ -14,7 +14,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
 
 	$router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 
-        $router->get('add_patient/{pid?}', 'PatientController@index');
+        $router->get('add_patient/{pid?}', 'PatientController@testView');
     });
 });
 

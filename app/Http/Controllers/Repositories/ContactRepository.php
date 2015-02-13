@@ -84,4 +84,16 @@ class ContactRepository implements ContactInterface
 
 		return $docsleep;
 	}
+
+	public function getPatientContacts($patientId)
+	{
+		$contacts = Contact::select('contactid')
+				->join('dental_patients', 'dental_patients.referred_by', '=', 'dental_contact.contactid')
+				->join(DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'dental_contact.contacttypeid')
+				->where('dental_patients.patientid', '=', $patientId)
+				->where('ct.physician', '!=', 1)
+				->get();
+
+		return $contacts;
+	}
 }

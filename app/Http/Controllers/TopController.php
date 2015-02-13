@@ -206,8 +206,12 @@ class TopController extends Controller
 				'dental_patients.docid' => Session::get('docId')
 			)));
 
+			$join = array('patientid', 'parent_patientid');
+
 			// change name!
-			$numC = count($this->patient->getJoinPatients(Session::get('docId')));
+			$numC = count($this->patient->getJoinPatients(array(
+				'p.docid' => Session::get('docId')
+			), $join));
 
 			$numPendingDuplicates = count($this->patient->getPendingDuplicates(Session::get('docId')));
 
@@ -476,7 +480,8 @@ class TopController extends Controller
 				'numBounce'					=> $numBounce,
 				'onClick'					=> $onClick,
 				'hideWarnings'				=> $hideWarnings,
-				'patientId'					=> $patientId
+				'patientId'					=> $patientId,
+				'username'					=> Session::get('username')
 			);
 
 			return $responseArray;

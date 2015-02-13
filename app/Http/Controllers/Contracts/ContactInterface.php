@@ -13,4 +13,6 @@ interface ContactInterface
 	public function getNewContacts($docId);
 
 	public function getDocsleep($contactId);
+
+	public function getPatientContacts($patientId);
 }

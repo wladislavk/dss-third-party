@@ -3,6 +3,7 @@
 use Ds3\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Request;
+use Mail;
 
 use Ds3\Libraries\Constants;
 use Ds3\Libraries\Password;
@@ -106,6 +107,19 @@ class PatientController extends Controller
 		}
 
 		$docPatientPortal = $this->user->findUser(Session::get('docId'))->use_patient_portal;
+
+		$ptReferralId = $this->getPtReferralIds($patientId);
+		if ($ptReferralId) {
+			$letters = $this->letter->get(array(
+				'patientid' 		=> $patientId,
+				'templateid' 		=> 20,
+				'pat_referral_list' => $ptReferralId
+			));
+
+			if (count($letters) == 0) {
+				$this->triggerLetter20($patientId);
+			}
+		}
 
 		if (!empty($this->request['patientSub']) && $this->request['patientSub'] == 1) {
 			if(!empty($this->request['PMEligiblePayer'])){
@@ -1130,12 +1144,13 @@ class PatientController extends Controller
 		$imageType4 = $this->qImage->getImage(4, $patientId, 'adddate');
 
 		if (count($imageType4) == 0) {
-			$showBlock['patientPhoto'] = true;
-		} else {
 			$showBlock['patientPhoto'] = false;
+		} else {
+			$showBlock['patientPhoto'] = true;
 		}
 
 		$registrationStatus = !empty($patient) ? $patient->registration_status : null;
+		$accessCode = !empty($patient) ? $patient->access_code : null;
 
 		if (!empty($patient) && $patient->use_patient_portal == 1) {
 			switch ($registrationStatus) {
@@ -1175,7 +1190,7 @@ class PatientController extends Controller
 			$showBlock['insuranceCardImage10'] = false;
 		} else {
 			$showBlock['insuranceCardImage10'] = true;
-			$image = $imageType10[0];
+			$image10 = $imageType10[0];
 		}
 
 		$insuranceContacts = $this->contact->getInsContact(Session::get('docId'));
@@ -1186,7 +1201,7 @@ class PatientController extends Controller
 			$showBlock['insuranceCardImage12'] = false;
 		} else {
 			$showBlock['insuranceCardImage12'] = true;
-			$image = $imageType12[0];
+			$image12 = $imageType12[0];
 		}
 
 		if (!empty($docPatientPortal)) {
@@ -1215,6 +1230,17 @@ class PatientController extends Controller
 		if (!empty($this->request['readonly'])) {
 			$showBlock['readOnly'] = true;
 		}
+	}
+
+	public function testView()
+	{
+		foreach ($this->request as $name => $value) {
+			$data[$name] = $value;
+		}
+
+		// dd($data);
+
+		return view('manage.add_patient', $data);
 	}
 
 	/**
@@ -1357,22 +1383,24 @@ class PatientController extends Controller
 			$logo = "/reg/images/email/reg_logo.gif";
 		}
 
-		$from = "Dental Sleep Solutions <patient@dentalsleepsolutions.com>";
-		$mimeBoundary = 'Multipart_Boundary_x' . md5(time()) . 'x';
+		$data = array(
+			'mailingPractice' 	=> $mailingPhone->mailing_practice,
+			'mailingAddress' 	=> $mailingPhone->mailing_address,
+			'mailingCity' 		=> $mailingPhone->mailing_city,
+			'mailingState' 		=> $mailingPhone->mailing_state,
+			'mailingZip' 		=> $mailingPhone->mailing_zip,
+			'email'				=> $email,
+			'link'				=> Request::root() . '/reg/activate/id/' . $patient->patientid . '/hash/' . $recoverHash,
+			'contactUs'			=> $this->formatPhone($mailingPhone),
+			'imgHeaderFo'		=> Request::root() . '/img/email/email_header_fo.png',
+			'linkLogo'			=> Request::root() . $logo,
+			'emailFooter'		=> Constants::DSS_EMAIL_FOOTER
+		);
 
-		$headers = 'From: "Dental Sleep Solutions" <Patient@dentalsleepsolutions.com>' . "\n"; 
-		$headers .= "MIME-Version: 1.0\n";
-		$headers .= "Content-Type: multipart/alternative; boundary=\"$mime_boundary\"\n";
-		$headers .= "Content-Transfer-Encoding: 7bit\n";
-		$headers .= 'X-Mailer: PHP/' . phpversion();
-
-		$subject = "Online Patient Registration";
-
-		// write code for send email
-		// ----- mail -----
-		/**
-
-		*/
+		Mail::send('emails.registration', $data, function($message){
+			$message->from('patient@dentalsleepsolutions.com', 'Dental Sleep Solutions');
+			$message->to($email, '')->subject('Online Patient Registration');
+		});
 	}
 
 	private function sendReminderEmail($patientId, $email)
@@ -1409,11 +1437,24 @@ class PatientController extends Controller
 
 		$subject = "Online Patient Registration";
 
-		// write code for send email
-		// ----- mail -----
-		/**
+		$data = array(
+			'mailingPractice' 	=> $mailingPhone->mailing_practice,
+			'mailingAddress' 	=> $mailingPhone->mailing_address,
+			'mailingCity' 		=> $mailingPhone->mailing_city,
+			'mailingState' 		=> $mailingPhone->mailing_state,
+			'mailingZip' 		=> $mailingPhone->mailing_zip,
+			'email'				=> $email,
+			'contactUs'			=> $this->formatPhone($mailingPhone),
+			'imgHeaderFo'		=> Request::root() . '/img/email/email_header_fo.png',
+			'linkLogo'			=> Request::root() . $logo,
+			'link'				=> Request::root() . '/reg/login/email/' . str_replace('+', '%2B', $email),
+			'emailFooter'		=> Constants::DSS_EMAIL_FOOTER
+		);
 
-		*/
+		Mail::send('emails.registration', $data, function($message){
+			$message->from('patient@dentalsleepsolutions.com', 'Dental Sleep Solutions');
+			$message->to($email, '')->subject('Online Patient Registration');
+		});
 	}
 
 	private function num($n, $phone = true)
@@ -1892,4 +1933,102 @@ class PatientController extends Controller
   			return $letterId;
   		}
 	}
+
+	private function formatPhone($data)
+	{
+		if (preg_match('/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches)) {
+			$result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
+
+			if (!empty($matches[4])) {
+				$result .= ' x'.$matches[4];
+			}
+
+			return $result;
+		}
+	}
+
+	private function triggerLetter20($patientId)
+	{
+		$letterId = '20';
+		$mdList = $this->getMdContactIds($patientId);
+		$ptReferralList = $this->getPtReferralIds($patientId);
+		$letter = $this->createLetter($letterId, $patientId, '', '', '', '', $ptReferralList);
+
+		if (!is_numeric($letter)) {
+			return "Can't send letter 20: " . $letter;
+		} else {
+			return $letter; 
+		}
+	}
+
+	private function getMdContactIds($patientId, $active = true)
+	{
+		$patients = $this->patient->get(array(
+			'patientid' => $patientId
+		));
+
+		if (count($patients)) {
+			$patient = $patients[0];
+
+			$contactIds = array();
+			foreach ($patient as $field) {
+				if ($field != 'Not Set') {
+					$contacts = explode(",", $field);
+
+					foreach ($contacts as $contact) {
+						if (!empty($contact)) {
+							if (!in_array($contact, $contactIds)) {
+								if ($active) {
+									$contactResponse = $this->contact->get(array(
+										'contactid' => $contact
+									));
+
+									if ($contactResponse->status == 1) {
+										$contactIds[] = $contact;
+									}
+								} else {
+									$contactIds[] = $contact;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		$contactIdList = implode(',', $contactIds);
+
+		return $contactIdList;
+	}
+
+	private function getPtReferralIds($patientId)
+	{
+		$patients = $this->patient->get(array(
+			'patientid' => $patientId
+		));
+
+		if (count($patients)) {
+			$patient = $patients[0];
+
+			if (!empty($patient->referred_source) && $patient->referred_source == 1) {
+				$join = array('referred_by', 'patientid');
+
+				$contacts = $this->patient->getJoinPatients(array(
+					'patientid' => $patientId
+				), $join);
+			} elseif (!empty($patient->referred_source) && $patient->referred_source == 2) {
+				$contacts = $this->contact->getPatientContacts($patientId);
+			}
+
+			$contactIds = array();
+
+			if (!empty($contacts)) foreach ($contacts as $contact) {
+				$contactIds[] = array_shift($contact->toArray());
+			}
+
+			$contactIdList = implode(',', $contactIds);
+		}
+
+		return $contactIdList;
+	}	
 }

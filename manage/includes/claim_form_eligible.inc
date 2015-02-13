@@ -841,9 +841,9 @@ $query = mysql_query($sql);
 	?>
 
     <? if($accept_assignment=="Yes"){ ?>
-    $('input[name="claim[accept_assignment_code]"][value="A"]').attr("checked", "checked");
+    $('input[name="claim[accept_assignment_code]"][value="A"]').prop("checked", true);
     <?php }elseif($accept_assignment=="No"){ ?>
-    $('input[name="claim[accept_assignment_code]"][value="C"]').attr("checked", "checked");
+    $('input[name="claim[accept_assignment_code]"][value="C"]').prop("checked", true);
     <?php } ?>
 
 
@@ -870,6 +870,11 @@ $query = mysql_query($sql);
     $('input[name="billing_provider[address][zip]"]').val("<?= $zip; ?>");
     $('input[name="billing_provider[npi]"]').val("<?= ($insurancetype == '1')?$medicare_npi:$npi; ?>"); 
     $('input[name="billing_provider[taxonomy_code]"]').val("332B00000X");
+    <?php if ($insured_signature): ?>
+      $('input[name="insured_signature"]').prop('checked',true);
+    <?php else: ?>
+      $('input[name="insured_signature"]').prop('checked',false);     
+    <?php endif; ?>
 	//<?= $billing_provider_b_other; ?>"); 
 
 

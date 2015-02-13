@@ -720,6 +720,19 @@ $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mys
     $('input[name="claim[diagnosis_codes][4]"]').val("<?= $ins_diag['ins_diagnosis']; ?>");
 
 
+  $('input[name="claim[diagnosis_codes][1]"]').val("<?= $diagnosis_a;?>");
+  $('input[name="claim[diagnosis_codes][2]"]').val("<?= $diagnosis_b;?>");
+  $('input[name="claim[diagnosis_codes][3]"]').val("<?= $diagnosis_c;?>");
+  $('input[name="claim[diagnosis_codes][4]"]').val("<?= $diagnosis_d;?>");
+  $('input[name="claim[diagnosis_codes][5]"]').val("<?= $diagnosis_e;?>");
+  $('input[name="claim[diagnosis_codes][6]"]').val("<?= $diagnosis_f;?>");
+  $('input[name="claim[diagnosis_codes][7]"]').val("<?= $diagnosis_g;?>");
+  $('input[name="claim[diagnosis_codes][8]"]').val("<?= $diagnosis_h;?>");
+  $('input[name="claim[diagnosis_codes][9]"]').val("<?= $diagnosis_i;?>");
+  $('input[name="claim[diagnosis_codes][10]"]').val("<?= $diagnosis_j;?>");
+  $('input[name="claim[diagnosis_codes][11]"]').val("<?= $diagnosis_k?>");
+  $('input[name="claim[diagnosis_codes][12]"]').val("<?= $diagnosis_l;?>");
+
 
 <?php
 // Get modifier codes

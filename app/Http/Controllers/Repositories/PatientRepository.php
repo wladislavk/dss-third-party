@@ -112,7 +112,7 @@ class PatientRepository implements PatientInterface
 
 	public function getSimilarPatients($data)
 	{
-		$patients = Patient::where('patientid', '!=', $patientId)
+		$patients = Patient::where('patientid', '!=', $data['patientId'])
 				->where('status', '=', 1)
 				->where('docid', '=', $data['docId'])
 				->where(function($query) use ($data){

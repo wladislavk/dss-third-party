@@ -49,6 +49,8 @@ class PatientController extends Controller
 	
 	private $request;
 
+	private $patientData;
+
 	public function __construct(CompanyInterface $company,
 								UserInterface $user,
 								LetterInterface $letter,
@@ -86,6 +88,27 @@ class PatientController extends Controller
 		$this->letterTemplate 	= $letterTemplate;
 
 		$this->request = Request::all();
+
+		$this->patientData = array('firstname', 'lastname', 'middlename', 'preferred_name', 'salutation', 'member_no',
+			'group_no', 'plan_no', 'add1', 'add2', 'city', 'state',
+			'zip', 'dob', 'gender', 'marital_status', 'feet', 'inches', 'weight', 'bmi',
+			'best_time', 'best_number', 'email', 'patient_notes', 'p_d_party', 'p_d_relation',
+			'p_d_other', 'p_d_employer', 'p_d_ins_co', 'p_d_ins_id', 's_d_party', 's_d_relation',
+			's_d_other', 's_d_employer', 's_d_ins_co', 's_d_ins_id', 'p_m_partyfname',
+			'p_m_partymname', 'p_m_partylname', 'p_m_gender', 'p_m_ins_grp', 's_m_ins_grp',
+			'p_m_dss_file', 's_m_dss_file', 'p_m_same_address', 's_m_same_address', 'p_m_address',
+			'p_m_city', 'p_m_state', 'p_m_zip', 's_m_address', 's_m_city', 's_m_state',
+			's_m_zip', 'p_m_ins_type', 's_m_ins_type', 'p_m_ins_ass', 's_m_ins_ass', 'ins_dob',
+			'ins2_dob', 'p_m_relation', 'p_m_other', 'p_m_employer', 'p_m_ins_co', 'p_m_ins_id',
+			's_m_partyfname', 's_m_partymname', 's_m_partylname', 's_m_gender',
+			's_m_relation', 's_m_other', 's_m_employer', 's_m_ins_co', 's_m_ins_id', 'p_m_ins_plan',
+			's_m_ins_plan', 'employer', 'emp_add1', 'emp_add2', 'emp_city', 'emp_state', 'emp_zip',
+			'plan_name', 'group_number', 'ins_type', 'accept_assignment', 'print_signature',
+			'medical_insurance', 'mark_yes', 'inactive', 'partner_name', 'docsleep', 'docpcp',
+			'docdentist', 'docent', 'docmdother', 'docmdother2', 'docmdother3', 'emergency_name',
+			'emergency_relationship', 'referred_source', 'referred_by', 'referred_notes',
+			'copyreqdate', 'status', 'use_patient_portal', 'preferredcontact'
+		);
 	}
 
 	public function index()
@@ -121,24 +144,376 @@ class PatientController extends Controller
 			}
 		}
 
-		if (!empty($this->request['patientSub']) && $this->request['patientSub'] == 1) {
-			if(!empty($this->request['PMEligiblePayer'])){
-				$PMEligiblePayerId = substr($_POST['PMEligiblePayer'], 0, strpos($_POST['PMEligiblePayer'], '-'));
-				$PMEligiblePayerName = substr($_POST['PMEligiblePayer'], (strpos($_POST['PMEligiblePayer'], '-') + 1));
-			}else{
-				$PMEligiblePayerId = '';
-				$PMEligiblePayerName = '';
+		$requestEd = (!empty($this->request['ed'])) ? $this->request['ed'] : '-1';
+
+		$status = Constants::DSS_PREAUTH_PENDING . ',' . Constants::DSS_PREAUTH_PREAUTH_PENDING;
+
+		$vob = $this->insurancePreauth->get(array(
+			'patient_id' => $requestEd
+		), $status, 'front_office_request_date');
+
+		$pendingVob = count($vob);
+
+		if ($pendingVob) {
+			$vob = $vob[0];
+			$pendingVobStatus = $vob->status;
+		}
+
+		$patient = $this->patient->get(array(
+			'patientid' => $requestEd
+		));
+
+		$patient = count($patient) ? $patient[0] : null;
+
+		$patientInfo = array();
+
+		if (!empty($message)) {
+			foreach ($this->patientData as $attribute) {
+				$patientInfo[$attribute] = $this->request[$attribute];
 			}
 
-			if(!empty($this->request['SMEligiblePayer'])){
-				$SMEligiblePayerId = substr($_POST['SMEligiblePayer'],0,strpos($_POST['SMEligiblePayer'], '-'));
-				$SMEligiblePayerName = substr($_POST['SMEligiblePayer'],(strpos($_POST['SMEligiblePayer'], '-')+1));
-			}else{
-				$SMEligiblePayerId = '';
-				$SMEligiblePayerName = '';
+			$patientInfo['p_m_ins_payer_id'] 	= $this->request['p_m_ins_payer_id'];
+			$patientInfo['location'] 			= $this->request['location'];
+			$patientInfo['home_phone']			= $this->request['home_phone'];
+			$patientInfo['work_phone']			= $this->request['work_phone'];
+			$patientInfo['cell_phone']			= $this->request['cell_phone'];
+		} else {
+			if (!empty($patient)) {
+				foreach ($this->patientData as $attribute) {
+					$patientInfo[$attribute] = $patient->$attribute;
+				}
+
+				$patientInfo['home_phone']			= $patient->home_phone;
+				$patientInfo['work_phone']			= $patient->work_phone;
+			} else {
+				foreach ($this->patientData as $attribute) {
+					$patientInfo[$attribute] = null;
+				}
+
+				$patientInfo['has_s_m_ins'] = null;
 			}
 
-			$usePatientPortal = $this->request['usePatientPortal'];
+			if (!empty($patientInfo['docsleep']) && $patientInfo['docsleep'] != 'Not Set') {
+				$contact = $this->contact->getDocsleep($patientInfo['docsleep']);
+
+				$docsleepName = $contact->lastname . ', ' . $contact->firstname . ' ' . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
+			} else {
+				$docsleepName = '';
+			}
+
+			$patientInfo['docpcp'] = !empty($patient) ? $patient->docpcp : null;
+			if ($patientInfo['docpcp'] && $patientInfo['docpcp'] != 'Not Set') {
+				$contact = $this->contact->getDocsleep($patientInfo['docpcp']);
+
+				$docpcpName = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
+			} else {
+				$docpcpName = '';
+			}
+
+			$patientInfo['docdentist'] = !empty($patient) ? $patient->docdentist : null;
+			if ($patientInfo['docdentist'] && $patientInfo['docdentist'] != 'Not Set') {
+				$contact = $this->contact->getDocsleep($patientInfo['docdentist']);
+
+				$docdentistName = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
+			} else {
+				$docdentistName = '';
+			}
+
+			$patientInfo['docent'] = !empty($patient) ? $patient->docent : null;
+			if ($patientInfo['docent'] && $patientInfo['docent'] != 'Not Set') {
+				$contact = $this->contact->getDocsleep($patientInfo['docent']);
+
+				$docentName = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
+			} else {
+				$docentName = '';
+			}
+
+			$patientInfo['docmdother'] = !empty($patient) ? $patient->docmdother : null;
+			if ($patientInfo['docmdother'] && $patientInfo['docmdother'] != 'Not Set') {
+				$contact = $this->contact->getDocsleep($patientInfo['docmdother']);
+
+				$docmdotherName = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
+			} else {
+				$docmdotherName = '';
+			}
+
+			$patientInfo['docmdother2'] = !empty($patient) ? $patient->docmdother2 : null;
+			if ($patientInfo['docmdother2'] && $patientInfo['docmdother2'] != 'Not Set') {
+				$contact = $this->contact->getDocsleep($patientInfo['docmdother2']);
+
+				$docmdother2Name = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
+			} else {
+				$docmdother2Name = '';
+			}
+
+			$patientInfo['docmdother3'] = !empty($patient) ? $patient->docmdother3 : null;
+			if ($patientInfo['docmdother3'] && $patientInfo['docmdother3'] != 'Not Set') {
+				$contact = $this->contact->getDocsleep($patientInfo['docmdother3']);
+
+				$docmdother3Name = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
+			} else {
+				$docmdother3Name = '';
+			}
+
+			if (!empty($patient)) {
+				$patientInfo['inactive'] 				= $patient->inactive;
+				$patientInfo['partner_name'] 			= $patient->partner_name;
+				$patientInfo['emergency_name'] 			= $patient->emergency_name;
+				$patientInfo['emergencyrelationship'] 	= $patient->emergency_relationship;
+				$patientInfo['emergency_number'] 		= $patient->emergency_number;
+				$patientInfo['referred_source'] 		= $patient->referred_source;
+				$patientInfo['referred_by'] 			= $patient->referred_by;
+				$patientInfo['referred_notes'] 			= $patient->referred_notes;
+			} else {
+				$patientInfo['referred_source'] = -1;
+			}
+
+			if (isset($referredSource)) {
+				if ($referredSource == Constants::DSS_REFERRED_PATIENT) {
+					$patient = $this->patient->get(array(
+						'patientid' => $referredBy
+					));
+
+					$referredName = $patient->lastname . ', ' . $patient->firstname . ' ' . $patient->middlename . ' - Patient';
+				} elseif ($referredSource == Constants::DSS_REFERRED_PHYSICIAN) {
+					$contact = $this->contact->getDocsleep($referredBy);
+
+					$referredName = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename;
+					if (!empty($contact->contacttype)) {
+						$referredName .= ' - ' . $contact->contacttype;
+					}
+				}
+			}
+
+			if (!empty($patient)) {
+				$copyReqDate = $patient->copyreqdate;
+				$preferredContact = $patient->preferredcontact;
+				$referredNotes = $patient->referred_notes;
+				$name = $patient->lastname . ' ' . $patient->middlename . ', ' . $patient->firstname;
+			}
+
+			$summary = $this->summary->get($patientId);
+
+			if (count($summary)) {
+				$summary = $summary[0];
+				$patientInfo['location'] = $summary->location;
+			}
+
+			$butText = 'Add ';
+		}
+
+		if (!empty($patient->userid)) {
+			$butText = 'Save/Update ';
+		} else {
+			$butText = 'Add ';
+		}
+
+		// Check if required information is filled out
+		$completeInfo = 0;
+		if (!empty($patientInfo['home_phone']) || !empty($patientInfo['work_phone']) || !empty($patientInfo['cell_phone'])) {
+			$patientphone = true;
+		}
+
+		if (!empty($patientInfo['email'])) {
+			$patientemail = true;
+		}
+
+		if ((!empty($patientemail) || !empty($patientphone)) && !empty($patientInfo['add1']) && !empty($patientInfo['city']) && !empty($patientInfo['state']) && !empty($patientInfo['zip']) && !empty($patientInfo['dob']) && !empty($patientInfo['gender'])) {
+			$completeInfo = 1;
+		}
+
+		// Determine Whether Patient Info has been set
+		if (!empty($this->request['ed'])) {
+			$this->updatePatientSummary($this->request['ed'], 'patient_info', $completeInfo);
+		}
+
+		$showBlock = array();
+
+		$notifications = $this->findPatientNotifications($patientId);
+
+		if (!empty($this->request['search'])) {
+			if (strpos($this->request['search'], ' ')) {
+				$firstname = ucfirst(substr($this->request['search'], 0, strpos($this->request['search'], ' ')));
+    			$lastname = ucfirst(substr($this->request['search'], strpos($this->request['search'],' ') + 1));
+			} else {
+				$firstname = ucfirst($this->request['search']);
+			}
+		}
+
+		if (!empty($patient) && ($patient->registration_status == 1 || $patient->registration_status == 0)) {
+			$showBlock['buttonSendReg'] = true;
+		} else {
+			$showBlock['buttonSendReg'] = false;
+		}
+
+		$companies = $this->company->getJoin(Session::get('docId'), Constants::DSS_COMPANY_TYPE_HST);
+
+		if (count($companies)) {
+			if (!empty($patHstNumUncompleted) && $patHstNumUncompleted > 0) {
+				$showBlock['orderHst'] = true;
+			} else {
+				$showBlock['orderHst'] = false;
+			}
+		}
+
+		$imageType4 = $this->qImage->getImage(4, $patientId, 'adddate');
+
+		if (count($imageType4) == 0) {
+			$showBlock['patientPhoto'] = true;
+		} else {
+			$showBlock['patientPhoto'] = false;
+		}
+
+		$registrationStatus = !empty($patient) ? $patient->registration_status : null;
+		$accessCode = !empty($patient) ? $patient->access_code : null;
+
+		if (!empty($patient) && $patient->use_patient_portal == 1) {
+			switch ($registrationStatus) {
+				case 0:
+					$showBlock['registrationStatus'] = 'Unregistered';
+					break;
+				case 1:
+					$showBlock['registrationStatus'] = 'Registration Emailed ' . date('m/d/Y h:i a', strtotime($patient->registration_senton)) . ' ET';
+					break;
+				case 2:
+					$showBlock['registrationStatus'] = 'Registered';
+					break;
+			}
+		} else {
+			$showBlock['registrationStatus'] = 'Patient Portal In-active';
+		}
+
+		$locations = $this->location->get(array(
+			'docid' => Session::get('docId')
+		));
+
+		if (empty($patientId)) {
+			$copyReqDate = date('m/d/Y');
+		}
+
+		$user = $this->user->findUser(Session::get('docId'));
+
+		if ($user->use_eligible_api == 1) {
+			$showBlock['insuranceCo'] = true;
+		} else {
+			$showBlock['insuranceCo'] = false;
+		}
+
+		$imageType10 = $this->qImage->getImage(10, $patientId, 'adddate');
+
+		if (count($imageType10) == 0) {
+			$showBlock['insuranceCardImage10'] = false;
+		} else {
+			$showBlock['insuranceCardImage10'] = true;
+			$image10 = $imageType10[0];
+		}
+
+		$insuranceContacts = $this->contact->getInsContact(Session::get('docId'));
+
+		if (!empty($insuranceContacts)) foreach ($insuranceContacts as $insuranceContact) {
+			$insContactsJson[$insuranceContact->contactid] = $insuranceContact->add1 . '\n'
+														   . $insuranceContact->add2
+														   . (!empty($insuranceContact->add2) ? '\n' : '')
+														   . $insuranceContact->city . ' '
+														   . $insuranceContact->state . ' '
+														   . $insuranceContact->zip . '\n'
+														   . $this->formatPhone($insuranceContact->phone1);
+		}
+
+		$imageType12 = $this->qImage->getImage(12, $patientId, 'adddate');
+
+		if (count($imageType12) == 0) {
+			$showBlock['insuranceCardImage12'] = false;
+		} else {
+			$showBlock['insuranceCardImage12'] = true;
+			$image12 = $imageType12[0];
+		}
+
+		if (!empty($docPatientPortal)) {
+			$showBlock['portalStatus'] = true;
+		} else {
+			$showBlock['portalStatus'] = false;
+		}
+
+		$letter = $this->letter->get(array(
+			'templateid' 	=> 3,
+			'deleted' 		=> 0,
+			'patientid' 	=> !empty($patientId) ? $patientId : ''
+		), 'generated_date');
+
+		if (count($letter) == 0) {
+			$showBlock['introLetter'] = false;
+		} else {
+			$letter = $letter[0];
+			$showBlock['introLetter'] = 'DSS Intro Letter Sent to Patient ' . $letter->generated_date;
+		}
+
+		if (empty($this->request['noheaders'])) {
+			$showBlock['noHeaders'] = true;
+		}
+
+		if (!empty($this->request['readonly'])) {
+			$showBlock['readOnly'] = true;
+		}
+
+		// send data to view
+
+		foreach ($this->request as $name => $value) {
+			$data[$name] = $value;
+		}
+
+		$data = array_merge($data, array(
+			'showBlock'					=> $showBlock,
+			'imageType4' 				=> $imageType4,
+			'patientInfo' 				=> $patientInfo,
+			'exclusiveBilling'			=> $exclusiveBilling,
+			'nameBilling'				=> $nameBilling,
+			'patientRequestId'			=> !empty($patient) ? $patient->patientid : null,
+			'butText'					=> $butText,
+			'docPatientPortal'			=> $docPatientPortal,
+			'locations'					=> $locations,
+			'usePatientPortal'			=> !empty($usePatientPortal) ? $usePatientPortal : null,
+			'insuranceContacts'			=> $insuranceContacts,
+			'insContactsJson'			=> json_encode($insContactsJson),
+			'DSS_REFERRED_MEDIA' 		=> Constants::DSS_REFERRED_MEDIA,
+			'DSS_REFERRED_FRANCHISE'	=> Constants::DSS_REFERRED_FRANCHISE,
+			'DSS_REFERRED_DSSOFFICE'	=> Constants::DSS_REFERRED_DSSOFFICE,
+			'DSS_REFERRED_OTHER'		=> Constants::DSS_REFERRED_OTHER,
+			'DSS_REFERRED_PATIENT'		=> Constants::DSS_REFERRED_PATIENT,
+			'DSS_REFERRED_PHYSICIAN'	=> Constants::DSS_REFERRED_PHYSICIAN,
+			'DSS_REFERRED_MEDIA'		=> Constants::DSS_REFERRED_MEDIA,
+			'DSS_REFERRED_DSSOFFICE'	=> Constants::DSS_REFERRED_DSSOFFICE,
+			'dssReferredLabels'			=> Constants::$dss_referred_labels,
+			'path' 						=> '/' . Request::segment(1) . '/' . Request::segment(2)
+		));
+
+		// dd($data);
+
+		return view('manage.add_patient', $data);
+	}
+
+	public function add()
+	{
+		$patientId = $this->request['patientId'];
+
+		if (!empty($this->request['patientsub']) && $this->request['patientsub'] == 1) {
+			if(!empty($this->request['p_m_eligible_payer'])){
+				$patientInfo['p_m_eligible_payer_id'] = substr($this->request['p_m_eligible_payer'], 0, strpos($this->request['p_m_eligible_payer'], '-'));
+				$patientInfo['p_m_eligible_payer_name'] = substr($this->request['p_m_eligible_payer'], (strpos($this->request['p_m_eligible_payer'], '-') + 1));
+			}else{
+				$patientInfo['p_m_eligible_payer_id'] = '';
+				$patientInfo['p_m_eligible_payer_name'] = '';
+			}
+
+			if(!empty($this->request['s_m_eligible_payer'])){
+				$patientInfo['s_m_eligible_payer_id'] = substr($this->request['s_m_eligible_payer'],0,strpos($this->request['s_m_eligible_payer'], '-'));
+				$patientInfo['s_m_eligible_payer_name'] = substr($this->request['s_m_eligible_payer'],(strpos($this->request['s_m_eligible_payer'], '-')+1));
+			}else{
+				$patientInfo['s_m_eligible_payer_id'] = '';
+				$patientInfo['s_m_eligible_payer_name'] = '';
+			}
+
+			$patientInfo['use_patient_portal'] = $this->request['use_patient_portal'];
 
 			if (!empty($this->request['ed'])) {
 				$patient = $this->patient->get(array(
@@ -159,27 +534,7 @@ class PatientController extends Controller
 					}
 				}
 
-				$patientData = array('firstname', 'lastname', 'middlename', 'preferred_name', 'salutation', 'member_no',
-									 'group_no', 'plan_no', 'add1', 'add2', 'city', 'state',
-									 'zip', 'dob', 'gender', 'marital_status', 'feet', 'inches', 'weight', 'bmi',
-									 'best_time', 'best_number', 'email', 'patient_notes', 'p_d_party', 'p_d_relation',
-									 'p_d_other', 'p_d_employer', 'p_d_ins_co', 'p_d_ins_id', 's_d_party', 's_d_relation',
-									 's_d_other', 's_d_employer', 's_d_ins_co', 's_d_ins_id', 'p_m_partyfname',
-									 'p_m_partymname', 'p_m_partylname', 'p_m_gender', 'p_m_ins_grp', 's_m_ins_grp',
-									 'p_m_dss_file', 's_m_dss_file', 'p_m_same_address', 's_m_same_address', 'p_m_address',
-									 'p_m_city', 'p_m_state', 'p_m_zip', 's_m_address', 's_m_city', 's_m_state',
-									 's_m_zip', 'p_m_ins_type', 's_m_ins_type', 'p_m_ins_ass', 's_m_ins_ass', 'ins_dob',
-									 'ins2_dob', 'p_m_relation', 'p_m_other', 'p_m_employer', 'p_m_ins_co', 'p_m_ins_id',
-									 's_m_ins', 's_m_partyfname', 's_m_partymname', 's_m_partylname', 's_m_gender',
-									 's_m_relation', 's_m_other', 's_m_employer', 's_m_ins_co', 's_m_ins_id', 'p_m_ins_plan',
-									 's_m_ins_plan', 'employer', 'emp_add1', 'emp_add2', 'emp_city', 'emp_state', 'emp_zip',
-									 'plan_name', 'group_number', 'ins_type', 'accept_assignment', 'print_signature',
-									 'medical_insurance', 'mark_yes', 'inactive', 'partner_name', 'docsleep', 'docpcp',
-									 'docdentist', 'docent', 'docmdother', 'docmdother2', 'docmdother3', 'emergency_name',
-									 'emergency_relationship', 'referred_source', 'referred_by', 'referred_notes',
-									 'copyreqdate', 'status', 'use_patient_portal', 'preferredcontact');
-
-				foreach ($patientData as $attribute) {
+				foreach ($this->patientData as $attribute) {
 					$data[$attribute] = $this->request[$attribute];
 				}
 
@@ -188,8 +543,8 @@ class PatientController extends Controller
 					'home_phone' 				=> $this->num($this->request['home_phone']), 
 					'work_phone' 				=> $this->num($this->request['work_phone']), 
 					'cell_phone' 				=> $this->num($this->request['cell_phone']),
-					'p_m_eligible_payer_id' 	=> $PMEligiblePayerId,
-					'p_m_eligible_payer_name' 	=> $PMEligiblePayerName,
+					'p_m_eligible_payer_id' 	=> $patientInfo['s_m_eligible_payer_id'],
+					'p_m_eligible_payer_name' 	=> $patientInfo['s_m_eligible_payer_name'],
 					'emp_phone' 				=> $this->num($this->request['emp_phone']), 
 					'emp_fax' 					=> $this->num($this->request['emp_fax']), 
 					'emergency_number' 			=> $this->num($this->request['emergency_number']),
@@ -362,7 +717,11 @@ class PatientController extends Controller
 					}
 				}
 
-				$this->triggerLetter1and2($this->request['ed'], $this->request);
+				$this->triggerLetter1and2($this->request['ed'], array(
+					$this->request['docsleep'], $this->request['docpcp'], $this->request['docdentist'],
+					$this->request['docent'], $this->request['docmdother'], $this->request['docmdother2'],
+					$this->request['docmdother3']
+				));
 
 				if (!empty($this->request['introletter']) && $this->request['introletter'] == 1) {
 					$this->triggerLetter3($this->request['ed']);
@@ -428,8 +787,12 @@ class PatientController extends Controller
 					$password = '';
 				}
 
-				foreach ($patientData as $attribute) {
-					$data[$attribute] = $this->request[$attribute];
+				foreach ($this->patientData as $attribute) {
+					if (!empty($this->request[$attribute])) { 
+						$data[$attribute] = $this->request[$attribute];
+					} else {
+						$data[$attribute] = 0;
+					}
 				}
 
 				$data = array_merge($data, array(
@@ -443,8 +806,8 @@ class PatientController extends Controller
 					'home_phone' 				=> $this->num($this->request['home_phone']), 
 					'work_phone' 				=> $this->num($this->request['work_phone']), 
 					'cell_phone' 				=> $this->num($this->request['cell_phone']),
-					'p_m_eligible_payer_id' 	=> $PMEligiblePayerId,
-					'p_m_eligible_payer_name' 	=> $PMEligiblePayerName,
+					'p_m_eligible_payer_id' 	=> $patientInfo['p_m_eligible_payer_id'],
+					'p_m_eligible_payer_name' 	=> $patientInfo['p_m_eligible_payer_name'],
 					'emp_phone' 				=> $this->num($this->request['emp_phone']), 
 					'emp_fax' 					=> $this->num($this->request['emp_fax']), 
 					'emergency_number' 			=> $this->num($this->request['emergency_number']),
@@ -463,7 +826,11 @@ class PatientController extends Controller
 					$this->summary->insertData($data);
 				}
 
-				$this->triggerLetter1and2($insertedPatientId);
+				$this->triggerLetter1and2($insertedPatientId, array(
+					$this->request['docsleep'], $this->request['docpcp'], $this->request['docdentist'],
+					$this->request['docent'], $this->request['docmdother'], $this->request['docmdother2'],
+					$this->request['docmdother3']
+				));
 
 				if (!empty($this->request['sendReg']) && $docPatientPortal && $this->request['use_patient_portal']) {
 					if (trim($this->request['email']) != '' && trim($this->request['cell_phone']) != '') {
@@ -516,7 +883,7 @@ class PatientController extends Controller
 				$similarPatients = $this->similarPatients($insertedPatientId);
 
 				if (count($similarPatients)) {
-					return redirect('duplicate_patients/pid/$insertedPatientId');
+					return redirect('/duplicate_patients/' . $insertedPatientId);
 				} else {
 					$message = 'Patient' . $this->request['firstname'] . ' ' . $this->request['lastname'] . ' added Successfully';
 
@@ -526,367 +893,24 @@ class PatientController extends Controller
 						$sendPin = '';
 					}
 
-					return redirect('add_patient/pid/' . $insertedPatientId. '/ed/' . $insertedPatientId . '/addtopat/1' . $sendPin);
+					return redirect('add_patient/' . $insertedPatientId. '/ed/' . $insertedPatientId . '/addtopat/1' . $sendPin);
 				}
 			}
 		}
-
-		$requestEd = (!empty($this->request['ed'])) ? $this->request['ed'] : '-1';
-
-		$status = Constants::DSS_PREAUTH_PENDING . ',' . Constants::DSS_PREAUTH_PREAUTH_PENDING;
-
-		$vob = $this->insurancePreauth->get(array(
-			'patient_id' => $requestEd
-		), $status, 'front_office_request_date');
-
-		$pendingVob = count($vob);
-
-		if ($pendingVob) {
-			$vob = $vob[0];
-			$pendingVobStatus = $vob->status;
-		}
-
-		$patient = $this->patient->get(array(
-			'patientid' => $requestEd
-		));
-
-		$patient = count($patient) ? $patient[0] : null;
-
-		$patientInfo = array();
-
-		if (!empty($message)) {
-			foreach ($patientData as $attribute) {
-				$patientInfo[$attribute] = $this->request[$attribute];
-			}
-
-			$patientInfo['p_m_ins_payer_id'] 	= $this->request['p_m_ins_payer_id'];
-			$patientInfo['location'] 			= $this->request['location'];
-			$patientInfo['home_phone']			= $this->request['home_phone'];
-			$patientInfo['work_phone']			= $this->request['work_phone'];
-			$patientInfo['cell_phone']			= $this->request['cell_phone'];
-		} else {
-			if (!empty($patient)) {
-				foreach ($patientData as $attribute) {
-					$patientInfo[$attribute] = $patient->$attribute;
-				}
-
-				$patientInfo['home_phone']			= $patient->home_phone;
-				$patientInfo['work_phone']			= $patient->work_phone;
-			}
-
-			if (!empty($patientInfo['docsleep']) && $patientInfo['docsleep'] != 'Not Set') {
-				$contact = $this->contact->getDocsleep($docsleep);
-
-				$docsleepName = $contact->lastname . ', ' . $contact->firstname . ' ' . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
-			} else {
-				$docsleepName = '';
-			}
-
-			$docpcp = !empty($patient) ? $patient->docpcp : null;
-			if ($docpcp && $docpcp != 'Not Set') {
-				$contact = $this->contact->getDocsleep($docpcp);
-
-				$docpcpName = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
-			} else {
-				$docpcpName = '';
-			}
-
-			$docdentist = !empty($patient) ? $patient->docdentist : null;
-			if ($docdentist && $docdentist != 'Not Set') {
-				$contact = $this->contact->getDocsleep($docdentist);
-
-				$docdentistName = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
-			} else {
-				$docdentistName = '';
-			}
-
-			$docent = !empty($patient) ? $patient->docent : null;
-			if ($docent && $docent != 'Not Set') {
-				$contact = $this->contact->getDocsleep($docent);
-
-				$docentName = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
-			} else {
-				$docentName = '';
-			}
-
-			$docmdother = !empty($patient) ? $patient->docmdother : null;
-			if ($docmdother && $docmdother != 'Not Set') {
-				$contact = $this->contact->getDocsleep($docmdother);
-
-				$docmdotherName = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
-			} else {
-				$docmdotherName = '';
-			}
-
-			$docmdother2 = !empty($patient) ? $patient->docmdother2 : null;
-			if ($docmdother2 && $docmdother2 != 'Not Set') {
-				$contact = $this->contact->getDocsleep($docmdother2);
-
-				$docmdother2Name = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
-			} else {
-				$docmdother2Name = '';
-			}
-
-			$docmdother3 = !empty($patient) ? $patient->docmdother3 : null;
-			if ($docmdother3 && $docmdother3 != 'Not Set') {
-				$contact = $this->contact->getDocsleep($docmdother3);
-
-				$docmdother3Name = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename . (($contact->contacttype != '') ? ' - ' . $contact->contacttype : '');
-			} else {
-				$docmdother3Name = '';
-			}
-
-			if (!empty($patient)) {
-				$patientInfo['inactive'] 				= $patient->inactive;
-				$patientInfo['partner_name'] 			= $patient->partner_name;
-				$patientInfo['emergency_name'] 			= $patient->emergency_name;
-				$patientInfo['emergencyrelationship'] 	= $patient->emergency_relationship;
-				$patientInfo['emergency_number'] 		= $patient->emergency_number;
-				$patientInfo['referred_source'] 		= $patient->referred_source;
-				$patientInfo['referred_by'] 			= $patient->referred_by;
-				$patientInfo['referred_notes'] 			= $patient->referred_notes;
-			}
-
-			if (isset($referredSource)) {
-				if ($referredSource == Constants::DSS_REFERRED_PATIENT) {
-					$patient = $this->patient->get(array(
-						'patientid' => $referredBy
-					));
-
-					$referredName = $patient->lastname . ', ' . $patient->firstname . ' ' . $patient->middlename . ' - Patient';
-				} elseif ($referredSource == Constants::DSS_REFERRED_PHYSICIAN) {
-					$contact = $this->contact->getDocsleep($referredBy);
-
-					$referredName = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename;
-					if (!empty($contact->contacttype)) {
-						$referredName .= ' - ' . $contact->contacttype;
-					}
-				}
-			}
-
-			if (!empty($patient)) {
-				$copyReqDate = $patient->copyreqdate;
-				$preferredContact = $patient->preferredcontact;
-				$referredNotes = $patient->referred_notes;
-				$name = $patient->lastname . ' ' . $patient->middlename . ', ' . $patient->firstname;
-			}
-
-			$summary = $this->summary->get($patientId);
-
-			if (count($summary)) {
-				$summary = $summary[0];
-				$location = $summary->location;
-			}
-
-			$butText = 'Add ';
-		}
-
-		if (!empty($patient->userid)) {
-			$butText = 'Save/Update ';
-		} else {
-			$butText = 'Add ';
-		}
-
-		// Check if required information is filled out
-		$completeInfo = 0;
-		if (!empty($patientInfo['home_phone']) || !empty($patientInfo['work_phone']) || !empty($patientInfo['cell_phone'])) {
-			$patientphone = true;
-		}
-
-		if (!empty($patientInfo['email'])) {
-			$patientemail = true;
-		}
-
-		if ((!empty($patientemail) || !empty($patientphone)) && !empty($patientInfo['add1']) && !empty($patientInfo['city']) && !empty($patientInfo['state']) && !empty($patientInfo['zip']) && !empty($patientInfo['dob']) && !empty($patientInfo['gender'])) {
-			$completeInfo = 1;
-		}
-
-		// Determine Whether Patient Info has been set
-		if (!empty($this->request['ed'])) {
-			$this->updatePatientSummary($this->request['ed'], 'patient_info', $completeInfo);
-		}
-
-		/**
-
-		*/
-		// CODE FOR VIEW
-		/**
-
-		*/
-
-		$showBlock = array();
-
-		$notifications = $this->findPatientNotifications($patientId);
-
-		if (!empty($this->request['search'])) {
-			if (strpos($this->request['search'], ' ')) {
-				$firstname = ucfirst(substr($this->request['search'], 0, strpos($this->request['search'], ' ')));
-    			$lastname = ucfirst(substr($this->request['search'], strpos($this->request['search'],' ') + 1));
-			} else {
-				$firstname = ucfirst($this->request['search']);
-			}
-		}
-
-		if (!empty($docPatientPortal) && $docPatientPortal && !empty($usePatientPortal) && $usePatientPortal) {
-			if ($patient->registration_status == 1 || $patient->registration_status == 0) {
-				$showBlock['buttonSendReg'] = true;
-			} else {
-				$showBlock['buttonSendReg'] = false;
-			}
-		}
-
-		$companies = $this->company->getJoin(Session::get('docId'), Constants::DSS_COMPANY_TYPE_HST);
-
-		if (count($companies)) {
-			if (!empty($patHstNumUncompleted) && $patHstNumUncompleted > 0) {
-				$showBlock['orderHst'] = true;
-			} else {
-				$showBlock['orderHst'] = false;
-			}
-		}
-
-		$imageType4 = $this->qImage->getImage(4, $patientId, 'adddate');
-
-		if (count($imageType4) == 0) {
-			$showBlock['patientPhoto'] = false;
-		} else {
-			$showBlock['patientPhoto'] = true;
-		}
-
-		$registrationStatus = !empty($patient) ? $patient->registration_status : null;
-		$accessCode = !empty($patient) ? $patient->access_code : null;
-
-		if (!empty($patient) && $patient->use_patient_portal == 1) {
-			switch ($registrationStatus) {
-				case 0:
-					$showBlock['registrationStatus'] = 'Unregistered';
-					break;
-				case 1:
-					$showBlock['registrationStatus'] = 'Registration Emailed ' . date('m/d/Y h:i a', strtotime($patient->registration_senton)) . ' ET';
-					break;
-				case 2:
-					$showBlock['registrationStatus'] = 'Registered';
-					break;
-			}
-		} else {
-			$showBlock['registrationStatus'] = 'Patient Portal In-active';
-		}
-
-		$locations = $this->location->get(array(
-			'docid' => Session::get('docId')
-		));
-
-		if (empty($patientId)) {
-			$copyReqDate = date('m/d/Y');
-		}
-
-		$user = $this->user->findUser(Session::get('docId'));
-
-		if ($user->use_eligible_api == 1) {
-			$showBlock['insuranceCo'] = true;
-		} else {
-			$showBlock['insuranceCo'] = false;
-		}
-
-		$imageType10 = $this->qImage->getImage(10, $patientId, 'adddate');
-
-		if (count($imageType10) == 0) {
-			$showBlock['insuranceCardImage10'] = false;
-		} else {
-			$showBlock['insuranceCardImage10'] = true;
-			$image10 = $imageType10[0];
-		}
-
-		$insuranceContacts = $this->contact->getInsContact(Session::get('docId'));
-
-		$imageType12 = $this->qImage->getImage(12, $patientId, 'adddate');
-
-		if (count($imageType12) == 0) {
-			$showBlock['insuranceCardImage12'] = false;
-		} else {
-			$showBlock['insuranceCardImage12'] = true;
-			$image12 = $imageType12[0];
-		}
-
-		if (!empty($docPatientPortal)) {
-			$showBlock['portalStatus'] = true;
-		} else {
-			$showBlock['portalStatus'] = false;
-		}
-
-		$letter = $this->letter->get(array(
-			'templateid' 	=> 3,
-			'deleted' 		=> 0,
-			'patientid' 	=> $patientId
-		), 'generated_date');
-
-		if (count($letter) == 0) {
-			$showBlock['introLetter'] = false;
-		} else {
-			$letter = $letter[0];
-			$showBlock['introLetter'] = 'DSS Intro Letter Sent to Patient ' . $letter->generated_date;
-		}
-
-		if (empty($this->request['noheaders'])) {
-			$showBlock['noHeaders'] = true;
-		}
-
-		if (!empty($this->request['readonly'])) {
-			$showBlock['readOnly'] = true;
-		}
-
-		// send data to view
-
-		foreach ($this->request as $name => $value) {
-			$data[$name] = $value;
-		}
-
-		$data = array_merge($data, array(
-			'imageType4' 				=> $imageType4,
-			'patientInfo' 				=> $patientInfo,
-			'exclusiveBilling'			=> $exclusiveBilling,
-			'nameBilling'				=> $nameBilling,
-			'patientRequestId'			=> !empty($patient) ? $patient->patientid : null,
-			'butText'					=> $butText,
-			'DSS_REFERRED_MEDIA' 		=> Constants::DSS_REFERRED_MEDIA,
-			'DSS_REFERRED_FRANCHISE'	=> Constants::DSS_REFERRED_FRANCHISE,
-			'DSS_REFERRED_DSSOFFICE'	=> Constants::DSS_REFERRED_DSSOFFICE,
-			'DSS_REFERRED_OTHER'		=> Constants::DSS_REFERRED_OTHER,
-			'dssReferredLabels'			=> Constants::$dss_referred_labels
-		));
-
-		// dd($data);
-
-		return view('manage.add_patient', $data);
 	}
 
-	/**
-
-
-
-	*/
-
-	private function triggerLetter1and2($patientId, $request)
+	private function triggerLetter1and2($patientId, $mdContacts)
 	{
 		$user = $this->user->findUser(Session::get('docId'));
 
 		if ($user->use_letters && $user->intro_letters) {
 			$letter1Id = '1';
 			$letter2Id = '2';
-			$mdContacts = array();
-
-			$mdcontacts[] = $request['docsleep'];
-			$mdcontacts[] = $request['docpcp'];
-			$mdcontacts[] = $request['docdentist'];
-			$mdcontacts[] = $request['docent'];
-			$mdcontacts[] = $request['docmdother'];
-			$mdcontacts[] = $request['docmdother2'];
-			$mdcontacts[] = $request['docmdother3'];
 
 			$recipients = array();
-			foreach ($mdcontacts as $contact) {
+			foreach ($mdContacts as $contact) {
 				if ($contact != 'Not Set') {
-					$mdList = $this->letter->getMdList($contact, $letter1id, $letter2id);
+					$mdList = $this->letter->getMdList($contact, $letter1Id, $letter2Id);
 
 					$numMdList = count($mdList);
 
@@ -1332,6 +1356,7 @@ class PatientController extends Controller
 		))[0];
 
 		$data = array(
+			'patientId'	=> $patientId,
 			'docId' 	=> Session::get('docId'),
 			'firstname' => $patient->firstname,
 			'lastname' 	=> $patient->lastname,

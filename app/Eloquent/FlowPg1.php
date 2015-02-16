@@ -7,4 +7,6 @@ class FlowPg1 extends Model
 	protected $table = 'dental_flow_pg1';
 
 	protected $primaryKey = 'id';
+
+	// public $timestamps = false;
 }

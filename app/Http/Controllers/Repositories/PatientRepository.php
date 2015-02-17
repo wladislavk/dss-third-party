@@ -50,17 +50,27 @@ class PatientRepository implements PatientInterface
 		return $joinPatients->get();
 	}
 
-	public function getPendingDuplicates($docId)
+	public function getPendingDuplicates($where, $status = null, $order = null)
 	{
 		$pendingDuplicates = DB::table(DB::raw('dental_patients p'))
-							->select('p.*')
-							->whereBetween('status', array(3, 4))
-							->where('docid', '=', $docId)
-							->whereRaw(DB::raw('(SELECT count(*) FROM dental_patients dp WHERE dp.status = 1 AND dp.docid = ' . $docId . ' AND
-										((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR (dp.add1 = p.add1 AND dp.city = p.city AND dp.state = p.state AND dp.zip = p.zip))) != 0'))
-							->get();
+							->select('p.*');
 
-		return $pendingDuplicates;
+		foreach ($where as $attribute => $value) {
+			$pendingDuplicates = $pendingDuplicates->where($attribute, '=', $value);
+		}
+
+		if (!empty($status)) {
+			$pendingDuplicates = $pendingDuplicates->whereRaw('status IN (' . $status . ')');
+		}
+
+		$pendingDuplicates = $pendingDuplicates->whereRaw(DB::raw('(SELECT count(*) FROM dental_patients dp WHERE dp.status = 1 AND dp.docid = ' . $where['docid'] . ' AND
+							((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR (dp.add1 = p.add1 AND dp.city = p.city AND dp.state = p.state AND dp.zip = p.zip))) != 0'));
+							
+		if (!empty($order)) {
+			$pendingDuplicates = $pendingDuplicates->orderBy($order);
+		}
+
+		return $pendingDuplicates->get();
 	}
 
 	public function getTransactionCode0486($patientId)
@@ -165,5 +175,16 @@ class PatientRepository implements PatientInterface
 		$patient = $patient->update($values);
 
 		return $patient;
+	}
+
+	public function deleteData($where)
+	{
+		$patient = new Patient();
+
+		foreach ($where as $attribute => $value) {
+			$patient = $patient->where($attribute, '=', $value);
+		}
+
+		return $patient->delete();
 	}
 }

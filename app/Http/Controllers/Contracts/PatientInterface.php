@@ -8,7 +8,7 @@ interface PatientInterface
 
 	public function getJoinPatients($where, $join);
 
-	public function getPendingDuplicates($docId);
+	public function getPendingDuplicates($where, $status = null, $order = null);
 
 	public function getTransactionCode0486($patientId);
 
@@ -21,4 +21,6 @@ interface PatientInterface
 	public function insertData($data);
 
 	public function updateData($where, $values);
+
+	public function deleteData($where);
 }

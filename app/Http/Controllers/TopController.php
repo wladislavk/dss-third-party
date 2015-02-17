@@ -213,7 +213,9 @@ class TopController extends Controller
 				'p.docid' => Session::get('docId')
 			), $join));
 
-			$numPendingDuplicates = count($this->patient->getPendingDuplicates(Session::get('docId')));
+			$numPendingDuplicates = count($this->patient->getPendingDuplicates(array(
+				'docid' => Session::get('docId')
+			), '3,4'));
 
 			$numBounce = count($this->patient->get(array(
 				'dental_patients.email_bounce' => 1,
@@ -268,24 +270,28 @@ class TopController extends Controller
 					'patientid' => $patientId
 				);
 
-				$patient = $this->patient->get($where)[0];
+				$patients = $this->patient->get($where);
 
-		        $premed = $patient->premedcheck;
-		        $medicare = ($patient->p_m_ins_type == 1);
+				$patient = count($patients) ? $patients[0] : null;
 
-		        if ($premed) {
-		          $title .= "Pre-medication: " . $patient->premed . "\n";
-		        }
+			    if (!empty($patient)) {
+			        $premed = $patient->premedcheck;
+			        $medicare = ($patient->p_m_ins_type == 1);
 
-		        $qPage3 = $this->qPage3->get($patientId);
+			        if ($premed) {
+			          $title .= "Pre-medication: " . $patient->premed . "\n";
+			        }
 
-		        $allergen = $qPage3->allergenscheck;
+			        $qPage3 = $this->qPage3->get($patientId);
 
-		        if ($allergen) {
-		          $title .= "Allergens: " . $qPage3->other_allergens;
-		        }
-		        
-		        $theName = $patient->firstname . ' ' . $patient->lastname;
+			        $allergen = !empty($qPage3) ? $qPage3->allergenscheck : null;
+
+			        if ($allergen) {
+			          $title .= "Allergens: " . $qPage3->other_allergens;
+			        }
+			        
+			        $theName = $patient->firstname . ' ' . $patient->lastname;
+			    }
 		    }
 
 	        $numTasks = count($this->task->get(Session::get('userId'), null, null, 'task'));
@@ -392,7 +398,7 @@ class TopController extends Controller
 				$existPatient = $this->patient->get(array(
 					'patientid' => $patientId
 				));
-				$existPatient = $existPatient[0];
+				$existPatient = count($existPatient) ? $existPatient[0] : null;
 
 				if (!empty($existPatient) && ($existPatient->symptoms_status == 2 &&
 					$existPatient->treatments_status == 2 && $existPatient->history_status == 2 &&

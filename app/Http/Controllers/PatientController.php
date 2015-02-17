@@ -113,8 +113,6 @@ class PatientController extends Controller
 
 	public function index()
 	{
-		// if(!isset($_GET['noheaders'])){
-
 		$patientId = $this->request['patientId'];
 
 		$billing = $this->company->getBilling(array(
@@ -883,7 +881,7 @@ class PatientController extends Controller
 				$similarPatients = $this->similarPatients($insertedPatientId);
 
 				if (count($similarPatients)) {
-					return redirect('/duplicate_patients/' . $insertedPatientId);
+					return redirect('/manage/duplicate_patient/' . $insertedPatientId);
 				} else {
 					$message = 'Patient' . $this->request['firstname'] . ' ' . $this->request['lastname'] . ' added Successfully';
 
@@ -897,6 +895,51 @@ class PatientController extends Controller
 				}
 			}
 		}
+	}
+
+	public function duplicate()
+	{
+		if (!empty($this->request['deleteId'])) {
+			$this->patient->deleteData(array(
+				'docid' 	=> Session::get('docId'),
+				'patientid' => $this->request['deleteId']
+			));
+
+			return redirect('add_patient/' . $this->request['useid'])->with(array(
+				'ed' 		=> $this->request['useId'],
+				'preview' 	=> 1,
+				'addtopat' 	=> 1
+			));
+		} elseif (!empty($this->request['createId'])) {
+			return redirect('add_patient/' . $this->request['createId'])->with('ed', $this->request['createId']);
+		}
+
+		$duplicates = $this->patient->getPendingDuplicates(array(
+			'patientid' => !empty($this->request['patientId']) ? $this->request['patientId'] : null,
+			'docid' 	=> Session::get('docId')
+		), null, 'p.lastname');
+
+		if (count($duplicates)) {
+			$duplicate = $duplicates[0];
+			$similarPatients = $this->similarPatients($duplicate->patientid);
+		} else {
+			$duplicate = null;
+			$similarPatients = null;
+		}
+
+		foreach ($this->request as $name => $value) {
+			$data[$name] = $value;
+		}
+
+		$data = array_merge($data, array(
+			'path'				=> '/' . Request::segment(1) . '/' . Request::segment(2),
+			'duplicate' 		=> $duplicate,
+			'similarPatients' 	=> $similarPatients,
+			'deleteId'			=> !empty($this->request['deleteid']) ? $this->request['deleteid'] : null,
+			'link'				=> Request::path()
+		));
+
+		return view('manage.duplicate', $data);
 	}
 
 	private function triggerLetter1and2($patientId, $mdContacts)
@@ -1025,11 +1068,11 @@ class PatientController extends Controller
 		}
 
 		$data = array(
-			'mailingPractice' 	=> $mailingPhone->mailing_practice,
-			'mailingAddress' 	=> $mailingPhone->mailing_address,
-			'mailingCity' 		=> $mailingPhone->mailing_city,
-			'mailingState' 		=> $mailingPhone->mailing_state,
-			'mailingZip' 		=> $mailingPhone->mailing_zip,
+			'mailingPractice' 	=> $location->mailing_practice,
+			'mailingAddress' 	=> $location->mailing_address,
+			'mailingCity' 		=> $location->mailing_city,
+			'mailingState' 		=> $location->mailing_state,
+			'mailingZip' 		=> $location->mailing_zip,
 			'email'				=> $email,
 			'link'				=> Request::root() . '/reg/activate/id/' . $patient->patientid . '/hash/' . $recoverHash,
 			'contactUs'			=> $this->formatPhone($mailingPhone),
@@ -1038,7 +1081,7 @@ class PatientController extends Controller
 			'emailFooter'		=> Constants::DSS_EMAIL_FOOTER
 		);
 
-		Mail::send('emails.registration', $data, function($message){
+		Mail::send('emails.registration', $data, function($message) use ($email){
 			$message->from('patient@dentalsleepsolutions.com', 'Dental Sleep Solutions');
 			$message->to($email, '')->subject('Online Patient Registration');
 		});
@@ -1079,11 +1122,11 @@ class PatientController extends Controller
 		$subject = "Online Patient Registration";
 
 		$data = array(
-			'mailingPractice' 	=> $mailingPhone->mailing_practice,
-			'mailingAddress' 	=> $mailingPhone->mailing_address,
-			'mailingCity' 		=> $mailingPhone->mailing_city,
-			'mailingState' 		=> $mailingPhone->mailing_state,
-			'mailingZip' 		=> $mailingPhone->mailing_zip,
+			'mailingPractice' 	=> $location->mailing_practice,
+			'mailingAddress' 	=> $location->mailing_address,
+			'mailingCity' 		=> $location->mailing_city,
+			'mailingState' 		=> $location->mailing_state,
+			'mailingZip' 		=> $location->mailing_zip,
 			'email'				=> $email,
 			'contactUs'			=> $this->formatPhone($mailingPhone),
 			'imgHeaderFo'		=> Request::root() . '/img/email/email_header_fo.png',
@@ -1092,7 +1135,7 @@ class PatientController extends Controller
 			'emailFooter'		=> Constants::DSS_EMAIL_FOOTER
 		);
 
-		Mail::send('emails.registration', $data, function($message){
+		Mail::send('emails.registration', $data, function($message) use ($email){
 			$message->from('patient@dentalsleepsolutions.com', 'Dental Sleep Solutions');
 			$message->to($email, '')->subject('Online Patient Registration');
 		});

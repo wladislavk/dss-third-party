@@ -82,7 +82,7 @@
 							</li>
 
 							<li>
-								<a href="logout">Sign Out</a>
+								<a href="/manage/logout">Sign Out</a>
 							</li>
 						</ul>
 					</div>
@@ -553,7 +553,7 @@
 									</a>
 								@endif
 
-								@if (!empty($rejectedInsurance))
+								@if (count($rejectedInsurance))
 									<span class="warning">Warning! Patient has the following rejected claims: <br />
 
 										@foreach ($rejectedInsurance as $rejected)

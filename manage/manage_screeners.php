@@ -195,28 +195,27 @@
 			<td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
 				<a href="manage_screeners.php?sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
 			</td>
+      <td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="13%">
+          <a href="manage_screeners.php?sort=phone&sortdir=<?php echo ($_REQUEST['sort']=='phone'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Phone</a>
+      </td>
 
-	        <td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="13%">
-	            <a href="manage_screeners.php?sort=phone&sortdir=<?php echo ($_REQUEST['sort']=='phone'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Phone</a>
-	        </td>
+      <td valign="top" class="col_head"  width="10%">
+          Risk 
+      </td>
 
-	        <td valign="top" class="col_head"  width="10%">
-	            Risk 
-	        </td>
+	<td valign="top" class="col_head" width="10%">
+          CPAP
+      </td>
 
-			<td valign="top" class="col_head" width="10%">
-	            CPAP
-	        </td>
-
-	        <td valign="top" class="col_head" width="10%">
-				Epworth
-	        </td>
-	        <td valign="top" class="col_head" width="10%">
-				Results	
-	        </td>
-	        <td valign="top" class="col_head" width="10%">
-	            HST
-	        </td>
+      <td valign="top" class="col_head" width="10%">
+		Epworth
+      </td>
+      <td valign="top" class="col_head" width="10%">
+		Results	
+      </td>
+      <td valign="top" class="col_head" width="10%">
+          HST
+      </td>
 
 			<td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 	            <a href="manage_screeners.php?sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Screened By</a>

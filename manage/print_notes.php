@@ -26,7 +26,6 @@ $sql = "select n.*, CONCAT(u.first_name,' ',u.last_name) signed_name, p.adddate 
         group by n.parentid
         order by n.procedure_date DESC, n.adddate desc
         ";
-
 $my = $db->getResults($sql);
 $num_users = count($my);
 ?>

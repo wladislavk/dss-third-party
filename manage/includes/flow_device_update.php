@@ -1,6 +1,7 @@
 <?php
   include_once '../admin/includes/main_include.php';
 
+
   $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
   $d = (!empty($_REQUEST['device']) ? $_REQUEST['device'] : '');
   $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');

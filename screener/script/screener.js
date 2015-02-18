@@ -1,4 +1,11 @@
 var screenerid='';
+
+function submit_register(){
+
+next_sect('finish');
+
+}
+
 function submit_screener(){
   $('#sect4_next').hide();
   $('#sect4_next_dis').show();
@@ -35,20 +42,12 @@ function submit_screener(){
       headaches: $("input[name=headaches]:checked").val(),
       falling_asleep: $("input[name=falling_asleep]:checked").val(),
       staying_asleep: $("input[name=staying_asleep]:checked").val(),
-      rx_cpap: $("input[name=rx_cpap]:checked").val(),
-      rx_blood_pressure: $("input[name=rx_blood_pressure]").is(':checked')?2:0,
+      rx_metabolic_syndrome: $("input[name=rx_metabolic_syndrome]").is(':checked')?2:0,
       rx_hypertension: $("input[name=rx_hypertension]").is(':checked')?1:0,
-      rx_heart_disease: $("input[name=rx_heart_disease]").is(':checked')?1:0,
+      rx_heart_failure: $("input[name=rx_heart_failure]").is(':checked')?1:0,
       rx_stroke: $("input[name=rx_stroke]").is(':checked')?3:0,
-      rx_apnea: $("input[name=rx_apnea]").is(':checked')?4:0,
       rx_diabetes: $("input[name=rx_diabetes]").is(':checked')?1:0,
-      rx_lung_disease: $("input[name=rx_lung_disease]").is(':checked')?1:0,
-      rx_insomnia: $("input[name=rx_insomnia]").is(':checked')?1:0,
-      rx_depression: $("input[name=rx_depression]").is(':checked')?1:0,
-      rx_narcolepsy: $("input[name=rx_narcolepsy]").is(':checked')?1:0,
-      rx_medication: $("input[name=rx_medication]").is(':checked')?1:0,
-      rx_restless_leg: $("input[name=rx_restless_leg]").is(':checked')?1:0,
-      rx_headaches: $("input[name=rx_headaches]").is(':checked')?1:0,
+      rx_obesity: $("input[name=rx_obesity]").is(':checked')?1:0,
       rx_heartburn: $("input[name=rx_heartburn]").is(':checked')?1:0
 
     },
@@ -80,39 +79,23 @@ function submit_screener(){
         $('#r_headaches').text(($("input[name=headaches]:checked").val() > 0)?'Yes':'No');
         $('#r_falling_asleep').text(($("input[name=falling_asleep]:checked").val() > 0)?'Yes':'No');
         $('#r_staying_asleep').text(($("input[name=staying_asleep]:checked").val() > 0)?'Yes':'No');
-        $('#r_rx_cpap').text(($("input[name=rx_cpap]:checked").val() > 0)?'Yes':'No');
-        if($("input[name=rx_blood_pressure]").is(':checked')){
-	  $('#r_diagnosed').append('<li>High blood pressure</li>');
+        if($("input[name=rx_metabolic_syndrome]").is(':checked')){
+	  $('#r_diagnosed').append('<li>Metabolic Syndrome</li>');
 	}
-        if($("input[name=rx_heart_disease]").is(':checked')){
-          $('#r_diagnosed').append('<li>Heart Disease</li>');
+        if($("input[name=rx_heart_failure]").is(':checked')){
+          $('#r_diagnosed').append('<li>Heart Failure</li>');
         }
         if($("input[name=rx_stroke]").is(':checked')){
           $('#r_diagnosed').append('<li>Stroke</li>');
         }
-        if($("input[name=rx_apnea]").is(':checked')){
-          $('#r_diagnosed').append('<li>Sleep Apnea</li>');
+        if($("input[name=rx_hypertension]").is(':checked')){
+          $('#r_diagnosed').append('<li>Hypertension</li>');
         }
         if($("input[name=rx_diabetes]").is(':checked')){
           $('#r_diagnosed').append('<li>Diabetes</li>');
         }
-        if($("input[name=rx_lung_disease]").is(':checked')){
-          $('#r_diagnosed').append('<li>Lung Disease</li>');
-        }
-        if($("input[name=rx_insomnia]").is(':checked')){
-          $('#r_diagnosed').append('<li>Insomnia</li>');
-        }
-        if($("input[name=rx_depression]").is(':checked')){
-          $('#r_diagnosed').append('<li>Depression</li>');
-        }
-        if($("input[name=rx_medication]").is(':checked')){
-          $('#r_diagnosed').append('<li>Sleeping medication</li>');
-        }
-        if($("input[name=rx_restless_leg]").is(':checked')){
-          $('#r_diagnosed').append('<li>Restless leg syndrome</li>');
-        }
-        if($("input[name=rx_headaches]").is(':checked')){
-          $('#r_diagnosed').append('<li>Morning headaches</li>');
+        if($("input[name=rx_obesity]").is(':checked')){
+          $('#r_diagnosed').append('<li>Obesity</li>');
         }
         if($("input[name=rx_heartburn]").is(':checked')){
           $('#r_diagnosed').append('<li>Heartburn (Gastroesophageal Reflux)</li>');
@@ -143,20 +126,12 @@ function submit_screener(){
         ep += parseInt($('#epworth_traffic').val(), 10);
         $('#r_ep_total').text(ep);
 	var sect3 = 0;
-	sect3 += parseInt($("input[name=rx_cpap]:checked").val(), 10);
-	sect3 += $("input[name=rx_blood_pressure]").is(':checked')?2:0;
+	sect3 += $("input[name=rx_obesity]").is(':checked')?1:0;
 	sect3 += $("input[name=rx_hypertension]").is(':checked')?1:0;
-	sect3 += $("input[name=rx_heart_disease]").is(':checked')?1:0;
+	sect3 += $("input[name=rx_heart_failure]").is(':checked')?1:0;
 	sect3 += $("input[name=rx_stroke]").is(':checked')?3:0;
-        sect3 += $("input[name=rx_apnea]").is(':checked')?4:0;
+        sect3 += $("input[name=rx_metabolic_syndrome]").is(':checked')?1:0;
         sect3 += $("input[name=rx_diabetes]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_lung_disease]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_insomnia]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_depression]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_narcolepsy]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_medication]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_restless_leg]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_headaches]").is(':checked')?1:0;
         sect3 += $("input[name=rx_heartburn]").is(':checked')?1:0;
 	var survey = 0;
 	if($("input[name=breathing]:checked").val())
@@ -214,9 +189,11 @@ function submit_screener(){
         if(survey > 15 || ep > 18 || sect3 > 3){
                 img = 'images/screener-severe_risk.png';
                 $('#risk_severe').show();
+		$('#finish_ok').attr('href', 'register.php?id='+screener_id);
 	}else if(survey > 11 || ep > 14 || sect3 > 2){
                 img = 'images/screener-high_risk.png';
                 $('#risk_high').show();
+                $('#finish_ok').attr('href', 'register.php?id='+screener_id);
 	}else if(survey > 7 || ep > 9 || sect3 > 1){
                 img = 'images/screener-moderate_risk.png';
                 $('#risk_moderate').show();
@@ -440,7 +417,7 @@ function validate_sect3(){
 
   if($('#jerk_div input:checked').val() == null){
     $('#jerk_div').addClass('error');
-    error_text += "<label for=\"jerk\" generated=\"true\" class=\"error\" style=\"\"><strong>Jerk</strong>: Please provide an answer</label>"
+    error_text += "<label for=\"jerk\" generated=\"true\" class=\"error\" style=\"\"><strong>Leg Kick</strong>: Please provide an answer</label>"
     return_val = false;
   }else{
     $('#jerk_div').removeClass('error');
@@ -506,7 +483,6 @@ $(document).ready(function(){
 				});
 });
 
-
 function submit_hst(){
   $.ajax({
     url: "script/submit_hst.php",
@@ -533,4 +509,20 @@ function submit_hst(){
       }
     }
    });
+}
+
+function validate_register_0(){
+  next_sect(1);
+}
+
+function validate_register_1(){
+  next_sect(2);
+}
+
+function validate_register_2(){
+  next_sect(3);
+}
+
+function validate_register_3(){
+  next_sect('finish');
 }

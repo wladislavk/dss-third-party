@@ -18,7 +18,7 @@ class SessionController extends Controller {
         $this->admin = $admin;
     }
     public function index()
-    {
+    {   
         return view('admin.auth.index');
     }
 

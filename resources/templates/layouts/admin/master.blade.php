@@ -259,33 +259,33 @@
 								</span>
 							</a>
 							<ul class="sub-menu">
-								 								<li>
-									<a href="/manage/admin/manage_companies.php" id="click_users_a">
+							<li>
+									<a href="/manage/admin/companies" id="click_users_a">
 										<i class="fa fa-user"></i>Companies
 									</a>
-								</li>
-																 								<li>
+							</li>
+							<li>
 									<a href="/manage/admin/backoffice/users">
 										<i class="fa fa-user"></i> Backoffice Accounts
 									</a>
-								</li>
-																				<li>
+							</li>
+							<li>
 									<a href="/manage/admin/users">
 										<i class="fa fa-external-link"></i> User Accounts
 									</a>
-								</li>
-								<li>
+							</li>
+							<li>
 									<a href="/manage/admin/export_users.php">
 										<i class="fa fa-bell"></i> Export Users
 									</a>
-								</li>
+							</li>
 
 								<li>
 									<a href="/manage/admin/export_users_emails.php">
 										<i class="fa fa-bell"></i>Export Active User Emails
 									</a>
 								</li>
-								<li>
+							<li>
 									<a href="/manage/admin/insurance_officeally_select.php">
 										<i class="fa fa-bell"></i>Export Pending Office Ally Claims
 									</a>
@@ -296,7 +296,7 @@
 									</a>
 								</li>
 								<li>
-									<a href="/manage/admin/manage_plans.php">
+									<a href="/manage/admin/plan">
 										<i class="fa fa-bell"></i>Plans
 									</a>
 								</li>

@@ -6,11 +6,21 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Ds3\Eloquent\Auth\User;
 
+
 class Admin extends User
 {
 	protected $table = 'admin';
 
-	protected $fillable = ['name', 'username', 'password', 'status'];
+	protected $fillable = [
+        'name',
+        'username',
+        'password',
+        'status',
+        'email',
+        'first_name',
+        'last_name',
+        'admin_access'
+    ];
 
 	protected $primaryKey = 'adminid';
 
@@ -34,4 +44,8 @@ class Admin extends User
 
 		return $admin;
 	}
+    public function adminCompanies()
+    {
+        $this->hasMany('Ds3\Eloquent\AdminCompany');
+    }
 }

@@ -29,8 +29,22 @@ $router->group(['prefix' => 'manage'],function() use ($router) {
     $router->post('admin/accesscode/{id}/update','Admin\AccessCodeController@postUpdateAccessCode');
     $router->get('admin/accesscode/{id}/delete','Admin\AccessCodeController@getDeleteAccessCode');
 
-//    /manage/admin/accesscode/{{$code->id}}/delete
     $router->get('admin/backoffice/users','Admin\BackOfficeController@getIndex');
+    $router->get('admin/backoffice/users/{id}/edit','Admin\BackOfficeController@getUpdateBackOfficeUser');
+    $router->get('admin/backoffice/users/new','Admin\BackOfficeController@getAddBackOfficeUser');
+    $router->post('admin/backoffice/users/new','Admin\BackOfficeController@postAddBackOfficeUser');
+    $router->post('admin/backoffice/users/{id}/edit','Admin\BackOfficeController@postUpdateBackOfficeUser');
+    $router->get('admin/backoffice/users/{id}/delete','Admin\BackOfficeController@deleteBackOfficeUser');
+
+    $router->get('admin/plan','Admin\PlanController@getIndex');
+    $router->get('admin/plan/new','Admin\PlanController@getAddNewPlan');
+    $router->post('admin/plan/new','Admin\PlanController@postAddNewPlan');
+    $router->get('admin/plan/{id}/edit','Admin\PlanController@getUpdatePlan');
+    $router->post('admin/plan/{id}/edit',['as'=>'plan.update','uses'=>'Admin\PlanController@postUpdatePlan']);
+    $router->get('admin/plan/{id}/delete','Admin\PlanController@getDeletePlan');
+
+    $router->resource('admin/companies','Admin\CompanyController');
+
 
 });
 $router->get('manage/admin/login','Admin\SessionController@index');

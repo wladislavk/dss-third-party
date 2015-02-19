@@ -19,7 +19,7 @@ class AccessCodeController extends Controller {
     public function getIndex()
     {
         return view('admin.accesscode.index')
-                ->with('accessCodes',$this->accesscode->getAllAccessCodes());
+                ->with('accessCodes',$this->accesscode->getAllAccessCodes()->paginate(20));
     }
     public function getAddAccessCode()
     {

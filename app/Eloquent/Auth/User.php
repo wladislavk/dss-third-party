@@ -66,4 +66,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return ( Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN == $access || Constants::DSS_ADMIN_ACCESS_BILLING_BASIC == $access );
     }
+    function is_hst_admin($admin_access)
+    {
+        return ( Constants::DSS_ADMIN_ACCESS_HST_ADMIN == $admin_access);
+    }
+    function is_billing_admin($admin_access)
+    {
+        return (Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN == $admin_access);
+    }
 }

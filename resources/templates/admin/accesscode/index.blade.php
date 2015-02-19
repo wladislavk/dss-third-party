@@ -32,7 +32,8 @@
                     <a href="/manage/admin/accesscode/{{$code->id}}/edit" title="" class="btn btn-primary btn-sm" data-original-title="Edit">Edit
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
-                    <a href="/manage/admin/accesscode/{{$code->id}}/delete" title="" class="btn btn-danger btn-sm float-right" data-original-title="Edit">Delete
+                    <a href="/manage/admin/accesscode/{{$code->id}}/delete" title="" class="btn btn-danger btn-sm float-right"
+                        data-original-title="Edit" onclick="javascript:return confirm('Are you absolutely sure you want to delete?')">Delete
                         <span class="glyphicon glyphicon-remove-sign"></span>
                     </a>
                 </td>

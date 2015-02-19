@@ -120,6 +120,9 @@ return [
         'Ds3\Providers\AdminServiceProvider',
         'Ds3\Providers\Ds3AuthServiceProvider',
 		'Ds3\Providers\AccessCodeServiceProvider',
+        'Ds3\Providers\BackOfficeServiceProvider',
+        'Ds3\Providers\PlanServiceProvider',
+        'Ds3\Providers\CompanyServiceProvider',
 		/*
 		 * Laravel Framework Service Providers...
 		 */

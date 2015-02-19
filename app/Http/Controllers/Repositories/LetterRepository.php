@@ -115,4 +115,21 @@ class LetterRepository implements LetterInterface
 
 		return $letter;
 	}
+
+	public function insertData($data)
+	{
+		$letter = new Letter();
+
+		foreach ($data as $attribute => $value) {
+			$letter->$attribute = $value;
+		}
+
+		try {
+			$letter->save();
+		} catch (ModelNotFoundException $e) {
+			return null;
+		}
+
+		return $letter->letterid;
+	}
 }

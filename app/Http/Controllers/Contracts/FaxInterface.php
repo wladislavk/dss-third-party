@@ -3,4 +3,6 @@
 interface FaxInterface
 {
 	public function getFaxAlerts($docId);
+
+	public function updateData($where, $values);
 }

@@ -6,11 +6,21 @@ interface PatientInterface
 
 	public function getLogins($clogin);
 
-	public function getJoinPatients($docId);
+	public function getJoinPatients($where, $join);
 
-	public function getPendingDuplicates($docId);
+	public function getPendingDuplicates($where, $status = null, $order = null);
+
+	public function getTransactionCode0486($patientId);
+
+	public function getUserInfo($patientId);
+
+	public function preauthPatient($patientId);
+
+	public function getSimilarPatients($data);
 
 	public function insertData($data);
 
 	public function updateData($where, $values);
+
+	public function deleteData($where);
 }

@@ -25,8 +25,6 @@ use Ds3\Contracts\QPage3Interface;
 use Ds3\Contracts\TaskInterface;
 use Ds3\Contracts\CompanyInterface;
 
-use Illuminate\Support\Facades\DB;
-
 class TopController extends Controller
 {
 	const SITE_NAME = 'Dental';
@@ -98,6 +96,10 @@ class TopController extends Controller
 
 		if (empty(Session::get('userId'))) {
 			return redirect('/manage/login');
+		} else {
+			$this->user->updateData(Session::get('userId'), array(
+				'last_accessed_date' => date('Y-m-d H:i:s')
+			));
 		}
 
 		$user = $this->user->findUser(Session::get('docId'));
@@ -204,10 +206,16 @@ class TopController extends Controller
 				'dental_patients.docid' => Session::get('docId')
 			)));
 
-			// change name!
-			$numC = count($this->patient->getJoinPatients(Session::get('docId')));
+			$join = array('patientid', 'parent_patientid');
 
-			$numPendingDuplicates = count($this->patient->getPendingDuplicates(Session::get('docId')));
+			// change name!
+			$numC = count($this->patient->getJoinPatients(array(
+				'p.docid' => Session::get('docId')
+			), $join));
+
+			$numPendingDuplicates = count($this->patient->getPendingDuplicates(array(
+				'docid' => Session::get('docId')
+			), '3,4'));
 
 			$numBounce = count($this->patient->get(array(
 				'dental_patients.email_bounce' => 1,
@@ -262,24 +270,28 @@ class TopController extends Controller
 					'patientid' => $patientId
 				);
 
-				$patient = $this->patient->get($where)[0];
+				$patients = $this->patient->get($where);
 
-		        $premed = $patient->premedcheck;
-		        $medicare = ($patient->p_m_ins_type == 1);
+				$patient = count($patients) ? $patients[0] : null;
 
-		        if ($premed) {
-		          $title .= "Pre-medication: " . $patient->premed . "\n";
-		        }
+			    if (!empty($patient)) {
+			        $premed = $patient->premedcheck;
+			        $medicare = ($patient->p_m_ins_type == 1);
 
-		        $qPage3 = $this->qPage3->get($patientId);
+			        if ($premed) {
+			          $title .= "Pre-medication: " . $patient->premed . "\n";
+			        }
 
-		        $allergen = $qPage3->allergenscheck;
+			        $qPage3 = $this->qPage3->get($patientId);
 
-		        if ($allergen) {
-		          $title .= "Allergens: " . $qPage3->other_allergens;
-		        }
-		        
-		        $theName = $patient->firstname . ' ' . $patient->lastname;
+			        $allergen = !empty($qPage3) ? $qPage3->allergenscheck : null;
+
+			        if ($allergen) {
+			          $title .= "Allergens: " . $qPage3->other_allergens;
+			        }
+			        
+			        $theName = $patient->firstname . ' ' . $patient->lastname;
+			    }
 		    }
 
 	        $numTasks = count($this->task->get(Session::get('userId'), null, null, 'task'));
@@ -386,7 +398,7 @@ class TopController extends Controller
 				$existPatient = $this->patient->get(array(
 					'patientid' => $patientId
 				));
-				$existPatient = $existPatient[0];
+				$existPatient = count($existPatient) ? $existPatient[0] : null;
 
 				if (!empty($existPatient) && ($existPatient->symptoms_status == 2 &&
 					$existPatient->treatments_status == 2 && $existPatient->history_status == 2 &&
@@ -417,11 +429,12 @@ class TopController extends Controller
 					'patient_id' => $patientId
 				));
 				*/
-				
-				if (Cookie::get('hidePatWarnings') == $patientId) {
+
+				if (Session::get('hidePatWarnings') == $patientId) {
 					$hideWarnings = true;
 				} else {
 					$hideWarnings = false;
+					Session::put('hidePatWarnings', null);
 				}
 			}	
 
@@ -473,10 +486,20 @@ class TopController extends Controller
 				'numBounce'					=> $numBounce,
 				'onClick'					=> $onClick,
 				'hideWarnings'				=> $hideWarnings,
-				'patientId'					=> $patientId
+				'patientId'					=> $patientId,
+				'username'					=> Session::get('username')
 			);
 
 			return $responseArray;
+		}
+	}
+
+	public function hideWarnings(Request $request)
+	{
+		if ($request->ajax()) {
+			Session::put($request->get('attribute'), $request->get('value'));
+
+			return 'Success';
 		}
 	}
 

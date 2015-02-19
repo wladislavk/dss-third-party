@@ -29,6 +29,7 @@ class CompanyRepository implements CompanyInterface
 	public function getBilling($where, $order = null)
 	{
 		$billing = DB::table(DB::raw('companies c'))
+				->select('c.name', 'c.exclusive')
 				->join(DB::raw('dental_users u'), 'c.id', '=', 'u.billing_company_id');
 
 		foreach ($where as $attribute => $value) {

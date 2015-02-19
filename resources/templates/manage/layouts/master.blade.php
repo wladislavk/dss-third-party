@@ -82,7 +82,7 @@
 							</li>
 
 							<li>
-								<a href="logout">Sign Out</a>
+								<a href="/manage/logout">Sign Out</a>
 							</li>
 						</ul>
 					</div>
@@ -406,11 +406,11 @@
 
 							@if (!empty($patientId))
 								@if (!empty($hideWarnings))
-									<a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="show_patient_warnings" onclick="$.cookie('hidePatWarnings', null);$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
-	         						<a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="hide_patient_warnings" onclick="$.cookie('hidePatWarnings', {!! $patientId !!});$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
+									<a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="show_patient_warnings" onclick="hideWarnings('hidePatWarnings', null, '{!! Session::get('_token') !!}');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
+	         						<a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="hide_patient_warnings" onclick="hideWarnings('hidePatWarnings', {!! $patientId !!}, '{!! Session::get('_token') !!}');$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
 								@else 
-									<a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="show_patient_warnings" onclick="$.cookie('hidePatWarnings', null);$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
-	         						<a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="hide_patient_warnings" onclick="$.cookie('hidePatWarnings', {!! $patientId !!});$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
+									<a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="show_patient_warnings" onclick="hideWarnings('hidePatWarnings', null, '{!! Session::get('_token') !!}');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
+	         						<a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="hide_patient_warnings" onclick="hideWarnings('hidePatWarnings', {!! $patientId !!}, '{!! Session::get('_token') !!}');$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
 								@endif
 							@endif
 
@@ -529,10 +529,11 @@
 						<br />
 
 						@if (!empty($patientId))
-							<?php /**
-
-							*/?>
-							<div id="patient_warnings">
+							@if (!empty($hideWarnings))
+								<div id="patient_warnings" style="display:none;">
+							@else
+								<div id="patient_warnings">
+							@endif
 
 								@if (!empty($showWarningProfile))
 									<a class="warning" href="patient_changes/pid/{!! $patientId !!}">
@@ -552,7 +553,7 @@
 									</a>
 								@endif
 
-								@if (!empty($rejectedInsurance))
+								@if (count($rejectedInsurance))
 									<span class="warning">Warning! Patient has the following rejected claims: <br />
 
 										@foreach ($rejectedInsurance as $rejected)
@@ -616,32 +617,30 @@
 			</tr>
 			<!-- Stick Footer Section Here -->
 		</table>
+		
+		@section('footer')
+			<div id="popupContact" style="width:750px;">
+				<a id="popupContactClose"><button>X</button></a>
 
-		<div id="popupContact" style="width:750px;">
-			<a id="popupContactClose"><button>X</button></a>
+				<iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+			</div>
 
-			<iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-		</div>
+			<div id="backgroundPopup"></div>
 
-		<div id="backgroundPopup"></div>
+			<div id="warn_logout">
+				<br /><br />
 
-		<div id="warn_logout">
-			<br /><br />
+				<img src="/img/logo.gif" /><br />
 
-			<img src="/img/logo.gif" /><br />
+				<h1>Your screen has been locked for privacy due to inactivity.<br />Click to reopen your Dental Sleep Solutions software.</h1>
 
-			<h1>Your screen has been locked for privacy due to inactivity.<br />Click to reopen your Dental Sleep Solutions software.</h1>
+				<p style="color:#fff;font-size:20px;">Log out in <span id="logout_time_remaining"></span>!</p>
 
-			<p style="color:#fff;font-size:20px;">Log out in <span id="logout_time_remaining"></span>!</p>
+				<br /><br />
 
-			<br /><br />
-
-			<a href="logout">Logout</a>
-			<a href="#" onclick="reset_interval(0)">Stay logged in</a>
-		</div>
-
-		<?php /**
-
-		*/?>
+				<a href="logout">Logout</a>
+				<a href="#" onclick="reset_interval(0)">Stay logged in</a>
+			</div>
+		@show
 	</body>
 </html>

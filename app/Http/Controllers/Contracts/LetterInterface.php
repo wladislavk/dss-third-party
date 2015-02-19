@@ -17,4 +17,6 @@ interface LetterInterface
 	public function getPendingLetters($docId, $patientId);
 
 	public function updateData($where, $values);
+
+	public function insertData($data);
 }

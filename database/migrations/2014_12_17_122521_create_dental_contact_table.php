@@ -46,6 +46,7 @@ class CreateDentalContactTable extends Migration {
 			$table->integer('merge_id')->nullable();
 			$table->dateTime('merge_date')->nullable();
 			$table->tinyInteger('corporate')->default(0);
+			$table->string('dea_number', 100)->nullable();
 
 			$table->timestamps();
 		});

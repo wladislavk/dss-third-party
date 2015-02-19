@@ -64,6 +64,9 @@ class CreateDentalScreenerTable extends Migration {
 			$table->string('phone', 30)->nullable();
 			$table->tinyInteger('contacted')->default(0);
 			$table->integer('patient_id')->nullable();
+			$table->tinyInteger('rx_heart_failure')->default(0);
+			$table->tinyInteger('rx_metabolic_syndrome')->default(0);
+			$table->tinyInteger('rx_obesity')->default(0);
 
 			$table->timestamps();
 		});

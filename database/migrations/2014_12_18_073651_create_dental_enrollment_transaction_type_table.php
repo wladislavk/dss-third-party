@@ -20,6 +20,7 @@ class CreateDentalEnrollmentTransactionTypeTable extends Migration {
 			$table->string('description', 200)->nullable();
 			$table->string('ip_address', 50)->nullable();
 			$table->tinyInteger('status')->default(1);
+			$table->string('endpoint_type')->nullable();
 
 			$table->timestamps();
 		});

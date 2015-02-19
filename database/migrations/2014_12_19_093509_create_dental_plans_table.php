@@ -38,6 +38,8 @@ class CreateDentalPlansTable extends Migration {
 			$table->decimal('producer_fee', 11, 2)->default(0.00);
 			$table->decimal('user_fee', 11, 2)->default(0.00);
 			$table->decimal('patient_fee', 11, 2)->default(0.00);
+			$table->tinyInteger('e0486_bill')->default(1);
+			$table->decimal('e0486_fee', 11, 2)->default(0.00);
 
 			$table->timestamps();
 		});

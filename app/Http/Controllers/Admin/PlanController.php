@@ -9,7 +9,7 @@ class PlanController extends Controller {
     private $plan;
 
 	public function __construct(PlanInterface $plan)
-    {   die("jslkdjf");
+    {
         $this->plan = $plan;
     }
     public function getIndex()

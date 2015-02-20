@@ -18,7 +18,7 @@ class SessionController extends Controller {
         $this->admin = $admin;
     }
     public function index()
-    {   
+    {
         return view('admin.auth.index');
     }
 
@@ -35,10 +35,12 @@ class SessionController extends Controller {
             return redirect('manage/admin/login')->withErrors($validator);
         }else
         {
-            try {
-                 $user = $this->auth->attempt($fields['username'],$fields['password'],'Admin');
+            try
+            {
+                $user = $this->auth->attempt($fields['username'],$fields['password'],'Admin');
 
-            }catch (Exception $e){
+            }catch (Exception $e)
+            {
                     dd($e->getMessage());
             }
             if(!empty($user))

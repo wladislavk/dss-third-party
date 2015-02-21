@@ -584,7 +584,7 @@ if(isset($_GET['msg'])){
            } ?>
 
 				</td>
-	<td valign="top" <?= ($myarray['num_fo_notes']>0)?'class="info"':''; ?>>
+	<td valign="top" class="<?= ($myarray['num_fo_notes']>0)?' info ':''; ?><?= ($myarray['num_notes']>0)?' notes_col ':''; ?>">
 		<a href="claim_notes.php?id=<?= $myarray['insuranceid']; ?>&pid=<?=$myarray['patientid'];?>">View (<?= $myarray['num_notes'];?>)
 		<?php
 			if($myarray['notes_last']!=''){
@@ -592,6 +592,26 @@ if(isset($_GET['msg'])){
 			}
 		?>
 		</a>
+		<div class="tooltip">
+			<?php
+ 				$n_sql = "SELECT n.*,
+        				CASE
+          					WHEN create_type='0'
+            					THEN CONCAT(a.first_name, ' ', a.last_name)
+          				ELSE
+            					CONCAT(u.first_name, ' ', u.last_name)
+          				END as creator_name
+         				FROM dental_claim_notes n 
+        					left join dental_users u ON n.creator_id = u.userid
+        					left join admin a ON n.creator_id = a.adminid
+        				where n.claim_id='".mysql_real_escape_string($myarray['insuranceid'])."'
+        				ORDER BY adddate ASC";
+ 				$n_q = mysql_query($n_sql) or die(mysql_error());
+				while($n = mysql_fetch_assoc($n_q)){
+					echo $n['note'] .' - '. $n['creator_name'].'<br />';
+				}
+				?>
+		</div>
 	</td>
 <td>
 <?php
@@ -679,6 +699,17 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
                                   });
 
   });
+
+$(document).ready(function(){
+  $(".notes_col").bind("mousemove", function(event) {
+    $(this).find("div.tooltip").css({
+        top: event.pageY + "px",
+        left: event.pageX - 150 + "px"
+    }).show();
+}).bind("mouseout", function() {
+    $("div.tooltip").hide();
+});
+});
 
 </script>
 

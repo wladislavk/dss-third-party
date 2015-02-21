@@ -797,7 +797,7 @@ if (isset($_POST['submit'])) {
 					FROM dental_letter_templates_custom c
 						WHERE c.status=1 AND c.docid = '".mysql_real_escape_string($_SESSION['docid'])."'
 
-				ORDER BY template_type DESC, id ASC
+				ORDER BY template_type ASC, id ASC
 						;";
 				$result = mysql_query($templates);
 				while ($row = mysql_fetch_assoc($result)) {

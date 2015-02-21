@@ -1,6 +1,15 @@
 body {
     font-family: 'Open Sans',sans-serif;	
 }
+.tooltip {
+    position:absolute;
+    display:none;
+    background: #fff;
+    padding: 10px;
+    z-index:1000;
+    border: 1px solid black;
+    opacity: 1;
+}
 
 .logout {
     float: right;

@@ -126,7 +126,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="logout.php">
+						<a href="/manage/admin/logout">
 							<i class="fa fa-key"></i> Log Out
 						</a>
 					</li>

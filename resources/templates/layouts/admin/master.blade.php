@@ -15,22 +15,17 @@
    <!-- END GLOBAL MANDATORY STYLES -->
 
    <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
-  <!--- <link href="admin/template/assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>---->  <!---displays momentary custom boxes on screen  --->
    <link href="/css/admin/template/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
    <link href="/css/admin/template/assets/plugins/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" type="text/css"/>
    <link href="/css/admin/template/assets/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css"/>
-  <!-- <link href="admin/template/assets/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css"/>--->
    <!-- END PAGE LEVEL PLUGIN STYLES -->
 
    <!-- BEGIN THEME STYLES -->
-   <!--<link href="admin/template/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
-   <link href="admin/template/assets/css/style.css" rel="stylesheet" type="text/css"/>
-   <link href="admin/template/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>--->
    <link href="/css/admin/template/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
    <link href="/css/admin/template/assets/css/components.css" rel="stylesheet" type="text/css"/>
    <link href="/css/admin/template/assets/css/layout.css" rel="stylesheet" type="text/css"/>
    <link href="/css/admin/template/assets/css/plugins.css" rel="stylesheet" type="text/css"/>
-   <link href="/cssadmin/template/assets/css/pages/tasks.css" rel="stylesheet" type="text/css"/>
+   <link href="/css/admin/template/assets/css/pages/tasks.css" rel="stylesheet" type="text/css"/>
 
    <link href="/css/admin/template/assets/css/custom.css" rel="stylesheet" type="text/css"/>
    <!-- END THEME STYLES -->

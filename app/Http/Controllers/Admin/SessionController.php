@@ -3,6 +3,7 @@
 use Ds3\Admin\Contracts\AdminInterface;
 use Ds3\Ds3Auth\Ds3AuthInterface;
 use Ds3\Http\Controllers\Controller;
+use Ds3\Http\Requests\AuthRequest;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -24,34 +25,20 @@ class SessionController extends Controller {
         return view('admin.auth.index');
     }
 
-    public function login()
+    public function login(AuthRequest $request)
     {
-        $fields = [
-            'username' => Input::get('username'),
-            'password' => Input::get('password')
-        ];
-        $rules = ['username'=>'required','password'=>'required'];
-        $validator = Validator::make($fields,$rules);
-        if($validator->fails())
-        {
-            return redirect('manage/admin/login')->withErrors($validator);
-        }else
-        {
-            try
+        try
             {
-                $user = $this->auth->attempt($fields['username'],$fields['password']);
+                $user = $this->auth->attempt($request->input('username'),$request->input('password'));
 
             }catch(\Exception $e)
             {
                 return redirect()->back()->withErrors($e->getMessage());
             }
-
-            if( ! empty( $user) )
+            if( ! empty( $user ) )
             {
                 return redirect('manage/admin/dashboard');
             }
-        }
-
     }
     public function logout()
     {

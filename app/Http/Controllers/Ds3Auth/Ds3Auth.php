@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 use Illuminate\Support\Facades\Request;
-
+use Session;
 class Ds3Auth implements Ds3AuthInterface
 {
 	private $user;
@@ -72,6 +72,7 @@ class Ds3Auth implements Ds3AuthInterface
                     Session::put('admin_user_id',$user->adminid);
                     Session::put('admin_access',"$user->admin_access");
                     Session::put('admin_company_id',"$user->companyid");
+
                     return $user;
                 }
             }

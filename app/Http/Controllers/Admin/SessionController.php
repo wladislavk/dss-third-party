@@ -7,11 +7,13 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ViewErrorBag;
 class SessionController extends Controller {
 
     private $auth;
     private $admin;
+
     public function __construct(Ds3AuthInterface $auth,AdminInterface $admin)
     {
         $this->auth = $auth;
@@ -37,27 +39,16 @@ class SessionController extends Controller {
         {
             try
             {
-                $user = $this->auth->attempt($fields['username'],$fields['password'],'Admin');
+                $user = $this->auth->attempt($fields['username'],$fields['password']);
 
-            }catch (Exception $e)
+            }catch(\Exception $e)
             {
-                    dd($e->getMessage());
+                return redirect()->back()->withErrors($e->getMessage());
             }
-            if(!empty($user))
-            {
-                Session::put('admin_user_id',$user->adminid);
-                Session::put('admin_access',"$user->admin_access");
-                Session::put('admin_company_id',"$user->companyid");
 
+            if( ! empty( $user) )
+            {
                 return redirect('manage/admin/dashboard');
-
-            }elseif($user->status == 3)
-            {
-                return redirect('manage/admin/login')
-                                ->with('errors','User is banned');
-            }else
-            {
-                return redirect('manage/admin/login')->with('errors','Wrong Password');
             }
         }
 

@@ -6,21 +6,7 @@
 	<!-- END LOGO -->
 
 	<div class="content">
-		<!-- BEGIN LOGIN FORM -->
-
-                          {{--@if(Session::has('errors'))--}}
-                            {{--{{ dd(Session::has('errors')) }}--}}
-                                    {{--<div style="color:red">--}}
-                                        {{--<p>The following errors have occurred:</p>--}}
-
-                                        {{--<ul >--}}
-                                            {{--@foreach($errors->all() as $error)--}}
-                                                {{--<li>{{ $error }}</li>--}}
-                                            {{--@endforeach--}}
-                                        {{--</ul>--}}
-                                    {{--</div><!-- end form-errors -->--}}
-                            {{--@endif--}}
-
+        @include('layouts.partials.errors')
 		<form name="loginfrm" method="post" action="/manage/admin/login" onsubmit="return loginabc(this)" class="login-form form-horizontal">
 
 			<h3 class="form-title">Login to your DS3 account</h3>

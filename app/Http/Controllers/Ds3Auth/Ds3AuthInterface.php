@@ -10,6 +10,6 @@ interface Ds3AuthInterface
 
 	public function generatePassword($password,$salt);
 
-	public function attempt($username,$password,$model);
+	public function attempt($username,$passwords);
 	
 }

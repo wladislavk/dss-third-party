@@ -55,7 +55,7 @@
 				@endif
 
 				@if (!empty($showBlock['orderHst']))
-					<a href="#" onclick="alert('Patient has existing HST with status <?php echo $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;" class="button">Order HST</a>
+					<a href="#" onclick="alert('Patient has existing HST with status {!! $patientInfo['pat_hst_status'] or '' !!}. Only one HST can be requested at a time.'); return false;" class="button">Order HST</a>
 				@else
 					<input type="submit" name="sendHST" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" value="Order HST" class="button" />
 				@endif

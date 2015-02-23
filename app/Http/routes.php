@@ -11,6 +11,8 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
 	$router->get('login', 'AuthController@index');
 	$router->post('login', 'AuthController@login');
     $router->get('logout', 'AuthController@logout');
+    $router->get('add_image/{pid?}', 'ImageController@index');
+    $router->post('add_image/{pid?}', 'ImageController@add');
 
 	$router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 

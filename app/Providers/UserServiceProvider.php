@@ -161,6 +161,26 @@ class UserServiceProvider extends ServiceProvider {
             'Ds3\Contracts\LetterTemplateInterface',
             'Ds3\Repositories\LetterTemplateRepository'
         );
+
+        $this->app->bind(
+            'Ds3\Contracts\ImageTypeInterface',
+            'Ds3\Repositories\ImageTypeRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\SleeplabInterface',
+            'Ds3\Repositories\SleeplabRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\InsDiagnosisInterface',
+            'Ds3\Repositories\InsDiagnosisRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\DeviceInterface',
+            'Ds3\Repositories\DeviceRepository'
+        );
     }
 
 }

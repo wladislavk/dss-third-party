@@ -22,7 +22,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     });
 });
 
-$router->group(['prefix' => 'manage'],function() use ($router) {
+$router->group(['prefix' => 'manage','middleware'=>'auth'], function() use ($router) {
     $router->get('admin/users','Admin\UserController@index');
     $router->get('admin/{id}/user','Admin\UserController@show');
     $router->get('admin/user/new','Admin\UserController@getNewUser');

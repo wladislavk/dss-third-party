@@ -60,6 +60,15 @@
                         <a href="invoice_bo_additional.php?show=1&amp;coid=3" title="" class="btn btn-primary btn-sm" data-original-title="Edit">
                             Invoice
                             <span class="glyphicon glyphicon-pencil"></span></a>
+
+                        {!! Form::open(['url'=>'manage/admin/companies/'.$company->id,'method'=>'delete']) !!}
+                            <button class="btn btn-danger" onclick="javascript:return confirm('Are you absolutely sure you want to delete?')">
+                                Delete
+                                <span class="glyphicon glyphicon-remove-sign"></span>
+                            </button>
+
+
+                        {!! Form::close() !!}
     				</td>
     	</tr>
     	@endforeach

@@ -44,13 +44,23 @@ class CompanyController extends Controller {
              ->with('plans',[''=>'None'] + $this->company->plans()->lists('name','id'));;
     }
     public function update($id,CompanyRequest $request)
-    {   dd($request->all());
+    {
         if($this->company->update($id,array_merge($request->all(),['ip_address'=>$request->ip()])))
         {
             return redirect("manage/admin/companies")->with('success','Company updated successfully');
         }else
         {
             return redirect()->back()->with('errors','Company couldn\'t updated');
+        }
+    }
+    public function destroy($id)
+    {
+        if($this->company->delete($id))
+        {
+            return redirect()->back()->with('success','Company deleted successfully');
+        }else
+        {
+            return redirect()->back()->with('errors','Company couldn\'t deleted');
         }
     }
 

@@ -166,11 +166,7 @@
     		Sleep Test Required for VOB?
                 </td>
                 <td valign="top" class="frmdata">
-                @if($company->vob_require_test == 1)
-                    {!! Form::checkbox('vob_require_test',null, true) !!}
-                @else
-                    {!! Form::checkbox('vob_require_test',null, false) !!}
-                @endif
+                    {!! Form::select('vob_require_test',[1=>'Yes',0=>'No'],$company->vob_require_test ,['class'=>'form-control']) !!}
                 </td>
             </tr>
             <tr bgcolor="#FFFFFF">
@@ -195,23 +191,15 @@
                     <attr title="This option will allow any frontoffice user associated with this company to send Support tickets directly to this company by choosing the company in the ‘Send To’ section of the ticket.">Support Tickets Active?</attr>
                 </td>
                 <td valign="top" class="frmdata">
-                @if($company->use_support == 1)
-    		        {!! Form::checkbox('use_support',null, true) !!}
-    		    @else
-    		        {!! Form::checkbox('use_support',null, false) !!}
-    		    @endif
-                </td>
+    		         {!! Form::select('use_support',[1=>'Yes',0=>'No'],$company->use_support ,['class'=>'form-control']) !!}
+    		    </td>
             </tr>
             <tr bgcolor="#FFFFFF">
                 <td valign="top" class="frmhead">
                     <attr title="This option is for BILLING companies.  If checked it will NOT allow frontoffice user to file their own claims, all billing will go exclusively to the backoffice billing company.">Exclusive?</attr>
                 </td>
                 <td valign="top" class="frmdata">
-                @if($company->exclusive == 1)
-                    {!! Form::checkbox('exclusive',null, true) !!}
-                @else
-                    {!! Form::checkbox('exclusive',null, false) !!}
-                @endif
+                    {!! Form::select('exclusive',[1=>'Yes',0=>'No'],$company->exclusive ,['class'=>'form-control']) !!}
                 </td>
             </tr>
 
@@ -230,6 +218,22 @@
             </tbody>
         </table>
     </form>
+    <script>
+    $(document).ready(function(){
+
+        if($('#exclusive').is(': checked'))
+        {
+            $('#exclusive').attr(': checked')
+        }else
+        {
+            $('#exclusive').attr(': unchecked')
+        }
+    });
+
+
+
+    </script>
+
 
     @stop
     @stop

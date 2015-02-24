@@ -166,7 +166,7 @@
     		Sleep Test Required for VOB?
                 </td>
                 <td valign="top" class="frmdata">
-                    <input type="checkbox" name="vob_require_test" value="1">
+                    {!! Form::select('vob_require_test',[1=>'Yes',0=>'No'],null ,['class'=>'form-control']) !!}
                 </td>
             </tr>
             <tr bgcolor="#FFFFFF">
@@ -193,7 +193,7 @@
                     <attr title="This option will allow any frontoffice user associated with this company to send Support tickets directly to this company by choosing the company in the ‘Send To’ section of the ticket.">Support Tickets Active?</attr>
                 </td>
                 <td valign="top" class="frmdata">
-    		    <input type="checkbox" name="use_support" value="1">
+    		    {!! Form::select('use_support',[1=>'Yes',0=>'No'],null ,['class'=>'form-control']) !!}
                 </td>
             </tr>
             <tr bgcolor="#FFFFFF">
@@ -201,7 +201,7 @@
                     <attr title="This option is for BILLING companies.  If checked it will NOT allow frontoffice user to file their own claims, all billing will go exclusively to the backoffice billing company.">Exclusive?</attr>
                 </td>
                 <td valign="top" class="frmdata">
-                    <input type="checkbox" name="exclusive" value="1">
+                    {!! Form::select('exclusive',[1=>'Yes',0=>'No'],null ,['class'=>'form-control']) !!}
                 </td>
             </tr>
 

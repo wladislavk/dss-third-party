@@ -38,6 +38,7 @@ class SessionController extends Controller {
     }
     public function logout()
     {
+        \Session::flush();
         return Redirect::to('manage/admin/login');
     }
 } 

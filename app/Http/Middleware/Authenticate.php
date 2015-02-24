@@ -41,7 +41,7 @@ class Authenticate implements Middleware {
 			}
 			else
 			{
-				return redirect()->guest('manage/admin/login');
+                return redirect()->guest('manage/admin/login');
 			}
 		}
 

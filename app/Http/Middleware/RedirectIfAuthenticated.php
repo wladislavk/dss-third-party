@@ -36,7 +36,7 @@ class RedirectIfAuthenticated implements Middleware {
 	{
 		if ($this->auth->check())
 		{
-			return new RedirectResponse(url('/manage/admin/dashboard'));
+			return new RedirectResponse(url('manage/admin/dashboard'));
 		}
 
 		return $next($request);

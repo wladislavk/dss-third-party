@@ -6,8 +6,11 @@ use Ds3\Libraries\Password;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Session;
+use Ds3\Ds3Auth\Ds3AuthInterface;
+
 class Ds3Auth implements Ds3AuthInterface
 {
 	private $user;
@@ -43,6 +46,7 @@ class Ds3Auth implements Ds3AuthInterface
     {
     	if($this->isAdmin())
         {
+            Config::set('auth.model','Admin');
             $this->user = $this->getByUsername($username,new Admin);
             if(!$this->user)
             {
@@ -67,8 +71,9 @@ class Ds3Auth implements Ds3AuthInterface
                 {
                     throw new Exception('Wrong password');
                 }
-                if ($user) {
-
+                if ($user)
+                {
+                    Auth::login($user);
                     Session::put('admin_user_id',$user->adminid);
                     Session::put('admin_access',"$user->admin_access");
                     Session::put('admin_company_id',"$user->companyid");

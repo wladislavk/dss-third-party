@@ -1,6 +1,5 @@
 <?php namespace Ds3\Http\Requests;
 
-use Ds3\Http\Requests\Request;
 
 class AuthRequest extends Request {
 

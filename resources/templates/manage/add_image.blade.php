@@ -402,5 +402,21 @@
 				</td>
 			</tr>
 		</table>
+
+		@if (!empty($showBlock))
+			@if (!empty($showBlock['updateProfileImage']))
+				<script type="text/javascript"> 
+					parent.updateProfileImage({!! $showBlock['updateProfileImage'] !!});
+				</script>
+			@else
+				<script type="text/javascript">
+					parent.updateInsCard({!! $showBlock['updateInsCard'][0] !!}, {!! $showBlock['updateInsCard'][1] !!});
+				</script>
+			@endif
+		@endif
+
+		<script type="text/javascript">
+			parent.disablePopupClean();
+		</script>
 	</body>
 </html>

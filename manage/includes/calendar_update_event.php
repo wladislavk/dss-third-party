@@ -12,11 +12,10 @@ $t_id = $_POST['t_id'];
 
 $res = $_POST['resource'];
 
-$r_type = $_POST['rec_type'];
-$r_pattern = $_POST['rec_pattern'];
+$r_type = ($_POST['rec_type']!='null')?$_POST['rec_type']:''; //to fix bug with string 'null' 
+$r_pattern = ($_POST['rec_pattern']!='null')?$_POST['rec_pattern']:'';
 $e_length = empty($_POST['elength']) ? "''" : $_POST['elength'];
 $e_pid = empty($_POST['epid']) ? "''" : $_POST['epid'];
-
 
 require_once '../admin/includes/main_include.php';
 require_once 'checkemail.php';

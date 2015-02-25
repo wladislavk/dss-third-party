@@ -166,7 +166,7 @@ background:#999999;
                         </tr>
                         <tr class="tr_active">
                                 <td valign="top">
-                                        Device Titration (EMA)
+                                        Device Titration Form (Arms/Bands) 
                                 </td>
                                 <td valign="top">
                                         <a href="view_user_form.php?file=device_titration_ema&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
@@ -176,7 +176,7 @@ background:#999999;
                         </tr>
                         <tr class="tr_active">
                                 <td valign="top">
-                                        Device Titration
+                                        Device Titration Form (with Key)
                                 </td>
                                 <td valign="top">
                                         <a href="view_user_form.php?file=device_titration&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">

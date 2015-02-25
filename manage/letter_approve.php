@@ -37,6 +37,16 @@ if(file_exists($jpg."-". $i.".jpg")){
 }
 }
 ?>
+<div style="float:left;"><a href="#" onclick="send_letter('<?=$_GET['id']; ?>')">Looks Good! SEND!</a> | <a href="#" onclick="parent.disablePopupClean();">Cancel/Revise</a></div>
+<?php
+  $fsql = "SELECT fax, preferredcontact from dental_contact WHERE contactid='".mysql_real_escape_string($r['md_list'])."' OR 
+contactid='".mysql_real_escape_string($r['md_referral_list'])."'";
+  $fq = mysql_query($fsql);
+  $f = mysql_fetch_assoc($fq);
+?>
+<?php if($r['send_method']=='fax' || ($r['send_method']=='' && $f['preferredcontact']=='fax')){ ?>
+<div style="float:right;margin-right:20px;">Digital Fax - <?= format_phone($f['fax']); ?></div>
+<?php } ?>
 
 
 <script type="text/javascript">

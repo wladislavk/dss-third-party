@@ -6,13 +6,14 @@ class GeneralFunctions
 {
 	public static function uploadImage($image, $filePath, $type = 'general')
 	{
-		$uploadedFile = $image->tmp_name;
-		$fileName = $image->name;
+		$uploadedFile = $image->getPathName();
+		$fileName = $image->getClientOriginalName();
 		$lastdot = strrpos($fileName, ".");
 		$name = substr($fileName, 0, $lastdot);
-		$fileSize = $image->size;
-		$extension = substr($fileName, $lastdot + 1);
-		list($width, $height) = getimagesize($uploadedfile);
+		$fileSize = $image->getSize();
+		$extension = $image->getClientOriginalExtension();
+		list($width, $height) = getimagesize($uploadedFile);
+
 		if (($width > Constants::DSS_IMAGE_MAX_WIDTH || $height > Constants::DSS_IMAGE_MAX_HEIGHT)
 			|| $fileSize > Constants::DSS_IMAGE_MAX_SIZE
 			|| ($type == 'profile' && ($width > Constants::DSS_IMAGE_PROFILE_WIDTH || $height > Constants::DSS_IMAGE_PROFILE_HEIGHT))
@@ -77,8 +78,8 @@ class GeneralFunctions
 			imagedestroy($src);
 			imagedestroy($tmp);
 		} else {
-			if ($image->size <= Constants::DSS_FILE_MAX_SIZE) {
-				@move_uploaded_file($image->tmp_name, $filePath);
+			if ($image->getSize() <= Constants::DSS_FILE_MAX_SIZE) {
+				$image->move($filePath);
 				$uploaded = true;
 			} else {
 				$uploaded =false;

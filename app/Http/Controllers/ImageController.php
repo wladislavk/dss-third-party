@@ -150,8 +150,8 @@ class ImageController extends Controller
 			foreach ($sleeplabData as $attribute) {
 				$summSleeplabData[$attribute] = $this->request[$attribute];
 			}
-			
-			if (!empty(Input::file('ss_file'))) {
+	
+			if (Input::hasFile('ss_file')) {
 				$fileName = Input::file('ss_file')->getClientOriginalExtension();
 				$lastdot = strrpos($fileName, ".");
 				$name = substr($fileName, 0, $lastdot);
@@ -224,17 +224,18 @@ class ImageController extends Controller
 		if (!empty($this->request['imagesub']) && $this->request['imagesub'] == 1) {
 			$title = $this->request['title'];
 			$imageTypeId = $this->request['imagetypeid'];
-			if (!empty(Input::file('image_file')) || empty($this->request['ed'])) {
+
+			if (Input::hasFile('image_file') || empty($this->request['ed'])) {
 				// check
-				if (Input::file('image_file')->error == 4 && Input::file('image_file1')->error == 4) {
+				if (!Input::file('image_file')->isValid() && !Input::file('image_file1')->isValid()) {
 					$uploaded = false;
 				} else {
-					if ($this->request['imagetypeid'] == 0 || (array_search(Input::file('image_file'), Constants::$dss_file_types) !== false)) {
+					if ($this->request['imagetypeid'] == 0 || (array_search(Input::file('image_file')->getMimeType(), Constants::$dss_file_types) !== false)) {
 						if ($imageTypeId == '0') {
-							$fileName = Input::file('image_file_1')->name;
+							$fileName = Input::file('image_file_1')->getClientOriginalName();
 							$lastdot = strrpos($fileName, ".");
 							$name = substr($fileName, 0, $lastdot);
-							$extension = substr($fileName, $lastdot + 1);
+							$extension = Input::file('image_file_1')->getClientOriginalExtension();
 							$banner1 = $name . '_' . date('dmy_Hi');
 							$banner1 = str_replace(" ", "_", $banner1);
 							$banner1 = str_replace(".", "_", $banner1);
@@ -247,26 +248,29 @@ class ImageController extends Controller
 							$newHeight = 1500;
 
 							// Load
-							$thumb = imagecreatetruecolor($newwidth, $newheight);
+							$thumb = imagecreatetruecolor($newWidth, $newHeight);
+
 							for ($i = 1; $i <= 9; $i++) {
-								$fileName = Input::file('image_file_' . $i)->name;
+								$fileName = Input::file('image_file_' . $i)->getClientOriginalName();
+								/*
 								$lastdot = strrpos($fileName, ".");
 								$name = substr($fileName, 0, $lastdot);
-								$extension2 = substr($fileName, $lastdot + 1);
+								*/
+								$extension2 = Input::file('image_file_' . $i)->getClientOriginalExtension();
 								switch(strtolower($extension2)){
 									case 'jpg':
 									case 'jpeg':
-										$source = imagecreatefromjpeg(Input::file('image_file_' . $i)->tmp_name);
+										$source = imagecreatefromjpeg(Input::file('image_file_' . $i)->getPathName());
 										break;
 									case 'gif':
-										$source = imagecreatefromgif(Input::file('image_file_' . $i)->tmp_name);
+										$source = imagecreatefromgif(Input::file('image_file_' . $i)->getPathName());
 										break;
 									case 'png':
-										$source = imagecreatefrompng(Input::file('image_file_' . $i)->tmp_name);
+										$source = imagecreatefrompng(Input::file('image_file_' . $i)->getPathName());
 										break;
 								}
 
-								list($width, $height) = getimagesize(Input::file('image_file_' . $i)->tmp_name);
+								list($width, $height) = getimagesize(Input::file('image_file_' . $i)->getPathName());
 								$x = (($i - 1) % 3) * 500;
 								$y = floor(($i - 1) / 3) * 500;	
 
@@ -274,10 +278,10 @@ class ImageController extends Controller
 								imagecopyresized($thumb, $source, $x, $y, 0, 0, 500, 500, $width, $height);
 							}
 
-							$fileName = Input::file('image_file_1')->name;
+							$fileName = Input::file('image_file_1')->getClientOriginalName();
 							$lastdot = strrpos($fileName, ".");
 							$name = substr($fileName, 0, $lastdot);
-							$extension = substr($fileName, $lastdot + 1);
+							$extension = Input::file('image_file_1')->getClientOriginalExtension();
 							$banner1 = $name . '_' . date('dmy_Hi');
 							$banner1 = str_replace(" ",  "_", $banner1);
 							$banner1 = str_replace(".","_", $banner1);
@@ -305,13 +309,13 @@ class ImageController extends Controller
 						} else {
 							//ALL OTHER IMAGES
 
-							$fileSize = Input::file('image_file')->size;
+							$fileSize = Input::file('image_file')->getSize();
 							if ($fileSize <= Constants::DSS_IMAGE_MAX_SIZE) {
-								if (!empty(Input::file('image_file')->name)) {
-									$fileName = Input::file('image_file')->name;
+								if (!empty(Input::file('image_file')->getClientOriginalName())) {
+									$fileName = Input::file('image_file')->getClientOriginalName();
 									$lastdot = strrpos($fileName, ".");
 									$name = substr($fileName, 0, $lastdot);
-									$extension = substr($fileName, $lastdot + 1);
+									$extension = Input::file('image_file')->getClientOriginalExtension();
 									$banner1 = $name . '_' . date('dmy_Hi');
 									$banner1 = str_replace(" ", "_", $banner1);
 									$banner1 = str_replace(".", "_", $banner1);
@@ -425,7 +429,7 @@ class ImageController extends Controller
 					$message = 'Uploaded Successfully';
 
 					if ($this->request['flow'] == '1') {
-						return redirect('/manage/flowsheet3' . !empty($patientId) ? '/' . $patientId : '');
+						return redirect('/manage/flowsheet3' . (!empty($patientId) ? '/' . $patientId : ''));
 					} elseif ($this->request['return'] == 'patinfo') {
 						if ($this->request['return_field'] == 'profile') {
 							$showBlock['updateProfileImage'] = $banner1;
@@ -435,7 +439,7 @@ class ImageController extends Controller
 							$showBlock['updateInsCard'] = array($banner1, 's_m_ins_card');
 						}
 					} else {
-						return redirect('/manage/q_image' . !empty($patientId) ? '/' . $patientId : '');
+						return redirect('/manage/q_image' . (!empty($patientId) ? '/' . $patientId : ''));
 					}
 				}
 			}
@@ -443,13 +447,15 @@ class ImageController extends Controller
 
 		$redirect = redirect('/manage/add_image');
 
-		$data = array(
-			'message' 			=> $message,
-			'showJsFunctions' 	=> $showJsFunctions,
-			'showBlock'			=> $showBlock
-		);
+		if (!empty($message)) {
+			$data['message'] = $message;
+		}
 
-		foreach ($data as $attribute => $value) {
+		if (!empty($showBlock)) {
+			$data['showBlock'] = $showBlock;
+		}
+
+		if (!empty($data)) foreach ($data as $attribute => $value) {
 			$redirect = $redirect->with($attribute, $value);
 		}
 

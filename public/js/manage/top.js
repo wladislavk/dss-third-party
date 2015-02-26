@@ -515,3 +515,20 @@ function hideWarnings(name, val, token)
         value: val
     })
 }
+
+/*
+function setInfoPopup(patientId, sh, it, returnValue, returnField, token)
+{
+    var patient = (patientId != 0) ? '/' + patientId : '';
+
+    $.post('/imagePopup', {
+        _token: token,
+        sh: sh,
+        it: it,
+        returnValue: returnValue,
+        returnField: returnField
+    }).done(function(){
+      loadPopup('/manage/add_image' + patient);
+    });
+}
+*/

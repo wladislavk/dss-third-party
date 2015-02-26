@@ -29,6 +29,10 @@ class ImageController extends Controller
 	private $device;
 
 	private $request;
+	private $sh;
+	private $it;
+	private $return;
+	private $returnField;
 
 	public function __construct(QImageInterface $qImage,
 								ImageTypeInterface $imageType,
@@ -47,7 +51,18 @@ class ImageController extends Controller
 		$this->patient 		= $patient;
 		$this->insDiagnosis = $insDiagnosis;
 		$this->device 		= $device;
+
 		$this->request 		= Request::all();
+		/*
+		$this->sh 			= Session::pull('sh');
+		$this->it 			= Session::pull('it');
+		$this->return 		= Session::pull('return');
+		$this->returnField 	= Session::pull('returnField');
+		*/
+		$this->sh 			= Route::input('sh');
+		$this->it 			= Route::input('it');
+		$this->return 		= Route::input('return');
+		$this->returnField 	= Route::input('field');
 	}
 
 	public function index()
@@ -70,7 +85,7 @@ class ImageController extends Controller
 		}
 
 		if (empty($imageTypeId)) {
-			$imageTypeId = !empty($this->request['sh']) ? $this->request['sh'] : null;
+			$imageTypeId = !empty($this->sh) ? $this->sh : null;
 		}
 
 		if (!empty($image->contactid)) {
@@ -111,10 +126,10 @@ class ImageController extends Controller
 		$data = array(
 			'path'			=> '/' . Request::segment(1) . '/' . Request::segment(2),
 			'message'		=> !empty(Session::get('message')) ? Session::get('message') : null,
-			'sh'			=> !empty($this->request['sh']) ? $this->request['sh'] : null,
-			'it'			=> !empty($this->request['it']) ? $this->request['it'] : null,
-			'return'		=> !empty($this->request['return']) ? $this->request['return'] : '',
-			'returnField'	=> !empty($this->request['return_field']) ? $this->request['return_field'] : '',
+			'sh'			=> !empty($this->sh) ? $this->sh : null,
+			'it'			=> !empty($this->it) ? $this->it : null,
+			'return'		=> !empty($this->return) ? $this->return : '',
+			'returnField'	=> !empty($this->return_field) ? $this->return_field : '',
 			'patientId' 	=> $patientId,
 			// 'flow'			=> $flow,
 			'butText'		=> $butText,
@@ -354,7 +369,7 @@ class ImageController extends Controller
 
 				$message = 'Edited Successfully';
 
-				return redirect("/manage/q_image" . (!empty($patientId) ? '/' . $patientId : ''))->with('sh', $this->request['sh']);
+				return redirect("/manage/q_image" . (!empty($patientId) ? '/' . $patientId : ''))->with('sh', $this->sh);
 			}
 
 			if (!empty($uploaded)) {
@@ -371,7 +386,7 @@ class ImageController extends Controller
 
 					$message = 'Edited Successfully';
 
-					return redirect("/manage/q_image" . (!empty($patientId) ? '/' . $patientId : ''))->with('sh', $this->request['sh']);
+					return redirect("/manage/q_image" . (!empty($patientId) ? '/' . $patientId : ''))->with('sh', $this->sh);
 				} else {
 					$data = array(
 						'patientid' 	=> $patientId,
@@ -430,8 +445,10 @@ class ImageController extends Controller
 
 					if ($this->request['flow'] == '1') {
 						return redirect('/manage/flowsheet3' . (!empty($patientId) ? '/' . $patientId : ''));
-					} elseif ($this->request['return'] == 'patinfo') {
-						if ($this->request['return_field'] == 'profile') {
+					} elseif ($this->return == 'patinfo') {
+						$showBlock = array(0);
+
+						if ($this->return_field == 'profile') {
 							$showBlock['updateProfileImage'] = $banner1;
 						} elseif ($this->request['imagetypeid'] == 10) {
 							$showBlock['updateInsCard'] = array($banner1, 'p_m_ins_card');
@@ -460,5 +477,15 @@ class ImageController extends Controller
 		}
 
 		return $redirect;
+	}
+
+	public function setInfoPopup()
+	{
+		if (Request::ajax()) {
+			Session::put('sh', Request::get('sh'));
+			Session::put('it', Request::get('it'));
+			Session::put('return', Request::get('returnValue'));
+			Session::put('returnField', Request::get('returnField'));
+		}
 	}
 }

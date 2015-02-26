@@ -3,6 +3,8 @@
 // Route::get('/pid/{pid}', array('middleware' => 'header', 'uses' => 'WelcomeController@index'));
 
 $router->post('/warnings', 'TopController@hideWarnings');
+$router->post('/imagePopup', 'ImageController@setInfoPopup');
+
 $router->get('/', function() {
     return redirect('/manage/login');
 });
@@ -11,7 +13,8 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
 	$router->get('login', 'AuthController@index');
 	$router->post('login', 'AuthController@login');
     $router->get('logout', 'AuthController@logout');
-    $router->get('add_image/{pid?}', 'ImageController@index');
+    // $router->get('add_image/{pid?}', 'ImageController@index');
+    $router->get('add_image/{it}/{return}/{field}/{pid?}/{sh?}', 'ImageController@index');
     $router->post('add_image/{pid?}', 'ImageController@add');
 
 	$router->group(['middleware' => 'header'], function() use ($router){

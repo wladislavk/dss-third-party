@@ -408,15 +408,16 @@
 				<script type="text/javascript"> 
 					parent.updateProfileImage({!! $showBlock['updateProfileImage'] !!});
 				</script>
-			@else
+			@elseif (!empty($showBlock['updateInsCard']))
 				<script type="text/javascript">
 					parent.updateInsCard({!! $showBlock['updateInsCard'][0] !!}, {!! $showBlock['updateInsCard'][1] !!});
 				</script>
 			@endif
+
+			<script type="text/javascript">
+				parent.disablePopupClean();
+			</script>
 		@endif
 
-		<script type="text/javascript">
-			parent.disablePopupClean();
-		</script>
 	</body>
 </html>

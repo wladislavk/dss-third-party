@@ -181,6 +181,11 @@ class UserServiceProvider extends ServiceProvider {
             'Ds3\Contracts\DeviceInterface',
             'Ds3\Repositories\DeviceRepository'
         );
+
+        $this->app->bind(
+            'Ds3\Contracts\ContactTypeInterface',
+            'Ds3\Repositories\ContactTypeRepository'
+        );
     }
 
 }

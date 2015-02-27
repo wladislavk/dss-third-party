@@ -8,6 +8,7 @@ use Mail;
 use Ds3\Libraries\Constants;
 use Ds3\Libraries\Password;
 use Ds3\Libraries\MDReferralFilter;
+use Ds3\Libraries\GeneralFunctions;
 
 use Ds3\Contracts\CompanyInterface;
 use Ds3\Contracts\UserInterface;
@@ -167,9 +168,14 @@ class PatientController extends Controller
 
 		if (!empty($message)) {
 			foreach ($this->patientData as $attribute) {
-				$patientInfo[$attribute] = $this->request[$attribute];
+				if (isset($this->request[$attribute])) {
+					$patientInfo[$attribute] = $this->request[$attribute];
+				} else {
+					$patientInfo[$attribute] = '';
+				}				
 			}
 
+			$patientInfo['ssn']					= $this->request['ssn'];
 			$patientInfo['p_m_ins_payer_id'] 	= $this->request['p_m_ins_payer_id'];
 			$patientInfo['location'] 			= $this->request['location'];
 			$patientInfo['home_phone']			= $this->request['home_phone'];
@@ -178,17 +184,25 @@ class PatientController extends Controller
 		} else {
 			if (!empty($patient)) {
 				foreach ($this->patientData as $attribute) {
-					$patientInfo[$attribute] = $patient->$attribute;
+					if (isset($patient->$attribute)) {
+						$patientInfo[$attribute] = $patient->$attribute;
+					} else {
+						$patientInfo[$attribute] = '';
+					}
 				}
 
+				$patientInfo['ssn']					= $patient->ssn;
+				$patientInfo['p_m_ins_payer_id'] 	= $patient->p_m_ins_payer_id;
+				$patientInfo['location'] 			= $patient->location;
 				$patientInfo['home_phone']			= $patient->home_phone;
 				$patientInfo['work_phone']			= $patient->work_phone;
+				$patientInfo['cell_phone']			= $patient->cell_phone;
 			} else {
 				foreach ($this->patientData as $attribute) {
-					$patientInfo[$attribute] = null;
+					$patientInfo[$attribute] = '';
 				}
 
-				$patientInfo['has_s_m_ins'] = null;
+				$patientInfo['has_s_m_ins'] = '';
 			}
 
 			if (!empty($patientInfo['docsleep']) && $patientInfo['docsleep'] != 'Not Set') {
@@ -266,15 +280,15 @@ class PatientController extends Controller
 				$patientInfo['referred_source'] = -1;
 			}
 
-			if (isset($referredSource)) {
-				if ($referredSource == Constants::DSS_REFERRED_PATIENT) {
+			if (isset($patientInfo['referred_source'])) {
+				if ($patientInfo['referred_source'] == Constants::DSS_REFERRED_PATIENT) {
 					$patient = $this->patient->get(array(
 						'patientid' => $referredBy
 					));
 
 					$referredName = $patient->lastname . ', ' . $patient->firstname . ' ' . $patient->middlename . ' - Patient';
-				} elseif ($referredSource == Constants::DSS_REFERRED_PHYSICIAN) {
-					$contact = $this->contact->getDocsleep($referredBy);
+				} elseif ($patientInfo['referred_source'] == Constants::DSS_REFERRED_PHYSICIAN) {
+					$contact = $this->contact->getDocsleep($patientInfo['referred_by']);
 
 					$referredName = $contact->lastname . ', ' . $contact->firstname . ' ' . $contact->middlename;
 					if (!empty($contact->contacttype)) {
@@ -415,7 +429,7 @@ class PatientController extends Controller
 														   . $insuranceContact->city . ' '
 														   . $insuranceContact->state . ' '
 														   . $insuranceContact->zip . '\n'
-														   . $this->formatPhone($insuranceContact->phone1);
+														   . GeneralFunctions::formatPhone($insuranceContact->phone1);
 		}
 
 		$imageType12 = $this->qImage->getImage(12, $patientId, 'adddate');
@@ -470,8 +484,15 @@ class PatientController extends Controller
 			'butText'					=> $butText,
 			'docPatientPortal'			=> $docPatientPortal,
 			'locations'					=> $locations,
-			'usePatientPortal'			=> !empty($usePatientPortal) ? $usePatientPortal : null,
 			'insuranceContacts'			=> $insuranceContacts,
+			'docsleepName'				=> $docsleepName,
+			'docpcpName'				=> $docpcpName,
+			'docdentistName'			=> $docdentistName,
+			'docentName'				=> $docentName,
+			'docmdotherName'			=> $docmdotherName,
+			'docmdother2Name'			=> $docmdother2Name,
+			'docmdother3Name'			=> $docmdother3Name,
+			'referredName'				=> !empty($referredName) ? $referredName : '',
 			'insContactsJson'			=> json_encode($insContactsJson),
 			'DSS_REFERRED_MEDIA' 		=> Constants::DSS_REFERRED_MEDIA,
 			'DSS_REFERRED_FRANCHISE'	=> Constants::DSS_REFERRED_FRANCHISE,
@@ -527,7 +548,7 @@ class PatientController extends Controller
 				} elseif (isset($this->request['sendRem'])) {
 					sendReminderEmail($this->request['ed'], $this->request['email']);
 				} elseif (!isset($this->request['sendReg']) && $patient->registration_status == 1 && trim($this->request['email']) != trim($patient->email)) {
-					if ($docPatientPortal && $usePatientPortal) {
+					if (!empty($docPatientPortal) && !empty($patientInfo['use_patient_portal'])) {
 						sendRegistrationEmail($this->request['ed'], $this->request['email'], '');
 					}
 				}
@@ -1075,7 +1096,7 @@ class PatientController extends Controller
 			'mailingZip' 		=> $location->mailing_zip,
 			'email'				=> $email,
 			'link'				=> Request::root() . '/reg/activate/id/' . $patient->patientid . '/hash/' . $recoverHash,
-			'contactUs'			=> $this->formatPhone($mailingPhone),
+			'contactUs'			=> GeneralFunctions::formatPhone($mailingPhone),
 			'imgHeaderFo'		=> Request::root() . '/img/email/email_header_fo.png',
 			'linkLogo'			=> Request::root() . $logo,
 			'emailFooter'		=> Constants::DSS_EMAIL_FOOTER
@@ -1128,7 +1149,7 @@ class PatientController extends Controller
 			'mailingState' 		=> $location->mailing_state,
 			'mailingZip' 		=> $location->mailing_zip,
 			'email'				=> $email,
-			'contactUs'			=> $this->formatPhone($mailingPhone),
+			'contactUs'			=> GeneralFunctions::formatPhone($mailingPhone),
 			'imgHeaderFo'		=> Request::root() . '/img/email/email_header_fo.png',
 			'linkLogo'			=> Request::root() . $logo,
 			'link'				=> Request::root() . '/reg/login/email/' . str_replace('+', '%2B', $email),
@@ -1617,19 +1638,6 @@ class PatientController extends Controller
   		} else {
   			return $letterId;
   		}
-	}
-
-	private function formatPhone($data)
-	{
-		if (preg_match('/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches)) {
-			$result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
-
-			if (!empty($matches[4])) {
-				$result .= ' x'.$matches[4];
-			}
-
-			return $result;
-		}
 	}
 
 	private function triggerLetter20($patientId)

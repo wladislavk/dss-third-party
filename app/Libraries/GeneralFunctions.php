@@ -89,4 +89,17 @@ class GeneralFunctions
 		@chmod($filePath, 0777);
 		return $uploaded;
 	}
+
+	public static function formatPhone($data)
+	{
+		if (preg_match('/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches)) {
+			$result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
+
+			if (!empty($matches[4])) {
+				$result .= ' x'.$matches[4];
+			}
+
+			return $result;
+		}
+	}
 }

@@ -16,6 +16,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     // $router->get('add_image/{pid?}', 'ImageController@index');
     $router->get('add_image/{it}/{return}/{field}/{pid?}/{sh?}', 'ImageController@index');
     $router->post('add_image/{pid?}', 'ImageController@add');
+    $router->get('view_contact/{ed?}', 'ContactController@index');
 
 	$router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 

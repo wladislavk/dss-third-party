@@ -46,7 +46,7 @@
 			<td  align="right">
 				<input type="submit" style="float:right; margin-left: 5px;" value=" {!! $butText or '' !!} Patient" class="button" />
 
-				@if (!empty($docPatientPortal) && !empty($usePatientPortal))
+				@if (!empty($docPatientPortal) && !empty($patientInfo['use_patient_portal']))
 					@if (!empty($showBlock['buttonSendReg']))
 						<input type="submit" name="sendReg" value="Send Registration Email" class="button" />
 					@else
@@ -266,7 +266,7 @@
 									<option value="-1">Inches</option>
 
 									@for ($i = 0; $i < 12; $i++)
-										<option value="{!! $i !!}" {!! (!empty($inches) && $inches == $i) ? 'selected' : '' !!}>{!! $i !!}</option>
+										<option value="{!! $i !!}" {!! (isset($patientInfo['inches']) && $patientInfo['inches'] == "$i") ? 'selected' : '' !!}>{!! $i !!}</option>
 									@endfor
 
 								</select>
@@ -388,7 +388,7 @@
 							</div>
 							<div style="clear:both;float:left;">
 								<div id="referred_person" {!! (!empty($patientInfo['referred_source']) && $patientInfo['referred_source'] != $DSS_REFERRED_PATIENT && $patientInfo['referred_source'] != $DSS_REFERRED_PHYSICIAN ) ? 'style="display:none;margin-left:100px;"' : 'style="margin-left:100px"' !!}> 
-									<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="{!! $patientInfo['referred_name'] or 'Type referral name' !!}" style="width:300px;" />
+									<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="{!! $referredName or 'Type referral name' !!}" style="width:300px;" />
 									<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat={!! $patientId or '' !!}&from=add_patient');" value="+ Create New Contact" />
 									<br />
 									<div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
@@ -655,8 +655,8 @@
 						<div style="height:40px;display:block;">
 							<span>
 								<label style="display:inline;">Does patient have secondary insurance?</label>
-								<input type="radio" value="Yes" {!! ($patientInfo['has_s_m_ins'] == "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-								<input type="radio" value="No" {!! ($patientInfo['has_s_m_ins'] != "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide(); clearInfo();" /> No
+								<input type="radio" value="Yes" {!! (!empty($patientInfo['has_s_m_ins']) && $patientInfo['has_s_m_ins'] == "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
+								<input type="radio" value="No" {!! (!empty($patientInfo['has_s_m_ins']) && $patientInfo['has_s_m_ins'] != "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide(); clearInfo();" /> No
 							</span>
 						</div>
 					</li>
@@ -733,7 +733,7 @@
 						<div></div>
 					</li>
 				</ul>
-				<ul id="s_m_address_fields" {!! ($patientInfo['s_m_same_address'] == "1" || $patientInfo['has_s_m_ins'] != "Yes") ? 'style="display:none;"':''; !!}>
+				<ul id="s_m_address_fields" {!! ($patientInfo['s_m_same_address'] == "1" || !empty($patientInfo['has_s_m_ins']) && $patientInfo['has_s_m_ins'] != "Yes") ? 'style="display:none;"':''; !!}>
 					<li id="foli8" class="complex">
 						<div>
 							<span>
@@ -849,12 +849,12 @@
 							<ul>
 								<li id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">Primary Care MD</label>
-									<div id="docpcp_static_info" style="{!! (!empty($docpcp)) ? '' : 'display:none' !!}">
-										<span id="docpcp_name_static" style="width:300px;">{!! $patientInfo['docpcp_name'] or '' !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docpcp'] or '' !!}');return false;" class="addButton">Quick View</a>
+									<div id="docpcp_static_info" style="{!! (!empty($patientInfo['docpcp'])) ? '' : 'display:none' !!}">
+										<span id="docpcp_name_static" style="width:300px;">{!! $docpcpName or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact{!! !empty($patientInfo['docpcp']) ? '/' . $patientInfo['docpcp'] : '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docpcp_static_info').hide();$('#docpcp_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
-									<input type="text" id="docpcp_name" style="width:300px;{!! (!empty($patientInfo['docpcp']) && $patientInfo['docpcp'] != '') ? 'display:none;' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="{!! !empty($patientInfo['docpcp_name']) ? $patientInfo['docpcp_name'] : 'Type contact name' !!}" />
+									<input type="text" id="docpcp_name" style="width:300px;{!! (!empty($patientInfo['docpcp']) && $patientInfo['docpcp'] != '') ? 'display:none;' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="{!! !empty($docpcpName) ? $docpcpName : 'Type contact name' !!}" />
 									<br />
 									<div id="docpcp_hints" class="search_hints" style="display:none;">
 										<ul id="docpcp_list" class="search_list">
@@ -871,12 +871,12 @@
 							<ul>
 								<li id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">ENT</label>
-									<div id="docent_static_info" style="{!! (!empty($docent)) ? '' : 'display:none' !!}">
-										<span id="docent_name_static" style="width:300px;">{!! $patientInfo['docent_name'] or '' !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docent'] or '' !!}');return false;" class="addButton">Quick View</a>
+									<div id="docent_static_info" style="{!! (!empty($patientInfo['docent'])) ? '' : 'display:none' !!}">
+										<span id="docent_name_static" style="width:300px;">{!! $docentName or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact{!! !empty($patientInfo['docent']) ? '/' . $patientInfo['docent'] : '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docent_static_info').hide();$('#docent_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
-									<input type="text" id="docent_name" style="width:300px;{!! (!empty($patientInfo['docent'])) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docent_name" value="{!! (!empty($patientInfo['docent'])) ? $patientInfo['docent_name'] : 'Type contact name' !!}" />
+									<input type="text" id="docent_name" style="width:300px;{!! (!empty($patientInfo['docent'])) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docent_name" value="{!! (!empty($patientInfo['docent'])) ? $docentName : 'Type contact name' !!}" />
 									<br />
 									<div id="docent_hints" class="search_hints" style="display:none;">
 										<ul id="docent_list" class="search_list">
@@ -893,12 +893,12 @@
 							<ul>
 								<li id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">Sleep MD</label>
-									<div id="docsleep_static_info" style="{!! (!empty($docsleep)) ? '' : 'display:none' !!}">
-										<span id="docsleep_name_static" style="width:300px;">{!! $patientInfo['docsleep_name'] or '' !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docsleep'] or '' !!}');return false;" class="addButton">Quick View</a>
+									<div id="docsleep_static_info" style="{!! (!empty($patientInfo['docdentist'])) ? '' : 'display:none' !!}">
+										<span id="docsleep_name_static" style="width:300px;">{!! $docsleepName or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact{!! !empty($patientInfo['docsleep']) ? '/' . $patientInfo['docsleep'] : '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docsleep_static_info').hide();$('#docsleep_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
-									<input type="text" id="docsleep_name" style="width:300px;{!! (!empty($docsleep)) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docsleep_name" value="{!! !empty($docsleep) ? $docsleep_name : 'Type contact name' !!}" />
+									<input type="text" id="docsleep_name" style="width:300px;{!! (!empty($patientInfo['docdentist'])) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docsleep_name" value="{!! !empty($docsleepName) ? $docsleepName : 'Type contact name' !!}" />
 									<br />
 									<div id="docsleep_hints" class="search_hints" style="display:none;">
 										<ul id="docsleep_list" class="search_list">
@@ -915,12 +915,12 @@
 							<ul>
 								<li id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">Dentist</label>
-									<div id="docdentist_static_info" style="{!! !empty($docdentist) ? '' : 'display:none' !!}">
-										<span id="docdentist_name_static" style="width:300px;">{!! $patientInfo['docdentist_name'] or '' !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docdentist'] or '' !!}');return false;" class="addButton">Quick View</a>
+									<div id="docdentist_static_info" style="{!! !empty($patientInfo['docdentist']) ? '' : 'display:none' !!}">
+										<span id="docdentist_name_static" style="width:300px;">{!! $docdentistName or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact{!! !empty($patientInfo['docdentist']) ? '/' . $patientInfo['docdentist'] : '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docdentist_static_info').hide();$('#docdentist_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
-									<input type="text" id="docdentist_name" style="width:300px;{!! !empty($docdentist) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="{!! !empty($docdentist) ? $docdentist_name : 'Type contact name' !!}" />
+									<input type="text" id="docdentist_name" style="width:300px;{!! !empty($patientInfo['docdentist']) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="{!! !empty($docdentistName) ? $docdentistName : 'Type contact name' !!}" />
 									<br />
 										<div id="docdentist_hints" class="search_hints" style="display:none;">
 											<ul id="docdentist_list" class="search_list">
@@ -937,12 +937,12 @@
 							<ul>
 								<li id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">Other MD</label>
-									<div id="docmdother_static_info" style="{!! !empty($docmdother) ? '' : 'display:none;' !!}height:25px;">
-										<span id="docmdother_name_static" style="width:300px;">{!! $patientInfo['docmdother_name'] or '' !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docmdother'] or '' !!}');return false;" class="addButton">Quick View</a>
+									<div id="docmdother_static_info" style="{!! !empty($patientInfo['docmdother']) ? '' : 'display:none;' !!}height:25px;">
+										<span id="docmdother_name_static" style="width:300px;">{!! $docmdotherName or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact{!! !empty($patientInfo['docmdother']) ? '/' . $patientInfo['docmdother'] : '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docmdother_static_info').hide();$('#docmdother_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
-									<input type="text" id="docmdother_name" style="width:300px;{!! !empty($patientInfo['docmdother']) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="{!! !empty($patientInfo['docmdother']) ? $patientInfo['docmdother_name'] : 'Type contact name' !!}" />
+									<input type="text" id="docmdother_name" style="width:300px;{!! !empty($patientInfo['docmdother']) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="{!! !empty($patientInfo['docmdother']) ? $docmdotherName : 'Type contact name' !!}" />
 									
 									@if ($patientInfo['docmdother2'] == '' || $patientInfo['docmdother3'] == '')
 										<a href="#" id="add_new_md" onclick="add_md(); return false;"  style="clear:both" class="addButton">+ Add Additional MD</a>
@@ -964,12 +964,12 @@
 							<ul>
 								<li  id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">Other MD 2</label>
-									<div id="docmdother2_static_info" style="{!! !empty($docmdother2) ? '' : 'display:none' !!}">
-										<span id="docmdother2_name_static" style="width:300px;">{!! $patientInfo['docmdother2_name'] or '' !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docmdother2'] or '' !!}');return false;" class="addButton">Quick View</a>
+									<div id="docmdother2_static_info" style="{!! !empty($patientInfo['docmdother2']) ? '' : 'display:none' !!}">
+										<span id="docmdother2_name_static" style="width:300px;">{!! $docmdother2Name or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact{!! !empty($patientInfo['docmdother2']) ? '/' . $patientInfo['docmdother2'] : '' !!}');return false;" class="addButton">Quick View</a>
 										<a href="#" onclick="$('#docmdother2_static_info').hide();$('#docmdother2_name').show();return false;" class="addButton">Change Contact</a>
 									</div>
-									<input type="text" id="docmdother2_name" style="width:300px;{!! !empty($patientInfo['docmdother2']) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="{!! !empty($patientInfo['docmdother2']) ? $patientInfo['docmdother2_name'] : 'Type contact name' !!}" />
+									<input type="text" id="docmdother2_name" style="width:300px;{!! !empty($patientInfo['docmdother2']) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="{!! !empty($patientInfo['docmdother2']) ? docmdother2Name : 'Type contact name' !!}" />
 									<br />
 									<div id="docmdother2_hints" class="search_hints" style="display:none;">
 										<ul id="docmdother2_list" class="search_list">
@@ -987,11 +987,11 @@
 								<li id="foli8" class="complex">
 									<label style="display: block; float: left; width: 110px;">Other MD 3</label>
 									<div id="docmdother3_static_info" style="{!! !empty($patientInfo['docmdother3']) ? '' : 'display:none' !!}">
-										<span id="docmdother3_name_static" style="width:300px;">{!! $patientInfo['docmdother3_name'] or '' !!}</span>
-										<a href="#" onclick="loadPopup('view_contact.php?ed={!! $patientInfo['docmdother3'] or '' !!}');return false;" class="addButton">Quick View</a>                                     
+										<span id="docmdother3_name_static" style="width:300px;">{!! $docmdother3Name or '' !!}</span>
+										<a href="#" onclick="loadPopup('view_contact{!! !empty($patientInfo['docmdother3']) ? '/' . $patientInfo['docmdother3'] : '' !!}');return false;" class="addButton">Quick View</a>                                     
 										<a href="#" onclick="$('#docmdother3_static_info').hide();$('#docmdother3_name').show();return false;" class="addButton">Change Contact</a>                          
 									</div>
-									<input type="text" id="docmdother3_name" style="width:300px;{!! !empty($patientInfo['docmdother3']) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docmdother3_name" value="{!! !empty($patientInfo['docmdother3']) ? $patientInfo['docmdother3_name'] : 'Type contact name' !!}" />
+									<input type="text" id="docmdother3_name" style="width:300px;{!! !empty($patientInfo['docmdother3']) ? 'display:none' : '' !!}" onclick="updateval(this)" autocomplete="off" name="docmdother3_name" value="{!! !empty($patientInfo['docmdother3']) ? $docmdother3Name : 'Type contact name' !!}" />
 									<br />
 									<div id="docmdother3_hints" class="search_hints" style="display:none;">
 										<ul id="docmdother3_list" class="search_list">

@@ -16,7 +16,10 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     // $router->get('add_image/{pid?}', 'ImageController@index');
     $router->get('add_image/{it}/{return}/{field}/{pid?}/{sh?}', 'ImageController@index');
     $router->post('add_image/{pid?}', 'ImageController@add');
-    $router->get('view_contact/{ed?}', 'ContactController@index');
+    $router->get('view_contact/{ed?}', 'ContactController@view');
+    $router->get('display_file/{file?}', 'FileController@display');
+    $router->get('imageholder/{image}/{folder?}', 'ImageController@imageHolder');
+    $router->get('add_contact', 'ContactController@index');
 
 	$router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 

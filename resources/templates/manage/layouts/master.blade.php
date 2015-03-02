@@ -293,7 +293,7 @@
 									<div id="patient_name_inner">
 
 										@if (!empty($medicare)) 
-											<img src="img/medicare_logo_small.png" />
+											<img src="/img/medicare_logo_small.png" />
 											<span class="medicare_name">
 										@else
 											<span class="name">

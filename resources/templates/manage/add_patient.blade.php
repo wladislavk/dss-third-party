@@ -73,7 +73,7 @@
 								</a>
 							@else
 								@foreach ($imageType4 as $image)
-									<img src='/display_file/f/{!! $image->image_file !!}' style='max-height:150px;max-width:200px;' style='float:right;' />
+									<img src="/manage/display_file{!! !empty($image->image_file) ? '/' . $image->image_file : '' !!}" style='max-height:150px;max-width:200px;' style='float:right;' />
 								@endforeach
 							@endif
 						</div>
@@ -585,7 +585,7 @@
 										+ Add Insurance Card Image
 									</button>
 								@else
-									<button id="p_m_ins_card" onclick="window.open('display_file.php?f={!! $image10->image_file or '' !!}','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+									<button id="p_m_ins_card" onclick="window.open('/manage/display_file{!! !empty($image10->image_file) ? '/' . $image10->image_file : '' !!}','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
 										View Insurance Card Image
 									</button>
 								@endif
@@ -655,8 +655,8 @@
 						<div style="height:40px;display:block;">
 							<span>
 								<label style="display:inline;">Does patient have secondary insurance?</label>
-								<input type="radio" value="Yes" {!! (!empty($patientInfo['has_s_m_ins']) && $patientInfo['has_s_m_ins'] == "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-								<input type="radio" value="No" {!! (!empty($patientInfo['has_s_m_ins']) && $patientInfo['has_s_m_ins'] != "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide(); clearInfo();" /> No
+								<input type="radio" value="Yes" {!! (isset($patientInfo['has_s_m_ins']) && $patientInfo['has_s_m_ins'] == "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
+								<input type="radio" value="No" {!! (isset($patientInfo['has_s_m_ins']) && $patientInfo['has_s_m_ins'] != "Yes") ? 'checked' : '' !!} name="s_m_ins" onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide(); clearInfo();" /> No
 							</span>
 						</div>
 					</li>
@@ -783,7 +783,7 @@
 										+ Add Insurance Card Image
 									</button>
 								@else
-									<button id="s_m_ins_card" onclick="window.open('imageholder.php?image={!! $image12->image_file !!}','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+									<button id="s_m_ins_card" onclick="window.open('imageholder/{!! $image12->image_file !!}','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
 										View Insurance Card Image
 									</button>
 								@endif

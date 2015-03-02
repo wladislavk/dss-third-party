@@ -102,4 +102,16 @@ class GeneralFunctions
 			return $result;
 		}
 	}
+
+	public static function num($n, $phone = true)
+	{
+		$n = preg_replace('/\D/', '', $n);
+		if (!$phone) {
+			return $n;
+		}
+		$pattern = '/([1]*)(.*)/'; 
+		preg_match($pattern, $n, $matches);
+		
+		return $matches[2];
+	}
 }

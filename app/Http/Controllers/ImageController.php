@@ -479,6 +479,15 @@ class ImageController extends Controller
 		return $redirect;
 	}
 
+	public function imageHolder($image, $folder = null)
+	{
+		if (empty($folder)) {
+			$folder = '/shared/q_file';
+		}
+
+		return view('manage.imageHolder')->with('image', $image)->with('folder', $folder);
+	}
+
 	public function setInfoPopup()
 	{
 		if (Request::ajax()) {

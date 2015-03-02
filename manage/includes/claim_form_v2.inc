@@ -181,7 +181,15 @@ die();
 	$patient_lastname = $_POST['patient_lastname'];
 	$patient_firstname = $_POST['patient_firstname'];
 	$patient_middle = $_POST['patient_middle'];
-	$patient_dob = $_POST['patient_dob'];
+
+  //we need to convert the DOB from mm-dd-yyyy to dd-mm-yyyy
+	$patient_dob_raw = $_POST['patient_dob'];
+  $patient_dob_pieces = explode('-', $patient_dob_raw);
+  $month = $patient_dob_pieces[0];
+  $day = $patient_dob_pieces[1];
+  $patient_dob_pieces[0] = $day;
+  $patient_dob_pieces[1] = $month;
+  $patient_dob = implode("-", $patient_dob_pieces);
 	$patient_sex = $_POST['patient_sex'];
 	$patient_address = $_POST['patient_address'];
 	$patient_city = $_POST['patient_city'];

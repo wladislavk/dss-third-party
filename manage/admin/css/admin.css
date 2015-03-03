@@ -1,7 +1,7 @@
 body {
     font-family: 'Open Sans',sans-serif;	
 }
-.tooltip {
+.notetip {
     position:absolute;
     display:none;
     background: #fff;

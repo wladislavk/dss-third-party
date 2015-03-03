@@ -1267,47 +1267,43 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
 <div align=center>
 
+<table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" width="615"> 
 
+	<tr>
 
-<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+  <td width=149 valign=bottom style=\'width:112.1pt;border:solid black 1.0pt;
 
- style=\'border-collapse:collapse;border:none\'>
-
- <tr>
-
-  <td width=149 valign=bottom style=\'width:112.1pt;border:solid windowtext 1.0pt;
-
-  padding:0in 5.4pt 0in 5.4pt\'>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
 
   text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
 
-  font-family:"Arial","sans-serif"\'>DATE </span></b></p>
+  font-family:"Arial","sans-serif"\'> DATE </span></b></p>
 
   </td>
 
   <td width=174 valign=top style=\'width:130.5pt;border:solid windowtext 1.0pt;
 
-  border-left:none;padding:0in 5.4pt 0in 5.4pt\'>
+  border-left:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
 
   text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
 
-  font-family:"Arial","sans-serif"\'>Number and Color</span></b></p>
+  font-family:"Arial","sans-serif"\'> Number and Color</span></b></p>
 
   </td>
 
   <td width=392 valign=bottom style=\'width:293.8pt;border:solid windowtext 1.0pt;
 
-  border-left:none;padding:0in 5.4pt 0in 5.4pt\'>
+  border-left:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
 
   text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
 
-  font-family:"Arial","sans-serif"\'>COMMENTS</span></b></p>
+  font-family:"Arial","sans-serif"\'> COMMENTS</span></b></p>
 
   </td>
 
@@ -1317,15 +1313,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1333,11 +1321,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1345,11 +1329,8 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
   </td>
 
@@ -1359,15 +1340,8 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
   </td>
 
@@ -1375,11 +1349,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1387,11 +1357,8 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
   </td>
 
@@ -1401,15 +1368,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1417,11 +1376,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1429,11 +1384,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1443,15 +1394,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1459,11 +1402,8 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
   </td>
 
@@ -1471,11 +1411,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1485,15 +1421,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1501,11 +1429,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1513,11 +1437,35 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+  </td>
 
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+ </tr>
+
+ <tr>
+
+  <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+
+
+  </td>
+
+  <td width=174 valign=top style=\'width:130.5pt;border-top:none;border-left:
+
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+
+
+  </td>
+
+  <td width=392 valign=top style=\'width:293.8pt;border-top:none;border-left:
+
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+
 
   </td>
 
@@ -1527,15 +1475,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1543,11 +1483,8 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
   </td>
 
@@ -1555,11 +1492,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -1569,15 +1502,8 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
   </td>
 
@@ -1585,11 +1511,8 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
   </td>
 
@@ -1597,53 +1520,8 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  </td>
-
- </tr>
-
- <tr>
-
-  <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
-
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  </td>
-
-  <td width=174 valign=top style=\'width:130.5pt;border-top:none;border-left:
-
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  </td>
-
-  <td width=392 valign=top style=\'width:293.8pt;border-top:none;border-left:
-
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
   </td>
 
@@ -1654,12 +1532,6 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
 
 </div>
-
-
-
-<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
 
 
@@ -1689,11 +1561,6 @@ please contact our office immediately. </span></p>
 
 
 
-<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-
-normal\'><span style=\'font-size:12.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-
 
 <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
 
@@ -1702,18 +1569,6 @@ text-align:center;line-height:normal\'><b><span style=\'font-size:12.0pt;
 font-family:"Arial","sans-serif"\'>Do Not Exceed the adjustment schedule!!!</span></b></p>
 
 
-
-<div style=\'border:none;border-bottom:solid black 1.5pt;padding:0in 0in 1.0pt 0in\'>
-
-
-
-<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-
-
-</div>
 
 
 
@@ -1789,7 +1644,6 @@ text-align:right\'><span style=\'font-size:8.0pt;line-height:115%;font-family:
 
         $title = "Device Titration (Arms/Bands)";
         $filename = "device_titration_ema_".$id.".pdf";
-
         create_form_pdf($html, $filename, $title, $backoffice);
 
 }
@@ -2032,9 +1886,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
 
 
-<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
-
- style=\'border-collapse:collapse;border:none\'>
+<table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" width="615"> 
 
  <tr>
 
@@ -2080,15 +1932,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2096,11 +1940,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2108,11 +1948,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2122,15 +1958,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2138,11 +1966,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2150,11 +1974,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2164,15 +1984,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2180,11 +1992,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2192,11 +2000,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2206,15 +2010,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2222,11 +2018,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2234,11 +2026,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2248,15 +2036,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2264,11 +2044,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2276,11 +2052,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2290,15 +2062,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2306,11 +2070,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2318,11 +2078,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2332,15 +2088,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
 
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2348,11 +2096,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2360,53 +2104,7 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
 
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  </td>
-
- </tr>
-
- <tr>
-
-  <td width=149 valign=top style=\'width:112.1pt;border:solid windowtext 1.0pt;
-
-  border-top:none;padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  </td>
-
-  <td width=184 valign=top style=\'width:137.75pt;border-top:none;border-left:
-
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-  </td>
-
-  <td width=382 valign=top style=\'width:286.55pt;border-top:none;border-left:
-
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-
-  padding:0in 5.4pt 0in 5.4pt\'>
-
-  <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-  style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
 
   </td>
 
@@ -2418,11 +2116,6 @@ style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nb
 
 </div>
 
-
-
-<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
 
 
@@ -2452,11 +2145,6 @@ office immediately. </span></p>
 
 
 
-<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
-
-normal\'><span style=\'font-size:12.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-
 
 <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
 
@@ -2464,19 +2152,6 @@ text-align:center;line-height:normal\'><b><span style=\'font-size:12.0pt;
 
 font-family:"Arial","sans-serif"\'>Do Not Exceed _____________ Turns Total</span></b></p>
 
-
-
-<div style=\'border:none;border-bottom:solid black 1.5pt;padding:0in 0in 1.0pt 0in\'>
-
-
-
-<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-
-style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-
-
-</div>
 
 
 

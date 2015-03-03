@@ -17,15 +17,27 @@
 	</head>
 	<body>
 
+		@if (!empty($showBlock['createWelcomeLetter']))
+			<script>
+				alert('This created an introduction letter. If you do not wish to send an introduction delete the letter from your Pending Letters queue.');
+			</script>
+		@endif
+
 		@if (!empty($message))
 			<div align="center" class="red">
 				{!! $message !!}
 			</div>
 		@endif
 
-		<form name="contactfrm" action="{!! $path !!}/add/1/activePat/{!! $this->request['activePat'] !!}/from/{!! $this->request['from'] !!}/from_id/{!! $this->request['from_id'] !!}/in_field/{!! $this->request['in_field'] !!}/id_field/{!! $this->request['id_field'] !!}" method="post" onSubmit="return contactabc(this)" style="width:99%;">
+		<form name="contactfrm" action="{!! $path !!}{!! !empty($activePat) ? '/' . $activePat : '' !!}" method="post" onSubmit="return contactabc(this)" style="width:99%;">
 			<input type="hidden" id="physician_types" value="{!! $physicianTypes !!}" />
 			<input type="hidden" name="contact_type" value="{!! $ctype !!}" />
+			<input type="hidden" name="add" value="1">
+			<input type="hidden" name="from" value="{!! $from !!}">
+			<input type="hidden" name="from_id" value="{!! $fromId !!}">
+			<input type="hidden" name="in_field" value="{!! $inField !!}">
+			<input type="hidden" name="id_field" value="{!! $idField !!}">
+			<input type="hidden" name="activePat" value="{!! $activePat !!}">
 			<table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
 				<tr>
 					<td colspan="2" class="cat_head">
@@ -287,8 +299,8 @@
 					</td>
 					<td valign="top" class="frmdata">
 						<select name="status" class="tbox" tabindex="22">
-							<option value="1" {!! ($contactInfo['status'] == 1) ? " selected" : ''>Active</option>
-							<option value="2" {!! ($contactInfo['status'] == 2) ? " selected" : ''>In-Active</option>
+							<option value="1" {!! ($contactInfo['status'] == 1) ? " selected" : '' !!}>Active</option>
+							<option value="2" {!! ($contactInfo['status'] == 2) ? " selected" : '' !!}>In-Active</option>
 						</select>
 						<br />&nbsp;
 					</td>
@@ -297,7 +309,7 @@
 					<td  colspan="2" align="center">
 						<span class="red">* Required Fields</span><br />
 						<input type="hidden" name="contactsub" value="1" />
-						<input type="hidden" name="ed" value="{!! $contact->contactid !!}" />
+						<input type="hidden" name="ed" value="{!! $contact->contactid or '' !!}" />
 						<a href="#" id="google_link" target="_blank" style="float:left;" />Google</a>
 						<input type="submit" value=" {!! $butText !!} Contact" class="button" />
 
@@ -307,7 +319,24 @@
 							</a>
 							<br />
 
-							{{-- CODE ... --}}
+							@if (!empty($showBlock['sentLetters']))
+								<a style="float:right;" href="/manage/contact/inactiveid/{!! $contact->contactid !!}" onclick="javascript: return confirm('Letters have previously been sent to this contact; therefore, for medical record purposes the contact cannot be deleted. This contact now will be marked as INACTIVE in your software and will no longer display in search results. Any pending letters associated with this contact will be deleted.');" class="dellink" target="_parent" title="DELETE">
+								<input type="submit" value=" {!! $butText !!} Contact" class="button" />
+
+								@if (!empty($showBlock['delete']))
+									<a style="float:right;" href="/manage/contact/delid/{!! $contact->contactid !!}" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE" target="_parent">
+										Delete 
+									</a>
+								@elseif (!empty($showBlock['deleteWarning']))
+									<a style="float:right;" href="/manage/contact/delid/{!! $contact->contactid !!}" onclick="javascript: return confirm('Warning: There are pending letters associated with this contact.  When you delete the contact the pending letters will also be deleted. Proceed?');" class="dellink" target="_parent" title="DELETE">
+										Delete 
+									</a>
+								@else
+									<a style="float:right;" href="/manage/contact/delid/{!! $contact->contactid !!}" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" target="_parent" title="DELETE">
+										Delete
+									</a>
+								@endif
+							@endif
 
 						@endif
 
@@ -315,5 +344,23 @@
 				</tr>
 			</table>
 		</form>
+
+		@if (!empty($showBlock['updateReferredBy']))
+			<script>
+				parent.updateReferredBy('<option value="{!! $insertContactId !!}" selected="selected">{!! $contactInfo["company"] !!}</option>', '{!! $fromId !!}');
+			</script>
+		@endif
+
+		@if (!empty($showBlock['updateContactField']))
+			<script>
+				parent.updateContactField('{!! $inField !!}', "{!! $showBlock['updateContactField']['name'] !!}", '{!! $idField !!}', "{!! $showBlock['updateContactField']['id'] !!}");
+			</script>
+		@endif
+
+		@if (!empty($showBlock['disablePopupRefClean']))
+			<script>
+				parent.disablePopupRefClean();
+			</script>
+		@endif
 	</body>
 </html>

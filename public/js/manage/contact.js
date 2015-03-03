@@ -16,8 +16,8 @@ function display_content(){
   }
 }
 
-
-$('#contacttypeid').change(function(){
-  display_content();
-}).change();
-
+$(document).ready(function(){
+  $('#contacttypeid').change(function(){
+    display_content();
+  }).change();
+});

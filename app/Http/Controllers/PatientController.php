@@ -49,6 +49,9 @@ class PatientController extends Controller
 	private $letterTemplate;
 	
 	private $request;
+	private $ed;
+	private $preview;
+	private $addtopat;
 
 	private $patientData;
 
@@ -89,6 +92,30 @@ class PatientController extends Controller
 		$this->letterTemplate 	= $letterTemplate;
 
 		$this->request = Request::all();
+
+		if (!empty($this->request['ed'])) {
+			$this->ed = $this->request['ed'];
+		} elseif (!empty(Session::get('ed'))) {
+			$this->ed = Session::get('ed');
+		} else {
+			$this->ed = '';
+		}
+
+		if (!empty($this->request['preview'])) {
+			$this->preview = $this->request['preview'];
+		} elseif (!empty(Session::get('preview'))) {
+			$this->preview = Session::get('preview');
+		} else {
+			$this->preview = '';
+		}
+
+		if (!empty($this->request['addtopat'])) {
+			$this->addtopat = $this->request['addtopat'];
+		} elseif (!empty(Session::get('addtopat'))) {
+			$this->addtopat = Session::get('addtopat');
+		} else {
+			$this->addtopat = '';
+		}
 
 		$this->patientData = array('firstname', 'lastname', 'middlename', 'preferred_name', 'salutation', 'member_no',
 			'group_no', 'plan_no', 'add1', 'add2', 'city', 'state',
@@ -143,7 +170,7 @@ class PatientController extends Controller
 			}
 		}
 
-		$requestEd = (!empty($this->request['ed'])) ? $this->request['ed'] : '-1';
+		$requestEd = (!empty($this->ed)) ? $this->ed : '-1';
 
 		$status = Constants::DSS_PREAUTH_PENDING . ',' . Constants::DSS_PREAUTH_PREAUTH_PENDING;
 
@@ -335,8 +362,8 @@ class PatientController extends Controller
 		}
 
 		// Determine Whether Patient Info has been set
-		if (!empty($this->request['ed'])) {
-			$this->updatePatientSummary($this->request['ed'], 'patient_info', $completeInfo);
+		if (!empty($this->ed)) {
+			$this->updatePatientSummary($this->ed, 'patient_info', $completeInfo);
 		}
 
 		$showBlock = array();
@@ -534,7 +561,7 @@ class PatientController extends Controller
 
 			$patientInfo['use_patient_portal'] = $this->request['use_patient_portal'];
 
-			if (!empty($this->request['ed'])) {
+			if (!empty($this->ed)) {
 				$patient = $this->patient->get(array(
 					'patientid' => $patientId
 				))[0];
@@ -546,10 +573,10 @@ class PatientController extends Controller
 				if ($patient->registration_status == 2 && $this->request['email'] != $patient->email) {
 					sendUpdatedEmail($patientId, $this->request['email'], $patient->email, 'doc');
 				} elseif (isset($this->request['sendRem'])) {
-					sendReminderEmail($this->request['ed'], $this->request['email']);
+					sendReminderEmail($this->ed, $this->request['email']);
 				} elseif (!isset($this->request['sendReg']) && $patient->registration_status == 1 && trim($this->request['email']) != trim($patient->email)) {
 					if (!empty($docPatientPortal) && !empty($patientInfo['use_patient_portal'])) {
-						sendRegistrationEmail($this->request['ed'], $this->request['email'], '');
+						sendRegistrationEmail($this->ed, $this->request['email'], '');
 					}
 				}
 
@@ -575,7 +602,7 @@ class PatientController extends Controller
 				}
 
 				$this->patient->updateData(array(
-					'patientid' => $this->request['ed']
+					'patientid' => $this->ed
 				), $data);
 
 				$data = array(
@@ -583,7 +610,7 @@ class PatientController extends Controller
 				);
 
 				$this->patient->updateData(array(
-					'parent_patientid' => $this->request['ed']
+					'parent_patientid' => $this->ed
 				), $data);
 
 				if ($oldPMInsCo != $this->request['p_m_ins_co'] || $patient->p_m_relation != $this->request['p_m_relation'] ||
@@ -598,10 +625,10 @@ class PatientController extends Controller
 						'viewed' 		=> 1
 					);
 
-					$countOfAffectedRows = $this->insurancePreauth->updateData($this->request['ed'], Constants::DSS_PREAUTH_PENDING, Constants::DSS_PREAUTH_PREAUTH_PENDING, $data);
+					$countOfAffectedRows = $this->insurancePreauth->updateData($this->ed, Constants::DSS_PREAUTH_PENDING, Constants::DSS_PREAUTH_PREAUTH_PENDING, $data);
 
 					if ($countOfAffectedRows >= 1) {
-						$vob = $this->createVob($this->request['ed']);
+						$vob = $this->createVob($this->ed);
 					}
 				}
 
@@ -627,7 +654,7 @@ class PatientController extends Controller
 				}
 
 				$patient = $this->patient->get(array(
-					'patientid' => $this->request['ed']
+					'patientid' => $this->ed
 				))[0];
 
 				$login = $patient->login;
@@ -660,7 +687,7 @@ class PatientController extends Controller
 					);
 
 					$this->patient->updateData(array(
-						'patientid' => $this->request['ed']
+						'patientid' => $this->ed
 					), $data);
 				}
 
@@ -668,7 +695,7 @@ class PatientController extends Controller
 
 				if (!empty($this->request['sendReg']) && $docPatientPortal && $this->request['use_patient_portal']) {
 					if (trim($this->request['email']) != '' && trim($this->request['cell_phone']) != '') {
-						sendRegistrationEmail($this->request['ed'], $this->request['email'], $login, $patient->email);
+						sendRegistrationEmail($this->ed, $this->request['email'], $login, $patient->email);
 					} else {
 						$showWarningCellPhone = true;
 					}
@@ -678,7 +705,7 @@ class PatientController extends Controller
 					'date_completed' => date('Y-m-d', strtotime($this->request['copyreqdate']))
 				);
 
-				$this->flowPg2->updateData($this->request['ed'], $data);
+				$this->flowPg2->updateData($this->ed, $data);
 
 				if ($oldReferredBy != $this->request['referred_by'] || $oldReferredSource != $this->request["referred_source"]) {
 					if ($oldReferredSource == 2 && $this->request['referred_source'] == 2) {
@@ -693,7 +720,7 @@ class PatientController extends Controller
 						$this->letter->updateData(array(
 							'status' 			=> 0,
 							'md_referral_list' 	=> $oldReferredBy,
-							'patientid' 		=> $this->request['ed']
+							'patientid' 		=> $this->ed
 						), $data);
 					} elseif ($oldReferredSource == 1 && $this->request['referred_source'] == 1) {
 						// PATIENT -> PATIENT
@@ -707,7 +734,7 @@ class PatientController extends Controller
 						$this->letter->updateData(array(
 							'status' 			=> 0,
 							'pat_referral_list' => $oldReferredBy,
-							'patientid' 		=> $this->request['ed']
+							'patientid' 		=> $this->ed
 						), $data);
 					} elseif ($oldReferredSource == 2 && $this->request['referred_source'] != 2) {
 						// PHYSICIAN -> NOT PHYSICIAN
@@ -736,14 +763,14 @@ class PatientController extends Controller
 					}
 				}
 
-				$this->triggerLetter1and2($this->request['ed'], array(
+				$this->triggerLetter1and2($this->ed, array(
 					$this->request['docsleep'], $this->request['docpcp'], $this->request['docdentist'],
 					$this->request['docent'], $this->request['docmdother'], $this->request['docmdother2'],
 					$this->request['docmdother3']
 				));
 
 				if (!empty($this->request['introletter']) && $this->request['introletter'] == 1) {
-					$this->triggerLetter3($this->request['ed']);
+					$this->triggerLetter3($this->ed);
 				}
 
 				if (!empty($this->request['add_ref_but'])) {
@@ -860,7 +887,7 @@ class PatientController extends Controller
 				}
 
 				if (!empty($this->request['introletter']) && $this->request['introletter'] == 1) {
-					$this->triggerLetter3($this->request['ed']);
+					$this->triggerLetter3($this->ed);
 				}
 
 				$data = array(

@@ -9,6 +9,7 @@ use Ds3\Contracts\ContactTypeInterface;
 use Ds3\Contracts\ContactInterface;
 use Ds3\Contracts\UserInterface;
 use Ds3\Contracts\QualifierInterface;
+use Ds3\Contracts\LetterInterface;
 
 use Ds3\Libraries\GeneralFunctions;
 use Ds3\Libraries\Constants;
@@ -19,19 +20,28 @@ class ContactController extends Controller
 	private $contact;
 	private $user;
 	private $qualifier;
+	private $letter;
 
 	private $request;
+	private $contactFields;
 
 	public function __construct(ContactTypeInterface $contactType,
 								ContactInterface $contact,
 								UserInterface $user,
-								QualifierInterface $qualifier)
+								QualifierInterface $qualifier,
+								LetterInterface $letter)
 	{
 		$this->contactType 	= $contactType;
 		$this->contact 		= $contact;
 		$this->user 		= $user;
 		$this->qualifier 	= $qualifier;
+		$this->letter 		= $letter;
 		$this->request 		= Request::all();
+
+		$this->contactFields = array('salutation', 'firstname', 'lastname', 'middlename', 'company', 'add1', 'add2', 'city',
+			'state', 'zip', 'phone1', 'phone2', 'fax', 'email', 'national_provider_id', 'qualifier', 'qualifierid',
+			'greeting', 'sincerely', 'contacttypeid', 'notes', 'status', 'preferredcontact', 'dea_number'
+		);
 	}
 
 	public function index()
@@ -39,17 +49,17 @@ class ContactController extends Controller
 		$contactTypes = $this->contactType->getPhysicians();
 
 		$physicians = array();
-		if (count($contactType)) foreach ($contactTypes as $contactType) {
+		if (count($contactTypes)) foreach ($contactTypes as $contactType) {
 			array_push($physicians, $contactType->contacttypeid);
 		}
 
 		$physicianTypes = implode(',', $physicians);
 		$contact = $this->contact->get(array(
-			'contactid' => !empty($this->request['ed']) ? $this->request['ed'] : null
+			'contactid' => !empty(Route::input('ed')) ? Route::input('ed') : null
 		));
 
 		if (!empty($message)) {
-			foreach ($contactFields as $contactField) {
+			foreach ($this->contactFields as $contactField) {
 				if (isset($this->request[$contactField])) {
 					$contactInfo[$contactField] = $this->request[$contactField];
 				} else {
@@ -57,7 +67,7 @@ class ContactController extends Controller
 				}
 			}
 		} else {
-			foreach ($contactFields as $contactField) {
+			foreach ($this->contactFields as $contactField) {
 				if (isset($contact->$contactField)) {
 					$contactInfo[$contactField] = $contact->$contactField;
 				} else {
@@ -86,19 +96,37 @@ class ContactController extends Controller
 			}
 		}
 
-		if (isset($this->request['ed'])) {
+		if (!empty(Route::input('ed'))) {
 			$contact = $this->contact->get(array(
-				'contactid' => !empty($this->request['ed']) ? $this->request['ed'] : null
+				'contactid' => !empty(Route::input('ed')) ? Route::input('ed') : null
 			));
 		}
 
 		$contactTypes = $this->contactType->getContactTypes();
 		$qualifiers = $this->qualifier->getQualifiers();
 
+		$showBlock = array();
+
+		$contactId = !empty($contact->contactId) ? $contact->contactId : 0;
+
+		if (count($this->getContactSentLetters($contactId)) > 0) {
+			$showBlock['sentLetters'] = true;
+
+			if (isset($contactId)) {
+				$showBlock['delete'] = true;
+			} elseif (count($this->getContactPendingLetters($contactId)) > 0) {
+				$showBlock['deleteWarning'] = true;
+			} else {
+				$showBlock['delete'] = true;
+			}
+		}
+
+		$showBlock = array_merge($showBlock, !empty(Session::get('showBlock')) ? Session::get('showBlock') : array());
+
 		$data = array(
 			'path' 				=> '/' . Request::segment(1) . '/' . Request::segment(2),
 			'physicianTypes' 	=> $physicianTypes,
-			'ctype'				=> $this->request['ctype'],
+			'ctype'				=> !empty($this->request['ctype']) ? $this->request['ctype'] : '',
 			'butText'			=> $butText,
 			'heading'			=> !empty($heading) ? $heading : '',
 			'contactInfo'		=> $contactInfo,
@@ -106,8 +134,17 @@ class ContactController extends Controller
 			'contact'			=> !empty($contact) ? $contact : null,
 			'type'				=> !empty($this->request['type']) ? $this->request['type'] : '',
 			'ctypeeq'			=> !empty($this->request['ctypeeq']) ? $this->request['ctypeeq'] : '',
-			'qualifiers'		=> $qualifiers
+			'qualifiers'		=> $qualifiers,
+			'activePat'			=> !empty($this->request['activePat']) ? $this->request['activePat'] : null,
+			'from'				=> !empty($this->request['from']) ? $this->request['from'] : null,
+			'fromId'			=> !empty($this->request['from_id']) ? $this->request['from_id'] : null,
+			'inField'			=> !empty($this->request['in_field']) ? $this->request['in_field'] : null,
+			'idField'			=> !empty($this->request['id_field']) ? $this->request['id_field'] : null,
+			'showBlock'			=> $showBlock,
+			'insertContactId'	=> !empty(Session::get('insertContactId')) ? Session::get('insertContactId') : null
 		);
+
+		// dd($data);
 
 		return view('manage.add_contact', $data);
 	}
@@ -118,23 +155,20 @@ class ContactController extends Controller
 
 	public function add()
 	{
-		$contactFields = array('salutation', 'firstname', 'lastname', 'middlename', 'company', 'add1', 'add2', 'city',
-			'state', 'zip', 'phone1', 'phone2', 'fax', 'email', 'national_provider_id', 'qualifier', 'qualifierid',
-			'greeting', 'sincerely', 'contacttypeid', 'notes', 'status', 'preferredcontact', 'dea_number'
-		);
+		$showBlock = array();
 
 		if (!empty($this->request['contactsub']) && $this->request['contactsub'] == 1) {
-			if (!empty($this->request['ed'])) {
-				foreach ($contactFields as $contactField) {
+			if (!empty(Route::input('ed'))) {
+				foreach ($this->contactFields as $contactField) {
 					$data[$contactField] = $this->request[$contactField];
 				}
 
-				$this->contact->updateData($this->request['ed'], $data);
+				$this->contact->updateData(Route::input('ed'), $data);
 				$message = 'Edited Successfully';
 
 				return redirect('/manage/contact')->with('message', $message);
 			} else {
-				foreach ($contactFields as $contactField) {
+				foreach ($this->contactFields as $contactField) {
 					$data[$contactField] = $this->request[$contactField];
 				}
 
@@ -144,7 +178,7 @@ class ContactController extends Controller
 				$data['docid'] = Session::get('docId');
 				$data['ip_address'] = Request::ip();
 
-				$insertId = $this->contact->insertData($data);
+				$insertContactId = $this->contact->insertData($data);
 				$user = $this->user->findUser(Session::get('docId'));
 
 				if (!empty($user->use_letters) && !empty($user->intro_letters)) {
@@ -152,17 +186,10 @@ class ContactController extends Controller
 
 					if (!empty($contactType->physician) && $contactType->physician == 1) {
 						if (Session::get('userType') != Constants::DSS_USER_TYPE_SOFTWARE) {
-
-							/**
-
-							*/
-							create_welcome_letter('1', $insertId, Session::get('docId'));
-							/**
-
-							*/
-
+							$this->createWelcomeLetter('1', $insertContactId, Session::get('docId'));
 						}
-						create_welcome_letter('2', $insertId, Session::get('docId'));
+						$this->createWelcomeLetter('2', $insertContactId, Session::get('docId'));
+						$showBlock['createWelcomeLetter'] = true;
 					}
 				}
 
@@ -173,21 +200,51 @@ class ContactController extends Controller
 				$npi = $this->request['national_provider_id'];
 				$message = 'Added Successfully';
 				// change
-				if (Route::input('from') == 'add_patient') {
-					if (!empty(Route::input('from_id'))) {
-						// code...
-					} elseif (!empty(Route::input('in_field')) && !empty(Route::input('id_field'))) {
-						// code...
+				if ($this->request['from'] == 'add_patient') {
+					if (!empty($this->request['from_id'])) {
+						if (!empty($this->request['contacttypeid']) && $this->request['contacttypeid'] == 11) {
+							$showBlock['updateReferredBy'] = true;
+						}
+					} elseif (!empty($this->request['in_field']) && !empty($this->request['id_field'])) {
+						if (substr($this->request['in_field'], 0, 16) == 'diagnosising_doc') {
+							$showBlock['updateContactField'] = array(
+								'name' 	=> $npiName,
+								'id'	=> $npi
+							);
+						} else {
+							$showBlock['updateContactField'] = array(
+								'name'	=> $name,
+								'id'	=> $insertContactId
+							);
+						}
 					}
-				} elseif (!empty(Route::input('activePat'))) {
-					// code...
+
+					$showBlock['disablePopupRefClean'] = true;
+				} elseif (!empty($this->request['activePat'])) {
+					$activePat = !empty($this->request['activePat']) ? $this->request['activePat'] : '';
+
+					return redirect('/manage/add_patient{!! $activePat !!}')
+						->with('ed', $activePat)
+						->with('preview', 1)
+						->with('addtopat', 1);
 				} else {
-					// code...	
+					return redirect('/manage/contact')->with('message', $message);	
 				}
 			}
 		}
 
-		return view('manage.add_contact')->with();
+		$redirect = redirect('/manage/add_contact');
+
+		$data = array(
+			'showBlock' => $showBlock,
+			'insertContactId'	=> $insertContactId
+		);
+
+		if (!empty($data)) foreach ($data as $attribute => $value) {
+			$redirect = $redirect->with($attribute, $value);
+		}
+
+		return $redirect;
 	}
 
 	public function view()
@@ -202,14 +259,9 @@ class ContactController extends Controller
 		$physicianTypes = implode(',', $physicianIds);
 		$contact = $this->contact->getDocsleep(!empty(Route::input('ed')) ? Route::input('ed') : null);
 
-		$contactFields = array('salutation', 'firstname', 'middlename', 'lastname', 'company', 'contacttype',
-			'add1', 'add2', 'city', 'state', 'zip', 'phone1', 'phone2', 'fax', 'email', 'national_provider_id',
-			'qualifier', 'qualifierid', 'greeting', 'sincerely', 'contacttypeid', 'notes', 'preferredcontact', 'status'
-		);
-
-		if (!empty($contact)) foreach ($contactFields as $field) {
+		if (!empty($contact)) foreach ($this->contactFields as $field) {
 			$contactData[$field] = !empty($contact->$field) ? $contact->$field : '';
-		} else foreach ($contactFields as $field) {
+		} else foreach ($this->contactFields as $field) {
 			$contactData[$field] = '';
 		}
 
@@ -233,5 +285,56 @@ class ContactController extends Controller
 		);
 
 		return view('manage.view_contact', $data);
+	}
+
+	private function createWelcomeLetter($templateId, $mdList, $docId)
+	{
+		$user = $this->user->findUser($docId);
+
+		if (!empty($user->use_letters) && !empty($user->intro_letters)) {
+			$genDate = date('Y-m-d H:i:s');
+			$status = '0';
+			$delivered = '0';
+			$deleted = '0';
+			$data['templateid'] = $templateId;
+
+			if ($status == 1) {
+				$data['date_sent'] = date('Y-m-d H:i:s');
+			}
+
+			if (isset($mdList)) {
+				$data['md_list'] = $mdList;
+				$data['cc_md_list'] = $mdList;
+			}
+
+			if (isset($status)) {
+				$data['status'] = $status;
+			}
+
+			if (isset($deleted)) {
+				$data['deleted'] = $deleted;
+			}
+
+			$data['generated_date'] = $genDate;
+			$data['delivered'] = $delivered;
+			$data['docid'] = $docId;
+			$data['userid'] = $docId;
+
+			return $this->letter->insertData($data);
+		}
+	}
+
+	private function getContactSentLetters($contactId)
+	{
+		$letters = $this->letter->getContactSentLetters(1, $contactId);
+
+		return $letters;
+	}
+
+	private function getContactPendingLetters($contactId)
+	{
+		$letters = $this->letter->getContactSentLetters(0, $contactId);
+
+		return $letters;
 	}
 }

@@ -326,6 +326,9 @@ if($is_pri_pending){
 	if($pat_myarray['p_m_ins_ass']=='Yes'){
 	  $insured_signature = 1;
 	}
+  else{
+    $insured_signature = 0;
+  }
 	$patient_signature = 1;
 	$signature_physician = "Signature on File";
 	$patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
@@ -883,9 +886,9 @@ $query = mysql_query($sql);
     $('input[name="billing_provider[npi]"]').val("<?= ($insurancetype == '1')?$medicare_npi:$npi; ?>"); 
     $('input[name="billing_provider[taxonomy_code]"]').val("332B00000X");
     <?php if ($insured_signature): ?>
-      $('input[name="insured_signature"]').prop('checked',true);
+      $('input[name="claim[direct_payment_authorized]"]').prop('checked',true);
     <?php else: ?>
-      $('input[name="insured_signature"]').prop('checked',false);     
+      $('input[name="claim[direct_payment_authorized]"]').prop('checked',false);
     <?php endif; ?>
 	//<?= $billing_provider_b_other; ?>"); 
 

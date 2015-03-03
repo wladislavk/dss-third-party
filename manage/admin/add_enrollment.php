@@ -16,6 +16,13 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
         $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."'";
         $t_q = mysql_query($t_sql);
         $t_r = mysql_fetch_assoc($t_q);
+$signature_sql = "SELECT * FROM dental_user_signatures WHERE user_id='" . mysql_real_escape_string($_GET['docid']) . "' ORDER BY adddate DESC LIMIT 1";
+$signature_query =  mysql_query($signature_sql);
+$signature_result = mysql_fetch_assoc($signature_query);
+$signature_json = "";
+if ($signature_result){
+  $signature_json = $signature_result['signature_json'];
+}
 $data = array();
 $data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
 if(isset($_POST['test']) && $_POST['test'] == "1"){
@@ -37,7 +44,7 @@ $data['enrollment_npi'] = array(
                 "last_name" => $_POST['last_name'],
                 "contact_number" => $_POST['phone'],
                 "email" => $_POST['email'],
-                "signature" => array("coordinates" => $r['signature_json'])
+                "signature" => array("coordinates" => $signature_json)
                 )
         );
 

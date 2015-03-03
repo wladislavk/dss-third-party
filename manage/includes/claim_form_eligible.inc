@@ -698,24 +698,36 @@ if(!$r['reference_id'] || !$w_r['response']){
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_1)."'";
      $ins_diag_q = mysql_query($ins_diag_sql);
      $ins_diag = mysql_fetch_assoc($ins_diag_q);
+     if (!empty($ins_diag['ins_diagnosis']) && empty($diagnosis_a)){
+      $diagnosis_a = $ins_diag['ins_diagnosis'];
+     }
    ?>
     $('input[name="claim[diagnosis_codes][1]"]').val("<?= $ins_diag['ins_diagnosis']; ?>");
    <?php
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_2)."'";
      $ins_diag_q = mysql_query($ins_diag_sql);
      $ins_diag = mysql_fetch_assoc($ins_diag_q);
+     if (!empty($ins_diag['ins_diagnosis']) && empty($diagnosis_b)){
+       $diagnosis_b = $ins_diag['ins_diagnosis'];
+     }
    ?>
     $('input[name="claim[diagnosis_codes][2]"]').val("<?= $ins_diag['ins_diagnosis']; ?>");
    <?php
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_3)."'";
      $ins_diag_q = mysql_query($ins_diag_sql);
      $ins_diag = mysql_fetch_assoc($ins_diag_q);
+     if (!empty($ins_diag['ins_diagnosis']) && empty($diagnosis_c)){
+       $diagnosis_c = $ins_diag['ins_diagnosis'];
+     }
    ?>
     $('input[name="claim[diagnosis_codes][3]"]').val("<?= $ins_diag['ins_diagnosis']; ?>");
    <?php
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_4)."'";
      $ins_diag_q = mysql_query($ins_diag_sql);
      $ins_diag = mysql_fetch_assoc($ins_diag_q);
+     if (!empty($ins_diag['ins_diagnosis']) && empty($diagnosis_d)){
+       $diagnosis_d = $ins_diag['ins_diagnosis'];
+     }
    ?>
     $('input[name="claim[diagnosis_codes][4]"]').val("<?= $ins_diag['ins_diagnosis']; ?>");
 

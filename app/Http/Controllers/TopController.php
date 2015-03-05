@@ -540,4 +540,15 @@ class TopController extends Controller
 
 		return $numChanges;
 	}
+
+	public function setRouteParameters()
+	{
+		if (\Request::ajax()) {
+			$data = \Request::input('data');
+
+			if (!empty($data)) foreach ($data as $attribute => $value) {
+				Session::put($attribute, $value);
+			}
+		}
+	}
 }

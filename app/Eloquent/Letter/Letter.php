@@ -7,4 +7,6 @@ class Letter extends Model
 	protected $table = 'dental_letters';
 
 	protected $primaryKey = 'letterid';
+
+	// public $timestamps = false;
 }

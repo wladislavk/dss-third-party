@@ -4,6 +4,7 @@
 
 $router->post('/warnings', 'TopController@hideWarnings');
 $router->post('/imagePopup', 'ImageController@setInfoPopup');
+$router->post('/set_route_parameters', 'TopController@setRouteParameters');
 
 $router->get('/', function() {
     return redirect('/manage/login');
@@ -20,6 +21,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->get('display_file/{file?}', 'FileController@display');
     $router->get('imageholder/{image}/{folder?}', 'ImageController@imageHolder');
     $router->get('add_contact/{ed?}', 'ContactController@index');
+    $router->post('add_contact/{ed?}', 'ContactController@add');
 
 	$router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 

@@ -25,12 +25,21 @@ class ContactController extends Controller
 	private $request;
 	private $contactFields;
 
+	private $activePat;
+	private $from;
+	private $fromId;
+	private $inField;
+	private $idField;
+	private $ctype;
+	private $type;
+	private $ctypeeq;
+
 	public function __construct(ContactTypeInterface $contactType,
 								ContactInterface $contact,
 								UserInterface $user,
 								QualifierInterface $qualifier,
 								LetterInterface $letter)
-	{
+	{		
 		$this->contactType 	= $contactType;
 		$this->contact 		= $contact;
 		$this->user 		= $user;
@@ -38,9 +47,18 @@ class ContactController extends Controller
 		$this->letter 		= $letter;
 		$this->request 		= Request::all();
 
+		$this->activePat 	= GeneralFunctions::getRouteParameter('activePat');
+		$this->from 		= GeneralFunctions::getRouteParameter('from');
+		$this->fromId 		= GeneralFunctions::getRouteParameter('from_id');
+		$this->inField 		= GeneralFunctions::getRouteParameter('in_field');
+		$this->idField 		= GeneralFunctions::getRouteParameter('id_field');
+		$this->ctype 		= GeneralFunctions::getRouteParameter('ctype');
+		$this->type 		= GeneralFunctions::getRouteParameter('type');
+		$this->ctypeeq		= GeneralFunctions::getRouteParameter('ctypeeq');
+
 		$this->contactFields = array('salutation', 'firstname', 'lastname', 'middlename', 'company', 'add1', 'add2', 'city',
 			'state', 'zip', 'phone1', 'phone2', 'fax', 'email', 'national_provider_id', 'qualifier', 'qualifierid',
-			'greeting', 'sincerely', 'contacttypeid', 'notes', 'status', 'preferredcontact', 'dea_number'
+			'contacttypeid', 'notes', 'status', 'preferredcontact', 'dea_number'
 		);
 	}
 
@@ -126,20 +144,20 @@ class ContactController extends Controller
 		$data = array(
 			'path' 				=> '/' . Request::segment(1) . '/' . Request::segment(2),
 			'physicianTypes' 	=> $physicianTypes,
-			'ctype'				=> !empty($this->request['ctype']) ? $this->request['ctype'] : '',
+			'ctype'				=> $this->ctype,
 			'butText'			=> $butText,
 			'heading'			=> !empty($heading) ? $heading : '',
 			'contactInfo'		=> $contactInfo,
 			'contactTypes'		=> $contactTypes,
 			'contact'			=> !empty($contact) ? $contact : null,
-			'type'				=> !empty($this->request['type']) ? $this->request['type'] : '',
-			'ctypeeq'			=> !empty($this->request['ctypeeq']) ? $this->request['ctypeeq'] : '',
+			'type'				=> $this->type,
+			'ctypeeq'			=> $this->ctypeeq,
 			'qualifiers'		=> $qualifiers,
-			'activePat'			=> !empty($this->request['activePat']) ? $this->request['activePat'] : null,
-			'from'				=> !empty($this->request['from']) ? $this->request['from'] : null,
-			'fromId'			=> !empty($this->request['from_id']) ? $this->request['from_id'] : null,
-			'inField'			=> !empty($this->request['in_field']) ? $this->request['in_field'] : null,
-			'idField'			=> !empty($this->request['id_field']) ? $this->request['id_field'] : null,
+			'activePat'			=> $this->activePat,
+			'from'				=> $this->from,
+			'fromId'			=> $this->fromId,
+			'inField'			=> $this->inField,
+			'idField'			=> $this->idField,
 			'showBlock'			=> $showBlock,
 			'insertContactId'	=> !empty(Session::get('insertContactId')) ? Session::get('insertContactId') : null
 		);
@@ -200,13 +218,13 @@ class ContactController extends Controller
 				$npi = $this->request['national_provider_id'];
 				$message = 'Added Successfully';
 				// change
-				if ($this->request['from'] == 'add_patient') {
-					if (!empty($this->request['from_id'])) {
+				if ($this->from == 'add_patient') {
+					if (!empty($this->fromId)) {
 						if (!empty($this->request['contacttypeid']) && $this->request['contacttypeid'] == 11) {
 							$showBlock['updateReferredBy'] = true;
 						}
-					} elseif (!empty($this->request['in_field']) && !empty($this->request['id_field'])) {
-						if (substr($this->request['in_field'], 0, 16) == 'diagnosising_doc') {
+					} elseif (!empty($this->inField) && !empty($this->idField)) {
+						if (substr($this->inField, 0, 16) == 'diagnosising_doc') {
 							$showBlock['updateContactField'] = array(
 								'name' 	=> $npiName,
 								'id'	=> $npi
@@ -220,8 +238,8 @@ class ContactController extends Controller
 					}
 
 					$showBlock['disablePopupRefClean'] = true;
-				} elseif (!empty($this->request['activePat'])) {
-					$activePat = !empty($this->request['activePat']) ? $this->request['activePat'] : '';
+				} elseif (!empty($this->activePat)) {
+					$activePat = $this->activePat;
 
 					return redirect('/manage/add_patient{!! $activePat !!}')
 						->with('ed', $activePat)
@@ -236,8 +254,8 @@ class ContactController extends Controller
 		$redirect = redirect('/manage/add_contact');
 
 		$data = array(
-			'showBlock' => $showBlock,
-			'insertContactId'	=> $insertContactId
+			'showBlock' 		=> $showBlock,
+			'insertContactId' 	=> $insertContactId
 		);
 
 		if (!empty($data)) foreach ($data as $attribute => $value) {
@@ -246,6 +264,10 @@ class ContactController extends Controller
 
 		return $redirect;
 	}
+
+	/**
+
+	*/
 
 	public function view()
 	{
@@ -286,6 +308,10 @@ class ContactController extends Controller
 
 		return view('manage.view_contact', $data);
 	}
+
+	/**
+
+	*/
 
 	private function createWelcomeLetter($templateId, $mdList, $docId)
 	{

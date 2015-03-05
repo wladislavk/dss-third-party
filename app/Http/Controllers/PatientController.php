@@ -93,29 +93,9 @@ class PatientController extends Controller
 
 		$this->request = Request::all();
 
-		if (!empty($this->request['ed'])) {
-			$this->ed = $this->request['ed'];
-		} elseif (!empty(Session::get('ed'))) {
-			$this->ed = Session::get('ed');
-		} else {
-			$this->ed = '';
-		}
-
-		if (!empty($this->request['preview'])) {
-			$this->preview = $this->request['preview'];
-		} elseif (!empty(Session::get('preview'))) {
-			$this->preview = Session::get('preview');
-		} else {
-			$this->preview = '';
-		}
-
-		if (!empty($this->request['addtopat'])) {
-			$this->addtopat = $this->request['addtopat'];
-		} elseif (!empty(Session::get('addtopat'))) {
-			$this->addtopat = Session::get('addtopat');
-		} else {
-			$this->addtopat = '';
-		}
+		$this->ed = GeneralFunctions::getRouteParameter('ed');
+		$this->preview = GeneralFunctions::getRouteParameter('preview');
+		$this->addtopat = GeneralFunctions::getRouteParameter('addtopat');
 
 		$this->patientData = array('firstname', 'lastname', 'middlename', 'preferred_name', 'salutation', 'member_no',
 			'group_no', 'plan_no', 'add1', 'add2', 'city', 'state',

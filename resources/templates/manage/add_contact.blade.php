@@ -38,6 +38,7 @@
 			<input type="hidden" name="in_field" value="{!! $inField !!}">
 			<input type="hidden" name="id_field" value="{!! $idField !!}">
 			<input type="hidden" name="activePat" value="{!! $activePat !!}">
+			<input type="hidden" name="_token" value="{!! csrf_token() !!}">
 			<table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
 				<tr>
 					<td colspan="2" class="cat_head">
@@ -65,7 +66,7 @@
 
 											@if (!empty($contactTypes))
 												@foreach ($contactTypes as $contactType)
-													@if (!empty($contact->contacttypeid) && $contact->contacttypeid == $contactType->contacttypeid || !empty($type) && $contact->contacttypeid == $type || !empty($ctypeeq) && $contact->contacttypeid == '11')
+													@if (!empty($contact->contacttypeid) && ($contact->contacttypeid == $contactType->contacttypeid || !empty($type) && $contact->contacttypeid == $type || !empty($ctypeeq) && $contact->contacttypeid == '11'))
 														<option selected value="{!! $contactType->contacttypeid or '' !!}">
 													@else
 														<option value="{!! $contactType->contacttypeid or '' !!}">

@@ -7,4 +7,6 @@ class Contact extends Model
 	protected $table = 'dental_contact';
 
 	protected $primaryKey = 'contactid';
+
+	// public $timestamps = false;
 }

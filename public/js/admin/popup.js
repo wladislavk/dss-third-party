@@ -53,21 +53,28 @@ function loadPopupWithClose(fa, c){
 
 
 //loading popup with jQuery magic!
-function loadPopupRefer(fa){
+function loadPopupRefer(fa, data, token){
         //centering with css
         centerPopupRef();
 
-        document.getElementById("aj_ref").src = fa;
+        var data = JSON.parse(data);
 
-        //loads popup only if it is disabled
-        if(popupStatus==0){
-                $("#backgroundPopupRef").css({
-                        "opacity": "0.7"
-                });
-                $("#backgroundPopupRef").fadeIn("slow");
-                $("#popupRefer").fadeIn("slow");
-                popupStatus = 1;
-        }
+        $.post("/set_route_parameters", {
+            _token: token,
+            data: data
+        }).done(function(){
+            document.getElementById("aj_ref").src = fa;    
+
+            //loads popup only if it is disabled
+            if(popupStatus==0){
+                    $("#backgroundPopupRef").css({
+                            "opacity": "0.7"
+                    });
+                    $("#backgroundPopupRef").fadeIn("slow");
+                    $("#popupRefer").fadeIn("slow");
+                    popupStatus = 1;
+            }
+        });
 }
 
 //loading popup with jQuery magic!

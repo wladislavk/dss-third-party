@@ -1,5 +1,8 @@
 <?php namespace Ds3\Libraries;
 
+use Request;
+use Session;
+
 use Ds3\Libraries\Constants;
 
 class GeneralFunctions
@@ -113,5 +116,16 @@ class GeneralFunctions
 		preg_match($pattern, $n, $matches);
 		
 		return $matches[2];
+	}
+
+	public static function getRouteParameter($name)
+	{
+		if (!empty(Request::input($name))) {
+			return Request::input($name);
+		} elseif (!empty(Session::get($name))) {
+			return Session::pull($name);
+		} else {
+			return '';
+		}
 	}
 }

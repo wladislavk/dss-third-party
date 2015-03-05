@@ -1,5 +1,18 @@
 ## DS3 Software
 
+##### 1 Master branch is PRODUCTION code
+##### 2 Develop branch is STAGING code, where Unit Tests and final QA are performed
+##### 3 'Feature' branches used to develop each component
+###### Workflow
+1 Develop each feature in separate branch with prefix "feature-".  For example "feature-email".
+
+2 Merge 'feature' branch into "develop"
+
+3 Run Unit tests on Develop branch, perform QA testing.
+
+4 If tests pass and QA good, merge Develop in Master. Deploy to Production.
+
+
 #### How to Install
 ##### Prerequisite
 #######  Vagrant + Homestead ( kindly follow this link https://laracasts.com/lessons/say-hello-to-laravel-homestead-two )
@@ -13,8 +26,6 @@
 
 4 create file under config folder -> database.php and use contents of this gist in database.php   
    https://gist.github.com/unknownArtist/e26091bac90bbb905060
-
-   
    
 5 In database.php under connections set your database credientials for mysql
 

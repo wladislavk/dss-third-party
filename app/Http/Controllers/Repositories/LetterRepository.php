@@ -103,6 +103,17 @@ class LetterRepository implements LetterInterface
 		return $letters;
 	}
 
+	public function getContactLetters($contact, $where)
+	{
+		$letters = Letter::whereRaw('FIND_IN_SET(' . $contact[0] . ', ' . $contact[1] . ')');
+
+		if (!empty($where)) foreach ($where as $attribute => $value) {
+			$letters = $letters->where($attribute, $value);
+		}
+
+		return $letters->get();
+	}
+
 	public function getContactSentLetters($delivered, $contactId)
 	{
 		$letters = Letter::where('delivered', '=', $delivered)

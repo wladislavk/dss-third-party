@@ -289,11 +289,11 @@ if ((isset($_GET['status']) && ($_GET['status'] != '')) || !empty($_GET['fid']))
 		$sql .= " AND ((claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")) OR
 				(claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SEC_SENT.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_SEC_PATIENT.")))";
         }elseif($_GET['status'] == 'unpaid14'){
-                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 14 day)";
+                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.",".DSS_CLAIM_SEC_EFILE_ACCEPTED.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 14 day)";
         }elseif($_GET['status'] == 'unpaid21'){
-                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 21 day)";
+                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.",".DSS_CLAIM_SEC_EFILE_ACCEPTED.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 21 day)";
         }elseif($_GET['status'] == 'unpaid45'){
-                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 45 day)";
+                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.",".DSS_CLAIM_SEC_EFILE_ACCEPTED.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 45 day)";
         }else{
         	$sql .= " AND claim.status = " . $_GET['status'] . " ";
 	}
@@ -311,7 +311,7 @@ if ((isset($_GET['status']) && ($_GET['status'] != '')) || !empty($_GET['fid']))
     $sql .= "  
 AND
 (
- CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.")
+ CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.")
     THEN p.p_m_dss_file
     ELSE p.s_m_dss_file
    END = '1' 

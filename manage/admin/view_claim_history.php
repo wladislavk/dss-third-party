@@ -24,24 +24,22 @@ $num_users=mysql_num_rows($my);
 		<h3>Claim Electronically filed on
     		<?= $r['adddate']; ?></h3>
 		<p>Response: <?= $r['response'];?></p>
+		<?php 
+		  if ($r['reference_id'] == ''){
+		?>
      		<h4>Webhook responses</h4> 
 		<?php
-			if (!empty(mysql_real_escape_string($r['reference_id'])){
-				$w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysql_real_escape_string($r['reference_id'])."'";
-				$w_q = mysql_query($w_sql);
-				while($w_r = mysql_fetch_assoc($w_q)){
-				  ?><strong><?= $w_r['event_type']; ?></strong>
-					<p><?= $w_r['response']; ?></p>
-					<?php $p = json_decode($w_r['response']); ?>
-					<p>Category: <?= $p->{"details"}->{"codes"}->{"category_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"category_label"}; ?><br />
-					Status: <?= $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"status_label"}; ?>
-					</p>
+			$w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysql_real_escape_string($r['reference_id'])."'";
+			$w_q = mysql_query($w_sql);
+			while($w_r = mysql_fetch_assoc($w_q)){
+			  ?><strong><?= $w_r['event_type']; ?></strong>
+				<p><?= $w_r['response']; ?></p>
+				<?php $p = json_decode($w_r['response']); ?>
+				<p>Category: <?= $p->{"details"}->{"codes"}->{"category_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"category_label"}; ?><br />
+				Status: <?= $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"status_label"}; ?>
+				</p>
 			<?php
 			}
-		} else {
-			?>
-			<p>no reference ID, can't load responses from eligible.</p>
-		<?php
 		}
 			?>
 	</div><?php

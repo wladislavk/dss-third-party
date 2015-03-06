@@ -25,7 +25,7 @@ $num_users=mysql_num_rows($my);
     		<?= $r['adddate']; ?></h3>
 		<p>Response: <?= $r['response'];?></p>
 		<?php 
-		  if ($r['reference_id'] == ''){
+		  if ($r['reference_id'] != ''){
 		?>
      		<h4>Webhook responses</h4> 
 		<?php

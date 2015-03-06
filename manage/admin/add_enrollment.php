@@ -360,7 +360,7 @@ function update_list(){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=professional%20claims&enrollment_required=true&api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer');
   }
 }
-
+$('#transaction_type').on("change", update_list);
 $('#provider_select').change(function(){
   var json = $(this).val();
   var r = $.parseJSON(json);

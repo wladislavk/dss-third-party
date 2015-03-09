@@ -12,6 +12,7 @@ use Ds3\Contracts\QualifierInterface;
 use Ds3\Contracts\LetterInterface;
 use Ds3\Contracts\FaxInterface;
 use Ds3\Contracts\LetterTemplateInterface;
+use Ds3\Contracts\PatientInterface;
 
 use Ds3\Libraries\GeneralFunctions;
 use Ds3\Libraries\Constants;
@@ -23,9 +24,10 @@ class ContactController extends Controller
 	private $contact;
 	private $user;
 	private $qualifier;
-	private $letter;
+	private $letterDB;
 	private $fax;
 	private $letterTemplate;
+	private $patient;
 
 	private $request;
 	private $contactFields;
@@ -39,22 +41,31 @@ class ContactController extends Controller
 	private $type;
 	private $ctypeeq;
 	private $delid;
+	private $inactiveid;
+	private $page;
+	private $contacttype;
+	private $status;
+	private $letter;
+	private $sort;
+	private $sortdir;
 
 	public function __construct(ContactTypeInterface $contactType,
 								ContactInterface $contact,
 								UserInterface $user,
 								QualifierInterface $qualifier,
-								LetterInterface $letter,
+								LetterInterface $letterDB,
 								FaxInterface $fax,
-								LetterTemplateInterface $letterTemplate)
+								LetterTemplateInterface $letterTemplate,
+								PatientInterface $patient)
 	{		
 		$this->contactType 		= $contactType;
 		$this->contact 			= $contact;
 		$this->user 			= $user;
 		$this->qualifier 		= $qualifier;
-		$this->letter 			= $letter;
+		$this->letterDB 		= $letterDB;
 		$this->fax 				= $fax;
 		$this->letterTemplate 	= $letterTemplate;
+		$this->patient 			= $patient;
 
 		$this->request 		= Request::all();
 		$this->activePat 	= GeneralFunctions::getRouteParameter('activePat');
@@ -66,6 +77,13 @@ class ContactController extends Controller
 		$this->type 		= GeneralFunctions::getRouteParameter('type');
 		$this->ctypeeq		= GeneralFunctions::getRouteParameter('ctypeeq');
 		$this->delid 		= GeneralFunctions::getRouteParameter('delid');
+		$this->inactiveid 	= GeneralFunctions::getRouteParameter('inactiveid');
+		$this->page 		= GeneralFunctions::getRouteParameter('page');
+		$this->contacttype 	= GeneralFunctions::getRouteParameter('contacttype');
+		$this->status 		= GeneralFunctions::getRouteParameter('status');
+		$this->letter 		= GeneralFunctions::getRouteParameter('letter');
+		$this->sort 		= GeneralFunctions::getRouteParameter('sort');
+		$this->sortdir 		= GeneralFunctions::getRouteParameter('sortdir');
 
 		$this->contactFields = array('salutation', 'firstname', 'lastname', 'middlename', 'company', 'add1', 'add2', 'city',
 			'state', 'zip', 'phone1', 'phone2', 'fax', 'email', 'national_provider_id', 'qualifier', 'qualifierid',
@@ -328,7 +346,134 @@ class ContactController extends Controller
 	{
 		if (!empty($this->delid)) {
 			$this->deleteContactLetters($this->delid);
+			$this->deleteContactFromPatients($this->delid);
+			$this->contact->deleteData($this->delid);
 
+			$message = 'Deleted Successfully';
+			return redirect('/manage/contact')->with('message', $message);
+		}
+
+		if (!empty($this->inactiveid)) {
+			$this->contact->updateData($this->inactiveid, array('status' => '2'));
+			$this->deleteContactLetters($this->inactiveid);
+
+			$message = 'Set to inactive';
+			return redirect('/manage/contact')->with('message', $message);
+		}
+
+		$recDisp = 50;
+
+		if (!empty($this->page)) {
+			$indexVal = $this->page;
+		} else {
+			$indexVal = 0;
+		}
+
+		$iVal = $indexVal * $recDisp;
+		$contactTypeHolder = !empty($this->contacttype) ? $this->contacttype : '';
+
+		if (!empty($this->letter)) {
+			$letter = $this->letter;
+		} else {
+			$letter = null;
+		}
+
+		if (!empty($this->sort)) {
+			switch ($this->sort) {
+				case 'company':
+					$order = array('company' => $this->sortdir);
+					break;
+				case 'type':
+					$order = array('dct.contacttype' => $this->sortdir);
+					break;
+				default:
+					$order = array(
+						'lastname'	=> $this->sortdir,
+						'firstname' => $this->sortdir
+					);
+					break;
+			}
+		} else {
+			$order = null;
+		}
+
+		if (!empty($contactTypeHolder)) {
+			$contacts = $this->contact->getContactTypeHolder(array(
+				'docid' 			=> Session::get('docId'),
+				'dct.contacttypeid' => $contactTypeHolder,
+				'dc.status'			=> 1
+			), $letter, $order);
+
+			$totalRec = count($contacts);
+			$contacts = $this->contact->getContactTypeHolder(array(
+				'docid' 			=> Session::get('docId'),
+				'dct.contacttypeid' => $contactTypeHolder,
+				'dc.status'			=> 1
+			), $letter, $order, $recDisp, $iVal);
+		} elseif (!empty($this->status)) {
+			$contacts = $this->contact->getContactTypeHolder(array(
+				'docid' 			=> Session::get('docId'),
+				'dc.status'			=> $this->status
+			), $letter, $order);
+
+			$totalRec = count($contacts);
+			$contacts = $this->contact->getContactTypeHolder(array(
+				'docid' 			=> Session::get('docId'),
+				'dc.status'			=> $this->status
+			), $letter, $order, $recDisp, $iVal);
+		} else {
+			$contacts = $this->contact->getContactTypeHolder(array(
+				'docid' 			=> Session::get('docId'),
+				'dc.status'			=> 1
+			), $letter, $order);
+
+			$totalRec = count($contacts);
+
+			// dd($recDisp, $iVal);
+
+			$contacts = $this->contact->getContactTypeHolder(array(
+				'docid' 			=> Session::get('docId'),
+				'dc.status'			=> 1
+			), $letter, $order, $recDisp, $iVal);
+		}
+
+		$noPages = $totalRec / $recDisp;
+
+		$contactTypes = $this->contactType->getAll();
+		if (!empty($contactTypes)) foreach ($contactTypes as $row) {
+			$contactType[$row->contacttypeid] = $row->contacttype;
+		}
+
+		// ++head info (end)
+
+		$contactTypes = $this->contactType->getContactTypes();
+
+		$letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+
+		$patientsInfo = array();
+
+		if (!empty($contacts)) foreach ($contacts as $contact) {
+			$patients = $this->patient->getReferredPatients($contact->contactid);
+			$patientsInfo[$contact->contactid]['ref'] = $patients;
+
+			$where = array(
+				'docpcp' 		=> $contact->contactid,
+				'docent' 		=> $contact->contactid,
+				'docsleep' 		=> $contact->contactid,
+				'docdentist'	=> $contact->contactid,
+				'docmdother'	=> $contact->contactid,
+				'docmdother2'	=> $contact->contactid,
+				'docmdother3' 	=> $contact->contactid,
+			);
+
+			/**
+
+			*/
+			$patients = $this->patient->getPatients($where); // check returned values
+			/**
+
+			*/
+			$patientsInfo[$contact->contactid]['pat'] = $patients;
 		}
 
 		foreach ($this->request as $name => $value) {
@@ -336,8 +481,25 @@ class ContactController extends Controller
 		}
 
 		$data = array_merge($data, array(
-			'path' => '/' . Request::segment(1) . '/' . Request::segment(2)
+			'path'			=> '/' . Request::segment(1) . '/' . Request::segment(2),
+			'contactTypes' 	=> $contactTypes,
+			'contactType'	=> $contactType,
+			'message'		=> !empty($message) ? $message : '',
+			'letters'		=> $letters,
+			'letter'		=> $this->letter,
+			'status'		=> $this->status,
+			'sort'			=> $this->sort,
+			'sortdir'		=> $this->sortdir,
+			'contacttype'	=> $this->contacttype,
+			'totalRec'		=> $totalRec,
+			'recDisp'		=> $recDisp,
+			'indexVal'		=> $indexVal,
+			'contacts'		=> $contacts,
+			'patientsInfo'	=> $patientsInfo,
+			'noPages'		=> $noPages
 		));
+
+		// dd($data);
 
 		return view('manage.contact', $data);
 	}
@@ -351,12 +513,20 @@ class ContactController extends Controller
 	private function deleteContactFromPatients($contactId)
 	{
 		$docs = array('docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother', 'docmdother2', 'docmdother3');
-		
+		foreach ($docs as $doc) {
+			$data = array(
+				$doc => ''
+			);
+
+			$this->patient->updateData(array(
+				$doc => $contactId
+			), $data);
+		}
 	}
 
 	private function deleteContactLetters($contactId)
 	{
-		$letters = $this->letter->getContactLetters(array($contactId, 'md_list'), array(
+		$letters = $this->letterDB->getContactLetters(array($contactId, 'md_list'), array(
 			'status' 	=> 0,
 			'delivered' => 0
 		));
@@ -365,7 +535,7 @@ class ContactController extends Controller
 			$this->deleteLetter($letter->letterid, false, 'md', $contactId);
 		}
 
-		$letters = $this->letter->getContactLetters(array($contactId, 'md_referral_list'), array(
+		$letters = $this->letterDB->getContactLetters(array($contactId, 'md_referral_list'), array(
 			'status' 	=> 0
 		));
 
@@ -377,7 +547,7 @@ class ContactController extends Controller
 	private function deleteLetter($letterId, $parent = null, $type, $recipientId, $template = null)
 	{
 		$rval = '';
-		$letters = $this->letter->get(array(
+		$letters = $this->letterDB->get(array(
 			'letterid' => $letterId
 		));
 
@@ -399,17 +569,17 @@ class ContactController extends Controller
 				'deleted_on' 	=> date('Y-m-d H:i:s')
 			);
 
-			$letterUpdate = $this->letter->updateData(array('letterid' => $letterId), $data);
+			$letterUpdate = $this->letterDB->updateData(array('letterid' => $letterId), $data);
 
 			$data = array('viewed' => '1');
 			$this->fax->updateData(array('letterid' => $letterId), $data);
 
 			$data = array('parentid' => null);
-			$this->letter->updateData(array('parentid' => $letterId), $data);
+			$this->letterDB->updateData(array('parentid' => $letterId), $data);
 
 			return $letterUpdate;
 		} else {
-			$selectLetters = $this->letter->get(array('letterid' => $letterId));
+			$selectLetters = $this->letterDB->get(array('letterid' => $letterId));
 
 			if (!empty($selectLetters)) foreach ($selectLetters as $selectLetter) {
 				$deleted = '1';
@@ -461,7 +631,7 @@ class ContactController extends Controller
 						'cc_topatient'	=> $removepatient
 					);
 
-					$updateLetters = $this->letter->updateData(array(
+					$updateLetters = $this->letterDB->updateData(array(
 						'letterid' => $letterId
 					), $data);
 				} elseif ($type == 'md') {
@@ -470,7 +640,7 @@ class ContactController extends Controller
 						'cc_md_list'	=> $newCcMds
 					);
 
-					$updateLetters = $this->letter->updateData(array(
+					$updateLetters = $this->letterDB->updateData(array(
 						'letterid' => $letterId
 					), $data);
 				} elseif ($type == 'md_referral') {
@@ -479,7 +649,7 @@ class ContactController extends Controller
 						'cc_md_referral_list'	=> $newCcMdReferrals
 					);
 
-					$updateLetters = $this->letter->updateData(array(
+					$updateLetters = $this->letterDB->updateData(array(
 						'letterid' => $letterId
 					), $data);
 				} elseif ($type == 'pat_referral') {
@@ -488,7 +658,7 @@ class ContactController extends Controller
 						'cc_pat_referral_list'	=> $newCcPatReferrals
 					);
 
-					$updateLetters = $this->letter->updateData(array(
+					$updateLetters = $this->letterDB->updateData(array(
 						'letterid' => $letterId
 					), $data);
 				}
@@ -509,7 +679,7 @@ class ContactController extends Controller
 								  $ccTopatient = null, $ccMdList = null, $ccMdReferralList = null,
 								  $ccPatReferralList = null, $fontSize = null, $fontFamily = null)
 	{
-		if (isset(Session::get('docId'))) {
+		if (!empty(Session::get('docId'))) {
 			$user = $this->user->findUser(Session::get('docId'));
 
 			if ($user->use_letters != '1') {
@@ -646,7 +816,7 @@ class ContactController extends Controller
 		$data['docid'] = Session::get('docId');
 		$data['userid'] = Session::get('userId');
 
-		$insertLetterId = $this->letter->insertData($data);
+		$insertLetterId = $this->letterDB->insertData($data);
 
 		if (empty($insertLetterId)) {
 			return 'Error inserting Letter to Database';
@@ -725,20 +895,20 @@ class ContactController extends Controller
 			$data['docid'] = $docId;
 			$data['userid'] = $docId;
 
-			return $this->letter->insertData($data);
+			return $this->letterDB->insertData($data);
 		}
 	}
 
 	private function getContactSentLetters($contactId)
 	{
-		$letters = $this->letter->getContactSentLetters(1, $contactId);
+		$letters = $this->letterDB->getContactSentLetters(1, $contactId);
 
 		return $letters;
 	}
 
 	private function getContactPendingLetters($contactId)
 	{
-		$letters = $this->letter->getContactSentLetters(0, $contactId);
+		$letters = $this->letterDB->getContactSentLetters(0, $contactId);
 
 		return $letters;
 	}

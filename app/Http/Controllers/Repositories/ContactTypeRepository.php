@@ -35,4 +35,9 @@ class ContactTypeRepository implements ContactTypeInterface
 
 		return $contactTypes;
 	}
+
+	public function getAll()
+	{
+		return ContactType::all();
+	}
 }

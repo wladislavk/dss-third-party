@@ -18,6 +18,10 @@ interface PatientInterface
 
 	public function getSimilarPatients($data);
 
+	public function getReferredPatients($contactId);
+
+	public function getPatients($where);
+
 	public function insertData($data);
 
 	public function updateData($where, $values);

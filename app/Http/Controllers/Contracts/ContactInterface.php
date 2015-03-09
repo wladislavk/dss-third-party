@@ -6,9 +6,13 @@ interface ContactInterface
 
 	public function getInsContact($docId);
 
+	public function getContactTypeHolder($where, $letter = null, $order = null, $limit = null, $offset = null);
+
 	public function updateData($contactId, $values);
 
 	public function insertData($data);
+
+	public function deleteData($contactId);
 
 	public function getNewContacts($docId);
 

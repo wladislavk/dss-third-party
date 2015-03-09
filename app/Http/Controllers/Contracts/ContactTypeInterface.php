@@ -7,4 +7,6 @@ interface ContactTypeInterface
 	public function getPhysicians();
 
 	public function getContactTypes();
+
+	public function getAll();
 }

@@ -37,6 +37,40 @@ class ContactRepository implements ContactInterface
 		return $insContact;
 	}
 
+	public function getContactTypeHolder($where, $letter = null, $order = null, $limit = null, $offset = null)
+	{
+		$contacts = DB::table(DB::raw('dental_contact dc'))
+				->select('dc.*')
+				->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
+				->whereNull('merge_id');
+
+		if (!empty($where)) foreach ($where as $attribute => $value) {
+			$contacts = $contacts->where($attribute, $value);
+		}
+
+		if (!empty($letter)) {
+			$contacts = $contacts->where("dc.lastname LIKE '" . $letter . "%'")
+				->orWhere(function($query) use ($letter){
+					$query->where('dc.lastname', '=', '')
+						->whereRaw("dc.company LIKE  '" . $letter . "%'");
+				});
+		}
+
+		if (!empty($order)) foreach ($order as $attribute => $method) {
+			$contacts = $contacts->orderBy($attribute, $method);
+		}
+
+		if (!empty($limit)) {
+			$contacts = $contacts->take($limit);
+		}
+
+		if (!empty($offset)) {
+			$contacts = $contacts->skip($offset);
+		}
+
+		return $contacts->get();
+	}
+
 	public function updateData($contactId, $values)
 	{
 		$contact = Contact::where('contactid', '=', $contactId)->update($values);
@@ -59,6 +93,13 @@ class ContactRepository implements ContactInterface
 		}
 
 		return $contact->contactid;
+	}
+
+	public function deleteData($contactId)
+	{
+		$contact = Contact::where('contactid', '=', $contactId)->delete();
+
+		return $contact;
 	}
 
 	public function getNewContacts($docId)

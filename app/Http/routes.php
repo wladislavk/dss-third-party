@@ -28,6 +28,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->get('add_patient/{pid?}', 'PatientController@index');
         $router->post('add_patient/{pid?}', 'PatientController@add');
         $router->get('duplicate_patient/{pid?}', 'PatientController@duplicate');
+        $router->get('contact', 'ContactController@manage');
     });
 });
 

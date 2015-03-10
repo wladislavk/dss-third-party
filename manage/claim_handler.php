@@ -605,7 +605,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 
     $data = array(); //Initializing parameter array
 
-    $data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4'; //Setting your api key
+    $data['api_key'] = DSS_DEFAULT_ELIGIBLE_API_KEY; //Setting your api key
 
     $data['eligibleToken'] = $_POST["eligibleToken"]; // Reading eligibleToken and passing to claims endpoint
 

@@ -53,7 +53,7 @@ define('DSS_CLAIM_PAID_SEC_PATIENT', 11);
 define('DSS_CLAIM_SEC_PATIENT_DISPUTE', 12);
 define('DSS_CLAIM_SEC_REJECTED', 13);
 define('DSS_CLAIM_EFILE_ACCEPTED', 14);
-define('DSS_CLAIM_SEC_EFILE_ACCEPTED', 14);
+define('DSS_CLAIM_SEC_EFILE_ACCEPTED', 15);
 
 // A convenience array to get claim labels
 $dss_claim_status_labels = array();
@@ -375,3 +375,5 @@ $dss_enrollment_labels = array();
 $dss_enrollment_labels[DSS_ENROLLMENT_SUBMITTED] = 'Submitted';
 $dss_enrollment_labels[DSS_ENROLLMENT_ACCEPTED] = 'Accepted';
 $dss_enrollment_labels[DSS_ENROLLMENT_REJECTED] = 'Rejected';
+
+define('DSS_DEFAULT_ELIGIBLE_API_KEY', '33b2e3a5-8642-1285-d573-07a22f8a15b4');

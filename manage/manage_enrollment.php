@@ -1,5 +1,7 @@
 <? 
 include "includes/top.htm";
+require_once('includes/constants.inc');
+
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -82,7 +84,7 @@ include "includes/top.htm";
 					</span>
 				</td>
 				<td valign="top">
-					<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4&transaction_type=837P" target="_blank">PDF</a>
+					<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'"?>&transaction_type=837P" target="_blank">PDF</a>
 				</td>
 			</tr>
 	<? 	}

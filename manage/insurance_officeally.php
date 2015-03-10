@@ -532,7 +532,7 @@ $data = array();
 if(isset($_GET['test']) && $_GET['test']==1){
   $data['test'] = 'true';
 }
-$data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
+$data['api_key'] = DSS_DEFAULT_ELIGIBLE_API_KEY;
 /*
 $data['submitter'] = array(
         "organization_name" => "Dental Sleep Solutions",
@@ -682,10 +682,7 @@ $data['claim'] = array(
 	"release_of_information" => "I",
 	"service_lines" => $claim_lines
 	);
-$data_string = json_encode($data);                                                                                   
-//error_log($data_string);
-//echo $data_string."<br /><br />"; 
-//$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
+$data_string = json_encode($data);                                                                                                                                                       
 $ch = curl_init('https://gds.eligibleapi.com/v1.1/claims.json');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  

@@ -2,6 +2,8 @@
 session_start();
 require_once '../admin/includes/main_include.php';
 include_once '../admin/includes/invoice_functions.php';
+require_once('../includes/constants.inc');
+
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <?php
@@ -130,7 +132,7 @@ include_once '../includes/calendarinc.php';
 
 	<?php } ?>
 
-        <input type="hidden" class="form-control" id="api_key" value="33b2e3a5-8642-1285-d573-07a22f8a15b4">
+        <input type="hidden" class="form-control" id="api_key" value=<?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>>
 
     <div class="form-group test-param">
       <label for="test_member_id" class="col-lg-2 control-label">Test Member ID</label>
@@ -182,7 +184,8 @@ include_once '../includes/calendarinc.php';
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer', '', true, false);
+var api_key = <?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>;
+setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?api_key='+api_key, 'ins_payer', '', true, false);
 });
 </script>
 <input type="hidden" name="payer_id" id="payer_id" />

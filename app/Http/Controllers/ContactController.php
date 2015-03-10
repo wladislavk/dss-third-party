@@ -57,7 +57,7 @@ class ContactController extends Controller
 								FaxInterface $fax,
 								LetterTemplateInterface $letterTemplate,
 								PatientInterface $patient)
-	{		
+	{
 		$this->contactType 		= $contactType;
 		$this->contact 			= $contact;
 		$this->user 			= $user;
@@ -372,7 +372,7 @@ class ContactController extends Controller
 		$iVal = $indexVal * $recDisp;
 		$contactTypeHolder = !empty($this->contacttype) ? $this->contacttype : '';
 
-		if (!empty($this->letter)) {
+		if (isset($this->letter)) {
 			$letter = $this->letter;
 		} else {
 			$letter = null;
@@ -428,8 +428,6 @@ class ContactController extends Controller
 			), $letter, $order);
 
 			$totalRec = count($contacts);
-
-			// dd($recDisp, $iVal);
 
 			$contacts = $this->contact->getContactTypeHolder(array(
 				'docid' 			=> Session::get('docId'),
@@ -499,7 +497,7 @@ class ContactController extends Controller
 			'noPages'		=> $noPages
 		));
 
-		// dd($data);
+		// dd($data['contacts']);
 
 		return view('manage.contact', $data);
 	}

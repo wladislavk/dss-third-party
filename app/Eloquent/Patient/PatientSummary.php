@@ -7,4 +7,6 @@ class PatientSummary extends Model
 	protected $table = 'dental_patient_summary';
 
 	protected $primaryKey = 'id';
+
+	// public $timestamps = false;
 }

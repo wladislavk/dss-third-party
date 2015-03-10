@@ -48,12 +48,8 @@ class ContactRepository implements ContactInterface
 			$contacts = $contacts->where($attribute, $value);
 		}
 
-		if (!empty($letter)) {
-			$contacts = $contacts->where("dc.lastname LIKE '" . $letter . "%'")
-				->orWhere(function($query) use ($letter){
-					$query->where('dc.lastname', '=', '')
-						->whereRaw("dc.company LIKE  '" . $letter . "%'");
-				});
+		if (isset($letter)) {
+			$contacts = $contacts->whereRaw("(dc.lastname LIKE '" . $letter . "%' OR (dc.lastname='' AND dc.company LIKE  '" . $letter . "%'))");
 		}
 
 		if (!empty($order)) foreach ($order as $attribute => $method) {

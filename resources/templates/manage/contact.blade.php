@@ -16,19 +16,19 @@
 <div style="margin-left:10px;margin-right:10px;">
 	<form name="jump1" style="float:left; width:350px;">
 		Filter by type:
-		<select name="myjumpbox" OnChange="location.href=jump1.myjumpbox.options[selectedIndex].value">
+		<select id="myjumpbox" name="myjumpbox" OnChange="redirectFromJumpBox('{!! csrf_token() !!}')">
 			<option selected>Please Select...</option>
-			<option value="manage_contact.php">Display All</option>
+			<option value="">Display All</option>
 
 			@if (!empty($contactTypes))	
 				@foreach ($contactTypes as $cType)
-					<option value="/manage/contact/contacttype/{!! $cType->contacttypeid or '' !!}">
+					<option value='{"contacttype": {!! $cType->contacttypeid or '' !!}}'>
 						{!! $cType->contacttype !!}
 					</option>
 				@endforeach
 			@endif
 
-			<option value="/manage/contact/status/2">In-active</option>
+			<option value='{"status": 2}'>In-active</option>
 		</select>
 	</form>
 
@@ -64,15 +64,15 @@
 					@if (!empty($letters))
 						@foreach ($letters as $let)
 							@if ($letter == $let)
-								<a class="selected_letter" href="/manage/contact" onclick='setRouteParameters("{\"letter\": \"{!! $let !!}\", \"status\": \"{!! $status !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", \"contacttype\": \"{!! $contacttype !!}\"}", {!! csrf_token() !!})'>{!! $let !!}</a>
+								<a class="selected_letter" href="#" onclick='setRouteParameters("/manage/contact", "{\"letter\": \"{!! $let !!}\", \"status\": \"{!! $status !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", \"contacttype\": \"{!! $contacttype !!}\"}", "{!! csrf_token() !!}"); return false;'>{!! $let !!}</a>
 							@else
-								<a href="/manage/contact" onclick='setRouteParameters("{\"letter\": \"{!! $let !!}\", \"status\": \"{!! $status !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", \"contacttype\": \"{!! $contacttype !!}\"}", {!! csrf_token() !!})'>{!! $let !!}</a>
+								<a href="#" onclick='setRouteParameters("/manage/contact", "{\"letter\": \"{!! $let !!}\", \"status\": \"{!! $status !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", \"contacttype\": \"{!! $contacttype !!}\"}", "{!! csrf_token() !!}"); return false;'>{!! $let !!}</a>
 							@endif
 						@endforeach
 					@endif
 
 					@if (!empty($letter))
-						<a href="/manage/contact" onclick='setRouteParameters("{\"status\": \"{!! $status !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", \"contacttype\": \"{!! $contacttype !!}\"}", {!! csrf_token() !!})'>Show All</a>
+						<a href="#" onclick='setRouteParameters("/manage/contact", "{\"status\": \"{!! $status !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", \"contacttype\": \"{!! $contacttype !!}\"}", "{!! csrf_token() !!}"); return false;'>Show All</a>
 					@endif
 
 				</div>
@@ -86,7 +86,7 @@
 						@if ($indexVal == $pCount)
 							<strong>{!! $pCount + 1 !!}</strong>
 						@else
-							<a href="/manage/contact" onclick='setRouteParameters("{\"page\": \"{!! $pCount !!}\", \"letter\": \"{!! $letter !!}\", \"status\": \"{!! $status !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", \"contacttype\": \"{!! $contacttype !!}\"}", {!! csrf_token() !!})' class="fp">
+							<a href="#" onclick='setRouteParameters("/manage/contact", "{\"page\": \"{!! $pCount !!}\", \"letter\": \"{!! $letter !!}\", \"status\": \"{!! $status !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", \"contacttype\": \"{!! $contacttype !!}\"}", "{!! csrf_token() !!}"); return false;' class="fp">
 							{!! $pCount + 1 !!}</a>
 						@endif
 					@endfor
@@ -95,15 +95,15 @@
 		</tr>
 		<tr class="tr_bg_h">
 			<td valign="top" class="col_head  {!! (!empty($sort) && $sort == 'name') ? 'arrow_' . strtolower($sortdir) : '' !!}" width="20%">
-				<a href="/manage/contact" onclick='setRouteParameters("{\"sort\": \"name\", \"sortdir\": \"{!! (!empty($sort) && $sort == 'name' && $sortdir == 'ASC') ? 'DESC' : 'ASC' !!}\"}", {!! csrf_token() !!})'>Name</a>
+				<a href="#" onclick='setRouteParameters("/manage/contact", "{\"sort\": \"name\", \"sortdir\": \"{!! (!empty($sort) && $sort == 'name' && $sortdir == 'ASC') ? 'DESC' : 'ASC' !!}\"}", "{!! csrf_token() !!}"); return false;'>Name</a>
 			</td>
 
 			<td valign="top" class="col_head  {!! (!empty($sort) && $sort == 'company') ? 'arrow_' . strtolower($sortdir) : '' !!}" width="25%">
-				<a href="/manage/contact" onclick='setRouteParameters("{\"sort\": \"company\", \"sortdir\": \"{!! (!empty($sort) && $sort == 'company' && $sortdir == 'ASC') ? 'DESC' : 'ASC' !!}\"}", {!! csrf_token() !!})'>Company</a>
+				<a href="#" onclick='setRouteParameters("/manage/contact", "{\"sort\": \"company\", \"sortdir\": \"{!! (!empty($sort) && $sort == 'company' && $sortdir == 'ASC') ? 'DESC' : 'ASC' !!}\"}", "{!! csrf_token() !!}"); return false;'>Company</a>
 			</td>
 
 			<td valign="top" class="col_head  {!! (!empty($sort) && $sort == 'type') ? 'arrow_' . strtolower($sortdir) : '' !!}" width="25%">
-				<a href="/manage/contact" onclick='setRouteParameters("{\"sort\": \"type\", \"sortdir\": \"{!! (!empty($sort) && $sort == 'type' && $sortdir == 'ASC') ? 'DESC' : 'ASC' !!}\"}", {!! csrf_token() !!})'>Contact Type</a>
+				<a href="#" onclick='setRouteParameters("/manage/contact", "{\"sort\": \"type\", \"sortdir\": \"{!! (!empty($sort) && $sort == 'type' && $sortdir == 'ASC') ? 'DESC' : 'ASC' !!}\"}", "{!! csrf_token() !!}"); return false;'>Contact Type</a>
 			</td>
 			<td valign="top" class="col_head" width="10%">
 				Referrer
@@ -160,7 +160,7 @@
 						</td>
 						<td valign="top" width="20%">
 							<div class="actions" style="display:none;">
-								<a href="#" onclick="loadPopup('/manage/view_contact/{!! $contact->contactid !!}')" class="editlink" title="EDIT">
+								<a href="#" onclick="loadPopup('/manage/view_contact/{!! $contact->contactid !!}'); return false;" class="editlink" title="EDIT">
 									Quick View
 								</a>
 								|
@@ -176,7 +176,7 @@
 							
 							@if (count($patientsInfo[$contact->contactid]['ref']))
 								@foreach ($patientsInfo[$contact->contactid]['ref'] as $patient)
-									<a href="/manage/add_patient/{!! $patient->patientid !!}/ed/{!! $patient->patientid !!}">{!! $patient->firstname !!} {!! $patient->lastname !!}<br />
+									<a href="#" onclick='setRouteParameters("/manage/add_patient{!! !empty($patient->patientid) ? '/' . $patient->patientid : '' !!}", "{\"ed\": \"{!! $patient->patientid or '' !!}\"}", "{!! csrf_token() !!}"); return false;'>{!! $patient->firstname !!} {!! $patient->lastname !!}<br />
 								@endforeach
 							@endif
 						</td>
@@ -186,7 +186,7 @@
 
 							@if (count($patientsInfo[$contact->contactid]['pat']))
 								@foreach ($patientsInfo[$contact->contactid]['pat'] as $patient)
-									<a href="/manage/add_patient/{!! $patient->patientid !!}/ed/{!! $patient->patientid !!}">{!! $patient->firstname !!} {!! $patient->lastname !!}<br />
+									<a href="#" onclick='setRouteParameters("/manage/add_patient{!! !empty($patient->patientid) ? '/' . $patient->patientid : '' !!}", "{\"ed\": \"{!! $patient->patientid or '' !!}\"}", "{!! csrf_token() !!}"); return false;'>{!! $patient->firstname !!} {!! $patient->lastname !!}<br />	
 								@endforeach
 							@endif
 						</td>
@@ -199,6 +199,8 @@
 @stop
 
 @section('footer')
+
+@parent
 
 <div id="popupRefer" style="height:550px; width:750px;">
 	<a id="popupReferClose">

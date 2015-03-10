@@ -120,12 +120,15 @@ class GeneralFunctions
 
 	public static function getRouteParameter($name)
 	{
-		if (!empty(Request::input($name))) {
-			return Request::input($name);
-		} elseif (!empty(Session::get($name))) {
+		$requestValue = Request::input($name);
+		$sessionValue = Session::get($name);
+
+		if (isset($requestValue)) {
+			return $requestValue;
+		} elseif (isset($sessionValue)) {
 			return Session::pull($name);
 		} else {
-			return '';
+			return null;
 		}
 	}
 }

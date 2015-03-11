@@ -174,7 +174,9 @@ $num_users=mysql_num_rows($my);
             $api_key_query = mysql_query($api_key_sql);
             $api_key_result = mysql_fetch_assoc($api_key_query);
             if($api_key_result){
+              if(!empty(trim($api_key_result['eligible_api_key'])){
                 $api_key = $api_key_result['eligible_api_key'];
+              }
             }
           ?>
 <a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key; ?>&transaction_type=837P" target="_blank">PDF</a>

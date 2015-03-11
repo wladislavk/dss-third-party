@@ -41,7 +41,9 @@ include_once '../includes/calendarinc.php';
   $api_key_query = mysql_query($api_key_sql);
   $api_key_result = mysql_fetch_assoc($api_key_query);
   if($api_key_result){
-    $api_key = $api_key_result['eligible_api_key'];
+    if(!empty(trim($api_key_result['eligible_api_key'])){
+      $api_key = $api_key_result['eligible_api_key'];
+    }
   }
 
 ?>

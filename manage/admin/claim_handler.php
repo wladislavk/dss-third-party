@@ -632,7 +632,9 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
       $api_key_query = mysql_query($api_key_sql);
       $api_key_result = mysql_fetch_assoc($api_key_query);
       if($api_key_result){
+        if(!empty(trim($api_key_result['eligible_api_key'])){
           $api_key = $api_key_result['eligible_api_key'];
+        }
       }
 
     $data = array(); //Initializing parameter array

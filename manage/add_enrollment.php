@@ -39,7 +39,9 @@ if(isset($_POST["enroll_but"]))
   $api_key_query = mysql_query($api_key_sql);
   $api_key_result = mysql_fetch_assoc($api_key_query);
   if($api_key_result){
+    if(!empty(trim($api_key_result['eligible_api_key'])){
       $api_key = $api_key_result['eligible_api_key'];
+    }
   }
 
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
@@ -224,8 +226,10 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
                   $api_key_query = mysql_query($api_key_sql);
                   $api_key_result = mysql_fetch_assoc($api_key_query);
                   if($api_key_result){
-                    $api_key = $api_key_result['eligible_api_key'];
-  }
+                    if(!empty(trim($api_key_result['eligible_api_key'])){
+                      $api_key = $api_key_result['eligible_api_key'];
+                    }
+                  }
                 ?>
           <?php if($r['docid']==0){
                 $snpi = $r['service_npi'];

@@ -538,7 +538,9 @@ $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN compa
 $api_key_query = mysql_query($api_key_sql);
 $api_key_result = mysql_fetch_assoc($api_key_query);
 if($api_key_result){
+  if(!empty(trim($api_key_result['eligible_api_key'])){
     $api_key = $api_key_result['eligible_api_key'];
+  }
 }
 
 $data['api_key'] = $api_key;

@@ -111,7 +111,7 @@ $num_users=mysql_num_rows($my);
 	{
 		while($myarray = mysql_fetch_array($my))
 		{
-			
+			echo print_r($myarray);
 			if($myarray["status"] == 1)
 			{
 				$tr_class = "";
@@ -168,7 +168,16 @@ $num_users=mysql_num_rows($my);
                                 </td>	
                 
 				<td valign="top" align="center">
-<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=".DSS_DEFAULT_ELIGIBLE_API_KEY."&transaction_type=837P" target="_blank">PDF</a>
+          <?php
+            $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+            $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($myarray['user_id'])."'";
+            $api_key_query = mysql_query($api_key_sql);
+            $api_key_result = mysql_fetch_assoc($api_key_query);
+            if($api_key_result){
+                $api_key = $api_key_result['eligible_api_key'];
+            }
+          ?>
+<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key; ?>&transaction_type=837P" target="_blank">PDF</a>
 				</td>	
                 
 			</tr>

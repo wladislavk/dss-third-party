@@ -1,6 +1,8 @@
 <?php 
 require_once('classes/tc_calendar.php');
-include 'includes/top.htm';?>
+include 'includes/top.htm';
+
+?>
 
 
 <div class="row">

@@ -11,6 +11,13 @@ if(isset($_POST["enrollsub"]))
   $sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_GET['docid'])."'";
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);
+  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($r['userid'])."'";
+  $api_key_query = mysql_query($api_key_sql);
+  $api_key_result = mysql_fetch_assoc($api_key_query);
+  if($api_key_result){
+      $api_key = $api_key_result['eligible_api_key'];
+  }
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
 $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
         $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."'";
@@ -24,7 +31,7 @@ if ($signature_result){
   $signature_json = $signature_result['signature_json'];
 }
 $data = array();
-$data['api_key'] = DSS_DEFAULT_ELIGIBLE_API_KEY;
+$data['api_key'] = $api_key;
 if(isset($_POST['test']) && $_POST['test'] == "1"){
   $data['test'] = "true";
 }

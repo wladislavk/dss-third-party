@@ -48,6 +48,7 @@ class ContactController extends Controller
 	private $letter;
 	private $sort;
 	private $sortdir;
+	private $search;
 
 	public function __construct(ContactTypeInterface $contactType,
 								ContactInterface $contact,
@@ -84,6 +85,7 @@ class ContactController extends Controller
 		$this->letter 		= GeneralFunctions::getRouteParameter('letter');
 		$this->sort 		= GeneralFunctions::getRouteParameter('sort');
 		$this->sortdir 		= GeneralFunctions::getRouteParameter('sortdir');
+		$this->search 		= GeneralFunctions::getRouteParameter('search');
 
 		$this->contactFields = array('salutation', 'firstname', 'lastname', 'middlename', 'company', 'add1', 'add2', 'city',
 			'state', 'zip', 'phone1', 'phone2', 'fax', 'email', 'national_provider_id', 'qualifier', 'qualifierid',
@@ -134,12 +136,12 @@ class ContactController extends Controller
 			$butText = 'Add ';
 		}
 
-		if (!empty(Route::input('search'))) {
-			if (strpos(Route::input('search'), ' ')) {
-				$firstname = ucfirst(substr(Route::input('search'), 0, strpos(Route::input('search'), ' ')));
-				$lastname = ucfirst(substr(Route::input('search'), strpos(Route::input('search'), ' ') + 1));
+		if (!empty($this->search)) {
+			if (strpos($this->search, ' ')) {
+				$firstname = ucfirst(substr($this->search, 0, strpos($this->search, ' ')));
+				$lastname = ucfirst(substr($this->search, strpos($this->search, ' ') + 1));
 			} else {
-				$firstname = ucfirst(Route::input('search'));
+				$firstname = ucfirst($this->search);
 			}
 		}
 
@@ -195,10 +197,6 @@ class ContactController extends Controller
 
 		return view('manage.add_contact', $data);
 	}
-
-	/**
-
-	*/
 
 	public function add()
 	{
@@ -294,10 +292,6 @@ class ContactController extends Controller
 		return $redirect;
 	}
 
-	/**
-
-	*/
-
 	public function view()
 	{
 		$physicians = $this->contactType->getPhysicians();
@@ -337,10 +331,6 @@ class ContactController extends Controller
 
 		return view('manage.view_contact', $data);
 	}
-
-	/**
-
-	*/
 
 	public function manage()
 	{
@@ -500,6 +490,50 @@ class ContactController extends Controller
 		// dd($data['contacts']);
 
 		return view('manage.contact', $data);
+	}
+
+	public function searchContact()
+	{
+		if (Request::ajax()) {
+			$partial = '';
+			if (isset($this->request['partial_name'])) {
+				$partial = $this->request['partial_name'];
+				$partial = preg_replace("[^ A-Za-z'\-]", "", $partial);
+			}
+
+			$names = explode(" ", $partial);
+
+			if (empty($names[1])) {
+				$names[1] = '';
+			}
+
+			if (empty($names[2])) {
+				$names[2] = '';
+			}
+
+			$contacts = $this->contact->searchContacts($names, $partial, Session::get('docId'));
+
+			// print_r($contacts); die();
+
+			$patients = array();
+			$i = 0;
+			if (count($contacts)) foreach ($contacts as $contact) {
+				$patients[$i]['id'] = $contact->contactid;
+				$patients[$i]['name'] = (!empty($contact->company) ? $contact->company . ' - ' : '')
+									  . (!empty($contact->lastname) ? $contact->lastname . ', ' : '')
+									  . (!empty($contact->firstname) ? $contact->firstname . ' ' : '')
+									  . (!empty($contact->middlename) ? $contact->middlename . ' - ' : '')
+									  . (!empty($contact->contacttype) ? $contact->contacttype : '');
+				$patients[$i]['source'] = !empty($contact->referral_type) ? $contact->referral_type : '';
+				$i++;
+			} else {
+				$patients = array('error' => 'Could not select patients from database');
+			}
+
+			return json_encode($patients);
+		} else {
+			return null;
+		}
 	}
 
 	/**

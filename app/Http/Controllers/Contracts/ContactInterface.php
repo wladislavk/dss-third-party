@@ -8,6 +8,8 @@ interface ContactInterface
 
 	public function getContactTypeHolder($where, $letter = null, $order = null, $limit = null, $offset = null);
 
+	public function searchContacts($names, $partial, $docId);
+
 	public function updateData($contactId, $values);
 
 	public function insertData($data);

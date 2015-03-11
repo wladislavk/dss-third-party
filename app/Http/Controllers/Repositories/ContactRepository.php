@@ -67,6 +67,26 @@ class ContactRepository implements ContactInterface
 		return $contacts->get();
 	}
 
+	public function searchContacts($names, $partial, $docId)
+	{
+		$contacts = DB::table(DB::raw('dental_contact c'))
+				->leftJoin(DB::raw('dental_contacttype ct'), 'c.contacttypeid', '=', 'ct.contacttypeid')
+				->where(function($query) use ($names, $partial){
+					$query->where(function($query) use ($names, $partial){
+							$query->whereRaw("(lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')")
+								->whereRaw("(lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%')");
+						})
+						->orWhereRaw("(firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" . $names[1] . "%' AND lastname LIKE '" . $names[2] . "%')")
+						->orWhereRaw("(company LIKE '" . $partial . "%')");
+				})
+				->whereNull('merge_id')
+				->where('c.status', '=', 1)
+				->where('docid', '=', $docId)
+				->orderBy('lastname');
+
+		return $contacts->get();		
+	}
+
 	public function updateData($contactId, $values)
 	{
 		$contact = Contact::where('contactid', '=', $contactId)->update($values);

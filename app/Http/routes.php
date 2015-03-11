@@ -22,6 +22,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->get('imageholder/{image}/{folder?}', 'ImageController@imageHolder');
     $router->get('add_contact/{ed?}', 'ContactController@index');
     $router->post('add_contact/{ed?}', 'ContactController@add');
+    $router->post('search_contacts', 'ContactController@searchContact');
 
 	$router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 

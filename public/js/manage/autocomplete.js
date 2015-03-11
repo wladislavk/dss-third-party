@@ -2,7 +2,7 @@
         var selectionref = 1;
         var selectedrefUrl = '';
         var searchrefVal = ""; // global variable to hold the last valid search string
-	function setup_autocomplete(in_field, hint, id_field, source, file, hinttype, pid){
+	function setup_autocomplete(in_field, hint, id_field, source, path, hinttype, pid){
                 $('#'+in_field).keyup(function(e) {
 				$('#'+id_field).val('');
 				if(source!=''){
@@ -15,7 +15,7 @@
                                         $('#'+hint).css('display', 'none');
                                 } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
                                         $('#'+hint).css("display", "inline");
-                                        sendValueRef($('#'+in_field).val(), in_field, hint, id_field, source, file, hinttype, pid);
+                                        sendValueRef($('#'+in_field).val(), in_field, hint, id_field, source, path, hinttype, pid);
                                         if ($(this).val() > 2) {
                                                 window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
                                         }
@@ -24,14 +24,12 @@
 	}
 
 
-        function sendValueRef(partial_name, in_field, hint, id_field, source, file, hinttype, pid) {
-                $.post(
-                
-                file,
-
-                { 
-                        "partial_name": partial_name 
-                },
+        function sendValueRef(partial_name, in_field, hint, id_field, source, path, hinttype, pid) {
+                $.post(path,
+                    {
+                        "partial_name": partial_name,
+                        "_token": $('#token').val()
+                    },
                 function(data) {
                         if (data.length == 0) {
                                 $('.json_patient').remove();
@@ -51,7 +49,7 @@
 				}
 				if(hinttype != 'eligibility' && hinttype != 'ins_payer'){
                                 var newLi = $('#'+hint+' ul .template').clone(true).removeClass('template').addClass('create_new')
-					.attr("onclick", "loadPopupRefer('add_contact.php?addtopat="+pid+"&from=add_patient&in_field="+in_field+"&id_field="+id_field+"&search="+(partial_name.replace(/'/g, "\\'"))+"')");
+					.attr('onclick', 'loadPopupRefer("/manage/add_contact", "{"addtopat": "' + pid + '", "from": "add_patient", "in_field": ' + in_field + ', "id_field": ' + id_field + ', "search": ' + (partial_name.replace(/'/g, "\\'")) + '}", "' + $('#token').val() + '")');
                                         template_list_ref(newLi, "Add "+label+" with this name&#8230;")
                                                 .appendTo('#'+hint+' ul')
                                                 .fadeIn();
@@ -73,7 +71,7 @@
                                                 .addClass('json_patient')
                                                 .data('rowid', data[i].id)
                                                 .data('rowsource', data[i].id)
-                                                .attr("onclick", "loadPopup('view_contact.php?ed="+data[i].id+"')"
+                                                .attr("onclick", "loadPopup('/manage/view_contact/" + data[i].id + "')"
 );
 				    }else{
                                         var newLi = $('#'+hint+' ul .template')

@@ -56,6 +56,7 @@
 </div>
 
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+	<input type="hidden" name="_token" id="token" value="{!! csrf_token() !!}">
 	<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 		<tr bgColor="#ffffff">
 			<td colspan="2">

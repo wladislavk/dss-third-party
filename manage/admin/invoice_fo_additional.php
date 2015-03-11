@@ -146,6 +146,7 @@ $claim_sql = "SELECT dp.patientid, dp.firstname, dp.lastname, i.insuranceid id, 
                 and i.percase_invoice = '".$invoice_id."'
 ";
 $claim_q = mysql_query($claim_sql);
+$claim_q2 = mysql_query($claim_sql);
 
 
 $vob_sql = "SELECT dp.firstname patient_firstname, dp.lastname patient_lastname, v.id, v.date_completed FROM 
@@ -243,7 +244,7 @@ $total_amount = 0;
   }
 
 
-  while($claim = mysql_fetch_assoc($claim_q)){
+  while($claim = mysql_fetch_assoc($claim_q2)){
     $id = $claim['id'];
     if(isset($_POST['claim_adddate_'.$id])){
       $up_sql = "UPDATE dental_insurance SET " .
@@ -974,7 +975,6 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=1
             WHERE id='".mysql_real_escape_string($invoiceid)."'";
-        
         mysql_query($invoice_sql);
     }
     

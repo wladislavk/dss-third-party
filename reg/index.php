@@ -34,7 +34,7 @@ $doc = mysql_fetch_assoc($dq);
 
 	<div id="tab-1" style="display: block; ">
 		<div class="dp100">
-			<p>Welcome to the secure patient portal! We're excited that you have taken the first steps toward improving your sleep quality and health. Treating snoring and sleep apnea improves your quality of life, and can dramatically improve your health and well-being. At the office of <?= $doc['name'];?>, we work hard to make sure you receive the best possible treatment.</p>
+			<p>Welcome to the secure patient portal! We're excited that you have taken the first steps toward improving your sleep quality and health. Treating snoring and sleep apnea improves your quality of life, and can dramatically improve your health and well-being. At the office of <?= $doc['practice'];?>, we work hard to make sure you receive the best possible treatment.</p>
 <br /> 
 <p>Please check the status box on the right side of this page to make sure your patient profile is 100% complete. Click on any incomplete highlighted fields to answer them. After your profile is 100% complete, we will be ready to see you at your next visit!</p>
 		</div>

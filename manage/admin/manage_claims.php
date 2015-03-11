@@ -292,6 +292,8 @@ if ((isset($_GET['status']) && ($_GET['status'] != '')) || !empty($_GET['fid']))
                 $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.",".DSS_CLAIM_SEC_EFILE_ACCEPTED.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 14 day)";
         }elseif($_GET['status'] == 'unpaid21'){
                 $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.",".DSS_CLAIM_SEC_EFILE_ACCEPTED.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 21 day)";
+        }elseif($_GET['status'] == 'unpaid30'){
+                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.",".DSS_CLAIM_SEC_EFILE_ACCEPTED.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 30 day)";
         }elseif($_GET['status'] == 'unpaid45'){
                 $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.",".DSS_CLAIM_SEC_EFILE_ACCEPTED.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 45 day)";
         }else{
@@ -357,15 +359,19 @@ if(isset($_GET['msg'])){
       <?php $sent_selected = ($status == DSS_CLAIM_SENT) ? 'selected' : ''; ?>
       <?php $unpaid14_selected = ($status == 'unpaid14') ? 'selected' : ''; ?>
       <?php $unpaid21_selected = ($status == 'unpaid21') ? 'selected' : ''; ?>
+      <?php $unpaid30_selected = ($status == 'unpaid30') ? 'selected' : ''; ?>
       <?php $unpaid45_selected = ($status == 'unpaid45') ? 'selected' : ''; ?>
       <?php $rejected_selected = ($status == DSS_CLAIM_REJECTED) ? 'selected' : ''; ?>
+      <?php $paid_patient_selected = ($status == DSS_CLAIM_PAID_PATIENT) ? 'selected' : ''; ?>
       <option value="">Any</option>
       <option value="<?=DSS_CLAIM_PENDING?>" <?=$pending_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_PENDING]?></option>
       <option value="<?=DSS_CLAIM_SENT?>" <?=$sent_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_SENT]?></option>
       <option value="unpaid14" <?= $unpaid14_selected; ?>>Unpaid 14+ Days</option>
       <option value="unpaid21" <?= $unpaid21_selected; ?>>Unpaid 21+ Days</option>
+      <option value="unpaid30" <?= $unpaid30_selected; ?>>Unpaid 30+ Days</option>
       <option value="unpaid45" <?= $unpaid45_selected; ?>>Unpaid 45+ Days</option>
       <option value="<?=DSS_CLAIM_REJECTED?>" <?=$rejected_selected;?>><?=$dss_claim_status_labels[DSS_CLAIM_REJECTED];?></option>
+      <option value="<?=DSS_CLAIM_PAID_PATIENT?>" <?=$paid_patient_selected;?>><?=$dss_claim_status_labels[DSS_CLAIM_PAID_PATIENT];?></option>
     </select>
     &nbsp;&nbsp;&nbsp;
 

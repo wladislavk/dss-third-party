@@ -27,10 +27,10 @@ $l = mysql_fetch_assoc($l_q);
 
 $reference_id = $r['reference_id'];
 
-$api_key = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
+$api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
 $data = array();                                                                    
 
-$data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
+$data['api_key'] = $api_key;
 $data['payer_id'] = $r['p_m_eligible_payer_id'];
 $data['provider_first_name'] = $r['first_name'];
 $data['provider_last_name'] = $r['last_name'];

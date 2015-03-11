@@ -1,6 +1,7 @@
 <?php
+require_once('../includes/constants.inc');
 $PUBLISHABLE_KEY = 'E1q20FOFf0-DcsrnQdltikaQrVI4nwwfhgXZ';
-$API_KEY = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
+$API_KEY = DSS_DEFAULT_ELIGIBLE_API_KEY;
 
     $user_defined_field1_value = '';
     $user_defined_field2_value = '';

@@ -16,8 +16,15 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
         $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."'";
         $t_q = mysql_query($t_sql);
         $t_r = mysql_fetch_assoc($t_q);
+$signature_sql = "SELECT * FROM dental_user_signatures WHERE user_id='" . mysql_real_escape_string($_GET['docid']) . "' ORDER BY adddate DESC LIMIT 1";
+$signature_query =  mysql_query($signature_sql);
+$signature_result = mysql_fetch_assoc($signature_query);
+$signature_json = "";
+if ($signature_result){
+  $signature_json = $signature_result['signature_json'];
+}
 $data = array();
-$data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
+$data['api_key'] = DSS_DEFAULT_ELIGIBLE_API_KEY;
 if(isset($_POST['test']) && $_POST['test'] == "1"){
   $data['test'] = "true";
 }
@@ -37,14 +44,12 @@ $data['enrollment_npi'] = array(
                 "last_name" => $_POST['last_name'],
                 "contact_number" => $_POST['phone'],
                 "email" => $_POST['email'],
-                "signature" => array("coordinates" => $r['signature_json'])
+                "signature" => array("coordinates" => $signature_json)
                 )
         );
 
 $data_string = json_encode($data);
 error_log($data_string);
-//echo $data_string."<br /><br />";
-//$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
 $ch = curl_init('https://gds.eligibleapi.com/v1.4/enrollment_npis');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
@@ -169,7 +174,8 @@ if(isset($json_response->{"error"})){
                 <li class="template" style="display:none"></li>
         </ul>
 <script type="text/javascript">
-setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=coverage&enrollment_required=true&api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer', null, null, false);
+var api_key = <?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>;
+setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer', null, null, false);
 </script>
             </td>
         </tr>
@@ -336,13 +342,14 @@ function check_add(){
 <script type="text/javascript">
 
 function update_list(){
+  var api_key = <?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>;
   var t = $('#transaction_type').val();
   if(t == '1'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=coverage&enrollment_required=true&api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer');
   }else if(t == '2'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=payment%20status&enrollment_required=true&api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=payment%20status&enrollment_required=true&api_key='+api_key, 'ins_payer');
   }else if(t == '4'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=payment%20reports&enrollment_required=true&api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=payment%20reports&enrollment_required=true&api_key='+api_key, 'ins_payer');
   }else if(t == '5'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', '', 'ins_payer');
   }else if(t == '6'){
@@ -350,10 +357,10 @@ function update_list(){
   }else if(t == '7'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/institutional.json', 'ins_payer');
   }else if(t == '8'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=professional%20claims&enrollment_required=true&api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4', 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=professional%20claims&enrollment_required=true&api_key='+api_key, 'ins_payer');
   }
 }
-
+$('#transaction_type').on("change", update_list);
 $('#provider_select').change(function(){
   var json = $(this).val();
   var r = $.parseJSON(json);

@@ -1,5 +1,6 @@
 <? 
 include "includes/top.htm";
+require_once('../includes/constants.inc');
 
 $rec_disp = 20;
 
@@ -167,7 +168,7 @@ $num_users=mysql_num_rows($my);
                                 </td>	
                 
 				<td valign="top" align="center">
-<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4&transaction_type=837P" target="_blank">PDF</a>
+<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=".DSS_DEFAULT_ELIGIBLE_API_KEY."&transaction_type=837P" target="_blank">PDF</a>
 				</td>	
                 
 			</tr>

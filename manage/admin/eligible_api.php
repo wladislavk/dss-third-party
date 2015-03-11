@@ -1,4 +1,7 @@
-<?php include 'includes/invoice_functions.php'; ?>
+<?php 
+include 'includes/invoice_functions.php'; 
+require_once('../includes/constants.inc');
+?>
 <link rel="stylesheet" href="../css/eligible_api.css" />
  <script type="text/javascript" src="../script/autocomplete.js"></script>
  <script type="text/javascript" src="../script/autocomplete_local.js"></script>
@@ -114,7 +117,7 @@ $(document).ready(function(){
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
 $data = array();
 $data['test'] = "true";
-$data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
+$data['api_key'] = DSS_DEFAULT_ELIGIBLE_API_KEY;
 $data['payer_id'] =  $payer_id;
 $data['service_provider_first_name'] =  $_POST['provider_first_name'];
 $data['service_provider_last_name'] =  $_POST['provider_last_name'];
@@ -128,7 +131,6 @@ $data['service_type'] =  $_POST['service_type_code'];
 $data_string = json_encode($data);                                                                               
 
 echo $data_string."<br /><br />"; 
-//$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
 $ch = curl_init('https://gds.eligibleapi.com/v1.1/coverage/all.json');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                 
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                              
@@ -146,58 +148,11 @@ echo $result;
 <div id="api_output"></div>
   <script type="text/javascript">
     $('#api_submit').click( function(){
-/*
-                                  $.ajax({
-                                        url: "https://eligibleapi.net/eligibility.asp",
-                                        type: "get",
-					dataType: 'json',
-                                        data: {APIKey: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
-						PayerName: $('#payer_name').val(),
-						PayerID: $('#payer_id').val(),
-						ProviderFirstName: $('#provider_first_name').val(),
-						ProviderLastName: $('#provider_last_name').val(),
-						ProviderNPI: $('#provider_npi').val(),
-						PatientMemberID: $('#patient_member_id').val(),
-						PatientFirstName: $('#patient_first_name').val(),
-						PatientLastName: $('#patient_last_name').val(),
-						PatientDOB: $('#patient_dob').val()
-						},
-                                        complete: function(data){
-						//$('#api_output').html(data.responseText);
-						$('#api_output').html('');
-						var r = $.parseJSON(data.responseText);
-						response = r['health_care_eligibility_benefit_response'];
-						if(response.error){
-						  //alert('error');
-                                                  $('#api_output').append('<h3>Error</h3><strong>'+response.error.reject_reason_description+'</strong><br />'+response.error['Follow-up_action_description']);
-						}else{
-						  oopn = response.subscriber.services.health_benefit_plan_coverage.out_of_plan_network;
-						  indiv_oop = oopn.individual['out_of_pocket_(stop_loss)'];
-						  $('#api_output').append('<h3>Out of Network - Individual out of pocket (stop loss)</h3>');
-						  $('#api_output').append('Service Year: $'+indiv_oop[0].service_year);
-						  $('#api_output').append('<br />Year to date: $'+indiv_oop[1].year_to_date);
-                                                  $('#api_output').append('<br />Remaining: $'+indiv_oop[2].remaining);
-
-	                                          ipn = response.subscriber.services.health_benefit_plan_coverage.in_plan_network;
-                                                  indiv_oop = ipn.individual['out_of_pocket_(stop_loss)'];
-                                                  $('#api_output').append('<h3>In Network - Individual out of pocket (stop loss)</h3>');
-                                                  $('#api_output').append('Service Year: $'+indiv_oop[1].service_year);
-                                                  $('#api_output').append('<br />Year to date: $'+indiv_oop[2].year_to_date);
-                                                  $('#api_output').append('<br />Remaining: $'+indiv_oop[0].remaining);
-						  //$('#api_output').append(oopn);
-						  console.log(ipn);
-						}
-                                        },
-                                        failure: function(data){
-                                                alert('fail');
-                                        }
-                                  });
-*/
-					//API - 33b2e3a5-8642-1285-d573-07a22f8a15b4
+      var api_key = <?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>
                                   $.ajax({
                                         url: "https://gds.eligibleapi.com/v1.3/coverage/all.json",
                                         type: "get",
-                                        data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
+                                        data: {api_key: api_key,
                                                 payer_id: $('#payer_id').val(),
                                                 service_provider_first_name: $('#provider_first_name').val(),
                                                 service_provider_last_name: $('#provider_last_name').val(),

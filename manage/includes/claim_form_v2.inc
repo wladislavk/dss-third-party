@@ -2,6 +2,7 @@
   <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>
 
 <?php
+
 $status_sql = "SELECT status FROM dental_insurance 
 		WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'
 			AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
@@ -3312,26 +3313,6 @@ function file_claim(){
   }
   c = confirm('You are about to electronically submit this claim, are you sure?');
   return c;
-/*
-                                  $.ajax({
-                                        url: "https://v1.eligibleapi.net/plan/all.json",
-                                        type: "get",
-                                        dataType: 'json',
-                                        data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
-                                                payer_name: $('#payer_name').val(),
-                                                payer_id: $('#payer_id').val(),
-                                                provider_first_name: $('#provider_first_name').val(),
-                                                service_provider_last_name: $('#provider_last_name').val(),
-                                                service_provider_npi: $('#provider_npi').val(),
-                                                subscriber_id: $('#patient_member_id').val(),
-                                                subscriber_first_name: $('#patient_first_name').val(),
-                                                subscriber_last_name: $('#patient_last_name').val(),
-                                                subscriber_dob: $('#patient_dob').val(),
-                                                service_type_code: 30
-                                                },
-                                        complete: function(data){
-
-*/
 }
 
 function change_form(){

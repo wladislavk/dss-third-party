@@ -742,7 +742,7 @@ $fdf = "
     ";
   }
   $fdf .= "
-  << /T(".$field_path.".name_referring_provider_qualifier_fill[0]) /V(".$referring_provider_qualifier.") >>
+  << /T(".$field_path.".name_referring_provider_qualifier[0]) /V(".$name_referring_provider_qualifier.") >>
   << /T(".$field_path.".name_referring_provider_fill[0]) /V(".$referring_provider.") >>
   << /T(".$field_path.".seventeenA_fill[0]) /V(".$field_17a.") >>
   << /T(".$field_path.".seventeenb_NPI_fill[0]) /V(".$field_17b.") >>
@@ -916,6 +916,8 @@ trailer
 >>
 %%EOF
 ";
+
+
 $d = date('YmdHms');
 $file = "fdf_".$_GET['insid']."_".$_GET['pid']."_".$d.".fdf";
 if($_REQUEST['type']=="secondary"){

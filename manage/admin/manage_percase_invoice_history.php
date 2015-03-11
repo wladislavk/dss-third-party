@@ -5,7 +5,7 @@ $sql = "SELECT pi.* FROM dental_percase_invoice pi
 	WHERE 
 		pi.status != '".DSS_INVOICE_PENDING."'
 		AND
-		pi.docid=".mysql_real_escape_string($_GET['docid'])." ORDER BY adddate DESC";
+		pi.docid=".mysql_real_escape_string($_GET['docid'])." ORDER BY pi.due_date DESC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;

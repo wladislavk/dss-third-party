@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
-	protected $table = 'dental_notifications';
-
-	protected $primaryKey = 'id';
+    protected $table = 'dental_notifications';
+    protected $primaryKey = 'id';
 }

@@ -2,11 +2,8 @@
 
 interface LocationInterface
 {
-	public function findLocation($id);
-
-	public function get($where);
-
-	public function updateData($id, $values);
-
-	public function insertData($data);
+    public function findLocation($id);
+    public function get($where);
+    public function updateData($id, $values);
+    public function insertData($data);
 }

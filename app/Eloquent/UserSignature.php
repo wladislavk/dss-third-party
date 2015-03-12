@@ -4,16 +4,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserSignature extends Model
 {
-	protected $table = 'dental_user_signatures';
+    protected $table = 'dental_user_signatures';
+    protected $fillable = ['user_id', 'signature_json', 'ip_address'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['user_id', 'signature_json', 'ip_address'];
+    public static function get($userId)
+    {
+        $userSignature = UserSignature::where('user_id', '=', $userId)->get();
 
-	protected $primaryKey = 'id';
-
-	public static function get($userId)
-	{
-		$userSignature = UserSignature::where('user_id', '=', $userId)->get();
-
-		return $userSignature;
-	}
+        return $userSignature;
+    }
 }

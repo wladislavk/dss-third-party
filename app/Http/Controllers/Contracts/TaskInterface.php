@@ -2,11 +2,8 @@
 
 interface TaskInterface
 {
-	public function get($userId, $docId, $patientId, $task, $type = null, $input = null);
-
-	public function getJoin($id);
-
-	public function updateData($id, $values);
-
-	public function insertData($data);
+    public function get($userId, $docId, $patientId, $task, $type = null, $input = null);
+    public function getJoin($id);
+    public function updateData($id, $values);
+    public function insertData($data);
 }

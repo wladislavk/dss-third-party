@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-	protected $table = 'dental_task';
-
-	protected $primaryKey = 'id';
+    protected $table = 'dental_task';
+    protected $primaryKey = 'id';
 }

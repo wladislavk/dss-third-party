@@ -4,52 +4,51 @@ use Illuminate\Database\Eloquent\Model;
 
 class Custom extends Model
 {
-	protected $table = 'dental_custom';
+    protected $table = 'dental_custom';
+    protected $fillable = ['title', 'description', 'docid', 'status'];
+    protected $primaryKey = 'customid';
 
-	protected $fillable = ['title', 'description', 'docid', 'status'];
+    public static function get($customId)
+    {
+        try {
+            $custom = Custom::where('customid', '=', $customId)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
 
-	protected $primaryKey = 'customid';
+        return $custom;
+    }
 
-	public static function get($customId)
-	{
-		try {
-			$custom = Custom::where('customid', '=', $customId)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public static function getTotalRecords($docId)
+    {
+        $totalRecords = Custom::where('docid', '=', $docId)
+            ->orderBy('title')
+            ->get();
 
-		return $custom;
-	}
+        return $totalRecords;
+    }
 
-	public static function getTotalRecords($docId)
-	{
-		$totalRecords = Custom::where('docid', '=', $docId)->orderBy('title')
-														   ->get();
+    public static function updateData($customId, $values)
+    {
+        $custom = Custom::where('customid', '=', $customId)->update($values);
 
-		return $totalRecords;
-	}
+        return $custom;
+    }
 
-	public static function updateData($customId, $values)
-	{
-		$custom = Custom::where('customid', '=', $customId)->update($values);
+    public static function insertData($data)
+    {
+        $custom = new Custom();
 
-		return $custom;
-	}
+        foreach ($data as $attribute => $value) {
+            $custom->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$custom = new Custom();
+        try {
+            $custom->save();
+        } catch (QueryException $e) {
+            return null;
+        }
 
-		foreach ($data as $attribute => $value) {
-			$custom->$attribute = $value;
-		}
-
-		try {
-			$custom->save();
-		} catch (QueryException $e) {
-			return null;
-		}
-
-		return $custom->customid;
-	}
+        return $custom->customid;
+    }
 }

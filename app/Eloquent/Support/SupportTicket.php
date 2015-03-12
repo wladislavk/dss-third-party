@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class SupportTicket extends Model
 {
-	protected $table = 'dental_support_tickets';
-
-	protected $primaryKey = 'id';
+    protected $table = 'dental_support_tickets';
+    protected $primaryKey = 'id';
 }

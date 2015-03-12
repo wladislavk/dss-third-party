@@ -13,40 +13,36 @@ use Ds3\Eloquent\Invoice\PercaseInvoice;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
-	use Authenticatable, CanResetPassword;
-	
+    use Authenticatable, CanResetPassword;
 
-	protected $table = 'dental_users';
+    protected $table = 'dental_users';
+    protected $fillable = ['username', 'email', 'password'];
+    protected $hidden = ['password'];
+    protected $primaryKey = 'userid';
 
-	protected $fillable = ['username', 'email', 'password'];
-
-	protected $hidden = ['password'];
-
-	protected $primaryKey = 'userid';
-
-	public function getLocations()
-	{
-		return $this->hasMany(new Location,'docid');
-	}
-
-	public function getContacts()
-	{
-		return $this->hasMany(new Contact,'docid');
-	}
-
-	public function getPatients()
-	{
-		return $this->hasMany(new Patient,'docid');
-	}
-
-	public function getStaff()
-	{
-		return $this->where('docid',$this->userid)->where('user_access',1)->count();
-	}
-
-	public function getInvoices()
+    public function getLocations()
     {
-    	return $this->hasMany(new PercaseInvoice,'docid');
+        return $this->hasMany(new Location, 'docid');
+    }
+
+    public function getContacts()
+    {
+        return $this->hasMany(new Contact, 'docid');
+    }
+
+    public function getPatients()
+    {
+        return $this->hasMany(new Patient, 'docid');
+    }
+
+    public function getStaff()
+    {
+        return $this->where('docid', $this->userid)->where('user_access', 1)->count();
+    }
+
+    public function getInvoices()
+    {
+        return $this->hasMany(new PercaseInvoice,'docid');
     }
 
     public function is_super($access)
@@ -61,13 +57,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function is_billing($access)
     {
-        return ( Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN == $access || Constants::DSS_ADMIN_ACCESS_BILLING_BASIC == $access );
+        return (Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN == $access || Constants::DSS_ADMIN_ACCESS_BILLING_BASIC == $access);
     }
-    function is_hst_admin($admin_access)
+
+    public function is_hst_admin($admin_access)
     {
-        return ( Constants::DSS_ADMIN_ACCESS_HST_ADMIN == $admin_access);
+        return (Constants::DSS_ADMIN_ACCESS_HST_ADMIN == $admin_access);
     }
-    function is_billing_admin($admin_access)
+    
+    public function is_billing_admin($admin_access)
     {
         return (Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN == $admin_access);
     }

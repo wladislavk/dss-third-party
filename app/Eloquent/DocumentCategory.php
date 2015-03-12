@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class DocumentCategory extends Model
 {
-	protected $table = 'dental_document_category';
-
-	protected $primaryKey = 'categoryid';
+    protected $table = 'dental_document_category';
+    protected $primaryKey = 'categoryid';
 }

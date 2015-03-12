@@ -4,44 +4,42 @@ use Illuminate\Database\Eloquent\Model;
 
 class Referredby extends Model
 {
-	protected $table = 'dental_referredby';
+    protected $table = 'dental_referredby';
+    protected $fillable = ['docid', 'salutation', 'lastname', 'firstname', 'middlename'];
+    protected $primaryKey = 'referredbyid';
 
-	protected $fillable = ['docid', 'salutation', 'lastname', 'firstname', 'middlename'];
+    public static function get($referredbyId)
+    {
+        try {
+            $referredby = Referredby::where('referredbyid', '=', $referredbyId)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
 
-	protected $primaryKey = 'referredbyid';
+        return $referredby;
+    }
 
-	public static function get($referredbyId)
-	{
-		try {
-			$referredby = Referredby::where('referredbyid', '=', $referredbyId)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public static function updateData($referredbyId, $values)
+    {
+        $referredby = Referredby::where('referredbyid', '=', $referredbyId)->update($values);
 
-		return $referredby;
-	}
+        return $referredby;
+    }
 
-	public static function updateData($referredbyId, $values)
-	{
-		$referredby = Referredby::where('referredbyid', '=', $referredbyId)->update($values);
+    public static function insertData($data)
+    {
+        $referredby = new Referredby();
 
-		return $referredby;
-	}
+        foreach ($data as $attribute => $value) {
+            $referredby->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$referredby = new Referredby();
+        try {
+            $referredby->save();
+        } catch (QueryException $e) {
+            return null;
+        }
 
-		foreach ($data as $attribute => $value) {
-			$referredby->$attribute = $value;
-		}
-
-		try {
-			$referredby->save();
-		} catch (QueryException $e) {
-			return null;
-		}
-
-		return $referredby->referredbyid;
-	}
+        return $referredby->referredbyid;
+    }
 }

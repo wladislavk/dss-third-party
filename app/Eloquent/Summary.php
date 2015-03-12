@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Summary extends Model
 {
-	protected $table = 'dental_summary';
-
-	protected $primaryKey = 'summaryid';
+    protected $table = 'dental_summary';
+    protected $primaryKey = 'summaryid';
 }

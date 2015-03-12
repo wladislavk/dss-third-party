@@ -4,9 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class FlowPg1 extends Model
 {
-	protected $table = 'dental_flow_pg1';
+    protected $table = 'dental_flow_pg1';
+    protected $primaryKey = 'id';
 
-	protected $primaryKey = 'id';
-
-	// public $timestamps = false;
+    // public $timestamps = false;
 }

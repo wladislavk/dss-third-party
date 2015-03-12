@@ -1,10 +1,8 @@
 <?php namespace Ds3\Admin\Contracts;
 
-interface AdminInterface {
-
+interface AdminInterface
+{
     public function getByUsername($username);
-
     public function recoverAndSetHash($admin_id,$email);
-    
     public function attemptAuth($username,$password);
-} 
+}

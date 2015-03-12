@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ContactType extends Model
 {
-	protected $table = 'dental_contacttype';
-
-	protected $primaryKey = 'contacttypeid';
+    protected $table = 'dental_contacttype';
+    protected $primaryKey = 'contacttypeid';
 }

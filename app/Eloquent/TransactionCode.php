@@ -4,86 +4,86 @@ use Illuminate\Database\Eloquent\Model;
 
 class TransactionCode extends Model
 {
-	protected $table = 'dental_transaction_code';
+    protected $table = 'dental_transaction_code';
+    protected $fillable = ['transaction_code', 'description', 'type', 'sortby', 'status'];
+    protected $primaryKey = 'transaction_codeid';
 
-	protected $fillable = ['transaction_code', 'description', 'type', 'sortby', 'status'];
+    public $timestamps = false;
 
-	protected $primaryKey = 'transaction_codeid';
+    public static function get($id)
+    {
+        try {
+            $transactionCode = TransactionCode::where('transaction_codeid', '=', $id)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
 
-	public $timestamps = false;
+        return $transactionCode;
+    }
 
-	public static function get($id)
-	{
-		try {
-			$transactionCode = TransactionCode::where('transaction_codeid', '=', $id)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public static function getTransactionType($docId, $code)
+    {
+        try {
+            $transactionType = TransactionCode::select('type')
+                ->where('docid', '=', $docId)
+                ->where('transaction_code', '=', $code)
+                ->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
 
-		return $transactionCode;
-	}
+        return $transactionType;
+    }
 
-	public static function getTransactionType($docId, $code)
-	{
-		try {
-			$transactionType = TransactionCode::select('type')->where('docid', '=', $docId)
-														  	  ->where('transaction_code', '=', $code)
-														 	  ->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public static function getCodes($where, $order = null)
+    {
+        $codes = new TransactionCode();
 
-		return $transactionType;
-	}
+        foreach ($where as $attribute => $value) {
+            $codes = $codes->where($attribute, '=', $value);
+        }
 
-	public static function getCodes($where, $order = null)
-	{
-		$codes = new TransactionCode();
+        if (!empty($order)) {
+            $codes = $codes->orderBy($order);
+        }
 
-		foreach ($where as $attribute => $value) {
-			$codes = $codes->where($attribute, '=', $value);
-		}
+        return $codes->get();
+    }
 
-		if (!empty($order)) {
-			$codes = $codes->orderBy($order);
-		}
+    public static function isUniqueField($field, $transactionCodeId, $docId)
+    {
+        reset($field);
+        $attribute = key($field);
+        $value = $field[$attribute];
 
-		return $codes->get();
-	}
+        $transactionCode = TransactionCode::where($attribute, '=', $value)
+            ->where('transaction_codeid', '!=', $transactionCodeId)
+            ->where('docid', '=', $docId);
 
-	public static function isUniqueField($field, $transactionCodeId, $docId)
-	{
-		reset($field);
-		$attribute = key($field);
-		$value = $field[$attribute];
+        return $transactionCode->get();
+    }
 
-		$transactionCode = TransactionCode::where($attribute, '=', $value)->where('transaction_codeid', '!=', $transactionCodeId)
-																		  ->where('docid', '=', $docId);
+    public static function updateData($transactionCodeId, $values)
+    {
+        $transactionCode = TransactionCode::where('transaction_codeid', '=', $transactionCodeId)->update($values);
 
-		return $transactionCode->get();
-	}
+        return $transactionCode;
+    }
 
-	public static function updateData($transactionCodeId, $values)
-	{
-		$transactionCode = TransactionCode::where('transaction_codeid', '=', $transactionCodeId)->update($values);
+    public static function insertData($data)
+    {
+        $transactionCode = new TransactionCode();
 
-		return $transactionCode;
-	}
+        foreach ($data as $attribute => $value) {
+            $transactionCode->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$transactionCode = new TransactionCode();
+        try {
+            $transactionCode->save();
+        } catch (QueryException $e) {
+            return null;
+        }
 
-		foreach ($data as $attribute => $value) {
-			$transactionCode->$attribute = $value;
-		}
-
-		try {
-			$transactionCode->save();
-		} catch (QueryException $e) {
-			return null;
-		}
-
-		return $transactionCode->transaction_codeid;
-	}
+        return $transactionCode->transaction_codeid;
+    }
 }

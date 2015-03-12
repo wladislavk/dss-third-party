@@ -2,5 +2,5 @@
 
 interface HstInterface
 {
-	public function get($viewed, $status, $where);
+    public function get($viewed, $status, $where);
 }

@@ -2,5 +2,5 @@
 
 interface QPage3Interface
 {
-	public function get($patientId);
+    public function get($patientId);
 }

@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class MemoAdmin extends Model
 {
-	protected $table = 'memo_admin';
-
-	protected $primaryKey = 'memo_id';
+    protected $table = 'memo_admin';
+    protected $primaryKey = 'memo_id';
 }

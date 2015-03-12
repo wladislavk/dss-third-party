@@ -4,26 +4,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Complaint extends Model
 {
-	protected $table = 'dental_complaint';
+    protected $table = 'dental_complaint';
+    protected $fillable = ['complaint', 'description', 'sortby', 'status'];
+    protected $primaryKey = 'complaintid';
 
-	protected $fillable = ['complaint', 'description', 'sortby', 'status'];
+    public static function get($where)
+    {
+        $complaint = new Complaint();
 
-	protected $primaryKey = 'complaintid';
+        foreach ($where as $attribute => $value) {
+            $complaint = $complaint->where($attribute, '=', $value);
+        }
 
-	public static function get($where)
-	{
-		$complaint = new Complaint();
+        try {
+            $complaint = $complaint->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
 
-		foreach ($where as $attribute => $value) {
-			$complaint = $complaint->where($attribute, '=', $value);
-		}
-
-		try {
-			$complaint = $complaint->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
-
-		return $complaint;
-	}
+        return $complaint;
+    }
 }

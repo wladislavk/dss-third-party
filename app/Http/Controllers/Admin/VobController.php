@@ -2,16 +2,10 @@
 
 use Ds3\Http\Controllers\Controller;
 
-class VobController extends Controller {
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		return view('admin.vob');
-	}
-
-
+class VobController extends Controller
+{
+    public function index()
+    {
+        return view('admin.vob');
+    }
 }

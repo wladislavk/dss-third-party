@@ -6,12 +6,11 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Ds3\Eloquent\Auth\User;
 
-
 class Admin extends User
 {
-	protected $table = 'admin';
+    protected $table = 'admin';
 
-	protected $fillable = [
+    protected $fillable = [
         'name',
         'username',
         'password',
@@ -22,28 +21,29 @@ class Admin extends User
         'admin_access'
     ];
 
-	protected $primaryKey = 'adminid';
+    protected $primaryKey = 'adminid';
 
-	public static function getAdmin($adminId)
-	{
-		try {
-			$admin = Admin::where('adminid', '=', $adminId)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public static function getAdmin($adminId)
+    {
+        try {
+            $admin = Admin::where('adminid', '=', $adminId)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
 
-		return $admin;
-	}
+        return $admin;
+    }
 
-	public static function getJoin($categoryId)
-	{
-		$admin = DB::table(DB::raw('admin a'))->select('a.*')
-											  ->join(DB::raw('dental_support_category_admin ca'), 'ca.adminid', '=', 'a.adminid')
-											  ->where('ca.category_id', '=', $categoryId)
-											  ->get();
+    public static function getJoin($categoryId)
+    {
+        $admin = DB::table(DB::raw('admin a'))
+            ->select('a.*')
+            ->join(DB::raw('dental_support_category_admin ca'), 'ca.adminid', '=', 'a.adminid')
+            ->where('ca.category_id', '=', $categoryId)
+            ->get();
 
-		return $admin;
-	}
+        return $admin;
+    }
     public function adminCompanies()
     {
         $this->hasMany('Ds3\Eloquent\AdminCompany');

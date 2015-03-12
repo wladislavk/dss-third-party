@@ -33,13 +33,24 @@ if(isset($_POST["enroll_but"]))
   $sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);
+
+  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($_SESSION['docid'])."'";
+  $api_key_query = mysql_query($api_key_sql);
+  $api_key_result = mysql_fetch_assoc($api_key_query);
+  if($api_key_result){
+    if(!empty(trim($api_key_result['eligible_api_key'])){
+      $api_key = $api_key_result['eligible_api_key'];
+    }
+  }
+
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
 $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 	$t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."' AND status=1";
         $t_q = mysql_query($t_sql);
 	$t_r = mysql_fetch_assoc($t_q);
 $data = array();
-$data['api_key'] = DSS_DEFAULT_ELIGIBLE_API_KEY;
+$data['api_key'] = $api_key;
 if(isset($_POST['test']) && $_POST['test'] == "1"){
   $data['test'] = "true";
 }
@@ -209,6 +220,16 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
                 <?php $us_sql = "SELECT * FROM dental_user_signatures where user_id='".mysql_real_escape_string($_SESSION['docid'])."'";
                   $us_q = mysql_query($us_sql);
                   $signature = mysql_num_rows($us_q);
+                  
+                  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+                  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($_SESSION['docid'])."'";
+                  $api_key_query = mysql_query($api_key_sql);
+                  $api_key_result = mysql_fetch_assoc($api_key_query);
+                  if($api_key_result){
+                    if(!empty(trim($api_key_result['eligible_api_key'])){
+                      $api_key = $api_key_result['eligible_api_key'];
+                    }
+                  }
                 ?>
           <?php if($r['docid']==0){
                 $snpi = $r['service_npi'];
@@ -279,7 +300,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 <script type="text/javascript">
 
 function update_list(){
-  var api_key = <?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>;
+  var api_key = <?php echo "'".$api_key."'" ?>;
   var t = $('#transaction_type').val();
   if(t == '1'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer');

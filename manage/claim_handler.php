@@ -605,6 +605,16 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 
     $data = array(); //Initializing parameter array
 
+    $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+    $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($_SESSION['docid'])."'";
+    $api_key_query = mysql_query($api_key_sql);
+    $api_key_result = mysql_fetch_assoc($api_key_query);
+    if($api_key_result){
+        if(!empty(trim($api_key_result['eligible_api_key'])){
+          $api_key = $api_key_result['eligible_api_key'];
+        }
+    }
+
     $data['api_key'] = DSS_DEFAULT_ELIGIBLE_API_KEY; //Setting your api key
 
     $data['eligibleToken'] = $_POST["eligibleToken"]; // Reading eligibleToken and passing to claims endpoint

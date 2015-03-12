@@ -25,7 +25,7 @@ include_once '../includes/calendarinc.php';
   <form role="form" class="form-horizontal form-coverage">
 
 <?php
-  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
+  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn u.userid as user_id from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
          LEFT JOIN dental_users u ON u.userid = p.docid
          WHERE p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
@@ -35,6 +35,17 @@ include_once '../includes/calendarinc.php';
   $doc_array = explode(' ',$doc_name);
   $doc_first_name = $doc_array[0];
   $doc_last_name = $doc_array[1];
+
+  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($r['user_id'])."'";
+  $api_key_query = mysql_query($api_key_sql);
+  $api_key_result = mysql_fetch_assoc($api_key_query);
+  if($api_key_result){
+    if(!empty(trim($api_key_result['eligible_api_key'])){
+      $api_key = $api_key_result['eligible_api_key'];
+    }
+  }
+
 ?>
 <?php
                       $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$_GET['docid']."'";
@@ -184,7 +195,7 @@ include_once '../includes/calendarinc.php';
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-var api_key = <?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>;
+var api_key = <?php echo "'".$api_key."'" ?>;
 setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.4/payers.json?api_key='+api_key, 'ins_payer', '', true, false);
 });
 </script>

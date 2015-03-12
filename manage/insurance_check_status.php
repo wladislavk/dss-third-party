@@ -11,7 +11,7 @@ $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
 $_GET['id'] = $_GET['insid'];
 $sql = "SELECT i.*, u.npi, u.tax_id_or_ssn,
 		ce.reference_id,
-		u.first_name, u.last_name
+		u.first_name, u.last_name, u.usserid as user_id
 		FROM dental_claim_electronic ce 
 	JOIN dental_insurance i ON i.insuranceid = ce.claimid
 	JOIN dental_users u ON i.docid = u.userid
@@ -21,13 +21,22 @@ $sql = "SELECT i.*, u.npi, u.tax_id_or_ssn,
 $q = mysql_query($sql) or die(mysql_error());
 $r = mysql_fetch_assoc($q);
 
+$api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($r['user_id'])."'";
+$api_key_query = mysql_query($api_key_sql);
+$api_key_result = mysql_fetch_assoc($api_key_query);
+if($api_key_result){
+  if(!empty(trim($api_key_result['eligible_api_key'])){
+    $api_key = $api_key_result['eligible_api_key'];
+  }
+}
+
 $l_sql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".mysql_real_escape_string($_GET['id'])."'";
 $l_q = mysql_query($l_sql);
 $l = mysql_fetch_assoc($l_q);
 
 $reference_id = $r['reference_id'];
 
-$api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
 $data = array();                                                                    
 
 $data['api_key'] = $api_key;

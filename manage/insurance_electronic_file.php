@@ -603,7 +603,18 @@ $data = array();
 if(isset($_GET['test']) && $_GET['test']==1){
   $data['test'] = 'true';
 }
-$data['api_key'] = DSS_DEFAULT_ELIGIBLE_API_KEY;
+
+$api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($docid)."'";
+$api_key_query = mysql_query($api_key_sql);
+$api_key_result = mysql_fetch_assoc($api_key_query);
+if($api_key_result){
+  if(!empty(trim($api_key_result['eligible_api_key'])){
+    $api_key = $api_key_result['eligible_api_key'];
+  }
+}
+
+$data['api_key'] = $api_key;
 /*
 $data['submitter'] = array(
         "organization_name" => "Dental Sleep Solutions",
@@ -756,7 +767,6 @@ $data['claim'] = array(
 $data_string = json_encode($data);                                                                                   
 error_log($data_string);
 //echo $data_string."<br /><br />"; 
-//$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key='.DSS_DEFAULT_ELIGIBLE_API_KEY);                                                                      
 $ch = curl_init('https://gds.eligibleapi.com/v1.1/claims.json');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  

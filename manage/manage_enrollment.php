@@ -20,6 +20,16 @@ require_once('includes/constants.inc');
 	LEFT JOIN dental_enrollment_transaction_type t ON e.transaction_type_id = t.id
 	WHERE e.user_id = '".mysql_real_escape_string($_SESSION['docid'])."'";
   $my = mysql_query($sql);
+
+  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($_SESSION['docid'])."'";
+  $api_key_query = mysql_query($api_key_sql);
+  $api_key_result = mysql_fetch_assoc($api_key_query);
+  if($api_key_result){
+    if(!empty(trim($api_key_result['eligible_api_key'])){
+      $api_key = $api_key_result['eligible_api_key'];
+    }
+  }
 ?>
 <div style="margin-left:10px;margin-right:10px;">
 	<button style="margin-right:10px; float:right;" onclick="loadPopup('add_enrollment.php')" class="addButton">
@@ -84,7 +94,7 @@ require_once('includes/constants.inc');
 					</span>
 				</td>
 				<td valign="top">
-					<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'"?>&transaction_type=837P" target="_blank">PDF</a>
+					<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key ?>&transaction_type=837P" target="_blank">PDF</a>
 				</td>
 			</tr>
 	<? 	}

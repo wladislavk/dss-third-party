@@ -30,6 +30,8 @@ AND
                 ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
                         ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
  ";
+
+
 /*
         $sql = "SELECT du.*, c.name AS company_name, c.id AS company_id, p.name as plan_name,
 		pi.id as invoice_id,
@@ -175,6 +177,32 @@ $producer_q = mysql_query($producer_sql);
 
 if(isset($_POST['submit'])){
 
+
+
+  $doc_sql = "SELECT p.monthly_fee, p.producer_fee, p.fax_fee, p.free_fax, p.claim_fee, p.free_claim, p.eligibility_fee, p.free_eligibility, p.efile_fee, p.free_efile, p.enrollment_fee, p.free_enrollment, vob_fee, free_vob, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type, c.name as company_name, p.name as plan_name
+                FROM dental_users u
+                JOIN dental_user_company uc ON uc.userid = u.userid
+                JOIN companies c ON uc.companyid = c.id
+                JOIN dental_plans p ON p.id=u.plan_id
+                WHERE u.userid='".mysql_real_escape_string($user['userid'])."'";
+  $doc_q = mysql_query($doc_sql);
+if(mysql_num_rows($doc_q) == 0){
+  //If no plan get company fees
+  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type, c.name as company_name, p.name as plan_name
+                FROM dental_users u
+                JOIN dental_user_company uc ON uc.userid = u.userid
+                JOIN companies c ON uc.companyid = c.id
+                WHERE u.userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+  $doc_q = mysql_query($doc_sql);
+
+}
+
+  $doc = mysql_fetch_assoc($doc_q);
+
+
+
+
+
   if(mysql_num_rows($q) > 0){
 
       $in_sql = "update dental_percase_invoice SET
@@ -248,15 +276,15 @@ if(isset($_POST['submit'])){
 		status = '1'
 		WHERE fax_invoice_id = '".$fax['fax_invoice_id']."' AND docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
     mysql_query($up_sql);
-  }else{
+  }elseif(!isset($_POST['free_fax_desc']) || (isset($_POST['free_fax_desc']) && (intval($fax['total_faxes']) - intval($doc['free_fax']) > 0))){
     $i_id = invoice_find('1',$user['userid']);
     $up_sql = "UPDATE dental_fax_invoice SET
 		invoice_id = '".mysql_real_escape_string($i_id)."'
-		WHERE invoice_id = '".$invoice_id."'";
+		WHERE invoice_id = '".$invoice_id."'
+			AND id != '".mysql_real_escape_string($fax_invoice_id)."'"; //DO NOT UPDATE FREE FAX INVOICE
     mysql_query($up_sql);
     
   }
-
   if(isset($_POST['free_ec_desc'])){
     $ec_start_date = ($_POST['free_ec_start_date'])?date('Y-m-d', strtotime($_POST['ec_start_date'])):'';
     $ec_end_date = ($_POST['free_ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';

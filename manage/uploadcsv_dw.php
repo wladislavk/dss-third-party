@@ -120,9 +120,9 @@ if($_FILES['csv']['error'] == 0){
 		foreach($fields AS $id => $field){
 		  switch($field){
                         case 'status':
-                                if($data[$id]=="True"){
+                                if(strtolower($data[$id])=="true"){
                                         $s .= $field . " = '3', ";
-                                }elseif($data[$id]=="False"){
+                                }elseif(strtolower($data[$id])=="false"){
                                         $s .= $field . " = '4', ";
                                 }
                                 break;
@@ -136,7 +136,8 @@ if($_FILES['csv']['error'] == 0){
 			case 'dob':
 				if($data[$id]!=''){
 				  $patientdob = true;
-				  $data[$id] = str_replace('/','-', $data[$id]);
+				  //uncomment following line for dd/mm/yyyy
+				  //$data[$id] = str_replace('/','-', $data[$id]);
 				  $d = date('m/d/Y', strtotime($data[$id]));
 				  $s .= $field . " = '" .$d."', ";	
 				}
@@ -201,7 +202,7 @@ if($_FILES['csv']['error'] == 0){
 				break;
 		   }
 		}
-			$s .= " docid = '".$_SESSION[docid]."'";
+			$s .= " docid = '".$_SESSION[docid]."', adddate = now()";
 			//echo $s;
 			mysql_query($s);
 			$pid = mysql_insert_id();
@@ -270,7 +271,7 @@ if($_FILES['csv']['error'] == 0){
 
 <br /><br />
 <form action="<?= $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" method="post">
-
+<p>Dates must be in mm/dd/yyyy format.</p>
 <input type="file" name="csv" />
 <br />
 <br />

@@ -15,8 +15,10 @@ if(isset($_POST["enrollsub"]))
   $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($r['userid'])."'";
   $api_key_query = mysql_query($api_key_sql);
   $api_key_result = mysql_fetch_assoc($api_key_query);
-  if($api_key_result){
+  if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+    if(trim($api_key_result['eligible_api_key']) != ""){
       $api_key = $api_key_result['eligible_api_key'];
+    }
   }
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
 $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);

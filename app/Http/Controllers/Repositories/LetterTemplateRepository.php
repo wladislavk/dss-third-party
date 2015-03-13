@@ -8,25 +8,25 @@ use Ds3\Eloquent\Letter\LetterTemplate;
 
 class LetterTemplateRepository implements LetterTemplateInterface
 {
-	public function findLetterTemplate($id)
-	{
-		return LetterTemplate::find($id);
-	}
+    public function findLetterTemplate($id)
+    {
+        return LetterTemplate::find($id);
+    }
 
-	public function insertData($data)
-	{
-		$letterTemplate = new LetterTemplate();
+    public function insertData($data)
+    {
+        $letterTemplate = new LetterTemplate();
 
-		foreach ($data as $attribute => $value) {
-			$letterTemplate->$attribute = $value;
-		}
+        foreach ($data as $attribute => $value) {
+            $letterTemplate->$attribute = $value;
+        }
 
-		try {
-			$letterTemplate->save();
-		} catch (QueryException $e) {
-			return null;
-		}
+        try {
+            $letterTemplate->save();
+        } catch (QueryException $e) {
+            return null;
+        }
 
-		return $letterTemplate->id;
-	}
+        return $letterTemplate->id;
+    }
 }

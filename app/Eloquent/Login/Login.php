@@ -7,5 +7,5 @@ class Login extends Model
     protected $table = 'dental_login';
     protected $primaryKey = 'loginid';
 
-    // public $timestamps = false;
+    public $timestamps = false;
 }

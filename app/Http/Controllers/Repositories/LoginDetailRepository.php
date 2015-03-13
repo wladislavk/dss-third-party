@@ -7,20 +7,20 @@ use Ds3\Eloquent\Login\LoginDetail;
 
 class LoginDetailRepository implements LoginDetailInterface
 {
-	public function insertData($data)
-	{
-		$loginDetail = new LoginDetail();
+    public function insertData($data)
+    {
+        $loginDetail = new LoginDetail();
 
-		foreach ($data as $attribute => $value) {
-			$loginDetail->$attribute = $value;
-		}
+        foreach ($data as $attribute => $value) {
+            $loginDetail->$attribute = $value;
+        }
 
-		try {
-			$loginDetail->save();
-		} catch(ModelNotFoundException $e) {
-			return null;
-		}
+        try {
+            $loginDetail->save();
+        } catch(ModelNotFoundException $e) {
+            return null;
+        }
 
-		return $loginDetail->l_detailid;
-	}
+        return $loginDetail->l_detailid;
+    }
 }

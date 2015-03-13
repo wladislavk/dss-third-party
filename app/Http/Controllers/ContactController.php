@@ -60,14 +60,14 @@ class ContactController extends Controller
         LetterTemplateInterface $letterTemplate,
         PatientInterface $patient
     ) {
-        $this->contactType      = $contactType;
-        $this->contact          = $contact;
-        $this->user             = $user;
-        $this->qualifier        = $qualifier;
-        $this->letterDB         = $letterDB;
-        $this->fax              = $fax;
-        $this->letterTemplate   = $letterTemplate;
-        $this->patient          = $patient;
+        $this->contactType     = $contactType;
+        $this->contact         = $contact;
+        $this->user            = $user;
+        $this->qualifier       = $qualifier;
+        $this->letterDB        = $letterDB;
+        $this->fax             = $fax;
+        $this->letterTemplate  = $letterTemplate;
+        $this->patient         = $patient;
 
         $this->request      = Request::all();
         $this->activePat    = GeneralFunctions::getRouteParameter('activePat');

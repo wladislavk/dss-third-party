@@ -5,10 +5,10 @@ use Ds3\Eloquent\Memo\MemoAdmin;
 
 class MemoAdminRepository implements MemoAdminInterface
 {
-	public function get()
-	{
-		$memoAdmins = MemoAdmin::whereRaw('off_date <= CURDATE()')->get();
+    public function get()
+    {
+        $memoAdmins = MemoAdmin::whereRaw('off_date <= CURDATE()')->get();
 
-		return $memoAdmins;
-	}
+        return $memoAdmins;
+    }
 }

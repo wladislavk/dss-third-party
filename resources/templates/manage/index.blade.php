@@ -243,10 +243,6 @@
 					<span class="count">{!! $numBounce or '' !!}</span>
 					<span class="label">Email Bounces</span>
 				</a>
-
-				<?php /**
-
-				*/?>
 			</div>
 
 			<div class="home_third">

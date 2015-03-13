@@ -6,36 +6,36 @@ use Illuminate\Filesystem\FileNotFoundException;
 
 class FileController extends Controller
 {
-	public function display($fileName = null)
-	{
-		$basePath = 'shared/q_file/';
+    public function display($fileName = null)
+    {
+        $basePath = 'shared/q_file/';
 
-		if (File::exists($basePath . $fileName)) {
-			$extension = File::extension($basePath . $fileName);
-			$contents = File::get($basePath . $fileName);
+        if (File::exists($basePath . $fileName)) {
+            $extension = File::extension($basePath . $fileName);
+            $contents = File::get($basePath . $fileName);
 
-			switch ($extension) {
-				case 'png': 
-					$contentType = 'image/png';
-					break;
-				case 'jpg':
-					$contentType = 'image/jpg';
-					break;
-				case 'jpeg':
-					$contentType = 'image/jpeg';
-					break;
-				case 'gif':
-					$contentType = 'image/gif';
-					break;
-				case 'bmp':
-					$contentType = 'image/bmp';
-					break;
-				default:
-					$contentType = '';
-					break;
-			}
+            switch ($extension) {
+                case 'png': 
+                    $contentType = 'image/png';
+                    break;
+                case 'jpg':
+                    $contentType = 'image/jpg';
+                    break;
+                case 'jpeg':
+                    $contentType = 'image/jpeg';
+                    break;
+                case 'gif':
+                    $contentType = 'image/gif';
+                    break;
+                case 'bmp':
+                    $contentType = 'image/bmp';
+                    break;
+                default:
+                    $contentType = '';
+                    break;
+            }
 
-			return response($contents)->header('Content-Type', $contentType);
-		}
-	}
+            return response($contents)->header('Content-Type', $contentType);
+        }
+    }
 }

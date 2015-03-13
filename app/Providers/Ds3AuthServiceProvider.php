@@ -2,9 +2,8 @@
 
 use Illuminate\Support\ServiceProvider;
 
-class Ds3AuthServiceProvider extends ServiceProvider {
-
-
+class Ds3AuthServiceProvider extends ServiceProvider
+{
     public function register()
     {
         $this->app->bind(
@@ -12,5 +11,4 @@ class Ds3AuthServiceProvider extends ServiceProvider {
             'Ds3\Ds3Auth\Ds3Auth'
         );
     }
-
 }

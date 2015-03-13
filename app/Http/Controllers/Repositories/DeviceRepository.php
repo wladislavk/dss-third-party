@@ -8,25 +8,25 @@ use Ds3\Eloquent\Device;
 
 class DeviceRepository implements DeviceInterface
 {
-	public function get()
-	{
-		$devices = Device::where('status', '=', 1)
-				->orderBy('sortby')
-				->get();
+    public function get()
+    {
+        $devices = Device::where('status', '=', 1)
+            ->orderBy('sortby')
+            ->get();
 
-		return $devices;
-	}
+        return $devices;
+    }
 
-	public function getDevice($deviceId)
-	{
-		try {
-			$device = Device::select('device')
-					->where('deviceid', '=', $deviceId)
-					->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public function getDevice($deviceId)
+    {
+        try {
+            $device = Device::select('device')
+                ->where('deviceid', '=', $deviceId)
+                ->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
 
-		return $device;
-	}
+        return $device;
+    }
 }

@@ -7,5 +7,5 @@ class LoginDetail extends Model
     protected $table = 'dental_login_detail';
     protected $primaryKey = 'l_detailid';
 
-    // public $timestamps = false;
+    public $timestamps = false;
 }

@@ -7,23 +7,23 @@ use Ds3\Eloquent\FlowPg2;
 
 class FlowPg2Repository implements FlowPg2Interface
 {
-	public function getStep($patientId)
-	{
-		try {
-			$step = FlowPg2::where('patientid', '=', $patientId)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public function getStep($patientId)
+    {
+        try {
+            $step = FlowPg2::where('patientid', '=', $patientId)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
 
-		return $step; 
-	}
+        return $step; 
+    }
 
-	public function updateData($patientId, $values)
-	{
-		$flowPg2 = FlowPg2::where('patientid', '=', $patientId)
-			->where('stepid', '=', 1)
-			->update($values);
+    public function updateData($patientId, $values)
+    {
+        $flowPg2 = FlowPg2::where('patientid', '=', $patientId)
+            ->where('stepid', '=', 1)
+            ->update($values);
 
-		return $flowPg2;
-	}
+        return $flowPg2;
+    }
 }

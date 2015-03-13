@@ -7,39 +7,38 @@ use Ds3\Eloquent\Login\Login;
 
 class LoginRepository implements LoginInterface
 {
-	public function insertData($data)
-	{
-		$login = new Login();
+    public function insertData($data)
+    {
+        $login = new Login();
 
-		foreach ($data as $attribute => $value) {
-			$login->$attribute = $value;
-		}
+        foreach ($data as $attribute => $value) {
+            $login->$attribute = $value;
+        }
 
-		try {
-			$login->save();
-		} catch(ModelNotFoundException $e) {
-			return null;
-		}
+        try {
+            $login->save();
+        } catch(ModelNotFoundException $e) {
+            return null;
+        }
 
-		return $login->loginid;
-	}
+        return $login->loginid;
+    }
 
+    public function get($where)
+    {
+        $login = new Login();
 
-	public function get($where)
-	{
-		$login = new Login();
+        foreach ($where as $attribute => $value) {
+            $login = $login->where($attribute, '=', $value);
+        }
 
-		foreach ($where as $attribute => $value) {
-			$login = $login->where($attribute, '=', $value);
-		}
+        return $login->get();
+    }
 
-		return $login->get();
-	}
+    public function updateData($loginId, $values)
+    {
+        $login = Login::where('loginid', '=', $loginId)->update($values);
 
-	public function updateData($loginId, $values)
-	{
-		$login = Login::where('loginid', '=', $loginId)->update($values);
-
-		return $login;
-	}
+        return $login;
+    }
 }

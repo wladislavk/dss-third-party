@@ -194,7 +194,14 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $insured_sex = $_POST['subscriber']['gender'];
         $insured_insurance_plan = $_POST['subscriber']['group_name'];
         $other_insured_insurance_plan = $_POST['other_payers'][0]['subscriber']['group_name'];
-        $another_plan = $_POST['other_payer'];
+        $other_payer = $_POST['other_payer'];
+        if($other_payer){
+            $another_plan = "YES";
+        }
+        else 
+        {
+            $another_plan = "NO";
+        }
         $patient_signature = $_POST['claim']['patient_signature_on_file'];
         // NO NAME ON FIELD $patient_signed_date = $_POST['patient_signed_date'];
         $insured_signature = $_POST['claim']['direct_payment_authorized'];

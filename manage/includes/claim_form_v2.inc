@@ -2210,7 +2210,7 @@ Medicare
 						<span class="small_cap"> I authorize the release of any medical or other information neccessary to process this claim. I also reuest payment of government benefits either to myself or th the party who accepts assignment below.</span>
 						<br /><br /><br />
 						
-						<input type="checkbox" name="patient_signature" value="1" <? if($patient_signature == "1") echo " checked";?> />
+						<input type="checkbox" name="patient_signature" value="Y" <? if($patient_signature == "1" || $patient_signature == "Y") echo " checked";?> />
 						Signature on File
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2902,10 +2902,10 @@ if (!$query) {
 									<br />
 									<span class="small_cap">(For govt. claims, see back)</span>
 									<br />
-									<input type="radio" name="accept_assignment" value="Yes" <? if($accept_assignment == "Yes") echo " checked";?> />
+									<input type="radio" name="accept_assignment" value="A" <? if($accept_assignment == "Yes" || $accept_assignment == "A") echo " checked";?> />
 									YES
 									&nbsp;&nbsp;&nbsp;
-									<input type="radio" name="accept_assignment" value="No" <? if($accept_assignment == "No") echo " checked";?> />
+									<input type="radio" name="accept_assignment" value="C" <? if($accept_assignment == "No" || $accept_assignment == "C") echo " checked";?> />
 									NO
 								</td>
 							</tr>
@@ -3041,7 +3041,7 @@ if ($is_pending) {
 										(I certify that the statements on the reverse apply to this bill and are made a part thereof.)
 									</span>
 									<br />
-									<input type="text" value="<?=$signature_physician?>" class="inbox_line3" size="40" name="signature_physician" />
+									<input type="text" class="inbox_line3" size="40" name="signature_physician" />
 									<br /><br />
 									Signed
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

@@ -1,5 +1,5 @@
 <?php
-namespace Ds3\Legacy;
+namespace Ds3\Libraries\Legacy;
 
 class OverflowException extends \OverflowException
 {}

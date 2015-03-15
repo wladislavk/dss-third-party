@@ -88,7 +88,7 @@
                     <span class="red">*</span>
                 </td>
             </tr>
-    	<!-- new -->
+        <!-- new -->
             <tr bgcolor="#FFFFFF">
                 <td valign="top" class="frmhead" width="30%">
                     Claim E-File Fee
@@ -98,7 +98,7 @@
                     <span class="red">*</span>
                 </td>
             </tr>
-    	<!-- new -->
+        <!-- new -->
             <tr bgcolor="#FFFFFF">
                 <td valign="top" class="frmhead" width="30%">
                     Free E-Claims (Monthly)
@@ -182,10 +182,10 @@
                 </td>
             </tr>
 
-	<!-- NEW -->
+    <!-- NEW -->
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-		Type
+        Type
             </td>
             <td valign="top" class="frmdata">
               {!! Form::select('office_type',[1=>'Super->FO',2=>'Super->BO',3=>'BO Ins Co->FO'],null,['class'=>'form-control validate']) !!}
@@ -211,7 +211,7 @@
                 <input type="hidden" name="_token" value="{!! csrf_token() !!}">
                 <input type="submit" value="Update Plan" class="btn btn-primary">
                 {!! HTML::link('manage/admin/plan','Back',['class'=>'btn btn-success']) !!}
-		    </td>
+            </td>
         </tr>
     </tbody>
     </table>

@@ -3,37 +3,36 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDentalMaxillaTable extends Migration {
+class CreateDentalMaxillaTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('dental_maxilla', function(Blueprint $table)
+        {
+            $table->increments('maxillaid');
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('dental_maxilla', function(Blueprint $table)
-		{
-			$table->increments('maxillaid');
+            $table->string('maxilla')->nullable();
+            $table->text('description')->nullable();
+            $table->integer('sortby')->default(999);
+            $table->integer('status')->default(1);
+            $table->string('ip_address', 50);
 
-			$table->string('maxilla')->nullable();
-			$table->text('description')->nullable();
-			$table->integer('sortby')->default(999);
-			$table->integer('status')->default(1);
-			$table->string('ip_address', 50);
+            $table->timestamps();
+        });
+    }
 
-			$table->timestamps();
-		});
-	}
-
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('dental_maxilla');
-	}
-
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('dental_maxilla');
+    }
 }

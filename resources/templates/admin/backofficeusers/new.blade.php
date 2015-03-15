@@ -1,6 +1,6 @@
- @extends('layouts.admin.master')
+@extends('layouts.admin.master')
 
- @section('content')
+@section('content')
 
 @foreach($errors->all() as $error)
                     <div class="alert alert-danger" role="alert">
@@ -27,7 +27,7 @@
                 <span class="red">*</span>
             </td>
         </tr>
-	        <tr bgcolor="#FFFFFF">
+            <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Password
             </td>
@@ -45,7 +45,7 @@
                 <span class="red">*</span>
             </td>
         </tr>
-	        <tr bgcolor="#FFFFFF">
+            <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 First Name
             </td>
@@ -81,12 +81,12 @@
                 {!! Form::select('companyid',[''=>'Select Companies'] + $companies,old('companyid'),['class'=>'form-control validate','id'=>'companyid']) !!}
             </td>
         </tr>
-	        <tr bgcolor="#FFFFFF">
+            <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Access Level
             </td>
             <td valign="top" class="frmdata">
-			    {!! Form::select('admin_access',[''=>'Select Access'] + $access_level,old('admin_access'),['class'=>'form-control validate','id'=>'admin_access']) !!}
+                {!! Form::select('admin_access',[''=>'Select Access'] + $access_level,old('admin_access'),['class'=>'form-control validate','id'=>'admin_access']) !!}
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

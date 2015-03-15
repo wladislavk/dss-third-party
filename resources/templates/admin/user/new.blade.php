@@ -325,10 +325,10 @@
             </div>
             <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Use Service NPI?</label>
-           	<div class="col-md-9">
+               <div class="col-md-9">
                      <input type="checkbox" name="use_service_npi" id="use_service_npi" />
-		</div>
-	    </div>
+        </div>
+        </div>
             <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Name</label>
                 <div class="col-md-9">

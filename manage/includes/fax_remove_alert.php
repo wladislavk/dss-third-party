@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 	require_once '../admin/includes/main_include.php';
 
 	$id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');

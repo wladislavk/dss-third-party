@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 include_once('../3rdParty/tcpdf/config/lang/eng.php');
 include_once('../3rdParty/tcpdf/tcpdf.php');
 include_once('includes/main_include.php');

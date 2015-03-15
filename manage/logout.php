@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 	include "admin/includes/main_include.php";
 
 	$login_up_sql = "update dental_login set logout_date = now() where loginid='".$_SESSION['loginid']."'";

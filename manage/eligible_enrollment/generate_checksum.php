@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 $PUBLISHABLE_KEY = '-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-';
 $API_KEY = 'hCmEKZG7_KQ8mS4ztO3EJWKP1KEWvwW5Bdvx';
 

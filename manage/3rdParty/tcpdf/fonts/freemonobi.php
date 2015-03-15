@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 $type='TrueTypeUnicode';
 $name='FreeMonoBoldOblique';
 $desc=array('Ascent'=>800,'Descent'=>-200,'CapHeight'=>19,'Flags'=>96,'FontBBox'=>'[-642 -200 834 800]','ItalicAngle'=>-12,'StemV'=>120,'MissingWidth'=>600);

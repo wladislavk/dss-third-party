@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 	include "includes/top.htm";
 	include "includes/similar.php";
 	include_once('includes/constants.inc');

@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 /* 
 In order to upload files to S3 using Flash runtime, one should start by placing crossdomain.xml into the bucket.
 crossdomain.xml can be as simple as this:

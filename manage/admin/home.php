@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 	include_once('classes/tc_calendar.php');
 	include 'includes/top.htm';?>
 

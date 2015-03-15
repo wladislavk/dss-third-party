@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 /**
  * Abstraction of an instance resource from the Twilio API.

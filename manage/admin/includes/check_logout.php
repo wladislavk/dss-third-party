@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 session_start();
 require_once './main_include.php';
 $id = $_SESSION['adminuserid'];

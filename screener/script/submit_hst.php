@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 require_once '../../manage/admin/includes/main_include.php';
 $screenerid = $_REQUEST['screenerid'];
 $docid = $_REQUEST['docid'];

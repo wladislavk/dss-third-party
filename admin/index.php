@@ -1,4 +1,4 @@
-<?
+<?php namespace Ds3\Legacy; ?><?
 session_start();
 include('includes/config.php');
 include_once('../manage/admin/includes/password.php');

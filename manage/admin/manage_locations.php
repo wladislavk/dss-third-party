@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Legacy; ?><? 
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]))

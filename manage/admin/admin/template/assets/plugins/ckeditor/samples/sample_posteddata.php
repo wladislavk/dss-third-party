@@ -1,4 +1,4 @@
-<?php /* <body><pre>
+<?php namespace Ds3\Legacy; ?><?php /* <body><pre>
 
 -------------------------------------------------------------------------------------------
   CKEditor - Posted Data

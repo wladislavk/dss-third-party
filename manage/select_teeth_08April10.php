@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Legacy; ?><? 
 include "admin/includes/main_include.php";
 
 if($_POST['selsub'] == 1)

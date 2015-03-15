@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 echo "Running the Stripe PHP bindings test suite.\n".
      "If you're trying to use the Stripe PHP bindings you'll probably want ".

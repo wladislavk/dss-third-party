@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 
 if(isset($_POST['ositesubmit'])){
 $query = "UPDATE dental_summary SET osite='".mysql_real_escape_string($_POST['ositenew'])."' WHERE patientid='".$_GET['pid']."';";

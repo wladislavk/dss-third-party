@@ -1,4 +1,4 @@
-<h2 class="fullwidth"><?php echo  (!empty($producer['first_name']) ? $producer['first_name'] : '')." ".(!empty($producer['last_name']) ? $producer['last_name'] : ''); ?></h2>
+<?php namespace Ds3\Legacy; ?><h2 class="fullwidth"><?php echo  (!empty($producer['first_name']) ? $producer['first_name'] : '')." ".(!empty($producer['last_name']) ? $producer['last_name'] : ''); ?></h2>
 
 <table class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">

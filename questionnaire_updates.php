@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 include 'manage/admin/includes/config.php';
 $run_updates = false;
 if(true){ //to prevent output if set to false

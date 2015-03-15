@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 /*
 The NuSOAP project home is:
 http://sourceforge.net/projects/nusoap/

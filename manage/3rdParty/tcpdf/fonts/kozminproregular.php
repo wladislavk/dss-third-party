@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 $type = 'cidfont0';
 $name = 'KozMinPro-Regular-Acro';
 $displayname = 'Kozuka Mincho Pro (Japanese Serif)';

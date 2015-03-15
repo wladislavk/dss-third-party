@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 require_once('padCrypt.php');
 require_once('AES_Encryption.php');

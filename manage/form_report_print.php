@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 	include "admin/includes/main_include.php";
 
 	if(/*$_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1*/0) {

@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 include "includes/top.htm";
 
 if($_POST['q_recipientssub'] == 1){

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 # MantisBT - a php based bugtracking system
 
 # Copyright (C) 2002 - 2010  MantisBT Team - mantisbt-dev@lists.sourceforge.

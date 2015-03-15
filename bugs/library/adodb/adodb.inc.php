@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 /*
  * Set tabs to 4 for best viewing.
  * 

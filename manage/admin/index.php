@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 	include 'includes/main_include.php';
 	include_once 'includes/password.php';
 	include_once '../includes/constants.inc';

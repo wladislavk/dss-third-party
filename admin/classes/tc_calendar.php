@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 //*********************************************************
 // The php calendar component 
 // written by TJ @triconsole

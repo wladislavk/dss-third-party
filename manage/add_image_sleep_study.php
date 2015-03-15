@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 include_once('admin/includes/main_include.php');
 include("includes/calendarinc.php");
 $pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";

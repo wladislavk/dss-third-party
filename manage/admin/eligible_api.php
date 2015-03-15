@@ -1,4 +1,4 @@
-<?php include 'includes/invoice_functions.php'; ?>
+<?php namespace Ds3\Legacy; ?><?php include 'includes/invoice_functions.php'; ?>
 <link rel="stylesheet" href="../css/eligible_api.css" />
  <script type="text/javascript" src="../script/autocomplete.js"></script>
  <script type="text/javascript" src="../script/autocomplete_local.js"></script>

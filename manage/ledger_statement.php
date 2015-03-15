@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 	//header("Content-type:application/pdf");
 
 	// It will be called downloaded.pdf

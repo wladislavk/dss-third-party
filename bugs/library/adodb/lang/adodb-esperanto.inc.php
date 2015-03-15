@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 // Vivu Esperanto cxiam! 
 // Traduko fare de Antono Vasiljev (anders[#]brainactive.org)
 

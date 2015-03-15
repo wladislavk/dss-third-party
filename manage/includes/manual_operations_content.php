@@ -1,4 +1,4 @@
-<style>
+<?php namespace Ds3\Legacy; ?><style>
 <!--
  /* Font Definitions */
  @font-face

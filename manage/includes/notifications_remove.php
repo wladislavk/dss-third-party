@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 	include_once '../admin/includes/main_include.php';
 
 	$id = (!empty($_POST['id']) ? $_POST['id'] : '');

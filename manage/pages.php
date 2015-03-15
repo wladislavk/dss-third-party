@@ -1,4 +1,4 @@
-<?php include 'includes/top.htm';?>
+<?php namespace Ds3\Legacy; ?><?php include 'includes/top.htm';?>
 <br />
 
 <? if(mysql_num_rows($page_my) == 0)

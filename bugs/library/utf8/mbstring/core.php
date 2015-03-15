@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 /**
 * @version $Id: core.php,v 1.5 2006/02/28 22:12:25 harryf Exp $
 * @package utf8

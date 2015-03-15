@@ -1,4 +1,4 @@
-<div style="clear:both;"></div>
+<?php namespace Ds3\Legacy; ?><div style="clear:both;"></div>
 <?php
 $status_sql = "SELECT status FROM dental_insurance
                 WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."'";

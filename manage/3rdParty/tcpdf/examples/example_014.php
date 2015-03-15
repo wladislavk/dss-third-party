@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 //============================================================+
 // File name   : example_014.php
 // Begin       : 2008-03-04

@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 include "includes/top.htm";
 
 $rec_disp = 20;

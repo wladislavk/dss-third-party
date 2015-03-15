@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	$targ_w = $targ_h = 150;

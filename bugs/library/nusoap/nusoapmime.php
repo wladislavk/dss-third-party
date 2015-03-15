@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 /*
 $Id: nusoapmime.php,v 1.13 2010/04/26 20:15:08 snichol Exp $
 

@@ -1,4 +1,4 @@
-<div id="screened">
+<?php namespace Ds3\Legacy; ?><div id="screened">
   <svg style='height:300px; width: 450px;'/>
 </div>
 

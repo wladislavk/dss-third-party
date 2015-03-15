@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 header("Content-type: application/vnd.xfdf");
 header('Content-Disposition: attachment; filename="file.xfdf"');
 session_start();

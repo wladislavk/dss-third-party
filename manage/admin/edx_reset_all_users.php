@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
   include 'includes/main_include.php';
 
   if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['fromForm'] == 1 )

@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="css/manual.css" type="text/css" media="screen" />
+<?php namespace Ds3\Legacy; ?><link rel="stylesheet" href="css/manual.css" type="text/css" media="screen" />
 
 </head>
 

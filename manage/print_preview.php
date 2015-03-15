@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 $message = html_entity_decode($_REQUEST['message']);
 ?>
 

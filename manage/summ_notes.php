@@ -1,4 +1,4 @@
-<button onclick="Javascript: loadPopup('add_notes.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>');" class="addButton" style="float: right;">
+<?php namespace Ds3\Legacy; ?><button onclick="Javascript: loadPopup('add_notes.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>');" class="addButton" style="float: right;">
     + Add New Progress Note
 </button>
 

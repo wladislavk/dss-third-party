@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 /* Romanian - by "bogdan stefan" <sbogdan#rsb.ro> */
 

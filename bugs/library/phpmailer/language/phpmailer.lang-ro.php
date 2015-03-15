@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 /**
 * PHPMailer language file: refer to English translation for definitive list
 * Romanian Version

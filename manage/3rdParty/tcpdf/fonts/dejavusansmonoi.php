@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 $type='TrueTypeUnicode';
 $name='DejaVuSansMono-Oblique';
 $desc=array('Ascent'=>928,'Descent'=>-236,'CapHeight'=>-62,'Flags'=>97,'FontBBox'=>'[-403 -375 746 1028]','ItalicAngle'=>-11,'StemV'=>70,'MissingWidth'=>602);

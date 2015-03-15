@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 // contributed by "Heinz Hombergs" <opn@hhombergs.de>
 $ADODB_LANG_ARRAY = array (
 			'LANG'                      => 'de',

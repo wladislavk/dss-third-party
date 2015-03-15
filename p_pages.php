@@ -1,4 +1,4 @@
-<?
+<?php namespace Ds3\Legacy; ?><?
 include "admin/includes/config.php";
 
 $page_sql = "select * from p_pages where status=1 and  p_pageid='".s_for($_GET['pid'])."'";

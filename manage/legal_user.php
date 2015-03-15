@@ -1,4 +1,4 @@
-
+<?php namespace Ds3\Legacy; ?>
 <h3>SAAS AGREEMENT</h3>
 
 <h4>DENTAL SLEEP SOLUTIONS FRANCHISING LLC</h4><h4>SOFTWARE AS A SERVICE AGREEMENT </h4><p>THIS IS A LEGALLY BINDING AGREEMENT between Dental Sleep Solutions Franchising, LLC, a Florida Corporation ("we" or "us") and you, as a user of our on-line health record and patient management system (the "System").   The term "You" or "you" means the individual or entity who is using the Service under this Agreement.  BY CLICKING "CREATE ACCOUNT" OR THROUGH THE CONTINUED USE OF THE SYSTEM, YOU ARE UNDERTAKI

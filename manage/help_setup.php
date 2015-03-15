@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
   include 'admin/includes/main_include.php';
   include 'includes/help_functions.php';
 

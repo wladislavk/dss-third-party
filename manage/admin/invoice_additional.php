@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 include "includes/top.htm";
   include_once '../3rdParty/stripe/lib/Stripe.php';
 include '../includes/calendarinc.php';

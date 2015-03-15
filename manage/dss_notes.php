@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 if (isset($_POST['newnotesubmit'])) {
     $query = "UPDATE dental_patients SET patient_notes='".mysqli_real_escape_string($con,$_POST['notecontent'])."' WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
     

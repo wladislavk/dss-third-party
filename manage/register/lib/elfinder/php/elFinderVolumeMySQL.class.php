@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 /**
  * Simple elFinder driver for MySQL.

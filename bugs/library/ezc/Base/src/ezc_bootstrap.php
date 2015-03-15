@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 /**
  * Include file that can be used for a quick setup of the eZ Components.
  *

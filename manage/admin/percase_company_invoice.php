@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Legacy; ?><? 
 include "includes/top.htm";
 include '../includes/calendarinc.php';
 $case_sql = "SELECT * FROM dental_ledger dl 

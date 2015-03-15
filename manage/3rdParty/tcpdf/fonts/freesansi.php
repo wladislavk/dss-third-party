@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 $type='TrueTypeUnicode';
 $name='FreeSansOblique';
 $desc=array('Ascent'=>1000,'Descent'=>-300,'CapHeight'=>22,'Flags'=>96,'FontBBox'=>'[-1166 -431 1572 1072]','ItalicAngle'=>-12,'StemV'=>70,'MissingWidth'=>600);

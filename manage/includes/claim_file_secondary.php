@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 require_once '../admin/includes/main_include.php';
 require_once '../includes/constants.inc';
 require_once '../includes/claim_functions.php';

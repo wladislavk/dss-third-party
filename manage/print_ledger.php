@@ -1,4 +1,4 @@
-<? include "admin/includes/main_include.php";
+<?php namespace Ds3\Legacy; ?><? include "admin/includes/main_include.php";
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 $username = $_REQUEST["username"];
 if ($username == 'user1' || $username == 'user2') {
 	echo json_encode(array('status' => 'OK', 'message' => 'Username <b>' . $username . '</b> is available. You can just pick it up!'));

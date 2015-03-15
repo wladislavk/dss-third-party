@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 define("MUTEX", $_SERVER['PHP_SELF']);
 $ft = array();

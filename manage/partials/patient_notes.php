@@ -1,4 +1,4 @@
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" class="table table-bordered table-hover">
+<?php namespace Ds3\Legacy; ?><table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" class="table table-bordered table-hover">
 <?php if(count($my) == 0){ ?>
         <tr class="tr_bg">
                 <th valign="top" class="col_head" colspan="10" align="center">

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 // security - hide paths
 if (!defined('ADODB_DIR')) die();

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 include_once dirname(__FILE__) . '/includes/sescheck.php';
 
 $basepath = dirname(__FILE__) . '/../../../shared/q_file';

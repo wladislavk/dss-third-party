@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
 if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))

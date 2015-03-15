@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Legacy; ?><?php 
 include "includes/top.htm";
 
 if(!empty($_POST['plansub']) && $_POST['plansub'] == 1)

@@ -1,4 +1,4 @@
-<? include"includes/top_1.htm"?>   
+<?php namespace Ds3\Legacy; ?><? include"includes/top_1.htm"?>   
         <table width="968" border="0" align="center" cellpadding="0" cellspacing="0" style="background-color:#FFFFFF;">
           <tr>
             <td align="left" valign="top" style="padding:8px 0 4px 8px;">

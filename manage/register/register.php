@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
     include 'includes/header.php';
     include '../../reg/includes/completed.php';
 ?>

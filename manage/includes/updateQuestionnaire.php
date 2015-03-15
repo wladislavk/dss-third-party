@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 	include_once '../admin/includes/main_include.php';
 
 	$f = (!empty($_POST['field']) ? $_POST['field'] : '');

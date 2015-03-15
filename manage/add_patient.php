@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 if(!isset($_GET['noheaders'])){
   include "includes/top.htm";
   include_once('includes/constants.inc');

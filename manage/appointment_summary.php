@@ -1,4 +1,4 @@
-<table width="98%" class="table table-bordered table-hover">
+<?php namespace Ds3\Legacy; ?><table width="98%" class="table table-bordered table-hover">
     <tr>
         <th>Date</th>
         <th>Treatment</th>

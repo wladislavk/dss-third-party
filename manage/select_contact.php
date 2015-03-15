@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Legacy; ?><? 
 include "admin/includes/main_include.php";
 
 $rec_disp = 40;

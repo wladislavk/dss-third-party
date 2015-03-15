@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 $sql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 $r = $db->getRow($sql);
 

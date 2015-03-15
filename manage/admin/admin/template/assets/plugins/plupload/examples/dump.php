@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?php namespace Ds3\Legacy; ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>

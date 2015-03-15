@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 require(dirname(__FILE__).'/class.fax.php');
 require(dirname(__FILE__).'/config.php');

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 /**
  * DataProxy implmentation that caches the output of the proxy it wraps.

@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Legacy; ?><? 
 	if($_SESSION["adminuserid"] == "")
 	{
 		?>

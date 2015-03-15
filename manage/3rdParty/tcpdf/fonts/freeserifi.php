@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 $type='TrueTypeUnicode';
 $name='FreeSerifItalic';
 $desc=array('Ascent'=>900,'Descent'=>-300,'CapHeight'=>-29,'Flags'=>96,'FontBBox'=>'[-879 -434 1558 900]','ItalicAngle'=>-16.5,'StemV'=>70,'MissingWidth'=>600);

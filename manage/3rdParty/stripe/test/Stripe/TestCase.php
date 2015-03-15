@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 /**
  * Base class for Stripe test cases, provides some utility methods for creating

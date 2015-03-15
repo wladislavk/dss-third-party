@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 /**
 * @version $Id: ord.php,v 1.4 2006/09/11 15:22:54 harryf Exp $
 * @package utf8

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 class Services_Twilio_AutoPagingIterator
     implements Iterator

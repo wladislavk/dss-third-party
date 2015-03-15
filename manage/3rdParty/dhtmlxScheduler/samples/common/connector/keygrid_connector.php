@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 /*
 	@author dhtmlx.com
 	@license GPL, see license.txt

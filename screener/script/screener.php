@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<?php namespace Ds3\Legacy; ?><script type="text/javascript">
 var screenerid='';
 function submit_screener(){
   $('#sect4_next').hide();

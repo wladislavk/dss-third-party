@@ -1,4 +1,4 @@
-<?php include_once 'admin/includes/main_include.php';
+<?php namespace Ds3\Legacy; ?><?php include_once 'admin/includes/main_include.php';
       include_once 'includes/constants.inc' ?>
 
 <div class="fullwidth">

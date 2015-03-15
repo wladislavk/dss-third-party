@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Legacy; ?><? 
 include "includes/top.htm";
 
 if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))

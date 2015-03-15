@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 	$docid = $_SESSION['docid'];
 	$sd = $_POST['start_date'];
 	$ed = $_POST['end_date'];

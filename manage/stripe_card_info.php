@@ -1,4 +1,4 @@
-<?php include_once('admin/includes/main_include.php'); ?>
+<?php namespace Ds3\Legacy; ?><?php include_once('admin/includes/main_include.php'); ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 
 <h3>Credit Card Information</h3>

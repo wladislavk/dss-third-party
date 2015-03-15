@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 $type='TrueTypeUnicode';
 $name='FreeSansBold';
 $desc=array('Ascent'=>1000,'Descent'=>-300,'CapHeight'=>22,'Flags'=>32,'FontBBox'=>'[-968 -460 1556 1072]','ItalicAngle'=>0,'StemV'=>120,'MissingWidth'=>600);

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 
 	foreach($_POST as $key => $value){
 		if(is_array($value)) {

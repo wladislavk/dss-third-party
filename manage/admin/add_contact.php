@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)

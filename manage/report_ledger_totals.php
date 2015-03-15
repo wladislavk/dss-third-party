@@ -1,4 +1,4 @@
-<div id="ledger">
+<?php namespace Ds3\Legacy; ?><div id="ledger">
   <svg style='height:300px; width: 450px;'/>
 </div>
 

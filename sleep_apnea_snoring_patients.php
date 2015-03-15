@@ -1,4 +1,4 @@
-<? include"includes/top.htm"?>  
+<?php namespace Ds3\Legacy; ?><? include"includes/top.htm"?>  
 <link href="css/dental_1.css" rel="stylesheet" type="text/css" />
  
         <table width="968" border="0" align="center" cellpadding="0" cellspacing="0" style="background-color:#FFFFFF;">

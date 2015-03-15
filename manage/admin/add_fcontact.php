@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 session_start();
 require_once 'includes/main_include.php';
 include_once 'includes/sescheck.php';

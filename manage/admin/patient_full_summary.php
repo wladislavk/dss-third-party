@@ -1,4 +1,4 @@
-<?
+<?php namespace Ds3\Legacy; ?><?
 include_once "includes/top.htm";
 
 include_once 'includes/patient_nav.php';

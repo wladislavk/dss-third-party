@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 /* 		Mohammad Ali Golkar
 		m.a.golkar@gmail.com
 		http://www.30minonline.com

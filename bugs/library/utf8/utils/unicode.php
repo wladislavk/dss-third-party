@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Legacy; ?><?php
 /**
 * @version $Id: unicode.php,v 1.2 2006/02/26 13:20:44 harryf Exp $
 * Tools for conversion between UTF-8 and unicode

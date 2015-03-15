@@ -1,4 +1,4 @@
-<?php $file = basename($_SERVER['PHP_SELF']) ?>
+<?php namespace Ds3\Legacy; ?><?php $file = basename($_SERVER['PHP_SELF']) ?>
     <?
     $thesql = "select * from dental_patients where patientid='".(!empty($_REQUEST["pid"]) ? $_REQUEST["pid"] : '')."'";
 

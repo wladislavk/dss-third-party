@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once 'main_include.php';
 $ac_id = $_REQUEST['ac_id'];
 $s = "select plan_id FROM dental_access_codes

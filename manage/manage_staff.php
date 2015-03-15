@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
 include_once 'includes/help_functions.php';

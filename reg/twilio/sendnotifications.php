@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once("twilio.config.php");
  
     // instantiate a new Twilio Rest Client

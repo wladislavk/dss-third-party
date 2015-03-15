@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top2.htm";
 
 if($_POST['q_page1sub'] == 1)

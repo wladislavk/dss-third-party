@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
   	header("Content-type:text/xml");
 	ini_set('max_execution_time', 600);
 	require_once('../../common/config.php');

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require 'admin/includes/main_include.php';
 
 $tid = $_GET['tid'];

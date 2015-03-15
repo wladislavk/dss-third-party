@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 
 function claim_status_history_update($insuranceid, $new, $old, $userid, $adminid=''){

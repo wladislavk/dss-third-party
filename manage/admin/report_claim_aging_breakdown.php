@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php include_once('../admin/includes/main_include.php'); ?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include_once('../admin/includes/main_include.php'); ?>
 
 <?php
   $s = "SELECT i.insuranceid, i.mailed_date, l.service_date, p.patientid, p.firstname, p.lastname, i.total_charge,

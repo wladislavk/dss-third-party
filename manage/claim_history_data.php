@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><link rel="stylesheet" href="css/ledger.css" />
+<?php namespace Ds3\Libraries\Legacy; ?><link rel="stylesheet" href="css/ledger.css" />
 <?php
   $sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' ORDER BY adddate DESC";
   $my = $db->getResults($sql);

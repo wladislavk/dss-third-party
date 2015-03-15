@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once '../../manage/admin/includes/main_include.php';
 require_once '../../manage/includes/constants.inc';
 $t = $_POST['type'];

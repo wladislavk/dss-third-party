@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
   include_once '../admin/includes/main_include.php';
   include_once 'constants.inc';
 

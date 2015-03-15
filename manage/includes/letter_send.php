@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once '../admin/includes/main_include.php';
 require_once '../admin/includes/general.htm';
 require_once '../admin/includes/invoice_functions.php';

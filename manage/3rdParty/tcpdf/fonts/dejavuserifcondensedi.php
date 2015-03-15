@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 $type='TrueTypeUnicode';
 $name='DejaVuSerifCondensed-Italic';
 $desc=array('Ascent'=>928,'Descent'=>-236,'CapHeight'=>-59,'Flags'=>96,'FontBBox'=>'[-755 -347 1480 1109]','ItalicAngle'=>-11,'StemV'=>70,'MissingWidth'=>540);

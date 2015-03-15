@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
 * This is the dynamic loader for the library. It checks whether you have
 * the mbstring extension available and includes relevant files

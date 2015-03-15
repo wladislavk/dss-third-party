@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php include "includes/top.htm"; ?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include "includes/top.htm"; ?>
 
     <link rel="stylesheet" href="css/ledger.css" />
 

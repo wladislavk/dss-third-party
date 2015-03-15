@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?>#!/usr/bin/php -q
+<?php namespace Ds3\Libraries\Legacy; ?>#!/usr/bin/php -q
 <?php
 # MantisBT - a php based bugtracking system
 # Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org

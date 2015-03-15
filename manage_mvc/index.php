@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
     session_start();
     define('APP_PATH', dirname(__FILE__));
     define('ROOT_URI', '/manage_mvc/');

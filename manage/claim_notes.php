@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><link rel="stylesheet" href="admin/css/support.css" />
+<?php namespace Ds3\Libraries\Legacy; ?><link rel="stylesheet" href="admin/css/support.css" />
 
 <?php
   $c_sql = "SELECT CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_name, ' ',u.last_name) doc_name 

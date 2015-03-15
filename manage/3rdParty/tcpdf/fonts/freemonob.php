@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 $type='TrueTypeUnicode';
 $name='FreeMonoBold';
 $desc=array('Ascent'=>800,'Descent'=>-200,'CapHeight'=>10,'Flags'=>32,'FontBBox'=>'[-600 -200 736 800]','ItalicAngle'=>0,'StemV'=>120,'MissingWidth'=>600);

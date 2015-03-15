@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><!DOCTYPE html>
+<?php namespace Ds3\Libraries\Legacy; ?><!DOCTYPE html>
 
 <!-- 
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.1.1

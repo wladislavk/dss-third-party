@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php include 'includes/top.htm';?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/popup2.js" type="text/javascript"></script>

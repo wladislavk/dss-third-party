@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
     if(!isset($_GET['print'])){
         include "includes/top.htm";
     }else{

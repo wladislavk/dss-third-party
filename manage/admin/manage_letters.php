@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php include 'includes/top.htm'; 
+<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm'; 
 
 function franchisee_asc($a, $b) {
   return strcmp ($a['franchisee'], $b['franchisee']);

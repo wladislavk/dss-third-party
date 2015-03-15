@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><div class="clear"></div>
+<?php namespace Ds3\Libraries\Legacy; ?><div class="clear"></div>
 
 <?php
 

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /*
  * jQuery File Upload Plugin PHP Class 7.1.0
  * https://github.com/blueimp/jQuery-File-Upload

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 $type='TrueTypeUnicode';
 $name='FreeMono';
 $desc=array('Ascent'=>800,'Descent'=>-200,'CapHeight'=>40,'Flags'=>32,'FontBBox'=>'[-793 -200 699 800]','ItalicAngle'=>0,'StemV'=>70,'MissingWidth'=>600);

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 // Arne Eckmann bananstat#users.sourceforge.net
 $ADODB_LANG_ARRAY = array (
   	    'LANG'                      => 'da',

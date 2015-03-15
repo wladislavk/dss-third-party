@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 $s_sql = "SELECT * FROM dental_screener WHERE patient_id='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 $myarray = $db->getRow($s_sql);
 if($myarray){?>

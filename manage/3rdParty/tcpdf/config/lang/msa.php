@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 //============================================================+
 // File name   : msa.php
 // Begin       : 2004-03-03

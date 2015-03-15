@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 require_once 'admin/includes/config.php';
 $sql = "SELECT * FROM dental_patients WHERE patientid=112";

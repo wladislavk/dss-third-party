@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 /* Farsi - by "Peyman Hooshmandi Raad" <phooshmand#gmail.com> */
 

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php include 'includes/header.php'; ?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/header.php'; ?>
 
   <link rel="stylesheet" href="css/register.css" />
   <link rel="stylesheet" href="lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" /> 

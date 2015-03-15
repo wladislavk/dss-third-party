@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><!DOCTYPE html>
+<?php namespace Ds3\Libraries\Legacy; ?><!DOCTYPE html>
 <html>
   <head>
     <title>Eligible Enrollment JS Demo</title>

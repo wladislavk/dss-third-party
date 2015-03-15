@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 $sql = "select i.*,
          (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid) num_notes,

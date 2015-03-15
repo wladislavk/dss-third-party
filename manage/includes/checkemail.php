@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
   function checkEmail($e, $i){
     $db = new Db();
     $con = $GLOBALS['con'];

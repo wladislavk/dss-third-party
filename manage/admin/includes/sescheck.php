@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include_once 'main_include.php';
 
 	if(empty($_SESSION["adminuserid"]))

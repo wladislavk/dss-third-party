@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
 * @version $Id: stristr.php,v 1.1 2006/02/25 13:50:17 harryf Exp $
 * @package utf8

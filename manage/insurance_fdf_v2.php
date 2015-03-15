@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
     //header("Content-type: application/vnd.fdf");
     //header('Content-Disposition: attachment; filename="file.fdf"');
 

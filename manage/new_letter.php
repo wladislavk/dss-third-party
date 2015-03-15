@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php include 'includes/top.htm';
+<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';
 
 function trigger_letter1($pid, $topatient, $md_referral_list, $md_list, $send_method) {
 	$letterid = '1';

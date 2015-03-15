@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><table width="100%" align="center">
+<?php namespace Ds3\Libraries\Legacy; ?><table width="100%" align="center">
 <tr>
 <td style="background:#333; color:#FFFFFF; font-size: 14px; font-weight:bold; height:30px;" colspan="15">
 Subjective Tests:

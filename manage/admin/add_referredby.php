@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 session_start();
 
 if(isset($_GET['addtopat'])){

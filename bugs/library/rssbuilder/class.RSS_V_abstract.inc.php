@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once 'interface.RSS.inc.php';
 require_once 'class.RSSBase.inc.php';
 /**

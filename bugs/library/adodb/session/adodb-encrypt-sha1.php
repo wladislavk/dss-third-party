@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 if (!defined('ADODB_SESSION')) die();
 
 include_once ADODB_SESSION . '/crypt.inc.php';

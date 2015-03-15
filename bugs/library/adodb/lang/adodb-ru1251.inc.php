@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 // Russian language file contributed by "Cyrill Malevanov" cyrill#malevanov.spb.ru.
 

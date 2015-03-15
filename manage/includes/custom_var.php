@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><div id="TabbedPanels1" class="TabbedPanels">
+<?php namespace Ds3\Libraries\Legacy; ?><div id="TabbedPanels1" class="TabbedPanels">
   <ul class="TabbedPanelsTabGroup">
     <li class="TabbedPanelsTab" tabindex="0">All Variables</li>
     <li class="TabbedPanelsTab" tabindex="0">Recipient</li>

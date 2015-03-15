@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php  
+<?php namespace Ds3\Libraries\Legacy; ?><?php  
 include "includes/top.htm";
 
 if(isset($_POST['dailysub']) && isset($_POST['monthlysub']) && $_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1)

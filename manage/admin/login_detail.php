@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
 
 $log_sql = "select * from dental_login where loginid='".s_for($_GET['logid'])."'";

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
 * Utilities for processing "special" characters in UTF-8. "Special" largely means anything which would
 * be regarded as a non-word character, like ASCII control characters and punctuation. This has a "Roman"

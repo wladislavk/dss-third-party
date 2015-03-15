@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><!DOCTYPE html>
+<?php namespace Ds3\Libraries\Legacy; ?><!DOCTYPE html>
 <?php
 /*
 Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.

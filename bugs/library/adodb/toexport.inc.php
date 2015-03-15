@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 /** 
  * @version V4.93 10 Oct 2006 (c) 2000-2009 John Lim (jlim#natsoft.com). All rights reserved.

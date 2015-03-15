@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><table class="sort_table" width="98%" align="center">
+<?php namespace Ds3\Libraries\Legacy; ?><table class="sort_table" width="98%" align="center">
   <thead>
     <tr>
       <th width="10%">Days</th>

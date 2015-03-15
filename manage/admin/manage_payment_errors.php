@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 
 if(is_billing($_SESSION['admin_access'])){

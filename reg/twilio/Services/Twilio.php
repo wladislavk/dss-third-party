@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 function Services_Twilio_autoload($className) {
     if (substr($className, 0, 15) != 'Services_Twilio') {

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 
 if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))

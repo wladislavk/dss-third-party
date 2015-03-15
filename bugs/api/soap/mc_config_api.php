@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # MantisConnect - A webservice interface to Mantis Bug Tracker
 # Copyright (C) 2004-2010  Victor Boctor - vboctor@users.sourceforge.net
 # This program is distributed under dual licensing.  These include

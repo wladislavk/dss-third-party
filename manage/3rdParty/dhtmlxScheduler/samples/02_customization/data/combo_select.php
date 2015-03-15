@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	require_once('../../common/connector/combo_connector.php');
 	require_once("../../common/config.php");
 

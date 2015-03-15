@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php include "includes/top.htm";
+<?php namespace Ds3\Libraries\Legacy; ?><?php include "includes/top.htm";
 require_once('includes/constants.inc');
 
 if(isset($_POST['submit'])){

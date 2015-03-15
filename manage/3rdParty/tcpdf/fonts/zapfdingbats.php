@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
  // core font definition file for TCPDF (www.tcpdf.org)
 $type='core';
 $dw=788;

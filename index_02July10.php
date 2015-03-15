@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><? include"includes/top.htm";
+<?php namespace Ds3\Libraries\Legacy; ?><? include"includes/top.htm";
 
 $home_sql = "select * from homepage";
 $home_my = mysql_query($home_sql);

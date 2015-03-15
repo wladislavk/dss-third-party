@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once "includes/similar.php";
 ?>
 <link rel="stylesheet" type="text/css" href="css/manage_display_similar.css">

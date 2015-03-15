@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 if(!empty($_GET['rx']) && $_GET['rx']==1){?>
 
 <div id="loader" style="position:absolute;width:100%; height:98%;">

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 function update_financial_agreement_medicare_form($id, $backoffice){
 	$db = new Db();

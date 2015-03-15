@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
 ADOdb Date Library, part of the ADOdb abstraction library
 Download: http://phplens.com/phpeverywhere/

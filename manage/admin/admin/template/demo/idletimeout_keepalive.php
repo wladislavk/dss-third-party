@@ -1,1 +1,1 @@
-<?php namespace Ds3\Legacy; ?>OK
+<?php namespace Ds3\Libraries\Legacy; ?>OK

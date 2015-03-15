@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # This program is distributed under the terms and conditions of the LGPL
 # See the README and LICENSE files for details
 

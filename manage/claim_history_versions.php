@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
   $s = "SELECT * FROM dental_insurance_history WHERE insuranceid='".mysqli_real_escape_string($con, !empty($_GET['cid']) ? $_GET['cid'] : '')."'";
   
   $q = $db->getResults($s);

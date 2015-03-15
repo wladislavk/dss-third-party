@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 if(isset($_GET['addtopat'])){
 	$addtopat = $_GET['addtopat'];
 }

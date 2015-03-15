@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once 'main_include.php';
 $id = $_REQUEST['id'];
 $s = "SELECT body FROM dental_letter_templates

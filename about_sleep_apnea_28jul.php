@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><? include"includes/top1.htm";
+<?php namespace Ds3\Libraries\Legacy; ?><? include"includes/top1.htm";
 
 $cat_sql = "select * from apnea_category where status=1 order by sortby";
 $cat_my = mysql_query($cat_sql);

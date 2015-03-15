@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
     function help_user_update($id, $help_con)
     {
         //return true; //temp work around until fully setup

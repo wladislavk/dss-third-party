@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><html>
+<?php namespace Ds3\Libraries\Legacy; ?><html>
 
 <head>
 <meta http-equiv=Content-Type content="text/html; charset=utf-8">

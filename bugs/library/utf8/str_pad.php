@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
 * @version $Id: str_pad.php,v 1.1 2006/09/03 09:25:13 harryf Exp $
 * @package utf8

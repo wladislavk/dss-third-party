@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 // Ukrainian language file contributed by  Alex Rootoff rootoff{AT}pisem.net.
 

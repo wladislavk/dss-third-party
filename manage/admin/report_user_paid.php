@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?>    <link href="../3rdParty/novus-nvd3/src/nv.d3.css" rel="stylesheet" type="text/css">
+<?php namespace Ds3\Libraries\Legacy; ?>    <link href="../3rdParty/novus-nvd3/src/nv.d3.css" rel="stylesheet" type="text/css">
 
     <script src="../3rdParty/novus-nvd3/lib/d3.v3.js"></script>
 

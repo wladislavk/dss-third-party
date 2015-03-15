@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /* $date should be in format year-month-day
    $past can be set to true if the date is supposed to be in the past
 */

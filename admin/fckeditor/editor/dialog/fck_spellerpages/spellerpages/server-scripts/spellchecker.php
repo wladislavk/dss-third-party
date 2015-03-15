@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 header('Content-type: text/html; charset=utf-8');
 
 // The following variables values must reflect your installation needs.

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 // by Trirat Petchsingh <rosskouk#gmail.com>
 $ADODB_LANG_ARRAY = array (
 			'LANG'                      => 'th',

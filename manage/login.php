@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include('admin/includes/main_include.php');
 include('admin/includes/password.php');
 //$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";

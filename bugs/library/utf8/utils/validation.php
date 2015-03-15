@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
 * @version $Id: validation.php,v 1.2 2006/02/26 13:20:44 harryf Exp $
 * Tools for validing a UTF-8 string is well formed.

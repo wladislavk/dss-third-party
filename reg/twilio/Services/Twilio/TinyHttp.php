@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
  * Based on TinyHttp from https://gist.github.com/618157.
  * Copyright 2011, Neuman Vong. BSD License.

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once('../admin/includes/general.htm');
 
 function trigger_letter5($pid, $info_id) {

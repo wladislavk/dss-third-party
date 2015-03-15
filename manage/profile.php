@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
     include 'includes/top.htm';
 
     if(isset($_POST["profilesub"]) && $_POST["profilesub"] == 1) {

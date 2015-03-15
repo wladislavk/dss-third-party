@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 include 'class.fax.php';
                 $faxNumber = "18883935968";                                           //<--- IMPORTANT: Enter a valid fax number

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><html>
+<?php namespace Ds3\Libraries\Legacy; ?><html>
 
 <head>
 <!-- Load the Cloud Zoom CSS file -->

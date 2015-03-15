@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?>
+<?php namespace Ds3\Libraries\Legacy; ?>
 <div class="fullwidth">
   <h3>Charges</h3>
   <ul>

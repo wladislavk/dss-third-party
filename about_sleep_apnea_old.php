@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><? include"includes/top1.htm";
+<?php namespace Ds3\Libraries\Legacy; ?><? include"includes/top1.htm";
 
 $all_sql = "select * from sleep_apnea_old where status=1 order by sortby";
 $all_my = mysql_query($all_sql);

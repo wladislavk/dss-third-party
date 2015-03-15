@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><form method="POST" action="#" style="width:100%;">
+<?php namespace Ds3\Libraries\Legacy; ?><form method="POST" action="#" style="width:100%;">
         <?php
                 $loc_sql = "SELECT * FROM dental_locations WHERE docid='".$docid."'";
                 

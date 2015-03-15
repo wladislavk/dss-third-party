@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include_once "includes/top.htm";
 	include_once('includes/patient_info.php');
 	if ($patient_info) {

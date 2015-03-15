@@ -1,4 +1,4 @@
-<?php namespace Ds3\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 // +----------------------------------------------------------------------+
 // | Copyright (c) 2001-2008 Liip AG                                      |

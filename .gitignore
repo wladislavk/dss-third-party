@@ -1,3 +1,4 @@
+.DS_Store
 manage/admin/includes/config.php
 admin/includes/config.php
 manage/sleepstudies/*

@@ -38,13 +38,13 @@
 
       $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
       $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($_SESSION['docid'])."'";
-      $api_key_result = $db->getRow($api_key_sql);
-      if($api_key_result){
-        if(!empty(trim($api_key_result['eligible_api_key'])){
+      $api_key_query = mysql_query($api_key_sql);
+      $api_key_result = mysql_fetch_assoc($api_key_query);
+      if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+        if(trim($api_key_result['eligible_api_key']) != ""){
           $api_key = $api_key_result['eligible_api_key'];
         }
       }
-
       $data = array();
       $data['api_key'] = $api_key;
       if(isset($_POST['test']) && $_POST['test'] == "1"){
@@ -193,8 +193,8 @@
                   $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($_SESSION['docid'])."'";
                   $api_key_query = mysqli_query($con, $api_key_sql);
                   $api_key_result = mysqli_fetch_assoc($api_key_query);
-                  if($api_key_result){
-                    if(!empty(trim($api_key_result['eligible_api_key'])){
+                  if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+                    if(trim($api_key_result['eligible_api_key']) != ""){
                       $api_key = $api_key_result['eligible_api_key'];
                     }
                   }

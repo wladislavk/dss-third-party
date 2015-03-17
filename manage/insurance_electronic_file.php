@@ -510,9 +510,17 @@
 
     $referredby_sql = "select * from dental_contact where `contactid` = ".$referredby." LIMIT 1;";
     
-    
-
     $referredby_my = $db->query($referredby_sql);
+
+    $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+    $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($docid)."'";
+    $api_key_query = mysql_query($api_key_sql);
+    $api_key_result = mysql_fetch_assoc($api_key_query);
+    if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+      if(trim($api_key_result['eligible_api_key']) != ""){
+        $api_key = $api_key_result['eligible_api_key'];
+      }
+    }
 
 
 

@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Routing\ResponseFactory as Response;
+use Illuminate\Auth\Guard as Auth;
 use Illuminate\Exception\WhoopsDisplayer;
 
 class Loader
@@ -12,14 +13,18 @@ class Loader
     private $app;
     private $request;
     private $response;
+    private $auth;
     private $legacyPath = '';
 
     /**
-     * @param Request $request
+     * @param Application $app
      * @param Config $config
+     * @param Request $request
+     * @param Response $response
+     * @param Auth $auth
      * @throws LoaderException
      */
-    public function __construct(Application $app, Config $config, Request $request, Response $response) {
+    public function __construct(Application $app, Config $config, Request $request, Response $response, Auth $auth) {
         $path = $config->get('app.legacy_path');
         $this->legacyPath = realpath($path);
 
@@ -30,6 +35,7 @@ class Loader
         $this->app = $app;
         $this->request = $request;
         $this->response = $response;
+        $this->auth = $auth;
 
         /**
          * Be aware that this change solves the problem with loading path,
@@ -50,7 +56,7 @@ class Loader
          * be the first match inside the real path
          */
         if (!$realPath || strpos($realPath, $this->legacyPath) !== 0 || !is_file($realPath)) {
-            throw new LoaderException('The path specified does not resolve to a valid legacy file');
+            throw new LoaderException("The path '$relativePath' (full path '$fullPath') does not resolve to a valid legacy file");
         }
 
         /**
@@ -61,15 +67,19 @@ class Loader
 
         try {
             ob_start();
+            error_reporting(E_ALL);
+            ini_set('display_errors', true);
             require_once $realPath;
 
             $legacyOutput = ob_get_clean();
         } catch (\Exception $exception) {
-            if (Auth::user()->hasRole('Admin')) {
-                $whoopsDisplayer = new WhoopsDisplayer($this->app->make('whoops'), false);
-                return $whoopsDisplayer->display($exception);
+            // if ($this->auth->user() && $this->auth->user()->hasRole('Admin')) {
+            if (true) {
+                // $whoopsDisplayer = new WhoopsDisplayer($this->app->make('whoops'), false);
+                // return $whoopsDisplayer->display($exception);
+                throw $exception;
             } else {
-                return $this->response->view('errors.general');
+                return $this->response->view('errors.503');
             }
         }
 

@@ -19,6 +19,6 @@ class LegacyLoaderController extends Controller
     public function index()
     {
         // return 'something';
-        return $this->loader->loadFile('inner.php');
+        return $this->loader->loadFile('admin/index.php');
     }
 }

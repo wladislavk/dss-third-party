@@ -6,7 +6,7 @@ use Illuminate\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Routing\ResponseFactory as Response;
 use Illuminate\Auth\Guard as Auth;
-use Illuminate\Exception\WhoopsDisplayer;
+// use Illuminate\Exception\WhoopsDisplayer;
 
 class Loader
 {
@@ -59,33 +59,38 @@ class Loader
             throw new LoaderException("The path '$relativePath' (full path '$fullPath') does not resolve to a valid legacy file");
         }
 
-        /**
-         * Prepare variables to catch the output and new headers. If the legacy script dies
-         * we would need to add an exit function to output the buffer
-         */
-        $legacyOutput = '';
+        $cwd = getcwd();
 
         try {
+            // Hide non fatal errors
+            error_reporting(E_ALL ^ (E_NOTICE | E_DEPRECATED | E_WARNING));
+
+            // Prepare output buffering, change dir to the one for the file being executed
             ob_start();
-            error_reporting(E_ALL);
-            ini_set('display_errors', true);
+            chdir(dirname($realPath));
+
             require_once $realPath;
 
+            // Save script output, restore working directory
             $legacyOutput = ob_get_clean();
+            chdir($cwd);
         } catch (\Exception $exception) {
             // if ($this->auth->user() && $this->auth->user()->hasRole('Admin')) {
+            //     $whoopsDisplayer = new WhoopsDisplayer($this->app->make('whoops'), false);
+            //     return $whoopsDisplayer->display($exception);
+            // }
+
+            /**
+             * @Todo: Validate that the user is logged in and is able to see exceptions
+             *        In the meantime, always show an exception
+             */
             if (true) {
-                // $whoopsDisplayer = new WhoopsDisplayer($this->app->make('whoops'), false);
-                // return $whoopsDisplayer->display($exception);
                 throw $exception;
             } else {
                 return $this->response->view('errors.503');
             }
         }
 
-        /**
-         * @Todo: Ensure the response methods are the correct ones
-         */
         return $this->response->make($legacyOutput);
     }
 }

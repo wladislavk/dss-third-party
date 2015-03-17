@@ -1,16 +1,16 @@
-<?php
+<?php include 'includes/top.htm';?>
 
-include 'includes/top.htm';
-include_once '../includes/constants.inc';
+<?
+require '../includes/constants.inc';
 
 
 $c_sql = "SELECT CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_name, ' ',u.last_name) doc_name 
                 FROM dental_insurance i
                 JOIN dental_patients p ON i.patientid=p.patientid
                 JOIN dental_users u ON u.userid=p.docid
-		WHERE i.insuranceid='".mysqli_real_escape_string($con,$_GET['id'])."'";
-$c_q = mysqli_query($con,$c_sql);
-$c = mysqli_fetch_assoc($c_q);
+		WHERE i.insuranceid='".mysql_real_escape_string($_GET['id'])."'";
+$c_q = mysql_query($c_sql) or die(mysql_error());
+$c = mysql_fetch_assoc($c_q);
 
 
 ?>
@@ -19,7 +19,7 @@ $c = mysqli_fetch_assoc($c_q);
 <link rel="stylesheet" href="css/support.css" type="text/css" />
 
 <span class="admin_head">
-	Claim Notes - Pt: <?php echo  $c['pat_name']; ?> - Claim: <?php echo  $_GET['id']; ?> - Account: <?php echo  $c['doc_name']; ?>
+	Claim Notes - Pt: <?= $c['pat_name']; ?> - Claim: <?= $_GET['id']; ?> - Account: <?= $c['doc_name']; ?>
 <?php
 
 
@@ -35,39 +35,39 @@ $c = mysqli_fetch_assoc($c_q);
 	 FROM dental_claim_notes n 
 	left join dental_users u ON n.creator_id = u.userid
 	left join admin a ON n.creator_id = a.adminid
-	where n.claim_id='".mysqli_real_escape_string($con,$_GET['id'])."'
+	where n.claim_id='".mysql_real_escape_string($_GET['id'])."'
 	ORDER BY adddate ASC";
- $n_q = mysqli_query($con,$n_sql) or die(mysql_error());
+ $n_q = mysql_query($n_sql) or die(mysql_error());
 ?>
 </span>
 <br /><br />
 
 <br /><br />
 <div align="center" class="red">
-	<?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?>
+	<? echo $_GET['msg'];?>
 </div>
 <div align="right">
-	<button onclick="loadPopup('add_claim_note.php?claim_id=<?php echo  $_GET['id']; ?>&pid=<?php echo  $_GET['pid'];?>');return false;" class="btn btn-success"> Add Note <span class="glyphicon glyphicon-plus"></span> </button>	
-	<button onclick="window.location='insurance_claim_v2.php?insid=<?php echo  $_GET['id']; ?>&pid=<?php echo  $_GET['pid'];?>';return false;" class="btn btn-success"> View Claim <span class="glyphicon glyphicon-view"></span> </button>	
+	<button onclick="loadPopup('add_claim_note.php?claim_id=<?= $_GET['id']; ?>&pid=<?= $_GET['pid'];?>');return false;" class="btn btn-success"> Add Note <span class="glyphicon glyphicon-plus"></span> </button>	
+	<button onclick="window.location='insurance_claim_v2.php?insid=<?= $_GET['id']; ?>&pid=<?= $_GET['pid'];?>';return false;" class="btn btn-success"> View Claim <span class="glyphicon glyphicon-view"></span> </button>	
 </div>
 <?php
- while($r = mysqli_fetch_assoc($n_q)){
+ while($r = mysql_fetch_assoc($n_q)){
 ?>
 
-   <div class="panel <?php echo  ($r['create_type']==0)?"panel-info":"panel-success"; ?>" >
-	<div class="panel-heading"><?php echo  $r['creator_name']; ?> on <?php echo  $r['adddate']; ?>
+   <div class="panel <?= ($r['create_type']==0)?"panel-info":"panel-success"; ?>" >
+	<div class="panel-heading"><?= $r['creator_name']; ?> on <?= $r['adddate']; ?>
    <?php
-        if($r['create_type']=='0' && $r['creator_id']==$_SESSION['adminuserid']){ ?>    <a href="#" onclick="loadPopup('add_claim_note.php?claim_id=<?php echo $_GET['id'];?>&pid=<?php echo $_GET['pid'];?>&nid=<?php echo $r['id'];?>');return false;" class="btn btn-default">Edit Note <span class="glyphicon glyphicon-pencil"></span>
+        if($r['create_type']=='0' && $r['creator_id']==$_SESSION['adminuserid']){ ?>    <a href="#" onclick="loadPopup('add_claim_note.php?claim_id=<?=$_GET['id'];?>&pid=<?=$_GET['pid'];?>&nid=<?=$r['id'];?>');return false;" class="btn btn-default">Edit Note <span class="glyphicon glyphicon-pencil"></span>
 </a>
         <?php } ?>
 </div>
 	<div class="panel-body">
-     <?php echo  $r['note']; ?>
+     <?= $r['note']; ?>
 <?php
-        $a_sql = "SELECT * FROM dental_claim_note_attachment WHERE note_id='".mysqli_real_escape_string($con,$r['id'])."'";
-        $a_q = mysqli_query($con,$a_sql);
-        while($a=mysqli_fetch_assoc($a_q)){
-        ?> | <a href="display_file.php?f=<?php echo  $a['filename']; ?>" target="_blank">View Attachment</a><?php
+        $a_sql = "SELECT * FROM dental_claim_note_attachment WHERE note_id='".mysql_real_escape_string($r['id'])."'";
+        $a_q = mysql_query($a_sql);
+        while($a=mysql_fetch_assoc($a_q)){
+        ?> | <a href="display_file.php?f=<?= $a['filename']; ?>" target="_blank">View Attachment</a><?php
         }
 ?>
     </div>
@@ -82,9 +82,9 @@ $c = mysqli_fetch_assoc($c_q);
 <div style="clear:both;"></div>
 <?php
 $status_sql = "SELECT status FROM dental_insurance
-                WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['id'])."'";
-$status_q = mysqli_query($con,$status_sql);
-$status_r = mysqli_fetch_assoc($status_q);
+                WHERE insuranceid='".mysql_real_escape_string($_GET['id'])."'";
+$status_q = mysql_query($status_sql);
+$status_r = mysql_fetch_assoc($status_q);
 $status = $status_r['status'];
 $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
 $is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
@@ -95,19 +95,19 @@ $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECT
 $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED);
 
 $sql = "select * from dental_insurance where insuranceid='".$_GET['id']."' and patientid='".$_GET['pid']."'";
-$my = mysqli_query($con,$sql);
-$myarray = mysqli_fetch_array($my);
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysqli_query($con,$pat_sql);
-$pat_myarray = mysqli_fetch_array($pat_my);
+$pat_my = mysql_query($pat_sql);
+$pat_myarray = mysql_fetch_array($pat_my);
 $docid = $pat_myarray['docid'];
 if($is_pri_pending){
 // Load patient info from dental_patients table using pid on query string
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysqli_query($con,$pat_sql);
-$pat_myarray = mysqli_fetch_array($pat_my);
+$pat_my = mysql_query($pat_sql);
+$pat_myarray = mysql_fetch_array($pat_my);
 $p_m_dss_file = $pat_myarray['p_m_dss_file'];
 $s_m_dss_file = $pat_myarray['s_m_dss_file'];
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
@@ -178,8 +178,8 @@ $patient_sex = st($myarray['patient_sex']);
   $other_insured_city = st($myarray['other_insured_city']);
   $other_insured_state = st($myarray['other_insured_state']);
   $other_insured_zip = st($myarray['other_insured_zip']);
-  $other_insured_phone_code = st(!empty($myarray['other_insured_phone_code']) ? $myarray['other_insured_phone_code'] : '');
-  $other_insured_phone = st(!empty($myarray['other_insured_phone']) ? $myarray['other_insured_phone'] : '');
+  $other_insured_phone_code = st($myarray['other_insured_phone_code']);
+  $other_insured_phone = st($myarray['other_insured_phone']);
   $other_insured_sex = st($myarray['other_insured_sex']);
 
   $patient_relation_insured = st($myarray['patient_relation_insured']);
@@ -187,7 +187,7 @@ $patient_address = st($myarray['patient_address']);
 $patient_city = st($myarray['patient_city']);
 $patient_state = st($myarray['patient_state']);
 $patient_status = st($myarray['patient_status']);
-$patient_status_array = explode('~',$patient_status);
+$patient_status_array = split('~',$patient_status);
 $patient_zip = st($myarray['patient_zip']);
 $patient_phone_code = st($myarray['patient_phone_code']);
 $patient_phone = st($myarray['patient_phone']);
@@ -253,14 +253,14 @@ $total_charge = st($myarray['total_charge']);
 ?>
 
                                                                 <?php
-        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['id'])."'";
-        $prod_q = mysqli_query($con,$prod_s);
-        $prod_r = mysqli_fetch_assoc($prod_q);
+        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['id'])."'";
+        $prod_q = mysql_query($prod_s);
+        $prod_r = mysql_fetch_assoc($prod_q);
         $claim_producer = $prod_r['producer'];
 
                       $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
-                      $userquery = mysqli_query($con,$getuserinfo);
-                      if($userinfo = mysqli_fetch_array($userquery)){
+                      $userquery = mysql_query($getuserinfo);
+                      if($userinfo = mysql_fetch_array($userquery)){
                         $phone = $userinfo['phone'];
 			$doc = $userinfo['first_name']." ".$userinfo['last_name'];
                         $practice = $userinfo['practice'];
@@ -273,18 +273,18 @@ $total_charge = st($myarray['total_charge']);
                         $medicare_ptan = $userinfo['medicare_ptan'];
                       }
                       $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
-                      $docquery = mysqli_query($con,$getdocinfo);
-                      $docinfo = mysqli_fetch_array($docquery);
-                        if(empty($phone)){ $phone = $docinfo['phone']; }
-                        if(empty($doc)){ $doc = $docinfo['first_name']." ".$docinfo['last_name']; }
-                        if(empty($practice)){ $practice = $docinfo['practice']; }
-                        if(empty($address)){ $address = $docinfo['address']; }
-                        if(empty($city)){ $city = $docinfo['city']; }
-                        if(empty($state)){ $state = $docinfo['state']; }
-                        if(empty($zip)){ $zip = $docinfo['zip']; }
-                        if(empty($npi)){ $npi = $docinfo['npi']; }
-                        if(empty($medicare_npi)){ $medicare_npi = $docinfo['medicare_npi']; }
-                        if(empty($medicare_ptan)){ $medicare_ptan = $docinfo['medicare_ptan']; }
+                      $docquery = mysql_query($getdocinfo);
+                      $docinfo = mysql_fetch_array($docquery);
+                        if($phone == ""){ $phone = $docinfo['phone']; }
+                        if($doc == ""){ $doc = $docinfo['first_name']." ".$docinfo['last_name']; }
+                        if($practice == ""){ $practice = $docinfo['practice']; }
+                        if($address == ""){ $address = $docinfo['address']; }
+                        if($city == ""){ $city = $docinfo['city']; }
+                        if($state == ""){ $state = $docinfo['state']; }
+                        if($zip == ""){ $zip = $docinfo['zip']; }
+                        if($npi == ""){ $npi = $docinfo['npi']; }
+                        if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
+                        if($medicare_ptan == ""){ $medicare_ptan = $docinfo['medicare_ptan']; }
 
                         if($docinfo['use_service_npi']==1){
                           $service_npi = $docinfo['service_npi'];
@@ -313,8 +313,8 @@ $total_charge = st($myarray['total_charge']);
                                                                                                   }
 
         $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
-        $inscoarray = mysqli_query($con,$inscoquery);
-        $inscoinfo = mysqli_fetch_array($inscoarray);
+        $inscoarray = mysql_query($inscoquery);
+        $inscoinfo = mysql_fetch_array($inscoarray);
 
   $sql = "SELECT "
        . "  ledger.*, ";if($is_pending){
@@ -340,8 +340,8 @@ if($insurancetype == '1'){
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
-$query = mysqli_query($con,$sql);
-$array = mysqli_fetch_array($query);
+$query = mysql_query($sql);
+$array = mysql_fetch_array($query);
 if ($is_pending) {
 
   // get total_charge
@@ -359,9 +359,9 @@ if ($is_pending) {
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
-    $charge_my = mysqli_query($con,$sql);
-    if ($charge_my && (mysqli_num_rows($charge_my) > 0)) {
-      $charge_row = mysqli_fetch_array($charge_my);
+    $charge_my = mysql_query($sql);
+    if ($charge_my && (mysql_num_rows($charge_my) > 0)) {
+      $charge_row = mysql_fetch_array($charge_my);
       $total_charge = $charge_row['total_charge'];
     }
   }
@@ -379,7 +379,7 @@ if ($is_pending) {
        . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
        . "ORDER BY "
        . "  ledger.service_date ASC";
-  if(!empty($_GET['instype']) && $_GET['instype']==2 && $status == DSS_CLAIM_SEC_PENDING){
+  if($_GET['instype']==2 && $status == DSS_CLAIM_SEC_PENDING){
     $sql = "SELECT
                 sum(dlp.amount) as amount_paid
         from dental_ledger dl
@@ -391,9 +391,9 @@ if ($is_pending) {
                         AND dlp.payer = 0
         ";
   }
-  $paid_my = mysqli_query($con,$sql);
-  if ($paid_my && (mysqli_num_rows($paid_my) > 0)) {
-    $paid_row = mysqli_fetch_array($paid_my);
+  $paid_my = mysql_query($sql);
+  if ($paid_my && (mysql_num_rows($paid_my) > 0)) {
+    $paid_row = mysql_fetch_array($paid_my);
     $amount_paid = $paid_row['amount_paid'];
   }
 
@@ -401,7 +401,6 @@ if ($is_pending) {
   $balance_due = $total_charge - $amount_paid;
 
   // format calculations
-  $total_charge += 0.0;
   $total_charge = number_format($total_charge, 2, '.','');
   $amount_paid = number_format($amount_paid, 2, '.','');
   $balance_due = number_format($balance_due, 2, '.','');
@@ -420,46 +419,46 @@ if ($is_pending) {
 </ul>
 
 <ul>
-  <li><label>Doc Name:</label><span class="value"><?php echo  $service_doc; ?></span></li>
-  <li><label>Doc Practice:</label><span class="value"><?php echo  $service_practice; ?></span></li>
-  <li><label>Doc Addr:</label><span class="value"><?php echo  $service_address." " .$service_city." ".$service_state." ".$service_zip; ?></span></li>
-  <li><label>Doc Tax ID:</label><span class="value"><?php echo $docinfo['tax_id_or_ssn'];?></span></li>
-  <li><label>Doc NPI:</label><span class="value"><?php echo  $service_npi; ?></span></li>
+  <li><label>Doc Name:</label><span class="value"><?= $service_doc; ?></span></li>
+  <li><label>Doc Practice:</label><span class="value"><?= $service_practice; ?></span></li>
+  <li><label>Doc Addr:</label><span class="value"><?= $service_address." " .$service_city." ".$service_state." ".$service_zip; ?></span></li>
+  <li><label>Doc Tax ID:</label><span class="value"><?=$docinfo['tax_id_or_ssn'];?></span></li>
+  <li><label>Doc NPI:</label><span class="value"><?= $service_npi; ?></span></li>
 </ul>
 
 <ul>
-  <li><label>Billing Name:</label> <span class="value"><?php echo  $practice; ?></span></li>
+  <li><label>Billing Name:</label> <span class="value"><?= $practice; ?></span></li>
   <li><label>Billing Addr:</label> <span class="value"><?php echo $address; ?> <?php echo $city;?>, <?php echo $state;?> <?php echo $zip;?></span></li>
-  <li><label>Billing Tax ID:</label> <span class="value"><?php echo  $tax_id_or_ssn; ?></span></li>
-  <li><label>Billing NPI:</label> <span class="value"><?php echo  ($insurancetype == '1')?$medicare_npi:$npi; ?></span></li>
-  <li><label>Medicare Billing NPI:</label> <span class="value"><?php echo  $medicare_npi; ?></span></li>
-  <li><label>Medicare PTAN:</label> <span class="value"><?php echo  $medicare_ptan; ?></span></li>
+  <li><label>Billing Tax ID:</label> <span class="value"><?= $tax_id_or_ssn; ?></span></li>
+  <li><label>Billing NPI:</label> <span class="value"><?= ($insurancetype == '1')?$medicare_npi:$npi; ?></span></li>
+  <li><label>Medicare Billing NPI:</label> <span class="value"><?= $medicare_npi; ?></span></li>
+  <li><label>Medicare PTAN:</label> <span class="value"><?= $medicare_ptan; ?></span></li>
 </ul>
 
 <ul>
-  <li><label>Pt Name:</label> <span class="value"><?php echo  $patient_firstname. " ".$patient_lastname; ?></span></li>
-  <li><label>Pt DOB:</label> <span class="value"><?php echo  $patient_dob; ?></span></li>
-  <li><label>Pt Sex:</label> <span class="value"><?php echo  $patient_sex; ?></span></li>
-  <li><label>Pt Addr:</label> <span class="value"><?php echo  $patient_address." ".$patient_city." ".$patient_state." ".$patient_zip; ?></span></li>
-  <li><label>Pt Ins ID:</label> <span class="value"><?php echo  $insured_id_number; ?></span></li>
-  <li><label>Pt Group #:</label> <span class="value"><?php echo  $insured_policy_group_feca; ?></span></li>
-  <li><label>Pt Phone:</label> <span class="value"><?php echo  $patient_phone_code ." ".$patient_phone; ?></span></li>
-  <li><label>Pt Relation to Insd:</label> <span class="value"><?php echo  $patient_relation_insured; ?></span></li>
+  <li><label>Pt Name:</label> <span class="value"><?= $patient_firstname. " ".$patient_lastname; ?></span></li>
+  <li><label>Pt DOB:</label> <span class="value"><?= $patient_dob; ?></span></li>
+  <li><label>Pt Sex:</label> <span class="value"><?= $patient_sex; ?></span></li>
+  <li><label>Pt Addr:</label> <span class="value"><?= $patient_address." ".$patient_city." ".$patient_state." ".$patient_zip; ?></span></li>
+  <li><label>Pt Ins ID:</label> <span class="value"><?= $insured_id_number; ?></span></li>
+  <li><label>Pt Group #:</label> <span class="value"><?= $insured_policy_group_feca; ?></span></li>
+  <li><label>Pt Phone:</label> <span class="value"><?= $patient_phone_code ." ".$patient_phone; ?></span></li>
+  <li><label>Pt Relation to Insd:</label> <span class="value"><?= $patient_relation_insured; ?></span></li>
 </ul>
 
 <ul>
-  <li><label>Insured Name:</label> <span class="value"><?php echo  $insured_firstname." ".$insured_lastname;?></span></li>
-  <li><label>Insured DOB:</label> <span class="value"><?php echo  $insured_dob; ?></span></li>
-  <li><label>Insured Sex:</label> <span class="value"><?php echo  $insured_sex; ?></span></li>
-  <li><label>Insured Addr:</label> <span class="value"><?php echo  $insured_address." ".$insured_city." ".$insured_state." ".$insured_zip; ?></span></li>
-  <li><label>Insured Ins ID:</label> <span class="value"><?php echo  $insured_id_number; ?></span></li>
-  <li><label>Insured Group #:</label> <span class="value"><?php echo  $insured_policy_group_feca; ?></span></li>
-  <li><label>Insured Phone:</label> <span class="value"><?php echo  $insured_phone; ?></span></li>
+  <li><label>Insured Name:</label> <span class="value"><?= $insured_firstname." ".$insured_lastname;?></span></li>
+  <li><label>Insured DOB:</label> <span class="value"><?= $insured_dob; ?></span></li>
+  <li><label>Insured Sex:</label> <span class="value"><?= $insured_sex; ?></span></li>
+  <li><label>Insured Addr:</label> <span class="value"><?= $insured_address." ".$insured_city." ".$insured_state." ".$insured_zip; ?></span></li>
+  <li><label>Insured Ins ID:</label> <span class="value"><?= $insured_id_number; ?></span></li>
+  <li><label>Insured Group #:</label> <span class="value"><?= $insured_policy_group_feca; ?></span></li>
+  <li><label>Insured Phone:</label> <span class="value"><?= $insured_phone; ?></span></li>
 </ul>
 
 <ul>
   <li><label>Claim Date of Service: </label> <span class="value"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></span></li>
-  <li><label>Total Claim Amt: </label> <span class="value"><?php echo  $total_charge; ?></span></li>
+  <li><label>Total Claim Amt: </label> <span class="value"><?= $total_charge; ?></span></li>
 </ul>
 </div>
 
@@ -469,7 +468,7 @@ if ($is_pending) {
 <div style="display:block; float:left; width:48%;">
 <h3>Secondary</h3>
 <?php
-  if(!empty($myarray['has_s_m_ins']) && $myarray['has_s_m_ins']!='Yes'){
+  if($myarray['has_s_m_ins']!='Yes'){
 ?>
   None
 <?php }else{ ?>
@@ -481,44 +480,44 @@ if ($is_pending) {
 </ul>
 
 <ul>
-  <li><label>Doc Name:</label><span class="value"><?php echo  $service_doc; ?></span></li>
-  <li><label>Doc Practice:</label><span class="value"><?php echo  $service_practice; ?></span></li>
-  <li><label>Doc Addr:</label><span class="value"><?php echo  $service_address." " .$service_city." ".$service_state." ".$service_zip; ?></span></li>
-  <li><label>Doc Tax ID:</label><span class="value"><?php echo $docinfo['tax_id_or_ssn'];?></span></li>
-  <li><label>Doc NPI:</label><span class="value"><?php echo  $service_npi; ?></span></li>
+  <li><label>Doc Name:</label><span class="value"><?= $service_doc; ?></span></li>
+  <li><label>Doc Practice:</label><span class="value"><?= $service_practice; ?></span></li>
+  <li><label>Doc Addr:</label><span class="value"><?= $service_address." " .$service_city." ".$service_state." ".$service_zip; ?></span></li>
+  <li><label>Doc Tax ID:</label><span class="value"><?=$docinfo['tax_id_or_ssn'];?></span></li>
+  <li><label>Doc NPI:</label><span class="value"><?= $service_npi; ?></span></li>
 </ul>
 
 <ul>
-  <li><label>Billing Name:</label> <span class="value"><?php echo  $practice; ?></span></li>
+  <li><label>Billing Name:</label> <span class="value"><?= $practice; ?></span></li>
   <li><label>Billing Addr:</label> <span class="value"><?php echo $address; ?> <?php echo $city;?>, <?php echo $state;?> <?php echo $zip;?></span></li>
-  <li><label>Billing Tax ID:</label> <span class="value"><?php echo  $tax_id_or_ssn; ?></span></li>
-  <li><label>Billing NPI:</label> <span class="value"><?php echo  ($insurancetype == '1')?$medicare_npi:$npi; ?></span></li>
+  <li><label>Billing Tax ID:</label> <span class="value"><?= $tax_id_or_ssn; ?></span></li>
+  <li><label>Billing NPI:</label> <span class="value"><?= ($insurancetype == '1')?$medicare_npi:$npi; ?></span></li>
 </ul>
 
 <ul>
-  <li><label>Pt Name:</label> <span class="value"><?php echo  $patient_firstname. " ".$patient_lastname; ?></span></li>
-  <li><label>Pt DOB:</label> <span class="value"><?php echo  $patient_dob; ?></span></li>
-  <li><label>Pt Sex:</label> <span class="value"><?php echo  $patient_sex; ?></span></li>
-  <li><label>Pt Addr:</label> <span class="value"><?php echo  $patient_address." ".$patient_city." ".$patient_state." ".$patient_zip; ?></span></li>
-  <li><label>Pt Ins ID:</label> <span class="value"><?php echo  $insured_id_number; ?></span></li>
-  <li><label>Pt Group #:</label> <span class="value"><?php echo  $insured_policy_group_feca; ?></span></li>
-  <li><label>Pt Phone:</label> <span class="value"><?php echo  $patient_phone_code ." ".$patient_phone; ?></span></li>
-  <li><label>Pt Relation to Insd:</label> <span class="value"><?php echo  $patient_relation_insured; ?></span></li>
+  <li><label>Pt Name:</label> <span class="value"><?= $patient_firstname. " ".$patient_lastname; ?></span></li>
+  <li><label>Pt DOB:</label> <span class="value"><?= $patient_dob; ?></span></li>
+  <li><label>Pt Sex:</label> <span class="value"><?= $patient_sex; ?></span></li>
+  <li><label>Pt Addr:</label> <span class="value"><?= $patient_address." ".$patient_city." ".$patient_state." ".$patient_zip; ?></span></li>
+  <li><label>Pt Ins ID:</label> <span class="value"><?= $insured_id_number; ?></span></li>
+  <li><label>Pt Group #:</label> <span class="value"><?= $insured_policy_group_feca; ?></span></li>
+  <li><label>Pt Phone:</label> <span class="value"><?= $patient_phone_code ." ".$patient_phone; ?></span></li>
+  <li><label>Pt Relation to Insd:</label> <span class="value"><?= $patient_relation_insured; ?></span></li>
 </ul>
 
 <ul>
-  <li><label>Insured Name:</label> <span class="value"><?php echo  $other_insured_firstname." ".$other_insured_lastname;?></span></li>
-  <li><label>Insured DOB:</label> <span class="value"><?php echo  $other_insured_dob; ?></span></li>
-  <li><label>Insured Sex:</label> <span class="value"><?php echo  $other_insured_sex; ?></span></li>
-  <li><label>Insured Addr:</label> <span class="value"><?php echo  $other_insured_address." ".$other_insured_city." ".$other_insured_state." ".$other_insured_zip; ?></span></li>
-  <li><label>Insured Ins ID:</label> <span class="value"><?php echo  $other_insured_id_number; ?></span></li>
-  <li><label>Insured Group #:</label> <span class="value"><?php echo  $other_insured_policy_group_feca; ?></span></li>
-  <li><label>Insured Phone:</label> <span class="value"><?php echo  (!empty($other_insured_phone) ? $other_insured_phone : ''); ?></span></li>
+  <li><label>Insured Name:</label> <span class="value"><?= $other_insured_firstname." ".$other_insured_lastname;?></span></li>
+  <li><label>Insured DOB:</label> <span class="value"><?= $other_insured_dob; ?></span></li>
+  <li><label>Insured Sex:</label> <span class="value"><?= $other_insured_sex; ?></span></li>
+  <li><label>Insured Addr:</label> <span class="value"><?= $other_insured_address." ".$other_insured_city." ".$other_insured_state." ".$other_insured_zip; ?></span></li>
+  <li><label>Insured Ins ID:</label> <span class="value"><?= $other_insured_id_number; ?></span></li>
+  <li><label>Insured Group #:</label> <span class="value"><?= $other_insured_policy_group_feca; ?></span></li>
+  <li><label>Insured Phone:</label> <span class="value"><?= $other_insured_phone; ?></span></li>
 </ul>
 
 <ul>
   <li><label>Claim Date of Service: </label><span class="value"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></span></li>
-  <li><label>Total Claim Amt: </label> <span class="value"><?php echo  ($total_charge!='')?$total_charge:'0.00'; ?></span></li>
+  <li><label>Total Claim Amt: </label> <span class="value"><?= ($total_charge!='')?$total_charge:'0.00'; ?></span></li>
 </ul>
 <?php } ?>
 </div>
@@ -532,4 +531,4 @@ if ($is_pending) {
 </div>
 <div id="backgroundPopup"></div>
 
-<?php include 'includes/bottom.htm';?>
+<? include 'includes/bottom.htm';?>

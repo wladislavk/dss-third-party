@@ -21,6 +21,8 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
                 		free_claim = '".mysqli_real_escape_string($con,$_POST['free_claim'])."',
                 		efile_fee = '".mysqli_real_escape_string($con,$_POST['efile_fee'])."',
                 		free_efile = '".mysqli_real_escape_string($con,$_POST['free_efile'])."',
+                        e0486_bill = '".mysqli_real_escape_string($con,$_POST['e0486_bill'])."',
+                        e0486_fee = '".mysqli_real_escape_string($con,$_POST['e0486_fee'])."',
                 		vob_fee = '".mysqli_real_escape_string($con,$_POST['vob_fee'])."',
                 		free_vob = '".mysqli_real_escape_string($con,$_POST['free_vob'])."',
 				producer_fee = '".mysqli_real_escape_string($con,$_POST['producer_fee'])."',
@@ -57,6 +59,8 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
                                 free_claim = '".mysqli_real_escape_string($con,$_POST['free_claim'])."',
                                 efile_fee = '".mysqli_real_escape_string($con,$_POST['efile_fee'])."',
                                 free_efile = '".mysqli_real_escape_string($con,$_POST['free_efile'])."',
+                                e0486_bill = '".mysqli_real_escape_string($con,$_POST['e0486_bill'])."',
+                                e0486_fee = '".mysqli_real_escape_string($con,$_POST['e0486_fee'])."',
                                 vob_fee = '".mysqli_real_escape_string($con,$_POST['vob_fee'])."',
                                 free_vob = '".mysqli_real_escape_string($con,$_POST['free_vob'])."',
 				producer_fee = '".mysqli_real_escape_string($con,$_POST['producer_fee'])."',
@@ -104,6 +108,8 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
 		$free_claim = $_POST['free_claim'];
 		$efile_fee = $_POST['efile_fee'];
 		$free_efile = $_POST['free_efile'];
+		$e0486_bill = $_POST['e0486_bill'];
+		$e0486_fee = $_POST['e0486_fee'];
 		$vob_fee = $_POST['vob_fee'];
 		$free_vob = $_POST['free_vob'];
 		$producer_fee = $_POST['producer_fee'];
@@ -128,9 +134,12 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
                 $free_claim = $themyarray['free_claim'];
 		$efile_fee = $themyarray['efile_fee'];
 		$free_efile = $themyarray['free_efile'];
+                $e0486_bill = $themyarray['e0486_bill'];
+                $e0486_fee = $themyarray['e0486_fee'];
                 $vob_fee = $themyarray['vob_fee'];
                 $free_vob = $themyarray['free_vob'];
 		$producer_fee = $themyarray['producer_fee'];
+		$user_fee = $themyarray['user_fee'];
 		$patient_fee = $themyarray['patient_fee'];
 		$duration = $themyarray['duration'];
                 $office_type = $themyarray['office_type'];
@@ -285,6 +294,25 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
                 <span class="red">*</span>
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Always Bill e0486?
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="checkbox" name="e0486_bill" value="1" <?php if($e0486_bill==1){ echo ' checked="checked" '; } ?> class="form-control" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                e0486 Fee
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="e0486_fee" value="<?=$e0486_fee?>" class="moneymask form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 VOB Fee

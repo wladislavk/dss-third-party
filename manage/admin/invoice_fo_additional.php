@@ -124,7 +124,6 @@ if($num_docs == 0){
   <?php
 }
 $user = mysql_fetch_assoc($q);
-
 $s = "SELECT id FROM dental_percase_invoice WHERE docid='".$user['userid']."' AND status='".DSS_INVOICE_PENDING."' AND invoice_type=".DSS_INVOICE_TYPE_BC_FO;
 $q = mysql_query($s) or die(mysql_error());
 if(mysql_num_rows($q) > 0){
@@ -147,6 +146,7 @@ $claim_sql = "SELECT dp.patientid, dp.firstname, dp.lastname, i.insuranceid id, 
                 and i.percase_invoice = '".$invoice_id."'
 ";
 $claim_q = mysql_query($claim_sql);
+$claim_q2 = mysql_query($claim_sql);
 
 
 $vob_sql = "SELECT dp.firstname patient_firstname, dp.lastname patient_lastname, v.id, v.date_completed FROM 
@@ -244,7 +244,7 @@ $total_amount = 0;
   }
 
 
-  while($claim = mysql_fetch_assoc($claim_q)){
+  while($claim = mysql_fetch_assoc($claim_q2)){
     $id = $claim['id'];
     if(isset($_POST['claim_adddate_'.$id])){
       $up_sql = "UPDATE dental_insurance SET " .
@@ -469,7 +469,7 @@ $total_amount = 0;
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT p.monthly_fee, p.producer_fee, p.fax_fee, p.free_fax, p.patient_fee, p.claim_fee, p.free_claim, p.eligibility_fee, p.free_eligibility, p.enrollment_fee, p.free_enrollment, vob_fee, free_vob, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type, c.name as company_name, p.name as plan_name
+  $doc_sql = "SELECT p.monthly_fee, p.producer_fee, p.fax_fee, p.free_fax, p.patient_fee, p.e0486_bill, p.e0486_fee, p.claim_fee, p.free_claim, p.eligibility_fee, p.free_eligibility, p.enrollment_fee, p.free_enrollment, vob_fee, free_vob, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type, c.name as company_name, p.name as plan_name
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
@@ -487,8 +487,8 @@ if(mysql_num_rows($doc_q) == 0){
   $doc_q = mysql_query($doc_sql);
 
 }
-  $doc = mysql_fetch_assoc($doc_q);
 
+  $doc = mysql_fetch_assoc($doc_q);
         if($user['last_monthly_fee_date']){
           $date = $user['last_monthly_fee_date'];
           $newdate = strtotime ( '+1 month' , strtotime ( $date ) ) ;
@@ -648,7 +648,9 @@ Invoice Due Date:
 	           <? } ?>
 
 
-                <?php while ($e0486 = mysql_fetch_array($e0486_q)) { ?>
+                <?php 
+		if($doc['e0486_bill']){
+		while ($e0486 = mysql_fetch_array($e0486_q)) { ?>
                 <tr id="e0486_row_<?= $e0486['id'] ?>">
                     <td>
                         <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
@@ -669,11 +671,13 @@ Invoice Due Date:
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="amount_<?= $e0486['id'] ?>" value="<?= $doc['claim_fee']; ?>">
+                            <input type="text" class="amount form-control" name="amount_<?= $e0486['id'] ?>" value="<?= $doc['e0486_fee']; ?>">
                         </div>
                     </td>
                 </tr>
-                   <? } ?>
+                   <? } 
+			}
+			?>
 
 
 
@@ -971,7 +975,6 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=1
             WHERE id='".mysql_real_escape_string($invoiceid)."'";
-        
         mysql_query($invoice_sql);
     }
     

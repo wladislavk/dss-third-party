@@ -10,7 +10,6 @@
 <html>
     <head>
     </head>
-
     <body>
         <?php
             if(authorize((!empty($_POST['username']) ? $_POST['username'] : ''), (!empty($_POST['password']) ? $_POST['password'] : ''), DSS_USER_TYPE_ADMIN)){
@@ -33,7 +32,7 @@
                     `payer`
                     ) VALUES ";
 
-                $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '');
+                $lsql = "SELECT * FROM dental_ledger WHERE (primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."  or secondary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '');
                 
                 $lq = $db->getResults($lsql);
                 if ($lq) foreach ($lq as $row){

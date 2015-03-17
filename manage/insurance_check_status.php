@@ -26,10 +26,18 @@
     $l = $db->getRow($l_sql);
     $reference_id = $r['reference_id'];
 
-    $api_key = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
+    $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+    $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($r['user_id'])."'";
+    $api_key_query = mysqli_query($con, $api_key_sql);
+    $api_key_result = mysqli_fetch_assoc($api_key_query);
+    if($api_key_result){
+      if(!empty(trim($api_key_result['eligible_api_key'])){
+        $api_key = $api_key_result['eligible_api_key'];
+      }
+    }
     $data = array();                                                                    
 
-    $data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
+    $data['api_key'] = $api_key;
     $data['payer_id'] = $r['p_m_eligible_payer_id'];
     $data['provider_first_name'] = $r['first_name'];
     $data['provider_last_name'] = $r['last_name'];
@@ -50,7 +58,6 @@
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
     $data = curl_exec ($ch); 
     curl_close ($ch);
- 
     //var_dump($data);
 
     function fill_cents($v)

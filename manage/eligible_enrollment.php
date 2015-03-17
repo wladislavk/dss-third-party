@@ -602,19 +602,19 @@ $data = array();
 if(isset($_GET['test']) && $_GET['test']==1){
   $data['test'] = 'true';
 }
-$data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
-/*
-$data['submitter'] = array(
-        "organization_name" => "Dental Sleep Solutions",
-        "last_name" => "Yatros",
-        "first_name" => "Gy",
-        "id" => "1",
-        "contact_name" => "Brandi",
-        "phone" => "9417574642",
-        "ext" => "",
-        "fax" => "",
-        "email" => "brandi@dentalsleepsolutions.com");
-*/
+
+$api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($docid)."'";
+$api_key_query = mysql_query($api_key_sql);
+$api_key_result = mysql_fetch_assoc($api_key_query);
+if($api_key_result){
+  if(!empty(trim($api_key_result['eligible_api_key'])){
+    $api_key = $api_key_result['eligible_api_key'];
+  }
+}
+
+$data['api_key'] = DSS_DEFAULT_ELIGIBLE_API_KEY;
+
 $data['receiver'] = array(
 	"organization_name" => $eligible_ins,
 	"id" => $eligible_id);
@@ -630,16 +630,7 @@ $data['billing_provider']= array(
 		"zip" => $zip),
 	"tin" => $tax_id_or_ssn,
 	"insurance_provider_id" => $medicare_ptan);
-/* $data['pay_to_provider'] = array(
-	"organization_name" => $practice,
-        "address" => array(
-                "street_line_1" => str_replace(',','',$address),
-                "street_line_2" => "",
-                "city" => $city,
-                "state" => $state,
-                "zip" => $zip)
-        );
-*/
+
 $data['subscriber'] = array(
 	"last_name" => $insured_lastname,
 	"first_name" => $insured_firstname,
@@ -755,7 +746,6 @@ $data['claim'] = array(
 $data_string = json_encode($data);                                                                                   
 error_log($data_string);
 //echo $data_string."<br /><br />"; 
-//$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
 $ch = curl_init('https://gds.eligibleapi.com/v1.1/claims.json');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
@@ -778,7 +768,7 @@ $up_sql = "INSERT INTO dental_claim_electronic SET
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
 mysql_query($up_sql);
-if($success == "false"){
+if(!$success){
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
   mysql_query($up_sql);
   claim_status_history_update($_GET['ins_id'], '', DSS_CLAIM_REJECTED, $_SESSION['userid']);

@@ -35,8 +35,18 @@
     	$t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysqli_real_escape_string($con,$_POST['transaction_type'])."' AND status=1";
       
     	$t_r = $db->getRow($t_sql);
+
+      $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+      $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($_SESSION['docid'])."'";
+      $api_key_result = $db->getRow($api_key_sql);
+      if($api_key_result){
+        if(!empty(trim($api_key_result['eligible_api_key'])){
+          $api_key = $api_key_result['eligible_api_key'];
+        }
+      }
+
       $data = array();
-      $data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
+      $data['api_key'] = $api_key;
       if(isset($_POST['test']) && $_POST['test'] == "1"){
         $data['test'] = "true";
       }
@@ -139,7 +149,7 @@
     	<label style="color:#fff;">Enroll Type</label>
       <select id="transaction_type" name="transaction_type" onchange="update_list()">
           <?php if ($t_q) foreach ($t_q as $t) { ?>
-              <option value="<?php echo  $t['id']; ?>"><?php echo  $t['transaction_type']; ?> - <?php echo  $t['description']; ?></option>
+              <option value="<?php echo  $t['id']; ?>"><?php echo  $t['transaction_type']; ?> <?php echo  $t['description']; ?></option>
           <?php } ?>
       </select>
     </div>
@@ -179,6 +189,15 @@
                   $us_sql = "SELECT * FROM dental_user_signatures where user_id='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
                   
                   $signature = $db->getNumberRows($us_sql);
+                  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+                  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($_SESSION['docid'])."'";
+                  $api_key_query = mysqli_query($con, $api_key_sql);
+                  $api_key_result = mysqli_fetch_assoc($api_key_query);
+                  if($api_key_result){
+                    if(!empty(trim($api_key_result['eligible_api_key'])){
+                      $api_key = $api_key_result['eligible_api_key'];
+                    }
+                  }
                 ?>
                 <?php if($r['docid']==0){
                   $snpi = $r['service_npi'];

@@ -30,11 +30,15 @@ $sql = "SELECT  "
      . "FROM dental_ledger dl  "
      . "JOIN dental_patients p ON p.patientid=dl.patientid "
      . " LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."' "
-     . " LEFT JOIN (SELECT patientid, SUM(paid_amount) amount FROM dental_ledger group by patientid) a ON a.patientid=dl.patientid "
+     . " LEFT JOIN (SELECT patientid, SUM(paid_amount) amount FROM dental_ledger 
+      LEFT JOIN dental_transaction_code tc2 on tc2.transaction_code = dental_ledger.transaction_code AND tc2.docid='".$_SESSION['docid']."' 
+                WHERE tc2.type='".mysql_real_escape_string(DSS_TRXN_TYPE_ADJ)."' 
+                group by patientid) a ON a.patientid=dl.patientid "
      . "WHERE dl.docid='".$_SESSION['docid']."'  "
-     . " AND tc.type!='".mysqli_real_escape_string($con,DSS_TRXN_TYPE_ADJ)."' "
-     . "GROUP BY dl.patientid";
+     . " AND tc.type!='".mysqli_real_escape_string($con,DSS_TRXN_TYPE_ADJ)."' OR tc.type IS NULL) "
+     . "GROUP BY dl.patientid ORDER BY p.lastname ASC";
 $my = $db->getResults($sql);
+
 /*
 $sql .= " order by service_date";
 
@@ -84,7 +88,7 @@ $num_users = count($my);
 			Patient
 		</td>
 		<td valign="top" class="col_head" width="10%">
-			Current	
+			0 Days	
 		</td>	
 		<td valign="top" class="col_head" width="10%">
 			30 Days
@@ -95,16 +99,19 @@ $num_users = count($my);
 		<td valign="top" class="col_head" width="10%">
 			90 Days	
 		</td>	
+    <td valign="top" class="col_head" width="10 %">
+      120+ Days 
+    </td> 
 		<td valign="top" class="col_head" width="10%">
 			Charges
 		</td>
-		<td valign="top" class="col_head">
+		<td valign="top" class="col_head"  width="10%">
 			Credits
 		</td>
-		<td valign="top" class="col_head">
+		<td valign="top" class="col_head" width="10%">
 			Adjustments	
 		</td>
-		<td valign="top" class="col_head">
+		<td valign="top" class="col_head"  width="10%">
 			Pt. Balance	
 		</td>
 	</tr>
@@ -123,164 +130,273 @@ $num_users = count($my);
 		$charges_30 = 0;
 		$charges_60 = 0;
 		$charges_90 = 0;
-		foreach ($my as $myarray) {
-			$pay_sql = "SELECT  "
-	                 . "  sum(pay.amount) as paid_amount "
-				     . "FROM dental_ledger dl  "
-				     . "JOIN dental_patients p ON p.patientid=dl.patientid "
-				     . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
-				     . "WHERE dl.docid='".$_SESSION['docid']."' "
-				     . "AND p.patientid='".$myarray['patientid']."' "
-				     . "GROUP BY dl.patientid";
+    $charges_120 = 0;
 
-			$pay_r = $db->getRow($pay_sql);
-			$paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
-			if(round($myarray['amount'],2)!=round($paid_amount,2)){
-				$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
-				$pat_myarray = $db->getRow($pat_sql);
-				
-				$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
-				
-				if(!empty($myarray["status"]) && $myarray["status"] == 1){
-					$tr_class = "tr_active";
-				} else {
-					$tr_class = "tr_inactive";
-				}
-				$tr_class = "tr_active";?>
-	<tr class="<?php echo $tr_class;?>">
-		<td valign="top">
-			<a href="manage_ledger.php?addtopat=1&pid=<?php echo $myarray['patientid'];?>"><?php echo st($myarray['lastname'].", ".$myarray['firstname']);?> (Click to View)</a>
-		</td>
-		<td valign="top" width="18%">
-			<a href="manage_ledger.php?addtopat=1&pid=<?php echo $myarray['patientid'];?>"><?php echo st($myarray['lastname'].", ".$myarray['firstname']);?></a>
-		</td>
-		<td>
-<?php 
-				$seg_sql = "SELECT "
-					     . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
-					     . "p.firstname, p.lastname, p.patientid "
-					     . "FROM dental_ledger dl  "
-					     . "JOIN dental_patients p ON p.patientid=dl.patientid "
-					     . "WHERE dl.docid='".$_SESSION['docid']."'  "
-					     . "AND p.patientid='".$myarray['patientid']."' "
-					     . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 30 day) "
-					     . "GROUP BY dl.patientid";
-				$seq_r = $db->getRow($seg_sql);
-				echo "$".number_format($seq_r['amount'],2);
-				$charges_cur += $seq_r['amount'];?>
-		</td>
-		<td>
-<?php 
-				$seg_sql = "SELECT "
-		                 . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
-					     . "p.firstname, p.lastname, p.patientid "
-					     . "FROM dental_ledger dl  "
-					     . "JOIN dental_patients p ON p.patientid=dl.patientid "
-					     . "WHERE dl.docid='".$_SESSION['docid']."'  "
-					     . "AND p.patientid='".$myarray['patientid']."' "
-					     . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 30 day) "
-					     . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 60 day) "
-					     . "GROUP BY dl.patientid";
-                $seq_r = $db->getRow($seg_sql);
-                echo "$".number_format($seq_r['amount'],2);
-				$charges_30 += $seq_r['amount'];?>
-		</td>
-		<td>
-<?php 
-				$seg_sql = "SELECT "
-					     . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
-					     . "p.firstname, p.lastname, p.patientid "
-					     . "FROM dental_ledger dl  "
-					     . "JOIN dental_patients p ON p.patientid=dl.patientid "
-					     . "WHERE dl.docid='".$_SESSION['docid']."'  "
-					     . "AND p.patientid='".$myarray['patientid']."' "
-					     . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 60 day) "
-					     . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 90 day) "
-					     . "GROUP BY dl.patientid";
-                $seq_r = $db->getRow($seg_sql);
-                echo "$".number_format($seq_r['amount'],2);
-				$charges_60 += $seq_r['amount'];?>	
-		</td>
-		<td>
-<?php 
-				$seg_sql = "SELECT "
-					     . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
-					     . "p.firstname, p.lastname, p.patientid "
-					     . "FROM dental_ledger dl  "
-					     . "JOIN dental_patients p ON p.patientid=dl.patientid "
-					     . "WHERE dl.docid='".$_SESSION['docid']."'  "
-					     . "AND p.patientid='".$myarray['patientid']."' "
-					     . "AND dl.service_date < DATE_SUB(NOW(), INTERVAL 90 day) "
-					     . "GROUP BY dl.patientid";
-                $seq_r = $db->getRow($seg_sql);
-                echo "$".number_format($seq_r['amount'],2);
-				$charges_90 += $seq_r['amount'];?>	
-		</td>
-		<td valign="top" align="right" width="18%">
-<?php
-				echo "$".number_format($myarray["amount"],2);
-				$tot_charges += $myarray["amount"];?>
-			&nbsp;
-		</td>
-		<td valign="top" align="right">
-<?php 
-				if(st($paid_amount) <> 0) {
-					echo number_format(st($paid_amount),2);
-					$tot_credit += st($paid_amount);
-				}?>
-			&nbsp;
-		</td>
-		<td valign="top" align="right">
-<?php 
-				if(st($myarray['adjusted_amount']) <> 0) {
-					echo number_format(st($myarray['adjusted_amount']),2);
-					$tot_adjusted += st($myarray['adjusted_amount']);
-				}?>
-		</td>
-		<td valign="top">
-			&nbsp;
-<?php 
-				if($myarray["amount"]>$paid_amount){
-					echo number_format(($myarray["amount"]-$paid_amount),2);
-				}elseif($myarray["amount"]<$paid_amount){ ?>
-			<span style="color:#070;">(<?php echo number_format((abs($myarray["amount"]-$paid_amount-$myarray['adjusted_amount'])),2); ?>)</span>
-<?php 
-				}?>
-		</td>
-	</tr>
-	<?php 	} 
-		} 
-	}?>  
-	<tr>
-		<td valign="top" align="right">
-			<b>Totals</b>
-		</td>
-        <td valign="top" align="right">
-            <b>
-				<?php echo "$".number_format($charges_cur,2); ?>
-	            &nbsp;
-            </b>
+    while($myarray = mysql_fetch_array($my))
+    {
+$pay_sql = "SELECT  "
+     . "  sum(pay.amount) as paid_amount "
+     . "FROM dental_ledger dl  "
+     . "JOIN dental_patients p ON p.patientid=dl.patientid "
+     . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
+     . "WHERE dl.docid='".$_SESSION['docid']."' "
+     . "AND p.patientid='".$myarray['patientid']."' "
+     . "GROUP BY dl.patientid";
+      $pay_r = $db->getRow($pay_sql);
+$paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
+if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2)){
+  $pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
+  $pat_my = mysql_query($pat_sql);
+  $pat_myarray = mysql_fetch_array($pat_my);
+
+  $pat_credits_total = $paid_amount+$myarray['adjusted_amount'];
+
+  $seg_sql = "SELECT "
+     . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+     . "p.firstname, p.lastname, p.patientid "
+     . "FROM dental_ledger dl  "
+     . "JOIN dental_patients p ON p.patientid=dl.patientid "
+     . "WHERE dl.docid='".$_SESSION['docid']."'  "
+     . "AND p.patientid='".$myarray['patientid']."' "
+     . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 30 day) "
+     . "GROUP BY dl.patientid";
+  $seg_q = mysql_query($seg_sql);
+  $seq_r = mysql_fetch_assoc($seg_q);
+  $pat_cur_owed = $seq_r['amount'];
+
+  $seg_sql = "SELECT "
+      . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+      . "p.firstname, p.lastname, p.patientid "
+      . "FROM dental_ledger dl  "
+      . "JOIN dental_patients p ON p.patientid=dl.patientid "
+      . "WHERE dl.docid='".$_SESSION['docid']."'  "
+      . "AND p.patientid='".$myarray['patientid']."' "
+      . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 30 day) "
+      . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 60 day) "
+      . "GROUP BY dl.patientid";
+        $seq_r = $db->getRow($seg_sql);
+
+  $pat_30_owed = $seq_r['amount'];
+
+  $seg_sql = "SELECT "
+      . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+      . "p.firstname, p.lastname, p.patientid "
+      . "FROM dental_ledger dl  "
+      . "JOIN dental_patients p ON p.patientid=dl.patientid "
+      . "WHERE dl.docid='".$_SESSION['docid']."'  "
+      . "AND p.patientid='".$myarray['patientid']."' "
+      . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 60 day) "
+      . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 90 day) "
+      . "GROUP BY dl.patientid";
+        $seq_r = $db->getRow($seg_sql);
+
+  $pat_60_owed = $seq_r['amount'];
+
+  $seg_sql = "SELECT "
+      . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+      . "p.firstname, p.lastname, p.patientid "
+      . "FROM dental_ledger dl  "
+      . "JOIN dental_patients p ON p.patientid=dl.patientid "
+      . "WHERE dl.docid='".$_SESSION['docid']."'  "
+      . "AND p.patientid='".$myarray['patientid']."' "
+      . "AND dl.service_date <= DATE_SUB(NOW(), INTERVAL 90 day) "
+      . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 120 day) "
+      . "GROUP BY dl.patientid";
+        $seq_r = $db->getRow($seg_sql);
+
+  $pat_90_owed = $seq_r['amount'];
+
+  $seg_sql = "SELECT "
+      . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
+      . "p.firstname, p.lastname, p.patientid "
+      . "FROM dental_ledger dl  "
+      . "JOIN dental_patients p ON p.patientid=dl.patientid "
+      . "WHERE dl.docid='".$_SESSION['docid']."'  "
+      . "AND p.patientid='".$myarray['patientid']."' "
+      . "AND dl.service_date < DATE_SUB(NOW(), INTERVAL 120 day) "
+      . "GROUP BY dl.patientid";
+        $seq_r = $db->getRow($seg_sql);
+
+  $pat_120_owed = $seq_r['amount'];
+
+  $pat_credits = $pat_credits_total;
+  $pat_120 = $pat_120_owed;
+  $pat_90 = $pat_90_owed;
+  $pat_60 = $pat_60_owed;
+  $pat_30 = $pat_30_owed;
+  $pat_cur = $pat_cur_owed;
+
+  if ($pat_120_owed > $pat_credits){ //patient paid less than their 120+ day total
+    $pat_120 = $pat_120_owed - $pat_credits;
+  } else {
+    if ($pat_90_owed == 0 AND $pat_60_owed == 0 AND $pat_30_owed == 0 AND $pat_cur_owed == 0){ //no charges after 120 days
+      $pat_120 = $pat_120_owed - $pat_credits;
+    } else {
+      $pat_credits = $pat_credits - $pat_120_owed;
+      $pat_120 = 0;
+      if ($pat_90_owed > $pat_credits){  //patient paid less than their 90 day total
+        $pat_90 = $pat_90_owed - $pat_credits;
+      } else {
+        if ($pat_60_owed == 0 AND $pat_30_owed == 0 AND $pat_cur_owed == 0){ // no charges after 90 days
+          $pat_90 = $pat_90_owed - $pat_credits;
+        } else {
+          $pat_credits = $pat_credits - $pat_90_owed;
+          $pat_90 = 0;
+          if ($pat_60_owed > $pat_credits){  //patient paid less than their 60 day total
+            $pat_60 = $pat_60_owed - $pat_credits;
+          } else {
+            if ($pat_30_owed == 0 AND $pat_cur_owed == 0){// no charges after 60 days
+              $pat_60 = $pat_60_owed - $pat_credits;
+            } else {
+              $pat_credits = $pat_credits - $pat_60_owed;
+              $pat_60 = 0;
+              if ($pat_30_owed > $pat_credits){ //patient paid less than their 30 day total
+                $pat_30 = $pat_30_owed - $pat_credits;
+              } else {
+                if ($pat_cur_owed == 0){ // no charges after 30 days
+                  $pat_30 = $pat_30_owed - $pat_credits;
+                } else {
+                  $pat_credits = $pat_credits - $pat_30_owed;
+                  $pat_30 = 0;
+                  $pat_cur = $pat_cur_owed - $pat_credits;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  $charges_cur += $pat_cur;
+  $charges_30 += $pat_30;
+  $charges_60 += $pat_60;
+  $charges_90 += $pat_90;
+  $charges_120 += $pat_120;
+
+
+      $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
+      
+      if($myarray["status"] == 1)
+      {
+        $tr_class = "tr_active";
+      }
+      else
+      {
+        $tr_class = "tr_inactive";
+      }
+      $tr_class = "tr_active";
+    ?>
+      <tr class="<?=$tr_class;?>">
+        <td valign="top">
+                  <a href="manage_ledger.php?addtopat=1&pid=<?=$myarray['patientid'];?>"><?=st($myarray['lastname'].", ".$myarray['firstname']);?> (Click to View)</a>
         </td>
-		<td valign="top" align="right">
-			<b>
-				<?php echo "$".number_format($charges_30,2);?>
-	            &nbsp;
-            </b>
+        <td>
+          <?php 
+            echo "$".number_format($pat_cur,2);
+          ?>
         </td>
-		<td valign="top" align="right">
-			<b>
-				<?php echo "$".number_format($charges_60,2); ?>
-	            &nbsp;
-            </b>
+        <td>
+          <?php
+            echo "$".number_format($pat_30,2); 
+          ?>
         </td>
-		<td valign="top" align="right">
-			<b>
-				<?php echo "$".number_format($charges_90,2);?>
-	            &nbsp;
-            </b>
+        <td>
+        <?php
+          echo "$".number_format($pat_60,2);
+        ?>  
         </td>
-		<td valign="top" align="right">     
-			<b>
+        <td>
+        <?php
+          echo "$".number_format($pat_90,2);
+        ?>  
+        </td>
+        <td>
+        <?php 
+          echo "$".number_format($pat_120,2);
+        ?>  
+        </td>
+        <td align="right" width="10%">
+          <?php
+          echo "$".number_format($myarray["amount"],2);
+    $tot_charges += $myarray["amount"];
+          ?>
+
+          &nbsp;
+        </td>
+        <td align="right">
+          <? if(st($paid_amount) <> 0) {?>
+                    <?=number_format(st($paid_amount),2);?>
+          <? 
+            $tot_credit += st($paid_amount);
+          }?>
+          &nbsp;
+  
+        </td>
+        <td  align="right">
+          <? if(st($myarray['adjusted_amount']) <> 0) {?>
+                    <?=number_format(st($myarray['adjusted_amount']),2);?>
+          <? 
+            $tot_adjusted += st($myarray['adjusted_amount']);
+          }?>
+        </td>
+        <td >&nbsp;
+          <?php if($myarray["amount"]>($paid_amount+$myarray['adjusted_amount'])){ ?>
+          <?= number_format(($myarray["amount"]-$paid_amount-$myarray['adjusted_amount']),2); ?>
+          <?php }elseif($myarray["amount"]<$paid_amount){ ?>
+            <span style="color:#070;">(<?= number_format((abs($myarray["amount"]-$paid_amount-$myarray['adjusted_amount'])),2); ?>)</span>
+          <?php }?>
+        </td>
+      </tr>
+  <?  } } }
+  ?> 
+    
+    <tr>
+      <td valign="top" align="left">
+        <b>Totals</b>
+      </td>
+                        <td valign="top" align="left">
+
+
+
+                                <b>
+                                <?php echo "$".number_format($charges_cur,2); ?>
+                                &nbsp;
+                                </b>
+                        </td>
+                        <td valign="top" align="left">
+                                <b>
+                                <?php echo "$".number_format($charges_30,2);?>
+                                &nbsp;
+                                </b>
+                        </td>
+                        <td valign="top" align="left">
+
+
+
+                                <b>
+                                <?php echo "$".number_format($charges_60,2); ?>
+                                &nbsp;
+                                </b>
+                        </td>
+                        <td valign="top" align="left">
+                                <b>
+                                <?php echo "$".number_format($charges_90,2);?>
+                                &nbsp;
+                                </b>
+                        </td>
+                        <td valign="top" align="left">
+                                <b>
+                                <?php echo "$".number_format($charges_120,2);?>
+                                &nbsp;
+                                </b>
+                        </td>
+      <td valign="top" align="right">
+      
+                    
+                    
+        <b>
 				<?php echo "$".number_format($tot_charges,2); ?>
 				&nbsp;
 			</b>

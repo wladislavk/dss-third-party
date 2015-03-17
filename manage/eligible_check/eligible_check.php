@@ -1,6 +1,8 @@
 <?php
 include_once '../admin/includes/main_include.php';
 include_once '../admin/includes/invoice_functions.php';
+require_once('../includes/constants.inc');
+
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <?php
@@ -21,7 +23,7 @@ include_once '../includes/calendarinc.php';
   <form role="form" class="form-horizontal form-coverage">
 
 <?php
-  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
+  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn u.userid as user_id from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
          LEFT JOIN dental_users u ON u.userid = p.docid
          WHERE p.patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
@@ -30,6 +32,16 @@ include_once '../includes/calendarinc.php';
   $doc_array = explode(' ',$doc_name);
   $doc_first_name = $doc_array[0];
   $doc_last_name = (!empty($doc_array[1]) ? $doc_array[1] : '');
+
+  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($r['user_id'])."'";
+  $api_key_query = mysqli_query($con, $api_key_sql);
+  $api_key_result = mysqli_fetch_assoc($api_key_query);
+  if($api_key_result){
+    if(!empty(trim($api_key_result['eligible_api_key'])){
+      $api_key = $api_key_result['eligible_api_key'];
+    }
+  }
 
   $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".(!empty($_GET['docid']) ? $_GET['docid'] : '')."'";
   $docinfo = $db->getRow($getdocinfo);
@@ -90,6 +102,7 @@ include_once '../includes/calendarinc.php';
     $d_zip = '';
   }
 
+
   $s = "SELECT eligible_test FROM dental_users where userid='".(!empty($_GET['docid']) ? $_GET['docid'] : '')."'";
   $row = $db->getRow($s);
   if($row['eligible_test']=="1"){?>
@@ -119,7 +132,7 @@ include_once '../includes/calendarinc.php';
 <?php 
   } ?>
 
-    <input type="hidden" class="form-control" id="api_key" value="33b2e3a5-8642-1285-d573-07a22f8a15b4">
+    <input type="hidden" class="form-control" id="api_key" value=<?php echo "'".$api_key."'" ?>>
 
     <div class="form-group test-param">
       <label for="test_member_id" class="col-lg-2 control-label">Test Member ID</label>
@@ -169,7 +182,6 @@ include_once '../includes/calendarinc.php';
                 <li class="template" style="display:none"></li>
         </ul>
 </div>
-
 <input type="hidden" name="payer_id" id="payer_id" />
       </div>
     </div>

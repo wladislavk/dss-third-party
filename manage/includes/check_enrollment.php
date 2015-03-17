@@ -26,4 +26,5 @@
   }elseif($r['status'] == DSS_ENROLLMENT_REJECTED){
     echo '{"enrolled":"no", "message":"Enrollment has be rejected. Please resubmit.", "userid":"'.$u_r['userid'].'"}';
   }
+
 ?>

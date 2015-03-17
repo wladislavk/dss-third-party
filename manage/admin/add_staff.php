@@ -5,9 +5,7 @@ include_once 'includes/password.php';
 include_once '../includes/general_functions.php';
 include_once 'includes/edx_functions.php';
 include_once '../includes/help_functions.php';
-?>
-<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-<?php
+//<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 
 if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
 {
@@ -461,7 +459,6 @@ Fields left blank below will default to the standard billing settings for your o
     }
   });
 
-$(document).ready( function(){
     if($('#producer').is(':checked')){
       $('.producer_field').show();
       if($('#producer_files').is(':checked')){
@@ -474,7 +471,6 @@ $(document).ready( function(){
       $('.files_field').hide();
     }
 
-});
 </script>
 
 </body>

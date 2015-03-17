@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="css/eligible_api.css" />
 <?php
-  $s = "SELECT p.*, c.company, u.name as doc_name, u.npi from dental_patients p
+<<<<<< HEAD
+  $s = "SELECT p.*, c.company, u.name as doc_name, u.npi, u.userid as user_id from dental_patients p
         LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
         LEFT JOIN dental_users u ON u.userid = p.docid
    	    WHERE p.patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
@@ -10,6 +11,15 @@
   $doc_array = explode(' ',$doc_name);
   $doc_first_name = $doc_array[0];
   $doc_last_name = (!empty($doc_array[1]) ? $doc_array[1] : '');
+  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($r['user_id'])."'";
+  $api_key_query = mysqli_query($con, $api_key_sql);
+  $api_key_result = mysqli_fetch_assoc($api_key_query);
+  if($api_key_result){
+    if(!empty(trim($api_key_result['eligible_api_key'])){
+      $api_key = $api_key_result['eligible_api_key'];
+    }
+  }
 ?>
 <form method="post">
   <div id="eligible_api" >
@@ -93,10 +103,11 @@
 
 <?php
   if(isset($_POST['api_submit'])){
+<<<<<< HEAD
     $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
     $data = array();
     $data['test'] = "true";
-    $data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
+    $data['api_key'] = $api_key;
     $data['payer_id'] =  $payer_id;
     $data['service_provider_first_name'] =  $_POST['provider_first_name'];
     $data['service_provider_last_name'] =  $_POST['provider_last_name'];
@@ -126,3 +137,4 @@
 ?>
 
   <div id="api_output"></div>
+

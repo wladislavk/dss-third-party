@@ -1,5 +1,7 @@
 <?php
 include "includes/top.htm";
+require_once('includes/constants.inc');
+
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -18,6 +20,16 @@ include "includes/top.htm";
 			LEFT JOIN dental_enrollment_transaction_type t ON e.transaction_type_id = t.id
 			WHERE e.user_id = '".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 	$my = $db->getResults($sql);
+
+  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($_SESSION['docid'])."'";
+  $api_key_query = mysqli_query($con, $api_key_sql);
+  $api_key_result = mysqli_fetch_assoc($api_key_query);
+  if($api_key_result){
+    if(!empty(trim($api_key_result['eligible_api_key'])){
+      $api_key = $api_key_result['eligible_api_key'];
+    }
+  }
 ?>
 <div style="margin-left:10px;margin-right:10px;">
 	<button style="margin-right:10px; float:right;" onclick="loadPopup('add_enrollment.php')" class="addButton">
@@ -80,7 +92,7 @@ include "includes/top.htm";
 				</span>
 			</td>
 			<td valign="top">
-				<a href="https://gds.eligibleapi.com/v1.3/payers/<?php echo $myarray['payer_id']; ?>/enrollment_form?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4&transaction_type=837P" target="_blank">PDF</a>
+					<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key ?>&transaction_type=837P" target="_blank">PDF</a>
 			</td>
 		</tr>
 			<? 	}

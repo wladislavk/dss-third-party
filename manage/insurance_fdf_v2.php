@@ -107,6 +107,10 @@
     
 
         if(!empty($_GET['type']) && $_GET['type']=='secondary'){
+            $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";
+            $inscoarray = mysqli_query($con, $inscoquery);
+            $inscoinfo = mysqli_fetch_array($inscoarray);
+
             $insurancetype =strtoupper($myarray['other_insurance_type']);
             $other_insurancetype = $myarray['insurance_type'];
             $other_insured_firstname =strtoupper($myarray['insured_firstname']);
@@ -130,7 +134,12 @@
             $insured_phone_code =strtoupper($myarray['insured_phone_code']);
             $insured_phone =strtoupper($myarray['insured_phone']);
             $insured_sex =strtoupper($myarray['other_insured_sex']);
+
         }else{
+            $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
+            $inscoarray = mysqli_query($con, $inscoquery);
+            $inscoinfo = mysqli_fetch_array($inscoarray);
+
             $insurancetype =strtoupper($myarray['insurance_type']);
             $other_insurancetype = $myarray['other_insurance_type'];
             $other_insured_firstname =strtoupper($myarray['other_insured_firstname']);
@@ -155,6 +164,7 @@
             $insured_phone =strtoupper($myarray['insured_phone']);
             $insured_sex =strtoupper($myarray['insured_sex']);
         }
+
 
         $reserved_local_use = strtoupper(st($myarray['reserved_local_use']));
         $another_plan = strtoupper(st($myarray['another_plan']));
@@ -335,7 +345,19 @@
         $name_referring_provider_qualifier=strtoupper($myarray['name_referring_provider_qualifier']);
         $status =strtoupper($myarray['status']);
     }
-
+    $status_sql = "SELECT status FROM dental_insurance
+                    WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'
+                            AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+    $status_q = mysqli_query($con, $status_sql);
+    $status_r = mysqli_fetch_assoc($status_q);
+    $status = $status_r['status'];
+    $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
+    $is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
+    $is_pri_pending = ($status == DSS_CLAIM_PENDING) ? true : false;
+    $is_sec_pending = ($status == DSS_CLAIM_SEC_PENDING) ? true : false;
+    $is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
+    $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
+    $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED);
     $is_sent = (!empty($status) && ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT)) ? true : false;
 
     if(empty($insured_sex)) {
@@ -494,11 +516,7 @@
 
     $referredby_sql = "select * from dental_contact where `contactid` = ".$referredby." LIMIT 1;";
     
-
-
     $referredby_my = $db->query($referredby_sql);
-
-
 
 
     if($referred_source==1){
@@ -924,8 +942,8 @@
   << /T(".$field_path.".".$p."_modifier_three_fill[0]) /V(".$array['modcode3'].") >>
   << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V(".$array['modcode4'].") >>
   << /T(".$field_path.".".$p."_diagnosis_pointer_fill[0]) /V(".$diagnosis_array[$array['diagnosispointer']].") >> 
-  << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format($array['amount'],0,'.','').") >>
-  << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents(floor(($array['amount']-floor($array['amount']))*100)).") >>
+  << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format(floor($array['amount']),0,'.','').") >>
+  << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents(round(($array['amount']-floor($array['amount']))*100)).") >>
   << /T(".$field_path.".".$p."_days_or_units_fill[0]) /V(".$array['daysorunits'].") >>
   << /T(".$field_path.".".$p."_EPSDT_fill[0]) /V(".$array['epsdt'].") >>
   << /T(".$field_path.".".$p."_rendering_provider_fill[0]) /V(".$array['provider_id'].") >> ";
@@ -960,12 +978,12 @@ $fdf .= "
   << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".((strtolower($accept_assignment) == "yes")?1:'').") >>
   << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".((strtolower($accept_assignment) == "no")?1:'').") >>
   
-  << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format($total_charge,0,'.','').") >>
-  << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents(floor(($total_charge-floor($total_charge))*100)).") >>
-  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format($amount_paid,0,'.','').") >>
-  << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".fill_cents(floor(($amount_paid-floor($amount_paid))*100)).") >>
-  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($balance_due,0,'.','').") >>
-  << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents(floor(($balance_due-floor($balance_due))*100)).") >>
+  << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format(floor($total_charge),0,'.','').") >>
+  << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents(round(($total_charge-floor($total_charge))*100)).") >>
+  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format(floor($amount_paid),0,'.','').") >>
+  << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".fill_cents(round(($amount_paid-floor($amount_paid))*100)).") >>
+  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format(floor($balance_due),0,'.','').") >>
+  << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents(round(($balance_due-floor($balance_due))*100)).") >>
   
   << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($service_facility_info_name)."\n".strtoupper($service_facility_info_address)."\n".strtoupper($service_facility_info_city).") >>
   << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".$billing_provider_phone_code.") >>
@@ -993,6 +1011,8 @@ trailer
 >>
 %%EOF
 ";
+
+
 $d = date('YmdHms');
 $file = "fdf_".$_GET['insid']."_".$_GET['pid']."_".$d.".fdf";
 if($_REQUEST['type']=="secondary"){

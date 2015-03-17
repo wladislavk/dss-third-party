@@ -45,7 +45,7 @@
 
   $cr_q = $db->getResults($cr_sql);
   if ($cr_q) foreach ($cr_q as $cr_r) {?>
-    <li><label><?php echo $dss_trxn_pymt_type_labels[$cr_r['description']]; ?></label> $<?php echo number_format($cr_r['amount'],2); ?></li>
+    <li><label><?php echo$dss_trxn_pymt_type_labels[$cr_r['description']]=='Check')?'Ins. Checks':$dss_trxn_pymt_type_labels[$cr_r['description']]; ?></label> $<?php echo number_format($cr_r['amount'],2); ?></li>
   <?php 
       $cr_total += $cr_r['amount'];
   } 
@@ -63,10 +63,11 @@
   $cr2_sql .= " GROUP BY dl.description";
   $cr2_q = $db->getResults($cr2_sql);
   if ($cr2_q) foreach ($cr2_q as $cr2_r) {?>
-    <li><label><?php echo $cr2_r['description']; ?></label> $<?php echo number_format($cr2_r['amount'],2); ?></li>
+    <li><label><?php echo $cr2_r['description'] = ($cr2_r['description']=='Check')?'Pers Checks':$cr2_r['description']; ?></label> $<?php echo number_format($cr2_r['amount'],2); ?></li>
   <?php 
     $cr_total += $cr2_r['amount'];
   } ?>
+
 
     <li><label>Credits Total</label> $<?php echo number_format($cr_total,2); ?></li>
   </ul>

@@ -2,6 +2,7 @@
   <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>
 
 <?php
+
 $status_sql = "SELECT status FROM dental_insurance 
 		WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
 			AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
@@ -186,7 +187,15 @@ die();
 	$patient_lastname = $_POST['patient_lastname'];
 	$patient_firstname = $_POST['patient_firstname'];
 	$patient_middle = $_POST['patient_middle'];
-	$patient_dob = $_POST['patient_dob'];
+
+  //we need to convert the DOB from mm-dd-yyyy to dd-mm-yyyy
+	$patient_dob_raw = $_POST['patient_dob'];
+  $patient_dob_pieces = explode('-', $patient_dob_raw);
+  $month = $patient_dob_pieces[0];
+  $day = $patient_dob_pieces[1];
+  $patient_dob_pieces[0] = $day;
+  $patient_dob_pieces[1] = $month;
+  $patient_dob = implode("-", $patient_dob_pieces);
 	$patient_sex = $_POST['patient_sex'];
 	$patient_address = $_POST['patient_address'];
 	$patient_city = $_POST['patient_city'];
@@ -706,34 +715,32 @@ die();
 		patient_zip = '".s_for($patient_zip)."',
 		patient_phone_code = '".s_for($patient_phone_code)."',
 		patient_phone = '".s_for($patient_phone)."',
-
-                patient_relation_insured = '".s_for($patient_relation_insured)."',
-                insurance_type = '".s_for($insurance_type)."',
-                insured_id_number = '".s_for($insured_id_number)."',
-                insured_firstname = '".s_for($insured_firstname)."',
-                insured_lastname = '".s_for($insured_lastname)."',
-                insured_middle = '".s_for($insured_middle)."',
-                insured_address = '".s_for($insured_address)."',
-                insured_city = '".s_for($insured_city)."',
-                insured_state = '".s_for($insured_state)."',
-                insured_zip = '".s_for($insured_zip)."',
-                insured_phone_code = '".s_for($insured_phone_code)."',
-                insured_phone = '".s_for($insured_phone)."',
-                other_insured_id_number = '".s_for($other_insured_id_number)."',
-                other_insured_firstname = '".s_for($other_insured_firstname)."',
-                other_insured_lastname = '".s_for($other_insured_lastname)."',
-                other_insured_middle = '".s_for($other_insured_middle)."',
-                insured_policy_group_feca = '".s_for($insured_policy_group_feca)."',
-                other_insured_policy_group_feca = '".s_for($other_insured_policy_group_feca)."',
-                insured_dob = '".s_for($insured_dob)."',
-                insured_sex = '".s_for($insured_sex)."',
-                other_insured_dob = '".s_for($other_insured_dob)."',
-                other_insured_sex = '".s_for($other_insured_sex)."',
-                insured_employer_school_name = '".s_for($insured_employer_school_name)."',
-                other_insured_employer_school_name = '".s_for($other_insured_employer_school_name)."',
-                insured_insurance_plan = '".s_for($insured_insurance_plan)."',
-                other_insured_insurance_plan = '".s_for($other_insured_insurance_plan)."',
-
+    patient_relation_insured = '".s_for($patient_relation_insured)."',
+    insurance_type = '".s_for($insurance_type)."',
+    insured_id_number = '".s_for($insured_id_number)."',
+    insured_firstname = '".s_for($insured_firstname)."',
+    insured_lastname = '".s_for($insured_lastname)."',
+    insured_middle = '".s_for($insured_middle)."',
+    insured_address = '".s_for($insured_address)."',
+    insured_city = '".s_for($insured_city)."',
+    insured_state = '".s_for($insured_state)."',
+    insured_zip = '".s_for($insured_zip)."',
+    insured_phone_code = '".s_for($insured_phone_code)."',
+    insured_phone = '".s_for($insured_phone)."',
+    other_insured_id_number = '".s_for($other_insured_id_number)."',
+    other_insured_firstname = '".s_for($other_insured_firstname)."',
+    other_insured_lastname = '".s_for($other_insured_lastname)."',
+    other_insured_middle = '".s_for($other_insured_middle)."',
+    insured_policy_group_feca = '".s_for($insured_policy_group_feca)."',
+    other_insured_policy_group_feca = '".s_for($other_insured_policy_group_feca)."',
+    insured_dob = '".s_for($insured_dob)."',
+    insured_sex = '".s_for($insured_sex)."',
+    other_insured_dob = '".s_for($other_insured_dob)."',
+    other_insured_sex = '".s_for($other_insured_sex)."',
+    insured_employer_school_name = '".s_for($insured_employer_school_name)."',
+    other_insured_employer_school_name = '".s_for($other_insured_employer_school_name)."',
+    insured_insurance_plan = '".s_for($insured_insurance_plan)."',
+    other_insured_insurance_plan = '".s_for($other_insured_insurance_plan)."',
 		employment = '".s_for($employment)."',
 		auto_accident = '".s_for($auto_accident)."',
 		auto_accident_place = '".s_for($auto_accident_place)."',
@@ -762,18 +769,18 @@ die();
 		diagnosis_3 = '".s_for($diagnosis_3)."',
 		diagnosis_4 = '".s_for($diagnosis_4)."',
 		icd_ind = '".s_for($icd_ind)."',
-                diagnosis_a = '".s_for($diagnosis_a)."',
-                diagnosis_b = '".s_for($diagnosis_b)."',
-                diagnosis_c = '".s_for($diagnosis_c)."',
-                diagnosis_d = '".s_for($diagnosis_d)."',
-                diagnosis_e = '".s_for($diagnosis_e)."',
-                diagnosis_f = '".s_for($diagnosis_f)."',
-                diagnosis_g = '".s_for($diagnosis_g)."',
-                diagnosis_h = '".s_for($diagnosis_h)."',
-                diagnosis_i = '".s_for($diagnosis_i)."',
-                diagnosis_j = '".s_for($diagnosis_j)."',
-                diagnosis_k = '".s_for($diagnosis_k)."',
-                diagnosis_l = '".s_for($diagnosis_l)."',
+    diagnosis_a = '".s_for($diagnosis_a)."',
+    diagnosis_b = '".s_for($diagnosis_b)."',
+    diagnosis_c = '".s_for($diagnosis_c)."',
+    diagnosis_d = '".s_for($diagnosis_d)."',
+    diagnosis_e = '".s_for($diagnosis_e)."',
+    diagnosis_f = '".s_for($diagnosis_f)."',
+    diagnosis_g = '".s_for($diagnosis_g)."',
+    diagnosis_h = '".s_for($diagnosis_h)."',
+    diagnosis_i = '".s_for($diagnosis_i)."',
+    diagnosis_j = '".s_for($diagnosis_j)."',
+    diagnosis_k = '".s_for($diagnosis_k)."',
+    diagnosis_l = '".s_for($diagnosis_l)."',
 		medicaid_resubmission_code = '".s_for($medicaid_resubmission_code)."',
 		original_ref_no = '".s_for($original_ref_no)."',
 		prior_authorization_number = '".s_for($prior_authorization_number)."',
@@ -881,13 +888,13 @@ die();
 		total_charge = '".s_for($total_charge)."',
 		amount_paid = '".s_for($amount_paid)."',
 		balance_due = '".s_for($balance_due)."',
-                nucc_8a = '".s_for($nucc_8a)."',
-                nucc_8b = '".s_for($nucc_8b)."',
-                nucc_9a = '".s_for($nucc_9a)."',
-                nucc_9b = '".s_for($nucc_9b)."',
-                claim_codes = '".s_for($claim_codes)."',
-                other_claim_id = '".s_for($other_claim_id)."',
-                nucc_30 = '".s_for($nucc_30)."',
+    nucc_8a = '".s_for($nucc_8a)."',
+    nucc_8b = '".s_for($nucc_8b)."',
+    nucc_9a = '".s_for($nucc_9a)."',
+    nucc_9b = '".s_for($nucc_9b)."',
+    claim_codes = '".s_for($claim_codes)."',
+    other_claim_id = '".s_for($other_claim_id)."',
+    nucc_30 = '".s_for($nucc_30)."',
 		signature_physician = '".s_for($signature_physician)."',
 		physician_signed_date = '".s_for($physician_signed_date)."',
 		service_facility_info_name = '".s_for($service_facility_info_name)."',
@@ -904,10 +911,10 @@ die();
 		billing_provider_a = '".s_for($billing_provider_a)."',
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."',
-                p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
-                s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
-                s_m_eligible_payer_name = '".mysqli_real_escape_string($con,$s_m_eligible_payer_name)."'";
+    p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
+    p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
+    s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
+    s_m_eligible_payer_name = '".mysqli_real_escape_string($con,$s_m_eligible_payer_name)."'";
 		if(isset($_POST['reject_but'])){
 		  $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
                   $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";
@@ -1873,8 +1880,8 @@ Medicare
 									Patient's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if($patient_dob!=''){ //$patient_dob = date('m-d-Y', strtotime($patient_dob)); 
-} ?>
+									<?php if($patient_dob!=''){$patient_dob = date('m-d-Y', strtotime($patient_dob));
+                  } ?>
 									<input type="text" value="<?php echo $patient_dob?>" name="patient_dob" class="inbox_line3 datealtfullmask" size="10"/>
 									mm-dd-yyyy
 								</td>
@@ -1918,7 +1925,7 @@ Medicare
 							<tr>
 								<td align="left" valign="top">
 									<span class="small_cap">Self</span>
-									<input name="patient_relation_insured" type="radio" value="Self" <?php if($patient_relation_insured == "Self") echo " checked";?> />
+									<input name="patient_relation_insured" type="radio" value="Self" <?php if($patient_relation_insured == "Self" || $patient_relation_insured=="") echo " checked";?> />
 								</td>
 								<td align="left" valign="top">
 									<span class="small_cap">Spouse</span>
@@ -2119,8 +2126,8 @@ Medicare
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if($insured_dob!=''){ //$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
-} ?>
+									<?php if($insured_dob!=''){$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
+                  } ?>
 									<input type="text" value="<?php echo $insured_dob?>" name="insured_dob" class="inbox_line3 datealtfullmask" size="10"/>
 									mm-dd-yyyy
 								</td>
@@ -2204,7 +2211,7 @@ Medicare
 						<span class="small_cap"> I authorize the release of any medical or other information neccessary to process this claim. I also reuest payment of government benefits either to myself or th the party who accepts assignment below.</span>
 						<br /><br /><br />
 						
-						<input type="checkbox" name="patient_signature" value="1" <?php if($patient_signature == "1") echo " checked";?> />
+						<input type="checkbox" name="patient_signature" value="1" <?php if($patient_signature == "1" || $patient_signature == "Y") echo " checked";?> />
 						Signature on File
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2900,10 +2907,10 @@ if (empty($query)) {
 									<br />
 									<span class="small_cap">(For govt. claims, see back)</span>
 									<br />
-									<input type="radio" name="accept_assignment" value="Yes" <?php if($accept_assignment == "Yes") echo " checked";?> />
+									<input type="radio" name="accept_assignment" value="A" <?php if($accept_assignment == "Yes" || $accept_assignment == "A") echo " checked";?> />
 									YES
 									&nbsp;&nbsp;&nbsp;
-									<input type="radio" name="accept_assignment" value="No" <?php if($accept_assignment == "No") echo " checked";?> />
+									<input type="radio" name="accept_assignment" value="C" <?php if($accept_assignment == "
 									NO
 								</td>
 							</tr>
@@ -3039,7 +3046,7 @@ if ($is_pending) {
 										(I certify that the statements on the reverse apply to this bill and are made a part thereof.)
 									</span>
 									<br />
-									<input type="text" value="<?php echo $signature_physician?>" class="inbox_line3" size="40" name="signature_physician" />
+									<input type="text" class="inbox_line3" size="40" name="signature_physician" />
 									<br /><br />
 									Signed
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -3311,26 +3318,6 @@ function file_claim(){
   }
   c = confirm('You are about to electronically submit this claim, are you sure?');
   return c;
-/*
-                                  $.ajax({
-                                        url: "https://v1.eligibleapi.net/plan/all.json",
-                                        type: "get",
-                                        dataType: 'json',
-                                        data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
-                                                payer_name: $('#payer_name').val(),
-                                                payer_id: $('#payer_id').val(),
-                                                provider_first_name: $('#provider_first_name').val(),
-                                                service_provider_last_name: $('#provider_last_name').val(),
-                                                service_provider_npi: $('#provider_npi').val(),
-                                                subscriber_id: $('#patient_member_id').val(),
-                                                subscriber_first_name: $('#patient_first_name').val(),
-                                                subscriber_last_name: $('#patient_last_name').val(),
-                                                subscriber_dob: $('#patient_dob').val(),
-                                                service_type_code: 30
-                                                },
-                                        complete: function(data){
-
-*/
 }
 
 function change_form(){

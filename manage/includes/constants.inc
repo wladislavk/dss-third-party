@@ -52,6 +52,8 @@ define('DSS_CLAIM_PATIENT_DISPUTE', 10);
 define('DSS_CLAIM_PAID_SEC_PATIENT', 11);
 define('DSS_CLAIM_SEC_PATIENT_DISPUTE', 12);
 define('DSS_CLAIM_SEC_REJECTED', 13);
+define('DSS_CLAIM_EFILE_ACCEPTED', 14);
+define('DSS_CLAIM_SEC_EFILE_ACCEPTED', 15);
 
 // A convenience array to get claim labels
 $dss_claim_status_labels = array();
@@ -81,6 +83,11 @@ $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_PATIENT] = 'Secondary Paid to Patien
 // $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_PATIENT]['short'] = 'Sec. Paid to pt.';
 $dss_claim_status_labels[DSS_CLAIM_SEC_PATIENT_DISPUTE] = 'Secondary Disputed';
 // $dss_claim_status_labels[DSS_CLAIM_SEC_PATIENT_DISPUTE]['short'] = 'Sec. Disp.';
+$dss_claim_status_labels[DSS_CLAIM_SEC_PATIENT_DISPUTE]['short'] = 'Sec. Disp.';
+$dss_claim_status_labels[DSS_CLAIM_EFILE_ACCEPTED] = 'Efile Accepted';
+$dss_claim_status_labels[DSS_CLAIM_EFILE_ACCEPTED]['short'] = 'E-Acc.';
+$dss_claim_status_labels[DSS_CLAIM_SEC_EFILE_ACCEPTED] = 'Secondary Efile Accepted';
+$dss_claim_status_labels[DSS_CLAIM_SEC_EFILE_ACCEPTED]['short'] = 'Sec. E-Acc.';
 
 // Pre-authorization statuses (pre-auth)
 define('DSS_PREAUTH_PENDING', 0);
@@ -369,3 +376,5 @@ $dss_enrollment_labels = array();
 $dss_enrollment_labels[DSS_ENROLLMENT_SUBMITTED] = 'Submitted';
 $dss_enrollment_labels[DSS_ENROLLMENT_ACCEPTED] = 'Accepted';
 $dss_enrollment_labels[DSS_ENROLLMENT_REJECTED] = 'Rejected';
+
+define('DSS_DEFAULT_ELIGIBLE_API_KEY', '33b2e3a5-8642-1285-d573-07a22f8a15b4');

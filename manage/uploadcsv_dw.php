@@ -24,7 +24,6 @@ if(isset($_POST['submitbut'])){
                 set_time_limit(0);
 
                 $row = 0;
-
         		$error_count = 0;
         		$error_array = array();
                 while(($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
@@ -119,9 +118,9 @@ if(isset($_POST['submitbut'])){
                         foreach($fields AS $id => $field){
                             switch($field){
                                 case 'status':
-                                    if($data[$id]=="True"){
+                                    if(strtolower($data[$id])=="true"){
                                         $s .= $field . " = '3', ";
-                                    }elseif($data[$id]=="False"){
+                                    }elseif(strtolower($data[$id])=="false"){
                                         $s .= $field . " = '4', ";
                                     }
                                     break;
@@ -135,7 +134,8 @@ if(isset($_POST['submitbut'])){
                     			case 'dob':
                     				if($data[$id]!=''){
                                         $patientdob = true;
-                                        $data[$id] = str_replace('/','-', $data[$id]);
+                                        //uncomment following line for dd/mm/yyyy
+                                        //$data[$id] = str_replace('/','-', $data[$id]);
                                         $d = date('m/d/Y', strtotime($data[$id]));
                                         $s .= $field . " = '" .$d."', ";	
                     				}
@@ -198,7 +198,7 @@ if(isset($_POST['submitbut'])){
                     				break;
                             }
                         }
-            			$s .= " docid = '".$_SESSION[docid]."'";
+            			$s .= " docid = '".$_SESSION[docid]."', adddate = now()";
             			//echo $s;
             			$pid = $db->getInsertId($s);
 
@@ -264,6 +264,7 @@ if(isset($_POST['submitbut'])){
 
 <br /><br />
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" method="post">
+    <p>Dates must be in mm/dd/yyyy format.</p>
     <input type="file" name="csv" />
     <br />
     <br />

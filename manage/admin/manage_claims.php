@@ -205,7 +205,12 @@ $sql = "SELECT "
      . "  claim.primary_claim_version, claim.secondary_claim_version, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
      . "  c.name as billing_name, "
-     . "  co.company as ins_name, "
+     . "  
+        CASE WHEN
+          claim.status IN (".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_SEC_SENT.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_PAID_SEC_INSURANCE.") THEN co2.company
+                ELSE co.company 
+        END as ins_name, "
+
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
                 WHEN ".DSS_CLAIM_PENDING." THEN 1
@@ -230,6 +235,7 @@ $sql = "SELECT "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid "
      . "  LEFT JOIN companies c ON c.id = users.billing_company_id "
      . "  LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co "
+     . "  LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co "
      . "  LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=claim.insuranceid "
      . "  LEFT JOIN (SELECT claim_id, MAX(adddate) max_date FROM dental_claim_notes group by claim_id) notes_date ON notes_date.claim_id=claim.insuranceid ";
 
@@ -283,11 +289,13 @@ if ((isset($_GET['status']) && ($_GET['status'] != '')) || !empty($_GET['fid']))
 		$sql .= " AND ((claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")) OR
 				(claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SEC_SENT.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_SEC_PATIENT.")))";
         }elseif($_GET['status'] == 'unpaid14'){
-                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 14 day)";
+                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.",".DSS_CLAIM_SEC_EFILE_ACCEPTED.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 14 day)";
         }elseif($_GET['status'] == 'unpaid21'){
-                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 21 day)";
+                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.",".DSS_CLAIM_SEC_EFILE_ACCEPTED.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 21 day)";
+        }elseif($_GET['status'] == 'unpaid30'){
+                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.",".DSS_CLAIM_SEC_EFILE_ACCEPTED.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 30 day)";
         }elseif($_GET['status'] == 'unpaid45'){
-                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 45 day)";
+                $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.",".DSS_CLAIM_SEC_EFILE_ACCEPTED.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 45 day)";
         }else{
         	$sql .= " AND claim.status = " . $_GET['status'] . " ";
 	}
@@ -305,7 +313,7 @@ if ((isset($_GET['status']) && ($_GET['status'] != '')) || !empty($_GET['fid']))
     $sql .= "  
 AND
 (
- CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.")
+ CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.")
     THEN p.p_m_dss_file
     ELSE p.s_m_dss_file
    END = '1' 
@@ -350,15 +358,19 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
       <?php $sent_selected = ($status == DSS_CLAIM_SENT) ? 'selected' : ''; ?>
       <?php $unpaid14_selected = ($status == 'unpaid14') ? 'selected' : ''; ?>
       <?php $unpaid21_selected = ($status == 'unpaid21') ? 'selected' : ''; ?>
+      <?php $unpaid30_selected = ($status == 'unpaid30') ? 'selected' : ''; ?>
       <?php $unpaid45_selected = ($status == 'unpaid45') ? 'selected' : ''; ?>
       <?php $rejected_selected = ($status == DSS_CLAIM_REJECTED) ? 'selected' : ''; ?>
+      <?php $paid_patient_selected = ($status == DSS_CLAIM_PAID_PATIENT) ? 'selected' : ''; ?>
       <option value="">Any</option>
       <option value="<?php echo DSS_CLAIM_PENDING?>" <?php echo $pending_selected?>><?php echo $dss_claim_status_labels[DSS_CLAIM_PENDING]?></option>
       <option value="<?php echo DSS_CLAIM_SENT?>" <?php echo $sent_selected?>><?php echo $dss_claim_status_labels[DSS_CLAIM_SENT]?></option>
       <option value="unpaid14" <?php echo  $unpaid14_selected; ?>>Unpaid 14+ Days</option>
       <option value="unpaid21" <?php echo  $unpaid21_selected; ?>>Unpaid 21+ Days</option>
+      <option value="unpaid30" <?php echo $unpaid30_selected; ?>>Unpaid 30+ Days</option>
       <option value="unpaid45" <?php echo  $unpaid45_selected; ?>>Unpaid 45+ Days</option>
       <option value="<?php echo DSS_CLAIM_REJECTED?>" <?php echo $rejected_selected;?>><?php echo $dss_claim_status_labels[DSS_CLAIM_REJECTED];?></option>
+
     </select>
     &nbsp;&nbsp;&nbsp;
 
@@ -522,23 +534,23 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 				<td valign="top">
 				    <?php 					//$primary_link = ($myarray['primary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['primary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=primary&pid='.$myarray['patientid'];
 					//$secondary_link = ($myarray['secondary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['secondary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=secondary&pid='.$myarray['patientid'];
-					$primary_link = "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'];
-					$secondary_link = "insurance_claim".(($myarray['secondary_claim_version']!="1")?'_eligible':'').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid']."";
+					$primary_link = "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'];
+					$secondary_link = "insurance_claim".(($myarray['secondary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid']."&instype=2";
 					?>
 				    <?php if($myarray["status"] == DSS_CLAIM_PENDING || $myarray["status"] == DSS_CLAIM_REJECTED){ ?>
-				    <a href="insurance_claim<?php echo ($myarray['primary_claim_version']!="1")?'_eligible':''; ?>.php?insid=<?php echo $myarray['insuranceid']?>&fid_filter=<?php echo $fid?>&pid_filter=<?php echo $pid?>&pid=<?php echo $myarray['patientid']?>" title="Edit" class="btn btn-primary btn-sm">
+				    <a href="insurance_claim<?php echo ($myarray['primary_claim_version']!="1")?'_eligible':'_v2'; ?>.php?insid=<?php echo $myarray['insuranceid']?>&fid_filter=<?php echo $fid?>&pid_filter=<?php echo $pid?>&pid=<?php echo $myarray['patientid']?>" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a> 
 				<?php }elseif($myarray["status"] == DSS_CLAIM_SEC_PENDING){ ?>
                                     <a href="insurance_claim<?php echo ($myarray['secondary_claim_version']!="1")?'_eligible':''; ?>.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>" title="Edit Secondary" class="btn btn-primary btn-sm">
                                                 Edit Secondary
                                          <span class="glyphicon glyphicon-pencil"></span></a><br />
-					<a href="<?php echo "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'').".php?insid=".$myarray['primary_claim_id']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'] ?>" title="View Primary" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
+					<a href="<?php echo "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['primary_claim_id']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'] ?>" title="View Primary" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
                                 <?php }elseif($myarray["status"] == DSS_CLAIM_SEC_SENT || $myarray["status"] == DSS_CLAIM_PAID_SEC_INSURANCE){ ?>
                                     <a href="<?php echo  $secondary_link; ?>" title="View Secondary" class="btn btn-primary btn-sm">
                                                 View Secondary
                                          <span class="glyphicon glyphicon-pencil"></span></a><br />
-                                        <a href="<?php echo "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'').".php?insid=".$myarray['primary_claim_id']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'] ?>" title="View Primary" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
+                                        <a href="<?php echo "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['primary_claim_id']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'] ?>" title="View Primary" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
                                 <?php }else{ ?>
 					<a href="<?php echo  $primary_link; ?>" title="View" class="btn btn-primary btn-sm">View <span class="glyphicon glyphicon-pencil"></span></a>
 				<?php } ?>
@@ -573,13 +585,33 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 		?><a href="manage_claims.php?status=<?php echo  (!empty($_GET['status']) ? $_GET['status'] : ''); ?>&sendid=<?php echo  $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a><?php            } ?>
 
 				</td>
-	<td valign="top" <?php echo  ($myarray['num_fo_notes']>0)?'class="info"':''; ?>>
+	<td valign="top" <?php echo  ($myarray['num_fo_notes']>0)?' info ':''; ?><?php echo ($myarray['num_notes']>0)?' notes_col ':''; ?>">
 		<a href="claim_notes.php?id=<?php echo  $myarray['insuranceid']; ?>&pid=<?php echo $myarray['patientid'];?>">View (<?php echo  $myarray['num_notes'];?>)
 		<?php 			if($myarray['notes_last']!=''){
 				echo date('m/d/y h:i a', strtotime($myarray['notes_last']));
 			}
 		?>
 		</a>
+		<div class="notetip">
+			<?php
+ 				$n_sql = "SELECT n.*,
+        				CASE
+          					WHEN create_type='0'
+            					THEN CONCAT(a.first_name, ' ', a.last_name)
+          				ELSE
+            					CONCAT(u.first_name, ' ', u.last_name)
+          				END as creator_name
+         				FROM dental_claim_notes n 
+        					left join dental_users u ON n.creator_id = u.userid
+        					left join admin a ON n.creator_id = a.adminid
+        				where n.claim_id='".mysql_real_escape_string($myarray['insuranceid'])."'
+        				ORDER BY adddate ASC";
+ 				$n_q = mysql_query($n_sql) or die(mysql_error());
+				while($n = mysql_fetch_assoc($n_q)){
+					echo $n['note'] .' - '. $n['creator_name'].'<br />';
+				}
+				?>
+		</div>
 	</td>
 <td>
 <?php   if($myarray['status'] == DSS_CLAIM_SENT || $myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PAID_INSURANCE || $myarray['status'] == DSS_CLAIM_PENDING || $myarray['status'] == DSS_CLAIM_PAID_PATIENT || $myarray['status'] == DSS_CLAIM_REJECTED || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE ){
@@ -662,6 +694,17 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
                                   });
 
   });
+
+$(document).ready(function(){
+  $(".notes_col").bind("mousemove", function(event) {
+    $(this).find("div.notetip").css({
+        top: event.pageY + "px",
+        left: event.pageX - 150 + "px"
+    }).show();
+}).bind("mouseout", function() {
+    $("div.notetip").hide();
+});
+});
 
 </script>
 

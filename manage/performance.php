@@ -203,6 +203,7 @@ $myarray = $db->getRow($sql);
   <span class="value"></span>
 </div>
 
+<!--
 <div class="data">
   <label>Ledger Charges</label>
   <span class="value">$<?php echo  number_format($total_charge_sum,2); ?></span>
@@ -210,8 +211,21 @@ $myarray = $db->getRow($sql);
 
 <div class="data">
   <label>Ledger Credits</label>
-  <span class="value">$<?php echo  number_format($total_credits_sum,2); ?></span>
-</div>
+  <span class="value">$<?echo number_format($total_credits_sum,2); ?></span>
+</div>-->
+<?php
+                if($start_date){
+                   $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+                   $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
+                   $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'";
+                   $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
+                   $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+                }else{
+                  $p_date = $i_date = $n_date = $l_date = '';
+                }
+?>
+<?php include 'ledger_summary_report.php'; ?>
+
 
 <div style="clear:both;">&nbsp;</div>
 <?php

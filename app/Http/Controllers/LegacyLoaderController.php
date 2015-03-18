@@ -19,6 +19,12 @@ class LegacyLoaderController extends Controller
     public function index()
     {
         // return 'something';
-        return $this->loader->loadFile('admin/index.php');
+        return $this->loader
+            ->setRequestParams('post', [
+                'loginsub' => 1,
+                'username' => 'admin',
+                'password' => 'admin'
+            ])
+            ->load('manage/admin/index.php');
     }
 }

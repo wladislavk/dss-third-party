@@ -30,9 +30,31 @@
     $insured_firstname = st($pat_myarray['p_m_partyfname']);
     $insured_lastname = st($pat_myarray['p_m_partylname']);
     $insured_middle = st($pat_myarray['p_m_partymname']);
+      if ($pat_myarray['p_m_same_address'] == 1){
+          $insured_address = $pat_myarray['add1']);
+          $insured_city = $pat_myarray['city']);
+          $insured_state = $pat_myarray['state']);
+          $insured_zip = $pat_myarray['zip']);
+      } else {
+          $insured_address = $pat_myarray['p_m_address']);
+          $insured_city = $pat_myarray['p_m_city']);
+          $insured_state = $pat_myarray['p_m_state']);
+          $insured_zip = $pat_myarray['p_m_zip']);
+      }
     $other_insured_firstname = st($pat_myarray['s_m_partyfname']);
     $other_insured_lastname = st($pat_myarray['s_m_partylname']);
     $other_insured_middle = st($pat_myarray['s_m_partymname']);
+      if ($pat_myarray['s_m_same_address'] == 1){
+          $insured_address = $pat_myarray['add1']);
+          $insured_city = $pat_myarray['city']);
+          $insured_state = $pat_myarray['state']);
+          $insured_zip = $pat_myarray['zip']);
+      } else {
+          $insured_address = $pat_myarray['s_m_address']);
+          $insured_city = $pat_myarray['s_m_city']);
+          $insured_state = $pat_myarray['s_m_state']);
+          $insured_zip = $pat_myarray['s_m_zip']);
+      }
     $insured_id_number = st($pat_myarray['p_m_ins_id']);
     $insured_dob = st($pat_myarray['ins_dob']);
     $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);

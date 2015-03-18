@@ -10,7 +10,7 @@ class InsDiagnosisRepository implements InsDiagnosisInterface
 {
     public function get()
     {
-        $insDiagnosis = InsDiagnosis::where('status', '=', 1)
+        $insDiagnosis = InsDiagnosis::active()
             ->orderBy('sortby')
             ->get();
 

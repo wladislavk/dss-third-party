@@ -8,8 +8,8 @@ class FaxRepository implements FaxInterface
     public function getFaxAlerts($docId)
     {
         $faxAlerts = Fax::where('docid', '=', $docId)
-            ->where('viewed', '=', 0)
-            ->where('sfax_status', '=', 2)
+            ->nonViewed()
+            ->sfaxStatus2()
             ->get();
 
         return $faxAlerts;

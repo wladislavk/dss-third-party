@@ -1,5 +1,8 @@
 <?php namespace Ds3\Repositories;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
+
 use Ds3\Contracts\LetterInterface;
 use Ds3\Eloquent\Letter\Letter;
 
@@ -39,7 +42,7 @@ class LetterRepository implements LetterInterface
             ->whereRaw('templateid IN(' . $letter1id . ',' . $letter2id . ')')
             ->get();
 
-        return $mdList;                           
+        return $mdList;
     }
 
     public function getGeneratedDates($where)
@@ -83,7 +86,7 @@ class LetterRepository implements LetterInterface
             ->leftJoin('dental_letter_templates', 'dental_letters.templateid', '=', 'dental_letter_templates.id')
             ->where('patientid', '=', $patientId)
             ->where('info_id', '=', $infoId)
-            ->where('deleted', '=', 0)
+            ->nonDeleted()
             ->orderBy('stepid')
             ->get();
 

@@ -9,7 +9,7 @@ class DocumentCategoryRepository implements DocumentCategoryInterface
 {
     public function get()
     {
-        $documentCategories = DocumentCategory::where('status', '=', 1)->orderBy('name', 'asc')->get();
+        $documentCategories = DocumentCategory::active()->orderBy('name', 'asc')->get();
 
         return $documentCategories;
     }

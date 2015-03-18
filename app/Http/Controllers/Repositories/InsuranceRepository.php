@@ -18,7 +18,7 @@ class InsuranceRepository implements InsuranceInterface
 
         if (!empty($status)) {
             $pendingClaims = $pendingClaims->whereRaw('(status IN (' . $status . '))');
-        }                              
+        }
 
         return $pendingClaims->get();
     }

@@ -38,10 +38,7 @@ class InsurancePreauthRepository implements InsurancePreauthInterface
     {
         $rejectedPreauth = InsurancePreauth::where('doc_id', '=', $docId)
             ->where('status', '=', $status)
-            ->where(function($query){
-                $query->whereNull('viewed')
-                      ->orWhere('viewed', '!=', 1);
-            })
+            ->nonViewed()
             ->get();
 
         return $rejectedPreauth;

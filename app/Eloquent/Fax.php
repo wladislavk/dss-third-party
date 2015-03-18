@@ -6,4 +6,14 @@ class Fax extends Model
 {
     protected $table = 'dental_faxes';
     protected $primaryKey = 'id';
+
+    public function scopeNonViewed($query)
+    {
+        return $query->where('viewed', '=', 0);
+    }
+
+    public function scopeSfaxStatus2($query)
+    {
+        return $query->where('sfax_status', '=', 2);
+    }
 }

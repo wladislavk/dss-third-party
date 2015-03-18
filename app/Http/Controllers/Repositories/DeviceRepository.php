@@ -10,7 +10,7 @@ class DeviceRepository implements DeviceInterface
 {
     public function get()
     {
-        $devices = Device::where('status', '=', 1)
+        $devices = Device::active()
             ->orderBy('sortby')
             ->get();
 

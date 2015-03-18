@@ -8,4 +8,9 @@ class Letter extends Model
     protected $primaryKey = 'letterid';
 
     // public $timestamps = false;
+
+    public function scopeNonDeleted($query)
+    {
+        return $query->where('deleted', '=', 0);
+    }
 }

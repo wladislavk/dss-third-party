@@ -10,7 +10,7 @@ class ImageTypeRepository implements ImageTypeInterface
 {
     public function get()
     {
-        $imagetypes = Imagetype::where('status', '=', 1)
+        $imagetypes = Imagetype::active()
             ->orderBy('sortby')
             ->get();
 

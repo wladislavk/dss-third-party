@@ -27,7 +27,7 @@ class ContactRepository implements ContactInterface
 
     public function getInsContact($docId)
     {
-        $insContact = Contact::where('status', '=', 1)
+        $insContact = Contact::active()
             ->whereNull('merge_id')
             ->where('contacttypeid', '=', 11)
             ->where('docid', '=', $docId)
@@ -127,7 +127,7 @@ class ContactRepository implements ContactInterface
         $newContacts = Contact::leftJoin('dental_contacttype', 'dental_contact.contacttypeid', '=', 'dental_contacttype.contacttypeid')
             ->where('docid', '=', $docId)
             ->union($contactType)
-            ->toSql();
+            ->get();
 
         return $newContacts;
     }

@@ -21,15 +21,15 @@ class ContactTypeRepository implements ContactTypeInterface
 
     public function getPhysicians()
     {
-        $physicians = ContactType::where('physician', '=', 1)->get();
+        $physicians = ContactType::physician()->get();
 
         return $physicians;
     }
 
     public function getContactTypes()
     {
-        $contactTypes = ContactType::where('status', '=', 1)
-            ->where('corporate', '=', 0)
+        $contactTypes = ContactType::active()
+            ->nonCorporate()
             ->orderBy('sortby')
             ->get();
 

@@ -8,4 +8,9 @@ class Contact extends Model
     protected $primaryKey = 'contactid';
 
     // public $timestamps = false;
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', '=', 1);
+    }
 }

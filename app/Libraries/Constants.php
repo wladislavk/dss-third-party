@@ -51,6 +51,8 @@ class Constants
     const DSS_CLAIM_PAID_SEC_PATIENT     = 11;
     const DSS_CLAIM_SEC_PATIENT_DISPUTE  = 12;
     const DSS_CLAIM_SEC_REJECTED         = 13;
+    const DSS_CLAIM_EFILE_ACCEPTED       = 14;
+    const DSS_CLAIM_SEC_EFILE_ACCEPTED   = 15;
 
     // A convenience array to get claim labels
     public static $dss_claim_status_labels = array(
@@ -66,7 +68,9 @@ class Constants
         self::DSS_CLAIM_PAID_SEC_INSURANCE   => 'Secondary Paid',
         self::DSS_CLAIM_PATIENT_DISPUTE      => 'Disputed',
         self::DSS_CLAIM_PAID_SEC_PATIENT     => 'Secondary Paid to Patient',
-        self::DSS_CLAIM_SEC_PATIENT_DISPUTE  => 'Secondary Disputed'
+        self::DSS_CLAIM_SEC_PATIENT_DISPUTE  => 'Secondary Disputed',
+        self::DSS_CLAIM_EFILE_ACCEPTED       => 'Efile Accepted',
+        self::DSS_CLAIM_SEC_EFILE_ACCEPTED   => 'Secondary Efile Accepted'
     );
 
     // Pre-authorization statuses (pre-auth)
@@ -335,4 +339,6 @@ class Constants
         self::DSS_ENROLLMENT_ACCEPTED   => 'Accepted',
         self::DSS_ENROLLMENT_REJECTED   => 'Rejected'
     );
+
+    const DSS_DEFAULT_ELIGIBLE_API_KEY = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
 }

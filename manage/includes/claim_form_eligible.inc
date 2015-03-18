@@ -560,9 +560,9 @@
             ?>
                 <p><strong>Error Response:</strong><br />
                   <?php
-                      $errors = $d->{"errors"}->{"message"};
+                      $errors = $d->{"errors"};
                       foreach($errors as $error){
-                        echo $error."<br />";
+                        echo $error->{"message"}."<br />";
                       }
               }
             ?>

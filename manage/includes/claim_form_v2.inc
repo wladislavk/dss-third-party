@@ -188,13 +188,15 @@ die();
 	$patient_firstname = $_POST['patient_firstname'];
 	$patient_middle = $_POST['patient_middle'];
 
-  //we need to convert the DOB from mm-dd-yyyy to dd-mm-yyyy
+  //we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
 	$patient_dob_raw = $_POST['patient_dob'];
   $patient_dob_pieces = explode('-', $patient_dob_raw);
   $month = $patient_dob_pieces[0];
   $day = $patient_dob_pieces[1];
-  $patient_dob_pieces[0] = $day;
+  $year = $patient_dob_pieces[2];
+  $patient_dob_pieces[0] = $year;
   $patient_dob_pieces[1] = $month;
+  $patient_dob_pieces[2] = $day;
   $patient_dob = implode("-", $patient_dob_pieces);
 	$patient_sex = $_POST['patient_sex'];
 	$patient_address = $_POST['patient_address'];
@@ -226,7 +228,16 @@ die();
 	$other_accident = (!empty($_POST['other_accident']) ? $_POST['other_accident'] : '');
 	$insured_policy_group_feca = $_POST['insured_policy_group_feca'];
 	$other_insured_policy_group_feca = $_POST['other_insured_policy_group_feca'];
-	$insured_dob = $_POST['insured_dob'];
+	//we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
+  $insured_dob_raw = $_POST['insured_dob'];
+  $insured_dob_pieces = explode('-', $insured_dob_raw);
+  $month = $insured_dob_pieces[0];
+  $day = $insured_dob_pieces[1];
+  $year = $insured_dob_pieces[2];
+  $insured_dob_pieces[0] = $year;
+  $insured_dob_pieces[1] = $month;
+  $insured_dob_pieces[2] = $day;
+  $insured_dob = implode("-", $insured_dob_pieces);
 	$insured_sex = $_POST['insured_sex'];
 	$other_insured_dob = (!empty($_POST['other_insured_dob']) ? $_POST['other_insured_dob'] : '');
 	$other_insured_sex = (!empty($_POST['other_insured_sex']) ? $_POST['other_insured_sex'] : '');
@@ -922,37 +933,6 @@ die();
 		  $ed_sql .= ", status = '".s_for($u_status)."'";
 		}
 		$ed_sql .= " where insuranceid = '".s_for($_POST['ed'])."'";
-		
-/*
-	//TAKE OUT INSURANCE FIELDS SO THEY KEEP ORIGINAL VALUES
-	//PUT BACK IN ON WHIM DUE TO REQUEST OF ONE CLIENT
-		patient_relation_insured = '".s_for($patient_relation_insured)."',
-                insurance_type = '".s_for($insurance_type)."',
-                insured_id_number = '".s_for($insured_id_number)."',
-                insured_firstname = '".s_for($insured_firstname)."',
-                insured_lastname = '".s_for($insured_lastname)."',
-                insured_middle = '".s_for($insured_middle)."',
-                insured_address = '".s_for($insured_address)."',
-                insured_city = '".s_for($insured_city)."',
-                insured_state = '".s_for($insured_state)."',
-                insured_zip = '".s_for($insured_zip)."',
-                insured_phone_code = '".s_for($insured_phone_code)."',
-                insured_phone = '".s_for($insured_phone)."',
-                other_insured_firstname = '".s_for($other_insured_firstname)."',
-                other_insured_lastname = '".s_for($other_insured_lastname)."',
-                other_insured_middle = '".s_for($other_insured_middle)."',
-                insured_policy_group_feca = '".s_for($insured_policy_group_feca)."',
-                other_insured_policy_group_feca = '".s_for($other_insured_policy_group_feca)."',
-                insured_dob = '".s_for($insured_dob)."',
-                insured_sex = '".s_for($insured_sex)."',
-                other_insured_dob = '".s_for($other_insured_dob)."',
-                other_insured_sex = '".s_for($other_insured_sex)."',
-                insured_employer_school_name = '".s_for($insured_employer_school_name)."',
-                other_insured_employer_school_name = '".s_for($other_insured_employer_school_name)."',
-                insured_insurance_plan = '".s_for($insured_insurance_plan)."',
-                other_insured_insurance_plan = '".s_for($other_insured_insurance_plan)."',
-*/
-
 
 
 		$db->query($ed_sql);
@@ -1010,9 +990,31 @@ $other_insurancetype = $pat_myarray['s_m_ins_type'];
 $insured_firstname = st($pat_myarray['p_m_partyfname']);
 $insured_lastname = st($pat_myarray['p_m_partylname']);
 $insured_middle = st($pat_myarray['p_m_partymname']);
+if ($pat_myarray['p_m_same_address'] == 1){
+  $insured_address = $pat_myarray['add1']);
+  $insured_city = $pat_myarray['city']);
+  $insured_state = $pat_myarray['state']);
+  $insured_zip = $pat_myarray['zip']);
+} else {
+  $insured_address = $pat_myarray['p_m_address']);
+  $insured_city = $pat_myarray['p_m_city']);
+  $insured_state = $pat_myarray['p_m_state']);
+  $insured_zip = $pat_myarray['p_m_zip']);
+}
 $other_insured_firstname = st($pat_myarray['s_m_partyfname']);
 $other_insured_lastname = st($pat_myarray['s_m_partylname']);
 $other_insured_middle = st($pat_myarray['s_m_partymname']);
+if ($pat_myarray['s_m_same_address'] == 1){
+  $insured_address = $pat_myarray['add1']);
+  $insured_city = $pat_myarray['city']);
+  $insured_state = $pat_myarray['state']);
+  $insured_zip = $pat_myarray['zip']);
+} else {
+  $insured_address = $pat_myarray['s_m_address']);
+  $insured_city = $pat_myarray['s_m_city']);
+  $insured_state = $pat_myarray['s_m_state']);
+  $insured_zip = $pat_myarray['s_m_zip']);
+}
 $insured_id_number = st($pat_myarray['p_m_ins_id']);
 $other_insured_id_number = st($pat_myarray['s_m_ins_id']);
 $insured_dob = st($pat_myarray['ins_dob']);
@@ -1025,6 +1027,7 @@ $other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
 $referredby = st($pat_myarray['referred_by']); 
 $referred_source = st($pat_myarray['referred_source']);
 $docid = $pat_myarray['docid'];
+
 // if patient does not have an id, redirect to manage_patient.php to address the issue
 if ($pat_myarray['patientid'] == '') {
     print '<script type="text/javascript">';

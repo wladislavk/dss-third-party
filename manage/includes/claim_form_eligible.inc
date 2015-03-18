@@ -545,8 +545,8 @@
         <?php
             }
           }
-          
-          if(!$r['reference_id'] || !$w_r['response']){
+
+        if(!$r['reference_id'] || !$w_r || !$w_r['response'] || $w_r['response']==''){
         ?>
             <h3>Claim Electronically filed on <?php echo  $r['adddate']; ?></h3>
             <?php
@@ -560,7 +560,7 @@
             ?>
                 <p><strong>Error Response:</strong><br />
                   <?php
-                      $errors = $d->{"errors"}->{"messages"};
+                      $errors = $d->{"errors"}->{"message"};
                       foreach($errors as $error){
                         echo $error."<br />";
                       }

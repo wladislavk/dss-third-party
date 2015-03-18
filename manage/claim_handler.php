@@ -157,7 +157,7 @@
             window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
         </script>
 <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
     // Put POST values into variables
 	$payer_id = (!empty($_POST['payer']['id']) ? $_POST['payer']['id'] : '');

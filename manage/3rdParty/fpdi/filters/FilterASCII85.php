@@ -31,7 +31,7 @@ if (!class_exists('FilterASCII85', false)) {
     class FilterASCII85 {
         
         function error($msg) {
-            die($msg);
+            trigger_error($msg, E_USER_ERROR);
         }
         
         function decode($in) {

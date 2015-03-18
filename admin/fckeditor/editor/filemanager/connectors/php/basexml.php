@@ -86,7 +86,7 @@ function SendError( $number, $text )
 
 		echo '</Connector>' ;
 	}
-	exit ;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 function SendErrorNode(  $number, $text )

@@ -186,7 +186,7 @@ if (isset($_GET['ed'])) {
                                 update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
     }
     $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";
-    mysql_query($sql) or die($sql." | ".mysql_error());
+    mysql_query($sql) or trigger_error($sql." | ".mysql_error(), E_USER_ERROR);
     
     //echo $ed_sql.mysql_error();
     $task_label = (!empty($_POST['completed'])) ? 'Completed' : 'Updated';

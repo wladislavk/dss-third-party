@@ -39,7 +39,7 @@ In ADOdb, named quotes for MS SQL Server use ". From the MSSQL Docs:
 */
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 class ADODB2_mssql extends ADODB_DataDict {
 	var $databaseType = 'mssql';

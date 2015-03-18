@@ -32,7 +32,7 @@ if($_POST["categorysub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update apnea_category set category = '".s_for($_POST["category"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."' where categoryid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 			
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -42,12 +42,12 @@ if($_POST["categorysub"] == 1)
 				parent.window.location='manage_apnea_category.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
 			$ins_sql = "insert into apnea_category set category = '".s_for($_POST["category"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -56,7 +56,7 @@ if($_POST["categorysub"] == 1)
 				parent.window.location='manage_apnea_category.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

@@ -30,7 +30,7 @@ if(!empty($_POST["mult_complaintsub"]) && $_POST["mult_complaintsub"] == 1)
 		parent.window.location='manage_complaint.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["complaintsub"]) && $_POST["complaintsub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["complaintsub"]) && $_POST["complaintsub"] == 1)
 				parent.window.location='manage_complaint.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["complaintsub"]) && $_POST["complaintsub"] == 1)
 				parent.window.location='manage_complaint.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

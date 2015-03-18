@@ -13,7 +13,7 @@ if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access']))
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select c.*, 

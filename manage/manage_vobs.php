@@ -39,7 +39,7 @@ function insert_preauth_row($patient_id) {
        . "  p.patientid = $patient_id";
   
   $my_array = $db->getRow($sql);
-//  print_r($my_array);exit;
+//  print_r($my_array);trigger_error("Exit called", E_USER_ERROR);
   
   $sql = "INSERT INTO dental_insurance_preauth ("
        . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
@@ -77,7 +77,7 @@ function insert_preauth_row($patient_id) {
        . DSS_PREAUTH_PENDING
        . ")";
   //print_r($my_array);
-  //print_r($sql);exit;
+  //print_r($sql);trigger_error("Exit called", E_USER_ERROR);
   $my = $db->query($sql);
 }
 

@@ -11,7 +11,7 @@ if($_POST["loginsub"] == 1)
 
         $pass = gen_password($_POST['password'], $salt_row['salt']);
 	$check_sql = "SELECT * FROM admin where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."'";
-	$check_my = mysql_query($check_sql) or die(mysql_error().' | '.$check_sql);
+	$check_my = mysql_query($check_sql) or trigger_error(mysql_error().' | '.$check_sql, E_USER_ERROR);
 	
 	if(mysql_num_rows($check_my) == 1) 
 	{
@@ -24,7 +24,7 @@ if($_POST["loginsub"] == 1)
 			window.location.replace('home.php');
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -34,7 +34,7 @@ if($_POST["loginsub"] == 1)
 			window.location.replace('index.php?msg=<?=$msg;?>');
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 

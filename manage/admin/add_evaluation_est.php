@@ -30,7 +30,7 @@ if(!empty($_POST["mult_evaluation_estsub"]) && $_POST["mult_evaluation_estsub"] 
 		parent.window.location='manage_evaluation_est.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["evaluation_estsub"]) && $_POST["evaluation_estsub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["evaluation_estsub"]) && $_POST["evaluation_estsub"] == 1)
 				parent.window.location='manage_evaluation_est.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["evaluation_estsub"]) && $_POST["evaluation_estsub"] == 1)
 				parent.window.location='manage_evaluation_est.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

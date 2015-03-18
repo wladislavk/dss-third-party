@@ -49,7 +49,7 @@
       print '<script type="text/javascript">';
       print '  window.location="manage_patient.php";';
       print '</script>';
-    	die(); // already did a javascript redirect...just die
+    	trigger_error("Die called", E_USER_ERROR); // already did a javascript redirect...just die
 
     }
   }

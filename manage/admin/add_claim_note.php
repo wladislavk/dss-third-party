@@ -22,7 +22,7 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
 				create_type = '0',
 				creator_id = '".mysql_real_escape_string($_SESSION['adminuserid'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysqli_query($con,$ins_sql) or die($ins_sql.mysql_error());
+		mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
 		$n_id = mysql_insert_id();
 
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
@@ -49,12 +49,12 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
 		</script>
 		<?
 		
-		die();
+		trigger_error("Die called", E_USER_ERROR);
   }else{
                 $up_sql = "update dental_claim_notes set 
                                 note = '".mysql_real_escape_string($_POST['note'])."'
                                 WHERE id='".mysql_real_escape_string($_POST['nid'])."'";
-                mysqli_query($con,$up_sql) or die($up_sql.mysql_error());
+                mysqli_query($con,$up_sql) or trigger_error($up_sql.mysql_error(), E_USER_ERROR);
 		$n_id = $_POST['nid'];
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
                 if($_FILES['attachment']['tmp_name'][$i]!=''){
@@ -79,7 +79,7 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
                 </script>
                 <?
 
-                die();
+                trigger_error("Die called", E_USER_ERROR);
   }
 }
 

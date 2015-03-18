@@ -32,7 +32,7 @@
         		parent.window.location = 'manage_transaction_code.php?msg=<?php echo $msg;?>';
         	</script>
 	<?php
-	        die();
+	        trigger_error("Die called", E_USER_ERROR);
         }
 
         if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1) {
@@ -68,7 +68,7 @@
         				parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
         			</script>
     <?php
-        			die();
+        			trigger_error("Die called", E_USER_ERROR);
         		} else {
                     $ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', place = '".s_for($_POST['place'])."', 
                                 modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
@@ -84,7 +84,7 @@
         				parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
         			</script>
     <?php
-        			die();
+        			trigger_error("Die called", E_USER_ERROR);
         		}
         	}
         }

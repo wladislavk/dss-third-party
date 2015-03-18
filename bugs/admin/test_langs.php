@@ -42,7 +42,7 @@ else {
 
 if (!checkfile( dirname( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR, 'strings_english.txt', true)) {
 	print_error( "FAILED: Language file 'strings_english.txt' failed." );
-	die;
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 unset( $g_skip_lang_load ) ;

@@ -47,12 +47,12 @@ if($_POST["usersub"] == 1)
 				recover_time=NOW(),
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
                         $userid = mysql_insert_id();			
                         $code_sql = "insert into dental_transaction_code (transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, docid, amount_adjust) SELECT transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, ".$userid.", amount_adjust FROM dental_transaction_code WHERE default_code=1";
-                        mysql_query($code_sql) or die($code_sql.mysql_error());
+                        mysql_query($code_sql) or trigger_error($code_sql.mysql_error(), E_USER_ERROR);
                         $custom_sql = "insert into dental_custom (title, description, docid) SELECT title, description, ".$userid." FROM dental_custom WHERE default_text=1";
-                        mysql_query($custom_sql) or die($custom_sql.mysql_error());
+                        mysql_query($custom_sql) or trigger_error($custom_sql.mysql_error(), E_USER_ERROR);
 			
 			if(is_super($_SESSION['admin_access'])){
 			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($userid)."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
@@ -96,7 +96,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				parent.window.location='manage_users.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 	}
 }
 

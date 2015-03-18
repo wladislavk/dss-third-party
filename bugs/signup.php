@@ -46,7 +46,7 @@
 	# Check to see if signup is allowed
 	if ( OFF == config_get_global( 'allow_signup' ) ) {
 		print_header_redirect( 'login_page.php' );
-		exit;
+		trigger_error("Exit called", E_USER_ERROR);
 	}
 
 	if( ON == config_get( 'signup_use_captcha' ) && get_gd_version() > 0 	&&

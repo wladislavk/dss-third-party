@@ -246,7 +246,7 @@ while($ddlistpname4 = (mysql_fetch_array($myddlist4))){
 if($_SESSION['userid'] != '')
 {
 	$welcome_sql = "select * from dental_doc_welcome where status=1 and (docid = '' or docid like '%~".$_SESSION['docid']."~%') order by sortby";
-	$welcome_my = mysql_query($welcome_sql) or die($welcome_sql." | ".mysql_error());
+	$welcome_my = mysql_query($welcome_sql) or trigger_error($welcome_sql." | ".mysql_error(), E_USER_ERROR);
 	
 	while($welcome_myarray = mysql_fetch_array($welcome_my)) 
 	{
@@ -315,7 +315,7 @@ if($_SESSION['userid'] != '')
 	  </tr>
 		<?
 		$insurance_sql = "select * from dental_doc_insurance where status=1 and (docid = '' or docid like '%~".$_SESSION['docid']."~%') order by sortby";
-		$insurance_my = mysql_query($insurance_sql) or die($insurance_sql." | ".mysql_error());
+		$insurance_my = mysql_query($insurance_sql) or trigger_error($insurance_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		if(mysql_num_rows($insurance_my) == 0)
 		{

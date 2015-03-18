@@ -60,7 +60,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
                                         adddate = now(),
                                         ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                                        mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
+                                        mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
 					$image_id = mysql_insert_id();
 			}
                 }
@@ -94,7 +94,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
 )
 VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."', '".$image_id."')";
 error_log($q);
-  $run_q = mysqli_query($con,$q) or die(mysql_error());
+  $run_q = mysqli_query($con,$q) or trigger_error(mysql_error(), E_USER_ERROR);
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
   }else{
@@ -107,7 +107,7 @@ error_log($q);
 parent.window.location='patient_images.php?pid=<?php echo $_GET['pid'];?>';
 </script>
 <?php
-die();
+trigger_error("Die called", E_USER_ERROR);
   }
  }
 
@@ -253,7 +253,7 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
                         title = '".s_for($title)."',
                         imagetypeid = '".s_for($imagetypeid)."' ";
                         $ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
-                        mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
+                        mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 
                         $msg = "Edited Successfully";
                         ?>
@@ -261,7 +261,7 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
                                 parent.window.location='patient_images.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
                         </script>
                         <?
-                        die();
+                        trigger_error("Die called", E_USER_ERROR);
 
 }
 if($uploaded ){		
@@ -274,7 +274,7 @@ if($uploaded ){
 			  $ed_sql .= ", image_file = '".s_for($banner1)."' ";
 			}
 			$ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
-			mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 			
 			$msg = "Edited Successfully";
 			?>
@@ -282,7 +282,7 @@ if($uploaded ){
 				parent.window.location='patient_images.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -296,7 +296,7 @@ if($uploaded ){
 			adddate = now(),
 			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 			
-			mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
+			mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
 			$imageid = mysql_insert_id();
 			if($_POST['imagetypeid']==6){
 			  $rx_sql = "SELECT rx_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
@@ -338,7 +338,7 @@ if($uploaded ){
 					parent.window.location="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid'];?>"
 				</script>
 				<?
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			} elseif($_REQUEST['return']=='patinfo'){
 				?>
                                 <script type="text/javascript">
@@ -353,14 +353,14 @@ if($uploaded ){
                                 </script>
                                 <?
 			
-                                die();
+                                trigger_error("Die called", E_USER_ERROR);
 			} else {
 				?>
 				<script type="text/javascript">
 					parent.window.location='patient_images.php?pid=<?php echo $_GET['pid'];?>';
 				</script>
 				<?
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			}
 		}
 }else{

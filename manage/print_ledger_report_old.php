@@ -7,7 +7,7 @@ if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1 && $_POST['weeklysub'] !
 		window.location = 'ledger.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 200;
@@ -47,7 +47,7 @@ $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
+$my=mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $num_users=mysql_num_rows($my);
 
 ?>

@@ -5,7 +5,7 @@
 ?>
         <h3 style="width:100%; text-align:center;">Letters feature has been disabled.</h3>
 <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 
     include_once('includes/patient_info.php');

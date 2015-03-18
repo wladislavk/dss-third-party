@@ -72,7 +72,7 @@
 	if ( strpos( $f_action, $t_external_action_prefix ) === 0 ) {
 		$t_form_page = 'bug_actiongroup_ext_page.php';
 		require_once( $t_form_page );
-		exit;
+		trigger_error("Exit called", E_USER_ERROR);
 	}
 
 	$t_custom_group_actions = config_get( 'custom_group_actions' );
@@ -80,7 +80,7 @@
 	foreach( $t_custom_group_actions as $t_custom_group_action ) {
 		if ( $f_action == $t_custom_group_action['action'] ) {
 			require_once( $t_custom_group_action['form_page'] );
-			exit;
+			trigger_error("Exit called", E_USER_ERROR);
 		}
 	}
 

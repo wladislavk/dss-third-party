@@ -109,12 +109,12 @@ if($_POST["doc_newub"] == 1)
 			parent.window.location='manage_doc_new.php?msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
 		$ins_sql = "insert into dental_doc_new set title = '".s_for($_POST["title"])."', docid = '".s_for($doc_id)."', description = '".s_for($_POST["description"])."', video_file = '".s_for($banner1)."', doc_file = '".s_for($banner2)."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysql_query($ins_sql) or die($ins_sql.mysql_error());
+		mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>
@@ -123,7 +123,7 @@ if($_POST["doc_newub"] == 1)
 			parent.window.location='manage_doc_new.php?msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 

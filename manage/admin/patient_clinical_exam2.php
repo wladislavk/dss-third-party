@@ -70,7 +70,7 @@ if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
 
 		$pat_sql = "UPDATE dental_patients SET
 		feet = '".s_for($feet)."',
@@ -97,7 +97,7 @@ if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1)
 		</script>
 		<?
 		}
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -109,7 +109,7 @@ if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1)
 		tongue = '".s_for($tongue_arr)."'
 		where ex_page1id = '".s_for($_POST['ed'])."'";
 		
-		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 
                 $pat_sql = "UPDATE dental_patients SET
                 feet = '".s_for($feet)."',
@@ -136,7 +136,7 @@ if(!empty($_POST['ex_page1sub']) && $_POST['ex_page1sub'] == 1)
 		</script>
 		<?
 		}
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -153,7 +153,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $bmi_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";

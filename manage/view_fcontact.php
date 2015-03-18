@@ -15,7 +15,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
 			parent.window.location='manage_fcontact.php?msg=<?php echo $msg;?>';
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -29,7 +29,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
 			parent.window.location='manage_fcontact.php?msg=<?php echo $msg;?>';
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 

@@ -20,7 +20,7 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 				parent.window.location='manage_claim_text.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -39,7 +39,7 @@ if(!empty($_POST["custom_textsub"]) && $_POST["custom_textsub"] == 1)
 				parent.window.location='manage_claim_text.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 }
 

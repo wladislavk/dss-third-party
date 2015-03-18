@@ -13,7 +13,7 @@ if($pat_myarray['patientid'] == ''){ ?>
 		window.location = 'manage_patient.php';
 	</script>
 	<?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate";

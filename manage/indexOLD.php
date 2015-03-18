@@ -27,7 +27,7 @@
 if($_SESSION['userid'] != '')
 {
 	$welcome_sql = "select * from dental_doc_welcome where status=1 and (docid = '' or docid like '%~".$_SESSION['docid']."~%') order by sortby";
-	$welcome_my = mysql_query($welcome_sql) or die($welcome_sql." | ".mysql_error());
+	$welcome_my = mysql_query($welcome_sql) or trigger_error($welcome_sql." | ".mysql_error(), E_USER_ERROR);
 	
 	while($welcome_myarray = mysql_fetch_array($welcome_my)) 
 	{
@@ -122,7 +122,7 @@ echo $memo_array['memo'] . "<br /><hr />";
 	  </tr>
 		<?
 		$new_sql = "select * from filemanager where docid=".$_SESSION['docid']." order by date DESC LIMIT 3";
-		$new_my = mysql_query($new_sql) or die($new_sql." | ".mysql_error());
+		$new_my = mysql_query($new_sql) or trigger_error($new_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		if(mysql_num_rows($new_my) == 0)
 		{
@@ -174,7 +174,7 @@ echo $memo_array['memo'] . "<br /><hr />";
 	  </tr>
 		<?
 		$educational_sql = "select * from filemanager_edu where docid=".$_SESSION['docid'] ." order by date DESC LIMIT 3";
-		$educational_my = mysql_query($educational_sql) or die($educational_sql." | ".mysql_error());
+		$educational_my = mysql_query($educational_sql) or trigger_error($educational_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		if(mysql_num_rows($educational_my) == 0)
 		{
@@ -224,7 +224,7 @@ echo $memo_array['memo'] . "<br /><hr />";
 	  </tr>
 		<?
 		$marketing_sql = "select * from filemanager_mark where docid=".$_SESSION['docid'] ." order by date DESC LIMIT 3";
-		$marketing_my = mysql_query($marketing_sql) or die($marketing_sql." | ".mysql_error());
+		$marketing_my = mysql_query($marketing_sql) or trigger_error($marketing_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		if(mysql_num_rows($marketing_my) == 0)
 		{
@@ -261,7 +261,7 @@ echo $memo_array['memo'] . "<br /><hr />";
 
 		<br />
 	
-	<span class="admin_head"><em> View DVD’S: </em></span>
+	<span class="admin_head"><em> View DVDï¿½S: </em></span>
 	<br />
 	
 	<table width="960" border="0" cellspacing="1" cellpadding="1" class="sample" align="center">
@@ -275,7 +275,7 @@ echo $memo_array['memo'] . "<br /><hr />";
 		
 		<?
 		$dvd_sql = "select * from filemanager_dvd where docid=".$_SESSION['docid'] ." order by date DESC LIMIT 3";
-		$dvd_my = mysql_query($dvd_sql) or die($dvd_sql." | ".mysql_error());
+		$dvd_my = mysql_query($dvd_sql) or trigger_error($dvd_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		if(mysql_num_rows($dvd_my) == 0)
 		{
@@ -325,7 +325,7 @@ echo $memo_array['memo'] . "<br /><hr />";
 	  </tr>
 		<?
 		$lab_sql = "select * from filemanager_al where docid=".$_SESSION['docid'] ." order by date DESC LIMIT 3";
-		$lab_my = mysql_query($lab_sql) or die($lab_sql." | ".mysql_error());
+		$lab_my = mysql_query($lab_sql) or trigger_error($lab_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		if(mysql_num_rows($lab_my) == 0)
 		{
@@ -377,7 +377,7 @@ echo $memo_array['memo'] . "<br /><hr />";
 	  </tr>
 		<?
 		$sllab_sql = "select * from filemanager_sl where docid=".$_SESSION['docid']." order by date DESC LIMIT 3";
-		$sllab_my = mysql_query($sllab_sql) or die($sllab_sql." | ".mysql_error());
+		$sllab_my = mysql_query($sllab_sql) or trigger_error($sllab_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		if(mysql_num_rows($lab_my) == 0)
 		{
@@ -427,7 +427,7 @@ echo $memo_array['memo'] . "<br /><hr />";
 	  </tr>
 		<?
 		$insurance_sql = "select * from dental_doc_insurance where status=1 and (docid = '' or docid like '%~".$_SESSION['docid']."~%') order by sortby";
-		$insurance_my = mysql_query($insurance_sql) or die($insurance_sql." | ".mysql_error());
+		$insurance_my = mysql_query($insurance_sql) or trigger_error($insurance_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		if(mysql_num_rows($insurance_my) == 0)
 		{

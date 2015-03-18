@@ -75,7 +75,7 @@ if(isset($_POST['device_submit'])){
                           adddate = now(),
                           ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-        $db->query($ex_ins_sql) or die($ex_ins_sql." | ".mysql_error());
+        $db->query($ex_ins_sql) or trigger_error($ex_ins_sql." | ".mysql_error(), E_USER_ERROR);
     }
     $sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
     $row = $db->getRow($sql);

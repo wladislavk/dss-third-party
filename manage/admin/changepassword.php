@@ -22,7 +22,7 @@ if(!empty($_POST['passsub']) && $_POST['passsub'] == 1)
 			window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>";
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -39,7 +39,7 @@ if(!empty($_POST['passsub']) && $_POST['passsub'] == 1)
 			window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>";
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 ?>

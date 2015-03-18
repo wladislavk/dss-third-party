@@ -26,7 +26,7 @@ if (isset($_REQUEST['ed'])) {
          . "  JOIN dental_patients p ON p.patientid = hst.patient_id "
          . "WHERE "
          . "  hst.id = " . $_POST['hst_id'];
-                $my = mysqli_query($con,$sql) or die(mysql_error());
+                $my = mysqli_query($con,$sql) or trigger_error(mysql_error(), E_USER_ERROR);
                 $hst = mysqli_fetch_array($my);
 
 
@@ -145,7 +145,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                                         adddate = now(),
                                         ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                                        mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
+                                        mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
 	}
 
    }
@@ -183,7 +183,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 	}
     }
     $sql .= "WHERE id = '" . $_POST["hst_id"] . "'";
-    mysqli_query($con,$sql) or die($sql." | ".mysql_error());
+    mysqli_query($con,$sql) or trigger_error($sql." | ".mysql_error(), E_USER_ERROR);
     
     //echo $ed_sql.mysql_error();
     $msg = "HST Updated Successfully";

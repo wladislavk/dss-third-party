@@ -17,7 +17,7 @@ V5.10 10 Nov 2009   (c) 2000-2009 John Lim (jlim#natsoft.com). All rights reserv
 	Contributed by Herman Kuiper  herman#ozuzo.net  
 */
 
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 include_once(ADODB_DIR.'/drivers/adodb-sqlite.inc.php');
 

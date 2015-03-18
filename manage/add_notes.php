@@ -68,7 +68,7 @@
 	            </script>
 <?php 		
 			} 
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			$p_r = $db->getRow("select parentid FROM dental_notes WHERE notesid='".$_POST["ed"]."'");
 			$parentid = $p_r['parentid'];
@@ -129,7 +129,7 @@
 				</script>
 			<?php } ?>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 	$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
@@ -146,7 +146,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 ?>
 	<?php

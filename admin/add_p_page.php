@@ -34,12 +34,12 @@ if($_POST["p_pagesub"] == 1)
 				parent.window.location='manage_p_pages.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
 			$ins_sql = "insert into p_pages set title = '".s_for($_POST["title"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -48,7 +48,7 @@ if($_POST["p_pagesub"] == 1)
 				parent.window.location='manage_p_pages.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

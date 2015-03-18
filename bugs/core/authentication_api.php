@@ -719,7 +719,7 @@ function auth_reauthenticate_page( $p_user_id, $p_username ) {
 		<?php
 		html_page_bottom();
 
-	exit;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 /**
@@ -800,7 +800,7 @@ function auth_get_current_user_id() {
 	if( db_num_rows( $result ) < 1 ) {
 		auth_clear_cookies();
 		access_denied();
-		exit();
+		trigger_error("Exit called", E_USER_ERROR);
 	}
 
 	$t_user_id = (int) db_result( $result );
@@ -824,7 +824,7 @@ function auth_http_prompt() {
 	print_bracket_link( 'main_page.php', lang_get( 'proceed' ) );
 	echo '</center>';
 
-	exit;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 /**

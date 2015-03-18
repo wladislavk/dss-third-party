@@ -19,7 +19,7 @@ if($_POST["mult_devicesub"] == 1)
 			if(mysqli_num_rows($query_check) == 0)
 			{
 				$ins_sql = "insert into dental_device set device = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysqli_query($con,$ins_sql) or die($ins_sql.mysql_error());
+				mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
 			}
 			
 		}
@@ -32,7 +32,7 @@ if($_POST["mult_devicesub"] == 1)
 		parent.window.location='manage_device.php?msg=<?=$msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 */
 if(!empty($_POST["devicesub"]) && $_POST["devicesub"] == 1)
@@ -134,7 +134,7 @@ if(!$uploaded){
 				parent.window.location='manage_device.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -162,7 +162,7 @@ if(!$uploaded){
 				parent.window.location='manage_device.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

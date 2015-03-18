@@ -21,7 +21,7 @@
     		window.location = 'ledger.php';
     	</script>
 	<?php
-	   die();
+	   trigger_error("Die called", E_USER_ERROR);
     }
 
     if(!isset($_REQUEST['sort'])){

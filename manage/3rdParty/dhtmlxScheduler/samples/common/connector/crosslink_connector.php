@@ -62,7 +62,7 @@ class CrossOptionsConnector extends Connector{
 		
 		if (isset($_GET["dhx_crosslink_".$this->link_name])){
 			$this->get_links($_GET["dhx_crosslink_".$this->link_name]);
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		
 		if (!$this->dload){

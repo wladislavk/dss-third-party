@@ -9,7 +9,7 @@
 			window.opener.location = '#add_para';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";

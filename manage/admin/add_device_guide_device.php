@@ -12,7 +12,7 @@ if($_POST["devsub"] == 1)
 			$ed_sql = "update dental_device_guide_devices set 
 				name = '".mysql_real_escape_string($_POST["name"])."'
 			where id='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 
   $set_sql = "SELECT * FROM dental_device_guide_settings";
   $set_q = mysql_query($set_sql);
@@ -47,7 +47,7 @@ if($_POST["devsub"] == 1)
 				parent.window.location='manage_device_guide_devices.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -57,7 +57,7 @@ if($_POST["devsub"] == 1)
                                 name = '".mysql_real_escape_string($_POST["name"])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
 			$d_id = mysql_insert_id();
 
   $set_sql = "SELECT * FROM dental_device_guide_settings";
@@ -80,7 +80,7 @@ if($_POST["devsub"] == 1)
 				parent.window.location='manage_device_guide_devices.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 }
 

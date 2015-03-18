@@ -34,7 +34,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 				company_type = '".mysqli_real_escape_string($con,$_POST['company_type'])."',
 				vob_require_test = '".mysqli_real_escape_string($con,$_POST['vob_require_test'])."'
 			where id='".$_POST["ed"]."'";
-			mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 
 			$course_sql = "update content_type_profile SET
 					field_companyname_value='".mysqli_real_escape_string($con,$_POST["name"])."'
@@ -49,7 +49,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 				parent.window.location='manage_companies.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -96,7 +96,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 				parent.window.location='manage_companies.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 }
 

@@ -239,7 +239,7 @@ $ex_ins_sql = " insert dental_ex_page5 set
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                mysql_query($ex_ins_sql) or die($ex_ins_sql." | ".mysql_error());
+                mysql_query($ex_ins_sql) or trigger_error($ex_ins_sql." | ".mysql_error(), E_USER_ERROR);
 }	
 	
 	if($_POST['ed'] == '')
@@ -435,7 +435,7 @@ $ex_ins_sql = " insert dental_ex_page5 set
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysql_query($ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>
@@ -444,7 +444,7 @@ $ex_ins_sql = " insert dental_ex_page5 set
 			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -644,14 +644,14 @@ $ex_ins_sql = " insert dental_ex_page5 set
 		<?php
 		}else{
       echo "Summary could not be saved";
-      die($ed_sql." | ".mysql_error());
+      trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
     }?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='<?=$_SERVER['PHP_SELF']?>?pg=2&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -677,7 +677,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $q1_sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";

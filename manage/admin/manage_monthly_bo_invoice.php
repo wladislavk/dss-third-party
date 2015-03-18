@@ -3,7 +3,7 @@ include "includes/top.htm";
 
 if(is_billing($_SESSION['admin_access'])){
   ?><h2>You are not authorized to view this page.</h2><?php
-  die();
+  trigger_error("Die called", E_USER_ERROR);
 }
 
 

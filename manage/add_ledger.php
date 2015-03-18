@@ -102,7 +102,7 @@
 			parent.window.location = 'manage_ledger.php?msg=<?php echo $msg;?>&pid=<?php echo $_GET['pid'];?>';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		$pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
     	$pat_my2 = $db->getResults($pat_sql2);
@@ -187,7 +187,7 @@
 			parent.window.location = 'manage_ledger.php?msg=<?php echo $msg;?>&pid=<?php echo $_GET['pid'];?>';
 		</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -200,7 +200,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 ?>
 

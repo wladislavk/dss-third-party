@@ -42,13 +42,13 @@
       $body = $e->getJsonBody();
       $err  = $body['error'];
       echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
-      die();
+      trigger_error("Die called", E_USER_ERROR);
   } catch (Stripe_InvalidRequestError $e) {
       // Invalid parameters were supplied to Stripe's API
       $body = $e->getJsonBody();
       $err  = $body['error'];
       echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
-      die();
+      trigger_error("Die called", E_USER_ERROR);
   } catch (Stripe_AuthenticationError $e) {
       // Authentication with Stripe's API failed
       // (maybe you changed API keys recently)

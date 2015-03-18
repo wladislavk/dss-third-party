@@ -12,7 +12,7 @@
 ?>
         <br />You do not have permissions to edit staff.
 <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 ?>
 
@@ -95,7 +95,7 @@
     				parent.window.location = 'manage_staff.php?msg=<?php echo $msg;?>';
     			</script>
 <?php
-                die();
+                trigger_error("Die called", E_USER_ERROR);
 		    } else {
                 $salt = create_salt();
                 $password = gen_password($_POST['password'], $salt);
@@ -156,7 +156,7 @@
     				parent.window.location = 'manage_staff.php?msg=<?php echo $msg;?>';
     			</script>
 <?php
-			    die();
+			    trigger_error("Die called", E_USER_ERROR);
 		    }
 	    }
     }

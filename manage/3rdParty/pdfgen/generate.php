@@ -68,7 +68,7 @@ function PDFErrorHandler ($errno, $errstr, $errfile, $errline) {
 	if ($errno < 1024) {
 		echo $errstr."<br>";
 		error_log($xmlString, 3, 'error_report_'.date("Y_m_d__H_i_s").'.xml');
-		exit(1);
+		trigger_error("Exit called with status 1", E_USER_ERROR);
 	}
 }
 

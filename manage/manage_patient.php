@@ -11,7 +11,7 @@ if(isset($_REQUEST["delid"]))
 	$msg= "Deleted Successfully";
 
 	header("Location: " . $_SERVER['PHP_SELF'] . "?msg=" . $msg);
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 30;

@@ -19,7 +19,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
 	    <?php } ?>
         </script>
         <?
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
     else
     {
@@ -38,7 +38,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
             <?php } ?>
         </script>
         <?
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 }
 

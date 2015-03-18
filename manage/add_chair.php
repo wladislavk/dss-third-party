@@ -10,7 +10,7 @@
 ?>
 		<br />You do not have permissions to edit resources.
 <?php
-	  	die();
+	  	trigger_error("Die called", E_USER_ERROR);
 	}
 ?>
 	<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
@@ -55,7 +55,7 @@
 					parent.window.location='manage_chairs.php?msg=<?php echo $msg;?>';
 				</script>
 <?php
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			} else {
 				$ins_sql = "insert into dental_resources (name, rank, docid) values ('".s_for($_POST["name"])."', " . $_POST['rank'] . ", " . $_SESSION['docid'] .")";
 	            $userid = $db->getInsertId($ins_sql);
@@ -65,7 +65,7 @@
 					parent.window.location='manage_chairs.php?msg=<?php echo $msg;?>';
 				</script>
 <?php
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			}
 		}
 	}

@@ -12,7 +12,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
@@ -129,9 +129,9 @@
 				<br><br>
 				Dear <strong><?php echo st($pat_myarray['firstname']);?></strong>,<br><br>
 
-				Thank you for taking the time to undergo the overnight sleep study utilizing the <strong>???</strong> sleep recorder.   I have summarized the results in the table below.  The “Before” column refers to your last sleep study, while the “After” column is with your dental sleep device in place.  Dental Sleep Solutions dentists adhere to the most stringent criteria for successful treatment.  We define successful treatment as a reduction in your AHI / RDI by at least one half and to a level below 10. <br /><br />
+				Thank you for taking the time to undergo the overnight sleep study utilizing the <strong>???</strong> sleep recorder.   I have summarized the results in the table below.  The ï¿½Beforeï¿½ column refers to your last sleep study, while the ï¿½Afterï¿½ column is with your dental sleep device in place.  Dental Sleep Solutions dentists adhere to the most stringent criteria for successful treatment.  We define successful treatment as a reduction in your AHI / RDI by at least one half and to a level below 10. <br /><br />
 
-				We delivered <strong>???</strong> device  on <strong>???</strong>, and <strong><?php echo $s_h?></strong> has reported doing well with it.  I write to give you a progress update after the initial titration period and following a take home sleep study done with the state-of-the-art <strong>???</strong> sleep recorder.  <strong><?php echo $name1?>’s</strong> numbers, baseline and post appliance insertion, appear below.<br /><br />
+				We delivered <strong>???</strong> device  on <strong>???</strong>, and <strong><?php echo $s_h?></strong> has reported doing well with it.  I write to give you a progress update after the initial titration period and following a take home sleep study done with the state-of-the-art <strong>???</strong> sleep recorder.  <strong><?php echo $name1?>ï¿½s</strong> numbers, baseline and post appliance insertion, appear below.<br /><br />
 				<table width="98%" border="1" cellspacing="0" cellpadding="6">
 					<tr>
 						<td width="214" valign="top">&nbsp;</td>
@@ -184,7 +184,7 @@
 				</ul>
 				Please understand that Obstructive Sleep Apnea is a serious medical disorder and we recommend that you seek care with other methods to avoid possible these unwanted medical outcomes.  Caution should also be taken while driving.  After we decide on a plan, I will inform your physician(s) of our decision.  I welcome any questions you may have.   <br /><br />
 
-				Thank you again for the opportunity to work with you.  Please don’t hesitate to call if you have any questions.  <br /><br />
+				Thank you again for the opportunity to work with you.  Please donï¿½t hesitate to call if you have any questions.  <br /><br />
 
 				Sincerely,<br><br><br><br>
 				<strong><?php echo $_SESSION['name']?>, DDS</strong><br><br>

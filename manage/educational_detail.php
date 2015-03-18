@@ -14,7 +14,7 @@
 			parent.disablePopup1();
 		</script>
 <?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 ?>
 

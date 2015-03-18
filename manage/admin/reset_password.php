@@ -31,7 +31,7 @@ $message .= DSS_EMAIL_FOOTER;
                 ?><br />
 			<h3>Password reset and user has been emailed.</h3>
                 <?
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         }
 
 ?>

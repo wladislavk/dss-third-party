@@ -17,6 +17,6 @@
 		header("Content-type: $type");
 		header("Content-Disposition: attachment; filename=$name");
 		echo $content;
-		exit;
+		trigger_error("Exit called", E_USER_ERROR);
 	}
 ?>

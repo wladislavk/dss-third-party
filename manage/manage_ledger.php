@@ -52,7 +52,7 @@ if(!empty($_REQUEST["delid"]))
                 <?php } ?>
   </script>
   <?php
-  die();
+  trigger_error("Die called", E_USER_ERROR);
 }
 
 if(isset($_REQUEST["delstatementid"]) && $_REQUEST["delstatementid"] != ""){
@@ -64,7 +64,7 @@ if(isset($_REQUEST["delstatementid"]) && $_REQUEST["delstatementid"] != ""){
                   window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
         </script>
         <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_REQUEST["delclaimid"]))
@@ -91,7 +91,7 @@ if(!empty($_REQUEST["delclaimid"]))
                 <?php } ?>
         </script>
         <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
   
 }
 
@@ -116,7 +116,7 @@ if(!empty($_REQUEST["delnoteid"]))
                 <?php } ?>
         </script>
         <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
 
 }
 
@@ -133,7 +133,7 @@ if(empty($pat_myarray['patientid']))
     //window.location = 'manage_patient.php';
   </script>
   <?php
-  //die();
+  //trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 2000;
@@ -860,7 +860,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
                           AND dlp.amount != 0
         AND dlp.paymentid='".$myarray['ledgerid']."'
   ";
-        $h_q = $db->getResults($h_sql) or die(mysql_error());
+        $h_q = $db->getResults($h_sql) or trigger_error(mysql_error(), E_USER_ERROR);
         foreach ($h_q as $h_r) {?>
     <tr class="history_<?php echo $myarray['ledgerid']; ?>" style="display:none;">
       <td><?php echo $h_r['updated_at']; ?></td>

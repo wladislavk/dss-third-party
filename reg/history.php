@@ -206,7 +206,7 @@ $injurytohead = $_POST['injurytohead'];
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysql_query($ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
 		mysql_query("UPDATE dental_patients SET history_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
                 mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$ped_sql = "update dental_patients 
@@ -215,7 +215,7 @@ $injurytohead = $_POST['injurytohead'];
                 	premed = '".s_for($_POST["premeddet"])."'
                 	where 
                 	patientid='".$_SESSION["pid"]."'";
-                mysql_query($ped_sql) or die($ped_sql." | ".mysql_error());
+                mysql_query($ped_sql) or trigger_error($ped_sql." | ".mysql_error(), E_USER_ERROR);
 
 		$msg = "Added Successfully";
 		?>
@@ -224,7 +224,7 @@ $injurytohead = $_POST['injurytohead'];
 			window.location='<?= $_POST['goto_p']; ?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -289,7 +289,7 @@ $injurytohead = $_POST['injurytohead'];
                 future_dental_det = '".s_for($future_dental_det)."',
                 drymouth_text = '".s_for($drymouth_text)."'
 		where patientid = '".s_for($_SESSION['pid'])."'";
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
                 mysql_query("UPDATE dental_patients SET history_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
                 mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$ped_sql = "update dental_patients 
@@ -298,7 +298,7 @@ $injurytohead = $_POST['injurytohead'];
                         premed = '".s_for($_POST["premeddet"])."' 
                         where 
                         patientid='".$_SESSION["pid"]."'";
-                mysql_query($ped_sql) or die($ped_sql." | ".mysql_error());
+                mysql_query($ped_sql) or trigger_error($ped_sql." | ".mysql_error(), E_USER_ERROR);
 		//echo $ed_sql;
 		$msg = "Edited Successfully";
 		?>
@@ -307,7 +307,7 @@ $injurytohead = $_POST['injurytohead'];
 			window.location='<?= $_POST['goto_p']; ?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -331,7 +331,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 $sql = "select * from dental_q_page3 where patientid='".$_SESSION['pid']."' ";
 $my = mysql_query($sql);

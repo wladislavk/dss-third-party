@@ -12,7 +12,7 @@ require_once '../../manage/admin/includes/main_include.php';
   $r = mysql_fetch_assoc($q);
   if($r['text_num'] >= 5 && strtotime($r['text_date'])>(time()-3600)){
     echo '{"error":"limit"}';
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   }
   if($r['access_code']=='' || strtotime($r['access_code_date']) < time()-86400){
                 $recover_hash = rand(100000, 999999);//substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);

@@ -66,7 +66,7 @@
 				</script>
 			<?php } ?>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 
 		if(isset($_REQUEST["delclaimid"]) && $_REQUEST["delclaimid"] != "") {
@@ -91,7 +91,7 @@
                 </script>
             <?php } ?>
 <?php
-        	die();
+        	trigger_error("Die called", E_USER_ERROR);
 		}
 
 		$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -105,7 +105,7 @@
 				window.location = 'manage_patient.php';
 			</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 
 		$rec_disp = 200;

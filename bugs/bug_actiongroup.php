@@ -44,7 +44,7 @@
 	foreach( $t_custom_group_actions as $t_custom_group_action ) {
 		if ( $f_action == $t_custom_group_action['action'] ) {
 			require_once( $t_custom_group_action['action_page'] );
-			exit;
+			trigger_error("Exit called", E_USER_ERROR);
 		}
 	}
 

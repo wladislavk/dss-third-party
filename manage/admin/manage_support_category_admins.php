@@ -19,7 +19,7 @@ if(!empty($_POST["update"]))
                 window.location="manage_support_categories.php?msg=<?php echo $msg?>";
         </script>
         <?
-        die();
+        trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select a.*,

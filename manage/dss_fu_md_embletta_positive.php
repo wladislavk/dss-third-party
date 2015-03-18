@@ -12,7 +12,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
@@ -152,7 +152,7 @@
 				<?php }?> 
 				.? <strong>???</strong>, and spent <strong><?php echo $sti_o2_1;?></strong> of the night below 90% O2.  <br />
 				<br />
-				We delivered <strong>???</strong> device  on <strong>???</strong>, and <strong><?php echo $s_h?></strong> has reported doing well with it.  I write to give you a progress update after the initial titration period and following a take home sleep study done with the state-of-the-art <strong>???</strong> sleep recorder.  <strong><?php echo $name1?>’s</strong> numbers, baseline and post appliance insertion, appear below.<br /><br />
+				We delivered <strong>???</strong> device  on <strong>???</strong>, and <strong><?php echo $s_h?></strong> has reported doing well with it.  I write to give you a progress update after the initial titration period and following a take home sleep study done with the state-of-the-art <strong>???</strong> sleep recorder.  <strong><?php echo $name1?>ï¿½s</strong> numbers, baseline and post appliance insertion, appear below.<br /><br />
 				<table width="98%" border="1" cellspacing="0" cellpadding="6">
 					<tr>
 						<td width="214" valign="top">&nbsp;</td>
@@ -196,9 +196,9 @@
 					</tr>
 				</table>
 				<br />
-				<strong><?php echo $name1?></strong> has been counseled that OSA is a progressive disease and I have stressed the importance of a team healthcare approach and disciplined follow up.  As you can see by the numbers, <strong><?php echo $name1?>’s</strong> treatment with dental sleep therapy appears to be <strong>???</strong>  and at this point and I believe <strong><?php echo $s_h?></strong> has reached the maximum medical improvement afforded by dental sleep therapy. <strong>(How will they check???)</strong><br><br>
+				<strong><?php echo $name1?></strong> has been counseled that OSA is a progressive disease and I have stressed the importance of a team healthcare approach and disciplined follow up.  As you can see by the numbers, <strong><?php echo $name1?>ï¿½s</strong> treatment with dental sleep therapy appears to be <strong>???</strong>  and at this point and I believe <strong><?php echo $s_h?></strong> has reached the maximum medical improvement afforded by dental sleep therapy. <strong>(How will they check???)</strong><br><br>
 
-				Please don’t hesitate to call if you have any questions.  I thank you again for the opportunity to participate in this patient’s treatment.<br><br>
+				Please donï¿½t hesitate to call if you have any questions.  I thank you again for the opportunity to participate in this patientï¿½s treatment.<br><br>
 
 				Sincerely,<br><br><br><br>
 

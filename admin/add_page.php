@@ -58,12 +58,12 @@ if($_POST["pagesub"] == 1)
 				parent.window.location='manage_pages.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
 			$ins_sql = "insert into pages set title = '".s_for($_POST["title"])."', keywords = '".s_for($_POST["keywords"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."', top_image = '".s_for($banner1)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -72,7 +72,7 @@ if($_POST["pagesub"] == 1)
 				parent.window.location='manage_pages.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }
@@ -190,7 +190,7 @@ if($_POST["pagesub"] == 1)
 				<input type="file" name="top_image" value="" size="26" />
 				<input type="hidden" name="top_image_old" value="<?=$top_image;?>" />
 				<br />
-				(Best Size: 618px × 268px)
+				(Best Size: 618px ï¿½ 268px)
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

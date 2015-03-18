@@ -15,7 +15,7 @@ $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
+$my=mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $num_users=mysql_num_rows($my);
 ?>
 
@@ -71,7 +71,7 @@ $num_users=mysql_num_rows($my);
 		while($myarray = mysql_fetch_array($my))
 		{
 			$user_sql = "select * from dental_users where userid='".st($myarray['userid'])."'";
-			$user_my = mysql_query($user_sql) or die(mysql_error()." | ".$user_sql);
+			$user_my = mysql_query($user_sql) or trigger_error(mysql_error()." | ".$user_sql, E_USER_ERROR);
 			$user_myarray = mysql_fetch_array($user_my);
 						
 			$tr_class = "tr_active";

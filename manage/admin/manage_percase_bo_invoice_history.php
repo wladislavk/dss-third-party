@@ -7,7 +7,7 @@ $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$my=mysql_query($sql) or die(mysql_error());
+$my=mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $num_users=mysql_num_rows($my);
 
 $c_sql = "SELECT * from companies WHERE id=".mysql_real_escape_string($_GET['companyid']);
@@ -257,7 +257,7 @@ try{
   $body = $e->getJsonBody();
   $err  = $body['error'];       
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-  //die();
+  //trigger_error("Die called", E_USER_ERROR);
 
 }
 echo $charge->card->last4;

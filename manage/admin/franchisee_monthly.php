@@ -13,7 +13,7 @@ if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;

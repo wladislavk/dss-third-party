@@ -39,7 +39,7 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
 				parent.window.location='manage_plans.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -75,7 +75,7 @@ if(!empty($_POST["plansub"]) && $_POST["plansub"] == 1)
 				parent.window.location = 'manage_plans.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 

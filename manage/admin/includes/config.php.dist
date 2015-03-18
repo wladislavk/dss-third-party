@@ -5,7 +5,7 @@
 	$config_db_host = "localhost";
 
 	session_start();
-	$con = 	mysql_connect($config_db_host,$config_db_user,$config_db_pass) or die('connection failure');
+	$con = 	mysql_connect($config_db_host,$config_db_user,$config_db_pass) or trigger_error('connection failure', E_USER_ERROR);
 	mysql_select_db($config_db_name);
 
 	include ROOT_DIR . '/manage/admin/classes/Db.php';

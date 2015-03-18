@@ -90,7 +90,7 @@ if(isset($json_response->{"error"})){
         ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'
         ";
 
-  mysqli_query($con,$up_sql) or die(mysql_error());
+  mysqli_query($con,$up_sql) or trigger_error(mysql_error(), E_USER_ERROR);
   $eid = mysql_insert_id();
   invoice_add_enrollment('2', $_SESSION['admincompanyid'], $eid);
   ?>
@@ -98,7 +98,7 @@ if(isset($json_response->{"error"})){
     parent.window.location = "manage_enrollments.php?ed=<?php echo $_GET['docid']; ?>";
   </script>
   <?php
-  die();
+  trigger_error("Die called", E_USER_ERROR);
 }
 }
 ?>
@@ -360,7 +360,7 @@ $('#provider_select').change(function(){
   if(r.signature=="0"){
     alert("Error - No e-signature on file for "+r.provider_name+".  In order to submit electronic enrollments this user must add an e-signature on his/her ‘Profile’ page.");
         $('#provider_select option:first-child').attr("selected", "selected");
-        exit;
+        trigger_error("Exit called", E_USER_ERROR);
   }
   $('#facility_name').val(r.facility_name);
   $('#provider_name').val(r.provider_name);

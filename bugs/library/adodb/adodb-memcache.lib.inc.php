@@ -1,7 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 global $ADODB_INCLUDED_MEMCACHE;
 $ADODB_INCLUDED_MEMCACHE = 1;

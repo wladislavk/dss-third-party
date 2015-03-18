@@ -420,7 +420,7 @@ if($_POST['insurancesub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysql_query($ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>
@@ -429,7 +429,7 @@ if($_POST['insurancesub'] == 1)
 			window.location='manage_insurance.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -623,7 +623,7 @@ if($_POST['insurancesub'] == 1)
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."'
 		where insuranceid = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		$msg = "Edited Successfully";
 		?>
@@ -632,7 +632,7 @@ if($_POST['insurancesub'] == 1)
 			window.location='<?=$_SERVER['PHP_SELF']?>?insid=<?=$_GET['insid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 		
 }
@@ -650,7 +650,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $qua_sql = "select * from dental_qualifier where status=1 order by sortby";

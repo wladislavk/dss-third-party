@@ -6,6 +6,6 @@
 	$r = $db->getRow($sql);
 	if(($r['registration_status'] == 1 || $r['registration_status'] == 2) && $r['use_patient_portal']==1 && $r['doc_use_patient_portal']==1 && $r['email']!=$_REQUEST['email']){
 	  echo '{"success":true}';
-	  die();
+	  trigger_error("Die called", E_USER_ERROR);
 	}
 ?>

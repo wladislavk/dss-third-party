@@ -13,7 +13,7 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
@@ -54,7 +54,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 		window.location.replace("<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>");
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
 

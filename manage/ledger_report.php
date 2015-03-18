@@ -6,7 +6,7 @@ if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] != 1 && !empty($_REQUE
 		window.location = 'ledger.php';
 	</script>
 	<?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!isset($_REQUEST['sort'])){

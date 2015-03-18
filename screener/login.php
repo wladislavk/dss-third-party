@@ -49,7 +49,7 @@ if($_POST["loginsub"] == 1)
 			window.location.replace('index.php');
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -59,7 +59,7 @@ if($_POST["loginsub"] == 1)
 			window.location.replace('login.php?msg=<?=$msg;?>');
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 ?>

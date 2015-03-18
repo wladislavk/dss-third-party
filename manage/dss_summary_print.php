@@ -12,7 +12,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$q1_sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";

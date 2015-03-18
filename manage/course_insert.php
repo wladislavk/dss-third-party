@@ -9,24 +9,24 @@ while($r = mysql_fetch_assoc($q)){
                                         name = '".mysql_real_escape_string($r["username"])."',
                                         mail = '".mysql_real_escape_string($r["email"])."',
                                         status = '1'";
-                        mysql_query($course_sql, $course_con) or die("u - " . mysql_error($course_con));
+                        mysql_query($course_sql, $course_con) or trigger_error("u - " . mysql_error($course_con), E_USER_ERROR);
                         $course_uid = mysql_insert_id($course_con);
 			echo $course_uid."<br />";
                         $roles_sql = "INSERT INTO users_roles SET
                                         uid = '".mysql_real_escape_string($course_uid)."',
                                         rid = '3'";
-                        mysql_query($roles_sql, $course_con) or die("role - " . mysql_error($course_con));
+                        mysql_query($roles_sql, $course_con) or trigger_error("role - " . mysql_error($course_con), E_USER_ERROR);
                         $rev_sql = "INSERT INTO node_revisions (title) VALUES ('dss profile')";
-                        mysql_query($rev_sql, $course_con) or die("rev - " . mysql_error($course_con));
+                        mysql_query($rev_sql, $course_con) or trigger_error("rev - " . mysql_error($course_con), E_USER_ERROR);
                         $vid = mysql_insert_id($course_con);
                         $profile_sql = "INSERT INTO node 
                                                 (type, status, title, vid, uid)
                                         VALUES
                                                 ('profile', 1, 'dss profile', '".$vid."', '".mysql_real_escape_string($course_uid)."')";
-                        mysql_query($profile_sql, $course_con) or die($profile_sql ." | ".mysql_error($course_con));
+                        mysql_query($profile_sql, $course_con) or trigger_error($profile_sql ." | ".mysql_error($course_con), E_USER_ERROR);
                         $nid = mysql_insert_id($course_con);
                         $rev_sql = "UPDATE node_revisions SET nid=".$nid." WHERE vid=".$vid;
-                        mysql_query($rev_sql, $course_con) or die("up - ".mysql_error($course_con));;
+                        mysql_query($rev_sql, $course_con) or trigger_error("up - ".mysql_error($course_con), E_USER_ERROR);;
                         if($r['docid']==0){
                           $docid = $r['userid'];
                         }else{
@@ -64,7 +64,7 @@ while($r = mysql_fetch_assoc($q)){
                                                         '".mysql_real_escape_string($docname)."',
                                                         '".mysql_real_escape_string($r['name'])."',
                                                         '".mysql_real_escape_string($r['userid'])."')";
-                        mysql_query($ctp_sql, $course_con) or die(mysql_error($course_con));
+                        mysql_query($ctp_sql, $course_con) or trigger_error(mysql_error($course_con), E_USER_ERROR);
 
 //echo $ctp_sql;
 }
@@ -91,14 +91,14 @@ $u = 'staff1e';
  
 		?><br /><br /><?php
                 $user_sql = "SELECT * FROM users_roles";
-                $q = mysql_query($user_sql, $course_con) or die(mysql_error());
+                $q = mysql_query($user_sql, $course_con) or trigger_error(mysql_error(), E_USER_ERROR);
                 while($row = mysql_fetch_assoc($q)){
                         print_r($row);
                 }
 
                 ?><br /><br /><?php
                 $user_sql = "SELECT * FROM node where type='profile' AND uid=".$uid;
-                $q = mysql_query($user_sql, $course_con) or die(mysql_error());
+                $q = mysql_query($user_sql, $course_con) or trigger_error(mysql_error(), E_USER_ERROR);
                 while($row = mysql_fetch_assoc($q)){
                         print_r($row);
 			$nid = $row['nid'];
@@ -108,7 +108,7 @@ $u = 'staff1e';
                 ?><br /><br /><?php
 		$user_sql = "SELECT * FROM content_type_profile ";
 		//echo $user_sql;
-                $q = mysql_query($user_sql, $course_con) or die(mysql_error($course_con));
+                $q = mysql_query($user_sql, $course_con) or trigger_error(mysql_error($course_con), E_USER_ERROR);
                 while($row = mysql_fetch_assoc($q)){
                         print_r($row);
                 }

@@ -7,7 +7,7 @@ if(isset($_POST['dailysub']) && isset($_POST['monthlysub']) && $_POST['dailysub'
 		window.location = 'patient_report.php';
 	</script>
 	<?php 
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 200;

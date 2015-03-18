@@ -80,7 +80,7 @@ class IndexController extends Controller
 					$_SESSION['loginid']=$ins_id;
 				
 					header('Location: index');
-					die();
+					trigger_error("Die called", E_USER_ERROR);
 				}
 			}
 			else
@@ -119,7 +119,7 @@ class IndexController extends Controller
 
 	public function check()
 	{
-echo "<pre>"; var_dump('ok'); die();
+echo "<pre>"; var_dump('ok'); trigger_error("Die called", E_USER_ERROR);
 		include_once(APP_PATH.'/views/index/login.phtml');
 	}
 

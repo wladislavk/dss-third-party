@@ -182,7 +182,7 @@
 		$letter = create_letter($letterid, $pid, '', $topatient);
 		if (!is_numeric($letter)) {
 			print $letter;
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			return $letter;
 		}

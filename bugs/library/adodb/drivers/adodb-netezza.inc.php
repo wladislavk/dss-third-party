@@ -15,7 +15,7 @@
     Still need to remove blob functions, as Netezza doesn't suppport blob
 */
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 include_once(ADODB_DIR.'/drivers/adodb-postgres64.inc.php');
 

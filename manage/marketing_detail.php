@@ -5,7 +5,7 @@ include("includes/sescheck.php");
 
 
 $sql = "select * from dental_doc_marketing where doc_marketingid='".s_for($_GET['id'])."'";
-$my = mysql_query($sql) or die(mysql_error());
+$my = mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $myarray = mysql_fetch_array($my);
 $num_users=mysql_num_rows($my);
 
@@ -16,7 +16,7 @@ if(st($myarray['title']) == '')
 		parent.disablePopup1();
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
 

@@ -66,7 +66,7 @@ if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
 				parent.window.location='manage_backoffice.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -102,7 +102,7 @@ if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
 				parent.window.location='manage_backoffice.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

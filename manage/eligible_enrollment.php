@@ -804,7 +804,7 @@ if($success == "false"){
 //echo($result);
 
 /*
-die();
+trigger_error("Die called", E_USER_ERROR);
 $prefix = array( 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX');
 
 // Get modifier codes

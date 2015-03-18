@@ -7,7 +7,7 @@
 			window.location = "index.php";
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 ?>

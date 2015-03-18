@@ -25,7 +25,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }*/
 
 $letterid = mysql_real_escape_string($_GET['lid']);

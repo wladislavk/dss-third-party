@@ -16,7 +16,7 @@
 ?>
     <h2>Unable to find letter.</h2>
   <?php
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   }
 ?>
 
@@ -47,7 +47,7 @@
     <h2>You are not permitted to view this letter.</h2>
 
 <?php
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   }
 
   $masterid = $_GET['lid'];
@@ -1969,7 +1969,7 @@ foreach ($master_q as $master_r) {
           <?php
             }
 
-	          die();
+	          trigger_error("Die called", E_USER_ERROR);
             continue;
           }
           ?>

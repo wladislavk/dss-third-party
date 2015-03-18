@@ -243,7 +243,7 @@ class LogMaster{
 			echo LogMaster::get_session_log();
 			echo "\n</xmp></pre>";
 		}
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	
 	/*! enable logging

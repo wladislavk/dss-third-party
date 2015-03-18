@@ -12,11 +12,11 @@ if(st($log_myarray['userid']) == '')
 		window.location = "manage_login.php?msg=Invalid Information.";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $user_sql = "select * from dental_users where userid='".st($log_myarray['userid'])."'";
-$user_my = mysql_query($user_sql) or die(mysql_error()." | ".$user_sql);
+$user_my = mysql_query($user_sql) or trigger_error(mysql_error()." | ".$user_sql, E_USER_ERROR);
 $user_myarray = mysql_fetch_array($user_my);
 
 $rec_disp = 20;
@@ -33,7 +33,7 @@ $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
+$my=mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $num_users=mysql_num_rows($my);
 ?>
 

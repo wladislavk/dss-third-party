@@ -15,7 +15,7 @@ function trigger_letter1($pid, $topatient, $md_referral_list, $md_list, $send_me
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
  
@@ -24,14 +24,14 @@ function trigger_letter2($pid, $topatient, $md_referral_list, $md_list, $send_me
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 2: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -40,14 +40,14 @@ function trigger_letter3($pid, $topatient, $md_referral_list, $md_list, $send_me
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 3: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -56,14 +56,14 @@ function trigger_letter4($pid, $topatient, $md_referral_list, $md_list, $send_me
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 4: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -75,14 +75,14 @@ function trigger_letter5($pid, $topatient, $md_referral_list, $md_list, $send_me
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 5: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -91,14 +91,14 @@ function trigger_letter6($pid, $topatient, $md_referral_list, $md_list, $send_me
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 6: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -107,14 +107,14 @@ function trigger_letter7($pid, $topatient, $md_referral_list, $md_list, $send_me
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 7: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -123,14 +123,14 @@ function trigger_letter8($pid, $topatient, $md_referral_list, $md_list, $send_me
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 8: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -139,14 +139,14 @@ function trigger_letter9($pid, $topatient, $md_referral_list, $md_list, $send_me
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 9: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -155,14 +155,14 @@ function trigger_letter10($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 10: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -171,14 +171,14 @@ function trigger_letter11($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 11: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -187,14 +187,14 @@ function trigger_letter12($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 12: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -203,14 +203,14 @@ function trigger_letter13($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 13: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -219,14 +219,14 @@ function trigger_letter14($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 14: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -235,14 +235,14 @@ function trigger_letter15($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 15: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -251,14 +251,14 @@ function trigger_letter16($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method, '', '', false);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 16: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -267,14 +267,14 @@ function trigger_letter17($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 17: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -283,14 +283,14 @@ function trigger_letter18($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 18: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -299,14 +299,14 @@ function trigger_letter19($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method, '', '', false);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 19: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -315,14 +315,14 @@ function trigger_letter20($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 20: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -331,14 +331,14 @@ function trigger_letter21($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 21: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -347,14 +347,14 @@ function trigger_letter22($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 22: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -363,14 +363,14 @@ function trigger_letter23($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 23: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -379,14 +379,14 @@ function trigger_letter24($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 24: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -395,14 +395,14 @@ function trigger_letter25($pid, $topatient, $md_referral_list, $md_list, $send_m
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
 	if (!is_numeric($letter)) {
 		print "Can't send letter 25: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		?>
 		<script type="text/javascript">
 			//parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -411,14 +411,14 @@ function trigger_letter99($pid, $topatient, $md_referral_list, $md_list, $send_m
         $letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
         if (!is_numeric($letter)) {
                 print "Can't send letter 99: " . $letter;
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         } else {
                 ?>
                 <script type="text/javascript">
                         parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';                
                 </script>
                 <?php
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         }
 }
 
@@ -427,14 +427,14 @@ function trigger_letter126($pid, $topatient, $md_referral_list, $md_list, $send_
         $letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
         if (!is_numeric($letter)) {
                 print "Can't send letter 126: " . $letter;
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         } else {
                 ?>
                 <script type="text/javascript">
 			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';
                 </script>
                 <?php
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         }
 }
 
@@ -443,14 +443,14 @@ function trigger_letter178($pid, $topatient, $md_referral_list, $md_list, $send_
         $letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method);
         if (!is_numeric($letter)) {
                 print "Can't send letter 178: " . $letter;
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         } else {
                 ?>
                 <script type="text/javascript">
                         parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';
                 </script>
                 <?php
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         }
 }
 
@@ -471,14 +471,14 @@ function trigger_letter($letterid, $pid, $topatient, $md_referral_list, $md_list
         $letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', '', $send_method, null, null, $check_recipient, $template_type);
         if (!is_numeric($letter)) {
                 print "Can't send letter ".$letterid.": " . $letter;
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         } else {
                 ?>
                 <script type="text/javascript">
                         parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';                
                 </script>
                 <?php
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         }
 }
 

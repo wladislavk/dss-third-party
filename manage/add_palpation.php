@@ -29,7 +29,7 @@
 					parent.window.location = 'custom_palpation.php?msg=<?php echo $msg;?>';
 				</script>
 <?php
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			} else {
 				$ins_sql = "insert into dental_palpation set palpation = '".s_for($_POST["palpation"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 				$db->query($ins_sql);
@@ -39,7 +39,7 @@
 					parent.window.location = 'custom_palpation.php?msg=<?php echo $msg;?>';
 				</script>
 <?php
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			}
 		}
 	}

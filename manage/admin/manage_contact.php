@@ -13,7 +13,7 @@ if(!empty($_REQUEST["delid"]))
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&docid=<?php echo $_GET['docid']?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;

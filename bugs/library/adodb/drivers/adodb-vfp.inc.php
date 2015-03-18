@@ -12,7 +12,7 @@ Set tabs to 4 for best viewing.
 */
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 if (!defined('_ADODB_ODBC_LAYER')) {
 	include(ADODB_DIR."/drivers/adodb-odbc.inc.php");

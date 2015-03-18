@@ -70,13 +70,13 @@ if( false == $result ) {
 		" on host " . config_get_global( 'hostname' ) .
 		" with username " . config_get_global( 'db_username' ) .
 		" failed: " . db_error_msg() . "\n";
-	exit( 1 );
+	trigger_error("Exit called with status 1", E_USER_ERROR);
 }
 
 # check to see if the new installer was used
 if ( -1 == config_get( 'database_version', -1 ) ) {
 	echo "Upgrade from the current installed MantisBT version is no longer supported.  If you are using MantisBT version older than 1.0.0, then upgrade to v1.0.0 first.";
-	exit( 1 );
+	trigger_error("Exit called with status 1", E_USER_ERROR);
 }
 
 # read control variables with defaults
@@ -98,7 +98,7 @@ $t_result = @$g_db->Connect( $f_hostname, $f_db_username, $f_db_password, $f_dat
 
 if( false == $t_result ) {
 	echo "failed\n";
-	exit( 1 );
+	trigger_error("Exit called with status 1", E_USER_ERROR);
 }
 
 echo "OK\n";
@@ -130,9 +130,9 @@ while(( $i <= $lastid ) && !$g_failed ) {
 }
 
 if( false == $g_failed ) {
-	exit( 0 );
+	trigger_error("Exit called with status 0", E_USER_ERROR);
 }
 
-exit( 1 );
+trigger_error("Exit called with status 1", E_USER_ERROR);
 
 # vim: noexpandtab tabstop=4 softtabstop=0:

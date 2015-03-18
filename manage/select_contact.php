@@ -15,7 +15,7 @@ $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
+$my=mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $num_contact=mysql_num_rows($my);
 ?>
 
@@ -79,7 +79,7 @@ $num_contact=mysql_num_rows($my);
 		while($myarray = mysql_fetch_array($my))
 		{
 			$contype_sql = "SELECT * FROM dental_contacttype where status=1 and contacttypeid='".s_for($myarray['contacttypeid'])."' ";
-			$contype_my = mysql_query($contype_sql) or die($contype_sql." | ".mysql_error());
+			$contype_my = mysql_query($contype_sql) or trigger_error($contype_sql." | ".mysql_error(), E_USER_ERROR);
 			$contype_myarray = mysql_fetch_array($contype_my);
 			
 			if($myarray["status"] == 1)

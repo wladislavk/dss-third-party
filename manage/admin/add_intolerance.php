@@ -30,7 +30,7 @@ if(!empty($_POST["mult_intolerancesub"]) && $_POST["mult_intolerancesub"] == 1)
 		parent.window.location='manage_intolerance.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["intolerancesub"]) && $_POST["intolerancesub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["intolerancesub"]) && $_POST["intolerancesub"] == 1)
 				parent.window.location='manage_intolerance.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["intolerancesub"]) && $_POST["intolerancesub"] == 1)
 				parent.window.location = 'manage_intolerance.php?msg=<?php echo $msg;?>';
 			</script>
 			<?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

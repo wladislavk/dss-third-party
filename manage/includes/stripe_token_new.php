@@ -41,39 +41,39 @@
         $body = $e->getJsonBody();
         $err  = $body['error'];
         echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     } catch (Stripe_InvalidRequestError $e) {
         // Invalid parameters were supplied to Stripe's API
         $body = $e->getJsonBody();
         $err  = $body['error'];
         echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     } catch (Stripe_AuthenticationError $e) {
         // Authentication with Stripe's API failed
         // (maybe you changed API keys recently)
         $body = $e->getJsonBody();
         $err  = $body['error'];
         echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     } catch (Stripe_ApiConnectionError $e) {
         // Network communication with Stripe failed
         $body = $e->getJsonBody();
         $err  = $body['error'];
         echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     } catch (Stripe_Error $e) {
         // Display a very generic error to the user, and maybe send
         // yourself an email
         $body = $e->getJsonBody();
         $err  = $body['error'];
         echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     } catch (Exception $e) {
         // Something else happened, completely unrelated to Stripe
         $body = $e->getJsonBody();
         $err  = $body['error'];
         echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 
     // charge the Customer instead of the card

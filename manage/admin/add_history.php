@@ -30,7 +30,7 @@ if(!empty($_POST["mult_historysub"]) && $_POST["mult_historysub"] == 1)
 		parent.window.location='manage_history.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["historysub"]) && $_POST["historysub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["historysub"]) && $_POST["historysub"] == 1)
 				parent.window.location='manage_history.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["historysub"]) && $_POST["historysub"] == 1)
 				parent.window.location='manage_history.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

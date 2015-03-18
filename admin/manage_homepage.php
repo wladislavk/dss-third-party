@@ -15,7 +15,7 @@ if($_POST["homepagesub"] == 1)
 		window.location='manage_homepage.php?msg=<?=$msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $thesql = "select * from homepage";

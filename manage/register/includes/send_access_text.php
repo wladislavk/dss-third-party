@@ -12,7 +12,7 @@
   $r = $db->getRow($s);
   if($r['text_num'] >= 5 && strtotime($r['text_date'])>(time()-3600)){
     echo '{"error":"limit"}';
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   }
 
   if($r['access_code']=='' || strtotime($r['access_code_date']) < time()-86400){

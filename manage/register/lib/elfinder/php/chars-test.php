@@ -6,13 +6,13 @@ header('Content-Type: text/html; charset=utf-8');
 echo 'белая собака';
 echo strToLower('белая собака');
 
-exit();
+trigger_error("Exit called", E_USER_ERROR);
 $orig = 'ёЁйЙØÅŻ';
 echo $orig.'<br>';
 $path = '../../../files/tmp/';
 
 if (!touch($path.$orig)) {
-	exit('unable to create file');
+    trigger_error('unable to create file', E_USER_ERROR);
 }
 
 

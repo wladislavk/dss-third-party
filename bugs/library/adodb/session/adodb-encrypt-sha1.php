@@ -1,5 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-if (!defined('ADODB_SESSION')) die();
+if (!defined('ADODB_SESSION')) trigger_error("Die called", E_USER_ERROR);
 
 include_once ADODB_SESSION . '/crypt.inc.php';
 

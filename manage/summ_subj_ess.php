@@ -40,7 +40,7 @@ if(!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1)
 		//parent.disablePopup();
 	</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 }
 
 $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
@@ -54,7 +54,7 @@ if(empty($pat_myarray['patientid']))
 		window.location = 'manage_patient.php';
 	</script>
 <?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select * from dental_q_sleep where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";

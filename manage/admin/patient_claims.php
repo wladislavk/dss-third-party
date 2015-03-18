@@ -63,7 +63,7 @@ if(isset($_REQUEST["delid"])  && $_SESSION['admin_access']==1) {
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&fid=<?=$_REQUEST['fid']?>&pid=<?=$_REQUEST['pid']?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(isset($_REQUEST['sendid'])){

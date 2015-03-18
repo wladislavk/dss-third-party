@@ -109,7 +109,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 				parent.window.location='manage_companies.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 }
 
 ?>

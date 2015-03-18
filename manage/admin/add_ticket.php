@@ -67,7 +67,7 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1)
 		</script>
 		<?
 		
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	
 }
 

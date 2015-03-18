@@ -10,7 +10,7 @@ if($_POST["ressub"] == 1)
 			$ed_sql = "update dental_support_responses set 
 				body = '".mysql_real_escape_string($_POST["body"])."'
 			where id='".$_POST["id"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -20,7 +20,7 @@ if($_POST["ressub"] == 1)
 				parent.window.location='view_support_ticket.php?ed=<?=$_GET['ed'];?>&msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 }
 
 ?>

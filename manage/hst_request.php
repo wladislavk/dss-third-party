@@ -9,7 +9,7 @@ if(isset($_POST['submit'])){
   $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND filename IS NOT NULL AND patiendid = '".$pid."' ORDER BY id DESC LIMIT 1;";
   $d = $db->getRow($sleepstudies);
   $diagnosis = $d['diagnosis'];
-  //print_r($my_array);exit;
+  //print_r($my_array);trigger_error("Exit called", E_USER_ERROR);
   $sd = date('Y-m-d H:i:s');
   $sql = "INSERT INTO dental_hst ("
        . "  patient_id, doc_id, user_id, company_id, ins_co_id, ins_phone, patient_ins_group_id, "

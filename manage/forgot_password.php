@@ -48,7 +48,7 @@ http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray
 			window.location.replace('login.php?msg=Email sent');
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		$msg='Email address not found';
 		?>
@@ -56,7 +56,7 @@ http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray
 			window.location.replace('forgot_password.php?msg=<?php echo $msg;?>');
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 ?>

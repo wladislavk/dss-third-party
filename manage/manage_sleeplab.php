@@ -13,7 +13,7 @@ if (!empty($_REQUEST["delid"])) {
 	</script>
 
 <?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;

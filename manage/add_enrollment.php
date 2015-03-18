@@ -114,7 +114,7 @@
         parent.window.location = "manage_enrollment.php";
       </script>
     <?php
-      die();
+      trigger_error("Die called", E_USER_ERROR);
     }
   }
 ?>

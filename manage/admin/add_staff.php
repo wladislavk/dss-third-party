@@ -83,7 +83,7 @@ if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
 				parent.window.location='manage_staff.php?msg=<?=$msg;?>&docid=<?=$_GET['docid'];?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -140,7 +140,7 @@ if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
 				parent.window.location='manage_staff.php?msg=<?=$msg;?>&docid=<?=$_GET['docid'];?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

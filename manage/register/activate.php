@@ -23,7 +23,7 @@
             window.location = "../login.php";
         </script>
 <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 
     $s = "SELECT du.email, du.phone FROM dental_users du 
@@ -38,7 +38,7 @@
 ?>
 		<h3 style="font-family:Helvetica, Arial, sans-serif;">We are unable to find the page you attempted to access. Please contact Dental Sleep Solutions&reg; for assistance.</h3>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
     }
 ?>
 

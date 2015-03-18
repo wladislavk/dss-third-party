@@ -225,7 +225,7 @@ $num = mysqli_num_rows($q);
 		</script>
 		<?
 		}
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -280,7 +280,7 @@ $num = mysqli_num_rows($q);
 		</script>
 		<?
 		}
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -306,7 +306,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";

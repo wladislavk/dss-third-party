@@ -108,7 +108,7 @@ if(!empty($_POST["doc_insuranceub"]) && $_POST["doc_insuranceub"] == 1)
 			parent.window.location='manage_doc_insurance.php?msg=<?php echo $msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -122,7 +122,7 @@ if(!empty($_POST["doc_insuranceub"]) && $_POST["doc_insuranceub"] == 1)
 			parent.window.location='manage_doc_insurance.php?msg=<?php echo $msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 

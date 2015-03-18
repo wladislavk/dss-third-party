@@ -49,7 +49,7 @@ if($_POST["videosub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update video set title = '".s_for($_POST["title"])."', status = '".s_for($_POST["status"])."', video_file = '".s_for($video)."' where videoid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 			
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -59,12 +59,12 @@ if($_POST["videosub"] == 1)
 				parent.window.location='manage_video.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
 			$ins_sql = "insert into video set title = '".s_for($_POST["title"])."', status = '".s_for($_POST["status"])."', video_file = '".s_for($video)."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -73,7 +73,7 @@ if($_POST["videosub"] == 1)
 				parent.window.location='manage_video.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }
@@ -159,7 +159,7 @@ if($_POST["videosub"] == 1)
                 <input type="hidden" name="video_file_old" value="<?=st($themyarray['video_file'])?>" />
                 <span class="red">*</span>
 				<br />
-				<b>[BEST SIZE: 300px × 250px, Only FLV file]</b>
+				<b>[BEST SIZE: 300px ï¿½ 250px, Only FLV file]</b>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

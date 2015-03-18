@@ -36,7 +36,7 @@ if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesu
 		parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
@@ -82,7 +82,7 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
 				parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -101,7 +101,7 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
 				parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

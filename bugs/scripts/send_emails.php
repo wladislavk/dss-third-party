@@ -27,11 +27,11 @@ require_once( 'email_api.php' );
 # Make sure this script doesn't run via the webserver
 if( php_sapi_name() != 'cli' ) {
 	echo "send_emails.php is not allowed to run through the webserver.\n";
-	exit( 1 );
+	trigger_error("Exit called with status 1", E_USER_ERROR);
 }
 
 echo "Sending emails...\n";
 email_send_all();
 echo "Done.\n";
 
-exit( 0 );
+trigger_error("Exit called with status 0", E_USER_ERROR);

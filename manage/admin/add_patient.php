@@ -105,7 +105,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 		status = '".s_for($_POST["status"])."' 
 		where 
 		patientid='".$_POST["ed"]."'";
-		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		//echo $ed_sql.mysql_error();
 		$msg = "Edited Successfully";
@@ -115,7 +115,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 			parent.window.location='manage_patient.php?msg=<?php echo $msg;?>&docid=<?php echo($_REQUEST["docid"]); ?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -217,7 +217,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 		status = '".s_for($_POST["status"])."',
 		adddate=now(),
 		ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysqli_query($con,$ins_sql) or die($ins_sql.mysql_error());
+		mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>
@@ -226,7 +226,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 			parent.window.location='manage_patient.php?msg=<?php echo $msg;?>&docid=<?php echo($_REQUEST["docid"]); ?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 

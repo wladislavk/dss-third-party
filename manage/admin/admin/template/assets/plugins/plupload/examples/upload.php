@@ -27,7 +27,7 @@ header("Pragma: no-cache");
 header("Access-Control-Allow-Origin: *");
 // other CORS headers if any...
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-	exit; // finish preflight CORS requests here
+	trigger_error("Exit called", E_USER_ERROR); // finish preflight CORS requests here
 }
 */
 
@@ -71,7 +71,7 @@ $chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
 // Remove old temp files	
 if ($cleanupTargetDir) {
 	if (!is_dir($targetDir) || !$dir = opendir($targetDir)) {
-		die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}');
+		trigger_error('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}', E_USER_ERROR);
 	}
 
 	while (($file = readdir($dir)) !== false) {
@@ -93,21 +93,21 @@ if ($cleanupTargetDir) {
 
 // Open temp file
 if (!$out = @fopen("{$filePath}.part", $chunks ? "ab" : "wb")) {
-	die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "'.$fileName.'"}');
+	trigger_error('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "'.$fileName.'"}', E_USER_ERROR);
 }
 
 if (!empty($_FILES)) {
 	if ($_FILES["file"]["error"] || !is_uploaded_file($_FILES["file"]["tmp_name"])) {
-		die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "'.$fileName.'"}');
+		trigger_error('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "'.$fileName.'"}', E_USER_ERROR);
 	}
 
 	// Read binary input stream and append it to temp file
 	if (!$in = @fopen($_FILES["file"]["tmp_name"], "rb")) {
-		die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "'.$fileName.'"}');
+		trigger_error('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "'.$fileName.'"}', E_USER_ERROR);
 	}
 } else {	
 	if (!$in = @fopen("php://input", "rb")) {
-		die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "'.$fileName.'"}');
+		trigger_error('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "'.$fileName.'"}', E_USER_ERROR);
 	}
 }
 
@@ -125,4 +125,4 @@ if (!$chunks || $chunk == $chunks - 1) {
 }
 
 // Return Success JSON-RPC response
-die('{"jsonrpc" : "2.0", "result" : "OK", "id" : "'.$fileName.'"}');
+trigger_error('{"jsonrpc" : "2.0", "result" : "OK", "id" : "'.$fileName.'"}', E_USER_ERROR);

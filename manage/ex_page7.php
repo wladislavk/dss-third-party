@@ -28,7 +28,7 @@ function trigger_letter7($pid) {
     $num_rows = mysql_num_rows($letter_result);
     if(!$letter_result) {
       print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
-      die();
+      trigger_error("Die called", E_USER_ERROR);
     }
     if ($num_rows == 0) {
       $recipients['mds'][] = $contact;
@@ -41,7 +41,7 @@ function trigger_letter7($pid) {
     $num_rows = mysql_num_rows($letter_result);
     if(!$letter_result) {
       print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
-      die();
+      trigger_error("Die called", E_USER_ERROR);
     }
     if ($num_rows == 0) {
       $recipients['md_referrals'][] = $contact;
@@ -53,7 +53,7 @@ function trigger_letter7($pid) {
     $letter = create_letter($letterid, $pid, '', '', $md_list, $md_referral_list);
     if (!is_numeric($letter)) {
       print $letter;
-      die();
+      trigger_error("Die called", E_USER_ERROR);
     }
   }
 }
@@ -163,7 +163,7 @@ if($_POST['ex_page7sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysql_query($ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
 	        
                 if ($assessment_chk) {
                   trigger_letter7($_GET['pid']);
@@ -176,7 +176,7 @@ if($_POST['ex_page7sub'] == 1)
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -194,7 +194,7 @@ if($_POST['ex_page7sub'] == 1)
 		additional_paragraph_suffers = '".s_for($additional_paragraph_suffers)."'
 		where ex_page7id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 		
 		if ($assessment_chk) {
                   trigger_letter7($_GET['pid']);
@@ -207,7 +207,7 @@ if($_POST['ex_page7sub'] == 1)
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -225,7 +225,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select * from dental_ex_page7 where patientid='".$_GET['pid']."'";

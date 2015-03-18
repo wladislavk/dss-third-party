@@ -19,7 +19,7 @@ $sql = "SELECT c.contactid, c.company "
         .               " AND docid = '" . mysql_real_escape_string($_GET['fid']) . "' "
         .               " AND c.status=1 "
 	.		" AND merge_id IS NULL ORDER BY c.company ASC";
-$result = mysql_query($sql) or die(mysql_error());
+$result = mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 
 $patients = array();
 $i = 0;

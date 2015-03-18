@@ -9,7 +9,7 @@
 				window.location = '<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 			</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 
 		if(!empty($_REQUEST["delid"])) {
@@ -22,7 +22,7 @@
 				window.location = "<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>";
 			</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 
 		$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -36,7 +36,7 @@
 				window.location = 'manage_patient.php';
 			</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 
 		$sql = "select i.*,

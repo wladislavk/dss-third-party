@@ -13,7 +13,7 @@
     			parent.window.location = 'manage_custom.php?msg=<?php echo $msg;?>';
     		</script>
     		<?
-    		die();
+    		trigger_error("Die called", E_USER_ERROR);
     	} else {
     		$ins_sql = "insert into dental_custom set title = '".s_for($_POST["title"])."', description = '".s_for($_POST["description"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
     		
@@ -24,7 +24,7 @@
     			parent.window.location = 'manage_custom.php?msg=<?php echo $msg;?>';
     		</script>
 <?php
-    		die();
+    		trigger_error("Die called", E_USER_ERROR);
     	}
     }
 ?>

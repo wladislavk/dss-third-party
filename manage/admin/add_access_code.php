@@ -12,7 +12,7 @@ if(isset($_POST['accesscodedelete'])){
                                 parent.window.location='manage_access_codes.php?msg=<?php echo $msg;?>';
                         </script>
                         <?
-                        die();
+                        trigger_error("Die called", E_USER_ERROR);
 }
 
 if(isset($_POST["accesscodesub"]))
@@ -49,7 +49,7 @@ if(isset($_POST["accesscodesub"]))
 				parent.window.location='manage_access_codes.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -68,7 +68,7 @@ if(isset($_POST["accesscodesub"]))
 				parent.window.location='manage_access_codes.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

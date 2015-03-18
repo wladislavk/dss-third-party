@@ -30,7 +30,7 @@ if(!empty($_POST["mult_type_servicesub"]) && $_POST["mult_type_servicesub"] == 1
 		parent.window.location='manage_type_service.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["type_servicesub"]) && $_POST["type_servicesub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["type_servicesub"]) && $_POST["type_servicesub"] == 1)
 				parent.window.location='manage_type_service.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["type_servicesub"]) && $_POST["type_servicesub"] == 1)
 				parent.window.location='manage_type_service.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

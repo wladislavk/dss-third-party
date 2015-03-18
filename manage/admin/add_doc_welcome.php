@@ -109,7 +109,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 			parent.window.location='manage_doc_welcome.php?msg=<?php echo $msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -123,7 +123,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 			parent.window.location='manage_doc_welcome.php?msg=<?php echo $msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 

@@ -11,7 +11,7 @@
 // Code contributed by "Robert Twitty" <rtwitty#neutron.ushmm.org>
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 /*
     Because the ODBTP server sends and reads UNICODE text data using UTF-8

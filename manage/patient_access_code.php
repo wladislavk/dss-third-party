@@ -112,7 +112,7 @@
             window.location = 'letterpdfs/<?php echo  $filename; ?>';
         </script>
     <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
     ?>
 

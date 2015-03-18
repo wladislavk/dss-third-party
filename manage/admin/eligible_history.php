@@ -3,7 +3,7 @@ $sql = "SELECT * FROM dental_claim_electronic ORDER BY adddate DESC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 
-$my=mysql_query($sql) or die(mysql_error());
+$my=mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $num_users=mysql_num_rows($my);
 
 ?>

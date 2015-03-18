@@ -212,7 +212,7 @@ $sql = "select
 ";
 
 
-$my=mysql_query($sql) or die(mysql_error());
+$my=mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $num_users=mysql_num_rows($my);
 
 $html = '';

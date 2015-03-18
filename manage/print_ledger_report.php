@@ -37,7 +37,7 @@ $sql .= " order by service_date";
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
-$my = $db->getResults($sql) or die('No Results for print');
+$my = $db->getResults($sql) or trigger_error('No Results for print', E_USER_ERROR);
 $num_users = count($my);
 //echo $sql; 
 ?>

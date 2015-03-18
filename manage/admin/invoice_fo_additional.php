@@ -113,7 +113,7 @@ $count_q = mysql_query($sql);
 $num_docs = mysql_num_rows($count_q);
 
 $sql .= " limit 1";
-$q = mysql_query($sql) or die(mysql_error());
+$q = mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $count_invoices = (isset($_GET['ci']) && $_GET['ci']!='')?$_GET['ci']:$num_docs;
 $count_current = (isset($_GET['cc']) && $_GET['cc']!='')?$_GET['cc']:1;
 if($num_docs == 0){
@@ -126,7 +126,7 @@ if($num_docs == 0){
 $user = mysql_fetch_assoc($q);
 
 $s = "SELECT id FROM dental_percase_invoice WHERE docid='".$user['userid']."' AND status='".DSS_INVOICE_PENDING."' AND invoice_type=".DSS_INVOICE_TYPE_BC_FO;
-$q = mysql_query($s) or die(mysql_error());
+$q = mysql_query($s) or trigger_error(mysql_error(), E_USER_ERROR);
 if(mysql_num_rows($q) > 0){
 $r = mysql_fetch_assoc($q);
 $invoice_id = $r['id'];
@@ -212,7 +212,7 @@ $total_amount = 0;
           $total_amount += $_POST['producer_amount'];
         }
  	$in_sql .= " WHERE id = '".$invoice_id."'";
-    mysql_query($in_sql) or die(mysql_error());
+    mysql_query($in_sql) or trigger_error(mysql_error(), E_USER_ERROR);
 
   while($e0486 = mysql_fetch_assoc($e0486_q)){
     $id = $e0486['id'];
@@ -238,7 +238,7 @@ $total_amount = 0;
         " new_fee_amount = '".mysql_real_escape_string($_POST['pat_new_amount_'.$id])."', " .
         " new_fee_invoice_id = '".mysql_real_escape_string($invoice_id)."' " .
         " WHERE patientid = '".$id."'";
-      mysql_query($up_sql) or die(mysql_error());
+      mysql_query($up_sql) or trigger_error(mysql_error(), E_USER_ERROR);
     }
 
   }
@@ -402,7 +402,7 @@ $total_amount = 0;
           $total_amount += $_POST['producer_amount'];
         }
 
-    mysql_query($in_sql) or die(mysql_error());
+    mysql_query($in_sql) or trigger_error(mysql_error(), E_USER_ERROR);
     $invoice_id = mysql_insert_id();
 
 }
@@ -475,7 +475,7 @@ $total_amount = 0;
 		JOIN companies c ON uc.companyid = c.id
 		LEFT JOIN dental_plans p ON p.id=u.billing_plan_id
 		WHERE u.userid='".mysql_real_escape_string($user['userid'])."'";
-  $doc_q = mysql_query($doc_sql) or die(mysql_error());
+  $doc_q = mysql_query($doc_sql) or trigger_error(mysql_error(), E_USER_ERROR);
 if(mysql_num_rows($doc_q) == 0){
   //If no plan get company fees
   $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type, c.name as company_name, p.name as plan_name
@@ -683,7 +683,7 @@ Invoice Due Date:
 					FROM dental_patients p
 					LEFT JOIN dental_insurance_preauth vob ON p.patientid= vob.patient_id AND vob.invoice_id IS NOT NULL
 					WHERE p.patientid='".$claim['patientid']."' LIMIT 1";
-			$cpat_q = mysql_query($cpat_sql) or die(mysql_error());
+			$cpat_q = mysql_query($cpat_sql) or trigger_error(mysql_error(), E_USER_ERROR);
 			$cpat_r = mysql_fetch_assoc($cpat_q);
 			if($cpat_r['new_fee_invoice_id']=='' && $cpat_r['invoice_id']==''){ ?>
 

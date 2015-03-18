@@ -368,7 +368,7 @@ function db_query_bound( $p_query, $arr_parms = null, $p_limit = -1, $p_offset =
 						}
 					} else {
 						echo( "Invalid argument type passed to query_bound(): $i" );
-						exit( 1 );
+						trigger_error("Exit called with status 1", E_USER_ERROR);
 					}
 					$p_query = utf8_substr( $p_query, 0, $matches[1][1] ) . $replace . utf8_substr( $p_query, $matches[1][1] + utf8_strlen( $matches[1][0] ) );
 					$lastoffset = $matches[1][1] + utf8_strlen( $replace );

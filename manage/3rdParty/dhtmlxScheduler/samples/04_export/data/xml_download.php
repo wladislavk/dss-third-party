@@ -1,7 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 if(empty($_POST['data'])) {
 	echo "why";
-	exit;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 $filename = "data.xml";

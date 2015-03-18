@@ -30,7 +30,7 @@ $all_my = mysql_query($all_sql);
 										<? while($cat_myarray = mysql_fetch_array($cat_my))
 										{
 											$ap_sql = "select * from sleep_apnea where status=1 and categoryid='".$cat_myarray['categoryid']."' order by sortby";
-											$ap_my = mysql_query($ap_sql) or die(mysql_error()." | ".$ap_sql);
+											$ap_my = mysql_query($ap_sql) or trigger_error(mysql_error()." | ".$ap_sql, E_USER_ERROR);
 											?>
 											<tr>
 												<td height="25" valign="top" class="suntab_head">

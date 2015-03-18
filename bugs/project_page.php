@@ -35,7 +35,7 @@
 
 	if ( $f_project_id == ALL_PROJECTS ) {
 		print_header_redirect( $t_view_issues_url );
-		exit;
+		trigger_error("Exit called", E_USER_ERROR);
 	}
 
 	# Override the current page to make sure we get the appropriate project-specific configuration

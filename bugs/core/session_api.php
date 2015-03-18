@@ -228,7 +228,7 @@ function session_validate( $p_session ) {
 			$t_url = config_get_global( 'path' ) . config_get_global( 'default_home_page' );
 			echo "\t<meta http-equiv=\"Refresh\" content=\"4;URL=$t_url\" />\n";
 
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

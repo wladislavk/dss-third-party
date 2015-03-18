@@ -5,7 +5,7 @@ include "includes/top.htm";
 ?>
 		<h2>You are not authorized to view this page.</h2>
 <?php
-  		die();
+  		trigger_error("Die called", E_USER_ERROR);
 	}
 
 $rec_disp = 20;

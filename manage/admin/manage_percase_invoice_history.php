@@ -309,7 +309,7 @@ try{
   $body = $e->getJsonBody();
   $err  = $body['error'];       
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-  //die();
+  //trigger_error("Die called", E_USER_ERROR);
 
 }
 echo $charge->card->last4;

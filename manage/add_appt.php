@@ -10,7 +10,7 @@
 ?>
 		<br />You do not have permissions to edit appointment types.
 <?php
-	  	die();
+	  	trigger_error("Die called", E_USER_ERROR);
 	}
 ?>
 	<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
@@ -56,7 +56,7 @@
 					parent.window.location = 'manage_appts.php?msg=<?php echo $msg;?>';
 				</script>
 <?php
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			} else {
 				$ins_sql = "insert into dental_appt_types (name, color, classname, docid) values ('".s_for($_POST["name"])."', '" . $_POST['color'] . "', '" . $classname . "', '".mysqli_real_escape_string($con,$_SESSION['docid'])."')";
 	            $userid = $db->getInsertId($ins_sql);
@@ -66,7 +66,7 @@
 					parent.window.location = 'manage_appts.php?msg=<?php echo $msg;?>';
 				</script>
 <?php
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			}
 		}
 	}

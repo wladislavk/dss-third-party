@@ -8,7 +8,7 @@
 ?>
         <h3 style="margin-left:20px;">You are not permitted to view this page.</h3>
 <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 
     $sql = "SELECT pi.* FROM dental_percase_invoice pi

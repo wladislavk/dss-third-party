@@ -10,7 +10,7 @@ if(isset($_GET['delid'])){
     window.location = "manage_tasks.php";
   </script>
   <?php
-  die();
+  trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select dt.*, CONCAT(du.first_name, ' ', du.last_name) as name, p.firstname, p.lastname from dental_task dt

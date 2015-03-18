@@ -1,7 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php session_start();
   if(!isset($_SESSION['pid'])){
     ?><script type="text/javascript">window.location = "login.php";</script><?php
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   }
 
 include 'includes/header.php';

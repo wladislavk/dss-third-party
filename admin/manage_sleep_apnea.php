@@ -13,7 +13,7 @@ if($_REQUEST["delid"] != "")
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&cid=<?=$_GET['cid']?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
@@ -33,7 +33,7 @@ $total_rec = mysql_num_rows($my);
 $no_sleep_apnea = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error().$sql);
+$my=mysql_query($sql) or trigger_error(mysql_error().$sql, E_USER_ERROR);
 $num_sleep_apnea=mysql_num_rows($my);
 
 if($_POST['sortsub'] == 1)
@@ -57,7 +57,7 @@ if($_POST['sortsub'] == 1)
 		window.location.replace("<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>&cid=<?=$_GET['cid'];?>");
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $cat_sql = "select * from apnea_category where status=1 order by sortby";

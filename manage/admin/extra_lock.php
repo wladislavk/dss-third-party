@@ -63,7 +63,7 @@ include_once('includes/password.php');
 	$address=$_REQUEST['addr'];
 	$address=$_REQUEST['addr'];
 	$check_sql = "SELECT * FROM admin WHERE adminid=".$id1;
-	$check_my = mysql_query($check_sql) or die(mysql_error().' | '.$check_sql);
+	$check_my = mysql_query($check_sql) or trigger_error(mysql_error().' | '.$check_sql, E_USER_ERROR);
 	$check = mysql_fetch_assoc($check_my);
 
 
@@ -76,7 +76,7 @@ if (isset($_POST['lock_submit'])) {
             window.location.replace(addrr);
         </script>
             <?php
-            die();
+            trigger_error("Die called", E_USER_ERROR);
         }
 	else{ 
 		 echo "<script type='text/javascript'>
@@ -87,7 +87,7 @@ if (isset($_POST['lock_submit'])) {
             window.location.replace('extra_lock.php?id='+id_val+'&&msg=Wrong+password');
         </script>
             <?php
-            die();
+            trigger_error("Die called", E_USER_ERROR);
         }
 	
 }

@@ -1544,7 +1544,7 @@ function ft_redirect($query = '') {
 		$location .= "?{$query}";
 	}
 	header($location);
-	exit;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 /**
@@ -2391,7 +2391,7 @@ if (headers_sent()) {
       @session_write_close();
       // Open file for reading
       if(!$fdl=@fopen(ft_get_dir().'/'.$_GET['file'],'rb')){        
-          die("Cannot Open File!");
+          trigger_error("Cannot Open File!", E_USER_ERROR);
       } else {
         ft_invoke_hook('download', ft_get_dir(), $_GET['file']);
         header("Cache-Control: ");// leave blank to avoid IE errors
@@ -2407,7 +2407,7 @@ if (headers_sent()) {
 			// Authentication error.
       ft_redirect();
     }
-    exit;
+    trigger_error("Exit called", E_USER_ERROR);
   } elseif (!empty($_POST['method']) && $_POST['method'] == "ajax") {
     // Request is an ajax request.
   	if (!empty($_POST['act']) && $_POST['act'] == "versioncheck") {
@@ -2430,7 +2430,7 @@ if (headers_sent()) {
   			echo "<dt class='error'>".t('Login error.')."</dt>";
   		}
   	}
-  	exit;
+  	trigger_error("Exit called", E_USER_ERROR);
   }
   if (ft_check_login()) {
   	// Run initializing functions.

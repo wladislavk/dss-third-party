@@ -16,7 +16,7 @@
 */
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
   define("_ADODB_DB2_LAYER", 2 );
 	 

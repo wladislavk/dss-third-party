@@ -24,14 +24,14 @@ require_once( dirname( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR . 'core.php' 
 # Make sure this script doesn't run via the webserver
 if( php_sapi_name() != 'cli' ) {
 	echo "checkin.php is not allowed to run through the webserver.\n";
-	exit( 1 );
+	trigger_error("Exit called with status 1", E_USER_ERROR);
 }
 
 # Check that the username is set and exists
 $t_username = config_get( 'source_control_account' );
 if( is_blank( $t_username ) || ( user_get_id_by_name( $t_username ) === false ) ) {
 	echo "Invalid source control account ('$t_username').\n";
-	exit( 1 );
+	trigger_error("Exit called with status 1", E_USER_ERROR);
 }
 
 if( !defined( "STDIN" ) ) {
@@ -65,13 +65,13 @@ while(( $t_line = fgets( STDIN, 1024 ) ) ) {
 # If no issues found, then no work to do.
 if(( count( $t_issues ) == 0 ) && ( count( $t_fixed_issues ) == 0 ) ) {
 	echo "Comment does not reference any issues.\n";
-	exit( 0 );
+	trigger_error("Exit called with status 0", E_USER_ERROR);
 }
 
 # Login as source control user
 if( !auth_attempt_script_login( $t_username ) ) {
 	echo "Unable to login\n";
-	exit( 1 );
+	trigger_error("Exit called with status 1", E_USER_ERROR);
 }
 
 # history parameters are reserved for future use.
@@ -94,4 +94,4 @@ foreach( $t_fixed_issues as $t_issue_id ) {
 	helper_call_custom_function( 'checkin', array( $t_issue_id, $t_comment, $t_history_old_value, $t_history_new_value, true ) );
 }
 
-exit( 0 );
+trigger_error("Exit called with status 0", E_USER_ERROR);

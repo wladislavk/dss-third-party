@@ -19,10 +19,10 @@ Set tabs to 4 for best viewing.
 */
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 if (!function_exists('sqlsrv_configure')) {
-	die("mssqlnative extension not installed");
+	trigger_error("mssqlnative extension not installed", E_USER_ERROR);
 }
 
 if (!function_exists('sqlsrv_set_error_handling')) {

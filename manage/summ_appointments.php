@@ -429,7 +429,7 @@ $sql = "SELECT "
      . "ORDER BY "
      . "  front_office_request_date DESC "
      . "LIMIT 1";
-$my = mysql_query($sql) or die(mysql_error());
+$my = mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $preauth = mysql_fetch_array($my);
 update_patient_summary($_GET['pid'], 'vob', $preauth['status']);
 

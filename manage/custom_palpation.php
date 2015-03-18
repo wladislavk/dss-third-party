@@ -22,7 +22,7 @@
 				window.location = "<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 			</script>
 	<?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 
 		$rec_disp = 20;
@@ -60,7 +60,7 @@
 				disablePopupRefClean();
 			</script>
 	<?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	?>
 

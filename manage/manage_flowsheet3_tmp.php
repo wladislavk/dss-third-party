@@ -246,7 +246,7 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
   $diagnosis = $d['diagnosis'];
-  //print_r($my_array);exit;
+  //print_r($my_array);trigger_error("Exit called", E_USER_ERROR);
   $sd = date('Y-m-d H:i:s');
   $sql = "INSERT INTO dental_insurance_preauth ("
        . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
@@ -287,7 +287,7 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
        . 1
        . ")";
   //print_r($my_array);
-  //print_r($sql);exit;
+  //print_r($sql);trigger_error("Exit called", E_USER_ERROR);
   if($my = mysql_query($sql)){
     ?><script type="text/javascript">
       alert("Submitted! Verification of benefits request was submitted <?= date('m/d/Y', strtotime($sd)); ?> and is currently pending.");
@@ -308,7 +308,7 @@ function trigger_letter5($pid, $stepid) {
 	$letter = create_letter($letterid, $pid, $stepid, $topatient, '', '', '', '', 'email');
 	if (!is_numeric($letter)) {
 		print "Can't send letter 5: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		return $letter;
 	}
@@ -320,7 +320,7 @@ function trigger_letter6($pid, $stepid) {
 	$letter = create_letter($letterid, $pid, $stepid, $topatient, '', '', '', '', 'paper');
 	if (!is_numeric($letter)) {
 		print "Can't send letter 6: " . $letter;
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		return $letter;
 	}
@@ -334,7 +334,7 @@ function trigger_letter7($pid, $stepid) {
 		$letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
 		if (!is_numeric($letter)) {
 			print "Can't send letter 7: " . $letter;
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			return $letter;
 		}
@@ -347,7 +347,7 @@ function trigger_letter8($pid, $stepid) {
   $letter = create_letter($letterid, $pid, $stepid, $topatient);
   if (!is_numeric($letter)) {
     print "Can't send letter 8: " . $letter;
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     return $letter;
   }
@@ -362,7 +362,7 @@ function trigger_letter9($pid, $stepid) {
 		$letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
 		if (!is_numeric($letter)) {
 			print "Can't send letter 9: " . $letter;
-			//die();
+			//trigger_error("Die called", E_USER_ERROR);
 		} else {
 			return $letter;
 		}
@@ -377,7 +377,7 @@ function trigger_letter10($pid, $stepid) {
 		$letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
 		if (!is_numeric($letter)) {
 			print "Can't send letter 10: " . $letter;
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			return $letter;
 		}
@@ -392,7 +392,7 @@ function trigger_letter11($pid, $stepid) {
 		$letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
 		if (!is_numeric($letter)) {
 			print "Can't send letter 11: " . $letter;
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			return $letter;
 		}
@@ -406,7 +406,7 @@ function trigger_letter13($pid, $stepid) {
   $letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 13: " . $letter;
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     return $letter;
   }
@@ -420,7 +420,7 @@ function trigger_letter16($pid, $stepid) {
   $letter = create_letter($letterid, $pid, $stepid, $topatient, $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 16: " . $letter;
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     return $letter;
   }
@@ -434,7 +434,7 @@ function trigger_letter17($pid, $stepid) {
   $letter = create_letter($letterid, $pid, $stepid, $topatient, $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 17: " . $letter;
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     return $letter;
   }
@@ -448,7 +448,7 @@ function trigger_letter19($pid, $stepid) {
   $letter = create_letter($letterid, $pid, $stepid, $topatient, $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 19: " . $letter;
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     return $letter;
   }
@@ -461,7 +461,7 @@ function trigger_letter20($pid) {
   $letter = create_letter($letterid, $pid, '', '', $md_list, $pt_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 20: " . $letter;
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     return $letter;
   }
@@ -474,7 +474,7 @@ function trigger_letter20($pid) {
   $letter = create_letter($letterid, $pid, $stepid, '', '', $md_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 24: " . $letter;
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     return $letter;
   }
@@ -486,7 +486,7 @@ function trigger_letter24($pid, $stepid) {
   $letter = create_letter($letterid, $pid, $stepid, $topatient);
   if (!is_numeric($letter)) {
     print "Can't send letter 24: " . $letter;
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     return $letter;
   }
@@ -597,7 +597,7 @@ if(isset($_POST['flowsubmit'])){
 					adddate = now(),
 					ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 					
-					mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+					mysql_query($ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
 					return mysql_insert_id();
 				}
 			} else {
@@ -803,7 +803,7 @@ print $datesched . " " . $letter ? "true":"false" . " " . $topstep . " " . $last
 		$select_result = mysql_query($select_query);
 		if(!$select_result) {
 			print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting information from flowsheet during update.";
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		$numrows = mysql_num_rows($select_result);
 
@@ -863,14 +863,14 @@ print $datesched . " " . $letter ? "true":"false" . " " . $topstep . " " . $last
 			$result = mysql_query($insertquery);
 			if(!$result) {
 				print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting new information into flowsheet during update.";
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			}
 		} else {
 			$updatequery = "UPDATE dental_flow_pg2_info SET ".$setstring." WHERE patientid='".$pid."' AND stepid='".$i."';";
 			$result = mysql_query($updatequery);
 			if(!$result) {
 				print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error updating new information into flowsheet during update.";
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			}
 			if($i==1){
 				$d = date('m/d/Y', strtotime($_POST['data'][$i]['datecomp']));
@@ -880,7 +880,7 @@ print $datesched . " " . $letter ? "true":"false" . " " . $topstep . " " . $last
 		}
 		$i++;
 	}
-	//die();
+	//trigger_error("Die called", E_USER_ERROR);
 	/*
 	if(mysql_num_rows($flowresult) <= 0){
 		$flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`clinnotereq`,`clinnoterec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$clinnotereq."','".$clinnoterec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."');";
@@ -978,7 +978,7 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
 							$select_result = mysql_query($select_query);
 							if(!$select_result) {
 								print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting information from flowsheet during update.";
-								die();
+								trigger_error("Die called", E_USER_ERROR);
 							}
 							$stepid = mysql_result($select_result, 0);
 							$stepid++;
@@ -1007,7 +1007,7 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
 		$posqsoResultFinal = $posqsoResult[0];	  		  
 		  
 		// echo print_r($posqsoResultFinal);
-		// exit();
+		// trigger_error("Exit called", E_USER_ERROR);
 
 /* it doesn't seem like we need to update segments_order for the flowsheet to work		  
 		  foreach($posqsoResultFinal as $key => $value)
@@ -1547,7 +1547,7 @@ $sql = "SELECT "
      . "ORDER BY "
      . "  front_office_request_date DESC "
      . "LIMIT 1";
-$my = mysql_query($sql) or die(mysql_error());
+$my = mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $preauth = mysql_fetch_array($my);
 update_patient_summary($_GET['pid'], 'vob', $preauth['status']);
 

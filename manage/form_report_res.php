@@ -7,7 +7,7 @@
 			window.location = 'patient_report.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$rec_disp = 200;

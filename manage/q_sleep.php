@@ -81,7 +81,7 @@
                 window.location='q_page1.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
             </script>
 <?php
-            die();
+            trigger_error("Die called", E_USER_ERROR);
         } else {
             $ed_sql = " update dental_q_sleep set 
                 epworthid = '".s_for($epworth_arr)."',
@@ -132,7 +132,7 @@
                 window.location = 'q_page1.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
             </script>
 <?php
-            die();
+            trigger_error("Die called", E_USER_ERROR);
         }
     }
 
@@ -156,7 +156,7 @@
             window.location = 'manage_patient.php';
         </script>
 <?php
-       die();
+       trigger_error("Die called", E_USER_ERROR);
     }
 
     $sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";

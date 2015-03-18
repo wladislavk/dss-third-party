@@ -8,7 +8,7 @@ if(st($_GET['v_f']) == ''){?>
 		parent.disablePopup1();
 	</script>
 	<?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

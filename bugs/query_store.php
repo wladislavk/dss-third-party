@@ -65,7 +65,7 @@
 			$t_query_redirect_url = $t_query_redirect_url . '?error_msg='
 				. urlencode( lang_get( 'query_dupe_name' ) );
 			print_header_redirect( $t_query_redirect_url );
-			exit;
+			trigger_error("Exit called", E_USER_ERROR);
 		}
 	}
 

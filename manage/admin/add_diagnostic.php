@@ -30,7 +30,7 @@ if(!empty($_POST["mult_diagnosticsub"]) && $_POST["mult_diagnosticsub"] == 1)
 		parent.window.location='manage_diagnostic.php?msg=<?=$msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
 				parent.window.location='manage_diagnostic.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["diagnosticsub"]) && $_POST["diagnosticsub"] == 1)
 				parent.window.location='manage_diagnostic.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

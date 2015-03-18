@@ -16,7 +16,7 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1){
 		parent.window.location='manage_referredby.php?msg=<?php echo $msg;?>';
 	</script>
 <?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 ?>

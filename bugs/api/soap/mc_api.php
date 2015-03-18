@@ -392,7 +392,7 @@ function mc_error_handler( $p_type, $p_error, $p_file, $p_line, $p_context ) {
 
 	$l_oServer->fault( 'Server', "Error Type: $t_error_type,\nError Description:\n$t_error_description,\nStack Trace:\n$t_error_stack" );
 	$l_oServer->send_response();
-	exit();
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 # Get a stack trace if PHP provides the facility or xdebug is present

@@ -21,7 +21,7 @@ if (!$ok) {
   echo "MISSING DEPENDENCY: The Stripe API test cases depend on SimpleTest. ".
        "Download it at <http://www.simpletest.org/>, and either install it ".
        "in your PHP include_path or put it in the test/ directory.\n";
-  exit(1);
+  trigger_error("Exit called with status 1", E_USER_ERROR);
 }
 
 // Throw an exception on any error

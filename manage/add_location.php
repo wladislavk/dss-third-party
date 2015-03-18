@@ -27,7 +27,7 @@
     			parent.window.location='manage_locations.php?docid=<?php echo  $_POST['docid']; ?>&msg=<?php echo $msg;?>';
     		</script>
 <?php 
-		    die();
+		    trigger_error("Die called", E_USER_ERROR);
 	    } else {
             $ins_sql = "insert into dental_locations set location = '".s_for($_POST["location"])."',
                         name = '".mysql_real_escape_string($_POST["name"])."',
@@ -46,7 +46,7 @@
     			parent.window.location = 'manage_locations.php?msg=<?php echo $msg;?>';
     		</script>
 <?php
-		    die();
+		    trigger_error("Die called", E_USER_ERROR);
 	    }
     }
 ?>

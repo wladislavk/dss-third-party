@@ -119,7 +119,7 @@
 		} else if ($_adodb_ver >= 5.0) {
 			define('ADODB_PHPVER',0x5000);
 		} else 
-			die("PHP5 or later required. You are running ".PHP_VERSION);
+			trigger_error("PHP5 or later required. You are running ".PHP_VERSION, E_USER_ERROR);
 	}
 	
 	
@@ -166,7 +166,7 @@
 		} else {
 			// do not accept url based paths, eg. http:/ or ftp:/
 			if (strpos($ADODB_CACHE_DIR,'://') !== false) 
-				die("Illegal path http:// or ftp://");
+				trigger_error("Illegal path http:// or ftp://", E_USER_ERROR);
 		}
 		
 			
@@ -428,7 +428,7 @@
 	 */
 	function ADOConnection()			
 	{
-		die('Virtual Class -- cannot instantiate');
+		trigger_error('Virtual Class -- cannot instantiate', E_USER_ERROR);
 	}
 	
 	static function Version()
@@ -637,8 +637,8 @@
 	 * compatibility with databases that do not support prepare:
 	 *
 	 *   $stmt = $db->Prepare("insert into table (id, name) values (?,?)");
-	 *   $db->Execute($stmt,array(1,'Jill')) or die('insert failed');
-	 *   $db->Execute($stmt,array(2,'Joe')) or die('insert failed');
+	 *   $db->Execute($stmt,array(1,'Jill')) or trigger_error('insert failed', E_USER_ERROR);
+	 *   $db->Execute($stmt,array(2,'Joe')) or trigger_error('insert failed', E_USER_ERROR);
 	 *
 	 * @param sql	SQL to send to database
 	 *
@@ -2654,7 +2654,7 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 	/**
 	* Will select the supplied $page number from a recordset, given that it is paginated in pages of 
 	* $nrows rows per page. It also saves two boolean values saying if the given page is the first 
-	* and/or last one of the recordset. Added by Iván Oliva to provide recordset pagination.
+	* and/or last one of the recordset. Added by Ivï¿½n Oliva to provide recordset pagination.
 	*
 	* See readme.htm#ex8 for an example of usage.
 	*
@@ -2681,7 +2681,7 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 	/**
 	* Will select the supplied $page number from a recordset, given that it is paginated in pages of 
 	* $nrows rows per page. It also saves two boolean values saying if the given page is the first 
-	* and/or last one of the recordset. Added by Iván Oliva to provide recordset pagination.
+	* and/or last one of the recordset. Added by Ivï¿½n Oliva to provide recordset pagination.
 	*
 	* @param secs2cache	seconds to cache data, set to 0 to force query
 	* @param sql
@@ -2880,9 +2880,9 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 	var $_obj; 				/** Used by FetchObj */
 	var $_names;			/** Used by FetchObj */
 	
-	var $_currentPage = -1;	/** Added by Iván Oliva to implement recordset pagination */
-	var $_atFirstPage = false;	/** Added by Iván Oliva to implement recordset pagination */
-	var $_atLastPage = false;	/** Added by Iván Oliva to implement recordset pagination */
+	var $_currentPage = -1;	/** Added by Ivï¿½n Oliva to implement recordset pagination */
+	var $_atFirstPage = false;	/** Added by Ivï¿½n Oliva to implement recordset pagination */
+	var $_atLastPage = false;	/** Added by Ivï¿½n Oliva to implement recordset pagination */
 	var $_lastPageNo = -1; 
 	var $_maxRecordCount = 0;
 	var $datetime = false;

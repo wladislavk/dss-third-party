@@ -147,10 +147,10 @@ if (!empty($_REQUEST["delid"]) ? $_REQUEST["delid"] : '') {
         </script>
         <?
 
-	die(); // already did a javascript redirect...just die
+	trigger_error("Die called", E_USER_ERROR); // already did a javascript redirect...just die
 }
 $is_new_claim = ((!isset($_REQUEST['insid']) || $_REQUEST['insid'] == '') && empty($_POST['ed'])) ? true : false;
-//print "\$is_new_claim: $is_new_claim";exit;
+//print "\$is_new_claim: $is_new_claim";trigger_error("Exit called", E_USER_ERROR);
 
 if(!empty($_POST['ex_statusbtn'])){
 ?>
@@ -158,7 +158,7 @@ if(!empty($_POST['ex_statusbtn'])){
   window.location = '<?php echo  $called_from; ?>?insid=<?php echo  (!empty($_GET['insid']) ? $_GET['insid'] : ''); ?>&checkstatus=1&pid=<?php echo  $_GET['pid']; ?>';
 </script>
 <?php
-die();
+trigger_error("Die called", E_USER_ERROR);
 
 
 // process inserts/updates for claim form
@@ -175,7 +175,7 @@ die();
 		window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
 	</script>
 	<?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
     }
     // Put POST values into variables
 	$pica1 = $_POST['pica1'];
@@ -660,7 +660,7 @@ die();
         print '  window.location="' . $called_from . '?pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
         print '</script>';
 		
-		die(); // already did a javascript redirect...just die
+		trigger_error("Die called", E_USER_ERROR); // already did a javascript redirect...just die
 		
     // Update the claim in the dental_insurance table
 	} else {
@@ -978,7 +978,7 @@ claim_history_update($primary_claim_id, $_SESSION['userid'], $_SESSION['adminuse
 		}
         print '</script>';
 
-		die(); // already did a javascript redirect...just die
+		trigger_error("Die called", E_USER_ERROR); // already did a javascript redirect...just die
 	} // end claim form insert or update
 } // end processing claim form
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -1024,7 +1024,7 @@ if ($pat_myarray['patientid'] == '') {
     print '  window.location="manage_patient.php";';
     print '</script>';
 
-	die(); // already did a javascript redirect...just die
+	trigger_error("Die called", E_USER_ERROR); // already did a javascript redirect...just die
 }
 }
 $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";

@@ -33,7 +33,7 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
 				parent.window.location='manage_pages.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -47,7 +47,7 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
 				parent.window.location='manage_pages.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

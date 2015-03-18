@@ -43,12 +43,12 @@ if($_POST["sleep_apneaub"] == 1)
 				parent.window.location='manage_sleep_apnea.php?msg=<?=$msg;?>&cid=<?=$_POST["categoryid"]?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
 			$ins_sql = "insert into sleep_apnea set title = '".s_for($_POST["title"])."', categoryid = '".s_for($_POST["categoryid"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."', sortby = '".$sby."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -57,7 +57,7 @@ if($_POST["sleep_apneaub"] == 1)
 				parent.window.location='manage_sleep_apnea.php?msg=<?=$msg;?>&cid=<?=$_POST["categoryid"]?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

@@ -7,7 +7,7 @@ if(isset($_POST['dailysub']) && $_POST['dailysub'] != 1 && isset($_POST['monthly
 		window.location = 'patient_report.php';
 	</script>
 	<?php 
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' ";

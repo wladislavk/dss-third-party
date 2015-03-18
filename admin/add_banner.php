@@ -61,7 +61,7 @@ if($_POST["bannersub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update banner set title = '".s_for($_POST["title"])."', status = '".s_for($_POST["status"])."', banner_file = '".s_for($banner)."', banner_link = '".s_for($banner_link)."' where bannerid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
 			
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -71,12 +71,12 @@ if($_POST["bannersub"] == 1)
 				parent.window.location='manage_banner.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
 			$ins_sql = "insert into banner set title = '".s_for($_POST["title"])."', status = '".s_for($_POST["status"])."', banner_file = '".s_for($banner)."', banner_link = '".s_for($banner_link)."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -85,7 +85,7 @@ if($_POST["bannersub"] == 1)
 				parent.window.location='manage_banner.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }
@@ -173,7 +173,7 @@ if($_POST["bannersub"] == 1)
                 <input type="hidden" name="banner_file_old" value="<?=st($themyarray['banner_file'])?>" />
                 <span class="red">*</span>
 				<br />
-				<b>[BEST SIZE: 300px × 250px]</b>
+				<b>[BEST SIZE: 300px ï¿½ 250px]</b>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

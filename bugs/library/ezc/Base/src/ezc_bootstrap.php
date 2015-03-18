@@ -24,7 +24,7 @@ else if ( $dirParts[count( $dirParts ) - 2] === 'ezc' )
 }
 else
 {
-    die( "Your environment isn't properly set-up. Please refer to the eZ components documentation at http://components.ez.no/doc ." );
+    trigger_error( "Your environment isn't properly set-up. Please refer to the eZ components documentation at http://components.ez.no/doc ." , E_USER_ERROR);
 }
 
 /**

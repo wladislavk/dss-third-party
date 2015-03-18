@@ -27,7 +27,7 @@
                 window.location = 'q_page2.php?pid=<?php echo $_GET['pid']?>&addtopat=1';
             </script>
 <?php
-            die();
+            trigger_error("Die called", E_USER_ERROR);
 		}
 ?>
 
@@ -137,7 +137,7 @@
 				</script>
 <?php
 			}
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			$ed_sql = " update dental_q_page2 set 
 			polysomnographic = '".s_for($polysomnographic)."',
@@ -199,7 +199,7 @@
 				</script>
 <?php
 			}
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}	
 
@@ -213,7 +213,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
     $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
     

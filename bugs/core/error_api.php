@@ -197,7 +197,7 @@ function error_handler( $p_type, $p_error, $p_file, $p_line, $p_context ) {
 			} else {
 				echo '</body></html>', "\n";
 			}
-			exit();
+			trigger_error("Exit called", E_USER_ERROR);
 		case 'inline':
 			echo '<p style="color:red">', $t_error_type, ': ', $t_error_description, '</p>';
 			$g_error_handled = true;

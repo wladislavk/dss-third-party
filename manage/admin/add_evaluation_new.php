@@ -30,7 +30,7 @@ if(!empty($_POST["mult_evaluation_newsub"]) && $_POST["mult_evaluation_newsub"] 
 		parent.window.location='manage_evaluation_new.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["evaluation_newsub"]) && $_POST["evaluation_newsub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["evaluation_newsub"]) && $_POST["evaluation_newsub"] == 1)
 				parent.window.location='manage_evaluation_new.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["evaluation_newsub"]) && $_POST["evaluation_newsub"] == 1)
 				parent.window.location='manage_evaluation_new.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

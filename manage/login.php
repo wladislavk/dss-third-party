@@ -78,7 +78,7 @@ if(isset($_POST["loginsub"]))
 			$_SESSION['loginid']=$ins_id;
 		
 			header('Location: index.php');
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 	else

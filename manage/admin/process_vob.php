@@ -32,7 +32,7 @@ if (isset($_REQUEST['ed'])) {
 	 . "  LEFT OUTER JOIN dental_ins_diagnosis id ON id.ins_diagnosisid = preauth.diagnosis_code "
          . "WHERE "
          . "  preauth.id = " . $_REQUEST['ed'];
-		$my = mysql_query($sql) or die(mysql_error());
+		$my = mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
 		$preauth = mysql_fetch_array($my);
 		// load dynamic preauth info
 		$sql = "SELECT "
@@ -155,7 +155,7 @@ if (isset($_REQUEST['ed'])) {
                                 update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
     }
     $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";
-    mysql_query($sql) or die($sql." | ".mysql_error());
+    mysql_query($sql) or trigger_error($sql." | ".mysql_error(), E_USER_ERROR);
     
     //echo $ed_sql.mysql_error();
     $task_label = (!empty($_POST['completed'])) ? 'Completed' : 'Updated';

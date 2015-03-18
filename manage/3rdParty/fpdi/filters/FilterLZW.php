@@ -33,7 +33,7 @@ if (!class_exists('FilterLZW', false)) {
         var $andTable = array(511, 1023, 2047, 4095);
     
         function error($msg) {
-            die($msg);
+            trigger_error($msg, E_USER_ERROR);
         }
         
         /**

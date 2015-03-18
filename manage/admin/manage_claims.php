@@ -69,7 +69,7 @@ if(isset($_REQUEST["delid"])  && $_SESSION['admin_access']==1) {
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&fid=<?php echo $_REQUEST['fid']?>&pid=<?php echo $_REQUEST['pid']?>";
 	</script>
 	<?php 
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(isset($_REQUEST['sendid'])){
@@ -322,12 +322,12 @@ AND
 
 $sql .= " 
 ORDER BY " . $sort_by_sql;
-$my = mysqli_query($con,$sql) or die(mysql_error());
+$my = mysqli_query($con,$sql) or trigger_error(mysql_error(), E_USER_ERROR);
 $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con,$sql) or die(mysql_error());
+$my=mysqli_query($con,$sql) or trigger_error(mysql_error(), E_USER_ERROR);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />

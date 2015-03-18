@@ -8,7 +8,7 @@ if(!isset($_SESSION['screener_doc'])){
 		window.location = 'login.php';
 	</script>
   <?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 ?>

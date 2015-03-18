@@ -9,7 +9,7 @@
 */ 
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 if (! defined("_ADODB_FBSQL_LAYER")) {
  define("_ADODB_FBSQL_LAYER", 1 );

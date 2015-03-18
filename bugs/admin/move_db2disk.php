@@ -167,7 +167,7 @@ if( $f_move_type == 'attachment' ) {
 		$t_type = 'Project Files';
 	} else {
 		echo "<p>Invalid value '$f_move_type' for parameter 'doc'.</p>";
-		exit;
+		trigger_error("Exit called", E_USER_ERROR);
 	}
 }
 ?>

@@ -111,7 +111,6 @@ $num_users = mysqli_num_rows($my);
 	{
 		while($myarray = mysqli_fetch_array($my))
 		{
-			echo print_r($myarray);
 			if($myarray["status"] == 1)
 			{
 				$tr_class = "";

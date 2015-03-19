@@ -69,4 +69,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return (Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN == $admin_access);
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', '=', 1);
+    }
+
+    public function scopeProducer($query)
+    {
+        return $query->where('producer', '=', 1);
+    }
 }

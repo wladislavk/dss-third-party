@@ -10,7 +10,7 @@ class QualifierRepository implements QualifierInterface
 {
     public function getQualifiers()
     {
-        $qualifiers = Qualifier::where('status', '=', 1)
+        $qualifiers = Qualifier::active()
             ->orderBy('sortby')
             ->get();
 

@@ -17,7 +17,7 @@ class SummSleeplabRepository implements SummSleeplabInterface
         }
 
         if (!empty($order)) {
-            $summSleeplab = $summSleeplab->orderBy(DB::raw($order), 'desc');    
+            $summSleeplab = $summSleeplab->orderBy(DB::raw($order), 'desc');
         }
         
         return $summSleeplab->get();
@@ -48,7 +48,7 @@ class SummSleeplabRepository implements SummSleeplabInterface
         if (!empty($completed)) {
             $sleepStudies = $sleepStudies->where('ss.completed', '=', 'Yes');
         }
-                                                                     
+
         $sleepStudies = $sleepStudies->whereRaw('ss.filename IS NOT NULL')
             ->where('ss.patiendid', '=', $patientId)
             ->get();

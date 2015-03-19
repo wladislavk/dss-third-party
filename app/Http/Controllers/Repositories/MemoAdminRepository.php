@@ -7,7 +7,7 @@ class MemoAdminRepository implements MemoAdminInterface
 {
     public function get()
     {
-        $memoAdmins = MemoAdmin::whereRaw('off_date <= CURDATE()')->get();
+        $memoAdmins = MemoAdmin::actual()->get();
 
         return $memoAdmins;
     }

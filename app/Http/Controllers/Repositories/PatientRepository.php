@@ -45,7 +45,7 @@ class PatientRepository implements PatientInterface
         
         foreach ($where as $attribute => $value) {
             $joinPatients = $joinPatients->where($attribute, '=', $value);
-        }                    
+        }
 
         return $joinPatients->get();
     }
@@ -123,7 +123,7 @@ class PatientRepository implements PatientInterface
     public function getSimilarPatients($data)
     {
         $patients = Patient::where('patientid', '!=', $data['patientId'])
-            ->where('status', '=', 1)
+            ->active()
             ->where('docid', '=', $data['docId'])
             ->where(function($query) use ($data){
                 $query->where(function($query) use ($data){
@@ -153,7 +153,7 @@ class PatientRepository implements PatientInterface
                 $query->whereNull('parent_patientid')
                     ->orWhere('parent_patientid', '=', '');
             })
-            ->where('referred_source', '=', 2)
+            ->referredSource2()
             ->where('referred_by', '=', $contactId);
 
         return $patients->get();
@@ -161,10 +161,7 @@ class PatientRepository implements PatientInterface
 
     public function getPatients($where)
     {
-        $patients = Patient::where(function($query){
-                $query->whereNull('parent_patientid')
-                    ->orWhere('parent_patientid', '=', '');
-            })
+        $patients = Patient::withoutParent()
             ->where(function($query) use ($where){
                 if (!empty($where)) foreach ($where as $attribute => $value) {
                     $query = $query->orWhere($attribute, '=', $value);

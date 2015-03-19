@@ -69,8 +69,7 @@ class UserRepository implements UserInterface
         $users = User::whereRaw('(docid = ' . $docId . ' OR userid = ' . $docId . ')')
             ->where('npi', '!=', '')
             ->where(function($query){
-                $query->where('producer', '=', 1)
-                      ->orWhere('docid', '=', 0);
+                $query->producer()->orWhere('docid', '=', 0);
             })
             ->orderBy('docid')
             ->get();
@@ -91,7 +90,7 @@ class UserRepository implements UserInterface
     {
         $check = User::where('username', '=', $username)
             ->where('password', '=', $password)
-            ->where('status', '=', 1)
+            ->active()
             ->whereRaw('(sign_notes = 1 OR userid = ' . $docId . ')')
             ->get();
 
@@ -133,7 +132,7 @@ class UserRepository implements UserInterface
 
     public function getResponsible($userId, $docId)
     {
-        $responsible = User::where('status', '=', 1)
+        $responsible = User::active()
             ->where(function($query) use ($userId, $docId){
                 $query->where('userid', '=', $userId)
                       ->orWhere('docid', '=', $docId);

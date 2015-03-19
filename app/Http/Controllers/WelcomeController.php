@@ -2,7 +2,7 @@
 
 class WelcomeController extends Controller
 {
-    public function index($id)
+    public function index()
     {
         return view('welcome');
     }

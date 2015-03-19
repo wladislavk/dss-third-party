@@ -13,11 +13,7 @@ class TaskRepository implements TaskInterface
         $tasks = Task::join('dental_users', 'dental_task.responsibleid', '=', 'dental_users.userid')
             ->leftJoin('dental_patients', 'dental_patients.patientid', '=', 'dental_task.patientid')
             ->select('dental_task.*', 'dental_users.name', 'dental_patients.firstname', 'dental_patients.lastname')
-            ->where(function($query)
-            {
-                $query->where('dental_task.status', '=', '0')
-                      ->orWhereNull('dental_task.status');
-            });
+            ->nonActive();
 
         if ($task == 'task') {
             $tasks = $tasks->where('dental_task.responsibleid', '=', $userId);
@@ -28,26 +24,25 @@ class TaskRepository implements TaskInterface
 
         switch ($type) {
             case 'od':
-                $tasks = $tasks->where('dental_task.due_date', '<', 'CURDATE()');
+                $tasks = $tasks->overdue();
                 break;
             case 'tod':
-                $tasks = $tasks->where('dental_task.due_date', '=', 'CURDATE()');
+                $tasks = $tasks->today();
                 break;
             case 'tom':
-                $tasks = $tasks->where('dental_task.due_date', '=', 'DATE_ADD(CURDATE(), INTERVAL 1 DAY)');
+                $tasks = $tasks->tomorrow();
                 break;
             case 'fut':
-                $tasks = $tasks->where('dental_task.due_date', '>', 'DATE_ADD(CURDATE(), INTERVAL 1 DAY)');
+                $tasks = $tasks->future();
                 break;
             case 'tw':
-                $tasks = $tasks->whereRaw("dental_task.due_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 2 DAY) AND '" . $input['thisSun'] . "'");
+                $tasks = $tasks->thisWeek($input['thisSun']);
                 break;
             case 'nw':
-                $tasks = $tasks->whereBetween('dental_task.due_date', array($input['nextMon'], $input['nextSun']));
+                $tasks = $tasks->nextWeek($input['nextMon'], $input['nextSun']);
                 break;
             case 'lat':
-                $tasks = $tasks->where('dental_task.due_date', '>', $input['nextSun'])
-                    ->orderBy('dental_task.due_date', 'asc');
+                $tasks = $tasks->later($input['nextSun'])->orderBy('dental_task.due_date', 'asc');
                 break;
             default:
                 break;

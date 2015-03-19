@@ -8,4 +8,22 @@ class Patient extends Model
     protected $primaryKey = 'patientid';
 
     // public $timestamps = false;
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', '=', 1);
+    }
+
+    public function scopeReferredSource2($query)
+    {
+        return $query->where('referred_source', '=', 2);
+    }
+
+    public function scopeWithoutParent($query)
+    {
+        return $query->where(function($query){
+            $query->whereNull('parent_patientid')
+                ->orWhere('parent_patientid', '=', '');
+        });
+    }
 }

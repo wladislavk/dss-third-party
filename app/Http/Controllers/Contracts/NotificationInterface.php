@@ -2,5 +2,5 @@
 
 interface NotificationInterface
 {
-    public function get($where);
+    public function getNotifications($where);
 }

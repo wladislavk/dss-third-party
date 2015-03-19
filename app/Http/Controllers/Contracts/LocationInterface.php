@@ -3,7 +3,7 @@
 interface LocationInterface
 {
     public function findLocation($id);
-    public function get($where);
+    public function getLocations($where);
     public function updateData($id, $values);
     public function insertData($data);
 }

@@ -2,9 +2,9 @@
 
 interface CompanyInterface
 {
-    public function get();
+    public function getAll();
     public function getLogo($userId);
     public function getBilling($where, $order = null);
     public function getJoin($userId, $companyType);
-    public function getCo($userId);
+    public function getCompanyJoinUser($userId);
 }

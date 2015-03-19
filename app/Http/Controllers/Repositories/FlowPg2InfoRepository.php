@@ -8,7 +8,7 @@ use Ds3\Eloquent\FlowPg2Info;
 
 class FlowPg2Inforepository implements FlowPg2InfoInterface
 {
-    public function get($where, $order = null)
+    public function getFlowPages2Info($where, $order = null)
     {
         $flowPg2Info = new FlowPg2Info();
 

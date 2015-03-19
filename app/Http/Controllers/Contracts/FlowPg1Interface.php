@@ -2,7 +2,7 @@
 
 interface FlowPg1Interface
 {
-    public function get($patientId);
+    public function find($patientId);
     public function updateData($id, $values);
     public function insertData($data);
 }

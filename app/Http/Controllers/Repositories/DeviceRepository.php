@@ -8,7 +8,7 @@ use Ds3\Eloquent\Device;
 
 class DeviceRepository implements DeviceInterface
 {
-    public function get()
+    public function getActiveDevices()
     {
         $devices = Device::active()
             ->orderBy('sortby')

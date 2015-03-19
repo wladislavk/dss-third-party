@@ -152,7 +152,7 @@ class TopController extends Controller
             $where = array('docid' => Session::get('docId'));
             $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING;
 
-            $numPendingClaims = count($this->insurance->get($where, $status));
+            $numPendingClaims = count($this->insurance->getInsurance($where, $status));
 
             $where = array(
                 'dental_ledger.status'           => Constants::DSS_TRXN_PENDING,
@@ -167,7 +167,7 @@ class TopController extends Controller
             $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING . ','
                     . Constants::DSS_CLAIM_DISPUTE . ',' . Constants::DSS_CLAIM_SEC_DISPUTE;
 
-            $numPendingClaims = count($this->insurance->get($where, $status));
+            $numPendingClaims = count($this->insurance->getInsurance($where, $status));
 
             $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING . ','
                     . Constants::DSS_CLAIM_DISPUTE . ',' . Constants::DSS_CLAIM_SEC_DISPUTE;
@@ -179,32 +179,32 @@ class TopController extends Controller
             $where = array('docid' => Session::get('docId'));
             $status = Constants::DSS_CLAIM_REJECTED . ',' . Constants::DSS_CLAIM_SEC_REJECTED;
 
-            $numRejectedClaims = count($this->insurance->get($where, $status));
+            $numRejectedClaims = count($this->insurance->getInsurance($where, $status));
 
             $numPreauth = count($this->insurancePreauth->getPreauth(Session::get('docId'), Constants::DSS_PREAUTH_COMPLETE));
 
             $where = array('doc_id' => Session::get('docId'));
             $status = Constants::DSS_PREAUTH_PENDING;
 
-            $numPendingPreauth = count($this->insurancePreauth->get($where, $status));
+            $numPendingPreauth = count($this->insurancePreauth->getInsurancePreauth($where, $status));
 
-            $numHst = count($this->hst->get(1, Constants::DSS_HST_COMPLETE, array(
+            $numHst = count($this->hst->getHomeSleepTests(1, Constants::DSS_HST_COMPLETE, array(
                 'doc_id' => Session::get('docId')
             )));
 
-            $numRequestedHst = count($this->hst->get(1, Constants::DSS_HST_REQUESTED, array(
+            $numRequestedHst = count($this->hst->getHomeSleepTests(1, Constants::DSS_HST_REQUESTED, array(
                 'doc_id' => Session::get('docId')
             )));
 
-            $numRejectedHst = count($this->hst->get(1, Constants::DSS_HST_REJECTED, array(
+            $numRejectedHst = count($this->hst->getHomeSleepTests(1, Constants::DSS_HST_REJECTED, array(
                 'doc_id' => Session::get('docId')
             )));
 
-            $numPatientContacts = count($this->patientContact->get(array(
+            $numPatientContacts = count($this->patientContact->getPatientContacts(array(
                 'dental_patients.docid' => Session::get('docId')
             )));
 
-            $numPatientInsurance = count($this->patientInsurance->get(array(
+            $numPatientInsurance = count($this->patientInsurance->getPatientsInsurance(array(
                 'dental_patients.docid' => Session::get('docId')
             )));
 
@@ -219,7 +219,7 @@ class TopController extends Controller
                 'docid' => Session::get('docId')
             ), '3,4'));
 
-            $numBounce = count($this->patient->get(array(
+            $numBounce = count($this->patient->getPatients(array(
                 'dental_patients.email_bounce' => 1,
                 'dental_patients.docid' => Session::get('docId')
             )));
@@ -272,7 +272,7 @@ class TopController extends Controller
                     'patientid' => $patientId
                 );
 
-                $patients = $this->patient->get($where);
+                $patients = $this->patient->getPatients($where);
 
                 $patient = count($patients) ? $patients[0] : null;
 
@@ -284,7 +284,7 @@ class TopController extends Controller
                       $title .= "Pre-medication: " . $patient->premed . "\n";
                     }
 
-                    $qPage3 = $this->qPage3->get($patientId);
+                    $qPage3 = $this->qPage3->find($patientId);
 
                     $allergen = !empty($qPage3) ? $qPage3->allergenscheck : null;
 
@@ -296,7 +296,7 @@ class TopController extends Controller
                 }
             }
 
-            $numTasks = count($this->task->get(Session::get('userId'), null, null, 'task'));
+            $numTasks = count($this->task->getTasks(Session::get('userId'), null, null, 'task'));
 
             $messageCount = $numPendingLetters + $numPreauth + $numRejectedPreauth +
                             $numPatientContacts + $numPatientInsurance + $numC +
@@ -320,22 +320,22 @@ class TopController extends Controller
 
             // check variable name!
 
-            $overdueTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'od');
+            $overdueTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'od');
 
-            $todayTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'tod');
+            $todayTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'tod');
 
-            $tomorrowTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'tom');
+            $tomorrowTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'tom');
 
-            $thisWeekTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'tw', array(
+            $thisWeekTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'tw', array(
                 'thisSun' => $thisSunday
             ));
 
-            $nextWeekTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'nw', array(
+            $nextWeekTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'nw', array(
                 'nextMon'  => $nextMonday,
                 'nextSun'  => $nextSunday
             ));
 
-            $laterTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'lat', array(
+            $laterTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'lat', array(
                 'nextSun' => $nextSunday
             ));
 
@@ -367,25 +367,25 @@ class TopController extends Controller
 
             if (!empty($patientId)) {
 
-                $numPatientTasks = count($this->task->get(Session::get('userId'), Session::get('docId'), $patientId, null));
+                $numPatientTasks = count($this->task->getTasks(Session::get('userId'), Session::get('docId'), $patientId, null));
 
                 if ($numPatientTasks > 0) {
-                    $overdueTasks = $this->task->get(Session::get('userId'), Session::get('docId'), $patientId, null, 'od');
-                    $todayTasks = $this->task->get(Session::get('userId'), Session::get('docId'), $patientId, null, 'tod');
-                    $tomorrowTasks = $this->task->get(Session::get('userId'), Session::get('docId'), $patientId, null, 'tom');
-                    $futureTasks = $this->task->get(Session::get('userId'), Session::get('docId'), $patientId, null, 'fut');
+                    $overdueTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), $patientId, null, 'od');
+                    $todayTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), $patientId, null, 'tod');
+                    $tomorrowTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), $patientId, null, 'tom');
+                    $futureTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), $patientId, null, 'fut');
                 }
 
-                $patientParent = $this->patient->get(array('parent_patientid' => $patientId));
+                $patientParent = $this->patient->getPatients(array('parent_patientid' => $patientId));
 
                 $numChanges = $this->numPatientChanges($patientId);
 
-                $totalContacts = count($this->patientContact->get(array(
+                $totalContacts = count($this->patientContact->getPatientContacts(array(
                     'dental_patients.docid'      => Session::get('docId'),
                     'dental_patients.patientid'  => $patientId
                 )));
 
-                $totalInsurance = count($this->patientInsurance->get(array(
+                $totalInsurance = count($this->patientInsurance->getPatientsInsurance(array(
                     'dental_patients.docid'      => Session::get('docId'),
                     'dental_patients.patientid'  => $patientId
                 )));
@@ -394,7 +394,7 @@ class TopController extends Controller
                     $showWarningProfile = true;
                 }
 
-                $existPatient = $this->patient->get(array(
+                $existPatient = $this->patient->getPatients(array(
                     'patientid' => $patientId
                 ));
                 $existPatient = count($existPatient) ? $existPatient[0] : null;
@@ -407,7 +407,7 @@ class TopController extends Controller
                     $showWarningQuestionnaire = true;
                 }
 
-                $email = $this->patient->get(array(
+                $email = $this->patient->getPatients(array(
                     'email_bounce'  => 1,
                     'patientid'     => $patientId
                 ));
@@ -418,14 +418,14 @@ class TopController extends Controller
 
                 $status = Constants::DSS_CLAIM_REJECTED . ',' . Constants::DSS_CLAIM_SEC_REJECTED;
 
-                $rejectedInsurance = $this->insurance->get(array('patientid' => $patientId), $status);
+                $rejectedInsurance = $this->insurance->getInsurance(array('patientid' => $patientId), $status);
 
                 // Undefined constants
                 /*
                 $status = Constants::DSS_HST_REQUSTED . ',' . Constants::DSS_HST_PENDING . ','
                         . Constants::DSS_HST_SCHEDULED . ',' . Constants::DSS_HST_REJECTED;
 
-                $hstUncompleted = $this->hst->get(0, $status, array(
+                $hstUncompleted = $this->hst->getHomeSleepTests(0, $status, array(
                     'patient_id' => $patientId
                 ));
                 */
@@ -507,13 +507,13 @@ class TopController extends Controller
     {
         $numChanges = 0;
 
-        $patient = $this->patient->get(array(
+        $patient = $this->patient->getPatients(array(
             'patientid' => $patientId
         ));
 
         $patient = isset($patient[0]) ? $patient[0] : array();
 
-        $patientParent = $this->patient->get(array(
+        $patientParent = $this->patient->getPatients(array(
             'parent_patientid' => $patientId
         ));
 

@@ -8,7 +8,7 @@ use Ds3\Eloquent\Insurance\Insurance;
 
 class InsuranceRepository implements InsuranceInterface
 {
-    public function get($where, $status = null)
+    public function getInsurance($where, $status = null)
     {
         $pendingClaims = new Insurance();
 

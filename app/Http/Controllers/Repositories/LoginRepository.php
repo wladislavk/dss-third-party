@@ -24,7 +24,7 @@ class LoginRepository implements LoginInterface
         return $login->loginid;
     }
 
-    public function get($where)
+    public function getLogins($where)
     {
         $login = new Login();
 

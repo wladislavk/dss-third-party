@@ -8,7 +8,7 @@ use Ds3\Eloquent\Summary;
 
 class SummaryRepository implements SummaryInterface
 {
-    public function get($patientId)
+    public function getSummary($patientId)
     {
         $summary = Summary::where('patientid', '=', $patientId)->get();
 

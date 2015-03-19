@@ -8,7 +8,7 @@ use Ds3\Eloquent\Sleeplab;
 
 class SleeplabRepository implements SleeplabInterface
 {
-    public function get($where, $order = null)
+    public function getSleeplabs($where, $order = null)
     {
         $sleeplabs = new Sleeplab();
 
@@ -20,7 +20,7 @@ class SleeplabRepository implements SleeplabInterface
             $sleeplabs = $sleeplabs->orderBy($order);
         }
 
-        return $sleeplabs->get();;
+        return $sleeplabs->get();
     }
 
     public function updateData($sleeplabId, $values)

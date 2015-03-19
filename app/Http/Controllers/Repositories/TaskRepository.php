@@ -8,7 +8,7 @@ use Ds3\Eloquent\Task;
 
 class TaskRepository implements TaskInterface
 {
-    public function get($userId, $docId, $patientId, $task, $type = null, $input = null)
+    public function getTasks($userId, $docId, $patientId, $task, $type = null, $input = null)
     {
         $tasks = Task::join('dental_users', 'dental_task.responsibleid', '=', 'dental_users.userid')
             ->leftJoin('dental_patients', 'dental_patients.patientid', '=', 'dental_task.patientid')

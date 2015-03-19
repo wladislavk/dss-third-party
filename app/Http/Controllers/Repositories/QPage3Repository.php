@@ -7,7 +7,7 @@ use Ds3\Eloquent\QPage3;
 
 class QPage3Repository implements QPage3Interface
 {
-    public function get($patientId)
+    public function find($patientId)
     {
         try {
             $qPage3 = QPage3::where('patientid', '=', $patientId)->firstOrFail();

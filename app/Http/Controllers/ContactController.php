@@ -104,7 +104,7 @@ class ContactController extends Controller
         }
 
         $physicianTypes = implode(',', $physicians);
-        $contact = $this->contact->get(array(
+        $contact = $this->contact->find(array(
             'contactid' => !empty(Route::input('ed')) ? Route::input('ed') : null
         ));
 
@@ -147,7 +147,7 @@ class ContactController extends Controller
         }
 
         if (!empty(Route::input('ed'))) {
-            $contact = $this->contact->get(array(
+            $contact = $this->contact->find(array(
                 'contactid' => !empty(Route::input('ed')) ? Route::input('ed') : null
             ));
         }
@@ -228,7 +228,7 @@ class ContactController extends Controller
                 $user = $this->user->findUser(Session::get('docId'));
 
                 if (!empty($user->use_letters) && !empty($user->intro_letters)) {
-                    $contactType = $this->contactType->get($this->request['contacttypeid']);
+                    $contactType = $this->contactType->find($this->request['contacttypeid']);
 
                     if (!empty($contactType->physician) && $contactType->physician == 1) {
                         if (Session::get('userType') != Constants::DSS_USER_TYPE_SOFTWARE) {
@@ -239,7 +239,7 @@ class ContactController extends Controller
                     }
                 }
 
-                $contactType = $this->contactType->get($this->request['contacttypeid']);
+                $contactType = $this->contactType->find($this->request['contacttypeid']);
 
                 $name = $this->request['lastname'] . ', ' . $this->request['firstname'] . ' - ' . $contactType->contacttype;
                 $npiName = $this->request['firstname'] . ' ' . $this->request['lastname'];
@@ -874,7 +874,7 @@ class ContactController extends Controller
         $contactInfo = array();
 
         if (isset($patient)) {
-            $patients = $this->patient->get(array(
+            $patients = $this->patient->getPatients(array(
                 'patientid' => $patientId
             ));
 
@@ -894,7 +894,7 @@ class ContactController extends Controller
         }
 
         if (!empty($patReferralList)) {
-            $patients = $this->patient->get(array(
+            $patients = $this->patient->getPatients(array(
                 'patientid' => $patReferralList
             ));
 

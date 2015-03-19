@@ -140,7 +140,7 @@ class PatientController extends Controller
 
         $ptReferralId = $this->getPtReferralIds($patientId);
         if ($ptReferralId) {
-            $letters = $this->letter->get(array(
+            $letters = $this->letter->getLetters(array(
                 'patientid'          => $patientId,
                 'templateid'         => 20,
                 'pat_referral_list'  => $ptReferralId
@@ -155,7 +155,7 @@ class PatientController extends Controller
 
         $status = Constants::DSS_PREAUTH_PENDING . ',' . Constants::DSS_PREAUTH_PREAUTH_PENDING;
 
-        $vob = $this->insurancePreauth->get(array(
+        $vob = $this->insurancePreauth->getInsurancePreauth(array(
             'patient_id' => $requestEd
         ), $status, 'front_office_request_date');
 
@@ -166,7 +166,7 @@ class PatientController extends Controller
             $pendingVobStatus = $vob->status;
         }
 
-        $patient = $this->patient->get(array(
+        $patient = $this->patient->getPatients(array(
             'patientid' => $requestEd
         ));
 
@@ -290,7 +290,7 @@ class PatientController extends Controller
 
             if (isset($patientInfo['referred_source'])) {
                 if ($patientInfo['referred_source'] == Constants::DSS_REFERRED_PATIENT) {
-                    $patient = $this->patient->get(array(
+                    $patient = $this->patient->getPatients(array(
                         'patientid' => $referredBy
                     ));
 
@@ -312,7 +312,7 @@ class PatientController extends Controller
                 $name = $patient->lastname . ' ' . $patient->middlename . ', ' . $patient->firstname;
             }
 
-            $summary = $this->summary->get($patientId);
+            $summary = $this->summary->getSummary($patientId);
 
             if (count($summary)) {
                 $summary = $summary[0];
@@ -403,7 +403,7 @@ class PatientController extends Controller
             $showBlock['registrationStatus'] = 'Patient Portal In-active';
         }
 
-        $locations = $this->location->get(array(
+        $locations = $this->location->getLocations(array(
             'docid' => Session::get('docId')
         ));
 
@@ -428,7 +428,7 @@ class PatientController extends Controller
             $image10 = $imageType10[0];
         }
 
-        $insuranceContacts = $this->contact->getInsContact(Session::get('docId'));
+        $insuranceContacts = $this->contact->getInsuranceContact(Session::get('docId'));
 
         if (!empty($insuranceContacts)) foreach ($insuranceContacts as $insuranceContact) {
             $insContactsJson[$insuranceContact->contactid] = $insuranceContact->add1 . '\n'
@@ -455,7 +455,7 @@ class PatientController extends Controller
             $showBlock['portalStatus'] = false;
         }
 
-        $letter = $this->letter->get(array(
+        $letter = $this->letter->getLetters(array(
             'templateid'  => 3,
             'deleted'     => 0,
             'patientid'   => !empty($patientId) ? $patientId : ''
@@ -543,7 +543,7 @@ class PatientController extends Controller
             $patientInfo['use_patient_portal'] = $this->request['use_patient_portal'];
 
             if (!empty($this->ed)) {
-                $patient = $this->patient->get(array(
+                $patient = $this->patient->getPatients(array(
                     'patientid' => $patientId
                 ))[0];
 
@@ -615,7 +615,7 @@ class PatientController extends Controller
                 }
 
                 if (!empty($this->request['location'])) {
-                    $summary = $this->summary->get($patientId);
+                    $summary = $this->summary->getSummary($patientId);
 
                     if (!empty($summary)) {
                         $data = array(
@@ -635,7 +635,7 @@ class PatientController extends Controller
                     }
                 }
 
-                $patient = $this->patient->get(array(
+                $patient = $this->patient->getPatients(array(
                     'patientid' => $this->ed
                 ))[0];
 
@@ -721,7 +721,7 @@ class PatientController extends Controller
                     } elseif ($oldReferredSource == 2 && $this->request['referred_source'] != 2) {
                         // PHYSICIAN -> NOT PHYSICIAN
 
-                        $letters = $this->letter->get(array(
+                        $letters = $this->letter->getLetters(array(
                             'md_referral_list'  => $oldReferredBy,
                             'patientid'         => $this->reuqest['ed'],
                             'status'            => 0
@@ -733,7 +733,7 @@ class PatientController extends Controller
                     } elseif ($oldReferredSource == 1 && $this->request['referred_source'] != 1) {
                         //PHYSICIAN -> NOT PHYSICIAN
 
-                        $letters = $this->letter->get(array(
+                        $letters = $this->letter->getLetters(array(
                             'pat_referral_list'  => $oldReferredBy,
                             'patientid'          => $this->reuqest['ed'],
                             'status'             => 0
@@ -992,7 +992,7 @@ class PatientController extends Controller
                     }
 
                     if ($numMdList == 0 && $contact != '') {
-                        $contact = $this->contact->get(array(
+                        $contact = $this->contact->find(array(
                             'contactid'  => $contact,
                             'status'     => 1
                         ));
@@ -1035,7 +1035,7 @@ class PatientController extends Controller
 
     private function sendRegistrationEmail($patientId, $email, $login, $oldEmail = '')
     {
-        $patient = $this->patient->get(array(
+        $patient = $this->patient->getPatients(array(
             'patientid' => $patientId
         ))[0];
 
@@ -1076,7 +1076,7 @@ class PatientController extends Controller
         ), true);
         */
 
-        $location = $this->summary->get($patient->patientid)[0];
+        $location = $this->summary->getSummary($patient->patientid)[0];
 
         if (!empty($location->location)) {
             $location = $this->user->getLocation(array(
@@ -1119,11 +1119,11 @@ class PatientController extends Controller
 
     private function sendReminderEmail($patientId, $email)
     {
-        $patient = $this->patient->get(array(
+        $patient = $this->patient->getPatients(array(
             'patientid' => $patientId
         ))[0];
 
-        $location = $this->summary->get($patient->patientid)[0];
+        $location = $this->summary->getSummary($patient->patientid)[0];
 
         if (!empty($location->location)) {
             $location = $this->user->getLocation(array(
@@ -1199,9 +1199,9 @@ class PatientController extends Controller
             return 'user';
         }
 
-        $patient = $this->patient->preauthPatient($patientId);
+        $patient = $this->patient->getPreauthPatient($patientId);
 
-        $sleepStudy = $this->summSleeplab->preauthSleepStudy($patientId);
+        $sleepStudy = $this->summSleeplab->getPreauthSleepStudy($patientId);
 
         $diagnosis = $sleepStudy->diagnosis;
 
@@ -1248,7 +1248,7 @@ class PatientController extends Controller
 
     private function deleteLetter($letterId, $type, $recipientId, $parent = null, $template = null)
     {
-        $letter = $this->letter->get(array(
+        $letter = $this->letter->getLetters(array(
             'letterid' => $letterId
         ))[0];
 
@@ -1288,7 +1288,7 @@ class PatientController extends Controller
 
             return $letterResponse;
         } else {
-            $letter = $this->letter->get(array(
+            $letter = $this->letter->getLetters(array(
                 'letterid' => $letterId
             ));
 
@@ -1376,7 +1376,7 @@ class PatientController extends Controller
         $contactInfo = array();
 
         if (!empty($patientId)) {
-            $patient = $this->patient->get(array(
+            $patient = $this->patient->getPatients(array(
                 'patientid' => $patientId
             ))[0];
 
@@ -1408,7 +1408,7 @@ class PatientController extends Controller
         }
 
         if (!empty($patientReferralList)) {
-            $patient = $this->patient->get(array(
+            $patient = $this->patient->getPatients(array(
                 'patientid' => $patientReferralList
             ));
 
@@ -1424,7 +1424,7 @@ class PatientController extends Controller
 
     private function similarPatients($patientId)
     {
-        $patient = $this->patient->get(array(
+        $patient = $this->patient->getPatients(array(
             'patientid' => $patientId
         ))[0];
 
@@ -1463,7 +1463,7 @@ class PatientController extends Controller
         }
 
         $insert = false;
-        $patientSummary = $this->patientSummary->get(array(
+        $patientSummary = $this->patientSummary->getPatientSummary(array(
             'pid' => $patientId
         ));
 
@@ -1491,7 +1491,7 @@ class PatientController extends Controller
 
     private function findPatientNotifications($patientId)
     {
-        $notifications = $this->notification->get(array(
+        $notifications = $this->notification->getNotifications(array(
             'patientid'  => $patientId,
             'status'     => 1
         ));
@@ -1665,7 +1665,7 @@ class PatientController extends Controller
 
     private function getMdContactIds($patientId, $active = true)
     {
-        $patients = $this->patient->get(array(
+        $patients = $this->patient->getPatients(array(
             'patientid' => $patientId
         ));
 
@@ -1681,7 +1681,7 @@ class PatientController extends Controller
                         if (!empty($contact)) {
                             if (!in_array($contact, $contactIds)) {
                                 if ($active) {
-                                    $contactResponse = $this->contact->get(array(
+                                    $contactResponse = $this->contact->find(array(
                                         'contactid' => $contact
                                     ));
 
@@ -1705,7 +1705,7 @@ class PatientController extends Controller
 
     private function getPtReferralIds($patientId)
     {
-        $patients = $this->patient->get(array(
+        $patients = $this->patient->getPatients(array(
             'patientid' => $patientId
         ));
 

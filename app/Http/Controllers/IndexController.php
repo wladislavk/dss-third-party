@@ -44,7 +44,7 @@ class IndexController extends Controller
             $showBlock['transactionCode'] = true;
         }
 
-        $documentCategories = $this->documentCategory->get();
+        $documentCategories = $this->documentCategory->getActiveDocumentCategories();
 
         if ($user->use_eligible_api == 1) {
             $showBlock['enrollments'] = true;
@@ -83,7 +83,7 @@ class IndexController extends Controller
 
         $numAlerts = $this->request['numRejectedPreauth'];
 
-        $memoAdmins = $this->memoAdmin->get();
+        $memoAdmins = $this->memoAdmin->getActualMemoAdmins();
 
         $data = array();
 

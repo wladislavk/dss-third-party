@@ -2,5 +2,5 @@
 
 interface PatientInsuranceInterface
 {
-    public function get($where);
+    public function getPatientsInsurance($where);
 }

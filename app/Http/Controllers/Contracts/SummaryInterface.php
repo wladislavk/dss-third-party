@@ -2,7 +2,7 @@
 
 interface SummaryInterface
 {
-    public function get($patientId);
+    public function getSummary($patientId);
     public function updateData($where, $values);
     public function insertData($data);
 }

@@ -8,7 +8,7 @@ use Ds3\Eloquent\Imagetype;
 
 class ImageTypeRepository implements ImageTypeInterface
 {
-    public function get()
+    public function getActiveImageTypes()
     {
         $imagetypes = Imagetype::active()
             ->orderBy('sortby')

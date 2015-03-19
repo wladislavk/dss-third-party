@@ -13,7 +13,7 @@ class LocationRepository implements LocationInterface
         return Location::find($id);
     }
 
-    public function get($where)
+    public function getLocations($where)
     {
         $locations = new Location();
 

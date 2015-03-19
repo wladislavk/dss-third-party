@@ -2,5 +2,5 @@
 
 interface MemoAdminInterface
 {
-    public function get();
+    public function getActualMemoAdmins();
 }

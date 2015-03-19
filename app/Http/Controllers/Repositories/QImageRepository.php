@@ -8,7 +8,7 @@ use Ds3\Eloquent\QImage;
 
 class QImageRepository implements QImageInterface
 {
-    public function get($imageId)
+    public function find($imageId)
     {
         try {
             $qImage = QImage::where('imageid', '=', $imageId)->firstOrFail();

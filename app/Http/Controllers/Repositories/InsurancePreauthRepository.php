@@ -7,7 +7,7 @@ use Ds3\Eloquent\Insurance\InsurancePreauth;
 
 class InsurancePreauthRepository implements InsurancePreauthInterface
 {
-    public function get($where, $status = null, $order = null)
+    public function getInsurancePreauth($where, $status = null, $order = null)
     {
         $insurancePreauth = new InsurancePreauth();
 

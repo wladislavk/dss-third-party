@@ -8,7 +8,7 @@ use Ds3\Eloquent\Contact\ContactType;
 
 class ContactTypeRepository implements ContactTypeInterface
 {
-    public function get($contactTypeId)
+    public function find($contactTypeId)
     {
         try {
             $contactType = ContactType::where('contacttypeid', '=', $contactTypeId)->firstOrFail();

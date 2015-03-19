@@ -8,7 +8,7 @@ use Ds3\Eloquent\Company;
 
 class CompanyRepository implements CompanyInterface
 {
-    public function get()
+    public function getAll()
     {
         $companies = Company::select('id')->get();
 
@@ -60,7 +60,7 @@ class CompanyRepository implements CompanyInterface
 
     // change the function name
 
-    public function getCo($userId)
+    public function getCompanyJoinUser($userId)
     {
         $company = DB::table(DB::raw('companies c'))
             ->select(DB::raw('c.id, c.name'))

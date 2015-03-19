@@ -2,7 +2,7 @@
 
 interface InsuranceInterface
 {
-    public function get($where, $status = null);
+    public function getInsurance($where, $status = null);
     public function getPendingNodssClaims($docId, $input);
     public function getUnmailedClaims($docId, $DSS_CLAIM_PENDING, $DSS_CLAIM_SEC_PENDING);
     public function getJoin($patientId);

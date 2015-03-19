@@ -8,7 +8,7 @@ use Ds3\Eloquent\FlowPg1;
 
 class FlowPg1Repository implements FlowPg1Interface
 {
-    public function get($patientId)
+    public function find($patientId)
     {
         try {
             $flowPg1 = FlowPg1::where('pid', '=', $patientId)->firstOrFail();

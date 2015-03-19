@@ -71,7 +71,7 @@ class ImageController extends Controller
         $patientId = !empty(Route::input('pid')) ? Route::input('pid') : null;
         $ed = !empty($this->request['ed']) ? $this->request['ed'] : null;
 
-        $image = $this->qImage->get($ed);
+        $image = $this->qImage->find($ed);
 
         if (!empty($message)) {
             $title = $this->request['title'];
@@ -95,7 +95,7 @@ class ImageController extends Controller
             $butText = 'Add ';
         }
 
-        $imageTypes = $this->imageType->get();
+        $imageTypes = $this->imageType->getActiveImageTypes();
 
         $showBlock = array();
 
@@ -103,7 +103,7 @@ class ImageController extends Controller
             $showBlock['imageTypes'] = true;
         }
 
-        $flowPg1 = $this->flowPg1->get($patientId);
+        $flowPg1 = $this->flowPg1->find($patientId);
 
         if (!empty($imageFile)) {
             $showBlock['imageFile'] = true;
@@ -111,18 +111,18 @@ class ImageController extends Controller
 
         $labels = array('', 'Facial Right', 'Facial Front', 'Facial Left', 'Retracted Right', 'Retracted Frontal', 'Retracted Left', 'Occlusal Upper', 'Mallampati', 'Occlusal Lower');
 
-        $patients = $this->patient->get(array('patientid' => $patientId));
+        $patients = $this->patient->getPatients(array('patientid' => $patientId));
 
         $patient = count($patients) ? $patients[0] : null;
 
-        $sleepSlabs = $this->sleeplab->get(array(
+        $sleepSlabs = $this->sleeplab->getSleeplabs(array(
             'status'  => 1,
             'docid'   => Session::get('docId')
         ), 'company');
 
-        $insDiagnoses = $this->insDiagnosis->get();
+        $insDiagnoses = $this->insDiagnosis->getActiveInsDiagnosis();
 
-        $devices = $this->device->get();
+        $devices = $this->device->getActiveDevices();
 
         $data = array(
             'path'          => '/' . Request::segment(1) . '/' . Request::segment(2),
@@ -401,7 +401,7 @@ class ImageController extends Controller
 
                     $imageId = $this->qImage->insertData($data);
 
-                    $flowPg1 = $this->flowPg1->get($patientId);
+                    $flowPg1 = $this->flowPg1->find($patientId);
 
                     if ($this->request['imagetypeid'] == 6) {
                         if (empty($flowPg1->rx_imgid) || $this->request['rx_update'] == 1) {

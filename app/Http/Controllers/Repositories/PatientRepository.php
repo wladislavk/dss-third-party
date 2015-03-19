@@ -8,7 +8,7 @@ use Ds3\Eloquent\Patient\Patient;
 
 class PatientRepository implements PatientInterface
 {
-    public function get($where, $orders = null)
+    public function getPatients($where, $orders = null)
     {
         $patients = new Patient();
 
@@ -103,7 +103,7 @@ class PatientRepository implements PatientInterface
         return $userInfo;
     }
 
-    public function preauthPatient($patientId)
+    public function getPreauthPatient($patientId)
     {
         $patient = DB::table(DB::raw('dental_patients p'))
             ->leftJoin(DB::raw('dental_contact r'), 'p.referred_by', '=', 'r.contactid')

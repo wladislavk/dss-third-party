@@ -8,7 +8,7 @@ use Ds3\Eloquent\Notification;
 
 class NotificationRepository implements NotificationInterface
 {
-    public function get($where)
+    public function getNotifications($where)
     {
         $notification = new Notification();
 

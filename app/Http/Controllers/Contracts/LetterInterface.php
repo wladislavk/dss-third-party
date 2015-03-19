@@ -2,7 +2,7 @@
 
 interface LetterInterface
 {
-    public function get($where, $order = null);
+    public function getLetters($where, $order = null);
     public function getList($letterId, $parentId);
     public function getMdList($contact, $letter1id, $letter2id);
     public function getGeneratedDates($valuesWhere);

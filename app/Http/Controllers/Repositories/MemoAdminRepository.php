@@ -5,7 +5,7 @@ use Ds3\Eloquent\Memo\MemoAdmin;
 
 class MemoAdminRepository implements MemoAdminInterface
 {
-    public function get()
+    public function getActualMemoAdmins()
     {
         $memoAdmins = MemoAdmin::actual()->get();
 

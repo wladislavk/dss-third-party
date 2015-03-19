@@ -2,7 +2,7 @@
 
 interface SleeplabInterface
 {
-    public function get($where, $order = null);
+    public function getSleeplabs($where, $order = null);
     public function updateData($sleeplabId, $values);
     public function insertData($data);
 }

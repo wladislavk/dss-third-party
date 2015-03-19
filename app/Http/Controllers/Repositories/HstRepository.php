@@ -8,14 +8,14 @@ use Ds3\Eloquent\Hst;
 
 class HstRepository implements HstInterface
 {
-    public function get($viewed, $status, $where)
+    public function getHomeSleepTests($viewed, $status, $where)
     {
         $hst = Hst::whereRaw('(status IN (' . $status . '))')
             ->whereRaw('(viewed IS NULL or viewed != ' . $viewed . ')');
 
         foreach ($where as $key => $value) {
             $hst = $hst->where($key, '=', $value);
-        }                      
+        }
 
         return $hst->get();
     }

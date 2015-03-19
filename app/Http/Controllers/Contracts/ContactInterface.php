@@ -2,8 +2,8 @@
 
 interface ContactInterface
 {
-    public function get($where);
-    public function getInsContact($docId);
+    public function find($where);
+    public function getInsuranceContact($docId);
     public function getContactTypeHolder($where, $letter = null, $order = null, $limit = null, $offset = null);
     public function searchContacts($names, $partial, $docId);
     public function updateData($contactId, $values);

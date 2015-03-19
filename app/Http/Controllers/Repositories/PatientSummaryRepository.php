@@ -8,7 +8,7 @@ use Ds3\Eloquent\Patient\PatientSummary;
 
 class PatientSummaryRepository implements PatientSummaryInterface
 {
-    public function get($where)
+    public function getPatientSummary($where)
     {
         $patientSummary = new PatientSummary();
 

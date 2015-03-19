@@ -8,7 +8,7 @@ use Ds3\Eloquent\InsDiagnosis;
 
 class InsDiagnosisRepository implements InsDiagnosisInterface
 {
-    public function get()
+    public function getActiveInsDiagnosis()
     {
         $insDiagnosis = InsDiagnosis::active()
             ->orderBy('sortby')

@@ -8,7 +8,7 @@ use Ds3\Eloquent\Contact\Contact;
 
 class ContactRepository implements ContactInterface
 {
-    public function get($where)
+    public function find($where)
     {
         $contact = new Contact();
 
@@ -25,7 +25,7 @@ class ContactRepository implements ContactInterface
         return $contact;
     }
 
-    public function getInsContact($docId)
+    public function getInsuranceContact($docId)
     {
         $insContact = Contact::active()
             ->whereNull('merge_id')

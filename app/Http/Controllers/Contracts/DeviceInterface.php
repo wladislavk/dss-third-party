@@ -2,6 +2,6 @@
 
 interface DeviceInterface
 {
-    public function get();
+    public function getActiveDevices();
     public function getDevice($deviceId);
 }

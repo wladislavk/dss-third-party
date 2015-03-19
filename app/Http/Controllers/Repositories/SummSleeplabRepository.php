@@ -8,7 +8,7 @@ use Ds3\Eloquent\SummSleeplab;
 
 class SummSleeplabRepository implements SummSleeplabInterface
 {
-    public function get($where, $order = null)
+    public function getSummSleeplabs($where, $order = null)
     {
         $summSleeplab = new SummSleeplab();
 
@@ -56,7 +56,7 @@ class SummSleeplabRepository implements SummSleeplabInterface
         return $sleepStudies;
     }
 
-    public function preauthSleepStudy($patientId)
+    public function getPreauthSleepStudy($patientId)
     {
         $sleepStudy = SummSleeplab::select('diagnosis')
             ->whereRaw("(diagnosis IS NOT NULL && diagnosis != '')")

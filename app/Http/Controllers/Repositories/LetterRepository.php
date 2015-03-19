@@ -8,7 +8,7 @@ use Ds3\Eloquent\Letter\Letter;
 
 class LetterRepository implements LetterInterface
 {
-    public function get($where, $order = null)
+    public function getLetters($where, $order = null)
     {
         $letters = new Letter();
 

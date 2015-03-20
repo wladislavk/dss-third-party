@@ -168,6 +168,26 @@ class PatientRepository implements PatientInterface
         return $patients->get();
     }
 
+    public function searchPatients($names, $docId)
+    {
+        $patients = DB::table(DB::raw('dental_patients p'))
+            ->select(DB::raw('p.patientid, p.lastname, p.firstname, p.middlename, s.patient_info'))
+            ->leftJoin(DB::raw('dental_patient_summary s'), 'p.patientid', '=', 's.pid')
+            ->where(function($query) use ($names){
+                $query->where(function($query) use ($names){
+                        $query->whereRaw("(lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')")
+                            ->whereRaw("(lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%')");
+                    })
+                    ->orWhereRaw("(firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" . $names[1] . "%' AND lastname LIKE '" . $names[2] . "%')");
+            })
+            ->where('p.status', '=', 1)
+            ->where('docid', '=', $docId)
+            ->orderBy('lastname')
+            ->take(12);
+
+        return $patients->get();
+    }
+
     public function insertData($data)
     {
         $patient = new Patient();

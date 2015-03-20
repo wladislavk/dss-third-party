@@ -455,7 +455,7 @@ class ContactController extends Controller
                 'docmdother3'  => $contact->contactid,
             );
 
-            $patients = $this->patient->getPatients($where);
+            $patients = $this->patient->getPatientsWithoutParent($where);
             $patientsInfo[$contact->contactid]['pat'] = $patients;
         }
 

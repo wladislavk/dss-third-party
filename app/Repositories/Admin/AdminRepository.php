@@ -15,9 +15,9 @@ class AdminRepository implements AdminInterface
 
     public function recoverAndSetHash($admin_id, $email)
     {
-        $hash = hash('sha256', $admin_id.$email.rand());
+        $hash = hash('sha256', $admin_id . $email . rand());
         $updated = Admin::where('adminid', $admin_id)
-                        ->update(['recover_hash'=>$hash, 'recover_time'=>Carbon::now()]);
+                        ->update(['recover_hash' => $hash, 'recover_time' => Carbon::now()]);
         if ($updated) {
             return 'true';
         }
@@ -25,8 +25,8 @@ class AdminRepository implements AdminInterface
 
     public function attemptAuth($username, $password)
     {
-        $salt =  Admin::where('username', $username)
-            ->where('status',1)
+        $salt = Admin::where('username', $username)
+            ->active()
             ->select('salt')
             ->first();
 

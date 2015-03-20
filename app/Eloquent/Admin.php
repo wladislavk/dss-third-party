@@ -44,8 +44,14 @@ class Admin extends User
 
         return $admin;
     }
+
     public function adminCompanies()
     {
         $this->hasMany('Ds3\Eloquent\AdminCompany');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
     }
 }

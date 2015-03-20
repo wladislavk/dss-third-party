@@ -14,7 +14,7 @@ class Patient extends Model
         return $query->where('status', '=', 1);
     }
 
-    public function scopeReferredSource2($query)
+    public function scopeReferred($query)
     {
         return $query->where('referred_source', '=', 2);
     }

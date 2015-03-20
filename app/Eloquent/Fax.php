@@ -12,7 +12,7 @@ class Fax extends Model
         return $query->where('viewed', '=', 0);
     }
 
-    public function scopeSfaxStatus2($query)
+    public function scopeWithError($query)
     {
         return $query->where('sfax_status', '=', 2);
     }

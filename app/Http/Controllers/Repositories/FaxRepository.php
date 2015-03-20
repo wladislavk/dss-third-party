@@ -9,7 +9,7 @@ class FaxRepository implements FaxInterface
     {
         $faxAlerts = Fax::where('docid', '=', $docId)
             ->nonViewed()
-            ->sfaxStatus2()
+            ->withError()
             ->get();
 
         return $faxAlerts;

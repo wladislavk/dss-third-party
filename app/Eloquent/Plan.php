@@ -17,4 +17,9 @@ class Plan extends Model
     {
         return $this->hasMany(new User,'plan_id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
 }

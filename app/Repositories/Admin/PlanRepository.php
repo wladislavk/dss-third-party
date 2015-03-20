@@ -14,7 +14,7 @@ class PlanRepository implements PlanInterface
 
     public function all()
     {
-       return $this->plan->where('status', 1)->paginate(20);
+       return $this->plan->active()->paginate(20);
     }
 
     public function save($fields)

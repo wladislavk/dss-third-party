@@ -149,17 +149,14 @@ class PatientRepository implements PatientInterface
 
     public function getReferredPatients($contactId)
     {
-        $patients = Patient::where(function($query){
-                $query->whereNull('parent_patientid')
-                    ->orWhere('parent_patientid', '=', '');
-            })
-            ->referredSource2()
+        $patients = Patient::withoutParent()
+            ->referred()
             ->where('referred_by', '=', $contactId);
 
         return $patients->get();
     }
 
-    public function getPatients($where)
+    public function getPatientsWithoutParent($where)
     {
         $patients = Patient::withoutParent()
             ->where(function($query) use ($where){

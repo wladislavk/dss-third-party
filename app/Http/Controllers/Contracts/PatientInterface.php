@@ -11,7 +11,7 @@ interface PatientInterface
     public function getPreauthPatient($patientId);
     public function getSimilarPatients($data);
     public function getReferredPatients($contactId);
-    public function getPatients($where);
+    public function getPatientsWithoutParent($where);
     public function insertData($data);
     public function updateData($where, $values);
     public function deleteData($where);

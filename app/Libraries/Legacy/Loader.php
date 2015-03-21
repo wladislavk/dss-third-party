@@ -1,61 +1,75 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-use Illuminate\Foundation\Application;
-use Illuminate\Config\Repository as Config;
-use Illuminate\Http\Request;
-use Illuminate\Contracts\Routing\ResponseFactory as Response;
-use Illuminate\Auth\Guard as Auth;
-// use Illuminate\Exception\WhoopsDisplayer;
+use Illuminate\Http\Response;
 
 class Loader
 {
-    private $app;
-    private $request;
-    private $response;
-    private $auth;
+    private $legacyPath = '';       // Config value of the legacy files
+    private $outputBuffer = '';     // Buffer capture of the legacy load
+    private $outputHeaders = [];    // Headers as set by the legacy load
 
-    private $legacyPath = '';
-    private $dirBackup = '';
-    private $outputBuffer = '';
+    private $backupDepot = [
+        'currentDir' => '',
+        'headers' => [],
+        'superglobals' => [
+            'post' => [],
+            'get' => [],
+            'server' => []
+        ],
+        'errorLevel' => 0,
+        'bufferLevel' => 0
+    ];
+    private $serverBackupFields = [
+        'PHP_SELF',
+        'REQUEST_METHOD',
+        'QUERY_STRING',
+        'DOCUMENT_ROOT',
+        'SCRIPT_FILENAME',
+        'PATH_TRANSLATED',
+        'SCRIPT_NAME',
+        'REQUEST_URI'
+    ];
 
-    private $requestType = 'get';
+    private $requestType = 'get';   // Data to simulate GET/POST requests
     private $requestParams = [
         'get' => [],
         'post' => []
     ];
 
     /**
-     * @param Application $app
-     * @param Config $config
-     * @param Request $request
-     * @param Response $response
-     * @param Auth $auth
+     * @param string $path
      * @throws LoaderException
      */
-    public function __construct(Application $app, Config $config, Request $request, Response $response, Auth $auth) {
-        $path = $config->get('app.legacy_path');
+    public function __construct($path) {
         $this->legacyPath = realpath($path);
 
         if (!is_dir($this->legacyPath)) {
-            throw new LoaderException('Path to the legacy repository has not been defined or is invalid');
+            throw new LoaderException('The path specified does not exist');
         }
-
-        $this->app = $app;
-        $this->request = $request;
-        $this->response = $response;
-        $this->auth = $auth;
-
-        /**
-         * Be aware that this change solves the problem with loading path,
-         * but does not address the problem with files written to disk.
-         *
-         * Paths might differ and the file saved to disk will not be found
-         */
-        set_include_path(get_include_path() . PATH_SEPARATOR . $this->legacyPath);
     }
 
     /**
+     * Real path to the legacy repository, as specified in the app.legacy_path config option
+     *
+     * @return string
+     */
+    public function getLegacyPath()
+    {
+        return $this->legacyPath;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getResponseDependency()
+    {
+        return $this->response;
+    }
+
+    /**
+     * Sets the values of the GET (query string) or POST (payload) request
+     *
      * @param string $type get, post
      * @param Array $parameters Array
      * @param bool $reset Delete previous contents of the parameters
@@ -75,12 +89,41 @@ class Loader
 
         $this->requestParams[$type] = $parameters + $this->requestParams[$type];
         $this->requestType = $type === 'post' ? 'post' : $this->requestType;
+
         return $this;
     }
 
     /**
+     * @return array
+     */
+    public function getRequestParams()
+    {
+        return $this->requestParams;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOutputBuffer()
+    {
+        return $this->outputBuffer;
+    }
+
+    /**
+     * @return Array
+     */
+    public function getOutputHeaders()
+    {
+        return $this->outputHeaders;
+    }
+
+    /**
+     * Receives a relative path to a legacy file, sets up a request scenario and loads the file
+     * The \ErrorException with severity = E_USER_ERROR is a reserved indicator for the legacy file
+     * which indicates the script attempted to use exit() or die() to end the execution
+     *
      * @param string $relativePath
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\Response
      * @throws LoaderException
      * @throws \Exception
      */
@@ -92,25 +135,41 @@ class Loader
             throw new LoaderException("The path '$relativePath' (full path '$realPath') does not resolve to a valid legacy file");
         }
 
-        $this->stageEnvironment($realPath);
+        $this->stageEnvironment($relativePath, $realPath);
 
+        /**
+         * Legacy files should use trigger_error(..., E_USER_ERROR) instead of
+         * exit() or die()
+         *
+         * The private method will catch the first exception and determine if its
+         * severity matches E_USER_ERROR. Otherwise the original exception is rethrown
+         */
         try {
-            require_once $realPath;
+            $this->requireLegacyFile($realPath);
         } catch (\Exception $exception) {
             $this->unstageEnvironment();
-
-            if (true) {
-                throw $exception;
-            } else {
-                return $this->response->view('errors.503');
-            }
+            throw $exception;
         }
 
         $this->unstageEnvironment();
-        return $this->response->make(htmlspecialchars($this->outputBuffer));
+
+        $response = new Response($this->outputBuffer, 200);
+        $redirection = self::getRedirection($this->outputBuffer, $relativePath);
+
+        if ($redirection) {
+            $this->outputHeaders['Location'] = $redirection;
+        }
+
+        foreach ($this->outputHeaders as $headerName => $headerValue) {
+            $response->header($headerName, $headerValue);
+        }
+
+        return $response;
     }
 
     /**
+     * Appends the relative path to the legacy path and applies realpath() to it
+     *
      * @param string $relativePath
      * @return string
      */
@@ -121,6 +180,8 @@ class Loader
     }
 
     /**
+     * Determines if the path is a valid file inside the legacy path folder
+     *
      * @param string $filePath
      * @param bool $relative
      * @return bool
@@ -133,47 +194,134 @@ class Loader
 
     /**
      * Sets up the environment to execute the legacy file and mimicking GET/POST requests
+     * Modifies $_GET, $_POST, $_SERVER and current working dir.
      *
-     * @param string $legacyFile
+     * @param string $relativePath
+     * @param string $realPath
      */
-    private function stageEnvironment($legacyFile)
+    private function stageEnvironment($relativePath, $realPath)
     {
-        // Assume the framework already has a copy of these globals
+        $this->backupDepot = [
+            'currentDir' => getcwd(),
+            'headers' => headers_list(),
+            'superglobals' => [
+                'get' => $_GET,
+                'post' => $_POST,
+                'server' => array_intersect_key($_SERVER, array_flip($this->serverBackupFields)),
+            ],
+            'bufferLevel' => ob_get_level(),
+            'errorLevel' => error_reporting()
+        ];
+
+        $this->outputBuffer = '';
+        $this->outputHeaders = [];
+
+        $queryString = http_build_query($this->requestParams['get']);
+        $scriptPath = "/$relativePath";
+
         $_POST = $this->requestParams['post'];
         $_GET = $this->requestParams['get'];
-        $_SERVER['REQUEST_METHOD'] = $this->requestType;
-        $_SERVER['DOCUMENT_ROOT'] = $this->legacyPath;
 
-        $this->dirBackup = getcwd();
-        chdir(dirname($legacyFile));
+        $_SERVER['REQUEST_METHOD'] = $this->requestType;
+        $_SERVER['QUERY_STRING'] = $queryString;
+
+        $_SERVER['DOCUMENT_ROOT'] = $this->legacyPath;
+        $_SERVER['PATH_TRANSLATED'] = $realPath;
+        $_SERVER['PHP_SELF'] = $scriptPath;
+        $_SERVER['SCRIPT_FILENAME'] = $scriptPath;
+        $_SERVER['SCRIPT_NAME'] = $scriptPath;
+        $_SERVER['REQUEST_URI'] = $scriptPath . ($queryString ? "?$queryString" : '');
+
+        chdir(dirname($realPath));
 
         // Hide non fatal errors
         error_reporting(E_ALL ^ (E_NOTICE | E_DEPRECATED | E_WARNING));
 
-        /**
-         * Start output buffer
-         *
-         * Note that the legacy script might start output buffering, but fail to
-         * restore the buffers and let the script exit and take care of it.
-         *
-         * A better implementation will take into account the level of buffering
-         * (nested buffering) and will retrieve all of the buffers up to the level
-         * where it started capturing the buffer.
-         */
-        $this->outputBuffer = '';
         ob_start();
     }
 
     /**
-     * Undoes changes done by stageEnvironment() and retrieves the output buffer
+     * Resets values of $_GET, $_POST, $_SERVER variables, returns to the proper working dir
+     * and
      */
     private function unstageEnvironment()
     {
+        error_reporting($this->backupDepot['errorLevel']);
+        chdir($this->backupDepot['currentDir']);
+
+        for ($n = ob_get_level(); $n > $this->backupDepot['bufferLevel']; $n--) {
+            ob_end_flush();
+        }
+
         $this->outputBuffer = ob_get_clean();
+        $headers = headers_list();
 
-        chdir($this->dirBackup);
+        // Remove headers set by the legacy file
+        foreach ($headers as $header) {
+            $headerName = $header;
+            $headerValue = '';
 
-        $_POST = [];
-        $_GET = [];
+            if (preg_match($header, '(?<name>.+?):\s*(?<value>.+)', $match)) {
+                $headerName = $match['name'];
+                $headerValue = $match['value'];
+            }
+
+            $this->outputHeaders[$headerName] = $headerValue;
+            header_remove($headerName);
+        }
+
+        // Restore the headers from the backup
+        foreach ($this->backupDepot['headers'] as $header) {
+            header($header);
+        }
+
+        $_GET = $this->backupDepot['superglobals']['get'];
+        $_POST = $this->backupDepot['superglobals']['post'];
+        $_SERVER = $this->backupDepot['superglobals']['server'] + $_SERVER;
+    }
+
+    /**
+     * Loads the legacy file, expects to communicate exit() and die()
+     * through trigger_error(..., E_USER_ERROR);
+     *
+     * @param string $legacyFile Full, real path to the file
+     * @throws \ErrorException
+     * @throws \Exception
+     */
+    private function requireLegacyFile($legacyFile)
+    {
+        try {
+            require_once $legacyFile;
+        } catch (\ErrorException $exitException) {
+            /**
+             * This is a die() or exit() exception only if the severity
+             * matches E_USER_ERROR
+             */
+            if ($exitException->getSeverity() !== E_USER_ERROR) {
+                throw $exitException;
+            }
+        }
+    }
+
+    /**
+     * Analyzes headers and output buffer to determine if it contains redirections
+     *
+     * @param string $buffer
+     * @param string $relativePath Legacy path
+     * @return string Detected redirection
+     */
+    public static function getRedirection($buffer, $relativePath)
+    {
+        $location = '';
+
+        if (strpos($buffer, 'window.location.replace') !== false && preg_match(
+            $buffer,
+            '@\s*<script>\s*window\.location\.replace\((["\'])(?<path>.+)\1\);\s*</script>\s*@is',
+            $match
+        )) {
+            $location = dirname("/$relativePath") . "{$match['path']}";
+        }
+
+        return $location;
     }
 }

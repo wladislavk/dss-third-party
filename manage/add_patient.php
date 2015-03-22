@@ -2275,7 +2275,7 @@ if($api_r['use_eligible_api']==1){
 } ?>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <a onclick="return false" class="plain" title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO.">Insured Address same as Pt. address?</a>
-              <input type="radio" onclick="$('#s_m_address_fields').hide();" name="s_m_same_address" value="1" <?php if($s_m_same_address == '1') echo "checked='checked'";?>> Yes
+              <input type="radio" onclick="$('#s_m_address_fields').hide();" name="s_m_same_address" value="1" <?php if($s_m_same_address !== '2') echo "checked='checked'";?>> Yes
               <input type="radio" onclick="$('#s_m_address_fields').show();" name="s_m_same_address" value="2" <?php if($s_m_same_address == '2') echo "checked='checked'";?>> No
             </label>
             <div class="s_m_ins_div" <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>

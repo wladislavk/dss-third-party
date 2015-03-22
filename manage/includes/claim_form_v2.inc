@@ -2898,7 +2898,7 @@ if (empty($query)) {
 									<input type="radio" name="accept_assignment" value="A" <?php if($accept_assignment == "Yes" || $accept_assignment == "A") echo " checked";?> />
 									YES
 									&nbsp;&nbsp;&nbsp;
-									<input type="radio" name="accept_assignment" value="C" <?php if($accept_assignment == "
+									<input type="radio" name="accept_assignment" value="C" <?php if($accept_assignment == "No" || $accept_assignment == "C") echo " checked";?> />
 									NO
 								</td>
 							</tr>

@@ -260,6 +260,23 @@ $total_amount = 0;
 
   }
 
+  while($vob = mysql_fetch_assoc($vob_q)){
+    $id = $vob['id'];
+    if(isset($_POST['vob_date_completed_'.$id])){
+      $up_sql = "UPDATE dental_insurance_preauth SET " .
+        " invoice_date = '".date('Y-m-d', strtotime($_POST['vob_date_completed_'.$id]))."', " .
+        " invoice_amount = '".mysql_real_escape_string($_POST['vob_amount_'.$id])."', " .
+        " invoice_status = '".DSS_PERCASE_INVOICED."' " .
+        " WHERE id = '".$id."'";
+      mysql_query($up_sql);
+    }else{
+      invoice_add_vob('1',$user['userid'],$id, DSS_INVOICE_TYPE_BC_FO);
+    }
+
+  }
+
+
+
   if(isset($_POST['free_fax_desc'])){
     $fax_start_date = ($_POST['free_fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):'';
     $fax_end_date = ($_POST['free_fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';

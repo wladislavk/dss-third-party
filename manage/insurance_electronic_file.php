@@ -798,8 +798,8 @@
                ";
 
     $dce_id = $db->getInsertId($up_sql);
-    invoice_add_efile('1', $_SESSION['docid'], $dce_id);
-    invoice_add_claim('1', $_SESSION['docid'], (!empty($_GET['insid']) ? $_GET['insid'] : ''));
+    invoice_add_efile('1', $docid, $dce_id);
+    invoice_add_claim('1', $docid, (!empty($_GET['insid']) ? $_GET['insid'] : ''));
 
     if(empty($success) || !$success){
         $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";

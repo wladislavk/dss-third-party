@@ -48,7 +48,7 @@
     $other_insured_policy_group_feca = strtoupper(st($pat_myarray['s_m_ins_grp']));
     $referredby =strtoupper($pat_myarray['referred_by']);
     $referred_source =strtoupper($pat_myarray['referred_source']);
-    $docid =strtoupper($pat_myarray['docid']);
+    $docid = $pat_myarray['docid'];
 
     $sql = "select * from dental_insurance where insuranceid='".(!empty($_GET['insid']) ? $_GET['insid'] : '')."' and patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     
@@ -1020,7 +1020,7 @@ if($_REQUEST['type']=="secondary"){
 }else{
   $fdf_field = "primary_fdf";
 }
-invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
+invoice_add_claim('1', $docid, $_GET['insid']);
 $sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysql_real_escape_string($file)."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
 mysql_query($sql);
             // this is where you'd do any custom handling of the data

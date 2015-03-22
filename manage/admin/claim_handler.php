@@ -377,6 +377,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
              $pat_my = mysql_query($pat_sql);
              $pat_myarray = mysql_fetch_array($pat_my);
              $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
+	     $docid = $pat_myarray['docid'];
              $u_status = $status;
              if($status == DSS_CLAIM_SENT){
                 $fdf_type="primary";
@@ -635,7 +636,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     $url = 'https://gds.eligibleapi.com/v1.4/claims.json';
     
       $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-      $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($_SESSION['docid'])."'";
+      $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($docid)."'";
       $api_key_query = mysql_query($api_key_sql);
       $api_key_result = mysql_fetch_assoc($api_key_query);
       if($api_key_result && !empty($api_key_result['eligible_api_key'])){
@@ -682,7 +683,7 @@ mysql_query($up_sql);
 claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
 $dce_id = mysql_insert_id();
 invoice_add_efile('2', $_SESSION['admincompanyid'], $dce_id);
-invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
+invoice_add_claim('1', $docid, $_GET['insid']);
 echo $result;
 if(!$success){
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";

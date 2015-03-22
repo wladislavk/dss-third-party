@@ -205,6 +205,7 @@ class PatientController extends Controller
                 $patientInfo['home_phone']        = $patient->home_phone;
                 $patientInfo['work_phone']        = $patient->work_phone;
                 $patientInfo['cell_phone']        = $patient->cell_phone;
+                $patientInfo['has_s_m_ins']       = $patient->has_s_m_ins;
             } else {
                 foreach ($this->patientData as $attribute) {
                     $patientInfo[$attribute] = '';
@@ -484,6 +485,8 @@ class PatientController extends Controller
 
         $data = array_merge($data, array(
             'showBlock'               => $showBlock,
+            'accessCode'              => $accessCode,
+            'registrationStatus'      => $registrationStatus,
             'imageType4'              => $imageType4,
             'patientInfo'             => $patientInfo,
             'exclusiveBilling'        => $exclusiveBilling,
@@ -976,6 +979,7 @@ class PatientController extends Controller
     {
         if (Request::ajax()) {
             $partial = '';
+
             if (isset($this->request['partial_name'])) {
                 $partial = $this->request['partial_name'];
                 $partial = preg_replace("[^ A-Za-z'\-]", "", $partial);

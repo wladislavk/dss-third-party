@@ -13,6 +13,7 @@ if (typeof String.prototype.trim !== 'function') {
   var selectedUrl = '';
   var searchVal = ""; // global variable to hold the last valid search string
   var local_pat_data = new Array();
+  var additionalRouteParameters = '{}';
 
   $(document).ready(function() {
     $('#patient_search').keyup(function(e) {
@@ -49,7 +50,7 @@ if (typeof String.prototype.trim !== 'function') {
         case 13:
           if($('#search_hints').css('display') == 'inline' || $('#search_hints').css('display') == 'block'){  
             if (selectedUrl != '') {
-            window.location = window.selectedUrl;
+              setRouteParameters(window.selectedUrl, window.additionalRouteParameters, $('#token').val());
             }
           }
           break;
@@ -93,11 +94,8 @@ if (typeof String.prototype.trim !== 'function') {
       //do nothing
                     }else{
       if (selectedUrl != '') {
-        window.location = window.selectedUrl;
-      } else {
-        var pid = $('#patient_list li').eq(window.selection).data("patientid");
-
-        setRouteParameters("/manage/add_patient/" + pid, '{"ed": ' + pid + '}', $('#token').val());
+        setRouteParameters(window.selectedUrl, window.additionalRouteParameters, $('#token').val());
+        return false;
       }
       $('#patient_search').val($(this).html());
       sendValue($(this).html());
@@ -421,7 +419,8 @@ function set_selected(menuitem)
     if (patient_info == 1) {
       window.selectedUrl = "/manage/manage_flowsheet3.php?pid=" + pid;
     } else {
-      window.selectedUrl = '';
+      window.selectedUrl = "/manage/add_patient/" + pid;
+      window.additionalRouteParameters = '{"ed": ' + pid + '}';
     }
   }
 }

@@ -387,7 +387,7 @@
                                 <input name="referred_source_r" {!! (!empty($patientInfo['referred_source']) && $patientInfo['referred_source'] == $DSS_REFERRED_OTHER) ? 'checked' : '' !!} type="radio" value="{!! $DSS_REFERRED_OTHER !!}" onclick="show_referredby('notes', {!! $DSS_REFERRED_OTHER !!})" /> {!! $dssReferredLabels[$DSS_REFERRED_OTHER] !!}
                             </div>
                             <div style="clear:both;float:left;">
-                                <div id="referred_person" {!! (!empty($patientInfo['referred_source']) && $patientInfo['referred_source'] != $DSS_REFERRED_PATIENT && $patientInfo['referred_source'] != $DSS_REFERRED_PHYSICIAN ) ? 'style="display:none;margin-left:100px;"' : 'style="margin-left:100px"' !!}> 
+                                <div id="referred_person" {!! (isset($patientInfo['referred_source']) && $patientInfo['referred_source'] != $DSS_REFERRED_PATIENT && $patientInfo['referred_source'] != $DSS_REFERRED_PHYSICIAN ) ? 'style="display:none;margin-left:100px;"' : 'style="margin-left:100px"' !!}> 
                                     <input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="{!! $referredName or 'Type referral name' !!}" style="width:300px;" />
                                     <input type="button" class="button" style="width:150px;" onclick='loadPopupRefer("/manage/add_contact", "{\"addtopat\": \"{!! $patientId or '' !!}\", \"from\": \"add_patient\"}", "{!! csrf_token() !!}");' value="+ Create New Contact" />
                                     <br />
@@ -397,7 +397,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div id="referred_notes" {!! (!empty($patientInfo['referred_source']) && $patientInfo['referred_source'] != $DSS_REFERRED_MEDIA && $patientInfo['referred_source'] != $DSS_REFERRED_FRANCHISE && $patientInfo['referred_source'] != $DSS_REFERRED_DSSOFFICE && $patientInfo['referred_source'] != $DSS_REFERRED_OTHER) ? 'style="display:none;margin-left:200px;"' : 'style="margin-left:200px;"' !!}>
+                                <div id="referred_notes" {!! (isset($patientInfo['referred_source']) && $patientInfo['referred_source'] != $DSS_REFERRED_MEDIA && $patientInfo['referred_source'] != $DSS_REFERRED_FRANCHISE && $patientInfo['referred_source'] != $DSS_REFERRED_DSSOFFICE && $patientInfo['referred_source'] != $DSS_REFERRED_OTHER) ? 'style="display:none;margin-left:200px;"' : 'style="margin-left:200px;"' !!}>
                                     <textarea name="referred_notes" style="width:300px;">{!! $patientInfo['referred_notes'] or '' !!}</textarea>  
                                 </div>
                                 <input type="hidden" name="referred_by" id="referred_by" value="{!! $patientInfo['referred_by'] or '' !!}" />

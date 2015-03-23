@@ -35,49 +35,44 @@
   }
 ?>
 <?php
-                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$r['docid']."'";
+  $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$r['docid']."'";
 
-                      $docinfo = $db->getRow($getdocinfo);
-                        $phone = $docinfo['phone'];
-                        $practice = $docinfo['practice'];
-                        $address = $docinfo['address'];
-                        $city = $docinfo['city'];
-                        $state = $docinfo['state'];
-                        $zip = $docinfo['zip'];
-                        $npi = $docinfo['npi'];
-                        $medicare_npi = $docinfo['medicare_npi'];
+  $docinfo = $db->getRow($getdocinfo);
+    $phone = $docinfo['phone'];
+    $practice = $docinfo['practice'];
+    $address = $docinfo['address'];
+    $city = $docinfo['city'];
+    $state = $docinfo['state'];
+    $zip = $docinfo['zip'];
+    $npi = $docinfo['npi'];
+    $medicare_npi = $docinfo['medicare_npi'];
 
-                        if($docinfo['use_service_npi']==1){
-                          $service_npi = $docinfo['service_npi'];
-                          $service_practice = $docinfo['service_name'];
-                          $service_address = $docinfo['service_address'];
-                          $service_city = $docinfo['service_city'];
-                          $service_state = $docinfo['service_state'];
-                          $service_zip = $docinfo['service_zip'];
-                          $service_medicare_npi = $docinfo['service_medicare_npi'];
-                        }else{
-                          $service_npi = $npi;
-                          $service_practice = $practice;
-                          $service_address = $address;
-                          $service_city = $city;
-                          $service_state = $state;
-                          $service_zip = $zip;
-                          $service_medicare_npi = $medicare_npi;
-                        }
-?>
-      <?php
-        if($r['p_m_same_address']==1){
-          $s_state = $r['state'];
-          $s_city = $r['city'];
-          $s_zip = $r['zip'];
-        }else{
-          $s_state = $r['p_m_state'];
-          $s_city = $r['p_m_city'];
-          $s_zip = $r['p_m_zip'];
-        }
-        ?>
-
-  <?php
+    if($docinfo['use_service_npi']==1){
+      $service_npi = $docinfo['service_npi'];
+      $service_practice = $docinfo['service_name'];
+      $service_address = $docinfo['service_address'];
+      $service_city = $docinfo['service_city'];
+      $service_state = $docinfo['service_state'];
+      $service_zip = $docinfo['service_zip'];
+      $service_medicare_npi = $docinfo['service_medicare_npi'];
+    }else{
+      $service_npi = $npi;
+      $service_practice = $practice;
+      $service_address = $address;
+      $service_city = $city;
+      $service_state = $state;
+      $service_zip = $zip;
+      $service_medicare_npi = $medicare_npi;
+    }
+    if($r['p_m_same_address']==1){
+      $s_state = $r['state'];
+      $s_city = $r['city'];
+      $s_zip = $r['zip'];
+    }else{
+      $s_state = $r['p_m_state'];
+      $s_city = $r['p_m_city'];
+      $s_zip = $r['p_m_zip'];
+    }
     if($r['p_m_relation'] != 'Self'){
       $d_last_name = $r['lastname'];
       $d_first_name = $r['firstname'];
@@ -98,9 +93,6 @@
       $d_zip = '';
     }
   ?>
-
-
-
 
     <div class="form-group hidden">
       <label for="member_dob" class="col-lg-2 control-label">Test?</label>

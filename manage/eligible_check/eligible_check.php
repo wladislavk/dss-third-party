@@ -23,6 +23,7 @@ include_once '../includes/calendarinc.php';
   <form role="form" class="form-horizontal form-coverage">
 
 <?php
+
   $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn u.userid as user_id from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
          LEFT JOIN dental_users u ON u.userid = p.docid
@@ -34,7 +35,7 @@ include_once '../includes/calendarinc.php';
   $doc_last_name = (!empty($doc_array[1]) ? $doc_array[1] : '');
 
   $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($r['user_id'])."'";
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($r['doc_id'])."'";
   $api_key_query = mysqli_query($con, $api_key_sql);
   $api_key_result = mysqli_fetch_assoc($api_key_query);
   if($api_key_result && !empty($api_key_result['eligible_api_key'])){
@@ -101,23 +102,7 @@ include_once '../includes/calendarinc.php';
     $d_city = '';
     $d_zip = '';
   }
-
-
-  $s = "SELECT eligible_test FROM dental_users where userid='".(!empty($_GET['docid']) ? $_GET['docid'] : '')."'";
-  $row = $db->getRow($s);
-  if($row['eligible_test']=="1"){?>
-
-    <div class="form-group">
-      <label for="member_dob" class="col-lg-2 control-label">Test?</label>
-
-      <div class="col-lg-10">
-        <input type="radio" name="test" id="test_yes" value="true" checked="checked"> Yes
-        <input type="radio" name="test" id="test_no" value="false"> No
-      </div>
-    </div>
-
-<?php 
-  }else{ ?>
+?>
 
     <div class="form-group hidden">
       <label for="member_dob" class="col-lg-2 control-label">Test?</label>
@@ -129,8 +114,6 @@ include_once '../includes/calendarinc.php';
     </div>
 
 
-<?php 
-  } ?>
 
     <input type="hidden" class="form-control" id="api_key" value=<?php echo "'".$api_key."'" ?>>
 
@@ -532,9 +515,9 @@ include_once '../includes/calendarinc.php';
     foreach ($q as $r) {?>
 
 	<tr>
-	  <td><?php echo $r['adddate']; ?></td>
-          <td><a href="#" onclick="parent.window.location = '../view_eligibility_response.php?id=<?php echo $r['id']; ?>';return false;">View</a></td>
-        </tr>
+        <td><?= $r['adddate']; ?></td>
+        <td><a href="view_eligibility_response.php?id=<?=$r['id']; ?>">View</a></td>
+    </tr>
 
 <?php
      }

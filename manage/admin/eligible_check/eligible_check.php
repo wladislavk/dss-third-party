@@ -482,7 +482,7 @@
       <div class="col-lg-offset-2 col-lg-10">
 	<input type="hidden" name="pid" id="pid" value="<?php echo  $_GET['pid']; ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
-        <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+        <button type="submit" id="submit-button" class="btn btn-primary btn-lg">Submit</button>
       </div>
     </div>
 

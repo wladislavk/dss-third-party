@@ -22,6 +22,8 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->post('add_contact/{ed?}', 'ContactController@add');
     $router->post('search_contacts', 'ContactController@searchContact');
     $router->post('search_patients', 'PatientController@searchPatients');
+    $router->get('add_task/{pid?}', 'TaskController@index');
+    $router->post('add_task', 'TaskController@add');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 

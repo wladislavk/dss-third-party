@@ -100,7 +100,7 @@
                                         <li class="task_item task_{!! $overdueTask->id !!}" style="clear:both;">
                                             <div class="task_extra" id="task_extra_{!! $overdueTask->id !!}" >
                                                 <a href="#" onclick="delete_task('{!! $overdueTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick="loadPopup('add_task/id/{!! $overdueTask->id !!}')" class="task_edit">Edit</a>
+                                                <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $overdueTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
                                             <input type="checkbox" class="task_status" style="float:left;" value="{!! $overdueTask->id !!}" />
@@ -124,7 +124,7 @@
                                         <li class="task_item task_{!! $todayTask->id !!}" style="clear:both;">
                                             <div class="task_extra" id="task_extra_{!! $todayTask->id !!}" >
                                                 <a href="#" onclick="delete_task('{!! $todayTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick="loadPopup('add_task/id/{!! $todayTask->id !!}')" class="task_edit">Edit</a>
+                                                <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $todayTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
                                             <input type="checkbox" class="task_status" style="float:left;" value="{!! $todayTask->id !!}" />
@@ -148,7 +148,7 @@
                                         <li class="task_item task_{!! $tomorrowTask->id !!}" style="clear:both;">
                                             <div class="task_extra" id="task_extra_{!! $tomorrowTask->id !!}" >
                                                 <a href="#" onclick="delete_task('{!! $tomorrowTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick="loadPopup('add_task/id/{!! $tomorrowTask->id !!}')" class="task_edit">Edit</a>
+                                                <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $tomorrowTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
                                             <input type="checkbox" class="task_status" style="float:left;" value="{!! $tomorrowTask->id !!}" />
@@ -172,7 +172,7 @@
                                         <li class="task_item task_{!! $thisWeekTask->id !!}" style="clear:both;">
                                             <div class="task_extra" id="task_extra_{!! $thisWeekTask->id !!}" >
                                                 <a href="#" onclick="delete_task('{!! $thisWeekTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick="loadPopup('add_task/id/{!! $thisWeekTask->id !!}')" class="task_edit">Edit</a>
+                                                <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $thisWeekTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
                                             <input type="checkbox" class="task_status" style="float:left;" value="{!! $thisWeekTask->id !!}" />
@@ -196,7 +196,7 @@
                                         <li class="task_item task_{!! $nextWeekTask->id !!}" style="clear:both;">
                                             <div class="task_extra" id="task_extra_{!! $nextWeekTask->id !!}" >
                                                 <a href="#" onclick="delete_task('{!! $nextWeekTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick="loadPopup('add_task/id/{!! $nextWeekTask->id !!}')" class="task_edit">Edit</a>
+                                                <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $nextWeekTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
                                             <input type="checkbox" class="task_status" style="float:left;" value="{!! $nextWeekTask->id !!}" />
@@ -220,7 +220,7 @@
                                         <li class="task_item task_{!! $laterTask->id !!}" style="clear:both;">
                                             <div class="task_extra" id="task_extra_{!! $laterTask->id !!}" >
                                                 <a href="#" onclick="delete_task('{!! $laterTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick="loadPopup('add_task/id/{!! $laterTask->id !!}')" class="task_edit">Edit</a>
+                                                <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $laterTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
                                             <input type="checkbox" class="task_status" style="float:left;" value="{!! $laterTask->id !!}" />
@@ -270,7 +270,7 @@
                             </form>
 
                             <button onclick="window.location='add_patient'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
-                            <button onclick="loadPopup('add_task/pid/{!! $patientId or null !!}')" style="padding: 3px; margin-top:27px;">+ Add Task</button>
+                            <button onclick="loadPopup('/manage/add_task{!! !empty($patientId) ? '/' . $patientId : '' !!}')" style="padding: 3px; margin-top:27px;">+ Add Task</button>
                         </div>
 
                         @if (!empty($logo))
@@ -320,7 +320,7 @@
                                                         <li class="task_item task_{!! $overdueTask->id !!}" style="clear:both;">
                                                             <div class="task_extra" id="task_extra_{!! $overdueTask->id !!}" >
                                                                 <a href="#" onclick="delete_task('{!! $overdueTask->id !!}')" class="task_delete"></a>
-                                                                <a href="#" onclick="loadPopup('add_task/id/{!! $overdueTask->id !!}')" class="task_edit">Edit</a>
+                                                                <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $overdueTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
                                                             </div>
 
                                                             <input type="checkbox" class="task_status" value="{!! $overdueTask->id !!}" />
@@ -342,7 +342,7 @@
                                                         <li class="task_item task_{!! $todayTask->id !!}" style="clear:both;">
                                                             <div class="task_extra" id="task_extra_{!! $todayTask->id !!}" >
                                                                 <a href="#" onclick="delete_task('{!! $todayTask->id !!}')" class="task_delete"></a>
-                                                                <a href="#" onclick="loadPopup('add_task/id/{!! $todayTask->id !!}')" class="task_edit">Edit</a>
+                                                                <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $todayTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
                                                             </div>
 
                                                             <input type="checkbox" class="task_status" value="{!! $todayTask->id !!}" />
@@ -364,7 +364,7 @@
                                                         <li class="task_item task_{!! $tomorrowTask->id !!}" style="clear:both;">
                                                             <div class="task_extra" id="task_extra_{!! $tomorrowTask->id !!}" >
                                                                 <a href="#" onclick="delete_task('{!! $tomorrowTask->id !!}')" class="task_delete"></a>
-                                                                <a href="#" onclick="loadPopup('add_task/id/{!! $tomorrowTask->id !!}')" class="task_edit">Edit</a>
+                                                                <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $tomorrowTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
                                                             </div>
 
                                                             <input type="checkbox" class="task_status" value="{!! $tomorrowTask->id !!}" />
@@ -386,7 +386,7 @@
                                                         <li class="task_item task_{!! $futureTask->id !!}" style="clear:both;">
                                                             <div class="task_extra" id="task_extra_{!! $futureTask->id !!}" >
                                                                 <a href="#" onclick="delete_task('{!! $futureTask->id !!}')" class="task_delete"></a>
-                                                                <a href="#" onclick="loadPopup('add_task/id/{!! $futureTask->id !!}')" class="task_edit">Edit</a>
+                                                                <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $futureTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
                                                             </div>
 
                                                             <input type="checkbox" class="task_status" value="{!! $futureTask->id !!}" />

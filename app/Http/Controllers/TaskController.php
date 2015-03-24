@@ -64,7 +64,8 @@ class TaskController extends Controller
             'task'           => $task,
             'patient'        => !empty($patients) ? $patients[0] : null,
             'users'          => $users,
-            'responsibleId'  => $responsibleId
+            'responsibleId'  => $responsibleId,
+            'closePopup'     => !empty(Session::get('closePopup')) ? Session::get('closePopup') : null
         );
 
         return view('manage.add_task', $data);
@@ -87,7 +88,7 @@ class TaskController extends Controller
             $this->task->insertData($data);
             // $message = 'Task Added!';
 
-            // return;
+            return redirect('/manage/add_task')->with('closePopup', true);
         } elseif (!empty($this->request['taskedit']) && $this->request['taskedit'] == 1) {
             $dueDate = !empty($this->request['due_date']) ? date('Y-m-d', strtotime($this->request['due_date'])) : '';
 
@@ -102,7 +103,7 @@ class TaskController extends Controller
             $this->task->updateData($this->request['task_id'], $data);
             // $message = 'Task Added!';
 
-            // return;
+            return redirect('/manage/add_task')->with('closePopup', true);
         }
     }
 }

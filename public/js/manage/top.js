@@ -55,14 +55,14 @@ if (typeof String.prototype.trim !== 'function') {
           }
           break;
       }
+    });
 
-      $('#task_header').mouseover(function(){
-        $('#task_list').show();
-      });
+    $('#task_header').mouseover(function(){
+      $('#task_list').show();
+    });
 
-      $('#task_menu').mouseleave(function(){
-        $('#task_list').hide();
-      })
+    $('#task_menu').mouseleave(function(){
+      $('#task_list').hide();
     });
 
     $('#patient_search').click(function() {

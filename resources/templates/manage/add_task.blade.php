@@ -15,6 +15,16 @@
         {!! HTML::script('/js/manage/calendar.js') !!}
     </head>
     <body>
+
+        @if (!empty($closePopup))
+            <script>
+                parent.disablePopup1();
+                loc = parent.window.location.href;
+                loc = loc.replace("#", "");
+                parent.window.location = loc;
+            </script>
+        @endif
+
         <form name="notesfrm" action="/manage/add_task" method="post" >
             <input type="hidden" name="patientid" value="{!! $patientId or '' !!}" />
             <input type="hidden" name="_token" value="{!! csrf_token() !!}">

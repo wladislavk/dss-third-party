@@ -44,7 +44,7 @@ class CompanyRepository implements CompanyInterface
 
     public function plans()
     {
-        return Plan::where('office_type', 2);
+        return Plan::superBackOffice();
     }
 
     public function update($id, $fields)

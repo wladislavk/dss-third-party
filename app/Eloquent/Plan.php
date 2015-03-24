@@ -22,4 +22,9 @@ class Plan extends Model
     {
         return $query->where('status', 1);
     }
+
+    public function scopeSuperBackOffice($query)
+    {
+        return $query->where('office_type', 2);
+    }
 }

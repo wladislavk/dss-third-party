@@ -40,13 +40,16 @@ class Loader
     /**
      * @param string $path
      * @throws LoaderException
+     * @return $this
      */
-    public function __construct($path) {
+    public function setLegacyPath($path) {
         $this->legacyPath = realpath($path);
 
         if (!is_dir($this->legacyPath)) {
             throw new LoaderException('The path specified does not exist');
         }
+
+        return $this;
     }
 
     /**
@@ -250,7 +253,7 @@ class Loader
         chdir($this->backupDepot['currentDir']);
 
         for ($n = ob_get_level(); $n > $this->backupDepot['bufferLevel']; $n--) {
-            ob_end_flush();
+            ob_get_contents();
         }
 
         $this->outputBuffer = ob_get_clean();
@@ -261,7 +264,7 @@ class Loader
             $headerName = $header;
             $headerValue = '';
 
-            if (preg_match($header, '(?<name>.+?):\s*(?<value>.+)', $match)) {
+            if (preg_match('@(?<name>.+?):\s*(?<value>.+)@', $header, $match)) {
                 $headerName = $match['name'];
                 $headerValue = $match['value'];
             }
@@ -315,11 +318,11 @@ class Loader
         $location = '';
 
         if (strpos($buffer, 'window.location.replace') !== false && preg_match(
+            '@\s*<script[^>]*?>\s*window\.location\.replace\((["\'])(?<path>.+)\1\);\s*</script>\s*@is',
             $buffer,
-            '@\s*<script>\s*window\.location\.replace\((["\'])(?<path>.+)\1\);\s*</script>\s*@is',
             $match
         )) {
-            $location = dirname("/$relativePath") . "{$match['path']}";
+            $location = dirname("/$relativePath") . "/{$match['path']}";
         }
 
         return $location;

@@ -536,7 +536,21 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 					//$secondary_link = ($myarray['secondary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['secondary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=secondary&pid='.$myarray['patientid'];
 					$primary_link = "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'];
 					$secondary_link = "insurance_claim".(($myarray['secondary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid']."&instype=2";
-					?>
+          $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."' ORDER BY adddate DESC LIMIT 1"; 
+          $reference_id_query = mysql_query($reference_id_sql);
+          if(mysql_num_rows($reference_id_query)){
+            $reference_id_result = mysql_fetch_assoc($reference_id_query);
+            $reference_id = $reference_id_result['reference_id'];
+            if($reference_id != ""){
+              $update_claim_url = "request_claim_update.php?insid=".$myarray['insuranceid'];
+              ?>
+                <a href="<?php echo $update_claim_url?>" class="btn btn-primary btn-sm" >Check Status</a>
+
+              <?php
+            }
+          }
+
+              ?>
 				    <?php if($myarray["status"] == DSS_CLAIM_PENDING || $myarray["status"] == DSS_CLAIM_REJECTED){ ?>
 				    <a href="insurance_claim<?php echo ($myarray['primary_claim_version']!="1")?'_eligible':'_v2'; ?>.php?insid=<?php echo $myarray['insuranceid']?>&fid_filter=<?php echo $fid?>&pid_filter=<?php echo $pid?>&pid=<?php echo $myarray['patientid']?>" title="Edit" class="btn btn-primary btn-sm">
 						Edit

@@ -651,6 +651,8 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 
     $data['eligibleToken'] = $_POST["eligibleToken"]; // Reading eligibleToken and passing to claims endpoint
 
+    $data['scrub_eligibility'] = 'true';
+
     //Curl post call to claim end point
     $ch = curl_init();
 
@@ -665,8 +667,6 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     $result = curl_exec ($ch);
 
     curl_close ($ch);
-
-
 
 $json_response = json_decode($result);
 $ref_id = $json_response->{"reference_id"};

@@ -19,6 +19,13 @@ class TaskController extends Controller
     private $request;
     private $id;
     private $patientId;
+    private $deletedId;
+    private $mine;
+    private $sort1;
+    private $sort2;
+    private $message;
+    private $page1;
+    private $page2;
 
     public function __construct(
         PatientInterface $patient,
@@ -32,6 +39,13 @@ class TaskController extends Controller
         $this->request   = Request::all();
         $this->id        = GeneralFunctions::getRouteParameter('id');
         $this->patientId = Route::input('pid');
+        $this->deletedId = GeneralFunctions::getRouteParameter('delid');
+        $this->mine      = GeneralFunctions::getRouteParameter('mine');
+        $this->sort1     = GeneralFunctions::getRouteParameter('sort1');
+        $this->sort2     = GeneralFunctions::getRouteParameter('sort2');
+        $this->message   = GeneralFunctions::getRouteParameter('message');
+        $this->page1     = GeneralFunctions::getRouteParameter('page1');
+        $this->page2     = GeneralFunctions::getRouteParameter('page2');
     }
 
     public function index()
@@ -105,5 +119,161 @@ class TaskController extends Controller
 
             return redirect('/manage/add_task')->with('closePopup', true);
         }
+    }
+
+    public function manageTasks()
+    {
+        if (!empty($this->deletedId)) {
+            $this->task->updateData($this->deletedId, array(
+                'status' => 2
+            ));
+
+            return redirect('/manage/tasks');
+        }
+
+        if ($this->mine == 1) {
+            $task = 'task';
+        } else {
+            $task = '';
+        }
+
+        if (!empty($this->sort1)) {
+            switch ($this->sort1) {
+                case 'due_date':
+                    $sort = 'due_date';
+                    break;
+                case 'task':
+                    $sort = 'task';
+                    break;
+                case 'responsible':
+                    $sort = 'du.name';
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            $this->request['sort1'] = 'name';
+            $this->request['sortdir1'] = 'DESC';
+            $sort = 'due_date';
+        }
+
+        if (!empty($this->request['sortdir1'])) {
+            $dir = $this->request['sortdir1'];
+        } else {
+            $dir = 'DESC';
+        }
+
+        $quantityDisplayedRecords = 10;
+
+        if (!empty($this->page1)) {
+            $indexValTop = $this->page1;
+        } else {
+            $indexValTop = 0;
+        }
+
+        $iVal = $indexValTop * $quantityDisplayedRecords;
+        $totalRecords = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
+            'value'     => $sort,
+            'direction' => $dir
+        ));
+
+        $noPagesTop = count($totalRecords) / $quantityDisplayedRecords;
+        $topTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
+            'value'     => $sort,
+            'direction' => $dir
+        ), array(
+            'skip' => $iVal,
+            'take' => $quantityDisplayedRecords
+        ));
+
+        $today = strtotime(date('Y-m-d'));
+        $tomorrow = strtotime(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"))));
+
+        $typesTasks = array();
+        if (count($topTasks)) foreach ($topTasks as $task) {
+            $due = strtotime(date('Y-m-d', strtotime($task->due_date)));
+            if ($due < $today) {
+                $type = 'expired';
+            } elseif ($due == $today) {
+                $type = 'today';
+            } elseif ($due == $tomorrow) {
+                $type = 'tomorrow';
+            } else {
+                $type = date('m/d/Y', strtotime($task->due_date));
+            }
+
+            $typesTasks[] = $type;
+        }
+
+        if (!empty($this->sort2)) {
+            switch ($this->sort2) {
+                case 'due_date':
+                    $sort = 'due_date';
+                    break;
+                case 'task':
+                    $sort = 'task';
+                    break;
+                case 'responsible':
+                    $sort = 'du.name';
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            $this->request['sort2'] = 'name';
+            $this->request['sortdir2'] = 'DESC';
+            $sort = 'due_date';
+        }
+
+        if (!empty($this->request['sortdir2'])) {
+            $dir = $this->request['sortdir2'];
+        } else {
+            $dir = 'DESC';
+        }
+
+        if (!empty($this->page2)) {
+            $indexValBottom = $this->page2;
+        } else {
+            $indexValBottom = 0;
+        }
+
+        $iVal = $indexValBottom * $quantityDisplayedRecords;
+        $totalRecords = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
+            'value'     => $sort,
+            'direction' => $dir
+        ));
+
+        $noPagesBottom = count($totalRecords) / $quantityDisplayedRecords;
+        $bottomTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
+            'value'     => $sort,
+            'direction' => $dir
+        ), array(
+            'skip' => $iVal,
+            'take' => $quantityDisplayedRecords
+        ));
+
+        // send data to view
+
+        foreach ($this->request as $name => $value) {
+            $data[$name] = $value;
+        }
+
+        $data = array_merge($data, array(
+            'typesTasks'     => $typesTasks,
+            'mine'           => $this->mine,
+            'noPagesTop'     => $noPagesTop,
+            'noPagesBottom'  => $noPagesBottom,
+            'indexValTop'    => $indexValTop,
+            'indexValBottom' => $indexValBottom,
+            'sort1'          => $this->sort1,
+            'sort2'          => $this->sort2,
+            'sortdir1'       => strtolower($this->sortdir1),
+            'sortdir2'       => strtolower($this->sortdir2),
+            'page2'          => $this->page2,
+            'topTasks'       => $topTasks,
+            'bottomTasks'    => $bottomTasks
+        ));
+
+        return view('manage.tasks', $data);
     }
 }

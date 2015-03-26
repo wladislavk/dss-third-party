@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\ContactTypeInterface;
@@ -10,11 +10,7 @@ class ContactTypeRepository implements ContactTypeInterface
 {
     public function find($contactTypeId)
     {
-        try {
-            $contactType = ContactType::where('contacttypeid', '=', $contactTypeId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $contactType = ContactType::where('contacttypeid', '=', $contactTypeId)->first();
 
         return $contactType;
     }

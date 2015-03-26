@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,11 +17,7 @@ class Form extends Model
             $form->$attribute = $value;
         }
 
-        try {
-            $form->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $form->save();
 
         return $form->formid;
     }

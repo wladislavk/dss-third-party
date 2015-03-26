@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,25 +13,17 @@ class TransactionCode extends Model
 
     public static function get($id)
     {
-        try {
-            $transactionCode = TransactionCode::where('transaction_codeid', '=', $id)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $transactionCode = TransactionCode::where('transaction_codeid', '=', $id)->first();
 
         return $transactionCode;
     }
 
     public static function getTransactionType($docId, $code)
     {
-        try {
-            $transactionType = TransactionCode::select('type')
-                ->where('docid', '=', $docId)
-                ->where('transaction_code', '=', $code)
-                ->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $transactionType = TransactionCode::select('type')
+            ->where('docid', '=', $docId)
+            ->where('transaction_code', '=', $code)
+            ->first();
 
         return $transactionType;
     }
@@ -78,11 +71,7 @@ class TransactionCode extends Model
             $transactionCode->$attribute = $value;
         }
 
-        try {
-            $transactionCode->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $transactionCode->save();
 
         return $transactionCode->transaction_codeid;
     }

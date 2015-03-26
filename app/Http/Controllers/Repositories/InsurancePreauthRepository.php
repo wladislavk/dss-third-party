@@ -1,6 +1,5 @@
-<?php namespace Ds3\Repositories;
-
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+<?php
+namespace Ds3\Repositories;
 
 use Ds3\Contracts\InsurancePreauthInterface;
 use Ds3\Eloquent\Insurance\InsurancePreauth;
@@ -61,11 +60,7 @@ class InsurancePreauthRepository implements InsurancePreauthInterface
             $insurancePreauth->$attribute = $value;
         }
 
-        try {
-            $insurancePreauth->save();
-        } catch (ModelNotFoundException $e) {
-            return null;
-        }
+        $insurancePreauth->save();
 
         return $insurancePreauth->id;
     }

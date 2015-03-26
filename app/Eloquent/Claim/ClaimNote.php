@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Claim;
+<?php
+namespace Ds3\Eloquent\Claim;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,11 +17,7 @@ class ClaimNote extends Model
             $claimNote = $claimNote->where($attribute, '=', $value);
         }
 
-        try {
-            $claimNote = $claimNote->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $claimNote = $claimNote->first();
 
         return $claimNote;
     }
@@ -45,11 +42,7 @@ class ClaimNote extends Model
             $claimNote->$attribute = $value;
         }
 
-        try {
-            $claimNote->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $claimNote->save();
 
         return $claimNote->id;
     }

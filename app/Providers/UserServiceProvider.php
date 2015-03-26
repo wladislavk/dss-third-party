@@ -1,4 +1,5 @@
-<?php namespace Ds3\Providers;
+<?php
+namespace Ds3\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -57,8 +58,8 @@ class UserServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            'Ds3\Contracts\HstInterface',
-            'Ds3\Repositories\HstRepository'
+            'Ds3\Contracts\HomeSleepTestInterface',
+            'Ds3\Repositories\HomeSleepTestRepository'
         );
 
         $this->app->bind(

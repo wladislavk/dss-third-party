@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,11 +39,7 @@ class Pcont extends Model
             $pcont->$attribute = $value;
         }
 
-        try {
-            $pcont->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $pcont->save();
 
         return $pcont->id;
     }

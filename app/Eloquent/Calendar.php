@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,8 +20,7 @@ class Calendar extends Model
             $calendar = $calendar->where($attribute, '=', $value);
         }
 
-        $calendar = $calendar->orderBy('dc.id')
-                             ->get();
+        $calendar = $calendar->orderBy('dc.id')->get();
 
         return $calendar;
     }

@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\LocationInterface;
@@ -39,11 +39,7 @@ class LocationRepository implements LocationInterface
             $location->$attribute = $value;
         }
 
-        try {
-            $location->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $location->save();
 
         return $location->id;
     }

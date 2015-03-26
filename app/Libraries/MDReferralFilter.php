@@ -1,4 +1,5 @@
-<?php namespace Ds3\Libraries;
+<?php
+namespace Ds3\Libraries;
 
 class MDReferralFilter
 {

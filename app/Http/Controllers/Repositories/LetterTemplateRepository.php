@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\LetterTemplateInterface;
@@ -21,11 +21,7 @@ class LetterTemplateRepository implements LetterTemplateInterface
             $letterTemplate->$attribute = $value;
         }
 
-        try {
-            $letterTemplate->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $letterTemplate->save();
 
         return $letterTemplate->id;
     }

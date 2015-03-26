@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\TaskInterface;
@@ -87,11 +87,7 @@ class TaskRepository implements TaskInterface
             $task->$attribute = $value;
         }
 
-        try {
-            $task->save();
-        } catch (ModelNotFoundException $e) {
-            return null;
-        }
+        $task->save();
 
         return $task->id;
     }

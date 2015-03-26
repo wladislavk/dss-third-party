@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +11,7 @@ class QPage1 extends Model
 
     public static function get($patientId)
     {
-        try {
-            $qPage1 = QPage1::where('patientid', '=', $patientId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $qPage1 = QPage1::where('patientid', '=', $patientId)->first();
 
         return $qPage1;
     }

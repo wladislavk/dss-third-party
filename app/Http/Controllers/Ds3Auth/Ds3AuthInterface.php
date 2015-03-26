@@ -1,4 +1,5 @@
-<?php namespace Ds3\Ds3Auth;
+<?php
+namespace Ds3\Ds3Auth;
 
 interface Ds3AuthInterface
 {

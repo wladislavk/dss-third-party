@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +11,7 @@ class Procedure extends Model
 
     public static function get($procedureId)
     {
-        try {
-            $procedure = Procedure::where('procedureid', '=', $procedureId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $procedure = Procedure::where('procedureid', '=', $procedureId)->first();
 
         return $procedure;
     }
@@ -34,11 +31,7 @@ class Procedure extends Model
             $procedure->$attribute = $value;
         }
 
-        try {
-            $procedure->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $procedure->save();
 
         return $procedure->procedureid;
     }

@@ -1,12 +1,12 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
-use Ds3\Contracts\HstInterface;
+use Ds3\Contracts\HomeSleepTestInterface;
 use Ds3\Eloquent\Hst;
 
-class HstRepository implements HstInterface
+class HomeSleepTestRepository implements HomeSleepTestInterface
 {
     public function getHomeSleepTests($viewed, $status, $where)
     {

@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\SummaryInterface;
@@ -36,11 +36,7 @@ class SummaryRepository implements SummaryInterface
             $summary->$attribute = $value;
         }
 
-        try {
-            $summary->save();
-        } catch (ModelNotFoundException $e) {
-            return null;
-        }
+        $summary->save();
 
         return $summary->summaryid;
     }

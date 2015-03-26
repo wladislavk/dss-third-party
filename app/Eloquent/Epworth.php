@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,13 +18,13 @@ class Epworth extends Model
         return $epworth;
     }
 
-    public static function getJoin($followupId)
+    public static function getJoin($followUpId)
     {
         $epworth = DB::table(DB::raw('dental_epworth e'))
             ->select(DB::raw('e.*, fu.answer'))
-            ->leftJoin(DB::raw('dentalsummfu_ess fu'), function($join) use ($followupId){
+            ->leftJoin(DB::raw('dentalsummfu_ess fu'), function($join) use ($followUpId) {
                 $join->on('fu.epworthid', '=', 'e.epworthid')
-                     ->where('fu.followupid', '=', $followupId);
+                     ->where('fu.followupid', '=', $followUpId);
             })
             ->where('e.status', '=', 1)
             ->orderBy('e.sortby')

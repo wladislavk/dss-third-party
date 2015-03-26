@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +11,7 @@ class Referredby extends Model
 
     public static function get($referredbyId)
     {
-        try {
-            $referredby = Referredby::where('referredbyid', '=', $referredbyId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $referredby = Referredby::where('referredbyid', '=', $referredbyId)->first();
 
         return $referredby;
     }
@@ -34,11 +31,7 @@ class Referredby extends Model
             $referredby->$attribute = $value;
         }
 
-        try {
-            $referredby->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $referredby->save();
 
         return $referredby->referredbyid;
     }

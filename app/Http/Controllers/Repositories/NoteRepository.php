@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\NoteInterface;
@@ -58,11 +58,7 @@ class NoteRepository implements NoteInterface
             $note->$attribute = $value;
         }
 
-        try {
-            $note->save();
-        } catch (ModelNotFoundException $e) {
-            return null;
-        }
+        $note->save();
 
         return $note->notesid;
     }

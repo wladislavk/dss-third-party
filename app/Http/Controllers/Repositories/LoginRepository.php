@@ -1,6 +1,5 @@
-<?php namespace Ds3\Repositories;
-
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+<?php
+namespace Ds3\Repositories;
 
 use Ds3\Contracts\LoginInterface;
 use Ds3\Eloquent\Login\Login;
@@ -15,11 +14,7 @@ class LoginRepository implements LoginInterface
             $login->$attribute = $value;
         }
 
-        try {
-            $login->save();
-        } catch(ModelNotFoundException $e) {
-            return null;
-        }
+        $login->save();
 
         return $login->loginid;
     }

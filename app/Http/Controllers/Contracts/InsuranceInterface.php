@@ -1,8 +1,9 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
 interface InsuranceInterface
 {
-    public function getInsurance($where, $status = null);
+    public function filterBy($where, $status = null);
     public function getPendingNodssClaims($docId, $input);
     public function getUnmailedClaims($docId, $DSS_CLAIM_PENDING, $DSS_CLAIM_SEC_PENDING);
     public function getJoin($patientId);

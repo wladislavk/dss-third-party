@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Insurance;
+<?php
+namespace Ds3\Eloquent\Insurance;
 
 use Illuminate\Database\Eloquent\Model;
 

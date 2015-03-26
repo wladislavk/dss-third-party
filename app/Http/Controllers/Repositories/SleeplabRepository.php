@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\SleeplabInterface;
@@ -38,11 +38,7 @@ class SleeplabRepository implements SleeplabInterface
             $sleeplab->$attribute = $value;
         }
 
-        try {
-            $sleeplab->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $sleeplab->save();
 
         return $sleeplab->sleeplabid;
     }

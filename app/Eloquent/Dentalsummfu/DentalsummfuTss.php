@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Dentalsummfu;
+<?php
+namespace Ds3\Eloquent\Dentalsummfu;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,38 +11,30 @@ class DentalsummfuTss extends Model
 
     public static function get($followupId, $thorntonId)
     {
-        try {
-            $dentalsummfuTss = DentalsummfuTss::where('followupid', '=', $followupId)
-                ->where('thorntonid', '=', $thorntonId)
-                ->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $summaryThorntonSnoringScale = DentalsummfuTss::where('followupid', '=', $followupId)
+            ->where('thorntonid', '=', $thorntonId)
+            ->first();
 
-        return $dentalsummfuTss;
+        return $summaryThorntonSnoringScale;
     }
 
     public static function insertData($data)
     {
-        $dentalsummfuTss = new DentalsummfuTss();
+        $summaryThorntonSnoringScale = new DentalsummfuTss();
 
         foreach ($data as $attribute => $value) {
-            $dentalsummfuTss->$attribute = $value;
+            $summaryThorntonSnoringScale->$attribute = $value;
         }
 
-        try {
-            $dentalsummfuTss->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $summaryThorntonSnoringScale->save();
 
-        return $dentalsummfuTss->followupid;
+        return $summaryThorntonSnoringScale->followupid;
     }
 
     public static function deleteData($followupId)
     {
-        $dentalsummfuTss = DentalsummfuTss::where('followupid', '=', $followupId)->delete();
+        $summaryThorntonSnoringScale = DentalsummfuTss::where('followupid', '=', $followupId)->delete();
 
-        return $dentalsummfuTss;
+        return $summaryThorntonSnoringScale;
     }
 }

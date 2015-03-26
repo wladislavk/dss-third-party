@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Claim;
+<?php
+namespace Ds3\Eloquent\Claim;
 
 use Illuminate\Database\Eloquent\Model;
 

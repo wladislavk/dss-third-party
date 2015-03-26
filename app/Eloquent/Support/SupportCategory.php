@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Support;
+<?php
+namespace Ds3\Eloquent\Support;
 
 use Illuminate\Database\Eloquent\Model;
 

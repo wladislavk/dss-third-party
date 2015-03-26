@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\UserInterface;
@@ -39,11 +39,7 @@ class UserRepository implements UserInterface
 
     public function getType($docId)
     {
-        try {
-            $user = User::where('userid', '=', $docId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $user = User::where('userid', '=', $docId)->first();
 
         return $user->user_type;
     }
@@ -157,11 +153,7 @@ class UserRepository implements UserInterface
             $user->$attribute = $value;
         }
 
-        try {
-            $user->save();
-        } catch (ModelNotFoundException $e) {
-            return null;
-        }
+        $user->save();
 
         return $user->userid;
     }

@@ -8,35 +8,28 @@ use Ds3\Libraries\Legacy\Loader;
 
 class LegacyLoaderController extends Controller
 {
-    private $request;
     private $loader;
     private $config;
 
-    public function __construct(Request $request, Config $config, Loader $loader)
+    public function __construct(Config $config, Loader $loader)
     {
-        $this->request = $request;
         $this->loader = $loader;
         $this->config = $config;
     }
 
-    public function index()
+    public function index(Request $request, $legacyFile)
     {
         $legacyPath = $this->config->get('app.legacy_path');
         $loader = new Loader();
 
-        $response = $loader->setLegacyPath($legacyPath)
-            ->setRequestParams('post', [
-                'loginsub' => 1,
-                'username' => 'admin',
-                'password' => 'admin'
-            ])
-            ->load('manage/admin/index.php');
+        $loader->setLegacyPath($legacyPath)
+            ->setRequestParams('get', $request->query());
 
-        ob_start();
-        dd($response);
+        if ($request->method() === 'post') {
+            $loader->setRequestParams('post', $request->input());
+        }
 
-        $output = ob_get_clean();
-
-        return $output;
+        $response = $loader->load($legacyFile);
+        return $response;
     }
 }

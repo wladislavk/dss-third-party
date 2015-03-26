@@ -70,4 +70,5 @@ $router->get('manage/admin/login','Admin\SessionController@index');
 $router->post('manage/admin/login','Admin\SessionController@login');
 
 $router->get("manage/admin/logout",'Admin\SessionController@logout');
-$router->get('legacy-loader', 'LegacyLoaderController@index');
+$router->any('{legacyFile}', 'LegacyLoaderController@index')
+    ->where('legacyFile', '.+\.php$');

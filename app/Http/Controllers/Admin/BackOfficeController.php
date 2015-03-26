@@ -1,4 +1,5 @@
-<?php namespace Ds3\Http\Controllers\Admin;
+<?php
+namespace Ds3\Http\Controllers\Admin;
 
 use Ds3\Admin\Contracts\BackOfficeUserInterface as BackOfficeUser;
 use Ds3\Http\Requests;

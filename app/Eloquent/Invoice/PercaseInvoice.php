@@ -1,4 +1,6 @@
-<?php namespace Ds3\Eloquent\Invoice; 
+<?php
+namespace Ds3\Eloquent\Invoice; 
+
 use Illuminate\Database\Eloquent\Model;
 
 class PercaseInvoice extends Model

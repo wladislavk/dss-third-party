@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\ContactInterface;
@@ -16,11 +16,7 @@ class ContactRepository implements ContactInterface
             $contact = $contact->where($attribute, '=', $value);
         }
 
-        try {
-            $contact = $contact->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $contact = $contact->first();
 
         return $contact;
     }
@@ -102,11 +98,7 @@ class ContactRepository implements ContactInterface
             $contact->$attribute = $value;
         }
 
-        try {
-            $contact->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $contact->save();
 
         return $contact->contactid;
     }

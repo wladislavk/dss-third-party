@@ -1,4 +1,5 @@
-<?php namespace Ds3\Http\Controllers\Admin;
+<?php
+namespace Ds3\Http\Controllers\Admin;
 
 use Ds3\Admin\Contracts\AdminInterface;
 use Ds3\Ds3Auth\Ds3AuthInterface;

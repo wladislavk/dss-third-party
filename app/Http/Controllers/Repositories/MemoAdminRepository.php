@@ -1,4 +1,5 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
 use Ds3\Contracts\MemoAdminInterface;
 use Ds3\Eloquent\Memo\MemoAdmin;

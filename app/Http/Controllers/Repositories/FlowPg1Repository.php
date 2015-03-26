@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\FlowPg1Interface;
@@ -10,11 +10,7 @@ class FlowPg1Repository implements FlowPg1Interface
 {
     public function find($patientId)
     {
-        try {
-            $flowPg1 = FlowPg1::where('pid', '=', $patientId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $flowPg1 = FlowPg1::where('pid', '=', $patientId)->first();
 
         return $flowPg1;
     }
@@ -34,11 +30,7 @@ class FlowPg1Repository implements FlowPg1Interface
             $flowPg1->$attribute = $value;
         }
 
-        try {
-            $flowPg1->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $flowPg1->save();
 
         return $flowPg1->id;
     }

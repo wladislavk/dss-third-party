@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Letter;
+<?php
+namespace Ds3\Eloquent\Letter;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +11,7 @@ class LetterTemplatesCustom extends Model
 
     public static function get($ed)
     {
-        try {
-            $letterTemplatesCustom = LetterTemplatesCustom::where('id', '=', $ed)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $letterTemplatesCustom = LetterTemplatesCustom::where('id', '=', $ed)->first();
 
         return $letterTemplatesCustom;
     }
@@ -36,11 +33,7 @@ class LetterTemplatesCustom extends Model
             $letterTemplatesCustom->$attribute = $value;
         }
 
-        try {
-            $letterTemplatesCustom->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $letterTemplatesCustom->save();
 
         return $letterTemplatesCustom->id;
     }

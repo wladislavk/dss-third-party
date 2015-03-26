@@ -1,4 +1,5 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
 use Ds3\Contracts\LedgerInterface;
 use Ds3\Eloquent\Ledger\Ledger;
@@ -14,24 +15,16 @@ class LedgerRepository implements LedgerInterface
 
     public function getNumTransactions($id)
     {
-        try {
-            $numTrxn = Ledger::select(DB::raw('COUNT(*) as num_trxn'))->where('primary_claim_id', '=', $id)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $numTrxn = Ledger::select(DB::raw('COUNT(*) as num_trxn'))->where('primary_claim_id', '=', $id)->first();
 
         return $numTrxn;
     }
 
     public function getSum($patientId)
     {
-        try {
-            $ledger = Ledger::select(DB::raw('sum(amount) as amt, sum(paid_amount) as p_amt'))
-                ->where('patientid', '=', $patientId)
-                ->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $ledger = Ledger::select(DB::raw('sum(amount) as amt, sum(paid_amount) as p_amt'))
+            ->where('patientid', '=', $patientId)
+            ->first();
 
         return $ledger;
     }
@@ -71,11 +64,7 @@ class LedgerRepository implements LedgerInterface
             $ledger->$attribute = $value;
         }
 
-        try {
-            $ledger->save();
-        } catch (ModelNotFoundException $e) {
-            return null;
-        }
+        $ledger->save();
 
         return $ledger->ledgerid;
     }

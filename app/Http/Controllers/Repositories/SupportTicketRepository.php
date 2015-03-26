@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\SupportTicketInterface;
@@ -28,11 +28,7 @@ class SupportTicketRepository implements SupportTicketInterface
             $supportTicket->$attribute = $value;
         }
 
-        try {
-            $supportTicket->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $supportTicket->save();
 
         return $supportTicket->id;
     }

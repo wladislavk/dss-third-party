@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +11,7 @@ class Custom extends Model
 
     public static function get($customId)
     {
-        try {
-            $custom = Custom::where('customid', '=', $customId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $custom = Custom::where('customid', '=', $customId)->first();
 
         return $custom;
     }
@@ -43,11 +40,7 @@ class Custom extends Model
             $custom->$attribute = $value;
         }
 
-        try {
-            $custom->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $custom->save();
 
         return $custom->customid;
     }

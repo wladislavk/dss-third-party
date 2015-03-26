@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +19,7 @@ class ModifierCode extends Model
             }
         }
 
-        $modifierCode = $modifierCode->orderBy('sortby');                                                             
+        $modifierCode = $modifierCode->orderBy('sortby');
 
         return $modifierCode->get();
     }

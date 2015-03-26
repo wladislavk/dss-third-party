@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +11,7 @@ class ChangeList extends Model
 
     public static function getContent()
     {
-        try {
-            $changeList = ChangeList::select('content')->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $changeList = ChangeList::select('content')->first();
 
         return $changeList;
     }

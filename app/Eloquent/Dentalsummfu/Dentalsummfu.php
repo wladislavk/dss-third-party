@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Dentalsummfu;
+<?php
+namespace Ds3\Eloquent\Dentalsummfu;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,41 +11,37 @@ class Dentalsummfu extends Model
 
     public static function get($patientId, $order)
     {
-        $dentalsummfu = Dentalsummfu::where('patientid', '=', $patientId)
+        $summaryFollowUp = Dentalsummfu::where('patientid', '=', $patientId)
             ->orderBy($order, 'desc')
             ->get();
 
-        return $dentalsummfu;
+        return $summaryFollowUp;
     }
 
     public static function updateData($followupId, $values)
     {
-        $dentalsummfu = Dentalsummfu::where('followupid', '=', $followupId)->update($values);
+        $summaryFollowUp = Dentalsummfu::where('followupid', '=', $followupId)->update($values);
 
-        return $dentalsummfu;
+        return $summaryFollowUp;
     }
 
     public static function insertData($data)
     {
-        $dentalsummfu = new Dentalsummfu();
+        $summaryFollowUp = new Dentalsummfu();
 
         foreach ($data as $attribute => $value) {
-            $dentalsummfu->$attribute = $value;
+            $summaryFollowUp->$attribute = $value;
         }
 
-        try {
-            $dentalsummfu->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $summaryFollowUp->save();
 
-        return $dentalsummfu->followupid;
+        return $summaryFollowUp->followupid;
     }
 
     public static function deleteData($followupId)
     {
-        $dentalsummfu = Dentalsummfu::where('followupid', '=', $followupId)->delete();
+        $summaryFollowUp = Dentalsummfu::where('followupid', '=', $followupId)->delete();
 
-        return $dentalsummfu;
+        return $summaryFollowUp;
     }
 }

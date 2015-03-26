@@ -1,6 +1,5 @@
-<?php namespace Ds3\Repositories;
-
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+<?php
+namespace Ds3\Repositories;
 
 use Ds3\Contracts\DocumentCategoryInterface;
 use Ds3\Eloquent\DocumentCategory;

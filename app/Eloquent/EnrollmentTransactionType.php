@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,13 +11,9 @@ class EnrollmentTransactionType extends Model
 
     public static function get($id)
     {
-        try {
-            $enrollmentTransactionType = EnrollmentTransactionType::where('id', '=', $id)
-                ->where('status', '=', 1)
-                ->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $enrollmentTransactionType = EnrollmentTransactionType::where('id', '=', $id)
+            ->where('status', '=', 1)
+            ->first();
 
         return $enrollmentTransactionType;
     }

@@ -1,4 +1,5 @@
-<?php namespace Ds3\Services;
+<?php
+namespace Ds3\Services;
 
 use Ds3\User;
 use Validator;

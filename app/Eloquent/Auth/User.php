@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Auth;
+<?php
+namespace Ds3\Eloquent\Auth;
 
 use Ds3\Libraries\Constants;
 use Illuminate\Auth\Authenticatable;
@@ -42,32 +43,32 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getInvoices()
     {
-        return $this->hasMany(new PercaseInvoice,'docid');
+        return $this->hasMany(new PercaseInvoice, 'docid');
     }
 
-    public function is_super($access)
+    public function isSuper($access)
     {
-        return (Constants::DSS_ADMIN_ACCESS_SUPER == $access);
+        return (Constants::DSS_ADMIN_ACCESS_SUPER === $access);
     }
 
-    public function is_admin($access)
+    public function isAdmin($access)
     {
-        return (Constants::DSS_ADMIN_ACCESS_ADMIN == $access || Constants::DSS_ADMIN_ACCESS_SUPER == $access);
+        return (Constants::DSS_ADMIN_ACCESS_ADMIN === $access || Constants::DSS_ADMIN_ACCESS_SUPER === $access);
     }
 
-    public function is_billing($access)
+    public function isBilling($access)
     {
-        return (Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN == $access || Constants::DSS_ADMIN_ACCESS_BILLING_BASIC == $access);
+        return (Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN === $access || Constants::DSS_ADMIN_ACCESS_BILLING_BASIC === $access);
     }
 
-    public function is_hst_admin($admin_access)
+    public function isHstAdmin($adminAccess)
     {
-        return (Constants::DSS_ADMIN_ACCESS_HST_ADMIN == $admin_access);
+        return (Constants::DSS_ADMIN_ACCESS_HST_ADMIN === $adminAccess);
     }
     
-    public function is_billing_admin($admin_access)
+    public function isBillingAdmin($adminAccess)
     {
-        return (Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN == $admin_access);
+        return (Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN === $adminAccess);
     }
 
     public function scopeActive($query)

@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,7 +9,7 @@ class ApptType extends Model
     protected $fillable = ['name', 'color', 'classname'];
     protected $primaryKey = 'id';
 
-    public static function get($where, $order = null)
+    public static function filterBy($where, $order = null)
     {
         $apptType = new ApptType();
 
@@ -48,11 +49,7 @@ class ApptType extends Model
             $apptType->$attribute = $value;
         }
 
-        try {
-            $apptType->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $apptType->save();
 
         return $apptType->id;
     }

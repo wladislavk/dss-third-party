@@ -1,4 +1,5 @@
-<?php namespace Ds3\Http\Requests;
+<?php
+namespace Ds3\Http\Requests;
 
 use Ds3\Http\Requests\Request;
 

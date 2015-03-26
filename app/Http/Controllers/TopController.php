@@ -1,4 +1,5 @@
-<?php namespace Ds3\Http\Controllers;
+<?php
+namespace Ds3\Http\Controllers;
 
 use Ds3\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -13,7 +14,7 @@ use Ds3\Contracts\LetterInterface;
 use Ds3\Contracts\InsuranceInterface;
 use Ds3\Contracts\LedgerInterface;
 use Ds3\Contracts\InsurancePreauthInterface;
-use Ds3\Contracts\HstInterface;
+use Ds3\Contracts\HomeSleepTestInterface;
 use Ds3\Contracts\PatientContactInterface;
 use Ds3\Contracts\PatientInsuranceInterface;
 use Ds3\Contracts\PatientInterface;
@@ -56,7 +57,7 @@ class TopController extends Controller
         InsuranceInterface $insurance,
         LedgerInterface $ledger,
         InsurancePreauthInterface $insurancePreauth,
-        HstInterface $hst,
+        HomeSleepTestInterface $hst,
         PatientContactInterface $patientContact,
         PatientInsuranceInterface $patientInsurance,
         PatientInterface $patient,
@@ -152,7 +153,7 @@ class TopController extends Controller
             $where = array('docid' => Session::get('docId'));
             $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING;
 
-            $numPendingClaims = count($this->insurance->getInsurance($where, $status));
+            $numPendingClaims = count($this->insurance->filterBy($where, $status));
 
             $where = array(
                 'dental_ledger.status'           => Constants::DSS_TRXN_PENDING,
@@ -167,7 +168,7 @@ class TopController extends Controller
             $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING . ','
                     . Constants::DSS_CLAIM_DISPUTE . ',' . Constants::DSS_CLAIM_SEC_DISPUTE;
 
-            $numPendingClaims = count($this->insurance->getInsurance($where, $status));
+            $numPendingClaims = count($this->insurance->filterBy($where, $status));
 
             $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING . ','
                     . Constants::DSS_CLAIM_DISPUTE . ',' . Constants::DSS_CLAIM_SEC_DISPUTE;
@@ -179,7 +180,7 @@ class TopController extends Controller
             $where = array('docid' => Session::get('docId'));
             $status = Constants::DSS_CLAIM_REJECTED . ',' . Constants::DSS_CLAIM_SEC_REJECTED;
 
-            $numRejectedClaims = count($this->insurance->getInsurance($where, $status));
+            $numRejectedClaims = count($this->insurance->filterBy($where, $status));
 
             $numPreauth = count($this->insurancePreauth->getPreauth(Session::get('docId'), Constants::DSS_PREAUTH_COMPLETE));
 
@@ -418,7 +419,7 @@ class TopController extends Controller
 
                 $status = Constants::DSS_CLAIM_REJECTED . ',' . Constants::DSS_CLAIM_SEC_REJECTED;
 
-                $rejectedInsurance = $this->insurance->getInsurance(array('patientid' => $patientId), $status);
+                $rejectedInsurance = $this->insurance->filterBy(array('patientid' => $patientId), $status);
 
                 // Undefined constants
                 /*

@@ -1,7 +1,7 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Illuminate\Support\Facades\DB;
 use Ds3\Eloquent\Auth\User;
@@ -25,11 +25,7 @@ class Admin extends User
 
     public static function getAdmin($adminId)
     {
-        try {
-            $admin = Admin::where('adminid', '=', $adminId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $admin = Admin::where('adminid', '=', $adminId)->first();
 
         return $admin;
     }

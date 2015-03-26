@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Login;
+<?php
+namespace Ds3\Eloquent\Login;
 
 use Illuminate\Database\Eloquent\Model;
 

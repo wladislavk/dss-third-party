@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Support;
+<?php
+namespace Ds3\Eloquent\Support;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,11 +17,7 @@ class SupportAttachment extends Model
             $supportAttachment->$attribute = $value;
         }
 
-        try {
-            $supportAttachment->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $supportAttachment->save();
 
         return $supportAttachment->id;
     }

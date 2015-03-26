@@ -1,4 +1,5 @@
-<?php namespace Ds3\Admin\Contracts;
+<?php
+namespace Ds3\Admin\Contracts;
 
 interface CompanyInterface
 {

@@ -1,4 +1,5 @@
-<?php namespace Ds3\Providers;
+<?php
+namespace Ds3\Providers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;

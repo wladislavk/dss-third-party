@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,13 +11,9 @@ class History extends Model
 
     public static function get($historyId)
     {
-        try {
-            $history = History::where('historyid', '=', $historyId)
-                ->where('status', '=', 1)
-                ->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $history = History::where('historyid', '=', $historyId)
+            ->where('status', '=', 1)
+            ->first();
 
         return $history;
     }

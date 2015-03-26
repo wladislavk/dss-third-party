@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\InsuranceInterface;
@@ -8,7 +8,7 @@ use Ds3\Eloquent\Insurance\Insurance;
 
 class InsuranceRepository implements InsuranceInterface
 {
-    public function getInsurance($where, $status = null)
+    public function filterBy($where, $status = null)
     {
         $pendingClaims = new Insurance();
 
@@ -72,11 +72,7 @@ class InsuranceRepository implements InsuranceInterface
             $insurance->$attribute = $value;
         }
 
-        try {
-            $insurance->save();
-        } catch (ModelNotFoundException $e) {
-            return null;
-        }
+        $insurance->save();
 
         return $insurance->insuranceid;
     }

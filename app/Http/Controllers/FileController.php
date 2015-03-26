@@ -1,4 +1,5 @@
-<?php namespace Ds3\Http\Controllers;
+<?php
+namespace Ds3\Http\Controllers;
 
 use Ds3\Http\Controllers\Controller;
 use File;

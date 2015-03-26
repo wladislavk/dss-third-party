@@ -1,4 +1,5 @@
-<?php namespace Ds3\Providers;
+<?php
+namespace Ds3\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 

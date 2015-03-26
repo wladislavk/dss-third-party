@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Ledger;
+<?php
+namespace Ds3\Eloquent\Ledger;
 
 use Illuminate\Database\Eloquent\Model;
 

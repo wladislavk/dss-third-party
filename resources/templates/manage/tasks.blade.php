@@ -29,7 +29,6 @@
 </div>
 <span style="float:right; margin-right:20px;">
   Pages:
-  <?php paging1($no_pages,$index_val,"sort1=".(!empty($_GET['sort1']) ? $_GET['sort1'] : '')."&sortdir1=".(!empty($_GET['sortdir1']) ? $_GET['sortdir1'] : '')."&page2=".(!empty($_GET['page2']) ? $_GET['page2'] : '')."&sort2=".(!empty($_GET['sort2']) ? $_GET['sort2'] : '')."&sortdir2=".(!empty($_GET['sortdir2']) ? $_GET['sortdir2'] : ''));?>
 
   @for ($pageCount = 0; $pageCount < $noPagesTop; $pageCount++)
     @if ($indexValTop == $pageCount)
@@ -40,6 +39,7 @@
         </a>
     @endif
   @endfor
+
 </span>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -68,8 +68,104 @@
         </tr>
     @else
         @foreach ($topTasks as $topTask)
-            
+            <tr class="{!! $topTask->type !!} task_{!! $topTask->id !!}" id="task_{!! $topTask->id !!}">
+                <td class="status_col">
+                    <input type="checkbox" class="task_status" value="{!! $topTask->id !!}" />
+                </td>
+                <td valign="top">
+                    {!! $topTask->task or '' !!}
+                    @if (!empty($topTask->firstname) && !empty($topTask->lastname))
+                        <a href="#" onclick='setRouteParameters("/manage/add_patient{!! !empty($topTask->patientid) ? '/' . $topTask->patientid : '' !!}", "{\"ed\": \"{!! $topTask->patientid or '' !!}\", \"preview\": 1, \"addtopat\": 1}", "{!! csrf_token() !!}"); return false;'>{!! $topTask->firstname !!} {!! $topTask->lastname !!}</a>
+                    @endif
+                </td>
+                <td class="due_date" valign="top">
+                    @if ($topTask->type === 'expired')
+                        Overdue
+                    @elseif ($topTask->type === 'today')
+                        Today
+                    @elseif ($topTask->type === 'tomorrow')
+                        Tomorrow
+                    @else
+                        {!! $topTask->type !!}
+                    @endif
+                </td>
+                <td valign="top">
+                    {!! $topTask->name !!}
+                </td>
+                <td valign="top">
+                    <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $topTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="editlink" title="EDIT">
+                        Edit
+                    </a>
+                </td>
+            </tr>
         @endforeach
     @endif
+
+</table>
+<br />
+<span class="admin_head">Completed</span>
+<span style="float:right; margin-right:20px;">
+    Pages:
+
+    @for ($pageCount = 0; $pageCount < $noPagesTop; $pageCount++)
+        @if ($indexValTop == $pageCount)
+            <strong>{!! $pageCount + 1 !!}</strong>
+        @else
+            <a href="#" class="fp" onclick='setRouteParameters("/manage/tasks", "{\"page1\": 0, \"page2\": $pageCount, \"sort1\": {!! $sort1 or '' !!}, \"sortdir1\": {!! $sortdir1 or '' !!}, \"page1\": {!! $page1 or '' !!}, \"sort2\": {!! $sort2 or '' !!}, \"sortdir2\": {!! $sortdir2 or '' !!}}", "{!! csrf_token() !!}"); return false;'>
+                {!! $pageCount + 1 !!}
+            </a>
+        @endif
+    @endfor
+
+</span>
+<table id="completed_tasks" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+    <tr class="tr_bg_h">
+        <td width="2%" class="col_head">
+        </td>
+    <td valign="top" class="col_head  {!! ($sort2 == 'task') ? 'arrow_' . $sortdir2 : '' !!}" width="45%">
+        <a href="#" onclick='setRouteParameters("/manage/tasks", "{\"page1\": \"{!! $page1 or '' !!}\", \"sort1\": \"{!! $sort1 or '' !!}\", \"sortdir1\": {!! $sortdir1 or '' !!}, \"page2\": {!! $page2 or '' !!}, \"sort2\": \"task\", \"sortdir2\": {!! ($sort2 == "task" && $sortdir2 == "asc") ? "desc" : "asc" !!}}", "{!! csrf_token() !!}"); return false;'>Task</a>
+    </td>
+    <td valign="top" class="col_head  {!! ($sort2 == 'due_date') ? 'arrow_' . $sortdir2 : '' !!}" width="20%">
+        <a href="#" onclick='setRouteParameters("/manage/tasks", "{\"sort1\": {!! $sort1 or '' !!}, \"sortdir1\": {!! $sortdir1 or '' !!}, \"page1\": {!! $page1 or '' !!}, \"sort2\": \"due_date\", \"sortdir2\": {!! ($sort2 == "due_date" && $sortdir2 == "asc") ? "desc" : "asc" !!}}", "{!! csrf_token() !!}"); return false;'>Due Date</a>
+    </td>
+    <td valign="top" class="col_head  {!! ($sort2 == 'responsible') ? 'arrow_' . $sortdir2 : '' !!}" width="20%">
+        <a href="#" onclick='setRouteParameters("/manage/tasks", "{\"sort1\": {!! $sort1 or '' !!}, \"sortdir1\": {!! $sortdir1 or '' !!}, \"page1\": {!! $page1 or '' !!}, \"sort2\": \"responsible\", \"sortdir2\": {!! ($sort2 == "responsible" && $sortdir2 == "asc") ? "desc" : "asc" !!}}", "{!! csrf_token() !!}"); return false;'>Assigned To</a>
+    </td>
+        <td valign="top" class="col_head" width="15%">
+            Action
+        </td>
+    </tr>
+
+    @if (!count($bottomTasks))
+        <tr class="tr_bg">
+            <td valign="top" class="col_head" colspan="4" align="center">
+                No Records
+            </td>
+        </tr>
+    @else
+        @foreach ($bottomTasks as $bottomTask)
+            <tr>
+                <td valign="top">
+                    {!! $bottomTask->task or '' !!}&nbsp;
+                    @if (!empty($bottomTask->firstname) && !empty($bottomTask->lastname))
+                        <a href="#" onclick='setRouteParameters("/manage/add_patient{!! !empty($bottomTask->patientid) ? '/' . $bottomTask->patientid : '' !!}", "{\"ed\": \"{!! $bottomTask->patientid or '' !!}\", \"preview\": 1, \"addtopat\": 1}", "{!! csrf_token() !!}"); return false;'>{!! $bottomTask->firstname !!} {!! $bottomTask->lastname !!}</a>
+                    @endif
+                </td>
+                <td valign="top">
+                    {!! date('m/d/Y', strtotime($bottomTask->due_date)) !!}&nbsp;
+                </td>
+                <td valign="top">
+                    {!! $bottomTask->name !!}
+                </td>
+                <td valign="top">
+                    <a href="#" onclick='loadPopup("/manage/add_task", "{\"id\": {!! $bottomTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="editlink" title="EDIT">
+                        Edit
+                    </a>
+                </td>
+            </tr>
+        @endforeach
+    @endif
+
+</table>
 
 @stop

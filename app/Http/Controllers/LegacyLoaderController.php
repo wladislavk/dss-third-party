@@ -22,8 +22,14 @@ class LegacyLoaderController extends Controller
         $legacyPath = $this->config->get('app.legacy_path');
         $loader = new Loader();
 
-        $loader->setLegacyPath($legacyPath)
-            ->setRequestParams('get', $request->query());
+        $loader->setLegacyPath($legacyPath);
+
+        // Try to determine if we are dealing with a folder
+        if ($loader->isLegacyFile("$legacyFile/index.php", true)) {
+            $legacyFile = "$legacyFile/index.php";
+        }
+
+        $loader->setRequestParams('get', $request->query());
 
         if ($request->method() === 'post') {
             $loader->setRequestParams('post', $request->input());

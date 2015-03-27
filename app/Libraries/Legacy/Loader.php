@@ -2,6 +2,7 @@
 namespace Ds3\Libraries\Legacy;
 
 use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 
 class Loader
 {
@@ -156,15 +157,13 @@ class Loader
 
         $this->unstageEnvironment();
 
-        $response = new Response($this->outputBuffer, 200);
-        $redirection = self::getRedirection($this->outputBuffer, $relativePath);
+        $redirection = self::getRedirection($this->outputHeaders, $this->outputBuffer, $relativePath);
 
         if ($redirection) {
-            $this->outputHeaders['Location'] = $redirection;
-        }
-
-        foreach ($this->outputHeaders as $headerName => $headerValue) {
-            $response->header($headerName, $headerValue);
+            unset($this->outputHeaders['location']);
+            $response = new RedirectResponse($redirection, 302, $this->outputHeaders);
+        } else {
+            $response = new Response($this->outputBuffer, 200, $this->outputHeaders);
         }
 
         return $response;
@@ -265,7 +264,7 @@ class Loader
             $headerValue = '';
 
             if (preg_match('@(?<name>.+?):\s*(?<value>.+)@', $header, $match)) {
-                $headerName = $match['name'];
+                $headerName = strtolower($match['name']);
                 $headerValue = $match['value'];
             }
 
@@ -300,7 +299,10 @@ class Loader
              * This is a die() or exit() exception only if the severity
              * matches E_USER_ERROR
              */
-            if ($exitException->getSeverity() !== E_USER_ERROR) {
+            if (
+                $exitException->getSeverity() !== E_USER_ERROR ||
+                !preg_match('/^(exit|die) called/i', $exitException->getMessage())
+            ) {
                 throw $exitException;
             }
         }
@@ -309,15 +311,25 @@ class Loader
     /**
      * Analyzes headers and output buffer to determine if it contains redirections
      *
+     * @param array $headers
      * @param string $buffer
      * @param string $relativePath Legacy path
      * @return string Detected redirection
      */
-    public static function getRedirection($buffer, $relativePath)
+    public static function getRedirection($headers = [], $buffer = '', $relativePath)
     {
         $location = '';
 
-        if (strpos($buffer, 'window.location.replace') !== false && preg_match(
+        /**
+         * The Location header can be relative and might not work properly
+         */
+        if (!empty($headers['location'])) {
+            if (preg_match('@://|^/@', $headers['location'])) {
+                $location = $headers['location'];
+            } else {
+                $location = dirname("/$relativePath") . "/{$headers['location']}";
+            }
+        } elseif (strpos($buffer, 'window.location.replace') !== false && preg_match(
             '@\s*<script[^>]*?>\s*window\.location\.replace\((["\'])(?<path>.+)\1\);\s*</script>\s*@is',
             $buffer,
             $match

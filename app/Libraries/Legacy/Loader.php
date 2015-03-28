@@ -38,6 +38,8 @@ class Loader
         'post' => []
     ];
 
+    private $onStage = false;       // Flag to not screw up when unstaging changes
+
     /**
      * @param string $path
      * @throws LoaderException
@@ -203,6 +205,7 @@ class Loader
      */
     private function stageEnvironment($relativePath, $realPath)
     {
+        $this->onStage = true;
         $this->backupDepot = [
             'currentDir' => getcwd(),
             'headers' => headers_list(),
@@ -248,6 +251,10 @@ class Loader
      */
     private function unstageEnvironment()
     {
+        if (!$this->onStage) {
+            return;
+        }
+
         error_reporting($this->backupDepot['errorLevel']);
         chdir($this->backupDepot['currentDir']);
 
@@ -280,6 +287,8 @@ class Loader
         $_GET = $this->backupDepot['superglobals']['get'];
         $_POST = $this->backupDepot['superglobals']['post'];
         $_SERVER = $this->backupDepot['superglobals']['server'] + $_SERVER;
+
+        $this->onStage = false;
     }
 
     /**

@@ -635,17 +635,25 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 
     $url = 'https://gds.eligibleapi.com/v1.4/claims.json';
     
-      $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-      $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($docid)."'";
-      $api_key_query = mysql_query($api_key_sql);
-      $api_key_result = mysql_fetch_assoc($api_key_query);
-      if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+    $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+    $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($docid)."'";
+    $api_key_query = mysql_query($api_key_sql);
+    $api_key_result = mysql_fetch_assoc($api_key_query);
+    if($api_key_result && !empty($api_key_result['eligible_api_key'])){
         if(trim($api_key_result['eligible_api_key']) != ""){
-          $api_key = $api_key_result['eligible_api_key'];
+            $api_key = $api_key_result['eligible_api_key'];
         }
-      }
-      
+    }
+
+    $test_sql = "SELECT eligible_test FROM dental_users JOIN dental_insurance ON dental_insurance.docid = dental_users.userid WHERE insuranceid = '".mysql_real_escape_string($_GET['insid'])."'";
+    $test_query = mysql_query($test_sql);
+    $test_result = mysql_fetch_assoc($test_query);
+
     $data = array(); //Initializing parameter array
+
+    if($test_result['eligible_test']){
+        $data['test'] = 'true';
+    }
 
     $data['api_key'] = $api_key; //Setting your api key
 

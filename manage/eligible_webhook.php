@@ -106,6 +106,21 @@ if($event == "claim_rejected"){
             WHERE reference_id='".mysql_real_escape_string($ref_id)."'";
         mysql_query($up_sql);
     }
+}elseif($event == "payment_report"){
+    $ref_id = $json->{"reference_id"};
+    $status = "payment_report";
+
+    $e_sql = "SELECT claimid FROM dental_claim_electronic WHERE reference_id='".mysql_real_escape_string($ref_id)."'";
+    $e_q = mysql_query($e_sql);
+    $e = mysql_fetch_assoc($e_q);
+
+    $payment_report_sql = "INSERT INTO dental_payment_reports SET
+        claimid = '".mysql_real_escape_string($e['claimid'])."',
+        reference_id = '".mysql_real_escape_string($ref_id)."',
+        response = '".mysql_real_escape_string($request_body)."',
+        adddate = now(),
+        ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
+    mysql_query($payment_report_sql);
 }
 
 

@@ -177,19 +177,27 @@ class TaskController extends Controller
         }
 
         $iVal = $indexValTop * $quantityDisplayedRecords;
-        $totalRecords = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
-            'value'     => $sort,
-            'direction' => $dir
-        ));
+        $totalRecords = $this->task->getTasks(
+            Session::get('userId'),
+            Session::get('docId'),
+            null,
+            $task,
+            null,
+            null,
+            array('value' => $sort, 'direction' => $dir)
+        );
 
         $noPagesTop = count($totalRecords) / $quantityDisplayedRecords;
-        $topTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
-            'value'     => $sort,
-            'direction' => $dir
-        ), array(
-            'skip' => $iVal,
-            'take' => $quantityDisplayedRecords
-        ));
+        $topTasks = $this->task->getTasks(
+            Session::get('userId'),
+            Session::get('docId'),
+            null,
+            $task,
+            null,
+            null,
+            array('value' => $sort, 'direction' => $dir),
+            array('skip' => $iVal, 'take' => $quantityDisplayedRecords)
+        );
 
         $today = strtotime(date('Y-m-d'));
         $tomorrow = strtotime(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"))));
@@ -242,19 +250,30 @@ class TaskController extends Controller
         }
 
         $iVal = $indexValBottom * $quantityDisplayedRecords;
-        $totalRecords = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
-            'value'     => $sort,
-            'direction' => $dir
-        ));
+        $totalRecords = $this->task->getTasks(
+            Session::get('userId'),
+            Session::get('docId'),
+            null,
+            $task,
+            null,
+            null,
+            array('value' => $sort, 'direction' => $dir),
+            null,
+            1
+        );
 
         $noPagesBottom = count($totalRecords) / $quantityDisplayedRecords;
-        $bottomTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
-            'value'     => $sort,
-            'direction' => $dir
-        ), array(
-            'skip' => $iVal,
-            'take' => $quantityDisplayedRecords
-        ));
+        $bottomTasks = $this->task->getTasks(
+            Session::get('userId'),
+            Session::get('docId'),
+            null,
+            $task,
+            null,
+            null,
+            array('value' => $sort, 'direction' => $dir),
+            array('skip' => $iVal, 'take' => $quantityDisplayedRecords),
+            1
+        );
 
         // send data to view
 
@@ -277,6 +296,8 @@ class TaskController extends Controller
             'topTasks'       => $topTasks,
             'bottomTasks'    => $bottomTasks
         ));
+
+        // dd($data);
 
         return view('manage.tasks', $data);
     }

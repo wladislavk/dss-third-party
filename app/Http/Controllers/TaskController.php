@@ -24,6 +24,8 @@ class TaskController extends Controller
     private $mine;
     private $sort1;
     private $sort2;
+    private $sortdir1;
+    private $sortdir2;
     private $message;
     private $page1;
     private $page2;
@@ -44,6 +46,8 @@ class TaskController extends Controller
         $this->mine      = GeneralFunctions::getRouteParameter('mine');
         $this->sort1     = GeneralFunctions::getRouteParameter('sort1');
         $this->sort2     = GeneralFunctions::getRouteParameter('sort2');
+        $this->sortdir1  = GeneralFunctions::getRouteParameter('sortdir1');
+        $this->sortdir2  = GeneralFunctions::getRouteParameter('sortdir2');
         $this->message   = GeneralFunctions::getRouteParameter('message');
         $this->page1     = GeneralFunctions::getRouteParameter('page1');
         $this->page2     = GeneralFunctions::getRouteParameter('page2');
@@ -173,24 +177,31 @@ class TaskController extends Controller
         }
 
         $iVal = $indexValTop * $quantityDisplayedRecords;
-        $totalRecords = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
-            'value'     => $sort,
-            'direction' => $dir
-        ));
+        $totalRecords = $this->task->getTasks(
+            Session::get('userId'),
+            Session::get('docId'),
+            null,
+            $task,
+            null,
+            null,
+            array('value' => $sort, 'direction' => $dir)
+        );
 
         $noPagesTop = count($totalRecords) / $quantityDisplayedRecords;
-        $topTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
-            'value'     => $sort,
-            'direction' => $dir
-        ), array(
-            'skip' => $iVal,
-            'take' => $quantityDisplayedRecords
-        ));
+        $topTasks = $this->task->getTasks(
+            Session::get('userId'),
+            Session::get('docId'),
+            null,
+            $task,
+            null,
+            null,
+            array('value' => $sort, 'direction' => $dir),
+            array('skip' => $iVal, 'take' => $quantityDisplayedRecords)
+        );
 
         $today = strtotime(date('Y-m-d'));
         $tomorrow = strtotime(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"))));
 
-        $typesTasks = array();
         if (count($topTasks)) foreach ($topTasks as $task) {
             $due = strtotime(date('Y-m-d', strtotime($task->due_date)));
             if ($due < $today) {
@@ -203,7 +214,7 @@ class TaskController extends Controller
                 $type = date('m/d/Y', strtotime($task->due_date));
             }
 
-            $typesTasks[] = $type;
+            $task->type = $type;
         }
 
         if (!empty($this->sort2)) {
@@ -239,19 +250,30 @@ class TaskController extends Controller
         }
 
         $iVal = $indexValBottom * $quantityDisplayedRecords;
-        $totalRecords = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
-            'value'     => $sort,
-            'direction' => $dir
-        ));
+        $totalRecords = $this->task->getTasks(
+            Session::get('userId'),
+            Session::get('docId'),
+            null,
+            $task,
+            null,
+            null,
+            array('value' => $sort, 'direction' => $dir),
+            null,
+            1
+        );
 
         $noPagesBottom = count($totalRecords) / $quantityDisplayedRecords;
-        $bottomTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), null, $task, null, null, array(
-            'value'     => $sort,
-            'direction' => $dir
-        ), array(
-            'skip' => $iVal,
-            'take' => $quantityDisplayedRecords
-        ));
+        $bottomTasks = $this->task->getTasks(
+            Session::get('userId'),
+            Session::get('docId'),
+            null,
+            $task,
+            null,
+            null,
+            array('value' => $sort, 'direction' => $dir),
+            array('skip' => $iVal, 'take' => $quantityDisplayedRecords),
+            1
+        );
 
         // send data to view
 
@@ -260,7 +282,6 @@ class TaskController extends Controller
         }
 
         $data = array_merge($data, array(
-            'typesTasks'     => $typesTasks,
             'mine'           => $this->mine,
             'noPagesTop'     => $noPagesTop,
             'noPagesBottom'  => $noPagesBottom,
@@ -270,10 +291,13 @@ class TaskController extends Controller
             'sort2'          => $this->sort2,
             'sortdir1'       => strtolower($this->sortdir1),
             'sortdir2'       => strtolower($this->sortdir2),
+            'page1'          => $this->page1,
             'page2'          => $this->page2,
             'topTasks'       => $topTasks,
             'bottomTasks'    => $bottomTasks
         ));
+
+        // dd($data);
 
         return view('manage.tasks', $data);
     }

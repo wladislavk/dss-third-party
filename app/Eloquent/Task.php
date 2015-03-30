@@ -9,6 +9,11 @@ class Task extends Model
     protected $primaryKey = 'id';
     // public $timestamps = false;
 
+    public function scopeActive($query)
+    {
+        return $query->where('dental_task.status', '=', 1);
+    }
+
     public function scopeNonActive($query)
     {
         return $query->where(function($query){

@@ -31,6 +31,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->post('add_patient/{pid?}', 'PatientController@add');
         $router->get('duplicate_patient/{pid?}', 'PatientController@duplicate');
         $router->get('contact', 'ContactController@manage');
+        $router->get('tasks', 'TaskController@manageTasks');
         $router->get('sleeplab', 'SleepLabController@index');
     });
 });

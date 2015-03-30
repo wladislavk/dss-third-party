@@ -87,6 +87,18 @@ class PatientRepository implements PatientInterface
         return $transactionCodes;
     }
 
+    public function getSleepLab($place)
+    {
+        $sleepLab = DB::table(DB::raw('dental_patients p'))
+            ->select('p.*')
+            ->join(DB::raw('dental_summ_sleeplab s'), 's.patiendid', '=', 'p.patientid')
+            ->where('s.place', '=', $place)
+            ->groupBy('p.patientid')
+            ->get();
+
+        return $sleepLab;
+    }
+
     public function getUserInfo($patientId)
     {
         $userInfo = DB::table(DB::raw('dental_patients p'))

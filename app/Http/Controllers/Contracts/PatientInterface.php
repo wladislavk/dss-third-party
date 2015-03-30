@@ -17,4 +17,5 @@ interface PatientInterface
     public function insertData($data);
     public function updateData($where, $values);
     public function deleteData($where);
+    public function getSleepLab($patientId);
 }

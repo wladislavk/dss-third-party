@@ -42,4 +42,11 @@ class SleeplabRepository implements SleeplabInterface
 
         return $sleeplab->sleeplabid;
     }
+
+    public function deleteData($sleeplabid)
+    {
+        $slleplab = Sleeplab::where('sleeplabid', '=', $sleeplabid)->delete();
+
+        return $slleplab;
+    }
 }

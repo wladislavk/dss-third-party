@@ -30,7 +30,7 @@
       $url = "https://gds.eligibleapi.com/v1.5/claims/".$reference_id."/acknowledgements?api_key=".$api_key;
 
       if($is_test_result['eligible_test']=="1"){
-       $url .= '$test=true';
+       $url .= '&test=true';
       }
 
       $ch = curl_init();

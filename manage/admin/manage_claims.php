@@ -445,6 +445,9 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
 			<a href="<?php echo sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
 		</td>
+        <td>
+            E-File
+        </td>
 		<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
 			<a href="<?php echo sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
@@ -516,6 +519,29 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 				<td valign="top" class="claim_<?php echo  $myarray["status"]; ?> <?php echo  ($myarray['days_pending']>7)?'old':''; ?> <?php echo  $status_color;?>">
 					<?php echo st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
+                <td>
+                    <?php
+                    $payment_report_sql = "SELECT * FROM dental_payment_reports WHERE claimid='" . mysql_real_escape_string($myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
+                    $payment_report_query = mysql_query($payment_report_sql);
+                    $payment_report_result = mysql_fetch_assoc($payment_report_query);
+                    if ($payment_report_result) {
+                        echo '<a href="view_payment_reports.php?insid=' . $payment_report_result['claimid'] . '"> Paid - ' . $payment_report_result['adddate'] . " (View)</a>";
+                    } else {
+                        $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='" . mysql_real_escape_string($myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
+                        $reference_id_query = mysql_query($reference_id_sql);
+                        $reference_id_result = mysql_fetch_assoc($reference_id_query);
+                        if ($reference_id_result) {
+                            $reference_id = $reference_id_result['reference_id'];
+                            if ($reference_id != "") {
+                                $eligible_response_sql = "SELECT event_type, adddate FROM dental_eligible_response WHERE reference_id='" . $reference_id . "' ORDER BY adddate DESC";
+                                $eligible_response_query = mysql_query($eligible_response_sql);
+                                $eligible_response_result = mysql_fetch_assoc($eligible_response_query);
+                                echo $eligible_response_result['event_type'] . " - " . $eligible_response_result['adddate'];
+                            }
+                        }
+                    }
+                    ?>
+                </td>
 				<td valign="top">
 					<a href="view_patient.php?pid=<?php echo $myarray['patientid'];?>"><?php echo st($myarray["lastname"]);?>, <?php echo st($myarray["firstname"]);?> (View Chart)</a>
 				</td>
@@ -531,26 +557,35 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
                                 <td valign="top">
                                         <?php echo st($myarray["billing_name"]);?>&nbsp;
                                 </td>
-				<td valign="top">
-				    <?php 					//$primary_link = ($myarray['primary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['primary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=primary&pid='.$myarray['patientid'];
-					//$secondary_link = ($myarray['secondary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['secondary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=secondary&pid='.$myarray['patientid'];
-					$primary_link = "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'];
-					$secondary_link = "insurance_claim".(($myarray['secondary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid']."&instype=2";
-          $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."' ORDER BY adddate DESC LIMIT 1"; 
-          $reference_id_query = mysql_query($reference_id_sql);
-          if(mysql_num_rows($reference_id_query)){
-            $reference_id_result = mysql_fetch_assoc($reference_id_query);
-            $reference_id = $reference_id_result['reference_id'];
-            if($reference_id != ""){
-              $update_claim_url = "request_claim_update.php?insid=".$myarray['insuranceid'];
-              ?>
-                <a href="<?php echo $update_claim_url?>" class="btn btn-primary btn-sm" >Check Status</a>
+            <td valign="top">
+            <?php
+            //$primary_link = ($myarray['primary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['primary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=primary&pid='.$myarray['patientid'];
+            //$secondary_link = ($myarray['secondary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['secondary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=secondary&pid='.$myarray['patientid'];
+            $primary_link = "insurance_claim" . (($myarray['primary_claim_version'] != "1") ? '_eligible' : '_v2') . ".php?insid=" . $myarray['insuranceid'] . "&fid_filter=" . $fid . "&pid_filter=" . $pid . "&pid=" . $myarray['patientid'];
+            $paid_statuses = array(0 => DSS_CLAIM_PAID_INSURANCE, 1 => DSS_CLAIM_PAID_SEC_INSURANCE);
+            $secondary_link = "insurance_claim" . (($myarray['secondary_claim_version'] != "1") ? '_eligible' : '_v2') . ".php?insid=" . $myarray['insuranceid'] . "&fid_filter=" . $fid . "&pid_filter=" . $pid . "&pid=" . $myarray['patientid'] . "&instype=2";
+            $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='" . mysql_real_escape_string($myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
+            $reference_id_query = mysql_query($reference_id_sql);
+            if (mysql_num_rows($reference_id_query)) {
+                $reference_id_result = mysql_fetch_assoc($reference_id_query);
+                $reference_id = $reference_id_result['reference_id'];
+                if ($reference_id != "" && !in_array($myarray['status'], $paid_statuses)) {
+                    $update_claim_url = "request_claim_update.php?insid=" . $myarray['insuranceid'];
+                    ?>
+                    <a href="<?php echo $update_claim_url ?>" class="btn btn-primary btn-sm">Check Status</a>
 
-              <?php
+                <?php
+                } else if ($reference_id != "" && in_array($myarray['status'], $paid_statuses)) {
+                    $payment_status_url = "request_payment_report.php?insid=" . $myarray['insuranceid'];
+                    ?>
+                    <a href="<?php echo $payment_status_url ?>" class="btn btn-primary btn-sm">Check Payment Status</a>
+
+                <?php
+                }
             }
-          }
+        }
 
-              ?>
+        ?>
 				    <?php if($myarray["status"] == DSS_CLAIM_PENDING || $myarray["status"] == DSS_CLAIM_REJECTED){ ?>
 				    <a href="insurance_claim<?php echo ($myarray['primary_claim_version']!="1")?'_eligible':'_v2'; ?>.php?insid=<?php echo $myarray['insuranceid']?>&fid_filter=<?php echo $fid?>&pid_filter=<?php echo $pid?>&pid=<?php echo $myarray['patientid']?>" title="Edit" class="btn btn-primary btn-sm">
 						Edit

@@ -12,9 +12,9 @@ if (!Array.prototype.indexOf) {
 
 // Endpoints object for eligible
 var EligibleEndpoints = {
-  coverage: "https://gds.eligibleapi.com/v1.3/coverage/all.json",
-  demographics: "https://gds.eligibleapi.com/v1.3/demographics/all.json",
-  medicare: "https://gds.eligibleapi.com/v1.3/coverage/medicare.json"
+  coverage: "https://gds.eligibleapi.com/v1.5/coverage/all.json",
+  demographics: "https://gds.eligibleapi.com/v1.5/demographics/all.json",
+  medicare: "https://gds.eligibleapi.com/v1.5/coverage/medicare.json"
 }
 
 var levels = [

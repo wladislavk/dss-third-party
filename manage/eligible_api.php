@@ -122,7 +122,7 @@
 
     echo $data_string."<br /><br />"; 
     //$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
-    $ch = curl_init('https://gds.eligibleapi.com/v1.1/coverage/all.json');
+    $ch = curl_init('https://gds.eligibleapi.com/v1.5/coverage/all.json');
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                 
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                              
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                  

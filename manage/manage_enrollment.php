@@ -92,7 +92,7 @@ require_once('includes/constants.inc');
 				</span>
 			</td>
 			<td valign="top">
-				<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key ?>&transaction_type=837P" target="_blank">PDF</a>
+				<a href="https://gds.eligibleapi.com/v1.5/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key ?>&transaction_type=837P" target="_blank">PDF</a>
                 <?php if($myarray['download_url']){ ?>
                     <a class="btn btn-success" href="<?php echo $myarray['download_url']; ?>">Sign Form</a>
                     <br />

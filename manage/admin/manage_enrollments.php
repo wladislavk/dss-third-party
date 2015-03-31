@@ -178,7 +178,7 @@ $num_users = mysqli_num_rows($my);
               }
             }
           ?>
-<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key; ?>&transaction_type=837P" target="_blank">PDF</a>
+<a href="https://gds.eligibleapi.com/v1.5/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key; ?>&transaction_type=837P" target="_blank">PDF</a>
         <?php
         /*
         //removed link for outdated v1.3 enrollment form.

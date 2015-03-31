@@ -586,7 +586,7 @@
 		        WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 	
     $db->query($pat_sql);
-    $url = 'https://gds.eligibleapi.com/v1.4/claims.json';
+    $url = 'https://gds.eligibleapi.com/v1.5/claims.json';
     $data = array(); //Initializing parameter array
 
     $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;

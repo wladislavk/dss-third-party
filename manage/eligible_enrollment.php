@@ -746,7 +746,7 @@ $data['claim'] = array(
 $data_string = json_encode($data);                                                                                   
 error_log($data_string);
 //echo $data_string."<br /><br />"; 
-$ch = curl_init('https://gds.eligibleapi.com/v1.1/claims.json');
+$ch = curl_init('https://gds.eligibleapi.com/v1.5/claims.json');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      

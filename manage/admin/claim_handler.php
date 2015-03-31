@@ -695,7 +695,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 	mysql_query($pat_sql);
 
 
-    $url = 'https://gds.eligibleapi.com/v1.4/claims.json';
+    $url = 'https://gds.eligibleapi.com/v1.5/claims.json';
     
     $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
     $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($docid)."'";

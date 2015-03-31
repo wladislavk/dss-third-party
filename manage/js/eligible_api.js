@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 $('#api_submit').click( function(){
 	$.ajax({
-	  url: "https://gds.eligibleapi.com/v1.3/coverage/all.json",
+	  url: "https://gds.eligibleapi.com/v1.5/coverage/all.json",
 	  type: "get",
 	  data: {
 	          api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',

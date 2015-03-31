@@ -72,7 +72,7 @@
 
       $data_string = json_encode($data);
       error_log($data_string);
-      $ch = curl_init('https://gds.eligibleapi.com/v1.3/enrollment_npis');
+      $ch = curl_init('https://gds.eligibleapi.com/v1.5/enrollment_npis');
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
       curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

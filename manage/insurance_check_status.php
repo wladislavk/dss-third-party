@@ -52,7 +52,7 @@
     $data['end_date'] = date('Y-m-d',strtotime($l['service_date']));
 
     $ch = curl_init(); 
-    curl_setopt($ch, CURLOPT_URL,'https://gds.eligibleapi.com/v1.1/payment/status.json'); 
+    curl_setopt($ch, CURLOPT_URL,'https://gds.eligibleapi.com/v1.5/payment/status.json');
     curl_setopt($ch, CURLOPT_POST, 1); 
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data)); 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  

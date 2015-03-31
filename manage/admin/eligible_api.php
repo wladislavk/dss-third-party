@@ -141,7 +141,7 @@ $data['service_type'] =  $_POST['service_type_code'];
 $data_string = json_encode($data);                                                                               
 
 echo $data_string."<br /><br />"; 
-$ch = curl_init('https://gds.eligibleapi.com/v1.1/coverage/all.json');
+$ch = curl_init('https://gds.eligibleapi.com/v1.5/coverage/all.json');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                 
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                              
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                  
@@ -160,7 +160,7 @@ echo $result;
     $('#api_submit').click( function(){
       var api_key = <?php echo "'".$api_key."'" ?>
                                   $.ajax({
-                                        url: "https://gds.eligibleapi.com/v1.3/coverage/all.json",
+                                        url: "https://gds.eligibleapi.com/v1.5/coverage/all.json",
                                         type: "get",
                                         data: {api_key: api_key,
                                                 payer_id: $('#payer_id').val(),

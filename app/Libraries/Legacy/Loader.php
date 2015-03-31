@@ -66,14 +66,6 @@ class Loader
     }
 
     /**
-     * @return Response
-     */
-    public function getResponseDependency()
-    {
-        return $this->response;
-    }
-
-    /**
      * Sets the values of the GET (query string) or POST (payload) request
      *
      * @param string $type get, post

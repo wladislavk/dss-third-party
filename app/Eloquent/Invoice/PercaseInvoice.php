@@ -3,7 +3,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class PercaseInvoice extends Model
 {
-	protected $table = 'dental_percase_invoice';
-
-	protected $primaryKey = 'id';
+    protected $table = 'dental_percase_invoice';
+    protected $primaryKey = 'id';
 }

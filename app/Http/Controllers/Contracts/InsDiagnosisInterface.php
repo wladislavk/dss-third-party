@@ -2,5 +2,5 @@
 
 interface InsDiagnosisInterface
 {
-	public function get();
+    public function getActiveInsDiagnosis();
 }

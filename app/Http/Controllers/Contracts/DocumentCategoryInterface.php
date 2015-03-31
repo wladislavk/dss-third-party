@@ -2,5 +2,5 @@
 
 interface DocumentCategoryInterface
 {
-	public function get();
+    public function getActiveDocumentCategories();
 }

@@ -4,41 +4,39 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClaimElectronic extends Model
 {
-	protected $table = 'dental_claim_electronic';
+    protected $table = 'dental_claim_electronic';
+    protected $fillable = ['claimid', 'response', 'reference_id'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['claimid', 'response', 'reference_id'];
+    public static function get($where, $order = null)
+    {
+        $claimElectronic = new ClaimElectronic();
 
-	protected $primaryKey = 'id';
+        foreach ($where as $attribute => $value) {
+            $claimElectronic = $claimElectronic->where($attribute, '=', $value);
+        }
 
-	public static function get($where, $order = null)
-	{
-		$claimElectronic = new ClaimElectronic();
+        if (!empty($order)) {
+            $claimElectronic = $claimElectronic->orderBy($order, 'desc');
+        }
 
-		foreach ($where as $attribute => $value) {
-			$claimElectronic = $claimElectronic->where($attribute, '=', $value);
-		}
+        return $claimElectronic->get();
+    }
 
-		if (!empty($order)) {
-			$claimElectronic = $claimElectronic->orderBy($order, 'desc');
-		}
+    public static function insertData($data)
+    {
+        $claimElectronic = new ClaimElectronic();
 
-		return $claimElectronic->get();
-	}
+        foreach ($data as $attribute => $value) {
+            $claimElectronic->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$claimElectronic = new ClaimElectronic();
+        try {
+            $claimElectronic->save();
+        } catch (QueryException $e) {
+            return null;
+        }
 
-		foreach ($data as $attribute => $value) {
-			$claimElectronic->$attribute = $value;
-		}
-
-		try {
-			$claimElectronic->save();
-		} catch (QueryException $e) {
-			return null;
-		}
-
-		return $claimElectronic->id;
-	}
+        return $claimElectronic->id;
+    }
 }

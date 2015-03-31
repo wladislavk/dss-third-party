@@ -2,8 +2,8 @@
 
 use Ds3\Http\Controllers\Controller;
 
-class DashboardController extends Controller {
-
+class DashboardController extends Controller
+{
     public function __construct()
     {
 

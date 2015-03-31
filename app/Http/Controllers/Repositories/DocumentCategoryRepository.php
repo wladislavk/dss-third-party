@@ -7,10 +7,10 @@ use Ds3\Eloquent\DocumentCategory;
 
 class DocumentCategoryRepository implements DocumentCategoryInterface
 {
-	public function get()
-	{
-		$documentCategories = DocumentCategory::where('status', '=', 1)->orderBy('name', 'asc')->get();
+    public function getActiveDocumentCategories()
+    {
+        $documentCategories = DocumentCategory::active()->orderBy('name', 'asc')->get();
 
-		return $documentCategories;
-	}
+        return $documentCategories;
+    }
 }

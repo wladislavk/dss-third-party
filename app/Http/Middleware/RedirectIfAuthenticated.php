@@ -5,14 +5,14 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Routing\Middleware;
 
-class RedirectIfAuthenticated implements Middleware {
-
-	/**
-	 * The Guard implementation.
-	 *
-	 * @var Guard
-	 */
-	protected $auth;
+class RedirectIfAuthenticated implements Middleware
+{
+    /**
+     * The Guard implementation.
+     *
+     * @var Guard
+     */
+    protected $auth;
 
     /**
      * Create a new filter instance.
@@ -20,26 +20,24 @@ class RedirectIfAuthenticated implements Middleware {
      * @param  Guard $auth
      * @return \Ds3\Http\Middleware\RedirectIfAuthenticated
      */
-	public function __construct(Guard $auth)
-	{
-		$this->auth = $auth;
-	}
+    public function __construct(Guard $auth)
+    {
+        $this->auth = $auth;
+    }
 
-	/**
-	 * Handle an incoming request.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Closure  $next
-	 * @return mixed
-	 */
-	public function handle($request, Closure $next)
-	{
-		if ($this->auth->check())
-		{
-			return new RedirectResponse(url('manage/admin/dashboard'));
-		}
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        if ($this->auth->check()) {
+            return new RedirectResponse(url('manage/admin/dashboard'));
+        }
 
-		return $next($request);
-	}
-
+        return $next($request);
+    }
 }

@@ -516,6 +516,20 @@ function hideWarnings(name, val, token)
     })
 }
 
+function setRouteParameters(url, data, token)
+{
+  var data = JSON.parse(data);
+
+  $.post("/set_route_parameters", {
+    _token: token,
+    data: data
+  }).done(function(){
+    if (typeof url !== 'undefined') {
+      $(location).attr('href', url);
+    }
+  });
+}
+
 /*
 function setInfoPopup(patientId, sh, it, returnValue, returnField, token)
 {

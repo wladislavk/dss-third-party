@@ -163,7 +163,7 @@
             </tr>
             <tr bgcolor="#FFFFFF">
                 <td valign="top" class="frmhead">
-    		Sleep Test Required for VOB?
+            Sleep Test Required for VOB?
                 </td>
                 <td valign="top" class="frmdata">
                     {!! Form::select('vob_require_test',[1=>'Yes',0=>'No'],null ,['class'=>'form-control']) !!}
@@ -175,16 +175,16 @@
                 </td>
                 <td valign="top" class="frmdata">
                     {!! Form::select('plan_id',$plans,null,['class'=>'form-control']) !!}
-    	        </td>
-    	</tr>
+                </td>
+        </tr>
             <tr bgcolor="#FFFFFF">
                 <td valign="top" class="frmhead">
                     Status
                 </td>
                 <td valign="top" class="frmdata">
-                	<select name="status" class="form-control">
-                    	<option value="1">Active</option>
-                    	<option value="2">In-Active</option>
+                    <select name="status" class="form-control">
+                        <option value="1">Active</option>
+                        <option value="2">In-Active</option>
                     </select>
                 </td>
             </tr>
@@ -193,7 +193,7 @@
                     <attr title="This option will allow any frontoffice user associated with this company to send Support tickets directly to this company by choosing the company in the ‘Send To’ section of the ticket.">Support Tickets Active?</attr>
                 </td>
                 <td valign="top" class="frmdata">
-    		    {!! Form::select('use_support',[1=>'Yes',0=>'No'],null ,['class'=>'form-control']) !!}
+                {!! Form::select('use_support',[1=>'Yes',0=>'No'],null ,['class'=>'form-control']) !!}
                 </td>
             </tr>
             <tr bgcolor="#FFFFFF">

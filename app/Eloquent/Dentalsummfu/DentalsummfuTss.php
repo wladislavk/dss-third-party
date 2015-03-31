@@ -4,45 +4,44 @@ use Illuminate\Database\Eloquent\Model;
 
 class DentalsummfuTss extends Model
 {
-	protected $table = 'dentalsummfu_tss';
+    protected $table = 'dentalsummfu_tss';
+    protected $fillable = ['followupid', 'thorntonid', 'answer'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['followupid', 'thorntonid', 'answer'];
+    public static function get($followupId, $thorntonId)
+    {
+        try {
+            $dentalsummfuTss = DentalsummfuTss::where('followupid', '=', $followupId)
+                ->where('thorntonid', '=', $thorntonId)
+                ->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
 
-	protected $primaryKey = 'id';
+        return $dentalsummfuTss;
+    }
 
-	public static function get($followupId, $thorntonId)
-	{
-		try {
-			$dentalsummfuTss = DentalsummfuTss::where('followupid', '=', $followupId)->where('thorntonid', '=', $thorntonId)
-																					 ->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public static function insertData($data)
+    {
+        $dentalsummfuTss = new DentalsummfuTss();
 
-		return $dentalsummfuTss;
-	}
+        foreach ($data as $attribute => $value) {
+            $dentalsummfuTss->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$dentalsummfuTss = new DentalsummfuTss();
+        try {
+            $dentalsummfuTss->save();
+        } catch (QueryException $e) {
+            return null;
+        }
 
-		foreach ($data as $attribute => $value) {
-			$dentalsummfuTss->$attribute = $value;
-		}
+        return $dentalsummfuTss->followupid;
+    }
 
-		try {
-			$dentalsummfuTss->save();
-		} catch (QueryException $e) {
-			return null;
-		}
+    public static function deleteData($followupId)
+    {
+        $dentalsummfuTss = DentalsummfuTss::where('followupid', '=', $followupId)->delete();
 
-		return $dentalsummfuTss->followupid;
-	}
-
-	public static function deleteData($followupId)
-	{
-		$dentalsummfuTss = DentalsummfuTss::where('followupid', '=', $followupId)->delete();
-
-		return $dentalsummfuTss;
-	}
+        return $dentalsummfuTss;
+    }
 }

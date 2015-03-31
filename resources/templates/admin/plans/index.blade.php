@@ -26,15 +26,15 @@
     <table class="table table-bordered table-hover">
         <tbody>
         <tr class="tr_bg_h">
-    		<td valign="top" class="col_head" width="20%">Name</td>
+            <td valign="top" class="col_head" width="20%">Name</td>
             <td valign="top" class="col_head" width="10%">Monthly Fee</td>
             <td valign="top" class="col_head" width="10%">Trial Period</td>
             <td valign="top" class="col_head" width="10%">Fax Fee</td>
             <td valign="top" class="col_head" width="10%">Free Fax</td>
-    		<td valign="top" class="col_head" width="10%">Users</td>
-    		<td valign="top" class="col_head" width="10%">Action</td>
-    	</tr>
-    	@foreach($plans as $plan)
+            <td valign="top" class="col_head" width="10%">Users</td>
+            <td valign="top" class="col_head" width="10%">Action</td>
+        </tr>
+        @foreach($plans as $plan)
             <tr class="">
                 <td valign="top">{{ $plan->name }}</td>
                 <td valign="top">{{ $plan->monthly_fee }}</td>
@@ -66,7 +66,7 @@
                 </td>
             </tr>
         @endforeach
-    	</tbody>
+        </tbody>
     </table>
 
 @stop

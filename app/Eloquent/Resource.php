@@ -4,59 +4,58 @@ use Illuminate\Database\Eloquent\Model;
 
 class Resource extends Model
 {
-	protected $table = 'dental_resources';
+    protected $table = 'dental_resources';
+    protected $fillable = ['name', 'rank', 'docid'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['name', 'rank', 'docid'];
+    public static function get($where, $orders = null)
+    {
+        $resource = new Resource();
 
-	protected $primaryKey = 'id';
+        foreach ($where as $attribute => $value) {
+            $resource = $resource->where($attribute, '=', $value);
+        }
 
-	public static function get($where, $orders = null)
-	{
-		$resource = new Resource();
+        if (!empty($orders)) {
+            foreach ($orders as $order) {
+                $resource = $resource->orderBy($order);
+            }
+        }
 
-		foreach ($where as $attribute => $value) {
-			$resource = $resource->where($attribute, '=', $value);
-		}
+        return $resource->get();
+    }
 
-		if (!empty($orders)) {
-			foreach ($orders as $order) {
-				$resource = $resource->orderBy($order);
-			}
-		}
+    public static function getSelCheck($docId, $name, $ed)
+    {
+        $selCheck = Resource::where('docid', '=', $docId)
+            ->where('name', '=', $name)
+            ->where('id', '!=', $ed)
+            ->get();
 
-		return $resource->get();
-	}
+        return $selCheck;
+    }
 
-	public static function getSelCheck($docId, $name, $ed)
-	{
-		$selCheck = Resource::where('docid', '=', $docId)->where('name', '=', $name)
-														 ->where('id', '!=', $ed)
-														 ->get();
+    public static function updateData($ed, $values)
+    {
+        $resource = Resource::where('id', '=', $ed)->update($values);
 
-		return $selCheck;
-	}
+        return $resource;
+    }
 
-	public static function updateData($ed, $values)
-	{
-		$resource = Resource::where('id', '=', $ed)->update($values);
+    public static function insertData($data)
+    {
+        $resource = new Resource();
 
-		return $resource;
-	}
+        foreach ($data as $attribute => $value) {
+            $resource->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$resource = new Resource();
+        try {
+            $resource->save();
+        } catch (QueryException $e) {
+            return null;
+        }
 
-		foreach ($data as $attribute => $value) {
-			$resource->$attribute = $value;
-		}
-
-		try {
-			$resource->save();
-		} catch (QueryException $e) {
-			return null;
-		}
-
-		return $resource->id;
-	}
+        return $resource->id;
+    }
 }

@@ -4,7 +4,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class DocumentCategory extends Model
 {
-	protected $table = 'dental_document_category';
+    protected $table = 'dental_document_category';
+    protected $primaryKey = 'categoryid';
 
-	protected $primaryKey = 'categoryid';
+    public function scopeActive($query)
+    {
+        return $query->where('status', '=', 1);
+    }
 }

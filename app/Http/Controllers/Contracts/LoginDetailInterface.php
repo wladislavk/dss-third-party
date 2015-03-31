@@ -2,5 +2,5 @@
 
 interface LoginDetailInterface
 {
-	public function insertData($data);
+    public function insertData($data);
 }

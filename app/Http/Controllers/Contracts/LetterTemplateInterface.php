@@ -2,7 +2,6 @@
 
 interface LetterTemplateInterface
 {
-	public function findLetterTemplate($id);
-
-	public function insertData($data);
+    public function findLetterTemplate($id);
+    public function insertData($data);
 }

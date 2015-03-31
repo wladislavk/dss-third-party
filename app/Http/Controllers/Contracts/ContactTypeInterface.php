@@ -2,9 +2,8 @@
 
 interface ContactTypeInterface
 {
-	public function get($contactTypeId);
-
-	public function getPhysicians();
-
-	public function getContactTypes();
+    public function find($contactTypeId);
+    public function getPhysicians();
+    public function getContactTypes();
+    public function getAll();
 }

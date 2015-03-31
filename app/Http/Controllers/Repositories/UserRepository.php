@@ -9,161 +9,160 @@ use Ds3\Libraries\Password;
 
 class UserRepository implements UserInterface
 {
-	public function attemptAuth($username, $password)
-	{
-		$userSalt = User::select('salt')
-				->where('username', '=', $username)
-				->first();
- 
-		if ($userSalt) {
-			$hashPassword = Password::genPassword($password, $userSalt->salt);
+    public function attemptAuth($username, $password)
+    {
+        $userSalt = User::select('salt')
+            ->where('username', '=', $username)
+            ->first();
 
-			$dataUser = User::leftJoin('dental_user_company', 'dental_user_company.userid', '=', 'dental_users.userid')
-					->select('dental_users.*', 'dental_user_company.companyid')
-					->where('username', '=', $username)
-					->where('password', '=', $hashPassword)
-					->whereBetween('status', array(1, 3))
-					->first();
+        if ($userSalt) {
+            $hashPassword = Password::genPassword($password, $userSalt->salt);
 
-			if (!empty($dataUser)) {
-				return ['success' => true, 'user' => $dataUser];
-			} else {
-				return ['success' => false];
-			}
-		} else {
-			return ['success' => false];
-		}		
+            $dataUser = User::leftJoin('dental_user_company', 'dental_user_company.userid', '=', 'dental_users.userid')
+                ->select('dental_users.*', 'dental_user_company.companyid')
+                ->where('username', '=', $username)
+                ->where('password', '=', $hashPassword)
+                ->whereBetween('status', array(1, 3))
+                ->first();
 
-		return $user;
-	}
+            if (!empty($dataUser)) {
+                return ['success' => true, 'user' => $dataUser];
+            } else {
+                return ['success' => false];
+            }
+        } else {
+            return ['success' => false];
+        }
 
-	public function getType($docId)
-	{
-		try {
-			$user = User::where('userid', '=', $docId)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+        return $user;
+    }
 
-		return $user->user_type;
-	}
+    public function getType($docId)
+    {
+        try {
+            $user = User::where('userid', '=', $docId)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
 
-	public function findUser($userId)
-	{
-		return User::find($userId);
-	}
+        return $user->user_type;
+    }
 
-	public function getCourseJoin($userId)
-	{
-		$courseJoin = DB::table(DB::raw('dental_users s'))
-					->select(DB::raw('s.use_course, d.use_course_staff'))
-					->join(DB::raw('dental_users d'), 'd.userid', '=', 's.docid')
-					->where('s.userid', '=', $userId)
-					->first();
-		
-		return $courseJoin;
-	}
+    public function findUser($userId)
+    {
+        return User::find($userId);
+    }
 
-	public function getProviderSelect($docId)
-	{
-		$users = User::whereRaw('(docid = ' . $docId . ' OR userid = ' . $docId . ')')
-			->where('npi', '!=', '')
-			->where(function($query){
-				$query->where('producer', '=', 1)
-					  ->orWhere('docid', '=', 0);
-			})
-			->orderBy('docid')
-			->get();
+    public function getCourseJoin($userId)
+    {
+        $courseJoin = DB::table(DB::raw('dental_users s'))
+            ->select(DB::raw('s.use_course, d.use_course_staff'))
+            ->join(DB::raw('dental_users d'), 'd.userid', '=', 's.docid')
+            ->where('s.userid', '=', $userId)
+            ->first();
 
-		return $users;
-	}
+        return $courseJoin;
+    }
 
-	public function getProducerOptions($docId)
-	{
-		$producerOptions = User::where('userid', '=', $docId)
-						->orWhereRaw('(docid = ' . $docId . ' AND producer = 1)')
-						->get();
+    public function getProviderSelect($docId)
+    {
+        $users = User::whereRaw('(docid = ' . $docId . ' OR userid = ' . $docId . ')')
+            ->where('npi', '!=', '')
+            ->where(function($query){
+                $query->producer()->orWhere('docid', '=', 0);
+            })
+            ->orderBy('docid')
+            ->get();
 
-		return $producerOptions;
-	}
+        return $users;
+    }
 
-	public function getCheck($username, $password, $docId)
-	{
-		$check = User::where('username', '=', $username)
-				->where('password', '=', $password)
-				->where('status', '=', 1)
-				->whereRaw('(sign_notes = 1 OR userid = ' . $docId . ')')
-				->get();
+    public function getProducerOptions($docId)
+    {
+        $producerOptions = User::where('userid', '=', $docId)
+            ->orWhereRaw('(docid = ' . $docId . ' AND producer = 1)')
+            ->get();
 
-		return $check;
-	}
+        return $producerOptions;
+    }
 
-	public function getLocation($where, $defaultLocation = null)
-	{
-		$location = DB::table(DB::raw('dental_users u'))
-				->select(DB::raw('l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip'))
-				->join(DB::raw('dental_patients p'), 'u.userid', '=', 'p.docid');
+    public function getCheck($username, $password, $docId)
+    {
+        $check = User::where('username', '=', $username)
+            ->where('password', '=', $password)
+            ->active()
+            ->whereRaw('(sign_notes = 1 OR userid = ' . $docId . ')')
+            ->get();
 
-		if (!empty($defaultLocation)) {
-			$location = $location->leftJoin(DB::raw('dental_locations l'), function($join){
-									$join->on('l.docid', '=', 'u.userid')
-										 ->where('l.default_location', '=', '1');
-								 });
-		} else {
-			$location = $location->leftJoin(DB::raw('dental_locations l'), 'l.docid', '=', 'u.userid');
-		}
+        return $check;
+    }
 
-		foreach ($where as $attribute => $value) {
-			$location = $location->where($attribute, '=', $value);
-		}
-														
-		return $location->first();
-	}
+    public function getLocation($where, $defaultLocation = null)
+    {
+        $location = DB::table(DB::raw('dental_users u'))
+            ->select(DB::raw('l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip'))
+            ->join(DB::raw('dental_patients p'), 'u.userid', '=', 'p.docid');
 
-	public function isUniqueField($field, $userId)
-	{
-		reset($field);
-		$attribute = key($field);
-		$value = $field[$attribute];
+        if (!empty($defaultLocation)) {
+            $location = $location->leftJoin(DB::raw('dental_locations l'), function($join){
+                $join->on('l.docid', '=', 'u.userid')
+                     ->where('l.default_location', '=', '1');
+            });
+        } else {
+            $location = $location->leftJoin(DB::raw('dental_locations l'), 'l.docid', '=', 'u.userid');
+        }
 
-		$user = User::where($attribute, '=', $value)->where('userid', '!=', $userId);							
+        foreach ($where as $attribute => $value) {
+            $location = $location->where($attribute, '=', $value);
+        }
 
-		return $user->get();
-	}
+        return $location->first();
+    }
 
-	public function getResponsible($userId, $docId)
-	{
-		$responsible = User::where('status', '=', 1)
-					->where(function($query) use ($userId, $docId){
-						$query->where('userid', '=', $userId)
-							  ->orWhere('docid', '=', $docId);
-					})
-					->get();
+    public function isUniqueField($field, $userId)
+    {
+        reset($field);
+        $attribute = key($field);
+        $value = $field[$attribute];
 
-		return $responsible;
-	}
+        $user = User::where($attribute, '=', $value)->where('userid', '!=', $userId);
 
-	public function updateData($userId, $values)
-	{
-		$user = User::where('userid', '=', $userId)->update($values);
+        return $user->get();
+    }
 
-		return $user;
-	}
+    public function getResponsible($userId, $docId)
+    {
+        $responsible = User::active()
+            ->where(function($query) use ($userId, $docId){
+                $query->where('userid', '=', $userId)
+                      ->orWhere('docid', '=', $docId);
+            })
+            ->get();
 
-	public function insertData($data)
-	{
-		$user = new User();
+        return $responsible;
+    }
 
-		foreach ($data as $attribute => $value) {
-			$user->$attribute = $value;
-		}
+    public function updateData($userId, $values)
+    {
+        $user = User::where('userid', '=', $userId)->update($values);
 
-		try {
-			$user->save();
-		} catch (ModelNotFoundException $e) {
-			return null;
-		}
+        return $user;
+    }
 
-		return $user->userid;
-	}
+    public function insertData($data)
+    {
+        $user = new User();
+
+        foreach ($data as $attribute => $value) {
+            $user->$attribute = $value;
+        }
+
+        try {
+            $user->save();
+        } catch (ModelNotFoundException $e) {
+            return null;
+        }
+
+        return $user->userid;
+    }
 }

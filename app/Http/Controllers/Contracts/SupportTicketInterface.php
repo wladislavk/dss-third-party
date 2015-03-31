@@ -2,7 +2,6 @@
 
 interface SupportTicketInterface
 {
-	public function getSupport($docId, $status);
-
-	public function insertData($data);
+    public function getSupport($docId, $status);
+    public function insertData($data);
 }

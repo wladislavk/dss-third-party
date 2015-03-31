@@ -1,24 +1,10 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: saqib
- * Date: 2/5/15
- * Time: 2:07 PM
- */
+<?php namespace Ds3\Admin\Contracts;
 
-namespace Ds3\Admin\Contracts;
-
-
-interface AccessCodeInterface {
-
+interface AccessCodeInterface
+{
     public function save($fields);
-
     public function update($fields,$id);
-
     public function find($id);
-
     public function delete($id);
-
     public function getAllAccessCodes();
-
-} 
+}

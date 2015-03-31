@@ -8,42 +8,42 @@ use Ds3\Eloquent\Sleeplab;
 
 class SleeplabRepository implements SleeplabInterface
 {
-	public function get($where, $order = null)
-	{
-		$sleeplabs = new Sleeplab();
+    public function getSleeplabs($where, $order = null)
+    {
+        $sleeplabs = new Sleeplab();
 
-		foreach ($where as $attribute => $value) {
-			$sleeplabs = $sleeplabs->where($attribute, '=', $value);
-		}
+        foreach ($where as $attribute => $value) {
+            $sleeplabs = $sleeplabs->where($attribute, '=', $value);
+        }
 
-		if (!empty($order)) {
-			$sleeplabs = $sleeplabs->orderBy($order);
-		}					 											 
+        if (!empty($order)) {
+            $sleeplabs = $sleeplabs->orderBy($order);
+        }
 
-		return $sleeplabs->get();;
-	}
+        return $sleeplabs->get();
+    }
 
-	public function updateData($sleeplabId, $values)
-	{
-		$sleeplab = Sleeplab::where('sleeplabid', '=', $sleeplabId)->update($values);
+    public function updateData($sleeplabId, $values)
+    {
+        $sleeplab = Sleeplab::where('sleeplabid', '=', $sleeplabId)->update($values);
 
-		return $sleeplab;
-	}
+        return $sleeplab;
+    }
 
-	public function insertData($data)
-	{
-		$sleeplab = new Sleeplab();
+    public function insertData($data)
+    {
+        $sleeplab = new Sleeplab();
 
-		foreach ($data as $attribute => $value) {
-			$sleeplab->$attribute = $value;
-		}
+        foreach ($data as $attribute => $value) {
+            $sleeplab->$attribute = $value;
+        }
 
-		try {
-			$sleeplab->save();
-		} catch (QueryException $e) {
-			return null;
-		}
+        try {
+            $sleeplab->save();
+        } catch (QueryException $e) {
+            return null;
+        }
 
-		return $sleeplab->sleeplabid;
-	}
+        return $sleeplab->sleeplabid;
+    }
 }

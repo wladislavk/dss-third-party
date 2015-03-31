@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ledger extends Model
 {
-	protected $table = 'dental_ledger';
-
-	protected $primaryKey = 'ledgerid';
+    protected $table = 'dental_ledger';
+    protected $primaryKey = 'ledgerid';
 }

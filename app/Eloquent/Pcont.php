@@ -4,46 +4,46 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pcont extends Model
 {
-	protected $table = 'dental_pcont';
+    protected $table = 'dental_pcont';
+    protected $fillable = ['patient_id', 'contact_id'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['patient_id', 'contact_id'];
+    public static function getPconts($patientId)
+    {
+        $pconts = Pcont::where('patient_id', '=', $patientId)->get();
 
-	protected $primaryKey = 'id';
+        return $pconts;
+    }
 
-	public static function getPconts($patientId)
-	{
-		$pconts = Pcont::where('patient_id', '=', $patientId)->get();
+    public static function getJoin($patientId)
+    {
+        $union = DB::table('dental_contact')
+            ->leftJoin('dental_pcont', 'dental_pcont.contact_id', '=', 'dental_contact.contactid')
+            ->where('dental_pcont.patient_id', '=', $patientId);
 
-		return $pconts;
-	}
+        $pcont = DB::table('dental_pcont')
+            ->leftJoin('dental_contact', 'dental_pcont.contact_id', '=', 'dental_contact.contactid')
+            ->where('dental_pcont.patient_id', '=', $patientId)
+            ->union($union)
+            ->get();
 
-	public static function getJoin($patientId)
-	{
-		$union = DB::table('dental_contact')->leftJoin('dental_pcont', 'dental_pcont.contact_id', '=', 'dental_contact.contactid')
-											->where('dental_pcont.patient_id', '=', $patientId);
+        return $pcont;
+    }
 
-		$pcont = DB::table('dental_pcont')->leftJoin('dental_contact', 'dental_pcont.contact_id', '=', 'dental_contact.contactid')
-										  ->where('dental_pcont.patient_id', '=', $patientId)
-										  ->union($union)
-										  ->get();
+    public static function insertData($data)
+    {
+        $pcont = new Pcont();
 
-		return $pcont;
-	}
+        foreach ($data as $attribute => $value) {
+            $pcont->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$pcont = new Pcont();
+        try {
+            $pcont->save();
+        } catch (QueryException $e) {
+            return null;
+        }
 
-		foreach ($data as $attribute => $value) {
-			$pcont->$attribute = $value;
-		}
-
-		try {
-			$pcont->save();
-		} catch (QueryException $e) {
-			return null;
-		}
-
-		return $pcont->id;
-	}
+        return $pcont->id;
+    }
 }

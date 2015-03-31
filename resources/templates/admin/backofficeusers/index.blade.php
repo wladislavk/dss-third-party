@@ -3,35 +3,35 @@
 
 
   <div class="page-header">
-  	Manage Backoffice Users
+      Manage Backoffice Users
   </div>
 
   <div align="right">
-  	<a href="/manage/admin/backoffice/users/new" class="btn btn-success">
-  		Add New Backoffice User
-  		<span class="glyphicon glyphicon-plus"></span>
-  	</a>
-  	&nbsp;&nbsp;
+      <a href="/manage/admin/backoffice/users/new" class="btn btn-success">
+          Add New Backoffice User
+          <span class="glyphicon glyphicon-plus"></span>
+      </a>
+      &nbsp;&nbsp;
   </div>
   <br>
 <table class="table table-bordered table-hover">
-	<tbody><tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
-			Username
-		</td>
-		<td valign="top" class="col_head" width="20%">
-			Name
-		</td>
-				<td valign="top" class="col_head" width="20%">
-			Company
-		</td>
-				<td valign="top" class="col_head" width="20%">
-			Permissions
-		</td>
-		<td valign="top" class="col_head" width="10%">
-			Action
-		</td>
-	</tr>
+    <tbody><tr class="tr_bg_h">
+        <td valign="top" class="col_head" width="20%">
+            Username
+        </td>
+        <td valign="top" class="col_head" width="20%">
+            Name
+        </td>
+                <td valign="top" class="col_head" width="20%">
+            Company
+        </td>
+                <td valign="top" class="col_head" width="20%">
+            Permissions
+        </td>
+        <td valign="top" class="col_head" width="10%">
+            Action
+        </td>
+    </tr>
         @foreach($backOfficeUsers as $bouser)
         <tr>
             <td valign="top">{{ $bouser->username }}</td>
@@ -51,11 +51,11 @@
                 Delete
                 <span class="glyphicon glyphicon-remove-sign"></span>
             </a>
-	    </tr>
-	    @endforeach
-	</tbody>
+        </tr>
+        @endforeach
+    </tbody>
 </table>
 
-  @stop
+@stop
 
-  @stop
+@stop

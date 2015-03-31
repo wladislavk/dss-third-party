@@ -4,9 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Login extends Model
 {
-	protected $table = 'dental_login';
+    protected $table = 'dental_login';
+    protected $primaryKey = 'loginid';
 
-	protected $primaryKey = 'loginid';
-
-	public $timestamps = false;
+    public $timestamps = false;
 }

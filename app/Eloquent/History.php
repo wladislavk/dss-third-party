@@ -4,21 +4,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class History extends Model
 {
-	protected $table = 'dental_history';
+    protected $table = 'dental_history';
+    protected $fillable = ['history', 'description', 'sortby', 'status'];
+    protected $primaryKey = 'historyid';
 
-	protected $fillable = ['history', 'description', 'sortby', 'status'];
+    public static function get($historyId)
+    {
+        try {
+            $history = History::where('historyid', '=', $historyId)
+                ->where('status', '=', 1)
+                ->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
 
-	protected $primaryKey = 'historyid';
-
-	public static function get($historyId)
-	{
-		try {
-			$history = History::where('historyid', '=', $historyId)->where('status', '=', 1)
-																   ->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
-
-		return $history;
-	}
+        return $history;
+    }
 }

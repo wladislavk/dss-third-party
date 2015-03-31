@@ -2,5 +2,5 @@
 
 interface ImageTypeInterface
 {
-	public function get();
+    public function getActiveImageTypes();
 }

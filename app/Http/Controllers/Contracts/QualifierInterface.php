@@ -2,5 +2,5 @@
 
 interface QualifierInterface
 {
-	public function getQualifiers();
+    public function getQualifiers();
 }

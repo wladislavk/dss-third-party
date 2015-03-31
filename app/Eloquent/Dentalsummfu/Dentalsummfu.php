@@ -4,48 +4,47 @@ use Illuminate\Database\Eloquent\Model;
 
 class Dentalsummfu extends Model
 {
-	protected $table = 'dentalsummfu';
+    protected $table = 'dentalsummfu';
+    protected $fillable = ['patientid', 'devadd', 'dsetadd'];
+    protected $primaryKey = 'followupid';
 
-	protected $fillable = ['patientid', 'devadd', 'dsetadd'];
+    public static function get($patientId, $order)
+    {
+        $dentalsummfu = Dentalsummfu::where('patientid', '=', $patientId)
+            ->orderBy($order, 'desc')
+            ->get();
 
-	protected $primaryKey = 'followupid';
+        return $dentalsummfu;
+    }
 
-	public static function get($patientId, $order)
-	{
-		$dentalsummfu = Dentalsummfu::where('patientid', '=', $patientId)->orderBy($order, 'desc')
-																		 ->get();
+    public static function updateData($followupId, $values)
+    {
+        $dentalsummfu = Dentalsummfu::where('followupid', '=', $followupId)->update($values);
 
-		return $dentalsummfu;
-	}
+        return $dentalsummfu;
+    }
 
-	public static function updateData($followupId, $values)
-	{
-		$dentalsummfu = Dentalsummfu::where('followupid', '=', $followupId)->update($values);
+    public static function insertData($data)
+    {
+        $dentalsummfu = new Dentalsummfu();
 
-		return $dentalsummfu;
-	}
+        foreach ($data as $attribute => $value) {
+            $dentalsummfu->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$dentalsummfu = new Dentalsummfu();
+        try {
+            $dentalsummfu->save();
+        } catch (QueryException $e) {
+            return null;
+        }
 
-		foreach ($data as $attribute => $value) {
-			$dentalsummfu->$attribute = $value;
-		}
+        return $dentalsummfu->followupid;
+    }
 
-		try {
-			$dentalsummfu->save();
-		} catch (QueryException $e) {
-			return null;
-		}
+    public static function deleteData($followupId)
+    {
+        $dentalsummfu = Dentalsummfu::where('followupid', '=', $followupId)->delete();
 
-		return $dentalsummfu->followupid;
-	}
-
-	public static function deleteData($followupId)
-	{
-		$dentalsummfu = Dentalsummfu::where('followupid', '=', $followupId)->delete();
-
-		return $dentalsummfu;
-	}
+        return $dentalsummfu;
+    }
 }

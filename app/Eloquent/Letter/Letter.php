@@ -4,9 +4,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Letter extends Model
 {
-	protected $table = 'dental_letters';
+    protected $table = 'dental_letters';
+    protected $primaryKey = 'letterid';
 
-	protected $primaryKey = 'letterid';
+    // public $timestamps = false;
 
-	// public $timestamps = false;
+    public function scopeNonDeleted($query)
+    {
+        return $query->where('deleted', '=', 0);
+    }
 }

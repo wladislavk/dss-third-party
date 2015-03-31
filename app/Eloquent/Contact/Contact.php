@@ -4,9 +4,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
-	protected $table = 'dental_contact';
+    protected $table = 'dental_contact';
+    protected $primaryKey = 'contactid';
 
-	protected $primaryKey = 'contactid';
+    // public $timestamps = false;
 
-	// public $timestamps = false;
+    public function scopeActive($query)
+    {
+        return $query->where('status', '=', 1);
+    }
 }

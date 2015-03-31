@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="page-header">
-	Manage Users
+    Manage Users
 </div>
 @if($users)
   @if($users[0]->is_super(\Session::get('admin_access')) || $users[0]->is_admin(\Session::get('admin_access')))
@@ -23,8 +23,8 @@
              <thead>
                <tr class="tr_bg_h">
                   <td valign="top" class="col_head" width="20%">ID</td>
-               		<td valign="top" class="col_head" width="20%">Name</td>
-               		<td valign="top" class="col_head" width="20%">Username</td>
+                       <td valign="top" class="col_head" width="20%">Name</td>
+                       <td valign="top" class="col_head" width="20%">Username</td>
                     @if($users)
                         @if($users[0]->is_super(\Session::get('admin_access')))
                             <td valign="top" class="col_head" width="20%">Letterhead</td>
@@ -33,14 +33,14 @@
                         @endif
                     @endif
 
-               		<td valign="top" class="col_head" width="8%">Locations</td>
-               		<td valign="top" class="col_head" width="8%">Contact</td>
-               		<td valign="top" class="col_head" width="8%">Staff</td>
-               		<td valign="top" class="col_head" width="8%">Patients</td>
-               		<td valign="top" class="col_head" width="8%">Invoices</td>
+                       <td valign="top" class="col_head" width="8%">Locations</td>
+                       <td valign="top" class="col_head" width="8%">Contact</td>
+                       <td valign="top" class="col_head" width="8%">Staff</td>
+                       <td valign="top" class="col_head" width="8%">Patients</td>
+                       <td valign="top" class="col_head" width="8%">Invoices</td>
                     <td valign="top" class="col_head" width="10%">Plan</td>
-               		<td valign="top" class="col_head" width="10%">Action</td>
-               	</tr>
+                       <td valign="top" class="col_head" width="10%">Action</td>
+                   </tr>
              </thead>
              <tbody>
              @foreach($users as $user)
@@ -78,7 +78,7 @@
                             <input type="submit" name="btnsubmit" value=" Login " class="btn btn-success">
                         </form>
                       
-                     	@endif
+                         @endif
                     @endif
                   </td>
                   <td valign="top" align="center">

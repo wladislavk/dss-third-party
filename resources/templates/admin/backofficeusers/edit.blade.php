@@ -28,7 +28,7 @@
             </td>
         </tr>
 
-	        <tr bgcolor="#FFFFFF">
+            <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 First Name
             </td>
@@ -64,12 +64,12 @@
                 {!! Form::select('companyid',[''=>'Select Companies'] + $companies,$user_company,['class'=>'form-control validate','id'=>'companyid']) !!}
             </td>
         </tr>
-	        <tr bgcolor="#FFFFFF">
+            <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Access Level
             </td>
             <td valign="top" class="frmdata">
-			    {!! Form::select('admin_access',[''=>'Select Access'] + $access_level, $backOfficeUser->admin_access,['class'=>'form-control validate','id'=>'admin_access']) !!}
+                {!! Form::select('admin_access',[''=>'Select Access'] + $access_level, $backOfficeUser->admin_access,['class'=>'form-control validate','id'=>'admin_access']) !!}
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

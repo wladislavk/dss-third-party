@@ -7,24 +7,24 @@
         Manage Access Codes
     </div>
     <div align="right">
-    	<a class="btn btn-success" href="/manage/admin/accesscode/new">Add New Access Code<span class="glyphicon glyphicon-plus"></span></a>
-    	&nbsp;&nbsp;
+        <a class="btn btn-success" href="/manage/admin/accesscode/new">Add New Access Code<span class="glyphicon glyphicon-plus"></span></a>
+        &nbsp;&nbsp;
     </div>
 
     <strong>Total Records: {{ $accessCodes->count() }}</strong>
 
     <table class="table table-bordered table-hover">
-    		<tbody>
-    		<tr class="tr_bg_h">
+            <tbody>
+            <tr class="tr_bg_h">
                 <td valign="top" class="col_head" width="20%">Access Code</td>
                 <td valign="top" class="col_head" width="60%">Notes</td>
                 <td valign="top" class="col_head" width="10%"># Users</td>
                 <td valign="top" class="col_head" width="10%">Plan</td>
                 <td valign="top" class="col_head" width="20%">Action</td>
-    	    </tr>
+            </tr>
             @foreach($accessCodes as $code)
-    		<tr class=@if($code->status == 2) {{ "warning" }} @endif>
-    		    <td valign="top">{{ $code->access_code }}</td>
+            <tr class=@if($code->status == 2) {{ "warning" }} @endif>
+                <td valign="top">{{ $code->access_code }}</td>
                 <td valign="top">{{ $code->notes }}</td>
                 <td valign="top" align="center"><a href="#" onclick="$('.users_{{ $code->id }}').toggle();">{{ $code->users()->count() }}</a>
                 </td><td valign="top">{{ $code->getPlan($code->plan_id)->name }}</td>
@@ -50,8 +50,8 @@
 
             @endforeach
 
-			</tbody>
-			</table>
+            </tbody>
+            </table>
     {!! $accessCodes->render() !!}
 @stop
 

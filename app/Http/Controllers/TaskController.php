@@ -5,6 +5,7 @@ use Ds3\Http\Controllers\Controller;
 use Route;
 use Request;
 use Session;
+use Carbon\Carbon;
 
 use Ds3\Libraries\GeneralFunctions;
 use Ds3\Contracts\PatientInterface;
@@ -93,11 +94,11 @@ class TaskController extends Controller
     public function add()
     {
         if (!empty($this->request['taskadd']) && $this->request['taskadd'] == 1) {
-            $dueDate = !empty($this->request['due_date']) ? date('Y-m-d', strtotime($this->request['due_date'])) : '';
+            $dueDate = !empty($this->request['due_date']) ? Carbon::parse($this->request['due_date'])->format('Y-m-d') : '';
 
             $data = array(
                 'task'           => $this->request['task'],
-                'due_date'       => date('Y-m-d', strtotime($dueDate)),
+                'due_date'       => Carbon::parse($dueDate)->format('Y-m-d'),
                 'userid'         => Session::get('userid'),
                 'status'         => !empty($this->request['status']) ? $this->request['status'] : 0,
                 'patientid'      => $this->request['patientid'],
@@ -106,14 +107,12 @@ class TaskController extends Controller
 
             $this->task->insertData($data);
             // $message = 'Task Added!';
-
-            return redirect('/manage/add_task')->with('closePopup', true);
         } elseif (!empty($this->request['taskedit']) && $this->request['taskedit'] == 1) {
-            $dueDate = !empty($this->request['due_date']) ? date('Y-m-d', strtotime($this->request['due_date'])) : '';
+            $dueDate = !empty($this->request['due_date']) ? Carbon::parse($this->request['due_date'])->format('Y-m-d')) : '';
 
             $data = array(
                 'task'           => $this->request['task'],
-                'due_date'       => date('Y-m-d', strtotime($dueDate)),
+                'due_date'       => Carbon::parse($dueDate)->format('Y-m-d'),
                 'userid'         => Session::get('userid'),
                 'status'         => !empty($this->request['status']) ? $this->request['status'] : 0,
                 'responsibleid'  => $this->request['responsibleid']
@@ -121,9 +120,9 @@ class TaskController extends Controller
 
             $this->task->updateData($this->request['task_id'], $data);
             // $message = 'Task Added!';
-
-            return redirect('/manage/add_task')->with('closePopup', true);
         }
+
+        return redirect('/manage/add_task')->with('closePopup', true);
     }
 
     public function manageTasks()
@@ -199,11 +198,12 @@ class TaskController extends Controller
             array('skip' => $iVal, 'take' => $quantityDisplayedRecords)
         );
 
-        $today = strtotime(date('Y-m-d'));
-        $tomorrow = strtotime(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"))));
+        $today = strtotime(Carbon::now());
+        $tomorrow = strtotime(Carbon::tomorrow());
 
         if (count($topTasks)) foreach ($topTasks as $task) {
-            $due = strtotime(date('Y-m-d', strtotime($task->due_date)));
+            $due = strtotime(Carbon::parse($task->due_date));
+
             if ($due < $today) {
                 $type = 'expired';
             } elseif ($due == $today) {
@@ -211,7 +211,7 @@ class TaskController extends Controller
             } elseif ($due == $tomorrow) {
                 $type = 'tomorrow';
             } else {
-                $type = date('m/d/Y', strtotime($task->due_date));
+                $type = Carbon::parse($task->due_date)->format('m/d/Y');
             }
 
             $task->type = $type;

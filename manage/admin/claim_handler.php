@@ -195,6 +195,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $insured_insurance_plan = $_POST['subscriber']['group_name'];
         $other_insured_insurance_plan = $_POST['other_payers'][0]['subscriber']['group_name'];
         $other_payer = $_POST['other_payer'];
+        $responsibility_sequence = $_POST['other_payers'][0]['responsibility_sequence'];
         if($other_payer){
             $another_plan = "YES";
         }
@@ -611,7 +612,9 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
                 p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
                 s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
-                s_m_eligible_payer_name = '".mysql_real_escape_string($s_m_eligible_payer_name)."'";
+                s_m_eligible_payer_name = '".mysql_real_escape_string($s_m_eligible_payer_name)."',
+                responsibility_sequence = '".mysql_real_escape_string($responsibility_sequence)."'";
+                
                 if(isset($_POST['reject_but'])){
                   $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
                   $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";

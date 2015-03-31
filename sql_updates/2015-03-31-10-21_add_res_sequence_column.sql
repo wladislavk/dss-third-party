@@ -1,0 +1,1 @@
+ALTER TABLE dental_insurance ADD responsibility_sequence VARCHAR(255);

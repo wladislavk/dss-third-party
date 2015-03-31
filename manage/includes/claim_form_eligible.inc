@@ -332,11 +332,13 @@
     $status = st($myarray['status']);
   }
 
-  if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
-    $another_plan = 'YES';
-  } else {
-    $another_plan = 'NO';
-  }
+if (!$another_plan) {
+    if ($pat_myarray['p_m_ins_type'] != 1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] == 1) {
+        $another_plan = 'YES';
+    } else {
+        $another_plan = 'NO';
+    }
+}
 
   if($is_pri_pending){
     $insured_sex = $pat_myarray['p_m_gender'];
@@ -672,7 +674,18 @@
     $('input[name="other_payers[0][subscriber][group_id]"]').val("<?php echo  $other_insured_policy_group_feca;?>");
     $('input[name="other_payers[0][subscriber][group_name]"]').val("<?php echo  $other_insured_insurance_plan;?>");
 
-    <?php if($employment == "YES") { ?>
+      <?php
+      if($_GET['instype']==2 && $responsibility_sequence == ""){
+        $seq='S';
+      } else if($responsibility_sequence == "") {
+        $seq='P';
+      } else{
+        $seq = $responsibility_sequence;
+      }
+    ?>
+      $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $seq?>");
+
+      <?php if($employment == "YES") { ?>
       $('input[name="claim[related_to_employment]"][value="true"]').attr("checked", "checked");
     <?php } elseif($employment == "NO") { ?>
       $('input[name="claim[related_to_employment]"][value="false"]').attr("checked", "checked");

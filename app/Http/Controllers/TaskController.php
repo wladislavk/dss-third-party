@@ -108,7 +108,7 @@ class TaskController extends Controller
             $this->task->insertData($data);
             // $message = 'Task Added!';
         } elseif (!empty($this->request['taskedit']) && $this->request['taskedit'] == 1) {
-            $dueDate = !empty($this->request['due_date']) ? Carbon::parse($this->request['due_date'])->format('Y-m-d')) : '';
+            $dueDate = !empty($this->request['due_date']) ? Carbon::parse($this->request['due_date'])->format('Y-m-d') : '';
 
             $data = array(
                 'task'           => $this->request['task'],

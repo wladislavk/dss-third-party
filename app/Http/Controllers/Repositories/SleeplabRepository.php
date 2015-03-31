@@ -49,4 +49,33 @@ class SleeplabRepository implements SleeplabInterface
 
         return $slleplab;
     }
+
+    public function getSleepLabTypeHolder($where, $letter = null, $order = null, $dir = null, $limit = null, $offset = null)
+    {
+        $sleeplabs = new Sleeplab();
+
+        if (!empty($where)) {
+            foreach ($where as $attribute => $value) {
+                $sleeplabs = $sleeplabs->where($attribute, $value);
+            }
+        }
+
+        if (!empty($letter)) {
+            $sleeplabs = $sleeplabs->whereRaw("company like '" . $letter . "%' ");
+        }
+
+        if (!empty($order)) {
+            $sleeplabs = $sleeplabs->orderBy($order, $dir);
+        }
+
+        if (!empty($limit)) {
+            $sleeplabs = $sleeplabs->take($limit);
+        }
+
+        if (!empty($offset)) {
+            $sleeplabs = $sleeplabs->skip($offset);
+        }
+
+        return $sleeplabs->get();
+    }
 }

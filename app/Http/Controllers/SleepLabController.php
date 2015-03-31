@@ -7,7 +7,6 @@ use Session;
 
 use Ds3\Contracts\SleepLabInterface;
 use Ds3\Contracts\PatientInterface;
-
 use Ds3\Libraries\GeneralFunctions;
 
 class SleeplabController extends Controller
@@ -15,7 +14,6 @@ class SleeplabController extends Controller
     private $request;
     private $delid;
     private $sleepLab;
-    private $sleepLabs;
     private $page;
     private $contacttype;
     private $sort;
@@ -29,9 +27,9 @@ class SleeplabController extends Controller
         $this->patient      = $patient;
 
         $this->request      = Request::all();
+
         $this->delid        = GeneralFunctions::getRouteParameter('delid');
         $this->page         = GeneralFunctions::getRouteParameter('page');
-        $this->contacttype  = GeneralFunctions::getRouteParameter('contacttype');
         $this->letter       = GeneralFunctions::getRouteParameter('letter');
         $this->sort         = GeneralFunctions::getRouteParameter('sort');
         $this->sortdir      = GeneralFunctions::getRouteParameter('sortdir');
@@ -41,9 +39,7 @@ class SleeplabController extends Controller
     {
         $letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
 
-        foreach ($this->request as $name => $value) {
-            $data[$name] = $value;
-        }
+        $patientsInfo = array();
 
         if (!empty($this->delid)) {
             $this->sleepLab->deleteData($this->delid);
@@ -52,14 +48,7 @@ class SleeplabController extends Controller
             return redirect('/manage/sleeplab')->with('message', $message);
         }
 
-        $sleepLabs = $this->sleepLab->getSleeplabs(array('docid' => Session::get('docId')));
-
-        foreach ($sleepLabs as $sleepLab) {
-            $patients = $this->patient->getSleepLab($sleepLab->sleeplabid);
-            $amountOfPatients = count($patients);
-        }
-
-        /*$recDisp = 20;
+        $recDisp = 20;
 
         if (!empty($this->page)) {
             $indexVal = $this->page;
@@ -68,36 +57,51 @@ class SleeplabController extends Controller
         }
 
         $iVal = $indexVal * $recDisp;
-        $contactTypeHolder = !empty($this->contacttype) ? $this->contacttype : '';
 
-        if (isset($this->letter)) {
+        if (!empty($this->letter)) {
             $letter = $this->letter;
         } else {
             $letter = null;
         }
 
         if (!empty($this->sort)) {
-            switch ($this->sort) {
-                case 'company':
-                    $order = array('company' => $this->sortdir);
-                    break;
-                case 'type':
-                    $order = array('dct.contacttype' => $this->sortdir);
-                    break;
-                default:
-                    $order = array(
-                        'lastname'  => $this->sortdir,
-                        'firstname' => $this->sortdir
-                    );
-                    break;
+            if($this->sort == 'lab') {
+                $order = 'company';
+                $dir = 'DESC';
+            } else {
+                $order = 'lastname';
+                $dir = 'DESC';
             }
         } else {
-            $order = null;
-        }*/
+            $dir = 'ASC';
+            $order = 'company';
+        }
+
+        $sleepLabs = $this->sleepLab->getSleepLabTypeHolder(array('docid' => Session::get('docId')), $letter, $order, $dir, $recDisp, $indexVal);
+
+        foreach ($sleepLabs as $sleepLab) {
+            $patients = $this->patient->getSleepLab($sleepLab->sleeplabid);
+            $patientsInfo[$sleepLab->sleeplabid]['pat'] = $patients;
+        }
+
+        $totalRec = count($sleepLabs);
+
+        $noPages = $totalRec / $recDisp;
+
+        foreach ($this->request as $name => $value) {
+            $data[$name] = $value;
+        }
+
         $data = array_merge($data, array(
-            'message'       => !empty($message) ? $message : '',
-            'letters'       => $letters,
-            'sleepLab'      => $sleepLab
+            'message'        => !empty($message) ? $message : '',
+            'letters'        => $letters,
+            'sleepLabs'      => $sleepLabs,
+            'patientsInfo'   => $patientsInfo,
+            'sort'           => $this->sort,
+            'sortdir'        => $this->sortdir,
+            'totalRec'       => $totalRec,
+            'noPages'        => $noPages,
+            'recDisp'        => $recDisp
         ));
 
         return view('manage.sleep_lab', $data);

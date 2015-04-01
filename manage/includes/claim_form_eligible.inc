@@ -706,9 +706,9 @@ if (!$another_plan) {
     <?php } ?>
 
     <?php if($another_plan == "YES") { ?>
-      $('input[name="claim[other_payer]"][value="true"]').attr("checked", "checked");
+      $('input[name="other_payer"][value="true"]').attr("checked", "checked");
     <?php } elseif($another_plan == "NO") { ?>
-      $('input[name="claim[other_payer]"][value="false"]').attr("checked", "checked");
+      $('input[name="other_payer"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
     $('input[name="claim[last_worked_date]"]').val("<?php echo  $unable_date_from; ?>");

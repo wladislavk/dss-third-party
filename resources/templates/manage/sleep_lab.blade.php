@@ -4,7 +4,7 @@
     @parent
 
     {!! HTML::style('/css/manage/popup.css') !!}
-    {!! HTML::style('/css/manage/task.css') !!}
+    {!! HTML::style('/css/manage/sleeplab.css') !!}
 
     {!! HTML::script('/js/admin/popup.js') !!}
 @stop
@@ -17,7 +17,7 @@
 <br /><br />&nbsp;
 
 <div align="right">
-    <button onclick="loadPopup('/manage/add_sleeplab');" class="addButton">Add New Sleep Lab</button>
+    <button style="margin-right:20px; float:right;" onclick="loadPopup('/manage/add_sleeplab');" class="addButton">Add New Sleep Lab</button>
     &nbsp;&nbsp;
 </div>
 <div class="letter_select">
@@ -31,21 +31,21 @@
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
     <input type="hidden" name="_token" id="token" value="{!! csrf_token() !!}">
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
-        @if ($totalRec > $recDisp)
-            <tr bgColor="#ffffff">
-                <td  align="right" colspan="15" class="bp">
+        <tr bgColor="#ffffff">
+            <td  align="right" colspan="15" class="bp">
+                @if ($totalRec > $recDisp)
                     Pages:
+
                     @for ($pCount = 0; $pCount < $noPages; $pCount++)
                         @if ($indexVal == $pCount)
                             <strong>{!! $pCount + 1 !!}</strong>
                         @else
-                            <a href="#" onclick='setRouteParameters("/manage/contact", "{\"page\": \"{!! $pCount !!}\", \"letter\": \"{!! $letter !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", "{!! csrf_token() !!}"); return false;' class="fp">
-                            {!! $pCount + 1 !!}</a>
+                            <a href="#" onclick='setRouteParameters("/manage/sleeplab", "{\"page\": \"{!! $pCount !!}\", \"letter\": \"{!! $letter !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\" }", "{!! csrf_token() !!}"); return false;'>{!! $pCount + 1 !!}</a>
                         @endif
                     @endfor
-                </td>
-            </tr>
-        @endif
+                @endif
+            </td>
+        </tr>
         <tr class="tr_bg_h">
             <td valign="top" class="col_head" width="30%">
                 <a href="#" onclick='setRouteParameters("/manage/sleeplab", "{\"sort\": \"lab\", \"sortdir\": \"{!! (!empty($sort) && $sort == 'lab' && $sortdir == 'ASC') ? 'DESC' : 'ASC' !!}\"}", "{!! csrf_token() !!}"); return false;'>Lab Name</a>
@@ -83,9 +83,9 @@
                         <a href="#" onclick="$('#pat_{!! $sleepLab->sleeplabid !!}').toggle(); return false;">{!! count($patientsInfo[$sleepLab->sleeplabid]['pat']) !!}</a>
                     </td>
                     <td valign="top">
-                        Quick View
+                        <a href="#" onclick="loadPopup('/manage/view_sleeplab/{!! $sleepLab->sleeplabid !!}'); return false;" class="editlink" title="EDIT">Quick View</a>
                         |
-                        Edit 
+                        <a href="#" onclick="loadPopup('/manage/add_sleeplab/{!! $sleepLab->sleeplabid !!}')" class="editlink" title="EDIT">Edit</a>
                     </td>
                 </tr>
                 <tr id="pat_{!! $sleepLab->sleeplabid !!}" style="display:none;">
@@ -94,7 +94,7 @@
 
                         @if (count($patientsInfo[$sleepLab->sleeplabid]['pat']))
                             @foreach ($patientsInfo[$sleepLab->sleeplabid]['pat'] as $patient)
-                                <a href="/manage/dss_summ?sect=sleep&pid={!! $patient->patientid !!}">{!! $patient->firstname !!} {!! $patient->lastname !!}</a><br />
+                                <a href="/manage/dss_summ/{!! $patient->patientid !!}", "{\'ed\': \{!! $patient->patientid !!}", "{!! csrf_token() !!}; return false;">{!! $patient->firstname !!} {!! $patient->lastname !!}</a><br />
                             @endforeach
                         @endif
                     </td>

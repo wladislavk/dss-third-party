@@ -77,14 +77,16 @@ class SleeplabController extends Controller
             $order = 'company';
         }
 
-        $sleepLabs = $this->sleepLab->getSleepLabTypeHolder(array('docid' => Session::get('docId')), $letter, $order, $dir, $recDisp, $indexVal);
+        $sleepLabs = $this->sleepLab->getSleepLabTypeHolder(array('docid' => Session::get('docId')), $letter, $order, $dir, $recDisp, $iVal);
+
+        $sleepLabsNum = $this->sleepLab->getSleepLabTypeHolder(array('docid' => Session::get('docId')), $letter, $order, $dir);
 
         foreach ($sleepLabs as $sleepLab) {
             $patients = $this->patient->getSleepLab($sleepLab->sleeplabid);
             $patientsInfo[$sleepLab->sleeplabid]['pat'] = $patients;
         }
 
-        $totalRec = count($sleepLabs);
+        $totalRec = count($sleepLabsNum);
 
         $noPages = $totalRec / $recDisp;
 
@@ -99,9 +101,11 @@ class SleeplabController extends Controller
             'patientsInfo'   => $patientsInfo,
             'sort'           => $this->sort,
             'sortdir'        => $this->sortdir,
+            'letter'         => $this->letter,
             'totalRec'       => $totalRec,
             'noPages'        => $noPages,
-            'recDisp'        => $recDisp
+            'recDisp'        => $recDisp,
+            'indexVal'       => $indexVal
         ));
 
         return view('manage.sleep_lab', $data);

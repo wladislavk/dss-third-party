@@ -647,7 +647,7 @@ if (!$another_plan) {
     $('input[name="dependent[address][city]"]').val("<?php echo  $patient_city;?>");
     $('input[name="dependent[address][state]"]').val("<?php echo  $patient_state;?>");
     $('input[name="dependent[address][zip]"]').val("<?php echo  $patient_zip;?>");
-    $('input[name="dependent[phone_number]"]').val("<?php echo  $patient_phone;?>");
+    $('input[name="dependent[phone_number]"]').val("<?php echo  $patient_phone_code.$patient_phone;?>");
     <?php if($patient_relation_insured == 'Spouse'){ ?>
       $('input[name="dependent[relationship]"][value="01"]').attr("checked", "checked");
     <?php }elseif($patient_relation_insured == 'Child'){ ?>
@@ -664,7 +664,7 @@ if (!$another_plan) {
     $('input[name="subscriber[address][city]"]').val("<?php echo  $insured_city;?>");
     $('input[name="subscriber[address][state]"]').val("<?php echo  $insured_state;?>");
     $('input[name="subscriber[address][zip]"]').val("<?php echo  $insured_zip;?>");
-    $('input[name="subscriber[phone_number]"]').val("<?php echo  $insured_phone;?>");
+    $('input[name="subscriber[phone_number]"]').val("<?php echo  $insured_phone_code.$insured_phone;?>");
     $('input[name="subscriber[group_id]"]').val("<?php echo  $insured_policy_group_feca;?>");
     $('input[name="subscriber[group_name]"]').val("<?php echo  $insured_insurance_plan;?>");
 
@@ -1027,6 +1027,7 @@ if (!$another_plan) {
              . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
              . "WHERE "
              . "  ledger.status = " . DSS_TRXN_PENDING . " "
+             . "  AND ledger.primary_claim_id = " . $insuranceid . " "
            . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
            . "  AND ledger.docid = " . $docid . " "
            . "  AND trxn_code.docid = " . $docid . " "

@@ -690,6 +690,19 @@ $up_sql = "INSERT INTO dental_claim_electronic SET
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
 mysql_query($up_sql);
+if($success){
+    $event = "claim_submitted";
+} else{
+    $event = "claim_rejected";
+}
+$eligible_response_sql = "INSERT INTO dental_eligible_response SET
+  response = '".mysql_real_escape_string($json_response)."',
+  reference_id = '".mysql_real_escape_string($ref_id)."',
+  event_type = '".mysql_real_escape_string($event)."',
+  adddate = now(),
+  ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
+mysql_query($eligible_response_sql);
+
   claim_status_history_update($_GET['insid'], DSS_CLAIM_SENT, DSS_CLAIM_PENDING, '', $_SESSION['adminuserid']);
 claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
 $dce_id = mysql_insert_id();

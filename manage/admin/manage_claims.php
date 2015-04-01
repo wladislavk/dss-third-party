@@ -1,7 +1,11 @@
 <?php  
 include "includes/top.htm";
 require_once('../includes/constants.inc');
+require_once('includes/main_include.php');
 require_once "includes/general.htm";
+include_once 'includes/claim_functions.php';
+include_once 'includes/invoice_functions.php';
+include_once '../includes/claim_functions.php';
 
 if(isset($_GET['upstatus'])){
   $old_sql = "SELECT status FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";

@@ -516,7 +516,7 @@ include_once '../includes/calendarinc.php';
 
 	<tr>
         <td><?= $r['adddate']; ?></td>
-        <td><a href="view_eligibility_response.php?id=<?=$r['id']; ?>">View</a></td>
+        <td><a href="/manage/view_eligibility_response.php?id=<?=$r['id']; ?>">View</a></td>
     </tr>
 
 <?php

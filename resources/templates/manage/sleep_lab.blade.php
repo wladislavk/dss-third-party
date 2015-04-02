@@ -105,3 +105,20 @@
 </form>
 
 @stop
+
+@section('footer')
+
+@parent
+
+<div id="popupRefer" style="height:550px; width:750px;">
+    <a id="popupReferClose">
+        <button>X</button>
+    </a>
+
+    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+
+<div id="backgroundPopupRef"></div>
+<br /><br />
+
+@stop

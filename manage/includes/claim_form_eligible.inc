@@ -659,9 +659,11 @@ if (!$another_plan) {
     <?php if($is_secondary) { ?>
       $('input[name="payer[id]"]').val("<?php echo  $s_m_eligible_payer_id;?>");
       $('input[name="payer[name]"]').val("<?php echo  $s_m_eligible_payer_name;?>");
+      $('input[name="other_payers[0][name]"]').val("<?= $p_m_eligible_payer_name;?>");
     <?php } else { ?>
       $('input[name="payer[id]"]').val("<?php echo  $p_m_eligible_payer_id;?>");
       $('input[name="payer[name]"]').val("<?php echo  $p_m_eligible_payer_name;?>");
+      $('input[name="other_payers[0][name]"]').val("<?= $p_m_eligible_payer_name;?>");
     <?php } ?>
 
     $('input[name="payer[address][street_line_1]"]').val("<?php echo  $inscoinfo['add1'];?>");
@@ -703,7 +705,6 @@ if (!$another_plan) {
     $('input[name="subscriber[phone_number]"]').val("<?php echo  $insured_phone_code.$insured_phone;?>");
     $('input[name="subscriber[group_id]"]').val("<?php echo  $insured_policy_group_feca;?>");
     $('input[name="subscriber[group_name]"]').val("<?php echo  $insured_insurance_plan;?>");
-
     $('input[name="other_payers[0][subscriber][last_name]"]').val("<?php echo  $other_insured_lastname;?>");
     $('input[name="other_payers[0][subscriber][first_name]"]').val("<?php echo  $other_insured_firstname;?>");
     $('input[name="other_payers[0][subscriber][middle_name]"]').val("<?php echo  $other_insured_middle;?>");

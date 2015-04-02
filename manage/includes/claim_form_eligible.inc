@@ -304,6 +304,36 @@
     $epsdt_family_plan6 = st($myarray['epsdt_family_plan6']);
     $id_qua6 = st($myarray['id_qua6']);
     $rendering_provider_id6 = st($myarray['rendering_provider_id6']);
+      $rendering_provider_entity_1  = st($myarray['rendering_provider_entity_1']);
+      $rendering_provider_first_name_1  = st($myarray['rendering_provider_first_name_1']);
+      $rendering_provider_last_name_1  = st($myarray['rendering_provider_last_name_1']);
+      $rendering_provider_org_1  = st($myarray['rendering_provider_org_1']);
+      $rendering_provider_npi_1  = st($myarray['rendering_provider_npi_1']);
+      $rendering_provider_entity_2  = st($myarray['rendering_provider_entity_2']);
+      $rendering_provider_first_name_2 = st($myarray['rendering_provider_first_name_2']);
+      $rendering_provider_last_name_2  = st($myarray['rendering_provider_last_name_2']);
+      $rendering_provider_org_2  = st($myarray['rendering_provider_org_2']);
+      $rendering_provider_npi_2  = st($myarray['rendering_provider_npi_2']);
+      $rendering_provider_entity_3  = st($myarray['rendering_provider_entity_3']);
+      $rendering_provider_first_name_3  = st($myarray['rendering_provider_first_name_3']);
+      $rendering_provider_last_name_3  = st($myarray['rendering_provider_last_name_3']);
+      $rendering_provider_org_3  = st($myarray['rendering_provider_org_3']);
+      $rendering_provider_npi_3  = st($myarray['rendering_provider_npi_3']);
+      $rendering_provider_entity_4  = st($myarray['rendering_provider_entity_4']);
+      $rendering_provider_first_name_4  = st($myarray['rendering_provider_first_name_4']);
+      $rendering_provider_last_name_4  = st($myarray['rendering_provider_last_name_4']);
+      $rendering_provider_org_4  = st($myarray['rendering_provider_org_4']);
+      $rendering_provider_npi_4  = st($myarray['rendering_provider_npi_4']);
+      $rendering_provider_entity_5  = st($myarray['rendering_provider_entity_5']);
+      $rendering_provider_first_name_5  = st($myarray['rendering_provider_first_name_5']);
+      $rendering_provider_last_name_5  = st($myarray['rendering_provider_last_name_5']);
+      $rendering_provider_org_5  = st($myarray['rendering_provider_org_5']);
+      $rendering_provider_npi_5  = st($myarray['rendering_provider_npi_5']);
+      $rendering_provider_entity_6  = st($myarray['rendering_provider_entity_6']);
+      $rendering_provider_first_name_6  = st($myarray['rendering_provider_first_name_6']);
+      $rendering_provider_last_name_6  = st($myarray['rendering_provider_last_name_6']);
+      $rendering_provider_org_6  = st($myarray['rendering_provider_org_6']);
+      $rendering_provider_npi_6  = st($myarray['rendering_provider_npi_6']);
     $federal_tax_id_number = st($myarray['federal_tax_id_number']);
     $ssn = st($myarray['ssn']);
     $ein = st($myarray['ein']);
@@ -492,6 +522,12 @@ if (!$another_plan) {
     $service_state = "";
     $service_zip = "";
     $service_medicare_npi = "";
+  }
+  if ($service_info_a != "") {
+    $service_npi = $service_info_a;
+  }
+  if ($billing_provider_a != "") {
+    $npi = $billing_provider_a;
   }
 ?>
 
@@ -873,7 +909,68 @@ if (!$another_plan) {
         $mod_array[] = $mod_row;
       }
 
-      // Load pending medical trxns if new claim form. Otherwise, load associated trxns.
+      if ($rendering_provider_first_name_1 != ""){
+  ?>
+        <?php if ($rendering_provider_entity_1){ ?>
+              $('input[name="claim[service_lines][0][rendering_provider][entity]"][value="true"]').trigger('click');
+         <?php } else { ?>
+              $('input[name="claim[service_lines][0][rendering_provider][entity]"][value=""]').prop("checked", true);
+         <?php } ?>
+          $('input[name="claim[service_lines][0][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_1; ?>");
+      $('input[name="claim[service_lines][0][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_1;  ?>");
+      $('input[name="claim[service_lines][0][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_1;  ?>");
+      $('input[name="claim[service_lines][0][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_1;  ?>");
+        <?php if ($rendering_provider_entity_2){ ?>
+              $('input[name="claim[service_lines][1][rendering_provider][entity]"][value="true"]').trigger('click');
+         <?php } else { ?>
+              $('input[name="claim[service_lines][1][rendering_provider][entity]"][value=""]').prop("checked", true);
+         <?php } ?>
+          $('input[name="claim[service_lines][1][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_2; ?>");
+      $('input[name="claim[service_lines][1][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_2;  ?>");
+      $('input[name="claim[service_lines][1][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_2;  ?>");
+      $('input[name="claim[service_lines][1][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_2;  ?>");
+        <?php if ($rendering_provider_entity_3){ ?>
+              $('input[name="claim[service_lines][2][rendering_provider][entity]"][value="true"]').trigger('click');
+         <?php } else { ?>
+              $('input[name="claim[service_lines][2][rendering_provider][entity]"][value=""]').prop("checked", true);
+         <?php } ?>
+          $('input[name="claim[service_lines][2][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_3; ?>");
+      $('input[name="claim[service_lines][2][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_3;  ?>");
+      $('input[name="claim[service_lines][2][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_3;  ?>");
+      $('input[name="claim[service_lines][2][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_3;  ?>");
+        <?php if ($rendering_provider_entity_4){ ?>
+              $('input[name="claim[service_lines][3][rendering_provider][entity]"][value="true"]').trigger('click');
+         <?php } else { ?>
+              $('input[name="claim[service_lines][3][rendering_provider][entity]"][value=""]').prop("checked", true);
+         <?php } ?>
+          $('input[name="claim[service_lines][3][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_4; ?>");
+      $('input[name="claim[service_lines][3][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_4;  ?>");
+      $('input[name="claim[service_lines][3][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_4;  ?>");
+      $('input[name="claim[service_lines][3][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_4;  ?>");
+        <?php if ($rendering_provider_entity_5){ ?>
+              $('input[name="claim[service_lines][4][rendering_provider][entity]"][value="true"]').trigger('click');
+         <?php } else { ?>
+              $('input[name="claim[service_lines][4][rendering_provider][entity]"][value=""]').prop("checked", true);
+         <?php } ?>
+          $('input[name="claim[service_lines][4][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_5; ?>");
+      $('input[name="claim[service_lines][4][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_5;  ?>");
+      $('input[name="claim[service_lines][4][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_5;  ?>");
+      $('input[name="claim[service_lines][4][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_5;  ?>");
+        <?php if ($rendering_provider_entity_6){ ?>
+              $('input[name="claim[service_lines][5][rendering_provider][entity]"][value="true"]').trigger('click');
+         <?php } else { ?>
+              $('input[name="claim[service_lines][5][rendering_provider][entity]"][value=""]').prop("checked", true);
+         <?php } ?>
+          $('input[name="claim[service_lines][5][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_6; ?>");
+      $('input[name="claim[service_lines][5][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_6;  ?>");
+      $('input[name="claim[service_lines][5][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_6;  ?>");
+      $('input[name="claim[service_lines][5][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_6;  ?>");
+
+          <?php
+} else {
+
+  // Load pending medical trxns if new claim form. Otherwise, load associated trxns.
+
       $sql = "";
       if ($is_new_claim) {
         $sql = "SELECT "
@@ -956,6 +1053,15 @@ if (!$another_plan) {
 <?php
         $li++;
       }
+
+ }
+    if($federal_tax_id_number != ''){
+      $tax_id_or_ssn = $federal_tax_id_number;
+    } else if($userinfo['tax_id_or_ssn'] != '') {
+      $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
+    } else {
+      $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
+    }
 
       if($userinfo['tax_id_or_ssn'] != '') {
           $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];

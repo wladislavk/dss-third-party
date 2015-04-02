@@ -253,7 +253,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $id_qua1 = $_POST['claim']['service_lines'][0]['rendering_provider']['secondary_id_type'];
         $rendering_provider_id1 = $_POST['claim']['service_lines'][0]['rendering_provider']['secondary_id'];
  	// WHAT IS THE SECOND ID
-
+        $rendering_provider_entity_1 = $_POST['claim']['service_lines'][0]['rendering_provider']['entity'];
+        $rendering_provider_first_name_1 = $_POST['claim']['service_lines'][0]['rendering_provider']['first_name'];
+        $rendering_provider_last_name_1 = $_POST['claim']['service_lines'][0]['rendering_provider']['last_name'];
+        $rendering_provider_org_1 = $_POST['claim']['service_lines'][0]['rendering_provider']['organization_name'];
+        $rendering_provider_npi_1 = $_POST['claim']['service_lines'][0]['rendering_provider']['npi'];
 
         $service_date2_from = $_POST['claim']['service_lines'][1]['service_date_from'];
         $service_date2_to = $_POST['claim']['service_lines'][1]['service_date_to'];
@@ -271,6 +275,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $id_qua2 = $_POST['claim']['service_lines'][1]['rendering_provider']['secondary_id_type'];
         $rendering_provider_id2 = $_POST['claim']['service_lines'][1]['rendering_provider']['secondary_id'];
         // WHAT IS THE SECOND ID
+        $rendering_provider_entity_2 = $_POST['claim']['service_lines'][1]['rendering_provider']['entity'];
+        $rendering_provider_first_name_2 = $_POST['claim']['service_lines'][1]['rendering_provider']['first_name'];
+        $rendering_provider_last_name_2 = $_POST['claim']['service_lines'][1]['rendering_provider']['last_name'];
+        $rendering_provider_org_2 = $_POST['claim']['service_lines'][1]['rendering_provider']['organization_name'];
+        $rendering_provider_npi_2 = $_POST['claim']['service_lines'][1]['rendering_provider']['npi'];
 
 
         $service_date3_from = $_POST['claim']['service_lines'][2]['service_date_from'];
@@ -289,6 +298,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $id_qua3 = $_POST['claim']['service_lines'][2]['rendering_provider']['secondary_id_type'];
         $rendering_provider_id3 = $_POST['claim']['service_lines'][2]['rendering_provider']['secondary_id'];
         // WHAT IS THE SECOND ID
+        $rendering_provider_entity_3 = $_POST['claim']['service_lines'][2]['rendering_provider']['entity'];
+        $rendering_provider_first_name_3 = $_POST['claim']['service_lines'][2]['rendering_provider']['first_name'];
+        $rendering_provider_last_name_3 = $_POST['claim']['service_lines'][2]['rendering_provider']['last_name'];
+        $rendering_provider_org_3 = $_POST['claim']['service_lines'][2]['rendering_provider']['organization_name'];
+        $rendering_provider_npi_3 = $_POST['claim']['service_lines'][2]['rendering_provider']['npi'];
 
 
         $service_date4_from = $_POST['claim']['service_lines'][3]['service_date_from'];
@@ -307,6 +321,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $id_qua4 = $_POST['claim']['service_lines'][3]['rendering_provider']['secondary_id_type'];
         $rendering_provider_id4 = $_POST['claim']['service_lines'][3]['rendering_provider']['secondary_id'];
         // WHAT IS THE SECOND ID
+        $rendering_provider_entity_4 = $_POST['claim']['service_lines'][3]['rendering_provider']['entity'];
+        $rendering_provider_first_name_4 = $_POST['claim']['service_lines'][3]['rendering_provider']['first_name'];
+        $rendering_provider_last_name_4 = $_POST['claim']['service_lines'][3]['rendering_provider']['last_name'];
+        $rendering_provider_org_4 = $_POST['claim']['service_lines'][3]['rendering_provider']['organization_name'];
+        $rendering_provider_npi_4 = $_POST['claim']['service_lines'][3]['rendering_provider']['npi'];
 
 
         $service_date5_from = $_POST['claim']['service_lines'][4]['service_date_from'];
@@ -325,6 +344,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $id_qua5 = $_POST['claim']['service_lines'][4]['rendering_provider']['secondary_id_type'];
         $rendering_provider_id5 = $_POST['claim']['service_lines'][4]['rendering_provider']['secondary_id'];
         // WHAT IS THE SECOND ID
+        $rendering_provider_entity_5 = $_POST['claim']['service_lines'][4]['rendering_provider']['entity'];
+        $rendering_provider_first_name_5 = $_POST['claim']['service_lines'][4]['rendering_provider']['first_name'];
+        $rendering_provider_last_name_5 = $_POST['claim']['service_lines'][4]['rendering_provider']['last_name'];
+        $rendering_provider_org_5 = $_POST['claim']['service_lines'][4]['rendering_provider']['organization_name'];
+        $rendering_provider_npi_5 = $_POST['claim']['service_lines'][4]['rendering_provider']['npi'];
 
 
         $service_date6_from = $_POST['claim']['service_lines'][5]['service_date_from'];
@@ -343,6 +367,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $id_qua6 = $_POST['claim']['service_lines'][5]['rendering_provider']['secondary_id_type'];
         $rendering_provider_id6 = $_POST['claim']['service_lines'][5]['rendering_provider']['secondary_id'];
         // WHAT IS THE SECOND ID
+        $rendering_provider_entity_6 = $_POST['claim']['service_lines'][5]['rendering_provider']['entity'];
+        $rendering_provider_first_name_6 = $_POST['claim']['service_lines'][5]['rendering_provider']['first_name'];
+        $rendering_provider_last_name_6 = $_POST['claim']['service_lines'][5]['rendering_provider']['last_name'];
+        $rendering_provider_org_6 = $_POST['claim']['service_lines'][5]['rendering_provider']['organization_name'];
+        $rendering_provider_npi_6 = $_POST['claim']['service_lines'][5]['rendering_provider']['npi'];
 
 
 
@@ -613,6 +642,36 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
                 s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
                 s_m_eligible_payer_name = '".mysql_real_escape_string($s_m_eligible_payer_name)."',
+                rendering_provider_entity_1  = '".mysql_real_escape_string($rendering_provider_entity_1)."',
+                rendering_provider_first_name_1  = '".mysql_real_escape_string($rendering_provider_first_name_1)."',
+                rendering_provider_last_name_1  = '".mysql_real_escape_string($rendering_provider_last_name_1)."',
+                rendering_provider_org_1  = '".mysql_real_escape_string($rendering_provider_org_1)."',
+                rendering_provider_npi_1  = '".mysql_real_escape_string($rendering_provider_npi_1)."',
+                rendering_provider_entity_2  = '".mysql_real_escape_string($rendering_provider_entity_2)."',
+                rendering_provider_first_name_2  = '".mysql_real_escape_string($rendering_provider_first_name_2)."',
+                rendering_provider_last_name_2  = '".mysql_real_escape_string($rendering_provider_last_name_2)."',
+                rendering_provider_org_2  = '".mysql_real_escape_string($rendering_provider_org_2)."',
+                rendering_provider_npi_2  = '".mysql_real_escape_string($rendering_provider_npi_2)."',
+                rendering_provider_entity_3  = '".mysql_real_escape_string($rendering_provider_entity_3)."',
+                rendering_provider_first_name_3  = '".mysql_real_escape_string($rendering_provider_first_name_3)."',
+                rendering_provider_last_name_3  = '".mysql_real_escape_string($rendering_provider_last_name_3)."',
+                rendering_provider_org_3  = '".mysql_real_escape_string($rendering_provider_org_3)."',
+                rendering_provider_npi_3  = '".mysql_real_escape_string($rendering_provider_npi_3)."',
+                rendering_provider_entity_4  = '".mysql_real_escape_string($rendering_provider_entity_4)."',
+                rendering_provider_first_name_4  = '".mysql_real_escape_string($rendering_provider_first_name_4)."',
+                rendering_provider_last_name_4  = '".mysql_real_escape_string($rendering_provider_last_name_4)."',
+                rendering_provider_org_4  = '".mysql_real_escape_string($rendering_provider_org_4)."',
+                rendering_provider_npi_4  = '".mysql_real_escape_string($rendering_provider_npi_4)."',
+                rendering_provider_entity_5  = '".mysql_real_escape_string($rendering_provider_entity_5)."',
+                rendering_provider_first_name_5  = '".mysql_real_escape_string($rendering_provider_first_name_5)."',
+                rendering_provider_last_name_5  = '".mysql_real_escape_string($rendering_provider_last_name_5)."',
+                rendering_provider_org_5  = '".mysql_real_escape_string($rendering_provider_org_5)."',
+                rendering_provider_npi_5  = '".mysql_real_escape_string($rendering_provider_npi_5)."',
+                rendering_provider_entity_6  = '".mysql_real_escape_string($rendering_provider_entity_6)."',
+                rendering_provider_first_name_6  = '".mysql_real_escape_string($rendering_provider_first_name_6)."',
+                rendering_provider_last_name_6  = '".mysql_real_escape_string($rendering_provider_last_name_6)."',
+                rendering_provider_org_6  = '".mysql_real_escape_string($rendering_provider_org_6)."',
+                rendering_provider_npi_6  = '".mysql_real_escape_string($rendering_provider_npi_6)."',
                 responsibility_sequence = '".mysql_real_escape_string($responsibility_sequence)."'";
                 
                 if(isset($_POST['reject_but'])){

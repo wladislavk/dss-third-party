@@ -1,6 +1,7 @@
 function disable_submit (){
     $('#submit-button').css('background-color', '#999999');
     $('#submit-button').disabled = true;
+    $('#submit-button-inner').replaceWith('<img src="/manage/images/DSS-ajax-animated_loading-gif.gif"></img>');
 }
 
 $(document).ready(function(){

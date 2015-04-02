@@ -493,7 +493,7 @@ include_once '../includes/calendarinc.php';
       <div class="col-lg-offset-2 col-lg-10">
 	<input type="hidden" name="pid" id="pid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
-        <button type="submit" id="submit-button" class="btn btn-primary btn-lg">Submit</button>
+        <button type="submit" id="submit-button" class="btn btn-primary btn-lg"><div id="submit-button-inner">Submit</div></button>
       </div>
     </div>
 

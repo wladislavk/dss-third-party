@@ -1,4 +1,10 @@
 <?php
+require_once('../includes/constants.inc');
+require_once('includes/main_include.php');
+include_once 'includes/claim_functions.php';
+include_once 'includes/invoice_functions.php';
+include_once '../includes/claim_functions.php';
+
   $status_sql = "SELECT status FROM dental_insurance
                  WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
                  AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";

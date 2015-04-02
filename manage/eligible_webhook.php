@@ -121,6 +121,16 @@ if($event == "claim_rejected"){
         adddate = now(),
         ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
     mysql_query($payment_report_sql);
+}elseif($event == "received_pdf"){
+    $ref_id = $json->{"details"}->{"id"};
+    $download_url = $json->{"details"}->{"received_pdf"}->{"download_url"};
+    if($download_url){
+        $up_sql = "UPDATE dental_eligible_enrollment SET
+    status='".DSS_ENROLLMENT_PDF_RECEIVED."',
+    download_url = '".mysql_real_escape_string($download_url)."'
+    WHERE reference_id='".mysql_real_escape_string($ref_id)."'";
+        mysql_query($up_sql);
+    }
 }
 
 

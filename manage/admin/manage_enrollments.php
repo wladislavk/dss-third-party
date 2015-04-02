@@ -179,25 +179,25 @@ $num_users = mysqli_num_rows($my);
             }
           ?>
 <a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key; ?>&transaction_type=837P" target="_blank">PDF</a>
-                    <?php
-                    /*
-                    //removed link for outdated v1.3 enrollment form.
-                    //<a href="https://gds.eligibleapi.com/v1.5/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key; ?>&transaction_type=837P" target="_blank">PDF</a>
-                    */
-                    ?>
-                    <?php if($myarray['download_url']){ ?>
-                        <a class="btn btn-success" href="<?php echo $myarray['download_url']; ?>">Sign Form</a>
-                        <br />
-                        <a class="btn btn-success" href="#" onclick="Javascript: loadPopup('upload_enrollment.php?id=<?= $myarray['reference_id']; ?>');">Upload</a>
-                        <?php
-                    }
-                    if($myarray['signed_download_url']){
-                        ?>
-                        <br />
-                        <a class="btn btn-success" href="<?php echo $myarray['download_url']; ?>">View Signed Form</a>
-                        <?php
-                    }
-                    ?>
+        <?php
+        /*
+        //removed link for outdated v1.3 enrollment form.
+        //<a href="https://gds.eligibleapi.com/v1.5/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key; ?>&transaction_type=837P" target="_blank">PDF</a>
+        */
+        ?>
+        <?php if($myarray['download_url']){ ?>
+            <a class="btn btn-success" href="<?php echo $myarray['download_url']; ?>">Sign Form</a>
+            <br />
+            <a class="btn btn-success" href="#" onclick="Javascript: loadPopup('upload_enrollment.php?id=<?= $myarray['reference_id']; ?>');">Upload</a>
+            <?php
+        }
+        if($myarray['signed_download_url']){
+            ?>
+            <br />
+            <a class="btn btn-success" href="<?php echo $myarray['download_url']; ?>">View Signed Form</a>
+            <?php
+        }
+        ?>
 				</td>	
                 
 			</tr>

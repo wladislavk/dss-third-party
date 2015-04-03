@@ -83,10 +83,10 @@
 							$e_q = $db->getResults($e_sql);
 							foreach ($e_q as $electronic) {
 								$r = json_decode($electronic['response']);
-								$errors = $r->{"errors"}->{"messages"};
+								$errors = $r->{"errors"};
 
 								foreach($errors as $error){
-								  echo $error."<br />";
+								  echo $error->{"messages"}."<br />";
 								}
 
 								$r_sql = "SELECT * FROM dental_eligible_response WHERE reference_id !='' AND reference_id='".mysqli_real_escape_string($con,$electronic['reference_id'])."'";
@@ -99,6 +99,15 @@
 									echo $codes->{"category_label"}."<br />";
                                     echo $codes->{"status_code"}." - ";
                                     echo $codes->{"status_label"};
+                                    
+                                    $acknowledgements = $r->{"acknowledgements"};
+                                    foreach ($acknowledgements as $acknowledgement) {
+                                        $codes = $acknowledgement->{"details"}->{"codes"};
+                                        echo $codes->{"category_code"}." - ";
++                                       echo $codes->{"category_label"}."<br />";
++                                       echo $codes->{"status_code"}." - ";
++                                       echo $codes->{"status_label"};
++                                   }
 								}
 							}
 						?>

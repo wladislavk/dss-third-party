@@ -6,6 +6,17 @@ use Illuminate\Http\RedirectResponse;
 
 class Loader
 {
+    public static $redirectRegex = '@
+            \s*<script[^>]*?>\s*
+                (?:alert\(.*?\);\s*)?
+                (?:
+                    window\.location\.replace\(\s*(?:["\'])(?<path>.+)\1\s*\);
+                    |
+                    window\.location\s*=\s*(?:["\'])(?<path>.+)\1\s*;
+                )
+            \s*</script>\s*
+        @isx';
+
     private $legacyPath = '';       // Config value of the legacy files
     private $outputBuffer = '';     // Buffer capture of the legacy load
     private $outputHeaders = [];    // Headers as set by the legacy load
@@ -39,6 +50,7 @@ class Loader
     ];
 
     private $onStage = false;       // Flag to not screw up when unstaging changes
+
 
     /**
      * @param string $path
@@ -325,17 +337,21 @@ class Loader
          * The Location header can be relative and might not work properly
          */
         if (!empty($headers['location'])) {
-            if (preg_match('@://|^/@', $headers['location'])) {
-                $location = $headers['location'];
-            } else {
+            $location = $headers['location'];
+        } elseif (strpos($buffer, 'window.location') !== false && preg_match(self::$redirectRegex, $buffer, $match)) {
+            $location = $match['path'];
+        }
+
+        if (strlen($location)) {
+            /**
+             * Test if the redirection has the base domain hardcoded, and remove it
+             * Also test if the redirection is relative: it does not contain "://" or doesn't start with a slash
+             */
+            if (strpos($location, '://dentalsleepsolutions.com')) {
+                $location = preg_replace('https?://dentalsleepsolutions\.com/?', '/', $location);
+            } elseif (!preg_match('@://|^/@', $location)) {
                 $location = dirname("/$relativePath") . "/{$headers['location']}";
             }
-        } elseif (strpos($buffer, 'window.location.replace') !== false && preg_match(
-            '@\s*<script[^>]*?>\s*window\.location\.replace\((["\'])(?<path>.+)\1\);\s*</script>\s*@is',
-            $buffer,
-            $match
-        )) {
-            $location = dirname("/$relativePath") . "/{$match['path']}";
         }
 
         return $location;

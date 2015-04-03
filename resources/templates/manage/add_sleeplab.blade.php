@@ -8,6 +8,7 @@
 
         {!! HTML::script('/js/jquery-1.6.2.min.js') !!}
         {!! HTML::script('/js/3rdParty/jquery.maskedinput-1.3.min.js') !!}
+        {!! HTML::script('/js/manage/top.js') !!}
         {!! HTML::script('/js/manage/validation.js') !!}
         {!! HTML::script('/js/manage/masks.js') !!}
         {!! HTML::script('/js/manage/wufoo.js') !!}
@@ -18,6 +19,7 @@
     </head>
 
     <body>
+
         @if (!empty($closePopup))
             <script>
                 parent.disablePopup1();
@@ -62,13 +64,23 @@
                                 </label>
                                 <div>
                                     <span>
-                                        <select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
-                                            <option value=""></option>
-                                            <option value="Dr." {!! ($salutation == 'Dr.') ? " selected" : '' !!}>Dr.</option>
-                                            <option value="Mr." {!! ($salutation == 'Mr.') ? " selected" : '' !!}>Mr.</option>
-                                            <option value="Mrs." {!! ($salutation == 'Mrs.') ? " selected" : '' !!}>Mrs.</option>
-                                            <option value="Miss." {!! ($salutation == 'Miss.') ? " selected" : '' !!}>Miss.</option>
-                                        </select>
+                                        @if (!empty($salutation))
+                                            <select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;">
+                                                <option value=""></option>
+                                                <option value="Dr." {!! ($salutation == 'Dr.') ? " selected" : '' !!}>Dr.</option>
+                                                <option value="Mr." {!! ($salutation == 'Mr.') ? " selected" : '' !!}>Mr.</option>
+                                                <option value="Mrs." {!! ($salutation == 'Mrs.') ? " selected" : '' !!}>Mrs.</option>
+                                                <option value="Miss." {!! ($salutation == 'Miss.') ? " selected" : '' !!}>Miss.</option>
+                                            </select>
+                                        @else
+                                            <select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;">
+                                                <option value=""></option>
+                                                <option value="Dr.">Dr.</option>
+                                                <option value="Mr.">Mr.</option>
+                                                <option value="Mrs.">Mrs.</option>
+                                                <option value="Miss.">Miss.</option>
+                                            </select>
+                                        @endif
                                         <label for="salutation">Salutation</label>
                                     </span>
                                     <span>
@@ -152,7 +164,7 @@
                         </ul>
                     </td>
                 </tr>
-                 <tr> 
+                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
                             <li id="foli8" class="complex"> 
@@ -173,10 +185,17 @@
                         Status
                     </td>
                     <td valign="top" class="frmdata">
-                        <select name="status" class="tbox" tabindex="22">
-                            <option value="1" {!! ($status == 1) ? " selected" : '' !!}>Active</option>
-                            <option value="2" {!! ($status == 2) ? " selected" : '' !!}>In-Active</option>
-                        </select>
+                        @if (!empty($status))
+                            <select name="status" class="tbox" tabindex="22">
+                                <option value="1" {!! ($status == 1) ? " selected" : '' !!}>Active</option>
+                                <option value="2" {!! ($status == 2) ? " selected" : '' !!}>In-Active</option>
+                            </select>
+                        @else
+                            <select name="status" class="tbox" tabindex="22">
+                                <option value="1">Active</option>
+                                <option value="2">In-Active</option>
+                            </select>
+                        @endif
                         <br />&nbsp;
                     </td>
                 </tr>
@@ -187,11 +206,15 @@
                         </span><br />
                         <input type="hidden" name="sleeplabsub" value="1" />
                         <input type="hidden" name="ed" value="{!! $ed !!}" />
+                        <input type="hidden" name="_token" value="{!! csrf_token() !!}" id="token">
                         <a href="#" id="google_link" target="_blank" style="float:left;" />
                             Google
                         </a>
                         <input type="submit" value="{!! $butText !!} Sleep Lab" class="button" />
-                        <a style="float:right;" href="/manage/sleeplab/{!! $ed !!}" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" target="_parent" title="DELETE">
+                        <script type="text/javascript">
+                            var delid = '{!! $ed or '' !!}';
+                        </script>
+                        <a style="float:right;" href="#" class="dellink" target="_parent" title="DELETE" id="dellink";>
                             Delete
                         </a>
                     </td>

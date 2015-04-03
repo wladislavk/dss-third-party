@@ -11,6 +11,15 @@
 
 @section('content')
 
+@if (!empty($closePopup))
+    <script>
+        parent.disablePopup1();
+        loc = parent.window.location.href;
+        loc = loc.replace("#", "");
+        parent.window.location = loc;
+    </script>
+@endif
+
 <span class="admin_head">
     Manage Sleep Lab
 </span>
@@ -26,7 +35,7 @@
     @endforeach
 </div><br />
 <div align="center" class="red">
-    <b>{!! $message !!}</b>
+    <b>{!! $message or '' !!}</b>
 </div>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
     <input type="hidden" name="_token" id="token" value="{!! csrf_token() !!}">

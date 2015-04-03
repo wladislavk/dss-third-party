@@ -371,6 +371,8 @@ define('DSS_OFFICE_TYPE_FRONT', 1);
 define('DSS_ENROLLMENT_SUBMITTED', 0);
 define('DSS_ENROLLMENT_ACCEPTED', 1);
 define('DSS_ENROLLMENT_REJECTED', 2);
+define('DSS_ENROLLMENT_PDF_RECEIVED', 3);
+define('DSS_ENROLLMENT_PDF_SENT', 4);
 
 $dss_enrollment_labels = array();
 $dss_enrollment_labels[DSS_ENROLLMENT_SUBMITTED] = 'Submitted';

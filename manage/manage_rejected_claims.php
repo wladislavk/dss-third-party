@@ -99,7 +99,7 @@
 									echo $codes->{"category_label"}."<br />";
                                     echo $codes->{"status_code"}." - ";
                                     echo $codes->{"status_label"};
-                                    
+
                                     $acknowledgements = $r->{"acknowledgements"};
                                     foreach ($acknowledgements as $acknowledgement) {
                                         $codes = $acknowledgement->{"details"}->{"codes"};

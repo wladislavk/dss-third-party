@@ -1,7 +1,6 @@
 <?php
 namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\CompanyInterface;
@@ -30,7 +29,7 @@ class CompanyRepository implements CompanyInterface
     public function getBilling($where, $order = null)
     {
         $billing = DB::table(DB::raw('companies c'))
-            ->select('c.name', 'c.exclusive')
+            ->select('c.*')
             ->join(DB::raw('dental_users u'), 'c.id', '=', 'u.billing_company_id');
 
         foreach ($where as $attribute => $value) {

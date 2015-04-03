@@ -191,5 +191,20 @@ class UserServiceProvider extends ServiceProvider
             'Ds3\Contracts\QualifierInterface',
             'Ds3\Repositories\QualifierRepository'
         );
+
+        $this->app->bind(
+            'Ds3\Contracts\SupportResponseInterface',
+            'Ds3\Repositories\SupportResponseRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\SupportCategoryInterface',
+            'Ds3\Repositories\SupportCategoryRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\SupportAttachmentInterface',
+            'Ds3\Repositories\SupportAttachmentRepository'
+        );
     }
 }

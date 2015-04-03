@@ -9,12 +9,8 @@ class SupportCategory extends Model
     protected $fillable = ['title', 'status'];
     protected $primaryKey = 'id';
 
-    public static function get()
+    public function scopeNonActive($query)
     {
-        $supportCategory = SupportCategory::where('status', '=', 0)
-            ->orderBy('title')
-            ->get();
-
-        return $supportCategory;
+        return $query->where('status', '=', 0);
     }
 }

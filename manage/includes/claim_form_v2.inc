@@ -1590,8 +1590,8 @@ if($r['reference_id']){
                         <?php
     }
 }
-if(!$r['reference_id'] || !$w_r['response']){
- 	?>
+if(!$r['reference_id'] || !$w_r || !$w_r['response'] || $w_r['response']==''){
+        ?>
                 <h3>Claim Electronically filed on
                 <?php echo  $r['adddate']; ?></h3>
                         <?php
@@ -1601,9 +1601,9 @@ if(!$r['reference_id'] || !$w_r['response']){
                                 ?><p><strong>Success Response:</strong><br /><?php
                         }else{
                                 ?><p><strong>Error Response:</strong><br /><?php
-                                        $errors = $d->{"errors"}->{"messages"};
+                                        $errors = $d->{"errors"};
                                         foreach($errors as $error){
-                                          echo $error."<br />";
+                                          echo $error->{"message"}."<br />";
                                         }
                         }
                         ?>
@@ -1613,22 +1613,7 @@ if(!$r['reference_id'] || !$w_r['response']){
 
 <?php
 }
-
-
-
-
-
-
-
 ?>
-
-
-
-
-
-
-
-
 
 <?php
 if (!empty($is_back_office) || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && ($is_pending || $is_rejected) && $p_m_dss_file == '2')){ 

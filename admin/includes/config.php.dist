@@ -1,4 +1,4 @@
-<?
+<?php namespace Ds3\Libraries\Legacy; ?><?
 	session_start();
 	$con = mysql_connect("localhost","root","t3mp123") or trigger_error('connection failure', E_USER_ERROR);
 	$db = mysql_select_db("dentalsl_site_dev") or trigger_error('DB connection failure', E_USER_ERROR);

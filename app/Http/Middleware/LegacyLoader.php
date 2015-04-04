@@ -37,7 +37,7 @@ class LegacyLoader implements Middleware
 
             $loader->setRequestParams('get', $request->query());
 
-            if ($request->method() === 'post') {
+            if (strtolower($request->method()) === 'post') {
                 $loader->setRequestParams('post', $request->input());
             }
 

@@ -372,6 +372,7 @@ class Loader
     public static function injectBaseTag($buffer, $relativePath)
     {
         $baseHref = dirname("/$relativePath") . '/';
+        $baseHref = $baseHref !== '//' ?: '/';
         $buffer = preg_replace('@(<head[^>]*>)@i', '$1<base href="' . htmlspecialchars($baseHref) . '">', $buffer);
 
         return $buffer;

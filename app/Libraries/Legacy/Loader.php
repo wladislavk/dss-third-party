@@ -10,9 +10,9 @@ class Loader
             \s*<script[^>]*?>\s*
                 (?:alert\(.*?\);\s*)?
                 (?:
-                    window\.location\.replace\(\s*(?:["\'])(?<path>.+)\1\s*\);
+                    window\.location\.replace\(\s*(?:["\'])(?<replacePath>.+)\1\s*\);
                     |
-                    window\.location\s*=\s*(?:["\'])(?<path>.+)\1\s*;
+                    window\.location\s*=\s*(?:["\'])(?<assignPath>.+)\1\s*;
                 )
             \s*</script>\s*
         @isx';
@@ -169,6 +169,7 @@ class Loader
             unset($this->outputHeaders['location']);
             $response = new RedirectResponse($redirection, 302, $this->outputHeaders);
         } else {
+            $this->outputBuffer = self::injectBaseTag($this->outputBuffer, $relativePath);
             $response = new Response($this->outputBuffer, 200, $this->outputHeaders);
         }
 
@@ -339,7 +340,7 @@ class Loader
         if (!empty($headers['location'])) {
             $location = $headers['location'];
         } elseif (strpos($buffer, 'window.location') !== false && preg_match(self::$redirectRegex, $buffer, $match)) {
-            $location = $match['path'];
+            $location = $match['replacePath'] ?: $match['assignPath'];
         }
 
         if (strlen($location)) {
@@ -352,8 +353,27 @@ class Loader
             } elseif (!preg_match('@://|^/@', $location)) {
                 $location = dirname("/$relativePath") . "/{$headers['location']}";
             }
+
+            // Remove index.php
+            $location = preg_replace('@^(/.*)index\.php$@', '$1', $location);
+
+            // Remove .php extension
+            $location = preg_replace('@^(/.*)\.php$@', '$1', $location);
         }
 
         return $location;
+    }
+
+    /**
+     * @param string $buffer Output buffer from the legacy file
+     * @param string $relativePath
+     * @return string Modified buffer (if applicable)
+     */
+    public static function injectBaseTag($buffer, $relativePath)
+    {
+        $baseHref = dirname("/$relativePath") . '/';
+        $buffer = preg_replace('@(<head[^>]*>)@i', '$1<base href="' . htmlspecialchars($baseHref) . '">', $buffer);
+
+        return $buffer;
     }
 }

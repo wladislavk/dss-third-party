@@ -378,5 +378,7 @@ $dss_enrollment_labels = array();
 $dss_enrollment_labels[DSS_ENROLLMENT_SUBMITTED] = 'Submitted';
 $dss_enrollment_labels[DSS_ENROLLMENT_ACCEPTED] = 'Accepted';
 $dss_enrollment_labels[DSS_ENROLLMENT_REJECTED] = 'Rejected';
+$dss_enrollment_labels[DSS_ENROLLMENT_PDF_RECEIVED] = 'PDF Received';
+$dss_enrollment_labels[DSS_ENROLLMENT_PDF_SENT] = 'PDF Sent';
 
 define('DSS_DEFAULT_ELIGIBLE_API_KEY', '33b2e3a5-8642-1285-d573-07a22f8a15b4');

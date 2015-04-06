@@ -509,34 +509,7 @@ $qualifier_my = $db->getResults($qualifier_sql);?>
         </a>
         <br />
         <?php
-        //Check if user has pending VOB
-        $vob_sql = "SELECT "
-            . "  ip.* "
-            . "FROM "
-            . "  dental_insurance_preauth ip "
-            . " JOIN dental_patients p on p.patientid = ip.patient_id "
-            . "WHERE "
-            . "  (p.p_m_ins_co = '" . $themyarray["contactid"] . "' "
-            . "  OR p.s_m_ins_co = '" . $themyarray["contactid"] . "') "
-            . "  AND (ip.status=" . DSS_PREAUTH_PENDING . " "
-            . "  OR ip.status=" . DSS_PREAUTH_PREAUTH_PENDING . ") "
-            . "ORDER BY "
-            . "  ip.front_office_request_date DESC "
-            . "LIMIT 1";
-        $vob_my = mysql_query($vob_sql);
-        $vob_myarray = mysql_fetch_assoc($vob_my);
-        $pending_vob = mysql_num_rows($vob_my);
-        $pending_vob_status = $vob_myarray['status'];
-
-        if ($pending_vob){
-            ?>
-            <a style="float:right;" href="manage_contact.php?delid=<?= $themyarray["contactid"]; ?>"
-               onclick="javascript: return confirm('Warning! There is currently a patient with this insurance company that has a pending VOB. Deleting this insurance company will cause the VOB to fail. Do you want to proceed?');"
-               class="dellink" target="_parent" title="DELETE">
-                Delete
-            </a>
-
-        <?php }elseif (get_contact_sent_letters($themyarray["contactid"]) > 0){ ?>
+        if(get_contact_sent_letters($themyarray["contactid"]) > 0){ ?>
         <a style="float:right;" href="manage_contact.php?inactiveid=<?php echo $themyarray["contactid"];?>" onclick="javascript: return confirm('Letters have previously been sent to this contact; therefore, for medical record purposes the contact cannot be deleted. This contact now will be marked as INACTIVE in your software and will no longer display in search results. Any pending letters associated with this contact will be deleted.');" class="dellink" target="_parent" title="DELETE">
             <input type="submit" value=" <?=$but_text?> Contact" class="button" />
             <?php if($themyarray["contactid"] != ''){ ?>

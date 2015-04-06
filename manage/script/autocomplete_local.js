@@ -12,7 +12,9 @@
 				local_data[i]['payer_id'] = cpl[i]['payer_id'];
 				local_data[i]['payer_name'] = cpl[i]['names'].join(',');
 				local_data[i]['enrollment_required'] = cpl[i]['enrollment_required'];
+				local_data[i]['enrollment_mandatory_fields'] = cpl[i]['supported_endpoints'][0].enrollment_mandatory_fields;
 			}
+				console.log(local_data[0]['enrollment_mandatory_fields'].split());
 		});
                 $('#'+in_field).keyup(function(e) {
 				$('#'+id_field).val('');
@@ -72,7 +74,8 @@
 				  data[r][0] = local_data[j].payer_id.replace(/(\r\n|\n|\r)/gm,"")+"-"+local_data[j].payer_name.replace(/(\r\n|\n|\r)/gm,"");
 				}
 				data[r][1] = local_data[j].payer_id.replace(/(\r\n|\n|\r)/gm,"")+" - "+local_data[j].payer_name.replace(/(\r\n|\n|\r)/gm,"");
-				data[r][2] = local_data[j].enrollment_required;
+				data[r][2] = local_data[j].onrollment_required;
+				data[r][3] = local_data[j].enrollment_mandatory_fields;
 				r++;
 			}
 		}
@@ -124,7 +127,7 @@
 						.addClass('json_patient')
 						.data('rowid', data[i][0])
 						.data('rowsource', data[i][0])
-						.attr("onclick", "update_referredby_local('"+in_field+"','"+(name.replace(/'/g, "\\'"))+"', '"+id_field+"', '"+data[i][0]+"', '"+source+"', '"+data[i][1]+"','"+hint+"','"+data[i][2]+"', '"+check_enrollment+"', '"+npi+"','"+office_type+"')");
+						.attr("onclick", "update_referredby_local('"+in_field+"','"+(name.replace(/'/g, "\\'"))+"', '"+id_field+"', '"+data[i][0]+"', '"+source+"', '"+data[i][1]+"','"+hint+"','"+data[i][2]+"', '"+check_enrollment+"', '"+npi+"','"+office_type+"', '"+data[i][3]+"')");
 				    }
                                         template_list_ref_local(newLi, name)
                                               .appendTo('#'+hint+' ul')
@@ -139,7 +142,16 @@
                 li.html(val);
                 return li;
         }
-function update_referredby_local(in_field, name, id_field, id, source, t, hint, enrollment, check_enrollment, npi, office_type){
+function update_referredby_local(in_field, name, id_field, id, source, t, hint, enrollment, check_enrollment, npi, office_type, enrollment_mandatory_fields){
+
+  if(enrollment_mandatory_fields != ''){
+	var emf = enrollment_mandatory_fields.split(',');
+	$('.formControl').removeClass('required');
+    for( var i = 0; i < emf.length; i++){
+	$('#'+emf[i]).addClass('required');
+    }
+  }
+
   if(enrollment=='true' && check_enrollment=='true'){
                                       $.ajax({
                                         url: "/manage/includes/check_enrollment.php",

@@ -42,3 +42,7 @@
 .list_hover {
 	background: #ddd;
 }
+
+.required{
+  border: solid 1px red;
+}

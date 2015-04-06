@@ -15,7 +15,6 @@ if (typeof String.prototype.trim !== 'function') {
   var local_pat_data = new Array();
 
   $(document).ready(function() {
-      $('#patient_search').keypress(function(event) { return event.keyCode != 13; });
     $('#patient_search').keyup(function(e) {
       console.log('START = '+$('#patient_search').val()+"|"+(new Date().getTime()));
 

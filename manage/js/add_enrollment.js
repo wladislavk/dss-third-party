@@ -1,8 +1,3 @@
-$(document).ready(function(){
-	setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', null, null, false);
-  $('#transaction_type').on("change", update_list);
-});
-
 $('#provider_select').change(function(event){
   var json = $(this).val();
   var r = $.parseJSON(json);

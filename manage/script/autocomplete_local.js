@@ -12,9 +12,10 @@
 				local_data[i]['payer_id'] = cpl[i]['payer_id'];
 				local_data[i]['payer_name'] = cpl[i]['names'].join(',');
 				local_data[i]['enrollment_required'] = cpl[i]['enrollment_required'];
-				local_data[i]['enrollment_mandatory_fields'] = cpl[i]['supported_endpoints'][0].enrollment_mandatory_fields;
+				if(hinttype == 'ins_payer'){ 
+					local_data[i]['enrollment_mandatory_fields'] = cpl[i]['supported_endpoints'][0].enrollment_mandatory_fields;
+				}
 			}
-				console.log(local_data[0]['enrollment_mandatory_fields'].split());
 		});
                 $('#'+in_field).keyup(function(e) {
 				$('#'+id_field).val('');

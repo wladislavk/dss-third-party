@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
 include_once 'includes/claim_functions.php';
@@ -198,7 +199,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $other_insured_insurance_plan = $_POST['other_payers'][0]['subscriber']['group_name'];
         $other_payer = $_POST['other_payer'];
         $responsibility_sequence = $_POST['other_payers'][0]['responsibility_sequence'];
-        if($other_payer){
+        if($other_payer == "true"){
             $another_plan = "YES";
         }
         else 
@@ -401,7 +402,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $reject_reason = $_POST['reject_reason'];
         $insurance_type_arr = $insurance_type;
 
-
+                $s_m_eligible_payer_id = $_POST['other_payers'][0]['subscriber']['id'];
                 $p_m_eligible_payer_id = $_POST['payer']['id'];
                 $p_m_eligible_payer_name = $_POST['payer']['name'];
 
@@ -642,7 +643,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 billing_provider_b_other = '".s_for($billing_provider_b_other)."',
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
                 p_m_eligible_payer_name = '".mysqli_real_escape_string($con, $p_m_eligible_payer_name)."',
-                s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
+                s_m_eligible_payer_id = '".mysqli_real_escape_string($con, $s_m_eligible_payer_id)."',
                 s_m_eligible_payer_name = '".mysqli_real_escape_string($con, $s_m_eligible_payer_name)."',
                 rendering_provider_entity_1  = '".mysqli_real_escape_string($con, $rendering_provider_entity_1)."',
                 rendering_provider_first_name_1  = '".mysqli_real_escape_string($con, $rendering_provider_first_name_1)."',

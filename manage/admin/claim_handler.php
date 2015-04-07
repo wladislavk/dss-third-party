@@ -196,7 +196,12 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $insured_dob = $_POST['subscriber']['dob'];
         $insured_sex = $_POST['subscriber']['gender'];
         $insured_insurance_plan = $_POST['subscriber']['group_name'];
-        $other_insured_insurance_plan = $_POST['other_payers'][0]['subscriber']['group_name'];
+        $other_insured_insurance_plan = $_POST['other_payers'][0]['name'];
+
+        $other_insured_address = $_POST['other_payers'][0]['subscriber']['address']['street_line_1'];
+        $other_insured_city = $_POST['other_payers'][0]['subscriber']['address']['city'];
+        $other_insured_state = $_POST['other_payers'][0]['subscriber']['address']['state'];
+        $other_insured_zip = $_POST['other_payers'][0]['subscriber']['address']['zip'];
         $other_payer = $_POST['other_payer'];
         $responsibility_sequence = $_POST['other_payers'][0]['responsibility_sequence'];
         if($other_payer == "true"){
@@ -466,6 +471,10 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 other_insured_firstname = '".s_for($other_insured_firstname)."',
                 other_insured_lastname = '".s_for($other_insured_lastname)."',
                 other_insured_middle = '".s_for($other_insured_middle)."',
+                other_insured_address = '".s_for($other_insured_address)."',
+                other_insured_city = '".s_for($other_insured_city)."',
+                other_insured_state = '".s_for($other_insured_state)."',
+                other_insured_zip = '".s_for($other_insured_zip)."',
                 insured_policy_group_feca = '".s_for($insured_policy_group_feca)."',
                 other_insured_policy_group_feca = '".s_for($other_insured_policy_group_feca)."',
                 insured_dob = '".s_for($insured_dob)."',

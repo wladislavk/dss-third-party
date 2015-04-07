@@ -51,15 +51,15 @@ include_once '../includes/claim_functions.php';
     $other_insured_lastname = st($pat_myarray['s_m_partylname']);
     $other_insured_middle = st($pat_myarray['s_m_partymname']);
       if ($pat_myarray['s_m_same_address'] == 1){
-          $insured_address = st($pat_myarray['add1']);
-          $insured_city = st($pat_myarray['city']);
-          $insured_state = st($pat_myarray['state']);
-          $insured_zip = st($pat_myarray['zip']);
+          $other_insured_address = st($pat_myarray['add1']);
+          $other_insured_city = st($pat_myarray['city']);
+          $other_insured_state = st($pat_myarray['state']);
+          $other_insured_zip = st($pat_myarray['zip']);
       } else {
-          $insured_address = st($pat_myarray['s_m_address']);
-          $insured_city = st($pat_myarray['s_m_city']);
-          $insured_state = st($pat_myarray['s_m_state']);
-          $insured_zip = st($pat_myarray['s_m_zip']);
+          $other_insured_address = st($pat_myarray['s_m_address']);
+          $other_insured_city = st($pat_myarray['s_m_city']);
+          $other_insured_state = st($pat_myarray['s_m_state']);
+          $other_insured_zip = st($pat_myarray['s_m_zip']);
       }
     $insured_id_number = st($pat_myarray['p_m_ins_id']);
     $insured_dob = st($pat_myarray['ins_dob']);
@@ -118,6 +118,10 @@ include_once '../includes/claim_functions.php';
       $other_insured_sex = st($myarray['insured_sex']);
       $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
       $other_insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
+      $other_insured_address = st($myarray['insured_address']);
+      $other_insured_city = st($myarray['insured_city']);
+      $other_insured_state = st($myarray['insured_state']);
+      $other_insured_zip = st($myarray['insured_zip']);
       $insured_id_number = st($myarray['other_insured_id_number']);
       $insured_firstname = st($myarray['other_insured_firstname']);
       $insured_middle = st($myarray['other_insured_middle']);
@@ -144,6 +148,10 @@ include_once '../includes/claim_functions.php';
       $other_insured_sex = st($myarray['other_insured_sex']);
       $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
       $other_insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
+      $other_insured_address = st($myarray['other_insured_address']);
+      $other_insured_city = st($myarray['other_insured_city']);
+      $other_insured_state = st($myarray['other_insured_state']);
+      $other_insured_zip = st($myarray['other_insured_zip']);
       $insured_id_number = st($myarray['insured_id_number']);
       $insured_firstname = st($myarray['insured_firstname']);
       $insured_middle = st($myarray['insured_middle']);
@@ -666,19 +674,14 @@ if (!$another_plan == "") {
     ?>
 
     <?php if($is_secondary) { ?>
-      $('input[name="payer[id]"]').val("<?php echo  $s_m_eligible_payer_id;?>");
-      $('input[name="payer[name]"]').val("<?php echo  $s_m_eligible_payer_name;?>");
-      $('input[name="other_payers[0][name]"]').val("<?= $p_m_eligible_payer_name;?>");
+      $('input[name="payer[id]"]').val("<?php echo  $other_s_m_eligible_payer_id;?>");
+      $('input[name="payer[name]"]').val("<?php echo  $other_s_m_eligible_payer_name;?>");
+      $('input[name="other_payers[0][name]"]').val("<?= $other_p_m_eligible_payer_name;?>");
     <?php } else { ?>
-      $('input[name="payer[id]"]').val("<?php echo  $p_m_eligible_payer_id;?>");
-      $('input[name="payer[name]"]').val("<?php echo  $p_m_eligible_payer_name;?>");
-      $('input[name="other_payers[0][name]"]').val("<?= $p_m_eligible_payer_name;?>");
-      $('input[name="other_payers[0][subscriber][id]"]').val("<?= $p_m_eligible_payer_id;?>");
-    <?php }else{ ?>
-      $('input[name="payer[id]"]').val("<?= $p_m_eligible_payer_id;?>");
-      $('input[name="payer[name]"]').val("<?= $p_m_eligible_payer_name;?>");
-      $('input[name="other_payers[0][name]"]').val("<?= $s_m_eligible_payer_name;?>");
-      $('input[name="other_payers[0][subscriber][id]"]').val("<?= $s_m_eligible_payer_id;?>");
+      $('input[name="payer[id]"]').val("<?php echo  $other_p_m_eligible_payer_id;?>");
+      $('input[name="payer[name]"]').val("<?php echo  $other_p_m_eligible_payer_name;?>");
+      $('input[name="other_payers[0][name]"]').val("<?= $other_p_m_eligible_payer_name;?>");
+      $('input[name="other_payers[0][subscriber][id]"]').val("<?= $other_p_m_eligible_payer_id;?>");
     <?php } ?>
 
     $('input[name="payer[address][street_line_1]"]').val("<?php echo  $inscoinfo['add1'];?>");
@@ -725,6 +728,11 @@ if (!$another_plan == "") {
     $('input[name="other_payers[0][subscriber][middle_name]"]').val("<?= $other_insured_middle;?>");
     $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
     $('input[name="other_payers[0][subscriber][group_name]"]').val("<?= $other_insured_insurance_plan;?>");
+    $('input[name="other_payers[0][subscriber][address][street_line_1]"]').val("<?= $other_insured_address;?>");
+    $('input[name="other_payers[0][subscriber][address][city]"]').val("<?= $other_insured_city;?>");
+    $('input[name="other_payers[0][subscriber][address][state]"]').val("<?= $other_insured_state;?>");
+    $('input[name="other_payers[0][subscriber][address][zip]"]').val("<?= $other_insured_zip;?>");
+
      <?php if($patient_relation_other_insured == 'Spouse'){ ?>
       $('input[name="other_payers[0][subscriber][relationship]"]').val("01");
     <?php }elseif($patient_relation_other_insured == 'Child'){ ?>
@@ -741,13 +749,16 @@ if (!$another_plan == "") {
         $seq='P';
       } else if($responsibility_sequence == "") {
         $seq='S';
-      } else{
+      } else  if ($responsibility_sequence != ""){
         $seq = $responsibility_sequence;
       }
+      if($seq){
     ?>
       $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $seq?>");
 
-      <?php if($employment == "YES") { ?>
+      <?php
+      }
+      if($employment == "YES") { ?>
       $('input[name="claim[related_to_employment]"][value="true"]').attr("checked", "checked");
     <?php } elseif($employment == "NO") { ?>
       $('input[name="claim[related_to_employment]"][value="false"]').attr("checked", "checked");

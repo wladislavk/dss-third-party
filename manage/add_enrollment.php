@@ -60,7 +60,8 @@
       	"city" => $_POST['city'],
       	"state" => $_POST['state'],
       	"zip" => $_POST['zip'],
-      	"npi" => $_POST[    'npi'],
+      	"npi" => $_POST['npi'],
+        "ptan" => $_POST['ptan'],
       	"authorized_signer" => array(
       		"first_name" => $_POST['first_name'],
       		"last_name" => $_POST['last_name'],
@@ -207,9 +208,9 @@
                 ?>
                 <?php if($r['docid']==0){
                   $snpi = $r['service_npi'];
-      		        $sjson ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
+      		        $sjson ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","medicare_ptan":"'.$r['medicare_ptan'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
                 }
-      		      $json ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
+      		      $json ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","medicare_ptan":"'.$r['medicare_ptan'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
               ?>
                 <option value='<?php echo  $json; ?>'><?php echo  $r['npi']; ?> - <?php echo  $r['first_name']." ".$r['last_name']; ?></option>
               <?php } ?>
@@ -249,6 +250,10 @@
     <div>
       <label>NPI</label>
     	<input type="text" id="npi" name="npi" value="<?php echo  $r['npi']; ?>" readonly="readonly" />
+    </div>
+    <div>
+        <label>PTAN (Medicare)</label>
+        <input type="text" id="ptan" name="ptan" value="<?= $r['medicare_ptan']; ?>" readonly="readonly" />
     </div>
     <div>
       <label>First Name</label>

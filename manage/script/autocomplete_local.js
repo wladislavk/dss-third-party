@@ -150,7 +150,11 @@ function update_referredby_local(in_field, name, id_field, id, source, t, hint, 
 	$('.formControl').removeClass('required');
     for( var i = 0; i < emf.length; i++){
 	$('#'+emf[i]).addClass('required');
+	if(emf[i] == 'medicaid_id'){
+		alert('Medicaid enrollment is not supported at this time. Please open a support ticket for further assistance.');	
+	}
     }
+   
   }
 
   if(enrollment=='true' && check_enrollment=='true'){

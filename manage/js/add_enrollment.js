@@ -14,6 +14,7 @@ $('#provider_select').change(function(event){
   $('#state').val(r.state);
   $('#zip').val(r.zip);
   $('#npi').val(r.npi);
+  $('#ptan').val(r.medicare_ptan);
   $('#first_name').val(r.first_name);
   $('#last_name').val(r.last_name);
   $('#contact_number').val(r.contact_number);

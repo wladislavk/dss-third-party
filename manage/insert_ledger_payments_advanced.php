@@ -58,7 +58,7 @@
                             '".mysqli_real_escape_string($con,$_POST['copay'])."',
                             '".mysqli_real_escape_string($con,$_POST['coins'])."',
                             '".mysqli_real_escape_string($con,$_POST['overpaid'])."',
-                            '".mysqli_real_escape_string($con,$_POST['followup'])."',
+                            '".date('Y-m-d', strtotime($_POST['followup']))."',
                             '".mysqli_real_escape_string($con,$_POST['note'])."'
                             ),";
                     }

@@ -60,7 +60,7 @@
                     <th>Description</th>
                     <th>Paid By</th>
                     <th>Payment Type</th>
-                    <th>Amount</th>
+                    <th>Billed Amount</th>
                     <th>Allowed</th>
                       <th>Paid Amount</th>
                     <th>Ins. Paid</th>
@@ -131,9 +131,9 @@
                         <tr>
                             <td>Service Date</td>
                             <td>Description</td>
-                            <td>Amount</td>
+                            <td>Billled Amount</td>
                             <td>Allowed</td>
-                            <td>Paid Amount</td>
+                            <td>Paid Amount <span class="req">*</span><</td>
                             <td>Ins. Paid</td>
                             <td>Deductible</td>
                             <td>Copay</td>
@@ -141,7 +141,6 @@
                             <td>Overpaid</td>
                             <td>Follow-up</td>
                             <td>Payment Date <span class="req">*</span></td>
-                            <td>Paid Amount <span class="req">*</span></td>
                             <td>Note</td>
                         </tr>
                         <?php
@@ -155,14 +154,14 @@
                                     <td><?php echo  $row['description']; ?></td>
                                     <td>$<?php echo  $row['amount']; ?></td>
                                     <td><input class="dollar_input" type="text" name="allowed" value="<?php echo  (!empty($row['allowed']) ? $row['allowed'] : ''); ?>" /></td>
+                                    <td><input class="payment_amount dollar_input" type="text" name="amount_<?= $row['ledgerid']; ?>" /></td>
                                     <td><input class="dollar_input" type="text" name="ins_paid" value="<?php echo  (!empty($row['ins_paid']) ? $row['ins_paid'] : ''); ?>" /></td>
                                     <td><input class="dollar_input" type="text" name="deductible" value="<?php echo  (!empty($row['deductible']) ? $row['deductible'] : ''); ?>" /></td>
                                     <td><input class="dollar_input" type="text" name="copay" value="<?php echo  (!empty($row['copay']) ? $row['copay'] : ''); ?>" /></td>
                                     <td><input class="dollar_input" type="text" name="coins" value="<?php echo  (!empty($row['coins']) ? $row['coins'] : ''); ?>" /></td>
                                     <td><input class="dollar_input" type="text" name="overpaid" value="<?php echo  (!empty($row['overpaid']) ? $row['overpaid'] : ''); ?>" /></td>
-                                    <td><input class="dollar_input" type="text" name="followup" value="<?php echo  (!empty($row['followup']) ? $row['followup'] : ''); ?>" /></td>
-                                    <td><input class="dollar_input" type="text" id="payment_date_<?php echo  (!empty($row['ledgerid']) ? $row['ledgerid'] : ''); ?>" name="payment_date_<?php echo  (!empty($row['ledgerid']) ? $row['ledgerid'] : ''); ?>" class="calendar_top" value="<?php echo  date('m/d/Y'); ?>" /></td>
-                                    <td><input class="payment_amount dollar_input" type="text" name="amount_<?php echo  $row['ledgerid']; ?>" /></td>
+                                    <td><input class="calendar_top" type="text" id="followup_<?= $row['ledgerid']; ?>" name="followup" value="<?= $row['followup']; ?>" /></td>
+                                    <td><input class="calendar_top" type="text" id="payment_date_<?= $row['ledgerid']; ?>" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></td>
                                     <td><input type="text" name="note" value="<?php echo  (!empty($row['note']) ? $row['note'] : ''); ?>" /></td>
                                 </tr>
                         <?php

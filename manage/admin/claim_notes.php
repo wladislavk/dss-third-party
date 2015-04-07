@@ -81,7 +81,7 @@ $c = mysqli_fetch_assoc($c_q);
 
 <div style="clear:both;"></div>
 <?php
-$status_sql = "SELECT status FROM dental_insurance
+$status_sql = "SELECT status, primary_claim_id FROM dental_insurance
                 WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['id'])."'";
 $status_q = mysqli_query($con,$status_sql);
 $status_r = mysqli_fetch_assoc($status_q);
@@ -94,7 +94,13 @@ $is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE
 $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
 $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED);
 
-$sql = "select * from dental_insurance where insuranceid='".$_GET['id']."' and patientid='".$_GET['pid']."'";
+//currently if secondary it just pulls info from primary
+//Need to change eventually to pull info from secondary
+if($status_r['primary_claim_id']){
+    $sql = "select * from dental_insurance where primary_claim_id='".$_GET['id']."' and patientid='".$_GET['pid']."'";
+}else{
+    $sql = "select * from dental_insurance where insuranceid='".$_GET['id']."' and patientid='".$_GET['pid']."'";
+}
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -469,7 +475,7 @@ if ($is_pending) {
 <div style="display:block; float:left; width:48%;">
 <h3>Secondary</h3>
 <?php
-  if(!empty($myarray['has_s_m_ins']) && $myarray['has_s_m_ins']!='Yes'){
+  if(!empty($pat_myarray['has_s_m_ins']) && $pat_myarray['has_s_m_ins']!='Yes'){
 ?>
   None
 <?php }else{ ?>

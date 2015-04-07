@@ -378,7 +378,7 @@ include_once '../includes/claim_functions.php';
     $status = st($myarray['status']);
   }
 
-if (!$another_plan == "") {
+if ($another_plan == "") {
     if ($pat_myarray['p_m_ins_type'] != 1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] == 1) {
         $another_plan = 'YES';
     } else {
@@ -674,15 +674,16 @@ if (!$another_plan == "") {
     ?>
 
     <?php if($is_secondary) { ?>
-      $('input[name="payer[id]"]').val("<?php echo  $other_s_m_eligible_payer_id;?>");
-      $('input[name="payer[name]"]').val("<?php echo  $other_s_m_eligible_payer_name;?>");
-      $('input[name="other_payers[0][name]"]').val("<?= $other_p_m_eligible_payer_name;?>");
-    <?php } else { ?>
-      $('input[name="payer[id]"]').val("<?php echo  $other_p_m_eligible_payer_id;?>");
-      $('input[name="payer[name]"]').val("<?php echo  $other_p_m_eligible_payer_name;?>");
-      $('input[name="other_payers[0][name]"]').val("<?= $other_p_m_eligible_payer_name;?>");
-      $('input[name="other_payers[0][subscriber][id]"]').val("<?= $other_p_m_eligible_payer_id;?>");
-    <?php } ?>
+      $('input[name="payer[id]"]').val("<?= $other_insured_insurance_plan;?>");
+      $('input[name="payer[name]"]').val("<?= $other_insured_policy_group_feca;?>");
+      $('input[name="other_payers[0][name]"]').val("<?= $insured_insurance_plan;?>");
+      $('input[name="other_payers[0][subscriber][id]"]').val("<?= $insured_policy_group_feca;?>");
+    <?php }else{ ?>
+      $('input[name="payer[id]"]').val("<?= $insured_policy_group_feca;?>");
+      $('input[name="payer[name]"]').val("<?= $insured_insurance_plan;?>");
+      $('input[name="other_payers[0][name]"]').val("<?= $other_insured_insurance_plan;?>");
+      $('input[name="other_payers[0][subscriber][id]"]').val("<?= $other_insured_policy_group_feca;?>");
+      <?php } ?>
 
     $('input[name="payer[address][street_line_1]"]').val("<?php echo  $inscoinfo['add1'];?>");
     $('input[name="payer[address][street_line_2]"]').val("<?php echo  $inscoinfo['add2'];?>");

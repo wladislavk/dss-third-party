@@ -17,10 +17,10 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
 
 
 		$ins_sql = "insert into dental_claim_notes set 
-				claim_id = '".mysql_real_escape_string($_POST['claim_id'])."',
-				note = '".mysql_real_escape_string($_POST['note'])."',
+				claim_id = '".mysqli_real_escape_string($con, $_POST['claim_id'])."',
+				note = '".mysqli_real_escape_string($con, $_POST['note'])."',
 				create_type = '0',
-				creator_id = '".mysql_real_escape_string($_SESSION['adminuserid'])."',
+				creator_id = '".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysqli_query($con,$ins_sql) or die($ins_sql.mysql_error());
 		$n_id = mysql_insert_id();
@@ -32,8 +32,8 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
                   move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 
                   $a_sql = "INSERT INTO dental_claim_note_attachment SET
-                                filename = '".mysql_real_escape_string($attachment)."',
-                                note_id=".mysql_real_escape_string($n_id);
+                                filename = '".mysqli_real_escape_string($con, $attachment)."',
+                                note_id=".mysqli_real_escape_string($con, $n_id);
                   mysqli_query($con,$a_sql);
                 }
                 }
@@ -52,8 +52,8 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
 		die();
   }else{
                 $up_sql = "update dental_claim_notes set 
-                                note = '".mysql_real_escape_string($_POST['note'])."'
-                                WHERE id='".mysql_real_escape_string($_POST['nid'])."'";
+                                note = '".mysqli_real_escape_string($con, $_POST['note'])."'
+                                WHERE id='".mysqli_real_escape_string($con, $_POST['nid'])."'";
                 mysqli_query($con,$up_sql) or die($up_sql.mysql_error());
 		$n_id = $_POST['nid'];
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
@@ -63,8 +63,8 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
                   move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 
                   $a_sql = "INSERT INTO dental_claim_note_attachment SET
-                                filename = '".mysql_real_escape_string($attachment)."',
-                                note_id=".mysql_real_escape_string($n_id);
+                                filename = '".mysqli_real_escape_string($con, $attachment)."',
+                                note_id=".mysqli_real_escape_string($con, $n_id);
                   mysqli_query($con,$a_sql);
                 }
                 }

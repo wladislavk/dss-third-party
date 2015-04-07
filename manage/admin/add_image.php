@@ -32,7 +32,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
   $copyreqdate = s_for($_POST['copyreqdate']);
   $sleeplab = s_for($_POST['sleeplab']);
   $patientid = $_GET['pid'];
-  $doc_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysql_real_escape_string($patientid)."'";
+  $doc_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $patientid)."'";
   $doc_q = mysqli_query($con,$doc_sql);
   $doc = mysqli_fetch_assoc($doc_q);
                 if($_FILES["ss_file"]["name"] <> '')

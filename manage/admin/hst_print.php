@@ -41,7 +41,7 @@ $sql = "SELECT "
 
 }
 
-$sql .= " WHERE hst.id='".mysql_real_escape_string($_GET['hst'])."'";
+$sql .= " WHERE hst.id='".mysqli_real_escape_string($con, $_GET['hst'])."'";
 
 $q = mysql_query($sql);
 $hst = mysql_fetch_assoc($q);

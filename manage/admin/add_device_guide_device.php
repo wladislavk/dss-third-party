@@ -10,7 +10,7 @@ if($_POST["devsub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_device_guide_devices set 
-				name = '".mysql_real_escape_string($_POST["name"])."'
+				name = '".mysqli_real_escape_string($con, $_POST["name"])."'
 			where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
@@ -19,21 +19,21 @@ if($_POST["devsub"] == 1)
   while($set_r = mysql_fetch_assoc($set_q)){
     $val = $_POST['setting_'.$set_r['id']];
     $check_sql = "SELECT id FROM dental_device_guide_device_setting ds 
-	WHERE device_id='".mysql_real_escape_string($_POST['ed'])."' AND setting_id='".mysql_real_escape_string($set_r['id'])."'";
+	WHERE device_id='".mysqli_real_escape_string($con, $_POST['ed'])."' AND setting_id='".mysqli_real_escape_string($con, $set_r['id'])."'";
     $check_q = mysql_query($check_sql);
     $check_r = mysql_fetch_assoc($check_q);
     if($check_r['id'] == ''){
     $s = "INSERT INTO dental_device_guide_device_setting SET
-        device_id = '".mysql_real_escape_string($_POST['ed'])."',
-        setting_id = '".mysql_real_escape_string($set_r['id'])."',
-        value = '".mysql_real_escape_string($val)."',
+        device_id = '".mysqli_real_escape_string($con, $_POST['ed'])."',
+        setting_id = '".mysqli_real_escape_string($con, $set_r['id'])."',
+        value = '".mysqli_real_escape_string($con, $val)."',
                                 adddate=now(),
                                 ip_address='".$_SERVER['REMOTE_ADDR']."'";
     mysql_query($s);
     }else{
       $s = "UPDATE dental_device_guide_device_setting SET
-        value = '".mysql_real_escape_string($val)."'
-	WHERE id='".mysql_real_escape_string($check_r['id'])."'";
+        value = '".mysqli_real_escape_string($con, $val)."'
+	WHERE id='".mysqli_real_escape_string($con, $check_r['id'])."'";
       mysql_query($s);
     }
   }
@@ -54,7 +54,7 @@ if($_POST["devsub"] == 1)
 
 
 			$ins_sql = "insert into dental_device_guide_devices set 
-                                name = '".mysql_real_escape_string($_POST["name"])."',
+                                name = '".mysqli_real_escape_string($con, $_POST["name"])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
@@ -65,9 +65,9 @@ if($_POST["devsub"] == 1)
   while($set_r = mysql_fetch_assoc($set_q)){
     $val = $_POST['setting_'.$set_r['id']];
     $s = "INSERT INTO dental_device_guide_device_setting SET
-	device_id = '".mysql_real_escape_string($d_id)."',
-	setting_id = '".mysql_real_escape_string($set_r['id'])."',
-	value = '".mysql_real_escape_string($val)."',
+	device_id = '".mysqli_real_escape_string($con, $d_id)."',
+	setting_id = '".mysqli_real_escape_string($con, $set_r['id'])."',
+	value = '".mysqli_real_escape_string($con, $val)."',
                                 adddate=now(),
                                 ip_address='".$_SERVER['REMOTE_ADDR']."'";
     mysql_query($s);
@@ -140,7 +140,7 @@ if($_POST["devsub"] == 1)
         </tr>
 <?php
   $set_sql = "SELECT s.*, ds.value FROM dental_device_guide_settings s
-		LEFT JOIN dental_device_guide_device_setting ds ON s.id = ds.setting_id AND ds.device_id='".mysql_real_escape_string($_GET['ed'])."'";
+		LEFT JOIN dental_device_guide_device_setting ds ON s.id = ds.setting_id AND ds.device_id='".mysqli_real_escape_string($con, $_GET['ed'])."'";
   $set_q = mysql_query($set_sql);
   while($set_r = mysql_fetch_assoc($set_q)){ 
     ?>

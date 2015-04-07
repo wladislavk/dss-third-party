@@ -40,11 +40,11 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
 	} else {
 		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for(ucfirst($_POST["firstname"]))."', lastname = '".s_for(ucfirst($_POST["lastname"]))."', middlename = '".s_for(ucfirst($_POST["middlename"]))."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$_POST['preferredcontact']."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', dea_number = '".s_for($_POST["dea_number"])."'";
 		$rid = $db->getInsertId($ins_sql);
-		$let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+		$let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 		error_log($let_sql);
 		$let_r = $db->getRow($let_sql);
 		if($let_r['use_letters'] && $let_r['intro_letters']){
-			$dct_sql = "SELECT physician from dental_contacttype WHERE contacttypeid=".mysql_real_escape_string($_POST["contacttypeid"]);
+			$dct_sql = "SELECT physician from dental_contacttype WHERE contacttypeid=".mysqli_real_escape_string($con, $_POST["contacttypeid"]);
 			$dct_r = $db->getRow($dct_sql);
 	        if($dct_r['physician']==1){	
 				//DO NOT CREATE LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
@@ -210,7 +210,6 @@ if($themyarray["contactid"] != '') {
           }
         }
 
-<?php 
 if(!empty($msg)) {?>
 <div align="center" class="red">
     <?php echo $msg;?>
@@ -557,6 +556,7 @@ if($themyarray["contactid"] != ''){ ?>
  <?php 
 	} ?>
 <?php 
+}
 } ?>
             </td>
         </tr>

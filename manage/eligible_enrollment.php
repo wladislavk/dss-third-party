@@ -76,7 +76,7 @@ if(isset($_GET['payerid']) && $_GET['payerid']!=''){
 }else{
   $ins_payer_id = st($pat_myarray['p_m_eligible_id']);
 }
-$payer_sql = "SELECT * FROM dental_ins_payer WHERE id='".mysql_real_escape_string($ins_payer_id)."'";
+$payer_sql = "SELECT * FROM dental_ins_payer WHERE id='".mysqli_real_escape_string($con, $ins_payer_id)."'";
 error_log($payer_sql);
 $payer_q = mysql_query($payer_sql);
 $payer = mysql_fetch_assoc($payer_q);
@@ -527,7 +527,7 @@ $seventeenA = $qua_myarray['qualifier'];
 			$getuserinfo .= " FROM `dental_users` WHERE `userid` = '".$docid."'";
                       $userquery = mysql_query($getuserinfo);
                       $userinfo = mysql_fetch_array($userquery);
-        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
         $prod_q = mysql_query($prod_s);
         $prod_r = mysql_fetch_assoc($prod_q);
         $claim_producer = $prod_r['producer'];
@@ -604,7 +604,7 @@ if(isset($_GET['test']) && $_GET['test']==1){
 }
 
 $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($docid)."'";
+$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $docid)."'";
 $api_key_query = mysql_query($api_key_sql);
 $api_key_result = mysql_fetch_assoc($api_key_query);
 if($api_key_result && !empty($api_key_result['eligible_api_key'])){
@@ -645,7 +645,7 @@ $data['subscriber'] = array(
                 "state" => $patient_state,
                 "zip" => $patient_zip),
 	"dob" => $claim_ins_dob);
-  $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".mysql_real_escape_string($pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$pat_myarray['docid']."'";
+  $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".mysqli_real_escape_string($con, $pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$pat_myarray['docid']."'";
   $ins_contact_qry_run = mysql_query($ins_contact_qry);
   $ins_contact_res = mysql_fetch_array($ins_contact_qry_run);
 
@@ -761,15 +761,15 @@ $json_response = json_decode($result);
 $ref_id = $json_response->{"reference_id"};
 $success = $json_response->{"success"};
 $up_sql = "INSERT INTO dental_claim_electronic SET 
-        claimid='".mysql_real_escape_string($_GET['insid'])."',
-	reference_id = '".mysql_real_escape_string($ref_id)."',
-	response='".mysql_real_escape_string($result)."',
+        claimid='".mysqli_real_escape_string($con, $_GET['insid'])."',
+	reference_id = '".mysqli_real_escape_string($con, $ref_id)."',
+	response='".mysqli_real_escape_string($con, $result)."',
         adddate=now(),
-        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
+        ip_address='".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'
         ";
 mysql_query($up_sql);
 if(!$success){
-  $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+  $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
   mysql_query($up_sql);
   claim_status_history_update($_GET['ins_id'], '', DSS_CLAIM_REJECTED, $_SESSION['userid']);
 ?>
@@ -933,7 +933,7 @@ if($_REQUEST['type']=="secondary"){
 }else{
   $fdf_field = "primary_fdf";
 }
-$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysql_real_escape_string($file)."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysqli_real_escape_string($con, $file)."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
 mysql_query($sql);
             // this is where you'd do any custom handling of the data
             // if you wanted to put it in a database, email the

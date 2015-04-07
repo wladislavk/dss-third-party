@@ -2,21 +2,21 @@
 <?php require_once("twilio/twilio.config.php");
 
 $s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.mailing_phone, dp.docid FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
-	WHERE dp.patientid='".mysql_real_escape_string($_GET['id'])."' AND
-		dp.recover_hash='".mysql_real_escape_string($_GET['hash'])."' AND
+	WHERE dp.patientid='".mysqli_real_escape_string($con, $_GET['id'])."' AND
+		dp.recover_hash='".mysqli_real_escape_string($con, $_GET['hash'])."' AND
 		dp.use_patient_portal='1' AND
 		du.use_patient_portal='1'";
 $q = mysql_query($s);
     if(mysql_num_rows($q) > 0){
       $r = mysql_fetch_assoc($q);
 
-$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($_GET['id'])."'";
+$loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($con, $_GET['id'])."'";
 $loc_q = mysql_query($loc_sql);
 $loc_r = mysql_fetch_assoc($loc_q);
 if($loc_r['location'] != '' && $loc_r['location'] != '0'){
-  $location_query = "SELECT * FROM dental_locations WHERE id='".mysql_real_escape_string($loc_r['location'])."' AND docid='".mysql_real_escape_string($r['docid'])."'";
+  $location_query = "SELECT * FROM dental_locations WHERE id='".mysqli_real_escape_string($con, $loc_r['location'])."' AND docid='".mysqli_real_escape_string($con, $r['docid'])."'";
 }else{
-  $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($r['docid'])."'";
+  $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($con, $r['docid'])."'";
 }
 $location_result = mysql_query($location_query);
 $location_info = mysql_fetch_assoc($location_result);

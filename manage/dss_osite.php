@@ -1,7 +1,7 @@
 <?php 
 
 if(isset($_POST['ositesubmit'])){
-$query = "UPDATE dental_summary SET osite='".mysql_real_escape_string($_POST['ositenew'])."' WHERE patientid='".$_GET['pid']."';";
+$query = "UPDATE dental_summary SET osite='".mysqli_real_escape_string($con, $_POST['ositenew'])."' WHERE patientid='".$_GET['pid']."';";
 if(!mysql_query($query)){
 echo "Could not add note! Please contact the system administrator or try again.";
 }

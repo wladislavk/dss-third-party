@@ -9,8 +9,8 @@ while($c = mysql_fetch_assoc($c_q)){
 
 $cid = $c['id'];
 $s = "INSERT INTO dental_letter_templates (name, body, companyid, triggerid)
-	SELECT name, body, '".$cid."', '".mysql_real_escape_string($tid)."' FROM dental_letter_templates 
-		WHERE id='".mysql_real_escape_string($tid)."'";
+	SELECT name, body, '".$cid."', '".mysqli_real_escape_string($con, $tid)."' FROM dental_letter_templates 
+		WHERE id='".mysqli_real_escape_string($con, $tid)."'";
 //mysql_query($s);
 
 

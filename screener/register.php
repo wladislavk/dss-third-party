@@ -58,7 +58,7 @@ if(!isset($_SESSION['screener_doc'])){
 
 
 <?php
-  $sql = "SELECT * FROM dental_screener where id='".mysql_real_escape_string($_GET['id'])."'";
+  $sql = "SELECT * FROM dental_screener where id='".mysqli_real_escape_string($con, $_GET['id'])."'";
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);
 ?>

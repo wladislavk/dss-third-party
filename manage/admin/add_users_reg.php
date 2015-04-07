@@ -55,9 +55,9 @@ if($_POST["usersub"] == 1)
                         mysql_query($custom_sql) or die($custom_sql.mysql_error());
 			
 			if(is_super($_SESSION['admin_access'])){
-			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($userid)."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
+			  mysql_query("INSERT INTO dental_user_company SET userid='".mysqli_real_escape_string($con, $userid)."', companyid='".mysqli_real_escape_string($con, $_POST["companyid"])."'");
 			}else{
-  			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($userid)."', companyid='".mysql_real_escape_string($_SESSION["companyid"])."'");
+  			  mysql_query("INSERT INTO dental_user_company SET userid='".mysqli_real_escape_string($con, $userid)."', companyid='".mysqli_real_escape_string($con, $_SESSION["companyid"])."'");
 			}		
 		
 			//send registration email.
@@ -86,7 +86,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 $subject = "Dental Sleep Solutions Account Activation";
                 $mail = mail($_POST['email'], $subject, $m, $headers);
 		if($mail){
-		  $e_sql = "UPDATE dental_users SET registration_email_date=now() WHERE userid='".mysql_real_escape_string($userid)."'";
+		  $e_sql = "UPDATE dental_users SET registration_email_date=now() WHERE userid='".mysqli_real_escape_string($con, $userid)."'";
 		  mysql_query($e_sql);
 		}
 			$msg = "Added Successfully";

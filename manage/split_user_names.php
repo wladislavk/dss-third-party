@@ -17,9 +17,9 @@ while($r = mysql_fetch_assoc($q)){
   echo " ".$f. " " .$l;
   echo "<br /><br />";
 
-  $u = "UPDATE dental_users SET first_name = '".mysql_real_escape_string($f)."',
-		last_name = '".mysql_real_escape_string($l)."'
-		WHERE userid='".mysql_real_escape_string($r['userid'])."'
+  $u = "UPDATE dental_users SET first_name = '".mysqli_real_escape_string($con, $f)."',
+		last_name = '".mysqli_real_escape_string($con, $l)."'
+		WHERE userid='".mysqli_real_escape_string($con, $r['userid'])."'
 		";
   //mysql_query($u);
 

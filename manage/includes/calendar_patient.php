@@ -8,7 +8,7 @@ require_once '../admin/includes/main_include.php';
 
 	//print one level of the tree, based on parent_id
 	function getDataFromDB($mask){
-		$sql = "SELECT * FROM dental_patients WHERE firstname like '".mysql_real_escape_string($mask)."%' OR lastname like '".mysql_real_escape_string($mask)."%'";
+		$sql = "SELECT * FROM dental_patients WHERE firstname like '".mysqli_real_escape_string($con, $mask)."%' OR lastname like '".mysqli_real_escape_string($con, $mask)."%'";
 		$sql.= " Order By lastname, firstname";
 
 			print("<complete add='true'>");

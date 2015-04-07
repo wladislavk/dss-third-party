@@ -38,7 +38,7 @@ class PDF extends FPDI {
             $this->_tplIdx = $this->importPage(1);
         }
 
-	$d_sql = "SELECT claim_margin_top, claim_margin_left FROM admin where adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+	$d_sql = "SELECT claim_margin_top, claim_margin_left FROM admin where adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'";
 	$d_q = mysql_query($d_sql);
 	$d_r = mysql_fetch_assoc($d_q);
 

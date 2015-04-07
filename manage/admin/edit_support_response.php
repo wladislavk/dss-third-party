@@ -8,7 +8,7 @@ include_once '../includes/general_functions.php';
 if($_POST["ressub"] == 1)
 {
 			$ed_sql = "update dental_support_responses set 
-				body = '".mysql_real_escape_string($_POST["body"])."'
+				body = '".mysqli_real_escape_string($con, $_POST["body"])."'
 			where id='".$_POST["id"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 

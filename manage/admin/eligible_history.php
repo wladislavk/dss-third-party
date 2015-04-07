@@ -16,7 +16,7 @@ $num_users=mysql_num_rows($my);
 
 <?php
   while($r = mysql_fetch_assoc($my)){
-$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysql_real_escape_string($r['claim_id']);
+$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysqli_real_escape_string($con, $r['claim_id']);
 $cq = mysql_query($csql);
 $claim = mysql_fetch_assoc($cq);
 	?><div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
@@ -25,7 +25,7 @@ $claim = mysql_fetch_assoc($cq);
 		<p>Response: <?= $r['response'];?></p>
      		<h4>Webhook responses</h4> 
 		<?php
-			$w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysql_real_escape_string($r['reference_id'])."'";
+			$w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysqli_real_escape_string($con, $r['reference_id'])."'";
 			$w_q = mysql_query($w_sql);
 			while($w_r = mysql_fetch_assoc($w_q)){
 			  ?><strong><?= $w_r['event_type']; ?></strong>

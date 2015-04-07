@@ -13,11 +13,11 @@ include 'includes/completed.php';
                                 lga_flowTabs.tabs_b();
                         });
         </script>
-<? $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'"; 
+<? $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'"; 
 $q = mysql_query($s);
 $pat = mysql_fetch_assoc($q);
 
-$ds = "SELECT * FROM dental_users WHERE userid='".mysql_real_escape_string($pat['docid'])."'";
+$ds = "SELECT * FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $pat['docid'])."'";
 $dq = mysql_query($ds);
 $doc = mysql_fetch_assoc($dq);
 

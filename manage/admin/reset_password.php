@@ -1,7 +1,7 @@
 <?php
   include 'includes/main_include.php';
   include '../includes/constants.inc';
-        $check_sql = "SELECT userid, username, email FROM dental_users WHERE userid='".mysql_real_escape_string($_GET['id'])."'";
+        $check_sql = "SELECT userid, username, email FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_GET['id'])."'";
         $check_my = mysql_query($check_sql);
 
         if(mysql_num_rows($check_my) >= 1)

@@ -27,7 +27,7 @@ if($pat_myarray['patientid'] == '')
 	die();
 }*/
 
-$letterid = mysql_real_escape_string($_GET['lid']);
+$letterid = mysqli_real_escape_string($con, $_GET['lid']);
 
 // Select Letter
 $letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";

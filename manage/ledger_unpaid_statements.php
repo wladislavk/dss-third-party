@@ -11,7 +11,7 @@ require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 require_once('includes/dental_patient_summary.php');
 include_once 'includes/constants.inc';
-$docsql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$docsql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 $docq = mysql_query($docsql);
 $docr = mysql_fetch_assoc($docq); 
 
@@ -381,11 +381,11 @@ $html = $head.$html;
 //$pdf->Output('example_001.pdf', 'I');
 
 /*	$state_sql = "INSERT INTO dental_ledger_statement SET
-			producerid = '".mysql_real_escape_string($_SESSION['userid'])."',
-			filename = '".mysql_real_escape_string($filename)."',
+			producerid = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
+			filename = '".mysqli_real_escape_string($con, $filename)."',
 			service_date = CURDATE(),
 			entry_date = CURDATE(),
-			patientid = '".mysql_real_escape_string($_GET['pid'])."',
+			patientid = '".mysqli_real_escape_string($con, $_GET['pid'])."',
 			adddate = now(),
 			ip_address = '".$_SERVER['REMOTE_ADDR']."'";
 	mysql_query($state_sql);

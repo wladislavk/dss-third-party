@@ -5,7 +5,7 @@ include_once('includes/password.php');
 include_once '../includes/constants.inc';
 if($_POST["emailsub"] == 1)
 {
-        $check_sql = "SELECT adminid, username, email FROM admin WHERE email='".mysql_real_escape_string($_POST['email'])."'";
+        $check_sql = "SELECT adminid, username, email FROM admin WHERE email='".mysqli_real_escape_string($con, $_POST['email'])."'";
         $check_my = mysql_query($check_sql);
 	//echo $check_sql;
         if(mysql_num_rows($check_my) >= 1)

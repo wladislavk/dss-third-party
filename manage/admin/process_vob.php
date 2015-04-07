@@ -128,7 +128,7 @@ if (isset($_REQUEST['ed'])) {
     
     if(isset($_POST['reject_but'])){
         $sql .= ", status = " . DSS_PREAUTH_REJECTED . " ";
-	$sql .= ", reject_reason = '" . mysql_real_escape_string($_POST['reject_reason']) ."' ";
+	$sql .= ", reject_reason = '" . mysqli_real_escape_string($con, $_POST['reject_reason']) ."' ";
         $sql .= ", viewed = 0 ";
     }elseif (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
@@ -139,7 +139,7 @@ if (isset($_REQUEST['ed'])) {
 	$ut_sql = "SELECT u.user_type FROM dental_users u 
 		JOIN dental_insurance_preauth p
 			ON p.doc_id=u.userid
-		WHERE p.id='".mysql_real_escape_string($_POST['preauth_id'])."'";
+		WHERE p.id='".mysqli_real_escape_string($con, $_POST['preauth_id'])."'";
         $ut_q = mysql_query($ut_sql);
         $ut_r = mysql_fetch_assoc($ut_q);
 	if($ut_r['user_type'] == DSS_USER_TYPE_SOFTWARE){

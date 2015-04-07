@@ -6,9 +6,9 @@ require_once "includes/general.htm";
 ?>
 
 <?php
-  $reports_sql = "SELECT * FROM dental_payment_reports WHERE claimid = '".mysql_real_escape_string($_GET['insid']). "' ORDER BY adddate DESC";
-  $reports_query = mysql_query($reports_sql);  
-  if (mysql_num_rows($reports_query) == 0){
+  $reports_sql = "SELECT * FROM dental_payment_reports WHERE claimid = '".mysqli_real_escape_string($con, $_GET['insid']). "' ORDER BY adddate DESC";
+  $reports_query = mysqli_query($con, $reports_sql);  
+  if (mysqli_num_rows($reports_query) == 0){
     echo ("No records");
   } else {
     ?>
@@ -22,7 +22,7 @@ require_once "includes/general.htm";
       </th>
     </tr>
     <?php
-    while($reports_result = mysql_fetch_assoc($reports_query)){
+    while($reports_result = mysqli_fetch_assoc($reports_query)){
       ?>
       <tr>
         <td>

@@ -413,7 +413,7 @@ $seventeenA = $qua_myarray['qualifier'];
 			$getuserinfo .= " FROM `dental_users` WHERE `userid` = '".$docid."'";
                       $userquery = mysql_query($getuserinfo);
                       $userinfo = mysql_fetch_array($userquery);
-        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
         $prod_q = mysql_query($prod_s);
         $prod_r = mysql_fetch_assoc($prod_q);
         $claim_producer = $prod_r['producer'];
@@ -788,7 +788,7 @@ if($_REQUEST['type']=="secondary"){
 }else{
   $fdf_field = "primary_fdf";
 }
-$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysql_real_escape_string($file)."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysqli_real_escape_string($con, $file)."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
 mysql_query($sql);
             // this is where you'd do any custom handling of the data
             // if you wanted to put it in a database, email the

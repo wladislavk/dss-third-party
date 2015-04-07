@@ -1021,7 +1021,7 @@ if($_REQUEST['type']=="secondary"){
   $fdf_field = "primary_fdf";
 }
 invoice_add_claim('1', $docid, $_GET['insid']);
-$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysql_real_escape_string($file)."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysqli_real_escape_string($con, $file)."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
 mysql_query($sql);
             // this is where you'd do any custom handling of the data
 	    // if you wanted to put it in a database, email t

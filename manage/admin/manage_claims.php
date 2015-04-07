@@ -334,12 +334,12 @@ AND
 
 $sql .= " 
 ORDER BY " . $sort_by_sql;
-$my = mysqli_query($con,$sql) or die(mysql_error());
+$my = mysqli_query($con,$sql) or die(mysqli_error($con));
 $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con,$sql) or die(mysql_error());
+$my=mysqli_query($con,$sql) or die(mysqli_error($con));
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -525,21 +525,21 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 				</td>
                 <td>
                     <?php
-                    $payment_report_sql = "SELECT * FROM dental_payment_reports WHERE claimid='" . mysql_real_escape_string($myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
-                    $payment_report_query = mysql_query($payment_report_sql);
-                    $payment_report_result = mysql_fetch_assoc($payment_report_query);
+                    $payment_report_sql = "SELECT * FROM dental_payment_reports WHERE claimid='" . mysqli_real_escape_string($con, $myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
+                    $payment_report_query = mysqli_query($con, $payment_report_sql);
+                    $payment_report_result = mysqli_fetch_assoc($payment_report_query);
                     if ($payment_report_result) {
                         echo '<a href="view_payment_reports.php?insid=' . $payment_report_result['claimid'] . '"> Paid - ' . $payment_report_result['adddate'] . " (View)</a>";
                     } else {
-                        $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='" . mysql_real_escape_string($myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
-                        $reference_id_query = mysql_query($reference_id_sql);
-                        $reference_id_result = mysql_fetch_assoc($reference_id_query);
+                        $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='" . mysqli_real_escape_string($con, $myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
+                        $reference_id_query = mysqli_query($con, $reference_id_sql);
+                        $reference_id_result = mysqli_fetch_assoc($reference_id_query);
                         if ($reference_id_result) {
                             $reference_id = $reference_id_result['reference_id'];
                             if ($reference_id != "") {
                                 $eligible_response_sql = "SELECT event_type, adddate FROM dental_eligible_response WHERE reference_id='" . $reference_id . "' ORDER BY adddate DESC";
-                                $eligible_response_query = mysql_query($eligible_response_sql);
-                                $eligible_response_result = mysql_fetch_assoc($eligible_response_query);
+                                $eligible_response_query = mysqli_query($con, $eligible_response_sql);
+                                $eligible_response_result = mysqli_fetch_assoc($eligible_response_query);
                                 echo $eligible_response_result['event_type'] . " - " . $eligible_response_result['adddate'];
                             }
                         }
@@ -568,10 +568,10 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
             $primary_link = "insurance_claim" . (($myarray['primary_claim_version'] != "1") ? '_eligible' : '_v2') . ".php?insid=" . $myarray['insuranceid'] . "&fid_filter=" . $fid . "&pid_filter=" . $pid . "&pid=" . $myarray['patientid'];
             $paid_statuses = array(0 => DSS_CLAIM_PAID_INSURANCE, 1 => DSS_CLAIM_PAID_SEC_INSURANCE);
             $secondary_link = "insurance_claim" . (($myarray['secondary_claim_version'] != "1") ? '_eligible' : '_v2') . ".php?insid=" . $myarray['insuranceid'] . "&fid_filter=" . $fid . "&pid_filter=" . $pid . "&pid=" . $myarray['patientid'] . "&instype=2";
-            $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='" . mysql_real_escape_string($myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
-            $reference_id_query = mysql_query($reference_id_sql);
-            if (mysql_num_rows($reference_id_query)) {
-                $reference_id_result = mysql_fetch_assoc($reference_id_query);
+            $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='" . mysqli_real_escape_string($con, $myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
+            $reference_id_query = mysqli_query($con, $reference_id_sql);
+            if (mysqli_num_rows($reference_id_query)) {
+                $reference_id_result = mysqli_fetch_assoc($reference_id_query);
                 $reference_id = $reference_id_result['reference_id'];
                 if ($reference_id != "" && !in_array($myarray['status'], $paid_statuses)) {
                     $update_claim_url = "request_claim_update.php?insid=" . $myarray['insuranceid'];
@@ -657,10 +657,10 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
          				FROM dental_claim_notes n 
         					left join dental_users u ON n.creator_id = u.userid
         					left join admin a ON n.creator_id = a.adminid
-        				where n.claim_id='".mysql_real_escape_string($myarray['insuranceid'])."'
+        				where n.claim_id='".mysqli_real_escape_string($con, $myarray['insuranceid'])."'
         				ORDER BY adddate ASC";
- 				$n_q = mysql_query($n_sql) or die(mysql_error());
-				while($n = mysql_fetch_assoc($n_q)){
+ 				$n_q = mysqli_query($con, $n_sql) or die(mysqli_error($con));
+				while($n = mysqli_fetch_assoc($n_q)){
 					echo $n['note'] .' - '. $n['creator_name'].'<br />';
 				}
 				?>
@@ -675,7 +675,7 @@ $my=mysqli_query($con,$sql) or die(mysql_error());
 ?>
 /></td>
 			</tr>
-	<?php  	}
+	<?php
 	}?>
 </table>
 </form>

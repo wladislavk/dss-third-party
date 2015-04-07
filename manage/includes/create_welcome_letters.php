@@ -29,7 +29,7 @@ echo $cid;
 
 // Function to Create Letters
 function create_welcome_letters ($templateid, $md_list, $docid) {
-$let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 error_log($let_sql);
 $let_q = mysql_query($let_sql);
 $let_r = mysql_fetch_assoc($let_q);
@@ -40,22 +40,22 @@ if($let_r['use_letters'] && $let_r['intro_letters']){
   $delivered = '0';
   $deleted = '0';
   $columns = "templateid";
-  $values = "'".mysql_real_escape_string($templateid)."'";
+  $values = "'".mysqli_real_escape_string($con, $templateid)."'";
   if ($status == 1) {
     $columns .= ", date_sent";
     $values .= ", NOW()";
   }
   if (isset($md_list)) {
     $columns .= ", md_list";
-    $values .= ", '".mysql_real_escape_string($md_list)."'";
+    $values .= ", '".mysqli_real_escape_string($con, $md_list)."'";
   }
   if (isset($status)) {
                 $columns .= ", status";
-                $values .= ", '".mysql_real_escape_string($status)."'";
+                $values .= ", '".mysqli_real_escape_string($con, $status)."'";
         }
   if (isset($deleted)) {
                 $columns .= ", deleted";
-                $values .= ", '".mysql_real_escape_string($deleted)."'";
+                $values .= ", '".mysqli_real_escape_string($con, $deleted)."'";
         }
 
   $columns .= ", generated_date, delivered, docid, userid";

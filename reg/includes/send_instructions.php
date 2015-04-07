@@ -2,7 +2,7 @@
 require_once '../../manage/admin/includes/main_include.php';
 require_once '../../manage/includes/constants.inc';
 $t = $_POST['type'];
-    $s = "SELECT * FROM dental_patients WHERE email='".mysql_real_escape_string($_POST['email'])."' AND parent_patientid IS NULL";
+    $s = "SELECT * FROM dental_patients WHERE email='".mysqli_real_escape_string($con, $_POST['email'])."' AND parent_patientid IS NULL";
     $q = mysql_query($s);
     if(mysql_num_rows($q) > 0){
       $r = mysql_fetch_assoc($q);
@@ -24,24 +24,24 @@ $t = $_POST['type'];
     }else{
       $recover_hash = $r['recover_hash'];
     }
-  $usql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+  $usql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysqli_real_escape_string($con, $r['patientid'])."'";
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);
   $n = $ur['phone'];
 
 
-$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($r['patientid'])."'";
+$loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($con, $r['patientid'])."'";
 $loc_q = mysql_query($loc_sql);
 $loc_r = mysql_fetch_assoc($loc_q);
 if($loc_r['location'] != '' && $loc_r['location'] != '0'){
   $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
 from dental_users u inner join dental_patients p on u.userid=p.docid 
                 LEFT JOIN dental_locations l ON l.docid = u.userid
-        WHERE l.id='".mysql_real_escape_string($loc_r['location'])."' AND l.docid='".mysql_real_escape_string($r['docid'])."'";
+        WHERE l.id='".mysqli_real_escape_string($con, $loc_r['location'])."' AND l.docid='".mysqli_real_escape_string($con, $r['docid'])."'";
 }else{
   $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
                 LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-        where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+        where p.patientid='".mysqli_real_escape_string($con, $r['patientid'])."'";
 }
   $uq = mysql_query($location_query);
   $ur = mysql_fetch_assoc($uq);

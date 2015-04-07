@@ -35,7 +35,7 @@
                 $this->_tplIdx = $this->importPage(1);
             }
 
-        	$d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+        	$d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 
         	$d_r = $db->getRow($d_sql);
 

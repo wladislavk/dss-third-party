@@ -2,7 +2,7 @@
 include "includes/top.htm";
 require_once '../3rdParty/stripe/lib/Stripe.php';
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
-	WHERE pi.docid=".mysql_real_escape_string($_GET['docid'])." 
+	WHERE pi.docid=".mysqli_real_escape_string($con, $_GET['docid'])." 
 		AND pi.status!=".DSS_INVOICE_PENDING."
 	ORDER BY adddate DESC";
 $my = mysql_query($sql);
@@ -12,7 +12,7 @@ $no_pages = $total_rec/$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
-$doc_sql = "SELECT * from dental_users WHERE userid=".mysql_real_escape_string($_GET['docid']);
+$doc_sql = "SELECT * from dental_users WHERE userid=".mysqli_real_escape_string($con, $_GET['docid']);
 $doc_q = mysql_query($doc_sql);
 $doc = mysql_fetch_assoc($doc_q);
 
@@ -35,7 +35,7 @@ $doc = mysql_fetch_assoc($doc_q);
         <b><? echo $_GET['msg'];?></b>
 </div>
 <?php 
-$sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_GET['docid'])."'";
+$sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con, $_GET['docid'])."'";
 $q = mysql_query($sql);
 $myarray = mysql_fetch_assoc($q);
 ?>
@@ -188,8 +188,8 @@ $case_q = mysql_query($case_sql);
 </div>
 <?php
   $charge_sql = "SELECT * FROM dental_charge
-                        WHERE userid='".mysql_real_escape_string($_GET['docid'])."'
-                        AND adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'
+                        WHERE userid='".mysqli_real_escape_string($con, $_GET['docid'])."'
+                        AND adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'
                         ";
   $charge_q = mysql_query($charge_sql);
 ?>
@@ -257,7 +257,7 @@ $case_q = mysql_query($case_sql);
 $key_sql = "SELECT stripe_secret_key FROM companies c 
                 JOIN dental_user_company uc
                         ON c.id = uc.companyid
-                 WHERE uc.userid='".mysql_real_escape_string($_GET['docid'])."'";
+                 WHERE uc.userid='".mysqli_real_escape_string($con, $_GET['docid'])."'";
 $key_q = mysql_query($key_sql);
 $key_r= mysql_fetch_assoc($key_q);
 

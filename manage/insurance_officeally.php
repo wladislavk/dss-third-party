@@ -551,7 +551,7 @@
 	}
 
 	$api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-	$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($docid)."'";
+	$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $docid)."'";
 	$api_key_query = mysqli_query($con, $api_key_sql);
 	$api_key_result = mysqli_fetch_assoc($api_key_query);
 	if($api_key_result && !empty($api_key_result['eligible_api_key'])){

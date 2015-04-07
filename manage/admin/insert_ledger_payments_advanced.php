@@ -58,7 +58,7 @@ if($_FILES["attachment"]["name"]!=''){
 		adddate,
 		ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'primary',
 		'".$banner1."',
 		'".mysql_escape_string($_POST['dispute_reason'])."',
@@ -82,7 +82,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'secondary',
                 '".$banner1."',
 		'".mysql_escape_string($_POST['dispute_reason'])."',
@@ -105,7 +105,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'primary',
                 '".$banner1."',
                 '".mysql_escape_string($_POST['dispute_reason'])."',
@@ -128,7 +128,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'secondary',
                 '".$banner1."',
                 '".mysql_escape_string($_POST['dispute_reason'])."',
@@ -202,7 +202,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'primary',
                 '".$banner1."',
                 '".$new_status."',
@@ -235,7 +235,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'secondary',
                 '".$banner1."',
                 '".$new_status."',
@@ -288,16 +288,16 @@ $sqlinsertqry .= "(
 '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', 
 '".date('Y-m-d')."', 
 '".str_replace(',','',$_POST['amount_'.$id])."', 
-'".mysql_real_escape_string($_POST['payment_type'])."', 
-'".mysql_real_escape_string($_POST['payer'])."',
-'".mysql_real_escape_string($_POST['allowed'])."',
-'".mysql_real_escape_string($_POST['ins_paid'])."',
-'".mysql_real_escape_string($_POST['deductible'])."',
-'".mysql_real_escape_string($_POST['copay'])."',
-'".mysql_real_escape_string($_POST['coins'])."',
-'".mysql_real_escape_string($_POST['overpaid'])."',
-'".mysql_real_escape_string($_POST['followup'])."',
-'".mysql_real_escape_string($_POST['note'])."'
+'".mysqli_real_escape_string($con, $_POST['payment_type'])."', 
+'".mysqli_real_escape_string($con, $_POST['payer'])."',
+'".mysqli_real_escape_string($con, $_POST['allowed'])."',
+'".mysqli_real_escape_string($con, $_POST['ins_paid'])."',
+'".mysqli_real_escape_string($con, $_POST['deductible'])."',
+'".mysqli_real_escape_string($con, $_POST['copay'])."',
+'".mysqli_real_escape_string($con, $_POST['coins'])."',
+'".mysqli_real_escape_string($con, $_POST['overpaid'])."',
+'".mysqli_real_escape_string($con, $_POST['followup'])."',
+'".mysqli_real_escape_string($con, $_POST['note'])."'
 ),";
 }
 

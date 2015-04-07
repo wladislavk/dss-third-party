@@ -67,7 +67,7 @@ $(document).ready(function(){
 		if($_POST['password1']==$_POST['password2']){
 			$salt = create_salt();
                         $pass = gen_password($_POST['password1'], $salt);
-			$up_sql = "UPDATE admin SET password='".$pass."', salt='".$salt."', recover_hash='' WHERE adminid='".mysql_real_escape_string($_POST['adminid'])."' AND recover_hash='".mysql_real_escape_string($_POST['hash'])."'";
+			$up_sql = "UPDATE admin SET password='".$pass."', salt='".$salt."', recover_hash='' WHERE adminid='".mysqli_real_escape_string($con, $_POST['adminid'])."' AND recover_hash='".mysqli_real_escape_string($con, $_POST['hash'])."'";
 			mysql_query($up_sql);
 			?>
                 <script type="text/javascript">
@@ -77,7 +77,7 @@ $(document).ready(function(){
                 <?
 		}
 	}
-	$check_sql = "SELECT adminid FROM admin WHERE username='".mysql_real_escape_string($_GET['un'])."' AND recover_hash='".mysql_real_escape_string($_GET['rh'])."' AND recover_time>DATE_SUB(NOW(), INTERVAL 1 HOUR)";
+	$check_sql = "SELECT adminid FROM admin WHERE username='".mysqli_real_escape_string($con, $_GET['un'])."' AND recover_hash='".mysqli_real_escape_string($con, $_GET['rh'])."' AND recover_time>DATE_SUB(NOW(), INTERVAL 1 HOUR)";
 	$check_my = mysql_query($check_sql);
 	if(mysql_num_rows($check_my) == 1) 
 	{

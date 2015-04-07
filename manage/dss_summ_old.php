@@ -3,7 +3,7 @@ include_once 'includes/constants.inc';
 include 'includes/top.htm';
 require_once('includes/patient_info.php');
 if(isset($_POST['locsubmit'])){
-$query = "UPDATE dental_summary SET location='".mysql_real_escape_string($_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+$query = "UPDATE dental_summary SET location='".mysqli_real_escape_string($con, $_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
 if(!mysql_query($query)){
 echo "Could not add note! Please contact the system administrator or try again.";
 }
@@ -962,7 +962,7 @@ $main_disp .= $m_val."
 }
 
 
-$cc_sql = "select chief_complaint_text from dental_q_page1 WHERE patientid=".mysql_real_escape_string($_GET['pid']);
+$cc_sql = "select chief_complaint_text from dental_q_page1 WHERE patientid=".mysqli_real_escape_string($con, $_GET['pid']);
 $cc_q = mysql_query($cc_sql);
 $cc_row = mysql_fetch_assoc($cc_q);
 $reason_seeking_tx = "

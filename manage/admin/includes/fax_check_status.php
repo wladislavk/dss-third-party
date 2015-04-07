@@ -19,14 +19,14 @@ $response = json_encode($fax_status);
   if($comp){
     $success = ($comp)?'1':'2';
     $error_code = $fax_status['ErrorCode'];
-    $up_sql = "UPDATE dental_faxes SET sfax_completed='".mysql_real_escape_string($comp)."',
-                                sfax_response='".mysql_real_escape_string($response)."',
-                                sfax_status = '".mysql_real_escape_string($success)."',
-                                sfax_error_code = '".mysql_real_escape_string($error_code)."'
-                WHERE id = '".mysql_real_escape_string($r['id'])."'";
+    $up_sql = "UPDATE dental_faxes SET sfax_completed='".mysqli_real_escape_string($con, $comp)."',
+                                sfax_response='".mysqli_real_escape_string($con, $response)."',
+                                sfax_status = '".mysqli_real_escape_string($con, $success)."',
+                                sfax_error_code = '".mysqli_real_escape_string($con, $error_code)."'
+                WHERE id = '".mysqli_real_escape_string($con, $r['id'])."'";
     mysql_query($up_sql);
     if($success == '2'){
-      $let_sql = "UPDATE dental_letters SET status='0' WHERE letterid='".mysql_real_escape_string($r['letterid'])."'";
+      $let_sql = "UPDATE dental_letters SET status='0' WHERE letterid='".mysqli_real_escape_string($con, $r['letterid'])."'";
       mysql_query($let_sql);
     }
   }

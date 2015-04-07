@@ -55,10 +55,10 @@ $enroll = mysql_fetch_assoc($enroll_q);
 if(isset($_POST['submit'])){
     if(isset($_POST['amount_monthly'])){
       $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address, due_date, monthly_fee_date, monthly_fee_amount) " .
-                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['due_date'])))."', '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."', '".mysql_real_escape_string($_POST['amount_monthly'])."')";
+                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', '".mysqli_real_escape_string($con, date('Y-m-d', strtotime($_POST['due_date'])))."', '".mysqli_real_escape_string($con, date('Y-m-d', strtotime($_POST['monthly_date'])))."', '".mysqli_real_escape_string($con, $_POST['amount_monthly'])."')";
     }else{
       $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, due_date, adddate, ip_address) " .
-                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['due_date'])))."', NOW(), '".$_SERVER['REMOTE_ADDR']."')";
+                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", '".mysqli_real_escape_string($con, date('Y-m-d', strtotime($_POST['due_date'])))."', NOW(), '".$_SERVER['REMOTE_ADDR']."')";
     };
     mysql_query($in_sql);
     $invoiceid = mysql_insert_id();
@@ -67,8 +67,8 @@ if(isset($_POST['submit'])){
     if(isset($_POST['service_date_'.$id])){
       $up_sql = "UPDATE dental_ledger SET " .
         " percase_date = '".date('Y-m-d', strtotime($_POST['service_date_'.$id]))."', " .
-        " percase_name = '".mysql_real_escape_string($_POST['name_'.$id])."', " .
-        " percase_amount = '".mysql_real_escape_string($_POST['amount_'.$id])."', " .
+        " percase_name = '".mysqli_real_escape_string($con, $_POST['name_'.$id])."', " .
+        " percase_amount = '".mysqli_real_escape_string($con, $_POST['amount_'.$id])."', " .
         " percase_status = '".DSS_PERCASE_INVOICED."', " .
         " percase_invoice = '".$invoiceid."' " .
         " WHERE ledgerid = '".$id."'";
@@ -81,8 +81,8 @@ if(isset($_POST['submit'])){
     if(isset($_POST['adddate_'.$id])){
       $up_sql = "UPDATE dental_claim_electronic SET " .
         " percase_date = '".date('Y-m-d', strtotime($_POST['adddate_'.$id]))."', " .
-        " percase_name = '".mysql_real_escape_string($_POST['name_'.$id])."', " .
-        " percase_amount = '".mysql_real_escape_string($_POST['amount_'.$id])."', " .
+        " percase_name = '".mysqli_real_escape_string($con, $_POST['name_'.$id])."', " .
+        " percase_amount = '".mysqli_real_escape_string($con, $_POST['amount_'.$id])."', " .
         " percase_status = '".DSS_PERCASE_INVOICED."', " .
         " percase_invoice = '".$invoiceid."' " .
         " WHERE id = '".$id."'";
@@ -95,7 +95,7 @@ if(isset($_POST['submit'])){
     if(isset($_POST['vob_date_completed_'.$id])){
       $up_sql = "UPDATE dental_insurance_preauth SET " .
         " invoice_date = '".date('Y-m-d', strtotime($_POST['vob_date_completed_'.$id]))."', " .
-        " invoice_amount = '".mysql_real_escape_string($_POST['vob_amount_'.$id])."', " .
+        " invoice_amount = '".mysqli_real_escape_string($con, $_POST['vob_amount_'.$id])."', " .
         " invoice_status = '".DSS_PERCASE_INVOICED."', " .
         " invoice_id = '".$invoiceid."' " .
         " WHERE id = '".$id."'";
@@ -108,11 +108,11 @@ if(isset($_POST['submit'])){
     $fax_end_date = ($_POST['free_fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_fax_invoice SET
-                invoice_id = '".mysql_real_escape_string($invoiceid)."',
-                description = '".mysql_real_escape_string($_POST['free_fax_desc'])."',
-                start_date = '".mysql_real_escape_string($free_fax_start_date)."',
-                end_date = '".mysql_real_escape_string($free_fax_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['free_fax_amount'])."',
+                invoice_id = '".mysqli_real_escape_string($con, $invoiceid)."',
+                description = '".mysqli_real_escape_string($con, $_POST['free_fax_desc'])."',
+                start_date = '".mysqli_real_escape_string($con, $free_fax_start_date)."',
+                end_date = '".mysqli_real_escape_string($con, $free_fax_end_date)."',
+                amount = '".mysqli_real_escape_string($con, $_POST['free_fax_amount'])."',
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
     mysql_query($in_sql);
@@ -121,7 +121,7 @@ if(isset($_POST['submit'])){
     $up_sql = "UPDATE dental_faxes SET
                 status = '1',
                 fax_invoice_id = '".$fax_invoice_id."' 
-                WHERE status='0' AND docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+                WHERE status='0' AND docid='".mysqli_real_escape_string($con, $_REQUEST['docid'])."'";
     mysql_query($up_sql);
   }
 
@@ -130,11 +130,11 @@ if(isset($_POST['submit'])){
     $fax_end_date = ($_POST['fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_fax_invoice SET
-                invoice_id = '".mysql_real_escape_string($invoiceid)."',
-		description = '".mysql_real_escape_string($_POST['fax_desc'])."',
-                start_date = '".mysql_real_escape_string($fax_start_date)."',
-                end_date = '".mysql_real_escape_string($fax_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['fax_amount'])."',
+                invoice_id = '".mysqli_real_escape_string($con, $invoiceid)."',
+		description = '".mysqli_real_escape_string($con, $_POST['fax_desc'])."',
+                start_date = '".mysqli_real_escape_string($con, $fax_start_date)."',
+                end_date = '".mysqli_real_escape_string($con, $fax_end_date)."',
+                amount = '".mysqli_real_escape_string($con, $_POST['fax_amount'])."',
 		adddate = now(),
 		ip_address = '".$_SERVER['REMOTE_ADDR']."'";
     mysql_query($in_sql);
@@ -143,7 +143,7 @@ if(isset($_POST['submit'])){
     $up_sql = "UPDATE dental_faxes SET
 		status = '1',
 		fax_invoice_id = '".$fax_invoice_id."' 
-		WHERE status='0' AND docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+		WHERE status='0' AND docid='".mysqli_real_escape_string($con, $_REQUEST['docid'])."'";
     mysql_query($up_sql);
   }
 
@@ -153,11 +153,11 @@ if(isset($_POST['submit'])){
     $ec_end_date = ($_POST['free_ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_eligibility_invoice SET
-                invoice_id = '".mysql_real_escape_string($invoiceid)."',
-                description = '".mysql_real_escape_string($_POST['free_ec_desc'])."',
-                start_date = '".mysql_real_escape_string($free_ec_start_date)."',
-                end_date = '".mysql_real_escape_string($free_ec_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['free_ec_amount'])."',
+                invoice_id = '".mysqli_real_escape_string($con, $invoiceid)."',
+                description = '".mysqli_real_escape_string($con, $_POST['free_ec_desc'])."',
+                start_date = '".mysqli_real_escape_string($con, $free_ec_start_date)."',
+                end_date = '".mysqli_real_escape_string($con, $free_ec_end_date)."',
+                amount = '".mysqli_real_escape_string($con, $_POST['free_ec_amount'])."',
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
     mysql_query($in_sql);
@@ -165,7 +165,7 @@ if(isset($_POST['submit'])){
 
     $up_sql = "UPDATE dental_eligibility SET
                 eligibility_invoice_id = '".$ec_invoice_id."' 
-                WHERE eligibility_invoice_id IS NULL AND userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+                WHERE eligibility_invoice_id IS NULL AND userid='".mysqli_real_escape_string($con, $_REQUEST['docid'])."'";
     mysql_query($up_sql);
   }
 
@@ -174,11 +174,11 @@ if(isset($_POST['submit'])){
     $ec_end_date = ($_POST['ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_eligibility_invoice SET
-                invoice_id = '".mysql_real_escape_string($invoiceid)."',
-                description = '".mysql_real_escape_string($_POST['ec_desc'])."',
-                start_date = '".mysql_real_escape_string($ec_start_date)."',
-                end_date = '".mysql_real_escape_string($ec_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['ec_amount'])."',
+                invoice_id = '".mysqli_real_escape_string($con, $invoiceid)."',
+                description = '".mysqli_real_escape_string($con, $_POST['ec_desc'])."',
+                start_date = '".mysqli_real_escape_string($con, $ec_start_date)."',
+                end_date = '".mysqli_real_escape_string($con, $ec_end_date)."',
+                amount = '".mysqli_real_escape_string($con, $_POST['ec_amount'])."',
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
     mysql_query($in_sql);
@@ -186,7 +186,7 @@ if(isset($_POST['submit'])){
 
     $up_sql = "UPDATE dental_eligibility SET
                 eligibility_invoice_id = '".$ec_invoice_id."' 
-                WHERE eligibility_invoice_id IS NULL AND userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+                WHERE eligibility_invoice_id IS NULL AND userid='".mysqli_real_escape_string($con, $_REQUEST['docid'])."'";
     mysql_query($up_sql);
   }
 
@@ -199,11 +199,11 @@ if(isset($_POST['submit'])){
     $enrollment_end_date = ($_POST['free_enrollment_end_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_enrollment_invoice SET
-                invoice_id = '".mysql_real_escape_string($invoiceid)."',
-                description = '".mysql_real_escape_string($_POST['free_enrollment_desc'])."',
-                start_date = '".mysql_real_escape_string($free_enrollment_start_date)."',
-                end_date = '".mysql_real_escape_string($free_enrollment_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['free_enrollment_amount'])."',
+                invoice_id = '".mysqli_real_escape_string($con, $invoiceid)."',
+                description = '".mysqli_real_escape_string($con, $_POST['free_enrollment_desc'])."',
+                start_date = '".mysqli_real_escape_string($con, $free_enrollment_start_date)."',
+                end_date = '".mysqli_real_escape_string($con, $free_enrollment_end_date)."',
+                amount = '".mysqli_real_escape_string($con, $_POST['free_enrollment_amount'])."',
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
     mysql_query($in_sql);
@@ -211,7 +211,7 @@ if(isset($_POST['submit'])){
 
     $up_sql = "UPDATE dental_eligible_enrollment SET
                 fax_invoice_id = '".$enrollment_invoice_id."' 
-                WHERE enrollment_invoice_id IS NULL AND user_id='".mysql_real_escape_string($_REQUEST['docid'])."'";
+                WHERE enrollment_invoice_id IS NULL AND user_id='".mysqli_real_escape_string($con, $_REQUEST['docid'])."'";
     mysql_query($up_sql);
   }
 
@@ -220,11 +220,11 @@ if(isset($_POST['submit'])){
     $enrollment_end_date = ($_POST['enrollment_end_date'])?date('Y-m-d', strtotime($_POST['enrollment_end_date'])):'';
 
     $in_sql = "INSERT INTO dental_enrollment_invoice SET
-                invoice_id = '".mysql_real_escape_string($invoiceid)."',
-                description = '".mysql_real_escape_string($_POST['enrollment_desc'])."',
-                start_date = '".mysql_real_escape_string($enrollment_start_date)."',
-                end_date = '".mysql_real_escape_string($enrollment_end_date)."',
-                amount = '".mysql_real_escape_string($_POST['enrollment_amount'])."',
+                invoice_id = '".mysqli_real_escape_string($con, $invoiceid)."',
+                description = '".mysqli_real_escape_string($con, $_POST['enrollment_desc'])."',
+                start_date = '".mysqli_real_escape_string($con, $enrollment_start_date)."',
+                end_date = '".mysqli_real_escape_string($con, $enrollment_end_date)."',
+                amount = '".mysqli_real_escape_string($con, $_POST['enrollment_amount'])."',
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
     mysql_query($in_sql);
@@ -232,7 +232,7 @@ if(isset($_POST['submit'])){
 
     $up_sql = "UPDATE dental_eligible_enrollment SET
                 enrollment_invoice_id = '".$enrollment_invoice_id."' 
-                WHERE enrollment_invoice_id is NULL AND user_id='".mysql_real_escape_string($_REQUEST['docid'])."'";
+                WHERE enrollment_invoice_id is NULL AND user_id='".mysqli_real_escape_string($con, $_REQUEST['docid'])."'";
     mysql_query($up_sql);
   }
 
@@ -247,8 +247,8 @@ if(isset($_POST['submit'])){
 	$amount = $_POST['extra_amount_'.$i];
 	$sql = "INSERT INTO dental_percase_invoice_extra SET" .
         " percase_date = '".$service_date."', " .
-        " percase_name = '".mysql_real_escape_string($name)."', " .
-        " percase_amount = '".mysql_real_escape_string($amount)."', " .
+        " percase_name = '".mysqli_real_escape_string($con, $name)."', " .
+        " percase_amount = '".mysqli_real_escape_string($con, $amount)."', " .
         " percase_status = '".DSS_PERCASE_INVOICED."', " .
         " percase_invoice = '".$invoiceid."', " .
 	" adddate = NOW(), " .
@@ -272,7 +272,7 @@ if(isset($_POST['submit'])){
   $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, p.claim_fee, p.free_claim, p.eligibility_fee, p.free_eligibility, p.enrollment_fee, p.free_enrollment, vob_fee, free_vob
 		FROM companies c 
  		JOIN dental_plans p ON p.id = c.plan_id
-		WHERE c.id='".mysql_real_escape_string($_REQUEST['cid'])."'";
+		WHERE c.id='".mysqli_real_escape_string($con, $_REQUEST['cid'])."'";
   $doc_q = mysql_query($doc_sql);
   $doc = mysql_fetch_assoc($doc_q);
 

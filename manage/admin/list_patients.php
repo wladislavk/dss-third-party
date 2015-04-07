@@ -41,12 +41,12 @@ $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS s
         .               " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
         .               " OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))"
         .               " AND p.status=1 "
-	.		" AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' "
+	.		" AND uc.companyid='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."' "
         .               " ORDER BY lastname ASC;";
 }elseif(is_billing($_SESSION['admin_access'])){
   $a_sql = "SELECT ac.companyid FROM admin_company ac
                         JOIN admin a ON a.adminid = ac.adminid
-                        WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+                        WHERE a.adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'";
   $a_q = mysql_query($a_sql);
   $admin = mysql_fetch_assoc($a_q);
 $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS stat, p.premedcheck,  "
@@ -62,7 +62,7 @@ $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS s
         .               " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
         .               " OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))"
         .               " AND p.status=1 "
-	.		" AND u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."' "
+	.		" AND u.billing_company_id='".mysqli_real_escape_string($con, $admin['companyid'])."' "
         .               " ORDER BY lastname ASC;";
 }
 $result = mysql_query($sql);

@@ -90,7 +90,7 @@ if($_FILES["attachment"]["name"]!=''){
 		adddate,
 		ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'primary',
 		'".$banner1."',
 		'".mysql_escape_string($_POST['dispute_reason'])."',
@@ -114,7 +114,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'secondary',
                 '".$banner1."',
 		'".mysql_escape_string($_POST['dispute_reason'])."',
@@ -137,7 +137,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'primary',
                 '".$banner1."',
                 '".mysql_escape_string($_POST['dispute_reason'])."',
@@ -160,7 +160,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'secondary',
                 '".$banner1."',
                 '".mysql_escape_string($_POST['dispute_reason'])."',
@@ -234,7 +234,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'primary',
                 '".$banner1."',
                 '".$new_status."',
@@ -267,7 +267,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'secondary',
                 '".$banner1."',
                 '".$new_status."',

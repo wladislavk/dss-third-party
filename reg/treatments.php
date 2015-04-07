@@ -70,7 +70,7 @@ if($_POST['q_page2sub'] == 1)
 		$polysomnographic = 0;
 	
 	
-        $exist_sql = "SELECT patientid FROM dental_q_page2 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_sql = "SELECT patientid FROM dental_q_page2 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
         $exist_q = mysql_query($exist_sql);
         if(mysql_num_rows($exist_q) == 0)
 	{
@@ -124,8 +124,8 @@ if($_POST['q_page2sub'] == 1)
                         }
                         mysql_query($s);
                 }
-		mysql_query("UPDATE dental_patients SET treatments_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
-                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
+		mysql_query("UPDATE dental_patients SET treatments_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
@@ -184,8 +184,8 @@ if($_POST['q_page2sub'] == 1)
                         }
                         mysql_query($s);
                 }
-		mysql_query("UPDATE dental_patients SET treatments_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
-                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
+		mysql_query("UPDATE dental_patients SET treatments_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -198,7 +198,7 @@ if($_POST['q_page2sub'] == 1)
 }
 
 
-        $exist_sql = "SELECT treatments_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_sql = "SELECT treatments_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
         $exist_q = mysql_query($exist_sql);
         $exist_row = mysql_fetch_assoc($exist_q);
         if($exist_row['treatments_status'] == 0)
@@ -535,7 +535,7 @@ if($cpap == '')
 	<table id="surgery_table">
 	<tr><th>Date</th><th>Surgeon</th><th>Surgery</th><th></th></tr>	
 		<?php
-		  $s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+		  $s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
 		  $s_q = mysql_query($s_sql);
 		  $s_count = 0;
 		  while($s_row = mysql_fetch_assoc($s_q)){

@@ -18,7 +18,7 @@ $claim_q = mysql_query($claim_sql);
 $claim_r = mysql_fetch_assoc($claim_q);
 if(($claim_r['primary_claim_id']=='' || $claim_r['primary_claim_id']==0) && $status==DSS_TRXN_PENDING){
 
-  $pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysql_real_escape_string($claim_r['producerid'])."'";
+  $pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $claim_r['producerid'])."'";
   $pf_q = mysql_query($pf_sql);
   $pf = mysql_fetch_assoc($pf_q);
   if($pf['producer_files'] == '1'){
@@ -27,7 +27,7 @@ if(($claim_r['primary_claim_id']=='' || $claim_r['primary_claim_id']==0) && $sta
     $claim_producer = $_SESSION['docid'];
   }
 
-  $s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysql_real_escape_string($_POST['patientid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+  $s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysqli_real_escape_string($con, $_POST['patientid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
   $q = mysql_query($s);
   $n = mysql_num_rows($q);
   if($n > 0){

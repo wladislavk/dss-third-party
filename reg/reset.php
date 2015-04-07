@@ -2,8 +2,8 @@
 <?php require_once("twilio/twilio.config.php");
 
 $s = "SELECT dp.cell_phone, dp.email FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
-        WHERE dp.patientid='".mysql_real_escape_string($_GET['id'])."' AND
-                dp.recover_hash='".mysql_real_escape_string($_GET['hash'])."' AND
+        WHERE dp.patientid='".mysqli_real_escape_string($con, $_GET['id'])."' AND
+                dp.recover_hash='".mysqli_real_escape_string($con, $_GET['hash'])."' AND
                 dp.use_patient_portal='1' AND
                 du.use_patient_portal='1'";
 

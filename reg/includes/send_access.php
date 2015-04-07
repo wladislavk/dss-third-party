@@ -11,7 +11,7 @@ require_once '../../manage/admin/includes/main_include.php';
        // "+17173685684" => "Adam Bert"
     );
 
-    $s = "SELECT * FROM dental_patients WHERE email='".mysql_real_escape_string($_POST['email'])."'";
+    $s = "SELECT * FROM dental_patients WHERE email='".mysqli_real_escape_string($con, $_POST['email'])."'";
     $q = mysql_query($s);
     if(mysql_num_rows($q) > 0){
       $r = mysql_fetch_assoc($q);

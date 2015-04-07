@@ -8,13 +8,13 @@ $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['id']."';
 $cq = mysql_query($csql);
 $claim = mysql_fetch_array($cq);
 
-$pasql = "SELECT * FROM dental_insurance_file where claimid='".mysql_real_escape_string($_GET['id'])."' AND
+$pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con, $_GET['id'])."' AND
 		(status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE.")";
 $paq = mysql_query($pasql);
 $num_pa = mysql_num_rows($paq);
 
 
-$sasql = "SELECT * FROM dental_insurance_file where claimid='".mysql_real_escape_string($_GET['id'])."' AND
+$sasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con, $_GET['id'])."' AND
                 (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
 $saq = mysql_query($sasql);
 $num_sa = mysql_num_rows($saq);

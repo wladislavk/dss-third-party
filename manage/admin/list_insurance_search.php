@@ -16,7 +16,7 @@ $names = explode(" ", $partial);
 $sql = "SELECT c.contactid, c.company "
   .			" FROM dental_contact c"
   .			" WHERE (company LIKE '%" . $names[0] . "%')"
-        .               " AND docid = '" . mysql_real_escape_string($_GET['fid']) . "' "
+        .               " AND docid = '" . mysqli_real_escape_string($con, $_GET['fid']) . "' "
         .               " AND c.status=1 "
 	.		" AND merge_id IS NULL ORDER BY c.company ASC";
 $result = mysql_query($sql) or die(mysql_error());

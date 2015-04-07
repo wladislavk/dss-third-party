@@ -32,7 +32,7 @@ $sql = "SELECT  "
      . " LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."' "
      . " LEFT JOIN (SELECT patientid, SUM(paid_amount) amount FROM dental_ledger 
       LEFT JOIN dental_transaction_code tc2 on tc2.transaction_code = dental_ledger.transaction_code AND tc2.docid='".$_SESSION['docid']."' 
-                WHERE tc2.type='".mysql_real_escape_string(DSS_TRXN_TYPE_ADJ)."' 
+                WHERE tc2.type='".mysqli_real_escape_string($con, DSS_TRXN_TYPE_ADJ)."' 
                 group by patientid) a ON a.patientid=dl.patientid "
      . "WHERE dl.docid='".$_SESSION['docid']."'  "
      . " AND tc.type!='".mysqli_real_escape_string($con,DSS_TRXN_TYPE_ADJ)."' OR tc.type IS NULL) "

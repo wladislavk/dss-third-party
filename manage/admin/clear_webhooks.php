@@ -1,7 +1,6 @@
 <?php
-	session_start();
-        require_once('includes/main_include.php');
-	require_once('includes/sescheck.php');
+require_once('includes/main_include.php');
+require_once('includes/sescheck.php');
 
 if(isset($_GET['clear'])){
 
@@ -19,7 +18,7 @@ if(isset($_GET['clear'])){
                 '202020202', 
                 '212121212')";	
 
-	mysql_query($s);
+	mysqli_query($con, $s);
 	?><h1>Test reference IDs deleted.</h1><?php
 
 }
@@ -42,8 +41,8 @@ if(isset($_GET['clear'])){
                 '919191919', 
                 '202020202', 
                 '212121212')"; 
-	$q = mysql_query($s);
-	while($r = mysql_fetch_assoc($q)){
+	$q = mysqli_query($con, $s);
+	while($r = mysqli_fetch_assoc($q)){
 		?><tr>
 		<td><?php echo $r['claimid']; ?></td>
                 <td><?php echo $r['reference_id']; ?></td>		

@@ -625,7 +625,7 @@ if(isset($_POST['flowsubmit'])){
 
     if(mysql_num_rows($flowresult) <= 0){
                 $s_sql = "SELECT referred_by, referred_source FROM dental_patients
-                        WHERE patientid=".mysql_real_escape_string($_GET['pid']);
+                        WHERE patientid=".mysqli_real_escape_string($con, $_GET['pid']);
                 $s_q = mysql_query($s_sql);
                 $s_r = mysql_fetch_assoc($s_q);
 	                $old_referred_by = $s_r['referred_by'];
@@ -636,9 +636,9 @@ $s1 = "UPDATE dental_flow_pg2_info SET copyreqdate = '".$copyreqdate."' WHERE pa
 mysql_query($s1);
                 if($old_referred_by != $referred_by || $old_referred_source != $referred_source){
                         if($_POST['referred_by']){
-                                $sql = "UPDATE dental_letters SET md_referral_list=".$referred_by." WHERE patientid=".mysql_real_escape_string($pid)."";
+                                $sql = "UPDATE dental_letters SET md_referral_list=".$referred_by." WHERE patientid=".mysqli_real_escape_string($con, $pid)."";
                         }else{
-                                $sql = "DELETE FROM dental_letters where patientid=".mysql_real_escape_string($pid)." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
+                                $sql = "DELETE FROM dental_letters where patientid=".mysqli_real_escape_string($con, $pid)." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
                         }
                         mysql_query($sql);
                 }
@@ -687,7 +687,7 @@ mysql_query($s1);
 
     }else{
                 $s_sql = "SELECT referred_by, referred_source FROM dental_patients
-                        WHERE patientid=".mysql_real_escape_string($_GET['pid']);
+                        WHERE patientid=".mysqli_real_escape_string($con, $_GET['pid']);
                 $s_q = mysql_query($s_sql);
                 $s_r = mysql_fetch_assoc($s_q);
                         $old_referred_by = $s_r['referred_by'];
@@ -699,9 +699,9 @@ mysql_query($s1);
 
  if($old_referred_by != $referred_by || $old_referred_source != $referred_source){
                         if($referred_by){
-                                $sql = "UPDATE dental_letters SET md_referral_list=".$referred_by." WHERE patientid=".mysql_real_escape_string($pid)."";
+                                $sql = "UPDATE dental_letters SET md_referral_list=".$referred_by." WHERE patientid=".mysqli_real_escape_string($con, $pid)."";
                         }else{
-                                $sql = "DELETE FROM dental_letters where patientid=".mysql_real_escape_string($pid)." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
+                                $sql = "DELETE FROM dental_letters where patientid=".mysqli_real_escape_string($con, $pid)." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
                         }
                         mysql_query($sql);
                 }

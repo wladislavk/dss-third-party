@@ -183,7 +183,7 @@ if(isset($_POST['submit'])){
                 JOIN dental_user_company uc ON uc.userid = u.userid
                 JOIN companies c ON uc.companyid = c.id
                 JOIN dental_plans p ON p.id=u.plan_id
-                WHERE u.userid='".mysql_real_escape_string($user['userid'])."'";
+                WHERE u.userid='".mysqli_real_escape_string($con, $user['userid'])."'";
   $doc_q = mysqli_query($con, $doc_sql);
 if(mysqli_num_rows($doc_q) == 0){
   //If no plan get company fees
@@ -191,7 +191,7 @@ if(mysqli_num_rows($doc_q) == 0){
                 FROM dental_users u
                 JOIN dental_user_company uc ON uc.userid = u.userid
                 JOIN companies c ON uc.companyid = c.id
-                WHERE u.userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+                WHERE u.userid='".mysqli_real_escape_string($con, $_REQUEST['docid'])."'";
   $doc_q = mysqli_query($con, $doc_sql);
 
 }
@@ -278,7 +278,7 @@ if(mysqli_num_rows($doc_q) == 0){
     $up_sql = "UPDATE dental_fax_invoice SET
 		invoice_id = '".mysqli_real_escape_string($con,$i_id)."'
 		WHERE invoice_id = '".$invoice_id."'
-        AND id != '".mysql_real_escape_string($fax_invoice_id)."'"; //DO NOT UPDATE FREE FAX INVOICE
+        AND id != '".mysqli_real_escape_string($con, $fax_invoice_id)."'"; //DO NOT UPDATE FREE FAX INVOICE
     mysqli_query($con,$up_sql);
     
   }

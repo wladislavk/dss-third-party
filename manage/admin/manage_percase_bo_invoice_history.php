@@ -2,7 +2,7 @@
 include "includes/top.htm";
 require_once '../3rdParty/stripe/lib/Stripe.php';
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
-	WHERE pi.companyid='".mysql_real_escape_string($_GET['companyid'])."' AND pi.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_SU_BC)."' ORDER BY adddate DESC";
+	WHERE pi.companyid='".mysqli_real_escape_string($con, $_GET['companyid'])."' AND pi.invoice_type='".mysqli_real_escape_string($con, DSS_INVOICE_TYPE_SU_BC)."' ORDER BY adddate DESC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -10,7 +10,7 @@ $no_pages = $total_rec/$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
-$c_sql = "SELECT * from companies WHERE id=".mysql_real_escape_string($_GET['companyid']);
+$c_sql = "SELECT * from companies WHERE id=".mysqli_real_escape_string($con, $_GET['companyid']);
 $c_q = mysql_query($c_sql);
 $company = mysql_fetch_assoc($c_q);
 
@@ -33,7 +33,7 @@ $company = mysql_fetch_assoc($c_q);
         <b><? echo $_GET['msg'];?></b>
 </div>
 <?php 
-$sql = "SELECT * FROM companies where id='".mysql_real_escape_string($_GET['companyid'])."'";
+$sql = "SELECT * FROM companies where id='".mysqli_real_escape_string($con, $_GET['companyid'])."'";
 $q = mysql_query($sql);
 $myarray = mysql_fetch_assoc($q);
 ?>
@@ -177,7 +177,7 @@ $case_q = mysql_query($case_sql);
 </div>
 <?php
   $charge_sql = "SELECT * FROM dental_charge
-			WHERE userid='".mysql_real_escape_string($_GET['docid'])."'";
+			WHERE userid='".mysqli_real_escape_string($con, $_GET['docid'])."'";
   $charge_q = mysql_query($charge_sql);
 ?>
 
@@ -244,7 +244,7 @@ $case_q = mysql_query($case_sql);
 $key_sql = "SELECT stripe_secret_key FROM companies c 
                 JOIN dental_user_company uc
                         ON c.id = uc.companyid
-                 WHERE uc.userid='".mysql_real_escape_string($_GET['docid'])."'";
+                 WHERE uc.userid='".mysqli_real_escape_string($con, $_GET['docid'])."'";
 $key_q = mysql_query($key_sql);
 $key_r= mysql_fetch_assoc($key_q);
 

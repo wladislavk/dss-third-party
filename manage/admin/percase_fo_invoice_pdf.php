@@ -6,7 +6,7 @@ require_once('../includes/constants.inc');
 
 $invoice_sql = "SELECT pi.*, u.name, u.address, u.city, u.state, u.zip, u.phone, u.user_type FROM dental_percase_invoice pi
 	JOIN dental_users u ON u.userid=pi.docid
-	WHERE id='".mysql_real_escape_string($_GET['invoice_id'])."'";
+	WHERE id='".mysqli_real_escape_string($con, $_GET['invoice_id'])."'";
 $invoice_q = mysql_query($invoice_sql);
 $invoice = mysql_fetch_assoc($invoice_q);
 

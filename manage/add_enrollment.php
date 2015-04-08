@@ -21,6 +21,9 @@
     <link rel="stylesheet" href="/manage/css/form.css" type="text/css" />
     <link href="/manage/css/search-hints.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="script/wufoo.js"></script>
+    <style type="text/css">
+        div { clear:both; }
+    </style>
   </head>
 
   <body>

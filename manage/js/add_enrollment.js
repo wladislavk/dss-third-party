@@ -1,3 +1,4 @@
+$('#transaction_type').on("change", update_list);
 $('#provider_select').change(function(event){
   var json = $(this).val();
   var r = $.parseJSON(json);

@@ -1,8 +1,8 @@
 <? include"includes/top.htm";
 
 $home_sql = "select * from homepage";
-$home_my = mysql_query($home_sql);
-$home_myarray = mysql_fetch_array($home_my);
+$home_my = mysqli_query($con, $home_sql);
+$home_myarray = mysqli_fetch_array($home_my);
 ?>  
 	<table width="960" border="0" cellspacing="0" cellpadding="0">
 		<tr>

@@ -4,7 +4,7 @@ include "includes/top.htm";
 if($_REQUEST["delid"] != "")
 {
 	$del_sql = "delete from filemanager where id='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con, $del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -25,13 +25,13 @@ else
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select * from filemanager where docid='".$_SESSION['docid']."' order by name";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_contact=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$num_contact=mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -82,7 +82,7 @@ $num_contact=mysql_num_rows($my);
 	</table>
 	<div style="overflow:auto; height:400px; overflow-x:hidden; overflow-y:scroll;">
 <table width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -93,7 +93,7 @@ $num_contact=mysql_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 
 				$tr_class = "tr_active";

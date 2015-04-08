@@ -3,8 +3,8 @@
 include 'admin/includes/config.php';
 
 $s = "SELECT adminid, name FROM admin";
-$q = mysql_query($s);
-while($r = mysql_fetch_assoc($q)){
+$q = mysqli_query($con, $s);
+while($r = mysqli_fetch_assoc($q)){
 
   echo $r['name'];
   echo "<br />";
@@ -17,11 +17,11 @@ while($r = mysql_fetch_assoc($q)){
   echo " ".$f. " " .$l;
   echo "<br /><br />";
 
-  $u = "UPDATE admin SET first_name = '".mysql_real_escape_string($f)."',
-		last_name = '".mysql_real_escape_string($l)."'
-		WHERE adminid='".mysql_real_escape_string($r['adminid'])."'
+  $u = "UPDATE admin SET first_name = '".mysqli_real_escape_string($con, $f)."',
+		last_name = '".mysqli_real_escape_string($con, $l)."'
+		WHERE adminid='".mysqli_real_escape_string($con, $r['adminid'])."'
 		";
-  //mysql_query($u);
+  //mysqli_query($con, $u);
 
 
 

@@ -32,7 +32,7 @@ $sql = "SELECT  "
      . " LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."' "
      . " LEFT JOIN (SELECT patientid, SUM(paid_amount) amount FROM dental_ledger 
       LEFT JOIN dental_transaction_code tc2 on tc2.transaction_code = dental_ledger.transaction_code AND tc2.docid='".$_SESSION['docid']."' 
-                WHERE tc2.type='".mysql_real_escape_string(DSS_TRXN_TYPE_ADJ)."' 
+                WHERE tc2.type='".mysqli_real_escape_string($con, DSS_TRXN_TYPE_ADJ)."' 
                 group by patientid) a ON a.patientid=dl.patientid "
      . "WHERE dl.docid='".$_SESSION['docid']."'  "
      . " AND tc.type!='".mysqli_real_escape_string($con,DSS_TRXN_TYPE_ADJ)."' OR tc.type IS NULL) "
@@ -42,7 +42,7 @@ $my = $db->getResults($sql);
 /*
 $sql .= " order by service_date";
 
-$total_rec = mysql_num_rows($my);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 */
 
@@ -132,7 +132,7 @@ $num_users = count($my);
 		$charges_90 = 0;
     $charges_120 = 0;
 
-    while($myarray = mysql_fetch_array($my))
+    while($myarray = mysqli_fetch_array($my))
     {
 $pay_sql = "SELECT  "
      . "  sum(pay.amount) as paid_amount "
@@ -146,8 +146,8 @@ $pay_sql = "SELECT  "
 $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2)){
   $pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
-  $pat_my = mysql_query($pat_sql);
-  $pat_myarray = mysql_fetch_array($pat_my);
+  $pat_my = mysqli_query($con, $pat_sql);
+  $pat_myarray = mysqli_fetch_array($pat_my);
 
   $pat_credits_total = $paid_amount+$myarray['adjusted_amount'];
 
@@ -160,8 +160,8 @@ if(round($myarray['amount'],2)!=round($paid_amount+$myarray['adjusted_amount'],2
      . "AND p.patientid='".$myarray['patientid']."' "
      . "AND dl.service_date > DATE_SUB(NOW(), INTERVAL 30 day) "
      . "GROUP BY dl.patientid";
-  $seg_q = mysql_query($seg_sql);
-  $seq_r = mysql_fetch_assoc($seg_q);
+  $seg_q = mysqli_query($con, $seg_sql);
+  $seq_r = mysqli_fetch_assoc($seg_q);
   $pat_cur_owed = $seq_r['amount'];
 
   $seg_sql = "SELECT "

@@ -32,7 +32,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
   $copyreqdate = s_for($_POST['copyreqdate']);
   $sleeplab = s_for($_POST['sleeplab']);
   $patientid = $_GET['pid'];
-  $doc_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysql_real_escape_string($patientid)."'";
+  $doc_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $patientid)."'";
   $doc_q = mysqli_query($con,$doc_sql);
   $doc = mysqli_fetch_assoc($doc_q);
                 if($_FILES["ss_file"]["name"] <> '')
@@ -60,8 +60,8 @@ if(isset($_POST['submitnewsleeplabsumm'])){
                                         adddate = now(),
                                         ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                                        mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
-					$image_id = mysql_insert_id();
+                                        mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysqli_error($con));
+					$image_id = mysqli_insert_id($con);
 			}
                 }
                 else
@@ -94,12 +94,12 @@ if(isset($_POST['submitnewsleeplabsumm'])){
 )
 VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."', '".$image_id."')";
 error_log($q);
-  $run_q = mysqli_query($con,$q) or die(mysql_error());
+  $run_q = mysqli_query($con,$q) or die(mysqli_error($con));
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
   }else{
         if($uploaded){
-                $ins_id = mysql_insert_id();
+                $ins_id = mysqli_insert_id($con);
 }
    $msg = "Successfully added sleep lab". $uploaded;
 ?>
@@ -253,7 +253,7 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
                         title = '".s_for($title)."',
                         imagetypeid = '".s_for($imagetypeid)."' ";
                         $ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
-                        mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
+                        mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysqli_error($con));
 
                         $msg = "Edited Successfully";
                         ?>
@@ -274,7 +274,7 @@ if($uploaded ){
 			  $ed_sql .= ", image_file = '".s_for($banner1)."' ";
 			}
 			$ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
-			mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysqli_error($con));
 			
 			$msg = "Edited Successfully";
 			?>
@@ -296,8 +296,8 @@ if($uploaded ){
 			adddate = now(),
 			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 			
-			mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
-			$imageid = mysql_insert_id();
+			mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysqli_error($con));
+			$imageid = mysqli_insert_id($con);
 			if($_POST['imagetypeid']==6){
 			  $rx_sql = "SELECT rx_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
 			  $rx_q = mysqli_query($con,$rx_sql);

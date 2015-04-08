@@ -6,9 +6,9 @@ include("includes/sescheck.php");
 if($_POST["videosub"] == 1)
 {
 	$sel_check = "select * from video where title = '".s_for($_POST["title"])."' and videoid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con, $sel_check);
 	
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg=" Video Title already exist. So please give another  Video Title.";
 		?>
@@ -49,9 +49,9 @@ if($_POST["videosub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update video set title = '".s_for($_POST["title"])."', status = '".s_for($_POST["status"])."', video_file = '".s_for($video)."' where videoid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
 			
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -64,7 +64,7 @@ if($_POST["videosub"] == 1)
 		else
 		{
 			$ins_sql = "insert into video set title = '".s_for($_POST["title"])."', status = '".s_for($_POST["status"])."', video_file = '".s_for($video)."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
 			
 			$msg = "Added Successfully";
 			?>
@@ -92,8 +92,8 @@ if($_POST["videosub"] == 1)
     <br />
     <?
     $thesql = "select * from video where videoid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	if($msg != '')
 	{

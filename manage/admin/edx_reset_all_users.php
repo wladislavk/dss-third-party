@@ -4,13 +4,13 @@
   if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['fromForm'] == 1 )
   {
     $users_sql = "SELECT userid, username, name, email FROM dental_users WHERE name IS NOT NULL;";
-    $users_result = mysql_query($users_sql);
-    while ($row = mysql_fetch_assoc($users_result))
+    $users_result = mysqli_query($con, $users_sql);
+    while ($row = mysqli_fetch_assoc($users_result))
     {
       $edx_id = shell_exec('sh ../edx_scripts/edxNewUser.sh '.urlencode($row["username"]).' '.urlencode($row["email"]).' '.urlencode('sdfgnliqwertyuilmcvxsdfdfvasdasd').' '.urlencode($row["name"]));
       echo $edx_id;
       $update_sql ="UPDATE dental_users SET edx_id=".$edx_id." WHERE userid=".$row["userid"].";";
-      $update_result = mysql_query($update_sql);
+      $update_result = mysqli_query($con, $update_sql);
     }
 
   }

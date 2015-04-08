@@ -16,40 +16,40 @@ $snore_4 = $_REQUEST['snore_4'];
 $snore_5 = $_REQUEST['snore_5'];
 
 $s = "INSERT INTO dental_hst SET
-	screener_id = '".mysql_real_escape_string($screenerid)."',
-	doc_id = '".mysql_real_escape_string($docid)."',
-	user_id = '".mysql_real_escape_string($userid)."',
-	company_id = '".mysql_real_escape_string($companyid)."',
-	patient_firstname = '".mysql_real_escape_string($patient_first_name)."',
-        patient_lastname = '".mysql_real_escape_string($patient_last_name)."',
-	patient_cell_phone = '".mysql_real_escape_string(num($patient_cell_phone))."',
-	patient_email = '".mysql_real_escape_string($patient_email)."',
-	patient_dob = '".mysql_real_escape_string(date('Y-m-d', strtotime($patient_dob)))."',
-        snore_1 = '".mysql_real_escape_string($snore_1)."',
-        snore_2 = '".mysql_real_escape_string($snore_2)."',
-        snore_3 = '".mysql_real_escape_string($snore_3)."',
-        snore_4 = '".mysql_real_escape_string($snore_4)."',
-        snore_5 = '".mysql_real_escape_string($snore_5)."',
+	screener_id = '".mysqli_real_escape_string($con, $screenerid)."',
+	doc_id = '".mysqli_real_escape_string($con, $docid)."',
+	user_id = '".mysqli_real_escape_string($con, $userid)."',
+	company_id = '".mysqli_real_escape_string($con, $companyid)."',
+	patient_firstname = '".mysqli_real_escape_string($con, $patient_first_name)."',
+        patient_lastname = '".mysqli_real_escape_string($con, $patient_last_name)."',
+	patient_cell_phone = '".mysqli_real_escape_string($con, num($patient_cell_phone))."',
+	patient_email = '".mysqli_real_escape_string($con, $patient_email)."',
+	patient_dob = '".mysqli_real_escape_string($con, date('Y-m-d', strtotime($patient_dob)))."',
+        snore_1 = '".mysqli_real_escape_string($con, $snore_1)."',
+        snore_2 = '".mysqli_real_escape_string($con, $snore_2)."',
+        snore_3 = '".mysqli_real_escape_string($con, $snore_3)."',
+        snore_4 = '".mysqli_real_escape_string($con, $snore_4)."',
+        snore_5 = '".mysqli_real_escape_string($con, $snore_5)."',
 	status = 0,
 	adddate=now(),
 	ip_address='".$_SERVER['REMOTE_ADDR']."'
 	";
-	$hst = mysql_query($s);
-	$hst_id = mysql_insert_id();
+	$hst = mysqli_query($con, $s);
+	$hst_id = mysqli_insert_id($con);
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysql_query($epworth_sql);
-  $epworth_number = mysql_num_rows($epworth_my);
-  while($epworth_myarray = mysql_fetch_array($epworth_my))
+  $epworth_my = mysqli_query($con, $epworth_sql);
+  $epworth_number = mysqli_num_rows($epworth_my);
+  while($epworth_myarray = mysqli_fetch_array($epworth_my))
   {
     $chk = $_REQUEST['epworth_'.$epworth_myarray['epworthid']];
     if($chk != ''){
       $hst_sql = "INSERT INTO dental_hst_epworth SET
-                        hst_id = '".mysql_real_escape_string($hst_id)."',
-                        epworth_id = '".mysql_real_escape_string($epworth_myarray['epworthid'])."',
-                        response = '".mysql_real_escape_string($chk)."',
+                        hst_id = '".mysqli_real_escape_string($con, $hst_id)."',
+                        epworth_id = '".mysqli_real_escape_string($con, $epworth_myarray['epworthid'])."',
+                        response = '".mysqli_real_escape_string($con, $chk)."',
                         adddate = now(),
-                        ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
-      mysql_query($hst_sql);
+                        ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'";
+      mysqli_query($con, $hst_sql);
     }
   }
 

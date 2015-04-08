@@ -6,11 +6,11 @@ include_once('includes/password.php');
 if($_POST["adminsub"] == 1)
 {
 	$sel_check = "select * from admin where username = '".s_for($_POST["username"])."' and adminid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con, $sel_check);
         $sel_check2 = "select * from admin where email = '".s_for($_POST["email"])."' and adminid <> '".s_for($_POST['ed'])."'";
-        $query_check2=mysql_query($sel_check2);
+        $query_check2=mysqli_query($con, $sel_check2);
 
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Username already exist. So please give another Username.";
 		?>
@@ -20,7 +20,7 @@ if($_POST["adminsub"] == 1)
 		</script>
 		<?
 	} 
-	elseif(mysql_num_rows($query_check2)>0)
+	elseif(mysqli_num_rows($query_check2)>0)
         {
                 $msg="Email already exist. So please give another Email.";
                 ?>
@@ -40,9 +40,9 @@ if($_POST["adminsub"] == 1)
 				name = '".s_for($_POST["name"])."', 
 				email = '".s_for($_POST["email"])."' 
 			where adminid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
 			
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -61,13 +61,13 @@ if($_POST["adminsub"] == 1)
 			$ins_sql = "insert into admin SET
 				username = '".s_for($_POST["username"])."',
 				admin_access = '".s_for($_POST['admin_access'])."', 
-				password = '".mysql_real_escape_string($password)."', 
+				password = '".mysqli_real_escape_string($con, $password)."', 
 				salt = '".$salt."',
 				name = '".s_for($_POST["name"])."', 
 				email = '".s_for($_POST["email"])."', 
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
 
 			$msg = "Added Successfully";
 			?>
@@ -87,8 +87,8 @@ if($_POST["adminsub"] == 1)
 
     <?
     $thesql = "select * from admin where adminid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	if($msg != '')
 	{

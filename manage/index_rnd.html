@@ -3,14 +3,14 @@ session_start();
 require_once('admin/includes/main_include.php');
 
 $page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
-$page_my = mysql_query($page_sql);
-$page_myarray = mysql_fetch_array($page_my);
+$page_my = mysqli_query($con, $page_sql);
+$page_myarray = mysqli_fetch_array($page_my);
 
 if($_SESSION['loginid'] <> '')
 {
 $cur_page_full =  $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
 $cur_ins_sql = "insert into dental_login_detail (loginid,userid,cur_page,adddate,ip_address) values('".$_SESSION['loginid']."','".$_SESSION['userid']."','".$cur_page_full."',now(),'".$_SERVER['REMOTE_ADDR']."')";
-mysql_query($cur_ins_sql);
+mysqli_query($con, $cur_ins_sql);
 }
 
 if(strpos($_SERVER['PHP_SELF'],'q_page') === false && strpos($_SERVER['PHP_SELF'],'ex_page') === false && strpos($_SERVER['PHP_SELF'],'q_sleep') === false && strpos($_SERVER['PHP_SELF'],'q_image') === false)

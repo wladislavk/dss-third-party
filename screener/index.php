@@ -107,9 +107,9 @@ if(!isset($_SESSION['screener_doc'])){
 
 <?php
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysql_query($epworth_sql);
-  $epworth_number = mysql_num_rows($epworth_my);
-  while($epworth_myarray = mysql_fetch_array($epworth_my))
+  $epworth_my = mysqli_query($con, $epworth_sql);
+  $epworth_number = mysqli_num_rows($epworth_my);
+  while($epworth_myarray = mysqli_fetch_array($epworth_my))
   {
 ?>
 <div class="sepH_b clear" id="epworth_<?= $epworth_myarray['epworthid']; ?>_div">
@@ -345,9 +345,9 @@ Survey: <span id="survey_score"></span>
 Sleep apnea is a life-threatening disease, and education and understanding of the condition is of utmost importance. Please mention this during your visit - we would love to help you learn more.
 </div>
 <?php
-  $s = "SELECT name FROM dental_users where userid='".mysql_real_escape_string($_SESSION['screener_doc'])."'";
-  $q = mysql_query($s);
-  $r = mysql_fetch_assoc($q);
+  $s = "SELECT name FROM dental_users where userid='".mysqli_real_escape_string($con, $_SESSION['screener_doc'])."'";
+  $q = mysqli_query($con, $s);
+  $r = mysqli_fetch_assoc($q);
 ?>
 
 <div class="risk_desc" id="risk_moderate">
@@ -394,10 +394,10 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 <a href="#results" onclick="$('#results_div').toggle();" class="fl next btn btn_medium btn_d">View Results</a>
 <?php
                           $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['screener_doc'])."'
+                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con, $_SESSION['screener_doc'])."'
                                         WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
-                                 $bu_q = mysql_query($bu_sql);
-                                if(mysql_num_rows($bu_q)>0){
+                                 $bu_q = mysqli_query($con, $bu_sql);
+                                if(mysqli_num_rows($bu_q)>0){
 ?>
 
 <a style="margin-left:20px;" href="#" onclick="return show_hst();" id="sect5_next" class="fr next btn btn_medium btn_d">Request HST (Doctor Only) &raquo;</a>
@@ -434,9 +434,9 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
     </div>
 <?php
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysql_query($epworth_sql);
-  $epworth_number = mysql_num_rows($epworth_my);
-  while($ea = mysql_fetch_array($epworth_my))
+  $epworth_my = mysqli_query($con, $epworth_sql);
+  $epworth_number = mysqli_num_rows($epworth_my);
+  while($ea = mysqli_fetch_array($epworth_my))
   {
 ?>
     <div class="check">
@@ -524,10 +524,10 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
         <label class="lbl_a">HST Company</label>
   <?php
                           $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['screener_doc'])."'
+                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con, $_SESSION['screener_doc'])."'
                                         WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
-                                 $bu_q = mysql_query($bu_sql);
-                          while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
+                                 $bu_q = mysqli_query($con, $bu_sql);
+                          while($bu_r = mysqli_fetch_assoc($bu_q)){ ?>
 <?php if($bu_r['logo']){ ?>
   <img src="../manage/q_file/<?= $bu_r['logo']; ?>" /><br />
 <?php } ?>

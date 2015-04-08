@@ -4,7 +4,7 @@ include "includes/top.htm";
 if($_REQUEST["delid"] != "")
 {
 	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con, $del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -147,7 +147,7 @@ if($_POST["flowsheetsub"] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
 		
 		$msg = "Added Successfully - Please complete step 1 in the flowsheet \"INQUIRY CALL\"";
 		?>
@@ -163,9 +163,9 @@ if($_POST["flowsheetsub"] == 1)
 	$patientid = $_GET['pid'];
 	$getcstep_query = "SELECT step,sstep FROM dental_flowsheet_new WHERE patientid =".$patientid;
 	
-	$getcstep_array = mysql_query($getcstep_query);
+	$getcstep_array = mysqli_query($con, $getcstep_query);
 	
-	while($getcstep = mysql_fetch_array($getcstep_array)){
+	while($getcstep = mysqli_fetch_array($getcstep_array)){
     $stepq = $getcstep['step'];
     $sstepq = $getcstep['sstep'];
   }
@@ -282,7 +282,7 @@ if($_POST["flowsheetsub"] == 1)
 		sstep = '".$sstep."',
 		step = '".$step."' where flowsheetid='".$_POST["ed"]."'";
 		
-		mysql_query($up_sql) or die($up_sql." | ".mysql_error());
+		mysqli_query($con, $up_sql) or die($up_sql." | ".mysqli_error($con));
 		
 		$msg = "Edited Successfully";
 		?>
@@ -296,8 +296,8 @@ if($_POST["flowsheetsub"] == 1)
 }
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -312,8 +312,8 @@ if($pat_myarray['patientid'] == '')
 }
 
 $sql = "select * from dental_flowsheet_new where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate";
-$my = mysql_query($sql) or die(mysql_error());
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql) or die(mysqli_error($con));
+$myarray = mysqli_fetch_array($my);
 
 $flowsheetid = st($myarray['flowsheetid']);
 $inquiry_call_comp = st($myarray['inquiry_call_comp']);
@@ -946,12 +946,12 @@ else
 						<span class="left">
 							<? 
 							$slab_sql = "select * from dental_sleeplab where docid='".$_SESSION['docid']."' order by company";
-							$s_my = mysql_query($slab_sql) or die(mysql_error()." | ".$slab_sql);
+							$s_my = mysqli_query($con, $slab_sql) or die(mysqli_error($con)." | ".$slab_sql);
 							?>
 								
 							<select name="sleep_lab" class="field text addr tbox">
 								<option value=""></option>
-								<? while($s_myarray = mysql_fetch_array($s_my))
+								<? while($s_myarray = mysqli_fetch_array($s_my))
 								{?>
 									<option value="<?=$s_myarray["sleeplabid"];?>" <? if($sleep_lab == $s_myarray["sleeplabid"]) { echo "selected";}?>>
 										<?=$s_myarray["company"];?>
@@ -1045,11 +1045,11 @@ else
 						<span class="right">
 							<? 
 							$doc_sql = "select * from dental_users where user_access=2 order by name";
-							$doc_my = mysql_query($doc_sql);
+							$doc_my = mysqli_query($con, $doc_sql);
 							?>
 							<select name="dss_dentists" class="field text addr tbox"  style="width:250px;">
 								<option value=""></option>
-								<? while($doc_myarray = mysql_fetch_array($doc_my))
+								<? while($doc_myarray = mysqli_fetch_array($doc_my))
 								{?>
 									<option value="<?=st($doc_myarray['userid'])?>" <? if(st($doc_myarray['userid']) == $dss_dentists) { echo " selected";}?>>
 										<?=st($doc_myarray['name'])?>

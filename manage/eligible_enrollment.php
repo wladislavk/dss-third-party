@@ -11,8 +11,8 @@ $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 $name = strtoupper(st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']));
 $pat_lastname = $pat_myarray['lastname'];
 $pat_firstname = $pat_myarray['firstname'];
@@ -64,9 +64,9 @@ $docid = st($pat_myarray['docid']);
 
 $sql = "select * from dental_insurance where insuranceid='".$_GET['insid']."' and patientid='".$_GET['pid']."'";
 
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
-$dent_rows = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_array($my);
+$dent_rows = mysqli_num_rows($my);
 $is_sent = ($status == DSS_CLAIM_SENT || $myarray['status'] == DSS_CLAIM_SEC_SENT) ? true : false;
 $is_pending = ($status == DSS_CLAIM_PENDING || $myarray['status'] == DSS_CLAIM_SEC_PENDING) ? true : false;
 $insuranceid = st($myarray['insuranceid']);
@@ -76,10 +76,10 @@ if(isset($_GET['payerid']) && $_GET['payerid']!=''){
 }else{
   $ins_payer_id = st($pat_myarray['p_m_eligible_id']);
 }
-$payer_sql = "SELECT * FROM dental_ins_payer WHERE id='".mysql_real_escape_string($ins_payer_id)."'";
+$payer_sql = "SELECT * FROM dental_ins_payer WHERE id='".mysqli_real_escape_string($con, $ins_payer_id)."'";
 error_log($payer_sql);
-$payer_q = mysql_query($payer_sql);
-$payer = mysql_fetch_assoc($payer_q);
+$payer_q = mysqli_query($con, $payer_sql);
+$payer = mysqli_fetch_assoc($payer_q);
 $eligible_id = $payer['payer_id'];
 $eligible_ins = $payer['name'];
 */
@@ -462,8 +462,8 @@ $sleepstudies = "SELECT ss.completed, ss.diagnosising_doc, ss.diagnosising_npi F
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
                         ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
 
-  $result = mysql_query($sleepstudies);
-  $d = mysql_fetch_assoc($result);
+  $result = mysqli_query($con, $sleepstudies);
+  $d = mysqli_fetch_assoc($result);
   $diagnosising_doc = $d['diagnosising_doc'];
   $diagnosising_npi = $d['diagnosising_npi'];
 if($insurancetype!=1){
@@ -484,37 +484,37 @@ if (empty($prior_authorization_number)) {
          . "ORDER BY "
          . "  date_completed desc "
          . "LIMIT 1";
-    $my = mysql_query($sql);
-    $num_rows = mysql_num_rows($my);
+    $my = mysqli_query($con, $sql);
+    $num_rows = mysqli_num_rows($my);
     
     if ($num_rows > 0) {
-        $myarray = mysql_fetch_array($my);
+        $myarray = mysqli_fetch_array($my);
         $prior_authorization_number = $myarray['pre_auth_num'];
     }
 }
 
 $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
-$inscoarray = mysql_query($inscoquery);
-$inscoinfo = mysql_fetch_array($inscoarray);
+$inscoarray = mysqli_query($con, $inscoquery);
+$inscoinfo = mysqli_fetch_array($inscoarray);
 
 $referredby_sql = "select * from dental_contact where `contactid` = ".$referredby." LIMIT 1;";
-$referredby_my = mysql_query($referredby_sql);
+$referredby_my = mysqli_query($con, $referredby_sql);
 
                 if($referred_source==1){
                   $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referredby;
-                  $rq = mysql_query($rsql);
-                  $r = mysql_fetch_assoc($rq);
+                  $rq = mysqli_query($con, $rsql);
+                  $r = mysqli_fetch_assoc($rq);
                   $ref_name = $r['firstname'].", ".$r['lastname'];                
 		}elseif($referred_source==2){
                   $rsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$referredby;
-                  $rq = mysql_query($rsql);
-                  $r = mysql_fetch_assoc($rq);
+                  $rq = mysqli_query($con, $rsql);
+                  $r = mysqli_fetch_assoc($rq);
                   $ref_name = $r['firstname']." ".$r['lastname'];
                 }
 
 $qua_sql = "select * from dental_qualifier where qualifierid=".$field_17a_dd;
-$qua_my = mysql_query($qua_sql);
-$qua_myarray = mysql_fetch_array($qua_my);
+$qua_my = mysqli_query($con, $qua_sql);
+$qua_myarray = mysqli_fetch_array($qua_my);
 $seventeenA = $qua_myarray['qualifier'];
 
                       $getuserinfo = "SELECT *, ";
@@ -525,16 +525,16 @@ $seventeenA = $qua_myarray['qualifier'];
 			}
   			$getuserinfo .= " as 'provider_id' ";
 			$getuserinfo .= " FROM `dental_users` WHERE `userid` = '".$docid."'";
-                      $userquery = mysql_query($getuserinfo);
-                      $userinfo = mysql_fetch_array($userquery);
-        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
-        $prod_q = mysql_query($prod_s);
-        $prod_r = mysql_fetch_assoc($prod_q);
+                      $userquery = mysqli_query($con, $getuserinfo);
+                      $userinfo = mysqli_fetch_array($userquery);
+        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
+        $prod_q = mysqli_query($con, $prod_s);
+        $prod_r = mysqli_fetch_assoc($prod_q);
         $claim_producer = $prod_r['producer'];
 
                       $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
-                      $userquery = mysql_query($getuserinfo);
-                      if($userinfo = mysql_fetch_array($userquery)){
+                      $userquery = mysqli_query($con, $getuserinfo);
+                      if($userinfo = mysqli_fetch_array($userquery)){
                         $phone = $userinfo['phone'];
                         $practice = $userinfo['practice'];
                         $address = $userinfo['address'];
@@ -548,8 +548,8 @@ $seventeenA = $qua_myarray['qualifier'];
 
                       }
                       $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
-                      $docquery = mysql_query($getdocinfo);
-                      $docinfo = mysql_fetch_array($docquery);
+                      $docquery = mysqli_query($con, $getdocinfo);
+                      $docinfo = mysqli_fetch_array($docquery);
                         if($phone == ""){ $phone = $docinfo['phone']; }
                         if($practice == ""){ $practice = $docinfo['practice']; }
                         if($address == ""){ $address = $docinfo['address']; }
@@ -562,32 +562,32 @@ $seventeenA = $qua_myarray['qualifier'];
 			if($medicare_ptan == ""){ $medicare_ptan = $docinfo['medicare_ptan']; }
 
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$diagnosis_1;
-$ins_diag_my = mysql_query($ins_diag_sql);
-$ins_diag_myarray = mysql_fetch_array($ins_diag_my);
+$ins_diag_my = mysqli_query($con, $ins_diag_sql);
+$ins_diag_myarray = mysqli_fetch_array($ins_diag_my);
 $dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
 $diagnosis_1 = $ins_diag_myarray['ins_diagnosis'];
 $diagnosis_1_left_fill = $dia[0];
 $diagnosis_1_right_fill = $dia[1];
 
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$diagnosis_2;
-$ins_diag_my = mysql_query($ins_diag_sql);
-$ins_diag_myarray = mysql_fetch_array($ins_diag_my);                            
+$ins_diag_my = mysqli_query($con, $ins_diag_sql);
+$ins_diag_myarray = mysqli_fetch_array($ins_diag_my);                            
 $dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
 $diagnosis_2 = $ins_diag_myarray['ins_diagnosis'];
 $diagnosis_2_left_fill = $dia[0];
 $diagnosis_2_right_fill = $dia[1];
 
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$diagnosis_3;
-$ins_diag_my = mysql_query($ins_diag_sql);
-$ins_diag_myarray = mysql_fetch_array($ins_diag_my);                            
+$ins_diag_my = mysqli_query($con, $ins_diag_sql);
+$ins_diag_myarray = mysqli_fetch_array($ins_diag_my);                            
 $dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
 $diagnosis_3 = $ins_diag_myarray['ins_diagnosis'];
 $diagnosis_3_left_fill = $dia[0];
 $diagnosis_3_right_fill = $dia[1];
 
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$diagnosis_4;
-$ins_diag_my = mysql_query($ins_diag_sql);
-$ins_diag_myarray = mysql_fetch_array($ins_diag_my);                            
+$ins_diag_my = mysqli_query($con, $ins_diag_sql);
+$ins_diag_myarray = mysqli_fetch_array($ins_diag_my);                            
 $dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
 $diagnosis_4 = $ins_diag_myarray['ins_diagnosis'];
 $diagnosis_4_left_fill = $dia[0];
@@ -604,9 +604,9 @@ if(isset($_GET['test']) && $_GET['test']==1){
 }
 
 $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($docid)."'";
-$api_key_query = mysql_query($api_key_sql);
-$api_key_result = mysql_fetch_assoc($api_key_query);
+$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $docid)."'";
+$api_key_query = mysqli_query($con, $api_key_sql);
+$api_key_result = mysqli_fetch_assoc($api_key_query);
 if($api_key_result && !empty($api_key_result['eligible_api_key'])){
   if(trim($api_key_result['eligible_api_key']) != ""){
     $api_key = $api_key_result['eligible_api_key'];
@@ -645,9 +645,9 @@ $data['subscriber'] = array(
                 "state" => $patient_state,
                 "zip" => $patient_zip),
 	"dob" => $claim_ins_dob);
-  $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".mysql_real_escape_string($pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$pat_myarray['docid']."'";
-  $ins_contact_qry_run = mysql_query($ins_contact_qry);
-  $ins_contact_res = mysql_fetch_array($ins_contact_qry_run);
+  $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".mysqli_real_escape_string($con, $pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$pat_myarray['docid']."'";
+  $ins_contact_qry_run = mysqli_query($con, $ins_contact_qry);
+  $ins_contact_res = mysqli_fetch_array($ins_contact_qry_run);
 
 $data['payer'] = array(
 	"name" => $eligible_ins,
@@ -703,10 +703,10 @@ if($insurancetype == '1'){
        . "ORDER BY "
        . "  ledger.service_date ASC";
 
-$query = mysql_query($sql);
+$query = mysqli_query($con, $sql);
 $c=0;
 $claim_lines = array();
-while ($array = mysql_fetch_assoc($query)) {
+while ($array = mysqli_fetch_assoc($query)) {
 $c++;
   $pos = preg_replace("/[^0-9]/","",$array['placeofservice']);
 $diagnosis = '';
@@ -761,16 +761,16 @@ $json_response = json_decode($result);
 $ref_id = $json_response->{"reference_id"};
 $success = $json_response->{"success"};
 $up_sql = "INSERT INTO dental_claim_electronic SET 
-        claimid='".mysql_real_escape_string($_GET['insid'])."',
-	reference_id = '".mysql_real_escape_string($ref_id)."',
-	response='".mysql_real_escape_string($result)."',
+        claimid='".mysqli_real_escape_string($con, $_GET['insid'])."',
+	reference_id = '".mysqli_real_escape_string($con, $ref_id)."',
+	response='".mysqli_real_escape_string($con, $result)."',
         adddate=now(),
-        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
+        ip_address='".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'
         ";
-mysql_query($up_sql);
+mysqli_query($con, $up_sql);
 if(!$success){
-  $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
-  mysql_query($up_sql);
+  $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
+  mysqli_query($con, $up_sql);
   claim_status_history_update($_GET['ins_id'], '', DSS_CLAIM_REJECTED, $_SESSION['userid']);
 ?>
 <script type="text/javascript">
@@ -799,9 +799,9 @@ $prefix = array( 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX');
 
 // Get modifier codes
 $mod_sql = "SELECT * FROM dental_modifier_code";
-$mod_my = mysql_query($mod_sql);
+$mod_my = mysqli_query($con, $mod_sql);
 $mod_array = array();
-while ($mod_row = mysql_fetch_array($mod_my)) {
+while ($mod_row = mysqli_fetch_array($mod_my)) {
   $mod_array[] = $mod_row;
 }
 
@@ -829,9 +829,9 @@ if($insurancetype == '1'){
        . "ORDER BY "
        . "  ledger.service_date ASC";
 
-$query = mysql_query($sql);
+$query = mysqli_query($con, $sql);
 $c=0;
-while ($array = mysql_fetch_array($query)) { 
+while ($array = mysqli_fetch_array($query)) { 
 $p = $prefix[$c];
 $c++;
   if($array['service_date']!=''){
@@ -933,8 +933,8 @@ if($_REQUEST['type']=="secondary"){
 }else{
   $fdf_field = "primary_fdf";
 }
-$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysql_real_escape_string($file)."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
-mysql_query($sql);
+$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysqli_real_escape_string($con, $file)."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
+mysqli_query($con, $sql);
             // this is where you'd do any custom handling of the data
             // if you wanted to put it in a database, email the
             // FDF data, push ti back to the user with a header() call, etc.

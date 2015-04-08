@@ -27,11 +27,11 @@ $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS s
 	.		" OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))"
         .               " AND p.status=1 "
 	.		" AND docid = '" . $_SESSION['docid'] . "' ORDER BY lastname ASC;";
-$result = mysql_query($sql);
+$result = mysqli_query($con, $sql);
 
 $patients = array();
 $i = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	$rxlomn = '';
                           if($row['rxreq'] != null && $row['rxrec'] == null){
         $day = (24 * 60 * 60);

@@ -6,10 +6,10 @@ require_once '../../manage/admin/includes/main_include.php';
   $hash = $_REQUEST['hash'];
 
   $s = "SELECT * FROM dental_patients WHERE
-	patientid=".mysql_real_escape_string($id)." AND
-	recover_hash='".mysql_real_escape_string($hash)."'";
-  $q = mysql_query($s);
-  $r = mysql_fetch_assoc($q);
+	patientid=".mysqli_real_escape_string($con, $id)." AND
+	recover_hash='".mysqli_real_escape_string($con, $hash)."'";
+  $q = mysqli_query($con, $s);
+  $r = mysqli_fetch_assoc($q);
   if($r['text_num'] >= 5 && strtotime($r['text_date'])>(time()-3600)){
     echo '{"error":"limit"}';
     die();
@@ -17,7 +17,7 @@ require_once '../../manage/admin/includes/main_include.php';
   if($r['access_code']=='' || strtotime($r['access_code_date']) < time()-86400){
                 $recover_hash = rand(100000, 999999);//substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);
                 $ins_sql = "UPDATE dental_patients set registration_status=1, access_code='".$recover_hash."', access_code_date = NOW() WHERE patientid='".$r['patientid']."'";
-                mysql_query($ins_sql);
+                mysqli_query($con, $ins_sql);
   }else{
 	$recover_hash = $r['access_code'];
   }
@@ -39,9 +39,9 @@ require_once '../../manage/admin/includes/main_include.php';
               "Your Dental Sleep Solutions access code is ".$recover_hash
             );
 		if(strtotime($r['text_date'])<(time()-3600) || $r['text_num']==0){
-		  mysql_query("UPDATE dental_patients SET text_num=1, text_date = NOW() WHERE patientid='".$r['patientid']."'");
+		  mysqli_query($con, "UPDATE dental_patients SET text_num=1, text_date = NOW() WHERE patientid='".$r['patientid']."'");
 		}else{
-                  mysql_query("UPDATE dental_patients SET text_num=text_num+1 WHERE patientid='".$r['patientid']."'");
+                  mysqli_query($con, "UPDATE dental_patients SET text_num=text_num+1 WHERE patientid='".$r['patientid']."'");
 		}
 		echo '{"success":true}';
           }else{

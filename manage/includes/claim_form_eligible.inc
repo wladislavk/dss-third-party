@@ -835,9 +835,9 @@ if (!$another_plan) {
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
-    $charge_my = mysql_query($sql);
-    if ($charge_my && (mysql_num_rows($charge_my) > 0)) {
-      $charge_row = mysql_fetch_array($charge_my);
+    $charge_my = mysqli_query($con, $sql);
+    if ($charge_my && (mysqli_num_rows($charge_my) > 0)) {
+      $charge_row = mysqli_fetch_array($charge_my);
       $total_charge = $charge_row['total_charge'];
     }
   }
@@ -855,9 +855,9 @@ if (!$another_plan) {
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
-    $charge_my = mysql_query($sql);
-    if ($charge_my && (mysql_num_rows($charge_my) > 0)) {
-      $charge_row = mysql_fetch_array($charge_my);
+    $charge_my = mysqli_query($con, $sql);
+    if ($charge_my && (mysqli_num_rows($charge_my) > 0)) {
+      $charge_row = mysqli_fetch_array($charge_my);
       $total_charge = $charge_row['total_charge'];
     }
   }

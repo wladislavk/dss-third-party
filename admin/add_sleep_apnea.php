@@ -7,9 +7,9 @@ include "fckeditor/fckeditor.php";
 if($_POST["sleep_apneaub"] == 1)
 {
 	$sel_check = "select * from sleep_apnea where title = '".s_for($_POST["title"])."' and sleep_apneaid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con, $sel_check);
 	
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Title already exist. So please give another Title.";
 		?>
@@ -33,9 +33,9 @@ if($_POST["sleep_apneaub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update sleep_apnea set title = '".s_for($_POST["title"])."', categoryid = '".s_for($_POST["categoryid"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."', sortby = '".$sby."' where sleep_apneaid='".$_POST["ed"]."'";
-			mysql_query($ed_sql);
+			mysqli_query($con, $ed_sql);
 			
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -48,7 +48,7 @@ if($_POST["sleep_apneaub"] == 1)
 		else
 		{
 			$ins_sql = "insert into sleep_apnea set title = '".s_for($_POST["title"])."', categoryid = '".s_for($_POST["categoryid"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."', sortby = '".$sby."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
 			
 			$msg = "Added Successfully";
 			?>
@@ -75,8 +75,8 @@ if($_POST["sleep_apneaub"] == 1)
 
     <?
     $thesql = "select * from sleep_apnea where sleep_apneaid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	if($msg != '')
 	{
@@ -137,8 +137,8 @@ if($_POST["sleep_apneaub"] == 1)
 					<option value="">Select</option>
 					<? 
 					$cat_sql = "select * from apnea_category where status=1 order by sortby";
-					$cat_my = mysql_query($cat_sql);
-					while($cat_myarray = mysql_fetch_array($cat_my))
+					$cat_my = mysqli_query($con, $cat_sql);
+					while($cat_myarray = mysqli_fetch_array($cat_my))
 					{
 					?>
 						<option value="<?=st($cat_myarray['categoryid'])?>" <? if($categoryid == st($cat_myarray['categoryid'])) echo " selected";?>>

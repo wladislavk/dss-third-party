@@ -99,9 +99,9 @@ if($_POST["doc_marketingub"] == 1)
 	if($_POST["ed"] != "")
 	{
 		$ed_sql = "update dental_doc_marketing set title = '".s_for($_POST["title"])."', docid = '".s_for($doc_id)."', description = '".s_for($_POST["description"])."', video_file = '".s_for($banner1)."', doc_file = '".s_for($banner2)."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."' where doc_marketingid='".$_POST["ed"]."'";
-		mysql_query($ed_sql);
+		mysqli_query($con, $ed_sql);
 		
-		//echo $ed_sql.mysql_error();
+		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -114,7 +114,7 @@ if($_POST["doc_marketingub"] == 1)
 	else
 	{
 		$ins_sql = "insert into dental_doc_marketing set title = '".s_for($_POST["title"])."', docid = '".s_for($doc_id)."', description = '".s_for($_POST["description"])."', video_file = '".s_for($banner1)."', doc_file = '".s_for($banner2)."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysql_query($ins_sql) or die($ins_sql.mysql_error());
+		mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
 		
 		$msg = "Added Successfully";
 		?>
@@ -133,8 +133,8 @@ if($_POST["doc_marketingub"] == 1)
 
     <?
     $thesql = "select * from dental_doc_marketing where doc_marketingid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 
 	$title = st($themyarray['title']);
 	$description = st($themyarray['description']);
@@ -252,8 +252,8 @@ if($_POST["doc_marketingub"] == 1)
             <td valign="top" class="frmdata">
             	<? 
 				$doc_sql = "select * from dental_users where status=1 and docid=0 order by username";
-				$doc_my = mysql_query($doc_sql);
-				//echo mysql_num_rows($doc_my);
+				$doc_my = mysqli_query($con, $doc_sql);
+				//echo mysqli_num_rows($doc_my);
 				?>
             	<input type="radio" name="show_to" value="0" <? if($show_to == 0) echo " checked";?> />
                 <b>ALL Doctors</b>
@@ -266,7 +266,7 @@ if($_POST["doc_marketingub"] == 1)
                 <br />
                 
                 <select name="docid[]" multiple="multiple" size="5" class="form-control">
-                	<? while($doc_myarray = mysql_fetch_array($doc_my))
+                	<? while($doc_myarray = mysqli_fetch_array($doc_my))
 					{?>
                     	<option value="<?=st($doc_myarray['userid'])?>"  <? if(strpos($docid,'~'.st($doc_myarray['userid']).'~') === false){ } else { echo " selected";}?>>
                         	<?=st($doc_myarray['username'])?>

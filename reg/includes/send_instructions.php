@@ -2,10 +2,10 @@
 require_once '../../manage/admin/includes/main_include.php';
 require_once '../../manage/includes/constants.inc';
 $t = $_POST['type'];
-    $s = "SELECT * FROM dental_patients WHERE email='".mysql_real_escape_string($_POST['email'])."' AND parent_patientid IS NULL";
-    $q = mysql_query($s);
-    if(mysql_num_rows($q) > 0){
-      $r = mysql_fetch_assoc($q);
+    $s = "SELECT * FROM dental_patients WHERE email='".mysqli_real_escape_string($con, $_POST['email'])."' AND parent_patientid IS NULL";
+    $q = mysqli_query($con, $s);
+    if(mysqli_num_rows($q) > 0){
+      $r = mysqli_fetch_assoc($q);
 	if($r['registration_status']==1 && $r['password']==''){ $t = 'activate'; }
       if($r['password']!='' && $t=='activate'){
         echo '{"error":"existing"}';
@@ -19,32 +19,32 @@ $t = $_POST['type'];
 
                 $recover_hash = hash('sha256', $r['patientid'].$_POST['email'].rand());
                 $ins_sql = "UPDATE dental_patients set recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
-                mysql_query($ins_sql);
+                mysqli_query($con, $ins_sql);
 
     }else{
       $recover_hash = $r['recover_hash'];
     }
-  $usql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
-  $uq = mysql_query($usql);
-  $ur = mysql_fetch_assoc($uq);
+  $usql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysqli_real_escape_string($con, $r['patientid'])."'";
+  $uq = mysqli_query($con, $usql);
+  $ur = mysqli_fetch_assoc($uq);
   $n = $ur['phone'];
 
 
-$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($r['patientid'])."'";
-$loc_q = mysql_query($loc_sql);
-$loc_r = mysql_fetch_assoc($loc_q);
+$loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($con, $r['patientid'])."'";
+$loc_q = mysqli_query($con, $loc_sql);
+$loc_r = mysqli_fetch_assoc($loc_q);
 if($loc_r['location'] != '' && $loc_r['location'] != '0'){
   $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
 from dental_users u inner join dental_patients p on u.userid=p.docid 
                 LEFT JOIN dental_locations l ON l.docid = u.userid
-        WHERE l.id='".mysql_real_escape_string($loc_r['location'])."' AND l.docid='".mysql_real_escape_string($r['docid'])."'";
+        WHERE l.id='".mysqli_real_escape_string($con, $loc_r['location'])."' AND l.docid='".mysqli_real_escape_string($con, $r['docid'])."'";
 }else{
   $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
                 LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-        where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+        where p.patientid='".mysqli_real_escape_string($con, $r['patientid'])."'";
 }
-  $uq = mysql_query($location_query);
-  $ur = mysql_fetch_assoc($uq);
+  $uq = mysqli_query($con, $location_query);
+  $ur = mysqli_fetch_assoc($uq);
   $n = format_phone($ur['mailing_phone']);
   if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
     $logo = "/manage/q_file/".$ur['logo'];

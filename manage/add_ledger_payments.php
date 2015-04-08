@@ -7,13 +7,13 @@ include "includes/top.htm";
 include_once "includes/constants.inc";
 require "includes/calendarinc.php";
 $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".$_GET['cid']."'  or dl.secondary_claim_id=".$_GET['cid'].");";
-$p_sql = mysql_query($sql);
-$payments = mysql_fetch_array($p_sql);
+$p_sql = mysqli_query($con, $sql);
+$payments = mysqli_fetch_array($p_sql);
 $csql = "SELECT i.*, CONCAT(p.firstname, ' ',p.lastname) name FROM dental_insurance i 
 	JOIN dental_patients p ON p.patientid=i.patientid
 	WHERE i.insuranceid='".$_GET['cid']."';";
-$cq = mysql_query($csql);
-$claim = mysql_fetch_array($cq);
+$cq = mysqli_query($con, $csql);
+$claim = mysqli_fetch_array($cq);
 >>>>>>> branch
 
   $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
@@ -253,8 +253,8 @@ function showAuthBox()
 =======
 <?php
 $sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".$_GET['cid']."'  or dl.secondary_claim_id=".$_GET['cid'].");";
-$p_sql = mysql_query($sql);
-if(mysql_num_rows($p_sql)==0){
+$p_sql = mysqli_query($con, $sql);
+if(mysqli_num_rows($p_sql)==0){
 ?><div style="margin-left:50px;">No Previous Payments</div><?php
 }else{
 ?>
@@ -276,7 +276,7 @@ if(mysql_num_rows($p_sql)==0){
 <th>Note</th>
 </tr>
 <?php
-while($p = mysql_fetch_array($p_sql)){
+while($p = mysqli_fetch_array($p_sql)){
 ?>
 <td><?= date('m/d/Y', strtotime($p['payment_date'])); ?></td>
 <td><?= date('m/d/Y', strtotime($p['entry_date'])); ?></dt>
@@ -364,8 +364,8 @@ while($p = mysql_fetch_array($p_sql)){
 </div>
 <?php
 $lsql = "SELECT * FROM dental_ledger WHERE (primary_claim_id=".$_GET['cid']."  or secondary_claim_id=".$_GET['cid'].")";
-$lq = mysql_query($lsql);
-while($row = mysql_fetch_assoc($lq)){
+$lq = mysqli_query($con, $lsql);
+while($row = mysqli_fetch_assoc($lq)){
 ?>
 <div style="height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
 <span style="width:80px;margin: 0 10px 0 0; float:left;"><?= $row['service_date']; ?></span>

@@ -1,10 +1,11 @@
 <?php
-session_start();
 require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
 include_once 'includes/claim_functions.php';
 include_once 'includes/invoice_functions.php';
 include_once '../includes/claim_functions.php';
+include_once '../includes/claim_create.php';
+
 if(!empty($_SERVER['HTTPS'])){
 $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
 }else{
@@ -13,10 +14,10 @@ $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
 
 
 $status_sql = "SELECT status FROM dental_insurance
-                WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'
-                        AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
-$status_q = mysql_query($status_sql);
-$status_r = mysql_fetch_assoc($status_q);
+                WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'
+                        AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+$status_q = mysqli_query($con, $status_sql);
+$status_r = mysqli_fetch_assoc($status_q);
 $status = $status_r['status'];
 $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
 $is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
@@ -36,10 +37,10 @@ function confirm_ledger_trxns(){
              . "  FROM dental_ledger "
              . "WHERE "
              . " ledgerid = ".$ledgerid;
-        $query = mysql_query($sql);
-        $c = mysql_num_rows($query);
+        $query = mysqli_query($con, $sql);
+        $c = mysqli_num_rows($query);
         if($c){
-                $row = mysql_fetch_assoc($query);
+                $row = mysqli_fetch_assoc($query);
                 if($row['entry_date'] != $_POST['entry_date'.$num] ||
                         $row['service_date'] != $_POST['service_date'.$num] ||
                         $row['transaction_code'] != $_POST['transaction_code'.$num] ||
@@ -59,6 +60,7 @@ function confirm_ledger_trxns(){
 // update and changes to ledger trxns
 // (updating associated claim id and status later w/ claim form insert and update)
 function update_ledger_trxns($primary_claim_id, $trxn_status) {
+    $con = $GLOBALS['con'];
     $num = 0;
     $added_ledger_ids = array();
     while ($num <= ($_POST['ledgercount']-1)) {
@@ -104,34 +106,34 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
              . "  `primary_claim_id` = '$primary_claim_id' "
              . "WHERE "
              . "  `ledgerid` = $ledgerid";
-        $query = mysql_query($sql);
+        $query = mysqli_query($con, $sql);
         if (!$query) {
-            echo mysql_errno() . ": " . mysql_error(). "\n";
+            echo mysqli_errno($con$con) . ": " . mysqli_error($con). "\n";
         }
         $num++;
     }
 
     $ledger_ids = implode(',', $added_ledger_ids);
-    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
-    $upq = mysql_query($upsql);
-    $upr = mysql_fetch_assoc($upq);
+    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN ('".$ledger_ids."')";
+    $upq = mysqli_query($con, $upsql);
+    $upr = mysqli_fetch_assoc($upq);
     if($upr['num_ledger']>0){
         $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$primary_claim_id."'";
-        $prod_q = mysql_query($prod_s);
-        $prod_r = mysql_fetch_assoc($prod_q);
+        $prod_q = mysqli_query($con, $prod_s);
+        $prod_r = mysqli_fetch_assoc($prod_q);
         $claim_producer = $prod_r['producer'];
-        $s = "SELECT insuranceid from dental_insurance where producer = '".mysql_real_escape_string($claim_producer)." AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
-        $q = mysql_query($s);
-        $n = mysql_num_rows($q);
+        $s = "SELECT insuranceid from dental_insurance where producer = '" . mysqli_real_escape_string($con, $claim_producer) . "' AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+        $q = mysqli_query($con, $s);
+        $n = mysqli_num_rows($q);
         if($n > 0){
-          $r = mysql_fetch_assoc($q);
+          $r = mysqli_fetch_assoc($q);
           $claim_id = $r['insuranceid'];
         }else{
           $claim_id = create_claim($_GET['pid'], $claim_producer);
         }
 
         $update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
-        mysql_query($update_sql);
+        mysqli_query($con, $update_sql);
 
     }
 
@@ -404,8 +406,8 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 $p_m_eligible_payer_name = $_POST['payer']['name'];
 
              $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-             $pat_my = mysql_query($pat_sql);
-             $pat_myarray = mysql_fetch_array($pat_my);
+             $pat_my = mysqli_query($con, $pat_sql);
+             $pat_myarray = mysqli_fetch_array($pat_my);
              $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
 	     $docid = $pat_myarray['docid'];
              $u_status = $status;
@@ -639,40 +641,40 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 billing_provider_dd = '".s_for($billing_provider_dd)."',
                 billing_provider_b_other = '".s_for($billing_provider_b_other)."',
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
+                p_m_eligible_payer_name = '".mysqli_real_escape_string($con, $p_m_eligible_payer_name)."',
                 s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
-                s_m_eligible_payer_name = '".mysql_real_escape_string($s_m_eligible_payer_name)."',
-                rendering_provider_entity_1  = '".mysql_real_escape_string($rendering_provider_entity_1)."',
-                rendering_provider_first_name_1  = '".mysql_real_escape_string($rendering_provider_first_name_1)."',
-                rendering_provider_last_name_1  = '".mysql_real_escape_string($rendering_provider_last_name_1)."',
-                rendering_provider_org_1  = '".mysql_real_escape_string($rendering_provider_org_1)."',
-                rendering_provider_npi_1  = '".mysql_real_escape_string($rendering_provider_npi_1)."',
-                rendering_provider_entity_2  = '".mysql_real_escape_string($rendering_provider_entity_2)."',
-                rendering_provider_first_name_2  = '".mysql_real_escape_string($rendering_provider_first_name_2)."',
-                rendering_provider_last_name_2  = '".mysql_real_escape_string($rendering_provider_last_name_2)."',
-                rendering_provider_org_2  = '".mysql_real_escape_string($rendering_provider_org_2)."',
-                rendering_provider_npi_2  = '".mysql_real_escape_string($rendering_provider_npi_2)."',
-                rendering_provider_entity_3  = '".mysql_real_escape_string($rendering_provider_entity_3)."',
-                rendering_provider_first_name_3  = '".mysql_real_escape_string($rendering_provider_first_name_3)."',
-                rendering_provider_last_name_3  = '".mysql_real_escape_string($rendering_provider_last_name_3)."',
-                rendering_provider_org_3  = '".mysql_real_escape_string($rendering_provider_org_3)."',
-                rendering_provider_npi_3  = '".mysql_real_escape_string($rendering_provider_npi_3)."',
-                rendering_provider_entity_4  = '".mysql_real_escape_string($rendering_provider_entity_4)."',
-                rendering_provider_first_name_4  = '".mysql_real_escape_string($rendering_provider_first_name_4)."',
-                rendering_provider_last_name_4  = '".mysql_real_escape_string($rendering_provider_last_name_4)."',
-                rendering_provider_org_4  = '".mysql_real_escape_string($rendering_provider_org_4)."',
-                rendering_provider_npi_4  = '".mysql_real_escape_string($rendering_provider_npi_4)."',
-                rendering_provider_entity_5  = '".mysql_real_escape_string($rendering_provider_entity_5)."',
-                rendering_provider_first_name_5  = '".mysql_real_escape_string($rendering_provider_first_name_5)."',
-                rendering_provider_last_name_5  = '".mysql_real_escape_string($rendering_provider_last_name_5)."',
-                rendering_provider_org_5  = '".mysql_real_escape_string($rendering_provider_org_5)."',
-                rendering_provider_npi_5  = '".mysql_real_escape_string($rendering_provider_npi_5)."',
-                rendering_provider_entity_6  = '".mysql_real_escape_string($rendering_provider_entity_6)."',
-                rendering_provider_first_name_6  = '".mysql_real_escape_string($rendering_provider_first_name_6)."',
-                rendering_provider_last_name_6  = '".mysql_real_escape_string($rendering_provider_last_name_6)."',
-                rendering_provider_org_6  = '".mysql_real_escape_string($rendering_provider_org_6)."',
-                rendering_provider_npi_6  = '".mysql_real_escape_string($rendering_provider_npi_6)."',
-                responsibility_sequence = '".mysql_real_escape_string($responsibility_sequence)."'";
+                s_m_eligible_payer_name = '".mysqli_real_escape_string($con, $s_m_eligible_payer_name)."',
+                rendering_provider_entity_1  = '".mysqli_real_escape_string($con, $rendering_provider_entity_1)."',
+                rendering_provider_first_name_1  = '".mysqli_real_escape_string($con, $rendering_provider_first_name_1)."',
+                rendering_provider_last_name_1  = '".mysqli_real_escape_string($con, $rendering_provider_last_name_1)."',
+                rendering_provider_org_1  = '".mysqli_real_escape_string($con, $rendering_provider_org_1)."',
+                rendering_provider_npi_1  = '".mysqli_real_escape_string($con, $rendering_provider_npi_1)."',
+                rendering_provider_entity_2  = '".mysqli_real_escape_string($con, $rendering_provider_entity_2)."',
+                rendering_provider_first_name_2  = '".mysqli_real_escape_string($con, $rendering_provider_first_name_2)."',
+                rendering_provider_last_name_2  = '".mysqli_real_escape_string($con, $rendering_provider_last_name_2)."',
+                rendering_provider_org_2  = '".mysqli_real_escape_string($con, $rendering_provider_org_2)."',
+                rendering_provider_npi_2  = '".mysqli_real_escape_string($con, $rendering_provider_npi_2)."',
+                rendering_provider_entity_3  = '".mysqli_real_escape_string($con, $rendering_provider_entity_3)."',
+                rendering_provider_first_name_3  = '".mysqli_real_escape_string($con, $rendering_provider_first_name_3)."',
+                rendering_provider_last_name_3  = '".mysqli_real_escape_string($con, $rendering_provider_last_name_3)."',
+                rendering_provider_org_3  = '".mysqli_real_escape_string($con, $rendering_provider_org_3)."',
+                rendering_provider_npi_3  = '".mysqli_real_escape_string($con, $rendering_provider_npi_3)."',
+                rendering_provider_entity_4  = '".mysqli_real_escape_string($con, $rendering_provider_entity_4)."',
+                rendering_provider_first_name_4  = '".mysqli_real_escape_string($con, $rendering_provider_first_name_4)."',
+                rendering_provider_last_name_4  = '".mysqli_real_escape_string($con, $rendering_provider_last_name_4)."',
+                rendering_provider_org_4  = '".mysqli_real_escape_string($con, $rendering_provider_org_4)."',
+                rendering_provider_npi_4  = '".mysqli_real_escape_string($con, $rendering_provider_npi_4)."',
+                rendering_provider_entity_5  = '".mysqli_real_escape_string($con, $rendering_provider_entity_5)."',
+                rendering_provider_first_name_5  = '".mysqli_real_escape_string($con, $rendering_provider_first_name_5)."',
+                rendering_provider_last_name_5  = '".mysqli_real_escape_string($con, $rendering_provider_last_name_5)."',
+                rendering_provider_org_5  = '".mysqli_real_escape_string($con, $rendering_provider_org_5)."',
+                rendering_provider_npi_5  = '".mysqli_real_escape_string($con, $rendering_provider_npi_5)."',
+                rendering_provider_entity_6  = '".mysqli_real_escape_string($con, $rendering_provider_entity_6)."',
+                rendering_provider_first_name_6  = '".mysqli_real_escape_string($con, $rendering_provider_first_name_6)."',
+                rendering_provider_last_name_6  = '".mysqli_real_escape_string($con, $rendering_provider_last_name_6)."',
+                rendering_provider_org_6  = '".mysqli_real_escape_string($con, $rendering_provider_org_6)."',
+                rendering_provider_npi_6  = '".mysqli_real_escape_string($con, $rendering_provider_npi_6)."',
+                responsibility_sequence = '".mysqli_real_escape_string($con, $responsibility_sequence)."'";
                 
                 if(isset($_POST['reject_but'])){
                   $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
@@ -682,7 +684,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 }
                 $ed_sql .= " where insuranceid = '".s_for($_GET['insid'])."'";
 
-                mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+                mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
             }
                 // update the ledger trxns passed in with the form
                 $trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
@@ -690,26 +692,26 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 
 	$pat_sql = "UPDATE dental_patients SET 
 			                p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."'
-		WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
-	mysql_query($pat_sql);
+                p_m_eligible_payer_name = '".mysqli_real_escape_string($con, $p_m_eligible_payer_name)."'
+		WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+	mysqli_query($con, $pat_sql);
 
 
     $url = 'https://gds.eligibleapi.com/v1.5/claims.json';
     
     $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-    $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($docid)."'";
-    $api_key_query = mysql_query($api_key_sql);
-    $api_key_result = mysql_fetch_assoc($api_key_query);
+    $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $docid)."'";
+    $api_key_query = mysqli_query($con, $api_key_sql);
+    $api_key_result = mysqli_fetch_assoc($api_key_query);
     if($api_key_result && !empty($api_key_result['eligible_api_key'])){
         if(trim($api_key_result['eligible_api_key']) != ""){
             $api_key = $api_key_result['eligible_api_key'];
         }
     }
 
-    $test_sql = "SELECT eligible_test FROM dental_users JOIN dental_insurance ON dental_insurance.docid = dental_users.userid WHERE insuranceid = '".mysql_real_escape_string($_GET['insid'])."'";
-    $test_query = mysql_query($test_sql);
-    $test_result = mysql_fetch_assoc($test_query);
+    $test_sql = "SELECT eligible_test FROM dental_users JOIN dental_insurance ON dental_insurance.docid = dental_users.userid WHERE insuranceid = '".mysqli_real_escape_string($con, $_GET['insid'])."'";
+    $test_query = mysqli_query($con, $test_sql);
+    $test_result = mysqli_fetch_assoc($test_query);
 
     $data = array(); //Initializing parameter array
 
@@ -742,42 +744,42 @@ $json_response = json_decode($result);
 $ref_id = $json_response->{"reference_id"};
 $success = $json_response->{"success"};
 $up_sql = "INSERT INTO dental_claim_electronic SET 
-        claimid='".mysql_real_escape_string($_GET['insid'])."',
-        reference_id = '".mysql_real_escape_string($ref_id)."',
-        response='".mysql_real_escape_string($result)."',
+        claimid='".mysqli_real_escape_string($con, $_GET['insid'])."',
+        reference_id = '".mysqli_real_escape_string($con, $ref_id)."',
+        response='".mysqli_real_escape_string($con, $result)."',
         adddate=now(),
-        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
+        ip_address='".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'
         ";
-mysql_query($up_sql);
+mysqli_query($con, $up_sql);
 if($success){
     $event = "claim_submitted";
 } else{
     $event = "claim_rejected";
 }
 $eligible_response_sql = "INSERT INTO dental_eligible_response SET
-  response = '".mysql_real_escape_string($json_response)."',
-  reference_id = '".mysql_real_escape_string($ref_id)."',
-  event_type = '".mysql_real_escape_string($event)."',
+  response = '".mysqli_real_escape_string($con, $json_response)."',
+  reference_id = '".mysqli_real_escape_string($con, $ref_id)."',
+  event_type = '".mysqli_real_escape_string($con, $event)."',
   adddate = now(),
-  ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
-mysql_query($eligible_response_sql);
+  ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'";
+mysqli_query($con, $eligible_response_sql);
 
   claim_status_history_update($_GET['insid'], DSS_CLAIM_SENT, DSS_CLAIM_PENDING, '', $_SESSION['adminuserid']);
 claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
-$dce_id = mysql_insert_id();
+$dce_id = mysqli_insert_id($con);
 invoice_add_efile('2', $_SESSION['admincompanyid'], $dce_id);
 invoice_add_claim('1', $docid, $_GET['insid']);
 echo $result;
 if(!$success){
-  $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
-  mysql_query($up_sql);
+  $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
+  mysqli_query($con, $up_sql);
 claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
   claim_status_history_update($_GET['insid'], '', DSS_CLAIM_REJECTED, '', $_SESSION['adminuserid']);
 
   $confirm = "Submission failed. ";
   $errors = $json_response->{"errors"}->{"messages"};
                                         foreach($errors as $error){
-                                          $confirm .= mysql_real_escape_string($error).", ";
+                                          $confirm .= mysqli_real_escape_string($con, $error).", ";
                                         }
 ?>
 <script type="text/javascript">

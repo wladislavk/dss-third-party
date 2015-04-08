@@ -663,7 +663,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       }else{
         $sql = "DELETE FROM dental_letters where patientid=".mysqli_real_escape_string($con,$_POST['ed'])." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
       }
-      mysql_query($sql);
+      mysqli_query($con, $sql);
       */
     }
 

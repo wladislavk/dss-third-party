@@ -12,12 +12,12 @@ if($_POST["mult_range_motionsub"] == 1)
 		if($val <> '')
 		{
 			$sel_check = "select * from dental_range_motion where range_motion = '".s_for($val)."'";
-			$query_check=mysql_query($sel_check);
+			$query_check=mysqli_query($con, $sel_check);
 			
-			if(mysql_num_rows($query_check) == 0)
+			if(mysqli_num_rows($query_check) == 0)
 			{
 				$ins_sql = "insert into dental_range_motion set range_motion = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysql_query($ins_sql) or die($ins_sql.mysql_error());
+				mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
 			}
 			
 		}
@@ -36,9 +36,9 @@ if($_POST["mult_range_motionsub"] == 1)
 if($_POST["range_motionsub"] == 1)
 {
 	$sel_check = "select * from dental_range_motion where range_motion = '".s_for($_POST["range_motion"])."' and range_motionid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con, $sel_check);
 	
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Range Motion already exist. So please give another Range Motion.";
 		?>
@@ -62,9 +62,9 @@ if($_POST["range_motionsub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_range_motion set range_motion = '".s_for($_POST["range_motion"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where range_motionid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
 			
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -77,7 +77,7 @@ if($_POST["range_motionsub"] == 1)
 		else
 		{
 			$ins_sql = "insert into dental_range_motion set range_motion = '".s_for($_POST["range_motion"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
 			
 			$msg = "Added Successfully";
 			?>
@@ -97,8 +97,8 @@ if($_POST["range_motionsub"] == 1)
 
     <?
     $thesql = "select * from dental_range_motion where range_motionid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	if($msg != '')
 	{

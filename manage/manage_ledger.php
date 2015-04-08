@@ -99,7 +99,7 @@ if(!empty($_REQUEST["delnoteid"]))
 {
 
   $sql = "DELETE FROM dental_ledger_note WHERE id='".mysqli_real_escape_string($con,$_REQUEST['delnoteid'])."' AND patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
-        $q = mysql_query($sql);
+        $q = mysqli_query($con, $sql);
          if($q){
 
           $msg= "Deleted Successfully";

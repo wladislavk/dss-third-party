@@ -14,9 +14,9 @@ function submit_screener(){
       phone: $('#phone').val(),
 <?php
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysql_query($epworth_sql);
-  $epworth_number = mysql_num_rows($epworth_my);
-  while($ea = mysql_fetch_array($epworth_my))
+  $epworth_my = mysqli_query($con, $epworth_sql);
+  $epworth_number = mysqli_num_rows($epworth_my);
+  while($ea = mysqli_fetch_array($epworth_my))
   {
 ?>
       epworth_<?= $ea['epworthid']; ?>: $('#epworth_<?=$ea['epworthid'];?>').val(),
@@ -66,9 +66,9 @@ function submit_screener(){
         $('#r_phone').text($('#phone').val());
 <?php
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysql_query($epworth_sql);
-  $epworth_number = mysql_num_rows($epworth_my);
-  while($ea = mysql_fetch_array($epworth_my))
+  $epworth_my = mysqli_query($con, $epworth_sql);
+  $epworth_number = mysqli_num_rows($epworth_my);
+  while($ea = mysqli_fetch_array($epworth_my))
   {
 ?>
 
@@ -142,9 +142,9 @@ function submit_screener(){
 	var ep = 0;
 <?php
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysql_query($epworth_sql);
-  $epworth_number = mysql_num_rows($epworth_my);
-  while($ea = mysql_fetch_array($epworth_my))
+  $epworth_my = mysqli_query($con, $epworth_sql);
+  $epworth_number = mysqli_num_rows($epworth_my);
+  while($ea = mysqli_fetch_array($epworth_my))
   {
 ?>
 	ep += parseInt($('#epworth_<?= $ea['epworthid']; ?>').val(), 10);
@@ -321,9 +321,9 @@ function validate_epworth(){
   var error_text = '';
 <?php
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysql_query($epworth_sql);
-  $epworth_number = mysql_num_rows($epworth_my);
-  while($ea = mysql_fetch_array($epworth_my))
+  $epworth_my = mysqli_query($con, $epworth_sql);
+  $epworth_number = mysqli_num_rows($epworth_my);
+  while($ea = mysqli_fetch_array($epworth_my))
   {
 ?>
   if($('#epworth_<?=$ea['epworthid']; ?>_div select').val() == ''){
@@ -497,9 +497,9 @@ function submit_hst(){
       patient_dob: $('#hst_dob').val(),
 <?php
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysql_query($epworth_sql);
-  $epworth_number = mysql_num_rows($epworth_my);
-  while($ea = mysql_fetch_array($epworth_my))
+  $epworth_my = mysqli_query($con, $epworth_sql);
+  $epworth_number = mysqli_num_rows($epworth_my);
+  while($ea = mysqli_fetch_array($epworth_my))
   {
 ?>
       epworth_<?= $ea['epworthid']; ?>: $('#epworth_<?=$ea['epworthid'];?>').val(),

@@ -20,11 +20,11 @@ $sql = "SELECT u.userid, u.last_name, u.first_name"
         .               " OR (first_name LIKE '" . $names[0] ."%' AND last_name LIKE '" . $names[1] . "%'))"
 	.		" AND u.docid=0"
 	.		" ORDER BY last_name ASC";
-$result = mysql_query($sql);
+$result = mysqli_query($con, $sql);
 
 $patients = array();
 $i = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
   $patients[$i]['id'] = $row['userid'];
   $patients[$i]['name'] = $row['last_name'].", ".$row['first_name'];
   $i++;

@@ -35,20 +35,20 @@ if($_GET['pid'] <> '')
 	$sql .= " and patientid='".s_for($_GET['pid'])."' ";
 	
 	$thepat_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";
-	$thepat_my = mysql_query($thepat_sql);
-	$thepat_myarray = mysql_fetch_array($thepat_my);
+	$thepat_my = mysqli_query($con, $thepat_sql);
+	$thepat_myarray = mysqli_fetch_array($thepat_my);
 	
 	$thename = st($thepat_myarray['lastname'])." ".st($thepat_myarray['middlename'])." ".st($thepat_myarray['firstname']);
 }
 
 $sql .= " order by service_date";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$num_users=mysqli_num_rows($my);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -129,7 +129,7 @@ $num_users=mysql_num_rows($my);
 			Ins
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -143,12 +143,12 @@ $num_users=mysql_num_rows($my);
 		$tot_charges = 0;
 		$tot_credit = 0;
 		$newquery = "SELECT * FROM dental_ledger WHERE `patientid` = '".$_GET['pid']."'";
-		$runquery = mysql_query($newquery);
-		while($myarray = mysql_fetch_array($runquery))
+		$runquery = mysqli_query($con, $newquery);
+		while($myarray = mysqli_fetch_array($runquery))
 		{
 			$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
-			$pat_my = mysql_query($pat_sql);
-			$pat_myarray = mysql_fetch_array($pat_my);
+			$pat_my = mysqli_query($con, $pat_sql);
+			$pat_myarray = mysqli_fetch_array($pat_my);
 			
 			$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
 			
@@ -216,18 +216,18 @@ $num_users=mysql_num_rows($my);
 				
 			<?php
                   $ledgerquery = "SELECT * FROM dental_ledger WHERE `patientid` =16 AND `transaction_type` = 'Charge'";
-                  $ledgerres = mysql_query($ledgerquery);
-                  $myarray = mysql_fetch_array($ledgerres);
+                  $ledgerres = mysqli_query($con, $ledgerquery);
+                  $myarray = mysqli_fetch_array($ledgerres);
                   $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `patientid` =16 and `transaction_type`='Credit'";
-                  $ledgerres2 = mysql_query($ledgerquery2);
-                  $myarray2 = mysql_fetch_array($ledgerres2);
+                  $ledgerres2 = mysqli_query($con, $ledgerquery2);
+                  $myarray2 = mysqli_fetch_array($ledgerres2);
                   if(st($myarray["amount"]) <> 0) {
           						$cur_bal += st($myarray["amount"]);
           					}
           					
           					$i = 0;
                     
-          						if($i < mysql_num_rows($ledgerres2)){
+          						if($i < mysqli_num_rows($ledgerres2)){
                         $cur_bal2 = $myarray2['paid_amount'];
                       }
                       $i++;

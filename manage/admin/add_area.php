@@ -6,9 +6,9 @@ include("includes/sescheck.php");
 if($_POST["areasub"] == 1)
 {
 	$sel_check = "select * from spine_area where area = '".s_for($_POST["area"])."' and areaid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con, $sel_check);
 	
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Area already exist. So please give another Area.";
 		?>
@@ -32,9 +32,9 @@ if($_POST["areasub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update spine_area set area = '".s_for($_POST["area"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where areaid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
 			
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -47,7 +47,7 @@ if($_POST["areasub"] == 1)
 		else
 		{
 			$ins_sql = "insert into spine_area set area = '".s_for($_POST["area"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
 			
 			$msg = "Added Successfully";
 			?>
@@ -68,8 +68,8 @@ if($_POST["areasub"] == 1)
     <br />
     <?
     $thesql = "select * from spine_area where areaid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	if($msg != '')
 	{

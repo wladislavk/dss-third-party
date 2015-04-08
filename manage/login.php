@@ -2,8 +2,8 @@
 include('admin/includes/main_include.php');
 include('admin/includes/password.php');
 //$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
-//$page_my = mysql_query($page_sql);
-//$page_myarray = mysql_fetch_array($page_my);
+//$page_my = mysqli_query($con, $page_sql);
+//$page_myarray = mysqli_fetch_array($page_my);
 
 if(!empty($_SESSION['loginid']))
 {
@@ -49,7 +49,7 @@ if(isset($_POST["loginsub"]))
 			$msg='This account has been suspended.';
 		}else{
 			/*$ins_sql = "insert into dental_log (userid,adddate,ip_address) values('".$check_myarray['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
-			mysql_query($ins_sql);*/
+			mysqli_query($con, $ins_sql);*/
 			
 			$_SESSION['userid']=$check_myarray['userid'];
 			$_SESSION['username']=$check_myarray['username'];

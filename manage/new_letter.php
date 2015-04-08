@@ -797,12 +797,12 @@ if (isset($_POST['submit'])) {
 						c.name,
 						''
 					FROM dental_letter_templates_custom c
-						WHERE c.status=1 AND c.docid = '".mysql_real_escape_string($_SESSION['docid'])."'
+						WHERE c.status=1 AND c.docid = '".mysqli_real_escape_string($con, $_SESSION['docid'])."'
 
 				ORDER BY template_type ASC, id ASC
 						;";
-				$result = mysql_query($templates);
-				while ($row = mysql_fetch_assoc($result)) {
+				$result = mysqli_query($con, $templates);
+				while ($row = mysqli_fetch_assoc($result)) {
 					//DO NOT SHOW LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
       					if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE || $row['triggerid']!=1){
 					  print "<option value=\"" . (($row['template_type']=='custom')?'C':'').$row['id'] . "\">" . (($row['template_type']=='custom')?'C':'').$row['id'] . " - " . $row['name'] . "</option>";

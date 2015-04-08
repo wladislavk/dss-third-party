@@ -14,18 +14,18 @@ class FTSSamples
 	{
 		$this->serviceEndpointUrl = "https://api.sfaxme.com/api/";
 		$this->securityContext = ""; //<--- Required but leave blank exactly as it is here
-                $key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($_SESSION['companyid'])."'";
-                $key_q = mysql_query($key_sql);
-                $keys = mysql_fetch_assoc($key_q);
+                $key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";
+                $key_q = mysqli_query($con, $key_sql);
+                $keys = mysqli_fetch_assoc($key_q);
 		$this->apiKey = $keys['sfax_app_key'];//Required Key	
 	}
   /* 	
 	public function __construct ()
 	{
 		$this->serviceEndpointUrl = "https://fws.axacore.com/xws/";
-		$key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($_SESSION['companyid'])."'";
-		$key_q = mysql_query($key_sql);
-		$keys = mysql_fetch_assoc($key_q);
+		$key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";
+		$key_q = mysqli_query($con, $key_sql);
+		$keys = mysqli_fetch_assoc($key_q);
 		$this->securityContext = $keys['sfax_security_context'];			//<--- IMPORTANT: Enter a valid securityContext
 	}
   */
@@ -285,9 +285,9 @@ class FTSAESHelper
 	
 	public function __construct($pSecurityContext)
 	{
-                $key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($_SESSION['companyid'])."'";
-                $key_q = mysql_query($key_sql);
-                $keys = mysql_fetch_assoc($key_q);
+                $key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";
+                $key_q = mysqli_query($con, $key_sql);
+                $keys = mysqli_fetch_assoc($key_q);
 /*
                 $this->pTokenContext = $pSecurityContext;
                 $this->pTokenUsername = $keys['app_id'];                                   //<--- IMPORTANT: Enter a valid App Id 

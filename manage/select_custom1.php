@@ -15,8 +15,8 @@ if($_POST['selsub'] == 1)
 }
 
 $sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -48,7 +48,7 @@ $total_rec = mysql_num_rows($my);
 			var desc_arr = new Array();
 			
 			<? $i=0;
-			while($myarray = mysql_fetch_array($my))
+			while($myarray = mysqli_fetch_array($my))
 			{?>
 				title_arr[<?=$i;?>] = "<?=st(addslashes($myarray['title']));?>";
 				desc_arr[<?=$i;?>] = "<?=st(addslashes($myarray['description']));?>";
@@ -74,8 +74,8 @@ $total_rec = mysql_num_rows($my);
             	<option value="">Select</option>
                 <? 
 				$j=0;
-				$my = mysql_query($sql);
-				while($myarray = mysql_fetch_array($my))
+				$my = mysqli_query($con, $sql);
+				while($myarray = mysqli_fetch_array($my))
 				{?>
 					<option value="<?=$j;?>">
                     	<?=st($myarray['title']);?>

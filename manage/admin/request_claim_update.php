@@ -6,21 +6,21 @@
   include_once 'includes/invoice_functions.php';
   include_once '../includes/claim_functions.php';
 
-  $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($_GET['insid'])."' ORDER BY adddate DESC LIMIT 1"; 
-  $reference_id_query = mysql_query($reference_id_sql);
-  $reference_id_result = mysql_fetch_assoc($reference_id_query);
+  $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con, $_GET['insid'])."' ORDER BY adddate DESC LIMIT 1"; 
+  $reference_id_query = mysqli_query($con, $reference_id_sql);
+  $reference_id_result = mysqli_fetch_assoc($reference_id_query);
   if($reference_id_result){
     $reference_id = $reference_id_result['reference_id'];
     if($reference_id != ""){
       $data = array();
-      $is_test_sql = "SELECT eligible_test, dental_insurance.docid FROM dental_users JOIN dental_insurance ON dental_users.userid = dental_insurance.docid where insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
-      $is_test_query = mysql_query($is_test_sql);
-      $is_test_result = mysql_fetch_assoc($is_test_query);
+      $is_test_sql = "SELECT eligible_test, dental_insurance.docid FROM dental_users JOIN dental_insurance ON dental_users.userid = dental_insurance.docid where insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
+      $is_test_query = mysqli_query($con, $is_test_sql);
+      $is_test_result = mysqli_fetch_assoc($is_test_query);
           
       $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-      $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($is_test_result['docid'])."'";
-      $api_key_query = mysql_query($api_key_sql);
-      $api_key_result = mysql_fetch_assoc($api_key_query);
+      $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $is_test_result['docid'])."'";
+      $api_key_query = mysqli_query($con, $api_key_sql);
+      $api_key_result = mysqli_fetch_assoc($api_key_query);
       
       if($api_key_result && !empty($api_key_result['eligible_api_key'])){
         if(trim($api_key_result['eligible_api_key']) != ""){
@@ -53,12 +53,12 @@
       }
 
       $electronic_claim_sql = "INSERT INTO dental_eligible_response SET
-        response = '".mysql_real_escape_string($result)."',
-        reference_id = '".mysql_real_escape_string($ref_id)."',
-        event_type = '".mysql_real_escape_string($response_status)."',
+        response = '".mysqli_real_escape_string($con, $result)."',
+        reference_id = '".mysqli_real_escape_string($con, $ref_id)."',
+        event_type = '".mysqli_real_escape_string($con, $response_status)."',
         adddate = now(),
-        ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
-      mysql_query($electronic_claim_sql);
+        ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'";
+      mysqli_query($con, $electronic_claim_sql);
 
       $status = "";
 
@@ -73,9 +73,9 @@
       }
 
       $insurance_update_sql = "UPDATE dental_insurance SET
-                status='".mysql_real_escape_string($status)."'
-                WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
-      mysql_query($insurance_update_sql);
+                status='".mysqli_real_escape_string($con, $status)."'
+                WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
+      mysqli_query($con, $insurance_update_sql);
 
     }
   }

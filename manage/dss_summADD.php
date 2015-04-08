@@ -20,7 +20,7 @@ $appt_notesadd = $_POST['appt_notesadd'];
 
 $fuinsert_sql = "INSERT INTO dentalsummfu (patientid, ep_dateadd, devadd, dsetadd, ep_eadd, ep_tsadd, ep_sadd, ep_radd, ep_eladd, sleep_qualadd, ep_hadd, ep_wadd, wapnadd, hours_sleepadd, appt_notesadd) VALUES ('$patientid','$ep_dateadd','$devadd','$dsetadd','$ep_eadd','$ep_tsadd','$ep_sadd','$ep_radd','$ep_eladd','$sleep_qualadd','$ep_hadd','$ep_wadd','$wapnadd','$hours_sleepadd','$appt_notesadd')";
 
-$fuinsert_qry = mysql_query($fuinsert_sql);
+$fuinsert_qry = mysqli_query($con, $fuinsert_sql);
 
 if(!$fuinsert_qry){
   echo "Error in inserting Follow Up, please try again.";

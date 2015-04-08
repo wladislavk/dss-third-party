@@ -151,7 +151,7 @@
 <? if($_GET['pt_lastname'] <> '')
 {
 	$pat_sql = "select * from dental_patients where lastname like '%".s_for($_GET['pt_lastname'])."%' and status=1";
-	$pat_my = mysql_query($pat_sql);
+	$pat_my = mysqli_query($con, $pat_sql);
 ?>
 <a name="pat_list"></a>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -163,7 +163,7 @@
 			Select
 		</td>
 	</tr>
-	<? if(mysql_num_rows($pat_my) == 0)
+	<? if(mysqli_num_rows($pat_my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center" style="color:#000000;">
@@ -174,7 +174,7 @@
 	}
 	else
 	{
-		while($pat_myarray = mysql_fetch_array($pat_my))
+		while($pat_myarray = mysqli_fetch_array($pat_my))
 		{
 		?>
 			<tr class="tr_active">

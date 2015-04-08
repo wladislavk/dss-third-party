@@ -4,7 +4,7 @@ include "includes/top.htm";
 if($_REQUEST["delid"] != "")
 {
 	$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con, $del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -25,13 +25,13 @@ else
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select * from admin order by username";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$num_users=mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -83,7 +83,7 @@ $num_users=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -94,7 +94,7 @@ $num_users=mysql_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{

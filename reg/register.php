@@ -24,14 +24,14 @@ include 'includes/completed.php';
         </script>
 
 <?php
-  $sql = "SELECT * from dental_patients WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-  $q = mysql_query($sql);
-  if(mysql_num_rows($q) > 0){
-      $p = mysql_fetch_assoc($q);
+  $sql = "SELECT * from dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+  $q = mysqli_query($con, $sql);
+  if(mysqli_num_rows($q) > 0){
+      $p = mysqli_fetch_assoc($q);
   }else{
-      $sql = "SELECT * from dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-      $q = mysql_query($sql);
-      $p = mysql_fetch_assoc($q);
+      $sql = "SELECT * from dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+      $q = mysqli_query($con, $sql);
+      $p = mysqli_fetch_assoc($q);
   }
 ?>
 				<div id="content_wrapper">
@@ -441,13 +441,13 @@ include 'includes/completed.php';
 
        	  	</div>
 			<?php
-				$p_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='1' AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-				$p_m_q = mysql_query($p_m_sql);
-				$p_m_r = mysql_fetch_assoc($p_m_q);
-                                if(mysql_num_rows($p_m_q)=='0'){
-                                        $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-                                        $p_m_q = mysql_query($p_m_sql);
-                                        $p_m_r = mysql_fetch_assoc($p_m_q);
+				$p_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='1' AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+				$p_m_q = mysqli_query($con, $p_m_sql);
+				$p_m_r = mysqli_fetch_assoc($p_m_q);
+                                if(mysqli_num_rows($p_m_q)=='0'){
+                                        $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+                                        $p_m_q = mysqli_query($con, $p_m_sql);
+                                        $p_m_r = mysqli_fetch_assoc($p_m_q);
                                 }
 
 			?>
@@ -594,13 +594,13 @@ include 'includes/completed.php';
 
                 </div>
                         <?php
-                                $s_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='2' AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-                                $s_m_q = mysql_query($s_m_sql);
-                                $s_m_r = mysql_fetch_assoc($s_m_q);
-				if(mysql_num_rows($s_m_q)=='0'){
-					$s_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-					$s_m_q = mysql_query($s_m_sql);
-					$s_m_r = mysql_fetch_assoc($s_m_q);
+                                $s_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='2' AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+                                $s_m_q = mysqli_query($con, $s_m_sql);
+                                $s_m_r = mysqli_fetch_assoc($s_m_q);
+				if(mysqli_num_rows($s_m_q)=='0'){
+					$s_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+					$s_m_q = mysqli_query($con, $s_m_sql);
+					$s_m_r = mysqli_fetch_assoc($s_m_q);
 				}
                         ?>
                         <input type="hidden" id="s_m_patient_insuranceid" name="s_m_patient_insuranceid" value="<?= $s_m_r['id']; ?>" />
@@ -821,15 +821,15 @@ foreach($types as $t){
                 }
 		$pcnum = 0;
 		if($cid == 0){
-			$pcsql = "SELECT * from dental_patient_contacts WHERE contacttype='".$t."' AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-			$pcq = mysql_query($pcsql);
-			$pc = mysql_fetch_assoc($pcq);
-			$pcnum = mysql_num_rows($pcq);
+			$pcsql = "SELECT * from dental_patient_contacts WHERE contacttype='".$t."' AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+			$pcq = mysqli_query($con, $pcsql);
+			$pc = mysqli_fetch_assoc($pcq);
+			$pcnum = mysqli_num_rows($pcq);
 		}
 
                                 $csql = "SELECT firstname, lastname FROM dental_contact WHERE contactid='".$cid."'";
-                                $cq = mysql_query($csql);
-				$cr = mysql_fetch_assoc($cq);
+                                $cq = mysqli_query($con, $csql);
+				$cr = mysqli_fetch_assoc($cq);
                                 $cname = $cr['firstname']. " ".$cr['lastname'];
 ?>
 		<h5 class="clear"><?= $dss_patient_contact_labels[$t]; ?></h5>

@@ -75,7 +75,7 @@ if(isset($_POST['device_submit'])){
                           adddate = now(),
                           ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-        $db->query($ex_ins_sql) or die($ex_ins_sql." | ".mysql_error());
+        $db->query($ex_ins_sql) or die($ex_ins_sql." | ".mysqli_error($con));
     }
     $sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
     $row = $db->getRow($sql);
@@ -683,16 +683,16 @@ $rs = $r['referred_source'];
   $referredby_sql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE dc.status=1 AND contactid='".st($r['referred_by'])."'";
-        $referredby_my = mysql_query($referredby_sql);
-        $referredby_myarray = mysql_fetch_array($referredby_my);
+        $referredby_my = mysqli_query($con, $referredby_sql);
+        $referredby_myarray = mysqli_fetch_array($referredby_my);
 
         $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
         $referredbythis .= " - ". $referredby_myarray['contacttype'];
   echo $referredbythis;
   }elseif($rs == DSS_REFERRED_PATIENT){
   $referredby_sql = "select * from dental_patients where patientid='".st($pat_myarray['referred_by'])."'";
-        $referredby_my = mysql_query($referredby_sql);
-        $referredby_myarray = mysql_fetch_array($referredby_my);
+        $referredby_my = mysqli_query($con, $referredby_sql);
+        $referredby_myarray = mysqli_fetch_array($referredby_my);
 
         $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
   echo $referredbythis ." - Patient";
@@ -704,8 +704,8 @@ $rs = $r['referred_source'];
 <?php
 // Get delivery date of Thank You letter to Referral Source
 $sql = "SELECT UNIX_TIMESTAMP(delivery_date) as delivery_date FROM dental_letters WHERE templateid = '9' AND md_referral_list = '".$referred_by."' AND patientid = '".s_for($_GET['pid'])."' ORDER BY delivery_date DESC LIMIT 1;";
-$result = mysql_query($sql);
-while ($row = mysql_fetch_assoc($result)) {
+$result = mysqli_query($con, $sql);
+while ($row = mysqli_fetch_assoc($result)) {
   if (!empty($row['delivery_date'])) {
                 $delivery_date = date('m/d/Y', $row['delivery_date']);
         } else {
@@ -719,8 +719,8 @@ Thank You Sent: <?php echo $delivery_date; ?>
 <?php
                                 $pid = $_GET['pid'];
   $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-  $itype_my = mysql_query($itype_sql);
-$num_face = mysql_num_rows($itype_my);
+  $itype_my = mysqli_query($con, $itype_sql);
+$num_face = mysqli_num_rows($itype_my);
 ?>
 <span style="float:right">
 <?php if($num_face==0){ ?>
@@ -728,7 +728,7 @@ $num_face = mysql_num_rows($itype_my);
                 <img src="images/add_patient_photo.png" />
         </a>
 <?php }else{
-  while($image = mysql_fetch_array($itype_my)){
+  while($image = mysqli_fetch_array($itype_my)){
    echo "<img src='display_file.php?f=".$image['image_file']."' width='150' style='float:right;' />";
   }
 
@@ -739,8 +739,8 @@ $num_face = mysql_num_rows($itype_my);
 <tr>
   <?php
      $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
-     $last_q = mysql_query($last_sql);
-     $last_r = mysql_fetch_assoc($last_q);
+     $last_q = mysqli_query($con, $last_sql);
+     $last_r = mysqli_fetch_assoc($last_q);
 ?>
   <td>Last seen: <?php echo ($last_r['last_visit']!='')?date('m/d/Y', strtotime($last_r['last_visit'])):''; ?>
 
@@ -748,9 +748,9 @@ $num_face = mysql_num_rows($itype_my);
 
 <?php
   $segment_query = "SELECT * FROM `flowsheet_segments` WHERE `id` = ".$row[$stepid].";";
-  $segment_res = mysql_query($segment_query);
+  $segment_res = mysqli_query($con, $segment_query);
   if($segment_res){
-    $segment = mysql_fetch_array($segment_res);
+    $segment = mysqli_fetch_array($segment_res);
     print_r($segment);
   }else{
 }
@@ -760,8 +760,8 @@ $num_face = mysql_num_rows($itype_my);
   <td rowspan="2">Reason for Tx:
 <?php
 $c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
-$c_q = mysql_query($c_sql);
-$c_r = mysql_fetch_assoc($c_q);
+$c_q = mysqli_query($con, $c_sql);
+$c_r = mysqli_fetch_assoc($c_q);
 echo $c_r['chief_complaint_text'];
 
 ?>
@@ -774,9 +774,9 @@ echo $c_r['chief_complaint_text'];
 				LEFT JOIN dental_ins_diagnosis d ON d.ins_diagnosisid = ss.diagnosis
                         WHERE 
                                 (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
-                $result = mysql_query($sleepstudies);
-                $numsleepstudy = mysql_num_rows($result);
-		$sleepstudy = mysql_fetch_assoc($result); 
+                $result = mysqli_query($con, $sleepstudies);
+                $numsleepstudy = mysqli_num_rows($result);
+		$sleepstudy = mysqli_fetch_assoc($result); 
 
 ?>
 <tr>
@@ -806,21 +806,21 @@ echo $c_r['chief_complaint_text'];
 <?php
 $patid = $_GET['pid'];
 $sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_array($my);
 $nights_wear_cpap = st($myarray['nights_wear_cpap']);
 $percent_night_cpap = st($myarray['percent_night_cpap']);
 
 $sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_array($my);
 
 $location = st($myarray['location']);
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 $patient_name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 
 $patient_dob = st($pat_myarray['dob']);
@@ -829,8 +829,8 @@ $referral_source = st($pat_myarray['referred_source']);
 if(st($pat_myarray['referred_by']) != '')
 {
         $referredby_sql = "select * from dental_contact where status=1 and contactid='".st($pat_myarray['referred_by'])."'";
-        $referredby_my = mysql_query($referredby_sql);
-        $referredby_myarray = mysql_fetch_array($referredby_my);
+        $referredby_my = mysqli_query($con, $referredby_sql);
+        $referredby_myarray = mysqli_fetch_array($referredby_my);
 
         $sleep_md = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
 }
@@ -845,8 +845,8 @@ if(st($pat_myarray['referred_by']) != '')
         <strong><?php echo $patient_name; ?></strong>
 <?php
 $sql = "SELECT imageid FROM dental_q_image WHERE patientid='".$_GET['pid']."' AND imagetypeid=4";
-$p = mysql_query($sql);
-$num_face = mysql_num_rows($p);
+$p = mysqli_query($con, $sql);
+$num_face = mysqli_num_rows($p);
 ?>
 <span align="right">
 <?php if($num_face==0){ ?>
@@ -867,8 +867,8 @@ $num_face = mysql_num_rows($p);
     </td>
 <?php
 $loc_sql = "SELECT * FROM dental_locations WHERE docid='".$docid."'";
-                $loc_q = mysql_query($loc_sql);
-$num_loc = mysql_num_rows($loc_q);
+                $loc_q = mysqli_query($con, $loc_sql);
+$num_loc = mysqli_num_rows($loc_q);
 $rowspan = ($num_loc > 1)?"4":"3";
 ?>
 
@@ -881,8 +881,8 @@ $rowspan = ($num_loc > 1)?"4":"3";
 
         $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
                 ON c.contactid=p.docsleep WHERE p.patientid=".$patid;
-        $d_q = mysql_query($d_sql);
-        if($d = mysql_fetch_assoc($d_q)){
+        $d_q = mysqli_query($con, $d_sql);
+        if($d = mysqli_fetch_assoc($d_q)){
                 echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Sleep MD:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
         }
 
@@ -891,8 +891,8 @@ $rowspan = ($num_loc > 1)?"4":"3";
 
         $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
                 ON c.contactid=p.docpcp WHERE p.patientid=".$patid;
-        $d_q = mysql_query($d_sql);
-        if($d = mysql_fetch_assoc($d_q)){
+        $d_q = mysqli_query($con, $d_sql);
+        if($d = mysqli_fetch_assoc($d_q)){
                 echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Primary Care:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
         }
 
@@ -900,8 +900,8 @@ $rowspan = ($num_loc > 1)?"4":"3";
 
         $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
                 ON c.contactid=p.docdentist WHERE p.patientid=".$patid;
-        $d_q = mysql_query($d_sql);
-        if($d = mysql_fetch_assoc($d_q)){
+        $d_q = mysqli_query($con, $d_sql);
+        if($d = mysqli_fetch_assoc($d_q)){
                 echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Dentist:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
         }
 
@@ -909,8 +909,8 @@ $rowspan = ($num_loc > 1)?"4":"3";
 
         $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
                 ON c.contactid=p.docent WHERE p.patientid=".$patid;
-        $d_q = mysql_query($d_sql);
-        if($d = mysql_fetch_assoc($d_q)){
+        $d_q = mysqli_query($con, $d_sql);
+        if($d = mysqli_fetch_assoc($d_q)){
                 echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>ENT:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
         }
 
@@ -918,8 +918,8 @@ $rowspan = ($num_loc > 1)?"4":"3";
 
         $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
                 ON c.contactid=p.docmdother WHERE p.patientid=".$patid;
-        $d_q = mysql_query($d_sql);
-        if($d = mysql_fetch_assoc($d_q)){
+        $d_q = mysqli_query($con, $d_sql);
+        if($d = mysqli_fetch_assoc($d_q)){
                 echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Other MD:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
         }
 
@@ -955,16 +955,16 @@ if(st($pat_myarray['referred_by']) <> '')
   $referredby_sql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE dc.status=1 AND contactid='".st($pat_myarray['referred_by'])."'";
-        $referredby_my = mysql_query($referredby_sql);
-        $referredby_myarray = mysql_fetch_array($referredby_my);
+        $referredby_my = mysqli_query($con, $referredby_sql);
+        $referredby_myarray = mysqli_fetch_array($referredby_my);
 
         $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
         $referredbythis .= " - ". $referredby_myarray['contacttype'];
   echo $referredbythis;
   }elseif($rs == DSS_REFERRED_PATIENT){
   $referredby_sql = "select * from dental_patients where patientid='".st($pat_myarray['referred_by'])."'";
-        $referredby_my = mysql_query($referredby_sql);
-        $referredby_myarray = mysql_fetch_array($referredby_my);
+        $referredby_my = mysqli_query($con, $referredby_sql);
+        $referredby_myarray = mysqli_fetch_array($referredby_my);
 
         $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
   echo $referredbythis ." - Patient";
@@ -1006,8 +1006,8 @@ if($num_loc > 1){
     <div style="width:80%;">
         <?php
           $pat_sql = "select cpap from dental_q_page2 where patientid='".s_for($_GET['pid'])."'";
-          $pat_my = mysql_query($pat_sql);
-          $pat_myarray = mysql_fetch_array($pat_my);
+          $pat_my = mysqli_query($con, $pat_sql);
+          $pat_myarray = mysqli_fetch_array($pat_my);
           if($pat_myarray['cpap']=="No"){
 
             ?>Patient has not previously attempted CPAP therapy.<?php
@@ -1084,8 +1084,8 @@ if($num_loc > 1){
 <!-- SUMM PAGE 2 -->
 <?php
 $sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
-$myex = mysql_query($sqlex);
-$myarrayex = mysql_fetch_array($myex);
+$myex = mysqli_query($con, $sqlex);
+$myarrayex = mysqli_fetch_array($myex);
 
 $i_opening_from = st($myarrayex['i_opening_from']);
 $protrusion_from = st($myarrayex['protrusion_from']);
@@ -1130,8 +1130,8 @@ $dentaldevice_date = st(($myarrayex['dentaldevice_date']!='')?date('m/d/Y', strt
         <select name="dentaldevice" style="width:250px">
         <option value=""></option>
         <?php        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
-                                                                $device_my = mysql_query($device_sql);
-                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                $device_my = mysqli_query($con, $device_sql);
+                                                                while($device_myarray = mysqli_fetch_array($device_my))
                                                                 {
                 ?>
                                                                  <option <?php echo ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?php echo st($device_myarray['deviceid'])?>"><?php echo st($device_myarray['device']);?></option>

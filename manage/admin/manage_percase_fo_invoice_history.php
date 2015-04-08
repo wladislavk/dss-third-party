@@ -2,19 +2,19 @@
 include "includes/top.htm";
 require_once '../3rdParty/stripe/lib/Stripe.php';
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
-	WHERE pi.docid=".mysql_real_escape_string($_GET['docid'])." 
+	WHERE pi.docid=".mysqli_real_escape_string($con, $_GET['docid'])." 
 		AND pi.status!=".DSS_INVOICE_PENDING."
 	ORDER BY adddate DESC";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$num_users=mysqli_num_rows($my);
 
-$doc_sql = "SELECT * from dental_users WHERE userid=".mysql_real_escape_string($_GET['docid']);
-$doc_q = mysql_query($doc_sql);
-$doc = mysql_fetch_assoc($doc_q);
+$doc_sql = "SELECT * from dental_users WHERE userid=".mysqli_real_escape_string($con, $_GET['docid']);
+$doc_q = mysqli_query($con, $doc_sql);
+$doc = mysqli_fetch_assoc($doc_q);
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -35,9 +35,9 @@ $doc = mysql_fetch_assoc($doc_q);
         <b><? echo $_GET['msg'];?></b>
 </div>
 <?php 
-$sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_GET['docid'])."'";
-$q = mysql_query($sql);
-$myarray = mysql_fetch_assoc($q);
+$sql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con, $_GET['docid'])."'";
+$q = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_assoc($q);
 ?>
 <div class="pull-right">
                                   <?php if($myarray["status"]==1){ ?>
@@ -78,7 +78,7 @@ $myarray = mysql_fetch_assoc($q);
 			Action	
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -89,7 +89,7 @@ $myarray = mysql_fetch_assoc($q);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 $total_charge = $myarray['monthly_fee_amount'] + $myarray['producer_fee_amount'];
 $case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl                 JOIN dental_patients dp ON dl.patientid=dp.patientid
@@ -131,8 +131,8 @@ new_fee_date, '', new_fee_amount, patientid FROM dental_patients
         WHERE
                 new_fee_invoice_id='".$myarray['id']."'
 ";
-$case_q = mysql_query($case_sql);
-while($case_r = mysql_fetch_assoc($case_q)){
+$case_q = mysqli_query($con, $case_sql);
+while($case_r = mysqli_fetch_assoc($case_q)){
 $total_charge += $case_r['percase_amount'];
 }
 		$case_sql = "SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
@@ -146,8 +146,8 @@ $total_charge += $case_r['percase_amount'];
     }
   </style>
 <?php
-$case_q = mysql_query($case_sql);
-		$case = mysql_fetch_assoc($case_q);
+$case_q = mysqli_query($con, $case_sql);
+		$case = mysqli_fetch_assoc($case_q);
 		?>
 			<tr class="status_<?= $myarray['status']; ?>">
 				<td valign="top">
@@ -188,10 +188,10 @@ $case_q = mysql_query($case_sql);
 </div>
 <?php
   $charge_sql = "SELECT * FROM dental_charge
-                        WHERE userid='".mysql_real_escape_string($_GET['docid'])."'
-                        AND adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'
+                        WHERE userid='".mysqli_real_escape_string($con, $_GET['docid'])."'
+                        AND adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'
                         ";
-  $charge_q = mysql_query($charge_sql);
+  $charge_q = mysqli_query($con, $charge_sql);
 ?>
 
 
@@ -214,7 +214,7 @@ $case_q = mysql_query($case_sql);
 			Card
 		</td>
         </tr>
-        <? if(mysql_num_rows($charge_q) == 0)
+        <? if(mysqli_num_rows($charge_q) == 0)
         { ?>
                 <tr class="tr_bg">
                         <td valign="top" class="col_head" colspan="10" align="center">
@@ -225,7 +225,7 @@ $case_q = mysql_query($case_sql);
         }
         else
         {
-                while($charge_r = mysql_fetch_array($charge_q))
+                while($charge_r = mysqli_fetch_array($charge_q))
                 {
                 ?>
                         <tr>
@@ -257,9 +257,9 @@ $case_q = mysql_query($case_sql);
 $key_sql = "SELECT stripe_secret_key FROM companies c 
                 JOIN dental_user_company uc
                         ON c.id = uc.companyid
-                 WHERE uc.userid='".mysql_real_escape_string($_GET['docid'])."'";
-$key_q = mysql_query($key_sql);
-$key_r= mysql_fetch_assoc($key_q);
+                 WHERE uc.userid='".mysqli_real_escape_string($con, $_GET['docid'])."'";
+$key_q = mysqli_query($con, $key_sql);
+$key_r= mysqli_fetch_assoc($key_q);
 
 Stripe::setApiKey($key_r['stripe_secret_key']);
 

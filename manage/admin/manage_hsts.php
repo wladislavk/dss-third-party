@@ -163,7 +163,7 @@ if(isset($_GET['status']) && isset($_GET['from']) && $_GET['from']=='view' && $t
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con,$sql) or die(mysql_error());
+$my=mysqli_query($con,$sql) or die(mysqli_error($con));
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />

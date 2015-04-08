@@ -12,7 +12,7 @@ if(isset($_POST["enrollsub"]))
   $q = mysqli_query($con,$sql);
   $r = mysqli_fetch_assoc($q);
   $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($r['userid'])."'";
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $r['userid'])."'";
   $api_key_query = mysqli_query($con, $api_key_sql);
   $api_key_result = mysqli_fetch_assoc($api_key_query);
   if($api_key_result && !empty($api_key_result['eligible_api_key'])){
@@ -25,7 +25,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
         $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysqli_real_escape_string($con,$_POST['transaction_type'])."'";
         $t_q = mysqli_query($con,$t_sql);
         $t_r = mysqli_fetch_assoc($t_q);
-$signature_sql = "SELECT * FROM dental_user_signatures WHERE user_id='" . mysql_real_escape_string($_GET['docid']) . "' ORDER BY adddate DESC LIMIT 1";
+$signature_sql = "SELECT * FROM dental_user_signatures WHERE user_id='" . mysqli_real_escape_string($con, $_GET['docid']) . "' ORDER BY adddate DESC LIMIT 1";
 $signature_query =  mysqli_query($con, $signature_sql);
 $signature_result = mysqli_fetch_assoc($signature_query);
 $signature_json = "";
@@ -104,8 +104,8 @@ if(isset($json_response->{"error"})){
         ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'
         ";
 
-  mysqli_query($con,$up_sql) or die(mysql_error());
-  $eid = mysql_insert_id();
+  mysqli_query($con,$up_sql) or die(mysqli_error($con));
+  $eid = mysqli_insert_id($con);
   invoice_add_enrollment('2', $_SESSION['admincompanyid'], $eid);
   ?>
   <script type="text/javascript">
@@ -209,7 +209,7 @@ $payer_name = substr($payer_id_post,strpos($payer_id_post, '-')+1);
         <?php while($r = mysqli_fetch_assoc($q)){ ?>
 		<?php $us_sql = "SELECT * FROM dental_user_signatures where user_id='".mysqli_real_escape_string($con,$_GET['docid'])."'";
 		  $us_q = mysqli_query($con,$us_sql);
-		  $signature = mysql_num_rows($us_q);
+		  $signature = mysqli_num_rows($us_q);
 		?>
           <?php if($r['docid']==0){
                 $snpi = $r['service_npi'];

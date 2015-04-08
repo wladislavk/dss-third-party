@@ -108,7 +108,7 @@ $my = $db->getResults($sql);
 /*
 $sql .= " order by service_date";
 
-$total_rec = mysql_num_rows($my);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 */
 

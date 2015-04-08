@@ -2,47 +2,47 @@
 include 'admin/includes/main_include.php';
 if(false){
 $sql = "SELECT * FROM dental_users WHERE username!=''";
-$q = mysql_query($sql);
-while($r = mysql_fetch_assoc($q)){
+$q = mysqli_query($con, $sql);
+while($r = mysqli_fetch_assoc($q)){
 
                           $course_sql = "INSERT INTO users set
-                                        name = '".mysql_real_escape_string($r["username"])."',
-                                        mail = '".mysql_real_escape_string($r["email"])."',
+                                        name = '".mysqli_real_escape_string($con, $r["username"])."',
+                                        mail = '".mysqli_real_escape_string($con, $r["email"])."',
                                         status = '1'";
-                        mysql_query($course_sql, $course_con) or die("u - " . mysql_error($course_con));
-                        $course_uid = mysql_insert_id($course_con);
+                        mysqli_query($con, $course_sql, $course_con) or die("u - " . mysqli_error($con$course_con));
+                        $course_uid = mysqli_insert_id($con$course_con);
 			echo $course_uid."<br />";
                         $roles_sql = "INSERT INTO users_roles SET
-                                        uid = '".mysql_real_escape_string($course_uid)."',
+                                        uid = '".mysqli_real_escape_string($con, $course_uid)."',
                                         rid = '3'";
-                        mysql_query($roles_sql, $course_con) or die("role - " . mysql_error($course_con));
+                        mysqli_query($con, $roles_sql, $course_con) or die("role - " . mysqli_error($con$course_con));
                         $rev_sql = "INSERT INTO node_revisions (title) VALUES ('dss profile')";
-                        mysql_query($rev_sql, $course_con) or die("rev - " . mysql_error($course_con));
-                        $vid = mysql_insert_id($course_con);
+                        mysqli_query($con, $rev_sql, $course_con) or die("rev - " . mysqli_error($con$course_con));
+                        $vid = mysqli_insert_id($con$course_con);
                         $profile_sql = "INSERT INTO node 
                                                 (type, status, title, vid, uid)
                                         VALUES
-                                                ('profile', 1, 'dss profile', '".$vid."', '".mysql_real_escape_string($course_uid)."')";
-                        mysql_query($profile_sql, $course_con) or die($profile_sql ." | ".mysql_error($course_con));
-                        $nid = mysql_insert_id($course_con);
+                                                ('profile', 1, 'dss profile', '".$vid."', '".mysqli_real_escape_string($con, $course_uid)."')";
+                        mysqli_query($con, $profile_sql, $course_con) or die($profile_sql ." | ".mysqli_error($con$course_con));
+                        $nid = mysqli_insert_id($con$course_con);
                         $rev_sql = "UPDATE node_revisions SET nid=".$nid." WHERE vid=".$vid;
-                        mysql_query($rev_sql, $course_con) or die("up - ".mysql_error($course_con));;
+                        mysqli_query($con, $rev_sql, $course_con) or die("up - ".mysqli_error($con$course_con));;
                         if($r['docid']==0){
                           $docid = $r['userid'];
                         }else{
                           $docid = $r['docid'];
                         }
 
-			$docname_sql = "SELECT name from dental_users WHERE userid='".mysql_real_escape_string($docid)."'";
-                        $docname_q = mysql_query($docname_sql);
-                        $docname_r = mysql_fetch_assoc($docname_q);
+			$docname_sql = "SELECT name from dental_users WHERE userid='".mysqli_real_escape_string($con, $docid)."'";
+                        $docname_q = mysqli_query($con, $docname_sql);
+                        $docname_r = mysqli_fetch_assoc($docname_q);
                         $docname = $docname_r['name'];
                         $co_sql = "SELECT c.id, c.name from companies c
                                         JOIN dental_user_company uc ON c.id = uc.companyid
                                         JOIN dental_users u ON u.userid = uc.userid
-                                         WHERE u.userid='".mysql_real_escape_string($docid)."'";
-                        $co_q = mysql_query($co_sql);
-                        $co_r = mysql_fetch_assoc($co_q);
+                                         WHERE u.userid='".mysqli_real_escape_string($con, $docid)."'";
+                        $co_q = mysqli_query($con, $co_sql);
+                        $co_r = mysqli_fetch_assoc($co_q);
                         $cid = $co_r['id'];
                         $cname = $co_r['name'];
 
@@ -56,50 +56,50 @@ while($r = mysql_fetch_assoc($q)){
                                                          field_dssusername_value,
                                                          field_dssuid_value)
                                         VALUES
-                                                ('".mysql_real_escape_string($vid)."',
-                                                        '".mysql_real_escape_string($nid)."',
-                                                        '".mysql_real_escape_string($cid)."',
-                                                        '".mysql_real_escape_string($cname)."',
-                                                        '".mysql_real_escape_string($docid)."',
-                                                        '".mysql_real_escape_string($docname)."',
-                                                        '".mysql_real_escape_string($r['name'])."',
-                                                        '".mysql_real_escape_string($r['userid'])."')";
-                        mysql_query($ctp_sql, $course_con) or die(mysql_error($course_con));
+                                                ('".mysqli_real_escape_string($con, $vid)."',
+                                                        '".mysqli_real_escape_string($con, $nid)."',
+                                                        '".mysqli_real_escape_string($con, $cid)."',
+                                                        '".mysqli_real_escape_string($con, $cname)."',
+                                                        '".mysqli_real_escape_string($con, $docid)."',
+                                                        '".mysqli_real_escape_string($con, $docname)."',
+                                                        '".mysqli_real_escape_string($con, $r['name'])."',
+                                                        '".mysqli_real_escape_string($con, $r['userid'])."')";
+                        mysqli_query($con, $ctp_sql, $course_con) or die(mysqli_error($con$course_con));
 
 //echo $ctp_sql;
 }
 
 }
 
-//mysql_query("DELETE FROM users where uid>10;", $course_con);
+//mysqli_query($con, "DELETE FROM users where uid>10;", $course_con);
 
 
 $u = 'staff1e';
 		$user_sql = "SELECT * FROM users";
-		$q = mysql_query($user_sql, $course_con);
-		while($row = mysql_fetch_assoc($q)){
+		$q = mysqli_query($con, $user_sql, $course_con);
+		while($row = mysqli_fetch_assoc($q)){
 			print_r($row);
 			$uid=$row['uid'];
 		}
 
 		?><br /><br /><?php
                 $user_sql = "SELECT * FROM x40_dss_login where user='".$u."'";
-                $q = mysql_query($user_sql, $course_con);
-                while($row = mysql_fetch_assoc($q)){
+                $q = mysqli_query($con, $user_sql, $course_con);
+                while($row = mysqli_fetch_assoc($q)){
                         print_r($row);
                 }
  
 		?><br /><br /><?php
                 $user_sql = "SELECT * FROM users_roles";
-                $q = mysql_query($user_sql, $course_con) or die(mysql_error());
-                while($row = mysql_fetch_assoc($q)){
+                $q = mysqli_query($con, $user_sql, $course_con) or die(mysqli_error($con));
+                while($row = mysqli_fetch_assoc($q)){
                         print_r($row);
                 }
 
                 ?><br /><br /><?php
                 $user_sql = "SELECT * FROM node where type='profile' AND uid=".$uid;
-                $q = mysql_query($user_sql, $course_con) or die(mysql_error());
-                while($row = mysql_fetch_assoc($q)){
+                $q = mysqli_query($con, $user_sql, $course_con) or die(mysqli_error($con));
+                while($row = mysqli_fetch_assoc($q)){
                         print_r($row);
 			$nid = $row['nid'];
 			$vid = $row['vid'];
@@ -108,8 +108,8 @@ $u = 'staff1e';
                 ?><br /><br /><?php
 		$user_sql = "SELECT * FROM content_type_profile ";
 		//echo $user_sql;
-                $q = mysql_query($user_sql, $course_con) or die(mysql_error($course_con));
-                while($row = mysql_fetch_assoc($q)){
+                $q = mysqli_query($con, $user_sql, $course_con) or die(mysqli_error($con$course_con));
+                while($row = mysqli_fetch_assoc($q)){
                         print_r($row);
                 }
 

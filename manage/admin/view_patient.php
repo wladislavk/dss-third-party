@@ -520,7 +520,7 @@ $ed_sql .="
 			<?php
 		}
 
-		//echo $ed_sql.mysql_error();
+		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
                 if(isset($_POST['sendPin'])){
 		  $sendPin = "&sendPin=1";
@@ -704,7 +704,7 @@ $ed_sql .="
       $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`pid`) VALUES (NULL,'".s_for($_POST["copyreqdate"])."','".$pid."');";
       $flowinsert = $db->query($flowinsertqry);
       if(empty($flowinsert)){
-        //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting flowsheet record, please try again!1";
+        //$message = "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error inserting flowsheet record, please try again!1";
       }else{
         $referred_result = $db->query($referredbyqry);
         $message = "Successfully updated flowsheet!2";
@@ -1753,8 +1753,8 @@ $image = $itype_my;
                                 insurance_nums = [];
                             <?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$docid."'";
-                            $ins_contact_qry_run = mysql_query($ins_contact_qry);
-                            while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
+                            $ins_contact_qry_run = mysqli_query($con, $ins_contact_qry);
+                            while($ins_contact_res = mysqli_fetch_array($ins_contact_qry_run)){
                             ?>
                                 document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($p_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>');
                                 

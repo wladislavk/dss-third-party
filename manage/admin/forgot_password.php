@@ -5,18 +5,18 @@ include_once('includes/password.php');
 include_once '../includes/constants.inc';
 if($_POST["emailsub"] == 1)
 {
-        $check_sql = "SELECT adminid, username, email FROM admin WHERE email='".mysql_real_escape_string($_POST['email'])."'";
-        $check_my = mysql_query($check_sql);
+        $check_sql = "SELECT adminid, username, email FROM admin WHERE email='".mysqli_real_escape_string($con, $_POST['email'])."'";
+        $check_my = mysqli_query($con, $check_sql);
 	//echo $check_sql;
-        if(mysql_num_rows($check_my) >= 1)
+        if(mysqli_num_rows($check_my) >= 1)
         {
-                $check_myarray = mysql_fetch_array($check_my);
+                $check_myarray = mysqli_fetch_array($check_my);
 
                 /*$ins_sql = "insert into dental_log (userid,adddate,ip_address) values('".$check_myarray['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
-                mysql_query($ins_sql);*/
+                mysqli_query($con, $ins_sql);*/
                 $recover_hash = hash('sha256', $check_myarray['adminid'].$_POST['email'].rand());
                 $ins_sql = "UPDATE admin set recover_hash='".$recover_hash."', recover_time=NOW() WHERE adminid='".$check_myarray['adminid']."'";
-                mysql_query($ins_sql);
+                mysqli_query($con, $ins_sql);
 
                 $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
 			'Content-type: text/html' ."\r\n" .
@@ -31,7 +31,7 @@ http://".$_SERVER['HTTP_HOST']."/manage/admin/recover_password.php?un=".$check_m
 </a>";
 $message .= "<br /><br />";
 $message .= DSS_EMAIL_FOOTER;
-                //$ins_id = mysql_insert_id();
+                //$ins_id = mysqli_insert_id($con);
                 $msg = mail($check_myarray['email'], $subject, $message, $headers);
 
                 ?>

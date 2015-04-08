@@ -23,15 +23,15 @@ $i_val = $index_val * $rec_disp;
                 		dl.transaction_code='E0486' AND
                 		dl.docid=du.userid AND
                 		dl.service_date > DATE_SUB(now(), INTERVAL 30 DAY)) as num_case30,
-		(SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_BC_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
+		(SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysqli_real_escape_string($con, DSS_INVOICE_TYPE_BC_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
                 FROM dental_users du 
                 JOIN dental_user_company uc ON uc.userid = du.userid
                 JOIN companies c ON c.id=uc.companyid
 		JOIN dental_plans p ON p.id=du.plan_id
                 WHERE 
 		du.billing_company_id ='".$_SESSION['admincompanyid']."' AND
-		du.status=1 AND du.docid=0 AND ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_BC_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysql_real_escape_string(DSS_INVOICE_TYPE_BC_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL p.trial_period DAY) < now()))
+		du.status=1 AND du.docid=0 AND ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysqli_real_escape_string($con, DSS_INVOICE_TYPE_BC_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
+		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid AND i2.invoice_type='".mysqli_real_escape_string($con, DSS_INVOICE_TYPE_BC_FO)."' ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL p.trial_period DAY) < now()))
 		";
         $sql .= " AND 
                 (SELECT COUNT(*) as num_inv FROM dental_percase_invoice
@@ -74,13 +74,13 @@ switch ($sort_by) {
 
 $sql .= " ORDER BY ".$sort_by_sql;
 
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$num_users=mysqli_num_rows($my);
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -152,7 +152,7 @@ $num_users=mysql_num_rows($my);
                         Last Monthly Bill Date
                 </td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -163,7 +163,7 @@ $num_users=mysql_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 		?>
 			<tr class="status_<?= $myarray["status"]; ?>">
@@ -228,8 +228,8 @@ $num_users=mysql_num_rows($my);
         </tr>
 <?php
   $mf_sql = "SELECT id, name, monthly_fee, fax_fee, free_fax FROM companies ORDER BY name ASC";
-  $mf_q = mysql_query($mf_sql);
-  while($mf_r = mysql_fetch_assoc($mf_q)){
+  $mf_q = mysqli_query($con, $mf_sql);
+  while($mf_r = mysqli_fetch_assoc($mf_q)){
   ?>
   <tr>
     <td><?= $mf_r['name']; ?></td>

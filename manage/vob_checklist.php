@@ -157,8 +157,8 @@ if ($patient_info) {
  // $vrt_sql = "SELECT c.vob_require_test FROM companies c
  //                JOIN dental_users u ON u.billing_company_id=c.id
  //                WHERE u.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
- // $vrt_q = mysql_query($vrt_sql) or die(mysql_error());
- // $vrt = mysql_fetch_assoc($vrt_q);
+ // $vrt_q = mysqli_query($con, $vrt_sql) or die(mysqli_error($con));
+ // $vrt = mysqli_fetch_assoc($vrt_q);
  // if($vrt['vob_require_test']!='1'){
  //   $vob_study_error = false;
  // }

@@ -10,18 +10,18 @@ require_once('../includes/constants.inc');
   $s = "SELECT p.*, c.company, u.name as doc_name, u.npi, u.userid as doc_id from dental_patients p
 	 LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
 	 LEFT JOIN dental_users u ON u.userid = p.docid
-   	 WHERE p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
-  $q = mysql_query($s);
-  $r = mysql_fetch_assoc($q);
+   	 WHERE p.patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+  $q = mysqli_query($con, $s);
+  $r = mysqli_fetch_assoc($q);
   $doc_name = $r['doc_name'];
   $doc_array = explode(' ',$doc_name);
   $doc_first_name = $doc_array[0];
   $doc_last_name = $doc_array[1];
 
   $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysql_real_escape_string($r['doc_id'])."'";
-  $api_key_query = mysql_query($api_key_sql);
-  $api_key_result = mysql_fetch_assoc($api_key_query);
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $r['doc_id'])."'";
+  $api_key_query = mysqli_query($con, $api_key_sql);
+  $api_key_result = mysqli_fetch_assoc($api_key_query);
   if($api_key_result && !empty($api_key_result['eligible_api_key'])){
     if(trim($api_key_result['eligible_api_key']) != ""){
       $api_key = $api_key_result['eligible_api_key'];

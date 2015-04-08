@@ -129,25 +129,25 @@ Next Appointment
  */
 
 	$qso = "SELECT `consultrow`, `sleepstudyrow`, `impressionrow`, `delayingtreatmentrow`, `refusedtreatmentrow`, `devicedeliveryrow`, `checkuprow`, `patientnoncomprow`, `homesleeptestrow`, `starttreatmentrow`, `annualrecallrow`, `terminationrow` FROM `segments_order` WHERE `patientid` = '".$_GET['pid']."'";
-	$qso_query = mysql_query($qso);
+	$qso_query = mysqli_query($con, $qso);
 	
 	$qsoResult = array();
 	
-	while ($qsoTmpResult = mysql_fetch_assoc($qso_query))
+	while ($qsoTmpResult = mysqli_fetch_assoc($qso_query))
 	{
 		$qsoResult []= $qsoTmpResult;
 	}
 		
 	$fsData_sql = "SELECT `steparray` FROM `dental_flow_pg2` WHERE `patientid` = '".$_GET['pid']."';";
-	$fsData_query = mysql_query($fsData_sql);
-	$fsData_array = mysql_fetch_array($fsData_query);
+	$fsData_query = mysqli_query($con, $fsData_sql);
+	$fsData_array = mysqli_fetch_array($fsData_query);
 	
 	
 	/*
 	$final_fsData_array = array();
 	$fsIt = 1;
 	
-	while ($fsdataRow = mysql_fetch_assoc($fsData_query))
+	while ($fsdataRow = mysqli_fetch_assoc($fsData_query))
 	{
 		$current_section = $fsdataRow['section'];
 		
@@ -178,8 +178,8 @@ Next Appointment
   
   
   $flow_pg2_info_query = "SELECT stepid, UNIX_TIMESTAMP(date_scheduled) as date_scheduled, UNIX_TIMESTAMP(date_completed) as date_completed, delay_reason, noncomp_reason, study_type, description, letterid FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid ASC;";
-  $flow_pg2_info_res = mysql_query($flow_pg2_info_query);
-  while ($row = mysql_fetch_assoc($flow_pg2_info_res)) {
+  $flow_pg2_info_res = mysqli_query($con, $flow_pg2_info_query);
+  while ($row = mysqli_fetch_assoc($flow_pg2_info_res)) {
     $flow_pg2_info[$row['stepid']] = $row;
   }
 //print_r($flow_pg2_info);
@@ -191,9 +191,9 @@ Next Appointment
 //print_r($letters);
   $letter_list = implode(",", $letters);
   $dental_letters_query = "SELECT patientid, stepid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND (letterid IN(".$letter_list.") OR parentid IN(".$letter_list."))ORDER BY stepid ASC;";
-  $dental_letters_res = mysql_query($dental_letters_query);
+  $dental_letters_res = mysqli_query($con, $dental_letters_query);
   $dental_letters = array();
-  while ($row = mysql_fetch_assoc($dental_letters_res)) {
+  while ($row = mysqli_fetch_assoc($dental_letters_res)) {
     $dental_letters[$row['stepid']][] = $row;
   }
 //print $dental_letters_query;
@@ -203,9 +203,9 @@ Next Appointment
   $i = 0;
   while($section = $order && $i < count($order)){
   $segment_query = "SELECT * FROM `flowsheet_segments` WHERE `id` = ".$order[$i].";";
-  $segment_res = mysql_query($segment_query);
+  $segment_res = mysqli_query($con, $segment_query);
   if($segment_res){
-    $segment = mysql_fetch_array($segment_res);
+    $segment = mysqli_fetch_array($segment_res);
   }else{
     echo "Error selecting segments from flowsheet"; 
   }
@@ -221,8 +221,8 @@ Next Appointment
 	$compid = "datecomp$i";
 
   /*$getsteparray = "SELECT * FROM dental_flow_pg2 WHERE `patientid` = '".$_GET['pid']."' LIMIT 1;";
-  $steparrayqry = mysql_query($getsteparray);
-  $steparray = mysql_fetch_array($steparrayqry);
+  $steparrayqry = mysqli_query($con, $getsteparray);
+  $steparray = mysqli_fetch_array($steparrayqry);
   $steparray = explode(",", $steparray['steparray']);
   $stepcount = count($steparray);
   $steparray_last = end($steparray);*/
@@ -341,8 +341,8 @@ Next Appointment
 // Determine Next Visit
 $date_scheduled = null;
 $sql = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE date_scheduled != '0000-00-00' AND date_completed = '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
-$result = mysql_query($sql);
-while ($row = mysql_fetch_array($result)) {
+$result = mysqli_query($con, $sql);
+while ($row = mysqli_fetch_array($result)) {
 	$date_scheduled = $row['date_scheduled'];
 }
 update_patient_summary($_GET['pid'], 'next_visit', $date_scheduled);
@@ -350,8 +350,8 @@ update_patient_summary($_GET['pid'], 'next_visit', $date_scheduled);
 // Determine Last Visit
 $date_completed = null;
 $sql = "SELECT date_completed FROM dental_flow_pg2_info WHERE date_completed != '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
-$result = mysql_query($sql);
-while ($row = mysql_fetch_array($result)) {
+$result = mysqli_query($con, $sql);
+while ($row = mysqli_fetch_array($result)) {
 	$date_completed = $row['date_completed'];
 }
 update_patient_summary($_GET['pid'], 'last_visit', $date_completed);
@@ -359,8 +359,8 @@ update_patient_summary($_GET['pid'], 'last_visit', $date_completed);
 // Determine Last Treatment
 $segmentid = null;
 $sql = "SELECT segmentid FROM dental_flow_pg2_info WHERE date_completed != '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
-$result = mysql_query($sql);
-while ($row = mysql_fetch_array($result)) {
+$result = mysqli_query($con, $sql);
+while ($row = mysqli_fetch_array($result)) {
 	$segmentid = $row['segmentid'];
 }
 switch ($segmentid) {
@@ -412,8 +412,8 @@ update_patient_summary($_GET['pid'], 'last_treatment', $treatment);
 // Determine Device Delivery Date
 $date_completed = null;
 $sql = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".s_for($_GET['pid'])."' and segmentid = '7' ORDER BY date_completed DESC LIMIT 1;";
-$result = mysql_query($sql);
-while ($row = mysql_fetch_array($result)) {
+$result = mysqli_query($con, $sql);
+while ($row = mysqli_fetch_array($result)) {
 	$date_completed = $row['date_completed'];
 }
 update_patient_summary($_GET['pid'], 'delivery_date', $date_completed);
@@ -429,8 +429,8 @@ $sql = "SELECT "
      . "ORDER BY "
      . "  front_office_request_date DESC "
      . "LIMIT 1";
-$my = mysql_query($sql) or die(mysql_error());
-$preauth = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql) or die(mysqli_error($con));
+$preauth = mysqli_fetch_array($my);
 update_patient_summary($_GET['pid'], 'vob', $preauth['status']);
 
 
@@ -438,8 +438,8 @@ update_patient_summary($_GET['pid'], 'vob', $preauth['status']);
 $pt_referralid = get_ptreferralids($_GET['pid']);
 if ($pt_referralid) {
 	$sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND md_referral_list = '".s_for($pt_referralid)."' AND deleted!=1;";
-	$result = mysql_query($sql);
-	$numrows = mysql_num_rows($result);
+	$result = mysqli_query($con, $sql);
+	$numrows = mysqli_num_rows($result);
 	if ($numrows == 0) {
 		trigger_letter20($_GET['pid']);
 	}

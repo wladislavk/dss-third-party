@@ -52,7 +52,7 @@ if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1)
 		$ins_sql = " insert into dental_ex_page2 set 
 		patientid = '".s_for($_GET['pid'])."',
 		mallampati = '".s_for($mallampati)."',
-		additional_notes = '".mysql_real_escape_string($_POST['additional_notes'])."',
+		additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
 		tonsils = '".s_for($tonsils_arr)."',
 		tonsils_grade = '".s_for($tonsils_grade)."',
 		userid = '".s_for($_SESSION['userid'])."',
@@ -60,7 +60,7 @@ if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysqli_error($con));
 		
 		$msg = "Added Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
@@ -85,12 +85,12 @@ if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1)
 	{
 		$ed_sql = " update dental_ex_page2 set 
 		mallampati = '".s_for($mallampati)."',
-                additional_notes = '".mysql_real_escape_string($_POST['additional_notes'])."',
+                additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
 		tonsils = '".s_for($tonsils_arr)."',
 		tonsils_grade = '".s_for($tonsils_grade)."'
 		where ex_page2id = '".s_for($_POST['ed'])."'";
 		
-		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysqli_error($con));
 		
 		$msg = "Edited Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){

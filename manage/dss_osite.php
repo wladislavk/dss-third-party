@@ -1,8 +1,8 @@
 <?php 
 
 if(isset($_POST['ositesubmit'])){
-$query = "UPDATE dental_summary SET osite='".mysql_real_escape_string($_POST['ositenew'])."' WHERE patientid='".$_GET['pid']."';";
-if(!mysql_query($query)){
+$query = "UPDATE dental_summary SET osite='".mysqli_real_escape_string($con, $_POST['ositenew'])."' WHERE patientid='".$_GET['pid']."';";
+if(!mysqli_query($con, $query)){
 echo "Could not add note! Please contact the system administrator or try again.";
 }
 }
@@ -11,9 +11,9 @@ echo "Could not add note! Please contact the system administrator or try again."
 <?php
 $query = "SELECT osite FROM dental_summary WHERE patientid='".$_GET['pid']."';";
 
-$array = mysql_query($query);
+$array = mysqli_query($con, $query);
 
-while($notes = mysql_fetch_array($array)){
+while($notes = mysqli_fetch_array($array)){
 echo "<input type=\"text\" name=\"ositenew\" value=\"".$array['osite']."\" id=\"osite\" />";
 }
 

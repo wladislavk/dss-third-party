@@ -9,12 +9,12 @@ clean_steps($pid);
 			patientid= ".$pid.",
 			segmentid = ".$id.",
 			date_scheduled = '".$sched."'";
-		$q = mysql_query($s); 
+		$q = mysqli_query($con, $s); 
 
-		$info_id = mysql_insert_id();
+		$info_id = mysqli_insert_id($con);
 
         $consult_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$pid."' LIMIT 1;";
-        $consult_result = mysql_query($consult_query);
+        $consult_result = mysqli_query($con, $consult_query);
         $consult_date = mysql_result($consult_result, 0, 0);
         if ($consult_date != "0000-00-00") {
                 $consulted = true;
@@ -47,16 +47,16 @@ if($q){
 function clean_steps($pid){ //Deletes not completed steps and clears scheduled
 	
 	$s = "SELECT id, segmentid, date_scheduled, date_completed from dental_flow_pg2_info where patientid=".$pid;
-	$q = mysql_query($s);
-	while($r = mysql_fetch_assoc($q)){
+	$q = mysqli_query($con, $s);
+	while($r = mysqli_fetch_assoc($q)){
 	  if( $r['date_completed']==''){
                 $s = "DELETE FROM dental_flow_pg2_info
                         WHERE id = ".$r['id']."
                                 AND patientid=".$pid;
-                mysql_query($s);
+                mysqli_query($con, $s);
 
 	  }else{
-		mysql_query("UPDATE dental_flow_pg2_info set 
+		mysqli_query($con, "UPDATE dental_flow_pg2_info set 
                         date_scheduled=''
                         WHERE id=".$r['id']);
 	  }

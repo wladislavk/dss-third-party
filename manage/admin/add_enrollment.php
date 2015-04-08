@@ -364,7 +364,7 @@ function check_add(){
 function update_list(){
   var api_key = <?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>;
   var t = $('#transaction_type').val();
-console.log('update'+t);
+  $('#ins_payer_name').val('');
   if(t == '1'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer');
   }else if(t == '2'){

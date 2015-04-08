@@ -28,6 +28,7 @@ $("input[type='text'][readonly]").click( function(){
 
 function update_list(){
   var t = $('#transaction_type').val();
+  $('#ins_payer_name').val('');
   if(t == '1'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer');
   }else if(t == '2'){

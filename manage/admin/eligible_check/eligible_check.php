@@ -2,6 +2,8 @@
 
   <script src="../script/autocomplete_local.js"></script>
 
+  <script src="../js/lib/jquery-1.10.2.min.js"></script>
+  <script src="../js/lib/jquery-ui-1.10.3.custom.min.js"></script>
   <script src="eligible_check/js/eligible.js"></script>
   <script src="eligible_check/js/sample_1.js"></script>
   <script type="text/javascript" src="/manage/admin/js/eligible_check.js"></script>
@@ -504,7 +506,7 @@
       ?>
 	<tr>
 	  <td><?php echo  $r['adddate']; ?></td>
-          <td><a href="view_eligibility_response.php?id=<?php echo $r['id']; ?>">View</a></td>
+          <td><a href="manage/view_eligibility_response.php?id=<?php echo $r['id']; ?>">View</a></td>
         </tr>
 
 <?php

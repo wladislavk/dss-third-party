@@ -74,13 +74,13 @@ switch ($sort_by) {
 
 $sql .= " ORDER BY ".$sort_by_sql;
 
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_users=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$num_users=mysqli_num_rows($my);
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -152,7 +152,7 @@ $num_users=mysql_num_rows($my);
                         Last Monthly Bill Date
                 </td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -163,7 +163,7 @@ $num_users=mysql_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 		?>
 			<tr class="status_<?= $myarray["status"]; ?>">
@@ -228,8 +228,8 @@ $num_users=mysql_num_rows($my);
         </tr>
 <?php
   $mf_sql = "SELECT id, name, monthly_fee, fax_fee, free_fax FROM companies ORDER BY name ASC";
-  $mf_q = mysql_query($mf_sql);
-  while($mf_r = mysql_fetch_assoc($mf_q)){
+  $mf_q = mysqli_query($con, $mf_sql);
+  while($mf_r = mysqli_fetch_assoc($mf_q)){
   ?>
   <tr>
     <td><?= $mf_r['name']; ?></td>

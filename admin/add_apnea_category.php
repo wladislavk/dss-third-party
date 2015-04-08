@@ -6,9 +6,9 @@ include("includes/sescheck.php");
 if($_POST["categorysub"] == 1)
 {
 	$sel_check = "select * from apnea_category where category = '".s_for($_POST["category"])."' and categoryid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con, $sel_check);
 	
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Apnea Category already exist. So please give another Apnea Category.";
 		?>
@@ -32,9 +32,9 @@ if($_POST["categorysub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update apnea_category set category = '".s_for($_POST["category"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."' where categoryid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
 			
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -47,7 +47,7 @@ if($_POST["categorysub"] == 1)
 		else
 		{
 			$ins_sql = "insert into apnea_category set category = '".s_for($_POST["category"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
 			
 			$msg = "Added Successfully";
 			?>
@@ -75,8 +75,8 @@ if($_POST["categorysub"] == 1)
     <br />
     <?
     $thesql = "select * from apnea_category where categoryid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	if($msg != '')
 	{

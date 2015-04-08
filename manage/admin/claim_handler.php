@@ -38,7 +38,7 @@ function confirm_ledger_trxns(){
              . "WHERE "
              . " ledgerid = ".$ledgerid;
         $query = mysqli_query($con, $sql);
-        $c = mysql_num_rows($query);
+        $c = mysqli_num_rows($query);
         if($c){
                 $row = mysqli_fetch_assoc($query);
                 if($row['entry_date'] != $_POST['entry_date'.$num] ||
@@ -108,7 +108,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
              . "  `ledgerid` = $ledgerid";
         $query = mysqli_query($con, $sql);
         if (!$query) {
-            echo mysql_errno($con) . ": " . mysqli_error($con). "\n";
+            echo mysqli_errno($con$con) . ": " . mysqli_error($con). "\n";
         }
         $num++;
     }

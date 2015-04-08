@@ -7,9 +7,9 @@ $s = "SELECT dp.cell_phone, dp.email FROM dental_patients dp JOIN dental_users d
                 dp.use_patient_portal='1' AND
                 du.use_patient_portal='1'";
 
-$q = mysql_query($s);
-    if(mysql_num_rows($q) > 0){
-      $r = mysql_fetch_assoc($q);
+$q = mysqli_query($con, $s);
+    if(mysqli_num_rows($q) > 0){
+      $r = mysqli_fetch_assoc($q);
       }else{
 	?>
 		<script type="text/javascript">

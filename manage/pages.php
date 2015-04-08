@@ -1,7 +1,7 @@
 <?php include 'includes/top.htm';?>
 <br />
 
-<? if(mysql_num_rows($page_my) == 0)
+<? if(mysqli_num_rows($page_my) == 0)
 {?>
 	<div align="center" class="red">
 		<b>No Records</b>

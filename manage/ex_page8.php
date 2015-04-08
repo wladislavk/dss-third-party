@@ -100,7 +100,7 @@ if($_POST['ex_page8sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
 		
 		$msg = "Added Successfully";
 		?>
@@ -128,7 +128,7 @@ if($_POST['ex_page8sub'] == 1)
 		additional_paragraph_referral = '".s_for($additional_paragraph_referral)."'
 		where ex_page8id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
 		
 		$msg = "Edited Successfully";
 		?>
@@ -143,8 +143,8 @@ if($_POST['ex_page8sub'] == 1)
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -161,8 +161,8 @@ if($pat_myarray['patientid'] == '')
 }
 
 $sql = "select * from dental_ex_page8 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_array($my);
 
 $ex_page8id = st($myarray['ex_page8id']);
 $inserted = st($myarray['inserted']);
@@ -241,9 +241,9 @@ if($see_type == "")
                                 
                                 <?
 								$device_sql = "select * from dental_device where status=1 order by sortby";
-								$device_my = mysql_query($device_sql);
+								$device_my = mysqli_query($con, $device_sql);
 								
-								while($device_myarray = mysql_fetch_array($device_my))
+								while($device_myarray = mysqli_fetch_array($device_my))
 								{	
 								?>
                                 <tr>
@@ -291,19 +291,19 @@ if($see_type == "")
                    
 				   	<? 
 					$plan_text_sql = "select * from dental_plan_text ";
-					$plan_text_my = mysql_query($plan_text_sql);
-					$plan_text_myarray = mysql_fetch_array($plan_text_my) or die($plan_text_sql.' | '.mysql_error());
+					$plan_text_my = mysqli_query($con, $plan_text_sql);
+					$plan_text_myarray = mysqli_fetch_array($plan_text_my) or die($plan_text_sql.' | '.mysqli_error($con));
 					?> 
 					<div>
                         <span style="font-weight:normal;">
 							<?
-							$device_my = mysql_query($device_sql);
+							$device_my = mysqli_query($con, $device_sql);
 							
 							$dd_val = '
 							<select name="device">
 								<option value=""></option>';
 								
-							while($device_myarray = mysql_fetch_array($device_my))
+							while($device_myarray = mysqli_fetch_array($device_my))
 							{	
 								$dd_val .= '
 									<option value="'.st($device_myarray['deviceid']).'"'; 
@@ -340,9 +340,9 @@ if($see_type == "")
                             <table width="95%" align="right">
                         	<?
 							$followup_sql = "select * from dental_followup where status=1 order by sortby";
-							$followup_my = mysql_query($followup_sql);
+							$followup_my = mysqli_query($con, $followup_sql);
 							
-							while($followup_myarray = mysql_fetch_array($followup_my))
+							while($followup_myarray = mysqli_fetch_array($followup_my))
 							{
 							?>
                             	<tr>

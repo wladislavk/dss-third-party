@@ -51,7 +51,7 @@ if($_POST['ex_page6sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
 		
 		$msg = "Added Successfully";
 		?>
@@ -71,7 +71,7 @@ if($_POST['ex_page6sub'] == 1)
 		additional_paragraph = '".s_for($additional_paragraph)."'
 		where ex_page6id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
 		
 		$msg = "Edited Successfully";
 		?>
@@ -86,8 +86,8 @@ if($_POST['ex_page6sub'] == 1)
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -102,8 +102,8 @@ if($pat_myarray['patientid'] == '')
 }
 
 $sql = "select * from dental_ex_page6 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_array($my);
 
 $ex_page6id = st($myarray['ex_page6id']);
 $completed = st($myarray['completed']);
@@ -170,9 +170,9 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                 
                                 <?
 								$diagnostic_sql = "select * from dental_diagnostic where status=1 order by sortby";
-								$diagnostic_my = mysql_query($diagnostic_sql);
+								$diagnostic_my = mysqli_query($con, $diagnostic_sql);
 								
-								while($diagnostic_myarray = mysql_fetch_array($diagnostic_my))
+								while($diagnostic_myarray = mysqli_fetch_array($diagnostic_my))
 								{	
 								?>
                                 <tr>

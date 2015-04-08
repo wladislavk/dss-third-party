@@ -618,8 +618,8 @@ color:white;background:black'>LICENSE #<?= $_SESSION['docid']; ?></span></b></p>
 <?php
 
 $s = "SELECT * from dental_users where userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
+$q = mysqli_query($con, $s);
+$r = mysqli_fetch_assoc($q);
 $docname = $r['name'];
 ?>
 

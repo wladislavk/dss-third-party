@@ -13,7 +13,7 @@ $annualrecallstep
 $terminationstep
 
 $getstepqry = "SELECT * FROM `dental_flow_pg2` WHERE `patientid`='".$_GET['patientid']."'";
-if(!mysql_query($getstepqry)){
+if(!mysqli_query($con, $getstepqry)){
 
 $insertstepqry = "INSERT INTO `dental_flow_pg2` (`patientid`,`steparray`) VALUES ('".$_POST['patientid']."','".$_POST['steparray']."';
 }else{

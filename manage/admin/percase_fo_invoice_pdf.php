@@ -7,8 +7,8 @@ require_once('../includes/constants.inc');
 $invoice_sql = "SELECT pi.*, u.name, u.address, u.city, u.state, u.zip, u.phone, u.user_type FROM dental_percase_invoice pi
 	JOIN dental_users u ON u.userid=pi.docid
 	WHERE id='".mysqli_real_escape_string($con, $_GET['invoice_id'])."'";
-$invoice_q = mysql_query($invoice_sql);
-$invoice = mysql_fetch_assoc($invoice_q);
+$invoice_q = mysqli_query($con, $invoice_sql);
+$invoice = mysqli_fetch_assoc($invoice_q);
 
 $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -180,8 +180,8 @@ $case_sql_e0486 = "SELECT percase_name, percase_date as start_date, '' as end_da
                 dl.transaction_code='E0486' AND
                 dl.docid='".$invoice['docid']."' AND
                 dl.percase_invoice='".$invoice['id']."'";
-$case_q_e0486 = mysql_query($case_sql_e0486);
-$num_case_e0486 = mysql_num_rows($case_q_e0486);
+$case_q_e0486 = mysqli_query($con, $case_sql_e0486);
+$num_case_e0486 = mysqli_num_rows($case_q_e0486);
 
 
 $case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl 
@@ -229,8 +229,8 @@ new_fee_date, '', new_fee_amount, patientid FROM dental_patients
                 new_fee_invoice_id='".$invoice['id']."'
 
 ";
-$case_q = mysql_query($case_sql);
-$num_case = mysql_num_rows($case_q);
+$case_q = mysqli_query($con, $case_sql);
+$num_case = mysqli_num_rows($case_q);
 
 if($num_case_e0486 > 0){
 $html .= '<tr>
@@ -245,7 +245,7 @@ $html .= '<tr>
                                                                         <td height="30" width="90" align="right" valign="middle" style="text-align: right; font-size:24px;border-bottom: 1px dotted #DDDDDD; padding-right: 10px;"></td>
                                                                         </tr>';
 }
-while($case = mysql_fetch_assoc($case_q)){
+while($case = mysqli_fetch_assoc($case_q)){
 $total_charge += $case['percase_amount'];
 $html .= '<tr>
                                                                         <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 2px dotted #DDDDDD;"></td>

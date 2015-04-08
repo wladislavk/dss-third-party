@@ -27,7 +27,7 @@ if(!empty($_POST["sleeplabsub"]) && $_POST["sleeplabsub"] == 1){
             		sleeplabid='".$_POST["ed"]."'";
 		$db->query($ed_sql);
 		
-		//echo $ed_sql.mysql_error();
+		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">

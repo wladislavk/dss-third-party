@@ -7,7 +7,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
 		$ed_sql = "update dental_fcontact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for($_POST["phone1"])."', phone2 = '".s_for($_POST["phone2"])."', fax = '".s_for($_POST["fax"])."', email = '".s_for($_POST["email"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."' where contactid='".$_POST["ed"]."'";
 		$db->query($ed_sql);
 		
-		//echo $ed_sql.mysql_error();
+		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">

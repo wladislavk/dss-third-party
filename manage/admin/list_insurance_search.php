@@ -19,11 +19,11 @@ $sql = "SELECT c.contactid, c.company "
         .               " AND docid = '" . mysqli_real_escape_string($con, $_GET['fid']) . "' "
         .               " AND c.status=1 "
 	.		" AND merge_id IS NULL ORDER BY c.company ASC";
-$result = mysql_query($sql) or die(mysql_error());
+$result = mysqli_query($con, $sql) or die(mysqli_error($con));
 
 $patients = array();
 $i = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
   $patients[$i]['id'] = $row['contactid'];
   $patients[$i]['name'] = $row['company'];
   $i++;

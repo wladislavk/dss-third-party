@@ -7,11 +7,11 @@ include 'includes/questionnaire_sections.php';
 if($_POST['q_sleepsub'] == 1)
 {
 	$epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-	$epworth_my = mysql_query($epworth_sql);
+	$epworth_my = mysqli_query($con, $epworth_sql);
 	
 	$epworth_arr = '';
 	
-	while($epworth_myarray = mysql_fetch_array($epworth_my))
+	while($epworth_myarray = mysqli_fetch_array($epworth_my))
 	{
 		if($_POST['epworth_'.$epworth_myarray['epworthid']] <> '')
 		{
@@ -40,7 +40,7 @@ if($_POST['q_sleepsub'] == 1)
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+                mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
                 $ins_sql = " insert into dental_thorton set 
                 patientid = '".s_for($_SESSION['pid'])."',
                 snore_1 = '".s_for($snore_1)."',
@@ -52,25 +52,25 @@ if($_POST['q_sleepsub'] == 1)
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+                mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
         $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
-        $exist_q = mysql_query($exist_sql);
-        if(mysql_num_rows($exist_q) == 0)
+        $exist_q = mysqli_query($con, $exist_sql);
+        if(mysqli_num_rows($exist_q) == 0)
         {
 		$ed_sql = "insert into dental_q_page1 set
                         ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
                         tss='".s_for($tot_score)."',
                         patientid='".$_SESSION['pid']."'";
-                mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+                mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
         }else{
                 $ed_sql = "update dental_q_page1 set
                         ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
                         tss='".s_for($tot_score)."'
                         WHERE patientid='".$_SESSION['pid']."'";
-                mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+                mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
 	}
-                mysql_query("UPDATE dental_patients SET sleep_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+                mysqli_query($con, "UPDATE dental_patients SET sleep_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+                mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
                 $msg = "Added Successfully";
                 ?>
                 <script type="text/javascript">
@@ -88,7 +88,7 @@ if($_POST['q_sleepsub'] == 1)
 		analysis = '".s_for($analysis)."'
 		where q_sleepid = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
 		$ed_sql = " update dental_thorton set 
                 snore_1 = '".s_for($snore_1)."',
                 snore_2 = '".s_for($snore_2)."',
@@ -98,27 +98,27 @@ if($_POST['q_sleepsub'] == 1)
                 tot_score = '".s_for($tot_score)."'
                 where thortonid = '".s_for($_POST['ted'])."'";
 
-                mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+                mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
         $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
-        $exist_q = mysql_query($exist_sql);
-        if(mysql_num_rows($exist_q) == 0)
+        $exist_q = mysqli_query($con, $exist_sql);
+        if(mysqli_num_rows($exist_q) == 0)
         {
                 $ed_sql = "insert into dental_q_page1 set
                         ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
                         tss='".s_for($tot_score)."',
                         patientid='".$_SESSION['pid']."'";
-                mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+                mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
         }else{
 
 		$ed_sql = "update dental_q_page1 set
 			ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
 			tss='".s_for($tot_score)."'
 			WHERE patientid='".$_SESSION['pid']."'";
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
 		//echo $ed_sql;
 	}
-                mysql_query("UPDATE dental_patients SET sleep_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
-                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+                mysqli_query($con, "UPDATE dental_patients SET sleep_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+                mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
 		$msg = " Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -132,14 +132,14 @@ if($_POST['q_sleepsub'] == 1)
 
 
         $exist_sql = "SELECT sleep_status, symptoms_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
-        $exist_q = mysql_query($exist_sql);
-        $exist_row = mysql_fetch_assoc($exist_q);
+        $exist_q = mysqli_query($con, $exist_sql);
+        $exist_row = mysqli_fetch_assoc($exist_q);
         if($exist_row['sleep_status'] == 0 && ($exist_row['symptoms_status'] == 0 || $exist_row['symptoms_status']==1))
         {
 
 $sql = "select * from dental_thorton where patientid='".$_SESSION['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_array($my);
 
 $thortonid = st($myarray['thortonid']);
 $snore_1 = st($myarray['snore_1']);
@@ -150,8 +150,8 @@ $snore_5 = st($myarray['snore_5']);
 $tot_score = st($myarray['tot_score']);
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -166,8 +166,8 @@ if($pat_myarray['patientid'] == '')
 }
 
 $sql = "select * from dental_q_sleep where patientid='".$_SESSION['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_array($my);
 
 $q_sleepid = st($myarray['q_sleepid']);
 $epworthid = st($myarray['epworthid']);
@@ -213,8 +213,8 @@ if($epworthid <> '')
 	</div>
                     <? 
 					$epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-					$epworth_my = mysql_query($epworth_sql);
-					$epworth_number = mysql_num_rows($epworth_my);
+					$epworth_my = mysqli_query($con, $epworth_sql);
+					$epworth_number = mysqli_num_rows($epworth_my);
 					?>
                     
                         	<script type="text/javascript">
@@ -268,7 +268,7 @@ if($epworthid <> '')
 								}
 							</script>
                     <?
-                                        while($epworth_myarray = mysql_fetch_array($epworth_my))
+                                        while($epworth_myarray = mysqli_fetch_array($epworth_my))
                                         {
                                                 if(@array_search($epworth_myarray['epworthid'],$epid) === false)
                                                 {

@@ -12,8 +12,8 @@ if($_GET['backoffice'] == '1') {
 
 /*
 $pat_sql = "select * from dental_patients where patientid='".s_for($['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 

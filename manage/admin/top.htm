@@ -214,8 +214,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
                 ORDER BY dental_letters.letterid ASC;";
 
   }
-  $letters_res = mysql_query($letters_query);
-  $pending_letters = mysql_num_rows($letters_res);
+  $letters_res = mysqli_query($con, $letters_query);
+  $pending_letters = mysqli_num_rows($letters_res);
 if(is_super($_SESSION['admin_access'])){
   $sql = "SELECT "
      . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
@@ -259,8 +259,8 @@ $sql = "SELECT "
      . " WHERE preauth.status IN (" . DSS_PREAUTH_PENDING.",".DSS_PREAUTH_PREAUTH_PENDING.") "
      . "   AND uc.companyid='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."'";
 }
-$my = mysql_query($sql);
-$num_pending_preauth = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$num_pending_preauth = mysqli_num_rows($my);
 
 if(is_super($_SESSION['admin_access'])){
   $sql = "SELECT "
@@ -296,8 +296,8 @@ if(is_super($_SESSION['admin_access'])){
      . " WHERE hst.status = " . DSS_HST_PENDING
      . "   AND uc.companyid='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."'";
 }
-$my = mysql_query($sql);
-$num_pending_hst = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$num_pending_hst = mysqli_num_rows($my);
 
 
 
@@ -320,12 +320,12 @@ $sql .= " AND
    END = '1'";
 if(is_billing($_SESSION['admin_access'])){
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
-    $c_q = mysql_query($c_sql);
-    $c = mysql_fetch_assoc($c_q);
+    $c_q = mysqli_query($con, $c_sql);
+    $c = mysqli_fetch_assoc($c_q);
     $sql .= " AND users.billing_company_id='".$c['companyid']."'"; 
 }
-$my = mysql_query($sql);
-$num_pending_claims = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$num_pending_claims = mysqli_num_rows($my);
 
 
 if(is_super($_SESSION['admin_access'])){
@@ -392,12 +392,12 @@ $sql .= " AND
 //echo $sql;
 if(is_billing($_SESSION['admin_access'])){
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
-    $c_q = mysql_query($c_sql);
-    $c = mysql_fetch_assoc($c_q);
+    $c_q = mysqli_query($con, $c_sql);
+    $c = mysqli_fetch_assoc($c_q);
     $sql .= " AND users.billing_company_id='".$c['companyid']."'";
 }
-$pending_q = mysql_query($sql);
-$num_pending_claims = mysql_num_rows($pending_q);
+$pending_q = mysqli_query($con, $sql);
+$num_pending_claims = mysqli_num_rows($pending_q);
 
 
 ?>
@@ -1138,8 +1138,8 @@ $num_pending_claims = mysql_num_rows($pending_q);
 				 <?php if (is_billing($_SESSION['admin_access'])) { ?>
                 <?php
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
-    $c_q = mysql_query($c_sql);
-    $c = mysql_fetch_assoc($c_q);
+    $c_q = mysqli_query($con, $c_sql);
+    $c = mysqli_fetch_assoc($c_q);
     $t_sql = "SELECT t.* FROM dental_support_tickets t
         JOIN dental_users u ON u.userid=t.userid
                 WHERE (t.status=0 OR t.status=1)
@@ -1148,8 +1148,8 @@ $num_pending_claims = mysql_num_rows($pending_q);
     $t_sql = "SELECT * FROM dental_support_tickets
         WHERE status=0 OR status=1;";
   }
-  $t_q = mysql_query($t_sql);
-  $num_open_tickets = mysql_num_rows($t_q);
+  $t_q = mysqli_query($con, $t_sql);
+  $num_open_tickets = mysqli_num_rows($t_q);
                 ?>
 				
 				

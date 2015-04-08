@@ -77,7 +77,7 @@
                         docid = '".$_SESSION['docid']."',
                         patientid = '".$_POST['patientid']."',
                         producerid = '".$_SESSION['userid']."',
-                        note = 'Insurance claim ".$_POST['claimid']." disputed because: ".mysql_escape_string($_POST['dispute_reason']).".'";
+                        note = 'Insurance claim ".$_POST['claimid']." disputed because: ".mysqli_escape_string($con, $_POST['dispute_reason']).".'";
                     
                     $db->query($note_sql);
                     if($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_PAID_INSURANCE){
@@ -97,7 +97,7 @@
                                 ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                 'primary',
                         		'".$banner1."',
-                        		'".mysql_escape_string($_POST['dispute_reason'])."',
+                        		'".mysqli_escape_string($con, $_POST['dispute_reason'])."',
                         		".$new_status.",
                                 now(),
                                 '".s_for($_SERVER['REMOTE_ADDR'])."'
@@ -122,7 +122,7 @@
                                 ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                 'secondary',
                                 '".$banner1."',
-                        		'".mysql_escape_string($_POST['dispute_reason'])."',
+                        		'".mysqli_escape_string($con, $_POST['dispute_reason'])."',
                         		'".$new_status."',
                                 now(),
                                 '".s_for($_SERVER['REMOTE_ADDR'])."'
@@ -147,7 +147,7 @@
                                 ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                 'primary',
                                 '".$banner1."',
-                                '".mysql_escape_string($_POST['dispute_reason'])."',
+                                '".mysqli_escape_string($con, $_POST['dispute_reason'])."',
                                 '".$new_status."',
                                 now(),
                                 '".s_for($_SERVER['REMOTE_ADDR'])."'
@@ -172,7 +172,7 @@
                                 ".mysqli_real_escape_string($con,$_POST['claimid']).",
                                 'secondary',
                                 '".$banner1."',
-                                '".mysql_escape_string($_POST['dispute_reason'])."',
+                                '".mysqli_escape_string($con, $_POST['dispute_reason'])."',
                                 '".$new_status."',
                                 now(),
                                 '".s_for($_SERVER['REMOTE_ADDR'])."'

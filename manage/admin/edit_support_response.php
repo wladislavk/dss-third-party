@@ -10,9 +10,9 @@ if($_POST["ressub"] == 1)
 			$ed_sql = "update dental_support_responses set 
 				body = '".mysqli_real_escape_string($con, $_POST["body"])."'
 			where id='".$_POST["id"]."'";
-			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
 
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -29,8 +29,8 @@ if($_POST["ressub"] == 1)
 
     <?
     $thesql = "select * from dental_support_responses where id='".$_REQUEST["id"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	?>
 	

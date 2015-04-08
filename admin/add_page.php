@@ -7,9 +7,9 @@ include "fckeditor/fckeditor.php";
 if($_POST["pagesub"] == 1)
 {
 	$sel_check = "select * from pages where title = '".s_for($_POST["title"])."' and pageid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con, $sel_check);
 	
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Title already exist. So please give another Title.";
 		?>
@@ -48,9 +48,9 @@ if($_POST["pagesub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update pages set title = '".s_for($_POST["title"])."', keywords = '".s_for($_POST["keywords"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."', top_image = '".s_for($banner1)."' where pageid='".$_POST["ed"]."'";
-			mysql_query($ed_sql);
+			mysqli_query($con, $ed_sql);
 			
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -63,7 +63,7 @@ if($_POST["pagesub"] == 1)
 		else
 		{
 			$ins_sql = "insert into pages set title = '".s_for($_POST["title"])."', keywords = '".s_for($_POST["keywords"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."', top_image = '".s_for($banner1)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
 			
 			$msg = "Added Successfully";
 			?>
@@ -90,8 +90,8 @@ if($_POST["pagesub"] == 1)
 
     <?
     $thesql = "select * from pages where pageid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	if($msg != '')
 	{

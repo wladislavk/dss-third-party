@@ -6,16 +6,16 @@ include_once('../manage/admin/includes/password.php');
 if($_POST["loginsub"] == 1)
 {
 	$salt_sql = "SELECT salt FROM admin WHERE username='".mysqli_real_escape_string($con, $_POST['username'])."'";
-        $salt_q = mysql_query($salt_sql);
-        $salt_row = mysql_fetch_assoc($salt_q);	
+        $salt_q = mysqli_query($con, $salt_sql);
+        $salt_row = mysqli_fetch_assoc($salt_q);	
 
         $pass = gen_password($_POST['password'], $salt_row['salt']);
 	$check_sql = "SELECT * FROM admin where username='".mysqli_real_escape_string($con, $_POST['username'])."' and password='".$pass."'";
-	$check_my = mysql_query($check_sql) or die(mysql_error().' | '.$check_sql);
+	$check_my = mysqli_query($con, $check_sql) or die(mysqli_error($con).' | '.$check_sql);
 	
-	if(mysql_num_rows($check_my) == 1) 
+	if(mysqli_num_rows($check_my) == 1) 
 	{
-		$check_myarray = mysql_fetch_array($check_my);
+		$check_myarray = mysqli_fetch_array($check_my);
 		
 		session_register("adminuserid");
 		$_SESSION['adminuserid']=$check_myarray['adminid'];

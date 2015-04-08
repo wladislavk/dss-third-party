@@ -63,8 +63,8 @@ include_once('includes/password.php');
 	$address=$_REQUEST['addr'];
 	$address=$_REQUEST['addr'];
 	$check_sql = "SELECT * FROM admin WHERE adminid=".$id1;
-	$check_my = mysql_query($check_sql) or die(mysql_error().' | '.$check_sql);
-	$check = mysql_fetch_assoc($check_my);
+	$check_my = mysqli_query($con, $check_sql) or die(mysqli_error($con).' | '.$check_sql);
+	$check = mysqli_fetch_assoc($check_my);
 
 
 if (isset($_POST['lock_submit'])) {

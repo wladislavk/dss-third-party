@@ -78,13 +78,13 @@ $s = "INSERT INTO dental_screener SET
 	adddate=now(),
 	ip_address='".$_SERVER['REMOTE_ADDR']."'
 	";
-	$q = mysql_query($s);
-	$screenerid = mysql_insert_id();
+	$q = mysqli_query($con, $s);
+	$screenerid = mysqli_insert_id($con);
 
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysql_query($epworth_sql);
-  $epworth_number = mysql_num_rows($epworth_my);
-  while($epworth_myarray = mysql_fetch_array($epworth_my))
+  $epworth_my = mysqli_query($con, $epworth_sql);
+  $epworth_number = mysqli_num_rows($epworth_my);
+  while($epworth_myarray = mysqli_fetch_array($epworth_my))
   {
     $chk = $_REQUEST['epworth_'.$epworth_myarray['epworthid']];
     if($chk != ''){
@@ -94,7 +94,7 @@ $s = "INSERT INTO dental_screener SET
                         response = '".mysqli_real_escape_string($con, $chk)."',
                         adddate = now(),
                         ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'";
-      mysql_query($hst_sql);
+      mysqli_query($con, $hst_sql);
     }
   }
 

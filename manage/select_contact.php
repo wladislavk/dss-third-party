@@ -10,13 +10,13 @@ else
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_contact where docid='".$_SESSION['docid']."' order by lastname";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
-$num_contact=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$num_contact=mysqli_num_rows($my);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -65,7 +65,7 @@ $num_contact=mysql_num_rows($my);
 			Select
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -76,11 +76,11 @@ $num_contact=mysql_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			$contype_sql = "SELECT * FROM dental_contacttype where status=1 and contacttypeid='".s_for($myarray['contacttypeid'])."' ";
-			$contype_my = mysql_query($contype_sql) or die($contype_sql." | ".mysql_error());
-			$contype_myarray = mysql_fetch_array($contype_my);
+			$contype_my = mysqli_query($con, $contype_sql) or die($contype_sql." | ".mysqli_error($con));
+			$contype_myarray = mysqli_fetch_array($contype_my);
 			
 			if($myarray["status"] == 1)
 			{

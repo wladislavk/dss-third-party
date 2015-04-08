@@ -104,8 +104,8 @@ if(isset($json_response->{"error"})){
         ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'
         ";
 
-  mysqli_query($con,$up_sql) or die(mysql_error());
-  $eid = mysql_insert_id();
+  mysqli_query($con,$up_sql) or die(mysqli_error($con));
+  $eid = mysqli_insert_id($con);
   invoice_add_enrollment('2', $_SESSION['admincompanyid'], $eid);
   ?>
   <script type="text/javascript">
@@ -209,7 +209,7 @@ $payer_name = substr($payer_id_post,strpos($payer_id_post, '-')+1);
         <?php while($r = mysqli_fetch_assoc($q)){ ?>
 		<?php $us_sql = "SELECT * FROM dental_user_signatures where user_id='".mysqli_real_escape_string($con,$_GET['docid'])."'";
 		  $us_q = mysqli_query($con,$us_sql);
-		  $signature = mysql_num_rows($us_q);
+		  $signature = mysqli_num_rows($us_q);
 		?>
           <?php if($r['docid']==0){
                 $snpi = $r['service_npi'];

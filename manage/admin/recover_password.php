@@ -68,7 +68,7 @@ $(document).ready(function(){
 			$salt = create_salt();
                         $pass = gen_password($_POST['password1'], $salt);
 			$up_sql = "UPDATE admin SET password='".$pass."', salt='".$salt."', recover_hash='' WHERE adminid='".mysqli_real_escape_string($con, $_POST['adminid'])."' AND recover_hash='".mysqli_real_escape_string($con, $_POST['hash'])."'";
-			mysql_query($up_sql);
+			mysqli_query($con, $up_sql);
 			?>
                 <script type="text/javascript">
                         //alert("<?= $check_myarray['userid']; ?>");
@@ -78,16 +78,16 @@ $(document).ready(function(){
 		}
 	}
 	$check_sql = "SELECT adminid FROM admin WHERE username='".mysqli_real_escape_string($con, $_GET['un'])."' AND recover_hash='".mysqli_real_escape_string($con, $_GET['rh'])."' AND recover_time>DATE_SUB(NOW(), INTERVAL 1 HOUR)";
-	$check_my = mysql_query($check_sql);
-	if(mysql_num_rows($check_my) == 1) 
+	$check_my = mysqli_query($con, $check_sql);
+	if(mysqli_num_rows($check_my) == 1) 
 	{
-		$check_myarray = mysql_fetch_array($check_my);
+		$check_myarray = mysqli_fetch_array($check_my);
 		
 		//$recover_hash = hash('sha256', $check_myarray['userid'].$_POST['email'].rand());
 		//$ins_sql = "UPDATE dental_users set recover_hash='".$recover_hash."', recover_time=NOW() WHERE userid='".$check_myarray['userid']."'";
-		//mysql_query($ins_sql);
+		//mysqli_query($con, $ins_sql);
 		
-		//$ins_id = mysql_insert_id();
+		//$ins_id = mysqli_insert_id($con);
 		
 		
 		?>

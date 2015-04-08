@@ -26,7 +26,7 @@ if($_POST['q_recipientssub'] == 1){
 						adddate = now(),
 						ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		$db->query($ins_sql) or die($ins_sql." | ".mysql_error());
+		$db->query($ins_sql) or die($ins_sql." | ".mysqli_error($con));
 		
 		$msg = "Added Successfully";?>
 		<script type="text/javascript">
@@ -43,7 +43,7 @@ if($_POST['q_recipientssub'] == 1){
 					patient_info = '".s_for($patient_info)."'
 					where q_recipientsid = '".s_for($_POST['ed'])."'";
 		
-		$db->query($ed_sql) or die($ed_sql." | ".mysql_error());
+		$db->query($ed_sql) or die($ed_sql." | ".mysqli_error($con));
 		
 		//echo $ed_sql;
 		$msg = "Edited Successfully";?>

@@ -7,11 +7,11 @@ $oid = $_REQUEST['oid'];
 $nid = $_REQUEST['nid'];
 $cur = $_REQUEST['cur'];
 $o_sql = "SELECT company_type from companies where id='".$oid."'";
-$o_q = mysql_query($o_sql);
-$old = mysql_fetch_assoc($o_q);
+$o_q = mysqli_query($con, $o_sql);
+$old = mysqli_fetch_assoc($o_q);
 $n_sql = "SELECT company_type from companies where id='".$nid."'";
-$n_q = mysql_query($n_sql);
-$new = mysql_fetch_assoc($n_q);
+$n_q = mysqli_query($con, $n_sql);
+$new = mysqli_fetch_assoc($n_q);
 if(is_billing($_SESSION['admin_access'])){
  if($cur == ''){ $cur = DSS_ADMIN_ACCESS_BILLING_BASIC; }
 

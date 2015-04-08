@@ -539,7 +539,7 @@ foreach ($master_q as $master_r) {
 
   // Device Delivery Date
   $device_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 7 ORDER BY stepid DESC LIMIT 1;";
-  $device_result = mysql_query($device_query);
+  $device_result = mysqli_query($con, $device_query);
   //$delivery_date = date('F d, Y', strtotime(mysql_result($device_result, 0)));
 
   */

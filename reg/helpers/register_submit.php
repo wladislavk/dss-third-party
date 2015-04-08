@@ -3,9 +3,9 @@
 <?php require_once '../../manage/includes/general_functions.php'; ?>
 <?php require_once '../../manage/includes/notifications.php'; ?>
 <?php
-        $chksql = "SELECT patientid FROM dental_patients WHERE parent_patientid='".mysql_escape_string($_SESSION['pid'])."'";
-        $chkq = mysql_query($chksql);
-	$chkc = mysql_num_rows($chkq);
+        $chksql = "SELECT patientid FROM dental_patients WHERE parent_patientid='".mysqli_escape_string($con, $_SESSION['pid'])."'";
+        $chkq = mysqli_query($con, $chksql);
+	$chkc = mysqli_num_rows($chkq);
         $dob = ($_POST['dob_month'] != '' && $_POST['dob_day'] != '' && $_POST['dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['dob_month'],$_POST['dob_day'],$_POST['dob_year'])):'';
         $ins_dob = ($_POST['ins_dob_month'] != '' && $_POST['ins_dob_day'] != '' && $_POST['ins_dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['ins_dob_month'],$_POST['ins_dob_day'],$_POST['ins_dob_year'])):'';
         $ins2_dob = ($_POST['ins2_dob_month'] != '' && $_POST['ins2_dob_day'] != '' && $_POST['ins2_dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['ins2_dob_month'],$_POST['ins2_dob_day'],$_POST['ins2_dob_year'])):'';
@@ -164,7 +164,7 @@
                 ";
 
    	}
-       $q = mysql_query($sql);
+       $q = mysqli_query($con, $sql);
 	if($q){
 		//echo "Successfully updated!";
 	}else{
@@ -173,15 +173,15 @@
 
 		$s_sql = "SELECT email FROM dental_patients
                         WHERE patientid=".mysqli_real_escape_string($con, $_SESSION['pid']);
-                $s_q = mysql_query($s_sql);
-                $s_r = mysql_fetch_assoc($s_q);
+                $s_q = mysqli_query($con, $s_sql);
+                $s_r = mysqli_fetch_assoc($s_q);
                 sendUpdatedEmail($_SESSION['pid'], $_POST['email'], $s_r['email'], 'pat');
 		if(trim($_POST['email']) != trim($s_r['email'])){
 			//echo create_notification($_SESSION['pid'], '', "User has updated email from ".$s_r['email']." to ".$_POST['email'].".", 'email');
 		}
 		
 		$s = "UPDATE dental_patients set email='".mysqli_real_escape_string($con, $_POST['email'])."' WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";	
-		mysql_query($s);
+		mysqli_query($con, $s);
 
                 $types = array(DSS_PATIENT_CONTACT_SLEEP, DSS_PATIENT_CONTACT_PRIMARY, DSS_PATIENT_CONTACT_DENTIST, DSS_PATIENT_CONTACT_ENT, DSS_PATIENT_CONTACT_OTHER);
 		$updatevals = '';
@@ -202,8 +202,8 @@
                                                 "phone = '" . mysqli_real_escape_string($con, num($_POST['pc_'.$t.'_phone'])) . "', " .
 						"adddate = now(), " .
 						"ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."';";
-                                        mysql_query($insql);
-                                        $id = mysql_insert_id();
+                                        mysqli_query($con, $insql);
+                                        $id = mysqli_insert_id($con);
 					if($updatevals!=''){ $updatevals .= ','; }
                                         $updatevals .= '"pc_'.$t.'_patient_contactid": "'.$id.'"';
 				    }else{
@@ -219,7 +219,7 @@
                                                 "zip = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_zip']) . "', " .
                                                 "phone = '" . mysqli_real_escape_string($con, num($_POST['pc_'.$t.'_phone'])) . "' " .
 						" WHERE id = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_patient_contactid']) . "'";
-                                        mysql_query($insql);
+                                        mysqli_query($con, $insql);
 				    }
                                 }
                         }
@@ -231,8 +231,8 @@
 
 
 $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
-                                        $p_m_q = mysql_query($p_m_sql);
-                                        $p_m_r = mysql_fetch_assoc($p_m_q);
+                                        $p_m_q = mysqli_query($con, $p_m_sql);
+                                        $p_m_r = mysqli_fetch_assoc($p_m_q);
 
 
 
@@ -262,8 +262,8 @@ $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.
                                                 "fax = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_fax']) . "', " .
                                                 "email = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_email']) . "', " .
                                                 "phone = '" . mysqli_real_escape_string($con, num($_POST['p_m_ins_phone'])) . "';";
-					  mysql_query($insql);
-					  $id = mysql_insert_id();
+					  mysqli_query($con, $insql);
+					  $id = mysqli_insert_id($con);
 					  echo '{"p_m_patient_insuranceid": "'.$id.'"}';
 					}
 				    }else{
@@ -280,14 +280,14 @@ $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.
                                                 "email = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_email']) . "', " .
                                                 "phone = '" . mysqli_real_escape_string($con, num($_POST['p_m_ins_phone'])) . "' " .
 						"WHERE id = '". mysqli_real_escape_string($con, $_POST['p_m_patient_insuranceid']) ."'";
-					mysql_query($insql);
+					mysqli_query($con, $insql);
 				    }
 				}
 
 
                                         $s_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
-                                        $s_m_q = mysql_query($s_m_sql);
-                                        $s_m_r = mysql_fetch_assoc($s_m_q);
+                                        $s_m_q = mysqli_query($con, $s_m_sql);
+                                        $s_m_r = mysqli_fetch_assoc($s_m_q);
 
                                 if(trim($_POST['s_m_ins_company'])!=''){
                                     if($_POST['s_m_patient_insuranceid'] == ''){
@@ -316,8 +316,8 @@ $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.
                                                 "fax = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_fax']) . "', " .
                                                 "email = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_email']) . "', " .
                                                 "phone = '" . mysqli_real_escape_string($con, num($_POST['s_m_ins_phone'])) . "';";
-                                          mysql_query($insql);
-                                          $id = mysql_insert_id();
+                                          mysqli_query($con, $insql);
+                                          $id = mysqli_insert_id($con);
 					  echo '{"s_m_patient_insuranceid": "'.$id.'"}';
 					}
                                     }else{
@@ -334,7 +334,7 @@ $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.
                                                 "email = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_email']) . "', " .
                                                 "phone = '" . mysqli_real_escape_string($con, num($_POST['s_m_ins_phone'])) . "' " .
                                                 "WHERE id = '". mysqli_real_escape_string($con, $_POST['s_m_patient_insuranceid']) ."'";
-                                        mysql_query($insql);
+                                        mysqli_query($con, $insql);
 				    }
                                 }
 

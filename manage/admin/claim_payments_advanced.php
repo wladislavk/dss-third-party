@@ -9,8 +9,8 @@ $c_sql = "SELECT CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_na
                 JOIN dental_patients p ON i.patientid=p.patientid
                 JOIN dental_users u ON u.userid=p.docid
 		WHERE i.insuranceid='".mysqli_real_escape_string($con, $_GET['id'])."'";
-$c_q = mysql_query($c_sql) or die(mysql_error());
-$c = mysql_fetch_assoc($c_q);
+$c_q = mysqli_query($con, $c_sql) or die(mysqli_error($con));
+$c = mysqli_fetch_assoc($c_q);
 
 
 ?>
@@ -30,22 +30,22 @@ $c = mysql_fetch_assoc($c_q);
 <?php
 
 $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['id']."' ;";
-$p_sql = mysql_query($sql);
-$payments = mysql_fetch_array($p_sql);
+$p_sql = mysqli_query($con, $sql);
+$payments = mysqli_fetch_array($p_sql);
 $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['id']."';";
-$cq = mysql_query($csql);
-$claim = mysql_fetch_array($cq);
+$cq = mysqli_query($con, $csql);
+$claim = mysqli_fetch_array($cq);
 
 $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con, $_GET['id'])."' AND
                 (status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE.")";
-$paq = mysql_query($pasql);
-$num_pa = mysql_num_rows($paq);
+$paq = mysqli_query($con, $pasql);
+$num_pa = mysqli_num_rows($paq);
 
 
 $sasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con, $_GET['id'])."' AND
                 (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
-$saq = mysql_query($sasql);
-$num_sa = mysql_num_rows($saq);
+$saq = mysqli_query($con, $sasql);
+$num_sa = mysqli_num_rows($saq);
 
 ?>
 
@@ -172,8 +172,8 @@ return returnval;
 </script>
 <?php
 $sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['id']."' ;";
-$p_sql = mysql_query($sql);
-if(mysql_num_rows($p_sql)==0){
+$p_sql = mysqli_query($con, $sql);
+if(mysqli_num_rows($p_sql)==0){
 ?><div style="margin-left:50px; ">No Previous Payments</div><?php
 }else{
 ?>
@@ -186,7 +186,7 @@ if(mysql_num_rows($p_sql)==0){
 <span style="float:left;font-weight:bold;width:100px;">Amount</span>
 </div>
 <?php
-while($p = mysql_fetch_array($p_sql)){
+while($p = mysqli_fetch_array($p_sql)){
 ?>
 <div style="margin-left:9px; margin-top: 10px; width:98%; ">
 <span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
@@ -248,8 +248,8 @@ input{ width: 60px; }
 </tr>
 <?php
 $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_GET['id'];
-$lq = mysql_query($lsql);
-while($row = mysql_fetch_assoc($lq)){
+$lq = mysqli_query($con, $lsql);
+while($row = mysqli_fetch_assoc($lq)){
 ?>
 <tr>
 <td><?= $row['service_date']; ?></td>

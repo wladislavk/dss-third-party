@@ -6,26 +6,26 @@ $s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.ma
 		dp.recover_hash='".mysqli_real_escape_string($con, $_GET['hash'])."' AND
 		dp.use_patient_portal='1' AND
 		du.use_patient_portal='1'";
-$q = mysql_query($s);
-    if(mysql_num_rows($q) > 0){
-      $r = mysql_fetch_assoc($q);
+$q = mysqli_query($con, $s);
+    if(mysqli_num_rows($q) > 0){
+      $r = mysqli_fetch_assoc($q);
 
 $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($con, $_GET['id'])."'";
-$loc_q = mysql_query($loc_sql);
-$loc_r = mysql_fetch_assoc($loc_q);
+$loc_q = mysqli_query($con, $loc_sql);
+$loc_r = mysqli_fetch_assoc($loc_q);
 if($loc_r['location'] != '' && $loc_r['location'] != '0'){
   $location_query = "SELECT * FROM dental_locations WHERE id='".mysqli_real_escape_string($con, $loc_r['location'])."' AND docid='".mysqli_real_escape_string($con, $r['docid'])."'";
 }else{
   $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($con, $r['docid'])."'";
 }
-$location_result = mysql_query($location_query);
-$location_info = mysql_fetch_assoc($location_result);
+$location_result = mysqli_query($con, $location_query);
+$location_info = mysqli_fetch_assoc($location_result);
 
   $n = $location_info['phone'];
 /*
                 $recover_hash = substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);
                 $ins_sql = "UPDATE dental_patients set access_code='".$recover_hash."' WHERE patientid='".$r['patientid']."'";
-                mysql_query($ins_sql);
+                mysqli_query($con, $ins_sql);
 
         // iterate over all our friends. $number is a phone number above, and $name 
         // is the name next to it

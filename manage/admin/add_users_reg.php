@@ -14,9 +14,9 @@ require_once 'includes/access.php';
 if($_POST["usersub"] == 1)
 {
         $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_POST['ed'])."'";
-        $query_check2=mysql_query($sel_check2);
+        $query_check2=mysqli_query($con, $sel_check2);
 
-	if(mysql_num_rows($query_check2)>0)
+	if(mysqli_num_rows($query_check2)>0)
         {
                 $msg="Email already exist. So please give another Email.";
                 ?>
@@ -47,17 +47,17 @@ if($_POST["usersub"] == 1)
 				recover_time=NOW(),
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or die($ins_sql.mysql_error());
-                        $userid = mysql_insert_id();			
+			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
+                        $userid = mysqli_insert_id($con);			
                         $code_sql = "insert into dental_transaction_code (transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, docid, amount_adjust) SELECT transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, ".$userid.", amount_adjust FROM dental_transaction_code WHERE default_code=1";
-                        mysql_query($code_sql) or die($code_sql.mysql_error());
+                        mysqli_query($con, $code_sql) or die($code_sql.mysqli_error($con));
                         $custom_sql = "insert into dental_custom (title, description, docid) SELECT title, description, ".$userid." FROM dental_custom WHERE default_text=1";
-                        mysql_query($custom_sql) or die($custom_sql.mysql_error());
+                        mysqli_query($con, $custom_sql) or die($custom_sql.mysqli_error($con));
 			
 			if(is_super($_SESSION['admin_access'])){
-			  mysql_query("INSERT INTO dental_user_company SET userid='".mysqli_real_escape_string($con, $userid)."', companyid='".mysqli_real_escape_string($con, $_POST["companyid"])."'");
+			  mysqli_query($con, "INSERT INTO dental_user_company SET userid='".mysqli_real_escape_string($con, $userid)."', companyid='".mysqli_real_escape_string($con, $_POST["companyid"])."'");
 			}else{
-  			  mysql_query("INSERT INTO dental_user_company SET userid='".mysqli_real_escape_string($con, $userid)."', companyid='".mysqli_real_escape_string($con, $_SESSION["companyid"])."'");
+  			  mysqli_query($con, "INSERT INTO dental_user_company SET userid='".mysqli_real_escape_string($con, $userid)."', companyid='".mysqli_real_escape_string($con, $_SESSION["companyid"])."'");
 			}		
 		
 			//send registration email.
@@ -87,7 +87,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 $mail = mail($_POST['email'], $subject, $m, $headers);
 		if($mail){
 		  $e_sql = "UPDATE dental_users SET registration_email_date=now() WHERE userid='".mysqli_real_escape_string($con, $userid)."'";
-		  mysql_query($e_sql);
+		  mysqli_query($con, $e_sql);
 		}
 			$msg = "Added Successfully";
 			?>
@@ -172,8 +172,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <select name="companyid" class="form-control">
 			<?php
 			  $bu_sql = "SELECT * FROM companies ORDER BY name ASC";
-			  $bu_q = mysql_query($bu_sql);
-			  while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
+			  $bu_q = mysqli_query($con, $bu_sql);
+			  while($bu_r = mysqli_fetch_assoc($bu_q)){ ?>
  			    <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $companyid)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
 			  <?php } ?>
                 </select>

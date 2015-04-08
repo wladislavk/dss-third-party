@@ -19,7 +19,7 @@ if($_POST["mult_devicesub"] == 1)
 			if(mysqli_num_rows($query_check) == 0)
 			{
 				$ins_sql = "insert into dental_device set device = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysqli_query($con,$ins_sql) or die($ins_sql.mysql_error());
+				mysqli_query($con,$ins_sql) or die($ins_sql.mysqli_error($con));
 			}
 			
 		}

@@ -22,8 +22,8 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
 				create_type = '0',
 				creator_id = '".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysqli_query($con,$ins_sql) or die($ins_sql.mysql_error());
-		$n_id = mysql_insert_id();
+		mysqli_query($con,$ins_sql) or die($ins_sql.mysqli_error($con));
+		$n_id = mysqli_insert_id($con);
 
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
                 if($_FILES['attachment']['tmp_name'][$i]!=''){
@@ -54,7 +54,7 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
                 $up_sql = "update dental_claim_notes set 
                                 note = '".mysqli_real_escape_string($con, $_POST['note'])."'
                                 WHERE id='".mysqli_real_escape_string($con, $_POST['nid'])."'";
-                mysqli_query($con,$up_sql) or die($up_sql.mysql_error());
+                mysqli_query($con,$up_sql) or die($up_sql.mysqli_error($con));
 		$n_id = $_POST['nid'];
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
                 if($_FILES['attachment']['tmp_name'][$i]!=''){
@@ -99,7 +99,7 @@ $my = mysqli_query($con,$sql);
                         <? $i=0;
                         //$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
                         //$my = mysqli_query($con,$sql);
-                        while($myarray = mysql_fetch_array($my))
+                        while($myarray = mysqli_fetch_array($my))
                         {?>
                                 title_arr[<?php echo $i;?>] = "<?php echo st(addslashes($myarray['title']));?>";
                                 desc_arr[<?php echo $i;?>] = "<?php echo st(trim( preg_replace( '/\n\r|\r\n/','%n%',addslashes($myarray['description']))));?>";
@@ -119,7 +119,7 @@ $my = mysqli_query($con,$sql);
         if(isset($_GET['nid'])){
                 $s = "SELECT * FROM dental_claim_notes WHERE id='".$_GET['nid']."'";
                 $q = mysqli_query($con,$s);
-                $r = mysql_fetch_assoc($q);
+                $r = mysqli_fetch_assoc($q);
                 $note = $r['note'];
         }else{
                 $note = '';
@@ -148,7 +148,7 @@ $my = mysqli_query($con,$sql);
                 <?
                                 $j=0;
                                 $my = mysqli_query($con,$sql);
-                                while($myarray = mysql_fetch_array($my))
+                                while($myarray = mysqli_fetch_array($my))
                                 { ?>
                                         <option value="<?php echo $j;?>">
                         <?php echo st($myarray['title']);?>

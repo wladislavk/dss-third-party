@@ -172,7 +172,7 @@ if(!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1)
 		adddate = '".date('m/d/Y')."',
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysql_error());
+		mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysqli_error($con));
 		
 		$msg = "Added Successfully";
                 if(isset($_POST['q_pagebtn_proceed'])){
@@ -218,7 +218,7 @@ if(!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1)
 		main_reason_other = '".s_for($main_reason_other)."'
 		where q_page1id = '".s_for($_POST['ed'])."'";
 		
-		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysql_error());
+		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysqli_error($con));
 		
 		$msg = "Edited Successfully";
                 if(isset($_POST['q_pagebtn_proceed'])){

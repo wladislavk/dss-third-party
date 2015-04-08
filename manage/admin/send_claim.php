@@ -5,10 +5,10 @@ include 'includes/top.htm';?>
 if(isset($_POST['submit'])){
 
   $p_sql = "SELECT patientid FROM dental_insurance where insuranceid='".mysqli_real_escape_string($con, $_REQUEST['insid'])."'";
-  $p_q = mysql_query($p_sql);
+  $p_q = mysqli_query($con, $p_sql);
   
-  if(mysql_num_rows($p_q)>0){
-    $p = mysql_fetch_assoc($p_q);
+  if(mysqli_num_rows($p_q)>0){
+    $p = mysqli_fetch_assoc($p_q);
 
     $_GET['insid'] = $_POST['insid'];
     $_GET['pid'] = $p['patientid'];
@@ -18,8 +18,8 @@ if(isset($_POST['submit'])){
     include '../insurance_electronic_file.php';
 
       $p_sql = "SELECT response FROM dental_claim_electronic where claimid='".mysqli_real_escape_string($con, $_REQUEST['insid'])."' ORDER BY id DESC";
-      $p_q = mysql_query($p_sql);
-      $p_r = mysql_fetch_assoc($p_q);
+      $p_q = mysqli_query($con, $p_sql);
+      $p_r = mysqli_fetch_assoc($p_q);
       echo $p_r['response'];
 
   }else{
@@ -40,8 +40,8 @@ Payer ID
                 if($p_m_ins_payer_id){
                   $dsql = "SELECT name, payer_id FROM dental_ins_payer
                         WHERE id=".mysqli_real_escape_string($con, $p_m_ins_payer_id);
-                  $dq = mysql_query($dsql);
-                  $d = mysql_fetch_assoc($dq);
+                  $dq = mysqli_query($con, $dsql);
+                  $d = mysqli_fetch_assoc($dq);
                   $p_m_ins_payer_name = $d['payer_id']." - ".$d['name'];
                 }else{
                   $p_m_ins_payer_name = "";

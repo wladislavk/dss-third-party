@@ -5,8 +5,8 @@ $mt_arr = explode(',',$_GET['mt']);
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 

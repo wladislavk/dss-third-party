@@ -5,8 +5,8 @@ $id = $_SESSION['adminuserid'];
 $logout_time = 3*60*60; // 3 hours in seconds
 $s = "SELECT last_accessed_date FROM admin
 	WHERE adminid='".mysqli_real_escape_string($con, $id)."'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
+$q = mysqli_query($con, $s);
+$r = mysqli_fetch_assoc($q);
 $lat = strtotime($r['last_accessed_date']);
 $now = time();
 if($lat > $now - $logout_time){

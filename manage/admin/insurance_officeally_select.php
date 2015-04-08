@@ -234,7 +234,7 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
  		JOIN dental_patients p ON p.patientid=i.patientid
                 WHERE i.insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";
   $api_q = mysqli_query($con,$api_sql);
-  $api_r = mysql_fetch_assoc($api_q);
+  $api_r = mysqli_fetch_assoc($api_q);
   if($api_r['use_eligible_api']==1 && $api_r['p_m_eligible_id']!=''){
     include '../insurance_electronic_file.php';
   } */

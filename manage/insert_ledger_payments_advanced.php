@@ -50,16 +50,16 @@
                             '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', 
                             '".date('Y-m-d')."', 
                             '".str_replace(',','',$_POST['amount_'.$id])."', 
-                            '".mysqli_real_escape_string($con,$_POST['payment_type'])."', 
-                            '".mysqli_real_escape_string($con,$_POST['payer'])."',
-                            '".mysqli_real_escape_string($con,$_POST['allowed'])."',
-                            '".mysqli_real_escape_string($con,$_POST['ins_paid'])."',
-                            '".mysqli_real_escape_string($con,$_POST['deductible'])."',
-                            '".mysqli_real_escape_string($con,$_POST['copay'])."',
-                            '".mysqli_real_escape_string($con,$_POST['coins'])."',
-                            '".mysqli_real_escape_string($con,$_POST['overpaid'])."',
-                            '".date('Y-m-d', strtotime($_POST['followup']))."',
-                            '".mysqli_real_escape_string($con,$_POST['note'])."'
+                            '".mysqli_real_escape_string($con,$_POST['payment_type_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['payer_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['allowed_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['ins_paid_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['deductible_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['copay_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['coins_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['overpaid_'.$id])."',
+                            '".date('Y-m-d', strtotime($_POST['followup_'.$id]))."',
+                            '".mysqli_real_escape_string($con,$_POST['note_'.$id])."'
                             ),";
                     }
                 }

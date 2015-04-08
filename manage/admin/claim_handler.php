@@ -178,7 +178,15 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $insured_firstname = $_POST['subscriber']['first_name'];
         $insured_lastname = $_POST['subscriber']['last_name'];
         $insured_middle = $_POST['subscriber']['middle_name'];
-        $patient_relation_insured = $_POST['dependent']['relationship'];
+        if($_POST['dependent']['relationship'] == '01'){
+            $patient_relation_insured = "Spouse";    
+        }else if($_POST['dependent']['relationship'] == '19'){
+            $patient_relation_insured = "Child";    
+        }else if($_POST['dependent']['relationship'] == 'G8'){
+            $patient_relation_insured = "Other";    
+        } else {
+            $patient_relation_insured = "Self";
+        }
         $insured_address = $_POST['subscriber']['address']['street_line_1'];
         $insured_state = $_POST['subscriber']['address']['state'];
         $insured_city = $_POST['subscriber']['address']['city'];
@@ -197,7 +205,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $insured_sex = $_POST['subscriber']['gender'];
         $insured_insurance_plan = $_POST['subscriber']['group_name'];
         $other_insured_insurance_plan = $_POST['other_payers'][0]['name'];
-
+        $other_insured_id_number = $_POST['other_payers'][0]['subscriber']['id'];
         $other_insured_address = $_POST['other_payers'][0]['subscriber']['address']['street_line_1'];
         $other_insured_city = $_POST['other_payers'][0]['subscriber']['address']['city'];
         $other_insured_state = $_POST['other_payers'][0]['subscriber']['address']['state'];

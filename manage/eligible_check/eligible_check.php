@@ -494,6 +494,7 @@ include_once '../includes/calendarinc.php';
 	<input type="hidden" name="pid" id="pid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
         <button type="submit" id="submit-button" class="btn btn-primary btn-lg"><div id="submit-button-inner">Submit</div></button>
+        <button type="submit" id="submit-button-medicare" class="btn btn-primary btn-lg"><div id="submit-button-inner">Medicare Check</div></button>
       </div>
     </div>
 

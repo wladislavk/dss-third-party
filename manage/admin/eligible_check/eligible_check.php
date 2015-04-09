@@ -156,6 +156,27 @@
                 <li class="template" style="display:none"></li>
         </ul>
 </div>
+<script type="text/javascript">
+function disable_submit (){
+  console.log("disabled");
+  $('#submit-button').css('background-color', '#999999');
+  $('#submit-button').prop("disabled",true);
+  $('#submit-button-inner').replaceWith('<img id="submit-button-inner" src="/manage/images/DSS-ajax-animated_loading-gif.gif"></img>');
+
+}
+function enable_submit (){
+  console.log("enabled");
+  $('#submit-button').css('background-color', '#428bca');
+  $('#submit-button').prop("disabled",false);
+  $('#submit-button-inner').replaceWith('<div id="submit-button-inner">Submit</div>');
+}
+$(document).ready(function(){
+  var api_key = <?php echo "'".$api_key."'" ?>;
+  setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?api_key='+api_key, 'ins_payer', '', true, false);
+  $('#submit-button').on("click",null ,null , disable_submit);
+
+});
+</script>
 <input type="hidden" name="payer_id" id="payer_id" />
       </div>
     </div>
@@ -485,6 +506,7 @@
 	<input type="hidden" name="pid" id="pid" value="<?php echo  $_GET['pid']; ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
         <button type="submit" id="submit-button" class="btn btn-primary btn-lg"><div id="submit-button-inner">Submit</div></button>
+        <button type="submit" id="submit-button-medicare" class="btn btn-primary btn-xl"><div id="submit-button-medicare-inner">Medicare Check</div></button>
       </div>
     </div>
 

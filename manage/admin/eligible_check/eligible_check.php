@@ -94,6 +94,7 @@
       $d_city = '';
       $d_zip = '';
     }
+    $medicare = $r['p_m_ins_type'] == 1;
   ?>
 
     <div class="form-group hidden">
@@ -501,12 +502,19 @@ $(document).ready(function(){
 
     </fieldset>
 
+    <?php if($medicare){ ?>
+    <div  style="clear:both;" class="form-group">
+	For Medicare eligibility checks please use the "Medicare Check" button. For all other checks click the "Submit" button.
+    </div>
+    <?php } ?>
     <div  style="clear:both;" class="form-group">
       <div class="col-lg-offset-2 col-lg-10">
 	<input type="hidden" name="pid" id="pid" value="<?php echo  $_GET['pid']; ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
         <button type="submit" id="submit-button" class="btn btn-primary btn-lg"><div id="submit-button-inner">Submit</div></button>
-        <button type="submit" id="submit-button-medicare" class="btn btn-primary btn-xl"><div id="submit-button-medicare-inner">Medicare Check</div></button>
+	<?php if($medicare){ ?>
+          <button type="submit" id="submit-button-medicare" class="btn btn-primary btn-xl"><div id="submit-button-medicare-inner">Medicare Check</div></button>
+	<?php } ?>
       </div>
     </div>
 

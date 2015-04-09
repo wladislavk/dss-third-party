@@ -33,3 +33,9 @@
   word-wrap: break-word;
   max-width: 235px;
 }
+
+.btn-xl{
+  font-size: 20px;
+  line-height: 1.33;
+  padding: 15px 21px;
+}

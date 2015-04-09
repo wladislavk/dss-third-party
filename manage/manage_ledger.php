@@ -449,7 +449,6 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 </div>
 
 <form name="edit_mult_form" id="edit_mult_form" />
-<<<<<<< HEAD
   <table  class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <?php if($total_rec > $rec_disp) {?>
     <TR bgColor="#ffffff">

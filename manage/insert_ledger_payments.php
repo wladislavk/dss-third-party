@@ -329,20 +329,10 @@
                 } else {
                     claim_history_update($_POST['claimid'], $_SESSION['userid'], $_SESSION['adminuserid']);
         ?>
-                    <script type="text/javascript">
-                        alert('<?php echo  $msg; ?>');
-        <?php
-                        if($new_status == DSS_CLAIM_SEC_PENDING){
-        ?>
-                            history.go(-1);
-        <?php
-                        }else{
-        ?>
-                            history.go(-1);
-        <?php
-                        }
-        ?>
-                    </script>
+                <script type="text/javascript">
+                    alert('<?php echo  $msg; ?>');
+                    history.go(-1);
+                </script>
         <?php
                 }
             } else { //NOT AUTHORIZED

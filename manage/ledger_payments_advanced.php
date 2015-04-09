@@ -1,6 +1,7 @@
 <?php 
     include "includes/top.htm";
     include_once "includes/constants.inc";
+    require "includes/calendarinc.php";
 
     $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
     $payments = $db->getRow($sql);

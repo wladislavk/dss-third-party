@@ -2,9 +2,9 @@
     include_once('admin/includes/main_include.php');
     include_once('includes/constants.inc');
     include("includes/sescheck.php");
-    include_once('includes/authorization_functions.php');
-    include_once 'admin/includes/claim_functions.php';
-    include_once 'includes/claim_functions.php';
+    require_once('includes/authorization_functions.php');
+    require_once 'admin/includes/claim_functions.php';
+    require_once 'includes/claim_functions.php';
 ?>
 
 <html>
@@ -39,7 +39,7 @@
                     `followup`,
                     `note`
                     ) VALUES ";
-                $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '');
+                $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."  or secondary_claim_id=".$_POST['claimid'].")";
 
                 $lq = $db->getResults($lsql);
                 if ($lq) foreach ($lq as $row){
@@ -66,7 +66,9 @@
 
                 $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
                 $insqry = $db->query($sqlinsertqry);
-                if(!empty($secsql)){
+                $pid = mysql_insert_id();
+
+                payment_history_update($pid, $_SESSION['userid'], '');
                     $paysql = "SELECT SUM(lp.amount) as payment
                                 FROM dental_ledger_payment lp
                                 JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
@@ -331,6 +333,7 @@
                         
                         $db->query($x); 
                     }
+                    if($secsql){
                         $db->query($secsql);
                     }
 

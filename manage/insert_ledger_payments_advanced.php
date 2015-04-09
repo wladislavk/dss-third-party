@@ -102,7 +102,7 @@
                             note = 'Insurance claim ".$_POST['claimid']." disputed because: ".mysqli_real_escape_string($con,(!empty($_POST['dispute_reason']) ? $_POST['dispute_reason'] : '')).".'";
                         
                         $db->query($note_sql);
-                        if($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_PAID_INSURANCE){
+                        if($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_EFILE_ACCEPTED || $claim['status']==DSS_CLAIM_PAID_INSURANCE){
                             $new_status = DSS_CLAIM_DISPUTE;
                             $msg = 'Disputed Primary Insurance';
 
@@ -208,7 +208,7 @@
                             $msg = "Claim saved, status is PAID.";
                         }elseif($claim['status']==DSS_CLAIM_PENDING || $claim['status']==DSS_CLAIM_SEC_PENDING){
                             //SAVE WITHOUT CHANGING STATUS
-                        }elseif($claim['status']==DSS_CLAIM_SENT){
+                        }elseif($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_EFILE_ACCEPTED){
                             if($_POST['close'] == 1){
                                 if($pat['s_m_dss_file']==1 && $payr['payment']<$claim['amount_due']){ //secondary
                                     if($pat['p_m_ins_type']==1){ //medicare
@@ -314,7 +314,7 @@
 
                     if(isset($new_status)){
                         $x = "UPDATE dental_insurance SET status='".$new_status."'  ";
-                        if($new_status == DSS_CLAIM_SENT || $new_status == DSS_CLAIM_SEC_SENT || $new_status == DSS_CLAIM_DISPUTE || $new_status == DSS_CLAIM_SEC_DISPUTE || $new_status == DSS_CLAIM_REJECTED || $new_status == DSS_CLAIM_SEC_REJECTED  || $new_status == DSS_CLAIM_PATIENT_DISPUTE || $new_status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
+                        if($new_status == DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_EFILE_ACCEPTED || $new_status == DSS_CLAIM_SEC_SENT || $new_status == DSS_CLAIM_SEC_EFILE_ACCEPTED || $new_status == DSS_CLAIM_DISPUTE || $new_status == DSS_CLAIM_SEC_DISPUTE || $new_status == DSS_CLAIM_REJECTED || $new_status == DSS_CLAIM_SEC_REJECTED  || $new_status == DSS_CLAIM_PATIENT_DISPUTE || $new_status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
                             $x .= ", mailed_date = NULL ";
                         }
                         if($new_status == DSS_CLAIM_SEC_PENDING){

@@ -3,16 +3,16 @@
     include_once "includes/constants.inc";
     require "includes/calendarinc.php";
 
-    $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
+    $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' or dl.secondary_claim_id=".$_GET['cid'].");";
     $payments = $db->getRow($sql);
     $csql = "SELECT i.*, CONCAT(p.firstname, ' ',p.lastname) name FROM dental_insurance i JOIN dental_patients p ON p.patientid=i.patientid WHERE i.insuranceid='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."';";
     $claim = $db->getRow($csql);
     $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-    		  (status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE.")";
+    		  (status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE." OR status = ".DSS_CLAIM_EFILE_ACCEPTED.")";
 
     $num_pa = $db->getNumberRows($pasql);
     $sasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-              (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
+              (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE." OR status = ".DSS_CLAIM_EFILE_ACCEPTED.")";
 
     $num_sa = $db->getNumberRows($sasql);
 ?>
@@ -33,6 +33,7 @@
             var DSS_CLAIM_SEC_PENDING = <?php echo  ($claim['status'] == DSS_CLAIM_SEC_PENDING) ? 1 : 0; ?>;
             var DSS_CLAIM_SENT = <?php echo  ($claim['status'] == DSS_CLAIM_SENT) ? 1 : 0; ?>;
             var DSS_CLAIM_SEC_SENT = <?php echo  ($claim['status']==DSS_CLAIM_SEC_SENT) ? 1 : 0; ?>;
+            var DSS_CLAIM_EFILE_ACCEPTED = <?php echo  ($claim['status']==DSS_CLAIM_EFILE_ACCEPTED) ? 1 : 0; ?>;
             var num_pa = <?php echo  ($num_pa == 0) ? 1 : 0; ?>;
             var num_sa = <?php echo  ($num_sa == 0) ? 1 : 0; ?>;
             var user_access = <?php echo  ($_SESSION['user_access']==2) ? 1 : 0;?>;
@@ -46,11 +47,11 @@
                 <input type="hidden" value="0" id="currval" />
             </div>
             <?php
-                $sql = "SELECT dlp.*, dl.description, dl.amount as ledger_amount FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
+                $sql = "SELECT dlp.*, dl.description, dl.amount as ledger_amount FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' or dl.secondary_claim_id=".$_GET['cid'].");";
                 $p_sql = $db->getResults($sql);
                 if(count($p_sql)==0){
             ?>
-                    <div style="margin-left:50px; ">No Previous Payments</div>
+                    <div style="margin-left:50px;">No Previous Payments</div>
             <?php
                 }else{
             ?>
@@ -145,7 +146,7 @@
                             <td>Note</td>
                         </tr>
                         <?php
-                            $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_GET['cid']) ? $_GET['cid'] : '');
+                            $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_GET['cid']) ? $_GET['cid'] : '')." or secondary_claim_id=".$_GET['cid'].")";
                             
                             $lq = $db->getResults($lsql);
                             if ($lq) foreach ($lq as $row){
@@ -171,14 +172,14 @@
                     </table>
                     <br />
 
-                    <input type="checkbox" id="close" name="close" onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1" /> <label >Close Claim</label>
+                    <input type="checkbox" id="close" name="close" onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1"  <?= (isset($_GET['close']) && $_GET['close']==1)?'checked="checked"':''; ?> /> <label >Close Claim</label>
                     <br />
-                    <input type="checkbox" id="dispute" name="dispute" onclick=" if(this.checked){ $('#close').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' /> <label >Dispute</label>
+                    <input type="checkbox" id="dispute" name="dispute" onclick=" if(this.checked){ $('#close').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' /> <label>Dispute</label>
                     <div id="dispute_reason_div" style="display: none">
-                        <label >Reason for dispute:</label> <input type="text" name="dispute_reason" />
+                        <label>Reason for dispute:</label> <input type="text" name="dispute_reason" />
                     </div>
                     <div id="ins_attach" style="display: none">
-                        <label >Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
+                        <label>Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
                     </div>
 
                     <input type="hidden" name="claimid" value="<?php echo (!empty($_GET['cid']) ? $_GET['cid'] : ''); ?>">
@@ -194,7 +195,7 @@
                     </div>
                 </div>
 
-                <div id="auth_div" style="display:none; padding: 10px; ">
+                <div id="auth_div" style="display:none; padding: 10px;">
                     <p>You are not authorized to complete this transaction. Please have an authorized user enter their credentials.</p>
                     Username: <input type="text" name="username" /><br />
                     Password: <input type="password" name="password" /><br />

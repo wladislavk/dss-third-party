@@ -105,7 +105,7 @@
 
                             $db->query($image_sql);   
                         }
-                    }elseif($claim['status']==DSS_CLAIM_SEC_SENT || $claim['status']==DSS_CLAIM_PAID_SEC_INSURANCE){
+                    }elseif($claim['status']==DSS_CLAIM_SEC_SENT || $claim['status']==DSS_CLAIM_EFILE_ACCEPTED || $claim['status']==DSS_CLAIM_PAID_SEC_INSURANCE){
                         $new_status = DSS_CLAIM_SEC_DISPUTE;
                         $msg = 'Disputed Secondary Insurance';
 
@@ -186,7 +186,7 @@
                         $msg = "Claim saved, status is PAID.";
                     }elseif($claim['status']==DSS_CLAIM_PENDING || $claim['status']==DSS_CLAIM_SEC_PENDING){
                         //SAVE WITHOUT CHANGING STATUS
-                    }elseif($claim['status']==DSS_CLAIM_SENT){
+                    }elseif($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_EFILE_ACCEPTED){
                         if($_POST['close'] == 1){
                             if($pat['s_m_dss_file']==1 && $payr['payment']<$claim['amount_due']){ //secondary
                                 if($pat['p_m_ins_type']==1){ //medicare
@@ -294,7 +294,7 @@
                     if($_POST['close'] == 1){
                 	    $x .= ", closed_by_office_type = 1 ";
                     }
-                    if($new_status == DSS_CLAIM_SENT || $new_status == DSS_CLAIM_SEC_SENT || $new_status == DSS_CLAIM_DISPUTE || $new_status == DSS_CLAIM_SEC_DISPUTE || $new_status == DSS_CLAIM_REJECTED || $new_status == DSS_CLAIM_SEC_REJECTED  || $new_status == DSS_CLAIM_PATIENT_DISPUTE || $new_status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
+                    if($new_status == DSS_CLAIM_SENT || $new_status == DSS_CLAIM_EFILE_ACCEPTED || $new_status == DSS_CLAIM_SEC_SENT || $new_status == DSS_CLAIM_SEC_EFILE_ACCEPTED || $new_status == DSS_CLAIM_DISPUTE || $new_status == DSS_CLAIM_SEC_DISPUTE || $new_status == DSS_CLAIM_REJECTED || $new_status == DSS_CLAIM_SEC_REJECTED  || $new_status == DSS_CLAIM_PATIENT_DISPUTE || $new_status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
                         $x .= ", mailed_date = NULL ";
                     }
                     if($new_status == DSS_CLAIM_SEC_PENDING){

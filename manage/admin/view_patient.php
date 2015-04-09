@@ -750,7 +750,7 @@ $ed_sql .="
 
 
     <?
-    $thesql = "select * from dental_patients where patientid='".(!empty($_REQUEST["pid"]) ? $_REQUEST["pid"] : '')."'";
+    $thesql = "select * from dental_patients where patientid='".(!empty($_GET["pid"]) ? $_GET["pid"] : '')."'";
 
 	$themyarray = $db->getRow($thesql);
   $docid = $themyarray['docid'];	

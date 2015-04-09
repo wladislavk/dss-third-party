@@ -8,7 +8,7 @@
 
 @section('content')
 
-<button style="margin-right:10px; float:right;" onclick="loadPopup('manage/add_ticket')" class="addButton">
+<button style="margin-right:10px; float:right;" onclick="loadPopup('/manage/add_ticket')" class="addButton">
     Add New Ticket
 </button>
 <br />
@@ -50,7 +50,7 @@
                     <td>{!! Carbon\Carbon::parse($openTicket->latest)->format('m/d/Y') !!}</td>
                     <td>{!! $dssTicketStatusLabels[$openTicket->status] !!}</td>
                     <td>
-                        <a href="/manage/view_support_ticket/ed/{!! $openTicket->id !!}">View</a>
+                        <a href="/manage/view_support_ticket/{!! $openTicket->id !!}">View</a>
 
                         @if (!empty($openTicket->attachment) || !empty($openTicket->response_attachment) || !empty($openTicket->ticket_attachment))
                             <span class="attachment"></span>
@@ -110,7 +110,7 @@
                     <td>{!! Carbon\Carbon::parse($closedTicket->latest)->format('m/d/Y') !!}</td>
                     <td>{!! $dssTicketStatusLabels[$closedTicket->status] !!}</td>
                     <td>
-                        <a href="/manage/view_support_ticket/ed/{!! $closedTicket->id !!}">View</a>
+                        <a href="/manage/view_support_ticket/{!! $closedTicket->id !!}">View</a>
                     </td>
                 </tr>
             @endforeach

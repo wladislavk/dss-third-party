@@ -29,6 +29,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->post('add_sleeplab/{ed?}', 'SleepLabController@add');
     $router->get('add_ticket', 'TicketController@show');
     $router->post('add_ticket', 'TicketController@add');
+    $router->post('view_support_ticket/{id}', 'TicketController@submitResponse');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 
@@ -39,6 +40,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->get('tasks', 'TaskController@manageTasks');
         $router->get('sleeplab', 'SleepLabController@manage');
         $router->get('support', 'TicketController@support');
+        $router->get('view_support_ticket/{id}', 'TicketController@view');
     });
 });
 

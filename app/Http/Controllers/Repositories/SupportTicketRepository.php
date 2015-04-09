@@ -69,6 +69,16 @@ class SupportTicketRepository implements SupportTicketInterface
         return $closedTickets;
     }
 
+    public function getTicketById($id)
+    {
+        $supportTicket = DB::table(DB::raw('dental_support_tickets t'))
+            ->select('t.*', DB::raw('(SELECT name FROM companies WHERE companies.id=t.company_id LIMIT 1) AS company_name'))
+            ->where('t.id', '=', $id)
+            ->first();
+
+        return $supportTicket;
+    }
+
     public function insertData($data)
     {
         $supportTicket = new SupportTicket();
@@ -82,11 +92,15 @@ class SupportTicketRepository implements SupportTicketInterface
         return $supportTicket->id;
     }
 
-    public function updateData($id, $values)
+    public function updateData($id, $values, $created = false)
     {
-        $supportTicket = SupportTicket::where('id', '=', $id)
-            ->nonCreated()
-            ->update($values);
+        $supportTicket = SupportTicket::where('id', '=', $id);
+
+        if (!$created) {
+            $supportTicket = $supportTicket->nonCreated();
+        }
+
+        $supportTicket = $supportTicket->update($values);
 
         return $supportTicket;
     }

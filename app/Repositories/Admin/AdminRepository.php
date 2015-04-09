@@ -57,4 +57,9 @@ class AdminRepository implements AdminInterface
 
         return $supportAdmins;
     }
+
+    public function findAdmin($adminId)
+    {
+        return Admin::find($adminId);
+    }
 }

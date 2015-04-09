@@ -88,16 +88,16 @@ $sql = "SELECT l.*, lt.body FROM dental_letters l
 	WHERE 
 	(l.templateid = 1 OR l.templateid = 2) AND
 	status=0 and deleted=0 and deleted=0";
-$q = mysql_query($sql);
-while($r = mysql_fetch_assoc($q)){
+$q = mysqli_query($con, $sql);
+while($r = mysqli_fetch_assoc($q)){
   $template = $r['body'];
 
   $contact_info = get_contact_info('', $r['md_list'], '');
   $contact = $contact_info['mds'][0];
 
 $franchisee_query = "SELECT mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email FROM dental_users WHERE userid = '".$r['docid']."';";
-$franchisee_result = mysql_query($franchisee_query);
-while ($row = mysql_fetch_assoc($franchisee_result)) {
+$franchisee_result = mysqli_query($con, $franchisee_query);
+while ($row = mysqli_fetch_assoc($franchisee_result)) {
         $franchisee_info = $row;
 }
 
@@ -106,8 +106,8 @@ $company_query = "SELECT c.* FROM companies c
                 JOIN dental_user_company uc ON c.id = uc.companyid
                 WHERE uc.userid = '".$r['docid']."';";
 //echo $company_query;
-$company_result = mysql_query($company_query);
-while ($row = mysql_fetch_assoc($company_result)) {
+$company_result = mysqli_query($con, $company_query);
+while ($row = mysqli_fetch_assoc($company_result)) {
         $company_info = $row;
 }
 

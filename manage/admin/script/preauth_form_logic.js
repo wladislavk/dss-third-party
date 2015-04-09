@@ -167,9 +167,9 @@ $(function() {
       if (hasOutOfNetwork == 1) {
         // percentage from out_of_network_percentage
         percentagePaid = $('#out_of_network_percentage').val();
-      } else if (isHmo == 0) {
+      //} else if (isHmo == 0) {
         // percentage from in_network_percentage
-        percentagePaid = $('#in_network_percentage').val();
+        //percentagePaid = $('#in_network_percentage').val();
       } else {
         // no percentage, set to 0
         percentagePaid = 0;
@@ -221,7 +221,7 @@ $(function() {
     }else{
       var amountLeftToMeet = $('#in_family_amount_left_to_meet').val();
     }
-    var hasOutOfNetwork = $("input[name='has_in_of_network_benefits']:checked").val();
+    var hasInNetwork = $("input[name='has_in_network_benefits']:checked").val();
     var isHmo = $("input[name='is_hmo']:checked").val();
     var outOfPocketMet = $("input[name='in_out_of_pocket_met']:checked").val();
     var benefits = $("input[name='network_benefits']:checked").val();
@@ -233,7 +233,13 @@ $(function() {
       console.log('isHmo: ' + isHmo);
       console.log('outOfPocketMet: ' + outOfPocketMet);
     }
+      if (hasInNetwork == 1) {
+        // percentage from out_of_network_percentage
         percentagePaid = $('#in_network_percentage').val();
+      } else {
+        // no percentage, set to 0
+        percentagePaid = 0;
+      }
     if (debug) { console.log('percentagePaid: ' + percentagePaid); }
 
     if (isNaN(deviceAmount))     { deviceAmount = 0; }
@@ -287,7 +293,7 @@ $(function() {
   $('#out_of_network_percentage, #in_network_percentage, #patient_deductible, #patient_amount_met').bind("mouseup keyup", function() {
     calc_expected_payments();
   });
-  $("[name='has_out_of_network_benefits'], [name='network_benefits'], [name='is_hmo'], [name='out_of_pocket_met']").bind('change', function() {
+  $("[name='has_out_of_network_benefits'], [name='has_in_network_benefits'], [name='network_benefits'], [name='is_hmo'], [name='out_of_pocket_met']").bind('change', function() {
     calc_expected_payments();
   });
   

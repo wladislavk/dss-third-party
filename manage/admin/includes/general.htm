@@ -396,7 +396,7 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
   error_log($letter_query);
   $letter_insert = $db->query($letter_query);
   if(!$letter_insert) {
-    return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
+    return ("MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error inserting Letter to Database");
   } else {
     $id = mysqli_insert_id($GLOBALS['con']);
     // If parent and recipient ids are set, clear the recipient id from the parent
@@ -442,7 +442,7 @@ function create_welcome_letter ($templateid, $md_list, $docid) {
     $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
     $letter_insert = $db->query($letter_query);
     if(!$letter_insert) {
-      return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
+      return ("MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error inserting Letter to Database");
     } else {
       $id = mysqli_insert_id($GLOBALS['con']);
       // If parent and recipient ids are set, clear the recipient id from the parent
@@ -492,7 +492,7 @@ $template = htmlspecialchars($template);
 		$letter_query .= " WHERE letterid='".s_for($letterid)."';";
 		$letter_result = $db->query($letter_query);
     return $letterid;
-    //return mysql_error();
+    //return mysqli_error($con);
   } else {
     $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list, cc_topatient, cc_md_list, cc_md_referral_list, template_type FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
 		$select_result = $db->getResults($select_letter);
@@ -542,7 +542,7 @@ $template = htmlspecialchars($template);
 			}
 			$update_result = $db->query($update_letters);
       if (!$update_result) {
-				return mysql_error();
+				return mysqli_error($con);
 			} else {
 				return $letter;
 			}
@@ -640,7 +640,7 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
       }
       $update_result = $db->query($update_letters);
       if (!$update_result) {
-        return mysql_error();
+        return mysqli_error($con);
       } else {
         return $letter;
       }
@@ -655,7 +655,7 @@ function create_letter_pdf($letterid){
   $sql = "SELECT patientid, topatient, md_list, md_referral_list, send_method, docid, userid, templateid, template FROM dental_letters where letterid = '".$letterid."';";
   $row = $db->getRow($sql);
   if (!$row) {
-    return mysql_error();
+    return mysqli_error($con);
   }
   $to_name = $firstname . " " . $lastname;
   $send_method = $row['send_method'];
@@ -795,7 +795,7 @@ function deliver_created_letter($letterid){
   $sql = "SELECT patientid, topatient, pdf_path, md_list, md_referral_list, send_method, docid, userid, templateid, template FROM dental_letters where letterid = '".$letterid."';";
   $result = $db->getResults($sql);
   if (!$result) {
-    return mysql_error();
+    return mysqli_error($con);
   } else {
     foreach ($result as $row) {
       if ($row['topatient']) {
@@ -901,7 +901,7 @@ function deliver_created_letter($letterid){
     $letter_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".s_for($letterid)."';";
     $letter_result = $db->query($letter_query);
     if (!$letter_result) {
-      return mysql_error();
+      return mysqli_error($con);
     }
     if ($send_method == 'paper') {
       return "paper";
@@ -928,7 +928,7 @@ function deliver_letter($letterid, $message) {
 		$sql = "SELECT patientid, topatient, md_list, md_referral_list, send_method, docid, userid, templateid FROM dental_letters where letterid = '".$letterid."';";
 		$result = $db->getResults($sql);
 		if (!$result) {
-			return mysql_error();
+			return mysqli_error($con);
  		} else {
       foreach ($result as $row) {
   			if ($row['topatient']) {
@@ -1093,7 +1093,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 			}
 			$letter_result = $db->query($letter_query);
 			if (!$letter_result) {
-				return mysql_error();
+				return mysqli_error($con);
 			}
 			if ($send_method == 'paper') {
 				return "paper";

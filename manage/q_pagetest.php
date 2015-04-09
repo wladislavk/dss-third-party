@@ -9,11 +9,11 @@ if($_POST['q_page1sub'] == 1)
 	$bmi = $_POST['bmi'];
 	
 	$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-	$complaint_my = mysql_query($complaint_sql);
+	$complaint_my = mysqli_query($con, $complaint_sql);
 	
 	$comp_arr = '';
 	
-	while($complaint_myarray = mysql_fetch_array($complaint_my))
+	while($complaint_myarray = mysqli_fetch_array($complaint_my))
 	{
 		if($_POST['complaint_'.$complaint_myarray['complaintid']] <> '')
 		{
@@ -101,7 +101,7 @@ if($_POST['q_page1sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
+		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>
@@ -137,7 +137,7 @@ if($_POST['q_page1sub'] == 1)
 		main_reason_other = '".s_for($main_reason_other)."'
 		where q_page1id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Edited Successfully";
 		?>
@@ -151,8 +151,8 @@ if($_POST['q_page1sub'] == 1)
 }
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -166,8 +166,8 @@ if($pat_myarray['patientid'] == '')
 	trigger_error("Die called", E_USER_ERROR);
 }
 $sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_array($my);
 
 $q_page1id = st($myarray['q_page1id']);
 $feet = st($myarray['feet']);
@@ -236,9 +236,9 @@ if($complaintid <> '')
 		same = 0;
 		<? 
 		$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-		$complaint_my = mysql_query($complaint_sql);
+		$complaint_my = mysqli_query($con, $complaint_sql);
 		
-		while($complaint_myarray = mysql_fetch_array($complaint_my))
+		while($complaint_myarray = mysqli_fetch_array($complaint_my))
 		{?>
 		if(comp_id != <?=st($complaint_myarray['complaintid']);?>)
 		{
@@ -381,15 +381,15 @@ if($complaintid <> '')
                     </label>
                     <? 
 					$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-					$complaint_my = mysql_query($complaint_sql);
-					$complaint_number = mysql_num_rows($complaint_my);
+					$complaint_my = mysqli_query($con, $complaint_sql);
+					$complaint_number = mysqli_num_rows($complaint_my);
 					?>
                     <span class="form_info">
                     	Select Complaint Sequence from the DropDown or leave is Blank.
                     </span>
                     <br />
                     <? 
-					while($complaint_myarray = mysql_fetch_array($complaint_my))
+					while($complaint_myarray = mysqli_fetch_array($complaint_my))
 					{
 						if(@array_search($complaint_myarray['complaintid'],$compid) === false)
 						{

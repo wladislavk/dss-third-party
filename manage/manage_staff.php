@@ -10,8 +10,8 @@ if(!empty($_REQUEST["delid"]))
 
 	if($logins == 0){
 		$u_sql = "SELECT username FROM dental_users where userid='".mysqli_real_escape_string($con,$_REQUEST['delid'])."'";
-		$u_q = mysql_query($u_sql);
-		$user = mysql_fetch_assoc($u_q);
+		$u_q = mysqli_query($con, $u_sql);
+		$user = mysqli_fetch_assoc($u_q);
 		edx_user_delete($_REQUEST['delid'], $edx_con);
 		$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
 	}else{

@@ -8,9 +8,9 @@ if($_POST["proceduresub"] == 1)
 	if($_POST["ed"] != "")
 	{
 		$ed_sql = "update dental_procedure set patientid = '".s_for($_GET["pid"])."', insuranceid = '".s_for($_GET["insid"])."', service_date_from = '".s_for($_POST["service_date_from"])."', service_date_to = '".s_for($_POST["service_date_to"])."', place_service = '".s_for($_POST["place_service"])."', type_service = '".s_for($_POST["type_service"])."', cpt_code = '".s_for($_POST["cpt_code"])."', units = '".s_for($_POST["units"])."', charge = '".s_for($_POST["charge"])."', total_charge = '".s_for($_POST["total_charge"])."', applies_icd = '".s_for($_POST["applies_icd"])."', npi = '".s_for($_POST["npi"])."', other_id = '".s_for($_POST["other_id"])."', other_id_qualifier = '".s_for($_POST["other_id_qualifier"])."', modifier_code_1 = '".s_for($_POST["modifier_code_1"])."', modifier_code_2 = '".s_for($_POST["modifier_code_2"])."', modifier_code_3 = '".s_for($_POST["modifier_code_3"])."', modifier_code_4 = '".s_for($_POST["modifier_code_4"])."', epsdt = '".s_for($_POST["epsdt"])."', emg = '".s_for($_POST["emg"])."', supplemental_info = '".s_for($_POST["supplemental_info"])."' where procedureid='".$_POST["ed"]."'";
-		mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
-		//echo $ed_sql.mysql_error();
+		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -23,7 +23,7 @@ if($_POST["proceduresub"] == 1)
 	else
 	{
 		$ins_sql = "insert into dental_procedure set patientid = '".s_for($_GET["pid"])."', insuranceid = '".s_for($_GET["insid"])."', service_date_from = '".s_for($_POST["service_date_from"])."', service_date_to = '".s_for($_POST["service_date_to"])."', place_service = '".s_for($_POST["place_service"])."', type_service = '".s_for($_POST["type_service"])."', cpt_code = '".s_for($_POST["cpt_code"])."', units = '".s_for($_POST["units"])."', charge = '".s_for($_POST["charge"])."', total_charge = '".s_for($_POST["total_charge"])."', applies_icd = '".s_for($_POST["applies_icd"])."', npi = '".s_for($_POST["npi"])."', other_id = '".s_for($_POST["other_id"])."', other_id_qualifier = '".s_for($_POST["other_id_qualifier"])."', modifier_code_1 = '".s_for($_POST["modifier_code_1"])."', modifier_code_2 = '".s_for($_POST["modifier_code_2"])."', modifier_code_3 = '".s_for($_POST["modifier_code_3"])."', modifier_code_4 = '".s_for($_POST["modifier_code_4"])."', epsdt = '".s_for($_POST["epsdt"])."', emg = '".s_for($_POST["emg"])."', supplemental_info = '".s_for($_POST["supplemental_info"])."', docid='".$_SESSION['docid']."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
+		mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>
@@ -53,8 +53,8 @@ if($_POST["proceduresub"] == 1)
 
     <?
     $thesql = "select * from dental_procedure where procedureid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	
 	$service_date_from = st($themyarray['service_date_from']);
@@ -90,13 +90,13 @@ if($_POST["proceduresub"] == 1)
 	}
 	
 	$place_sql = "select * from dental_place_service where status=1 order by sortby";
-	$place_my = mysql_query($place_sql) or trigger_error($place_sql ." | ".mysql_error(), E_USER_ERROR);
+	$place_my = mysqli_query($con, $place_sql) or trigger_error($place_sql ." | ".mysqli_error($con), E_USER_ERROR);
 	
 	$type_sql = "select * from dental_type_service where status=1 order by sortby";
-	$type_my = mysql_query($type_sql) or trigger_error($type_sql ." | ".mysql_error(), E_USER_ERROR);
+	$type_my = mysqli_query($con, $type_sql) or trigger_error($type_sql ." | ".mysqli_error($con), E_USER_ERROR);
 	
 	$cpt_sql = "select * from dental_cpt_code where status=1 order by sortby";
-	$cpt_my = mysql_query($cpt_sql) or trigger_error($cpt_sql ." | ".mysql_error(), E_USER_ERROR);
+	$cpt_my = mysqli_query($con, $cpt_sql) or trigger_error($cpt_sql ." | ".mysqli_error($con), E_USER_ERROR);
 	
 	?>
 	
@@ -194,7 +194,7 @@ if($_POST["proceduresub"] == 1)
 				<select name="place_service" class="inbox_line3" style="width:300px;">
 					<option value=""></option>
 					<?
-					while($place_myarray = mysql_fetch_array($place_my))
+					while($place_myarray = mysqli_fetch_array($place_my))
 					{?>
 						<option value="<?=st($place_myarray['place_serviceid']);?>" <? if($place_service == st($place_myarray['place_serviceid'])) echo " selected";?>>
 							<?=st($place_myarray['place_service']);?>
@@ -212,7 +212,7 @@ if($_POST["proceduresub"] == 1)
 				<select name="type_service" class="inbox_line3" style="width:300px;">
 					<option value=""></option>
 					<?
-					while($type_myarray = mysql_fetch_array($type_my))
+					while($type_myarray = mysqli_fetch_array($type_my))
 					{?>
 						<option value="<?=st($type_myarray['type_serviceid']);?>" <? if($type_service == st($type_myarray['type_serviceid'])) echo " selected";?>>
 							<?=st($type_myarray['type_service']);?>
@@ -230,7 +230,7 @@ if($_POST["proceduresub"] == 1)
 				<select name="cpt_code" class="inbox_line3" style="width:300px;">
 					<option value=""></option>
 					<?
-					while($cpt_myarray = mysql_fetch_array($cpt_my))
+					while($cpt_myarray = mysqli_fetch_array($cpt_my))
 					{?>
 						<option value="<?=st($cpt_myarray['cpt_codeid']);?>" <? if($cpt_code == st($cpt_myarray['cpt_codeid'])) echo " selected";?>>
 							<?=st($cpt_myarray['cpt_code']);?>
@@ -305,8 +305,8 @@ if($_POST["proceduresub"] == 1)
 					<option value=""></option>
 					<?
 					$qua_sql = "select * from dental_qualifier where status=1 order by sortby";
-					$qua_my = mysql_query($qua_sql);
-					while($qua_myarray = mysql_fetch_array($qua_my))
+					$qua_my = mysqli_query($con, $qua_sql);
+					while($qua_myarray = mysqli_fetch_array($qua_my))
 					{?>
 						<option value="<?=st($qua_myarray['qualifierid']);?>" <? if($other_id_qualifier == st($qua_myarray['qualifierid'])) echo " selected";?>>
 							<?=st($qua_myarray['qualifier']);?>
@@ -330,8 +330,8 @@ if($_POST["proceduresub"] == 1)
 					<option value=""></option>
 					<?
 					$mod_sql = "select * from dental_modifier_code where status=1 order by sortby";
-					$mod_my = mysql_query($mod_sql) or trigger_error($mod_sql." | ".mysql_error(), E_USER_ERROR);
-					while($mod_myarray = mysql_fetch_array($mod_my))
+					$mod_my = mysqli_query($con, $mod_sql) or trigger_error($mod_sql." | ".mysqli_error($con), E_USER_ERROR);
+					while($mod_myarray = mysqli_fetch_array($mod_my))
 					{?>
 						<option value="<?=st($mod_myarray['modifier_codeid']);?>" <? if($modifier_code_1 == st($mod_myarray['modifier_codeid'])) echo " selected";?>>
 							<?=st($mod_myarray['modifier_code']);?>
@@ -350,8 +350,8 @@ if($_POST["proceduresub"] == 1)
 					<option value=""></option>
 					<?
 					$mod_sql = "select * from dental_modifier_code where status=1 order by sortby";
-					$mod_my = mysql_query($mod_sql) or trigger_error($mod_sql." | ".mysql_error(), E_USER_ERROR);
-					while($mod_myarray = mysql_fetch_array($mod_my))
+					$mod_my = mysqli_query($con, $mod_sql) or trigger_error($mod_sql." | ".mysqli_error($con), E_USER_ERROR);
+					while($mod_myarray = mysqli_fetch_array($mod_my))
 					{?>
 						<option value="<?=st($mod_myarray['modifier_codeid']);?>" <? if($modifier_code_2 == st($mod_myarray['modifier_codeid'])) echo " selected";?>>
 							<?=st($mod_myarray['modifier_code']);?>
@@ -370,8 +370,8 @@ if($_POST["proceduresub"] == 1)
 					<option value=""></option>
 					<?
 					$mod_sql = "select * from dental_modifier_code where status=1 order by sortby";
-					$mod_my = mysql_query($mod_sql) or trigger_error($mod_sql." | ".mysql_error(), E_USER_ERROR);
-					while($mod_myarray = mysql_fetch_array($mod_my))
+					$mod_my = mysqli_query($con, $mod_sql) or trigger_error($mod_sql." | ".mysqli_error($con), E_USER_ERROR);
+					while($mod_myarray = mysqli_fetch_array($mod_my))
 					{?>
 						<option value="<?=st($mod_myarray['modifier_codeid']);?>" <? if($modifier_code_3 == st($mod_myarray['modifier_codeid'])) echo " selected";?>>
 							<?=st($mod_myarray['modifier_code']);?>
@@ -390,8 +390,8 @@ if($_POST["proceduresub"] == 1)
 					<option value=""></option>
 					<?
 					$mod_sql = "select * from dental_modifier_code where status=1 order by sortby";
-					$mod_my = mysql_query($mod_sql) or trigger_error($mod_sql." | ".mysql_error(), E_USER_ERROR);
-					while($mod_myarray = mysql_fetch_array($mod_my))
+					$mod_my = mysqli_query($con, $mod_sql) or trigger_error($mod_sql." | ".mysqli_error($con), E_USER_ERROR);
+					while($mod_myarray = mysqli_fetch_array($mod_my))
 					{?>
 						<option value="<?=st($mod_myarray['modifier_codeid']);?>" <? if($modifier_code_4 == st($mod_myarray['modifier_codeid'])) echo " selected";?>>
 							<?=st($mod_myarray['modifier_code']);?>

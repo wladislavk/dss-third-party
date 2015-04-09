@@ -510,9 +510,17 @@
 
     $referredby_sql = "select * from dental_contact where `contactid` = ".$referredby." LIMIT 1;";
     
-    
-
     $referredby_my = $db->query($referredby_sql);
+
+    $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+    $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $docid)."'";
+    $api_key_query = mysqli_query($con, $api_key_sql);
+    $api_key_result = mysqli_fetch_assoc($api_key_query);
+    if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+      if(trim($api_key_result['eligible_api_key']) != ""){
+        $api_key = $api_key_result['eligible_api_key'];
+      }
+    }
 
 
 
@@ -618,7 +626,17 @@
     if(isset($_GET['test']) && $_GET['test']==1){
         $data['test'] = 'true';
     }
-    $data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
+    $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+    $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $docid)."'";
+    $api_key_query = mysqli_query($con, $api_key_sql);
+    $api_key_result = mysqli_fetch_assoc($api_key_query);
+    if($api_key_result){
+      if(!empty(trim($api_key_result['eligible_api_key'])){
+        $api_key = $api_key_result['eligible_api_key'];
+      }
+    }
+
+    $data['api_key'] = $api_key;
 
     $data['receiver'] = array(
     	"organization_name" => (!empty($eligible_ins) ? $eligible_ins : ''),
@@ -754,7 +772,7 @@
     $data_string = json_encode($data);                                                                                   
     error_log($data_string);
 
-    $ch = curl_init('https://gds.eligibleapi.com/v1.1/claims.json');
+    $ch = curl_init('https://gds.eligibleapi.com/v1.5/claims.json');
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
@@ -780,10 +798,10 @@
                ";
 
     $dce_id = $db->getInsertId($up_sql);
-    invoice_add_efile('1', $_SESSION['docid'], $dce_id);
-    invoice_add_claim('1', $_SESSION['docid'], (!empty($_GET['insid']) ? $_GET['insid'] : ''));
+    invoice_add_efile('1', $docid, $dce_id);
+    invoice_add_claim('1', $docid, (!empty($_GET['insid']) ? $_GET['insid'] : ''));
 
-    if(empty($success)){
+    if(empty($success) || !$success){
         $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
         
         $db->query($up_sql);

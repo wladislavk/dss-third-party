@@ -101,8 +101,8 @@ if(isset($_REQUEST['authorize'])){
   $db->query($hst_sql);
 
   $unsent_sql = "SELECT count(*) num_unsent FROM dental_hst WHERE doc_id = ".$_SESSION['docid']." AND status='".DSS_HST_REQUESTED."'";
-  $unsent_q = mysql_query($unsent_sql);
-  if(mysql_num_rows($unsent_q) > 0){
+  $unsent_q = mysqli_query($con, $unsent_sql);
+  if(mysqli_num_rows($unsent_q) > 0){
   ?>
   <script type="text/javascript">
     window.location = 'manage_hst.php?status=0';

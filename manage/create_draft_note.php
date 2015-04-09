@@ -18,7 +18,7 @@ if ($_POST['ed'] != ''){ //post from editing
     procedure_date='".s_for(date('Y-m-d', strtotime($_POST['procedure_date'])))."',
     ip_address='".s_for($_SERVER['REMOTE_ADDR'])."'
     WHERE notesid='".s_for($_POST['ed'])."';";
-    $update_result = mysql_query($update_sql);
+    $update_result = mysqli_query($con, $update_sql);
     if ($update_result){
       echo "save_successful";
     }
@@ -42,11 +42,11 @@ else //creating a new note.
       adddate = '".date('Y-m-d H:i:s')."',
       procedure_date = '".date('Y-m-d')."',
       ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-  $note_result = mysql_query($note_sql);
+  $note_result = mysqli_query($con, $note_sql);
   
-  $note_id =  mysql_insert_id();
+  $note_id =  mysqli_insert_id($con);
   $update_sql = "UPDATE dental_notes SET parentid = '".$note_id."' WHERE notesid = '".$note_id."';";
-  $update_result = mysql_query($update_sql);
+  $update_result = mysqli_query($con, $update_sql);
 
   echo $note_id;
 }

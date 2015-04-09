@@ -139,8 +139,8 @@ if(count($my) == 0){ ?>
          . "  AND ledger.docid = " . $_SESSION['docid'] . " "
          . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
          . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " ";
-    $query = mysql_query($sql);
-    $num_trxns = mysql_num_rows($query);
+    $query = mysqli_query($con, $sql);
+    $num_trxns = mysqli_num_rows($query);
     $row_text = ($num_trxns == 1) ? "is 1 ledger transaction" : "are $num_trxns ledger transactions";
   ?>
 <?php if ($num_trxns > 0) { ?>
@@ -172,8 +172,8 @@ if(count($my) == 0){ ?>
          . "  AND ledger.docid = " . $_SESSION['docid'] . " "
          . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
          . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " ";
-    $query = mysql_query($sql);
-    $num_trxns = mysql_num_rows($query);
+    $query = mysqli_query($con, $sql);
+    $num_trxns = mysqli_num_rows($query);
     $row_text = ($num_trxns == 1) ? "is 1 ledger transaction" : "are $num_trxns ledger transactions";
   ?>
   <tr class="<?php echo $tr_class;?>">

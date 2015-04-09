@@ -10,9 +10,9 @@ include 'includes/questionnaire_sections.php';
 $todaysdate=date("m/d/Y");
 if($_POST['q_page1sub'] == 1)
 {
-  $s_sql = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-  $s_q = mysql_query($s_sql);
-  $s_r = mysql_fetch_assoc($s_q);
+  $s_sql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+  $s_q = mysqli_query($con, $s_sql);
+  $s_r = mysqli_fetch_assoc($s_q);
   if($s_r['questionnaire_status']==0 || $s_r['questionnaire_status']==1){
 
 
@@ -20,11 +20,11 @@ if($_POST['q_page1sub'] == 1)
 	$tss = $_POST['tss'];
         $chief_complaint_text = $_POST['chief_complaint_text'];	
 	$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-	$complaint_my = mysql_query($complaint_sql);
+	$complaint_my = mysqli_query($con, $complaint_sql);
 	
 	$comp_arr = '';
 	
-	while($complaint_myarray = mysql_fetch_array($complaint_my))
+	while($complaint_myarray = mysqli_fetch_array($complaint_my))
 	{
 		if($_POST['complaint_'.$complaint_myarray['complaintid']] <> '')
 		{
@@ -66,9 +66,9 @@ if($_POST['q_page1sub'] == 1)
 	if($main_reason_arr != '')
 		$main_reason_arr = '~'.$main_reason_arr;
 	
- 	$exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";	
-	$exist_q = mysql_query($exist_sql);
-	if(mysql_num_rows($exist_q) == 0)
+ 	$exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";	
+	$exist_q = mysqli_query($con, $exist_sql);
+	if(mysqli_num_rows($exist_q) == 0)
 	{
 		$ins_sql = " insert into dental_q_page1 set 
 		patientid = '".s_for($_SESSION['pid'])."',
@@ -94,9 +94,9 @@ if($_POST['q_page1sub'] == 1)
 		adddate = '".date('m/d/Y')."',
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
-	        mysql_query("UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
-		mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
+		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+	        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
+		mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
@@ -128,9 +128,9 @@ if($_POST['q_page1sub'] == 1)
 		main_reason_other = '".s_for($main_reason_other)."'
 		where patientid = '".s_for($_SESSION['pid'])."'";
 		
-		mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
-	        mysql_query("UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");		
-                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
+	        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");		
+                mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -154,15 +154,15 @@ if($_POST['q_page1sub'] == 1)
 }
 ?>
 <?php
-        $exist_sql = "SELECT symptoms_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-        $exist_q = mysql_query($exist_sql);
-	$exist_row = mysql_fetch_assoc($exist_q);
+        $exist_sql = "SELECT symptoms_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+        $exist_q = mysqli_query($con, $exist_sql);
+	$exist_row = mysqli_fetch_assoc($exist_q);
         if($exist_row['symptoms_status'] == 0)
         {
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
@@ -176,8 +176,8 @@ if($pat_myarray['patientid'] == '')
 	//trigger_error("Die called", E_USER_ERROR);
 }
 $sql = "select * from dental_q_page1 where patientid='".$_SESSION['pid']."' ";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_array($my);
 
 $q_page1id = st($myarray['q_page1id']);
 $chief_complaint_text = st($myarray['chief_complaint_text']);
@@ -229,9 +229,9 @@ if($complaintid <> '')
 		same = 0;
 		<? 
 		$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-		$complaint_my = mysql_query($complaint_sql);
+		$complaint_my = mysqli_query($con, $complaint_sql);
 		
-		while($complaint_myarray = mysql_fetch_array($complaint_my))
+		while($complaint_myarray = mysqli_fetch_array($complaint_my))
 		{?>
 		if(comp_id != <?=st($complaint_myarray['complaintid']);?>)
 		{
@@ -271,8 +271,8 @@ if($complaintid <> '')
                     </label>
                     <? 
 					$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-					$complaint_my = mysql_query($complaint_sql);
-					$complaint_number = mysql_num_rows($complaint_my);
+					$complaint_my = mysqli_query($con, $complaint_sql);
+					$complaint_number = mysqli_num_rows($complaint_my);
 					?>
                     <span class="form_info">
 			Please check any other complaints below.
@@ -315,7 +315,7 @@ function in_array(needle, haystack)
 			});
 		    </script>
                     <? 
-					while($complaint_myarray = mysql_fetch_array($complaint_my))
+					while($complaint_myarray = mysqli_fetch_array($complaint_my))
 					{
 						if(@array_search($complaint_myarray['complaintid'],$compid) === false)
 						{
@@ -541,8 +541,8 @@ function in_array(needle, haystack)
                                     	<select multiple="multiple" id="main_reason" name="main_reason[]" class="field text addr tbox" onchange="showOtherBox()" style="width:350px;" size="7">
                                     	      <?php
                                             $cmp_query = "SELECT * FROM dental_complaint WHERE status=1";
-                                            $cmp_array = mysql_query($cmp_query);
-                                            while($cmp_res = mysql_fetch_array($cmp_array)){
+                                            $cmp_array = mysqli_query($con, $cmp_query);
+                                            while($cmp_res = mysqli_fetch_array($cmp_array)){
                                             ?>
                                     	
                                            	<option value="<?php echo $cmp_res['complaint']; ?><?php// echo $cmp_res['complaintid']; ?>" <?php if($main_reason == "~".$cmp_res['complaint']."~"){ echo "selected=\"selected\""; } ?>>

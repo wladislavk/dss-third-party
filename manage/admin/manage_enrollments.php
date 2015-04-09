@@ -1,5 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
+require_once('../includes/constants.inc');
 
 $rec_disp = 20;
 
@@ -110,7 +111,6 @@ $num_users = mysqli_num_rows($my);
 	{
 		while($myarray = mysqli_fetch_array($my))
 		{
-			
 			if($myarray["status"] == 1)
 			{
 				$tr_class = "";
@@ -167,7 +167,37 @@ $num_users = mysqli_num_rows($my);
                                 </td>	
                 
 				<td valign="top" align="center">
-<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4&transaction_type=837P" target="_blank">PDF</a>
+          <?php
+            $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+            $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $myarray['user_id'])."'";
+            $api_key_query = mysqli_query($con, $api_key_sql);
+            $api_key_result = mysqli_fetch_assoc($api_key_query);
+            if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+              if(trim($api_key_result['eligible_api_key']) != ""){
+                $api_key = $api_key_result['eligible_api_key'];
+              }
+            }
+          ?>
+<a href="https://gds.eligibleapi.com/v1.5/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key; ?>&transaction_type=837P" target="_blank">PDF</a>
+        <?php
+        /*
+        //removed link for outdated v1.3 enrollment form.
+        //<a href="https://gds.eligibleapi.com/v1.5/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key; ?>&transaction_type=837P" target="_blank">PDF</a>
+        */
+        ?>
+        <?php if($myarray['download_url']){ ?>
+            <a class="btn btn-success" href="<?php echo $myarray['download_url']; ?>">Sign Form</a>
+            <br />
+            <a class="btn btn-success" href="#" onclick="Javascript: loadPopup('upload_enrollment.php?id=<?= $myarray['reference_id']; ?>');">Upload</a>
+            <?php
+        }
+        if($myarray['signed_download_url']){
+            ?>
+            <br />
+            <a class="btn btn-success" href="<?php echo $myarray['download_url']; ?>">View Signed Form</a>
+            <?php
+        }
+        ?>
 				</td>	
                 
 			</tr>

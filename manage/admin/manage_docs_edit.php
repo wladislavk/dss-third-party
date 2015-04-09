@@ -21,12 +21,12 @@ if(isset($_POST['edit_doc'])){
         $fsql = '';
       }
   $ed = "UPDATE dental_document SET
-  	name = '".mysql_real_escape_string($_POST['name'])."',
+  	name = '".mysqli_real_escape_string($con, $_POST['name'])."',
         ".$fsql."
-        categoryid = '".mysql_real_escape_string($_POST['category'])."'
-        where documentid='".mysql_real_escape_string($_GET['doc'])."'
+        categoryid = '".mysqli_real_escape_string($con, $_POST['category'])."'
+        where documentid='".mysqli_real_escape_string($con, $_GET['doc'])."'
         ";
-  mysql_query($ed);
+  mysqli_query($con, $ed);
 ?>
 	<script type="text/javascript">
 		window.location = "manage_docs.php?cat=<?= $_POST['category']; ?>"
@@ -37,9 +37,9 @@ if(isset($_POST['edit_doc'])){
 }
 
 
-$ds = "SELECT * FROM dental_document WHERE documentid=".mysql_real_escape_string($_GET['doc']);
-$dq = mysql_query($ds);
-$doc = mysql_fetch_assoc($dq);
+$ds = "SELECT * FROM dental_document WHERE documentid=".mysqli_real_escape_string($con, $_GET['doc']);
+$dq = mysqli_query($con, $ds);
+$doc = mysqli_fetch_assoc($dq);
 ?>
 
 <div class="page-header">Edit Document</div>
@@ -49,9 +49,9 @@ $doc = mysql_fetch_assoc($dq);
 <br />
   <?php  
     $cs = "SELECT * FROM dental_document_category ORDER BY name ASC";
-    $cq = mysql_query($cs);
+    $cq = mysqli_query($con, $cs);
     ?><label>Category:</label> <select name="category"><?php
-    while($c = mysql_fetch_assoc($cq)){ ?>
+    while($c = mysqli_fetch_assoc($cq)){ ?>
 	<option <?= ($c['categoryid']==$doc['categoryid'])?'selected="selected"':''; ?> value="<?= $c['categoryid']; ?>"><?= $c['name']; ?></option>
     <?php } ?>	
     </select>

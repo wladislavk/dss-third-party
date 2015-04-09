@@ -8,9 +8,9 @@ if($_POST["contactsub"] == 1)
 	if($_POST["ed"] != "")
 	{
 		$ed_sql = "update dental_fcontact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."' where contactid='".$_POST["ed"]."'";
-		mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
-		//echo $ed_sql.mysql_error();
+		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -23,7 +23,7 @@ if($_POST["contactsub"] == 1)
 	else
 	{
 		$ins_sql = "insert into dental_fcontact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
+		mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>
@@ -42,8 +42,8 @@ if($_POST["contactsub"] == 1)
 
     <?
     $thesql = "select * from dental_fcontact where contactid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	if($msg != '')
 	{
@@ -248,11 +248,11 @@ if($_POST["contactsub"] == 1)
                 <div class="col-md-9">
                     <? 
                     $qualifier_sql = "select * from dental_qualifier where status=1 order by sortby";
-                    $qualifier_my = mysql_query($qualifier_sql);
+                    $qualifier_my = mysqli_query($con, $qualifier_sql);
                     ?>
                     <select id="qualifier" name="qualifier" class="form-control">
                         <option value="0"></option>
-                        <? while($qualifier_myarray = mysql_fetch_array($qualifier_my))
+                        <? while($qualifier_myarray = mysqli_fetch_array($qualifier_my))
                         {?>
                             <option value="<?=st($qualifier_myarray['qualifierid']);?>">
                                 <?=st($qualifier_myarray['qualifier']);?>
@@ -266,11 +266,11 @@ if($_POST["contactsub"] == 1)
                 <div class="col-md-9">
                     <? 
                             $ctype_sql = "select * from dental_fcontacttype order by sortby";
-                            $ctype_my = mysql_query($ctype_sql);
+                            $ctype_my = mysqli_query($con, $ctype_sql);
                             ?> 
                     <select id="contacttypeid" name="contacttypeid" class="form-control">
                         <option value="0"></option>
-                                <? while($ctype_myarray = mysql_fetch_array($ctype_my))
+                                <? while($ctype_myarray = mysqli_fetch_array($ctype_my))
                                 {?>
                                     <option value="<?=st($ctype_myarray['contacttypeid']);?>" <?php if($ctype_myarray['contacttypeid'] === $contacttypeid){ echo " selected=\"selected\"";} ?>>
                                         <?=st($ctype_myarray['contacttype']);?>

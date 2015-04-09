@@ -10,6 +10,15 @@
   $doc_array = explode(' ',$doc_name);
   $doc_first_name = $doc_array[0];
   $doc_last_name = (!empty($doc_array[1]) ? $doc_array[1] : '');
+  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $r['user_id'])."'";
+  $api_key_query = mysqli_query($con, $api_key_sql);
+  $api_key_result = mysqli_fetch_assoc($api_key_query);
+  if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+    if(trim($api_key_result['eligible_api_key']) != ""){
+      $api_key = $api_key_result['eligible_api_key'];
+    }
+  }
 ?>
 <form method="post">
   <div id="eligible_api" >
@@ -96,7 +105,7 @@
     $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
     $data = array();
     $data['test'] = "true";
-    $data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
+    $data['api_key'] = $api_key;
     $data['payer_id'] =  $payer_id;
     $data['service_provider_first_name'] =  $_POST['provider_first_name'];
     $data['service_provider_last_name'] =  $_POST['provider_last_name'];
@@ -111,7 +120,7 @@
 
     echo $data_string."<br /><br />"; 
     //$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
-    $ch = curl_init('https://gds.eligibleapi.com/v1.1/coverage/all.json');
+    $ch = curl_init('https://gds.eligibleapi.com/v1.5/coverage/all.json');
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                 
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                              
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                  

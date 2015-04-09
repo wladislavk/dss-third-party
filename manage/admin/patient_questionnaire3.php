@@ -265,7 +265,7 @@ $injurytohead = $_POST['injurytohead'];
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
+		mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 
 		$ped_sql = "update dental_patients 
                 	set		
@@ -273,7 +273,7 @@ $injurytohead = $_POST['injurytohead'];
                 	premed = '".s_for($_POST["premeddet"])."'
                 	where 
                 	patientid='".$_GET["pid"]."'";
-                mysqli_query($con,$ped_sql) or trigger_error($ped_sql." | ".mysql_error(), E_USER_ERROR);
+                mysqli_query($con,$ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
 
 		$msg = "Added Successfully";
                 if(isset($_POST['q_pagebtn_proceed'])){
@@ -359,14 +359,14 @@ $injurytohead = $_POST['injurytohead'];
                 drymouth_text = '".s_for($drymouth_text)."'
 		where q_page3id = '".s_for($_POST['ed'])."'";
 		
-		mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
+		mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		$ped_sql = "update dental_patients 
                         set             
                         premedcheck = '".s_for($_POST["premedcheck"])."',
                         premed = '".s_for($_POST["premeddet"])."' 
                         where 
                         patientid='".$_GET["pid"]."'";
-                mysqli_query($con,$ped_sql) or trigger_error($ped_sql." | ".mysql_error(), E_USER_ERROR);
+                mysqli_query($con,$ped_sql) or trigger_error($ped_sql." | ".mysqli_error($con), E_USER_ERROR);
 		//echo $ed_sql;
 		$msg = "Edited Successfully";
                 if(isset($_POST['q_pagebtn_proceed'])){

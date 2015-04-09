@@ -66,7 +66,7 @@
                     }
 
                     if($form['status']==1){
-                        $pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysql_real_escape_string($form['producer'])."'";
+                        $pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $form['producer'])."'";
                         
                         $pf = $db->getRow($pf_sql);
                         if($pf['producer_files'] == '1') {
@@ -75,7 +75,7 @@
                             $claim_producer = $_SESSION['docid'];
                         }
 
-                        $s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysql_real_escape_string($_POST['patientid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+                        $s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysqli_real_escape_string($con, $_POST['patientid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
                         
                         $q = $db->getResults($s);
                         $n = count($q);
@@ -289,7 +289,7 @@
         $d = $db->getRow($sleepstudies);
         $diagnosis_1 = $d['diagnosis'];
 
-        $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_1)."'";
+        $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con, $diagnosis_1)."'";
 
         $ins_diag = $db->getRow($ins_diag_sql);
         $diagnosis_a = $ins_diag['ins_diagnosis'];
@@ -541,8 +541,8 @@
             billing_provider_a = '".s_for($billing_provider_a)."',
             billing_provider_dd = '".s_for($billing_provider_dd)."',
             billing_provider_b_other = '".s_for($billing_provider_b_other)."',
-    		p_m_eligible_payer_id = '".mysql_real_escape_string($p_m_eligible_payer_id)."',
-            p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
+    		p_m_eligible_payer_id = '".mysqli_real_escape_string($con, $p_m_eligible_payer_id)."',
+            p_m_eligible_payer_name = '".mysqli_real_escape_string($con, $p_m_eligible_payer_name)."',
             status = '".s_for(DSS_CLAIM_PENDING)."',
             userid = '".s_for($_SESSION['userid'])."',
             docid = '".s_for($_SESSION['docid'])."',

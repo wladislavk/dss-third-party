@@ -39,7 +39,10 @@ include_once('includes/password.php');
         $themyarray = mysqli_fetch_array($themy);
 ?>
   <h2>Eligibility for <?php echo  $themyarray['pat_name']; ?> - <?php echo  date('m/d/Y h:ia', strtotime($themyarray['adddate'])); ?></h2>
-  <a href="patient_eligibility.php?pid=<?php echo $themyarray['patientid'];?>" >Return to chart</a>
+    <a href="patient_eligibility.php?pid=<?=$themyarray['patientid'];?>" class="btn btn-primary" style="margin-bottom:10px;">Return to chart</a>
+    <section class="coverage-section"></section>
+    <a href="patient_eligibility.php?pid=<?=$themyarray['patientid'];?>" class="btn btn-primary" style="margin-bottom:10px;">Return to chart</a>
+
 <script type="text/javascript">
 $(document).ready(function(){
   var coverage = new Coverage(<?php echo  $themyarray['response']; ?>);

@@ -13,8 +13,8 @@
 						<br />
 						<?             
 						$video_sql = "select * from video where status=1 order by rand() limit 1";
-						$video_my = mysql_query($video_sql);
-						$video_myarray = mysql_fetch_array($video_my);
+						$video_my = mysqli_query($con, $video_sql);
+						$video_myarray = mysqli_fetch_array($video_my);
 						
 						if(st($video_myarray['video_file']) <> '')
 						{
@@ -76,8 +76,8 @@
 						<br />
 						<? 
 						$banner_sql = "select * from banner where status=1 order by rand() limit 1";
-						$banner_my = mysql_query($banner_sql);
-						$banner_myarray = mysql_fetch_array($banner_my);
+						$banner_my = mysqli_query($con, $banner_sql);
+						$banner_myarray = mysqli_fetch_array($banner_my);
 						
 						if(st($banner_myarray['banner_file']) <> '')
 						{

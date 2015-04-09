@@ -11,9 +11,9 @@ require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 require_once('includes/dental_patient_summary.php');
 include_once 'includes/constants.inc';
-$docsql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-$docq = mysql_query($docsql);
-$docr = mysql_fetch_assoc($docq); 
+$docsql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+$docq = mysqli_query($con, $docsql);
+$docr = mysqli_fetch_assoc($docq); 
 
 
 //START PDF
@@ -55,8 +55,8 @@ $find_sql = "SELECT  "
      . "JOIN dental_patients p ON p.patientid=dl.patientid "
      . "WHERE dl.docid='".$_SESSION['docid']."'  "
      . "GROUP BY dl.patientid";
-$find_my = mysql_query($find_sql);
-                while($find_myarray = mysql_fetch_array($find_my))
+$find_my = mysqli_query($con, $find_sql);
+                while($find_myarray = mysqli_fetch_array($find_my))
                 {
 $pay_sql = "SELECT  "
                  . "  sum(pay.amount) as paid_amount "
@@ -66,8 +66,8 @@ $pay_sql = "SELECT  "
      . "WHERE dl.docid='".$_SESSION['docid']."' "
      . "AND p.patientid='".$find_myarray['patientid']."' "
      . "GROUP BY dl.patientid";
-$pay_q = mysql_query($pay_sql);
-$pay_r = mysql_fetch_assoc($pay_q);
+$pay_q = mysqli_query($con, $pay_sql);
+$pay_r = mysqli_fetch_assoc($pay_q);
 $paid_amount = $find_myarray['paid_amount']+$pay_r['paid_amount'];
                         if(round($find_myarray['amount'],2)!=round($paid_amount,2)){
 
@@ -79,9 +79,9 @@ $sql = "SELECT  "
      . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
      . "WHERE dl.docid='".$_SESSION['docid']."' AND dl.patientid='".s_for($_GET['pid'])."'  "
      . "GROUP BY dl.ledgerid";
-$result = mysql_query($sql);
+$result = mysqli_query($con, $sql);
 $ledger_balance = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
   $ledger_balance -= $row['amount'];
   $ledger_balance += $row['paid_amount'];
 }
@@ -91,8 +91,8 @@ if(!isset($_REQUEST['sort'])){
 }
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my); 
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my); 
 
 $name = st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 
@@ -212,8 +212,8 @@ $sql = "select
 ";
 
 
-$my=mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
-$num_users=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
+$num_users=mysqli_num_rows($my);
 
 $html = '';
 
@@ -240,7 +240,7 @@ $html .=' <table width="98%">
 		</td>
 	</tr>';
 
-	 if(mysql_num_rows($my) == 0)
+	 if(mysqli_num_rows($my) == 0)
 	{ 
 		$html .= '<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -253,7 +253,7 @@ $html .=' <table width="98%">
 		$cur_bal = $cur_cha = $cur_pay = 0;
 		$last_sd = '';
 		$last_ed = '';
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{
@@ -381,14 +381,14 @@ $html = $head.$html;
 //$pdf->Output('example_001.pdf', 'I');
 
 /*	$state_sql = "INSERT INTO dental_ledger_statement SET
-			producerid = '".mysql_real_escape_string($_SESSION['userid'])."',
-			filename = '".mysql_real_escape_string($filename)."',
+			producerid = '".mysqli_real_escape_string($con, $_SESSION['userid'])."',
+			filename = '".mysqli_real_escape_string($con, $filename)."',
 			service_date = CURDATE(),
 			entry_date = CURDATE(),
-			patientid = '".mysql_real_escape_string($_GET['pid'])."',
+			patientid = '".mysqli_real_escape_string($con, $_GET['pid'])."',
 			adddate = now(),
 			ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-	mysql_query($state_sql);
+	mysqli_query($con, $state_sql);
 */
 ?>
 <script type="text/javascript">

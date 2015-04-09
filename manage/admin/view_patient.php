@@ -520,7 +520,7 @@ $ed_sql .="
 			<?php
 		}
 
-		//echo $ed_sql.mysql_error();
+		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
                 if(isset($_POST['sendPin'])){
 		  $sendPin = "&sendPin=1";
@@ -704,7 +704,7 @@ $ed_sql .="
       $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`pid`) VALUES (NULL,'".s_for($_POST["copyreqdate"])."','".$pid."');";
       $flowinsert = $db->query($flowinsertqry);
       if(empty($flowinsert)){
-        //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting flowsheet record, please try again!1";
+        //$message = "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error inserting flowsheet record, please try again!1";
       }else{
         $referred_result = $db->query($referredbyqry);
         $message = "Successfully updated flowsheet!2";
@@ -753,7 +753,8 @@ $ed_sql .="
     $thesql = "select * from dental_patients where patientid='".(!empty($_REQUEST["pid"]) ? $_REQUEST["pid"] : '')."'";
 
 	$themyarray = $db->getRow($thesql);
-	
+  $docid = $themyarray['docid'];	
+
 	if(isset($msg) && $msg != '')
 	{
 		$firstname = $_POST['firstname'];
@@ -1734,7 +1735,7 @@ $image = $itype_my;
                                 <select id="p_m_ins_co" name="p_m_ins_co" class="field text addr tbox" maxlength="255" onchange="updateNumber('p_m_ins_phone');" style="width:200px;" />
 																	  <option value="">Select Insurance Company</option>
                                     <?php
-                                      $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".(!empty($_SESSION['docid']) ? $_SESSION['docid'] : '')."'";
+                                      $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$docid."'";
                                       $ins_contact_qry_run = $db->getResults($ins_contact_qry);
                                       if (!empty($ins_contact_qry_run)) foreach ($ins_contact_qry_run as $ins_contact_res){
                                     ?>
@@ -1742,6 +1743,23 @@ $image = $itype_my;
                                         document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($p_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>');
                                       </script>
                                     <?php } ?>
+																	<option value="">Select Insurance Company</option>
+<script type="text/javascript">
+                                function updateNumber(f){
+                                   var selectBox = document.getElementById("p_m_ins_co");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+                                   document.getElementById(f).innerHTML = insurance_nums[selectedValue];
+                                }
+                                insurance_nums = [];
+                            <?php
+                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$docid."'";
+                            $ins_contact_qry_run = mysqli_query($con, $ins_contact_qry);
+                            while($ins_contact_res = mysqli_fetch_array($ins_contact_qry_run)){
+                            ?>
+                                document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($p_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>');
+                                
+                                <?php } ?>
+				</script>
                                 </select>
                                 <label for="p_m_ins_co">Insurance Co.</label><br />
 																<!--<input class="btn btn-primary" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />-->
@@ -1894,7 +1912,7 @@ $image = $itype_my;
                             var insurance_nums = [];
                           </script>
                           <?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".(!empty($_SESSION['docid']) ? $_SESSION['docid'] : '')."'";
+                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$docid."'";
                             $ins_contact_qry_run = $db->getResults($ins_contact_qry);
                             if (!empty($ins_contact_qry_run)) foreach ($ins_contact_qry_run as $ins_contact_res){
                           ?>

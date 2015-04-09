@@ -126,7 +126,7 @@
             				post_ledger_adjustments = ".$pla.", 
             				edit_ledger_entries = ".$ele.", 
             				use_course = ".$c.", ";
-                $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+                $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
                 $r = $db->getRow($sql);
                 if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff']==1) {
                     $ins_sql .= " manage_staff = ".$s.", ";

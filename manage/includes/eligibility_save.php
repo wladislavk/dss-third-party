@@ -22,7 +22,7 @@
     if($q){
       echo '{"success":true,"id":"'.$eid.'"}';
     }else{
-      //echo mysql_error();
+      //echo mysqli_error($con);
       echo '{"error":true,"id":"'.$eid.'"}';
     }
 ?>

@@ -12,9 +12,11 @@
 
 
 <?php
-  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
+  include_once "../includes/constants.inc";
+
+  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn, u.userid as doc_id from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
-         LEFT JOIN dental_users u ON u.userid = p.docid
+         LEFT JOIN dental_users u ON u.userid = p.docidz
          WHERE p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
   $r = $db->getRow($s);
@@ -22,51 +24,55 @@
   $doc_array = explode(' ',$doc_name);
   $doc_first_name = $doc_array[0];
   $doc_last_name = (!empty($doc_array[1]) ? $doc_array[1] : '');
+  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $r['doc_id'])."'";
+  $api_key_query = mysqli_query($con, $api_key_sql);
+  $api_key_result = mysqli_fetch_assoc($api_key_query);
+  if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+    if(trim($api_key_result['eligible_api_key']) != ""){
+      $api_key = $api_key_result['eligible_api_key'];
+    }
+  }
 ?>
 <?php
-                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$r['docid']."'";
+  $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$r['docid']."'";
 
-                      $docinfo = $db->getRow($getdocinfo);
-                        $phone = $docinfo['phone'];
-                        $practice = $docinfo['practice'];
-                        $address = $docinfo['address'];
-                        $city = $docinfo['city'];
-                        $state = $docinfo['state'];
-                        $zip = $docinfo['zip'];
-                        $npi = $docinfo['npi'];
-                        $medicare_npi = $docinfo['medicare_npi'];
+  $docinfo = $db->getRow($getdocinfo);
+    $phone = $docinfo['phone'];
+    $practice = $docinfo['practice'];
+    $address = $docinfo['address'];
+    $city = $docinfo['city'];
+    $state = $docinfo['state'];
+    $zip = $docinfo['zip'];
+    $npi = $docinfo['npi'];
+    $medicare_npi = $docinfo['medicare_npi'];
 
-                        if($docinfo['use_service_npi']==1){
-                          $service_npi = $docinfo['service_npi'];
-                          $service_practice = $docinfo['service_name'];
-                          $service_address = $docinfo['service_address'];
-                          $service_city = $docinfo['service_city'];
-                          $service_state = $docinfo['service_state'];
-                          $service_zip = $docinfo['service_zip'];
-                          $service_medicare_npi = $docinfo['service_medicare_npi'];
-                        }else{
-                          $service_npi = $npi;
-                          $service_practice = $practice;
-                          $service_address = $address;
-                          $service_city = $city;
-                          $service_state = $state;
-                          $service_zip = $zip;
-                          $service_medicare_npi = $medicare_npi;
-                        }
-?>
-      <?php
-        if($r['p_m_same_address']==1){
-          $s_state = $r['state'];
-          $s_city = $r['city'];
-          $s_zip = $r['zip'];
-        }else{
-          $s_state = $r['p_m_state'];
-          $s_city = $r['p_m_city'];
-          $s_zip = $r['p_m_zip'];
-        }
-        ?>
-
-  <?php
+    if($docinfo['use_service_npi']==1){
+      $service_npi = $docinfo['service_npi'];
+      $service_practice = $docinfo['service_name'];
+      $service_address = $docinfo['service_address'];
+      $service_city = $docinfo['service_city'];
+      $service_state = $docinfo['service_state'];
+      $service_zip = $docinfo['service_zip'];
+      $service_medicare_npi = $docinfo['service_medicare_npi'];
+    }else{
+      $service_npi = $npi;
+      $service_practice = $practice;
+      $service_address = $address;
+      $service_city = $city;
+      $service_state = $state;
+      $service_zip = $zip;
+      $service_medicare_npi = $medicare_npi;
+    }
+    if($r['p_m_same_address']==1){
+      $s_state = $r['state'];
+      $s_city = $r['city'];
+      $s_zip = $r['zip'];
+    }else{
+      $s_state = $r['p_m_state'];
+      $s_city = $r['p_m_city'];
+      $s_zip = $r['p_m_zip'];
+    }
     if($r['p_m_relation'] != 'Self'){
       $d_last_name = $r['lastname'];
       $d_first_name = $r['firstname'];
@@ -88,9 +94,6 @@
     }
   ?>
 
-
-
-
     <div class="form-group hidden">
       <label for="member_dob" class="col-lg-2 control-label">Test?</label>
 
@@ -101,7 +104,7 @@
     </div>
 
 
-        <input type="hidden" class="form-control" id="api_key" value="33b2e3a5-8642-1285-d573-07a22f8a15b4">
+        <input type="hidden" class="form-control" id="api_key" value="<?php echo $api_key ?>">
 
     <div class="form-group test-param">
       <label for="test_member_id" class="col-lg-2 control-label">Test Member ID</label>
@@ -151,7 +154,6 @@
                 <li class="template" style="display:none"></li>
         </ul>
 </div>
-
 <input type="hidden" name="payer_id" id="payer_id" />
       </div>
     </div>
@@ -480,7 +482,7 @@
       <div class="col-lg-offset-2 col-lg-10">
 	<input type="hidden" name="pid" id="pid" value="<?php echo  $_GET['pid']; ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
-        <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+        <button type="submit" id="submit-button" class="btn btn-primary btn-lg"><div id="submit-button-inner">Submit</div></button>
       </div>
     </div>
 

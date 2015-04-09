@@ -178,7 +178,7 @@ buildError = function (error) {
 
 // When the api call was ok and we get data from the patient, build the success form
 buildCoverageHTML = function(coverage) {
-  $(".coverage-section").remove();
+  //$(".coverage-section").remove();
 
   var plugin = new CoveragePlugin(coverage);
 
@@ -216,5 +216,6 @@ buildCoverageHTML = function(coverage) {
     plugin.addMedicareProcedureCodes();
   }
 
-  $('body').append(plugin.coverageSection);
+  //$('body').append(plugin.coverageSection);
+  $(".coverage-section").append(plugin.coverageSection);
 }

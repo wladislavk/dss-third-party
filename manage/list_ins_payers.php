@@ -17,7 +17,7 @@ if (isset($_POST['partial_name'])) {
   .			" FROM dental_ins_payer p"
   .			" WHERE name LIKE '%" . $partial . "%' "
         .               " ORDER BY name ASC";
-$result = mysql_query($sql);
+$result = mysqli_query($con, $sql);
 */
 
 $data = json_decode(file_get_contents("https://eligibleapi.com/resources/claims-payer.json"));

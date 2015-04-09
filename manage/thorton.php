@@ -50,7 +50,7 @@ if($_POST['thortonsub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
+		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>
@@ -72,7 +72,7 @@ if($_POST['thortonsub'] == 1)
 		tot_score = '".s_for($tot_score)."'
 		where thortonid = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Edited Successfully";
 		?>
@@ -86,8 +86,8 @@ if($_POST['thortonsub'] == 1)
 }
 
 $sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_array($my);
 
 $thortonid = st($myarray['thortonid']);
 $snore_1 = st($myarray['snore_1']);

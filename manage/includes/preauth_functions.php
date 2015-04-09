@@ -7,8 +7,8 @@
         $errors = array();
         /*
            $sql = "SELECT * FROM dental_patients p WHERE p.referred_source IS NOT NULL AND p.referred_source != '' AND p.patientid=".$pid;
-          $my = mysql_query($sql);
-          $num = mysql_num_rows($my);
+          $my = mysqli_query($con, $sql);
+          $num = mysqli_num_rows($my);
           if( $num <= 0 ){
             array_push($errors, "Missing referral - Flow Sheet");
           }
@@ -111,15 +111,15 @@
 
         /*
         $sql = "SELECT * FROM dental_summ_sleeplab p WHERE p.patiendid=".$pid;
-          $my = mysql_query($sql);
-          $num = mysql_num_rows($my);
+          $my = mysqli_query($con, $sql);
+          $num = mysqli_num_rows($my);
           if( $num <= 0 ){
             array_push($errors, "Missing sleep lab");
           }
         */
         /*  $sql = "SELECT * FROM dental_patients p JOIN dental_q_page2 q2 ON p.patientid = q2.patientid WHERE p.patientid=".$pid;
-          $my = mysql_query($sql);
-          $num = mysql_num_rows($my);
+          $my = mysqli_query($con, $sql);
+          $num = mysqli_num_rows($my);
           if( $num <= 0 ){
             array_push($errors, "Missing questionnaire page 2");
           }

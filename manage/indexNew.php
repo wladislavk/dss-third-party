@@ -18,8 +18,8 @@
 <?php
 
 $adminmemo_check_sql = "SELECT * FROM memo_admin LIMIT 1";
-$adminmemo_check_qry = mysql_query($adminmemo_check_sql);
-while($adminmemo_array = mysql_fetch_array($adminmemo_check_qry)){
+$adminmemo_check_qry = mysqli_query($con, $adminmemo_check_sql);
+while($adminmemo_array = mysqli_fetch_array($adminmemo_check_qry)){
 if($adminmemo_array['memo'] != NULL || $adminmemo_array['memo'] != ''){
 	?>
 	  
@@ -52,8 +52,8 @@ echo "". $adminmemo_array['memo'] . "<br />";
 
 $memouserid = $_SESSION['userid'];
 $memo_check_sql = "SELECT * FROM memo WHERE user_id={$memouserid} LIMIT 1";
-$memo_check_qry = mysql_query($memo_check_sql);
-while($memo_array = mysql_fetch_array($memo_check_qry)){
+$memo_check_qry = mysqli_query($con, $memo_check_sql);
+while($memo_array = mysqli_fetch_array($memo_check_qry)){
 if($memo_array != NULL || $memo_array != ''){
 echo $memo_array['memo'] . "<br /><hr />";
 }
@@ -75,7 +75,7 @@ if($_GET['sh'] != 2)
 	$sqlddlist .= " and status = 1";
 }
 $sqlddlist .= " order by lastname, firstname";
-$myddlist = mysql_query($sqlddlist);
+$myddlist = mysqli_query($con, $sqlddlist);
 
 ?>
 <SCRIPT LANGUAGE="javascript">
@@ -97,8 +97,8 @@ if($_GET['sh'] != 2)
 	$sqlddlist2 .= " and status = 1";
 }
 $sqlddlist2 .= " order by lastname, firstname";
-$myddlist2 = mysql_query($sqlddlist2);
-while($ddlistpname2 = (mysql_fetch_array($myddlist2))){
+$myddlist2 = mysqli_query($con, $sqlddlist2);
+while($ddlistpname2 = (mysqli_fetch_array($myddlist2))){
 ?>
 <option value="manage_patient.php?pid=<?php echo $ddlistpname2['patientid']; ?>">
 <?php echo $ddlistpname2['lastname'].", ".$ddlistpname2['firstname']." ".$ddlistpname2['middlename']; ?>
@@ -144,8 +144,8 @@ if($_GET['sh'] != 2)
 	$sqlddlist3 .= " and status = 1";
 }
 $sqlddlist3 .= " order by lastname, firstname";
-$myddlist3 = mysql_query($sqlddlist3);
-while($ddlistpname3 = (mysql_fetch_array($myddlist3))){
+$myddlist3 = mysqli_query($con, $sqlddlist3);
+while($ddlistpname3 = (mysqli_fetch_array($myddlist3))){
 ?>
 <option value="manage_flowsheet.php?pid=<?php echo $ddlistpname3['patientid']; ?>">
 <?php echo $ddlistpname3['lastname'].", ".$ddlistpname3['firstname']." ".$ddlistpname3['middlename']; ?>
@@ -188,8 +188,8 @@ if($_GET['sh'] != 2)
 	$sqlddlist4 .= " and status = 1";
 }
 $sqlddlist4 .= " order by lastname, firstname";
-$myddlist4 = mysql_query($sqlddlist4);
-while($ddlistpname4 = (mysql_fetch_array($myddlist4))){
+$myddlist4 = mysqli_query($con, $sqlddlist4);
+while($ddlistpname4 = (mysqli_fetch_array($myddlist4))){
 ?>
 <option value="dss_summ.php?pid=<?php echo $ddlistpname4['patientid']; ?>">
 <?php echo $ddlistpname4['lastname'].", ".$ddlistpname4['firstname']." ".$ddlistpname4['middlename']; ?>
@@ -246,9 +246,9 @@ while($ddlistpname4 = (mysql_fetch_array($myddlist4))){
 if($_SESSION['userid'] != '')
 {
 	$welcome_sql = "select * from dental_doc_welcome where status=1 and (docid = '' or docid like '%~".$_SESSION['docid']."~%') order by sortby";
-	$welcome_my = mysql_query($welcome_sql) or trigger_error($welcome_sql." | ".mysql_error(), E_USER_ERROR);
+	$welcome_my = mysqli_query($con, $welcome_sql) or trigger_error($welcome_sql." | ".mysqli_error($con), E_USER_ERROR);
 	
-	while($welcome_myarray = mysql_fetch_array($welcome_my)) 
+	while($welcome_myarray = mysqli_fetch_array($welcome_my)) 
 	{
 		if(st($welcome_myarray['video_file']) != '')
 		{?>
@@ -315,9 +315,9 @@ if($_SESSION['userid'] != '')
 	  </tr>
 		<?
 		$insurance_sql = "select * from dental_doc_insurance where status=1 and (docid = '' or docid like '%~".$_SESSION['docid']."~%') order by sortby";
-		$insurance_my = mysql_query($insurance_sql) or trigger_error($insurance_sql." | ".mysql_error(), E_USER_ERROR);
+		$insurance_my = mysqli_query($con, $insurance_sql) or trigger_error($insurance_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
-		if(mysql_num_rows($insurance_my) == 0)
+		if(mysqli_num_rows($insurance_my) == 0)
 		{
 		?>
 			<tr>
@@ -329,7 +329,7 @@ if($_SESSION['userid'] != '')
 		}
 		else
 		{
-			while($insurance_myarray = mysql_fetch_array($insurance_my)) 
+			while($insurance_myarray = mysqli_fetch_array($insurance_my)) 
 			{
 				?>
 				<tr>

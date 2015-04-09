@@ -37,7 +37,7 @@ $c = mysqli_fetch_assoc($c_q);
 	left join admin a ON n.creator_id = a.adminid
 	where n.claim_id='".mysqli_real_escape_string($con,$_GET['id'])."'
 	ORDER BY adddate ASC";
- $n_q = mysqli_query($con,$n_sql) or trigger_error(mysql_error(), E_USER_ERROR);
+ $n_q = mysqli_query($con,$n_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 ?>
 </span>
 <br /><br />
@@ -438,7 +438,7 @@ if ($is_pending) {
 
 <ul>
   <li><label>Pt Name:</label> <span class="value"><?php echo  $patient_firstname. " ".$patient_lastname; ?></span></li>
-  <li><label>Pt DOB:</label> <span class="value"><?php echo  $patient_dob; ?></span></li>
+  <li><label>Pt DOB:</label> <span class="value"><?php echo  date('m-d-Y', strtotime(str_replace('-','/',$patient_dob))); ?></span></li>
   <li><label>Pt Sex:</label> <span class="value"><?php echo  $patient_sex; ?></span></li>
   <li><label>Pt Addr:</label> <span class="value"><?php echo  $patient_address." ".$patient_city." ".$patient_state." ".$patient_zip; ?></span></li>
   <li><label>Pt Ins ID:</label> <span class="value"><?php echo  $insured_id_number; ?></span></li>
@@ -497,7 +497,7 @@ if ($is_pending) {
 
 <ul>
   <li><label>Pt Name:</label> <span class="value"><?php echo  $patient_firstname. " ".$patient_lastname; ?></span></li>
-  <li><label>Pt DOB:</label> <span class="value"><?php echo  $patient_dob; ?></span></li>
+  <li><label>Pt DOB:</label> <span class="value"><?php echo  date('m-d-Y', strtotime(str_replace('-','/',$patient_dob))); ?></span></li>
   <li><label>Pt Sex:</label> <span class="value"><?php echo  $patient_sex; ?></span></li>
   <li><label>Pt Addr:</label> <span class="value"><?php echo  $patient_address." ".$patient_city." ".$patient_state." ".$patient_zip; ?></span></li>
   <li><label>Pt Ins ID:</label> <span class="value"><?php echo  $insured_id_number; ?></span></li>

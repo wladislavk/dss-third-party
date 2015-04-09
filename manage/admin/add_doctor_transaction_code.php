@@ -23,7 +23,7 @@ if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesu
 			if(mysqli_num_rows($query_check) == 0)
 			{
 				$ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
+				mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			}
 			
 		}
@@ -73,9 +73,9 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
                                 days_units = '".s_for($_POST['days_units'])."',
 				amount_adjust = '".s_for($_POST['amount_adjust'])."',
 				sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."' where transaction_codeid='".$_POST["ed"]."'";
-			mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
+			mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -93,7 +93,7 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
                                 days_units = '".s_for($_POST['days_units'])."',
                                 amount_adjust = '".s_for($_POST['amount_adjust'])."',
 				sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', docid=".$_GET['docid'];
-			mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
+			mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>

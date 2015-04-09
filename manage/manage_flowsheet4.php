@@ -67,7 +67,7 @@
 				
 				$flowinsert = $db->query($flowinsertqry);      
 				if(!$flowinsert){
-					$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting flowsheet record, please try again!1";
+					$message = "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error inserting flowsheet record, please try again!1";
 				}else{
 					$message = "Successfully updated flowsheet!2";
 				}  
@@ -76,7 +76,7 @@
 				
 				$flowinsert = $db->query($flowinsertqry);      
 				if(!$flowinsert){
-					$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error updating flowsheet, please try again!3";
+					$message = "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error updating flowsheet, please try again!3";
 				}else{
 					$message = "Successfully updated flowsheet!4";
 				} 
@@ -282,7 +282,7 @@
 										$insertstepqry = "INSERT INTO `dental_flow_pg2` (`patientid` , `steparray`) VALUES ('".$patientid."','".$value."')";
 										
 										if(!$db->query($insertstepqry)){
-											$error = "MySQL error ".mysql_errno().": ".mysql_error();
+											$error = "MySQL error ".mysqli_errno($con).": ".mysqli_error($con);
 											echo $error."1";
 											echo "error inserting";
 										}
@@ -291,7 +291,7 @@
 										
 										if(!$db->query($insertorderqry)){
 											echo "error updating order";
-											$error = "MySQL error ".mysql_errno().": ".mysql_error();
+											$error = "MySQL error ".mysqli_errno($con).": ".mysqli_error($con);
 											echo $error."2";
 										}
 									}else{
@@ -306,7 +306,7 @@
 					
     										if(!$db->query($updatestepqry)){
     											echo "error updating record";
-    											$error = "MySQL error ".mysql_errno().": ".mysql_error();
+    											$error = "MySQL error ".mysqli_errno($con).": ".mysqli_error($con);
 												echo $error."3";
     										}
 
@@ -315,7 +315,7 @@
 											$currpos1 = $db->query($getcurrpos1);
 											if(!$currpos1){
 												echo "error updating order";
-												$error = "MySQL error ".mysql_errno().": ".mysql_error();
+												$error = "MySQL error ".mysqli_errno($con).": ".mysqli_error($con);
 												echo $error."4";
 											}
 
@@ -326,7 +326,7 @@
 													$currpos = $db->query($updatecurrpos);
 													if(!$currpos){
 														echo "error updating order";
-														$error = "MySQL error ".mysql_errno().": ".mysql_error();
+														$error = "MySQL error ".mysqli_errno($con).": ".mysqli_error($con);
 														echo $error."5";
 													}
 												}
@@ -336,7 +336,7 @@
 											
 											if(!$db->query($updatesegments)){
 												echo "error updating order";
-												$error = "MySQL error ".mysql_errno().": ".mysql_error();
+												$error = "MySQL error ".mysqli_errno($con).": ".mysqli_error($con);
 												echo $error."6";
 											}
          								}			

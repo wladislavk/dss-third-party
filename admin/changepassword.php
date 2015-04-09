@@ -7,15 +7,15 @@ if($_POST['passsub'] == 1)
 {
 
         $salt_sql = "SELECT salt FROM admin WHERE adminid='".s_for($_SESSION['adminuserid'])."'";
-        $salt_q = mysql_query($salt_sql);
-        $salt_row = mysql_fetch_assoc($salt_q);
+        $salt_q = mysqli_query($con, $salt_sql);
+        $salt_row = mysqli_fetch_assoc($salt_q);
 
         $old_pass = gen_password($_POST['old_pass'], $salt_row['salt']);
 
 	$chk_sql = "select * from admin where adminid='".s_for($_SESSION['adminuserid'])."' and password='".$old_pass."'";
-	$chk_my = mysql_query($chk_sql);
+	$chk_my = mysqli_query($con, $chk_sql);
 	
-	if(mysql_num_rows($chk_my) == 0)
+	if(mysqli_num_rows($chk_my) == 0)
 	{
 		$msg="Incorrect Old Password, Please Try Again.";
 		?>
@@ -34,7 +34,7 @@ if($_POST['passsub'] == 1)
 		$new_pass = gen_password($_POST['new_pass'], $salt);
 
 		$up_sql = "update admin set password='".$new_pass."', salt='".$salt."' where adminid='".s_for($_SESSION['adminuserid'])."'";
-		mysql_query($up_sql);
+		mysqli_query($con, $up_sql);
 		
 		$msg="Password Changed Successfully.";
 		?>

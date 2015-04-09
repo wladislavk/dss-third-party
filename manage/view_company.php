@@ -25,8 +25,8 @@ include_once "admin/includes/general.htm";
 
     $thesql = "select c.* from companies c 
 		where c.id='".$_REQUEST["id"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 		$name = st($themyarray['name']);
 		$add1 = st($themyarray['add1']);

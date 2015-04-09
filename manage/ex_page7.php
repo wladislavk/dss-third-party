@@ -24,11 +24,11 @@ function trigger_letter7($pid) {
   $contacts['mds'] = explode(",", $md_list);
   foreach ($contacts['mds'] as $contact) {
     $letter_query = "SELECT md_list FROM dental_letters WHERE md_list IS NOT NULL AND CONCAT(',', md_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letterid.") AND patientid = '".$pid."';";
-    $letter_result = mysql_query($letter_query);
-    $num_rows = mysql_num_rows($letter_result);
+    $letter_result = mysqli_query($con, $letter_query);
+    $num_rows = mysqli_num_rows($letter_result);
     if(!$letter_result) {
-      print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
-      trigger_error("Die called", E_USER_ERROR);
+      print "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error Selecting Letters from Database";
+        trigger_error("Die called", E_USER_ERROR);
     }
     if ($num_rows == 0) {
       $recipients['mds'][] = $contact;
@@ -37,11 +37,11 @@ function trigger_letter7($pid) {
   $contacts['md_referrals'] = explode(",", $md_referral_list);
   foreach ($contacts['md_referrals'] as $contact) {
     $letter_query = "SELECT md_referral_list FROM dental_letters WHERE md_referral_list IS NOT NULL AND CONCAT(',', md_referral_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letterid.") AND patientid = '".$pid."';";
-    $letter_result = mysql_query($letter_query);
-    $num_rows = mysql_num_rows($letter_result);
+    $letter_result = mysqli_query($con, $letter_query);
+    $num_rows = mysqli_num_rows($letter_result);
     if(!$letter_result) {
-      print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
-      trigger_error("Die called", E_USER_ERROR);
+      print "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error Selecting Letters from Database";
+        trigger_error("Die called", E_USER_ERROR);
     }
     if ($num_rows == 0) {
       $recipients['md_referrals'][] = $contact;
@@ -163,7 +163,7 @@ if($_POST['ex_page7sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysql_query($ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
+		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 	        
                 if ($assessment_chk) {
                   trigger_letter7($_GET['pid']);
@@ -194,7 +194,7 @@ if($_POST['ex_page7sub'] == 1)
 		additional_paragraph_suffers = '".s_for($additional_paragraph_suffers)."'
 		where ex_page7id = '".s_for($_POST['ed'])."'";
 		
-		mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		if ($assessment_chk) {
                   trigger_letter7($_GET['pid']);
@@ -213,8 +213,8 @@ if($_POST['ex_page7sub'] == 1)
 
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['firstname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['lastname']);
 
@@ -229,8 +229,8 @@ if($pat_myarray['patientid'] == '')
 }
 
 $sql = "select * from dental_ex_page7 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
+$my = mysqli_query($con, $sql);
+$myarray = mysqli_fetch_array($my);
 
 $ex_page7id = st($myarray['ex_page7id']);
 $sleep_study_on = st($myarray['sleep_study_on']);
@@ -246,8 +246,8 @@ $additional_paragraph_candidate = st($myarray['additional_paragraph_candidate'])
 $additional_paragraph_suffers = st($myarray['additional_paragraph_suffers']);
 
 $q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
-$q2_my = mysql_query($q2_sql);
-$q2_myarray = mysql_fetch_array($q2_my);
+$q2_my = mysqli_query($con, $q2_sql);
+$q2_myarray = mysqli_fetch_array($q2_my);
 
 $sleep_study_on = st($q2_myarray['sleep_study_on']);
 $sleep_study_by = st($q2_myarray['sleep_study_by']);
@@ -285,9 +285,9 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
 		{
 		<?
 		$assessment_sql = "select * from dental_assessment where status=1 order by sortby";
-		$assessment_my = mysql_query($assessment_sql);
+		$assessment_my = mysqli_query($con, $assessment_sql);
 		
-		while($assessment_myarray = mysql_fetch_array($assessment_my))
+		while($assessment_myarray = mysqli_fetch_array($assessment_my))
 		{
 		?>
 			document.getElementById('assessment_<?=st($assessment_myarray['assessmentid']);?>').disabled = false;
@@ -300,9 +300,9 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
 			
 		<?
 		$assessment_sql = "select * from dental_assessment where status=1 order by sortby";
-		$assessment_my = mysql_query($assessment_sql);
+		$assessment_my = mysqli_query($con, $assessment_sql);
 		
-		while($assessment_myarray = mysql_fetch_array($assessment_my))
+		while($assessment_myarray = mysqli_fetch_array($assessment_my))
 		{
 		?>
 			document.getElementById('assessment_<?=st($assessment_myarray['assessmentid']);?>').disabled = true;
@@ -394,9 +394,9 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
                         	<table width="95%" align="right">
                         	<?
 							$assessment_sql = "select * from dental_assessment where status=1 order by sortby";
-							$assessment_my = mysql_query($assessment_sql);
+							$assessment_my = mysqli_query($con, $assessment_sql);
 							
-							while($assessment_myarray = mysql_fetch_array($assessment_my))
+							while($assessment_myarray = mysqli_fetch_array($assessment_my))
 							{
 							?>
                             	<tr>
@@ -442,9 +442,9 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
                         	<table width="95%" align="right">
                         	<?
 							$assess_addition_sql = "select * from dental_assess_addition  where status=1 order by sortby";
-							$assess_addition_my = mysql_query($assess_addition_sql);
+							$assess_addition_my = mysqli_query($con, $assess_addition_sql);
 							
-							while($assess_addition_myarray = mysql_fetch_array($assess_addition_my))
+							while($assess_addition_myarray = mysqli_fetch_array($assess_addition_my))
 							{
 							?>
                             	<tr>
@@ -504,9 +504,9 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
                         	<table width="100%" align="right">
                         	<?
 							$consultation_sql = "select * from dental_consultation where status=1 order by sortby";
-							$consultation_my = mysql_query($consultation_sql);
+							$consultation_my = mysqli_query($con, $consultation_sql);
 							
-							while($consultation_myarray = mysql_fetch_array($consultation_my))
+							while($consultation_myarray = mysqli_fetch_array($consultation_my))
 							{
 							?>
                             	<tr>
@@ -549,9 +549,9 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
                         	<table width="100%" align="right">
                         	<?
 							$evaluation_new_sql = "select * from dental_evaluation_new where status=1 order by sortby";
-							$evaluation_new_my = mysql_query($evaluation_new_sql);
+							$evaluation_new_my = mysqli_query($con, $evaluation_new_sql);
 							
-							while($evaluation_new_myarray = mysql_fetch_array($evaluation_new_my))
+							while($evaluation_new_myarray = mysqli_fetch_array($evaluation_new_my))
 							{
 							?>
                             	<tr>
@@ -578,9 +578,9 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
                         	<table width="100%" align="right">
                         	<?
 							$evaluation_est_sql = "select * from dental_evaluation_est where status=1 order by sortby";
-							$evaluation_est_my = mysql_query($evaluation_est_sql);
+							$evaluation_est_my = mysqli_query($con, $evaluation_est_sql);
 							
-							while($evaluation_est_myarray = mysql_fetch_array($evaluation_est_my))
+							while($evaluation_est_myarray = mysqli_fetch_array($evaluation_est_my))
 							{
 							?>
                             	<tr>

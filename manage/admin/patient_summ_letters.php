@@ -151,7 +151,7 @@ $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, den
 $letters_res = mysqli_query($con,$letters_query);
 
 if (!$letters_res) {
-    print "MYSQL ERROR:".mysqli_errno($con).": ".mysql_error($con)."<br/>"."Error selecting letters from the database.";
+    print "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con$con)."<br/>"."Error selecting letters from the database.";
 }
 else {
     while ($row = mysqli_fetch_assoc($letters_res)) {

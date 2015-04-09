@@ -101,7 +101,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 			mysqli_query($con,$ed_sql);
 
 
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">

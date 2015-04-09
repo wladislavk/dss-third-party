@@ -1,10 +1,10 @@
 <?php namespace Ds3\Libraries\Legacy; ?><? include"includes/top1.htm";
 
 $cat_sql = "select * from apnea_category where status=1 order by sortby";
-$cat_my = mysql_query($cat_sql);
+$cat_my = mysqli_query($con, $cat_sql);
 
 $all_sql = "select * from sleep_apnea where status=1 order by sortby";
-$all_my = mysql_query($all_sql);
+$all_my = mysqli_query($con, $all_sql);
 ?>   
 
 <table width="960" border="0" cellspacing="0" cellpadding="0"  >
@@ -27,10 +27,10 @@ $all_my = mysql_query($all_sql);
 							<tr>
 								<td width="270" valign="top">
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
-										<? while($cat_myarray = mysql_fetch_array($cat_my))
+										<? while($cat_myarray = mysqli_fetch_array($cat_my))
 										{
 											$ap_sql = "select * from sleep_apnea where status=1 and categoryid='".$cat_myarray['categoryid']."' order by sortby";
-											$ap_my = mysql_query($ap_sql) or trigger_error(mysql_error()." | ".$ap_sql, E_USER_ERROR);
+											$ap_my = mysqli_query($con, $ap_sql) or trigger_error(mysqli_error($con)." | ".$ap_sql, E_USER_ERROR);
 											?>
 											<tr>
 												<td height="25" valign="top" class="suntab_head">
@@ -38,7 +38,7 @@ $all_my = mysql_query($all_sql);
 												</td>
 											</tr>
 											<?	
-											while($ap_myarray = mysql_fetch_array($ap_my))
+											while($ap_myarray = mysqli_fetch_array($ap_my))
 											{
 											?>
 												<tr>

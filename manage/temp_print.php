@@ -1,8 +1,8 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php include "admin/includes/main_include.php";
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my);
+$pat_my = mysqli_query($con, $pat_sql);
+$pat_myarray = mysqli_fetch_array($pat_my);
 
 $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 
@@ -20,8 +20,8 @@ if($pat_myarray['patientid'] == '')
 
 
 $ref_sql = "select * from dental_contact where status=1 and contactid='".$pat_myarray['referred_by']."'";
-$ref_my = mysql_query($ref_sql);
-$ref_myarray = mysql_fetch_array($ref_my);
+$ref_my = mysqli_query($con, $ref_sql);
+$ref_myarray = mysqli_fetch_array($ref_my);
 
 $ref_name = st($ref_myarray['salutation'])." ".st($ref_myarray['firstname'])." ".st($ref_myarray['middlename'])." ".st($ref_myarray['lastname']);
 

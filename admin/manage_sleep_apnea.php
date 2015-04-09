@@ -4,7 +4,7 @@ include "includes/top.htm";
 if($_REQUEST["delid"] != "")
 {
 	$del_sql = "delete from sleep_apnea where sleep_apneaid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con, $del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -28,19 +28,19 @@ $sql = "select * from sleep_apnea ";
 if($_GET['cid'] <> '') 
 	$sql .= " where categoryid='".s_for($_GET['cid'])."'";
 $sql .= " order by sortby";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 $no_sleep_apnea = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or trigger_error(mysql_error().$sql, E_USER_ERROR);
-$num_sleep_apnea=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con).$sql, E_USER_ERROR);
+$num_sleep_apnea=mysqli_num_rows($my);
 
 if($_POST['sortsub'] == 1)
 {
 	foreach($_POST['sortby'] as $val)
 	{
-		$smyarray = mysql_fetch_array($my);
+		$smyarray = mysqli_fetch_array($my);
 		
 		if($val == '' || is_numeric($val) === false)
 		{
@@ -48,7 +48,7 @@ if($_POST['sortsub'] == 1)
 		}
 		
 		$up_sort_sql = "update sleep_apnea set sortby='".s_for($val)."' where sleep_apneaid='".$smyarray["sleep_apneaid"]."'";
-		mysql_query($up_sort_sql);
+		mysqli_query($con, $up_sort_sql);
 	}
 	$msg = "Sort By Changed Successfully";
 	?>
@@ -61,7 +61,7 @@ if($_POST['sortsub'] == 1)
 }
 
 $cat_sql = "select * from apnea_category where status=1 order by sortby";
-$cat_my = mysql_query($cat_sql);
+$cat_my = mysqli_query($con, $cat_sql);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -73,7 +73,7 @@ $cat_my = mysql_query($cat_sql);
 	
 	<select name="cid" onchange="Javascript: window.location = '<?=$_SERVER['PHP_SELF']?>?cid='+this.value;">
 		<option value="">All</option>
-		<? while($cat_myarray = mysql_fetch_array($cat_my))
+		<? while($cat_myarray = mysqli_fetch_array($cat_my))
 		{
 		?>
 			<option value="<?=st($cat_myarray['categoryid'])?>" <? if($_GET['cid'] == st($cat_myarray['categoryid'])) echo " selected";?>>
@@ -121,7 +121,7 @@ $cat_my = mysql_query($cat_sql);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -132,7 +132,7 @@ $cat_my = mysql_query($cat_sql);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{

@@ -5,9 +5,9 @@ include "fckeditor/fckeditor.php";
 if($_POST["homepagesub"] == 1)
 {
 	$ed_sql = "update homepage set description = '".s_for($_POST["description"])."'";
-	mysql_query($ed_sql);
+	mysqli_query($con, $ed_sql);
 	
-	//echo $ed_sql.mysql_error();
+	//echo $ed_sql.mysqli_error($con);
 	$msg = "Edited Successfully";
 	?>
 	<script type="text/javascript">
@@ -19,8 +19,8 @@ if($_POST["homepagesub"] == 1)
 }
 
 $thesql = "select * from homepage";
-$themy = mysql_query($thesql);
-$themyarray = mysql_fetch_array($themy);
+$themy = mysqli_query($con, $thesql);
+$themyarray = mysqli_fetch_array($themy);
 
 $description = st($themyarray['description']);
 

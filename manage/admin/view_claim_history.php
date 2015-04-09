@@ -24,6 +24,9 @@ $num_users = mysqli_num_rows($my);
 		<h3>Claim Electronically filed on
     		<?php echo  $r['adddate']; ?></h3>
 		<p>Response: <?php echo  $r['response'];?></p>
+		<?php 
+		  if ($r['reference_id'] != ''){
+		?>
      		<h4>Webhook responses</h4> 
 		<?php
 			$w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysqli_real_escape_string($con,$r['reference_id'])."'";
@@ -37,6 +40,7 @@ $num_users = mysqli_num_rows($my);
 				</p>
 			<?php
 			}
+		}
 			?>
 	</div><?php
   }

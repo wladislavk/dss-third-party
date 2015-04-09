@@ -6,25 +6,25 @@ if ($_REQUEST['key'] != $cron_key) trigger_error("Die called", E_USER_ERROR);
 
 // Trigger Letter 12
 $lateconsult_query = "SELECT dental_flow_pg2_info.patientid, dental_patients.docid, dental_patients.salutation, dental_patients.firstname, dental_patients.lastname FROM dental_flow_pg2_info JOIN dental_patients ON dental_flow_pg2_info.patientid=dental_patients.patientid WHERE dental_flow_pg2_info.date_scheduled <= DATE_SUB(NOW(), INTERVAL 30 day) AND dental_flow_pg2_info.date_completed = '0000-00-00' AND dental_flow_pg2_info.segmentid = '2' GROUP BY dental_flow_pg2_info.patientid;";
-$lateconsult_result = mysql_query($lateconsult_query);
+$lateconsult_result = mysqli_query($con, $lateconsult_query);
 $patients = array();
-while ($row = mysql_fetch_assoc($lateconsult_result)) {
+while ($row = mysqli_fetch_assoc($lateconsult_result)) {
   $patients[] = $row;
 }
 foreach ($patients as $patient) {
   $user_id = $patient['docid'];
   $memo = "Patient, " . $patient['salutation'] . " " . $patient['firstname'] . " " . $patient['lastname'] . ", has not completed their scheduled consultation within 30 days.  Click <a href=\"/manage/letter12.php?pid=" . $patient['patientid'] . "\">Yes</a> to send them a letter, or click <a href=\"/manage/manage_flowsheet3.php?pid=" . $patient['patientid'] . "&page=page2\">No</a> to view the patient's Flow Sheet.";
-  $memo = mysql_real_escape_string($memo); 
+  $memo = mysqli_real_escape_string($con, $memo); 
   $memo_query = "INSERT INTO memo VALUES ('$user_id', '$memo', DATE_ADD(NOW(), INTERVAL 1 DAY));";
-  //$memo_result = mysql_query($memo_query);
+  //$memo_result = mysqli_query($con, $memo_query);
 }
 
 // Trigger Letter 18
 // Select patients where Device Delivery is the last step on their flowsheet
 /*$dd_query = "SELECT patientid, steparray FROM dental_flow_pg2 WHERE CONCAT('[', steparray, ']') LIKE '%7]';";
-$dd_result = mysql_query($dd_query);
+$dd_result = mysqli_query($con, $dd_query);
 $patients = array();
-while ($row = mysql_fetch_assoc($dd_result)) {
+while ($row = mysqli_fetch_assoc($dd_result)) {
   $patients[] = $row;
 }
 //print_r($patients);
@@ -35,8 +35,8 @@ foreach ($patients as $patient) {
   $current_step = count($steps);
   $ddpastdue = "SELECT dental_flow_pg2_info.patientid, dental_patients.docid, dental_patients.salutation, dental_patients.firstname, dental_patients.lastname, dental_flow_pg2_info.segmentid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2_info JOIN dental_patients ON dental_flow_pg2_info.patientid=dental_patients.patientid WHERE patientid IN('".$patient['patientid']."') AND date_completed <= DATE_SUB(NOW(), INTERVAL 30 DAY) AND segmentid = '7' AND stepid = '".$current_step."';";
 //print $ddpastdue. "<br />";
-  $ddpastdue_result = mysql_query($ddpastdue);
-  while ($row = mysql_fetch_assoc($ddpastdue_result)) {
+  $ddpastdue_result = mysqli_query($con, $ddpastdue);
+  while ($row = mysqli_fetch_assoc($ddpastdue_result)) {
     $pastdue_patients[] = $row;
   }
 }*/
@@ -45,9 +45,9 @@ foreach ($patients as $patient) {
 //$casetwo = "SELECT patientid, steparray FROM dental_flow_pg2 WHERE CONCAT('[', steparray, ']') LIKE '%8]' OR CONCAT('[', steparray, ']') LIKE '%2]' OR CONCAT('[', steparray, ']') LIKE '%7]';";
 // SELECT patients who have CURRENT STEP is [Follow-up / Check]
 $casetwo = "SELECT patientid, steparray FROM dental_flow_pg2 WHERE CONCAT('[', steparray, ']') LIKE '%8]';";
-$casetwo_result = mysql_query($casetwo);
+$casetwo_result = mysqli_query($con, $casetwo);
 $casetwo_patients;
-while ($row = mysql_fetch_assoc($casetwo_result)) {
+while ($row = mysqli_fetch_assoc($casetwo_result)) {
   $casetwo_patients[] = $row;
 }
 //print_r($casetwo_patients); print "<br />";
@@ -58,15 +58,15 @@ foreach ($casetwo_patients as $patient) {
   $finalstep = count($steparray);
   // Select Current Step scheduled 30 days ago not completed
   $curstep_query = "SELECT patientid, date_scheduled, date_completed from dental_flow_pg2_info WHERE patientid = '".$patient['patientid']."' AND stepid = '".$finalstep."' AND date_scheduled <= DATE_SUB(NOW(), INTERVAL 30 DAY) AND date_completed = '0000-00-00';";
-  $curstep_result = mysql_query($curstep_query);
-  while ($row = mysql_fetch_assoc($curstep_result)) {
+  $curstep_result = mysqli_query($con, $curstep_query);
+  while ($row = mysqli_fetch_assoc($curstep_result)) {
     $current_step[] = $row;
   }
   foreach ($current_step as $step) {
     // SELECT previous device delivery segments completed more than 30 days ago
     $ddquery = "SELECT dental_flow_pg2_info.patientid, dental_patients.docid, dental_patients.salutation, dental_patients.firstname, dental_patients.lastname, dental_flow_pg2_info.segmentid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2_info JOIN dental_patients ON dental_flow_pg2_info.patientid=dental_patients.patientid WHERE patientid IN('".$step['patientid']."') AND date_completed <= DATE_SUB(NOW(), INTERVAL 30 DAY) AND segmentid = '7';";
-    $ddresult = mysql_query($ddquery);
-    while ($row = mysql_fetch_assoc($ddresult)) {
+    $ddresult = mysqli_query($con, $ddquery);
+    while ($row = mysqli_fetch_assoc($ddresult)) {
       $second_case_patients[] = $row;
     }
   }
@@ -101,9 +101,9 @@ foreach ($pastdue_patients as $patient) {
 foreach ($second_case_patients as $patient) {
   $user_id = $patient['docid'];
   $memo = "Patient, " . $patient['salutation'] . " " . $patient['firstname'] . " " . $patient['lastname'] . ", has not been in for a device check appt within 30 days of delivery.  Click <a href=\"/manage/letter18.php?pid=" . $patient['patientid'] . "\">Yes</a> to send them a letter, or click <a href=\"/manage/manage_flowsheet3.php?pid=" . $patient['patientid'] . "&page=page2\">No</a> to view the patient's Flow Sheet.";
-  $memo = mysql_real_escape_string($memo); 
+  $memo = mysqli_real_escape_string($con, $memo); 
   $memo_query = "INSERT INTO memo VALUES ('$user_id', '$memo', DATE_ADD(NOW(), INTERVAL 1 DAY));";
-  $memo_result = mysql_query($memo_query);
+  $memo_result = mysqli_query($con, $memo_query);
 	
 
 /*
@@ -111,8 +111,8 @@ foreach ($second_case_patients as $patient) {
   $topatient = '1';
   if (array_search($patient['patientid'], $sentto) === false) {
     $letters_query = "SELECT letterid FROM dental_letters WHERE templateid = '18' AND patientid = '".$patient['patientid']."';";
-    $result = mysql_query($letters_query);
-    $numrows = mysql_num_rows($result);
+    $result = mysqli_query($con, $letters_query);
+    $numrows = mysqli_num_rows($result);
     if ($numrows < $segment_count[$patient['patientid']]) {
       $letter = create_letter($letterid, $patient['patientid'], '', $topatient);
       if (!is_numeric($letter)) {
@@ -125,11 +125,11 @@ foreach ($second_case_patients as $patient) {
 }
 
 $letter21_query = "SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.id, dental_flow_pg2_info.date_completed, dental_letters.letterid FROM dental_flow_pg2_info LEFT JOIN dental_letters ON (dental_flow_pg2_info.patientid=dental_letters.patientid AND dental_flow_pg2_info.stepid=dental_letters.stepid) WHERE dental_flow_pg2_info.segmentid = '7' AND date_completed <= DATE_SUB(NOW(), INTERVAL 350 DAY) AND dental_letters.letterid IS NULL;";
-$result = mysql_query($letter21_query);
+$result = mysqli_query($con, $letter21_query);
 if (!$result) {
-  print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from database";
+  print "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error selecting letters from database";
 } else {
-  while ($row = mysql_fetch_assoc($result)) {
+  while ($row = mysqli_fetch_assoc($result)) {
     $letterid = '21';
     $patientid = $row['patientid'];
     $info_id = $row['id'];
@@ -142,13 +142,13 @@ if (!$result) {
 }
 
 $letter23_query = "SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.id, dental_flow_pg2_info.date_completed, dental_letters.letterid, dental_letters.templateid FROM dental_flow_pg2_info LEFT JOIN dental_letters ON (dental_flow_pg2_info.patientid=dental_letters.patientid AND dental_flow_pg2_info.stepid=dental_letters.stepid) WHERE date_completed <= DATE_SUB(NOW(), INTERVAL 30 MONTH) AND dental_flow_pg2_info.segmentid = 7 AND (dental_letters.templateid = 21 OR dental_letters.templateid = 23) ORDER by dental_flow_pg2_info.patientid ASC;";
-$result = mysql_query($letter23_query);
+$result = mysqli_query($con, $letter23_query);
 if (!$result) {
-  print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from database";
+  print "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error selecting letters from database";
 } else {
   $letter_info = array();
   $removeids = array();
-  while ($row = mysql_fetch_assoc($result)) {
+  while ($row = mysqli_fetch_assoc($result)) {
     if ($row['templateid'] == 21) {
       $letter_info["{$row['patientid']}-{$row['id']}"] = array('patientid' => $row['patientid'], 'info_id' => $row['id']);
     }

@@ -586,9 +586,20 @@
 		        WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 	
     $db->query($pat_sql);
-    $url = 'https://gds.eligibleapi.com/v1.3/claims.json';
+    $url = 'https://gds.eligibleapi.com/v1.5/claims.json';
     $data = array(); //Initializing parameter array
-    $data['api_key'] = 'hCmEKZG7_KQ8mS4ztO3EJWKP1KEWvwW5Bdvx'; //Setting your api key
+
+    $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+    $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+    $api_key_query = mysqli_query($con, $api_key_sql);
+    $api_key_result = mysqli_fetch_assoc($api_key_query);
+    if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+        if(trim($api_key_result['eligible_api_key']) != ""){
+          $api_key = $api_key_result['eligible_api_key'];
+        }
+    }
+    $data['api_key'] = $api_key; //Setting your api key
+
     $data['eligibleToken'] = (!empty($_POST["eligibleToken"]) ? $_POST["eligibleToken"] : ''); // Reading eligibleToken and passing to claims endpoint
 
     //Curl post call to claim end point
@@ -617,19 +628,20 @@
                 adddate=now(),
                 ip_address='".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'
                 ";
-
+    mysqli_query($con, $up_sql);
     claim_status_history_update((!empty($_GET['ins_id']) ? $_GET['ins_id'] : ''), '', DSS_CLAIM_SENT, $_SESSION['userid']);
     $dce_id = $db->getInsertId($up_sql);
     invoice_add_efile('1', $_SESSION['docid'], $dce_id);
     invoice_add_claim('1', $_SESSION['docid'], (!empty($_GET['insid']) ? $_GET['insid'] : ''));
 
-    if($success == "false"){
+    if(!$success){
         $errors = $json_response->{"errors"}->{"messages"};
         $e_msg = implode($errors, ', ');
         $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
 
         $db->query($up_sql);
         claim_status_history_update($_GET['ins_id'], '', DSS_CLAIM_REJECTED, $_SESSION['userid']);
+
 ?>
         <script type="text/javascript">
            alert('Submission failed due to the following errors: <?php echo  $e_msg; ?> ');

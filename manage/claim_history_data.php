@@ -54,13 +54,13 @@
         <p><strong>Error Response:</strong><br />
           <?php
               if (!empty($errors)) {
-                $errors = $d->{"errors"}->{"messages"};
+                $errors = $d->{"errors"};
               } else {
                 $errors = array();
               }
               
               foreach($errors as $error){
-                echo $error."<br />";
+                echo $error->{"message"}."<br />";
               }
       			}
       		?>

@@ -185,8 +185,8 @@ foreach($segments as $segment => $label){
   <td>
 <?php
   $s = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND segmentid='".$segment."' ORDER BY date_completed DESC";
-  $q = mysql_query($s);
-  $r = mysql_fetch_assoc($q);
+  $q = mysqli_query($con, $s);
+  $r = mysqli_fetch_assoc($q);
 if($r){
   $datesched = ($r['date_scheduled']!='0' && $r['date_scheduled']!='' && $r['date_scheduled']!='0000-00-00')?date('m/d/Y', strtotime($r['date_scheduled'])):'';
   if($r['date_completed']!='0' && $r['date_completed']!=''){
@@ -203,8 +203,8 @@ if($r){
 }
 
   $s_sched = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND segmentid='".$segment."' ORDER BY date_scheduled DESC";
-  $q_sched = mysql_query($s_sched);
-  $r_sched = mysql_fetch_assoc($q_sched);
+  $q_sched = mysqli_query($con, $s_sched);
+  $r_sched = mysqli_fetch_assoc($q_sched);
   $datesched = ($r_sched['date_scheduled']!='0' && $r_sched['date_scheduled']!='' && $r_sched['date_scheduled']!='0000-00-00')?date('m/d/Y', strtotime($r_sched['date_scheduled'])):'';
 
 ?>   

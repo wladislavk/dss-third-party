@@ -2,8 +2,8 @@
 include "includes/top.htm";
 
 $log_sql = "select * from dental_login where loginid='".s_for($_GET['logid'])."'";
-$log_my = mysql_query($log_sql);
-$log_myarray = mysql_fetch_array($log_my);
+$log_my = mysqli_query($con, $log_sql);
+$log_myarray = mysqli_fetch_array($log_my);
 
 if(st($log_myarray['userid']) == '')
 {
@@ -16,8 +16,8 @@ if(st($log_myarray['userid']) == '')
 }
 
 $user_sql = "select * from dental_users where userid='".st($log_myarray['userid'])."'";
-$user_my = mysql_query($user_sql) or trigger_error(mysql_error()." | ".$user_sql, E_USER_ERROR);
-$user_myarray = mysql_fetch_array($user_my);
+$user_my = mysqli_query($con, $user_sql) or trigger_error(mysqli_error($con)." | ".$user_sql, E_USER_ERROR);
+$user_myarray = mysqli_fetch_array($user_my);
 
 $rec_disp = 20;
 
@@ -28,13 +28,13 @@ else
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_login_detail where loginid='".$log_myarray['loginid']."' order by adddate";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
-$num_users=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
+$num_users=mysqli_num_rows($my);
 ?>
 
 <div class="page-header">
@@ -74,7 +74,7 @@ $num_users=mysql_num_rows($my);
 			Visited Page
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -85,7 +85,7 @@ $num_users=mysql_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{			
 			$tr_class = "tr_active";	
 		?>

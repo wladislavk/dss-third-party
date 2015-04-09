@@ -4,7 +4,7 @@ include "includes/top.htm";
 if($_REQUEST["delid"] != "")
 {
 	$del_sql = "delete from dental_contact where contactid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	mysqli_query($con, $del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -32,13 +32,13 @@ $sql = "select * from dental_contact where docid='".$_SESSION['docid']."' and co
 }
 
 
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
-$num_contact=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
+$num_contact=mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -54,7 +54,7 @@ $num_contact=mysql_num_rows($my);
 <div style="margin-left:10px;margin-right:10px;">
 <?php 
 $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-$ctype_my = mysql_query($ctype_sql);
+$ctype_my = mysqli_query($con, $ctype_sql);
 ?>
 <style>
 #contentMain tr:hover{
@@ -70,7 +70,7 @@ Filter by type: <select name="myjumpbox"
  OnChange="location.href=jump1.myjumpbox.options[selectedIndex].value">
      <option selected>Please Select...</option>
      <option value="manage_contact.php">Display All</option>
-      <? while($ctype_myarray = mysql_fetch_array($ctype_my))
+      <? while($ctype_myarray = mysqli_fetch_array($ctype_my))
 									{?>
                                     	<option value="manage_contact.php?contacttype=<?=st($ctype_myarray['contacttypeid']);?>">
                                         	<?=st($ctype_myarray['contacttype']);?>
@@ -118,7 +118,7 @@ Filter by type: <select name="myjumpbox"
 	 </table>
 	<div style="overflow:auto; height:400px; overflow-x:hidden; overflow-y:scroll;">
 <table width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -129,7 +129,7 @@ Filter by type: <select name="myjumpbox"
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
 			{

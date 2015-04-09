@@ -18,7 +18,7 @@ $sql = "SELECT "
 		 . "FROM "
 		 . "  dental_insurance_preauth preauth "
 		 . "WHERE "
-		 . "  preauth.id = " . $_GET['ed'];
+		 . "  preauth.id = '" . $_GET['ed'] . "'";
 $result = $db->getRow($sql);
 $pid = (!empty($result['patient_id']) ? $result['patient_id'] : '');
 
@@ -47,7 +47,7 @@ if (isset($_GET['ed'])) {
 		 . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
 		 . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
 		 . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
-         . "  d.name as doc_name, d.practice as doc_practice, d.address as doc_address, d.phone as doc_phone, "
+         . "  CONCAT(d.first_name,' ',d.last_name) as doc_name, d.practice as doc_practice, d.address as doc_address, d.phone as doc_phone, "
 		 . "  p.home_phone as 'patient_phone', p.work_phone, p.cell_phone  "
 		 . "FROM "
 		 . "  dental_patients p  "
@@ -64,99 +64,99 @@ if (isset($_GET['ed'])) {
 } else {
     // update preauth
     $sql = "UPDATE dental_insurance_preauth SET "
-				 . "ins_co = '" . s_for($_POST["ins_co"]) . "', "
-				 . "ins_rank = '" . s_for($_POST["ins_rank"]) . "', "
-				 . "ins_phone = '" . s_for(num($_POST["ins_phone"])) . "', "
-				 . "patient_ins_group_id = '" . s_for($_POST["patient_ins_group_id"]) . "', "
-				 . "patient_ins_id = '" . s_for($_POST["patient_ins_id"]) . "', "
-				 . "patient_firstname = '" . s_for($_POST["patient_firstname"]) . "', "
-				 . "patient_lastname = '" . s_for($_POST["patient_lastname"]) . "', "
-				 . "patient_add1 = '" . s_for($_POST["patient_add1"]) . "', "
-				 . "patient_add2 = '" . s_for($_POST["patient_add2"]) . "', "
-				 . "patient_city = '" . s_for($_POST["patient_city"]) . "', "
-				 . "patient_state = '" . s_for($_POST["patient_state"]) . "', "
-				 . "patient_zip = '" . s_for($_POST["patient_zip"]) . "', "
-				 . "patient_dob = '" . s_for($_POST["patient_dob"]) . "', "
-				 . "insured_first_name = '" . s_for($_POST["insured_first_name"]) . "', "
-				 . "insured_last_name = '" . s_for($_POST["insured_last_name"]) . "', "
-				 . "insured_dob = '" . s_for($_POST["insured_dob"]) . "', "
-				 . "doc_name = '". s_for($_POST["doc_name"]). "', "
-				 . "doc_practice = '". s_for($_POST["doc_practice"]). "', "
-				 . "doc_address = '". s_for($_POST["doc_address"]). "', "
-				 . "doc_phone = '". s_for($_POST["doc_phone"]). "', "
-				 . "doc_npi = '" . s_for($_POST["doc_npi"]) . "', "
-				 . "referring_doc_npi = '" . s_for($_POST["referring_doc_npi"]) . "', "
-				 . "doc_medicare_npi = '" . s_for($_POST["doc_medicare_npi"]) . "', "
-				 . "doc_tax_id_or_ssn = '" . s_for(num($_POST["doc_tax_id_or_ssn"], false)) . "', "
-				 . "trxn_code_amount = '" . s_for($_POST["trxn_code_amount"]) . "', "
-				 . "diagnosis_code = '" . s_for($_POST["diagnosis_code"]) . "', "
-				 . "patient_phone = '" . s_for(num($_POST["patient_phone"])) . "', "
-         . "date_of_call = '" . s_for($_POST["date_of_call"]) . "', "
-         . "insurance_rep = '" . s_for($_POST["insurance_rep"]) . "', "
-         . "call_reference_num = '".s_for($_POST["call_reference_num"])."', "
-         . "ins_effective_date = '".s_for($_POST["ins_effective_date"])."', "
-         . "ins_cal_year_start = '".s_for($_POST["ins_cal_year_start"])."', "
-         . "ins_cal_year_end = '".s_for($_POST["ins_cal_year_end"])."', "
-         . "trxn_code_covered = '" . s_for($_POST["trxn_code_covered"]) . "', "
-         . "code_covered_notes = '".s_for($_POST["code_covered_notes"])."', "
-         . "how_often = '".s_for($_POST["how_often"])."', "
-         . "has_out_of_network_benefits = '" . $_POST["has_out_of_network_benefits"] . "', "
-         . "out_of_network_percentage = '" . $_POST["out_of_network_percentage"] . "', "
-         . "is_hmo = '" . $_POST["is_hmo"] . "', "
-         . "hmo_date_called = '".s_for($_POST["hmo_date_called"])."', "
-         . "hmo_date_received = '".s_for($_POST["hmo_date_received"])."', "
-         . "hmo_needs_auth = '" . $_POST["hmo_needs_auth"] . "', "
-         . "hmo_auth_date_requested = '".s_for($_POST["hmo_auth_date_requested"])."', "
-         . "hmo_auth_date_received = '".s_for($_POST["hmo_audoc_tax_id_or_ssnth_date_received"])."', "
-         . "hmo_auth_notes = '".s_for($_POST["hmo_auth_notes"])."', "
-         . "in_network_percentage = '" . $_POST["in_network_percentage"] . "', "
-         . "in_network_appeal_date_sent = '".s_for($_POST["in_network_appeal_date_sent"])."', "
-         . "in_network_appeal_date_received = '".s_for($_POST["in_network_appeal_date_received"])."', "
-         . "is_pre_auth_required = '" . $_POST["is_pre_auth_required"] . "', "
-         . "verbal_pre_auth_name = '".s_for($_POST["verbal_pre_auth_name"])."', "
-         . "verbal_pre_auth_ref_num = '".s_for($_POST["verbal_pre_auth_ref_num"])."', "
-         . "verbal_pre_auth_notes = '".s_for($_POST["verbal_pre_auth_notes"])."', "
-         . "written_pre_auth_notes = '".s_for($_POST["written_pre_auth_notes"])."', "
-         . "written_pre_auth_date_received = '".s_for($_POST["written_pre_auth_date_received"])."', "
-         . "pre_auth_num = '".s_for($_POST["pre_auth_num"])."', "
-         . "network_benefits = '" . $_POST["network_benefits"] . "', "
-         . "deductible_from = '" . $_POST["deductible_from"] . "', "
-         . "patient_deductible = '" . $_POST["patient_deductible"] . "', "
-         . "patient_amount_met = '" . $_POST["patient_amount_met"] . "', "
-         . "family_deductible = '" . $_POST["family_deductible"] . "', "
-         . "family_amount_met = '" . $_POST["family_amount_met"] . "', "
-         . "deductible_reset_date = '".s_for($_POST["deductible_reset_date"])."', "
-         . "out_of_pocket_met = '" . $_POST["out_of_pocket_met"] . "', "
-         . "patient_amount_left_to_meet = '" . $_POST["patient_amount_left_to_meet"] . "', "
-         . "family_amount_left_to_meet = '" . $_POST["family_amount_left_to_meet"] . "', "
-         . "expected_insurance_payment = '" . $_POST["expected_insurance_payment"] . "', "
-         . "expected_patient_payment = '" . $_POST["expected_patient_payment"] . "', "
-         . "in_deductible_from = '" . $_POST["in_deductible_from"] . "', "
-         . "in_patient_deductible = '" . $_POST["in_patient_deductible"] . "', "
-         . "in_patient_amount_met = '" . $_POST["in_patient_amount_met"] . "', "
-         . "in_family_deductible = '" . $_POST["in_family_deductible"] . "', "
-         . "in_family_amount_met = '" . $_POST["in_family_amount_met"] . "', "
-         . "in_deductible_reset_date = '".s_for($_POST["in_deductible_reset_date"])."', "
-         . "in_out_of_pocket_met = '" . $_POST["in_out_of_pocket_met"] . "', "
-         . "in_patient_amount_left_to_meet = '" . $_POST["in_patient_amount_left_to_meet"] . "', "
-         . "in_family_amount_left_to_meet = '" . $_POST["in_family_amount_left_to_meet"] . "', "
-         . "in_expected_insurance_payment = '" . $_POST["in_expected_insurance_payment"] . "', "
-         . "in_expected_patient_payment = '" . $_POST["in_expected_patient_payment"] . "', "
-         . "has_in_network_benefits = '" . $_POST["has_in_network_benefits"] . "', "
-         . "in_is_pre_auth_required = '" . $_POST["in_is_pre_auth_required"] . "', "
-         . "in_call_reference_num = '" . $_POST["in_call_reference_num"] . "', "
-         . "in_verbal_pre_auth_name = '" . $_POST["in_verbal_pre_auth_name"] . "', "
-         . "in_verbal_pre_auth_ref_num = '" . $_POST["in_verbal_pre_auth_ref_num"] . "', "
-         . "in_verbal_pre_auth_notes = '" . $_POST["in_verbal_pre_auth_notes"] . "', "
-         . "in_written_pre_auth_date_received = '" . $_POST["in_written_pre_auth_date_received"] . "', "
-         . "in_pre_auth_num = '" . $_POST["in_pre_auth_num"] . "', "
-         . "in_written_pre_auth_notes = '" . $_POST["in_written_pre_auth_notes"] . "', "
+				 . "ins_co = '" . mysqli_real_escape_string($con, s_for($_POST["ins_co"])) . "', "
+				 . "ins_rank = '" . mysqli_real_escape_string($con, s_for($_POST["ins_rank"])) . "', "
+				 . "ins_phone = '" . mysqli_real_escape_string($con, s_for(num($_POST["ins_phone"]))) . "', "
+				 . "patient_ins_group_id = '" . mysqli_real_escape_string($con, s_for($_POST["patient_ins_group_id"])) . "', "
+				 . "patient_ins_id = '" . mysqli_real_escape_string($con, s_for($_POST["patient_ins_id"])) . "', "
+				 . "patient_firstname = '" . mysqli_real_escape_string($con, s_for($_POST["patient_firstname"])) . "', "
+				 . "patient_lastname = '" . mysqli_real_escape_string($con, s_for($_POST["patient_lastname"])) . "', "
+				 . "patient_add1 = '" . mysqli_real_escape_string($con, s_for($_POST["patient_add1"])) . "', "
+				 . "patient_add2 = '" . mysqli_real_escape_string($con, s_for($_POST["patient_add2"])) . "', "
+				 . "patient_city = '" . mysqli_real_escape_string($con, s_for($_POST["patient_city"])) . "', "
+				 . "patient_state = '" . mysqli_real_escape_string($con, s_for($_POST["patient_state"])) . "', "
+				 . "patient_zip = '" . mysqli_real_escape_string($con, s_for($_POST["patient_zip"])) . "', "
+				 . "patient_dob = '" . mysqli_real_escape_string($con, s_for($_POST["patient_dob"])) . "', "
+				 . "insured_first_name = '" . mysqli_real_escape_string($con, s_for($_POST["insured_first_name"])) . "', "
+				 . "insured_last_name = '" . mysqli_real_escape_string($con, s_for($_POST["insured_last_name"])) . "', "
+				 . "insured_dob = '" . mysqli_real_escape_string($con, s_for($_POST["insured_dob"])) . "', "
+				 . "doc_name = '". mysqli_real_escape_string($con, s_for($_POST["doc_name"])). "', "
+				 . "doc_practice = '". mysqli_real_escape_string($con, s_for($_POST["doc_practice"])). "', "
+				 . "doc_address = '". mysqli_real_escape_string($con, s_for($_POST["doc_address"])). "', "
+				 . "doc_phone = '". mysqli_real_escape_string($con, s_for($_POST["doc_phone"])). "', "
+				 . "doc_npi = '" . mysqli_real_escape_string($con, s_for($_POST["doc_npi"])) . "', "
+				 . "referring_doc_npi = '" . mysqli_real_escape_string($con, s_for($_POST["referring_doc_npi"])) . "', "
+				 . "doc_medicare_npi = '" . mysqli_real_escape_string($con, s_for($_POST["doc_medicare_npi"])) . "', "
+				 . "doc_tax_id_or_ssn = '" . mysqli_real_escape_string($con, s_for(num($_POST["doc_tax_id_or_ssn"], false))) . "', "
+				 . "trxn_code_amount = '" . mysqli_real_escape_string($con, s_for($_POST["trxn_code_amount"])) . "', "
+				 . "diagnosis_code = '" . mysqli_real_escape_string($con, s_for($_POST["diagnosis_code"])) . "', "
+				 . "patient_phone = '" . mysqli_real_escape_string($con, s_for(num($_POST["patient_phone"]))) . "', "
+         . "date_of_call = '" . mysqli_real_escape_string($con, s_for($_POST["date_of_call"])) . "', "
+         . "insurance_rep = '" . mysqli_real_escape_string($con, s_for($_POST["insurance_rep"])) . "', "
+         . "call_reference_num = '".mysqli_real_escape_string($con, s_for($_POST["call_reference_num"]))."', "
+         . "ins_effective_date = '".mysqli_real_escape_string($con, s_for($_POST["ins_effective_date"]))."', "
+         . "ins_cal_year_start = '".mysqli_real_escape_string($con, s_for($_POST["ins_cal_year_start"]))."', "
+         . "ins_cal_year_end = '".mysqli_real_escape_string($con, s_for($_POST["ins_cal_year_end"]))."', "
+         . "trxn_code_covered = '" . mysqli_real_escape_string($con, s_for($_POST["trxn_code_covered"])) . "', "
+         . "code_covered_notes = '".mysqli_real_escape_string($con, s_for($_POST["code_covered_notes"]))."', "
+         . "how_often = '".mysqli_real_escape_string($con, s_for($_POST["how_often"]))."', "
+         . "has_out_of_network_benefits = '" . mysqli_real_escape_string($con, $_POST["has_out_of_network_benefits"]) . "', "
+         . "out_of_network_percentage = '" . mysqli_real_escape_string($con, $_POST["out_of_network_percentage"]) . "', "
+         . "is_hmo = '" . mysqli_real_escape_string($con, $_POST["is_hmo"]) . "', "
+         . "hmo_date_called = '".mysqli_real_escape_string($con, s_for($_POST["hmo_date_called"]))."', "
+         . "hmo_date_received = '".mysqli_real_escape_string($con, s_for($_POST["hmo_date_received"]))."', "
+         . "hmo_needs_auth = '" . mysqli_real_escape_string($con, $_POST["hmo_needs_auth"]) . "', "
+         . "hmo_auth_date_requested = '".mysqli_real_escape_string($con, s_for($_POST["hmo_auth_date_requested"]))."', "
+         . "hmo_auth_date_received = '".mysqli_real_escape_string($con, s_for($_POST["hmo_audoc_tax_id_or_ssnth_date_received"]))."', "
+         . "hmo_auth_notes = '".mysqli_real_escape_string($con, s_for($_POST["hmo_auth_notes"]))."', "
+         . "in_network_percentage = '" . mysqli_real_escape_string($con, $_POST["in_network_percentage"]) . "', "
+         . "in_network_appeal_date_sent = '".mysqli_real_escape_string($con, s_for($_POST["in_network_appeal_date_sent"]))."', "
+         . "in_network_appeal_date_received = '".mysqli_real_escape_string($con, s_for($_POST["in_network_appeal_date_received"]))."', "
+         . "is_pre_auth_required = '" . mysqli_real_escape_string($con, $_POST["is_pre_auth_required"]) . "', "
+         . "verbal_pre_auth_name = '".mysqli_real_escape_string($con, s_for($_POST["verbal_pre_auth_name"]))."', "
+         . "verbal_pre_auth_ref_num = '".mysqli_real_escape_string($con, s_for($_POST["verbal_pre_auth_ref_num"]))."', "
+         . "verbal_pre_auth_notes = '".mysqli_real_escape_string($con, s_for($_POST["verbal_pre_auth_notes"]))."', "
+         . "written_pre_auth_notes = '".mysqli_real_escape_string($con, s_for($_POST["written_pre_auth_notes"]))."', "
+         . "written_pre_auth_date_received = '".mysqli_real_escape_string($con, s_for($_POST["written_pre_auth_date_received"]))."', "
+         . "pre_auth_num = '".mysqli_real_escape_string($con, s_for($_POST["pre_auth_num"]))."', "
+         . "network_benefits = '" . mysqli_real_escape_string($con, $_POST["network_benefits"]) . "', "
+         . "deductible_from = '" . mysqli_real_escape_string($con, $_POST["deductible_from"]) . "', "
+         . "patient_deductible = '" . mysqli_real_escape_string($con, $_POST["patient_deductible"]) . "', "
+         . "patient_amount_met = '" . mysqli_real_escape_string($con, $_POST["patient_amount_met"]) . "', "
+         . "family_deductible = '" . mysqli_real_escape_string($con, $_POST["family_deductible"]) . "', "
+         . "family_amount_met = '" . mysqli_real_escape_string($con, $_POST["family_amount_met"]) . "', "
+         . "deductible_reset_date = '".mysqli_real_escape_string($con, s_for($_POST["deductible_reset_date"]))."', "
+         . "out_of_pocket_met = '" . mysqli_real_escape_string($con, $_POST["out_of_pocket_met"]) . "', "
+         . "patient_amount_left_to_meet = '" . mysqli_real_escape_string($con, $_POST["patient_amount_left_to_meet"]) . "', "
+         . "family_amount_left_to_meet = '" . mysqli_real_escape_string($con, $_POST["family_amount_left_to_meet"]) . "', "
+         . "expected_insurance_payment = '" . mysqli_real_escape_string($con, $_POST["expected_insurance_payment"]) . "', "
+         . "expected_patient_payment = '" . mysqli_real_escape_string($con, $_POST["expected_patient_payment"]) . "', "
+         . "in_deductible_from = '" . mysqli_real_escape_string($con, $_POST["in_deductible_from"]) . "', "
+         . "in_patient_deductible = '" . mysqli_real_escape_string($con, $_POST["in_patient_deductible"]) . "', "
+         . "in_patient_amount_met = '" . mysqli_real_escape_string($con, $_POST["in_patient_amount_met"]) . "', "
+         . "in_family_deductible = '" . mysqli_real_escape_string($con, $_POST["in_family_deductible"]) . "', "
+         . "in_family_amount_met = '" . mysqli_real_escape_string($con, $_POST["in_family_amount_met"]) . "', "
+         . "in_deductible_reset_date = '".mysqli_real_escape_string($con, s_for($_POST["in_deductible_reset_date"]))."', "
+         . "in_out_of_pocket_met = '" . mysqli_real_escape_string($con, $_POST["in_out_of_pocket_met"]) . "', "
+         . "in_patient_amount_left_to_meet = '" . mysqli_real_escape_string($con, $_POST["in_patient_amount_left_to_meet"]) . "', "
+         . "in_family_amount_left_to_meet = '" . mysqli_real_escape_string($con, $_POST["in_family_amount_left_to_meet"]) . "', "
+         . "in_expected_insurance_payment = '" . mysqli_real_escape_string($con, $_POST["in_expected_insurance_payment"]) . "', "
+         . "in_expected_patient_payment = '" . mysqli_real_escape_string($con, $_POST["in_expected_patient_payment"]) . "', "
+         . "has_in_network_benefits = '" . mysqli_real_escape_string($con, $_POST["has_in_network_benefits"]) . "', "
+         . "in_is_pre_auth_required = '" . mysqli_real_escape_string($con, $_POST["in_is_pre_auth_required"]) . "', "
+         . "in_call_reference_num = '" . mysqli_real_escape_string($con, $_POST["in_call_reference_num"]) . "', "
+         . "in_verbal_pre_auth_name = '" . mysqli_real_escape_string($con, $_POST["in_verbal_pre_auth_name"]) . "', "
+         . "in_verbal_pre_auth_ref_num = '" . mysqli_real_escape_string($con, $_POST["in_verbal_pre_auth_ref_num"]) . "', "
+         . "in_verbal_pre_auth_notes = '" . mysqli_real_escape_string($con, $_POST["in_verbal_pre_auth_notes"]) . "', "
+         . "in_written_pre_auth_date_received = '" . mysqli_real_escape_string($con, $_POST["in_written_pre_auth_date_received"]) . "', "
+         . "in_pre_auth_num = '" . mysqli_real_escape_string($con, $_POST["in_pre_auth_num"]) . "', "
+         . "in_written_pre_auth_notes = '" . mysqli_real_escape_string($con, $_POST["in_written_pre_auth_notes"]) . "', "
 	 . "updated_at = now(), "
-	 . "updated_by = '".mysql_real_escape_string($_SESSION['adminuserid'])."' ";
+	 . "updated_by = '".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."' ";
     
     if(isset($_POST['reject_but'])){
         $sql .= ", status = " . DSS_PREAUTH_REJECTED . " ";
-	$sql .= ", reject_reason = '" . mysql_real_escape_string($_POST['reject_reason']) ."' ";
+	$sql .= ", reject_reason = '" . mysqli_real_escape_string($con, $_POST['reject_reason']) ."' ";
         $sql .= ", viewed = 0 ";
     }elseif (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
@@ -168,9 +168,9 @@ if (isset($_GET['ed'])) {
 	$ut_sql = "SELECT u.userid, u.user_type FROM dental_users u 
 		JOIN dental_insurance_preauth p
 			ON p.doc_id=u.userid
-		WHERE p.id='".mysql_real_escape_string($_POST['preauth_id'])."'";
-        $ut_q = mysql_query($ut_sql);
-        $ut_r = mysql_fetch_assoc($ut_q);
+		WHERE p.id='".mysqli_real_escape_string($con, $_POST['preauth_id'])."'";
+        $ut_q = mysqli_query($con, $ut_sql);
+        $ut_r = mysqli_fetch_assoc($ut_q);
 
 	invoice_add_vob('1', $ut_r['userid'], $_POST['preauth_id']);
 
@@ -186,9 +186,9 @@ if (isset($_GET['ed'])) {
                                 update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
     }
     $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";
-    mysql_query($sql) or trigger_error($sql." | ".mysql_error(), E_USER_ERROR);
+    mysqli_query($con, $sql) or trigger_error($sql." | ".mysqli_error($con), E_USER_ERROR);
     
-    //echo $ed_sql.mysql_error();
+    //echo $ed_sql.mysqli_error($con);
     $task_label = (!empty($_POST['completed'])) ? 'Completed' : 'Updated';
     $msg = "Verification of Benefits $task_label Successfully";
     print "<script type='text/javascript'>";
@@ -340,6 +340,33 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
+                Patient's Group Insurance #
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_ins_group_id" value="<?=$preauth['patient_ins_group_id']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Patient's Insurance ID #
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_ins_id" value="<?=$preauth['patient_ins_id']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Patient's DOB
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_dob" value="<?=$preauth['patient_dob']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
                 Insured First Name
             </td>
             <td valign="top" class="frmdata">
@@ -362,33 +389,6 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="insured_dob" value="<?=$preauth['insured_dob']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Patient's Group Insurance #
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_group_id" value="<?=$preauth['patient_ins_group_id']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Patient's Insurance ID #
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_id" value="<?=$preauth['patient_ins_id']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Patient's DOB
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="patient_dob" value="<?=$preauth['patient_dob']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>

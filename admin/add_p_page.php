@@ -7,9 +7,9 @@ include "fckeditor/fckeditor.php";
 if($_POST["p_pagesub"] == 1)
 {
 	$sel_check = "select * from p_pages where title = '".s_for($_POST["title"])."' and p_pageid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con, $sel_check);
 	
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Title already exist. So please give another Title.";
 		?>
@@ -24,9 +24,9 @@ if($_POST["p_pagesub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update p_pages set title = '".s_for($_POST["title"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."' where p_pageid='".$_POST["ed"]."'";
-			mysql_query($ed_sql);
+			mysqli_query($con, $ed_sql);
 			
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -39,7 +39,7 @@ if($_POST["p_pagesub"] == 1)
 		else
 		{
 			$ins_sql = "insert into p_pages set title = '".s_for($_POST["title"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
+			mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -66,8 +66,8 @@ if($_POST["p_pagesub"] == 1)
 
     <?
     $thesql = "select * from p_pages where p_pageid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	if($msg != '')
 	{

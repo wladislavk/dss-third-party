@@ -9,8 +9,8 @@ if($_GET['said'] <> '')
 else
 {
 	$sa_cat_sql = "select * from apnea_category where status=1 order by sortby";
-	$sa_cat_my = mysql_query($sa_cat_sql);
-	$sa_cat_myarray = mysql_fetch_array($sa_cat_my);
+	$sa_cat_my = mysqli_query($con, $sa_cat_sql);
+	$sa_cat_myarray = mysqli_fetch_array($sa_cat_my);
 	
 	$sa_sql = "select * from sleep_apnea where status=1 and categoryid='".$sa_cat_myarray['categoryid']."'";	
 }
@@ -19,8 +19,8 @@ else
 if($_GET['said'] <> '')
 	$sa_sql .= " and sleep_apneaid='".s_for($_GET['said'])."'";	*/
 $sa_sql .= " order by sortby limit 1";
-$sa_my = mysql_query($sa_sql) or trigger_error(mysql_error()." | ".$sa_sql, E_USER_ERROR);
-$sa_myarray = mysql_fetch_array($sa_my);
+$sa_my = mysqli_query($con, $sa_sql) or trigger_error(mysqli_error($con)." | ".$sa_sql, E_USER_ERROR);
+$sa_myarray = mysqli_fetch_array($sa_my);
 
 $page_title = st($sa_myarray['title']);
 

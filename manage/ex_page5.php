@@ -749,9 +749,6 @@
 		    &nbsp;&nbsp;&nbsp;
 		</div>
 	</form>
-	<script type="text/javascript">
-		chk_normal();
-	</script>
 
 	<br />
 		<?php include("includes/form_bottom.htm");?>

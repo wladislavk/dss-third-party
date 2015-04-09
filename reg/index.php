@@ -13,13 +13,13 @@ include 'includes/completed.php';
                                 lga_flowTabs.tabs_b();
                         });
         </script>
-<? $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'"; 
-$q = mysql_query($s);
-$pat = mysql_fetch_assoc($q);
+<? $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'"; 
+$q = mysqli_query($con, $s);
+$pat = mysqli_fetch_assoc($q);
 
-$ds = "SELECT * FROM dental_users WHERE userid='".mysql_real_escape_string($pat['docid'])."'";
-$dq = mysql_query($ds);
-$doc = mysql_fetch_assoc($dq);
+$ds = "SELECT * FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $pat['docid'])."'";
+$dq = mysqli_query($con, $ds);
+$doc = mysqli_fetch_assoc($dq);
 
 ?>
 <div class="dp60">
@@ -34,7 +34,7 @@ $doc = mysql_fetch_assoc($dq);
 
 	<div id="tab-1" style="display: block; ">
 		<div class="dp100">
-			<p>Welcome to the secure patient portal! We're excited that you have taken the first steps toward improving your sleep quality and health. Treating snoring and sleep apnea improves your quality of life, and can dramatically improve your health and well-being. At the office of <?= $doc['name'];?>, we work hard to make sure you receive the best possible treatment.</p>
+			<p>Welcome to the secure patient portal! We're excited that you have taken the first steps toward improving your sleep quality and health. Treating snoring and sleep apnea improves your quality of life, and can dramatically improve your health and well-being. At the office of <?= $doc['practice'];?>, we work hard to make sure you receive the best possible treatment.</p>
 <br /> 
 <p>Please check the status box on the right side of this page to make sure your patient profile is 100% complete. Click on any incomplete highlighted fields to answer them. After your profile is 100% complete, we will be ready to see you at your next visit!</p>
 		</div>

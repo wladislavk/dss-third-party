@@ -35,8 +35,18 @@
     	$t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysqli_real_escape_string($con,$_POST['transaction_type'])."' AND status=1";
       
     	$t_r = $db->getRow($t_sql);
+
+      $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+      $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+      $api_key_query = mysqli_query($con, $api_key_sql);
+      $api_key_result = mysqli_fetch_assoc($api_key_query);
+      if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+        if(trim($api_key_result['eligible_api_key']) != ""){
+          $api_key = $api_key_result['eligible_api_key'];
+        }
+      }
       $data = array();
-      $data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
+      $data['api_key'] = $api_key;
       if(isset($_POST['test']) && $_POST['test'] == "1"){
         $data['test'] = "true";
       }
@@ -44,13 +54,13 @@
       	"payer_id" => $payer_id,
       	"transaction_type" => $t_r['transaction_type'],
       	"facility_name" => $_POST['facility_name'],
-      	"provider_name" => $_POST['provide_name'],
+      	"provider_name" => $_POST['provider_name'],
       	"tax_id" => $_POST['tax_id'],
       	"address" => $_POST['address'],
       	"city" => $_POST['city'],
       	"state" => $_POST['state'],
       	"zip" => $_POST['zip'],
-      	"npi" => $_POST['npi'],
+      	"npi" => $_POST[    'npi'],
       	"authorized_signer" => array(
       		"first_name" => $_POST['first_name'],
       		"last_name" => $_POST['last_name'],
@@ -62,7 +72,7 @@
 
       $data_string = json_encode($data);
       error_log($data_string);
-      $ch = curl_init('https://gds.eligibleapi.com/v1.3/enrollment_npis');
+      $ch = curl_init('https://gds.eligibleapi.com/v1.5/enrollment_npis');
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
       curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -139,7 +149,7 @@
     	<label style="color:#fff;">Enroll Type</label>
       <select id="transaction_type" name="transaction_type" onchange="update_list()">
           <?php if ($t_q) foreach ($t_q as $t) { ?>
-              <option value="<?php echo  $t['id']; ?>"><?php echo  $t['transaction_type']; ?> - <?php echo  $t['description']; ?></option>
+              <option value="<?php echo  $t['id']; ?>"><?php echo  $t['transaction_type']; ?> <?php echo  $t['description']; ?></option>
           <?php } ?>
       </select>
     </div>
@@ -179,6 +189,15 @@
                   $us_sql = "SELECT * FROM dental_user_signatures where user_id='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
                   
                   $signature = $db->getNumberRows($us_sql);
+                  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+                  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+                  $api_key_query = mysqli_query($con, $api_key_sql);
+                  $api_key_result = mysqli_fetch_assoc($api_key_query);
+                  if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+                    if(trim($api_key_result['eligible_api_key']) != ""){
+                      $api_key = $api_key_result['eligible_api_key'];
+                    }
+                  }
                 ?>
                 <?php if($r['docid']==0){
                   $snpi = $r['service_npi'];

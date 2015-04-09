@@ -52,7 +52,7 @@ function invoice_find($user_type, $user_id, $inv_type = DSS_INVOICE_TYPE_SU_FO){
   }elseif($user_type == '2'){
     $sql = "SELECT id FROM dental_percase_invoice 
                 WHERE companyid='".mysqli_real_escape_string($con,$user_id)."'
-		AND invoice_type='".DSS_INVOICE_TYPE_SU_BC."',
+		AND invoice_type='".DSS_INVOICE_TYPE_SU_BC."'
                 AND status = '".DSS_INVOICE_PENDING."'";
     $q = $db->getRow($sql);
     if(!empty($q)){

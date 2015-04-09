@@ -17,7 +17,7 @@ $sql = "SELECT "
 		 . "  dental_insurance_preauth preauth "
 		 . "WHERE "
 		 . "  preauth.id = " . $_REQUEST['ed'];
-$result = mysql_query($sql);
+$result = mysqli_query($con, $sql);
 $pid = mysql_result($result, 0);
 
 if (isset($_REQUEST['ed'])) {
@@ -32,8 +32,8 @@ if (isset($_REQUEST['ed'])) {
 	 . "  LEFT OUTER JOIN dental_ins_diagnosis id ON id.ins_diagnosisid = preauth.diagnosis_code "
          . "WHERE "
          . "  preauth.id = " . $_REQUEST['ed'];
-		$my = mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
-		$preauth = mysql_fetch_array($my);
+		$my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
+		$preauth = mysqli_fetch_array($my);
 		// load dynamic preauth info
 		$sql = "SELECT "
 		 . "  i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
@@ -56,8 +56,8 @@ if (isset($_REQUEST['ed'])) {
 		 . "WHERE "
 		 . "  p.patientid = ".$preauth['patientid'];
 
-		$my = mysql_query($sql);
-		$my_array = mysql_fetch_array($my);
+		$my = mysqli_query($con, $sql);
+		$my_array = mysqli_fetch_array($my);
 		$preauth = array_merge($preauth, $my_array);
 } else {
     // update preauth
@@ -128,7 +128,7 @@ if (isset($_REQUEST['ed'])) {
     
     if(isset($_POST['reject_but'])){
         $sql .= ", status = " . DSS_PREAUTH_REJECTED . " ";
-	$sql .= ", reject_reason = '" . mysql_real_escape_string($_POST['reject_reason']) ."' ";
+	$sql .= ", reject_reason = '" . mysqli_real_escape_string($con, $_POST['reject_reason']) ."' ";
         $sql .= ", viewed = 0 ";
     }elseif (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
@@ -139,9 +139,9 @@ if (isset($_REQUEST['ed'])) {
 	$ut_sql = "SELECT u.user_type FROM dental_users u 
 		JOIN dental_insurance_preauth p
 			ON p.doc_id=u.userid
-		WHERE p.id='".mysql_real_escape_string($_POST['preauth_id'])."'";
-        $ut_q = mysql_query($ut_sql);
-        $ut_r = mysql_fetch_assoc($ut_q);
+		WHERE p.id='".mysqli_real_escape_string($con, $_POST['preauth_id'])."'";
+        $ut_q = mysqli_query($con, $ut_sql);
+        $ut_r = mysqli_fetch_assoc($ut_q);
 	if($ut_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
 	  //$sql .= ", invoice_amount = '45.00' ";
 	  invoice_add_vob('1', $_SESSION['docid'], $_POST['preauth_id']);
@@ -155,9 +155,9 @@ if (isset($_REQUEST['ed'])) {
                                 update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
     }
     $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";
-    mysql_query($sql) or trigger_error($sql." | ".mysql_error(), E_USER_ERROR);
+    mysqli_query($con, $sql) or trigger_error($sql." | ".mysqli_error($con), E_USER_ERROR);
     
-    //echo $ed_sql.mysql_error();
+    //echo $ed_sql.mysqli_error($con);
     $task_label = (!empty($_POST['completed'])) ? 'Completed' : 'Updated';
     $msg = "Verification of Benefits $task_label Successfully";
     print "<script type='text/javascript'>";

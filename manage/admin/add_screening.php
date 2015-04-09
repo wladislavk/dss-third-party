@@ -12,12 +12,12 @@ if($_POST["mult_screeningsub"] == 1)
 		if($val <> '')
 		{
 			$sel_check = "select * from dental_screening where screening = '".s_for($val)."'";
-			$query_check=mysql_query($sel_check);
+			$query_check=mysqli_query($con, $sel_check);
 			
-			if(mysql_num_rows($query_check) == 0)
+			if(mysqli_num_rows($query_check) == 0)
 			{
 				$ins_sql = "insert into dental_screening set screening = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
+				mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			}
 			
 		}
@@ -36,9 +36,9 @@ if($_POST["mult_screeningsub"] == 1)
 if($_POST["screeningsub"] == 1)
 {
 	$sel_check = "select * from dental_screening where screening = '".s_for($_POST["screening"])."' and screeningid <> '".s_for($_POST['ed'])."'";
-	$query_check=mysql_query($sel_check);
+	$query_check=mysqli_query($con, $sel_check);
 	
-	if(mysql_num_rows($query_check)>0)
+	if(mysqli_num_rows($query_check)>0)
 	{
 		$msg="Screening already exist. So please give another Screening.";
 		?>
@@ -62,9 +62,9 @@ if($_POST["screeningsub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_screening set screening = '".s_for($_POST["screening"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where screeningid='".$_POST["ed"]."'";
-			mysql_query($ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
+			mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -77,7 +77,7 @@ if($_POST["screeningsub"] == 1)
 		else
 		{
 			$ins_sql = "insert into dental_screening set screening = '".s_for($_POST["screening"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysql_query($ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
+			mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -97,8 +97,8 @@ if($_POST["screeningsub"] == 1)
 
     <?
     $thesql = "select * from dental_screening where screeningid='".$_REQUEST["ed"]."'";
-	$themy = mysql_query($thesql);
-	$themyarray = mysql_fetch_array($themy);
+	$themy = mysqli_query($con, $thesql);
+	$themyarray = mysqli_fetch_array($themy);
 	
 	if($msg != '')
 	{

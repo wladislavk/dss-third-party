@@ -3,7 +3,7 @@
 	require_once('includes/patient_info.php');
 	if ($patient_info) {
 		if(!empty($_GET['own']) && $_GET['own']==1){
-			$c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";  $c_q = mysql_query($c_sql);  $changed = mysql_num_rows($c_q);
+			$c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";  $c_q = mysqli_query($con, $c_sql);  $changed = mysqli_num_rows($c_q);
 			$own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 			$db->query($own_sql);
 

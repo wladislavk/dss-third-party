@@ -58,7 +58,7 @@ if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
                           mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_SESSION["companyid"])."'");
 			}
 			
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">

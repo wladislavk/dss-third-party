@@ -4,9 +4,9 @@ function show_section_completed($pid){
 
   $links_title = "<p>The section you are trying to access has been completed. Please click any of the sections below to complete your Questionnaire:</p>";
   $links = '';
-  $sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($pid)."'";
-  $q = mysql_query($sql);
-  $r = mysql_fetch_assoc($q);
+  $sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $pid)."'";
+  $q = mysqli_query($con, $sql);
+  $r = mysqli_fetch_assoc($q);
   if($r['symptoms_status']==0){
     $links .= "<p><a href=\"symptoms.php\">Symptoms</a></p>";
   }
@@ -27,9 +27,9 @@ function show_section_completed($pid){
   if($links==''){
     $s = "SELECT u.name, u.phone FROM dental_users u
 		JOIN dental_patients p ON u.userid=p.docid
-		WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-    $q = mysql_query($s);
-    $r = mysql_fetch_assoc($q);
+		WHERE p.patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+    $q = mysqli_query($con, $s);
+    $r = mysqli_fetch_assoc($q);
     echo "<p>All sections of questionnaire has been completed. Please <a href=\"index.php\">click here</a> to return to the home page. If you need to make changes to the questionnaire please contact ".$r['name']." at ".format_phone($r['phone'])."</p>";
   }else{
     echo $links_title . $links;

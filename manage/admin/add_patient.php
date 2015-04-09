@@ -105,9 +105,9 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 		status = '".s_for($_POST["status"])."' 
 		where 
 		patientid='".$_POST["ed"]."'";
-		mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
+		mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
-		//echo $ed_sql.mysql_error();
+		//echo $ed_sql.mysqli_error($con);
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -217,7 +217,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 		status = '".s_for($_POST["status"])."',
 		adddate=now(),
 		ip_address='".$_SERVER['REMOTE_ADDR']."'";
-		mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
+		mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>

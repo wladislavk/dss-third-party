@@ -3,9 +3,9 @@
 <?php require_once '../../manage/includes/general_functions.php'; ?>
 <?php require_once '../../manage/includes/notifications.php'; ?>
 <?php
-        $chksql = "SELECT patientid FROM dental_patients WHERE parent_patientid='".mysql_escape_string($_SESSION['pid'])."'";
-        $chkq = mysql_query($chksql);
-	$chkc = mysql_num_rows($chkq);
+        $chksql = "SELECT patientid FROM dental_patients WHERE parent_patientid='".mysqli_escape_string($con, $_SESSION['pid'])."'";
+        $chkq = mysqli_query($con, $chksql);
+	$chkc = mysqli_num_rows($chkq);
         $dob = ($_POST['dob_month'] != '' && $_POST['dob_day'] != '' && $_POST['dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['dob_month'],$_POST['dob_day'],$_POST['dob_year'])):'';
         $ins_dob = ($_POST['ins_dob_month'] != '' && $_POST['ins_dob_day'] != '' && $_POST['ins_dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['ins_dob_month'],$_POST['ins_dob_day'],$_POST['ins_dob_year'])):'';
         $ins2_dob = ($_POST['ins2_dob_month'] != '' && $_POST['ins2_dob_day'] != '' && $_POST['ins2_dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['ins2_dob_month'],$_POST['ins2_dob_day'],$_POST['ins2_dob_year'])):'';
@@ -16,155 +16,155 @@
 	}
         if($chkc == 0){
         $sql = "INSERT INTO dental_patients set
-                firstname = '".mysql_real_escape_string($_POST['firstname'])."',
-                middlename= '".mysql_real_escape_string($_POST['middlename'])."',
-                lastname= '".mysql_real_escape_string($_POST['lastname'])."',
-                preferred_name= '".mysql_real_escape_string($_POST['preferred_name'])."',
-                email= '".mysql_real_escape_string($_POST['email'])."',
-                home_phone = '".mysql_real_escape_string(num($_POST['home_phone']))."',
-                work_phone = '".mysql_real_escape_string(num($_POST['work_phone']))."',
-                cell_phone = '".mysql_real_escape_string(num($_POST['cell_phone']))."',
-                add1 = '".mysql_real_escape_string($_POST['add1'])."',
-                add2 = '".mysql_real_escape_string($_POST['add2'])."',
-                city = '".mysql_real_escape_string($_POST['city'])."',
-                state = '".mysql_real_escape_string($_POST['state'])."',
-                zip = '".mysql_real_escape_string($_POST['zip'])."',
-                dob = '".mysql_real_escape_string($dob)."',
-                gender = '".mysql_real_escape_string($_POST['gender'])."',
-                marital_status = '".mysql_real_escape_string($_POST['marital_status'])."',
-                partner_name = '".mysql_real_escape_string($_POST['partner_name'])."',
-                ssn = '".mysql_real_escape_string(num($_POST['ssn'], false))."',
-                preferredcontact = '".mysql_real_escape_string($_POST['preferredcontact'])."',
-		feet = '".mysql_real_escape_string($_POST['feet'])."',
-		inches = '".mysql_real_escape_string($_POST['inches'])."',
-		weight = '".mysql_real_escape_string($_POST['weight'])."',
-		bmi = '".mysql_real_escape_string($_POST['bmi'])."',
-                emergency_name = '".mysql_real_escape_string($_POST['emergency_name'])."',
-                emergency_relationship = '".mysql_real_escape_string($_POST['emergency_relationship'])."',
-                emergency_number = '".mysql_real_escape_string(num($_POST['emergency_number']))."',
-                p_m_relation = '".mysql_real_escape_string($_POST['p_m_relation'])."',
-                p_m_partyfname = '".mysql_real_escape_string($_POST['p_m_partyfname'])."',
-                p_m_partymname = '".mysql_real_escape_string($_POST['p_m_partymname'])."',
-                p_m_partylname = '".mysql_real_escape_string($_POST['p_m_partylname'])."',
-		p_m_gender = '".mysql_real_escape_string($_POST['p_m_gender'])."',
-                ins_dob = '".mysql_real_escape_string($ins_dob)."',
-                p_m_ins_co = '".mysql_real_escape_string($_POST['p_m_ins_co'])."',
-                p_m_ins_id = '".mysql_real_escape_string($_POST['p_m_ins_id'])."',
-                p_m_ins_grp = '".mysql_real_escape_string($_POST['p_m_ins_grp'])."',
-                p_m_ins_plan = '".mysql_real_escape_string($_POST['p_m_ins_plan'])."',";
+                firstname = '".mysqli_real_escape_string($con, $_POST['firstname'])."',
+                middlename= '".mysqli_real_escape_string($con, $_POST['middlename'])."',
+                lastname= '".mysqli_real_escape_string($con, $_POST['lastname'])."',
+                preferred_name= '".mysqli_real_escape_string($con, $_POST['preferred_name'])."',
+                email= '".mysqli_real_escape_string($con, $_POST['email'])."',
+                home_phone = '".mysqli_real_escape_string($con, num($_POST['home_phone']))."',
+                work_phone = '".mysqli_real_escape_string($con, num($_POST['work_phone']))."',
+                cell_phone = '".mysqli_real_escape_string($con, num($_POST['cell_phone']))."',
+                add1 = '".mysqli_real_escape_string($con, $_POST['add1'])."',
+                add2 = '".mysqli_real_escape_string($con, $_POST['add2'])."',
+                city = '".mysqli_real_escape_string($con, $_POST['city'])."',
+                state = '".mysqli_real_escape_string($con, $_POST['state'])."',
+                zip = '".mysqli_real_escape_string($con, $_POST['zip'])."',
+                dob = '".mysqli_real_escape_string($con, $dob)."',
+                gender = '".mysqli_real_escape_string($con, $_POST['gender'])."',
+                marital_status = '".mysqli_real_escape_string($con, $_POST['marital_status'])."',
+                partner_name = '".mysqli_real_escape_string($con, $_POST['partner_name'])."',
+                ssn = '".mysqli_real_escape_string($con, num($_POST['ssn'], false))."',
+                preferredcontact = '".mysqli_real_escape_string($con, $_POST['preferredcontact'])."',
+		feet = '".mysqli_real_escape_string($con, $_POST['feet'])."',
+		inches = '".mysqli_real_escape_string($con, $_POST['inches'])."',
+		weight = '".mysqli_real_escape_string($con, $_POST['weight'])."',
+		bmi = '".mysqli_real_escape_string($con, $_POST['bmi'])."',
+                emergency_name = '".mysqli_real_escape_string($con, $_POST['emergency_name'])."',
+                emergency_relationship = '".mysqli_real_escape_string($con, $_POST['emergency_relationship'])."',
+                emergency_number = '".mysqli_real_escape_string($con, num($_POST['emergency_number']))."',
+                p_m_relation = '".mysqli_real_escape_string($con, $_POST['p_m_relation'])."',
+                p_m_partyfname = '".mysqli_real_escape_string($con, $_POST['p_m_partyfname'])."',
+                p_m_partymname = '".mysqli_real_escape_string($con, $_POST['p_m_partymname'])."',
+                p_m_partylname = '".mysqli_real_escape_string($con, $_POST['p_m_partylname'])."',
+		p_m_gender = '".mysqli_real_escape_string($con, $_POST['p_m_gender'])."',
+                ins_dob = '".mysqli_real_escape_string($con, $ins_dob)."',
+                p_m_ins_co = '".mysqli_real_escape_string($con, $_POST['p_m_ins_co'])."',
+                p_m_ins_id = '".mysqli_real_escape_string($con, $_POST['p_m_ins_id'])."',
+                p_m_ins_grp = '".mysqli_real_escape_string($con, $_POST['p_m_ins_grp'])."',
+                p_m_ins_plan = '".mysqli_real_escape_string($con, $_POST['p_m_ins_plan'])."',";
                 if($p_m_ins_type!=''){
-			$sql .= " p_m_ins_type = '".mysql_real_escape_string($p_m_ins_type)."', ";
+			$sql .= " p_m_ins_type = '".mysqli_real_escape_string($con, $p_m_ins_type)."', ";
 		}
 		$sql .= "
-		has_p_m_ins = '".mysql_real_escape_string($_POST['has_p_m_ins'])."',
-                has_s_m_ins = '".mysql_real_escape_string($_POST['has_s_m_ins'])."',
-                s_m_relation = '".mysql_real_escape_string($_POST['s_m_relation'])."',
-                s_m_partyfname = '".mysql_real_escape_string($_POST['s_m_partyfname'])."',
-                s_m_partymname = '".mysql_real_escape_string($_POST['s_m_partymname'])."',
-                s_m_partylname = '".mysql_real_escape_string($_POST['s_m_partylname'])."',
-		s_m_gender = '".mysql_real_escape_string($_POST['s_m_gender'])."',
-                ins2_dob = '".mysql_real_escape_string($ins2_dob)."',
-                s_m_ins_co = '".mysql_real_escape_string($_POST['s_m_ins_co'])."',
-                s_m_ins_id = '".mysql_real_escape_string($_POST['s_m_ins_id'])."',
-                s_m_ins_grp = '".mysql_real_escape_string($_POST['s_m_ins_grp'])."',
-                s_m_ins_plan = '".mysql_real_escape_string($_POST['s_m_ins_plan'])."',";
+		has_p_m_ins = '".mysqli_real_escape_string($con, $_POST['has_p_m_ins'])."',
+                has_s_m_ins = '".mysqli_real_escape_string($con, $_POST['has_s_m_ins'])."',
+                s_m_relation = '".mysqli_real_escape_string($con, $_POST['s_m_relation'])."',
+                s_m_partyfname = '".mysqli_real_escape_string($con, $_POST['s_m_partyfname'])."',
+                s_m_partymname = '".mysqli_real_escape_string($con, $_POST['s_m_partymname'])."',
+                s_m_partylname = '".mysqli_real_escape_string($con, $_POST['s_m_partylname'])."',
+		s_m_gender = '".mysqli_real_escape_string($con, $_POST['s_m_gender'])."',
+                ins2_dob = '".mysqli_real_escape_string($con, $ins2_dob)."',
+                s_m_ins_co = '".mysqli_real_escape_string($con, $_POST['s_m_ins_co'])."',
+                s_m_ins_id = '".mysqli_real_escape_string($con, $_POST['s_m_ins_id'])."',
+                s_m_ins_grp = '".mysqli_real_escape_string($con, $_POST['s_m_ins_grp'])."',
+                s_m_ins_plan = '".mysqli_real_escape_string($con, $_POST['s_m_ins_plan'])."',";
                 if($_POST['has_s_m_ins']=="Yes"){
                         $sql .= " s_m_ins_type = '7', ";
                 }
                 $sql .= "
-                employer = '".mysql_real_escape_string($_POST['employer'])."',
-                emp_add1 = '".mysql_real_escape_string($_POST['emp_add1'])."',
-                emp_add2 = '".mysql_real_escape_string($_POST['emp_add2'])."',
-                emp_city = '".mysql_real_escape_string($_POST['emp_city'])."',
-                emp_state = '".mysql_real_escape_string($_POST['emp_state'])."',
-                emp_zip = '".mysql_real_escape_string($_POST['emp_zip'])."',
-                emp_phone = '".mysql_real_escape_string(num($_POST['emp_phone']))."',
-                emp_fax = '".mysql_real_escape_string(num($_POST['emp_fax']))."',
-		docsleep = '".mysql_real_escape_string($_POST['pc_1_contactid'])."',
-                docpcp = '".mysql_real_escape_string($_POST['pc_2_contactid'])."',
-                docdentist = '".mysql_real_escape_string($_POST['pc_3_contactid'])."',
-                docent = '".mysql_real_escape_string($_POST['pc_4_contactid'])."',
-                docmdother = '".mysql_real_escape_string($_POST['pc_5_contactid'])."',
+                employer = '".mysqli_real_escape_string($con, $_POST['employer'])."',
+                emp_add1 = '".mysqli_real_escape_string($con, $_POST['emp_add1'])."',
+                emp_add2 = '".mysqli_real_escape_string($con, $_POST['emp_add2'])."',
+                emp_city = '".mysqli_real_escape_string($con, $_POST['emp_city'])."',
+                emp_state = '".mysqli_real_escape_string($con, $_POST['emp_state'])."',
+                emp_zip = '".mysqli_real_escape_string($con, $_POST['emp_zip'])."',
+                emp_phone = '".mysqli_real_escape_string($con, num($_POST['emp_phone']))."',
+                emp_fax = '".mysqli_real_escape_string($con, num($_POST['emp_fax']))."',
+		docsleep = '".mysqli_real_escape_string($con, $_POST['pc_1_contactid'])."',
+                docpcp = '".mysqli_real_escape_string($con, $_POST['pc_2_contactid'])."',
+                docdentist = '".mysqli_real_escape_string($con, $_POST['pc_3_contactid'])."',
+                docent = '".mysqli_real_escape_string($con, $_POST['pc_4_contactid'])."',
+                docmdother = '".mysqli_real_escape_string($con, $_POST['pc_5_contactid'])."',
                 registered = '1',
-                parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'
+                parent_patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'
                 ";
 
        }else{
 
         $sql = "UPDATE dental_patients set
-                firstname = '".mysql_real_escape_string($_POST['firstname'])."',
-                middlename= '".mysql_real_escape_string($_POST['middlename'])."',
-                lastname= '".mysql_real_escape_string($_POST['lastname'])."',
-                preferred_name= '".mysql_real_escape_string($_POST['preferred_name'])."',
-                email= '".mysql_real_escape_string($_POST['email'])."',
-                home_phone = '".mysql_real_escape_string(num($_POST['home_phone']))."',
-                work_phone = '".mysql_real_escape_string(num($_POST['work_phone']))."',
-                cell_phone = '".mysql_real_escape_string(num($_POST['cell_phone']))."',
-                add1 = '".mysql_real_escape_string($_POST['add1'])."',
-                add2 = '".mysql_real_escape_string($_POST['add2'])."',
-                city = '".mysql_real_escape_string($_POST['city'])."',
-                state = '".mysql_real_escape_string($_POST['state'])."',
-                zip = '".mysql_real_escape_string($_POST['zip'])."',
-                dob = '".mysql_real_escape_string($dob)."',
-                gender = '".mysql_real_escape_string($_POST['gender'])."',
-                marital_status = '".mysql_real_escape_string($_POST['marital_status'])."',
-                partner_name = '".mysql_real_escape_string($_POST['partner_name'])."',
-                ssn = '".mysql_real_escape_string(num($_POST['ssn'], false))."',
-                preferredcontact = '".mysql_real_escape_string($_POST['preferredcontact'])."',
-                feet = '".mysql_real_escape_string($_POST['feet'])."',
-                inches = '".mysql_real_escape_string($_POST['inches'])."',
-                weight = '".mysql_real_escape_string($_POST['weight'])."',
-                bmi = '".mysql_real_escape_string($_POST['bmi'])."',
-                emergency_name = '".mysql_real_escape_string($_POST['emergency_name'])."',
-                emergency_relationship = '".mysql_real_escape_string($_POST['emergency_relationship'])."',
-                emergency_number = '".mysql_real_escape_string(num($_POST['emergency_number']))."',
-                p_m_relation = '".mysql_real_escape_string($_POST['p_m_relation'])."',
-                p_m_partyfname = '".mysql_real_escape_string($_POST['p_m_partyfname'])."',
-                p_m_partymname = '".mysql_real_escape_string($_POST['p_m_partymname'])."',
-                p_m_partylname = '".mysql_real_escape_string($_POST['p_m_partylname'])."',
-		p_m_gender = '".mysql_real_escape_string($_POST['p_m_gender'])."',
-                ins_dob = '".mysql_real_escape_string($ins_dob)."',
-                p_m_ins_co = '".mysql_real_escape_string($_POST['p_m_ins_company'])."',
-                p_m_ins_id = '".mysql_real_escape_string($_POST['p_m_ins_id'])."',
-                p_m_ins_grp = '".mysql_real_escape_string($_POST['p_m_ins_grp'])."',
-                p_m_ins_plan = '".mysql_real_escape_string($_POST['p_m_ins_plan'])."',
-                p_m_ins_type = '".mysql_real_escape_string($p_m_ins_type)."',
-		has_p_m_ins = '".mysql_real_escape_string($_POST['has_p_m_ins'])."',
-                has_s_m_ins = '".mysql_real_escape_string($_POST['has_s_m_ins'])."',
-                s_m_relation = '".mysql_real_escape_string($_POST['s_m_relation'])."',
-                s_m_partyfname = '".mysql_real_escape_string($_POST['s_m_partyfname'])."',
-                s_m_partymname = '".mysql_real_escape_string($_POST['s_m_partymname'])."',
-                s_m_partylname = '".mysql_real_escape_string($_POST['s_m_partylname'])."',
-		s_m_gender = '".mysql_real_escape_string($_POST['s_m_gender'])."',
-                ins2_dob = '".mysql_real_escape_string($ins2_dob)."',
-                s_m_ins_co = '".mysql_real_escape_string($_POST['s_m_ins_company'])."',
-                s_m_ins_id = '".mysql_real_escape_string($_POST['s_m_ins_id'])."',
-                s_m_ins_grp = '".mysql_real_escape_string($_POST['s_m_ins_grp'])."',
-                s_m_ins_plan = '".mysql_real_escape_string($_POST['s_m_ins_plan'])."',";
+                firstname = '".mysqli_real_escape_string($con, $_POST['firstname'])."',
+                middlename= '".mysqli_real_escape_string($con, $_POST['middlename'])."',
+                lastname= '".mysqli_real_escape_string($con, $_POST['lastname'])."',
+                preferred_name= '".mysqli_real_escape_string($con, $_POST['preferred_name'])."',
+                email= '".mysqli_real_escape_string($con, $_POST['email'])."',
+                home_phone = '".mysqli_real_escape_string($con, num($_POST['home_phone']))."',
+                work_phone = '".mysqli_real_escape_string($con, num($_POST['work_phone']))."',
+                cell_phone = '".mysqli_real_escape_string($con, num($_POST['cell_phone']))."',
+                add1 = '".mysqli_real_escape_string($con, $_POST['add1'])."',
+                add2 = '".mysqli_real_escape_string($con, $_POST['add2'])."',
+                city = '".mysqli_real_escape_string($con, $_POST['city'])."',
+                state = '".mysqli_real_escape_string($con, $_POST['state'])."',
+                zip = '".mysqli_real_escape_string($con, $_POST['zip'])."',
+                dob = '".mysqli_real_escape_string($con, $dob)."',
+                gender = '".mysqli_real_escape_string($con, $_POST['gender'])."',
+                marital_status = '".mysqli_real_escape_string($con, $_POST['marital_status'])."',
+                partner_name = '".mysqli_real_escape_string($con, $_POST['partner_name'])."',
+                ssn = '".mysqli_real_escape_string($con, num($_POST['ssn'], false))."',
+                preferredcontact = '".mysqli_real_escape_string($con, $_POST['preferredcontact'])."',
+                feet = '".mysqli_real_escape_string($con, $_POST['feet'])."',
+                inches = '".mysqli_real_escape_string($con, $_POST['inches'])."',
+                weight = '".mysqli_real_escape_string($con, $_POST['weight'])."',
+                bmi = '".mysqli_real_escape_string($con, $_POST['bmi'])."',
+                emergency_name = '".mysqli_real_escape_string($con, $_POST['emergency_name'])."',
+                emergency_relationship = '".mysqli_real_escape_string($con, $_POST['emergency_relationship'])."',
+                emergency_number = '".mysqli_real_escape_string($con, num($_POST['emergency_number']))."',
+                p_m_relation = '".mysqli_real_escape_string($con, $_POST['p_m_relation'])."',
+                p_m_partyfname = '".mysqli_real_escape_string($con, $_POST['p_m_partyfname'])."',
+                p_m_partymname = '".mysqli_real_escape_string($con, $_POST['p_m_partymname'])."',
+                p_m_partylname = '".mysqli_real_escape_string($con, $_POST['p_m_partylname'])."',
+		p_m_gender = '".mysqli_real_escape_string($con, $_POST['p_m_gender'])."',
+                ins_dob = '".mysqli_real_escape_string($con, $ins_dob)."',
+                p_m_ins_co = '".mysqli_real_escape_string($con, $_POST['p_m_ins_company'])."',
+                p_m_ins_id = '".mysqli_real_escape_string($con, $_POST['p_m_ins_id'])."',
+                p_m_ins_grp = '".mysqli_real_escape_string($con, $_POST['p_m_ins_grp'])."',
+                p_m_ins_plan = '".mysqli_real_escape_string($con, $_POST['p_m_ins_plan'])."',
+                p_m_ins_type = '".mysqli_real_escape_string($con, $p_m_ins_type)."',
+		has_p_m_ins = '".mysqli_real_escape_string($con, $_POST['has_p_m_ins'])."',
+                has_s_m_ins = '".mysqli_real_escape_string($con, $_POST['has_s_m_ins'])."',
+                s_m_relation = '".mysqli_real_escape_string($con, $_POST['s_m_relation'])."',
+                s_m_partyfname = '".mysqli_real_escape_string($con, $_POST['s_m_partyfname'])."',
+                s_m_partymname = '".mysqli_real_escape_string($con, $_POST['s_m_partymname'])."',
+                s_m_partylname = '".mysqli_real_escape_string($con, $_POST['s_m_partylname'])."',
+		s_m_gender = '".mysqli_real_escape_string($con, $_POST['s_m_gender'])."',
+                ins2_dob = '".mysqli_real_escape_string($con, $ins2_dob)."',
+                s_m_ins_co = '".mysqli_real_escape_string($con, $_POST['s_m_ins_company'])."',
+                s_m_ins_id = '".mysqli_real_escape_string($con, $_POST['s_m_ins_id'])."',
+                s_m_ins_grp = '".mysqli_real_escape_string($con, $_POST['s_m_ins_grp'])."',
+                s_m_ins_plan = '".mysqli_real_escape_string($con, $_POST['s_m_ins_plan'])."',";
 		if($_POST['has_s_m_ins']=="Yes"){
                 	$sql .= " s_m_ins_type = '7', ";
 		}
 		$sql .= "
-                employer = '".mysql_real_escape_string($_POST['employer'])."',
-                emp_add1 = '".mysql_real_escape_string($_POST['emp_add1'])."',
-                emp_add2 = '".mysql_real_escape_string($_POST['emp_add2'])."',
-                emp_city = '".mysql_real_escape_string($_POST['emp_city'])."',
-                emp_state = '".mysql_real_escape_string($_POST['emp_state'])."',
-                emp_zip = '".mysql_real_escape_string($_POST['emp_zip'])."',
-                emp_phone = '".mysql_real_escape_string(num($_POST['emp_phone']))."',
-                emp_fax = '".mysql_real_escape_string(num($_POST['emp_fax']))."',
-                docsleep = '".mysql_real_escape_string($_POST['pc_1_contactid'])."',
-                docpcp = '".mysql_real_escape_string($_POST['pc_2_contactid'])."',
-                docdentist = '".mysql_real_escape_string($_POST['pc_3_contactid'])."',
-                docent = '".mysql_real_escape_string($_POST['pc_4_contactid'])."',
-                docmdother = '".mysql_real_escape_string($_POST['pc_5_contactid'])."',
+                employer = '".mysqli_real_escape_string($con, $_POST['employer'])."',
+                emp_add1 = '".mysqli_real_escape_string($con, $_POST['emp_add1'])."',
+                emp_add2 = '".mysqli_real_escape_string($con, $_POST['emp_add2'])."',
+                emp_city = '".mysqli_real_escape_string($con, $_POST['emp_city'])."',
+                emp_state = '".mysqli_real_escape_string($con, $_POST['emp_state'])."',
+                emp_zip = '".mysqli_real_escape_string($con, $_POST['emp_zip'])."',
+                emp_phone = '".mysqli_real_escape_string($con, num($_POST['emp_phone']))."',
+                emp_fax = '".mysqli_real_escape_string($con, num($_POST['emp_fax']))."',
+                docsleep = '".mysqli_real_escape_string($con, $_POST['pc_1_contactid'])."',
+                docpcp = '".mysqli_real_escape_string($con, $_POST['pc_2_contactid'])."',
+                docdentist = '".mysqli_real_escape_string($con, $_POST['pc_3_contactid'])."',
+                docent = '".mysqli_real_escape_string($con, $_POST['pc_4_contactid'])."',
+                docmdother = '".mysqli_real_escape_string($con, $_POST['pc_5_contactid'])."',
                 registered = '1',
-		last_reg_sect = '".mysql_real_escape_string($_POST['last_reg_sect'])."'
-                WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'
+		last_reg_sect = '".mysqli_real_escape_string($con, $_POST['last_reg_sect'])."'
+                WHERE parent_patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'
                 ";
 
    	}
-       $q = mysql_query($sql);
+       $q = mysqli_query($con, $sql);
 	if($q){
 		//echo "Successfully updated!";
 	}else{
@@ -172,16 +172,16 @@
 	}
 
 		$s_sql = "SELECT email FROM dental_patients
-                        WHERE patientid=".mysql_real_escape_string($_SESSION['pid']);
-                $s_q = mysql_query($s_sql);
-                $s_r = mysql_fetch_assoc($s_q);
+                        WHERE patientid=".mysqli_real_escape_string($con, $_SESSION['pid']);
+                $s_q = mysqli_query($con, $s_sql);
+                $s_r = mysqli_fetch_assoc($s_q);
                 sendUpdatedEmail($_SESSION['pid'], $_POST['email'], $s_r['email'], 'pat');
 		if(trim($_POST['email']) != trim($s_r['email'])){
 			//echo create_notification($_SESSION['pid'], '', "User has updated email from ".$s_r['email']." to ".$_POST['email'].".", 'email');
 		}
 		
-		$s = "UPDATE dental_patients set email='".mysql_real_escape_string($_POST['email'])."' WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";	
-		mysql_query($s);
+		$s = "UPDATE dental_patients set email='".mysqli_real_escape_string($con, $_POST['email'])."' WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";	
+		mysqli_query($con, $s);
 
                 $types = array(DSS_PATIENT_CONTACT_SLEEP, DSS_PATIENT_CONTACT_PRIMARY, DSS_PATIENT_CONTACT_DENTIST, DSS_PATIENT_CONTACT_ENT, DSS_PATIENT_CONTACT_OTHER);
 		$updatevals = '';
@@ -191,35 +191,35 @@
 				   if($_POST['pc_'.$t.'_patient_contactid'] == ''){
                                         $insql = "INSERT INTO dental_patient_contacts SET " .
                                                 "contacttype = '" . $t . "', " .
-                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
-                                                "firstname = '" . mysql_real_escape_string(trim($_POST['pc_'.$t.'_firstname'])) . "', " .
-                                                "lastname = '" . mysql_real_escape_string(trim($_POST['pc_'.$t.'_lastname'])) . "', " .
-                                                "address1 = '" . mysql_real_escape_string($_POST['pc_'.$t.'_address1']) . "', " .
-                                                "address2 = '" . mysql_real_escape_string($_POST['pc_'.$t.'_address2']) . "', " .
-                                                "city = '" . mysql_real_escape_string($_POST['pc_'.$t.'_city']) . "', " .
-                                                "state = '" . mysql_real_escape_string($_POST['pc_'.$t.'_state']) . "', " .
-                                                "zip = '" . mysql_real_escape_string($_POST['pc_'.$t.'_zip']) . "', " .
-                                                "phone = '" . mysql_real_escape_string(num($_POST['pc_'.$t.'_phone'])) . "', " .
+                                                "patientid = '" . mysqli_real_escape_string($con, $_SESSION['pid']) . "', " .
+                                                "firstname = '" . mysqli_real_escape_string($con, trim($_POST['pc_'.$t.'_firstname'])) . "', " .
+                                                "lastname = '" . mysqli_real_escape_string($con, trim($_POST['pc_'.$t.'_lastname'])) . "', " .
+                                                "address1 = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_address1']) . "', " .
+                                                "address2 = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_address2']) . "', " .
+                                                "city = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_city']) . "', " .
+                                                "state = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_state']) . "', " .
+                                                "zip = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_zip']) . "', " .
+                                                "phone = '" . mysqli_real_escape_string($con, num($_POST['pc_'.$t.'_phone'])) . "', " .
 						"adddate = now(), " .
-						"ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."';";
-                                        mysql_query($insql);
-                                        $id = mysql_insert_id();
+						"ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."';";
+                                        mysqli_query($con, $insql);
+                                        $id = mysqli_insert_id($con);
 					if($updatevals!=''){ $updatevals .= ','; }
                                         $updatevals .= '"pc_'.$t.'_patient_contactid": "'.$id.'"';
 				    }else{
                                         $insql = "UPDATE dental_patient_contacts SET " .
                                                 "contacttype = '" . $t . "', " .
-                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
-                                                "firstname = '" . mysql_real_escape_string(trim($_POST['pc_'.$t.'_firstname'])) . "', " .
-                                                "lastname = '" . mysql_real_escape_string(trim($_POST['pc_'.$t.'_lastname'])) . "', " .
-                                                "address1 = '" . mysql_real_escape_string($_POST['pc_'.$t.'_address1']) . "', " .
-                                                "address2 = '" . mysql_real_escape_string($_POST['pc_'.$t.'_address2']) . "', " .
-                                                "city = '" . mysql_real_escape_string($_POST['pc_'.$t.'_city']) . "', " .
-                                                "state = '" . mysql_real_escape_string($_POST['pc_'.$t.'_state']) . "', " .
-                                                "zip = '" . mysql_real_escape_string($_POST['pc_'.$t.'_zip']) . "', " .
-                                                "phone = '" . mysql_real_escape_string(num($_POST['pc_'.$t.'_phone'])) . "' " .
-						" WHERE id = '" . mysql_real_escape_string($_POST['pc_'.$t.'_patient_contactid']) . "'";
-                                        mysql_query($insql);
+                                                "patientid = '" . mysqli_real_escape_string($con, $_SESSION['pid']) . "', " .
+                                                "firstname = '" . mysqli_real_escape_string($con, trim($_POST['pc_'.$t.'_firstname'])) . "', " .
+                                                "lastname = '" . mysqli_real_escape_string($con, trim($_POST['pc_'.$t.'_lastname'])) . "', " .
+                                                "address1 = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_address1']) . "', " .
+                                                "address2 = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_address2']) . "', " .
+                                                "city = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_city']) . "', " .
+                                                "state = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_state']) . "', " .
+                                                "zip = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_zip']) . "', " .
+                                                "phone = '" . mysqli_real_escape_string($con, num($_POST['pc_'.$t.'_phone'])) . "' " .
+						" WHERE id = '" . mysqli_real_escape_string($con, $_POST['pc_'.$t.'_patient_contactid']) . "'";
+                                        mysqli_query($con, $insql);
 				    }
                                 }
                         }
@@ -230,9 +230,9 @@
 
 
 
-$p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-                                        $p_m_q = mysql_query($p_m_sql);
-                                        $p_m_r = mysql_fetch_assoc($p_m_q);
+$p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+                                        $p_m_q = mysqli_query($con, $p_m_sql);
+                                        $p_m_r = mysqli_fetch_assoc($p_m_q);
 
 
 
@@ -252,42 +252,42 @@ $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.
 					){
 					  $insql = "INSERT INTO dental_patient_insurance SET " .
                                                 "insurancetype = '1', " .
-                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
-                                                "company = '" . mysql_real_escape_string($_POST['p_m_ins_company']) . "', " .
-                                                "address1 = '" . mysql_real_escape_string($_POST['p_m_ins_address1']) . "', " .
-                                                "address2 = '" . mysql_real_escape_string($_POST['p_m_ins_address2']) . "', " .
-                                                "city = '" . mysql_real_escape_string($_POST['p_m_ins_city']) . "', " .
-                                                "state = '" . mysql_real_escape_string($_POST['p_m_ins_state']) . "', " .
-                                                "zip = '" . mysql_real_escape_string($_POST['p_m_ins_zip']) . "', " .
-                                                "fax = '" . mysql_real_escape_string($_POST['p_m_ins_fax']) . "', " .
-                                                "email = '" . mysql_real_escape_string($_POST['p_m_ins_email']) . "', " .
-                                                "phone = '" . mysql_real_escape_string(num($_POST['p_m_ins_phone'])) . "';";
-					  mysql_query($insql);
-					  $id = mysql_insert_id();
+                                                "patientid = '" . mysqli_real_escape_string($con, $_SESSION['pid']) . "', " .
+                                                "company = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_company']) . "', " .
+                                                "address1 = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_address1']) . "', " .
+                                                "address2 = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_address2']) . "', " .
+                                                "city = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_city']) . "', " .
+                                                "state = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_state']) . "', " .
+                                                "zip = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_zip']) . "', " .
+                                                "fax = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_fax']) . "', " .
+                                                "email = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_email']) . "', " .
+                                                "phone = '" . mysqli_real_escape_string($con, num($_POST['p_m_ins_phone'])) . "';";
+					  mysqli_query($con, $insql);
+					  $id = mysqli_insert_id($con);
 					  echo '{"p_m_patient_insuranceid": "'.$id.'"}';
 					}
 				    }else{
                                         $insql = "UPDATE dental_patient_insurance SET " .
                                                 "insurancetype = '1', " .
-                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
-                                                "company = '" . mysql_real_escape_string($_POST['p_m_ins_company']) . "', " .
-                                                "address1 = '" . mysql_real_escape_string($_POST['p_m_ins_address1']) . "', " .
-                                                "address2 = '" . mysql_real_escape_string($_POST['p_m_ins_address2']) . "', " .
-                                                "city = '" . mysql_real_escape_string($_POST['p_m_ins_city']) . "', " .
-                                                "state = '" . mysql_real_escape_string($_POST['p_m_ins_state']) . "', " .
-                                                "zip = '" . mysql_real_escape_string($_POST['p_m_ins_zip']) . "', " .
-                                                "fax = '" . mysql_real_escape_string($_POST['p_m_ins_fax']) . "', " .
-                                                "email = '" . mysql_real_escape_string($_POST['p_m_ins_email']) . "', " .
-                                                "phone = '" . mysql_real_escape_string(num($_POST['p_m_ins_phone'])) . "' " .
-						"WHERE id = '". mysql_real_escape_string($_POST['p_m_patient_insuranceid']) ."'";
-					mysql_query($insql);
+                                                "patientid = '" . mysqli_real_escape_string($con, $_SESSION['pid']) . "', " .
+                                                "company = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_company']) . "', " .
+                                                "address1 = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_address1']) . "', " .
+                                                "address2 = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_address2']) . "', " .
+                                                "city = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_city']) . "', " .
+                                                "state = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_state']) . "', " .
+                                                "zip = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_zip']) . "', " .
+                                                "fax = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_fax']) . "', " .
+                                                "email = '" . mysqli_real_escape_string($con, $_POST['p_m_ins_email']) . "', " .
+                                                "phone = '" . mysqli_real_escape_string($con, num($_POST['p_m_ins_phone'])) . "' " .
+						"WHERE id = '". mysqli_real_escape_string($con, $_POST['p_m_patient_insuranceid']) ."'";
+					mysqli_query($con, $insql);
 				    }
 				}
 
 
-                                        $s_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-                                        $s_m_q = mysql_query($s_m_sql);
-                                        $s_m_r = mysql_fetch_assoc($s_m_q);
+                                        $s_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
+                                        $s_m_q = mysqli_query($con, $s_m_sql);
+                                        $s_m_r = mysqli_fetch_assoc($s_m_q);
 
                                 if(trim($_POST['s_m_ins_company'])!=''){
                                     if($_POST['s_m_patient_insuranceid'] == ''){
@@ -306,35 +306,35 @@ $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.
 
                                           $insql = "INSERT INTO dental_patient_insurance SET " .
                                                 "insurancetype = '2', " .
-                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
-                                                "company = '" . mysql_real_escape_string($_POST['s_m_ins_company']) . "', " .
-                                                "address1 = '" . mysql_real_escape_string($_POST['s_m_ins_address1']) . "', " .
-                                                "address2 = '" . mysql_real_escape_string($_POST['s_m_ins_address2']) . "', " .
-                                                "city = '" . mysql_real_escape_string($_POST['s_m_ins_city']) . "', " .
-                                                "state = '" . mysql_real_escape_string($_POST['s_m_ins_state']) . "', " .
-                                                "zip = '" . mysql_real_escape_string($_POST['s_m_ins_zip']) . "', " .
-                                                "fax = '" . mysql_real_escape_string($_POST['s_m_ins_fax']) . "', " .
-                                                "email = '" . mysql_real_escape_string($_POST['s_m_ins_email']) . "', " .
-                                                "phone = '" . mysql_real_escape_string(num($_POST['s_m_ins_phone'])) . "';";
-                                          mysql_query($insql);
-                                          $id = mysql_insert_id();
+                                                "patientid = '" . mysqli_real_escape_string($con, $_SESSION['pid']) . "', " .
+                                                "company = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_company']) . "', " .
+                                                "address1 = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_address1']) . "', " .
+                                                "address2 = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_address2']) . "', " .
+                                                "city = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_city']) . "', " .
+                                                "state = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_state']) . "', " .
+                                                "zip = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_zip']) . "', " .
+                                                "fax = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_fax']) . "', " .
+                                                "email = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_email']) . "', " .
+                                                "phone = '" . mysqli_real_escape_string($con, num($_POST['s_m_ins_phone'])) . "';";
+                                          mysqli_query($con, $insql);
+                                          $id = mysqli_insert_id($con);
 					  echo '{"s_m_patient_insuranceid": "'.$id.'"}';
 					}
                                     }else{
                                         $insql = "UPDATE dental_patient_insurance SET " .
                                                 "insurancetype = '2', " .
-                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
-                                                "company = '" . mysql_real_escape_string($_POST['s_m_ins_company']) . "', " .
-                                                "address1 = '" . mysql_real_escape_string($_POST['s_m_ins_address1']) . "', " .
-                                                "address2 = '" . mysql_real_escape_string($_POST['s_m_ins_address2']) . "', " .
-                                                "city = '" . mysql_real_escape_string($_POST['s_m_ins_city']) . "', " .
-                                                "state = '" . mysql_real_escape_string($_POST['s_m_ins_state']) . "', " .
-                                                "zip = '" . mysql_real_escape_string($_POST['s_m_ins_zip']) . "', " .
-                                                "fax = '" . mysql_real_escape_string($_POST['s_m_ins_fax']) . "', " .
-                                                "email = '" . mysql_real_escape_string($_POST['s_m_ins_email']) . "', " .
-                                                "phone = '" . mysql_real_escape_string(num($_POST['s_m_ins_phone'])) . "' " .
-                                                "WHERE id = '". mysql_real_escape_string($_POST['s_m_patient_insuranceid']) ."'";
-                                        mysql_query($insql);
+                                                "patientid = '" . mysqli_real_escape_string($con, $_SESSION['pid']) . "', " .
+                                                "company = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_company']) . "', " .
+                                                "address1 = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_address1']) . "', " .
+                                                "address2 = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_address2']) . "', " .
+                                                "city = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_city']) . "', " .
+                                                "state = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_state']) . "', " .
+                                                "zip = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_zip']) . "', " .
+                                                "fax = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_fax']) . "', " .
+                                                "email = '" . mysqli_real_escape_string($con, $_POST['s_m_ins_email']) . "', " .
+                                                "phone = '" . mysqli_real_escape_string($con, num($_POST['s_m_ins_phone'])) . "' " .
+                                                "WHERE id = '". mysqli_real_escape_string($con, $_POST['s_m_patient_insuranceid']) ."'";
+                                        mysqli_query($con, $insql);
 				    }
                                 }
 

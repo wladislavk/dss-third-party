@@ -23,7 +23,7 @@ if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1){
 	
 	if($check_myarray) {
 		/*$ins_sql = "insert into dental_log (userid,adddate,ip_address) values('".$check_myarray['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
-		mysql_query($ins_sql);*/
+		mysqli_query($con, $ins_sql);*/
 		$recover_hash = hash('sha256', $check_myarray['userid'].$_POST['email'].rand());
 		$ins_sql = "UPDATE dental_users set recover_hash='".$recover_hash."', recover_time=NOW() WHERE userid='".$check_myarray['userid']."'";
 		$db->query($ins_sql);
@@ -39,7 +39,7 @@ if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1){
 http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray['username']."&rh=".$recover_hash;
 		$message .= "<br /><br />";
 		$message .= DSS_EMAIL_FOOTER;
-		//$ins_id = mysql_insert_id();
+		//$ins_id = mysqli_insert_id($con);
 		$msg = mail($check_myarray['email'], $subject, $message, $headers);
 		
 		?>

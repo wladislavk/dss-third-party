@@ -1,4 +1,10 @@
 <?php
+require_once('../includes/constants.inc');
+require_once('includes/main_include.php');
+include_once 'includes/claim_functions.php';
+include_once 'includes/invoice_functions.php';
+include_once '../includes/claim_functions.php';
+
   $status_sql = "SELECT status FROM dental_insurance
                  WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
                  AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
@@ -30,9 +36,31 @@
     $insured_firstname = st($pat_myarray['p_m_partyfname']);
     $insured_lastname = st($pat_myarray['p_m_partylname']);
     $insured_middle = st($pat_myarray['p_m_partymname']);
+      if ($pat_myarray['p_m_same_address'] == 1){
+          $insured_address = st($pat_myarray['add1']);
+          $insured_city = st($pat_myarray['city']);
+          $insured_state = st($pat_myarray['state']);
+          $insured_zip = st($pat_myarray['zip']);
+      } else {
+          $insured_address = st($pat_myarray['p_m_address']);
+          $insured_city = st($pat_myarray['p_m_city']);
+          $insured_state = st($pat_myarray['p_m_state']);
+          $insured_zip = st($pat_myarray['p_m_zip']);
+      }
     $other_insured_firstname = st($pat_myarray['s_m_partyfname']);
     $other_insured_lastname = st($pat_myarray['s_m_partylname']);
     $other_insured_middle = st($pat_myarray['s_m_partymname']);
+      if ($pat_myarray['s_m_same_address'] == 1){
+          $insured_address = st($pat_myarray['add1']);
+          $insured_city = st($pat_myarray['city']);
+          $insured_state = st($pat_myarray['state']);
+          $insured_zip = st($pat_myarray['zip']);
+      } else {
+          $insured_address = st($pat_myarray['s_m_address']);
+          $insured_city = st($pat_myarray['s_m_city']);
+          $insured_state = st($pat_myarray['s_m_state']);
+          $insured_zip = st($pat_myarray['s_m_zip']);
+      }
     $insured_id_number = st($pat_myarray['p_m_ins_id']);
     $insured_dob = st($pat_myarray['ins_dob']);
     $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
@@ -63,6 +91,7 @@
   $myarray = (!empty($my[0]) ? $my[0] : '');
   $dent_rows = count($my);
   $insuranceid = st(!empty($myarray['insuranceid']) ? $myarray['insuranceid'] : '');
+  $orig_claim_id = st(!empty($myarray['primary_claim_id']) ? $myarray['primary_claim_id'] : '');
   $p_m_eligible_payer_id = (!empty($myarray['p_m_eligible_payer_id']) ? $myarray['p_m_eligible_payer_id'] : '');
   $p_m_eligible_payer_name = (!empty($myarray['p_m_eligible_payer_name']) ? $myarray['p_m_eligible_payer_name'] : '');
   $s_m_eligible_payer_id = (!empty($myarray['s_m_eligible_payer_id']) ? $myarray['s_m_eligible_payer_id'] : '');
@@ -181,6 +210,7 @@
     $diagnosis_j = st($myarray['diagnosis_j']);
     $diagnosis_k = st($myarray['diagnosis_k']);
     $diagnosis_l = st($myarray['diagnosis_l']);
+
     $medicaid_resubmission_code = st($myarray['medicaid_resubmission_code']);
     $original_ref_no = st($myarray['original_ref_no']);
     $prior_authorization_number = st($myarray['prior_authorization_number']);
@@ -280,6 +310,36 @@
     $epsdt_family_plan6 = st($myarray['epsdt_family_plan6']);
     $id_qua6 = st($myarray['id_qua6']);
     $rendering_provider_id6 = st($myarray['rendering_provider_id6']);
+      $rendering_provider_entity_1  = st($myarray['rendering_provider_entity_1']);
+      $rendering_provider_first_name_1  = st($myarray['rendering_provider_first_name_1']);
+      $rendering_provider_last_name_1  = st($myarray['rendering_provider_last_name_1']);
+      $rendering_provider_org_1  = st($myarray['rendering_provider_org_1']);
+      $rendering_provider_npi_1  = st($myarray['rendering_provider_npi_1']);
+      $rendering_provider_entity_2  = st($myarray['rendering_provider_entity_2']);
+      $rendering_provider_first_name_2 = st($myarray['rendering_provider_first_name_2']);
+      $rendering_provider_last_name_2  = st($myarray['rendering_provider_last_name_2']);
+      $rendering_provider_org_2  = st($myarray['rendering_provider_org_2']);
+      $rendering_provider_npi_2  = st($myarray['rendering_provider_npi_2']);
+      $rendering_provider_entity_3  = st($myarray['rendering_provider_entity_3']);
+      $rendering_provider_first_name_3  = st($myarray['rendering_provider_first_name_3']);
+      $rendering_provider_last_name_3  = st($myarray['rendering_provider_last_name_3']);
+      $rendering_provider_org_3  = st($myarray['rendering_provider_org_3']);
+      $rendering_provider_npi_3  = st($myarray['rendering_provider_npi_3']);
+      $rendering_provider_entity_4  = st($myarray['rendering_provider_entity_4']);
+      $rendering_provider_first_name_4  = st($myarray['rendering_provider_first_name_4']);
+      $rendering_provider_last_name_4  = st($myarray['rendering_provider_last_name_4']);
+      $rendering_provider_org_4  = st($myarray['rendering_provider_org_4']);
+      $rendering_provider_npi_4  = st($myarray['rendering_provider_npi_4']);
+      $rendering_provider_entity_5  = st($myarray['rendering_provider_entity_5']);
+      $rendering_provider_first_name_5  = st($myarray['rendering_provider_first_name_5']);
+      $rendering_provider_last_name_5  = st($myarray['rendering_provider_last_name_5']);
+      $rendering_provider_org_5  = st($myarray['rendering_provider_org_5']);
+      $rendering_provider_npi_5  = st($myarray['rendering_provider_npi_5']);
+      $rendering_provider_entity_6  = st($myarray['rendering_provider_entity_6']);
+      $rendering_provider_first_name_6  = st($myarray['rendering_provider_first_name_6']);
+      $rendering_provider_last_name_6  = st($myarray['rendering_provider_last_name_6']);
+      $rendering_provider_org_6  = st($myarray['rendering_provider_org_6']);
+      $rendering_provider_npi_6  = st($myarray['rendering_provider_npi_6']);
     $federal_tax_id_number = st($myarray['federal_tax_id_number']);
     $ssn = st($myarray['ssn']);
     $ein = st($myarray['ein']);
@@ -308,11 +368,13 @@
     $status = st($myarray['status']);
   }
 
-  if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
-    $another_plan = 'YES';
-  } else {
-    $another_plan = 'NO';
-  }
+if (!$another_plan) {
+    if ($pat_myarray['p_m_ins_type'] != 1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] == 1) {
+        $another_plan = 'YES';
+    } else {
+        $another_plan = 'NO';
+    }
+}
 
   if($is_pri_pending){
     $insured_sex = $pat_myarray['p_m_gender'];
@@ -328,10 +390,11 @@
   	$patient_zip = $pat_myarray['zip'];
   	$patient_dob = $pat_myarray['dob'];
 
-  	if($pat_myarray['p_m_ins_ass']=='Yes'){
-  	  $insured_signature = 1;
-  	}
-
+    if($pat_myarray['p_m_ins_ass']=='Yes'){
+      $insured_signature = 1;
+    }else{
+      $insured_signature = 0;
+    }
   	$patient_signature = 1;
   	$signature_physician = "Signature on File";
   	$patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
@@ -466,6 +529,12 @@
     $service_zip = "";
     $service_medicare_npi = "";
   }
+  if ($service_info_a != "") {
+    $service_npi = $service_info_a;
+  }
+  if ($billing_provider_a != "") {
+    $npi = $billing_provider_a;
+  }
 ?>
 
 <html>
@@ -520,8 +589,8 @@
         <?php
             }
           }
-          
-          if(!$r['reference_id'] || !$w_r['response']){
+
+        if(!$r['reference_id'] || !$w_r || !$w_r['response'] || $w_r['response']==''){
         ?>
             <h3>Claim Electronically filed on <?php echo  $r['adddate']; ?></h3>
             <?php
@@ -535,9 +604,9 @@
             ?>
                 <p><strong>Error Response:</strong><br />
                   <?php
-                      $errors = $d->{"errors"}->{"messages"};
+                      $errors = $d->{"errors"};
                       foreach($errors as $error){
-                        echo $error."<br />";
+                        echo $error->{"message"}."<br />";
                       }
               }
             ?>
@@ -596,9 +665,11 @@
     <?php if($is_secondary) { ?>
       $('input[name="payer[id]"]').val("<?php echo  $s_m_eligible_payer_id;?>");
       $('input[name="payer[name]"]').val("<?php echo  $s_m_eligible_payer_name;?>");
+      $('input[name="other_payers[0][name]"]').val("<?= $p_m_eligible_payer_name;?>");
     <?php } else { ?>
       $('input[name="payer[id]"]').val("<?php echo  $p_m_eligible_payer_id;?>");
       $('input[name="payer[name]"]').val("<?php echo  $p_m_eligible_payer_name;?>");
+      $('input[name="other_payers[0][name]"]').val("<?= $p_m_eligible_payer_name;?>");
     <?php } ?>
 
     $('input[name="payer[address][street_line_1]"]').val("<?php echo  $inscoinfo['add1'];?>");
@@ -620,8 +691,14 @@
     $('input[name="dependent[address][city]"]').val("<?php echo  $patient_city;?>");
     $('input[name="dependent[address][state]"]').val("<?php echo  $patient_state;?>");
     $('input[name="dependent[address][zip]"]').val("<?php echo  $patient_zip;?>");
-    $('input[name="dependent[phone_number]"]').val("<?php echo  $patient_phone;?>");
-
+    $('input[name="dependent[phone_number]"]').val("<?php echo  $patient_phone_code.$patient_phone;?>");
+    <?php if($patient_relation_insured == 'Spouse'){ ?>
+      $('input[name="dependent[relationship]"][value="01"]').attr("checked", "checked");
+    <?php }elseif($patient_relation_insured == 'Child'){ ?>
+      $('input[name="dependent[relationship]"][value="19"]').attr("checked", "checked");
+    <?php }elseif($patient_relation_insured == 'Other'){ ?>
+      $('input[name="dependent[relationship]"][value="G8"]').attr("checked", "checked");
+    <?php } ?>
     $('input[name="subscriber[last_name]"]').val("<?php echo  $insured_lastname;?>");
     $('input[name="subscriber[first_name]"]').val("<?php echo  $insured_firstname;?>");
     $('input[name="subscriber[middle_name]"]').val("<?php echo  $insured_middle;?>");
@@ -631,17 +708,27 @@
     $('input[name="subscriber[address][city]"]').val("<?php echo  $insured_city;?>");
     $('input[name="subscriber[address][state]"]').val("<?php echo  $insured_state;?>");
     $('input[name="subscriber[address][zip]"]').val("<?php echo  $insured_zip;?>");
-    $('input[name="subscriber[phone_number]"]').val("<?php echo  $insured_phone;?>");
+    $('input[name="subscriber[phone_number]"]').val("<?php echo  $insured_phone_code.$insured_phone;?>");
     $('input[name="subscriber[group_id]"]').val("<?php echo  $insured_policy_group_feca;?>");
     $('input[name="subscriber[group_name]"]').val("<?php echo  $insured_insurance_plan;?>");
-
     $('input[name="other_payers[0][subscriber][last_name]"]').val("<?php echo  $other_insured_lastname;?>");
     $('input[name="other_payers[0][subscriber][first_name]"]').val("<?php echo  $other_insured_firstname;?>");
     $('input[name="other_payers[0][subscriber][middle_name]"]').val("<?php echo  $other_insured_middle;?>");
     $('input[name="other_payers[0][subscriber][group_id]"]').val("<?php echo  $other_insured_policy_group_feca;?>");
     $('input[name="other_payers[0][subscriber][group_name]"]').val("<?php echo  $other_insured_insurance_plan;?>");
 
-    <?php if($employment == "YES") { ?>
+      <?php
+      if($_GET['instype']==2 && $responsibility_sequence == ""){
+        $seq='S';
+      } else if($responsibility_sequence == "") {
+        $seq='P';
+      } else{
+        $seq = $responsibility_sequence;
+      }
+    ?>
+      $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $seq?>");
+
+      <?php if($employment == "YES") { ?>
       $('input[name="claim[related_to_employment]"][value="true"]').attr("checked", "checked");
     <?php } elseif($employment == "NO") { ?>
       $('input[name="claim[related_to_employment]"][value="false"]').attr("checked", "checked");
@@ -662,9 +749,9 @@
     <?php } ?>
 
     <?php if($another_plan == "YES") { ?>
-      $('input[name="claim[other_payer]"][value="true"]').attr("checked", "checked");
+      $('input[name="other_payer"][value="true"]').attr("checked", "checked");
     <?php } elseif($another_plan == "NO") { ?>
-      $('input[name="claim[other_payer]"][value="false"]').attr("checked", "checked");
+      $('input[name="other_payer"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
     $('input[name="claim[last_worked_date]"]').val("<?php echo  $unable_date_from; ?>");
@@ -683,28 +770,57 @@
       $('input[name="claim[outside_lab]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
-    $('input[name="claim[original_ref_number]"]').val("<?php echo  $original_ref_no; ?>");
-    $('input[name="claim[prior_authorization_number]"]').val("<?php echo  $prior_authorization_number; ?>");
+    $('input[name="claim[original_ref_number]"]').val("<?php echo $original_ref_no; ?>");
+    $('input[name="claim[prior_authorization_number]"]').val("<?php echo $prior_authorization_number; ?>");
+  <?php
+     $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con, $diagnosis_1)."'";
+     $ins_diag_q = mysqli_query($con, $ins_diag_sql);
+     $ins_diag = mysqli_fetch_assoc($ins_diag_q);
+     if (!empty($ins_diag['ins_diagnosis']) && empty($diagnosis_a)){
+      $diagnosis_a = $ins_diag['ins_diagnosis'];
+     }
+   ?>
+   <?php
+     $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con, $diagnosis_2)."'";
+     $ins_diag_q = mysqli_query($con, $ins_diag_sql);
+     $ins_diag = mysqli_fetch_assoc($ins_diag_q);
+     if (!empty($ins_diag['ins_diagnosis']) && empty($diagnosis_b)){
+       $diagnosis_b = $ins_diag['ins_diagnosis'];
+     }
+   ?>
+   <?php
+     $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con, $diagnosis_3)."'";
+     $ins_diag_q = mysqli_query($con, $ins_diag_sql);
+     $ins_diag = mysqli_fetch_assoc($ins_diag_q);
+     if (!empty($ins_diag['ins_diagnosis']) && empty($diagnosis_c)){
+       $diagnosis_c = $ins_diag['ins_diagnosis'];
+     }
+   ?>
+   <?php
+     $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con, $diagnosis_4)."'";
+     $ins_diag_q = mysqli_query($con, $ins_diag_sql);
+     $ins_diag = mysqli_fetch_assoc($ins_diag_q);
+     if (!empty($ins_diag['ins_diagnosis']) && empty($diagnosis_d)){
+       $diagnosis_d = $ins_diag['ins_diagnosis'];
+     }
+   ?>
 
-    <?php
-      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con,$diagnosis_1)."'";
+    $('input[name="claim[diagnosis_codes][1]"]').val("<?= $diagnosis_a;?>");
+    $('input[name="claim[diagnosis_codes][2]"]').val("<?= $diagnosis_b;?>");
+    $('input[name="claim[diagnosis_codes][3]"]').val("<?= $diagnosis_c;?>");
+    $('input[name="claim[diagnosis_codes][4]"]').val("<?= $diagnosis_d;?>");
+    $('input[name="claim[diagnosis_codes][5]"]').val("<?= $diagnosis_e;?>");
+    $('input[name="claim[diagnosis_codes][6]"]').val("<?= $diagnosis_f;?>");
+    $('input[name="claim[diagnosis_codes][7]"]').val("<?= $diagnosis_g;?>");
+    $('input[name="claim[diagnosis_codes][8]"]').val("<?= $diagnosis_h;?>");
+    $('input[name="claim[diagnosis_codes][9]"]').val("<?= $diagnosis_i;?>");
+    $('input[name="claim[diagnosis_codes][10]"]').val("<?= $diagnosis_j;?>");
+    $('input[name="claim[diagnosis_codes][11]"]').val("<?= $diagnosis_k?>");
+    $('input[name="claim[diagnosis_codes][12]"]').val("<?= $diagnosis_l;?>");
 
-      $ins_diag = $db->getRow($ins_diag_sql);
-    ?>
 
-    $('input[name="claim[diagnosis_codes][1]"]').val("<?php echo  $ins_diag['ins_diagnosis']; ?>");
 
-    <?php
-      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con,$diagnosis_2)."'";
 
-      $ins_diag = $db->getRow($ins_diag_sql);
-    ?>
-  
-    $('input[name="claim[diagnosis_codes][2]"]').val("<?php echo  $ins_diag['ins_diagnosis']; ?>");
-
-    <?php
-      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con,$diagnosis_3)."'";
-  // get total_charge
   if($is_pri_pending){
     $sql = "SELECT "
        . "  SUM(ledger.amount) as 'total_charge' "
@@ -719,9 +835,9 @@
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
-    $charge_my = mysql_query($sql);
-    if ($charge_my && (mysql_num_rows($charge_my) > 0)) {
-      $charge_row = mysql_fetch_array($charge_my);
+    $charge_my = mysqli_query($con, $sql);
+    if ($charge_my && (mysqli_num_rows($charge_my) > 0)) {
+      $charge_row = mysqli_fetch_array($charge_my);
       $total_charge = $charge_row['total_charge'];
     }
   }
@@ -739,9 +855,9 @@
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
-    $charge_my = mysql_query($sql);
-    if ($charge_my && (mysql_num_rows($charge_my) > 0)) {
-      $charge_row = mysql_fetch_array($charge_my);
+    $charge_my = mysqli_query($con, $sql);
+    if ($charge_my && (mysqli_num_rows($charge_my) > 0)) {
+      $charge_row = mysqli_fetch_array($charge_my);
       $total_charge = $charge_row['total_charge'];
     }
   }
@@ -800,7 +916,8 @@
         $mod_array[] = $mod_row;
       }
 
-      // Load pending medical trxns if new claim form. Otherwise, load associated trxns.
+  // Load pending medical trxns if new claim form. Otherwise, load associated trxns.
+
       $sql = "";
       if ($is_new_claim) {
         $sql = "SELECT "
@@ -884,24 +1001,97 @@
         $li++;
       }
 
-      if($userinfo['tax_id_or_ssn'] != '') {
-          $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
-      } else {
-          $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
-      }
+ if ($rendering_provider_first_name_1 != ""){
+  ?>
+      <?php if ($rendering_provider_entity_1){ ?>
+      $('input[name="claim[service_lines][0][rendering_provider][entity]"][value="true"]').trigger('click');
+      <?php } else { ?>
+      $('input[name="claim[service_lines][0][rendering_provider][entity]"][value=""]').prop("checked", true);
+      <?php } ?>
+      $('input[name="claim[service_lines][0][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_1; ?>");
+      $('input[name="claim[service_lines][0][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_1;  ?>");
+      $('input[name="claim[service_lines][0][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_1;  ?>");
+      $('input[name="claim[service_lines][0][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_1;  ?>");
+      <?php if ($rendering_provider_entity_2){ ?>
+      $('input[name="claim[service_lines][1][rendering_provider][entity]"][value="true"]').trigger('click');
+      <?php } else { ?>
+      $('input[name="claim[service_lines][1][rendering_provider][entity]"][value=""]').prop("checked", true);
+      <?php } ?>
+      $('input[name="claim[service_lines][1][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_2; ?>");
+      $('input[name="claim[service_lines][1][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_2;  ?>");
+      $('input[name="claim[service_lines][1][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_2;  ?>");
+      $('input[name="claim[service_lines][1][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_2;  ?>");
+      <?php if ($rendering_provider_entity_3){ ?>
+      $('input[name="claim[service_lines][2][rendering_provider][entity]"][value="true"]').trigger('click');
+      <?php } else { ?>
+      $('input[name="claim[service_lines][2][rendering_provider][entity]"][value=""]').prop("checked", true);
+      <?php } ?>
+      $('input[name="claim[service_lines][2][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_3; ?>");
+      $('input[name="claim[service_lines][2][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_3;  ?>");
+      $('input[name="claim[service_lines][2][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_3;  ?>");
+      $('input[name="claim[service_lines][2][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_3;  ?>");
+      <?php if ($rendering_provider_entity_4){ ?>
+      $('input[name="claim[service_lines][3][rendering_provider][entity]"][value="true"]').trigger('click');
+      <?php } else { ?>
+      $('input[name="claim[service_lines][3][rendering_provider][entity]"][value=""]').prop("checked", true);
+      <?php } ?>
+      $('input[name="claim[service_lines][3][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_4; ?>");
+      $('input[name="claim[service_lines][3][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_4;  ?>");
+      $('input[name="claim[service_lines][3][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_4;  ?>");
+      $('input[name="claim[service_lines][3][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_4;  ?>");
+      <?php if ($rendering_provider_entity_5){ ?>
+      $('input[name="claim[service_lines][4][rendering_provider][entity]"][value="true"]').trigger('click');
+      <?php } else { ?>
+      $('input[name="claim[service_lines][4][rendering_provider][entity]"][value=""]').prop("checked", true);
+      <?php } ?>
+      $('input[name="claim[service_lines][4][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_5; ?>");
+      $('input[name="claim[service_lines][4][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_5;  ?>");
+      $('input[name="claim[service_lines][4][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_5;  ?>");
+      $('input[name="claim[service_lines][4][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_5;  ?>");
+      <?php if ($rendering_provider_entity_6){ ?>
+      $('input[name="claim[service_lines][5][rendering_provider][entity]"][value="true"]').trigger('click');
+      <?php } else { ?>
+      $('input[name="claim[service_lines][5][rendering_provider][entity]"][value=""]').prop("checked", true);
+      <?php } ?>
+      $('input[name="claim[service_lines][5][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_6; ?>");
+      $('input[name="claim[service_lines][5][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_6;  ?>");
+      $('input[name="claim[service_lines][5][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_6;  ?>");
+      $('input[name="claim[service_lines][5][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_6;  ?>");
 
-      if($userinfo['ssn'] != '' && $userinfo['producer_files']==1) {
-          $ssn = $userinfo['ssn'];
-      } else {
-          $ssn = $docinfo['ssn'];
-      }
+      <?php
+}
 
-      if($userinfo['ein'] != '' && $userinfo['producer_files']==1) {
-          $ein = $userinfo['ein'];
-      } else {
-          $ein = $docinfo['ein'];
-      }
-?>
+if($federal_tax_id_number != ''){
+  $tax_id_or_ssn = $federal_tax_id_number;
+} else if($userinfo['tax_id_or_ssn'] != '') {
+  $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
+} else {
+  $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
+}
+
+  if($userinfo['tax_id_or_ssn'] != '') {
+      $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
+  } else {
+      $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
+  }
+
+  if($userinfo['ssn'] != '' && $userinfo['producer_files']==1) {
+      $ssn = $userinfo['ssn'];
+  } else {
+      $ssn = $docinfo['ssn'];
+  }
+
+  if($userinfo['ein'] != '' && $userinfo['producer_files']==1) {
+      $ein = $userinfo['ein'];
+  } else {
+      $ein = $docinfo['ein'];
+  }
+  if($accept_assignment=="Yes"){ ?>
+        $('input[name="claim[accept_assignment_code]"][value="A"]').prop("checked", true);
+      <?php }elseif($accept_assignment=="No"){ ?>
+        $('input[name="claim[accept_assignment_code]"][value="C"]').prop("checked", true);
+      <?php } ?>
+
       $('input[name="billing_provider[tax_id]"]').val("<?php echo  $tax_id_or_ssn; ?>"); 
      
       <?php if($ssn=="1") { ?>
@@ -925,6 +1115,11 @@
       $('input[name="billing_provider[address][zip]"]').val("<?php echo  $zip; ?>");
       $('input[name="billing_provider[npi]"]').val("<?php echo  ($insurancetype == '1')?$medicare_npi:$npi; ?>"); 
       $('input[name="billing_provider[taxonomy_code]"]').val("332B00000X");
+      <?php if ($insured_signature): ?>
+        $('input[name="claim[direct_payment_authorized]"]').prop('checked',true);
+      <?php else: ?>
+        $('input[name="claim[direct_payment_authorized]"]').prop('checked',false);
+      <?php endif; ?>
 
 <?php
       $total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
@@ -944,6 +1139,7 @@
              . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
              . "WHERE "
              . "  ledger.status = " . DSS_TRXN_PENDING . " "
+             . "  AND ledger.primary_claim_id = " . $insuranceid . " "
            . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
            . "  AND ledger.docid = " . $docid . " "
            . "  AND trxn_code.docid = " . $docid . " "

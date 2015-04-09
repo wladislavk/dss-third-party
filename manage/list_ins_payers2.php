@@ -17,11 +17,11 @@ $sql = "SELECT p.id, p.name, p.payer_id "
   .			" FROM dental_ins_payer p"
   .			" WHERE name LIKE '%" . $partial . "%' "
         .               " ORDER BY name ASC";
-$result = mysql_query($sql);
+$result = mysqli_query($con, $sql);
 
 $patients = array();
 $i = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
   $patients[$i]['id'] = $row['payer_id'];
   $patients[$i]['name'] = $row['payer_id'] ." - ".$row['name'];
   //$patients[$i]['source'] = $row['referral_type'];

@@ -26,7 +26,7 @@ if (isset($_REQUEST['ed'])) {
          . "  JOIN dental_patients p ON p.patientid = hst.patient_id "
          . "WHERE "
          . "  hst.id = " . $_POST['hst_id'];
-                $my = mysqli_query($con,$sql) or trigger_error(mysql_error(), E_USER_ERROR);
+                $my = mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
                 $hst = mysqli_fetch_array($my);
 
 
@@ -134,7 +134,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
    echo "Could not add sleep lab... Please try again.";
   }else{
         if($uploaded){
-                $sleepid = mysql_insert_id();
+                $sleepid = mysqli_insert_id($con);
                                         $ins_sql = " insert into dental_q_image set 
                                         patientid = '".s_for($_GET['pid'])."',
                                         title = 'Sleep Study ".$sleepid."',
@@ -145,7 +145,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                                         adddate = now(),
                                         ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                                        mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysql_error(), E_USER_ERROR);
+                                        mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 	}
 
    }
@@ -183,9 +183,9 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 	}
     }
     $sql .= "WHERE id = '" . $_POST["hst_id"] . "'";
-    mysqli_query($con,$sql) or trigger_error($sql." | ".mysql_error(), E_USER_ERROR);
+    mysqli_query($con,$sql) or trigger_error($sql." | ".mysqli_error($con), E_USER_ERROR);
     
-    //echo $ed_sql.mysql_error();
+    //echo $ed_sql.mysqli_error($con);
     $msg = "HST Updated Successfully";
     ?>
     <script type='text/javascript'>

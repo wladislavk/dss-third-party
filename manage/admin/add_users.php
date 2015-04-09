@@ -111,7 +111,7 @@ if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
                                 billing_plan_id = '".$_POST['billing_plan_id']."',
 				access_code_id = '".$_POST['access_code_id']."'
 			where userid='".$_POST["ed"]."'";
-			mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysql_error(), E_USER_ERROR);
+			mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			$loc_sql = "UPDATE dental_locations SET
                                 location = '".s_for($_POST['mailing_practice'])."', 
                                 name = '".s_for($_POST["mailing_name"])."', 
@@ -181,7 +181,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 
 		}
 
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
@@ -263,8 +263,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				}
 				$ins_sql .= " adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysql_error(), E_USER_ERROR);
-                        $userid = mysql_insert_id();			
+			mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
+                        $userid = mysqli_insert_id($con);			
                         $loc_sql = "INSERT INTO dental_locations SET
                                 location = '".s_for($_POST['mailing_practice'])."', 
                                 name = '".s_for($_POST["mailing_name"])."', 
@@ -308,9 +308,9 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 
 
                         $code_sql = "insert into dental_transaction_code (transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, docid, amount_adjust) SELECT transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, ".$userid.", amount_adjust FROM dental_transaction_code WHERE default_code=1";
-                        mysqli_query($con,$code_sql) or trigger_error($code_sql.mysql_error(), E_USER_ERROR);
+                        mysqli_query($con,$code_sql) or trigger_error($code_sql.mysqli_error($con), E_USER_ERROR);
                         $custom_sql = "insert into dental_custom (title, description, docid) SELECT title, description, ".$userid." FROM dental_custom WHERE default_text=1";
-                        mysqli_query($con,$custom_sql) or trigger_error($custom_sql.mysql_error(), E_USER_ERROR);
+                        mysqli_query($con,$custom_sql) or trigger_error($custom_sql.mysqli_error($con), E_USER_ERROR);
 			
 			if(is_super($_SESSION['admin_access'])){
 			  mysqli_query($con,"INSERT INTO dental_user_company SET userid='".mysqli_real_escape_string($con,$userid)."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");

@@ -2,8 +2,8 @@
 include "admin/includes/config.php";
 
 $page_sql = "select * from p_pages where status=1 and  p_pageid='".s_for($_GET['pid'])."'";
-$page_my = mysql_query($page_sql);
-$page_myarray = mysql_fetch_array($page_my);
+$page_my = mysqli_query($con, $page_sql);
+$page_myarray = mysqli_fetch_array($page_my);
 
 $top_image = st($page_myarray['top_image']);
 $page_title = st($page_myarray['title']);

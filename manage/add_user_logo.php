@@ -124,7 +124,7 @@
 
       //not updating forms for the time being since this is not being used anywhere there isn't auto creating forms
       //form_update_all($_SESSION['docid']);
-			//echo $ed_sql.mysql_error();
+			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
 ?>
 			<script type="text/javascript">

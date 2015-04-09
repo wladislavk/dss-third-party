@@ -11,12 +11,12 @@ $i_val = $index_val * $rec_disp;
 $sql = "select d.*
 	 from dental_device_guide_devices d 
 	 order by name ASC";
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
+$my = mysqli_query($con, $sql);
+$total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$my=mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
-$num_users=mysql_num_rows($my);
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
+$num_users=mysqli_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -61,7 +61,7 @@ $num_users=mysql_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
+	<? if(mysqli_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="3" align="center">
@@ -72,7 +72,7 @@ $num_users=mysql_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysql_fetch_array($my))
+		while($myarray = mysqli_fetch_array($my))
 		{
 
 		?>

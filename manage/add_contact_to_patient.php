@@ -6,7 +6,7 @@ include("includes/sescheck.php");
 <?php
 if(isset($_POST['newcontadded'])){
 $insert_new_contactto = "INSERT INTO dental_pcont(contact_id,patient_id) VALUES(".$_POST['contacts'].",".$_POST['patid'].");";
-$insert_new_contacttores = mysql_query($insert_new_contactto);
+$insert_new_contacttores = mysqli_query($con, $insert_new_contactto);
 
 if($insert_new_contacttores){
 

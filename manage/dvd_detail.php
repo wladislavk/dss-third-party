@@ -5,9 +5,9 @@ include("includes/sescheck.php");
 
 
 $sql = "select * from dental_doc_dvd where doc_dvdid='".s_for($_GET['id'])."'";
-$my = mysql_query($sql) or trigger_error(mysql_error(), E_USER_ERROR);
-$myarray = mysql_fetch_array($my);
-$num_users=mysql_num_rows($my);
+$my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
+$myarray = mysqli_fetch_array($my);
+$num_users=mysqli_num_rows($my);
 
 if(st($myarray['title']) == '')
 {

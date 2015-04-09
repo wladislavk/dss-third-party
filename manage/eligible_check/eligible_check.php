@@ -1,6 +1,8 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once '../admin/includes/main_include.php';
 include_once '../admin/includes/invoice_functions.php';
+require_once('../includes/constants.inc');
+
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <?php
@@ -21,7 +23,8 @@ include_once '../includes/calendarinc.php';
   <form role="form" class="form-horizontal form-coverage">
 
 <?php
-  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
+
+  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn u.userid as user_id from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
          LEFT JOIN dental_users u ON u.userid = p.docid
          WHERE p.patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
@@ -30,6 +33,16 @@ include_once '../includes/calendarinc.php';
   $doc_array = explode(' ',$doc_name);
   $doc_first_name = $doc_array[0];
   $doc_last_name = (!empty($doc_array[1]) ? $doc_array[1] : '');
+
+  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $r['doc_id'])."'";
+  $api_key_query = mysqli_query($con, $api_key_sql);
+  $api_key_result = mysqli_fetch_assoc($api_key_query);
+  if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+    if(trim($api_key_result['eligible_api_key']) != ""){
+      $api_key = $api_key_result['eligible_api_key'];
+    }
+  }
 
   $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".(!empty($_GET['docid']) ? $_GET['docid'] : '')."'";
   $docinfo = $db->getRow($getdocinfo);
@@ -89,22 +102,7 @@ include_once '../includes/calendarinc.php';
     $d_city = '';
     $d_zip = '';
   }
-
-  $s = "SELECT eligible_test FROM dental_users where userid='".(!empty($_GET['docid']) ? $_GET['docid'] : '')."'";
-  $row = $db->getRow($s);
-  if($row['eligible_test']=="1"){?>
-
-    <div class="form-group">
-      <label for="member_dob" class="col-lg-2 control-label">Test?</label>
-
-      <div class="col-lg-10">
-        <input type="radio" name="test" id="test_yes" value="true" checked="checked"> Yes
-        <input type="radio" name="test" id="test_no" value="false"> No
-      </div>
-    </div>
-
-<?php 
-  }else{ ?>
+?>
 
     <div class="form-group hidden">
       <label for="member_dob" class="col-lg-2 control-label">Test?</label>
@@ -116,10 +114,8 @@ include_once '../includes/calendarinc.php';
     </div>
 
 
-<?php 
-  } ?>
 
-    <input type="hidden" class="form-control" id="api_key" value="33b2e3a5-8642-1285-d573-07a22f8a15b4">
+    <input type="hidden" class="form-control" id="api_key" value=<?php echo "'".$api_key."'" ?>>
 
     <div class="form-group test-param">
       <label for="test_member_id" class="col-lg-2 control-label">Test Member ID</label>
@@ -169,7 +165,6 @@ include_once '../includes/calendarinc.php';
                 <li class="template" style="display:none"></li>
         </ul>
 </div>
-
 <input type="hidden" name="payer_id" id="payer_id" />
       </div>
     </div>
@@ -498,7 +493,7 @@ include_once '../includes/calendarinc.php';
       <div class="col-lg-offset-2 col-lg-10">
 	<input type="hidden" name="pid" id="pid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
-        <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+        <button type="submit" id="submit-button" class="btn btn-primary btn-lg"><div id="submit-button-inner">Submit</div></button>
       </div>
     </div>
 
@@ -520,9 +515,9 @@ include_once '../includes/calendarinc.php';
     foreach ($q as $r) {?>
 
 	<tr>
-	  <td><?php echo $r['adddate']; ?></td>
-          <td><a href="#" onclick="parent.window.location = '../view_eligibility_response.php?id=<?php echo $r['id']; ?>';return false;">View</a></td>
-        </tr>
+        <td><?= $r['adddate']; ?></td>
+        <td><a href="/manage/view_eligibility_response.php?id=<?=$r['id']; ?>">View</a></td>
+    </tr>
 
 <?php
      }

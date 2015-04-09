@@ -12,11 +12,11 @@ require_once '../includes/claim_functions.php';
 <body>
 <?php
 $csql = "SELECT *, REPLACE(i.total_charge,',','') AS amount_due FROM dental_insurance i WHERE i.insuranceid='".$_POST['claimid']."';";
-$cq = mysql_query($csql);
-$claim = mysql_fetch_array($cq);
+$cq = mysqli_query($con, $csql);
+$claim = mysqli_fetch_array($cq);
 $psql = "SELECT * FROM dental_patients p WHERE p.patientid='".$_POST['patientid']."';";
-$pq = mysql_query($psql);
-$pat = mysql_fetch_array($pq);
+$pq = mysqli_query($con, $psql);
+$pat = mysqli_fetch_array($pq);
 $msg = "Payments have been added.";
 echo "<br />";
 //Determine new status
@@ -42,8 +42,8 @@ if($_POST['dispute']==1){
                 docid = '".$_SESSION['docid']."',
                 patientid = '".$_POST['patientid']."',
                 producerid = '".$_SESSION['userid']."',
-                note = 'Insurance claim ".$_POST['claimid']." disputed because: ".mysql_escape_string($_POST['dispute_reason']).".'";
-  mysql_query($note_sql);
+                note = 'Insurance claim ".$_POST['claimid']." disputed because: ".mysqli_escape_string($con, $_POST['dispute_reason']).".'";
+  mysqli_query($con, $note_sql);
 
   if($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_PAID_INSURANCE){
     $new_status = DSS_CLAIM_DISPUTE;
@@ -58,15 +58,15 @@ if($_FILES["attachment"]["name"]!=''){
 		adddate,
 		ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'primary',
 		'".$banner1."',
-		'".mysql_escape_string($_POST['dispute_reason'])."',
+		'".mysqli_escape_string($con, $_POST['dispute_reason'])."',
 		".$new_status.",
                 now(),
                 '".s_for($_SERVER['REMOTE_ADDR'])."'
                 )";
-     mysql_query($image_sql);   
+     mysqli_query($con, $image_sql);   
 }
 
   }elseif($claim['status']==DSS_CLAIM_SEC_SENT || $claim['status']==DSS_CLAIM_PAID_SEC_INSURANCE){
@@ -82,15 +82,15 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'secondary',
                 '".$banner1."',
-		'".mysql_escape_string($_POST['dispute_reason'])."',
+		'".mysqli_escape_string($con, $_POST['dispute_reason'])."',
 		'".$new_status."',
                 now(),
                 '".s_for($_SERVER['REMOTE_ADDR'])."'
                 )";
-     mysql_query($image_sql);    
+     mysqli_query($con, $image_sql);    
 }
   }elseif($claim['status']==DSS_CLAIM_PAID_PATIENT){
     $new_status = DSS_CLAIM_PATIENT_DISPUTE;
@@ -105,15 +105,15 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'primary',
                 '".$banner1."',
-                '".mysql_escape_string($_POST['dispute_reason'])."',
+                '".mysqli_escape_string($con, $_POST['dispute_reason'])."',
                 '".$new_status."',
                 now(),
                 '".s_for($_SERVER['REMOTE_ADDR'])."'
                 )";
-     mysql_query($image_sql);
+     mysqli_query($con, $image_sql);
 }
   }elseif($claim['status']==DSS_CLAIM_PAID_SEC_PATIENT){
     $new_status = DSS_CLAIM_SEC_PATIENT_DISPUTE;
@@ -128,15 +128,15 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'secondary',
                 '".$banner1."',
-                '".mysql_escape_string($_POST['dispute_reason'])."',
+                '".mysqli_escape_string($con, $_POST['dispute_reason'])."',
                 '".$new_status."',
                 now(),
                 '".s_for($_SERVER['REMOTE_ADDR'])."'
                 )";
-     mysql_query($image_sql);
+     mysqli_query($con, $image_sql);
 }
   }
 }else{
@@ -163,8 +163,8 @@ $image_sql = "INSERT INTO dental_insurance_file (
 	               $pat_sql = "select p.*, u.billing_company_id from dental_patients p 
                 JOIN dental_users u ON u.userid=p.docid
                 where p.patientid='".s_for($_POST['patientid'])."'";
-             $pat_my = mysql_query($pat_sql);
-             $pat_myarray = mysql_fetch_array($pat_my);
+             $pat_my = mysqli_query($con, $pat_sql);
+             $pat_myarray = mysqli_fetch_array($pat_my);
 		$s_m_dss_file = $pat_myarray['s_m_dss_file'];
 		$s_m_billing_id = $pat_myarray['billing_company_id'];
 
@@ -202,14 +202,14 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'primary',
                 '".$banner1."',
                 '".$new_status."',
                 now(),
                 '".s_for($_SERVER['REMOTE_ADDR'])."'
                 )";
-     mysql_query($image_sql);
+     mysqli_query($con, $image_sql);
 
     }
 }
@@ -235,14 +235,14 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 adddate,
                 ip_address)
               VALUES (
-                ".mysql_real_escape_string($_POST['claimid']).",
+                ".mysqli_real_escape_string($con, $_POST['claimid']).",
                 'secondary',
                 '".$banner1."',
                 '".$new_status."',
                 now(),
                 '".s_for($_SERVER['REMOTE_ADDR'])."'
                 )";
-     mysql_query($image_sql);
+     mysqli_query($con, $image_sql);
 }
   }
 
@@ -256,7 +256,7 @@ if(isset($new_status)){
     $x .= ", s_m_billing_id = '".$s_m_billing_id."', s_m_dss_file = '".$s_m_dss_file."' ";
   }
   $x .= " WHERE insuranceid='".$_POST['claimid']."';";
-  mysql_query($x);
+  mysqli_query($con, $x);
   claim_status_history_update($_POST['claimid'], $new_status, $claim['status'], $_SESSION['userid']);
 }
 
@@ -279,8 +279,8 @@ $sqlinsertqry = "INSERT INTO dental_ledger_payment (
 `note`
 ) VALUES ";
 $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_POST['claimid'];
-$lq = mysql_query($lsql);
-while($row = mysql_fetch_assoc($lq)){
+$lq = mysqli_query($con, $lsql);
+while($row = mysqli_fetch_assoc($lq)){
 $id = $row['ledgerid'];
 if($_POST['amount_'.$id]!=''){
 $sqlinsertqry .= "(
@@ -288,22 +288,22 @@ $sqlinsertqry .= "(
 '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', 
 '".date('Y-m-d')."', 
 '".str_replace(',','',$_POST['amount_'.$id])."', 
-'".mysql_real_escape_string($_POST['payment_type'])."', 
-'".mysql_real_escape_string($_POST['payer'])."',
-'".mysql_real_escape_string($_POST['allowed'])."',
-'".mysql_real_escape_string($_POST['ins_paid'])."',
-'".mysql_real_escape_string($_POST['deductible'])."',
-'".mysql_real_escape_string($_POST['copay'])."',
-'".mysql_real_escape_string($_POST['coins'])."',
-'".mysql_real_escape_string($_POST['overpaid'])."',
-'".mysql_real_escape_string($_POST['followup'])."',
-'".mysql_real_escape_string($_POST['note'])."'
+'".mysqli_real_escape_string($con, $_POST['payment_type'])."', 
+'".mysqli_real_escape_string($con, $_POST['payer'])."',
+'".mysqli_real_escape_string($con, $_POST['allowed'])."',
+'".mysqli_real_escape_string($con, $_POST['ins_paid'])."',
+'".mysqli_real_escape_string($con, $_POST['deductible'])."',
+'".mysqli_real_escape_string($con, $_POST['copay'])."',
+'".mysqli_real_escape_string($con, $_POST['coins'])."',
+'".mysqli_real_escape_string($con, $_POST['overpaid'])."',
+'".mysqli_real_escape_string($con, $_POST['followup'])."',
+'".mysqli_real_escape_string($con, $_POST['note'])."'
 ),";
 }
 
 }
 $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
-$insqry = mysql_query($sqlinsertqry);
+$insqry = mysqli_query($con, $sqlinsertqry);
 
 if($secsql){
 $paysql = "SELECT SUM(lp.amount) as payment
@@ -311,15 +311,15 @@ $paysql = "SELECT SUM(lp.amount) as payment
                                 JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
                         WHERE dl.primary_claim_id='".$_POST['claimid']."'
                                 AND lp.payer='".DSS_TRXN_PAYER_PRIMARY."'";
-$payq = mysql_query($paysql);
-$payr = mysql_fetch_assoc($payq);
+$payq = mysqli_query($con, $paysql);
+$payr = mysqli_fetch_assoc($payq);
 if($payr['payment']>=$claim['amount_due']){
   $new_status = DSS_CLAIM_PAID_INSURANCE;
   $msg = 'Payment Successfully Added';
   $x = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_INSURANCE."'  WHERE insuranceid='".$_POST['claimid']."';";
-  mysql_query($x); 
+  mysqli_query($con, $x); 
 }
-  mysql_query($secsql);
+  mysqli_query($con, $secsql);
 }
 
 

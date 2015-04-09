@@ -18,7 +18,6 @@
 <?php
     exec('gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -r300 -sOutputFile='.$jpg.'-%01d.jpg '. $file)
 ?>
-
 <?php
     $reload = false;
     if(isset($_REQUEST['parent'])){
@@ -41,7 +40,7 @@
 ?>
 
     <div style="float:left;">
-        <a href="#" onclick="send_letter('<?php echo (!empty($_GET['id']) ? $_GET['id'] : ''); ?>', <?php echo (isset($reload) ? $reload : ''); ?>, '<?php echo (isset($page) ? $page : ''); ?>')">Looks Good! SEND!</a> | <a href="#" onclick="reload_parent();">Cancel/Revise</a>
+        <a href="#" onclick="send_letter('<?php echo (!empty($_GET['id']) ? $_GET['id'] : ''); ?>', <?php echo (isset($reload) ? $reload : ''); ?>, '<?php echo (isset($page) ? $page : ''); ?>')">Looks Good! SEND!</a> | <a href="#" onclick="parent.disablePopupClean();">Cancel/Revise</a>
     </div>
     <?php
         $fsql = "SELECT fax, preferredcontact from dental_contact WHERE contactid='".mysqli_real_escape_string($con,$r['md_list'])."' OR 

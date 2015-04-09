@@ -11,7 +11,7 @@ if(isset($_GET['ed'])){
  $patid = $_POST['patid'];
 }
  $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
+ $pcont_array = mysqli_query($con, $pcont_qry);
 
 ?>
 
@@ -24,7 +24,7 @@ if(isset($_GET['ed'])){
 <?php
 if(isset($_POST['patid'])){
 $insert_new_contactto = "INSERT INTO dental_pcont(contact_id,patient_id) VALUES(".$_POST['contacts'].",".$_POST['patid'].");";
-$insert_new_contacttores = mysql_query($insert_new_contactto);
+$insert_new_contacttores = mysqli_query($con, $insert_new_contactto);
 
 if($insert_new_contacttores){
 echo "Successfully added contact!";
@@ -35,9 +35,9 @@ echo "Successfully added contact!";
 <select name="contacts">
     <?php
     $newcont_qry = "SELECT * FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid = dental_contacttype.contacttypeid WHERE docid=".$_SESSION['docid']." UNION SELECT * FROM dental_contact RIGHT JOIN dental_contacttype ON dental_contact.contacttypeid = dental_contacttype.contacttypeid WHERE docid=".$_SESSION['docid']; 
-    $newcont_array = mysql_query($newcont_qry);
+    $newcont_array = mysqli_query($con, $newcont_qry);
     
-    while($newcont_list = mysql_fetch_array($newcont_array)){
+    while($newcont_list = mysqli_fetch_array($newcont_array)){
     if($newcont_list['contacttype'] == ""){
     $newcont_conttype = "Type Not Set";
     }else{

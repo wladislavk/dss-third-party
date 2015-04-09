@@ -2,17 +2,17 @@
 
 require_once 'admin/includes/config.php';
 $sql = "SELECT * FROM dental_patients WHERE patientid=112";
-$q = mysql_query($sql);
-$pat = mysql_fetch_assoc($q);
+$q = mysqli_query($con, $sql);
+$pat = mysqli_fetch_assoc($q);
 
 
-$pm_sql = "SELECT * FROM dental_contact where contactid='".mysql_real_escape_string($pat['p_m_ins_co'])."'";
-$pm_q = mysql_query($pm_sql);
-$pm = mysql_fetch_assoc($pm_q);
+$pm_sql = "SELECT * FROM dental_contact where contactid='".mysqli_real_escape_string($con, $pat['p_m_ins_co'])."'";
+$pm_q = mysqli_query($con, $pm_sql);
+$pm = mysqli_fetch_assoc($pm_q);
 
-$sm_sql = "SELECT * FROM dental_contact where contactid='".mysql_real_escape_string($pat['s_m_ins_co'])."'";
-$sm_q = mysql_query($sm_sql);
-$sm = mysql_fetch_assoc($sm_q);
+$sm_sql = "SELECT * FROM dental_contact where contactid='".mysqli_real_escape_string($con, $pat['s_m_ins_co'])."'";
+$sm_q = mysqli_query($con, $sm_sql);
+$sm = mysqli_fetch_assoc($sm_q);
 
 $xml = '<?xml version="1.0" encoding="UTF-8"?>
 <DSSReferral>

@@ -25,7 +25,7 @@ $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS s
 	.		" AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
 	.		" OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))"
         .               " AND p.status=1 "
-	.		" AND p.docid='".mysql_real_escape_string($_GET['fid'])."'"
+	.		" AND p.docid='".mysqli_real_escape_string($con, $_GET['fid'])."'"
 	.		" ORDER BY lastname ASC;";
 }elseif(is_software($_SESSION['admin_access'])){
 $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS stat, p.premedcheck,  "
@@ -42,15 +42,15 @@ $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS s
         .               " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
         .               " OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))"
         .               " AND p.status=1 "
-	.		" AND p.docid='".mysql_real_escape_string($_GET['fid'])."'"
-	.		" AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' "
+	.		" AND p.docid='".mysqli_real_escape_string($con, $_GET['fid'])."'"
+	.		" AND uc.companyid='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."' "
         .               " ORDER BY lastname ASC;";
 }elseif(is_billing($_SESSION['admin_access'])){
   $a_sql = "SELECT ac.companyid FROM admin_company ac
                         JOIN admin a ON a.adminid = ac.adminid
-                        WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
-  $a_q = mysql_query($a_sql);
-  $admin = mysql_fetch_assoc($a_q);
+                        WHERE a.adminid='".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."'";
+  $a_q = mysqli_query($con, $a_sql);
+  $admin = mysqli_fetch_assoc($a_q);
 $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS stat, p.premedcheck,  "
   .   " s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment,  "
   .             " s.delivery_date, s.vob, s.ledger, s.patient_info, d.device, "
@@ -64,15 +64,15 @@ $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS s
         .               " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
         .               " OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))"
         .               " AND p.status=1 "
-	.		" AND p.docid='".mysql_real_escape_string($_GET['fid'])."'"
-	.		" AND u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."' "
+	.		" AND p.docid='".mysqli_real_escape_string($con, $_GET['fid'])."'"
+	.		" AND u.billing_company_id='".mysqli_real_escape_string($con, $admin['companyid'])."' "
         .               " ORDER BY lastname ASC;";
 }
-$result = mysql_query($sql);
+$result = mysqli_query($con, $sql);
 
 $patients = array();
 $i = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	$rxlomn = '';
                           if($row['rxreq'] != null && $row['rxrec'] == null){
         $day = (24 * 60 * 60);

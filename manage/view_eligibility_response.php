@@ -38,9 +38,11 @@
             $themyarray = $db->getRow($thesql);
         ?>
         <h2 style="color:#fff;">Eligibility for <?php echo $themyarray['pat_name']; ?> - <?php echo date('m/d/Y h:ia', strtotime($themyarray['adddate'])); ?></h2>
-        <a href="eligible_check.php?pid=<?php echo $themyarray['patientid'];?>" style="color:#fff;">Return to chart</a>
+        <a href="eligible_check.php?pid=<?=$themyarray['patientid'];?>" class="button" style="color:#fff; margin-bottom:10px;">Return to chart</a>
+        <section class="coverage-section"></section>
+        <a href="eligible_check.php?pid=<?=$themyarray['patientid'];?>" class="button" style="color:#fff; margin-bottom:10px;">Return to chart</a>
 
-<script>
+        <script>
     var response = <?php echo $themyarray['response']; ?>;
 </script>
 

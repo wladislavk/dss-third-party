@@ -10,14 +10,14 @@
     if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1) {
     	if($_POST["ed"] != "") {
     		$ed_sql = "update dental_locations set 
-    				    location = '".mysql_real_escape_string($_POST["location"])."', 
-    				    name = '".mysql_real_escape_string($_POST["name"])."',
-    				    address = '".mysql_real_escape_string($_POST["address"])."',
-                        city = '".mysql_real_escape_string($_POST["city"])."',
-                        state = '".mysql_real_escape_string($_POST["state"])."',
-                        zip = '".mysql_real_escape_string($_POST["zip"])."',
-                        phone = '".mysql_real_escape_string(num($_POST["phone"]))."',
-    				    fax = '".mysql_real_escape_string(num($_POST["fax"]))."'
+    				    location = '".mysqli_real_escape_string($con, $_POST["location"])."', 
+    				    name = '".mysqli_real_escape_string($con, $_POST["name"])."',
+    				    address = '".mysqli_real_escape_string($con, $_POST["address"])."',
+                        city = '".mysqli_real_escape_string($con, $_POST["city"])."',
+                        state = '".mysqli_real_escape_string($con, $_POST["state"])."',
+                        zip = '".mysqli_real_escape_string($con, $_POST["zip"])."',
+                        phone = '".mysqli_real_escape_string($con, num($_POST["phone"]))."',
+    				    fax = '".mysqli_real_escape_string($con, num($_POST["fax"]))."'
     				    where id='".$_POST["ed"]."'";
 
     		$db->query($ed_sql);		
@@ -30,13 +30,13 @@
 		    trigger_error("Die called", E_USER_ERROR);
 	    } else {
             $ins_sql = "insert into dental_locations set location = '".s_for($_POST["location"])."',
-                        name = '".mysql_real_escape_string($_POST["name"])."',
-                        address = '".mysql_real_escape_string($_POST["address"])."',
-                        city = '".mysql_real_escape_string($_POST["city"])."',
-                        state = '".mysql_real_escape_string($_POST["state"])."',
-                        zip = '".mysql_real_escape_string($_POST["zip"])."',
-                        phone = '".mysql_real_escape_string(num($_POST["phone"]))."',
-                        fax = '".mysql_real_escape_string(num($_POST["fax"]))."',
+                        name = '".mysqli_real_escape_string($con, $_POST["name"])."',
+                        address = '".mysqli_real_escape_string($con, $_POST["address"])."',
+                        city = '".mysqli_real_escape_string($con, $_POST["city"])."',
+                        state = '".mysqli_real_escape_string($con, $_POST["state"])."',
+                        zip = '".mysqli_real_escape_string($con, $_POST["zip"])."',
+                        phone = '".mysqli_real_escape_string($con, num($_POST["phone"]))."',
+                        fax = '".mysqli_real_escape_string($con, num($_POST["fax"]))."',
 				        docid='".$_SESSION['docid']."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 
             $db->query($ins_sql);

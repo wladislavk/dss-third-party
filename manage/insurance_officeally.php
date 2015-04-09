@@ -435,17 +435,10 @@
 	}
 
 	$inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
-
 	$inscoinfo = $db->getRow($inscoquery);
 
 	$referredby_sql = "select * from dental_contact where `contactid` = ".$referredby." LIMIT 1;";
-	
-
-
 	$referredby_my = $db->query($referredby_sql);
-
-
-
 
 	if($referred_source==1){
 		$rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referredby;
@@ -556,8 +549,18 @@
 	if(isset($_GET['test']) && $_GET['test']==1){
 	  $data['test'] = 'true';
 	}
-	$data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
 
+	$api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
+	$api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $docid)."'";
+	$api_key_query = mysqli_query($con, $api_key_sql);
+	$api_key_result = mysqli_fetch_assoc($api_key_query);
+	if($api_key_result && !empty($api_key_result['eligible_api_key'])){
+	  if(trim($api_key_result['eligible_api_key']) != ""){
+	    $api_key = $api_key_result['eligible_api_key'];
+	  }
+	}
+
+	$data['api_key'] = $api_key;
 	$data['receiver'] = array(
 		"organization_name" => $eligible_ins,
 		"id" => $eligible_id);
@@ -573,20 +576,18 @@
 			"zip" => $zip),
 		"tin" => $tax_id_or_ssn,
 		"insurance_provider_id" => $medicare_ptan);
-
 	$data['subscriber'] = array(
 		"last_name" => $insured_lastname,
 		"first_name" => $insured_firstname,
 		"member_id" => $insured_id_number,
 		"group_id" => $insured_policy_group_feca,
-		"group_name" => $insured_insurance_plan,
-        "gender" => $pat_gender,
-        "address" => array(
-            "street_line_1" => $patient_address,
-            "street_line_2" => "",
-            "city" => $patient_city,
-            "state" => $patient_state,
-            "zip" => $patient_zip),
+    "gender" => $pat_gender,
+    "address" => array(
+    "street_line_1" => $patient_address,
+    "street_line_2" => "",
+    "city" => $patient_city,
+    "state" => $patient_state,
+    "zip" => $patient_zip),
 		"dob" => $claim_ins_dob);
 
 	$ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".mysqli_real_escape_string($con,$pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$pat_myarray['docid']."'";
@@ -689,16 +690,16 @@
 		"service_lines" => $claim_lines
 	);
 
-	$data_string = json_encode($data);                                                                                   
+	$data_string = json_encode($data);
 	
-	$ch = curl_init('https://gds.eligibleapi.com/v1.1/claims.json');
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-	    'Content-Type: application/json',                                                                                
-	    'Content-Length: ' . strlen($data_string))                                                                       
-	);                                                                                                                   
+	$ch = curl_init('https://gds.eligibleapi.com/v1.5/claims.json');
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+	    'Content-Type: application/json',
+	    'Content-Length: ' . strlen($data_string))
+	);
  
 	$result = curl_exec($ch);
 

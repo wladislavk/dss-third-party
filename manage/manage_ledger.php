@@ -99,7 +99,7 @@ if(!empty($_REQUEST["delnoteid"]))
 {
 
   $sql = "DELETE FROM dental_ledger_note WHERE id='".mysqli_real_escape_string($con,$_REQUEST['delnoteid'])."' AND patientid='".mysqli_real_escape_string($con,$_REQUEST['pid'])."'";
-        $q = mysql_query($sql);
+        $q = mysqli_query($con, $sql);
          if($q){
 
           $msg= "Deleted Successfully";
@@ -449,6 +449,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 </div>
 
 <form name="edit_mult_form" id="edit_mult_form" />
+<<<<<<< HEAD
   <table  class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <?php if($total_rec > $rec_disp) {?>
     <TR bgColor="#ffffff">
@@ -804,7 +805,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
                   AND dl.ledgerid = '".mysqli_real_escape_string($con,$myarray['ledgerid'])."'
       ORDER BY dl.updated_at ASC
       ";
-        //$h_q = $db->getResults($h_sql);
+        $h_q = $db->getResults($h_sql);
         //Table 'dentalsl_site_dev.dental_ledger_history' doesn't exist
         if (!empty($h_q)) {
           foreach ($h_q as $h_r) {?>  
@@ -836,47 +837,6 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       <td>Update By</td>
     </tr>
 <?php 
-// table 'dental_ledger_payment_history' exist
-/*        $h_sql = "select 
-                  'ledger_payment',
-                  dlp.id,
-                  dlp.payment_date service_date,
-                  dlp.entry_date,
-                  CONCAT(p.first_name,' ',p.last_name) name,
-                  dlp.amount,
-                  dl.primary_claim_id,
-                  dlp.payer,
-                  dlp.payment_type,
-                  dlp.updated_at,
-                  CONCAT(u.first_name,' ',u.last_name) as updated_user,
-                  CONCAT(a.first_name,' ',a.last_name) as updated_admin
-  from dental_ledger dl 
-                  LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                  JOIN dental_ledger_payment_history dlp on dlp.ledgerid=dl.ledgerid
-   LEFT JOIN dental_users u ON u.userid=dlp.updated_by_user
-                  LEFT JOIN admin a ON a.adminid=dlp.updated_by_admin
-
-                          where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
-                          AND dlp.amount != 0
-        AND dlp.paymentid='".$myarray['ledgerid']."'
-  ";
-        $h_q = $db->getResults($h_sql) or trigger_error(mysql_error(), E_USER_ERROR);
-        foreach ($h_q as $h_r) {?>
-    <tr class="history_<?php echo $myarray['ledgerid']; ?>" style="display:none;">
-      <td><?php echo $h_r['updated_at']; ?></td>
-      <td><?php echo $h_r['service_date']; ?></td>
-      <td><?php echo $h_r['name']; ?></td>
-      <td>
-        <?php echo $dss_trxn_payer_labels[$myarray['payer']]." Payment - ";
-              echo $dss_trxn_pymt_type_labels[$myarray['payment_type']]." ";
-              echo ($myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
-      </td>
-      <td></td>
-      <td><?php echo $h_r['amount']; ?></td>
-      <td><?php echo $h_r['updated_user']; ?><?php echo $h_r['updated_admin']; ?></td>
-    </tr>
-<?php 
-        } */
       }
     }
   }

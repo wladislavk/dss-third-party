@@ -818,7 +818,7 @@ claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
 <script type="text/javascript">
   c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');
   if(c){
-   window.location = "manage_claims.php?insid=<?= $_GET['insid']; ?>&upstatus=<?= DSS_CLAIM_SENT; ?>"; 
+   window.location = "manage_claims.php?status=0"; 
   }
 </script>
 <?php

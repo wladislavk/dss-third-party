@@ -97,7 +97,7 @@ $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SE
 //currently if secondary it just pulls info from primary
 //Need to change eventually to pull info from secondary
 if($status_r['primary_claim_id']){
-    $sql = "select * from dental_insurance where primary_claim_id='".$_GET['id']."' and patientid='".$_GET['pid']."'";
+    $sql = "select * from dental_insurance where primary_claim_id='".$status_r['primary_claim_id']."' and patientid='".$_GET['pid']."'";
 }else{
     $sql = "select * from dental_insurance where insuranceid='".$_GET['id']."' and patientid='".$_GET['pid']."'";
 }
@@ -478,7 +478,12 @@ if ($is_pending) {
   if(!empty($pat_myarray['has_s_m_ins']) && $pat_myarray['has_s_m_ins']!='Yes'){
 ?>
   None
-<?php }else{ ?>
+  <?php
+  } else {
+    $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";
+    $inscoarray = mysql_query($inscoquery);
+    $inscoinfo = mysql_fetch_array($inscoarray);
+  ?>
 <ul>
   <li><label>Insurance Co.:</label><span class="value"><?php echo $inscoinfo['company']; ?></span></li>
   <li><label>Insurance Addr:</label><span class="value"><?php echo $inscoinfo['add1']." ".$inscoinfo['add2']." ".$inscoinfo['city']." ".$inscoinfo['state']." ".$inscoinfo['zip']; ?></span></li>
@@ -506,10 +511,10 @@ if ($is_pending) {
   <li><label>Pt DOB:</label> <span class="value"><?php echo  date('d-m-Y', strtotime(str_replace('-','/',$patient_dob))); ?></span></li>
   <li><label>Pt Sex:</label> <span class="value"><?php echo  $patient_sex; ?></span></li>
   <li><label>Pt Addr:</label> <span class="value"><?php echo  $patient_address." ".$patient_city." ".$patient_state." ".$patient_zip; ?></span></li>
-  <li><label>Pt Ins ID:</label> <span class="value"><?php echo  $insured_id_number; ?></span></li>
-  <li><label>Pt Group #:</label> <span class="value"><?php echo  $insured_policy_group_feca; ?></span></li>
+  <li><label>Pt Ins ID:</label> <span class="value"><?php echo  $other_insured_id_number; ?></span></li>
+  <li><label>Pt Group #:</label> <span class="value"><?php echo  $other_insured_policy_group_feca; ?></span></li>
   <li><label>Pt Phone:</label> <span class="value"><?php echo  $patient_phone_code ." ".$patient_phone; ?></span></li>
-  <li><label>Pt Relation to Insd:</label> <span class="value"><?php echo  $patient_relation_insured; ?></span></li>
+  <li><label>Pt Relation to Insd:</label> <span class="value"><?php echo  $other_patient_relation_insured; ?></span></li>
 </ul>
 
 <ul>

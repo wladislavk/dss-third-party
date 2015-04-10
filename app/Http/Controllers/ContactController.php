@@ -275,7 +275,7 @@ class ContactController extends Controller
                         ->with('preview', 1)
                         ->with('addtopat', 1);
                 } else {
-                    return redirect('/manage/contact')->with('message', $message);    
+                    return redirect('/manage/contact')->with('message', $message);
                 }
             }
         }
@@ -319,6 +319,16 @@ class ContactController extends Controller
         $contactData['phone1'] = GeneralFunctions::formatPhone($contactData['phone1']);
         $contactData['phone2'] = GeneralFunctions::formatPhone($contactData['phone2']);
         $contactData['fax'] = GeneralFunctions::formatPhone($contactData['fax']);
+
+        $contactTypes = $this->contactType->getAll();
+
+        if (!empty($contactTypes)) {
+            foreach ($contactTypes as $row) {
+                if ($row['contacttypeid'] == $contact->contacttypeid) {
+                    $contactData['contacttype'] = $row['contacttype'];
+                }
+            }
+        }
 
         $corporate = false;
         if (!empty($contact->corporate) && $contact->corporate == '1') {
@@ -530,6 +540,78 @@ class ContactController extends Controller
         } else {
             return null;
         }
+    }
+
+    public function manageCorporate()
+    {
+        if (!empty($this->delid)) {
+            $this->contact->deleteData($this->delid);
+            $message = 'Deleted Successfully';
+
+            return redirect('/manage/fcontact')->with('message', $message);
+        }
+
+        $recDisp = 10;
+
+        if (!empty($this->page)) {
+            $indexVal = $this->page;
+        } else {
+            $indexVal = 0;
+        }
+
+        $iVal = $indexVal * $recDisp;
+
+        $contactTypes = $this->contactType->getAll();
+        if (!empty($contactTypes)) {
+            foreach ($contactTypes as $row) {
+                $contactType[$row->contacttypeid] = $row->contacttype;
+            }
+        }
+
+        if (!empty($this->sort)) {
+            switch ($this->sort) {
+                case 'company':
+                    $order = array('company' => $this->sortdir);
+                    break;
+                case 'type':
+                    $order = array('dct.contacttype' => $this->sortdir);
+                    break;
+                default:
+                    $order = array(
+                        'lastname'  => $this->sortdir,
+                        'firstname' => $this->sortdir
+                    );
+                    break;
+            }
+        } else {
+            $order = null;
+        }
+
+        $fcontacts = $this->contact->getContactTypeHolder(array('dc.corporate' => 1), null, $order, $recDisp, $iVal);
+
+        $fcontactsCount = $this->contact->getContactTypeHolder(array('dc.corporate' => 1), null, $order, null, null);
+
+        $totalRec = count($fcontactsCount);
+        $noPages = $totalRec / $recDisp;
+
+        foreach ($this->request as $name => $value) {
+            $data[$name] = $value;
+        }
+
+        $data = array_merge($data, array(
+            'message'       => !empty($message) ? $message : '',
+            'fcontacts'     => $fcontacts,
+            'contactType'   => $contactType,
+            'totalRec'      => $totalRec,
+            'noPages'       => $noPages,
+            'recDisp'       => $recDisp,
+            'indexVal'      => $indexVal,
+            'sort'          => $this->sort,
+            'sortdir'       => $this->sortdir,
+            'contacttype'   => $this->contacttype
+        ));
+
+        return view('manage.fcontact', $data);
     }
 
     /**

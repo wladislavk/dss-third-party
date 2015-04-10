@@ -185,7 +185,7 @@ if(isset($json_response->{"error"})){
         </ul>
 <script type="text/javascript">
 var api_key = <?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>;
-setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer', null, null, false);
+setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer', null, null, false, '','','coverage');
 </script>
             </td>
         </tr>
@@ -366,11 +366,11 @@ function update_list(){
   var t = $('#transaction_type').val();
   $('#ins_payer_name').val('');
   if(t == '1'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer', '','','','','','coverage');
   }else if(t == '2'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=payment%20status&enrollment_required=true&api_key='+api_key, 'ins_payer');
   }else if(t == '4'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=payment%20reports&enrollment_required=true&api_key='+api_key, 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=payment%20reports&enrollment_required=true&api_key='+api_key, 'ins_payer', '','','','','','payment reports');
   }else if(t == '5'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', '', 'ins_payer');
   }else if(t == '6'){
@@ -378,7 +378,7 @@ function update_list(){
   }else if(t == '7'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/institutional.json', 'ins_payer');
   }else if(t == '8'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=professional%20claims&enrollment_required=true&api_key='+api_key, 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=professional%20claims&enrollment_required=true&api_key='+api_key, 'ins_payer', '','','','','','professional claims');
   }
 }
 $('#transaction_type').on("change", update_list);

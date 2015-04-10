@@ -3,17 +3,27 @@
         var selectedrefUrl = '';
         var searchrefVal = ""; // global variable to hold the last valid search string
 	var local_data = "";
-	function setup_autocomplete_local(in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment, npi, office_type){
+	function setup_autocomplete_local(in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment, npi, office_type, endpoint){
 		$.getJSON(file).done(function(data){
 			local_data = new Array();
 			var cpl = data;
+			var array_index = 0;
 			for(var i=0; i<cpl.length;i++){
-				local_data[i] = new Array();
-				local_data[i]['payer_id'] = cpl[i]['payer_id'];
-				local_data[i]['payer_name'] = cpl[i]['names'].join(',');
-				local_data[i]['enrollment_required'] = cpl[i]['enrollment_required'];
-				if(hinttype == 'ins_payer'){ 
-					local_data[i]['enrollment_mandatory_fields'] = cpl[i]['supported_endpoints'][0].enrollment_mandatory_fields;
+				var endpoint_index = -1;
+				for(j=0;j<cpl[i]['supported_endpoints'].length;j++){
+				  if(endpoint == cpl[i]['supported_endpoints'][j].endpoint){
+				    endpoint_index = j;
+				  }
+				}
+				if(!endpoint || endpoint_index != -1){
+					local_data[array_index] = new Array();
+					local_data[array_index]['payer_id'] = cpl[i]['payer_id'];
+					local_data[array_index]['payer_name'] = cpl[i]['names'].join(',');
+					local_data[array_index]['enrollment_required'] = cpl[i]['enrollment_required'];
+					if(hinttype == 'ins_payer' && endpoint_index != -1){ 
+						local_data[array_index]['enrollment_mandatory_fields'] = cpl[i]['supported_endpoints'][endpoint_index].enrollment_mandatory_fields;
+					}
+					array_index++;
 				}
 			}
 		});
@@ -145,6 +155,7 @@
         }
 function update_referredby_local(in_field, name, id_field, id, source, t, hint, enrollment, check_enrollment, npi, office_type, enrollment_mandatory_fields){
 
+  console.log(enrollment_mandatory_fields);
   if(enrollment_mandatory_fields != ''){
 	var emf = enrollment_mandatory_fields.split(',');
 	$('.formControl').removeClass('required');

@@ -15,7 +15,7 @@ function enable_submit (){
 
 $(document).ready(function(){
     var api_key = <?php echo "'".$api_key."'" ?>;
-    setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?api_key='+api_key, 'ins_payer', '', true, false);
+    setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?api_key='+api_key, 'ins_payer', '', true, false, '','','coverage');
     $('.form-coverage').bind("submit", disable_submit);
 });
 

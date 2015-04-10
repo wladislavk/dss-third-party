@@ -135,6 +135,9 @@ class Stripe_Object implements ArrayAccess
    */
   public static function scopedConstructFrom($class, $values, $apiKey=null)
   {
+    if (!class_exists($class) && class_exists("\\Ds3\\Libraries\\Legacy\\$class")) {
+      $class = "\\Ds3\\Libraries\\Legacy\\$class";
+    }
     $obj = new $class(isset($values['id']) ? $values['id'] : null, $apiKey);
     $obj->refreshFrom($values, $apiKey);
     return $obj;

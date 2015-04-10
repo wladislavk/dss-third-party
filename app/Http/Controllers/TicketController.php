@@ -219,7 +219,7 @@ class TicketController extends Controller
 
         if (empty($ticket->create_type)) {
             $admin = $this->admin->findAdmin($ticket->creator_id);
-            $name = 'Support - ' . $admin->name;
+            $name = 'Support - ' . $admin->username;
         } elseif ($ticket->create_type == '1') {
             $user = $this->user->findUser($ticket->creator_id);
             $name = $user->name;
@@ -231,19 +231,19 @@ class TicketController extends Controller
 
         if (count($responses)) {
             foreach ($responses as $response) {
-                $response->attachments = $this->supportAttachment->getAttachmentsById(array('response_id' => $response->id));
+                $response->attachments = $this->supportAttachment->getAttachmentsById(array('response_id' => $response->id), true);
 
                 if ($response->response_type == '0') {
                     $admin = $this->admin->findAdmin($response->responder_id);
-                    $name = 'Support - ' . $admin->name;
+                    $responseName = 'Support - ' . $admin->username;
                 } elseif ($response->response_type == '1') {
                     $user = $this->user->findUser($response->responder_id);
-                    $name = $user->name;
+                    $responseName = $user->name;
                 } else {
-                    $name = '';
+                    $responseName = '';
                 }
 
-                $response->name = $name;
+                $response->name = $responseName;
                 $response->add_date = Carbon::parse($response->adddate)->format('m/d/Y h:i:s a');
             }
         }
@@ -254,8 +254,8 @@ class TicketController extends Controller
             $ticketStatus = false;
         }
 
-        foreach ($this->request as $name => $value) {
-            $data[$name] = $value;
+        foreach ($this->request as $title => $value) {
+            $data[$title] = $value;
         }
 
         $data = array_merge($data, array(
@@ -268,6 +268,8 @@ class TicketController extends Controller
             'ticketStatus' => $ticketStatus,
             'showAlert'    => !empty(Session::get('showAlert')) ? Session::get('showAlert') : false
         ));
+
+        // dd($data);
 
         return view('manage.view_support_ticket', $data);
     }

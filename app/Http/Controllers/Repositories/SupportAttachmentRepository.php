@@ -6,9 +6,13 @@ use Ds3\Eloquent\Support\SupportAttachment;
 
 class SupportAttachmentRepository implements SupportAttachmentInterface
 {
-    public function getAttachmentsById($id)
+    public function getAttachmentsById($id, $response = false)
     {
-        $supportAttachments = SupportAttachment::whereNull('response_id');
+        $supportAttachments = new SupportAttachment();
+
+        if (!$response) {
+            $supportAttachments = $supportAttachments->whereNull('response_id');
+        }
 
         foreach ($id as $attribute => $value) {
             $supportAttachments = $supportAttachments->where($attribute, '=', $value);

@@ -275,9 +275,9 @@ class Loader
             $headerName = $header;
             $headerValue = '';
 
-            if (preg_match('@(?<name>.+?):\s*(?<value>.+)@', $header, $match)) {
+            if (preg_match('@(?<name>.+?)(?:$|:\s*(?<value>.*))@', $header, $match)) {
                 $headerName = strtolower($match['name']);
-                $headerValue = $match['value'];
+                $headerValue = isset($match['value']) ? $match['value'] : '';
             }
 
             $this->outputHeaders[$headerName] = $headerValue;
@@ -371,8 +371,8 @@ class Loader
      */
     public static function injectBaseTag($buffer, $relativePath)
     {
-        $baseHref = dirname("/$relativePath") . '/';
-        $baseHref = $baseHref !== '//' ? $baseHref : '/';
+        $baseHref = "/$relativePath";
+        $baseHref = preg_replace('@//+@', '/', $baseHref);
         $buffer = preg_replace('@(<head[^>]*>)@i', '$1<base href="' . htmlspecialchars($baseHref) . '">', $buffer);
 
         return $buffer;

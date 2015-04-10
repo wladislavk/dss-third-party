@@ -114,8 +114,8 @@ include_once '../includes/claim_functions.php';
       $other_insured_firstname = st($myarray['insured_firstname']);
       $other_insured_lastname = st($myarray['insured_lastname']);
       $other_insured_middle = st($myarray['insured_middle']);
-      $other_insured_dob = st($myarray['insured_dob']);
-      $other_insured_sex = st($myarray['insured_sex']);
+      $other_insured_dob = st($pat_myarray['ins_dob']);
+      $other_insured_sex = st($pat_myarray['s_m_gender']);
       $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
       $other_insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
       $other_insured_address = st($myarray['insured_address']);
@@ -126,7 +126,7 @@ include_once '../includes/claim_functions.php';
       $insured_firstname = st($myarray['other_insured_firstname']);
       $insured_middle = st($myarray['other_insured_middle']);
       $insured_lastname = st($myarray['other_insured_lastname']);
-      $insured_dob = st($myarray['other_insured_dob']);
+      $insured_dob = st($pat_myarray['ins2_dob']);
       $insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
       $insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
       $other_insured_id_number = st($myarray['insured_id_number']);
@@ -136,7 +136,7 @@ include_once '../includes/claim_functions.php';
       $insured_zip = st($myarray['other_insured_zip']);
       $insured_phone_code = st($myarray['insured_phone_code']);
       $insured_phone = st($myarray['insured_phone']);
-      $insured_sex = st($myarray['other_insured_sex']);
+      $insured_sex = st($pat_myarray['p_m_gender']);
       $patient_relation_insured = st($myarray['patient_relation_other_insured']);
       $patient_relation_other_insured = st($myarray['patient_relation_insured']);
     } else {
@@ -675,15 +675,7 @@ if ($another_plan == "") {
 
       $inscoinfo = $db->getRow($inscoquery);
     ?>
-
-    <?php if($is_secondary) { ?>
-      $('input[name="payer[id]"]').val("<?= $other_insured_insurance_plan;?>");
-      $('input[name="payer[name]"]').val("<?= $other_insured_policy_group_feca;?>");
-    <?php }else{ ?>
-      $('input[name="payer[id]"]').val("<?= $insured_policy_group_feca;?>");
-      $('input[name="payer[name]"]').val("<?= $insured_insurance_plan;?>");
-      <?php } ?>
-
+      
     $('input[name="payer[address][street_line_1]"]').val("<?php echo  $inscoinfo['add1'];?>");
     $('input[name="payer[address][street_line_2]"]').val("<?php echo  $inscoinfo['add2'];?>");
     $('input[name="payer[address][city]"]').val("<?php echo  $inscoinfo['city'];?>");

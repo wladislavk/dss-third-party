@@ -1,4 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?
+
+require_once dirname(__FILE__) . '/../../../includes/autoloader.php';
+
 	$config_db_name = "dentalsl_main_dev";
 	$config_db_user = "root";
 	$config_db_pass = "";

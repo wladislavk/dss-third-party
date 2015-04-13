@@ -25,7 +25,7 @@
         </b>
     </div>
 
-    <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+    <form name="sortfrm" action="/manage/fcontact" method="post">
         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 
             @if ($totalRec > $recDisp)
@@ -99,21 +99,5 @@
         </table>
     </form>
 <br />
-
-@stop
-
-@section('footer')
-
-@parent
-
-<div id="popupRefer" style="height:550px; width:750px;">
-    <a id="popupReferClose">
-        <button>X</button>
-    </a>
-    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-
-<div id="backgroundPopupRef"></div>
-<br /><br />
 
 @stop

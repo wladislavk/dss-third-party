@@ -21,7 +21,8 @@
                 {!! $message !!}
             </div>
         @endif
-        <form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return contactabc(this)">
+        <form name="contactfrm" action="/manage/fcontact" method="post" onSubmit="return contactabc(this)">
+        <input type="hidden" name="add" value="1">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">

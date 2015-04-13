@@ -614,6 +614,68 @@ class ContactController extends Controller
         return view('manage.fcontact', $data);
     }
 
+    public function viewCorporateContact()
+    {
+        if (!empty($this->request['contactsub']) && $this->request['contactsub'] == 1) {
+            if (Route::input('ed') != '') {
+                foreach ($this->contactFields as $contactField) {
+                    $data[$contactField] = $this->request[$contactField];
+                }
+
+                $this->contact->updateData(Route::input('ed'), $data);
+                $message = 'Edited Successfully';
+
+                return redirect('/manage/fcontact')->with('message', $message);
+            } else {
+                foreach ($this->contactFields as $contactField) {
+                    $data[$contactField] = $this->request[$contactField];
+                }
+
+                $data['phone1'] = GeneralFunctions::num($data['phone1']);
+                $data['phone2'] = GeneralFunctions::num($data['phone2']);
+                $data['fax'] = GeneralFunctions::num($data['fax']);
+                $data['docid'] = Session::get('docId');
+                $data['ip_address'] = Request::ip();
+
+                $insertContactId = $this->contact->insertData($data);
+                $message = 'Added Successfully';
+
+                return redirect('/manage/fcontact')->with('message', $message);
+            }
+        }
+
+        $fcontacts = $this->contact->getContactTypeHolder(array('dc.contactid' => Route::input('ed')), null, null, null, null);
+
+        if (count($fcontacts)) {
+            $fcontacts = $fcontacts[0];
+        }
+
+        if ($fcontacts->contactid != '') {
+            $butText = "Edit ";
+        } else {
+            $butText = "Add ";
+        }
+
+        $contactTypes = $this->contactType->getAll();
+
+        if (!empty($contactTypes)) {
+            foreach ($contactTypes as $row) {
+                if ($row['contacttypeid'] == $fcontacts->contacttypeid) {
+                    $contactType['contacttype'] = $row['contacttype'];
+                }
+            }
+        }
+
+        $data = array(
+            'message'     => !empty($message) ? $message : '',
+            'fcontacts'   => $fcontacts,
+            'butText'     => $butText,
+            'contactType' => $contactType
+        );
+
+        return view('manage.view_fcontact', $data);
+    }
+
     /**
 
 

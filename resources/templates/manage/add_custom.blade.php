@@ -12,6 +12,7 @@
         {!! HTML::script('/js/manage/validation.js') !!}
         {!! HTML::script('/js/manage/masks.js') !!}
         {!! HTML::script('/js/manage/wufoo.js') !!}
+        {!! HTML::script('/js/manage/add_custom.js') !!}
         {!! HTML::script('js/admin/popup.js') !!}
     </head>
 
@@ -30,7 +31,6 @@
                 {!! $message !!}
             @endif
         </div>
-
         <form name="customfrm" action="/manage/add_custom{!! !empty($ed) ? '/' . $ed : '' !!}" method="post" onSubmit="return customabc(this)">
         <input type="hidden" name="add" value="1">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -42,7 +42,6 @@
                         @endif
                     </td>
                 </tr>
-
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
@@ -61,7 +60,6 @@
                         </ul>
                     </td>
                 </tr>
-
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
@@ -80,7 +78,6 @@
                         </ul>
                     </td>
                 </tr>
-
                 <tr bgcolor="#FFFFFF">
                     <td valign="top" class="frmhead">
                         Status
@@ -93,7 +90,6 @@
                         <br />&nbsp;
                     </td>
                 </tr>
-
                 <tr>
                     <td colspan="2" align="center">
                         <span class="red">
@@ -102,16 +98,19 @@
                         <input type="hidden" name="customsub" value="1" />
                         <input type="hidden" name="ed" value="{!! $customid or '' !!}" />
                         <input type="submit" value="{!! $butText !!} Custom Text" class="button" />
+                        <script type="text/javascript">
+                            var delid = '{!! $ed or '' !!}';
+                        </script>
 
                         @if (!empty($customid))
-                            <a style="float:right;" href="/manage/custom/delid={!! $customid or '' !!}" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE" target="_parent">
+                            <a style="float:right;" href="#" class="dellink" target="_parent" title="DELETE" id="dellink";>
                                 Delete
                             </a>
                         @endif
                     </td>
                 </tr>
             </table>
-            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+            <input id="token" type="hidden" name="_token" value="{!! csrf_token() !!}">
         </form>
 
     </body>

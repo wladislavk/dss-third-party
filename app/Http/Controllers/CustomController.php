@@ -36,7 +36,7 @@ class CustomController extends Controller
             $this->custom->deleteData($this->delid);
             $message = 'Deleted Successfully';
 
-            return redirect('/manage/custom')->with('message', $message)->with('closePopup', true);
+            return redirect('/manage/add_custom')->with('message', $message)->with('closePopup', true);
         }
 
         $recDisp = 20;

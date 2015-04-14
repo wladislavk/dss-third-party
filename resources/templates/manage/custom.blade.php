@@ -6,6 +6,7 @@
     {!! HTML::style('/css/manage/popup.css') !!}
 
     {!! HTML::script('/js/admin/popup.js') !!}
+    {!! HTML::script('/js/manage/add_custom.js') !!}
 @stop
 
 @section('content')

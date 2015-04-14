@@ -87,7 +87,7 @@ if (!isset($_SESSION['userid'])) {
 
     $num_pending_nodss_claims = $db->getNumberRows($claim_query);
 
-    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND mailed_date IS NULL AND status !=  ".DSS_CLAIM_PENDING." AND status != ".DSS_CLAIM_SEC_PENDING;
+    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND mailed_date IS NULL AND sec_mailed_date IS NULL AND status !=  ".DSS_CLAIM_PENDING." AND status != ".DSS_CLAIM_SEC_PENDING;
 
     $num_unmailed_claims = $db->getNumberRows($claim_query);
 

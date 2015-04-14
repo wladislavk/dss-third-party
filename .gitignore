@@ -1,3 +1,5 @@
+error_log
+*/error_log
 manage/admin/includes/config.php
 admin/includes/config.php
 manage/sleepstudies/*

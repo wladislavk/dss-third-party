@@ -17,7 +17,7 @@ include_once '../includes/claim_functions.php';
   $is_sec_pending = ($status == DSS_CLAIM_SEC_PENDING) ? true : false;
   $is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
   $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
-  $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED);
+  $_GET['instype'] == 2
 
   $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
   
@@ -597,10 +597,23 @@ if ($another_plan == "") {
               <h3><?php echo  $w_r['event_type']; ?> on
                     <?php echo  $w_r['adddate']; ?></h3>
               <?php $p = json_decode($w_r['response']); ?>
-              <p>Category: <?php echo  $p->{"details"}->{"codes"}->{"category_code"}; ?> - <?php echo  $p->{"details"}->{"codes"}->{"category_label"}; ?><br />
-              Status: <?php echo  $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?php echo  $p->{"details"}->{"codes"}->{"status_label"}; ?>
-              </p>
-        <?php
+                <?php if ($p->{"acknowledgements"} != "") {
+                    $ack_array = $p->{"acknowledgements"};
+                    $latest = $ack_array[0];
+                    ?>
+                    <p>Category: <?= $latest->{"details"}->{"codes"}->{"category_code"}; ?>
+                        - <?= $latest->{"details"}->{"codes"}->{"category_label"}; ?><br/>
+                        Status: <?= $latest->{"details"}->{"codes"}->{"status_code"}; ?>
+                        - <?= $latest->{"details"}->{"codes"}->{"status_label"}; ?>
+                        }else{
+                        ?>
+                    <p>Category: <?= $p->{"details"}->{"codes"}->{"category_code"}; ?>
+                        - <?= $p->{"details"}->{"codes"}->{"category_label"}; ?><br/>
+                        Status: <?php echo $p->{"details"}->{"codes"}->{"status_code"}; ?>
+                        - <?php echo $p->{"details"}->{"codes"}->{"status_label"}; ?>
+                    </p>
+                <?php
+                }
             }
           }
 
@@ -675,6 +688,17 @@ if ($another_plan == "") {
 
       $inscoinfo = $db->getRow($inscoquery);
     ?>
+      <?php if ($_GET['instype']==2){
+           ?>
+      $('input[name="payer[id]"').val("<?= $s_m_eligible_payer_id;?>");
+      $('input[name="payer[name]"').val("<?= $s_m_eligible_payer_name;?>");
+
+      <?php } else { ?>
+
+      $('input[name="payer[id]"').val("<?= $p_m_eligible_payer_id;?>");
+      $('input[name="payer[name]"').val("<?= $p_m_eligible_payer_name;?>");
+
+      <?php } ?>
 
     $('input[name="payer[address][street_line_1]"]').val("<?php echo  $inscoinfo['add1'];?>");
     $('input[name="payer[address][street_line_2]"]').val("<?php echo  $inscoinfo['add2'];?>");

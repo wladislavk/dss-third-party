@@ -1062,6 +1062,7 @@ if ($another_plan == "") {
       $('input[name="claim[service_lines][0][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_1;  ?>");
       $('input[name="claim[service_lines][0][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_1;  ?>");
       $('input[name="claim[service_lines][0][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_1;  ?>");
+      $('input[name="claim[service_lines][0][units]"]').val("<?php echo $days_or_units1;  ?>");
       <?php if ($rendering_provider_entity_2){ ?>
       $('input[name="claim[service_lines][1][rendering_provider][entity]"][value="true"]').trigger('click');
       <?php } else { ?>
@@ -1071,6 +1072,7 @@ if ($another_plan == "") {
       $('input[name="claim[service_lines][1][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_2;  ?>");
       $('input[name="claim[service_lines][1][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_2;  ?>");
       $('input[name="claim[service_lines][1][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_2;  ?>");
+      $('input[name="claim[service_lines][1][units]"]').val("<?php echo $days_or_units2;  ?>");
       <?php if ($rendering_provider_entity_3){ ?>
       $('input[name="claim[service_lines][2][rendering_provider][entity]"][value="true"]').trigger('click');
       <?php } else { ?>
@@ -1080,6 +1082,7 @@ if ($another_plan == "") {
       $('input[name="claim[service_lines][2][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_3;  ?>");
       $('input[name="claim[service_lines][2][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_3;  ?>");
       $('input[name="claim[service_lines][2][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_3;  ?>");
+      $('input[name="claim[service_lines][2][units]"]').val("<?php echo $days_or_units3;  ?>");
       <?php if ($rendering_provider_entity_4){ ?>
       $('input[name="claim[service_lines][3][rendering_provider][entity]"][value="true"]').trigger('click');
       <?php } else { ?>
@@ -1089,6 +1092,7 @@ if ($another_plan == "") {
       $('input[name="claim[service_lines][3][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_4;  ?>");
       $('input[name="claim[service_lines][3][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_4;  ?>");
       $('input[name="claim[service_lines][3][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_4;  ?>");
+      $('input[name="claim[service_lines][3][units]"]').val("<?php echo $days_or_units4;  ?>");
       <?php if ($rendering_provider_entity_5){ ?>
       $('input[name="claim[service_lines][4][rendering_provider][entity]"][value="true"]').trigger('click');
       <?php } else { ?>
@@ -1098,6 +1102,7 @@ if ($another_plan == "") {
       $('input[name="claim[service_lines][4][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_5;  ?>");
       $('input[name="claim[service_lines][4][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_5;  ?>");
       $('input[name="claim[service_lines][4][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_5;  ?>");
+      $('input[name="claim[service_lines][4][units]"]').val("<?php echo $days_or_units5;  ?>");
       <?php if ($rendering_provider_entity_6){ ?>
       $('input[name="claim[service_lines][5][rendering_provider][entity]"][value="true"]').trigger('click');
       <?php } else { ?>
@@ -1107,7 +1112,7 @@ if ($another_plan == "") {
       $('input[name="claim[service_lines][5][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_6;  ?>");
       $('input[name="claim[service_lines][5][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_6;  ?>");
       $('input[name="claim[service_lines][5][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_6;  ?>");
-
+      $('input[name="claim[service_lines][5][units]"]').val("<?php echo $days_or_units6; ?>");
       <?php
 }
 

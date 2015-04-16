@@ -685,13 +685,13 @@ if ($another_plan == "") {
     ?>
       <?php if ($_GET['instype']==2){
            ?>
-      $('input[name="payer[id]"').val("<?= $s_m_eligible_payer_id;?>");
-      $('input[name="payer[name]"').val("<?= $s_m_eligible_payer_name;?>");
+      $('input[name="payer[id]"]').val("<?= $s_m_eligible_payer_id;?>");
+      $('input[name="payer[name]"]').val("<?= $s_m_eligible_payer_name;?>");
 
       <?php } else { ?>
 
-      $('input[name="payer[id]"').val("<?= $p_m_eligible_payer_id;?>");
-      $('input[name="payer[name]"').val("<?= $p_m_eligible_payer_name;?>");
+      $('input[name="payer[id]"]').val("<?= $p_m_eligible_payer_id;?>");
+      $('input[name="payer[name]"]').val("<?= $p_m_eligible_payer_name;?>");
 
       <?php } ?>
 

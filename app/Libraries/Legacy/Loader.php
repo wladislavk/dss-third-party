@@ -311,7 +311,7 @@ class Loader
     private function requireLegacyFile($legacyFile)
     {
         try {
-            require_once $legacyFile;
+            require $legacyFile;
         } catch (\ErrorException $exitException) {
             /**
              * This is a die() or exit() exception only if the severity

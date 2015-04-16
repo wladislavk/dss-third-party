@@ -975,8 +975,8 @@ $fdf .= "
   << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".(($ssn == "1")?1:'').") >>
   << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".(($ein == "1")?1:'').") >>
   << /T(".$field_path.".pt_account_number_fill[0]) /V(".$patient_account_no.") >>
-  << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".((strtolower($accept_assignment) == "yes")?1:'').") >>
-  << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".((strtolower($accept_assignment) == "no")?1:'').") >>
+  << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".((strtolower($accept_assignment) == "yes" || $accept_assignment == "A")?1:'').") >>
+  << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".((strtolower($accept_assignment) == "no" || $accept_assignment == "C")?1:'').") >>
   
   << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format(floor($total_charge),0,'.','').") >>
   << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents(round(($total_charge-floor($total_charge))*100)).") >>

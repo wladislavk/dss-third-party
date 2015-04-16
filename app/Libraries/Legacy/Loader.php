@@ -6,16 +6,20 @@ use Illuminate\Http\RedirectResponse;
 
 class Loader
 {
-    public static $redirectRegex = '@
+    public static $redirectRegex = '@^
             \s*<script[^>]*?>\s*
                 (?:alert\(.*?\);\s*)?
                 (?:
-                    window\.location\.replace\(\s*(?:["\'])(?<replacePath>.+)\1\s*\);
+                    window\.location\.replace\(\s*
+                        (?<replaceDelimiter>["\'])(?<replacePath>.+)\k<replaceDelimiter>
+                    \s*\);
                     |
-                    window\.location\s*=\s*(?:["\'])(?<assignPath>.+)\1\s*;
+                    window\.location\s*=\s*
+                        (?<assignDelimiter>["\'])(?<assignPath>.+)\k<assignDelimiter>
+                    \s*;
                 )
             \s*</script>\s*
-        @isx';
+        $@isx';
 
     private $legacyPath = '';       // Config value of the legacy files
     private $outputBuffer = '';     // Buffer capture of the legacy load
@@ -307,7 +311,7 @@ class Loader
     private function requireLegacyFile($legacyFile)
     {
         try {
-            require_once $legacyFile;
+            require $legacyFile;
         } catch (\ErrorException $exitException) {
             /**
              * This is a die() or exit() exception only if the severity
@@ -351,14 +355,12 @@ class Loader
             if (strpos($location, '://dentalsleepsolutions.com')) {
                 $location = preg_replace('https?://dentalsleepsolutions\.com/?', '/', $location);
             } elseif (!preg_match('@://|^/@', $location)) {
-                $location = dirname("/$relativePath") . "/{$headers['location']}";
+                $location = dirname("/$relativePath") . "/$location";
+                $location = preg_replace('@/{2,}@', '/', $location);
             }
 
             // Remove index.php
             $location = preg_replace('@^(/.*)index\.php$@', '$1', $location);
-
-            // Remove .php extension
-            $location = preg_replace('@^(/.*)\.php$@', '$1', $location);
         }
 
         return $location;

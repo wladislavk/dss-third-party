@@ -15,12 +15,23 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     // $router->get('add_image/{pid?}', 'ImageController@index');
     $router->get('add_image/{it}/{return}/{field}/{pid?}/{sh?}', 'ImageController@index');
     $router->post('add_image/{pid?}', 'ImageController@add');
-    $router->get('view_contact/{ed?}', 'ContactController@view');
+    $router->get('view_contact/{ed?}/{corporate?}', 'ContactController@view');
+    $router->get('view_fcontact/{ed?}', 'ContactController@viewCorporateContact');
     $router->get('display_file/{file?}', 'FileController@display');
     $router->get('imageholder/{image}/{folder?}', 'ImageController@imageHolder');
     $router->get('add_contact/{ed?}', 'ContactController@index');
     $router->post('add_contact/{ed?}', 'ContactController@add');
     $router->post('search_contacts', 'ContactController@searchContact');
+    $router->post('search_patients', 'PatientController@searchPatients');
+    $router->get('add_task/{pid?}', 'TaskController@index');
+    $router->post('add_task', 'TaskController@add');
+    $router->get('view_sleeplab/{ed?}', 'SleepLabController@view');
+    $router->get('add_sleeplab/{ed?}', 'SleepLabController@index');
+    $router->post('add_sleeplab/{ed?}', 'SleepLabController@add');
+    $router->get('add_custom/{ed?}', 'CustomController@index');
+    $router->post('add_custom/{ed?}', 'CustomController@add');
+    $router->post('transaction_code/add', 'TransactionCodeController@add');
+    $router->get('transaction_code/edit/{ed?}', 'TransactionCodeController@index');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 
@@ -28,6 +39,11 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->post('add_patient/{pid?}', 'PatientController@add');
         $router->get('duplicate_patient/{pid?}', 'PatientController@duplicate');
         $router->get('contact', 'ContactController@manage');
+        $router->get('tasks', 'TaskController@manageTasks');
+        $router->get('sleeplab', 'SleepLabController@manage');
+        $router->get('fcontact', 'ContactController@manageCorporate');
+        $router->get('custom', 'CustomController@manage');
+        $router->get('transaction_code/{ed?}', 'TransactionCodeController@manage');
     });
 });
 

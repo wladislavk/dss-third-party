@@ -57,7 +57,7 @@
                 <label>Notes:</label>
                 <span class="value">{!! $sleepLabs['0']->notes !!}</span>
             </div>
-            <a href="/manage/add_sleeplab/{!! $ed !!}" style="margin-right:10px; float:right;">Edit</a>
+            <a href="/manage/sleeplab/add/{!! $ed !!}" style="margin-right:10px; float:right;">Edit</a>
         </div>
     </body>
 

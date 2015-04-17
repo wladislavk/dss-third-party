@@ -61,7 +61,7 @@ class SleeplabRepository implements SleeplabInterface
         }
 
         if (!empty($letter)) {
-            $sleeplabs = $sleeplabs->whereRaw("company like '" . $letter . "%' ");
+            $sleeplabs = $sleeplabs->whereRaw("company like ? ", array($letter . '%'));
         }
 
         if (!empty($order)) {

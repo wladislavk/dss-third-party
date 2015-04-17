@@ -51,7 +51,7 @@ class SleeplabController extends Controller
             $this->sleepLab->deleteData($this->delid);
             $message = 'Deleted Successfully';
 
-            return redirect('/manage/add_sleeplab')->with('message', $message)->with('closePopup', true);
+            return redirect('/manage/sleeplab/add')->with('message', $message)->with('closePopup', true);
         }
 
         $recDisp = 20;
@@ -148,13 +148,13 @@ class SleeplabController extends Controller
         $sleepLabs = $this->sleepLab->getSleepLabTypeHolder(array('sleeplabid' => Route::input('ed')));
 
         if (!empty(Route::input('ed'))) {
-            $butText = 'Edit';
+            $buttonText = 'Edit';
         } else {
-            $butText = 'Add';
+            $buttonText = 'Add';
         }
 
         $data = array(
-            'butText'     => $butText,
+            'buttonText'     => $buttonText,
             'ed'          => Route::input('ed'),
             'message'     => !empty(Session::get('message')) ? Session::get('message') : 'som',
             'closePopup'  => !empty(Session::get('closePopup')) ? Session::get('closePopup') : null
@@ -201,9 +201,9 @@ class SleeplabController extends Controller
             }
 
             if (!empty(Route::input('ed'))) {
-                $path = '/manage/add_sleeplab/' . Route::input('ed');
+                $path = '/manage/sleeplab/add' . Route::input('ed');
             } else {
-                $path = '/manage/add_sleeplab';
+                $path = '/manage/sleeplab/add';
             }
 
             return redirect($path)->with('closePopup', true)->with('message', $message);

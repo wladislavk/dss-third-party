@@ -29,12 +29,12 @@
             </script>
         @endif
 
-        <form name="sleeplabfrm" action="/manage/add_sleeplab{!! !empty($ed) ? '/' . $ed : '' !!}" method="post" onSubmit="return sleeplababc(this)">
+        <form name="sleeplabfrm" action="/manage/sleeplab/add{!! !empty($ed) ? '/' . $ed : '' !!}" method="post" onSubmit="return sleeplababc(this)">
             <input type="hidden" name="_token" value="{!! csrf_token() !!}">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">
-                       {!! $butText !!} Sleep Lab
+                       {!! $buttonText !!} Sleep Lab
                        @if (!empty($firstname) && !empty($lastname))
                             "{!! $firstname !!} {!! $lastname !!}"
                        @endif
@@ -210,7 +210,7 @@
                         <a href="#" id="google_link" target="_blank" style="float:left;" />
                             Google
                         </a>
-                        <input type="submit" value="{!! $butText !!} Sleep Lab" class="button" />
+                        <input type="submit" value="{!! $buttonText !!} Sleep Lab" class="button" />
                         <script type="text/javascript">
                             var delid = '{!! $ed or '' !!}';
                         </script>

@@ -26,7 +26,7 @@
 <br /><br />&nbsp;
 
 <div align="right">
-    <button style="margin-right:20px; float:right;" onclick="loadPopup('/manage/add_sleeplab');" class="addButton">Add New Sleep Lab</button>
+    <button style="margin-right:20px; float:right;" onclick="loadPopup('/manage/sleeplab/add');" class="addButton">Add New Sleep Lab</button>
     &nbsp;&nbsp;
 </div>
 <div class="letter_select">
@@ -92,9 +92,9 @@
                         <a href="#" onclick="$('#pat_{!! $sleepLab->sleeplabid !!}').toggle(); return false;">{!! count($patientsInfo[$sleepLab->sleeplabid]['pat']) !!}</a>
                     </td>
                     <td valign="top">
-                        <a href="#" onclick="loadPopup('/manage/view_sleeplab/{!! $sleepLab->sleeplabid !!}'); return false;" class="editlink" title="EDIT">Quick View</a>
+                        <a href="#" onclick="loadPopup('/manage/sleeplab/{!! $sleepLab->sleeplabid !!}/view'); return false;" class="editlink" title="EDIT">Quick View</a>
                         |
-                        <a href="#" onclick="loadPopup('/manage/add_sleeplab/{!! $sleepLab->sleeplabid !!}')" class="editlink" title="EDIT">Edit</a>
+                        <a href="#" onclick="loadPopup('/manage/sleeplab/add/{!! $sleepLab->sleeplabid !!}')" class="editlink" title="EDIT">Edit</a>
                     </td>
                 </tr>
                 <tr id="pat_{!! $sleepLab->sleeplabid !!}" style="display:none;">

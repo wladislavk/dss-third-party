@@ -363,15 +363,15 @@ class ContactController extends Controller
             return redirect('/manage/contact')->with('message', $message);
         }
 
-        $recDisp = 50;
+        $numberOfRecordsDisplayed = 50;
 
         if (!empty($this->page)) {
-            $indexVal = $this->page;
+            $indexPage = $this->page;
         } else {
-            $indexVal = 0;
+            $indexPage = 0;
         }
 
-        $iVal = $indexVal * $recDisp;
+        $skipValues = $indexPage * $numberOfRecordsDisplayed;
         $contactTypeHolder = !empty($this->contacttype) ? $this->contacttype : '';
 
         if (isset($this->letter)) {
@@ -411,7 +411,7 @@ class ContactController extends Controller
                 'docid'             => Session::get('docId'),
                 'dct.contacttypeid' => $contactTypeHolder,
                 'dc.status'         => 1
-            ), $letter, $order, $recDisp, $iVal);
+            ), $letter, $order, $numberOfRecordsDisplayed, $skipValues);
         } elseif (!empty($this->status)) {
             $contacts = $this->contact->getContactTypeHolder(array(
                 'docid'      => Session::get('docId'),
@@ -422,7 +422,7 @@ class ContactController extends Controller
             $contacts = $this->contact->getContactTypeHolder(array(
                 'docid'      => Session::get('docId'),
                 'dc.status'  => $this->status
-            ), $letter, $order, $recDisp, $iVal);
+            ), $letter, $order, $numberOfRecordsDisplayed, $skipValues);
         } else {
             $contacts = $this->contact->getContactTypeHolder(array(
                 'docid'      => Session::get('docId'),
@@ -434,10 +434,10 @@ class ContactController extends Controller
             $contacts = $this->contact->getContactTypeHolder(array(
                 'docid'      => Session::get('docId'),
                 'dc.status'  => 1
-            ), $letter, $order, $recDisp, $iVal);
+            ), $letter, $order, $numberOfRecordsDisplayed, $skipValues);
         }
 
-        $noPages = $totalRec / $recDisp;
+        $noPages = $totalRec / $numberOfRecordsDisplayed;
 
         $contactTypes = $this->contactType->getAll();
         if (!empty($contactTypes)) foreach ($contactTypes as $row) {
@@ -475,22 +475,22 @@ class ContactController extends Controller
         }
 
         $data = array_merge($data, array(
-            'path'          => '/' . Request::segment(1) . '/' . Request::segment(2),
-            'contactTypes'  => $contactTypes,
-            'contactType'   => $contactType,
-            'message'       => !empty($message) ? $message : '',
-            'letters'       => $letters,
-            'letter'        => $this->letter,
-            'status'        => $this->status,
-            'sort'          => $this->sort,
-            'sortdir'       => $this->sortdir,
-            'contacttype'   => $this->contacttype,
-            'totalRec'      => $totalRec,
-            'recDisp'       => $recDisp,
-            'indexVal'      => $indexVal,
-            'contacts'      => $contacts,
-            'patientsInfo'  => $patientsInfo,
-            'noPages'       => $noPages
+            'path'                     => '/' . Request::segment(1) . '/' . Request::segment(2),
+            'contactTypes'             => $contactTypes,
+            'contactType'              => $contactType,
+            'message'                  => !empty($message) ? $message : '',
+            'letters'                  => $letters,
+            'letter'                   => $this->letter,
+            'status'                   => $this->status,
+            'sort'                     => $this->sort,
+            'sortdir'                  => $this->sortdir,
+            'contacttype'              => $this->contacttype,
+            'totalRec'                 => $totalRec,
+            'numberOfRecordsDisplayed' => $numberOfRecordsDisplayed,
+            'indexPage'                 => $indexPage,
+            'contacts'                 => $contacts,
+            'patientsInfo'             => $patientsInfo,
+            'noPages'                  => $noPages
         ));
 
         // dd($data['contacts']);
@@ -551,15 +551,15 @@ class ContactController extends Controller
             return redirect('/manage/fcontact')->with('message', $message);
         }
 
-        $recDisp = 10;
+        $numberOfRecordsDisplayed = 10;
 
         if (!empty($this->page)) {
-            $indexVal = $this->page;
+            $indexPage = $this->page;
         } else {
-            $indexVal = 0;
+            $indexPage = 0;
         }
 
-        $iVal = $indexVal * $recDisp;
+        $skipValues = $indexPage * $numberOfRecordsDisplayed;
 
         $contactTypes = $this->contactType->getAll();
         if (!empty($contactTypes)) {
@@ -587,28 +587,28 @@ class ContactController extends Controller
             $order = null;
         }
 
-        $fcontacts = $this->contact->getContactTypeHolder(array('dc.corporate' => 1), null, $order, $recDisp, $iVal);
+        $fcontacts = $this->contact->getContactTypeHolder(array('dc.corporate' => 1), null, $order, $numberOfRecordsDisplayed, $skipValues);
 
         $fcontactsCount = $this->contact->getContactTypeHolder(array('dc.corporate' => 1), null, $order, null, null);
 
         $totalRec = count($fcontactsCount);
-        $noPages = $totalRec / $recDisp;
+        $noPages = $totalRec / $numberOfRecordsDisplayed;
 
         foreach ($this->request as $name => $value) {
             $data[$name] = $value;
         }
 
         $data = array_merge($data, array(
-            'message'       => !empty($message) ? $message : '',
-            'fcontacts'     => $fcontacts,
-            'contactType'   => $contactType,
-            'totalRec'      => $totalRec,
-            'noPages'       => $noPages,
-            'recDisp'       => $recDisp,
-            'indexVal'      => $indexVal,
-            'sort'          => $this->sort,
-            'sortdir'       => $this->sortdir,
-            'contacttype'   => $this->contacttype
+            'message'                  => !empty($message) ? $message : '',
+            'fcontacts'                => $fcontacts,
+            'contactType'              => $contactType,
+            'totalRec'                 => $totalRec,
+            'noPages'                  => $noPages,
+            'numberOfRecordsDisplayed' => $numberOfRecordsDisplayed,
+            'indexPage'                 => $indexPage,
+            'sort'                     => $this->sort,
+            'sortdir'                  => $this->sortdir,
+            'contacttype'              => $this->contacttype
         ));
 
         return view('manage.fcontact', $data);

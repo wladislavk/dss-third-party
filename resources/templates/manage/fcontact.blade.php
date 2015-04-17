@@ -28,13 +28,13 @@
     <form name="sortfrm" action="/manage/fcontact" method="post">
         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 
-            @if ($totalRec > $recDisp)
+            @if ($totalRec > $numberOfRecordsDisplayed)
                 <tr bgColor="#ffffff">
                     <td  align="right" colspan="15" class="bp">
                         Pages:
 
                         @for ($pCount = 0; $pCount < $noPages; $pCount++)
-                            @if ($indexVal == $pCount)
+                            @if ($indexPage == $pCount)
                                 <strong>{!! $pCount + 1 !!}</strong>
                             @else
                                 <a href="#" onclick='setRouteParameters("/manage/fcontact", "{\"page\": \"{!! $pCount !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", \"contacttype\": \"{!! $contacttype !!}\"}", "{!! csrf_token() !!}"); return false;' class="fp">

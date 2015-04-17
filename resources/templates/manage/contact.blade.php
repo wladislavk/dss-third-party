@@ -43,7 +43,7 @@
         </ul>
     </div>
 
-    <button style="margin-right:10px; float:right;" onclick="loadPopup('/manage/add_contact')" class="addButton">
+    <button style="margin-right:10px; float:right;" onclick="loadPopup('/manage/contact/add')" class="addButton">
         Add New Contact
     </button>
     &nbsp;&nbsp;
@@ -161,11 +161,11 @@
                         </td>
                         <td valign="top" width="20%">
                             <div class="actions" style="display:none;">
-                                <a href="#" onclick="loadPopup('/manage/view_contact/{!! $contact->contactid !!}'); return false;" class="editlink" title="EDIT">
+                                <a href="#" onclick="loadPopup('/manage/contact/{!! $contact->contactid !!}/view'); return false;" class="editlink" title="EDIT">
                                     Quick View
                                 </a>
                                 |
-                                <a href="#" onclick="loadPopup('/manage/add_contact/{!! $contact->contactid !!}')" class="editlink" title="EDIT">
+                                <a href="#" onclick="loadPopup('/manage/contact/add/{!! $contact->contactid !!}')" class="editlink" title="EDIT">
                                     Edit 
                                 </a>
                             </div>
@@ -177,7 +177,7 @@
                             
                             @if (count($patientsInfo[$contact->contactid]['ref']))
                                 @foreach ($patientsInfo[$contact->contactid]['ref'] as $patient)
-                                    <a href="#" onclick='setRouteParameters("/manage/add_patient{!! !empty($patient->patientid) ? '/' . $patient->patientid : '' !!}", "{\"ed\": \"{!! $patient->patientid or '' !!}\"}", "{!! csrf_token() !!}"); return false;'>{!! $patient->firstname !!} {!! $patient->lastname !!}<br />
+                                    <a href="#" onclick='setRouteParameters("/manage/patient/add{!! !empty($patient->patientid) ? '/' . $patient->patientid : '' !!}", "{\"ed\": \"{!! $patient->patientid or '' !!}\"}", "{!! csrf_token() !!}"); return false;'>{!! $patient->firstname !!} {!! $patient->lastname !!}<br />
                                 @endforeach
                             @endif
                         </td>
@@ -187,7 +187,7 @@
 
                             @if (count($patientsInfo[$contact->contactid]['pat']))
                                 @foreach ($patientsInfo[$contact->contactid]['pat'] as $patient)
-                                    <a href="#" onclick='setRouteParameters("/manage/add_patient{!! !empty($patient->patientid) ? '/' . $patient->patientid : '' !!}", "{\"ed\": \"{!! $patient->patientid or '' !!}\"}", "{!! csrf_token() !!}"); return false;'>{!! $patient->firstname !!} {!! $patient->lastname !!}<br />    
+                                    <a href="#" onclick='setRouteParameters("/manage/patient/add{!! !empty($patient->patientid) ? '/' . $patient->patientid : '' !!}", "{\"ed\": \"{!! $patient->patientid or '' !!}\"}", "{!! csrf_token() !!}"); return false;'>{!! $patient->firstname !!} {!! $patient->lastname !!}<br />    
                                 @endforeach
                             @endif
                         </td>

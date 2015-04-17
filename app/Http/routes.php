@@ -15,21 +15,21 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     // $router->get('add_image/{pid?}', 'ImageController@index');
     $router->get('add_image/{it}/{return}/{field}/{pid?}/{sh?}', 'ImageController@index');
     $router->post('add_image/{pid?}', 'ImageController@add');
-    $router->get('view_contact/{ed?}', 'ContactController@view');
+    $router->get('contact/{ed}/view', 'ContactController@view');
     $router->get('display_file/{file?}', 'FileController@display');
     $router->get('imageholder/{image}/{folder?}', 'ImageController@imageHolder');
-    $router->get('add_contact/{ed?}', 'ContactController@index');
-    $router->post('add_contact/{ed?}', 'ContactController@add');
-    $router->post('search_contacts', 'ContactController@searchContact');
-    $router->post('search_patients', 'PatientController@searchPatients');
-    $router->get('add_task/{pid?}', 'TaskController@index');
-    $router->post('add_task', 'TaskController@add');
+    $router->get('contact/add/{ed?}', 'ContactController@index');
+    $router->post('contact/add/{ed?}', 'ContactController@add');
+    $router->post('contact/search', 'ContactController@searchContact');
+    $router->post('patient/search', 'PatientController@searchPatients');
+    $router->get('task/add/{pid?}', 'TaskController@index');
+    $router->post('task/add', 'TaskController@add');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 
-        $router->get('add_patient/{pid?}', 'PatientController@index');
-        $router->post('add_patient/{pid?}', 'PatientController@add');
-        $router->get('duplicate_patient/{pid?}', 'PatientController@duplicate');
+        $router->get('patient/add/{pid?}', 'PatientController@index');
+        $router->post('patient/add/{pid?}', 'PatientController@add');
+        $router->get('patient/{pid}/duplicate', 'PatientController@duplicate');
         $router->get('contact', 'ContactController@manage');
     });
 });

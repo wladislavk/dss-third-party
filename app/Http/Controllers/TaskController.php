@@ -88,7 +88,7 @@ class TaskController extends Controller
             $this->task->insertData($data);
             // $message = 'Task Added!';
 
-            return redirect('/manage/add_task')->with('closePopup', true);
+            return redirect('/manage/task/add')->with('closePopup', true);
         } elseif (!empty($this->request['taskedit']) && $this->request['taskedit'] == 1) {
             $dueDate = !empty($this->request['due_date']) ? date('Y-m-d', strtotime($this->request['due_date'])) : '';
 
@@ -103,7 +103,7 @@ class TaskController extends Controller
             $this->task->updateData($this->request['task_id'], $data);
             // $message = 'Task Added!';
 
-            return redirect('/manage/add_task')->with('closePopup', true);
+            return redirect('/manage/task/add')->with('closePopup', true);
         }
     }
 }

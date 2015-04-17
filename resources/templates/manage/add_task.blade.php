@@ -25,7 +25,7 @@
             </script>
         @endif
 
-        <form name="notesfrm" action="/manage/add_task" method="post" >
+        <form name="notesfrm" action="/manage/task/add" method="post" >
             <input type="hidden" name="patientid" value="{!! $patientId or '' !!}" />
             <input type="hidden" name="_token" value="{!! csrf_token() !!}">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">

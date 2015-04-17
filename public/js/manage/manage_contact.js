@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	setup_autocomplete('contact_name', 'contact_hints', 'contact', '', '/manage/search_contacts');
+	setup_autocomplete('contact_name', 'contact_hints', 'contact', '', '/manage/contact/search');
 	$('.actions').show();
 });
 

@@ -117,22 +117,32 @@
       $other_insured_city = st($myarray['insured_city']);
       $other_insured_state = st($myarray['insured_state']);
       $other_insured_zip = st($myarray['insured_zip']);
-      $insured_id_number = st($myarray['other_insured_id_number']);
+
+      $insured_id_number = $pat_myarray['s_m_ins_id'];
       $insured_firstname = st($myarray['other_insured_firstname']);
       $insured_middle = st($myarray['other_insured_middle']);
       $insured_lastname = st($myarray['other_insured_lastname']);
       $insured_dob = st($pat_myarray['ins2_dob']);
+
       $insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
       $insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
       $other_insured_id_number = st($myarray['insured_id_number']);
-      $insured_address = st($myarray['other_insured_address']);
-      $insured_city = st($myarray['other_insured_city']);
-      $insured_state = st($myarray['other_insured_state']);
-      $insured_zip = st($myarray['other_insured_zip']);
+
+        if ($pat_myarray['s_m_same_address'] == 1) {
+            $insured_address = st($pat_myarray['add1']);
+            $insured_city = st($pat_myarray['city']);
+            $insured_state = st($pat_myarray['state']);
+            $insured_zip = st($pat_myarray['zip']);
+        } else {
+            $insured_address = st($pat_myarray['s_m_address']);
+            $insured_city = st($pat_myarray['s_m_city']);
+            $insured_state = st($pat_myarray['s_m_state']);
+            $insured_zip = st($pat_myarray['s_m_zip']);
+        }
       $insured_phone_code = st($myarray['insured_phone_code']);
       $insured_phone = st($myarray['insured_phone']);
-      $insured_sex = st($pat_myarray['p_m_gender']);
-      $patient_relation_insured = st($myarray['patient_relation_other_insured']);
+      $insured_sex = st($pat_myarray['s_m_gender']);
+      $patient_relation_insured = st($pat_myarray['s_m_relation']);
       $patient_relation_other_insured = st($myarray['patient_relation_insured']);
     } else {
       $insurancetype = st($myarray['insurance_type']);

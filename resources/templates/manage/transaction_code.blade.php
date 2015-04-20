@@ -16,7 +16,7 @@
     <br />
     <br />
     <div align="right">
-        <button style="margin-right:20px; float:right;" onclick="loadPopup('/manage/transaction_code/edit');" class="addButton"> Add New Transaction Code</button>
+        <button style="margin-right:20px; float:right;" onclick="loadPopup('/manage/transaction_code/add');" class="addButton"> Add New Transaction Code</button>
         &nbsp;&nbsp;
     </div>
     <br />
@@ -112,7 +112,7 @@
                         {!! $transaction['amount'] !!}
                     </td>
                     <td valign="top">
-                        <a href="#" onclick="loadPopup('transaction_code/edit/{!! $transaction['transaction_codeid'] !!}');" class="editlink" title="EDIT">
+                        <a href="#" onclick="loadPopup('transaction_code/{!! $transaction['transaction_codeid'] !!}/edit');" class="editlink" title="EDIT">
                             Edit
                         </a>
                     </td>

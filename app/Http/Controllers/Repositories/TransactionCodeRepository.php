@@ -59,20 +59,6 @@ class TransactionCodeRepository implements TransactionCodeInterface
         return $transaction;
     }
 
-    public function getPlaceService($where = null, $order = null)
-    {
-        $placeServices = DB::table('dental_place_service')->orderBy($order)->get();
-
-        return $placeServices;
-    }
-
-    public function getModifierCode($where = null, $order = null)
-    {
-        $modifierCodes = DB::table('dental_modifier_code')->orderBy($order)->get();
-
-        return $modifierCodes;
-    }
-
     public function updateData($codeId, $values)
     {
         $transactionCode = TransactionCode::where('transaction_codeid', '=', $codeId)->update($values);
@@ -80,8 +66,8 @@ class TransactionCodeRepository implements TransactionCodeInterface
         return $transactionCode;
     }
 
-     public function insertData($data)
-     {
+    public function insertData($data)
+    {
         $transactionCode = new TransactionCode();
 
         foreach ($data as $attribute => $value) {
@@ -89,5 +75,5 @@ class TransactionCodeRepository implements TransactionCodeInterface
         }
 
         $transactionCode->save();
-     }
+    }
 }

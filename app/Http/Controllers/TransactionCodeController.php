@@ -7,42 +7,50 @@ use Session;
 use Route;
 
 use Ds3\Contracts\TransactionCodeInterface;
+use Ds3\Contracts\PlaceServiceInterface;
+use Ds3\Contracts\ModifierCodeInterface;
 use Ds3\Contracts\UserInterface;
 use Ds3\Libraries\GeneralFunctions;
+
+use Ds3\Libraries\Constants;
 
 class TransactionCodeController extends Controller
 {
     private $transactionCode;
+    private $placeService;
+    private $modifierCode;
     private $request;
     private $user;
-    private $delid;
-    private $page;
+    private $deleteId;
+    private $pageNumber;
     private $transactionCodeFields;
 
     const LIMIT = 20;
     const ORDER = 'sortby';
-    const DSS_AMOUNT_ADJUST_USER = 'User Entered';
-    const DSS_AMOUNT_ADJUST_NEGATIVE = 'Always Negative';
-    const DSS_AMOUNT_ADJUST_POSITIVE = 'Always Positive';
 
     public function __construct(
         TransactionCodeInterface $transactionCode,
+        PlaceServiceInterface    $placeService,
+        ModifierCodeInterface    $modifierCode,
         UserInterface            $user
     ) {
         $this->request         = Request::all();
 
         $this->user            = $user;
         $this->transactionCode = $transactionCode;
+        $this->placeService    = $placeService;
+        $this->modifierCode    = $modifierCode;
 
-        $this->delid           = GeneralFunctions::getRouteParameter('delid');
-        $this->page            = GeneralFunctions::getRouteParameter('page');
+        $this->deleteId        = GeneralFunctions::getRouteParameter('delid');
+        $this->pageNumber      = GeneralFunctions::getRouteParameter('page');
 
         $this->transactionCodeFields = array('transaction_code', 'description', 'type', 'place', 'modifier_code_1', 'modifier_code_1', 'modifier_code_2', 'days_units', 'amount_adjust', 'status', 'amount');
     }
 
     public function manage()
     {
-        $usersType = $this->user->getTypeUsers(array('userid' => Session::get('userId')));
+        $usersType = $this->user->getTypeUsers(array(
+            'userid' => Session::get('userId')));
 
         if (count($usersType)) {
             $usersType = $usersType[0];
@@ -54,17 +62,17 @@ class TransactionCodeController extends Controller
             return view('manage.transaction_code', $message);
         }
 
-        if (!empty($this->delid)) {
-            $this->transactionCode->deleteData(array('transaction_codeid' => $this->delid,
+        if (!empty($this->deleteId)) {
+            $this->transactionCode->deleteData(array('transaction_codeid' => $this->deleteId,
                                                      'docid'              => Session::get('docId')));
 
             $message = 'Deleted Successfully';
 
-            return redirect('/manage/transaction_code/edit')->with('message', $message)->with('closePopup', true);
+            return redirect('/manage/transaction_code/add')->with('message', $message)->with('closePopup', true);
         }
 
-        if (!empty($this->page)) {
-            $indexVal = $this->page;
+        if (!empty($this->pageNumber)) {
+            $indexVal = $this->pageNumber;
         } else {
             $indexVal = 0;
         }
@@ -99,8 +107,8 @@ class TransactionCodeController extends Controller
     {
         if (!empty($this->request['sortsub']) && $this->request['sortsub'] == 1) {
 
-            if (!empty($this->page)) {
-                $indexVal = $this->page;
+            if (!empty($this->pageNumber)) {
+                $indexVal = $this->pageNumber;
             } else {
                 $indexVal = 0;
             }
@@ -121,10 +129,10 @@ class TransactionCodeController extends Controller
         }
 
         if ($this->request['sortby'] == '' || is_numeric($this->request['sortby']) === false) {
-                $sortBy = 999;
-            } else {
-                $sortBy = $this->request['sortby'];
-            }
+            $sortBy = 999;
+        } else {
+            $sortBy = $this->request['sortby'];
+        }
 
         if (!empty($this->request['add']) && $this->request['add'] == 1) {
             if (!empty($this->request['ed'])) {
@@ -151,34 +159,35 @@ class TransactionCodeController extends Controller
                 $message = 'Added Successfully';
             }
 
-             return redirect('/manage/transaction_code/edit')->with('message', $message)->with('closePopup', true);
+             return redirect('/manage/transaction_code/add')->with('message', $message)->with('closePopup', true);
         }
     }
 
     public function index()
     {
-        $transactionsNum = $this->transactionCode->getTransactionCode(array('transaction_codeid' => Route::input('ed'),
-                                                                            'docid'              => Session::get('docId')),
-                                                                            null, null, null);
+        $transactionsNum = $this->transactionCode->getTransactionCode(array(
+            'transaction_codeid' => Route::input('ed'),
+            'docid'              => Session::get('docId')),
+            null, null, null);
 
-        $placeServices = $this->transactionCode->getPlaceService(null, 'sortby');
-        $modifierCodes = $this->transactionCode->getModifierCode(null, 'sortby');
+        $placeServices = $this->placeService->getPlaceService('sortby');
+        $modifierCodes = $this->modifierCode->getModifierCode('sortby');
 
         if (count($transactionsNum)) {
-            $butText         = 'Edit';
+            $buttonText      = 'Edit';
             $transactionsNum = $transactionsNum[0];
         } else {
-            $butText = 'Add';
+            $buttonText = 'Add';
         }
 
         $data = array(
-            'butText'                 => $butText,
+            'buttonText'              => $buttonText,
             'transactionsNum'         => $transactionsNum,
             'placeServices'           => $placeServices,
             'modifierCodes'           => $modifierCodes,
-            'dssAmountAdjustUser'     => self::DSS_AMOUNT_ADJUST_USER,
-            'dssAmountAdjustNegative' => self::DSS_AMOUNT_ADJUST_NEGATIVE,
-            'dssAmountAdjustPositive' => self::DSS_AMOUNT_ADJUST_POSITIVE,
+            'dssAmountAdjustUser'     => Constants::$dss_amount_adjust_labels[0],
+            'dssAmountAdjustNegative' => Constants::$dss_amount_adjust_labels[1],
+            'dssAmountAdjustPositive' => Constants::$dss_amount_adjust_labels[2],
             'message'     => !empty(Session::get('message')) ? Session::get('message') : '',
             'closePopup'  => !empty(Session::get('closePopup')) ? Session::get('closePopup') : null
         );

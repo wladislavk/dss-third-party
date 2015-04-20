@@ -201,5 +201,15 @@ class UserServiceProvider extends ServiceProvider
             'Ds3\Contracts\TransactionCodeInterface',
             'Ds3\Repositories\TransactionCodeRepository'
         );
+
+        $this->app->bind(
+            'Ds3\Contracts\PlaceServiceInterface',
+            'Ds3\Repositories\PlaceServiceRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\ModifierCodeInterface',
+            'Ds3\Repositories\ModifierCodeRepository'
+        );
     }
 }

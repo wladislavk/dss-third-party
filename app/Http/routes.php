@@ -31,7 +31,8 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->get('add_custom/{ed?}', 'CustomController@index');
     $router->post('add_custom/{ed?}', 'CustomController@add');
     $router->post('transaction_code/add', 'TransactionCodeController@add');
-    $router->get('transaction_code/edit/{ed?}', 'TransactionCodeController@index');
+    $router->get('transaction_code/{ed?}/edit', 'TransactionCodeController@index');
+    $router->get('transaction_code/add', 'TransactionCodeController@index');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 

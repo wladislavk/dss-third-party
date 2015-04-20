@@ -40,8 +40,8 @@
                 <tr>
                     <td colspan="2" class="cat_head">
 
-                        @if (!empty($butText))
-                            {!! $butText !!} Transaction Code
+                        @if (!empty($buttonText))
+                            {!! $buttonText !!} Transaction Code
 
                             @if (!empty($transactionsNum['transaction_code']))
                                 &quot;{!! $transactionsNum['transaction_code'] !!}&quot;
@@ -169,9 +169,9 @@
                     </td>
                     <td valign="top" class="frmdata">
                         <select name="amount_adjust" class="tbox">
-                            <option value="DSS_AMOUNT_ADJUST_USER" {!! (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == DSS_AMOUNT_ADJUST_USER) ? "selected" : '' !!}>{!! $dssAmountAdjustUser !!}</option>
-                            <option value="DSS_AMOUNT_ADJUST_NEGATIVE" {!! (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == DSS_AMOUNT_ADJUST_NEGATIVE) ? "selected" : '' !!}>{!! $dssAmountAdjustNegative !!}</option>
-                            <option value="DSS_AMOUNT_ADJUST_POSITIVE" {!! (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == DSS_AMOUNT_ADJUST_POSITIVE) ? "selected" : '' !!}>{!! $dssAmountAdjustPositive !!}</option>
+                            <option value="0" {!! (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == 0) ? "selected" : '' !!}>{!! $dssAmountAdjustUser !!}</option>
+                            <option value="1" {!! (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == 1) ? "selected" : '' !!}>{!! $dssAmountAdjustNegative !!}</option>
+                            <option value="2" {!! (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == 2) ? "selected" : '' !!}>{!! $dssAmountAdjustPositive !!}</option>
                         </select>
                     </td>
                 </tr>
@@ -190,7 +190,7 @@
                         </span><br />
                         <input type="hidden" name="transaction_codesub" value="1" />
                         <input type="hidden" name="ed" value="{!! $transactionsNum['transaction_codeid'] or '' !!}" />
-                        <input type="submit" value="{!! $butText or '' !!} Transaction Code" class="button" />
+                        <input type="submit" value="{!! $buttonText or '' !!} Transaction Code" class="button" />
 
                         <script type="text/javascript">
                             var delid = '{!! $transactionsNum['transaction_codeid'] or '' !!}';

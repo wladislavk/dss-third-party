@@ -589,23 +589,23 @@ if ($another_plan == "") {
             $w_r = $db->getRow($w_sql);
             if($w_r['response']!=''){
         ?>
-              <h3><?php echo  $w_r['event_type']; ?> on
+              <h3><?php echo  $w_r['event_type']; ?>
                     <?php echo  $w_r['adddate']; ?></h3>
               <?php $p = json_decode($w_r['response']); ?>
                 <?php if ($p->{"acknowledgements"} != "") {
                     $ack_array = $p->{"acknowledgements"};
                     $latest = $ack_array[0];
                     ?>
-                    <p>Category: <?= $latest->{"details"}->{"codes"}->{"category_code"}; ?>
-                        - <?= $latest->{"details"}->{"codes"}->{"category_label"}; ?><br/>
-                        Status: <?= $latest->{"details"}->{"codes"}->{"status_code"}; ?>
-                        - <?= $latest->{"details"}->{"codes"}->{"status_label"}; ?>
+                    <p>Category: <?= htmlspecialchars($latest->{"details"}->{"codes"}->{"category_code"}); ?>
+                        - <?= htmlspecialchars($latest->{"details"}->{"codes"}->{"category_label"}); ?><br/>
+                        Status: <?= htmlspecialchars($latest->{"details"}->{"codes"}->{"status_code"}); ?>
+                        - <?= htmlspecialchars($latest->{"details"}->{"codes"}->{"status_label"}); ?>
                         }else{
                         ?>
-                    <p>Category: <?= $p->{"details"}->{"codes"}->{"category_code"}; ?>
-                        - <?= $p->{"details"}->{"codes"}->{"category_label"}; ?><br/>
-                        Status: <?php echo $p->{"details"}->{"codes"}->{"status_code"}; ?>
-                        - <?php echo $p->{"details"}->{"codes"}->{"status_label"}; ?>
+                    <p>Category: <?= htmlspecialchars($p->{"details"}->{"codes"}->{"category_code"}); ?>
+                        - <?= htmlspecialchars($p->{"details"}->{"codes"}->{"category_label"}); ?><br/>
+                        Status: <?php echo htmlspecialchars($p->{"details"}->{"codes"}->{"status_code"}); ?>
+                        - <?php echo htmlspecialchars($p->{"details"}->{"codes"}->{"status_label"}); ?>
                     </p>
                 <?php
                 }

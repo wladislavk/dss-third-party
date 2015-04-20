@@ -600,6 +600,7 @@ if ($another_plan == "") {
                         - <?= htmlspecialchars($latest->{"details"}->{"codes"}->{"category_label"}); ?><br/>
                         Status: <?= htmlspecialchars($latest->{"details"}->{"codes"}->{"status_code"}); ?>
                         - <?= htmlspecialchars($latest->{"details"}->{"codes"}->{"status_label"}); ?>
+                        <?php
                         }else{
                         ?>
                     <p>Category: <?= htmlspecialchars($p->{"details"}->{"codes"}->{"category_code"}); ?>

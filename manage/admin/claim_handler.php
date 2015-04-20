@@ -205,11 +205,6 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $insured_sex = $_POST['subscriber']['gender'];
         $insured_insurance_plan = $_POST['subscriber']['group_name'];
         $other_insured_insurance_plan = $_POST['other_payers'][0]['name'];
-        $other_insured_id_number = $_POST['other_payers'][0]['subscriber']['id'];
-        $other_insured_address = $_POST['other_payers'][0]['subscriber']['address']['street_line_1'];
-        $other_insured_city = $_POST['other_payers'][0]['subscriber']['address']['city'];
-        $other_insured_state = $_POST['other_payers'][0]['subscriber']['address']['state'];
-        $other_insured_zip = $_POST['other_payers'][0]['subscriber']['address']['zip'];
         $other_payer = $_POST['other_payer'];
         $responsibility_sequence = $_POST['other_payers'][0]['responsibility_sequence'];
         if($other_payer == "true"){
@@ -414,8 +409,6 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $billing_provider_a = $_POST['billing_provider']['npi'];
         $reject_reason = $_POST['reject_reason'];
         $insurance_type_arr = $insurance_type;
-
-                $s_m_eligible_payer_id = $_POST['other_payers'][0]['subscriber']['id'];
                 $p_m_eligible_payer_id = $_POST['payer']['id'];
                 $p_m_eligible_payer_name = $_POST['payer']['name'];
 

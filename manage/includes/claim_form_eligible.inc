@@ -741,23 +741,7 @@ if ($another_plan == "") {
       $('input[name="other_payers[0][subscriber][first_name]"]').val("<?= $other_insured_firstname;?>");
       $('input[name="other_payers[0][subscriber][middle_name]"]').val("<?= $other_insured_middle;?>");
       $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
-      $('input[name="other_payers[0][subscriber][group_name]"]').val("<?= $other_insured_insurance_plan;?>");
-      $('input[name="other_payers[0][subscriber][address][street_line_1]"]').val("<?= $other_insured_address;?>");
-      $('input[name="other_payers[0][subscriber][address][city]"]').val("<?= $other_insured_city;?>");
-      $('input[name="other_payers[0][subscriber][address][state]"]').val("<?= $other_insured_state;?>");
-      $('input[name="other_payers[0][subscriber][address][zip]"]').val("<?= $other_insured_zip;?>");
-
-      <?php if($patient_relation_other_insured == 'Spouse'){ ?>
-      $('input[name="other_payers[0][subscriber][relationship]"]').val("01");
-      <?php }elseif($patient_relation_other_insured == 'Child'){ ?>
-      $$('input[name="other_payers[0][subscriber][relationship]"]').val("19");
-      <?php }elseif($patient_relation_other_insured == 'Other'){ ?>
-      $('input[name="other_payers[0][subscriber][relationship]"]').val("G8");
-      <?php }elseif($patient_relation_other_insured == 'Self'){ ?>
-      $('input[name="other_payers[0][subscriber][relationship]"]').val("18");
-      <?php } ?>
-
-      $('input[name="other_payers[0][subscriber][id]"]').val("<?= $other_insured_insurance_plan;?>");
+                      
       <?php
         if($_GET['instype']==2 && $responsibility_sequence == ""){
           $seq='P';

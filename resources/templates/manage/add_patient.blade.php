@@ -68,7 +68,7 @@
                         <div id="profile_image" style="float:right; width:270px;">
                             <span style="float:right">
                             @if (!empty($showBlock['patientPhoto']))
-                                <a href="#" onclick="loadPopup('/manage/add_image/4/patinfo/profile'{!! !empty($patientId) ? '/' . $patientId : '' !!}{!! !empty($sh) ? '/' . $sh : '' !!}); return false;">
+                                <a href="#" onclick='loadPopup("/manage/image/add", "{\"it\": \"4\", \"return\": \"patinfo\", \"field\": \"profile\", \"pid\": \"{!! $patientId !!}\", \"sh\": \"{!! $sh or '' !!}\"}", "{!! csrf_token() !!}"); return false;'>
                                     <img src="/img/add_patient_photo.png" />
                                 </a>
                             @else
@@ -581,7 +581,7 @@
                             <span style="float:right">
 
                                 @if (empty($showBlock['insuranceCardImage10']))
-                                    <button id="p_m_ins_card" onclick="loadPopup('/manage/add_image/10/patinfo/0'{!! !empty($patientId) ? '/' . $patientId : '' !!}{!! !empty($sh) ? '/' . $sh : '' !!});return false;" class="addButton">
+                                    <button id="p_m_ins_card" onclick='loadPopup("/manage/image/add", "{\"it\": \"10\", \"return\": \"patinfo\", \"pid\": \"{!! $patientId !!}\", \"sh\": \"{!! $sh or '' !!}\"}", "{!! csrf_token() !!}"); return false;' class="addButton">
                                         + Add Insurance Card Image
                                     </button>
                                 @else
@@ -779,7 +779,7 @@
                             <span style="float:right">
 
                                 @if (empty($showBlock['insuranceCardImage12']))
-                                    <button id="s_m_ins_card" onclick="loadPopup('/manage/add_image/12/patinfo/0'{!! !empty($patientId) ? '/' . $patientId : '' !!}{!! !empty($sh) ? '/' . $sh : '' !!});return false;" class="addButton">
+                                    <button id="s_m_ins_card" onclick='loadPopup("/manage/image/add", "{\"it\": \"12\", \"return\": \"patinfo\", \"pid\": \"{!! $patientId !!}\", \"sh\": \"{!! $sh or '' !!}\"}", "{!! csrf_token() !!}"); return false;' class="addButton">
                                         + Add Insurance Card Image
                                     </button>
                                 @else

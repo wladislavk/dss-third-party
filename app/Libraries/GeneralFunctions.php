@@ -10,15 +10,14 @@ class GeneralFunctions
     public static function uploadImage($image, $filePath, $type = 'general')
     {
         $uploadedFile = $image->getPathName();
-        $fileName = $image->getClientOriginalName();
-        $lastdot = strrpos($fileName, ".");
-        $name = substr($fileName, 0, $lastdot);
+        $fullName = $image->getClientOriginalName();
+        $lastPoint = strrpos($fullName, ".");
+        $name = substr($fullName, 0, $lastPoint);
         $fileSize = $image->getSize();
         $extension = $image->getClientOriginalExtension();
         list($width, $height) = getimagesize($uploadedFile);
 
-        if (
-            ($width > Constants::DSS_IMAGE_MAX_WIDTH || $height > Constants::DSS_IMAGE_MAX_HEIGHT)
+        if (($width > Constants::DSS_IMAGE_MAX_WIDTH || $height > Constants::DSS_IMAGE_MAX_HEIGHT)
             || $fileSize > Constants::DSS_IMAGE_MAX_SIZE
             || ($type == 'profile' && ($width > Constants::DSS_IMAGE_PROFILE_WIDTH || $height > Constants::DSS_IMAGE_PROFILE_HEIGHT))
             || ($type == 'device' && ($width > Constants::DSS_IMAGE_DEVICE_WIDTH || $height > Constants::DSS_IMAGE_DEVICE_HEIGHT))
@@ -31,8 +30,7 @@ class GeneralFunctions
                 $src = imagecreatefromgif($uploadedFile);
             }
 
-            if (
-                ($width > Constants::DSS_IMAGE_MAX_WIDTH || $height > Constants::DSS_IMAGE_MAX_HEIGHT)
+            if (($width > Constants::DSS_IMAGE_MAX_WIDTH || $height > Constants::DSS_IMAGE_MAX_HEIGHT)
                 || ($type == 'profile' && ($width > Constants::DSS_IMAGE_PROFILE_WIDTH || $height > Constants::DSS_IMAGE_PROFILE_HEIGHT))
                 || ($type == 'device' && ($width > Constants::DSS_IMAGE_DEVICE_WIDTH || $height > Constants::DSS_IMAGE_DEVICE_HEIGHT))
             ) {

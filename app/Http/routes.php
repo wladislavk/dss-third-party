@@ -13,8 +13,8 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->post('login', 'AuthController@login');
     $router->get('logout', 'AuthController@logout');
     // $router->get('add_image/{pid?}', 'ImageController@index');
-    $router->get('add_image/{it}/{return}/{field}/{pid?}/{sh?}', 'ImageController@index');
-    $router->post('add_image/{pid?}', 'ImageController@add');
+    $router->get('image/add/{ed?}', 'ImageController@index');
+    $router->post('image/add/{ed?}', 'ImageController@add');
     $router->get('contact/{ed}/view', 'ContactController@view');
     $router->get('display_file/{file?}', 'FileController@display');
     $router->get('imageholder/{image}/{folder?}', 'ImageController@imageHolder');

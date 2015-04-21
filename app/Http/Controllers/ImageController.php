@@ -5,6 +5,7 @@ use Request;
 use Session;
 use Route;
 use Input;
+use Carbon\Carbon;
 
 use Ds3\Contracts\QImageInterface;
 use Ds3\Contracts\ImageTypeInterface;
@@ -19,6 +20,8 @@ use Ds3\Libraries\GeneralFunctions;
 
 class ImageController extends Controller
 {
+    private $uploadedPath;
+
     private $qImage;
     private $imageType;
     private $flowPg1;
@@ -33,6 +36,7 @@ class ImageController extends Controller
     private $it;
     private $return;
     private $returnField;
+    private $patientId;
 
     public function __construct(
         QImageInterface $qImage,
@@ -44,38 +48,33 @@ class ImageController extends Controller
         DeviceInterface $device,
         SummSleeplabInterface $summSleeplab
     ) {
-        $this->qImage         = $qImage;
-        $this->imageType     = $imageType;
-        $this->flowPg1         = $flowPg1;
+        $this->uploadedPath = public_path() . "/shared/q_file/";
+
+        $this->qImage       = $qImage;
+        $this->imageType    = $imageType;
+        $this->flowPg1      = $flowPg1;
         $this->sleeplab     = $sleeplab;
         $this->summSleeplab = $summSleeplab;
-        $this->patient         = $patient;
+        $this->patient      = $patient;
         $this->insDiagnosis = $insDiagnosis;
-        $this->device         = $device;
+        $this->device       = $device;
 
-        $this->request         = Request::all();
-        /*
-        $this->sh             = Session::pull('sh');
-        $this->it             = Session::pull('it');
-        $this->return         = Session::pull('return');
-        $this->returnField     = Session::pull('returnField');
-        */
-        $this->sh             = Route::input('sh');
-        $this->it             = Route::input('it');
-        $this->return         = Route::input('return');
-        $this->returnField     = Route::input('field');
+        $this->request      = Request::all();
+
+        $this->sh           = GeneralFunctions::getRouteParameter('sh');
+        $this->it           = GeneralFunctions::getRouteParameter('it');
+        $this->return       = GeneralFunctions::getRouteParameter('return');
+        $this->returnField  = GeneralFunctions::getRouteParameter('field');
+        $this->patientId    = GeneralFunctions::getRouteParameter('pid');
     }
 
     public function index()
     {
-        $patientId = !empty(Route::input('pid')) ? Route::input('pid') : null;
-        $ed = !empty($this->request['ed']) ? $this->request['ed'] : null;
+        $image = $this->qImage->find(Route::input('ed'));
 
-        $image = $this->qImage->find($ed);
-
-        if (!empty($message)) {
-            $title = $this->request['title'];
-            $imageTypeId = $this->request['imagetypeid'];
+        if (!empty(Session::get('message'))) {
+            $title = Session::get('title');
+            $imageTypeId = Session::get('imageTypeId');
         } elseif (!empty($image)) {
             $title        = $image->title;
             $imageFile    = $image->image_file;
@@ -90,9 +89,9 @@ class ImageController extends Controller
         }
 
         if (!empty($image->contactid)) {
-            $butText = 'Edit ';
+            $buttonText = 'Edit ';
         } else {
-            $butText = 'Add ';
+            $buttonText = 'Add ';
         }
 
         $imageTypes = $this->imageType->getActiveImageTypes();
@@ -103,7 +102,7 @@ class ImageController extends Controller
             $showBlock['imageTypes'] = true;
         }
 
-        $flowPg1 = $this->flowPg1->find($patientId);
+        $flowPg1 = $this->flowPg1->find($this->patientId);
 
         if (!empty($imageFile)) {
             $showBlock['imageFile'] = true;
@@ -111,7 +110,7 @@ class ImageController extends Controller
 
         $labels = array('', 'Facial Right', 'Facial Front', 'Facial Left', 'Retracted Right', 'Retracted Frontal', 'Retracted Left', 'Occlusal Upper', 'Mallampati', 'Occlusal Lower');
 
-        $patients = $this->patient->getPatients(array('patientid' => $patientId));
+        $patients = $this->patient->getPatients(array('patientid' => $this->patientId));
 
         $patient = count($patients) ? $patients[0] : null;
 
@@ -126,14 +125,13 @@ class ImageController extends Controller
 
         $data = array(
             'path'          => '/' . Request::segment(1) . '/' . Request::segment(2),
-            'message'       => !empty(Session::get('message')) ? Session::get('message') : null,
-            'sh'            => !empty($this->sh) ? $this->sh : null,
-            'it'            => !empty($this->it) ? $this->it : null,
-            'return'        => !empty($this->return) ? $this->return : '',
-            'returnField'   => !empty($this->return_field) ? $this->return_field : '',
-            'patientId'     => $patientId,
-            // 'flow'       => $flow,
-            'butText'       => $butText,
+            'message'       => Session::get('message'),
+            'sh'            => $this->sh,
+            'it'            => $this->it,
+            'return'        => $this->return,
+            'field'         => $this->returnField,
+            'patientId'     => $this->patientId,
+            'buttonText'    => $buttonText,
             'title'         => $title,
             'imageTypes'    => $imageTypes,
             'imageTypeId'   => $imageTypeId,
@@ -144,7 +142,9 @@ class ImageController extends Controller
             'insDiagnoses'  => $insDiagnoses,
             'patient'       => $patient,
             'devices'       => $devices,
-            'showBlock'     => $showBlock
+            'showBlock'     => $showBlock,
+            'alert'         => Session::get('alert'),
+            'closePopup'    => Session::get('closePopup')
         );
 
         // dd($data);
@@ -154,13 +154,13 @@ class ImageController extends Controller
 
     public function add()
     {
-        $patientId = !empty(Route::input('pid')) ? Route::input('pid') : null;
-
         if (!empty($this->request['submitnewsleeplabsumm'])) {
-            $sleeplabData = array('date', 'sleeptesttype', 'place', 'diagnosising_doc', 'diagnosising_npi',
-                'apnea', 'hypopnea', 'ahi', 'ahisupine', 'rdi', 'rdisupine', 'o2nadir', 't9002', 'sleepefficiency',
-                'cpaplevel', 'dentaldevice', 'devicesetting', 'diagnosis', 'notes', 'testnumber', 'needed', 'scheddate',
-                'completed', 'interpolation', 'copyreqdate', 'sleeplab'
+            $sleeplabData = array(
+                'date', 'sleeptesttype', 'place', 'diagnosising_doc',
+                'diagnosising_npi', 'ahi', 'ahisupine', 'rdi',
+                'rdisupine', 'o2nadir', 't9002', 'dentaldevice',
+                'devicesetting', 'diagnosis', 'notes', 'testnumber',
+                'sleeplab'
             );
 
             foreach ($sleeplabData as $attribute) {
@@ -168,26 +168,27 @@ class ImageController extends Controller
             }
 
             if (Input::hasFile('ss_file')) {
-                $fileName = Input::file('ss_file')->getClientOriginalExtension();
-                $lastdot = strrpos($fileName, ".");
-                $name = substr($fileName, 0, $lastdot);
-                $extension = substr($fileName, $lastdot + 1);
-                $banner1 = $name . '_' . date('dmy_Hi');
-                $banner1 = str_replace(" ", "_", $banner1);
-                $banner1 = str_replace(".", "_", $banner1);
-                $banner1 = str_replace("'", "_", $banner1);
-                $banner1 = str_replace("&", "amp", $banner1);
-                $banner1 = preg_replace("/[^a-zA-Z0-9_]/", "", $banner1);
-                $banner1 .= ".". $extension;
+                $fullName = Input::file('ss_file')->getClientOriginalName();
+                $lastPoint = strrpos($fullName, ".");
+                $name = substr($fullName, 0, $lastPoint);
 
-                $uploaded = GeneralFunctions::uploadImage(Input::file('ss_file'), "/shared/q_file/" . $banner1);
+                $name = $name . '_' . Carbon::now()->format('dmy_Hi');
+                $name = str_replace(" ", "_", $name);
+                $name = str_replace(".", "_", $name);
+                $name = str_replace("'", "_", $name);
+                $name = str_replace("&", "amp", $name);
+                $name = preg_replace("/[^a-zA-Z0-9_]/", "", $name);
+
+                $fileName = $name . "." . Input::file('ss_file')->getClientOriginalExtension();
+
+                $uploaded = GeneralFunctions::uploadImage(Input::file('ss_file'), $this->uploadedPath . $fileName);
 
                 if (!empty($uploaded)) {
                     $data = array(
-                        'patientid'    => $patientId,
+                        'patientid'    => $this->patientId,
                         'title'        => $summSleeplabData['sleeptesttype'] . ' ' . $summSleeplabData['date'],
                         'imagetypeid'  => 1,
-                        'image_file'   => $banner1,
+                        'image_file'   => $name,
                         'userid'       => Session::get('userId'),
                         'docid'        => Session::get('docId'),
                         'ip_address'   => Request::ip()
@@ -196,68 +197,52 @@ class ImageController extends Controller
                     $imageId = $this->qImage->insertData($data);
                 }
             } else {
-                $banner1 = null;
+                $name = null;
                 $imageId = null;
             }
-            
-            $data = array(
-                'date'              => $summSleeplabData['date'],
-                'sleeptesttype'     => $summSleeplabData['sleeptesttype'],
-                'place'             => $summSleeplabData['place'],
-                'diagnosising_doc'  => $summSleeplabData['diagnosising_doc'],
-                'diagnosising_npi'  => $summSleeplabData['diagnosising_npi'],
-                'ahi'               => $summSleeplabData['ahi'],
-                'ahisupine'         => $summSleeplabData['ahisupine'],
-                'rdi'               => $summSleeplabData['rdi'],
-                'rdisupine'         => $summSleeplabData['rdisupine'],
-                'o2nadir'           => $summSleeplabData['o2nadir'],
-                't9002'             => $summSleeplabData['t9002'],
-                'dentaldevice'      => $summSleeplabData['dentaldevice'],
-                'devicesetting'     => $summSleeplabData['devicesetting'],
-                'diagnosis'         => $summSleeplabData['diagnosis'],
-                'filename'          => $banner1,
-                'notes'             => $summSleeplabData['notes'],
-                'testnumber'        => $summSleeplabData['testnumber'],
-                'sleeplab'          => $summSleeplabData['sleeplab'],
-                'patiendid'         => $patientId,
+
+            foreach ($sleeplabData as $attribute) {
+                $data[$attribute] = $summSleeplabData[$attribute];
+            }
+
+            $data = array_merge($data, array(
+                'filename'          => $name,
+                'patiendid'         => $this->patientId,
                 'image_id'          => $imageId
-            );
+            ));
 
             $summSleeplabId = $this->summSleeplab->insertData($data);
 
             if (empty($summSleeplabId)) {
-                echo 'Could not add sleep lab... Please try again.';
+                $message = 'Could not add sleep lab... Please try again.';
             } else {
-                if (!empty($uploaded)) {
-                    // code...
-                }
                 $message = 'Successfully added sleep lab' . $uploaded;
-
-                return redirect("/manage/q_image" . (!empty($patientId) ? '/' . $patientId : ''));
             }
+
+            return redirect("/manage/q_image" . (!empty($this->patientId) ? '/' . $this->patientId : ''));
         }
 
         if (!empty($this->request['imagesub']) && $this->request['imagesub'] == 1) {
             $title = $this->request['title'];
             $imageTypeId = $this->request['imagetypeid'];
 
-            if (Input::hasFile('image_file') || empty($this->request['ed'])) {
-                // check
+            if (Input::hasFile('image_file') || empty(Route::input('ed'))) {
                 if (!Input::file('image_file')->isValid() && !Input::file('image_file1')->isValid()) {
                     $uploaded = false;
                 } else {
-                    if ($this->request['imagetypeid'] == 0 || (array_search(Input::file('image_file')->getMimeType(), Constants::$dss_file_types) !== false)) {
+                    if ($imageTypeId == 0 || (array_search(Input::file('image_file')->getMimeType(), Constants::$dss_file_types) !== false)) {
                         if ($imageTypeId == '0') {
-                            $fileName = Input::file('image_file_1')->getClientOriginalName();
-                            $lastdot = strrpos($fileName, ".");
-                            $name = substr($fileName, 0, $lastdot);
-                            $extension = Input::file('image_file_1')->getClientOriginalExtension();
-                            $banner1 = $name . '_' . date('dmy_Hi');
-                            $banner1 = str_replace(" ", "_", $banner1);
-                            $banner1 = str_replace(".", "_", $banner1);
-                            $banner1 = str_replace("'", "_", $banner1);
-                            $banner1 = str_replace("&", "amp", $banner1);
-                            $banner1 .= "." . $extension;
+                            $fullName = Input::file('image_file_1')->getClientOriginalName();
+                            $lastPoint = strrpos($fullName, ".");
+                            $name = substr($fullName, 0, $lastPoint);
+
+                            $name = $name . '_' . Carbon::now()->format('dmy_Hi');
+                            $name = str_replace(" ", "_", $name);
+                            $name = str_replace(".", "_", $name);
+                            $name = str_replace("'", "_", $name);
+                            $name = str_replace("&", "amp", $name);
+
+                            $fileName = $name . "." . Input::file('image_file_1')->getClientOriginalExtension();
 
                             // Get new sizes
                             $newWidth = 1500;
@@ -294,32 +279,21 @@ class ImageController extends Controller
                                 imagecopyresized($thumb, $source, $x, $y, 0, 0, 500, 500, $width, $height);
                             }
 
-                            $fileName = Input::file('image_file_1')->getClientOriginalName();
-                            $lastdot = strrpos($fileName, ".");
-                            $name = substr($fileName, 0, $lastdot);
-                            $extension = Input::file('image_file_1')->getClientOriginalExtension();
-                            $banner1 = $name . '_' . date('dmy_Hi');
-                            $banner1 = str_replace(" ",  "_", $banner1);
-                            $banner1 = str_replace(".","_", $banner1);
-                            $banner1 = str_replace("'", "_", $banner1);
-                            $banner1 = str_replace("&", "amp", $banner1);
-                            $banner1 .= "." . $extension;
-
                             // Output
-                            switch (strtolower($extension)) {
+                            switch (strtolower(Input::file('image_file_1')->getClientOriginalExtension())) {
                                 case 'jpg':
                                 case 'jpeg':
-                                    imagejpeg($thumb, "/shared/q_file/" . $banner1);
+                                    imagejpeg($thumb, $this->uploadedPath . $fileName);
                                     break;
                                 case 'gif':
-                                    imagegif($thumb, "/shared/q_file/" . $banner1);
+                                    imagegif($thumb, $this->uploadedPath . $fileName);
                                     break;
                                 case 'png':
-                                    imagepng($thumb, "/shared/q_file/" . $banner1);
+                                    imagepng($thumb, $this->uploadedPath . $fileName);
                                     break;
                             }
 
-                            @chmod('/shared/q_file/' . $banner1, 0777);
+                            @chmod($this->uploadedPath . $fileName, 0777);
 
                             $uploaded = true;
                         } else {
@@ -328,34 +302,34 @@ class ImageController extends Controller
                             $fileSize = Input::file('image_file')->getSize();
                             if ($fileSize <= Constants::DSS_IMAGE_MAX_SIZE) {
                                 if (!empty(Input::file('image_file')->getClientOriginalName())) {
-                                    $fileName = Input::file('image_file')->getClientOriginalName();
-                                    $lastdot = strrpos($fileName, ".");
-                                    $name = substr($fileName, 0, $lastdot);
-                                    $extension = Input::file('image_file')->getClientOriginalExtension();
-                                    $banner1 = $name . '_' . date('dmy_Hi');
-                                    $banner1 = str_replace(" ", "_", $banner1);
-                                    $banner1 = str_replace(".", "_", $banner1);
-                                    $banner1 = str_replace("'", "_", $banner1);
-                                    $banner1 = str_replace("&", "amp", $banner1);
-                                    $banner1 .= ".". $extension;
+                                    $fullName = Input::file('image_file')->getClientOriginalName();
+                                    $lastPoint = strrpos($fullName, ".");
+                                    $name = substr($fullName, 0, $lastPoint);
+
+                                    $name = $name . '_' . Carbon::now()->format('dmy_Hi');
+                                    $name = str_replace(" ", "_", $name);
+                                    $name = str_replace(".", "_", $name);
+                                    $name = str_replace("'", "_", $name);
+                                    $name = str_replace("&", "amp", $name);
+
+                                    $fileName = $name . "." . Input::file('image_file')->getClientOriginalExtension();
                                     $profile = ($this->request['imagetypeid'] == 4) ? 'profile' : 'general';
 
-                                    $uploaded = GeneralFunctions::uploadImage(Input::file('image_file'), '/shared/q_file/' . $banner1, $profile);
+                                    $uploaded = GeneralFunctions::uploadImage(Input::file('image_file'), $this->uploadedPath . $fileName, $profile);
 
                                     if (!empty($this->request['image_file_old'])) {
-                                        @unlink('/shared/q_file/' . $this->request['image_file_old']);
+                                        @unlink($this->uploadedPath . $this->request['image_file_old']);
                                     }
                                 } else {
-                                    $banner1 = $this->request['image_file_old'];
+                                    $fileName = $this->request['image_file_old'];
                                 }
                             } else {
-                                // alert code...
-
+                                $alert = 'Max image size exceeded. Uploaded files can be no larger than 10 megabytes.';
                                 $uploaded = false;
                             }
                         }
                     } else {
-                        // alert code...
+                        $alert = 'Invalid File Type';
                     }
                 }
             } else {
@@ -365,16 +339,16 @@ class ImageController extends Controller
                 );
 
                 $this->qImage->updateData(array(
-                    'imageid' => !empty($this->request['ed']) ? $this->request['ed'] : null
+                    'imageid' => Route::input('ed')
                 ), $data);
 
                 $message = 'Edited Successfully';
 
-                return redirect("/manage/q_image" . (!empty($patientId) ? '/' . $patientId : ''))->with('sh', $this->sh);
+                return redirect("/manage/q_image" . (!empty($this->patientId) ? '/' . $this->patientId : ''))->with('sh', $this->sh);
             }
 
             if (!empty($uploaded)) {
-                if (!empty($this->request['ed'])) {
+                if (!empty(Route::input('ed'))) {
                     $data = array(
                         'title'        => $title,
                         'imagetypeid'  => $imageTypeId,
@@ -382,18 +356,18 @@ class ImageController extends Controller
                     );
 
                     $this->qImage->updateData(array(
-                        'imageid' => !empty($this->request['ed']) ? $this->request['ed'] : null
+                        'imageid' => Route::input('ed')
                     ), $data);
 
                     $message = 'Edited Successfully';
 
-                    return redirect("/manage/q_image" . (!empty($patientId) ? '/' . $patientId : ''))->with('sh', $this->sh);
+                    return redirect("/manage/q_image" . (!empty($this->patientId) ? '/' . $this->patientId : ''))->with('sh', $this->sh);
                 } else {
                     $data = array(
-                        'patientid'    => $patientId,
+                        'patientid'    => $this->patientId,
                         'title'        => $title,
                         'imagetypeid'  => $imageTypeId,
-                        'image_file'   => $banner1,
+                        'image_file'   => $fileName,
                         'userid'       => Session::get('userId'),
                         'docid'        => Session::get('docId'),
                         'ip_address'   => Request::ip()
@@ -401,17 +375,17 @@ class ImageController extends Controller
 
                     $imageId = $this->qImage->insertData($data);
 
-                    $flowPg1 = $this->flowPg1->find($patientId);
+                    $flowPg1 = $this->flowPg1->find($this->patientId);
 
                     if ($this->request['imagetypeid'] == 6) {
                         if (empty($flowPg1->rx_imgid) || $this->request['rx_update'] == 1) {
                             $data = array(
                                 'rx_imgid'  => $imageId,
-                                'rxrec'     => date('m/d/Y')
+                                'rxrec'     => Carbon::now()->format('m/d/Y')
                             );
 
                             $this->flowPg1->updateData(array(
-                                'pid' => $patientId
+                                'pid' => $this->patientId
                             ), $data);
                         }
                     }
@@ -420,11 +394,11 @@ class ImageController extends Controller
                         if (empty($flowPg1->lomn_imgid) || $this->request['lomn_update'] == 1) {
                             $data = array(
                                 'lomn_imgid'  => $imageId,
-                                'lomnrec'     => date('m/d/Y')
+                                'lomnrec'     => Carbon::now()->format('m/d/Y')
                             );
 
                             $this->flowPg1->updateData(array(
-                                'pid' => $patientId
+                                'pid' => $this->patientId
                             ), $data);
                         }
                     }
@@ -433,11 +407,11 @@ class ImageController extends Controller
                         if (empty($flowPg1->rxlomn_imgid) || $this->request['rxlomn_update'] == 1) {
                             $data = array(
                                 'rxlomn_imgid'  => $imageId,
-                                'rxlomnrec'     => date('m/d/Y')
+                                'rxlomnrec'     => Carbon::now()->format('m/d/Y')
                             );
 
                             $this->flowPg1->updateData(array(
-                                'pid' => $patientId
+                                'pid' => $this->patientId
                             ), $data);
                         }
                     }
@@ -445,33 +419,41 @@ class ImageController extends Controller
                     $message = 'Uploaded Successfully';
 
                     if ($this->request['flow'] == '1') {
-                        return redirect('/manage/flowsheet3' . (!empty($patientId) ? '/' . $patientId : ''));
+                        return redirect('/manage/flowsheet3' . (!empty($this->patientId) ? '/' . $this->patientId : ''));
                     } elseif ($this->return == 'patinfo') {
                         $showBlock = array(0);
 
-                        if ($this->return_field == 'profile') {
-                            $showBlock['updateProfileImage'] = $banner1;
+                        if ($this->returnField == 'profile') {
+                            $showBlock['updateProfileImage'] = $fileName;
                         } elseif ($this->request['imagetypeid'] == 10) {
-                            $showBlock['updateInsCard'] = array($banner1, 'p_m_ins_card');
+                            $showBlock['updateInsCard'] = array($fileName, 'p_m_ins_card');
                         } elseif ($this->request['imagetypeid'] == 12) {
-                            $showBlock['updateInsCard'] = array($banner1, 's_m_ins_card');
+                            $showBlock['updateInsCard'] = array($fileName, 's_m_ins_card');
                         }
                     } else {
-                        return redirect('/manage/q_image' . (!empty($patientId) ? '/' . $patientId : ''));
+                        return redirect('/manage/q_image' . (!empty($this->patientId) ? '/' . $this->patientId : ''));
                     }
                 }
             }
         }
 
-        $redirect = redirect('/manage/add_image');
+        $redirect = redirect('/manage/image/add');
 
         if (!empty($message)) {
-            $data['message'] = $message;
+            $data['message']     = $message;
+            $data['title']       = $this->request['title'];
+            $data['imageTypeId'] = $this->request['imagetypeid'];
         }
 
         if (!empty($showBlock)) {
             $data['showBlock'] = $showBlock;
         }
+
+        if (!empty($alert)) {
+            $data['alert'] = $alert;
+        }
+
+        $data['closePopup'] = true;
 
         if (!empty($data)) foreach ($data as $attribute => $value) {
             $redirect = $redirect->with($attribute, $value);
@@ -483,7 +465,7 @@ class ImageController extends Controller
     public function imageHolder($image, $folder = null)
     {
         if (empty($folder)) {
-            $folder = '/shared/q_file';
+            $folder = $this->uploadedPath;
         }
 
         return view('manage.imageHolder')->with('image', $image)->with('folder', $folder);
@@ -492,10 +474,10 @@ class ImageController extends Controller
     public function setInfoPopup()
     {
         if (Request::ajax()) {
-            Session::put('sh', Request::get('sh'));
-            Session::put('it', Request::get('it'));
-            Session::put('return', Request::get('returnValue'));
-            Session::put('returnField', Request::get('returnField'));
+            Session::put('sh', $this->sh);
+            Session::put('it', $this->it);
+            Session::put('return', $this->return);
+            Session::put('field', $this->returnField);
         }
     }
 }

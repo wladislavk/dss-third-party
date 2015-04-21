@@ -124,11 +124,7 @@ class SleeplabController extends Controller
 
         if (count($sleepLabs)) {
             $sleepLab = $sleepLabs[0];
-            $sleeplabData['name'] = (($sleepLab['salutation'])
-                                 . ($sleepLab['firstname'])
-                                 . ($sleepLab['middlename'])
-                                 . ($sleepLab['lastname']));
-
+            $sleeplabData['name'] = $sleepLab['salutation'] . $sleepLab['firstname'] . $sleepLab['middlename'] . $sleepLab['lastname'];
             $sleeplabData['phone1'] = GeneralFunctions::formatPhone($sleepLab['phone1']);
             $sleeplabData['phone2'] = GeneralFunctions::formatPhone($sleepLab['phone2']);
             $sleeplabData['fax'] = GeneralFunctions::formatPhone($sleepLab['fax']);

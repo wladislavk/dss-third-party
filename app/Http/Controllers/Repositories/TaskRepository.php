@@ -29,7 +29,12 @@ class TaskRepository implements TaskInterface
         if ($parameters['task'] == 'task') {
             $tasks = $tasks->where('dental_task.responsibleid', '=', $parameters['userId']);
         } else {
-            $tasks = $tasks->whereRaw('(dental_users.docid = ' . $parameters['docId'] . ' OR dental_users.userid = ' . $parameters['docId'] . ')');
+            $tasks = $tasks->where(function($query) use ($parameters)
+            {
+                $query->where('dental_users.docid', '=', $parameters['docId'])
+                    ->orWhere('dental_users.userid', '=', $parameters['docId']);
+            });
+
             if (isset($parameters['patientId'])) {
                 $tasks = $tasks->where('dental_task.patientid', '=', $parameters['patientId']);
             }

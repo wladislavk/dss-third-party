@@ -606,10 +606,9 @@ if ($another_plan == "") {
                     $ack_array = $p->{"acknowledgements"};
                     $latest = $ack_array[0];
                     ?>
-                    <p>Category: <?= htmlspecialchars($latest->{"details"}->{"codes"}->{"category_code"}); ?>
-                        - <?= htmlspecialchars($latest->{"details"}->{"codes"}->{"category_label"}); ?><br/>
-                        Status: <?= htmlspecialchars($latest->{"details"}->{"codes"}->{"status_code"}); ?>
-                        - <?= htmlspecialchars($latest->{"details"}->{"codes"}->{"status_label"}); ?>
+                    <p>Status: <?= htmlspecialchars($latest->{"status"}); ?> <br />
+                       Message: <?= htmlspecialchars($latest->{"message"}); ?>
+                    </p>
                         <?php
                         }else{
                         ?>

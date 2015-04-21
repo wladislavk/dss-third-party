@@ -28,7 +28,8 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->get('view_sleeplab/{ed?}', 'SleepLabController@view');
     $router->get('add_sleeplab/{ed?}', 'SleepLabController@index');
     $router->post('add_sleeplab/{ed?}', 'SleepLabController@add');
-    $router->get('add_custom/{ed?}', 'CustomController@index');
+    $router->get('custom/add', 'CustomController@index');
+    $router->get('custom/{ed?}/edit', 'CustomController@index');
     $router->post('add_custom/{ed?}', 'CustomController@add');
 
     $router->group(['middleware' => 'header'], function() use ($router){

@@ -19,7 +19,7 @@
     &nbsp;
 
     <div align="right">
-        <button style="margin-right:20px; float:right;" onclick="loadPopup('/manage/add_custom');" class="addButton">Add New Custom Text</button>
+        <button style="margin-right:20px; float:right;" onclick="loadPopup('/manage/custom/add');" class="addButton">Add New Custom Text</button>
         &nbsp;&nbsp;
     </div>
     <br />
@@ -37,14 +37,14 @@
         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
             <tr bgColor="#ffffff">
                 <td  align="right" colspan="15" class="bp">
-                    @if ($totalRec > $recDisp)
+                    @if ($totalRecords > $numberOfRecordsDisplayed)
                         Pages:
 
                         @for ($pCount = 0; $pCount < $noPages; $pCount++)
-                            @if ($indexVal == $pCount)
+                            @if ($indexPage == $pCount)
                                 <strong>{!! $pCount + 1 !!}</strong>
                             @else
-                                <a href="#" onclick='setRouteParameters("/manage/custom", "{\"page\": \"{!! $pCount !!}\" }", "{!! csrf_token() !!}"); return false;'>{!! $pCount + 1 !!}</a>
+                                <a href="#" onclick='setRouteParameters("/manage/custom", "{\"pageNumber\": \"{!! $pCount !!}\" }", "{!! csrf_token() !!}"); return false;'>{!! $pCount + 1 !!}</a>
                             @endif
                         @endfor
                     @endif
@@ -79,7 +79,7 @@
                         {!! $custom['title'] !!}
                     </td>
                     <td valign="top" width="20%">
-                        <a href="#" onclick="loadPopup('/manage/add_custom/{!! $custom['customid'] !!}')" class="editlink" title="EDIT">Edit</a>
+                        <a href="#" onclick="loadPopup('/manage/custom/{!! $custom['customid'] !!}/edit')" class="editlink" title="EDIT">Edit</a>
                     </td>
                     </tr>
                 @endforeach

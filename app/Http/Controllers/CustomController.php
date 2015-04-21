@@ -13,62 +13,62 @@ class CustomController extends Controller
 {
     private $request;
     private $custom;
-    private $delid;
-    private $page;
+    private $deleteId;
+    private $pageNumber;
     private $customFields;
 
     public function __construct(
         CustomInterface $custom
     ) {
-        $this->request = Request::all();
+        $this->request    = Request::all();
 
-        $this->custom  = $custom;
+        $this->custom     = $custom;
 
-        $this->delid   = GeneralFunctions::getRouteParameter('delid');
-        $this->page    = GeneralFunctions::getRouteParameter('page');
+        $this->deleteId   = GeneralFunctions::getRouteParameter('deleteId');
+        $this->pageNumber = GeneralFunctions::getRouteParameter('pageNumber');
 
         $this->customFields = array('title', 'description', 'status', 'description');
     }
 
     public function manage()
     {
-        if (!empty($this->delid)) {
-            $this->custom->deleteData($this->delid);
+        if (!empty($this->deleteId)) {
+            $this->custom->deleteData($this->deleteId);
             $message = 'Deleted Successfully';
 
-            return redirect('/manage/add_custom')->with('message', $message)->with('closePopup', true);
+            return redirect('/manage/custom/add')->with('message', $message)->with('closePopup', true);
         }
 
-        $recDisp = 20;
+        $numberOfRecordsDisplayed = 20;
 
-        if (!empty($this->page)) {
-            $indexVal = $this->page;
+        if (!empty($this->pageNumber)) {
+            $indexPage = $this->pageNumber;
         } else {
-            $indexVal = 0;
+            $indexPage = 0;
         }
 
         $order = 'title';
-        $iVal = $indexVal * $recDisp;
+        $skipValues = $indexPage * $numberOfRecordsDisplayed;
 
-        $customs = $this->custom->getCustomTypeHolder(array('docid' => Session::get('docId')), $order, $recDisp, $iVal);
+        $customs = $this->custom->getCustomTypeHolder(array('docid' => Session::get('docId')), $order, $numberOfRecordsDisplayed, $skipValues);
         $customsNum = $this->custom->getCustomTypeHolder(array('docid' => Session::get('docId')), $order, null, null);
 
-        $totalRec = count($customsNum);
+        $totalRecords = count($customsNum);
 
-        $noPages = $totalRec / $recDisp;
+        $noPages = $totalRecords / $numberOfRecordsDisplayed;
 
         foreach ($this->request as $name => $value) {
             $data[$name] = $value;
         }
 
         $data = array_merge($data, array(
-            'noPages'      => $noPages,
-            'customs'      => $customs,
-            'message'      => Session::get('message'),
-            'totalRec'     => $totalRec,
-            'recDisp'      => $recDisp,
-            'customsNum'   => $customsNum,
-            'indexVal'     => $indexVal
+            'noPages'                  => $noPages,
+            'customs'                  => $customs,
+            'message'                  => Session::get('message'),
+            'totalRecords'             => $totalRecords,
+            'numberOfRecordsDisplayed' => $numberOfRecordsDisplayed,
+            'customsNum'               => $customsNum,
+            'indexPage'                => $indexPage
         ));
 
         return view('manage.custom', $data);
@@ -97,13 +97,12 @@ class CustomController extends Controller
 
                 $this->custom->insertData($data);
                 $message = 'Added Successfully';
-
             }
 
             if (!empty(Route::input('ed'))) {
-                $path = '/manage/add_custom/' . Route::input('ed');
+                $path = '/manage/custom/' . Route::input('ed') . '/edit';
             } else {
-                $path = '/manage/add_custom';
+                $path = '/manage/custom/add';
             }
 
             return redirect($path)->with('closePopup', true)->with('message', $message);

@@ -99,7 +99,7 @@
                         <input type="hidden" name="ed" value="{!! $customid or '' !!}" />
                         <input type="submit" value="{!! $butText !!} Custom Text" class="button" />
                         <script type="text/javascript">
-                            var delid = '{!! $ed or '' !!}';
+                            var deleteId = '{!! $ed or '' !!}';
                         </script>
 
                         @if (!empty($customid))

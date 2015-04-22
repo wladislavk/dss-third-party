@@ -31,6 +31,9 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->get('custom/add', 'CustomController@index');
     $router->get('custom/{ed}/edit', 'CustomController@index');
     $router->post('add_custom/{ed?}', 'CustomController@add');
+    $router->post('transaction_code/add', 'TransactionCodeController@add');
+    $router->get('transaction_code/{ed?}/edit', 'TransactionCodeController@index');
+    $router->get('transaction_code/add', 'TransactionCodeController@index');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 
@@ -42,6 +45,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->get('sleeplab', 'SleepLabController@manage');
         $router->get('fcontact', 'ContactController@manageCorporate');
         $router->get('custom', 'CustomController@manage');
+        $router->get('transaction_code/{ed?}', 'TransactionCodeController@manage');
     });
 });
 

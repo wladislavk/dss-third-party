@@ -8,6 +8,7 @@ class PlaceService extends Model
     protected $table = 'dental_place_service';
     protected $fillable = ['place_service', 'description', 'sortby', 'status'];
     protected $primaryKey = 'place_serviceid';
+    //public $timestamps = false;
 
     public static function get($where = null)
     {

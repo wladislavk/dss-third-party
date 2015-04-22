@@ -25,15 +25,14 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->post('search_patients', 'PatientController@searchPatients');
     $router->get('add_task/{pid?}', 'TaskController@index');
     $router->post('add_task', 'TaskController@add');
-    $router->get('sleeplab/{ed}/view', 'SleepLabController@view');
-    $router->get('sleeplab/add/{ed?}', 'SleepLabController@index');
-    $router->post('sleeplab/add/{ed?}', 'SleepLabController@add');
+    $router->get('view_sleeplab/{ed?}', 'SleepLabController@view');
+    $router->get('add_sleeplab/{ed?}', 'SleepLabController@index');
+    $router->post('add_sleeplab/{ed?}', 'SleepLabController@add');
     $router->get('custom/add', 'CustomController@index');
     $router->get('custom/{ed}/edit', 'CustomController@index');
     $router->post('add_custom/{ed?}', 'CustomController@add');
-    $router->post('transaction_code/add', 'TransactionCodeController@add');
-    $router->get('transaction_code/{ed?}/edit', 'TransactionCodeController@index');
-    $router->get('transaction_code/add', 'TransactionCodeController@index');
+    $router->get('staff/{ed}/edit', 'StaffController@index');
+    $router->get('staff/add', 'StaffController@index');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 
@@ -45,7 +44,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->get('sleeplab', 'SleepLabController@manage');
         $router->get('fcontact', 'ContactController@manageCorporate');
         $router->get('custom', 'CustomController@manage');
-        $router->get('transaction_code/{ed?}', 'TransactionCodeController@manage');
+        $router->get('staff', 'StaffController@manage');
     });
 });
 

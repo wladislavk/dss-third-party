@@ -15,7 +15,8 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     // $router->get('add_image/{pid?}', 'ImageController@index');
     $router->get('add_image/{it}/{return}/{field}/{pid?}/{sh?}', 'ImageController@index');
     $router->post('add_image/{pid?}', 'ImageController@add');
-    $router->get('view_contact/{ed?}', 'ContactController@view');
+    $router->get('view_contact/{ed?}/{corporate?}', 'ContactController@view');
+    $router->get('view_fcontact/{ed?}', 'ContactController@viewCorporateContact');
     $router->get('display_file/{file?}', 'FileController@display');
     $router->get('imageholder/{image}/{folder?}', 'ImageController@imageHolder');
     $router->get('add_contact/{ed?}', 'ContactController@index');
@@ -36,6 +37,8 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->get('contact', 'ContactController@manage');
         $router->get('tasks', 'TaskController@manageTasks');
         $router->get('sleeplab', 'SleepLabController@manage');
+        $router->get('fcontact', 'ContactController@manageCorporate');
+        $router->get('custom', 'CustomController@manage');
     });
 });
 

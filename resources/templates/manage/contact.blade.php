@@ -80,11 +80,11 @@
             </td>
 
             <td align="right" colspan="15" class="bp">
-                @if ($totalRec > $recDisp)
+                @if ($totalRec > $numberOfRecordsDisplayed)
                     Pages:
 
                     @for ($pCount = 0; $pCount < $noPages; $pCount++)
-                        @if ($indexVal == $pCount)
+                        @if ($indexPage == $pCount)
                             <strong>{!! $pCount + 1 !!}</strong>
                         @else
                             <a href="#" onclick='setRouteParameters("/manage/contact", "{\"page\": \"{!! $pCount !!}\", \"letter\": \"{!! $letter !!}\", \"status\": \"{!! $status !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", \"contacttype\": \"{!! $contacttype !!}\"}", "{!! csrf_token() !!}"); return false;' class="fp">

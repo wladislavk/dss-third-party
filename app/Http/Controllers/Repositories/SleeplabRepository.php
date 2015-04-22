@@ -42,4 +42,40 @@ class SleeplabRepository implements SleeplabInterface
 
         return $sleeplab->sleeplabid;
     }
+
+    public function deleteData($sleeplabid)
+    {
+        $slleplab = Sleeplab::where('sleeplabid', '=', $sleeplabid)->delete();
+
+        return $slleplab;
+    }
+
+    public function getSleepLabTypeHolder($where, $letter = null, $order = null, $dir = null, $limit = null, $offset = null)
+    {
+        $sleeplabs = new Sleeplab();
+
+        if (!empty($where)) {
+            foreach ($where as $attribute => $value) {
+                $sleeplabs = $sleeplabs->where($attribute, $value);
+            }
+        }
+
+        if (!empty($letter)) {
+            $sleeplabs = $sleeplabs->whereRaw("company like ? ", array($letter . '%'));
+        }
+
+        if (!empty($order)) {
+            $sleeplabs = $sleeplabs->orderBy($order, $dir);
+        }
+
+        if (!empty($limit)) {
+            $sleeplabs = $sleeplabs->take($limit);
+        }
+
+        if (!empty($offset)) {
+            $sleeplabs = $sleeplabs->skip($offset);
+        }
+
+        return $sleeplabs->get();
+    }
 }

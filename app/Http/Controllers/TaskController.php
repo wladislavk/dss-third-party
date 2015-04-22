@@ -5,6 +5,7 @@ use Ds3\Http\Controllers\Controller;
 use Route;
 use Request;
 use Session;
+use Carbon\Carbon;
 
 use Ds3\Libraries\GeneralFunctions;
 use Ds3\Contracts\PatientInterface;
@@ -18,47 +19,47 @@ class TaskController extends Controller
     private $user;
 
     private $request;
-    private $id;
+    private $taskId;
     private $patientId;
     private $deletedId;
-    private $mine;
-    private $sort1;
-    private $sort2;
-    private $sortdir1;
-    private $sortdir2;
+    private $mineTask;
+    private $sortTopTasks;
+    private $sortBottomTasks;
+    private $sortDirectionTopTasks;
+    private $sortDirectionBottomTasks;
     private $message;
-    private $page1;
-    private $page2;
+    private $topPageNumber;
+    private $bottomPageNumber;
 
     public function __construct(
         PatientInterface $patient,
         TaskInterface $task,
         UserInterface $user
     ) {
-        $this->patient   = $patient;
-        $this->task      = $task;
-        $this->user      = $user;
+        $this->patient                  = $patient;
+        $this->task                     = $task;
+        $this->user                     = $user;
 
-        $this->request   = Request::all();
-        $this->id        = GeneralFunctions::getRouteParameter('id');
-        $this->patientId = Route::input('pid');
-        $this->deletedId = GeneralFunctions::getRouteParameter('delid');
-        $this->mine      = GeneralFunctions::getRouteParameter('mine');
-        $this->sort1     = GeneralFunctions::getRouteParameter('sort1');
-        $this->sort2     = GeneralFunctions::getRouteParameter('sort2');
-        $this->sortdir1  = GeneralFunctions::getRouteParameter('sortdir1');
-        $this->sortdir2  = GeneralFunctions::getRouteParameter('sortdir2');
-        $this->message   = GeneralFunctions::getRouteParameter('message');
-        $this->page1     = GeneralFunctions::getRouteParameter('page1');
-        $this->page2     = GeneralFunctions::getRouteParameter('page2');
+        $this->request                  = Request::all();
+        $this->taskId                   = GeneralFunctions::getRouteParameter('id');
+        $this->patientId                = Route::input('pid');
+        $this->deletedId                = GeneralFunctions::getRouteParameter('delid');
+        $this->mineTask                 = GeneralFunctions::getRouteParameter('mine');
+        $this->sortTopTasks             = GeneralFunctions::getRouteParameter('sort1');
+        $this->sortBottomTasks          = GeneralFunctions::getRouteParameter('sort2');
+        $this->sortDirectionTopTasks    = GeneralFunctions::getRouteParameter('sortdir1');
+        $this->sortDirectionBottomTasks = GeneralFunctions::getRouteParameter('sortdir2');
+        $this->message                  = GeneralFunctions::getRouteParameter('message');
+        $this->topPageNumber            = GeneralFunctions::getRouteParameter('page1');
+        $this->bottomPageNumber         = GeneralFunctions::getRouteParameter('page2');
     }
 
     public function index()
     {
         $showBlock = array();
 
-        if (!empty($this->id)) {
-            $task = $this->task->getJoin($this->id);
+        if (!empty($this->taskId)) {
+            $task = $this->task->getJoin($this->taskId);
         } else {
             $task = null;
         }
@@ -78,7 +79,7 @@ class TaskController extends Controller
 
         $data = array(
             'showBlock'      => $showBlock,
-            'id'             => $this->id,
+            'id'             => $this->taskId,
             'patientId'      => $this->patientId,
             'task'           => $task,
             'patient'        => !empty($patients) ? $patients[0] : null,
@@ -93,11 +94,11 @@ class TaskController extends Controller
     public function add()
     {
         if (!empty($this->request['taskadd']) && $this->request['taskadd'] == 1) {
-            $dueDate = !empty($this->request['due_date']) ? date('Y-m-d', strtotime($this->request['due_date'])) : '';
+            $dueDate = !empty($this->request['due_date']) ? Carbon::parse($this->request['due_date'])->format('Y-m-d') : '';
 
             $data = array(
                 'task'           => $this->request['task'],
-                'due_date'       => date('Y-m-d', strtotime($dueDate)),
+                'due_date'       => Carbon::parse($dueDate)->format('Y-m-d'),
                 'userid'         => Session::get('userid'),
                 'status'         => !empty($this->request['status']) ? $this->request['status'] : 0,
                 'patientid'      => $this->request['patientid'],
@@ -106,14 +107,12 @@ class TaskController extends Controller
 
             $this->task->insertData($data);
             // $message = 'Task Added!';
-
-            return redirect('/manage/add_task')->with('closePopup', true);
         } elseif (!empty($this->request['taskedit']) && $this->request['taskedit'] == 1) {
-            $dueDate = !empty($this->request['due_date']) ? date('Y-m-d', strtotime($this->request['due_date'])) : '';
+            $dueDate = !empty($this->request['due_date']) ? Carbon::parse($this->request['due_date'])->format('Y-m-d') : '';
 
             $data = array(
                 'task'           => $this->request['task'],
-                'due_date'       => date('Y-m-d', strtotime($dueDate)),
+                'due_date'       => Carbon::parse($dueDate)->format('Y-m-d'),
                 'userid'         => Session::get('userid'),
                 'status'         => !empty($this->request['status']) ? $this->request['status'] : 0,
                 'responsibleid'  => $this->request['responsibleid']
@@ -121,9 +120,9 @@ class TaskController extends Controller
 
             $this->task->updateData($this->request['task_id'], $data);
             // $message = 'Task Added!';
-
-            return redirect('/manage/add_task')->with('closePopup', true);
         }
+
+        return redirect('/manage/add_task')->with('closePopup', true);
     }
 
     public function manageTasks()
@@ -136,14 +135,14 @@ class TaskController extends Controller
             return redirect('/manage/tasks');
         }
 
-        if ($this->mine == 1) {
+        if ($this->mineTask == 1) {
             $task = 'task';
         } else {
             $task = '';
         }
 
-        if (!empty($this->sort1)) {
-            switch ($this->sort1) {
+        if (!empty($this->sortTopTasks)) {
+            switch ($this->sortTopTasks) {
                 case 'due_date':
                     $sort = 'due_date';
                     break;
@@ -157,53 +156,47 @@ class TaskController extends Controller
                     break;
             }
         } else {
-            $this->request['sort1'] = 'name';
-            $this->request['sortdir1'] = 'DESC';
+            $this->sortTopTasks = 'name';
+            $this->sortDirectionTopTasks = 'DESC';
             $sort = 'due_date';
         }
 
-        if (!empty($this->request['sortdir1'])) {
-            $dir = $this->request['sortdir1'];
+        if (!empty($this->sortDirectionTopTasks)) {
+            $dir = $this->sortDirectionTopTasks;
         } else {
             $dir = 'DESC';
         }
 
         $quantityDisplayedRecords = 10;
 
-        if (!empty($this->page1)) {
-            $indexValTop = $this->page1;
+        if (!empty($this->topPageNumber)) {
+            $indexValTop = $this->topPageNumber;
         } else {
             $indexValTop = 0;
         }
 
         $iVal = $indexValTop * $quantityDisplayedRecords;
-        $totalRecords = $this->task->getTasks(
-            Session::get('userId'),
-            Session::get('docId'),
-            null,
-            $task,
-            null,
-            null,
-            array('value' => $sort, 'direction' => $dir)
+
+        $parameters = array(
+            'userId'    => Session::get('userId'),
+            'docId'     => Session::get('docId'),
+            'patientId' => null,
+            'task'      => $task,
+            'sort'      => array('value' => $sort, 'direction' => $dir)
         );
+
+        $totalRecords = $this->task->getTasks($parameters);
 
         $noPagesTop = count($totalRecords) / $quantityDisplayedRecords;
-        $topTasks = $this->task->getTasks(
-            Session::get('userId'),
-            Session::get('docId'),
-            null,
-            $task,
-            null,
-            null,
-            array('value' => $sort, 'direction' => $dir),
-            array('skip' => $iVal, 'take' => $quantityDisplayedRecords)
-        );
+        $parameters['limit'] = array('skip' => $iVal, 'take' => $quantityDisplayedRecords);
+        $topTasks = $this->task->getTasks($parameters);
 
-        $today = strtotime(date('Y-m-d'));
-        $tomorrow = strtotime(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"))));
+        $today = strtotime(Carbon::now());
+        $tomorrow = strtotime(Carbon::tomorrow());
 
         if (count($topTasks)) foreach ($topTasks as $task) {
-            $due = strtotime(date('Y-m-d', strtotime($task->due_date)));
+            $due = strtotime(Carbon::parse($task->due_date));
+
             if ($due < $today) {
                 $type = 'expired';
             } elseif ($due == $today) {
@@ -211,14 +204,14 @@ class TaskController extends Controller
             } elseif ($due == $tomorrow) {
                 $type = 'tomorrow';
             } else {
-                $type = date('m/d/Y', strtotime($task->due_date));
+                $type = Carbon::parse($task->due_date)->format('m/d/Y');
             }
 
             $task->type = $type;
         }
 
-        if (!empty($this->sort2)) {
-            switch ($this->sort2) {
+        if (!empty($this->sortBottomTasks)) {
+            switch ($this->sortBottomTasks) {
                 case 'due_date':
                     $sort = 'due_date';
                     break;
@@ -232,48 +225,39 @@ class TaskController extends Controller
                     break;
             }
         } else {
-            $this->request['sort2'] = 'name';
-            $this->request['sortdir2'] = 'DESC';
+            $this->sortBottomTasks = 'name';
+            $this->sortDirectionBottomTasks = 'DESC';
             $sort = 'due_date';
         }
 
-        if (!empty($this->request['sortdir2'])) {
-            $dir = $this->request['sortdir2'];
+        if (!empty($this->sortDirectionBottomTasks)) {
+            $dir = $this->sortDirectionBottomTasks;
         } else {
             $dir = 'DESC';
         }
 
-        if (!empty($this->page2)) {
-            $indexValBottom = $this->page2;
+        if (!empty($this->bottomPageNumber)) {
+            $indexValBottom = $this->bottomPageNumber;
         } else {
             $indexValBottom = 0;
         }
 
         $iVal = $indexValBottom * $quantityDisplayedRecords;
-        $totalRecords = $this->task->getTasks(
-            Session::get('userId'),
-            Session::get('docId'),
-            null,
-            $task,
-            null,
-            null,
-            array('value' => $sort, 'direction' => $dir),
-            null,
-            1
+
+        $parameters = array(
+            'userId'    => Session::get('userId'),
+            'docId'     => Session::get('docId'),
+            'patientId' => null,
+            'task'      => $task,
+            'sort'      => array('value' => $sort, 'direction' => $dir),
+            'status'    => 1
         );
 
+        $totalRecords = $this->task->getTasks($parameters);
+
         $noPagesBottom = count($totalRecords) / $quantityDisplayedRecords;
-        $bottomTasks = $this->task->getTasks(
-            Session::get('userId'),
-            Session::get('docId'),
-            null,
-            $task,
-            null,
-            null,
-            array('value' => $sort, 'direction' => $dir),
-            array('skip' => $iVal, 'take' => $quantityDisplayedRecords),
-            1
-        );
+        $parameters['limit'] = array('skip' => $iVal, 'take' => $quantityDisplayedRecords);
+        $bottomTasks = $this->task->getTasks($parameters);
 
         // send data to view
 
@@ -282,17 +266,17 @@ class TaskController extends Controller
         }
 
         $data = array_merge($data, array(
-            'mine'           => $this->mine,
+            'mine'           => $this->mineTask,
             'noPagesTop'     => $noPagesTop,
             'noPagesBottom'  => $noPagesBottom,
             'indexValTop'    => $indexValTop,
             'indexValBottom' => $indexValBottom,
-            'sort1'          => $this->sort1,
-            'sort2'          => $this->sort2,
-            'sortdir1'       => strtolower($this->sortdir1),
-            'sortdir2'       => strtolower($this->sortdir2),
-            'page1'          => $this->page1,
-            'page2'          => $this->page2,
+            'sort1'          => $this->sortTopTasks,
+            'sort2'          => $this->sortBottomTasks,
+            'sortdir1'       => strtolower($this->sortDirectionTopTasks),
+            'sortdir2'       => strtolower($this->sortDirectionBottomTasks),
+            'page1'          => $this->topPageNumber,
+            'page2'          => $this->bottomPageNumber,
             'topTasks'       => $topTasks,
             'bottomTasks'    => $bottomTasks
         ));

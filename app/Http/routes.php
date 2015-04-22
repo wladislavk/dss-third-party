@@ -24,6 +24,9 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->post('search_patients', 'PatientController@searchPatients');
     $router->get('add_task/{pid?}', 'TaskController@index');
     $router->post('add_task', 'TaskController@add');
+    $router->get('sleeplab/{ed}/view', 'SleepLabController@view');
+    $router->get('sleeplab/add/{ed?}', 'SleepLabController@index');
+    $router->post('sleeplab/add/{ed?}', 'SleepLabController@add');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 
@@ -32,6 +35,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->get('duplicate_patient/{pid?}', 'PatientController@duplicate');
         $router->get('contact', 'ContactController@manage');
         $router->get('tasks', 'TaskController@manageTasks');
+        $router->get('sleeplab', 'SleepLabController@manage');
     });
 });
 

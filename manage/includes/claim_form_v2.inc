@@ -2284,8 +2284,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						<span class="num">17.</span> 
 						Name of Referring Provider or Other Source
 				<select name="name_referring_provider_qualifier">
-					<option value="DN" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DN")?'checked="checked"':''; ?>>DN - Referring Provider</option>
-					<option value="DK" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DK")?'checked="checked"':''; ?>>DK - Ordering Provider</option>
+                    <option value=""></option>
+                    <option value="DN" <?= ($name_referring_provider_qualifier=="DN" || $insurancetype == '1' )?'checked="checked"':''; ?>>DN - Referring Provider</option>
+                    <option value="DK" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DK")?'checked="checked"':''; ?>>DK - Ordering Provider</option>
 					<option value="DQ" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DQ")?'checked="checked"':''; ?>>DQ - Supervising Provider</option>
 				</select>
 								<input type="text" value="<?php echo  $referring_provider; ?>" name="referring_provider" class="inbox_line3" size="20" />

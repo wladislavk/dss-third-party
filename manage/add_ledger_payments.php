@@ -1,20 +1,7 @@
 <?php
-<<<<<<< HEAD
-  include "includes/top.htm";
-  include_once "includes/constants.inc";
-=======
 include "includes/top.htm";
 include_once "includes/constants.inc";
 require "includes/calendarinc.php";
-$sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".$_GET['cid']."'  or dl.secondary_claim_id=".$_GET['cid'].");";
-$p_sql = mysqli_query($con, $sql);
-$payments = mysqli_fetch_array($p_sql);
-$csql = "SELECT i.*, CONCAT(p.firstname, ' ',p.lastname) name FROM dental_insurance i 
-	JOIN dental_patients p ON p.patientid=i.patientid
-	WHERE i.insuranceid='".$_GET['cid']."';";
-$cq = mysqli_query($con, $csql);
-$claim = mysqli_fetch_array($cq);
->>>>>>> branch
 
   $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
   $payments = $db->getRow($sql);
@@ -23,12 +10,12 @@ $claim = mysqli_fetch_array($cq);
   $claim = $db->getRow($csql);
 
   $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-  		(status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE.")";
+  		(status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE."OR status = ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
   $num_pa = $db->getNumberRows($pasql);
 
 
   $sasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-            (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
+            (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE."OR status = ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
   $num_sa = $db->getNumberRows($sasql);
 ?>
 
@@ -120,7 +107,7 @@ function validSubmission(f)
         } else {
 
         }
-      } else if (<?php echo  ($claim['status']==DSS_CLAIM_SENT)?1:0; ?>) {
+      } else if (<?php echo  ($claim['status']==DSS_CLAIM_SENT||$claim['status']==DSS_CLAIM_EFILE_ACCEPTED)?1:0; ?>) {
         if (f.payer.value==<?php echo  DSS_TRXN_PAYER_PRIMARY;?>) {
           if (f.close.checked) {
             if (f.attachment.value =='' && <?php echo  ($num_pa == 0)?1:0; ?>) {
@@ -207,7 +194,7 @@ function showAuthBox()
     $sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
     $p_sql = $db->getResults($sql);
 
-<<<<<<< HEAD
+
     if(count($p_sql)==0) {
   ?>
     <div style="margin-left:50px;">No Previous Payments</div>
@@ -250,50 +237,7 @@ function showAuthBox()
       <td><?php echo  $p['followup']; ?></td>
       <td><?php echo  $p['note']; ?></td>
     </tr>
-=======
-<?php
-$sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".$_GET['cid']."'  or dl.secondary_claim_id=".$_GET['cid'].");";
-$p_sql = mysqli_query($con, $sql);
-if(mysqli_num_rows($p_sql)==0){
-?><div style="margin-left:50px;">No Previous Payments</div><?php
-}else{
-?>
-<table style="width: 98%" border="1">
-<tr>
-<th>Payment Date</th>
-<th>Entry Date</th>
-<th>Description</th>
-<th>Paid By</th>
-<th>Payment Type</th>
-<th>Amount</th>
-<th>Allowed</th>
-<th>Ins. Paid</th>
-<th>Deductible</th>
-<th>Copay</th>
-<th>CoIns</th>
-<th>Overpaid</th>
-<th>Follow-up</th>
-<th>Note</th>
-</tr>
-<?php
-while($p = mysqli_fetch_array($p_sql)){
-?>
-<td><?= date('m/d/Y', strtotime($p['payment_date'])); ?></td>
-<td><?= date('m/d/Y', strtotime($p['entry_date'])); ?></dt>
-<td><?= $p['description']; ?></td>
-<td><?= $dss_trxn_payer_labels[$p['payer']]; ?></td>
-<td><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></td>
-<td><?= ($p['amount'] > 0 ? $p['amount'] : ""); ?></td>
-<td><?= ($p['amount_allowed'] > 0 ? $p['amount_allowed'] : ""); ?></td>
-<td><?= ($p['ins_paid'] > 0 ?  $p['ins_paid'] : ""); ?></td>
-<td><?= ($p['deductible'] > 0 ? $p['deductible'] : ""); ?></td>
-<td><?= ($p['copay'] > 0 ? $p['copay'] : ""); ?></td>
-<td><?= ($p['coins'] > 0 ? $p['coins'] : ""); ?></td>
-<td><?= ($p['overpaid'] > 0 ? $p['overpaid'] : ""); ?></td>
-<td><?= $p['followup']; ?></td>
-<td><?= $p['note']; ?></td>
-</tr>
->>>>>>> branch
+
 <?php 
   }
 ?>
@@ -335,7 +279,6 @@ while($p = mysqli_fetch_array($p_sql)){
       <span style="float:left;font-weight:bold;">Paid Amount</span>
     </div>
 
-<<<<<<< HEAD
     <?php
       $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_GET['cid']) ? $_GET['cid'] : '');
       $lq = $db->getResults($lsql);
@@ -353,29 +296,6 @@ while($p = mysqli_fetch_array($p_sql)){
           </span>
         </div>
     <?php } ?>
-=======
-<div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
-<span style="width:80px;margin: 0 10px 0 0; float:left;">Service Date</span>
-<span style="width:180px;margin: 0 10px 0 0; float:left;">Description</span>
-<span style="width:100px;margin: 0 10px 0 0; float:left;">Amount</span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">Payment Date <span class="req">*</span></span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">Amount Allowed</span>
-<span style="float:left;font-weight:bold;">Paid Amount <span class="req">*</span></span>
-</div>
-<?php
-$lsql = "SELECT * FROM dental_ledger WHERE (primary_claim_id=".$_GET['cid']."  or secondary_claim_id=".$_GET['cid'].")";
-$lq = mysqli_query($con, $lsql);
-while($row = mysqli_fetch_assoc($lq)){
-?>
-<div style="height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
-<span style="width:80px;margin: 0 10px 0 0; float:left;"><?= $row['service_date']; ?></span>
-<span style="width:180px;margin: 0 10px 0 0; float:left;"><?= $row['description']; ?></span>
-<span style="width:100px;margin: 0 10px 0 0; float:left;">$<?= $row['amount']; ?></span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" id="payment_date_<?= $row['ledgerid']; ?>" class="calendar_top" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" class="allowed_amount dollar_input" name="allowed_<?= $row['ledgerid']; ?>" /></span>
-<span style="float:left;font-weight:bold;"><input class="payment_amount dollar_input" style="width:140px;" type="text" name="amount_<?= $row['ledgerid']; ?>" /></span>
-</div>
->>>>>>> branch
 
     <br />
     <input type="checkbox" id="close" name="close" onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1" />
@@ -397,15 +317,15 @@ while($row = mysqli_fetch_assoc($lq)){
     <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
     <input type="hidden" name="entrycount" value="javascript::readCookie();">
     <div style="width:200px;float:right;margin-left:10px;text-align:left;" id="submitButton">
-      <input type="submit" value="Submit Payments" />
+      <input style="width:auto;" type="submit" value="Submit Payments" />
     </div>
   </div>
 
-  <div id="auth_div" style="display:none; padding: 10px">
+  <div id="auth_div" style="display:none; padding: 10px;">
     <p>You are not authorized to complete this transaction. Please have an authorized user enter their credentials.</p>
     Username: <input type="text" name="username" /><br />
     Password: <input type="password" name="password" /><br />
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Submit" style="width:auto;"/>
   </div>
 </form>
 <br><br>

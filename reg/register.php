@@ -477,7 +477,7 @@ include 'includes/completed.php';
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>7e.</strong> State</label>
-                        <input class="inpt_a validate" id="p_m_ins_state" name="p_m_ins_state" type="text" value="<?= $p_m_r['state']; ?>" />
+                        <input class="inpt_a validate" id="p_m_ins_state" name="p_m_ins_state" type="text" value="<?= $p_m_r['state']; ?>" maxlength="2" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>7f.</strong> Zip</label>
@@ -629,7 +629,7 @@ include 'includes/completed.php';
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6e.</strong> State</label>
-                        <input class="inpt_a validate" id="s_m_ins_state" name="s_m_ins_state" type="text" value="<?= $s_m_r['state']; ?>" />
+                        <input class="inpt_a validate" id="s_m_ins_state" name="s_m_ins_state" type="text" value="<?= $s_m_r['state']; ?>" maxlength="2" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6f.</strong> Zip</label>

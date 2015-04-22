@@ -3,15 +3,28 @@
         var selectedrefUrl = '';
         var searchrefVal = ""; // global variable to hold the last valid search string
 	var local_data = "";
-	function setup_autocomplete_local(in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment, npi, office_type){
+	function setup_autocomplete_local(in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment, npi, office_type, endpoint){
 		$.getJSON(file).done(function(data){
 			local_data = new Array();
 			var cpl = data;
+			var array_index = 0;
 			for(var i=0; i<cpl.length;i++){
-				local_data[i] = new Array();
-				local_data[i]['payer_id'] = cpl[i]['payer_id'];
-				local_data[i]['payer_name'] = cpl[i]['names'].join(',');
-				local_data[i]['enrollment_required'] = cpl[i]['enrollment_required'];
+				var endpoint_index = -1;
+				for(j=0;j<cpl[i]['supported_endpoints'].length;j++){
+				  if(endpoint == cpl[i]['supported_endpoints'][j].endpoint){
+				    endpoint_index = j;
+				  }
+				}
+				if(!endpoint || endpoint_index != -1){
+					local_data[array_index] = new Array();
+					local_data[array_index]['payer_id'] = cpl[i]['payer_id'];
+					local_data[array_index]['payer_name'] = cpl[i]['names'].join(',');
+					local_data[array_index]['enrollment_required'] = cpl[i]['enrollment_required'];
+					if(hinttype == 'ins_payer' && endpoint_index != -1){ 
+						local_data[array_index]['enrollment_mandatory_fields'] = cpl[i]['supported_endpoints'][endpoint_index].enrollment_mandatory_fields;
+					}
+					array_index++;
+				}
 			}
 		});
                 $('#'+in_field).keyup(function(e) {
@@ -72,7 +85,8 @@
 				  data[r][0] = local_data[j].payer_id.replace(/(\r\n|\n|\r)/gm,"")+"-"+local_data[j].payer_name.replace(/(\r\n|\n|\r)/gm,"");
 				}
 				data[r][1] = local_data[j].payer_id.replace(/(\r\n|\n|\r)/gm,"")+" - "+local_data[j].payer_name.replace(/(\r\n|\n|\r)/gm,"");
-				data[r][2] = local_data[j].enrollment_required;
+				data[r][2] = local_data[j].onrollment_required;
+				data[r][3] = local_data[j].enrollment_mandatory_fields;
 				r++;
 			}
 		}
@@ -124,7 +138,7 @@
 						.addClass('json_patient')
 						.data('rowid', data[i][0])
 						.data('rowsource', data[i][0])
-						.attr("onclick", "update_referredby_local('"+in_field+"','"+(name.replace(/'/g, "\\'"))+"', '"+id_field+"', '"+data[i][0]+"', '"+source+"', '"+data[i][1]+"','"+hint+"','"+data[i][2]+"', '"+check_enrollment+"', '"+npi+"','"+office_type+"')");
+						.attr("onclick", "update_referredby_local('"+in_field+"','"+(name.replace(/'/g, "\\'"))+"', '"+id_field+"', '"+data[i][0]+"', '"+source+"', '"+data[i][1]+"','"+hint+"','"+data[i][2]+"', '"+check_enrollment+"', '"+npi+"','"+office_type+"', '"+data[i][3]+"')");
 				    }
                                         template_list_ref_local(newLi, name)
                                               .appendTo('#'+hint+' ul')
@@ -139,7 +153,21 @@
                 li.html(val);
                 return li;
         }
-function update_referredby_local(in_field, name, id_field, id, source, t, hint, enrollment, check_enrollment, npi, office_type){
+function update_referredby_local(in_field, name, id_field, id, source, t, hint, enrollment, check_enrollment, npi, office_type, enrollment_mandatory_fields){
+
+  console.log(enrollment_mandatory_fields);
+  if(enrollment_mandatory_fields != ''){
+	var emf = enrollment_mandatory_fields.split(',');
+	$('.formControl').removeClass('required');
+    for( var i = 0; i < emf.length; i++){
+	$('#'+emf[i]).addClass('required');
+	if(emf[i] == 'medicaid_id'){
+		alert('Medicaid enrollment is not supported at this time. Please open a support ticket for further assistance.');	
+	}
+    }
+   
+  }
+
   if(enrollment=='true' && check_enrollment=='true'){
                                       $.ajax({
                                         url: "/manage/includes/check_enrollment.php",

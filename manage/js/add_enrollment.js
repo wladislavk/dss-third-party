@@ -1,8 +1,4 @@
-$(document).ready(function(){
-	setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', null, null, false);
-  $('#transaction_type').on("change", update_list);
-});
-
+$('#transaction_type').on("change", update_list);
 $('#provider_select').change(function(event){
   var json = $(this).val();
   var r = $.parseJSON(json);
@@ -19,6 +15,7 @@ $('#provider_select').change(function(event){
   $('#state').val(r.state);
   $('#zip').val(r.zip);
   $('#npi').val(r.npi);
+  $('#ptan').val(r.medicare_ptan);
   $('#first_name').val(r.first_name);
   $('#last_name').val(r.last_name);
   $('#contact_number').val(r.contact_number);
@@ -31,17 +28,18 @@ $("input[type='text'][readonly]").click( function(){
 
 function update_list(){
   var t = $('#transaction_type').val();
+  $('#ins_payer_name').val('');
   if(t == '1'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', '','','','','','coverage');
   }else if(t == '2'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/payment/status.json', 'ins_payer');
   }else if(t == '4'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/era.json', 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/era.json', 'ins_payer', '','','','','','payment reports');
   }else if(t == '5'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', '', 'ins_payer');
   }else if(t == '6'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/dental.json', 'ins_payer');
   }else if(t == '7'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/institutional.json', 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/institutional.json', 'ins_payer', '','','','','','professional claims');
   }
 }

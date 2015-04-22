@@ -98,7 +98,7 @@ if (isset($_GET['ed'])) {
          . "ins_cal_year_start = '".mysqli_real_escape_string($con, s_for($_POST["ins_cal_year_start"]))."', "
          . "ins_cal_year_end = '".mysqli_real_escape_string($con, s_for($_POST["ins_cal_year_end"]))."', "
          . "trxn_code_covered = '" . mysqli_real_escape_string($con, s_for($_POST["trxn_code_covered"])) . "', "
-         . "code_covered_notes = '".mysqli_real_escape_string($con, s_for($_POST["code_covered_notes"]))."', "
+         . "code_covered_notes = '".mysqli_real_escape_string($con, $_POST["code_covered_notes"])."', "
          . "how_often = '".mysqli_real_escape_string($con, s_for($_POST["how_often"]))."', "
          . "has_out_of_network_benefits = '" . mysqli_real_escape_string($con, $_POST["has_out_of_network_benefits"]) . "', "
          . "out_of_network_percentage = '" . mysqli_real_escape_string($con, $_POST["out_of_network_percentage"]) . "', "

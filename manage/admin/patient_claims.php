@@ -156,6 +156,10 @@ $sql = "SELECT "
      . "  claim.mailed_date, claim.sec_mailed_date, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
      . "  c.name as billing_name, "
+     . "  CASE WHEN
+    claim.status IN (".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_SEC_SENT.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_PAID_SEC_INSURANCE.") THEN co2.company
+    ELSE co.company 
+  END as ins_name, "
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
 		WHEN ".DSS_CLAIM_PENDING." THEN 1
@@ -176,7 +180,9 @@ $sql = "SELECT "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid "
-     . "  LEFT JOIN companies c ON c.id = users.billing_company_id ";
+     . "  LEFT JOIN companies c ON c.id = users.billing_company_id "
+     . "  LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co "
+     . "  LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co ";
 }elseif(is_billing($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
@@ -184,6 +190,10 @@ $sql = "SELECT "
      . "  claim.primary_fdf, claim.secondary_fdf, "
      . "  claim.mailed_date, claim.sec_mailed_date, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
+     . "  CASE WHEN
+    claim.status IN (".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_SEC_SENT.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_PAID_SEC_INSURANCE.") THEN co2.company
+    ELSE co.company 
+  END as ins_name, "
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
                 WHEN ".DSS_CLAIM_PENDING." THEN 1
@@ -200,8 +210,10 @@ $sql = "SELECT "
      . "FROM "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
-     . "  JOIN dental_users users ON claim.docid = users.userid AND users.billing_company_id='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'"
-     . "  JOIN dental_user_company uc ON uc.userid = claim.docid " 
+     . "  JOIN dental_users users ON claim.docid = users.userid AND users.billing_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."'"
+     . "  JOIN dental_user_company uc ON uc.userid = claim.docid "
+     . "  LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co "
+     . "  LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co " 
      . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
 }
 else{
@@ -211,6 +223,10 @@ $sql = "SELECT "
      . "  claim.primary_fdf, claim.secondary_fdf, "
      . "  claim.mailed_date, claim.mailed_date, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
+     . "  CASE WHEN
+    claim.status IN (".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_SEC_SENT.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_PAID_SEC_INSURANCE.") THEN co2.company
+    ELSE co.company 
+  END as ins_name, "
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
                 WHEN ".DSS_CLAIM_PENDING." THEN 1
@@ -228,7 +244,9 @@ $sql = "SELECT "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
-     . "  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'"
+     . "  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'"
+     . "  LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co "
+     . "  LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
 }
 // . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
@@ -283,165 +301,245 @@ if(isset($_GET['msg'])){
     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
              . "&status=" . ((isset($_REQUEST['status']))?$_REQUEST['status']:'') . "&sort_by=%s&sort_dir=%s";
     ?>
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Added</a>
-		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
-		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
-		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="15%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
-		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="15%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
-		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
+  <tr class="tr_bg_h">
+    <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
+      <a href="<?=sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Added</a>
+    </td>
+    <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
+      <a href="<?=sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
+    </td>
+    <td>
+      E-File
+    </td>
+    <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
+      <a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
+    </td>
+                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_INS, $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, SORT_BY_INS, get_sort_dir($sort_by, SORT_BY_INS, $sort_dir))?>">Insurance Company</a>
+                </td>
+    <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="15%">
+      <a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
+    </td>
+    <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="15%">
+      <a href="<?=sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
+    </td>
+    <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
                         <a href="<?=sprintf($sort_qs, SORT_BY_BC, get_sort_dir($sort_by, SORT_BY_BC, $sort_dir))?>">Billing Company</a>
                 </td>
-		<td valign="top" class="col_head" width="15%">
-			Action
-		</td>
-		<td valign="top" class="col_head" width="15%">
-			Notes	
-		</td>
-		<td valign="top" class="col_head" width="15%">
-			Mailed
-		</td>
-	</tr>
-	<? if(mysqli_num_rows($my) == 0)
-	{ ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="7" align="center">
-				No Records
-			</td>
-		</tr>
-	<? 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-		?>
-			<tr class="<?= (isset($tr_class))?$tr_class:'';?>">
-				<td valign="top">
-					<?=st($myarray["adddate"]);?>&nbsp;
-				</td>
-				<?php 
-				switch($myarray['status']){
-					case 0:
-					case 2:
-					case 6:
-					case 8:
-					case 10:
-					case 12:
-						if($myarray['days_pending']>7){
-						  $status_color = "danger";
-						}else{
-						  $status_color = "warning";
-						}
-						break;
-					case 4:
-					case 13:
-						$status_color = "danger";
-						break;
-					default:
-						$status_color = "success";
-						break;
-				}
-		
-		//$status_color = ($myarray["status"] == DSS_CLAIM_PENDING) ? "warning" : "success"; ?>
-				<?php //$status_color = ($myarray["status"] == DSS_CLAIM_PENDING && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
-				<td valign="top" class="claim_<?= $myarray["status"]; ?> <?= ($myarray['days_pending']>7)?'old':''; ?> <?= $status_color;?>">
-					<?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
-				</td>
-				<td valign="top">
-					<a href="view_patient.php?pid=<?=$myarray['patientid'];?>"><?=st($myarray["lastname"]);?>, <?=st($myarray["firstname"]);?></a>
-				</td>
-				<td valign="top">
-					<?=st($myarray["doc_name"]);?>&nbsp;
-				</td>
-				<td valign="top">
-					<?=st($myarray["user_name"]);?>&nbsp;
-				</td>
+    <td valign="top" class="col_head" width="15%">
+      Action
+    </td>
+                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_NOTES, $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, SORT_BY_NOTES, get_sort_dir($sort_by, SORT_BY_NOTES, $sort_dir))?>">Notes</a>
+                </td>
+    <td valign="top" class="col_head" width="15%">
+      Mailed
+    </td>
+  </tr>
+  <? if(mysql_num_rows($my) == 0)
+  { ?>
+    <tr class="tr_bg">
+      <td valign="top" class="col_head" colspan="7" align="center">
+        No Records
+      </td>
+    </tr>
+  <? 
+  }
+  else
+  {
+    while($myarray = mysql_fetch_array($my))
+    {
+    ?>
+      <tr class="<?= (isset($tr_class))?$tr_class:'';?>">
+        <td valign="top">
+          <?=st($myarray["adddate"]);?>&nbsp;
+        </td>
+        <?php 
+        switch($myarray['status']){
+          case 0:
+          case 2:
+          case 6:
+          case 8:
+          case 10:
+          case 12:
+            if($myarray['days_pending']>7){
+              $status_color = "danger";
+            }else{
+              $status_color = "warning";
+            }
+            break;
+          case 4:
+          case 13:
+            $status_color = "danger";
+            break;
+          default:
+            $status_color = "success";
+            break;
+        }
+    
+    //$status_color = ($myarray["status"] == DSS_CLAIM_PENDING) ? "warning" : "success"; ?>
+        <?php //$status_color = ($myarray["status"] == DSS_CLAIM_PENDING && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
+        <td valign="top" class="claim_<?= $myarray["status"]; ?> <?= ($myarray['days_pending']>7)?'old':''; ?> <?= $status_color;?>">
+          <?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
+        </td>
+        <td>
+          <?php
+            $payment_report_sql = "SELECT * FROM dental_payment_reports WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."' ORDER BY adddate DESC LIMIT 1";
+            $payment_report_query = mysql_query($payment_report_sql);
+            $payment_report_result = mysql_fetch_assoc($payment_report_query);
+            if($payment_report_result){
+              echo '<a href="view_payment_reports.php?insid='.$payment_report_result['claimid'].'"> Paid - '.$payment_report_result['adddate']." (View)</a>";
+            } else {
+              $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."' ORDER BY adddate DESC LIMIT 1"; 
+              $reference_id_query = mysql_query($reference_id_sql);
+              $reference_id_result = mysql_fetch_assoc($reference_id_query);
+              if($reference_id_result){
+                $reference_id = $reference_id_result['reference_id'];
+                if($reference_id != ""){
+                  $eligible_response_sql = "SELECT event_type, adddate FROM dental_eligible_response WHERE reference_id='".$reference_id."' ORDER BY adddate DESC";
+                  $eligible_response_query = mysql_query($eligible_response_sql);
+                  $eligible_response_result = mysql_fetch_assoc($eligible_response_query);
+                  echo $eligible_response_result['event_type']." - ".$eligible_response_result['adddate'];
+                }
+              }
+            }
+          ?>
+        </td>
+        <td valign="top">
+          <a href="view_patient.php?pid=<?=$myarray['patientid'];?>"><?=st($myarray["lastname"]);?>, <?=st($myarray["firstname"]);?> (View Chart)</a>
+        </td>
+        <td valign="top">
+          <?=st($myarray["ins_name"]);?>&nbsp;
+        </td>
+        <td valign="top">
+          <a href="view_user.php?ed=<?= $myarray['docid']; ?>"><?=st($myarray["doc_name"]);?></a>&nbsp;
+        </td>
+        <td valign="top">
+          <?=st($myarray["user_name"]);?>&nbsp;
+        </td>
                                 <td valign="top">
                                         <?=st($myarray["billing_name"]);?>&nbsp;
                                 </td>
-				<td valign="top">
-				    <?php
-					//$primary_link = ($myarray['primary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['primary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=primary&pid='.$myarray['patientid'];
-					//$secondary_link = ($myarray['secondary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['secondary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=secondary&pid='.$myarray['patientid'];
-					$primary_link = "insurance_claim_v2.php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'];
-					$secondary_link = "insurance_claim_v2.php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid']."&instype=2";
-					?>
-				    <?php if($myarray["status"] == DSS_CLAIM_PENDING || $myarray["status"] == DSS_CLAIM_REJECTED){ ?>
-				    <a href="insurance_claim_v2.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>" title="Edit" class="btn btn-primary btn-sm">
-						Edit
-					 <span class="glyphicon glyphicon-pencil"></span></a> 
-				<?php }elseif($myarray["status"] == DSS_CLAIM_SEC_PENDING){ ?>
-                                    <a href="insurance_claim_v2.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>&instype=2" title="Edit" class="btn btn-primary btn-sm">
+        <td valign="top">
+            <?php
+          //$primary_link = ($myarray['primary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['primary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=primary&pid='.$myarray['patientid'];
+          //$secondary_link = ($myarray['secondary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['secondary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=secondary&pid='.$myarray['patientid'];
+          $paid_statuses = array(0 => DSS_CLAIM_PAID_INSURANCE, 1 => DSS_CLAIM_PAID_SEC_INSURANCE);
+
+          $primary_link = "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'];
+          $secondary_link = "insurance_claim".(($myarray['secondary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid']."&instype=2";
+          $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."' ORDER BY adddate DESC LIMIT 1"; 
+          $reference_id_query = mysql_query($reference_id_sql);
+          if(mysql_num_rows($reference_id_query)){
+            $reference_id_result = mysql_fetch_assoc($reference_id_query);
+            $reference_id = $reference_id_result['reference_id'];
+            if($reference_id != "" && !in_array($myarray['status'], $paid_statuses)){
+              $update_claim_url = "request_claim_update.php?insid=".$myarray['insuranceid'];
+              ?>
+                <a href="<?php echo $update_claim_url?>" class="btn btn-primary btn-sm" >Check Status</a>
+
+              <?php
+            } else if($reference_id != "" && in_array($myarray['status'], $paid_statuses)){
+              $payment_status_url = "request_payment_report.php?insid=".$myarray['insuranceid'];
+              ?>
+                <a href="<?php echo $payment_status_url?>" class="btn btn-primary btn-sm" >Check Payment Status</a>
+
+              <?php
+            }
+          }
+
+              ?>
+            <?php if($myarray["status"] == DSS_CLAIM_PENDING || $myarray["status"] == DSS_CLAIM_REJECTED){ ?>
+            <a href="insurance_claim<?=($myarray['primary_claim_version']!="1")?'_eligible':'_v2'; ?>.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>" class="btn btn-primary btn-sm">
+            Edit
+           <span class="glyphicon glyphicon-pencil"></span></a> 
+        <?php }elseif($myarray["status"] == DSS_CLAIM_SEC_PENDING){ ?>
+                                    <a href="insurance_claim<?=($myarray['secondary_claim_version']!="1")?'_eligible':'_v2'; ?>.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>&instype=2" class="btn btn-primary btn-sm">
                                                 Edit Secondary
                                          <span class="glyphicon glyphicon-pencil"></span></a><br />
-					<a href="<?= $primary_link; ?>" title="Edit" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
+          <a href="<?= "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['primary_claim_id']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'] ?>" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
                                 <?php }elseif($myarray["status"] == DSS_CLAIM_SEC_SENT || $myarray["status"] == DSS_CLAIM_PAID_SEC_INSURANCE){ ?>
-                                    <a href="<?= $secondary_link; ?>" title="Edit" class="btn btn-primary btn-sm">
+                                    <a href="<?= $secondary_link; ?>" class="btn btn-primary btn-sm">
                                                 View Secondary
                                          <span class="glyphicon glyphicon-pencil"></span></a><br />
-                                        <a href="<?= $primary_link; ?>" title="Edit" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
+                                        <a href="<?= "insurance_claim".(($myarray['primary_claim_version']!="1")?'_eligible':'_v2').".php?insid=".$myarray['primary_claim_id']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid'] ?>" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
                                 <?php }else{ ?>
-					<a href="<?= $primary_link; ?>" title="Edit" class="btn btn-primary btn-sm">View <span class="glyphicon glyphicon-pencil"></span></a>
-				<?php } ?>
-				<?php 
-					$eobsql = "SELECT * FROM dental_insurance_file WHERE claimid='".mysqli_real_escape_string($con,$myarray['insuranceid'])."'";
-					$eobq = mysqli_query($con,$eobsql);
-					while($eobr = mysqli_fetch_assoc($eobq)){
-						?><br /><a href="display_file.php?f=<?= $eobr['filename']; ?>" title="Edit" class="btn btn-primary btn-sm">View <?= $eobr['claimtype']; ?> EOB <span class="glyphicon glyphicon-pencil"></span></a>
-				<?php } ?>
+          <a href="<?= $primary_link; ?>" class="btn btn-primary btn-sm">View <span class="glyphicon glyphicon-pencil"></span></a>
+        <?php } ?>
+        <?php 
+          $eobsql = "SELECT * FROM dental_insurance_file WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
+          $eobq = mysqli_query($con, $eobsql);
+          while($eobr = mysqli_fetch_assoc($eobq)){
+            ?><br /><a href="display_file.php?f=<?= $eobr['filename']; ?>" <?= $eobr['claimtype']; ?> EOB" class="btn btn-primary btn-sm">View <?= $eobr['claimtype']; ?> EOB <span class="glyphicon glyphicon-pencil"></span></a>
+        <?php } ?>
 <?php if($myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysqli_real_escape_string($con,$myarray['insuranceid'])."'";
             $sq = mysqli_query($con,$s);
             if(mysqli_num_rows($sq)>0){
             $file = mysqli_fetch_assoc($sq);
             ?>
-	   <br />
+     <br />
            <a href="javascript:alert('Dispute Reason:\n<?= $file['description']; ?>');">Reason</a>
-		<br />
-	 <?php } ?>
-		<a href="manage_claims.php?status=<?= $_GET['status']; ?>&sendid=<?= $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a>
+    <br />
+   <?php } ?>
+    <a href="manage_claims.php?status=<?= $_GET['status']; ?>&sendid=<?= $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a>
                 <a href="manage_claims.php?status=<?= $_GET['status']; ?>&cancelid=<?= $myarray['insuranceid']; ?>" onclick="return confirm('This will CANCEL the disputed claim and notify the frontoffice. Proceed?')">Cancel Dispute</a>
-	 <?php
+   <?php
           }elseif($myarray['status'] == DSS_CLAIM_SEC_DISPUTE || $myarray['status'] == DSS_CLAIM_SEC_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysqli_real_escape_string($con,$myarray['insuranceid'])."'";
             $sq = mysqli_query($con,$s);
             if(mysqli_num_rows($sq)>0){
             $file = mysqli_fetch_assoc($sq);
             ?>
-	   <br />
+     <br />
            <a href="javascript:alert('Dispute Reason:\n<?= $file['description']; ?>');">Reason</a>
-	   <br />
+     <br />
         <?php }
-		?><a href="manage_claims.php?status=<?= $_GET['status']; ?>&sendid=<?= $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a><?php
+    ?><a href="manage_claims.php?status=<?= $_GET['status']; ?>&sendid=<?= $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a><?php
            } ?>
 
-				</td>
-	<td valign="top" <?= ($myarray['num_fo_notes']>0)?'class="info"':''; ?>>
-		<a href="claim_notes.php?id=<?= $myarray['insuranceid']; ?>&pid=<?=$myarray['patientid'];?>">View (<?= $myarray['num_notes'];?>)</a>
-	</td>
+        </td>
+  <td valign="top" class="<?= ($myarray['num_fo_notes']>0)?' info ':''; ?><?= ($myarray['num_notes']>0)?' notes_col ':''; ?>">
+    <a href="claim_notes.php?id=<?= $myarray['insuranceid']; ?>&pid=<?=$myarray['patientid'];?>">View (<?= $myarray['num_notes'];?>)
+    <?php
+      if($myarray['notes_last']!=''){
+        echo date('m/d/y h:i a', strtotime($myarray['notes_last']));
+      }
+    ?>
+    </a>
+    <div class="notetip">
+      <?php
+        $n_sql = "SELECT n.*,
+                CASE
+                    WHEN create_type='0'
+                      THEN CONCAT(a.first_name, ' ', a.last_name)
+                  ELSE
+                      CONCAT(u.first_name, ' ', u.last_name)
+                  END as creator_name
+                FROM dental_claim_notes n 
+                  left join dental_users u ON n.creator_id = u.userid
+                  left join admin a ON n.creator_id = a.adminid
+                where n.claim_id='".mysql_real_escape_string($myarray['insuranceid'])."'
+                ORDER BY adddate ASC";
+        $n_q = mysql_query($n_sql) or die(mysql_error());
+        while($n = mysql_fetch_assoc($n_q)){
+          echo $n['note'] .' - '. $n['creator_name'].'<br />';
+        }
+        ?>
+    </div>
+  </td>
 <td>
 <?php
-  if($myarray['status'] == DSS_CLAIM_SENT || $myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PAID_INSURANCE || $myarray['status'] == DSS_CLAIM_PENDING || $myarray['status'] == DSS_CLAIM_PAID_PATIENT || $myarray['status'] == DSS_CLAIM_REJECTED || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE ){
-	?><input type="checkbox" class="mailed_chk" value="<?= $myarray['insuranceid']; ?>" <?php
+  if($myarray['status'] == DSS_CLAIM_SENT || $myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PAID_INSURANCE || $myarray['status'] == DSS_CLAIM_PENDING || $myarray['status'] == DSS_CLAIM_PAID_PATIENT || $myarray['status'] == DSS_CLAIM_REJECTED || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE  || $myarray['status'] == DSS_CLAIM_EFILE_ACCEPTED  ){
+  ?><input type="checkbox" class="mailed_chk" value="<?= $myarray['insuranceid']; ?>" <?php
   echo ($myarray['mailed_date'] !='')?'checked="checked"':''; 
-}elseif($myarray['status'] == DSS_CLAIM_SEC_SENT || $myarray['status'] == DSS_CLAIM_SEC_DISPUTE || $myarray['status'] == DSS_CLAIM_PAID_SEC_INSURANCE || $myarray['status'] == DSS_CLAIM_SEC_PENDING || $myarray['status'] == DSS_CLAIM_PAID_SEC_PATIENT || $myarray['status'] == DSS_CLAIM_SEC_REJECTED || $myarray['status'] == DSS_CLAIM_SEC_PATIENT_DISPUTE ){
+}elseif($myarray['status'] == DSS_CLAIM_SEC_SENT || $myarray['status'] == DSS_CLAIM_SEC_DISPUTE || $myarray['status'] == DSS_CLAIM_PAID_SEC_INSURANCE || $myarray['status'] == DSS_CLAIM_SEC_PENDING || $myarray['status'] == DSS_CLAIM_PAID_SEC_PATIENT || $myarray['status'] == DSS_CLAIM_SEC_REJECTED || $myarray['status'] == DSS_CLAIM_SEC_PATIENT_DISPUTE  || $myarray['status'] == DSS_CLAIM_SEC_EFILE_ACCEPTED  ){
         ?><input type="checkbox" class="sec_mailed_chk" value="<?= $myarray['insuranceid']; ?>" <?php
-  echo ($myarray['sec_mailed_date'] !='')?'checked="checked"':''; 
+  echo ($myarray['sec_mailed_date'] !='')?'checked="checked"':'';
 }
 ?>
 /></td>
-			</tr>
+      </tr>
 	<? 	}
 	}?>
 </table>

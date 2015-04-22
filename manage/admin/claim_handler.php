@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
 include_once 'includes/claim_functions.php';
@@ -177,7 +178,15 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $insured_firstname = $_POST['subscriber']['first_name'];
         $insured_lastname = $_POST['subscriber']['last_name'];
         $insured_middle = $_POST['subscriber']['middle_name'];
-        $patient_relation_insured = $_POST['dependent']['relationship'];
+        if($_POST['dependent']['relationship'] == '01'){
+            $patient_relation_insured = "Spouse";    
+        }else if($_POST['dependent']['relationship'] == '19'){
+            $patient_relation_insured = "Child";    
+        }else if($_POST['dependent']['relationship'] == 'G8'){
+            $patient_relation_insured = "Other";    
+        } else {
+            $patient_relation_insured = "Self";
+        }
         $insured_address = $_POST['subscriber']['address']['street_line_1'];
         $insured_state = $_POST['subscriber']['address']['state'];
         $insured_city = $_POST['subscriber']['address']['city'];
@@ -195,10 +204,15 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $insured_dob = $_POST['subscriber']['dob'];
         $insured_sex = $_POST['subscriber']['gender'];
         $insured_insurance_plan = $_POST['subscriber']['group_name'];
-        $other_insured_insurance_plan = $_POST['other_payers'][0]['subscriber']['group_name'];
+        $other_insured_insurance_plan = $_POST['other_payers'][0]['name'];
+        $other_insured_id_number = $_POST['other_payers'][0]['subscriber']['id'];
+        $other_insured_address = $_POST['other_payers'][0]['subscriber']['address']['street_line_1'];
+        $other_insured_city = $_POST['other_payers'][0]['subscriber']['address']['city'];
+        $other_insured_state = $_POST['other_payers'][0]['subscriber']['address']['state'];
+        $other_insured_zip = $_POST['other_payers'][0]['subscriber']['address']['zip'];
         $other_payer = $_POST['other_payer'];
         $responsibility_sequence = $_POST['other_payers'][0]['responsibility_sequence'];
-        if($other_payer){
+        if($other_payer == "true"){
             $another_plan = "YES";
         }
         else 
@@ -401,7 +415,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $reject_reason = $_POST['reject_reason'];
         $insurance_type_arr = $insurance_type;
 
-
+                $s_m_eligible_payer_id = $_POST['other_payers'][0]['subscriber']['id'];
                 $p_m_eligible_payer_id = $_POST['payer']['id'];
                 $p_m_eligible_payer_name = $_POST['payer']['name'];
 
@@ -465,6 +479,10 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 other_insured_firstname = '".s_for($other_insured_firstname)."',
                 other_insured_lastname = '".s_for($other_insured_lastname)."',
                 other_insured_middle = '".s_for($other_insured_middle)."',
+                other_insured_address = '".s_for($other_insured_address)."',
+                other_insured_city = '".s_for($other_insured_city)."',
+                other_insured_state = '".s_for($other_insured_state)."',
+                other_insured_zip = '".s_for($other_insured_zip)."',
                 insured_policy_group_feca = '".s_for($insured_policy_group_feca)."',
                 other_insured_policy_group_feca = '".s_for($other_insured_policy_group_feca)."',
                 insured_dob = '".s_for($insured_dob)."',
@@ -642,7 +660,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 billing_provider_b_other = '".s_for($billing_provider_b_other)."',
                 p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
                 p_m_eligible_payer_name = '".mysqli_real_escape_string($con, $p_m_eligible_payer_name)."',
-                s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
+                s_m_eligible_payer_id = '".mysqli_real_escape_string($con, $s_m_eligible_payer_id)."',
                 s_m_eligible_payer_name = '".mysqli_real_escape_string($con, $s_m_eligible_payer_name)."',
                 rendering_provider_entity_1  = '".mysqli_real_escape_string($con, $rendering_provider_entity_1)."',
                 rendering_provider_first_name_1  = '".mysqli_real_escape_string($con, $rendering_provider_first_name_1)."',
@@ -800,7 +818,7 @@ claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
 <script type="text/javascript">
   c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');
   if(c){
-   window.location = "manage_claims.php?insid=<?= $_GET['insid']; ?>&upstatus=<?= DSS_CLAIM_SENT; ?>"; 
+   window.location = "manage_claims.php?status=0"; 
   }
 </script>
 <?php

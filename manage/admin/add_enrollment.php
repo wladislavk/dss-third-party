@@ -48,6 +48,7 @@ $data['enrollment_npi'] = array(
         "state" => $_POST['state'],
         "zip" => $_POST['zip'],
         "npi" => $_POST['npi'],
+        "ptan" => $_POST['ptan'],
         "authorized_signer" => array(
                 "first_name" => $_POST['first_name'],
                 "last_name" => $_POST['last_name'],
@@ -184,7 +185,7 @@ if(isset($json_response->{"error"})){
         </ul>
 <script type="text/javascript">
 var api_key = <?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>;
-setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer', null, null, false);
+setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer', null, null, false, '','','coverage');
 </script>
             </td>
         </tr>
@@ -213,9 +214,9 @@ $payer_name = substr($payer_id_post,strpos($payer_id_post, '-')+1);
 		?>
           <?php if($r['docid']==0){
                 $snpi = $r['service_npi'];
-                $sjson ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
+                $sjson ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","medicare_ptan":"'.$r['medicare_ptan'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
                 }
-                $json ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
+                $json ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","medicare_ptan":"'.$r['medicare_ptan'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
           ?>
           <option value='<?php echo  $json; ?>'><?php echo  $r['npi']; ?> - <?php echo  $r['first_name']." ".$r['last_name']; ?></option>
         <?php } ?>
@@ -289,7 +290,15 @@ $payer_name = substr($payer_id_post,strpos($payer_id_post, '-')+1);
 		NPI
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="npi" name="npi" value="<?php echo $r['npi']?>" class="moneymask form-control validate" readonly="readonly" />
+                <input type="text" id="npi" name="npi" value="<?=$r['npi']?>" class="form-control validate" readonly="readonly" />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                PTAN (Medicare)
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" id="ptan" name="ptan" value="<?=$r['medicare_ptan']?>" class="form-control" readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -355,12 +364,13 @@ function check_add(){
 function update_list(){
   var api_key = <?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>;
   var t = $('#transaction_type').val();
+  $('#ins_payer_name').val('');
   if(t == '1'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer', '','','','','','coverage');
   }else if(t == '2'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=payment%20status&enrollment_required=true&api_key='+api_key, 'ins_payer');
   }else if(t == '4'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=payment%20reports&enrollment_required=true&api_key='+api_key, 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=payment%20reports&enrollment_required=true&api_key='+api_key, 'ins_payer', '','','','','','payment reports');
   }else if(t == '5'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', '', 'ins_payer');
   }else if(t == '6'){
@@ -368,7 +378,7 @@ function update_list(){
   }else if(t == '7'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/institutional.json', 'ins_payer');
   }else if(t == '8'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=professional%20claims&enrollment_required=true&api_key='+api_key, 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=professional%20claims&enrollment_required=true&api_key='+api_key, 'ins_payer', '','','','','','professional claims');
   }
 }
 $('#transaction_type').on("change", update_list);
@@ -388,6 +398,7 @@ $('#provider_select').change(function(){
   $('#state').val(r.state);
   $('#zip').val(r.zip);
   $('#npi').val(r.npi);
+  $('#ptan').val(r.medicare_ptan);
   $('#first_name').val(r.first_name);
   $('#last_name').val(r.last_name);
   $('#contact_number').val(r.contact_number);

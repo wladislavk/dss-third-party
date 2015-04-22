@@ -275,7 +275,7 @@ class ContactController extends Controller
                         ->with('preview', 1)
                         ->with('addtopat', 1);
                 } else {
-                    return redirect('/manage/contact')->with('message', $message);    
+                    return redirect('/manage/contact')->with('message', $message);
                 }
             }
         }

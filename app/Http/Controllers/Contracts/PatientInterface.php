@@ -13,6 +13,7 @@ interface PatientInterface
     public function getSimilarPatients($data);
     public function getReferredPatients($contactId);
     public function getPatientsWithoutParent($where);
+    public function searchPatients($names, $docId);
     public function insertData($data);
     public function updateData($where, $values);
     public function deleteData($where);

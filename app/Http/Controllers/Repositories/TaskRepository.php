@@ -8,18 +8,40 @@ use Ds3\Eloquent\Task;
 
 class TaskRepository implements TaskInterface
 {
-    public function getTasks($userId, $docId, $patientId, $task, $type = null, $input = null)
-    {
+    public function getTasks(
+        $userId,
+        $docId,
+        $patientId,
+        $task,
+        $type = null,
+        $input = null,
+        $sort = null,
+        $limit = null,
+        $status = null
+    ) {
         $tasks = Task::join('dental_users', 'dental_task.responsibleid', '=', 'dental_users.userid')
             ->leftJoin('dental_patients', 'dental_patients.patientid', '=', 'dental_task.patientid')
-            ->select('dental_task.*', 'dental_users.name', 'dental_patients.firstname', 'dental_patients.lastname')
-            ->nonActive();
+            ->select(
+                'dental_task.*',
+                'dental_users.name',
+                'dental_patients.firstname',
+                'dental_patients.lastname',
+                DB::raw("CONCAT(dental_users.first_name, ' ', dental_users.last_name) as full_name")
+            );
+
+        if (empty($status)) {
+            $tasks = $tasks->nonActive();
+        } else {
+            $tasks = $tasks->active();
+        }
 
         if ($task == 'task') {
             $tasks = $tasks->where('dental_task.responsibleid', '=', $userId);
         } else {
-            $tasks = $tasks->whereRaw('(dental_users.docid = ' . $docId . ' OR dental_users.userid = ' . $docId . ')')
-                ->where('dental_task.patientid', '=', $patientId);
+            $tasks = $tasks->whereRaw('(dental_users.docid = ' . $docId . ' OR dental_users.userid = ' . $docId . ')');
+            if (isset($patientId)) {
+                $tasks = $tasks->where('dental_task.patientid', '=', $patientId);
+            }
         }
 
         switch ($type) {
@@ -46,6 +68,14 @@ class TaskRepository implements TaskInterface
                 break;
             default:
                 break;
+        }
+
+        if (!empty($sort)) {
+            $tasks = $tasks->orderBy($sort['value'], $sort['direction']);
+        }
+
+        if (!empty($limit)) {
+            $tasks = $tasks->skip($limit['skip'])->take($limit['take']);
         }
 
         return $tasks->get();

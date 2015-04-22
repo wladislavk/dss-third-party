@@ -13,6 +13,7 @@ if (typeof String.prototype.trim !== 'function') {
   var selectedUrl = '';
   var searchVal = ""; // global variable to hold the last valid search string
   var local_pat_data = new Array();
+  var additionalRouteParameters = '{}';
 
   $(document).ready(function() {
     $('#patient_search').keyup(function(e) {
@@ -49,19 +50,19 @@ if (typeof String.prototype.trim !== 'function') {
         case 13:
           if($('#search_hints').css('display') == 'inline' || $('#search_hints').css('display') == 'block'){  
             if (selectedUrl != '') {
-            window.location = window.selectedUrl;
+              setRouteParameters(window.selectedUrl, window.additionalRouteParameters, $('#token').val());
             }
           }
           break;
       }
+    });
 
-      $('#task_header').mouseover(function(){
-        $('#task_list').show();
-      });
+    $('#task_header').mouseover(function(){
+      $('#task_list').show();
+    });
 
-      $('#task_menu').mouseleave(function(){
-        $('#task_list').hide();
-      })
+    $('#task_menu').mouseleave(function(){
+      $('#task_list').hide();
     });
 
     $('#patient_search').click(function() {
@@ -93,7 +94,8 @@ if (typeof String.prototype.trim !== 'function') {
       //do nothing
                     }else{
       if (selectedUrl != '') {
-        window.location = window.selectedUrl;
+        setRouteParameters(window.selectedUrl, window.additionalRouteParameters, $('#token').val());
+        return false;
       }
       $('#patient_search').val($(this).html());
       sendValue($(this).html());
@@ -340,9 +342,10 @@ function popitup(url)
 function sendValue(partial_name)
 {
   $.post(
-    "list_patients.php",
+    "/manage/search_patients",
     { 
-      "partial_name": partial_name 
+      "partial_name": partial_name,
+      "_token": $('#token').val()
     }, function(data) {
       if (data.length == 0) {
         $('.json_patient').remove();
@@ -368,7 +371,7 @@ function sendValue(partial_name)
         $('.no_matches').remove();
  
         for (i in data) {
-          var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').data("number", parseInt(i)+1).data("patientid", data[i].patientid).data("patient_info", data[i].patient_info);
+          var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').data("number", parseInt(i)+1).data("patientid", data[i].patientId).data("patient_info", data[i].patientInfo);
           template_list(newLi, data[i])
             .appendTo('#patient_list')
             .fadeIn();
@@ -416,7 +419,8 @@ function set_selected(menuitem)
     if (patient_info == 1) {
       window.selectedUrl = "/manage/manage_flowsheet3.php?pid=" + pid;
     } else {
-      window.selectedUrl = "/manage/add_patient.php?pid=" + pid + "&ed=" + pid;
+      window.selectedUrl = "/manage/add_patient/" + pid;
+      window.additionalRouteParameters = '{"ed": ' + pid + '}';
     }
   }
 }

@@ -206,6 +206,7 @@ class PatientController extends Controller
                 $patientInfo['home_phone']        = $patient->home_phone;
                 $patientInfo['work_phone']        = $patient->work_phone;
                 $patientInfo['cell_phone']        = $patient->cell_phone;
+                $patientInfo['has_s_m_ins']       = $patient->has_s_m_ins;
             } else {
                 foreach ($this->patientData as $attribute) {
                     $patientInfo[$attribute] = '';
@@ -485,6 +486,8 @@ class PatientController extends Controller
 
         $data = array_merge($data, array(
             'showBlock'               => $showBlock,
+            'accessCode'              => $accessCode,
+            'registrationStatus'      => $registrationStatus,
             'imageType4'              => $imageType4,
             'patientInfo'             => $patientInfo,
             'exclusiveBilling'        => $exclusiveBilling,
@@ -971,6 +974,47 @@ class PatientController extends Controller
         ));
 
         return view('manage.duplicate', $data);
+    }
+
+    public function searchPatients()
+    {
+        if (Request::ajax()) {
+            $partial = '';
+
+            if (isset($this->request['partial_name'])) {
+                $partial = $this->request['partial_name'];
+                $partial = preg_replace("[^ A-Za-z'\-]", "", $partial);
+            }
+
+            $names = explode(" ", $partial);
+
+            if (empty($names[1])) {
+                $names[1] = '';
+            }
+
+            if (empty($names[2])) {
+                $names[2] = '';
+            }
+
+            $patients = $this->patient->searchPatients($names, Session::get('docId'));
+
+            $patientsInfo = array();
+            $i = 0;
+            if (count($patients)) foreach ($patients as $patient) {
+                $patientsInfo[$i]['patientId'] = $patient->patientid;
+                $patientsInfo[$i]['lastname'] = $patient->lastname;
+                $patientsInfo[$i]['firstname'] = $patient->firstname;
+                $patientsInfo[$i]['middlename'] = $patient->middlename;
+                $patientsInfo[$i]['patientInfo'] = $patient->patient_info;
+                $i++;
+            } else {
+                $patientsInfo = array('error' => 'Could not select patients from database');
+            }
+
+            return json_encode($patientsInfo);
+        } else {
+            return null;
+        }
     }
 
     private function triggerLetter1and2($patientId, $mdContacts)

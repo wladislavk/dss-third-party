@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\SleeplabInterface;
@@ -8,42 +8,74 @@ use Ds3\Eloquent\Sleeplab;
 
 class SleeplabRepository implements SleeplabInterface
 {
-	public function get($where, $order = null)
-	{
-		$sleeplabs = new Sleeplab();
+    public function getSleeplabs($where, $order = null)
+    {
+        $sleeplabs = new Sleeplab();
 
-		foreach ($where as $attribute => $value) {
-			$sleeplabs = $sleeplabs->where($attribute, '=', $value);
-		}
+        foreach ($where as $attribute => $value) {
+            $sleeplabs = $sleeplabs->where($attribute, '=', $value);
+        }
 
-		if (!empty($order)) {
-			$sleeplabs = $sleeplabs->orderBy($order);
-		}					 											 
+        if (!empty($order)) {
+            $sleeplabs = $sleeplabs->orderBy($order);
+        }
 
-		return $sleeplabs->get();;
-	}
+        return $sleeplabs->get();
+    }
 
-	public function updateData($sleeplabId, $values)
-	{
-		$sleeplab = Sleeplab::where('sleeplabid', '=', $sleeplabId)->update($values);
+    public function updateData($sleeplabId, $values)
+    {
+        $sleeplab = Sleeplab::where('sleeplabid', '=', $sleeplabId)->update($values);
 
-		return $sleeplab;
-	}
+        return $sleeplab;
+    }
 
-	public function insertData($data)
-	{
-		$sleeplab = new Sleeplab();
+    public function insertData($data)
+    {
+        $sleeplab = new Sleeplab();
 
-		foreach ($data as $attribute => $value) {
-			$sleeplab->$attribute = $value;
-		}
+        foreach ($data as $attribute => $value) {
+            $sleeplab->$attribute = $value;
+        }
 
-		try {
-			$sleeplab->save();
-		} catch (QueryException $e) {
-			return null;
-		}
+        $sleeplab->save();
 
-		return $sleeplab->sleeplabid;
-	}
+        return $sleeplab->sleeplabid;
+    }
+
+    public function deleteData($sleeplabid)
+    {
+        $slleplab = Sleeplab::where('sleeplabid', '=', $sleeplabid)->delete();
+
+        return $slleplab;
+    }
+
+    public function getSleepLabTypeHolder($where, $letter = null, $order = null, $dir = null, $limit = null, $offset = null)
+    {
+        $sleeplabs = new Sleeplab();
+
+        if (!empty($where)) {
+            foreach ($where as $attribute => $value) {
+                $sleeplabs = $sleeplabs->where($attribute, $value);
+            }
+        }
+
+        if (!empty($letter)) {
+            $sleeplabs = $sleeplabs->whereRaw("company like ? ", array($letter . '%'));
+        }
+
+        if (!empty($order)) {
+            $sleeplabs = $sleeplabs->orderBy($order, $dir);
+        }
+
+        if (!empty($limit)) {
+            $sleeplabs = $sleeplabs->take($limit);
+        }
+
+        if (!empty($offset)) {
+            $sleeplabs = $sleeplabs->skip($offset);
+        }
+
+        return $sleeplabs->get();
+    }
 }

@@ -1,6 +1,7 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
 interface NotificationInterface
 {
-	public function get($where);
+    public function getNotifications($where);
 }

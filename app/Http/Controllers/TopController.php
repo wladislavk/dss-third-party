@@ -1,4 +1,5 @@
-<?php namespace Ds3\Http\Controllers;
+<?php
+namespace Ds3\Http\Controllers;
 
 use Ds3\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -13,7 +14,7 @@ use Ds3\Contracts\LetterInterface;
 use Ds3\Contracts\InsuranceInterface;
 use Ds3\Contracts\LedgerInterface;
 use Ds3\Contracts\InsurancePreauthInterface;
-use Ds3\Contracts\HstInterface;
+use Ds3\Contracts\HomeSleepTestInterface;
 use Ds3\Contracts\PatientContactInterface;
 use Ds3\Contracts\PatientInsuranceInterface;
 use Ds3\Contracts\PatientInterface;
@@ -27,528 +28,560 @@ use Ds3\Contracts\CompanyInterface;
 
 class TopController extends Controller
 {
-	const SITE_NAME = 'Dental';
-
-	private $routeParameters;
-
-	private $user;
-	private $loginDetail;
-	private $letter;
-	private $insurance;
-	private $ledger;
-	private $insurancePreauth;
-	private $hst;
-	private $patientContact;
-	private $patientInsurance;
-	private $patient;
-	private $note;
-	private $fax;
-	private $supportTicket;
-	private $flowPg2;
-	private $qPage3;
-	private $task;
-	private $company;
-
-	public function __construct(UserInterface $user,
-								LoginDetailInterface $loginDetail,
-								LetterInterface $letter,
-								InsuranceInterface $insurance,
-								LedgerInterface $ledger,
-								InsurancePreauthInterface $insurancePreauth,
-								HstInterface $hst,
-								PatientContactInterface $patientContact,
-								PatientInsuranceInterface $patientInsurance,
-								PatientInterface $patient,
-								NoteInterface $note,
-								FaxInterface $fax,
-								SupportTicketInterface $supportTicket,
-								FlowPg2Interface $flowPg2,
-								QPage3Interface $qPage3,
-								TaskInterface $task,
-								CompanyInterface $company)
-	{
-		$this->routeParameters = Route::current()->parameters();
-
-		$this->user = $user;
-		$this->loginDetail = $loginDetail;
-		$this->letter = $letter;
-		$this->insurance = $insurance;
-		$this->ledger = $ledger;
-		$this->insurancePreauth = $insurancePreauth;
-		$this->hst = $hst;
-		$this->patientContact = $patientContact;
-		$this->patientInsurance = $patientInsurance;
-		$this->patient = $patient;
-		$this->note = $note;
-		$this->fax = $fax;
-		$this->supportTicket = $supportTicket;
-		$this->flowPg2 = $flowPg2;
-		$this->qPage3 = $qPage3;
-		$this->task = $task;
-		$this->company = $company;
-	}
-
-	public function index(Request $request)
-	{
-		$responseArray = array();
-
-		$patientId = isset($this->routeParameters['pid']) ? $this->routeParameters['pid'] : null;
-
-		if (empty(Session::get('userId'))) {
-			return redirect('/manage/login');
-		} else {
-			$this->user->updateData(Session::get('userId'), array(
-				'last_accessed_date' => date('Y-m-d H:i:s')
-			));
-		}
-
-		$user = $this->user->findUser(Session::get('docId'));
-
-		if ($user->homepage != '1') {
-			// include_once 'includes/top2.htm';
-		} else {
-			if (!empty(Session::get('loginId'))) {
-				$data = array(
-					'loginid' 		=> Session::get('loginId'),
-					'userid' 		=> Session::get('userId'),
-					'cur_page' 		=> $request->path(),
-					'ip_address' 	=> $request->ip()
-				);
-
-				$this->loginDetail->insertData($data);
-			}
-
-			if (str_contains($request->path(), 'q_page') == false && str_contains($request->path(), 'ex_page') == false &&
-				str_contains($request->path(), 'q_sleep') == false && str_contains($request->path(), 'q_image') == false) {
-
-				$unload = 0;
-			} else {
-				$unload = 1;
-			}
-
-			$where = array(
-				'dental_letters.status' 	=> 0,
-				'dental_letters.delivered' 	=> 0,
-				'dental_letters.deleted' 	=> 0,
-				'dental_letters.docid' 		=> Session::get('docId')
-			);
+    const SITE_NAME = 'Dental';
+
+    private $routeParameters;
+
+    private $user;
+    private $loginDetail;
+    private $letter;
+    private $insurance;
+    private $ledger;
+    private $insurancePreauth;
+    private $hst;
+    private $patientContact;
+    private $patientInsurance;
+    private $patient;
+    private $note;
+    private $fax;
+    private $supportTicket;
+    private $flowPg2;
+    private $qPage3;
+    private $task;
+    private $company;
+
+    public function __construct(
+        UserInterface $user,
+        LoginDetailInterface $loginDetail,
+        LetterInterface $letter,
+        InsuranceInterface $insurance,
+        LedgerInterface $ledger,
+        InsurancePreauthInterface $insurancePreauth,
+        HomeSleepTestInterface $hst,
+        PatientContactInterface $patientContact,
+        PatientInsuranceInterface $patientInsurance,
+        PatientInterface $patient,
+        NoteInterface $note,
+        FaxInterface $fax,
+        SupportTicketInterface $supportTicket,
+        FlowPg2Interface $flowPg2,
+        QPage3Interface $qPage3,
+        TaskInterface $task,
+        CompanyInterface $company
+    ) {
+        $this->routeParameters = Route::current()->parameters();
+
+        $this->user = $user;
+        $this->loginDetail = $loginDetail;
+        $this->letter = $letter;
+        $this->insurance = $insurance;
+        $this->ledger = $ledger;
+        $this->insurancePreauth = $insurancePreauth;
+        $this->hst = $hst;
+        $this->patientContact = $patientContact;
+        $this->patientInsurance = $patientInsurance;
+        $this->patient = $patient;
+        $this->note = $note;
+        $this->fax = $fax;
+        $this->supportTicket = $supportTicket;
+        $this->flowPg2 = $flowPg2;
+        $this->qPage3 = $qPage3;
+        $this->task = $task;
+        $this->company = $company;
+    }
+
+    public function index(Request $request)
+    {
+        $responseArray = array();
+
+        $patientId = isset($this->routeParameters['pid']) ? $this->routeParameters['pid'] : null;
+
+        if (empty(Session::get('userId'))) {
+            return redirect('/manage/login');
+        } else {
+            $this->user->updateData(Session::get('userId'), array(
+                'last_accessed_date' => date('Y-m-d H:i:s')
+            ));
+        }
+
+        $user = $this->user->findUser(Session::get('docId'));
+
+        if ($user->homepage != '1') {
+            // include_once 'includes/top2.htm';
+        } else {
+            if (!empty(Session::get('loginId'))) {
+                $data = array(
+                    'loginid'     => Session::get('loginId'),
+                    'userid'      => Session::get('userId'),
+                    'cur_page'    => $request->path(),
+                    'ip_address'  => $request->ip()
+                );
+
+                $this->loginDetail->insertData($data);
+            }
+
+            if (
+                str_contains($request->path(), 'q_page') == false && str_contains($request->path(), 'ex_page') == false &&
+                str_contains($request->path(), 'q_sleep') == false && str_contains($request->path(), 'q_image') == false
+            ) {
+                $unload = 0;
+            } else {
+                $unload = 1;
+            }
+
+            $where = array(
+                'dental_letters.status'     => 0,
+                'dental_letters.delivered'  => 0,
+                'dental_letters.deleted'    => 0,
+                'dental_letters.docid'      => Session::get('docId')
+            );
 
-			$generatedDates = $this->letter->getGeneratedDates($where);
+            $generatedDates = $this->letter->getGeneratedDates($where);
 
-			$generatedDate = $generatedDates[0];
-			$numPendingLetters = count($generatedDates);
-			$secondsPerDay = 86400;
+            $generatedDate = $generatedDates[0];
+            $numPendingLetters = count($generatedDates);
+            $secondsPerDay = 86400;
 
-			if (empty($generatedDate)) {
-				$oldestLetter = 0;
-			} else {
-				$oldestLetter = floor((time() - $generatedDate->generated_date) / $secondsPerDay);
-			}
+            if (empty($generatedDate)) {
+                $oldestLetter = 0;
+            } else {
+                $oldestLetter = floor((time() - $generatedDate->generated_date) / $secondsPerDay);
+            }
 
-			$numUnmailedLetters = count($this->letter->getUnmailedLetters(Session::get('docId')));
+            $numUnmailedLetters = count($this->letter->getUnmailedLetters(Session::get('docId')));
 
-			$where = array('docid' => Session::get('docId'));
-			$status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING;
+            $where = array('docid' => Session::get('docId'));
+            $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING;
 
-			$numPendingClaims = count($this->insurance->get($where, $status));
+            $numPendingClaims = count($this->insurance->filterBy($where, $status));
 
-			$where = array(
-				'dental_ledger.status' 			=> Constants::DSS_TRXN_PENDING,
-				'dental_ledger.docid' 			=> Session::get('docId'),
-				'dental_transaction_code.docid' => Session::get('docId'),
-				'dental_transaction_code.type' 	=> Constants::DSS_TRXN_TYPE_MED
-			);
+            $where = array(
+                'dental_ledger.status'           => Constants::DSS_TRXN_PENDING,
+                'dental_ledger.docid'            => Session::get('docId'),
+                'dental_transaction_code.docid'  => Session::get('docId'),
+                'dental_transaction_code.type'   => Constants::DSS_TRXN_TYPE_MED
+            );
 
-			$numPendingClaims = count($this->ledger->getPendingClaims($where));
+            $numPendingClaims = count($this->ledger->getPendingClaims($where));
 
-			$where = array('docid' => Session::get('docId'));
-			$status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING . ','
-					. Constants::DSS_CLAIM_DISPUTE . ',' . Constants::DSS_CLAIM_SEC_DISPUTE;
+            $where = array('docid' => Session::get('docId'));
+            $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING . ','
+                    . Constants::DSS_CLAIM_DISPUTE . ',' . Constants::DSS_CLAIM_SEC_DISPUTE;
 
-			$numPendingClaims = count($this->insurance->get($where, $status));
+            $numPendingClaims = count($this->insurance->filterBy($where, $status));
 
-			$status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING . ','
-					. Constants::DSS_CLAIM_DISPUTE . ',' . Constants::DSS_CLAIM_SEC_DISPUTE;
+            $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING . ','
+                    . Constants::DSS_CLAIM_DISPUTE . ',' . Constants::DSS_CLAIM_SEC_DISPUTE;
 
-			$numPendingNodssClaims = count($this->insurance->getPendingNodssClaims(Session::get('docId'), $status));
+            $numPendingNodssClaims = count($this->insurance->getPendingNodssClaims(Session::get('docId'), $status));
 
-			$numUnmailedClaims = count($this->insurance->getUnmailedClaims(Session::get('docId'), Constants::DSS_CLAIM_PENDING, Constants::DSS_CLAIM_SEC_PENDING));
+            $numUnmailedClaims = count($this->insurance->getUnmailedClaims(Session::get('docId'), Constants::DSS_CLAIM_PENDING, Constants::DSS_CLAIM_SEC_PENDING));
 
-			$where = array('docid' => Session::get('docId'));
-			$status = Constants::DSS_CLAIM_REJECTED . ',' . Constants::DSS_CLAIM_SEC_REJECTED;
+            $where = array('docid' => Session::get('docId'));
+            $status = Constants::DSS_CLAIM_REJECTED . ',' . Constants::DSS_CLAIM_SEC_REJECTED;
 
-			$numRejectedClaims = count($this->insurance->get($where, $status));
+            $numRejectedClaims = count($this->insurance->filterBy($where, $status));
 
-			$numPreauth = count($this->insurancePreauth->getPreauth(Session::get('docId'), Constants::DSS_PREAUTH_COMPLETE));
+            $numPreauth = count($this->insurancePreauth->getPreauth(Session::get('docId'), Constants::DSS_PREAUTH_COMPLETE));
 
-			$where = array('doc_id' => Session::get('docId'));
-			$status = Constants::DSS_PREAUTH_PENDING;
+            $where = array('doc_id' => Session::get('docId'));
+            $status = Constants::DSS_PREAUTH_PENDING;
 
-			$numPendingPreauth = count($this->insurancePreauth->get($where, $status));
+            $numPendingPreauth = count($this->insurancePreauth->getInsurancePreauth($where, $status));
 
-			$numHst = count($this->hst->get(1, Constants::DSS_HST_COMPLETE, array(
-				'doc_id' => Session::get('docId')
-			)));
+            $numHst = count($this->hst->getHomeSleepTests(1, Constants::DSS_HST_COMPLETE, array(
+                'doc_id' => Session::get('docId')
+            )));
 
-			$numRequestedHst = count($this->hst->get(1, Constants::DSS_HST_REQUESTED, array(
-				'doc_id' => Session::get('docId')
-			)));
+            $numRequestedHst = count($this->hst->getHomeSleepTests(1, Constants::DSS_HST_REQUESTED, array(
+                'doc_id' => Session::get('docId')
+            )));
 
-			$numRejectedHst = count($this->hst->get(1, Constants::DSS_HST_REJECTED, array(
-				'doc_id' => Session::get('docId')
-			)));
+            $numRejectedHst = count($this->hst->getHomeSleepTests(1, Constants::DSS_HST_REJECTED, array(
+                'doc_id' => Session::get('docId')
+            )));
 
-			$numPatientContacts = count($this->patientContact->get(array(
-				'dental_patients.docid' => Session::get('docId')
-			)));
+            $numPatientContacts = count($this->patientContact->getPatientContacts(array(
+                'dental_patients.docid' => Session::get('docId')
+            )));
 
-			$numPatientInsurance = count($this->patientInsurance->get(array(
-				'dental_patients.docid' => Session::get('docId')
-			)));
+            $numPatientInsurance = count($this->patientInsurance->getPatientsInsurance(array(
+                'dental_patients.docid' => Session::get('docId')
+            )));
 
-			$join = array('patientid', 'parent_patientid');
+            $join = array('patientid', 'parent_patientid');
 
-			// change name!
-			$numC = count($this->patient->getJoinPatients(array(
-				'p.docid' => Session::get('docId')
-			), $join));
+            // change name!
+            $numC = count($this->patient->getJoinPatients(array(
+                'p.docid' => Session::get('docId')
+            ), $join));
 
-			$numPendingDuplicates = count($this->patient->getPendingDuplicates(array(
-				'docid' => Session::get('docId')
-			), '3,4'));
+            $numPendingDuplicates = count($this->patient->getPendingDuplicates(array(
+                'docid' => Session::get('docId')
+            ), '3,4'));
 
-			$numBounce = count($this->patient->get(array(
-				'dental_patients.email_bounce' => 1,
-				'dental_patients.docid' => Session::get('docId')
-			)));
+            $numBounce = count($this->patient->getPatients(array(
+                'dental_patients.email_bounce' => 1,
+                'dental_patients.docid' => Session::get('docId')
+            )));
 
-			$numUnsigned = count($this->note->getUnsigned(Session::get('docId')));
+            $numUnsigned = count($this->note->getUnsigned(Session::get('docId')));
 
-			$numRejectedPreauth = count($this->insurancePreauth->getPreauth(Session::get('docId'), Constants::DSS_PREAUTH_REJECTED));
+            $numRejectedPreauth = count($this->insurancePreauth->getPreauth(Session::get('docId'), Constants::DSS_PREAUTH_REJECTED));
 
-			$numFaxAlerts = count($this->fax->getFaxAlerts(Session::get('docId')));
+            $numFaxAlerts = count($this->fax->getFaxAlerts(Session::get('docId')));
 
-			$numSupport = count($this->supportTicket->getSupport(Session::get('docId'), Constants::DSS_TICKET_STATUS_CLOSED));
+            $numSupport = count($this->supportTicket->getSupport(Session::get('docId'), Constants::DSS_TICKET_STATUS_CLOSED));
 
-			$onClick = '';
+            $onClick = '';
 
-			if ($request->path() == '/manage/flowsheet3' || $request->path() == '/manage/flowsheet4') {
-				$stepResponse = $this->flowPg2->getStep($patientId);
+            if ($request->path() == '/manage/flowsheet3' || $request->path() == '/manage/flowsheet4') {
+                $stepResponse = $this->flowPg2->getStep($patientId);
 
-				if (!empty($stepResponse)) {
-					$stepResponse = array($stepResponse->steparray);
-					$step = explode(',', $stepResponse['0']);
-					$stepJson = json_encode($step);
-					$onClick .= 'hideallblocksForFlowsheet(' . $step_json. ');';
-				} else {
-					$onClick .= 'hideallblocks();';
-				}
-			}
+                if (!empty($stepResponse)) {
+                    $stepResponse = array($stepResponse->steparray);
+                    $step = explode(',', $stepResponse['0']);
+                    $stepJson = json_encode($step);
+                    $onClick .= 'hideallblocksForFlowsheet(' . $step_json. ');';
+                } else {
+                    $onClick .= 'hideallblocks();';
+                }
+            }
 
-			if (isset($this->routeParameters['preview']) && $this->routeParameters['preview'] == '1') {
-				$onClick .= ' check();';
-			}
+            if (isset($this->routeParameters['preview']) && $this->routeParameters['preview'] == '1') {
+                $onClick .= ' check();';
+            }
 
-			if (isset($this->routeParameters['page']) && $this->routeParameters['page'] == 'page2') {
-				$cssForPage2 = true;
-				$onClick .= " $('#flowsheet_page1').css('display', 'none'); $('#flowsheet_page2').css('display', 'block');";
-			} else {
-				$cssForPage2 = false;
-			}
+            if (isset($this->routeParameters['page']) && $this->routeParameters['page'] == 'page2') {
+                $cssForPage2 = true;
+                $onClick .= " $('#flowsheet_page1').css('display', 'none'); $('#flowsheet_page2').css('display', 'block');";
+            } else {
+                $cssForPage2 = false;
+            }
 
-			$theName 			= null;
-			$medicare 			= null;
-			$premed 			= null;
-			$allergen 			= null;
-			$title 				= null;
+            $theName   = null;
+            $medicare  = null;
+            $premed    = null;
+            $allergen  = null;
+            $title     = null;
 
-			if (!empty($patientId)) {
-				$title = '';
+            if (!empty($patientId)) {
+                $title = '';
 
-				$where = array(
-					'docid' => Session::get('docId'),
-					'patientid' => $patientId
-				);
+                $where = array(
+                    'docid' => Session::get('docId'),
+                    'patientid' => $patientId
+                );
 
-				$patients = $this->patient->get($where);
+                $patients = $this->patient->getPatients($where);
 
-				$patient = count($patients) ? $patients[0] : null;
+                $patient = count($patients) ? $patients[0] : null;
 
-			    if (!empty($patient)) {
-			        $premed = $patient->premedcheck;
-			        $medicare = ($patient->p_m_ins_type == 1);
+                if (!empty($patient)) {
+                    $premed = $patient->premedcheck;
+                    $medicare = ($patient->p_m_ins_type == 1);
 
-			        if ($premed) {
-			          $title .= "Pre-medication: " . $patient->premed . "\n";
-			        }
+                    if ($premed) {
+                      $title .= "Pre-medication: " . $patient->premed . "\n";
+                    }
 
-			        $qPage3 = $this->qPage3->get($patientId);
+                    $qPage3 = $this->qPage3->find($patientId);
 
-			        $allergen = !empty($qPage3) ? $qPage3->allergenscheck : null;
+                    $allergen = !empty($qPage3) ? $qPage3->allergenscheck : null;
 
-			        if ($allergen) {
-			          $title .= "Allergens: " . $qPage3->other_allergens;
-			        }
-			        
-			        $theName = $patient->firstname . ' ' . $patient->lastname;
-			    }
-		    }
+                    if ($allergen) {
+                      $title .= "Allergens: " . $qPage3->other_allergens;
+                    }
+                    
+                    $theName = $patient->firstname . ' ' . $patient->lastname;
+                }
+            }
 
-	        $numTasks = count($this->task->get(Session::get('userId'), null, null, 'task'));
+            $parameters = array(
+                'userId'    => Session::get('userId'),
+                'docId'     => null,
+                'patientId' => null,
+                'task'      => 'task'
+            );
 
-	        $messageCount = $numPendingLetters + $numPreauth + $numRejectedPreauth +
-	        				$numPatientContacts + $numPatientInsurance + $numC +
-	        				$numBounce + $numUnsigned + $numPendingDuplicates;
+            $numTasks = count($this->task->getTasks($parameters));
 
-	       	if (Session::get('userType') == Constants::DSS_USER_TYPE_SOFTWARE) {
-	       		$messageCount += $numUnmailedClaims + $numPendingNodssClaims;
-	       	} else {
-	       		$messageCount += $numPendingClaims;
-	       	}
+            $messageCount = $numPendingLetters + $numPreauth + $numRejectedPreauth +
+                            $numPatientContacts + $numPatientInsurance + $numC +
+                            $numBounce + $numUnsigned + $numPendingDuplicates;
 
-	       	if (date('N') == 7) {
-				$thisSunday = date('Y-m-d');
-				$nextMonday = date('Y-m-d',  strtotime("next Tuesday"));
-				$nextSunday = date('Y-m-d',  strtotime("next Sunday"));
-			} else {
-				$thisSunday = date('Y-m-d',  strtotime("next Sunday"));
-				$nextMonday = date('Y-m-d',  strtotime("next Monday"));
-				$nextSunday = date('Y-m-d',  strtotime("next Sunday + 1 week"));
-			}
+               if (Session::get('userType') == Constants::DSS_USER_TYPE_SOFTWARE) {
+                   $messageCount += $numUnmailedClaims + $numPendingNodssClaims;
+               } else {
+                   $messageCount += $numPendingClaims;
+               }
 
-			// check variable name!
+               if (date('N') == 7) {
+                $thisSunday = date('Y-m-d');
+                $nextMonday = date('Y-m-d',  strtotime("next Tuesday"));
+                $nextSunday = date('Y-m-d',  strtotime("next Sunday"));
+            } else {
+                $thisSunday = date('Y-m-d',  strtotime("next Sunday"));
+                $nextMonday = date('Y-m-d',  strtotime("next Monday"));
+                $nextSunday = date('Y-m-d',  strtotime("next Sunday + 1 week"));
+            }
 
-			$overdueTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'od');
+            // check variable name!
 
-			$todayTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'tod');
+            $parameters = array(
+                'userId'    => Session::get('userId'),
+                'docId'     => null,
+                'patientId' => null,
+                'task'      => 'task',
+                'type'      => 'od'
+            );
 
-			$tomorrowTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'tom');
+            $overdueTasks = $this->task->getTasks($parameters);
 
-			$thisWeekTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'tw', array(
-				'thisSun' => $thisSunday
-			));
+            $parameters['type'] = 'tod';
+            $todayTasks = $this->task->getTasks($parameters);
 
-			$nextWeekTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'nw', array(
-				'nextMon' => $nextMonday,
-				'nextSun' => $nextSunday
-			));
+            $parameters['type'] = 'tom';
+            $tomorrowTasks = $this->task->getTasks($parameters);
 
-			$laterTasks = $this->task->get(Session::get('userId'), null, null, 'task', 'lat', array(
-				'nextSun' => $nextSunday
-			));
+            $parameters['type']  = 'tw';
+            $parameters['input'] = array('thisSun' => $thisSunday);
+            $thisWeekTasks = $this->task->getTasks($parameters);
 
-			$showLinkOnlineCe = false;
+            $parameters['type']  = 'nw';
+            $parameters['input'] = array(
+                'nextMon'  => $nextMonday,
+                'nextSun'  => $nextSunday
+            );
+            $nextWeekTasks = $this->task->getTasks($parameters);
 
-			if (Session::get('docId') == Session::get('userId')) {
-				$course = $this->user->findUser(Session::get('userId'))->use_course;
+            $parameters['type']  = 'lat';
+            $parameters['input'] = array('nextSun' => $nextSunday);
+            $laterTasks = $this->task->getTasks($parameters);
 
-				if ($course == 1) {
-					$showLinkOnlineCe = true;
-				}
-			} else {
-				$course = $this->user->getCourseJoin(Session::get('userId'));
+            $showLinkOnlineCe = false;
 
-				if ($course['use_course'] == 1 && $course['use_course_staff'] == 1) {
-					$showLinkOnlineCe = true;
-				}
-			}
+            if (Session::get('docId') == Session::get('userId')) {
+                $course = $this->user->findUser(Session::get('userId'))->use_course;
 
-			$logo = $this->company->getLogo(Session::get('userId'))->logo;
+                if ($course == 1) {
+                    $showLinkOnlineCe = true;
+                }
+            } else {
+                $course = $this->user->getCourseJoin(Session::get('userId'));
 
-			$numPatientTasks 			= null;
-			$futureTasks 				= null;
-			$showWarningProfile 		= null;
-			$showWarningQuestionnaire 	= null;
-			$showWarningBounced 		= null;
-			$rejectedInsurance 			= null;
-			$hideWarnings				= null;
+                if ($course['use_course'] == 1 && $course['use_course_staff'] == 1) {
+                    $showLinkOnlineCe = true;
+                }
+            }
 
-			if (!empty($patientId)) {
+            $logo = $this->company->getLogo(Session::get('userId'))->logo;
 
-				$numPatientTasks = count($this->task->get(Session::get('userId'), Session::get('docId'), $patientId, null));
-
-				if ($numPatientTasks > 0) {
-					$overdueTasks = $this->task->get(Session::get('userId'), Session::get('docId'), $patientId, null, 'od');
-
-					$todayTasks = $this->task->get(Session::get('userId'), Session::get('docId'), $patientId, null, 'tod');
-
-					$tomorrowTasks = $this->task->get(Session::get('userId'), Session::get('docId'), $patientId, null, 'tom');
-
-					$futureTasks = $this->task->get(Session::get('userId'), Session::get('docId'), $patientId, null, 'fut');
-				}
-
-				$patientParent = $this->patient->get(array('parent_patientid' => $patientId));
-
-				$numChanges = $this->numPatientChanges($patientId);
-
-				$totalContacts = count($this->patientContact->get(array(
-					'dental_patients.docid' 	=> Session::get('docId'),
-					'dental_patients.patientid' => $patientId
-				)));
-
-				$totalInsurance = count($this->patientInsurance->get(array(
-					'dental_patients.docid' 	=> Session::get('docId'),
-					'dental_patients.patientid' => $patientId
-				)));
-
-				if ((count($patientParent) + $totalContacts + $totalInsurance) > 0) {
-					$showWarningProfile = true;
-				}
-
-				$existPatient = $this->patient->get(array(
-					'patientid' => $patientId
-				));
-				$existPatient = count($existPatient) ? $existPatient[0] : null;
-
-				if (!empty($existPatient) && ($existPatient->symptoms_status == 2 &&
-					$existPatient->treatments_status == 2 && $existPatient->history_status == 2 &&
-					$existPatient->sleep_status == 2)) {
-
-					$showWarningQuestionnaire = true;
-				}
-
-				$email = $this->patient->get(array(
-					'email_bounce' => 1,
-					'patientid' => $patientId
-				));
-
-				if (count($email)) {
-					$showWarningBounced = true;
-				}
-
-				$status = Constants::DSS_CLAIM_REJECTED . ',' . Constants::DSS_CLAIM_SEC_REJECTED;
-
-				$rejectedInsurance = $this->insurance->get(array('patientid' => $patientId), $status);
-
-				// Undefined constants
-				/*
-				$status = Constants::DSS_HST_REQUSTED . ',' . Constants::DSS_HST_PENDING . ','
-						. Constants::DSS_HST_SCHEDULED . ',' . Constants::DSS_HST_REJECTED;
-
-				$hstUncompleted = $this->hst->get(0, $status, array(
-					'patient_id' => $patientId
-				));
-				*/
-
-				if (Session::get('hidePatWarnings') == $patientId) {
-					$hideWarnings = true;
-				} else {
-					$hideWarnings = false;
-					Session::put('hidePatWarnings', null);
-				}
-			}	
-
-			$useLetters = ($this->user->findUser(Session::get('docId'))->use_letters == '1');
-
-			$responseArray = array(
-				'siteName' 					=> self::SITE_NAME,
-				'cssForPage2'				=> $cssForPage2,
-				'messageCount' 				=> $messageCount,
-				'numSupport' 				=> $numSupport,
-				'numTasks' 					=> $numTasks,
-				'showLinkOnlineCe' 			=> $showLinkOnlineCe,
-				'logo'						=> $logo,
-				'theName'					=> $theName,
-				'medicare'					=> $medicare,
-				'premed'					=> $premed,
-				'allergen'					=> $allergen,
-				'title'						=> $title,
-				'numPatientTasks'			=> $numPatientTasks,
-				'overdueTasks'				=> $overdueTasks,
-				'todayTasks'				=> $todayTasks,
-				'tomorrowTasks'				=> $tomorrowTasks,
-				'futureTasks'				=> $futureTasks,
-				'thisWeekTasks'				=> $thisWeekTasks,
-				'nextWeekTasks'				=> $nextWeekTasks,
-				'laterTasks'				=> $laterTasks,
-				'showWarningProfile' 		=> $showWarningProfile,
-				'showWarningQuestionnaire' 	=> $showWarningQuestionnaire,
-				'showWarningBounced'		=> $showWarningBounced,
-				'rejectedInsurance'			=> $rejectedInsurance,
-				'numPendingClaims'			=> $numPendingClaims,
-				'numPatientContacts'		=> $numPatientContacts,
-				'numPatientInsurance'		=> $numPatientInsurance,
-				'numC'						=> $numC,
-				'useLetters'				=> $useLetters,
-				'numUnmailedLetters'		=> $numUnmailedLetters,
-				'numPendingLetters'			=> $numPendingLetters,
-				'numPreauth'				=> $numPreauth,
-				'numHst'					=> $numHst,
-				'numRejectedHst'			=> $numRejectedHst,
-				'numRequestedHst'			=> $numRequestedHst,
-				'numPendingNodssClaims'		=> $numPendingNodssClaims,
-				'numUnmailedClaims'			=> $numUnmailedClaims,
-				'numRejectedClaims'			=> $numRejectedClaims,
-				'numUnsigned'				=> $numUnsigned,
-				'numRejectedPreauth'		=> $numRejectedPreauth,
-				'numFaxAlerts'				=> $numFaxAlerts,
-				'numPendingDuplicates'		=> $numPendingDuplicates,
-				'numBounce'					=> $numBounce,
-				'onClick'					=> $onClick,
-				'hideWarnings'				=> $hideWarnings,
-				'patientId'					=> $patientId,
-				'username'					=> Session::get('username')
-			);
-
-			return $responseArray;
-		}
-	}
-
-	public function hideWarnings(Request $request)
-	{
-		if ($request->ajax()) {
-			Session::put($request->get('attribute'), $request->get('value'));
-
-			return 'Success';
-		}
-	}
-
-	private function numPatientChanges($patientId)
-	{
-		$numChanges = 0;
-
-		$patient = $this->patient->get(array(
-			'patientid' => $patientId
-		));
-
-		$patient = isset($patient[0]) ? $patient[0] : array();
-
-		$patientParent = $this->patient->get(array(
-			'parent_patientid' => $patientId
-		));
-
-		$patientParent = isset($patientParent[0]) ? $patientParent[0] : array();
-
-		$fields = array(
-			'firstname', 'middlename', 'lastname', 'preferred_name', 'email', 'home_phone', 'work_phone',
-			'cell_phone', 'add1', 'add2', 'city', 'state', 'zip', 'feet', 'inches', 'weight', 'bmi', 'dob',
-			'gender', 'marital_status', 'ssn', 'preferredcontact', 'emergency_name', 'emergency_relationship',
-			'emergency_number', 'p_m_relation', 'p_m_partyfname', 'p_m_partymname', 'p_m_partylname', 'ins_dob',
-			'p_m_ins_id', 'p_m_ins_grp', 'p_m_ins_plan', 'p_m_ins_type', 's_m_relation', 's_m_partyfname',
-			's_m_partymname', 's_m_partylname', 'ins2_dob', 's_m_ins_id', 's_m_ins_grp', 's_m_ins_plan',
-			's_m_ins_type', 'employer', 'emp_add1', 'emp_add2', 'emp_city', 'emp_state', 'emp_zip', 'emp_phone',
-			'emp_fax', 'docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother' 
-		);
-
-		if (!empty($patientParent)) {
-			foreach ($fields as $field) {
-				if(trim($patient->$field) != trim($patientParent->$field)){
-					$numChanges++;
-				}
-			}
-		}
-
-		return $numChanges;
-	}
-
-	public function setRouteParameters()
-	{
-		if (\Request::ajax()) {
-			$data = \Request::input('data');
-
-			if (!empty($data)) foreach ($data as $attribute => $value) {
-				Session::put($attribute, $value);
-			}
-		}
-	}
+            $numPatientTasks           = null;
+            $futureTasks               = null;
+            $showWarningProfile        = null;
+            $showWarningQuestionnaire  = null;
+            $showWarningBounced        = null;
+            $rejectedInsurance         = null;
+            $hideWarnings              = null;
+
+            if (!empty($patientId)) {
+                $parameters = array(
+                    'userId'    => Session::get('userId'),
+                    'docId'     => Session::get('docId'),
+                    'patientId' => $patientId,
+                    'task'      => null
+                );
+
+                $numPatientTasks = count($this->task->getTasks($parameters));
+
+                if ($numPatientTasks > 0) {
+                    $parameters['type'] = 'od';
+                    $overdueTasks = $this->task->getTasks($parameters);
+
+                    $parameters['type'] = 'tod';
+                    $todayTasks = $this->task->getTasks($parameters);
+
+                    $parameters['type'] = 'tom';
+                    $tomorrowTasks = $this->task->getTasks($parameters);
+
+                    $parameters['type'] = 'fut';
+                    $futureTasks = $this->task->getTasks($parameters);
+                }
+
+                $patientParent = $this->patient->getPatients(array('parent_patientid' => $patientId));
+
+                $numChanges = $this->numPatientChanges($patientId);
+
+                $totalContacts = count($this->patientContact->getPatientContacts(array(
+                    'dental_patients.docid'      => Session::get('docId'),
+                    'dental_patients.patientid'  => $patientId
+                )));
+
+                $totalInsurance = count($this->patientInsurance->getPatientsInsurance(array(
+                    'dental_patients.docid'      => Session::get('docId'),
+                    'dental_patients.patientid'  => $patientId
+                )));
+
+                if ((count($patientParent) + $totalContacts + $totalInsurance) > 0) {
+                    $showWarningProfile = true;
+                }
+
+                $existPatient = $this->patient->getPatients(array(
+                    'patientid' => $patientId
+                ));
+                $existPatient = count($existPatient) ? $existPatient[0] : null;
+
+                if (
+                    !empty($existPatient) && ($existPatient->symptoms_status == 2 &&
+                    $existPatient->treatments_status == 2 && $existPatient->history_status == 2 &&
+                    $existPatient->sleep_status == 2)
+                ) {
+                    $showWarningQuestionnaire = true;
+                }
+
+                $email = $this->patient->getPatients(array(
+                    'email_bounce'  => 1,
+                    'patientid'     => $patientId
+                ));
+
+                if (count($email)) {
+                    $showWarningBounced = true;
+                }
+
+                $status = Constants::DSS_CLAIM_REJECTED . ',' . Constants::DSS_CLAIM_SEC_REJECTED;
+
+                $rejectedInsurance = $this->insurance->filterBy(array('patientid' => $patientId), $status);
+
+                // Undefined constants
+                /*
+                $status = Constants::DSS_HST_REQUSTED . ',' . Constants::DSS_HST_PENDING . ','
+                        . Constants::DSS_HST_SCHEDULED . ',' . Constants::DSS_HST_REJECTED;
+
+                $hstUncompleted = $this->hst->getHomeSleepTests(0, $status, array(
+                    'patient_id' => $patientId
+                ));
+                */
+
+                if (Session::get('hidePatWarnings') == $patientId) {
+                    $hideWarnings = true;
+                } else {
+                    $hideWarnings = false;
+                    Session::put('hidePatWarnings', null);
+                }
+            }
+
+            $useLetters = ($this->user->findUser(Session::get('docId'))->use_letters == '1');
+
+            $responseArray = array(
+                'siteName'                  => self::SITE_NAME,
+                'cssForPage2'               => $cssForPage2,
+                'messageCount'              => $messageCount,
+                'numSupport'                => $numSupport,
+                'numTasks'                  => $numTasks,
+                'showLinkOnlineCe'          => $showLinkOnlineCe,
+                'logo'                      => $logo,
+                'theName'                   => $theName,
+                'medicare'                  => $medicare,
+                'premed'                    => $premed,
+                'allergen'                  => $allergen,
+                'title'                     => $title,
+                'numPatientTasks'           => $numPatientTasks,
+                'overdueTasks'              => $overdueTasks,
+                'todayTasks'                => $todayTasks,
+                'tomorrowTasks'             => $tomorrowTasks,
+                'futureTasks'               => $futureTasks,
+                'thisWeekTasks'             => $thisWeekTasks,
+                'nextWeekTasks'             => $nextWeekTasks,
+                'laterTasks'                => $laterTasks,
+                'showWarningProfile'        => $showWarningProfile,
+                'showWarningQuestionnaire'  => $showWarningQuestionnaire,
+                'showWarningBounced'        => $showWarningBounced,
+                'rejectedInsurance'         => $rejectedInsurance,
+                'numPendingClaims'          => $numPendingClaims,
+                'numPatientContacts'        => $numPatientContacts,
+                'numPatientInsurance'       => $numPatientInsurance,
+                'numC'                      => $numC,
+                'useLetters'                => $useLetters,
+                'numUnmailedLetters'        => $numUnmailedLetters,
+                'numPendingLetters'         => $numPendingLetters,
+                'numPreauth'                => $numPreauth,
+                'numHst'                    => $numHst,
+                'numRejectedHst'            => $numRejectedHst,
+                'numRequestedHst'           => $numRequestedHst,
+                'numPendingNodssClaims'     => $numPendingNodssClaims,
+                'numUnmailedClaims'         => $numUnmailedClaims,
+                'numRejectedClaims'         => $numRejectedClaims,
+                'numUnsigned'               => $numUnsigned,
+                'numRejectedPreauth'        => $numRejectedPreauth,
+                'numFaxAlerts'              => $numFaxAlerts,
+                'numPendingDuplicates'      => $numPendingDuplicates,
+                'numBounce'                 => $numBounce,
+                'onClick'                   => $onClick,
+                'hideWarnings'              => $hideWarnings,
+                'patientId'                 => $patientId,
+                'username'                  => Session::get('username')
+            );
+
+            return $responseArray;
+        }
+    }
+
+    public function hideWarnings(Request $request)
+    {
+        if ($request->ajax()) {
+            Session::put($request->get('attribute'), $request->get('value'));
+
+            return 'Success';
+        }
+    }
+
+    private function numPatientChanges($patientId)
+    {
+        $numChanges = 0;
+
+        $patient = $this->patient->getPatients(array(
+            'patientid' => $patientId
+        ));
+
+        $patient = isset($patient[0]) ? $patient[0] : array();
+
+        $patientParent = $this->patient->getPatients(array(
+            'parent_patientid' => $patientId
+        ));
+
+        $patientParent = isset($patientParent[0]) ? $patientParent[0] : array();
+
+        $fields = array(
+            'firstname', 'middlename', 'lastname', 'preferred_name', 'email', 'home_phone', 'work_phone',
+            'cell_phone', 'add1', 'add2', 'city', 'state', 'zip', 'feet', 'inches', 'weight', 'bmi', 'dob',
+            'gender', 'marital_status', 'ssn', 'preferredcontact', 'emergency_name', 'emergency_relationship',
+            'emergency_number', 'p_m_relation', 'p_m_partyfname', 'p_m_partymname', 'p_m_partylname', 'ins_dob',
+            'p_m_ins_id', 'p_m_ins_grp', 'p_m_ins_plan', 'p_m_ins_type', 's_m_relation', 's_m_partyfname',
+            's_m_partymname', 's_m_partylname', 'ins2_dob', 's_m_ins_id', 's_m_ins_grp', 's_m_ins_plan',
+            's_m_ins_type', 'employer', 'emp_add1', 'emp_add2', 'emp_city', 'emp_state', 'emp_zip', 'emp_phone',
+            'emp_fax', 'docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother' 
+        );
+
+        if (!empty($patientParent)) {
+            foreach ($fields as $field) {
+                if(trim($patient->$field) != trim($patientParent->$field)){
+                    $numChanges++;
+                }
+            }
+        }
+
+        return $numChanges;
+    }
+
+    public function setRouteParameters()
+    {
+        if (\Request::ajax()) {
+            $data = \Request::input('data');
+
+            if (!empty($data)) foreach ($data as $attribute => $value) {
+                Session::put($attribute, $value);
+            }
+        }
+    }
 }

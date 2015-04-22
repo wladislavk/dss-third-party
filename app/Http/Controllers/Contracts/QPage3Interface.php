@@ -1,6 +1,7 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
 interface QPage3Interface
 {
-	public function get($patientId);
+    public function find($patientId);
 }

@@ -1,36 +1,31 @@
-<?php namespace Ds3\Eloquent\Dentalsummfu;
+<?php
+namespace Ds3\Eloquent\Dentalsummfu;
 
 use Illuminate\Database\Eloquent\Model;
 
 class DentalsummfuEss extends Model
 {
-	protected $table = 'dentalsummfu_ess';
+    protected $table = 'dentalsummfu_ess';
+    protected $fillable = ['followupid', 'epworthid', 'answer'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['followupid', 'epworthid', 'answer'];
+    public static function insertData($data)
+    {
+        $summaryEpworthSleep = new DentalsummfuEss();
 
-	protected $primaryKey = 'id';
+        foreach ($data as $attribute => $value) {
+            $summaryEpworthSleep->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$dentalsummfuEss = new DentalsummfuEss();
+        $summaryEpworthSleep->save();
 
-		foreach ($data as $attribute => $value) {
-			$dentalsummfuEss->$attribute = $value;
-		}
+        return $summaryEpworthSleep->followupid;
+    }
 
-		try {
-			$dentalsummfuEss->save();
-		} catch (QueryException $e) {
-			return null;
-		}
+    public static function deleteData($followupId)
+    {
+        $summaryEpworthSleep = DentalsummfuEss::where('followupid', '=', $followupId)->delete();
 
-		return $dentalsummfuEss->followupid;
-	}
-
-	public static function deleteData($followupId)
-	{
-		$dentalsummfuEss = DentalsummfuEss::where('followupid', '=', $followupId)->delete();
-
-		return $dentalsummfuEss;
-	}
+        return $summaryEpworthSleep;
+    }
 }

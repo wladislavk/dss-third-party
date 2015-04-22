@@ -4,9 +4,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>Admin popup</title>
     <!--------------css for login --------------->
-		<link href="/css/admin/template/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-		<link href="/css/admin/template/assets/css/pages/login-soft.css" rel="stylesheet" type="text/css"/>
-		<link href="/css/admin/template/assets/css/components.css" rel="stylesheet" type="text/css"/>
+        <link href="/css/admin/template/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="/css/admin/template/assets/css/pages/login-soft.css" rel="stylesheet" type="text/css"/>
+        <link href="/css/admin/template/assets/css/components.css" rel="stylesheet" type="text/css"/>
 </head>
 <body class="login">
 

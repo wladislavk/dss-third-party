@@ -1,29 +1,24 @@
-<?php namespace Ds3\Eloquent\Support;
+<?php
+namespace Ds3\Eloquent\Support;
 
 use Illuminate\Database\Eloquent\Model;
 
 class SupportAttachment extends Model
 {
-	protected $table = 'dental_support_attachment';
+    protected $table = 'dental_support_attachment';
+    protected $fillable = ['ticket_id', 'response_id', 'filename'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['ticket_id', 'response_id', 'filename'];
+    public static function insertData($data)
+    {
+        $supportAttachment = new SupportAttachment();
 
-	protected $primaryKey = 'id';
+        foreach ($data as $attribute => $value) {
+            $supportAttachment->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$supportAttachment = new SupportAttachment();
+        $supportAttachment->save();
 
-		foreach ($data as $attribute => $value) {
-			$supportAttachment->$attribute = $value;
-		}
-
-		try {
-			$supportAttachment->save();
-		} catch (QueryException $e) {
-			return null;
-		}
-
-		return $supportAttachment->id;
-	}
+        return $supportAttachment->id;
+    }
 }

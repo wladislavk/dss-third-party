@@ -1,23 +1,22 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
 class ExPage5 extends Model
 {
-	protected $table = 'dental_ex_page5';
+    protected $table = 'dental_ex_page5';
+    protected $fillable = ['formid', 'patientid', 'palpationid'];
+    protected $primaryKey = 'ex_page5id';
 
-	protected $fillable = ['formid', 'patientid', 'palpationid'];
+    public static function get($where)
+    {
+        $exPage5 = new ExPage5();
 
-	protected $primaryKey = 'ex_page5id';
+        foreach ($where as $attribute => $value) {
+            $exPage5 = $exPage5->where($attribute, '=', $value);
+        }
 
-	public static function get($where)
-	{
-		$exPage5 = new ExPage5();
-
-		foreach ($where as $attribute => $value) {
-			$exPage5 = $exPage5->where($attribute, '=', $value);
-		}
-
-		return $exPage5->get();
-	}
+        return $exPage5->get();
+    }
 }

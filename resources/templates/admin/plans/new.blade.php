@@ -1,6 +1,6 @@
- @extends('layouts.admin.master')
+@extends('layouts.admin.master')
 
- @section('content')
+@section('content')
 
 <h4 class="modal-title">Add New Plan</h4>
 @include('layouts.partials.errors')
@@ -88,7 +88,7 @@
                     <span class="red">*</span>
                 </td>
             </tr>
-    	<!-- new -->
+        <!-- new -->
             <tr bgcolor="#FFFFFF">
                 <td valign="top" class="frmhead" width="30%">
                     Claim E-File Fee
@@ -98,7 +98,7 @@
                     <span class="red">*</span>
                 </td>
             </tr>
-    	<!-- new -->
+        <!-- new -->
             <tr bgcolor="#FFFFFF">
                 <td valign="top" class="frmhead" width="30%">
                     Free E-Claims (Monthly)
@@ -182,17 +182,17 @@
                 </td>
             </tr>
 
-	<!-- NEW -->
+    <!-- NEW -->
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-		Type
+        Type
             </td>
             <td valign="top" class="frmdata">
                 <select name="office_type" class="form-control validate">
-			<option value="1">Super-&gt;FO</option>
-			<option value="2">Super-&gt;BO</option>
-			<option value="3">BO Ins Co-&gt;FO</option>
-		</select>
+            <option value="1">Super-&gt;FO</option>
+            <option value="2">Super-&gt;BO</option>
+            <option value="3">BO Ins Co-&gt;FO</option>
+        </select>
             </td>
         </tr>
 
@@ -202,9 +202,9 @@
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="form-control validate">
-                	<option value="1">Active</option>
-                	<option value="2">In-Active</option>
+                <select name="status" class="form-control validate">
+                    <option value="1">Active</option>
+                    <option value="2">In-Active</option>
                 </select>
             </td>
         </tr>

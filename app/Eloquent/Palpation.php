@@ -1,69 +1,61 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Palpation extends Model
 {
-	protected $table = 'dental_palpation';
+    protected $table = 'dental_palpation';
+    protected $fillable = ['palpation', 'sortby', 'status'];
+    protected $primaryKey = 'palpationid';
 
-	protected $fillable = ['palpation', 'sortby', 'status'];
+    public static function get($palpationId)
+    {
+        $palpation = Palpation::where('palpationid', '=', $palpationId)->first();
 
-	protected $primaryKey = 'palpationid';
+        return $palpation;
+    }
 
-	public static function get($palpationId)
-	{
-		try {
-			$palpation = Palpation::where('palpationid', '=', $palpationId)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public static function getOrderBy()
+    {
+        $palpations = Palpation::orderBy('sortby')->get();
 
-		return $palpation;
-	}
+        return $palpations;
+    }
 
-	public static function getOrderBy()
-	{
-		$palpations = Palpation::orderBy('sortby')->get();
+    public static function checkPalpation($palpation, $palpationId)
+    {
+        $palpations = Palpation::where('palpation', '=', $palpation)
+            ->where('palpationid', '!=', $palpationId)
+            ->get();
 
-		return $palpations;
-	}
+        return $palpations;
+    }
 
-	public static function checkPalpation($palpation, $palpationId)
-	{
-		$palpations = Palpation::where('palpation', '=', $palpation)->where('palpationid', '!=', $palpationId)
-																	->get();
+    public static function updateData($palpationId, $values)
+    {
+        $palpation = Palpation::where('palpationid', '=', $palpationId)->update($values);
 
-		return $palpations;
-	}
+        return $palpation;
+    }
 
-	public static function updateData($palpationId, $values)
-	{
-		$palpation = Palpation::where('palpationid', '=', $palpationId)->update($values);
+    public static function insertData($data)
+    {
+        $palpation = new Palpation();
 
-		return $palpation;
-	}
+        foreach ($data as $attribute => $value) {
+            $palpation->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$palpation = new Palpation();
+        $palpation->save();
 
-		foreach ($data as $attribute => $value) {
-			$palpation->$attribute = $value;
-		}
+        return $palpation->palpationid;
+    }
 
-		try {
-			$palpation->save();
-		} catch (QueryException $e) {
-			return null;
-		}
+    public static function deleteData($palpationId)
+    {
+        $palpation = Palpation::where('palpationid', '=', $palpationId)->delete();
 
-		return $palpation->palpationid;
-	}
-
-	public static function deleteData($palpationId)
-	{
-		$palpation = Palpation::where('palpationid', '=', $palpationId)->delete();
-
-		return $palpation;
-	}
+        return $palpation;
+    }
 }

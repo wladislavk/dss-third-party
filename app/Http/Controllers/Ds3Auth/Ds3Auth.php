@@ -1,4 +1,5 @@
-<?php namespace Ds3\Ds3Auth;
+<?php
+namespace Ds3\Ds3Auth;
 
 use Ds3\Eloquent\Admin;
 use Ds3\Eloquent\Auth\User;
@@ -13,51 +14,46 @@ use Ds3\Ds3Auth\Ds3AuthInterface;
 
 class Ds3Auth implements Ds3AuthInterface
 {
-	private $user;
+    private $user;
 
-	 function getByUsername($username,$model)
+    public function getByUsername($username, $model)
     {
-         return $model::where('username',$username)->first();
+        return $model::where('username', $username)->first();
     }
-    public function recoverAndSetHash($id,$email,$model,$columnName)
-    {  
-        $hash = hash('sha256', $id.$email.rand());
-        $updated = $model->where("$columnName",$id)
-                         ->update(['recover_hash'=>$hash,'recover_time'=>Carbon::now()]);
 
-        if($updated)
-        {
+    public function recoverAndSetHash($id, $email, $model, $columnName)
+    {
+        $hash = hash('sha256', $id.$email.rand());
+        $updated = $model->where("$columnName", $id)
+                         ->update(['recover_hash'=>$hash, 'recover_time'=>Carbon::now()]);
+
+        if ($updated) {
             return 'true';
-        }else
-        {
+        } else {
             return 'false';
         }
     }
 
-   	public function getUserSalt($username,$model)
-	{
-		return  $model->where('username',$username)->where('status',1)->select('salt')->first();
-	}
-	 public function generatePassword($password,$salt)
-	{
-		return Password::genPassword($password,$salt);
-	}
-	 public function attempt($username,$password)
+    public function getUserSalt($username, $model)
     {
-    	if($this->isAdmin())
-        {
-            Config::set('auth.model','Admin');
-            $this->user = $this->getByUsername($username,new Admin);
-            if(!$this->user)
-            {
-                throw new Exception('User Not Found');
-            }elseif($this->user->status == 3)
-            {
-                throw new Exception( 'User is Banned');
-            }
-            else
-            {
+        return $model->where('username', $username)->where('status', 1)->select('salt')->first();
+    }
 
+    public function generatePassword($password, $salt)
+    {
+        return Password::genPassword($password, $salt);
+    }
+
+    public function attempt($username, $password)
+    {
+        if ($this->isAdmin()) {
+            Config::set('auth.model', 'Admin');
+            $this->user = $this->getByUsername($username, new Admin);
+            if (!$this->user) {
+                throw new Exception('User Not Found');
+            } elseif($this->user->status == 3) {
+                throw new Exception('User is Banned');
+            } else {
                 self::recoverAndSetHash($this->user->adminid, $this->user->email, new Admin, 'adminid');
 
                 $generatedPassword = $this->generatePassword($password, $this->getUserSalt($username, new Admin));
@@ -67,29 +63,26 @@ class Ds3Auth implements Ds3AuthInterface
                     ->select('admin_company.companyid', 'admin.adminid', 'admin.admin_access')
                     ->first();
 
-                if (empty($user))
-                {
+                if (empty($user)) {
                     throw new Exception('Wrong password');
                 }
-                if ($user)
-                {
+
+                if ($user) {
                     Auth::login($user);
-                    Session::put('admin_user_id',$user->adminid);
-                    Session::put('admin_access',"$user->admin_access");
-                    Session::put('admin_company_id',"$user->companyid");
+                    Session::put('admin_user_id', $user->adminid);
+                    Session::put('admin_access', "$user->admin_access");
+                    Session::put('admin_company_id', "$user->companyid");
 
                     return $user;
                 }
             }
-    	}
-        if($this->isUser())
-        {
-            $this->user = $this->getByUsername($username,new Admin);
-            if(!$this->user)
-            {
+        }
+
+        if ($this->isUser()) {
+            $this->user = $this->getByUsername($username, new Admin);
+            if (!$this->user) {
                 throw new Exception('User Not Found');
-            }else
-            {
+            } else {
                 self::recoverAndSetHash($this->user->userid, $this->user->email, new User, 'userid');
                 $generatedPassword = $this->generatePassword($password, $this->getUserSalt($username, new User));
                 $user = User::where('username', $username)
@@ -103,41 +96,36 @@ class Ds3Auth implements Ds3AuthInterface
                 if (empty($user)) {
                     throw new Exception('Wrong password');
                 }
+
                 if ($user) {
                     return $user;
                 }
             }
 
-
-            if($this->user)
-            {
+            if ($this->user) {
                 Auth::login($user);
                 return $user;
-            }else
-            {
+            } else {
                 return 'false';
             }
         }
-
     }
+
     public function isAdmin()
     {
-        if(Request::is('manage/admin/login'))
-        {
+        if (Request::is('manage/admin/login')) {
             return true;
-        }else
-        {
+        } else {
             return false;
         }
     }
+
     public function isUser()
     {
         dd(Request::is('manage/login'));
-        if(Request::is('manage/login'))
-        {
+        if (Request::is('manage/login')) {
             return true;
-        }else
-        {
+        } else {
             return false;
         }
     }

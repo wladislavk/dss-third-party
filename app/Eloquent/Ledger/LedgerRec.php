@@ -1,29 +1,24 @@
-<?php namespace Ds3\Eloquent\Ledger;
+<?php
+namespace Ds3\Eloquent\Ledger;
 
 use Illuminate\Database\Eloquent\Model;
 
 class LedgerRec extends Model
 {
-	protected $table = 'dental_ledger_rec';
+    protected $table = 'dental_ledger_rec';
+    protected $fillable = ['formid', 'patientid', 'description'];
+    protected $primaryKey = 'ledgerid';
 
-	protected $fillable = ['formid', 'patientid', 'description'];
+    public static function insertData($data)
+    {
+        $ledgerRec = new LedgerRec();
 
-	protected $primaryKey = 'ledgerid';
+        foreach ($data as $attribute => $value) {
+            $ledgerRec->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$ledgerRec = new LedgerRec();
+        $ledgerRec->save();
 
-		foreach ($data as $attribute => $value) {
-			$ledgerRec->$attribute = $value;
-		}
-
-		try {
-			$ledgerRec->save();
-		} catch (ModelNotFoundException $e) {
-			return null;
-		}
-
-		return $ledgerRec->ledgerid;
-	}
+        return $ledgerRec->ledgerid;
+    }
 }

@@ -1,10 +1,10 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Sleeplab extends Model
+class SleepLab extends Model
 {
-	protected $table = 'dental_sleeplab';
-
-	protected $primaryKey = 'sleeplabid';
+    protected $table = 'dental_sleeplab';
+    protected $primaryKey = 'sleeplabid';
 }

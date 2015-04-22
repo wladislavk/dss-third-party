@@ -1,10 +1,15 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Qualifier extends Model
 {
-	protected $table = 'dental_qualifier';
+    protected $table = 'dental_qualifier';
+    protected $primaryKey = 'qualifierid';
 
-	protected $primaryKey = 'qualifierid';
+    public function scopeActive($query)
+    {
+        return $query->where('status', '=', 1);
+    }
 }

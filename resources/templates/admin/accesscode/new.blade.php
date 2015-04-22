@@ -1,6 +1,6 @@
- @extends('layouts.admin.master')
+@extends('layouts.admin.master')
 
- @section('content')
+@section('content')
 
 @foreach($errors->all() as $error)
                     <div class="alert alert-danger" role="alert">
@@ -29,7 +29,7 @@
                  Notes
              </td>
              <td valign="top" class="frmdata">
- 		<textarea name="notes"></textarea>
+         <textarea name="notes"></textarea>
              </td>
          </tr>
          <tr bgcolor="#FFFFFF">
@@ -46,7 +46,7 @@
                 Status
              </td>
              <td valign="top" class="frmdata">
- 		        {!! Form::select('status',[1=>'active',2=>'In-Active'],'',['class'=>'form-control']) !!}
+                 {!! Form::select('status',[1=>'active',2=>'In-Active'],'',['class'=>'form-control']) !!}
              </td>
          </tr>
 
@@ -59,7 +59,7 @@
                  <input type="hidden" name="_token" value={!! csrf_token() !!}>
                  <input type="submit" name="accesscodesub" value=" Add  Access Code" class="btn btn-primary">
                  <a href="/manage/admin/accesscode" class="btn btn-success">Back</a>
- 		     </td>
+              </td>
          </tr>
      </tbody></table>
      </form>

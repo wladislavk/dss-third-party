@@ -1,8 +1,8 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
 interface SupportTicketInterface
 {
-	public function getSupport($docId, $status);
-
-	public function insertData($data);
+    public function getSupport($docId, $status);
+    public function insertData($data);
 }

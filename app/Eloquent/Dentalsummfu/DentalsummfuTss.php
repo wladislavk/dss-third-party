@@ -1,48 +1,40 @@
-<?php namespace Ds3\Eloquent\Dentalsummfu;
+<?php
+namespace Ds3\Eloquent\Dentalsummfu;
 
 use Illuminate\Database\Eloquent\Model;
 
 class DentalsummfuTss extends Model
 {
-	protected $table = 'dentalsummfu_tss';
+    protected $table = 'dentalsummfu_tss';
+    protected $fillable = ['followupid', 'thorntonid', 'answer'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['followupid', 'thorntonid', 'answer'];
+    public static function get($followupId, $thorntonId)
+    {
+        $summaryThorntonSnoringScale = DentalsummfuTss::where('followupid', '=', $followupId)
+            ->where('thorntonid', '=', $thorntonId)
+            ->first();
 
-	protected $primaryKey = 'id';
+        return $summaryThorntonSnoringScale;
+    }
 
-	public static function get($followupId, $thorntonId)
-	{
-		try {
-			$dentalsummfuTss = DentalsummfuTss::where('followupid', '=', $followupId)->where('thorntonid', '=', $thorntonId)
-																					 ->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public static function insertData($data)
+    {
+        $summaryThorntonSnoringScale = new DentalsummfuTss();
 
-		return $dentalsummfuTss;
-	}
+        foreach ($data as $attribute => $value) {
+            $summaryThorntonSnoringScale->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$dentalsummfuTss = new DentalsummfuTss();
+        $summaryThorntonSnoringScale->save();
 
-		foreach ($data as $attribute => $value) {
-			$dentalsummfuTss->$attribute = $value;
-		}
+        return $summaryThorntonSnoringScale->followupid;
+    }
 
-		try {
-			$dentalsummfuTss->save();
-		} catch (QueryException $e) {
-			return null;
-		}
+    public static function deleteData($followupId)
+    {
+        $summaryThorntonSnoringScale = DentalsummfuTss::where('followupid', '=', $followupId)->delete();
 
-		return $dentalsummfuTss->followupid;
-	}
-
-	public static function deleteData($followupId)
-	{
-		$dentalsummfuTss = DentalsummfuTss::where('followupid', '=', $followupId)->delete();
-
-		return $dentalsummfuTss;
-	}
+        return $summaryThorntonSnoringScale;
+    }
 }

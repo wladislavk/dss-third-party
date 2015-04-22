@@ -1,18 +1,18 @@
-<?php namespace Ds3\Providers;
+<?php
+namespace Ds3\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
-class EventServiceProvider extends ServiceProvider {
-
-	/**
-	 * The event handler mappings for the application.
-	 *
-	 * @var array
-	 */
-	protected $listen = [
-		'event.name' => [
-			'EventListener',
-		],
-	];
-
+class EventServiceProvider extends ServiceProvider
+{
+    /**
+     * The event handler mappings for the application.
+     *
+     * @var array
+     */
+    protected $listen = [
+        'event.name' => [
+            'EventListener',
+        ],
+    ];
 }

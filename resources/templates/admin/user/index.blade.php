@@ -3,10 +3,10 @@
 @section('content')
 
 <div class="page-header">
-	Manage Users
+    Manage Users
 </div>
 @if($users)
-  @if($users[0]->is_super(\Session::get('admin_access')) || $users[0]->is_admin(\Session::get('admin_access')))
+  @if($users[0]->isSuper(\Session::get('admin_access')) || $users[0]->is_admin(\Session::get('admin_access')))
 
 <div align="right">
   <a href="/manage/admin/user/new" class="btn btn-success">
@@ -23,24 +23,24 @@
              <thead>
                <tr class="tr_bg_h">
                   <td valign="top" class="col_head" width="20%">ID</td>
-               		<td valign="top" class="col_head" width="20%">Name</td>
-               		<td valign="top" class="col_head" width="20%">Username</td>
+                       <td valign="top" class="col_head" width="20%">Name</td>
+                       <td valign="top" class="col_head" width="20%">Username</td>
                     @if($users)
-                        @if($users[0]->is_super(\Session::get('admin_access')))
+                        @if($users[0]->isSuper(\Session::get('admin_access')))
                             <td valign="top" class="col_head" width="20%">Letterhead</td>
                             <td valign="top" class="col_head" width="10%">Company</td>
                             <td valign="top" class="col_head" width="10%">Login As</td>
                         @endif
                     @endif
 
-               		<td valign="top" class="col_head" width="8%">Locations</td>
-               		<td valign="top" class="col_head" width="8%">Contact</td>
-               		<td valign="top" class="col_head" width="8%">Staff</td>
-               		<td valign="top" class="col_head" width="8%">Patients</td>
-               		<td valign="top" class="col_head" width="8%">Invoices</td>
+                       <td valign="top" class="col_head" width="8%">Locations</td>
+                       <td valign="top" class="col_head" width="8%">Contact</td>
+                       <td valign="top" class="col_head" width="8%">Staff</td>
+                       <td valign="top" class="col_head" width="8%">Patients</td>
+                       <td valign="top" class="col_head" width="8%">Invoices</td>
                     <td valign="top" class="col_head" width="10%">Plan</td>
-               		<td valign="top" class="col_head" width="10%">Action</td>
-               	</tr>
+                       <td valign="top" class="col_head" width="10%">Action</td>
+                   </tr>
              </thead>
              <tbody>
              @foreach($users as $user)
@@ -64,7 +64,7 @@
 
                  </td>
                  @endif
-                     @if($user->is_super(\Session::get('admin_access')) || $user->is_admin(\Session::get('admin_access')))
+                     @if($user->isSuper(\Session::get('admin_access')) || $user->isAdmin(\Session::get('admin_access')))
                      <td valign="top">
                         <a href="/manage/admin/letterhead.php?uid={{$user->userid}}">Update Images</a>
                      <td>
@@ -78,7 +78,7 @@
                             <input type="submit" name="btnsubmit" value=" Login " class="btn btn-success">
                         </form>
                       
-                     	@endif
+                         @endif
                     @endif
                   </td>
                   <td valign="top" align="center">

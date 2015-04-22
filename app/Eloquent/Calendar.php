@@ -1,39 +1,38 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Calendar extends Model
 {
-	protected $table = 'dental_calendar';
+    protected $table = 'dental_calendar';
+    protected $fillable = ['start_date', 'end_date', 'description', 'event_id', 'docid'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['start_date', 'end_date', 'description', 'event_id', 'docid'];
+    public static function getJoin($where)
+    {
+        $calendar = DB::table(DB::raw('dental_calendar as dc'))
+            ->select(DB::raw('dc.*, dp.*, dt.name as etype'))
+            ->leftJoin(DB::raw('dental_patients as dp'), 'dc.patientid', '=', 'dp.patientid')
+            ->join(DB::raw('dental_appt_types as dt'), 'dc.category', '=', 'dt.classname');
 
-	protected $primaryKey = 'id';
+        foreach ($where as $attribute => $value) {
+            $calendar = $calendar->where($attribute, '=', $value);
+        }
 
-	public static function getJoin($where)
-	{
-		$calendar = DB::table(DB::raw('dental_calendar as dc'))->select(DB::raw('dc.*, dp.*, dt.name as etype'))
-															   ->leftJoin(DB::raw('dental_patients as dp'), 'dc.patientid', '=', 'dp.patientid')
-															   ->join(DB::raw('dental_appt_types as dt'), 'dc.category', '=', 'dt.classname');
+        $calendar = $calendar->orderBy('dc.id')->get();
 
-		foreach ($where as $attribute => $value) {
-			$calendar = $calendar->where($attribute, '=', $value);
-		}
+        return $calendar;
+    }
 
-		$calendar = $calendar->orderBy('dc.id')
-							 ->get();
+    public static function updateData($where, $values)
+    {
+        $calendar = new Calendar();
 
-		return $calendar;
-	}
+        foreach ($where as $attribute => $value) {
+            $calendar->where($attribute, '=', $value);
+        }
 
-	public static function updateData($where, $values)
-	{
-		$calendar = new Calendar();
-
-		foreach ($where as $attribute => $value) {
-			$calendar->where($attribute, '=', $value);
-		}
-
-		$calendar->update($values);
-	}
+        $calendar->update($values);
+    }
 }

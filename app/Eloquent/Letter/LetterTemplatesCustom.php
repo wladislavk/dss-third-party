@@ -1,48 +1,40 @@
-<?php namespace Ds3\Eloquent\Letter;
+<?php
+namespace Ds3\Eloquent\Letter;
 
 use Illuminate\Database\Eloquent\Model;
 
 class LetterTemplatesCustom extends Model
 {
-	protected $table = 'dental_letter_templates_custom';
+    protected $table = 'dental_letter_templates_custom';
+    protected $fillable = ['name', 'body', 'docid'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['name', 'body', 'docid'];
+    public static function get($ed)
+    {
+        $letterTemplatesCustom = LetterTemplatesCustom::where('id', '=', $ed)->first();
 
-	protected $primaryKey = 'id';
+        return $letterTemplatesCustom;
+    }
 
-	public static function get($ed)
-	{
-		try {
-			$letterTemplatesCustom = LetterTemplatesCustom::where('id', '=', $ed)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public static function updateData($docId, $id, $values)
+    {
+        $letterTemplatesCustom = LetterTemplatesCustom::where('docid', '=', $docId)
+            ->where('id', '=', $id)
+            ->update($values);
 
-		return $letterTemplatesCustom;
-	}
+        return $letterTemplatesCustom;
+    }
 
-	public static function updateData($docId, $id, $values)
-	{
-		$letterTemplatesCustom = LetterTemplatesCustom::where('docid', '=', $docId)->where('id', '=', $id)
-													 							   ->update($values);
+    public static function insertData($data)
+    {
+        $letterTemplatesCustom = new LetterTemplatesCustom();
 
-		return $letterTemplatesCustom;
-	}
+        foreach ($data as $attribute => $value) {
+            $letterTemplatesCustom->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$letterTemplatesCustom = new LetterTemplatesCustom();
+        $letterTemplatesCustom->save();
 
-		foreach ($data as $attribute => $value) {
-			$letterTemplatesCustom->$attribute = $value;
-		}
-
-		try {
-			$letterTemplatesCustom->save();
-		} catch (QueryException $e) {
-			return null;
-		}
-
-		return $letterTemplatesCustom->id;
-	}
+        return $letterTemplatesCustom->id;
+    }
 }

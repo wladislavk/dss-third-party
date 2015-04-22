@@ -1,32 +1,29 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
 class EnrollmentTransactionType extends Model
 {
-	protected $table = 'dental_enrollment_transaction_type';
+    protected $table = 'dental_enrollment_transaction_type';
+    protected $fillable = ['transaction_type', 'description', 'status'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['transaction_type', 'description', 'status'];
+    public static function get($id)
+    {
+        $enrollmentTransactionType = EnrollmentTransactionType::where('id', '=', $id)
+            ->where('status', '=', 1)
+            ->first();
 
-	protected $primaryKey = 'id';
+        return $enrollmentTransactionType;
+    }
 
-	public static function get($id)
-	{
-		try {
-			$enrollmentTransactionType = EnrollmentTransactionType::where('id', '=', $id)->where('status', '=', 1)
-																						 ->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public static function getTransactionTypes()
+    {
+        $transactionTypes = EnrollmentTransactionType::where('status', '=', 1)
+            ->orderBy('transaction_type')
+            ->get();
 
-		return $enrollmentTransactionType;
-	}
-
-	public static function getTransactionTypes()
-	{
-		$transactionTypes = EnrollmentTransactionType::where('status', '=', 1)->orderBy('transaction_type')
-																			  ->get();
-
-		return $transactionTypes;
-	}
+        return $transactionTypes;
+    }
 }

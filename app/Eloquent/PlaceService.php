@@ -1,27 +1,27 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
 class PlaceService extends Model
 {
-	protected $table = 'dental_place_service';
+    protected $table = 'dental_place_service';
+    protected $fillable = ['place_service', 'description', 'sortby', 'status'];
+    protected $primaryKey = 'place_serviceid';
+    //public $timestamps = false;
 
-	protected $fillable = ['place_service', 'description', 'sortby', 'status'];
+    public static function get($where = null)
+    {
+        $placeServices = new PlaceService();
 
-	protected $primaryKey = 'place_serviceid';
+        if (!empty($where)) {
+            foreach ($where as $attribute => $value) {
+                $placeServices = $placeServices->where($attribute, '=', $value);
+            }
+        }
 
-	public static function get($where = null)
-	{
-		$placeServices = new PlaceService();
+        $placeServices = $placeServices->orderBy('sortby');
 
-		if (!empty($where)) {
-			foreach ($where as $attribute => $value) {
-				$placeServices = $placeServices->where($attribute, '=', $value);
-			}
-		}
-
-		$placeServices = $placeServices->orderBy('sortby');										  
-
-		return $placeServices->get();
-	}
+        return $placeServices->get();
+    }
 }

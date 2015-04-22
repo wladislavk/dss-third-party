@@ -1,10 +1,9 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
 interface SummaryInterface
 {
-	public function get($patientId);
-
-	public function updateData($where, $values);
-
-	public function insertData($data);
+    public function getSummary($patientId);
+    public function updateData($where, $values);
+    public function insertData($data);
 }

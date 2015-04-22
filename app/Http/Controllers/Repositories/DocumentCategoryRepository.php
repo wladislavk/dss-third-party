@@ -1,16 +1,15 @@
-<?php namespace Ds3\Repositories;
-
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+<?php
+namespace Ds3\Repositories;
 
 use Ds3\Contracts\DocumentCategoryInterface;
 use Ds3\Eloquent\DocumentCategory;
 
 class DocumentCategoryRepository implements DocumentCategoryInterface
 {
-	public function get()
-	{
-		$documentCategories = DocumentCategory::where('status', '=', 1)->orderBy('name', 'asc')->get();
+    public function getActiveDocumentCategories()
+    {
+        $documentCategories = DocumentCategory::active()->orderBy('name', 'asc')->get();
 
-		return $documentCategories;
-	}
+        return $documentCategories;
+    }
 }

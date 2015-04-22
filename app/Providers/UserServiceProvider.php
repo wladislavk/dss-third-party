@@ -1,10 +1,10 @@
-<?php namespace Ds3\Providers;
+<?php
+namespace Ds3\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class UserServiceProvider extends ServiceProvider {
-
-
+class UserServiceProvider extends ServiceProvider
+{
     public function register()
     {
         $this->app->bind(
@@ -13,8 +13,8 @@ class UserServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
-        	'Ds3\Contracts\UserInterface',
-        	'Ds3\Repositories\UserRepository'
+            'Ds3\Contracts\UserInterface',
+            'Ds3\Repositories\UserRepository'
         );
 
         $this->app->bind(
@@ -23,8 +23,8 @@ class UserServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
-        	'Ds3\Contracts\LoginDetailInterface',
-        	'Ds3\Repositories\LoginDetailRepository'
+            'Ds3\Contracts\LoginDetailInterface',
+            'Ds3\Repositories\LoginDetailRepository'
         );
 
         $this->app->bind(
@@ -58,8 +58,8 @@ class UserServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
-            'Ds3\Contracts\HstInterface',
-            'Ds3\Repositories\HstRepository'
+            'Ds3\Contracts\HomeSleepTestInterface',
+            'Ds3\Repositories\HomeSleepTestRepository'
         );
 
         $this->app->bind(
@@ -191,6 +191,25 @@ class UserServiceProvider extends ServiceProvider {
             'Ds3\Contracts\QualifierInterface',
             'Ds3\Repositories\QualifierRepository'
         );
-    }
 
+        $this->app->bind(
+            'Ds3\Contracts\CustomInterface',
+            'Ds3\Repositories\CustomRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\TransactionCodeInterface',
+            'Ds3\Repositories\TransactionCodeRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\PlaceServiceInterface',
+            'Ds3\Repositories\PlaceServiceRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\ModifierCodeInterface',
+            'Ds3\Repositories\ModifierCodeRepository'
+        );
+    }
 }

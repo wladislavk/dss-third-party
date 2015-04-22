@@ -1,64 +1,56 @@
-<?php namespace Ds3\Eloquent\Claim;
+<?php
+namespace Ds3\Eloquent\Claim;
 
 use Illuminate\Database\Eloquent\Model;
 
 class ClaimNote extends Model
 {
-	protected $table = 'dental_claim_notes';
+    protected $table = 'dental_claim_notes';
+    protected $fillable = ['claim_id', 'create_type', 'note'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['claim_id', 'create_type', 'note'];
+    public static function get($where)
+    {
+        $claimNote = new ClaimNote();
 
-	protected $primaryKey = 'id';
+        foreach ($where as $attribute => $value) {
+            $claimNote = $claimNote->where($attribute, '=', $value);
+        }
 
-	public static function get($where)
-	{
-		$claimNote = new ClaimNote();
+        $claimNote = $claimNote->first();
 
-		foreach ($where as $attribute => $value) {
-			$claimNote = $claimNote->where($attribute, '=', $value);
-		}
+        return $claimNote;
+    }
 
-		try {
-			$claimNote = $claimNote->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public static function getJoin($claimId)
+    {
+        $claimNote = DB::table(DB::raw('dental_claim_notes n'))
+            ->select(DB::raw("n.*, CASE WHEN n.create_type='0' THEN CONCAT(a.first_name, ' ', a.last_name) ELSE CONCAT(u.first_name, ' ', u.last_name) END as creator_name"))
+            ->leftJoin(DB::raw('dental_users u'), 'n.creator_id', '=', 'u.userid')
+            ->leftJoin(DB::raw('admin a'), 'n.creator_id', '=', 'a.adminid')
+            ->where('n.claim_id', '=', $claimId)
+            ->get();
 
-		return $claimNote;
-	}
+        return $claimNote;
+    }
 
-	public static function getJoin($claimId)
-	{
-		$claimNote = DB::table(DB::raw('dental_claim_notes n'))->select(DB::raw("n.*, CASE WHEN n.create_type='0' THEN CONCAT(a.first_name, ' ', a.last_name) ELSE CONCAT(u.first_name, ' ', u.last_name) END as creator_name"))
-															   ->leftJoin(DB::raw('dental_users u'), 'n.creator_id', '=', 'u.userid')
-															   ->leftJoin(DB::raw('admin a'), 'n.creator_id', '=', 'a.adminid')
-															   ->where('n.claim_id', '=', $claimId)
-															   ->get();
+    public static function insertData($data)
+    {
+        $claimNote = new ClaimNote();
 
-		return $claimNote;
-	}
+        foreach ($data as $attribute => $value) {
+            $claimNote->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$claimNote = new ClaimNote();
+        $claimNote->save();
 
-		foreach ($data as $attribute => $value) {
-			$claimNote->$attribute = $value;
-		}
+        return $claimNote->id;
+    }
 
-		try {
-			$claimNote->save();
-		} catch (QueryException $e) {
-			return null;
-		}
+    public static function updateData($ed, $values)
+    {
+        $claimNote = ClaimNote::where('id', '=', $ed)->update($values);
 
-		return $claimNote->id;
-	}
-
-	public static function updateData($ed, $values)
-	{
-		$claimNote = ClaimNote::where('id', '=', $ed)->update($values);
-
-		return $claimNote;
-	}
+        return $claimNote;
+    }
 }

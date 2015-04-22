@@ -1,29 +1,24 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Filemanager extends Model
 {
-	protected $table = 'filemanager';
+    protected $table = 'filemanager';
+    protected $fillable = ['docid', 'name', 'type', 'size', 'ext'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['docid', 'name', 'type', 'size', 'ext'];
+    public static function insertData($data)
+    {
+        $filemanager = new Filemanager();
 
-	protected $primaryKey = 'id';
+        foreach ($data as $attribute => $value) {
+            $filemanager->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$filemanager = new Filemanager();
+        $filemanager->save();
 
-		foreach ($data as $attribute => $value) {
-			$filemanager->$attribute = $value;
-		}
-
-		try {
-			$filemanager->save();
-		} catch (QueryException $e) {
-			return null;
-		}
-
-		return $filemanager->id;
-	}
+        return $filemanager->id;
+    }
 }

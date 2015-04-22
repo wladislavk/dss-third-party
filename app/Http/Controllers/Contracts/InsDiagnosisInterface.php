@@ -1,6 +1,7 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
 interface InsDiagnosisInterface
 {
-	public function get();
+    public function getActiveInsDiagnosis();
 }

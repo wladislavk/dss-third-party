@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Auth;
+<?php
+namespace Ds3\Eloquent\Auth;
 
 use Ds3\Libraries\Constants;
 use Illuminate\Auth\Authenticatable;
@@ -13,62 +14,70 @@ use Ds3\Eloquent\Invoice\PercaseInvoice;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
-	use Authenticatable, CanResetPassword;
-	
+    use Authenticatable, CanResetPassword;
 
-	protected $table = 'dental_users';
+    protected $table = 'dental_users';
+    protected $fillable = ['username', 'email', 'password'];
+    protected $hidden = ['password'];
+    protected $primaryKey = 'userid';
 
-	protected $fillable = ['username', 'email', 'password'];
-
-	protected $hidden = ['password'];
-
-	protected $primaryKey = 'userid';
-
-	public function getLocations()
-	{
-		return $this->hasMany(new Location,'docid');
-	}
-
-	public function getContacts()
-	{
-		return $this->hasMany(new Contact,'docid');
-	}
-
-	public function getPatients()
-	{
-		return $this->hasMany(new Patient,'docid');
-	}
-
-	public function getStaff()
-	{
-		return $this->where('docid',$this->userid)->where('user_access',1)->count();
-	}
-
-	public function getInvoices()
+    public function getLocations()
     {
-    	return $this->hasMany(new PercaseInvoice,'docid');
+        return $this->hasMany(new Location, 'docid');
     }
 
-    public function is_super($access)
+    public function getContacts()
     {
-        return (Constants::DSS_ADMIN_ACCESS_SUPER == $access);
+        return $this->hasMany(new Contact, 'docid');
     }
 
-    public function is_admin($access)
+    public function getPatients()
     {
-        return (Constants::DSS_ADMIN_ACCESS_ADMIN == $access || Constants::DSS_ADMIN_ACCESS_SUPER == $access);
+        return $this->hasMany(new Patient, 'docid');
     }
 
-    public function is_billing($access)
+    public function getStaff()
     {
-        return ( Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN == $access || Constants::DSS_ADMIN_ACCESS_BILLING_BASIC == $access );
+        return $this->where('docid', $this->userid)->where('user_access', 1)->count();
     }
-    function is_hst_admin($admin_access)
+
+    public function getInvoices()
     {
-        return ( Constants::DSS_ADMIN_ACCESS_HST_ADMIN == $admin_access);
+        return $this->hasMany(new PercaseInvoice, 'docid');
     }
-    function is_billing_admin($admin_access)
+
+    public function isSuper($access)
     {
-        return (Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN == $admin_access);
+        return (Constants::DSS_ADMIN_ACCESS_SUPER === $access);
+    }
+
+    public function isAdmin($access)
+    {
+        return (Constants::DSS_ADMIN_ACCESS_ADMIN === $access || Constants::DSS_ADMIN_ACCESS_SUPER === $access);
+    }
+
+    public function isBilling($access)
+    {
+        return (Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN === $access || Constants::DSS_ADMIN_ACCESS_BILLING_BASIC === $access);
+    }
+
+    public function isHstAdmin($adminAccess)
+    {
+        return (Constants::DSS_ADMIN_ACCESS_HST_ADMIN === $adminAccess);
+    }
+    
+    public function isBillingAdmin($adminAccess)
+    {
+        return (Constants::DSS_ADMIN_ACCESS_BILLING_ADMIN === $adminAccess);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', '=', 1);
+    }
+
+    public function scopeProducer($query)
+    {
+        return $query->where('producer', '=', 1);
     }
 }

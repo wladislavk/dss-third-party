@@ -1,8 +1,10 @@
-<?php namespace Ds3\Providers;
+<?php
+namespace Ds3\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class AccessCodeServiceProvider extends ServiceProvider {
+class AccessCodeServiceProvider extends ServiceProvider
+{
     public function register()
     {
         $this->app->bind(
@@ -10,4 +12,4 @@ class AccessCodeServiceProvider extends ServiceProvider {
             'Ds3\Admin\Repositories\AccessCodeRepository'
         );
     }
-} 
+}

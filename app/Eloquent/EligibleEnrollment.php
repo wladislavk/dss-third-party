@@ -1,29 +1,24 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
 class EligibleEnrollment extends Model
 {
-	protected $table = 'dental_eligible_enrollment';
+    protected $table = 'dental_eligible_enrollment';
+    protected $fillable = ['user_id', 'payer_id', 'reference_id', 'response', 'status'];
+    protected $primaryKey = 'id';
 
-	protected $fillable = ['user_id', 'payer_id', 'reference_id', 'response', 'status'];
+    public static function insertData($data)
+    {
+        $eligibleEnrollment = new EligibleEnrollment();
 
-	protected $primaryKey = 'id';
+        foreach ($data as $attribute => $value) {
+            $eligibleEnrollment->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$eligibleEnrollment = new EligibleEnrollment();
+        $eligibleEnrollment->save();
 
-		foreach ($data as $attribute => $value) {
-			$eligibleEnrollment->$attribute = $value;
-		}
-
-		try {
-			$eligibleEnrollment->save();
-		} catch (QueryException $e) {
-			return null;
-		}
-
-		return $eligibleEnrollment->id;
-	}
+        return $eligibleEnrollment->id;
+    }
 }

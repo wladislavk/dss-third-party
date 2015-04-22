@@ -1,29 +1,24 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Form extends Model
 {
-	protected $table = 'dental_forms';
+    protected $table = 'dental_forms';
+    protected $fillable = ['docid', 'patientid', 'formtype', 'ip_address'];
+    protected $primaryKey = 'formid';
 
-	protected $fillable = ['docid', 'patientid', 'formtype', 'ip_address'];
+    public static function insertData($data)
+    {
+        $form = new Form();
 
-	protected $primaryKey = 'formid';
+        foreach ($data as $attribute => $value) {
+            $form->$attribute = $value;
+        }
 
-	public static function insertData($data)
-	{
-		$form = new Form();
+        $form->save();
 
-		foreach ($data as $attribute => $value) {
-			$form->$attribute = $value;
-		}
-
-		try {
-			$form->save();
-		} catch (QueryException $e) {
-			return null;
-		}
-
-		return $form->formid;
-	}
+        return $form->formid;
+    }
 }

@@ -1,6 +1,7 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
 interface PatientInsuranceInterface
 {
-	public function get($where);
+    public function getPatientsInsurance($where);
 }

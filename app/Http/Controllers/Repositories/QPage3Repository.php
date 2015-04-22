@@ -1,20 +1,15 @@
-<?php namespace Ds3\Repositories;
-
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+<?php
+namespace Ds3\Repositories;
 
 use Ds3\Contracts\QPage3Interface;
 use Ds3\Eloquent\QPage3;
 
 class QPage3Repository implements QPage3Interface
 {
-	public function get($patientId)
-	{
-		try {
-			$qPage3 = QPage3::where('patientid', '=', $patientId)->firstOrFail();
-		} catch (ModelNotFoundException $e) {
-			return false;
-		}
+    public function find($patientId)
+    {
+        $qPage3 = QPage3::where('patientid', '=', $patientId)->first();
 
-		return $qPage3;
-	}
+        return $qPage3;
+    }
 }

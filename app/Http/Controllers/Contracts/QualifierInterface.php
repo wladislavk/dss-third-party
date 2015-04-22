@@ -1,6 +1,7 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
 interface QualifierInterface
 {
-	public function getQualifiers();
+    public function getQualifiers();
 }

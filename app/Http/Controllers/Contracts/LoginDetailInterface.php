@@ -1,6 +1,7 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
 interface LoginDetailInterface
 {
-	public function insertData($data);
+    public function insertData($data);
 }

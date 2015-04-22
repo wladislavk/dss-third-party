@@ -1,6 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
   include "includes/top.htm";
   include_once "includes/constants.inc";
+  require "includes/calendarinc.php";
 
   $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
   $payments = $db->getRow($sql);
@@ -9,12 +10,12 @@
   $claim = $db->getRow($csql);
 
   $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-  		(status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE.")";
+  		(status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE."OR status = ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
   $num_pa = $db->getNumberRows($pasql);
 
 
   $sasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-            (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
+            (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE."OR status = ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
   $num_sa = $db->getNumberRows($sasql);
 ?>
 
@@ -106,7 +107,7 @@ function validSubmission(f)
         } else {
 
         }
-      } else if (<?php echo  ($claim['status']==DSS_CLAIM_SENT)?1:0; ?>) {
+      } else if (<?php echo  ($claim['status']==DSS_CLAIM_SENT||$claim['status']==DSS_CLAIM_EFILE_ACCEPTED)?1:0; ?>) {
         if (f.payer.value==<?php echo  DSS_TRXN_PAYER_PRIMARY;?>) {
           if (f.close.checked) {
             if (f.attachment.value =='' && <?php echo  ($num_pa == 0)?1:0; ?>) {
@@ -235,6 +236,7 @@ function showAuthBox()
       <td><?php echo  $p['followup']; ?></td>
       <td><?php echo  $p['note']; ?></td>
     </tr>
+
 <?php 
   }
 ?>
@@ -314,15 +316,15 @@ function showAuthBox()
     <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
     <input type="hidden" name="entrycount" value="javascript::readCookie();">
     <div style="width:200px;float:right;margin-left:10px;text-align:left;" id="submitButton">
-      <input type="submit" value="Submit Payments" />
+      <input style="width:auto;" type="submit" value="Submit Payments" />
     </div>
   </div>
 
-  <div id="auth_div" style="display:none; padding: 10px">
+  <div id="auth_div" style="display:none; padding: 10px;">
     <p>You are not authorized to complete this transaction. Please have an authorized user enter their credentials.</p>
     Username: <input type="text" name="username" /><br />
     Password: <input type="password" name="password" /><br />
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Submit" style="width:auto;"/>
   </div>
 </form>
 <br><br>

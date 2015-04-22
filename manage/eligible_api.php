@@ -1,6 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><link rel="stylesheet" href="css/eligible_api.css" />
 <?php
-  $s = "SELECT p.*, c.company, u.name as doc_name, u.npi from dental_patients p
+  $s = "SELECT p.*, c.company, u.name as doc_name, u.npi, u.userid as user_id from dental_patients p
         LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
         LEFT JOIN dental_users u ON u.userid = p.docid
    	    WHERE p.patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";

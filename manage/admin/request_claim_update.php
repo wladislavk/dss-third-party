@@ -13,7 +13,7 @@
     $reference_id = $reference_id_result['reference_id'];
     if($reference_id != ""){
       $data = array();
-      $is_test_sql = "SELECT eligible_test, dental_insurance.docid FROM dental_users JOIN dental_insurance ON dental_users.userid = dental_insurance.docid where insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
+      $is_test_sql = "SELECT eligible_test, dental_insurance.docid, dental_insurance.status FROM dental_users JOIN dental_insurance ON dental_users.userid = dental_insurance.docid where insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
       $is_test_query = mysqli_query($con, $is_test_sql);
       $is_test_result = mysqli_fetch_assoc($is_test_query);
           
@@ -61,27 +61,44 @@
       mysqli_query($con, $electronic_claim_sql);
 
       $status = "";
-
-      if ($response_status == "created"){
-        $status = DSS_CLAIM_SENT;
-      } elseif ($response_status == "received"){
-        $status = DSS_CLAIM_SENT;
-      } elseif ($response_status == "rejected"){
-        $status = DSS_CLAIM_REJECTED;
-      } elseif ($response_status == "accepted"){
-        $status = DSS_CLAIM_EFILE_ACCEPTED;
+      $is_secondary = $current_status == DSS_CLAIM_SEC_PENDING || $current_status == DSS_CLAIM_SEC_SENT || $current_status == DSS_CLAIM_SEC_DISPUTE || $current_status == DSS_CLAIM_PAID_SEC_INSURANCE || $current_status == DSS_CLAIM_PAID_SEC_PATIENT || $current_status == DSS_CLAIM_SEC_PATIENT_DISPUTE || $current_status == DSS_CLAIM_SEC_EFILE_ACCEPTED;
+      
+      if($is_secondary){
+        if ($response_status == "created"){
+          $status = DSS_CLAIM_SEC_SENT;
+        } elseif ($response_status == "received"){
+          $status = DSS_CLAIM_SEC_SENT;
+        } elseif ($response_status == "rejected"){
+          $status = DSS_CLAIM_SEC_REJECTED;
+        } elseif ($response_status == "accepted"){
+          $status = DSS_CLAIM_SEC_EFILE_ACCEPTED;
+        }
+      } else {
+        if ($response_status == "created"){
+          $status = DSS_CLAIM_SENT;
+        } elseif ($response_status == "received"){
+          $status = DSS_CLAIM_SENT;
+        } elseif ($response_status == "rejected"){
+          $status = DSS_CLAIM_REJECTED;
+        } elseif ($response_status == "accepted"){
+          $status = DSS_CLAIM_EFILE_ACCEPTED;
+        }
       }
+      
+      $current_status = $is_test_result['status'];
+      echo $dss_claim_status_labels[$current_status];
 
-      $insurance_update_sql = "UPDATE dental_insurance SET
-                status='".mysqli_real_escape_string($con, $status)."'
-                WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
-      mysqli_query($con, $insurance_update_sql);
-
+      if(!$is_secondary) {
+          $insurance_update_sql = "UPDATE dental_insurance SET
+                status='" . mysqli_real_escape_string($con, $status) . "'
+                WHERE insuranceid='" . mysqli_real_escape_string($con, $_GET['insid']) . "'";
+          mysqli_query($con, $insurance_update_sql);
+      }
     }
   }
 ?>
 
 <script type="text/javascript">
-   alert("<?php echo $message ?>");
+   alert("<?php echo htmlspecialchars($message);?> \n <?php echo $dss_claim_status_labels[$current_status].'-'.$current_status;?> ;");
    window.location = "manage_claims.php"; 
 </script>

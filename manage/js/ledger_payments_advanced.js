@@ -13,7 +13,18 @@ function validSubmission(f)
 
         if( !payment ){
             alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
-            returnval = false;
+            return false;
+        }
+        allowed = false;
+        $('.allowed_amount').each( function(){
+            if( $(this).val()!=''){
+                allowed = true;
+            }
+
+        });
+
+        if( !allowed ){
+           returnval = confirm('You did not enter "Amount Allowed". This information is normally listed on the patient\'s EOB.  Proceed anyway?');
         }
 
         //DISPUTE CLAIM
@@ -73,12 +84,13 @@ function validSubmission(f)
                 }else{
 
                 }
-            }else if(DSS_CLAIM_SENT){
+            }else if(DSS_CLAIM_SENT || DSS_CLAIM_EFILE_ACCEPTED){
                 if(f.payer.value == DSS_TRXN_PAYER_PRIMARY){
                     if(f.close.checked){
                         if(f.attachment.value =='' && num_pa){
-                            returnval = false;
-                            alert('A claim must have an EOB attached to close.');
+                            if(!confirm('You did not upload an Explanation of Benefits (EOB) to this claim.  It is strongly recommended that you attach an EOB later for record keeping.')){
+                                returnval = false;
+                            }
                         }
                         //file secondary
                         //VALID
@@ -98,8 +110,9 @@ function validSubmission(f)
             }else if(DSS_CLAIM_SEC_SENT){
                 if(f.close.checked){
                     if(f.attachment.value =='' && num_sa){
-                        returnval = false;
-                        alert('A claim must have an EOB attached to close.');
+                        if(!confirm('A claim must have an EOB attached to close.')) {
+                            returnval = false;
+                        }
                     }
                     //VALID
                 }else{

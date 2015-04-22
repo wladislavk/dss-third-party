@@ -2120,7 +2120,7 @@ if($exclusive_billing){
                 <label for="city">Insured City</label>
               </span>
               <span>
-                <input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="<?php echo $p_m_state?>"  style="width:80px;" maxlength="255" />
+                <input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="<?php echo $p_m_state?>"  style="width:80px;" maxlength="2" />
                 <label for="state">Insured State</label>
               </span>
               <span>
@@ -2323,7 +2323,7 @@ if($api_r['use_eligible_api']==1){
                 <label for="city">Insured City</label>
               </span>
               <span>
-                <input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="<?php echo $s_m_state?>"  style="width:80px;" maxlength="255" />
+                <input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="<?php echo $s_m_state?>"  style="width:80px;" maxlength="2" />
                 <label for="state">Insured State</label>
               </span>
               <span>

@@ -81,7 +81,7 @@ $c = mysqli_fetch_assoc($c_q);
 
 <div style="clear:both;"></div>
 <?php
-$status_sql = "SELECT status FROM dental_insurance
+$status_sql = "SELECT status, primary_claim_id FROM dental_insurance
                 WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['id'])."'";
 $status_q = mysqli_query($con,$status_sql);
 $status_r = mysqli_fetch_assoc($status_q);
@@ -94,7 +94,13 @@ $is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE
 $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
 $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED);
 
-$sql = "select * from dental_insurance where insuranceid='".$_GET['id']."' and patientid='".$_GET['pid']."'";
+//currently if secondary it just pulls info from primary
+//Need to change eventually to pull info from secondary
+if($status_r['primary_claim_id']){
+    $sql = "select * from dental_insurance where primary_claim_id='".$status_r['primary_claim_id']."' and patientid='".$_GET['pid']."'";
+}else{
+    $sql = "select * from dental_insurance where insuranceid='".$_GET['id']."' and patientid='".$_GET['pid']."'";
+}
 $my = mysqli_query($con,$sql);
 $myarray = mysqli_fetch_array($my);
 
@@ -469,10 +475,15 @@ if ($is_pending) {
 <div style="display:block; float:left; width:48%;">
 <h3>Secondary</h3>
 <?php
-  if(!empty($myarray['has_s_m_ins']) && $myarray['has_s_m_ins']!='Yes'){
+  if(!empty($pat_myarray['has_s_m_ins']) && $pat_myarray['has_s_m_ins']!='Yes'){
 ?>
   None
-<?php }else{ ?>
+  <?php
+  } else {
+    $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";
+    $inscoarray = mysql_query($inscoquery);
+    $inscoinfo = mysql_fetch_array($inscoarray);
+  ?>
 <ul>
   <li><label>Insurance Co.:</label><span class="value"><?php echo $inscoinfo['company']; ?></span></li>
   <li><label>Insurance Addr:</label><span class="value"><?php echo $inscoinfo['add1']." ".$inscoinfo['add2']." ".$inscoinfo['city']." ".$inscoinfo['state']." ".$inscoinfo['zip']; ?></span></li>
@@ -497,13 +508,13 @@ if ($is_pending) {
 
 <ul>
   <li><label>Pt Name:</label> <span class="value"><?php echo  $patient_firstname. " ".$patient_lastname; ?></span></li>
-  <li><label>Pt DOB:</label> <span class="value"><?php echo  date('m-d-Y', strtotime(str_replace('-','/',$patient_dob))); ?></span></li>
+  <li><label>Pt DOB:</label> <span class="value"><?php echo  date('d-m-Y', strtotime(str_replace('-','/',$patient_dob))); ?></span></li>
   <li><label>Pt Sex:</label> <span class="value"><?php echo  $patient_sex; ?></span></li>
   <li><label>Pt Addr:</label> <span class="value"><?php echo  $patient_address." ".$patient_city." ".$patient_state." ".$patient_zip; ?></span></li>
-  <li><label>Pt Ins ID:</label> <span class="value"><?php echo  $insured_id_number; ?></span></li>
-  <li><label>Pt Group #:</label> <span class="value"><?php echo  $insured_policy_group_feca; ?></span></li>
+  <li><label>Pt Ins ID:</label> <span class="value"><?php echo  $other_insured_id_number; ?></span></li>
+  <li><label>Pt Group #:</label> <span class="value"><?php echo  $other_insured_policy_group_feca; ?></span></li>
   <li><label>Pt Phone:</label> <span class="value"><?php echo  $patient_phone_code ." ".$patient_phone; ?></span></li>
-  <li><label>Pt Relation to Insd:</label> <span class="value"><?php echo  $patient_relation_insured; ?></span></li>
+  <li><label>Pt Relation to Insd:</label> <span class="value"><?php echo  $other_patient_relation_insured; ?></span></li>
 </ul>
 
 <ul>

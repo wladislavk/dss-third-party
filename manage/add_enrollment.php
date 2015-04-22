@@ -21,6 +21,9 @@
     <link rel="stylesheet" href="/manage/css/form.css" type="text/css" />
     <link href="/manage/css/search-hints.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="script/wufoo.js"></script>
+    <style type="text/css">
+        div { clear:both; }
+    </style>
   </head>
 
   <body>
@@ -60,7 +63,8 @@
       	"city" => $_POST['city'],
       	"state" => $_POST['state'],
       	"zip" => $_POST['zip'],
-      	"npi" => $_POST[    'npi'],
+      	"npi" => $_POST['npi'],
+        "ptan" => $_POST['ptan'],
       	"authorized_signer" => array(
       		"first_name" => $_POST['first_name'],
       		"last_name" => $_POST['last_name'],
@@ -166,6 +170,12 @@
     </div>
 
     <script type="text/javascript" src="js/add_enrollment.js"></script>
+      <script type="text/javascript">
+          $(document).ready(function(){
+              var api_key = <?php echo "'".DSS_DEFAULT_ELIGIBLE_API_KEY."'" ?>;
+              setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=coverage&enrollment_required=true&api_key='+api_key, 'ins_payer', null, null, false,'','','coverage');
+          });
+      </script>
 
     <?php
       $sql = "SELECT * FROM dental_users WHERE (docid='".$_SESSION['docid']."' OR userid='".$_SESSION['docid']."') AND npi !='' AND (producer=1 OR docid=0) ORDER BY docid ASC";
@@ -201,9 +211,9 @@
                 ?>
                 <?php if($r['docid']==0){
                   $snpi = $r['service_npi'];
-      		        $sjson ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
+      		        $sjson ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","medicare_ptan":"'.$r['medicare_ptan'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
                 }
-      		      $json ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
+      		      $json ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","medicare_ptan":"'.$r['medicare_ptan'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'","signature":"'.$signature.'"}';
               ?>
                 <option value='<?php echo  $json; ?>'><?php echo  $r['npi']; ?> - <?php echo  $r['first_name']." ".$r['last_name']; ?></option>
               <?php } ?>
@@ -243,6 +253,10 @@
     <div>
       <label>NPI</label>
     	<input type="text" id="npi" name="npi" value="<?php echo  $r['npi']; ?>" readonly="readonly" />
+    </div>
+    <div>
+        <label>PTAN (Medicare)</label>
+        <input type="text" id="ptan" name="ptan" value="<?= $r['medicare_ptan']; ?>" readonly="readonly" />
     </div>
     <div>
       <label>First Name</label>

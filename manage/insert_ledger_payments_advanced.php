@@ -2,9 +2,9 @@
     include_once('admin/includes/main_include.php');
     include_once('includes/constants.inc');
     include("includes/sescheck.php");
-    include_once('includes/authorization_functions.php');
-    include_once 'admin/includes/claim_functions.php';
-    include_once 'includes/claim_functions.php';
+    require_once('includes/authorization_functions.php');
+    require_once 'admin/includes/claim_functions.php';
+    require_once 'includes/claim_functions.php';
 ?>
 
 <html>
@@ -39,7 +39,7 @@
                     `followup`,
                     `note`
                     ) VALUES ";
-                $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '');
+                $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."  or secondary_claim_id=".$_POST['claimid'].")";
 
                 $lq = $db->getResults($lsql);
                 if ($lq) foreach ($lq as $row){
@@ -50,23 +50,25 @@
                             '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', 
                             '".date('Y-m-d')."', 
                             '".str_replace(',','',$_POST['amount_'.$id])."', 
-                            '".mysqli_real_escape_string($con,$_POST['payment_type'])."', 
-                            '".mysqli_real_escape_string($con,$_POST['payer'])."',
-                            '".mysqli_real_escape_string($con,$_POST['allowed'])."',
-                            '".mysqli_real_escape_string($con,$_POST['ins_paid'])."',
-                            '".mysqli_real_escape_string($con,$_POST['deductible'])."',
-                            '".mysqli_real_escape_string($con,$_POST['copay'])."',
-                            '".mysqli_real_escape_string($con,$_POST['coins'])."',
-                            '".mysqli_real_escape_string($con,$_POST['overpaid'])."',
-                            '".mysqli_real_escape_string($con,$_POST['followup'])."',
-                            '".mysqli_real_escape_string($con,$_POST['note'])."'
+                            '".mysqli_real_escape_string($con,$_POST['payment_type_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['payer_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['allowed_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['ins_paid_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['deductible_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['copay_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['coins_'.$id])."',
+                            '".mysqli_real_escape_string($con,$_POST['overpaid_'.$id])."',
+                            '".date('Y-m-d', strtotime($_POST['followup_'.$id]))."',
+                            '".mysqli_real_escape_string($con,$_POST['note_'.$id])."'
                             ),";
                     }
                 }
 
                 $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
                 $insqry = $db->query($sqlinsertqry);
-                if(!empty($secsql)){
+                $pid = mysql_insert_id();
+
+                payment_history_update($pid, $_SESSION['userid'], '');
                     $paysql = "SELECT SUM(lp.amount) as payment
                                 FROM dental_ledger_payment lp
                                 JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
@@ -100,7 +102,7 @@
                             note = 'Insurance claim ".$_POST['claimid']." disputed because: ".mysqli_real_escape_string($con,(!empty($_POST['dispute_reason']) ? $_POST['dispute_reason'] : '')).".'";
                         
                         $db->query($note_sql);
-                        if($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_PAID_INSURANCE){
+                        if($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_EFILE_ACCEPTED || $claim['status']==DSS_CLAIM_PAID_INSURANCE){
                             $new_status = DSS_CLAIM_DISPUTE;
                             $msg = 'Disputed Primary Insurance';
 
@@ -206,7 +208,7 @@
                             $msg = "Claim saved, status is PAID.";
                         }elseif($claim['status']==DSS_CLAIM_PENDING || $claim['status']==DSS_CLAIM_SEC_PENDING){
                             //SAVE WITHOUT CHANGING STATUS
-                        }elseif($claim['status']==DSS_CLAIM_SENT){
+                        }elseif($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_EFILE_ACCEPTED){
                             if($_POST['close'] == 1){
                                 if($pat['s_m_dss_file']==1 && $payr['payment']<$claim['amount_due']){ //secondary
                                     if($pat['p_m_ins_type']==1){ //medicare
@@ -312,7 +314,7 @@
 
                     if(isset($new_status)){
                         $x = "UPDATE dental_insurance SET status='".$new_status."'  ";
-                        if($new_status == DSS_CLAIM_SENT || $new_status == DSS_CLAIM_SEC_SENT || $new_status == DSS_CLAIM_DISPUTE || $new_status == DSS_CLAIM_SEC_DISPUTE || $new_status == DSS_CLAIM_REJECTED || $new_status == DSS_CLAIM_SEC_REJECTED  || $new_status == DSS_CLAIM_PATIENT_DISPUTE || $new_status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
+                        if($new_status == DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_EFILE_ACCEPTED || $new_status == DSS_CLAIM_SEC_SENT || $new_status == DSS_CLAIM_SEC_EFILE_ACCEPTED || $new_status == DSS_CLAIM_DISPUTE || $new_status == DSS_CLAIM_SEC_DISPUTE || $new_status == DSS_CLAIM_REJECTED || $new_status == DSS_CLAIM_SEC_REJECTED  || $new_status == DSS_CLAIM_PATIENT_DISPUTE || $new_status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
                             $x .= ", mailed_date = NULL ";
                         }
                         if($new_status == DSS_CLAIM_SEC_PENDING){
@@ -331,6 +333,7 @@
                         
                         $db->query($x); 
                     }
+                    if($secsql){
                         $db->query($secsql);
                     }
 

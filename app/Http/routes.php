@@ -12,7 +12,6 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->get('login', 'AuthController@index');
     $router->post('login', 'AuthController@login');
     $router->get('logout', 'AuthController@logout');
-    // $router->get('add_image/{pid?}', 'ImageController@index');
     $router->get('image/add/{ed?}', 'ImageController@index');
     $router->post('image/add/{ed?}', 'ImageController@add');
     $router->get('contact/{ed}/view', 'ContactController@view');

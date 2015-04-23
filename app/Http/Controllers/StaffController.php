@@ -16,6 +16,8 @@ class StaffController extends Controller
     private $login;
     private $deleteId;
     private $pageNumber;
+    private $staffFields;
+    private $staffFieldInts;
 
     public function __construct(
         UserInterface $user,
@@ -28,6 +30,10 @@ class StaffController extends Controller
 
         $this->user  = $user;
         $this->login = $login;
+
+        $this->staffFields = array('username', 'first_name', 'last_name', 'address', 'status', 'npi', 'medicare_npi', 'medicare_ptan', 'tax_id_or_ssn', 'practice', 'city', 'state', 'zip', 'email');
+
+        $this->staffFieldInts = array('producer', 'producer_files', 'ein', 'ssn', 'post_ledger_adjustments', 'edit_ledger_entries', 'use_course', 'sign_notes', 'manage_staff');
     }
 
     public function manage()
@@ -111,24 +117,44 @@ class StaffController extends Controller
             $getTypeUsers = $getTypeUsers[0];
             $buttonText   = 'Edit';
 
-            $getTypeLogins = $this->login->getLogins(array(
-            'userid' => $getTypeUsers['userid']));
-
         } else {
             $buttonText = 'Add';
         }
 
+        $getTypeLogins = $this->login->getLogins(array(
+            'userid' => $getTypeUsers['userid']));
+
         $data = array(
-            'getTypeUsers'   => !empty($getTypeUsers) ? $getTypeUsers : '',
-            'getTypeUsersId' => !empty($getTypeUsersId) ? $getTypeUsersId : '',
-            'getTypeLoginsNumber'  => count($getTypeLogins),
-            'buttonText'     => $buttonText,
-            'userId'         => Session::get('userId'),
-            'docId'          => Session::get('docId'),
-            'message'        => !empty(Session::get('message')) ? Session::get('message') : '',
-            'closePopup'     => !empty(Session::get('closePopup')) ? Session::get('closePopup') : null
+            'getTypeUsers'        => !empty($getTypeUsers) ? $getTypeUsers : '',
+            'getTypeUsersId'      => !empty($getTypeUsersId) ? $getTypeUsersId : '',
+            'getTypeLoginsNumber' => !empty(count($getTypeLogins)) ? count($getTypeLogins) : '',
+            'buttonText'          => $buttonText,
+            'userId'              => Session::get('userId'),
+            'docId'               => Session::get('docId'),
+            'message'             => !empty(Session::get('message')) ? Session::get('message') : '',
+            'closePopup'          => !empty(Session::get('closePopup')) ? Session::get('closePopup') : null
         );
 
         return view('manage.add_staff', $data);
+    }
+
+    public function add()
+    {
+        if (!empty(Route::input('ed'))) {
+            foreach ($this->staffFields as $staffField) {
+                $data[$staffField] = $this->request[$staffField];
+            }
+
+            foreach ($this->staffFieldInts as $staffFieldInt) {
+                $data[$staffFieldInt] = !empty($this->request[$staffFieldInt]) ? $this->request[$staffFieldInt] : 0;
+            }
+
+            $data['user_access'] = 1;
+            $data['phone']       = GeneralFunctions::formatPhone($this->request['phone']);
+
+            $this->user->updateData(Route::input('ed'), $data);
+
+            $message = 'Edited Successfully';
+        }
     }
 }

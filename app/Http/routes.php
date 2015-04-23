@@ -33,6 +33,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->post('add_custom/{ed?}', 'CustomController@add');
     $router->get('staff/{ed}/edit', 'StaffController@index');
     $router->get('staff/add', 'StaffController@index');
+    $router->post('add_staff/{ed?}', 'StaffController@add');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 

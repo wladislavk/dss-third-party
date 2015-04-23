@@ -5,8 +5,8 @@
 
         {!! HTML::script('/js/jquery-1.6.2.min.js') !!}
         {!! HTML::script('/js/jquery-ui-1.8.22.custom.min.js') !!}
-        {!! HTML::script('/js/manage/modal.js') !!}
         {!! HTML::script('/js/manage/add_staff.js') !!}
+        {!! HTML::script('/js/manage/modal.js') !!}
 
         {!! HTML::style('/css/manage/admin.css') !!}
         {!! HTML::style('/css/manage/form.css') !!}
@@ -34,7 +34,7 @@
             </div>
         @endif
 
-        <form name="stafffrm" action="/manage/add_staff" method="post" onSubmit="return staffabc(this)">
+        <form name="stafffrm" action="/manage/add_staff{!! !empty($getTypeUsers['userid']) ? '/' . $getTypeUsers['userid'] : '' !!}" method="post" onSubmit="return staffabc(this)">
             <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <input type="hidden" name="add" value="1" />
                 <input type="hidden" name="_token" id="token" value="{!! csrf_token() !!}">
@@ -277,8 +277,8 @@
                     </td>
                     <td valign="top" class="frmdata">
                         <select name="status" class="tbox">
-                            <option value="1" {!! (!empty($getTypeUsers['status']) == "1") ? "selected" : '' !!}>Active</option>
-                            <option value="2" {!! (!empty($getTypeUsers['status']) == "2") ? "selected" : '' !!}>In-Active</option>
+                            <option value="1" {!! ($getTypeUsers['status'] == "1") ? "selected" : '' !!}>Active</option>
+                            <option value="2" {!! ($getTypeUsers['status'] == "2") ? "selected" : '' !!}>In-Active</option>
                         </select>
                     </td>
                 </tr>
@@ -288,7 +288,7 @@
                             * Required Fields
                         </span><br />
                         <input type="hidden" name="staffsub" value="1" />
-                        <input type="hidden" name="ed" value="{!! $getTypeUsers['userid'] !!}" />
+                        <input type="hidden" name="ed" value="{!! $getTypeUsers['userid'] or '' !!}" />
                         <input type="submit" value="{!! $buttonText !!} Staff" class="button" />
 
                         <script type="text/javascript">

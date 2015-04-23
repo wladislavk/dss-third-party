@@ -15,6 +15,14 @@ if(isset($_GET['rid'])){
   $u_sql = "UPDATE dental_support_responses SET viewed=0 WHERE ticket_id='".mysqli_real_escape_string($con,$_GET['rid'])."' AND response_type=1 ";
   mysqli_query($con,$u_sql);
 }
+?>
+<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
+<script src="popup/popup.js" type="text/javascript"></script>
+<!--link rel="stylesheet" href="css/support.css" type="text/css" /-->
+<?php
+
+if(!isset($_GET['all'])){
+
 $sql = "select t.*,
 	CONCAT(u.first_name,' ',u.last_name) as user,
 	CONCAT(a.first_name,' ',a.last_name) as account,
@@ -50,12 +58,16 @@ $total_rec = mysqli_num_rows($my);
 
 ?>
 
-<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/popup.js" type="text/javascript"></script>
-<!--link rel="stylesheet" href="css/support.css" type="text/css" /-->
 <div class="page-header">
 	Manage Support Tickets
 </div>
+<div class="page-header">
+Open Tickets
+</div>
+<a href="manage_support_tickets.php?all" class="btn btn-success pull-right" style="margin-left:5px">
+    View Closed Tickets
+    <span class="glyphicon glyphicon-plus"></span>
+</a>
 <button onclick="loadPopup('add_ticket.php'); return false;" class="btn btn-success pull-right">
     Add Ticket
     <span class="glyphicon glyphicon-plus"></span>
@@ -161,7 +173,15 @@ else
 </tbody>
 </table>
 
+<a href="manage_support_tickets.php?all" class="btn btn-success pull-right" style="margin-left:5px">
+    View Closed Tickets 
+    <span class="glyphicon glyphicon-plus"></span>
+</a>
+
 <?php
+
+}else{ //isset($_GET['all'])
+
 $sql = "select t.*,
         CONCAT(u.first_name, ' ', u.last_name) as user,
 	CONCAT(a.first_name, ' ', a.last_name) as account,
@@ -197,6 +217,11 @@ $total_rec = mysqli_num_rows($my);
 <div class="page-header">
 Resolved
 </div>
+<a href="manage_support_tickets.php" class="btn btn-success pull-right" style="margin-left:5px">
+    View Open Tickets
+    <span class="glyphicon glyphicon-plus"></span>
+</a>
+
 <table class="sort_table table table-bordered table-hover">
 	<thead>
         <tr class="tr_bg_h">
@@ -289,8 +314,13 @@ else
 	</tbody>
 </table>
 
+<a href="manage_support_tickets.php" class="btn btn-success pull-right" style="margin-left:5px">
+    View Open Tickets
+    <span class="glyphicon glyphicon-plus"></span>
+</a>
 
 
+<?php } ?>
 
 
 

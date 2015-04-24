@@ -1071,6 +1071,13 @@ function check_billed () {
 <?php
 
 function bill_card ($customerID, $amount, $userid, $invoiceid) {
+  if($amount==0){
+    ?>
+    <script type="text/javascript">
+      alert('Cannot post $0.00 charge to Stripe.');
+    </script>
+    <?php
+  }else{
     $key_sql = "SELECT stripe_secret_key FROM companies c
         JOIN dental_user_company uc
         ON c.id = uc.companyid
@@ -1163,5 +1170,6 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         mysqli_query($con,$invoice_sql);
     }
     
+  }
     return true;
 }

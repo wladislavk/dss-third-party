@@ -83,11 +83,13 @@ if (!isset($_SESSION['userid'])) {
 
     $claim_query = "SELECT i.* FROM dental_insurance i 
                     JOIN dental_patients p ON p.patientid=i.patientid
-                    WHERE p.p_m_dss_file='2' AND i.docid = '".$docid."' AND (i.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE."))";
-
+                    WHERE
+                        ((p.p_m_dss_file='2' AND (i.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_DISPUTE."))) OR
+                        (p.s_m_dss_file='2' AND (i.status IN (".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_SEC_DISPUTE."))))
+                        AND i.docid = '".$docid."'";
     $num_pending_nodss_claims = $db->getNumberRows($claim_query);
 
-    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND mailed_date IS NULL AND status !=  ".DSS_CLAIM_PENDING." AND status != ".DSS_CLAIM_SEC_PENDING;
+    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND mailed_date IS NULL AND sec_mailed_date IS NULL AND status !=  ".DSS_CLAIM_PENDING." AND status != ".DSS_CLAIM_SEC_PENDING;
 
     $num_unmailed_claims = $db->getNumberRows($claim_query);
 

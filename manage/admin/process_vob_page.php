@@ -89,7 +89,7 @@ if (isset($_GET['ed'])) {
 				 . "doc_medicare_npi = '" . mysqli_real_escape_string($con, s_for($_POST["doc_medicare_npi"])) . "', "
 				 . "doc_tax_id_or_ssn = '" . mysqli_real_escape_string($con, s_for(num($_POST["doc_tax_id_or_ssn"], false))) . "', "
 				 . "trxn_code_amount = '" . mysqli_real_escape_string($con, s_for($_POST["trxn_code_amount"])) . "', "
-				 . "diagnosis_code = '" . mysqli_real_escape_string($con, s_for($_POST["diagnosis_code"])) . "', "
+				 //. "diagnosis_code = '" . mysqli_real_escape_string($con, s_for($_POST["diagnosis_code"])) . "', "
 				 . "patient_phone = '" . mysqli_real_escape_string($con, s_for(num($_POST["patient_phone"]))) . "', "
          . "date_of_call = '" . mysqli_real_escape_string($con, s_for($_POST["date_of_call"])) . "', "
          . "insurance_rep = '" . mysqli_real_escape_string($con, s_for($_POST["insurance_rep"])) . "', "

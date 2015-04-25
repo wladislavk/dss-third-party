@@ -59,7 +59,8 @@
             $m['p_m_ins_co'] == "" ||
             $m['p_m_ins_grp'] == "" ||
             ($m['p_m_ins_plan'] == "" && $m['p_m_ins_type'] != 1) || 
-            $m['p_m_ins_type'] == ''
+            $m['p_m_ins_type'] == '' ||
+            $m['p_m_ins_ass'] == ''
         ){
             array_push($errors, "Primary insurance not completed - Patient Info");
         }

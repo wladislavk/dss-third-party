@@ -128,7 +128,9 @@ if ($patient_info) {
       $pat_r['p_m_ins_co'] == "" ||
       $pat_r['p_m_ins_grp'] == "" ||
       ($pat_r['p_m_ins_plan'] == "" && $pat_r['p_m_ins_type'] != 1) ||
-      $pat_r['p_m_ins_type'] == ''){
+      $pat_r['p_m_ins_type'] == '' ||
+      $pat_r['p_m_ins_ass'] == ''
+  ){
     $ins_error = true;
   }elseif($exclusive_billing){
     $ins_error = false;

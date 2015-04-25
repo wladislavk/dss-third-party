@@ -3,7 +3,8 @@ include_once '../includes/constants.inc';
 include_once 'includes/main_include.php';
 include_once 'includes/sescheck.php';
 include_once '../includes/claim_create.php';
-include_once '../includes/claim_functions.php';
+include_once 'includes/claim_functions.php';
+include_once '../includes/invoice_functions.php';
 include_once '../includes/general_functions.php';
 
 $is_back_office = true;

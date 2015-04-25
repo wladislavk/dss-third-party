@@ -336,14 +336,14 @@ if(isset($_GET['msg'])){
       Mailed
     </td>
   </tr>
-  <? if(mysql_num_rows($my) == 0)
-  { ?>
+  <?php if(mysql_num_rows($my) == 0){
+   ?>
     <tr class="tr_bg">
       <td valign="top" class="col_head" colspan="7" align="center">
         No Records
       </td>
     </tr>
-  <? 
+  <?php 
   }
   else
   {

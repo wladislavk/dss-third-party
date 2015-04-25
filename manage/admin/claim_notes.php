@@ -444,7 +444,7 @@ if ($is_pending) {
 
 <ul>
   <li><label>Pt Name:</label> <span class="value"><?php echo  $patient_firstname. " ".$patient_lastname; ?></span></li>
-  <li><label>Pt DOB:</label> <span class="value"><?php echo  date('m-d-Y', strtotime(str_replace('-','/',$patient_dob))); ?></span></li>
+  <li><label>Pt DOB:</label> <span class="value"><?php echo  date('Y-m-d', strtotime(str_replace('-','/',$patient_dob))); ?></span></li>
   <li><label>Pt Sex:</label> <span class="value"><?php echo  $patient_sex; ?></span></li>
   <li><label>Pt Addr:</label> <span class="value"><?php echo  $patient_address." ".$patient_city." ".$patient_state." ".$patient_zip; ?></span></li>
   <li><label>Pt Ins ID:</label> <span class="value"><?php echo  $insured_id_number; ?></span></li>
@@ -519,7 +519,7 @@ if ($is_pending) {
 
 <ul>
   <li><label>Insured Name:</label> <span class="value"><?php echo  $other_insured_firstname." ".$other_insured_lastname;?></span></li>
-  <li><label>Insured DOB:</label> <span class="value"><?php echo  $other_insured_dob; ?></span></li>
+  <li><label>Insured DOB:</label> <span class="value"><?php echo  date('Y-m-d', strtotime(str_replace('-','/',$other_insured_dob))); ?></span></li>
   <li><label>Insured Sex:</label> <span class="value"><?php echo  $other_insured_sex; ?></span></li>
   <li><label>Insured Addr:</label> <span class="value"><?php echo  $other_insured_address." ".$other_insured_city." ".$other_insured_state." ".$other_insured_zip; ?></span></li>
   <li><label>Insured Ins ID:</label> <span class="value"><?php echo  $other_insured_id_number; ?></span></li>

@@ -211,5 +211,10 @@ class UserServiceProvider extends ServiceProvider
             'Ds3\Contracts\ModifierCodeInterface',
             'Ds3\Repositories\ModifierCodeRepository'
         );
+
+        $this->app->bind(
+            'Ds3\Contracts\ChairsInterface',
+            'Ds3\Repositories\ChairsRepository'
+        );
     }
 }

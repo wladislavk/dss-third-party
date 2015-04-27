@@ -7,6 +7,7 @@
     {!! HTML::style('/css/manage/manage.css') !!}
 
     {!! HTML::script('/js/admin/popup.js') !!}
+
 @stop
 
 @section('content')
@@ -27,6 +28,7 @@
     <br />
     <div align="center" class="red">
         <b>
+
             @if (!empty($message))
                 {!! $message !!}
             @endif
@@ -41,6 +43,7 @@
                         Pages:
 
                         @for ($pCount = 0; $pCount < $noPages; $pCount++)
+
                             @if ($indexPage == $pCount)
                                 <strong>{!! $pCount + 1 !!}</strong>
                             @else
@@ -89,6 +92,7 @@
                         {!! $getTypeUser['producer'] == 1 ? "X" : '' !!}
                     </td>
                     <td valign="top">
+
                         @if ($docId == $userId || $getTypeUsersId['manage_staff'] == 1)
                             <a href="#" onclick="loadPopup('staff/{!! $getTypeUser['userid'] !!}/edit');" class="editlink" title="EDIT">
                                 Edit

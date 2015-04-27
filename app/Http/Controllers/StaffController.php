@@ -5,6 +5,7 @@ use Ds3\Http\Controllers\Controller;
 use Ds3\Contracts\UserInterface;
 use Ds3\Contracts\LoginInterface;
 use Ds3\Libraries\GeneralFunctions;
+use Ds3\Libraries\Password;
 use Request;
 use Session;
 use Route;
@@ -31,23 +32,26 @@ class StaffController extends Controller
         $this->user  = $user;
         $this->login = $login;
 
-        $this->staffFields = array('username', 'first_name', 'last_name', 'address', 'status', 'npi', 'medicare_npi', 'medicare_ptan', 'tax_id_or_ssn', 'practice', 'city', 'state', 'zip', 'email');
-
+        $this->staffFields    = array('username', 'first_name', 'last_name', 'address', 'status', 'npi', 'medicare_npi', 'medicare_ptan', 'tax_id_or_ssn', 'practice', 'city', 'state', 'zip', 'email');
         $this->staffFieldInts = array('producer', 'producer_files', 'ein', 'ssn', 'post_ledger_adjustments', 'edit_ledger_entries', 'use_course', 'sign_notes', 'manage_staff');
     }
 
     public function manage()
     {
-        if (!empty($this->request['deleteId'])) {
-            $getTypeLogins = $this->login->getLogins(array('userid' => $this->request['deleteId']));
+        if (!empty($this->deleteId)) {
+            $getTypeLogins = $this->login->getLogins(array(
+                'userid' => $this->deleteId));
 
             if (count($getTypeLogins) == 0) {
-                $this->user->deleteUsers($this->request['deleteId']);
+                $this->user->deleteUsers($this->deleteId);
             } else {
-                $this->user->updateData($this->request['deleteId'], array('status' => 2));
+                $this->user->updateData($this->deleteId, array(
+                    'status' => 2));
             }
 
             $message = 'Deleted Successfully';
+
+            return redirect('/manage/staff/add')->with('message', $message)->with('closePopup', true);
         }
 
         $numberOfRecordsDisplayed = 20;
@@ -113,21 +117,26 @@ class StaffController extends Controller
         }
 
         if (count($getTypeUsers)) {
-
             $getTypeUsers = $getTypeUsers[0];
-            $buttonText   = 'Edit';
-
-        } else {
-            $buttonText = 'Add';
+            
         }
 
-        $getTypeLogins = $this->login->getLogins(array(
+        if (count($getTypeUsers)) {
+
+            $buttonText = 'Edit';
+
+            $getTypeLogins = $this->login->getLogins(array(
             'userid' => $getTypeUsers['userid']));
 
+        } else {
+            $buttonText    = 'Add';
+            $getTypeLogins = null;
+        }
+
         $data = array(
-            'getTypeUsers'        => !empty($getTypeUsers) ? $getTypeUsers : '',
+            'getTypeUsers'        => count($getTypeUsers) ? $getTypeUsers : null,
             'getTypeUsersId'      => !empty($getTypeUsersId) ? $getTypeUsersId : '',
-            'getTypeLoginsNumber' => !empty(count($getTypeLogins)) ? count($getTypeLogins) : '',
+            'getTypeLoginsNumber' => !empty(count($getTypeLogins)),
             'buttonText'          => $buttonText,
             'userId'              => Session::get('userId'),
             'docId'               => Session::get('docId'),
@@ -140,21 +149,52 @@ class StaffController extends Controller
 
     public function add()
     {
-        if (!empty(Route::input('ed'))) {
-            foreach ($this->staffFields as $staffField) {
-                $data[$staffField] = $this->request[$staffField];
+        if ($this->request['staffsub'] && $this->request['staffsub'] == 1) {
+
+            if (!empty(Route::input('ed'))) {
+                foreach ($this->staffFields as $staffField) {
+                    $data[$staffField] = $this->request[$staffField];
+                }
+
+                foreach ($this->staffFieldInts as $staffFieldInt) {
+                    $data[$staffFieldInt] = !empty($this->request[$staffFieldInt]) ? $this->request[$staffFieldInt] : 0;
+                }
+
+                $data['user_access'] = 1;
+                $data['phone']       = GeneralFunctions::formatPhone($this->request['phone']);
+
+                $this->user->updateData(Route::input('ed'), $data);
+
+                $message = 'Edited Successfully';
+            } else {
+                foreach ($this->staffFieldInts as $staffFieldInt) {
+                    $data[$staffFieldInt] = !empty($this->request[$staffFieldInt]) ? $this->request[$staffFieldInt] : 0;
+                }
+
+                foreach ($this->staffFields as $staffField) {
+                    $data[$staffField] = $this->request[$staffField];
+                }
+
+                $salt = Password::createSalt();
+
+                $data['user_access'] = 1;
+                $data['docid']       = Session::get('docId');
+                $data['salt']        = $salt;
+                $data['password']    = Password::genPassword($this->request['password'], $salt);
+                $data['phone']       = GeneralFunctions::formatPhone($this->request['phone']);
+
+                $this->user->insertData($data);
+
+                $message = 'Added Successfully';
             }
 
-            foreach ($this->staffFieldInts as $staffFieldInt) {
-                $data[$staffFieldInt] = !empty($this->request[$staffFieldInt]) ? $this->request[$staffFieldInt] : 0;
+            if (!empty(Route::input('ed'))) {
+                $path = '/manage/staff/' . Route::input('ed') . '/edit';
+            } else {
+                $path = '/manage/staff/add';
             }
 
-            $data['user_access'] = 1;
-            $data['phone']       = GeneralFunctions::formatPhone($this->request['phone']);
-
-            $this->user->updateData(Route::input('ed'), $data);
-
-            $message = 'Edited Successfully';
+            return redirect($path)->with('closePopup', true)->with('message', $message);
         }
     }
 }

@@ -46,6 +46,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->get('fcontact', 'ContactController@manageCorporate');
         $router->get('custom', 'CustomController@manage');
         $router->get('staff', 'StaffController@manage');
+        $router->get('chairs', 'ChairsController@manage');
     });
 });
 

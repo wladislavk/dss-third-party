@@ -5,8 +5,14 @@
 
         {!! HTML::script('/js/jquery-1.6.2.min.js') !!}
         {!! HTML::script('/js/jquery-ui-1.8.22.custom.min.js') !!}
-        {!! HTML::script('/js/manage/add_staff.js') !!}
+        {!! HTML::script('/js/3rdParty/jquery.maskedinput-1.3.min.js') !!}
         {!! HTML::script('/js/manage/modal.js') !!}
+        {!! HTML::script('/js/manage/staff.js') !!}
+        {!! HTML::script('/js/manage/top.js') !!}
+        {!! HTML::script('/js/manage/validation.js') !!}
+        {!! HTML::script('/js/manage/masks.js') !!}
+        {!! HTML::script('/js/manage/wufoo.js') !!}
+        {!! HTML::script('js/admin/popup.js') !!}
 
         {!! HTML::style('/css/manage/admin.css') !!}
         {!! HTML::style('/css/manage/form.css') !!}
@@ -107,7 +113,7 @@
                         </div>
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! $getTypeUsers['producer'] == 1 ? "checked" : '' !!} value="1" id="producer" name="producer" />
+                        <input type="checkbox" {!! (!empty($getTypeUsers['producer']) && $getTypeUsers['producer'] == 1) ? "checked" : '' !!} value="1" id="producer" name="producer" />
                     </td>
                 </tr>
                 <tr class="producer_field" bgcolor="#FFFFFF">
@@ -115,7 +121,7 @@
                        Producer bills insurance under their name?
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! $getTypeUsers['producer_files'] == 1 ? "checked" : '' !!} value="1" id="producer_files" name="producer_files" />
+                        <input type="checkbox" {!! count($getTypeUsers['producer_files']) && $getTypeUsers['producer_files'] == 1 ? "checked" : '' !!} value="1" id="producer_files" name="producer_files" />
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor"#ffffff;">
@@ -160,8 +166,8 @@
                         EIN or SSN
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! $getTypeUsers['ein'] == 1 ? "checked" : '' !!} value="1" name="ein" /> EIN
-                        <input type="checkbox" {!! $getTypeUsers['ssn'] == 1 ? "checked" : '' !!} value="1" name="ssn" /> SSN
+                        <input type="checkbox" {!! (!empty($getTypeUsers['ein']) && $getTypeUsers['ein'] == 1) ? "checked" : '' !!} value="1" name="ein" /> EIN
+                        <input type="checkbox" {!! (!empty($getTypeUsers['ssn']) && $getTypeUsers['ssn'] == 1) ? "checked" : '' !!} value="1" name="ssn" /> SSN
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">
@@ -220,7 +226,7 @@
                         </div>
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! $getTypeUsers['sign_notes'] == 1 ? "checked" : '' !!} value="1" name="sign_notes" />
+                        <input type="checkbox" {!! (!empty($getTypeUsers['sign_notes']) && $getTypeUsers['sign_notes'] == 1) ? "checked" : '' !!} value="1" name="sign_notes" />
                     </td>
                 </tr>
                 <tr>
@@ -228,7 +234,7 @@
                     Use Course?
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! $getTypeUsers['use_course'] == 1 ? "checked" : '' !!} value="1" name="use_course" />
+                        <input type="checkbox" {!! (!empty($getTypeUsers['use_course']) && $getTypeUsers['use_course'] == 1) ? "checked" : '' !!} value="1" name="use_course" />
                     </td>
                 </tr>
 
@@ -241,7 +247,7 @@
                             </div>
                         </td>
                         <td valign="top" class="frmdata">
-                            <input type="checkbox" {!! $getTypeUsers['manage_staff'] == 1 ? "checked" : '' !!} value="1" name="manage_staff" />
+                            <input type="checkbox" {!! (!empty($getTypeUsers['manage_staff']) && $getTypeUsers['manage_staff'] == 1) ? "checked" : '' !!} value="1" name="manage_staff" />
                         </td>
                     </tr>
                 @endif
@@ -254,7 +260,7 @@
                         </div>
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! $getTypeUsers['post_ledger_adjustments'] == 1 ? "checked" : '' !!} value="1" name="post_ledger_adjustments" />
+                        <input type="checkbox" {!! (!empty($getTypeUsers['post_ledger_adjustments']) && $getTypeUsers['post_ledger_adjustments'] == 1) ? "checked" : '' !!} value="1" name="post_ledger_adjustments" />
                     </td>
                 </tr>
                 <tr>
@@ -265,7 +271,7 @@
                         </div> 
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! $getTypeUsers['edit_ledger_entries'] == 1 ? "checked" : '' !!} value="1" name="edit_ledger_entries" />
+                        <input type="checkbox" {!! (!empty($getTypeUsers['edit_ledger_entries']) && $getTypeUsers['edit_ledger_entries'] == 1) ? "checked" : '' !!} value="1" name="edit_ledger_entries" />
                     </td>
                 </tr>
                 <tr bgcolor="#FFFFFF">
@@ -288,12 +294,13 @@
                             * Required Fields
                         </span><br />
                         <input type="hidden" name="staffsub" value="1" />
-                        <input type="hidden" name="ed" value="{!! $getTypeUsers['userid'] or '' !!}" />
+                        <input type="hidden" name="ed" value="{!! !empty($getTypeUsers['userid']) !!}" />
+                        <input type="hidden" name="logins" value="{!! !empty($getTypeLoginsNumber) or '' !!}" />
                         <input type="submit" value="{!! $buttonText !!} Staff" class="button" />
 
                         <script type="text/javascript">
-                            var deleteid = '{!! $getTypeUsers['userid'] or '' !!}';
-                            var countLogins = '{!! $getTypeLoginsNumber !!}';
+                            var deleteId    = "{!! $getTypeUsers['userid'] or '' !!}";
+                            var countLogins = "{!! !empty($getTypeLoginsNumber) or '' !!}";
                         </script>
 
                         @if ($getTypeUsers['userid'] != '')

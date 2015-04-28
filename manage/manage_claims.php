@@ -162,7 +162,6 @@ if(isset($_GET['msg'])){
         </td>
         <td valign="top">
             <?php echo $dss_claim_status_labels[$pend_myarray['status']];?>
-        </td>
             <?php
             if($pend_myarray['p_m_dss_file']!=2){
                 $b_sql = "SELECT c.name, c.exclusive FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,$pend_myarray['docid'])."'";
@@ -178,6 +177,7 @@ if(isset($_GET['msg'])){
                 echo "(".$billing_co." filing)";
             }
             ?>
+        </td>
         <td valign="top">
             <a href="view_claim.php?claimid=<?php echo $pend_myarray['insuranceid']; ?>&pid=<?php echo $pend_myarray['patientid']; ?>#notes">View (<?php echo $pend_myarray['num_notes'];?>)</a>
         </td>

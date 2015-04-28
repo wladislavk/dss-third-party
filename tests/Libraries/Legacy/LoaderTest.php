@@ -165,6 +165,16 @@ class LoaderTest extends TestCase {
             '<head meta-tag="abc"><base href="/">',
             Loader::injectBaseTag('<head meta-tag="abc">', '//')
         );
+
+        $this->assertEquals(
+            '<head meta-tag="abc"><base href="/?">',
+            Loader::injectBaseTag('<head meta-tag="abc">', '/', '')
+        );
+
+        $this->assertEquals(
+            '<head meta-tag="abc"><base href="/?xyz">',
+            Loader::injectBaseTag('<head meta-tag="abc">', '/', 'xyz')
+        );
     }
 
     public function testLoadWithoutRedirect()

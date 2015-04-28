@@ -107,7 +107,7 @@
 		
 		<form name="jump1" style="float:left; width:350px;">
 			Filter by type:
-			<select name="myjumpbox" OnChange="location.href=jump1.myjumpbox.options[selectedIndex].value">
+			<select name="myjumpbox" OnChange="location.href=jump1.myjumpbox.options[jump1.myjumpbox.selectedIndex].value">
 		    	<option selected>Please Select...</option>
 		     	<option value="manage_contact.php">Display All</option>
 

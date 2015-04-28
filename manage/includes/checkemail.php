@@ -20,7 +20,7 @@
 
   function checkUserEmail($e, $i){
     $db = new Db();
-    $con = $GLOBALS['con']
+    $con = $GLOBALS['con'];
 
     if(trim($e) == ''){
       $n = 0;

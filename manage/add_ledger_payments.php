@@ -10,12 +10,12 @@ require "includes/calendarinc.php";
   $claim = $db->getRow($csql);
 
   $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-  		(status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE."OR status = ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
+  		(status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE." OR status = ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
   $num_pa = $db->getNumberRows($pasql);
 
 
   $sasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-            (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE."OR status = ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
+            (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE." OR status = ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
   $num_sa = $db->getNumberRows($sasql);
 ?>
 

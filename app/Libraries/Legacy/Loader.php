@@ -137,11 +137,12 @@ class Loader
      * which indicates the script attempted to use exit() or die() to end the execution
      *
      * @param string $relativePath
+     * @param string $queryString
      * @return \Illuminate\Http\Response
      * @throws LoaderException
      * @throws \Exception
      */
-    public function load($relativePath)
+    public function load($relativePath, $queryString=null)
     {
         $realPath = $this->getRealPath($relativePath);
 
@@ -173,7 +174,7 @@ class Loader
             unset($this->outputHeaders['location']);
             $response = new RedirectResponse($redirection, 302, $this->outputHeaders);
         } else {
-            $this->outputBuffer = self::injectBaseTag($this->outputBuffer, $relativePath);
+            $this->outputBuffer = self::injectBaseTag($this->outputBuffer, $relativePath, $queryString);
             $response = new Response($this->outputBuffer, 200, $this->outputHeaders);
         }
 
@@ -369,12 +370,18 @@ class Loader
     /**
      * @param string $buffer Output buffer from the legacy file
      * @param string $relativePath
+     * @param string $queryString
      * @return string Modified buffer (if applicable)
      */
-    public static function injectBaseTag($buffer, $relativePath)
+    public static function injectBaseTag($buffer, $relativePath, $queryString=null)
     {
         $baseHref = "/$relativePath";
         $baseHref = preg_replace('@//+@', '/', $baseHref);
+
+        if (!is_null($queryString)) {
+            $baseHref .= '?' . $queryString;
+        }
+
         $buffer = preg_replace('@(<head[^>]*>)@i', '$1<base href="' . htmlspecialchars($baseHref) . '">', $buffer);
 
         return $buffer;

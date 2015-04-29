@@ -23,6 +23,14 @@ class LegacyLoader implements Middleware
             $baseUrl = $this->config->get('app.url');
             $url = $request->url();
 
+            $queryString = null;
+            $requestUri = $request->getRequestUri();
+
+            if (strpos($requestUri, '?') !== false) {
+                $queryString = strstr($requestUri, '?');
+                $queryString = substr($queryString, 1);
+            }
+
             /**
              * The current url could not match the base url if
              * the request is the root and there is no trailing slash
@@ -56,7 +64,7 @@ class LegacyLoader implements Middleware
                 $loader->setRequestParams('post', $request->input());
             }
 
-            $response = $loader->load($legacyFile);
+            $response = $loader->load($legacyFile, $queryString);
             return $response;
         } catch (LoaderException $exception) {
             // Legacy file not found

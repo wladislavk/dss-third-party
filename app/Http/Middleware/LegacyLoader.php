@@ -22,7 +22,14 @@ class LegacyLoader implements Middleware
             $legacyPath = $this->config->get('app.legacy_path');
             $baseUrl = $this->config->get('app.url');
             $url = $request->url();
-            $queryString = $request->getQueryString();
+
+            $queryString = null;
+            $requestUri = $request->getRequestUri();
+
+            if (strpos($requestUri, '?') !== false) {
+                $queryString = strstr($requestUri, '?');
+                $queryString = substr($queryString, 1);
+            }
 
             /**
              * The current url could not match the base url if

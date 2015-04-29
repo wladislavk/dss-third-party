@@ -27,7 +27,7 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
 
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
                 if($_FILES['attachment']['tmp_name'][$i]!=''){
-                  $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
+                  $extension = preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['attachment']["name"][$i]));
                   $attachment = "claim_note_attachment_".$n_id."_".$_SESSION['adminuserid']."_".rand(1000, 9999).".".$extension;
                   move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 
@@ -58,7 +58,7 @@ if(!empty($_POST["notesub"]) && $_POST["notesub"] == 1)
 		$n_id = $_POST['nid'];
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
                 if($_FILES['attachment']['tmp_name'][$i]!=''){
-                  $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
+                  $extension = preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['attachment']["name"][$i]));
                   $attachment = "claim_note_attachment_".$n_id."_".$_SESSION['adminuserid']."_".rand(1000, 9999).".".$extension;
                   move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 

@@ -84,7 +84,7 @@
 			$date = date("Ymd");
 			$origfilename = $_FILES["file"]["name"];
 			$random = rand(111111111,999999999);
-			//$scanext = end(explode('.', $origfilename));
+			//$scanext = preg_replace('/^.*[.]([^.]+)$/', '$1', ($origfilename));
 			$insslquery = "INSERT INTO `dental_sleepstudy` (`id`,`testnumber`,`docid`,`patientid`,`needed`,`scheddate`,`sleeplabwheresched`,`completed`,`interpolation`,`labtype`,`copyreqdate`,`sleeplab`,`date`) VALUES (NULL,'".$random."','".$docid."','".$_POST['patientid']."','".$needed."','".$scheddate."','".$sleeplabwheresched."','".$completed."','".$interpolation."','".$labtype."','".$copyreqdate."','".$sleeplab."','".$date."');";
 			//echo $insslquery;
 
@@ -115,7 +115,7 @@
 		<?php
 						} else {
 							//$filename = $patientid.'-'.$random.".".$scanext;
-							$scanext = end(explode('.', $origfilename));
+							$scanext = preg_replace('/^.*[.]([^.]+)$/', '$1', ($origfilename));
 							$fullfilename = $filename . "." . $scanext;
 							$success = uploadImage($_FILES["file"],"../../../shared/q_file/".$fullfilename);
 							//$success = move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/$fullfilename");

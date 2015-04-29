@@ -20,6 +20,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     protected $fillable = ['username', 'email', 'password'];
     protected $hidden = ['password'];
     protected $primaryKey = 'userid';
+    //public $timestamps = false;
 
     public function getLocations()
     {

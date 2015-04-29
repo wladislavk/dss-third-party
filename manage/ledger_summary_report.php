@@ -45,7 +45,7 @@
 
   $cr_q = $db->getResults($cr_sql);
   if ($cr_q) foreach ($cr_q as $cr_r) {?>
-    <li><label><?php echo$dss_trxn_pymt_type_labels[$cr_r['description']]=='Check')?'Ins. Checks':$dss_trxn_pymt_type_labels[$cr_r['description']]; ?></label> $<?php echo number_format($cr_r['amount'],2); ?></li>
+    <li><label><?php echo ($dss_trxn_pymt_type_labels[$cr_r['description']] == 'Check') ? 'Ins. Checks' : $dss_trxn_pymt_type_labels[$cr_r['description']]; ?></label> $<?php echo number_format($cr_r['amount'],2); ?></li>
   <?php 
       $cr_total += $cr_r['amount'];
   } 

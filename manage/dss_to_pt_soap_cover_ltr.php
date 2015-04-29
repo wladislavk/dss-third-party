@@ -128,7 +128,7 @@
 				$search[] = "%franchisee_fullname%";
 				$replace[] = "<strong>" . $franchisee_name . "</strong>";
 				$search[] = "%franchisee_lastname%";
-				$replace[] = "<strong>" . end(explode(" ", $franchisee_name)) . "</strong>";
+				$replace[] = "<strong>" . preg_replace('/^.*[ ]([^ ]+)$/', '$1', ($franchisee_name)) . "</strong>";
     			$new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
     			// Letter hasn't been edited, but a new template exists in hidden field
  				if ($new_template[$key] == null && $_POST['new_template'][$key] != null) {

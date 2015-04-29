@@ -39,7 +39,7 @@ if(isset($_POST['respond'])){
 
                 for($i=0;$i < count($_FILES['attachment']['name']); $i++){
                 if($_FILES['attachment']['tmp_name'][$i]!=''){
-                  $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
+                  $extension = preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['attachment']["name"][$i]));
                   $attachment = "support_attachment_".$r_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
                   move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 

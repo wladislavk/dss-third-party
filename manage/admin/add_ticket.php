@@ -32,7 +32,7 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1)
 
                 for($i=0;$i < count(!empty($_FILES['attachment']) ? $_FILES['attachment']['name'] : null); $i++){
                 if($_FILES['attachment']['tmp_name'][$i]!=''){
-                  $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
+                  $extension = preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['attachment']["name"][$i]));
                   $attachment = "support_attachment_".$t_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
                   move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 

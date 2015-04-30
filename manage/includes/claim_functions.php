@@ -607,6 +607,9 @@ function claim_history_update($insid, $userid, $adminid){
 }
 
 function payment_history_update($paymentid, $userid, $adminid){
+    $db = new Db();
+    $con = $GLOBALS['con'];
+
     $paymentid = intval($paymentid);
     $userid = intval($userid);
     $adminid = intval($adminid);
@@ -653,6 +656,5 @@ function payment_history_update($paymentid, $userid, $adminid){
         FROM dental_ledger_payment p
         WHERE p.id = $paymentid";
 
-    mysql_query($sql) or die(mysql_error());
-    return mysql_insert_id();
+    return $db->getInsertId($sql);
 }

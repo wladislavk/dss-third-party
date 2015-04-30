@@ -107,12 +107,12 @@
 		
 		<form name="jump1" style="float:left; width:350px;">
 			Filter by type:
-			<select name="myjumpbox" OnChange="location.href=jump1.myjumpbox.options[selectedIndex].value">
+			<select name="myjumpbox" OnChange="location.href=jump1.myjumpbox.options[jump1.myjumpbox.selectedIndex].value">
 		    	<option selected>Please Select...</option>
 		     	<option value="manage_contact.php">Display All</option>
 
 		      	<?php foreach ($ctype_myarray as $value): ?>
-		            <option value="manage_contact.php?contacttype=<?php echo st((!empty($ctype_myarray['contacttypeid']) ? $ctype_myarray['contacttypeid'] : '')); ?>">
+		            <option value="manage_contact.php?contacttype=<?php echo st((!empty($value['contacttypeid']) ? $value['contacttypeid'] : '')); ?>">
 		               	<?php echo st($value['contacttype']); ?>
 		            </option>
 		        <?php endforeach ?>

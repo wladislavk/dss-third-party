@@ -52,7 +52,7 @@ $(document).ready(function() {
   });
 
   if (getParameterByName('sendPin')) {
-    loadPopupWithClose('patient_access_code.php?pid=<?= $_GET['pid']; ?>', 'add_patient.php?ed=<?= $_GET['ed']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>');
+    loadPopupWithClose('patient_access_code.php?pid=' + patientId, 'add_patient.php?ed=' + existingPatient + '&preview=1&addtopat=1&pid=' + patientId);
 
 });
 

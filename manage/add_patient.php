@@ -16,6 +16,10 @@ if(!isset($_GET['noheaders'])){
 <link href="css/notifications.css" rel="stylesheet" type="text/css" />
 <link href="css/search-hints.css" rel="stylesheet" type="text/css">
 <link href="css/top.css" rel="stylesheet" type="text/css" />
+<script>
+    var existingPatient = <?= intval($_GET['ed']) ?>,
+        patientId = <?= intval($_GET['pid']) ?>;
+</script>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
 <script type="text/javascript" src="js/masks.js"></script>

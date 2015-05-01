@@ -605,3 +605,56 @@ function claim_history_update($insid, $userid, $adminid){
   $db->query($sql);
   return $hid;
 }
+
+function payment_history_update($paymentid, $userid, $adminid){
+    $db = new Db();
+    $con = $GLOBALS['con'];
+
+    $paymentid = intval($paymentid);
+    $userid = intval($userid);
+    $adminid = intval($adminid);
+
+    $sql = "INSERT INTO dental_ledger_payment_history (
+            paymentid,
+            payer,
+            amount,
+            payment_type,
+            payment_date,
+            entry_date,
+            ledgerid,
+            amount_allowed,
+            ins_paid,
+            deductible,
+            copay,
+            coins,
+            overpaid,
+            followup,
+            note,
+            updated_by_user,
+            updated_by_admin,
+            updated_at
+        )
+        SELECT
+            id,
+            payer,
+            amount,
+            payment_type,
+            payment_date,
+            entry_date,
+            ledgerid,
+            amount_allowed,
+            ins_paid,
+            deductible,
+            copay,
+            coins,
+            overpaid,
+            followup,
+            note,
+            $userid,
+            $adminid,
+            now()
+        FROM dental_ledger_payment p
+        WHERE p.id = $paymentid";
+
+    return $db->getInsertId($sql);
+}

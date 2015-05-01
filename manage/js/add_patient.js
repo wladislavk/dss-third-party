@@ -53,7 +53,7 @@ $(document).ready(function() {
 
   if (getParameterByName('sendPin')) {
     loadPopupWithClose('patient_access_code.php?pid=' + patientId, 'add_patient.php?ed=' + existingPatient + '&preview=1&addtopat=1&pid=' + patientId);
-
+  }
 });
 
 function confirmExit(){

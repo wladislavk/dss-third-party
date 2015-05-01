@@ -70,6 +70,7 @@ function similar_contacts($id){
 function similar_patients($id){
     $db = new Db();
     $con = $GLOBALS['con'];
+    $id = intval($id);
 
     $s = "SELECT * from dental_patients WHERE patientid='".$id."'";
     $r = $db->getRow($s);
@@ -80,7 +81,7 @@ function similar_patients($id){
               AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 
     $s2 = "SELECT * FROM dental_patients WHERE " .
-    		"patientid != ".$id." AND " .
+    		"patientid != '".$id."' AND " .
     		"status='1' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND " .
     		"((firstname = '".$r['firstname']."' AND " .
     	        "lastname = '".$r['lastname']."') OR " .

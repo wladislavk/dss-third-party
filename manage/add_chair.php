@@ -20,7 +20,7 @@
 	<link rel="stylesheet" href="css/modal.css" />
 <?php
 	if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
-		$sel_check = "select * from dental_resources where docid='".$_SESSION['docid']."' AND name = '".s_for($_POST["name"]) . "' and id <> " . $_POST['ed'];
+		$sel_check = "select * from dental_resources where docid='". intval($_SESSION['docid']) ."' AND name = '".s_for($_POST["name"]) . "' and id <> '" . intval($_POST['ed']) . "'";
 		
 		if($db->getNumberRows($sel_check)>0) {
 			$msg = "Resource name already exists. Please give another name.";
@@ -40,29 +40,29 @@
 <?php
 		} else {
 			if($_POST["ed"] != "") {
-	            $old_sql = "SELECT name FROM dental_resources WHERE docid='".$_SESSION['docid']."' AND id='".mysqli_real_escape_string($con,$_POST["ed"])."'";
+	            $old_sql = "SELECT name FROM dental_resources WHERE docid='". intval($_SESSION['docid']) ."' AND id='".mysqli_real_escape_string($con,$_POST["ed"])."'";
 	            
 	            $old_r = $db->getRow($old_sql);
 	            $old_username = $old_r['name'];
 				$ed_sql = "update dental_resources set name = '".s_for($_POST["name"])."', ";
-				$ed_sql .= "rank=" . $_POST['rank'] . " ";
-				$ed_sql .= " where id='".$_POST["ed"]."'";
+				$ed_sql .= "rank='" . mysqli_real_escape_string($con, $_POST['rank']) . "' ";
+				$ed_sql .= " where id='". intval($_POST["ed"]) ."'";
 
 				$db->query($ed_sql);
 				$msg = "Edited Successfully" . $_POST['name'];
 ?>
 				<script type="text/javascript">
-					parent.window.location='manage_chairs.php?msg=<?php echo $msg;?>';
+					parent.window.location='manage_chairs.php?msg=<?php echo urlencode($msg);?>';
 				</script>
 <?php
 				trigger_error("Die called", E_USER_ERROR);
 			} else {
-				$ins_sql = "insert into dental_resources (name, rank, docid) values ('".s_for($_POST["name"])."', " . $_POST['rank'] . ", " . $_SESSION['docid'] .")";
+				$ins_sql = "insert into dental_resources (name, rank, docid) values ('".s_for($_POST["name"])."', '" . mysqli_real_escape_string($con, $_POST['rank']) . "', '" . intval($_SESSION['docid']) ."')";
 	            $userid = $db->getInsertId($ins_sql);
 				$msg = "Added Successfully";
 ?>
 				<script type="text/javascript">
-					parent.window.location='manage_chairs.php?msg=<?php echo $msg;?>';
+					parent.window.location='manage_chairs.php?msg=<?php echo urlencode($msg);?>';
 				</script>
 <?php
 				trigger_error("Die called", E_USER_ERROR);
@@ -81,7 +81,7 @@
 	
 	<body>
     <?php
-	    $thesql = "select * from dental_resources where docid=".mysqli_real_escape_string($con,$_SESSION['docid'])." AND id='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+	    $thesql = "select * from dental_resources where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND id='".(!empty($_REQUEST["ed"]) ? intval($_REQUEST["ed"]) : '')."'";
 		
 		$themyarray = $db->getRow($thesql);
 		

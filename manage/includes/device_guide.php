@@ -7,6 +7,7 @@
 
   <script type="text/javascript" src="/manage/js/device/jquery-1.9.1.js"></script>
   <script type="text/javascript" src="/manage/js/device/jquery-ui.js"></script>
+  <script type="text/javascript" src="../js/device_guide.js"></script>
   <link rel="stylesheet" href="/manage/js/device/jquery-ui.css" />
 
   <?php
@@ -111,8 +112,6 @@
               $labelArray .= ',' . $o_r['label'] . '';
             }
           ?>
-
-          <script type="text/javascript" src="../js/device_guide.js"></script>
 
           <script type="text/javascript">
             setSlider("<?php echo $labelArray; ?>", <?php echo  $s_r['id']; ?>, <?php echo  $s_r['range_start']; ?>, <?php echo $s_r['range_end']; ?>, <?php echo $range_step; ?>);

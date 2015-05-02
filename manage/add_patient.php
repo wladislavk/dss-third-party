@@ -1357,7 +1357,7 @@ function validate_add_patient(fa){
    fa.p_m_ins_id.value != '<?php echo $p_m_ins_id; ?>' || 
    fa.p_m_ins_grp.value != '<?php echo $p_m_ins_grp; ?>' || 
    fa.p_m_ins_plan.value != '<?php echo $p_m_ins_plan ; ?>'
-  ) && <?php echo $pending_vob; ?>){
+  ) && <?php echo ($pending_vob)?$pending_vob:0; ?>){
 <?php 
   if($pending_vob_status == DSS_PREAUTH_PREAUTH_PENDING){ ?>
     if(!confirm('Warning! This patient has a Verification of Benefits (VOB) that is currently awaiting pre-authorization from the insurance company. You have changed the patient\'s insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?'));

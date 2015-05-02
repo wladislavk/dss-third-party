@@ -6,29 +6,32 @@ $('.imp_chk').click( function(){
 	}
 });
 
-$('.device_submit').click(function(){
-	$.ajax({
-		url: "device_guide_results.php",
-		type: "post",
-		data: $('#device_form').serialize(),
-		success: function(data){
-			$('#results li').remove();
-		  	var r = $.parseJSON(data);
-			$.each( r,  function(i, v){
-				if(v.image_path!=''){
-					$('#results').append("<li class='box_go'><div class='ico'><img src='"+v.image_path+"' /></div><a href='#' onclick=\"update_device("+v.id+", '"+v.name+"');return false();\">"+v['name']+" ("+ v.value +")</a></li>");
-				} else {
-		      		$('#results').append("<li><a href='#' onclick=\"update_device("+v.id+", '"+v.name+"');return false();\">"+v['name']+" ("+ v.value +")</a></li>");
-				}
-			});
+$(document).ready(function()
+{
+	$('.device_submit').click(function(){
+		$.ajax({
+			url: "device_guide_results.php",
+			type: "post",
+			data: $('#device_form').serialize(),
+			success: function(data){
+				$('#results li').remove();
+			  	var r = $.parseJSON(data);
+				$.each( r,  function(i, v){
+					if(v.image_path!=''){
+						$('#results').append("<li class='box_go'><div class='ico'><img src='"+v.image_path+"' /></div><a href='#' onclick=\"update_device("+v.id+", '"+v.name+"');return false();\">"+v['name']+" ("+ v.value +")</a></li>");
+					} else {
+			      		$('#results').append("<li><a href='#' onclick=\"update_device("+v.id+", '"+v.name+"');return false();\">"+v['name']+" ("+ v.value +")</a></li>");
+					}
+				});
 
-			if(r.error){
-			} else {
+				if(r.error){
+				} else {
+				}
+			},
+			failure: function(data){
+			  //alert('fail');
 			}
-		},
-		failure: function(data){
-		  //alert('fail');
-		}
+		});
 	});
 });
 

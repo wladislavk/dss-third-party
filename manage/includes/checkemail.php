@@ -36,7 +36,7 @@
 
   function checkUsername($u, $i){
     $db = new Db();
-    $con = $GLOBALS['con']
+    $con = $GLOBALS['con'];
     
     if(trim($u) == ''){
       $n = 0;

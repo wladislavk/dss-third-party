@@ -29,7 +29,7 @@
                 $user_sql = "SELECT * FROM dental_users where userid='".st($myarray["userid"])."'";
                 $user_myarray = $db->getRow($user_sql);
 ?>
-        <tr id="note_<?php echo $myarray['notesid'];?>" class="<?php echo $tr_class;?>" <?php if($bg_color != '') {?> style="background-color:<?php echo $bg_color?>" ?>>
+        <tr id="note_<?php echo $myarray['notesid'];?>" class="<?php echo $tr_class;?>" <?php if($bg_color != '') {?> style="background-color:<?php echo $bg_color?>" <?php } ?>>
                 <td valign="top" style="border:solid 1px #000;">
                         <table width="100%" cellpadding="2" cellspacing="1" border="0">
                                 <tr>
@@ -90,5 +90,6 @@
         </tr>
         <?php      }
 }
-}?>
+
+?>
 </table>

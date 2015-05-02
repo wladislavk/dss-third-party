@@ -91,7 +91,7 @@ function get_mdcontactids ($pid, $active = true) {
       }
     }
   }
-  $contactid_list = implode(",", $contactids);
+  $contactid_list = clear_id_list(implode(",", $contactids));
 
   return $contactid_list;
 }
@@ -119,7 +119,7 @@ function get_mdreferralids ($pid, $active = true) {
   	}
   }
 
-  $contactid_list = implode(",", $contactids);
+  $contactid_list = clear_id_list(implode(",", $contactids));
 
   return $contactid_list;
 
@@ -148,7 +148,7 @@ function get_ptreferralids ($pid) {
       $contactids[] = array_shift($row);
     }
   }
-  $contactid_list = implode(",", $contactids); 
+  $contactid_list = clear_id_list(implode(",", $contactids));
 
   return $contactid_list;
 }
@@ -160,6 +160,12 @@ function get_contact_info ($patient, $md_list, $md_referral_list, $pat_referral_
 
   $db = new Db();
   $contact_info = array();
+
+  $patient = clear_id_list($patient);
+  $md_list = clear_id_list($md_list);
+  $md_referral_list = clear_id_list($md_referral_list);
+  $pat_referral_list = clear_id_list($pat_referral_list);
+
   if (isset($patient)) {
     $sql = "SELECT patientid AS id, salutation, firstname, lastname, add1, add2, city, state, zip, email, preferredcontact, ".$letterid." AS letterid FROM dental_patients WHERE patientid IN('".$patient."');";
     $result = $db->getResults($sql);
@@ -218,7 +224,21 @@ function get_contact_info ($patient, $md_list, $md_referral_list, $pat_referral_
   return $contact_info;
 }
 
+function clear_id_list($string_list)
+{
+    if (!isset($string_list)) {
+        return $string_list;
+    }
 
+    $string_list = preg_replace('/,+/', ',', $string_list);
+
+    // Add a default value here
+    if ($string_list === '' || $string_list === ',') {
+        $string_list = null;
+    }
+
+    return $string_list;
+}
 
 //get number of contacts for letter
 function num_letter_contacts($lid){

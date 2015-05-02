@@ -4,7 +4,7 @@
 $thesql = "select * from dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_REQUEST["pid"]) ? $_REQUEST["pid"] : ''))."'";
 $themyarray = $db->getRow($thesql);
 
-$docsleep = st($themyarray["docsleep"]);
+$docsleep = intval($themyarray["docsleep"]);
 if ($docsleep) {
     $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
@@ -24,7 +24,7 @@ if ($docsleep) {
     }
 }
 
-$docpcp = st($themyarray["docpcp"]);
+$docpcp = intval($themyarray["docpcp"]);
 if ($docpcp) {
     $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
@@ -44,7 +44,7 @@ if ($docpcp) {
     }
 }
 
-$docdentist = st($themyarray["docdentist"]);
+$docdentist = intval($themyarray["docdentist"]);
 if ($docdentist) {
     $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
@@ -64,7 +64,7 @@ if ($docdentist) {
     }
 }
 
-$docent = st($themyarray["docent"]);
+$docent = intval($themyarray["docent"]);
 if ($docent) {
     $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
@@ -84,7 +84,7 @@ if ($docent) {
     }
 }
 
-$docmdother = st($themyarray["docmdother"]);
+$docmdother = intval($themyarray["docmdother"]);
 if ($docmdother) {
     $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
@@ -104,7 +104,7 @@ if ($docmdother) {
     }
 }
 
-$docmdother2 = st($themyarray["docmdother2"]);
+$docmdother2 = intval($themyarray["docmdother2"]);
 if ($docmdother2) {
     $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
@@ -124,7 +124,7 @@ if ($docmdother2) {
     }
 }
 
-$docmdother3 = st($themyarray["docmdother3"]);
+$docmdother3 = intval($themyarray["docmdother3"]);
 if ($docmdother3) {
     $dsql = "SELECT dc.contactid, dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
               LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid

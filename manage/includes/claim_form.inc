@@ -1293,7 +1293,7 @@ input{text-transform:uppercase;}
 
 
 
-<form name="insurancefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?insid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '')?>&pid=<?php echo (!empty($_GET['pid']))?> ? $_GET['pid'] : ''" method="post">
+<form name="insurancefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?insid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '')?>&pid=<?php echo !empty($_GET['pid']) ? $_GET['pid'] : '' ?>" method="post">
 	<input type="hidden" name="insurancesub" value="1" />
 	<input type="hidden" name="ed" value="<?php echo $insuranceid;?>" />
 	

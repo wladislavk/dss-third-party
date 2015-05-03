@@ -661,7 +661,7 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
         					left join admin a ON n.creator_id = a.adminid
         				where n.claim_id='".mysqli_real_escape_string($con, $myarray['insuranceid'])."'
         				ORDER BY adddate ASC";
- 				$n_q = mysqli_query($con, $n_sql) or die(mysqli_error($con));
+ 				$n_q = mysqli_query($con, $n_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 				while($n = mysqli_fetch_assoc($n_q)){
 					echo $n['note'] .' - '. $n['creator_name'].'<br />';
 				}

@@ -1,5 +1,3 @@
-  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-  <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>
 <?php
 
 $status_sql = "SELECT status FROM dental_insurance 
@@ -1262,7 +1260,9 @@ if (empty($prior_authorization_number)) {
 -->
 input{text-transform:uppercase;}
 </style>
-<script language="javascript" type="text/javascript" src="<?php echo $manage_path?>script/validation.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>
+    <script language="javascript" type="text/javascript" src="<?php echo $manage_path?>script/validation.js"></script>
 </head>
 
 <body>
@@ -1293,7 +1293,7 @@ input{text-transform:uppercase;}
 
 
 
-<form name="insurancefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?insid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '')?>&pid=<?php echo (!empty($_GET['pid']))?> ? $_GET['pid'] : ''" method="post">
+<form name="insurancefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?insid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '')?>&pid=<?php echo !empty($_GET['pid']) ? $_GET['pid'] : '' ?>" method="post">
 	<input type="hidden" name="insurancesub" value="1" />
 	<input type="hidden" name="ed" value="<?php echo $insuranceid;?>" />
 	
@@ -2955,8 +2955,6 @@ if ($is_pending) {
 <div id="backgroundPopup"></div>
 
 <br /><br />
-</body>
-</html>
 
 <script type="text/javascript">
 
@@ -3005,3 +3003,6 @@ function file_claim(){
   return c;
 }
 </script>
+
+</body>
+</html>

@@ -17,4 +17,3 @@ require_once dirname(__FILE__) . '/../../../includes/autoloader.php';
 	
 	$base_path = 'http://staging1.dss.xforty.com/dental/manage/';
 	$sitename = "Dental";
-?>

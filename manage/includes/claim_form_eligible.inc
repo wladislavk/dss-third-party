@@ -1,5 +1,9 @@
 <?php
 
+if (!function_exists('s_for')) {
+    require_once dirname(__FILE__) . '/../admin/includes/general.htm';
+}
+
   $status_sql = "SELECT status FROM dental_insurance
                  WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
                  AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
@@ -12,7 +16,7 @@
   $is_sec_pending = ($status == DSS_CLAIM_SEC_PENDING) ? true : false;
   $is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
   $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
-  $_GET['instype'] == 2
+  $_GET['instype'] == 2;
 
   $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
   

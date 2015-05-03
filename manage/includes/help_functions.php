@@ -28,10 +28,10 @@
             $help_id = $db->getInsertId($help_sql);  
             //USER ROLES
             //remove previous roles
-        	$del_role_sql = "delete from wp_usermeta where userid=".mysqli_real_escape_string($GLOBALS['con'], $help_id)." AND meta_key = 'wp_capabilities'";
+        	$del_role_sql = "delete from help_wp.wp_usermeta where userid=".mysqli_real_escape_string($GLOBALS['con'], $help_id)." AND meta_key = 'wp_capabilities'";
         	
             $db->query($del_role_sql);    
-            $role_sql = "insert into wp_usermeta (user_id, meta_key, meta_value) values (".mysqli_real_escape_string($GLOBALS['con'], $help_id).", 'wp_capabilities', 'a:1:{s:10:\"subscriber\";b:1;}');";
+            $role_sql = "insert into help_wp.wp_usermeta (user_id, meta_key, meta_value) values (".mysqli_real_escape_string($GLOBALS['con'], $help_id).", 'wp_capabilities', 'a:1:{s:10:\"subscriber\";b:1;}');";
             
             $db->query($role_sql);
             $u_sql = "UPDATE dental_users SET help_id='".mysqli_real_escape_string($GLOBALS['con'], $help_id)."' WHERE userid='".mysqli_real_escape_string($GLOBALS['con'], $id)."'";

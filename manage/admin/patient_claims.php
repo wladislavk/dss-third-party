@@ -521,7 +521,7 @@ if(isset($_GET['msg'])){
                   left join admin a ON n.creator_id = a.adminid
                 where n.claim_id='".mysql_real_escape_string($myarray['insuranceid'])."'
                 ORDER BY adddate ASC";
-        $n_q = mysql_query($n_sql) or die(mysql_error());
+        $n_q = mysql_query($n_sql) or trigger_error(mysql_error(), E_USER_ERROR);
         while($n = mysql_fetch_assoc($n_q)){
           echo $n['note'] .' - '. $n['creator_name'].'<br />';
         }

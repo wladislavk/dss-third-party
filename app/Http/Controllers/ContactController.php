@@ -270,7 +270,7 @@ class ContactController extends Controller
                 } elseif (!empty($this->activePat)) {
                     $activePat = $this->activePat;
 
-                    return redirect('/manage/add_patient{!! $activePat !!}')
+                    return redirect('/manage/patient/add{!! $activePat !!}')
                         ->with('ed', $activePat)
                         ->with('preview', 1)
                         ->with('addtopat', 1);
@@ -280,7 +280,7 @@ class ContactController extends Controller
             }
         }
 
-        $redirect = redirect('/manage/add_contact');
+        $redirect = redirect('/manage/contact/add');
 
         $data = array(
             'showBlock'        => $showBlock,

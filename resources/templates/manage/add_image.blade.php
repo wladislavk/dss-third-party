@@ -23,20 +23,36 @@
 
         <br /><br />
 
+        @if (!empty($alert))
+            <script>
+                alert('{!! $alert !!}');
+            </script>
+        @endif
+
         @if (!empty($message))
             <div align="center" class="red">
                 {!! $message !!}
             </div>
         @endif
 
-        <form name="imagefrm" action="{!! $path or '' !!}{!! !empty($patientId) ? '/' . $patientId : '' !!}" method="post" onSubmit="return imageabc(this);" enctype="multipart/form-data">
+        @if (!empty($closePopup))
+            <script>
+                parent.disablePopup1();
+                loc = parent.window.location.href;
+                loc = loc.replace("#", "");
+                parent.window.location = loc;
+            </script>
+        @endif
+
+        <form name="imagefrm" action="/manage/image/add" method="post" onSubmit="return imageabc(this);" enctype="multipart/form-data">
             <input name="flow" type="hidden" value="{!! $flow or '' !!}" />
             <input type="hidden" name='add' value='1'>
             <input type="hidden" name='sh' value="{!! $sh or '' !!}">
+            <input type="hidden" name="pid" value="{!! $patientId !!}">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">
-                        {!! $butText !!} Image
+                        {!! $buttonText !!} Image
                         
                         @if (!empty($title))
                             &quot;{!! $title !!}&quot;
@@ -46,7 +62,7 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex">    
+                            <li id="foli8" class="complex">
                                 <span>
                                     Image Type
                                     &nbsp;&nbsp;
@@ -156,14 +172,14 @@
                 <tr class="image_sect">
                     <td  colspan="2" align="center">
                         <span class="red">
-                            * Required Fields                    
+                            * Required Fields
                         </span><br />
                         <input type="hidden" name="imagesub" value="1" />
                         <input type="hidden" name="ed" value="{!! $image->imageid or '' !!}" />
                         <input type="hidden" name="return" value="{!! $return !!}" />
-                        <input type="hidden" name="return_field" value="{!! $returnField !!}" />
+                        <input type="hidden" name="field" value="{!! $field !!}" />
                         <input type="hidden" name="_token" value="{!! Session::get('_token') !!}">
-                        <input type="submit" value=" {!! $butText !!} Image" class="button" />
+                        <input type="submit" value=" {!! $buttonText !!} Image" class="button" />
                     </td>
                 </tr>
             </table>

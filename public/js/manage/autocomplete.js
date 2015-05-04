@@ -49,7 +49,7 @@
 				}
 				if(hinttype != 'eligibility' && hinttype != 'ins_payer'){
                                 var newLi = $('#'+hint+' ul .template').clone(true).removeClass('template').addClass('create_new')
-					.attr('onclick', 'loadPopupRefer("/manage/add_contact", "{"addtopat": "' + pid + '", "from": "add_patient", "in_field": ' + in_field + ', "id_field": ' + id_field + ', "search": ' + (partial_name.replace(/'/g, "\\'")) + '}", "' + $('#token').val() + '")');
+					.attr('onclick', 'loadPopupRefer("/manage/contact/add", "{"addtopat": "' + pid + '", "from": "add_patient", "in_field": ' + in_field + ', "id_field": ' + id_field + ', "search": ' + (partial_name.replace(/'/g, "\\'")) + '}", "' + $('#token').val() + '")');
                                         template_list_ref(newLi, "Add "+label+" with this name&#8230;")
                                                 .appendTo('#'+hint+' ul')
                                                 .fadeIn();
@@ -71,7 +71,7 @@
                                                 .addClass('json_patient')
                                                 .data('rowid', data[i].id)
                                                 .data('rowsource', data[i].id)
-                                                .attr("onclick", "loadPopup('/manage/view_contact/" + data[i].id + "')"
+                                                .attr("onclick", "loadPopup('/manage/contact/" + data[i].id + "/view')"
 );
 				    }else{
                                         var newLi = $('#'+hint+' ul .template')

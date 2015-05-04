@@ -193,6 +193,21 @@ class UserServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            'Ds3\Contracts\SupportResponseInterface',
+            'Ds3\Repositories\SupportResponseRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\SupportCategoryInterface',
+            'Ds3\Repositories\SupportCategoryRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\SupportAttachmentInterface',
+            'Ds3\Repositories\SupportAttachmentRepository'
+        );
+
+        $this->app->bind(
             'Ds3\Contracts\CustomInterface',
             'Ds3\Repositories\CustomRepository'
         );
@@ -210,6 +225,11 @@ class UserServiceProvider extends ServiceProvider
         $this->app->bind(
             'Ds3\Contracts\ModifierCodeInterface',
             'Ds3\Repositories\ModifierCodeRepository'
+        );
+
+        $this->app->bind(
+            'Ds3\Contracts\ChairsInterface',
+            'Ds3\Repositories\ChairsRepository'
         );
     }
 }

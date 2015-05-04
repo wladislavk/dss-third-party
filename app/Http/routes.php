@@ -15,7 +15,8 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     // $router->get('add_image/{pid?}', 'ImageController@index');
     $router->get('add_image/{it}/{return}/{field}/{pid?}/{sh?}', 'ImageController@index');
     $router->post('add_image/{pid?}', 'ImageController@add');
-    $router->get('view_contact/{ed?}', 'ContactController@view');
+    $router->get('view_contact/{ed?}/{corporate?}', 'ContactController@view');
+    $router->get('view_fcontact/{ed?}', 'ContactController@viewCorporateContact');
     $router->get('display_file/{file?}', 'FileController@display');
     $router->get('imageholder/{image}/{folder?}', 'ImageController@imageHolder');
     $router->get('add_contact/{ed?}', 'ContactController@index');
@@ -30,6 +31,12 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->get('add_ticket', 'TicketController@show');
     $router->post('add_ticket', 'TicketController@add');
     $router->post('view_support_ticket/{id}', 'TicketController@submitResponse');
+    $router->get('custom/add', 'CustomController@index');
+    $router->get('custom/{ed}/edit', 'CustomController@index');
+    $router->post('add_custom/{ed?}', 'CustomController@add');
+    $router->get('staff/{ed}/edit', 'StaffController@index');
+    $router->get('staff/add', 'StaffController@index');
+    $router->post('add_staff/{ed?}', 'StaffController@add');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 
@@ -41,6 +48,10 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->get('sleeplab', 'SleepLabController@manage');
         $router->get('support', 'TicketController@support');
         $router->get('view_support_ticket/{id}', 'TicketController@view');
+        $router->get('fcontact', 'ContactController@manageCorporate');
+        $router->get('custom', 'CustomController@manage');
+        $router->get('staff', 'StaffController@manage');
+        $router->get('chairs', 'ChairsController@manage');
     });
 });
 

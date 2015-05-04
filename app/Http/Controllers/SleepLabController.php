@@ -51,7 +51,7 @@ class SleeplabController extends Controller
             $this->sleepLab->deleteData($this->delid);
             $message = 'Deleted Successfully';
 
-            return redirect('/manage/sleeplab')->with('message', $message);
+            return redirect('/manage/sleeplab/add')->with('message', $message)->with('closePopup', true);
         }
 
         $recDisp = 20;
@@ -101,7 +101,6 @@ class SleeplabController extends Controller
         }
 
         $data = array_merge($data, array(
-            'message'        => !empty($message) ? $message : '',
             'letters'        => $letters,
             'sleepLabs'      => $sleepLabs,
             'patientsInfo'   => $patientsInfo,
@@ -111,7 +110,9 @@ class SleeplabController extends Controller
             'totalRec'       => $totalRec,
             'noPages'        => $noPages,
             'recDisp'        => $recDisp,
-            'indexVal'       => $indexVal
+            'indexVal'       => $indexVal,
+            'message'        => Session::get('message'),
+            'closePopup'  => !empty(Session::get('closePopup')) ? Session::get('closePopup') : null
         ));
 
         return view('manage.sleep_lab', $data);
@@ -121,14 +122,13 @@ class SleeplabController extends Controller
     {
         $sleepLabs = $this->sleepLab->getSleepLabTypeHolder(array('sleeplabid' => (!empty(Route::input('ed')) ? Route::input('ed') : null)));
 
-        $sleeplabData['name'] = (!empty($sleepLabs['0']->salutation) ? $sleepLabs['0']->salutation . ' ' : '')
-                             . (!empty($sleepLabs['0']->firstname) ? $sleepLabs['0']->firstname . ' ' : '')
-                             . (!empty($sleepLabs['0']->middlename) ? $sleepLabs['0']->middlename . ' ' : '')
-                             . (!empty($sleepLabs['0']->lastname) ? $sleepLabs['0']->lastname . ' ' : '');
-
-        $sleeplabData['phone1'] = GeneralFunctions::formatPhone($sleepLabs['0']->phone1);
-        $sleeplabData['phone2'] = GeneralFunctions::formatPhone($sleepLabs['0']->phone2);
-        $sleeplabData['fax'] = GeneralFunctions::formatPhone($sleepLabs['0']->fax);
+        if (count($sleepLabs)) {
+            $sleepLab = $sleepLabs[0];
+            $sleeplabData['name'] = $sleepLab['salutation'] . $sleepLab['firstname'] . $sleepLab['middlename'] . $sleepLab['lastname'];
+            $sleeplabData['phone1'] = GeneralFunctions::formatPhone($sleepLab['phone1']);
+            $sleeplabData['phone2'] = GeneralFunctions::formatPhone($sleepLab['phone2']);
+            $sleeplabData['fax'] = GeneralFunctions::formatPhone($sleepLab['fax']);
+        }
 
         $data = array(
             'sleeplabData' => $sleeplabData,
@@ -144,15 +144,16 @@ class SleeplabController extends Controller
         $sleepLabs = $this->sleepLab->getSleepLabTypeHolder(array('sleeplabid' => Route::input('ed')));
 
         if (!empty(Route::input('ed'))) {
-            $butText = 'Edit';
+            $buttonText = 'Edit';
         } else {
-            $butText = 'Add';
+            $buttonText = 'Add';
         }
 
         $data = array(
-            'butText'     => $butText,
+            'buttonText'     => $buttonText,
             'ed'          => Route::input('ed'),
-            'closePopup'     => !empty(Session::get('closePopup')) ? Session::get('closePopup') : null
+            'message'     => !empty(Session::get('message')) ? Session::get('message') : 'som',
+            'closePopup'  => !empty(Session::get('closePopup')) ? Session::get('closePopup') : null
         );
 
         if (count($sleepLabs)) {
@@ -174,48 +175,21 @@ class SleeplabController extends Controller
     {
         if (!empty($this->request['sleeplabsub']) && $this->request['sleeplabsub'] == 1) {
             if (!empty(Route::input('ed'))) {
-                $data = array(
-                    'company'      => $this->request['company'],
-                    'salutation'   => $this->request['salutation'],
-                    'firstname'   => $this->request['firstname'],
-                    'lastname'   => $this->request['lastname'],
-                    'middlename'   => $this->request['middlename'],
-                    'add1'   => $this->request['add1'],
-                    'add2'   => $this->request['add2'],
-                    'city'   => $this->request['city'],
-                    'state'   => $this->request['state'],
-                    'zip'   => $this->request['zip'],
-                    'phone1'   => $this->request['phone1'],
-                    'phone2'   => $this->request['phone2'],
-                    'fax'   => $this->request['fax'],
-                    'email'   => $this->request['email'],
-                    'notes'   => $this->request['notes'],
-                    'status'   => $this->request['status']
-                );
+                foreach ($this->sleeplabFields as $sleeplabField) {
+                    $data[$sleeplabField] = $this->request[$sleeplabField];
+                }
 
                 $this->sleepLab->updateData(Route::input('ed'), $data);
                 $message = 'Edited Successfully';
             } else {
-                $data = array(
-                    'company'      => $this->request['company'],
-                    'salutation'   => $this->request['salutation'],
-                    'firstname'   => $this->request['firstname'],
-                    'lastname'   => $this->request['lastname'],
-                    'middlename'   => $this->request['middlename'],
-                    'add1'   => $this->request['add1'],
-                    'add2'   => $this->request['add2'],
-                    'city'   => $this->request['city'],
-                    'state'   => $this->request['state'],
-                    'zip'   => $this->request['zip'],
-                    'email'   => $this->request['email'],
-                    'notes'   => $this->request['notes'],
-                    'status'   => $this->request['status']
-                );
+                foreach ($this->sleeplabFields as $sleeplabField) {
+                    $data[$sleeplabField] = $this->request[$sleeplabField];
+                }
 
-                $data['phone1'] = GeneralFunctions::num($data['phone1']);
-                $data['phone2'] = GeneralFunctions::num($data['phone2']);
-                $data['fax'] = GeneralFunctions::num($data['fax']);
-                $data['docid'] = Session::get('docId');
+                $data['phone1']     = GeneralFunctions::num($data['phone1']);
+                $data['phone2']     = GeneralFunctions::num($data['phone2']);
+                $data['fax']        = GeneralFunctions::num($data['fax']);
+                $data['docid']      = Session::get('docId');
                 $data['ip_address'] = Request::ip();
 
                 $this->sleepLab->insertData($data);
@@ -223,12 +197,12 @@ class SleeplabController extends Controller
             }
 
             if (!empty(Route::input('ed'))) {
-                $path = '/manage/add_sleeplab/' . Route::input('ed');
+                $path = '/manage/sleeplab/add' . Route::input('ed');
             } else {
-                $path = '/manage/add_sleeplab';
+                $path = '/manage/sleeplab/add';
             }
 
-            return redirect($path)->with('message', $message)->with('closePopup', true);
+            return redirect($path)->with('closePopup', true)->with('message', $message);
         }
     }
 }

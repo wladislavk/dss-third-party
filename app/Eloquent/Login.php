@@ -3,9 +3,9 @@ namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Custom extends Model
+class Login extends Model
 {
-    protected $table = 'dental_custom';
-    protected $primaryKey = 'customid';
+    protected $table = 'dental_login';
+    protected $primaryKey = 'loginid';
     //public $timestamps = false;
 }

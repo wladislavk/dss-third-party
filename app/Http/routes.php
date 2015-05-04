@@ -28,6 +28,9 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->get('view_sleeplab/{ed?}', 'SleepLabController@view');
     $router->get('add_sleeplab/{ed?}', 'SleepLabController@index');
     $router->post('add_sleeplab/{ed?}', 'SleepLabController@add');
+    $router->get('add_ticket', 'TicketController@show');
+    $router->post('add_ticket', 'TicketController@add');
+    $router->post('view_support_ticket/{id}', 'TicketController@submitResponse');
     $router->get('custom/add', 'CustomController@index');
     $router->get('custom/{ed}/edit', 'CustomController@index');
     $router->post('add_custom/{ed?}', 'CustomController@add');
@@ -43,6 +46,8 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->get('contact', 'ContactController@manage');
         $router->get('tasks', 'TaskController@manageTasks');
         $router->get('sleeplab', 'SleepLabController@manage');
+        $router->get('support', 'TicketController@support');
+        $router->get('view_support_ticket/{id}', 'TicketController@view');
         $router->get('fcontact', 'ContactController@manageCorporate');
         $router->get('custom', 'CustomController@manage');
         $router->get('staff', 'StaffController@manage');

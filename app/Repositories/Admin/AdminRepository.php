@@ -6,6 +6,7 @@ use Ds3\Admin\Contracts\AdminInterface;
 use Ds3\Eloquent\Admin;
 use Ds3\Libraries\Password;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class AdminRepository implements AdminInterface
 {
@@ -44,5 +45,21 @@ class AdminRepository implements AdminInterface
         } else {
             return ['status' => 'false'];
         }
+    }
+
+    public function getSupportAdmins($categoryId)
+    {
+        $supportAdmins = DB::table(DB::raw('admin a'))
+            ->select('a.*')
+            ->join(DB::raw('dental_support_category_admin ca'), 'ca.adminid', '=', 'a.adminid')
+            ->where('ca.category_id', '=', $categoryId)
+            ->get();
+
+        return $supportAdmins;
+    }
+
+    public function findAdmin($adminId)
+    {
+        return Admin::find($adminId);
     }
 }

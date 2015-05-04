@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\SleeplabInterface;
@@ -38,12 +38,44 @@ class SleeplabRepository implements SleeplabInterface
             $sleeplab->$attribute = $value;
         }
 
-        try {
-            $sleeplab->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $sleeplab->save();
 
         return $sleeplab->sleeplabid;
+    }
+
+    public function deleteData($sleeplabid)
+    {
+        $slleplab = Sleeplab::where('sleeplabid', '=', $sleeplabid)->delete();
+
+        return $slleplab;
+    }
+
+    public function getSleepLabTypeHolder($where, $letter = null, $order = null, $dir = null, $limit = null, $offset = null)
+    {
+        $sleeplabs = new Sleeplab();
+
+        if (!empty($where)) {
+            foreach ($where as $attribute => $value) {
+                $sleeplabs = $sleeplabs->where($attribute, $value);
+            }
+        }
+
+        if (!empty($letter)) {
+            $sleeplabs = $sleeplabs->whereRaw("company like ? ", array($letter . '%'));
+        }
+
+        if (!empty($order)) {
+            $sleeplabs = $sleeplabs->orderBy($order, $dir);
+        }
+
+        if (!empty($limit)) {
+            $sleeplabs = $sleeplabs->take($limit);
+        }
+
+        if (!empty($offset)) {
+            $sleeplabs = $sleeplabs->skip($offset);
+        }
+
+        return $sleeplabs->get();
     }
 }

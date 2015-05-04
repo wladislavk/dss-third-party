@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,11 +17,7 @@ class Intolerance extends Model
             $intolerance = $intolerance->where($attribute, '=', $value);
         }
 
-        try {
-            $intolerance = $intolerance->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $intolerance = $intolerance->first();
 
         return $intolerance;
     }

@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\DeviceInterface;
@@ -19,13 +19,9 @@ class DeviceRepository implements DeviceInterface
 
     public function getDevice($deviceId)
     {
-        try {
-            $device = Device::select('device')
-                ->where('deviceid', '=', $deviceId)
-                ->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $device = Device::select('device')
+            ->where('deviceid', '=', $deviceId)
+            ->first();
 
         return $device;
     }

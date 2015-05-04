@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -50,11 +51,7 @@ class Resource extends Model
             $resource->$attribute = $value;
         }
 
-        try {
-            $resource->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $resource->save();
 
         return $resource->id;
     }

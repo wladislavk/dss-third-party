@@ -1,4 +1,5 @@
-<?php namespace Ds3\Admin\Repositories;
+<?php
+namespace Ds3\Admin\Repositories;
 
 use Ds3\Admin\Contracts\CompanyInterface;
 use Ds3\Eloquent\Company;

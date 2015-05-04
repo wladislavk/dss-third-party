@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Memo;
+<?php
+namespace Ds3\Eloquent\Memo;
 
 use Illuminate\Database\Eloquent\Model;
 

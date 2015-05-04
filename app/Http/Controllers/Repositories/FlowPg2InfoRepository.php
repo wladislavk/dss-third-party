@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\FlowPg2InfoInterface;
@@ -33,11 +33,7 @@ class FlowPg2Inforepository implements FlowPg2InfoInterface
             $flowPg2Info->$attribute = $value;
         }
 
-        try {
-            $flowPg2Info->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $flowPg2Info->save();
 
         return $flowPg2Info->id;
     }

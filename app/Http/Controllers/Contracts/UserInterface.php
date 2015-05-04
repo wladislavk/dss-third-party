@@ -1,4 +1,5 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
 interface UserInterface
 {
@@ -14,4 +15,6 @@ interface UserInterface
     public function getResponsible($userId, $docId);
     public function updateData($userId, $values);
     public function insertData($data);
+    public function getTypeUsers($where, $whereDocId, $order, $limit, $offset);
+    public function deleteUsers($where);
 }

@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,11 +17,7 @@ class Filemanager extends Model
             $filemanager->$attribute = $value;
         }
 
-        try {
-            $filemanager->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $filemanager->save();
 
         return $filemanager->id;
     }

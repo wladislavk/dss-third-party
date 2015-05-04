@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,11 +17,7 @@ class EligibleEnrollment extends Model
             $eligibleEnrollment->$attribute = $value;
         }
 
-        try {
-            $eligibleEnrollment->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $eligibleEnrollment->save();
 
         return $eligibleEnrollment->id;
     }

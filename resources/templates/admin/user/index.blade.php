@@ -6,7 +6,7 @@
     Manage Users
 </div>
 @if($users)
-  @if($users[0]->is_super(\Session::get('admin_access')) || $users[0]->is_admin(\Session::get('admin_access')))
+  @if($users[0]->isSuper(\Session::get('admin_access')) || $users[0]->is_admin(\Session::get('admin_access')))
 
 <div align="right">
   <a href="/manage/admin/user/new" class="btn btn-success">
@@ -26,7 +26,7 @@
                        <td valign="top" class="col_head" width="20%">Name</td>
                        <td valign="top" class="col_head" width="20%">Username</td>
                     @if($users)
-                        @if($users[0]->is_super(\Session::get('admin_access')))
+                        @if($users[0]->isSuper(\Session::get('admin_access')))
                             <td valign="top" class="col_head" width="20%">Letterhead</td>
                             <td valign="top" class="col_head" width="10%">Company</td>
                             <td valign="top" class="col_head" width="10%">Login As</td>
@@ -64,7 +64,7 @@
 
                  </td>
                  @endif
-                     @if($user->is_super(\Session::get('admin_access')) || $user->is_admin(\Session::get('admin_access')))
+                     @if($user->isSuper(\Session::get('admin_access')) || $user->isAdmin(\Session::get('admin_access')))
                      <td valign="top">
                         <a href="/manage/admin/letterhead.php?uid={{$user->userid}}">Update Images</a>
                      <td>

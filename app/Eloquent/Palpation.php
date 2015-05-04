@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +11,7 @@ class Palpation extends Model
 
     public static function get($palpationId)
     {
-        try {
-            $palpation = Palpation::where('palpationid', '=', $palpationId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $palpation = Palpation::where('palpationid', '=', $palpationId)->first();
 
         return $palpation;
     }
@@ -50,11 +47,7 @@ class Palpation extends Model
             $palpation->$attribute = $value;
         }
 
-        try {
-            $palpation->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $palpation->save();
 
         return $palpation->palpationid;
     }

@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\TaskInterface;
@@ -8,44 +8,72 @@ use Ds3\Eloquent\Task;
 
 class TaskRepository implements TaskInterface
 {
-    public function getTasks($userId, $docId, $patientId, $task, $type = null, $input = null)
+    public function getTasks($parameters)
     {
         $tasks = Task::join('dental_users', 'dental_task.responsibleid', '=', 'dental_users.userid')
             ->leftJoin('dental_patients', 'dental_patients.patientid', '=', 'dental_task.patientid')
-            ->select('dental_task.*', 'dental_users.name', 'dental_patients.firstname', 'dental_patients.lastname')
-            ->nonActive();
+            ->select(
+                'dental_task.*',
+                'dental_users.name',
+                'dental_patients.firstname',
+                'dental_patients.lastname',
+                DB::raw("CONCAT(dental_users.first_name, ' ', dental_users.last_name) as full_name")
+            );
 
-        if ($task == 'task') {
-            $tasks = $tasks->where('dental_task.responsibleid', '=', $userId);
+        if (empty($parameters['status'])) {
+            $tasks = $tasks->nonActive();
         } else {
-            $tasks = $tasks->whereRaw('(dental_users.docid = ' . $docId . ' OR dental_users.userid = ' . $docId . ')')
-                ->where('dental_task.patientid', '=', $patientId);
+            $tasks = $tasks->active();
         }
 
-        switch ($type) {
-            case 'od':
-                $tasks = $tasks->overdue();
-                break;
-            case 'tod':
-                $tasks = $tasks->today();
-                break;
-            case 'tom':
-                $tasks = $tasks->tomorrow();
-                break;
-            case 'fut':
-                $tasks = $tasks->future();
-                break;
-            case 'tw':
-                $tasks = $tasks->thisWeek($input['thisSun']);
-                break;
-            case 'nw':
-                $tasks = $tasks->nextWeek($input['nextMon'], $input['nextSun']);
-                break;
-            case 'lat':
-                $tasks = $tasks->later($input['nextSun'])->orderBy('dental_task.due_date', 'asc');
-                break;
-            default:
-                break;
+        if ($parameters['task'] == 'task') {
+            $tasks = $tasks->where('dental_task.responsibleid', '=', $parameters['userId']);
+        } else {
+            $tasks = $tasks->where(function($query) use ($parameters)
+            {
+                $query->where('dental_users.docid', '=', $parameters['docId'])
+                    ->orWhere('dental_users.userid', '=', $parameters['docId']);
+            });
+
+            if (isset($parameters['patientId'])) {
+                $tasks = $tasks->where('dental_task.patientid', '=', $parameters['patientId']);
+            }
+        }
+
+        if (!empty($parameters['type'])) {
+            switch ($parameters['type']) {
+                case 'od':
+                    $tasks = $tasks->overdue();
+                    break;
+                case 'tod':
+                    $tasks = $tasks->today();
+                    break;
+                case 'tom':
+                    $tasks = $tasks->tomorrow();
+                    break;
+                case 'fut':
+                    $tasks = $tasks->future();
+                    break;
+                case 'tw':
+                    $tasks = $tasks->thisWeek($parameters['input']['thisSun']);
+                    break;
+                case 'nw':
+                    $tasks = $tasks->nextWeek($parameters['input']['nextMon'], $parameters['input']['nextSun']);
+                    break;
+                case 'lat':
+                    $tasks = $tasks->later($parameters['input']['nextSun'])->orderBy('dental_task.due_date', 'asc');
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (!empty($parameters['sort'])) {
+            $tasks = $tasks->orderBy($parameters['sort']['value'], $parameters['sort']['direction']);
+        }
+
+        if (!empty($parameters['limit'])) {
+            $tasks = $tasks->skip($parameters['limit']['skip'])->take($parameters['limit']['take']);
         }
 
         return $tasks->get();
@@ -77,11 +105,7 @@ class TaskRepository implements TaskInterface
             $task->$attribute = $value;
         }
 
-        try {
-            $task->save();
-        } catch (ModelNotFoundException $e) {
-            return null;
-        }
+        $task->save();
 
         return $task->id;
     }

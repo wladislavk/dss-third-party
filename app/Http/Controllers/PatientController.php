@@ -1,8 +1,10 @@
-<?php namespace Ds3\Http\Controllers;
+<?php
+namespace Ds3\Http\Controllers;
 
 use Ds3\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Request;
+use Session;
+use Request;
+use Response;
 use Mail;
 
 use Ds3\Libraries\Constants;
@@ -980,7 +982,7 @@ class PatientController extends Controller
         if (Request::ajax()) {
             $partial = '';
 
-            if (isset($this->request['partial_name'])) {
+            if (Request::has('partial_name')) {
                 $partial = $this->request['partial_name'];
                 $partial = preg_replace("[^ A-Za-z'\-]", "", $partial);
             }
@@ -999,18 +1001,20 @@ class PatientController extends Controller
 
             $patientsInfo = array();
             $i = 0;
-            if (count($patients)) foreach ($patients as $patient) {
-                $patientsInfo[$i]['patientId'] = $patient->patientid;
-                $patientsInfo[$i]['lastname'] = $patient->lastname;
-                $patientsInfo[$i]['firstname'] = $patient->firstname;
-                $patientsInfo[$i]['middlename'] = $patient->middlename;
-                $patientsInfo[$i]['patientInfo'] = $patient->patient_info;
-                $i++;
+            if (count($patients)) {
+                foreach ($patients as $patient) {
+                    $patientsInfo[$i]['patientId'] = $patient->patientid;
+                    $patientsInfo[$i]['lastname'] = $patient->lastname;
+                    $patientsInfo[$i]['firstname'] = $patient->firstname;
+                    $patientsInfo[$i]['middlename'] = $patient->middlename;
+                    $patientsInfo[$i]['patientInfo'] = $patient->patient_info;
+                    $i++;
+                }
             } else {
                 $patientsInfo = array('error' => 'Could not select patients from database');
             }
 
-            return json_encode($patientsInfo);
+            return Response::json($patientsInfo);
         } else {
             return null;
         }

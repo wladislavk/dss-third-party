@@ -1,4 +1,5 @@
-<?php namespace Ds3\Http\Middleware;
+<?php
+namespace Ds3\Http\Middleware;
 
 use Closure;
 use Ds3\Http\Controllers\TopController;

@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\PatientInterface;
@@ -85,6 +85,18 @@ class PatientRepository implements PatientInterface
             ->get();
 
         return $transactionCodes;
+    }
+
+    public function getSleepLab($place)
+    {
+        $sleepLab = DB::table(DB::raw('dental_patients p'))
+            ->select('p.*')
+            ->join(DB::raw('dental_summ_sleeplab s'), 's.patiendid', '=', 'p.patientid')
+            ->where('s.place', '=', $place)
+            ->groupBy('p.patientid')
+            ->get();
+
+        return $sleepLab;
     }
 
     public function getUserInfo($patientId)
@@ -175,10 +187,10 @@ class PatientRepository implements PatientInterface
             ->leftJoin(DB::raw('dental_patient_summary s'), 'p.patientid', '=', 's.pid')
             ->where(function($query) use ($names){
                 $query->where(function($query) use ($names){
-                        $query->whereRaw("(lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')")
-                            ->whereRaw("(lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%')");
+                        $query->whereRaw("(lastname LIKE ? OR firstname LIKE ?)", array($names[0] . '%', $names[0] . '%'))
+                            ->whereRaw("(lastname LIKE ? OR firstname LIKE ?)", array($names[1] . '%', $names[1] . '%'));
                     })
-                    ->orWhereRaw("(firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" . $names[1] . "%' AND lastname LIKE '" . $names[2] . "%')");
+                    ->orWhereRaw("(firstname LIKE ? AND middlename LIKE ? AND lastname LIKE ?)", array($names[0] . '%', $names[1] . '%', $names[2] . '%'));
             })
             ->where('p.status', '=', 1)
             ->where('docid', '=', $docId)
@@ -196,11 +208,7 @@ class PatientRepository implements PatientInterface
             $patient->$attribute = $value;
         }
 
-        try {
-            $patient->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $patient->save();
 
         return $patient->patientid;
     }

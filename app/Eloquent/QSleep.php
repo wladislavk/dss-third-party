@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +11,7 @@ class QSleep extends Model
 
     public static function get($patientId)
     {
-        try {
-            $qSleep = QSleep::where('patientid', '=', $patientId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $qSleep = QSleep::where('patientid', '=', $patientId)->first();
 
         return $qSleep;
     }

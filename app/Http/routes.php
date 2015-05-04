@@ -12,17 +12,28 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->get('login', 'AuthController@index');
     $router->post('login', 'AuthController@login');
     $router->get('logout', 'AuthController@logout');
-    $router->get('image/add/{ed?}', 'ImageController@index');
-    $router->post('image/add/{ed?}', 'ImageController@add');
-    $router->get('contact/{ed}/view', 'ContactController@view');
+    // $router->get('add_image/{pid?}', 'ImageController@index');
+    $router->get('add_image/{it}/{return}/{field}/{pid?}/{sh?}', 'ImageController@index');
+    $router->post('add_image/{pid?}', 'ImageController@add');
+    $router->get('view_contact/{ed?}/{corporate?}', 'ContactController@view');
+    $router->get('view_fcontact/{ed?}', 'ContactController@viewCorporateContact');
     $router->get('display_file/{file?}', 'FileController@display');
     $router->get('imageholder/{image}/{folder?}', 'ImageController@imageHolder');
-    $router->get('contact/add/{ed?}', 'ContactController@index');
-    $router->post('contact/add/{ed?}', 'ContactController@add');
-    $router->post('contact/search', 'ContactController@searchContact');
-    $router->post('patient/search', 'PatientController@searchPatients');
-    $router->get('task/add/{pid?}', 'TaskController@index');
-    $router->post('task/add', 'TaskController@add');
+    $router->get('add_contact/{ed?}', 'ContactController@index');
+    $router->post('add_contact/{ed?}', 'ContactController@add');
+    $router->post('search_contacts', 'ContactController@searchContact');
+    $router->post('search_patients', 'PatientController@searchPatients');
+    $router->get('add_task/{pid?}', 'TaskController@index');
+    $router->post('add_task', 'TaskController@add');
+    $router->get('view_sleeplab/{ed?}', 'SleepLabController@view');
+    $router->get('add_sleeplab/{ed?}', 'SleepLabController@index');
+    $router->post('add_sleeplab/{ed?}', 'SleepLabController@add');
+    $router->get('custom/add', 'CustomController@index');
+    $router->get('custom/{ed}/edit', 'CustomController@index');
+    $router->post('add_custom/{ed?}', 'CustomController@add');
+    $router->get('staff/{ed}/edit', 'StaffController@index');
+    $router->get('staff/add', 'StaffController@index');
+    $router->post('add_staff/{ed?}', 'StaffController@add');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 
@@ -30,6 +41,12 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
         $router->post('patient/add/{pid?}', 'PatientController@add');
         $router->get('patient/{pid}/duplicate', 'PatientController@duplicate');
         $router->get('contact', 'ContactController@manage');
+        $router->get('tasks', 'TaskController@manageTasks');
+        $router->get('sleeplab', 'SleepLabController@manage');
+        $router->get('fcontact', 'ContactController@manageCorporate');
+        $router->get('custom', 'CustomController@manage');
+        $router->get('staff', 'StaffController@manage');
+        $router->get('chairs', 'ChairsController@manage');
     });
 });
 

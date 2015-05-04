@@ -1,4 +1,5 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
 interface FlowPg1Interface
 {

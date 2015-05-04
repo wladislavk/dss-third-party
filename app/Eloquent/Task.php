@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -7,6 +8,11 @@ class Task extends Model
     protected $table = 'dental_task';
     protected $primaryKey = 'id';
     // public $timestamps = false;
+
+    public function scopeActive($query)
+    {
+        return $query->where('dental_task.status', '=', 1);
+    }
 
     public function scopeNonActive($query)
     {

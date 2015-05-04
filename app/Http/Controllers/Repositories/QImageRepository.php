@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\QImageInterface;
@@ -10,11 +10,7 @@ class QImageRepository implements QImageInterface
 {
     public function find($imageId)
     {
-        try {
-            $qImage = QImage::where('imageid', '=', $imageId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $qImage = QImage::where('imageid', '=', $imageId)->first();
 
         return $qImage;
     }
@@ -39,11 +35,7 @@ class QImageRepository implements QImageInterface
             $qImage->$attribute = $value;
         }
 
-        try {
-            $qImage->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $qImage->save();
 
         return $qImage->imageid;
     }

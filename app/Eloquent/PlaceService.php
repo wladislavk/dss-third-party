@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -7,6 +8,7 @@ class PlaceService extends Model
     protected $table = 'dental_place_service';
     protected $fillable = ['place_service', 'description', 'sortby', 'status'];
     protected $primaryKey = 'place_serviceid';
+    //public $timestamps = false;
 
     public static function get($where = null)
     {
@@ -18,7 +20,7 @@ class PlaceService extends Model
             }
         }
 
-        $placeServices = $placeServices->orderBy('sortby');                                          
+        $placeServices = $placeServices->orderBy('sortby');
 
         return $placeServices->get();
     }

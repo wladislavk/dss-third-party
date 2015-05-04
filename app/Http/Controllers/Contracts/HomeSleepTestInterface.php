@@ -1,6 +1,7 @@
-<?php namespace Ds3\Contracts;
+<?php
+namespace Ds3\Contracts;
 
-interface HstInterface
+interface HomeSleepTestInterface
 {
     public function getHomeSleepTests($viewed, $status, $where);
 }

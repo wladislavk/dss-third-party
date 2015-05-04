@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Ds3\Eloquent\Auth\User;
 use Illuminate\Database\Eloquent\Model;

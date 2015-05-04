@@ -1,4 +1,5 @@
-<?php namespace Ds3\Http\Controllers;
+<?php
+namespace Ds3\Http\Controllers;
 
 use Ds3\Http\Controllers\Controller;
 use Route;
@@ -319,6 +320,16 @@ class ContactController extends Controller
         $contactData['phone2'] = GeneralFunctions::formatPhone($contactData['phone2']);
         $contactData['fax'] = GeneralFunctions::formatPhone($contactData['fax']);
 
+        $contactTypes = $this->contactType->getAll();
+
+        if (!empty($contactTypes)) {
+            foreach ($contactTypes as $row) {
+                if ($row['contacttypeid'] == $contact->contacttypeid) {
+                    $contactData['contacttype'] = $row['contacttype'];
+                }
+            }
+        }
+
         $corporate = false;
         if (!empty($contact->corporate) && $contact->corporate == '1') {
             $corporate = true;
@@ -352,15 +363,15 @@ class ContactController extends Controller
             return redirect('/manage/contact')->with('message', $message);
         }
 
-        $recDisp = 50;
+        $numberOfRecordsDisplayed = 50;
 
         if (!empty($this->page)) {
-            $indexVal = $this->page;
+            $indexPage = $this->page;
         } else {
-            $indexVal = 0;
+            $indexPage = 0;
         }
 
-        $iVal = $indexVal * $recDisp;
+        $skipValues = $indexPage * $numberOfRecordsDisplayed;
         $contactTypeHolder = !empty($this->contacttype) ? $this->contacttype : '';
 
         if (isset($this->letter)) {
@@ -400,7 +411,7 @@ class ContactController extends Controller
                 'docid'             => Session::get('docId'),
                 'dct.contacttypeid' => $contactTypeHolder,
                 'dc.status'         => 1
-            ), $letter, $order, $recDisp, $iVal);
+            ), $letter, $order, $numberOfRecordsDisplayed, $skipValues);
         } elseif (!empty($this->status)) {
             $contacts = $this->contact->getContactTypeHolder(array(
                 'docid'      => Session::get('docId'),
@@ -411,7 +422,7 @@ class ContactController extends Controller
             $contacts = $this->contact->getContactTypeHolder(array(
                 'docid'      => Session::get('docId'),
                 'dc.status'  => $this->status
-            ), $letter, $order, $recDisp, $iVal);
+            ), $letter, $order, $numberOfRecordsDisplayed, $skipValues);
         } else {
             $contacts = $this->contact->getContactTypeHolder(array(
                 'docid'      => Session::get('docId'),
@@ -423,10 +434,10 @@ class ContactController extends Controller
             $contacts = $this->contact->getContactTypeHolder(array(
                 'docid'      => Session::get('docId'),
                 'dc.status'  => 1
-            ), $letter, $order, $recDisp, $iVal);
+            ), $letter, $order, $numberOfRecordsDisplayed, $skipValues);
         }
 
-        $noPages = $totalRec / $recDisp;
+        $noPages = $totalRec / $numberOfRecordsDisplayed;
 
         $contactTypes = $this->contactType->getAll();
         if (!empty($contactTypes)) foreach ($contactTypes as $row) {
@@ -464,22 +475,22 @@ class ContactController extends Controller
         }
 
         $data = array_merge($data, array(
-            'path'          => '/' . Request::segment(1) . '/' . Request::segment(2),
-            'contactTypes'  => $contactTypes,
-            'contactType'   => $contactType,
-            'message'       => !empty($message) ? $message : '',
-            'letters'       => $letters,
-            'letter'        => $this->letter,
-            'status'        => $this->status,
-            'sort'          => $this->sort,
-            'sortdir'       => $this->sortdir,
-            'contacttype'   => $this->contacttype,
-            'totalRec'      => $totalRec,
-            'recDisp'       => $recDisp,
-            'indexVal'      => $indexVal,
-            'contacts'      => $contacts,
-            'patientsInfo'  => $patientsInfo,
-            'noPages'       => $noPages
+            'path'                     => '/' . Request::segment(1) . '/' . Request::segment(2),
+            'contactTypes'             => $contactTypes,
+            'contactType'              => $contactType,
+            'message'                  => !empty($message) ? $message : '',
+            'letters'                  => $letters,
+            'letter'                   => $this->letter,
+            'status'                   => $this->status,
+            'sort'                     => $this->sort,
+            'sortdir'                  => $this->sortdir,
+            'contacttype'              => $this->contacttype,
+            'totalRec'                 => $totalRec,
+            'numberOfRecordsDisplayed' => $numberOfRecordsDisplayed,
+            'indexPage'                 => $indexPage,
+            'contacts'                 => $contacts,
+            'patientsInfo'             => $patientsInfo,
+            'noPages'                  => $noPages
         ));
 
         // dd($data['contacts']);
@@ -529,6 +540,140 @@ class ContactController extends Controller
         } else {
             return null;
         }
+    }
+
+    public function manageCorporate()
+    {
+        if (!empty($this->delid)) {
+            $this->contact->deleteData($this->delid);
+            $message = 'Deleted Successfully';
+
+            return redirect('/manage/fcontact')->with('message', $message);
+        }
+
+        $numberOfRecordsDisplayed = 10;
+
+        if (!empty($this->page)) {
+            $indexPage = $this->page;
+        } else {
+            $indexPage = 0;
+        }
+
+        $skipValues = $indexPage * $numberOfRecordsDisplayed;
+
+        $contactTypes = $this->contactType->getAll();
+        if (!empty($contactTypes)) {
+            foreach ($contactTypes as $row) {
+                $contactType[$row->contacttypeid] = $row->contacttype;
+            }
+        }
+
+        if (!empty($this->sort)) {
+            switch ($this->sort) {
+                case 'company':
+                    $order = array('company' => $this->sortdir);
+                    break;
+                case 'type':
+                    $order = array('dct.contacttype' => $this->sortdir);
+                    break;
+                default:
+                    $order = array(
+                        'lastname'  => $this->sortdir,
+                        'firstname' => $this->sortdir
+                    );
+                    break;
+            }
+        } else {
+            $order = null;
+        }
+
+        $fcontacts = $this->contact->getContactTypeHolder(array('dc.corporate' => 1), null, $order, $numberOfRecordsDisplayed, $skipValues);
+
+        $fcontactsCount = $this->contact->getContactTypeHolder(array('dc.corporate' => 1), null, $order, null, null);
+
+        $totalRec = count($fcontactsCount);
+        $noPages = $totalRec / $numberOfRecordsDisplayed;
+
+        foreach ($this->request as $name => $value) {
+            $data[$name] = $value;
+        }
+
+        $data = array_merge($data, array(
+            'message'                  => !empty($message) ? $message : '',
+            'fcontacts'                => $fcontacts,
+            'contactType'              => $contactType,
+            'totalRec'                 => $totalRec,
+            'noPages'                  => $noPages,
+            'numberOfRecordsDisplayed' => $numberOfRecordsDisplayed,
+            'indexPage'                 => $indexPage,
+            'sort'                     => $this->sort,
+            'sortdir'                  => $this->sortdir,
+            'contacttype'              => $this->contacttype
+        ));
+
+        return view('manage.fcontact', $data);
+    }
+
+    public function viewCorporateContact()
+    {
+        if (!empty($this->request['contactsub']) && $this->request['contactsub'] == 1) {
+            if (Route::input('ed') != '') {
+                foreach ($this->contactFields as $contactField) {
+                    $data[$contactField] = $this->request[$contactField];
+                }
+
+                $this->contact->updateData(Route::input('ed'), $data);
+                $message = 'Edited Successfully';
+
+                return redirect('/manage/fcontact')->with('message', $message);
+            } else {
+                foreach ($this->contactFields as $contactField) {
+                    $data[$contactField] = $this->request[$contactField];
+                }
+
+                $data['phone1'] = GeneralFunctions::num($data['phone1']);
+                $data['phone2'] = GeneralFunctions::num($data['phone2']);
+                $data['fax'] = GeneralFunctions::num($data['fax']);
+                $data['docid'] = Session::get('docId');
+                $data['ip_address'] = Request::ip();
+
+                $insertContactId = $this->contact->insertData($data);
+                $message = 'Added Successfully';
+
+                return redirect('/manage/fcontact')->with('message', $message);
+            }
+        }
+
+        $fcontacts = $this->contact->getContactTypeHolder(array('dc.contactid' => Route::input('ed')), null, null, null, null);
+
+        if (count($fcontacts)) {
+            $fcontacts = $fcontacts[0];
+        }
+
+        if ($fcontacts->contactid != '') {
+            $butText = "Edit ";
+        } else {
+            $butText = "Add ";
+        }
+
+        $contactTypes = $this->contactType->getAll();
+
+        if (!empty($contactTypes)) {
+            foreach ($contactTypes as $row) {
+                if ($row['contacttypeid'] == $fcontacts->contacttypeid) {
+                    $contactType['contacttype'] = $row['contacttype'];
+                }
+            }
+        }
+
+        $data = array(
+            'message'     => !empty($message) ? $message : '',
+            'fcontacts'   => $fcontacts,
+            'butText'     => $butText,
+            'contactType' => $contactType
+        );
+
+        return view('manage.view_fcontact', $data);
     }
 
     /**

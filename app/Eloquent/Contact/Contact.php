@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Contact;
+<?php
+namespace Ds3\Eloquent\Contact;
 
 use Illuminate\Database\Eloquent\Model;
 

@@ -1,4 +1,5 @@
-<?php namespace Ds3\Ds3Auth;
+<?php
+namespace Ds3\Ds3Auth;
 
 use Ds3\Eloquent\Admin;
 use Ds3\Eloquent\Auth\User;

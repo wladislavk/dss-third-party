@@ -1,4 +1,5 @@
-<?php namespace Ds3\Http\Requests;
+<?php
+namespace Ds3\Http\Requests;
 
 class CompanyRequest extends Request
 {

@@ -1,11 +1,13 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\UserInterface;
 use Ds3\Eloquent\Auth\User;
 use Ds3\Libraries\Password;
+use Ds3\Eloquent\Login;
+
 
 class UserRepository implements UserInterface
 {
@@ -39,11 +41,7 @@ class UserRepository implements UserInterface
 
     public function getType($docId)
     {
-        try {
-            $user = User::where('userid', '=', $docId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $user = User::where('userid', '=', $docId)->first();
 
         return $user->user_type;
     }
@@ -157,12 +155,45 @@ class UserRepository implements UserInterface
             $user->$attribute = $value;
         }
 
-        try {
-            $user->save();
-        } catch (ModelNotFoundException $e) {
-            return null;
-        }
+        $user->save();
 
         return $user->userid;
+    }
+
+    public function getTypeUsers($where, $whereDocId = null, $order = null, $limit = null, $offset = null)
+    {
+        $users = new User();
+
+        if (!empty($where)) {
+            foreach ($where as $attribute => $value) {
+                $users = $users->where($attribute, $value);
+            }
+        }
+
+        if (!empty($whereDocId)) {
+            $users = $users->where('user_access', '=', $whereDocId['user_access'])
+                           ->where('docid', '=', $whereDocId['docid']);
+        }
+
+        if (!empty($order)) {
+            $users = $users->orderBy($order);
+        }
+
+        if (!empty($limit)) {
+            $users = $users->take($limit);
+        }
+
+        if (!empty($offset)) {
+            $users = $users->skip($offset);
+        }
+
+        return $users->get();
+    }
+
+    public function deleteUsers($where)
+    {
+        $transactionCodeidDel = User::where('userid', '=', $where)->delete();
+
+        return $transactionCodeidDel;
     }
 }

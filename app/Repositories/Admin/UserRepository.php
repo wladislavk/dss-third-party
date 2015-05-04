@@ -1,4 +1,5 @@
-<?php namespace Ds3\Admin\Repositories;
+<?php
+namespace Ds3\Admin\Repositories;
 
 use Carbon\Carbon;
 use Ds3\Eloquent\AccessCode;
@@ -28,7 +29,7 @@ class UserRepository implements UserInterface
         $access = Session::get('admin_access');
         $cid = Input::get('cid');
 
-        if ($this->user->is_super($access)) {
+        if ($this->user->isSuper($access)) {
             $query = $this->user->leftJoin('dental_user_company as duc', 'duc.userid', '=', 'dental_users.userid')
                 ->leftJoin('companies as c', 'c.id', '=', 'duc.companyid')
                 ->leftJoin('dental_plans as dp', 'dp.id', '=', 'dental_users.plan_id')
@@ -40,7 +41,7 @@ class UserRepository implements UserInterface
                 $query = $query->where('c.id', $cid);
             }
         // if -> is_admin
-        } elseif ($this->user->is_admin($access)) {
+        } elseif ($this->user->isAdmin($access)) {
             $query = $this->user->join('dental_user_company as duc', 'duc.userid', '=', 'dental_users.userid')
                 ->join('companies as c', 'c.id', '=', 'duc.companyid')
                 ->leftJoin('dental_plans as dp', 'dp.id', '=', 'dental_users.plan_id')
@@ -50,7 +51,7 @@ class UserRepository implements UserInterface
                 ->orderBy('dental_users.first_name');
             $query = $query;
 //      if -> is_billing
-        } elseif ($this->user->is_billing($access)) {
+        } elseif ($this->user->isBilling($access)) {
             $adminCompany = AdminCompany::join('admin as a', 'a.adminid', '=', 'admin_company.adminid')
                 ->where('a.adminid', Session::get('admin_user_id'))
                 ->select('admin_company.companyid')

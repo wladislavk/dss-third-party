@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +11,7 @@ class QRecipient extends Model
 
     public static function get($patientId)
     {
-        try {
-            $qRecipient = QRecipient::where('patientid', '=', $patientId)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $qRecipient = QRecipient::where('patientid', '=', $patientId)->first();
 
         return $qRecipient;
     }

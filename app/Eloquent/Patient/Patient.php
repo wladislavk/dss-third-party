@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Patient;
+<?php
+namespace Ds3\Eloquent\Patient;
 
 use Illuminate\Database\Eloquent\Model;
 

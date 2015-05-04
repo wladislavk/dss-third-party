@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent;
+<?php
+namespace Ds3\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,11 +17,7 @@ class Complaint extends Model
             $complaint = $complaint->where($attribute, '=', $value);
         }
 
-        try {
-            $complaint = $complaint->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            return false;
-        }
+        $complaint = $complaint->first();
 
         return $complaint;
     }

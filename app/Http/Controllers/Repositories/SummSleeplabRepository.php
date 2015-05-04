@@ -1,6 +1,6 @@
-<?php namespace Ds3\Repositories;
+<?php
+namespace Ds3\Repositories;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 use Ds3\Contracts\SummSleeplabInterface;
@@ -83,11 +83,7 @@ class SummSleeplabRepository implements SummSleeplabInterface
             $summSleeplab->$attribute = $value;
         }
 
-        try {
-            $summSleeplab->save();
-        } catch (QueryException $e) {
-            return null;
-        }
+        $summSleeplab->save();
 
         return $summSleeplab->id;
     }

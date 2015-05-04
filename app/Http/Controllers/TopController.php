@@ -1,4 +1,5 @@
-<?php namespace Ds3\Http\Controllers;
+<?php
+namespace Ds3\Http\Controllers;
 
 use Ds3\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -13,7 +14,7 @@ use Ds3\Contracts\LetterInterface;
 use Ds3\Contracts\InsuranceInterface;
 use Ds3\Contracts\LedgerInterface;
 use Ds3\Contracts\InsurancePreauthInterface;
-use Ds3\Contracts\HstInterface;
+use Ds3\Contracts\HomeSleepTestInterface;
 use Ds3\Contracts\PatientContactInterface;
 use Ds3\Contracts\PatientInsuranceInterface;
 use Ds3\Contracts\PatientInterface;
@@ -56,7 +57,7 @@ class TopController extends Controller
         InsuranceInterface $insurance,
         LedgerInterface $ledger,
         InsurancePreauthInterface $insurancePreauth,
-        HstInterface $hst,
+        HomeSleepTestInterface $hst,
         PatientContactInterface $patientContact,
         PatientInsuranceInterface $patientInsurance,
         PatientInterface $patient,
@@ -152,7 +153,7 @@ class TopController extends Controller
             $where = array('docid' => Session::get('docId'));
             $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING;
 
-            $numPendingClaims = count($this->insurance->getInsurance($where, $status));
+            $numPendingClaims = count($this->insurance->filterBy($where, $status));
 
             $where = array(
                 'dental_ledger.status'           => Constants::DSS_TRXN_PENDING,
@@ -167,7 +168,7 @@ class TopController extends Controller
             $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING . ','
                     . Constants::DSS_CLAIM_DISPUTE . ',' . Constants::DSS_CLAIM_SEC_DISPUTE;
 
-            $numPendingClaims = count($this->insurance->getInsurance($where, $status));
+            $numPendingClaims = count($this->insurance->filterBy($where, $status));
 
             $status = Constants::DSS_CLAIM_PENDING . ',' . Constants::DSS_CLAIM_SEC_PENDING . ','
                     . Constants::DSS_CLAIM_DISPUTE . ',' . Constants::DSS_CLAIM_SEC_DISPUTE;
@@ -179,7 +180,7 @@ class TopController extends Controller
             $where = array('docid' => Session::get('docId'));
             $status = Constants::DSS_CLAIM_REJECTED . ',' . Constants::DSS_CLAIM_SEC_REJECTED;
 
-            $numRejectedClaims = count($this->insurance->getInsurance($where, $status));
+            $numRejectedClaims = count($this->insurance->filterBy($where, $status));
 
             $numPreauth = count($this->insurancePreauth->getPreauth(Session::get('docId'), Constants::DSS_PREAUTH_COMPLETE));
 
@@ -296,7 +297,14 @@ class TopController extends Controller
                 }
             }
 
-            $numTasks = count($this->task->getTasks(Session::get('userId'), null, null, 'task'));
+            $parameters = array(
+                'userId'    => Session::get('userId'),
+                'docId'     => null,
+                'patientId' => null,
+                'task'      => 'task'
+            );
+
+            $numTasks = count($this->task->getTasks($parameters));
 
             $messageCount = $numPendingLetters + $numPreauth + $numRejectedPreauth +
                             $numPatientContacts + $numPatientInsurance + $numC +
@@ -320,24 +328,36 @@ class TopController extends Controller
 
             // check variable name!
 
-            $overdueTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'od');
+            $parameters = array(
+                'userId'    => Session::get('userId'),
+                'docId'     => null,
+                'patientId' => null,
+                'task'      => 'task',
+                'type'      => 'od'
+            );
 
-            $todayTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'tod');
+            $overdueTasks = $this->task->getTasks($parameters);
 
-            $tomorrowTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'tom');
+            $parameters['type'] = 'tod';
+            $todayTasks = $this->task->getTasks($parameters);
 
-            $thisWeekTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'tw', array(
-                'thisSun' => $thisSunday
-            ));
+            $parameters['type'] = 'tom';
+            $tomorrowTasks = $this->task->getTasks($parameters);
 
-            $nextWeekTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'nw', array(
+            $parameters['type']  = 'tw';
+            $parameters['input'] = array('thisSun' => $thisSunday);
+            $thisWeekTasks = $this->task->getTasks($parameters);
+
+            $parameters['type']  = 'nw';
+            $parameters['input'] = array(
                 'nextMon'  => $nextMonday,
                 'nextSun'  => $nextSunday
-            ));
+            );
+            $nextWeekTasks = $this->task->getTasks($parameters);
 
-            $laterTasks = $this->task->getTasks(Session::get('userId'), null, null, 'task', 'lat', array(
-                'nextSun' => $nextSunday
-            ));
+            $parameters['type']  = 'lat';
+            $parameters['input'] = array('nextSun' => $nextSunday);
+            $laterTasks = $this->task->getTasks($parameters);
 
             $showLinkOnlineCe = false;
 
@@ -366,14 +386,27 @@ class TopController extends Controller
             $hideWarnings              = null;
 
             if (!empty($patientId)) {
+                $parameters = array(
+                    'userId'    => Session::get('userId'),
+                    'docId'     => Session::get('docId'),
+                    'patientId' => $patientId,
+                    'task'      => null
+                );
 
-                $numPatientTasks = count($this->task->getTasks(Session::get('userId'), Session::get('docId'), $patientId, null));
+                $numPatientTasks = count($this->task->getTasks($parameters));
 
                 if ($numPatientTasks > 0) {
-                    $overdueTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), $patientId, null, 'od');
-                    $todayTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), $patientId, null, 'tod');
-                    $tomorrowTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), $patientId, null, 'tom');
-                    $futureTasks = $this->task->getTasks(Session::get('userId'), Session::get('docId'), $patientId, null, 'fut');
+                    $parameters['type'] = 'od';
+                    $overdueTasks = $this->task->getTasks($parameters);
+
+                    $parameters['type'] = 'tod';
+                    $todayTasks = $this->task->getTasks($parameters);
+
+                    $parameters['type'] = 'tom';
+                    $tomorrowTasks = $this->task->getTasks($parameters);
+
+                    $parameters['type'] = 'fut';
+                    $futureTasks = $this->task->getTasks($parameters);
                 }
 
                 $patientParent = $this->patient->getPatients(array('parent_patientid' => $patientId));
@@ -418,7 +451,7 @@ class TopController extends Controller
 
                 $status = Constants::DSS_CLAIM_REJECTED . ',' . Constants::DSS_CLAIM_SEC_REJECTED;
 
-                $rejectedInsurance = $this->insurance->getInsurance(array('patientid' => $patientId), $status);
+                $rejectedInsurance = $this->insurance->filterBy(array('patientid' => $patientId), $status);
 
                 // Undefined constants
                 /*

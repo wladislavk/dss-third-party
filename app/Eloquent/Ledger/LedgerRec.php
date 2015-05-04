@@ -1,4 +1,5 @@
-<?php namespace Ds3\Eloquent\Ledger;
+<?php
+namespace Ds3\Eloquent\Ledger;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,11 +17,7 @@ class LedgerRec extends Model
             $ledgerRec->$attribute = $value;
         }
 
-        try {
-            $ledgerRec->save();
-        } catch (ModelNotFoundException $e) {
-            return null;
-        }
+        $ledgerRec->save();
 
         return $ledgerRec->ledgerid;
     }

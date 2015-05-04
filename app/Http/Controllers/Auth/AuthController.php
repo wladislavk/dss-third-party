@@ -1,4 +1,5 @@
-<?php namespace Ds3\Http\Controllers\Auth;
+<?php
+namespace Ds3\Http\Controllers\Auth;
 
 use Ds3\Http\Controllers\Controller;
 use Illuminate\Http\Request;

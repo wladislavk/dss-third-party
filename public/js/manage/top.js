@@ -342,7 +342,7 @@ function popitup(url)
 function sendValue(partial_name)
 {
   $.post(
-    "/manage/search_patients",
+    "/manage/patient/search",
     { 
       "partial_name": partial_name,
       "_token": $('#token').val()
@@ -419,7 +419,7 @@ function set_selected(menuitem)
     if (patient_info == 1) {
       window.selectedUrl = "/manage/manage_flowsheet3.php?pid=" + pid;
     } else {
-      window.selectedUrl = "/manage/add_patient/" + pid;
+      window.selectedUrl = "/manage/patient/add/" + pid;
       window.additionalRouteParameters = '{"ed": ' + pid + '}';
     }
   }

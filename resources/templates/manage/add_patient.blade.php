@@ -68,7 +68,7 @@
                         <div id="profile_image" style="float:right; width:270px;">
                             <span style="float:right">
                             @if (!empty($showBlock['patientPhoto']))
-                                <a href="#" onclick="loadPopup('/manage/add_image/4/patinfo/profile'{!! !empty($patientId) ? '/' . $patientId : '' !!}{!! !empty($sh) ? '/' . $sh : '' !!}); return false;">
+                                <a href="#" onclick='loadPopup("/manage/image/add", "{\"it\": \"4\", \"return\": \"patinfo\", \"field\": \"profile\", \"pid\": \"{!! $patientId !!}\", \"sh\": \"{!! $sh or '' !!}\"}", "{!! csrf_token() !!}"); return false;'>
                                     <img src="/img/add_patient_photo.png" />
                                 </a>
                             @else
@@ -389,7 +389,7 @@
                             <div style="clear:both;float:left;">
                                 <div id="referred_person" {!! (isset($patientInfo['referred_source']) && $patientInfo['referred_source'] != $DSS_REFERRED_PATIENT && $patientInfo['referred_source'] != $DSS_REFERRED_PHYSICIAN ) ? 'style="display:none;margin-left:100px;"' : 'style="margin-left:100px"' !!}> 
                                     <input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="{!! $referredName or 'Type referral name' !!}" style="width:300px;" />
-                                    <input type="button" class="button" style="width:150px;" onclick='loadPopupRefer("/manage/add_contact", "{\"addtopat\": \"{!! $patientId or '' !!}\", \"from\": \"add_patient\"}", "{!! csrf_token() !!}");' value="+ Create New Contact" />
+                                    <input type="button" class="button" style="width:150px;" onclick='loadPopupRefer("/manage/contact/add", "{\"addtopat\": \"{!! $patientId or '' !!}\", \"from\": \"add_patient\"}", "{!! csrf_token() !!}");' value="+ Create New Contact" />
                                     <br />
                                     <div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
                                         <ul id="referredby_list" class="search_list">
@@ -581,7 +581,7 @@
                             <span style="float:right">
 
                                 @if (empty($showBlock['insuranceCardImage10']))
-                                    <button id="p_m_ins_card" onclick="loadPopup('/manage/add_image/10/patinfo/0'{!! !empty($patientId) ? '/' . $patientId : '' !!}{!! !empty($sh) ? '/' . $sh : '' !!});return false;" class="addButton">
+                                    <button id="p_m_ins_card" onclick='loadPopup("/manage/image/add", "{\"it\": \"10\", \"return\": \"patinfo\", \"pid\": \"{!! $patientId !!}\", \"sh\": \"{!! $sh or '' !!}\"}", "{!! csrf_token() !!}"); return false;' class="addButton">
                                         + Add Insurance Card Image
                                     </button>
                                 @else
@@ -609,7 +609,7 @@
                                     @endif
                                 </select>
                                 <label for="p_m_ins_co">Insurance Co.</label><br />
-                                <input type="button" class="button" style="width:215px;" onclick='loadPopupRefer("/manage/add_contact", "{\"from_id\": \"p_m_ins_co\", \"from\": \"add_patient\", \"ctype\": \"ins\", \"type\": \"11\", \"ctypeeq\": \"1\", \"activePat\": \"{!! $patientId or '' !!}\"}", "{!! csrf_token() !!}");' value="+ Create New Insurance Company" />
+                                <input type="button" class="button" style="width:215px;" onclick='loadPopupRefer("/manage/contact/add", "{\"from_id\": \"p_m_ins_co\", \"from\": \"add_patient\", \"ctype\": \"ins\", \"type\": \"11\", \"ctypeeq\": \"1\", \"activePat\": \"{!! $patientId or '' !!}\"}", "{!! csrf_token() !!}");' value="+ Create New Insurance Company" />
                             </span>
                             <span>
                                 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="{!! $patientInfo['p_m_ins_id'] or '' !!}" maxlength="255" style="width:190px;" />
@@ -779,7 +779,7 @@
                             <span style="float:right">
 
                                 @if (empty($showBlock['insuranceCardImage12']))
-                                    <button id="s_m_ins_card" onclick="loadPopup('/manage/add_image/12/patinfo/0'{!! !empty($patientId) ? '/' . $patientId : '' !!}{!! !empty($sh) ? '/' . $sh : '' !!});return false;" class="addButton">
+                                    <button id="s_m_ins_card" onclick='loadPopup("/manage/image/add", "{\"it\": \"12\", \"return\": \"patinfo\", \"pid\": \"{!! $patientId !!}\", \"sh\": \"{!! $sh or '' !!}\"}", "{!! csrf_token() !!}"); return false;' class="addButton">
                                         + Add Insurance Card Image
                                     </button>
                                 @else
@@ -808,7 +808,7 @@
 
                                 </select>
                                 <label for="s_m_ins_co">Insurance Co.</label><br />
-                                <input type="button" class="button" style="width:215px;" onclick='loadPopupRefer("/manage/add_contact", "{\"from_id\": \"s_m_ins_co\", \"from\": \"add_patient\", \"ctype\": \"ins\", \"type\": \"11\", \"ctypeeq\": \"1\", \"activePat\": \"{!! $patientId or '' !!}\"}", "{!! csrf_token() !!}");' value="+ Create New Insurance Company" />
+                                <input type="button" class="button" style="width:215px;" onclick='loadPopupRefer("/manage/contact/add", "{\"from_id\": \"s_m_ins_co\", \"from\": \"add_patient\", \"ctype\": \"ins\", \"type\": \"11\", \"ctypeeq\": \"1\", \"activePat\": \"{!! $patientId or '' !!}\"}", "{!! csrf_token() !!}");' value="+ Create New Insurance Company" />
                             </span>
                             <span>
                                 <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="{!! $patientInfo['s_m_ins_id'] or '' !!}" maxlength="255" style="width:190px;" />
@@ -844,7 +844,7 @@
                         <td>
                             <span style="padding-left:10px; float:left;">Add medical contacts so they can receive correspondence about this patient.</span>
                             <span style="float:left; margin-left:20px;">
-                                <input type="button" class="button" style="float:left; width:150px;" onclick='loadPopupRefer("/manage/add_contact", "{\"from\": \"add_patient\"}", "{!! csrf_token() !!}");' value="+ Create New Contact" />
+                                <input type="button" class="button" style="float:left; width:150px;" onclick='loadPopupRefer("/manage/contact/add", "{\"from\": \"add_patient\"}", "{!! csrf_token() !!}");' value="+ Create New Contact" />
                             </span>
                             <ul>
                                 <li id="foli8" class="complex">

@@ -916,7 +916,7 @@ class PatientController extends Controller
                 $similarPatients = $this->similarPatients($insertedPatientId);
 
                 if (count($similarPatients)) {
-                    return redirect('/manage/duplicate_patient/' . $insertedPatientId);
+                    return redirect('/manage/patient/' . $insertedPatientId . '/duplicate');
                 } else {
                     $message = 'Patient' . $this->request['firstname'] . ' ' . $this->request['lastname'] . ' added Successfully';
 

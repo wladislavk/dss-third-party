@@ -65,7 +65,7 @@
             @if (!empty($corporate))
                 <a href="/manage/view_fcontact{!! !empty($ed) ? '/' . $ed : '' !!}" style="margin-right:10px;float:right;">View Full</a>
             @else
-                <a href="/manage/add_contact{!! !empty($ed) ? '/' . $ed : '' !!}" style="margin-right:10px;float:right;">Edit</a>
+                <a href="/manage/contact/add{!! !empty($ed) ? '/' . $ed : '' !!}" style="margin-right:10px;float:right;">Edit</a>
             @endif
         </div>
     </body>

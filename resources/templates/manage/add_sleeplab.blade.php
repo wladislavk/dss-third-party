@@ -29,14 +29,14 @@
             </script>
         @endif
 
-        <form name="sleeplabfrm" action="/manage/sleeplab/add{!! !empty($ed) ? '/' . $ed : '' !!}" method="post" onSubmit="return sleeplababc(this)">
-            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+        <form name="sleeplabfrm" action="/manage/sleeplab/add{{ !empty($ed) ? '/' . $ed : '' }}" method="post" onSubmit="return sleeplababc(this)">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">
-                       {!! $buttonText !!} Sleep Lab
+                       {{ $buttonText }} Sleep Lab
                        @if (!empty($firstname) && !empty($lastname))
-                            "{!! $firstname !!} {!! $lastname !!}"
+                            "{{ $firstname }} {{ $lastname }}"
                        @endif
                     </td>
                 </tr>
@@ -48,7 +48,7 @@
                                     <span>
                                         <span style="color:#000000">Lab Name</span>
                                         <span id="req_0" class="req">*</span>
-                                        <input id="company" name="company" type="text" class="field text addr tbox" value="{!! $company or '' !!}" tabindex="1" style="width:575px;" maxlength="255">
+                                        <input id="company" name="company" type="text" class="field text addr tbox" value="{{ $company or '' }}" tabindex="1" style="width:575px;" maxlength="255">
                                     </span>
                                 </label>
                             </li>
@@ -67,10 +67,10 @@
                                         @if (!empty($salutation))
                                             <select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;">
                                                 <option value=""></option>
-                                                <option value="Dr." {!! ($salutation == 'Dr.') ? " selected" : '' !!}>Dr.</option>
-                                                <option value="Mr." {!! ($salutation == 'Mr.') ? " selected" : '' !!}>Mr.</option>
-                                                <option value="Mrs." {!! ($salutation == 'Mrs.') ? " selected" : '' !!}>Mrs.</option>
-                                                <option value="Miss." {!! ($salutation == 'Miss.') ? " selected" : '' !!}>Miss.</option>
+                                                <option value="Dr." {{ ($salutation == 'Dr.') ? " selected" : '' }}>Dr.</option>
+                                                <option value="Mr." {{ ($salutation == 'Mr.') ? " selected" : '' }}>Mr.</option>
+                                                <option value="Mrs." {{ ($salutation == 'Mrs.') ? " selected" : '' }}>Mrs.</option>
+                                                <option value="Miss." {{ ($salutation == 'Miss.') ? " selected" : '' }}>Miss.</option>
                                             </select>
                                         @else
                                             <select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;">
@@ -84,15 +84,15 @@
                                         <label for="salutation">Salutation</label>
                                     </span>
                                     <span>
-                                        <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="{!! $firstname or '' !!}" tabindex="2" maxlength="255" />
+                                        <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="{{ $firstname or '' }}" tabindex="2" maxlength="255" />
                                         <label for="firstname">First Name</label>
                                     </span>
                                     <span>
-                                        <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="{!! $lastname or '' !!}" tabindex="3" maxlength="255" />
+                                        <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="{{ $lastname or '' }}" tabindex="3" maxlength="255" />
                                         <label for="lastname">Last Name</label>
                                     </span>
                                     <span>
-                                        <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="{!! $lastname or '' !!}" tabindex="4" style="width:50px;" maxlength="1" />
+                                        <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="{{ $lastname or '' }}" tabindex="4" style="width:50px;" maxlength="1" />
                                         <label for="middlename">Middle <br />Init</label>
                                     </span>
                                </div>
@@ -110,25 +110,25 @@
                                 </label>
                                 <div>
                                     <span>
-                                        <input id="add1" name="add1" type="text" class="field text addr tbox" value="{!! $add1 or '' !!}" tabindex="6" style="width:325px;"  maxlength="255"/>
+                                        <input id="add1" name="add1" type="text" class="field text addr tbox" value="{{ $add1 or '' }}" tabindex="6" style="width:325px;"  maxlength="255"/>
                                         <label for="add1">Address1</label>
                                     </span>
                                     <span>
-                                        <input id="add2" name="add2" type="text" class="field text addr tbox" value="{!! $add2 or '' !!}" tabindex="7" style="width:325px;" maxlength="255" />
+                                        <input id="add2" name="add2" type="text" class="field text addr tbox" value="{{ $add2 or '' }}" tabindex="7" style="width:325px;" maxlength="255" />
                                         <label for="add2">Address2</label>
                                     </span>
                                 </div>
                                 <div>
                                     <span>
-                                        <input id="city" name="city" type="text" class="field text addr tbox" value="{!! $city or '' !!}" tabindex="8" style="width:200px;" maxlength="255" />
+                                        <input id="city" name="city" type="text" class="field text addr tbox" value="{{ $city or '' }}" tabindex="8" style="width:200px;" maxlength="255" />
                                         <label for="city">City</label>
                                     </span>
                                     <span>
-                                        <input id="state" name="state" type="text" class="field text addr tbox" value="{!! $state or '' !!}" tabindex="9" style="width:80px;" maxlength="255" />
+                                        <input id="state" name="state" type="text" class="field text addr tbox" value="{{ $state or '' }}" tabindex="9" style="width:80px;" maxlength="255" />
                                         <label for="state">State</label>
                                     </span>
                                     <span>
-                                        <input id="zip" name="zip" type="text" class="field text addr tbox" value="{!! $zip or '' !!}" tabindex="10" style="width:80px;" maxlength="255" />
+                                        <input id="zip" name="zip" type="text" class="field text addr tbox" value="{{ $zip or '' }}" tabindex="10" style="width:80px;" maxlength="255" />
                                         <label for="zip">Zip / Post Code </label>
                                     </span>
                                 </div>
@@ -142,21 +142,21 @@
                             <li id="foli8" class="complex">
                                 <div>
                                     <span>
-                                        <input id="phone1" name="phone1" type="text" class="extphonemask field text addr tbox" value="{!! $phone1 or '' !!}" tabindex="11" maxlength="255" style="width:200px;" />
+                                        <input id="phone1" name="phone1" type="text" class="extphonemask field text addr tbox" value="{{ $phone1 or '' }}" tabindex="11" maxlength="255" style="width:200px;" />
                                         <label for="phone1">Phone 1</label>
                                     </span>
                                     <span>
-                                        <input id="phone2" name="phone2" type="text" class="extphonemask field text addr tbox" value="{!! $phone2 or '' !!}" tabindex="12" maxlength="255" style="width:200px;" />
+                                        <input id="phone2" name="phone2" type="text" class="extphonemask field text addr tbox" value="{{ $phone2 or '' }}" tabindex="12" maxlength="255" style="width:200px;" />
                                         <label for="phone2">Phone 2</label>
                                     </span>
                                     <span>
-                                        <input id="fax" name="fax" type="text" class="extphonemask field text addr tbox" value="{!! $fax or '' !!}" tabindex="13" maxlength="255" style="width:200px;" />
+                                        <input id="fax" name="fax" type="text" class="extphonemask field text addr tbox" value="{{ $fax or '' }}" tabindex="13" maxlength="255" style="width:200px;" />
                                         <label for="fax">Fax</label>
                                     </span>
                                 </div>
                                 <div>
                                     <span>
-                                        <input id="email" name="email" type="text" class="field text addr tbox" value="{!! $email or '' !!}" tabindex="14" maxlength="255" style="width:325px;" />
+                                        <input id="email" name="email" type="text" class="field text addr tbox" value="{{ $email or '' }}" tabindex="14" maxlength="255" style="width:325px;" />
                                         <label for="email">Email</label>
                                     </span>
                                 </div>
@@ -173,7 +173,7 @@
                                 </label>
                                 <div>
                                     <span class="full">
-                                        <textarea name="notes" id="notes" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;">{!! $notes or '' !!}</textarea>
+                                        <textarea name="notes" id="notes" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;">{{ $notes or '' }}</textarea>
                                     </span>
                                 </div>
                             </li>
@@ -187,8 +187,8 @@
                     <td valign="top" class="frmdata">
                         @if (!empty($status))
                             <select name="status" class="tbox" tabindex="22">
-                                <option value="1" {!! ($status == 1) ? " selected" : '' !!}>Active</option>
-                                <option value="2" {!! ($status == 2) ? " selected" : '' !!}>In-Active</option>
+                                <option value="1" {{ ($status == 1) ? " selected" : '' }}>Active</option>
+                                <option value="2" {{ ($status == 2) ? " selected" : '' }}>In-Active</option>
                             </select>
                         @else
                             <select name="status" class="tbox" tabindex="22">
@@ -205,14 +205,14 @@
                             * Required Fields
                         </span><br />
                         <input type="hidden" name="sleeplabsub" value="1" />
-                        <input type="hidden" name="ed" value="{!! $ed !!}" />
-                        <input type="hidden" name="_token" value="{!! csrf_token() !!}" id="token">
+                        <input type="hidden" name="ed" value="{{ $ed }}" />
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
                         <a href="#" id="google_link" target="_blank" style="float:left;" />
                             Google
                         </a>
-                        <input type="submit" value="{!! $buttonText !!} Sleep Lab" class="button" />
+                        <input type="submit" value="{{ $buttonText }} Sleep Lab" class="button" />
                         <script type="text/javascript">
-                            var delid = '{!! $ed or '' !!}';
+                            var delid = '{{ $ed or '' }}';
                         </script>
                         <a style="float:right;" href="#" class="dellink" target="_parent" title="DELETE" id="dellink";>
                             Delete

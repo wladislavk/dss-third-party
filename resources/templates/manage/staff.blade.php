@@ -30,7 +30,7 @@
         <b>
 
             @if (!empty($message))
-                {!! $message !!}
+                {{ $message }}
             @endif
         </b>
     </div>
@@ -45,9 +45,9 @@
                         @for ($pCount = 0; $pCount < $noPages; $pCount++)
 
                             @if ($indexPage == $pCount)
-                                <strong>{!! $pCount + 1 !!}</strong>
+                                <strong>{{ $pCount + 1 }}</strong>
                             @else
-                                <a href="#" onclick='setRouteParameters("/manage/staff", "{\"pageNumber\": \"{!! $pCount !!}\" }", "{!! csrf_token() !!}"); return false;'>{!! $pCount + 1 !!}</a>
+                                <a href="#" onclick='setRouteParameters("/manage/staff", "{\"pageNumber\": \"{{ $pCount }}\" }", "{{ csrf_token() }}"); return false;'>{{ $pCount + 1 }}</a>
                             @endif
                         @endfor
                     @endif
@@ -83,18 +83,18 @@
                         <tr class="tr_inactive">
                     @endif
                     <td valign="top">
-                        {!! $getTypeUser['username'] !!}
+                        {{ $getTypeUser['username'] }}
                     </td>
                     <td valign="top">
-                        {!! $getTypeUser['first_name'] !!} {!! $getTypeUser['last_name'] !!}
+                        {{ $getTypeUser['first_name'] }} {{ $getTypeUser['last_name'] }}
                     </td>
                     <td valign="top">
-                        {!! $getTypeUser['producer'] == 1 ? "X" : '' !!}
+                        {{ $getTypeUser['producer'] == 1 ? "X" : '' }}
                     </td>
                     <td valign="top">
 
                         @if ($docId == $userId || $getTypeUsersId['manage_staff'] == 1)
-                            <a href="#" onclick="loadPopup('staff/{!! $getTypeUser['userid'] !!}/edit');" class="editlink" title="EDIT">
+                            <a href="#" onclick="loadPopup('staff/{{ $getTypeUser['userid'] }}/edit');" class="editlink" title="EDIT">
                                 Edit
                             </a>
                         @endif

@@ -30,21 +30,21 @@
         <br />
 
         @if (!empty($message))
-            {!! $message !!}
+            {{ $message }}
         @endif
 
         <form name="transaction_codefrm" action="/manage/transaction_code/add" method="post" onSubmit="return transaction_codeabc(this)">
-            <input type="hidden" name="_token" id="token" value="{!! csrf_token() !!}">
+            <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             <input type="hidden" name="add" value="1">
             <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">
 
                         @if (!empty($buttonText))
-                            {!! $buttonText !!} Transaction Code
+                            {{ $buttonText }} Transaction Code
 
                             @if (!empty($transactionsNum['transaction_code']))
-                                &quot;{!! $transactionsNum['transaction_code'] !!}&quot;
+                                &quot;{{ $transactionsNum['transaction_code'] }}&quot;
                             @endif
                         @endif
                     </td>
@@ -54,7 +54,7 @@
                         Transaction Code
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="transaction_code" value="{!! $transactionsNum['transaction_code'] or '' !!}" class="tbox" />
+                        <input type="text" name="transaction_code" value="{{ $transactionsNum['transaction_code'] or '' }}" class="tbox" />
                         <span class="red">*</span>
                     </td>
                 </tr>
@@ -65,11 +65,11 @@
                     <td valign="top" class="frmdata">
                         <select name="type" class="tbox" />
                             <option value="1" <?php if(!empty($type) && $type == "1"){echo " selected='selected'";} ?>> Medical Code </option>
-                            <option value="2" {!! (!empty($transactionsNum['type']) && $transactionsNum['type'] == "2") ? "selected" : '' !!}> Patient Payment Code </option>
-                            <option value="3" {!! (!empty($transactionsNum['type']) && $transactionsNum['type'] == "3") ? "selected" : '' !!}> Insurance Payment Code </option>
-                            <option value="4" {!! (!empty($transactionsNum['type']) && $transactionsNum['type'] == "4") ? "selected" : '' !!}> Diagnostic Code </option>
-                            <option value="5" {!! (!empty($transactionsNum['type']) && $transactionsNum['type'] == "5") ? "selected" : '' !!}> Modifier Code </option>
-                            <option value="6" {!! (!empty($transactionsNum['type']) && $transactionsNum['type'] == "6") ? "selected" : '' !!}> Adjustment Code </option>
+                            <option value="2" {{ (!empty($transactionsNum['type']) && $transactionsNum['type'] == "2") ? "selected" : '' }}> Patient Payment Code </option>
+                            <option value="3" {{ (!empty($transactionsNum['type']) && $transactionsNum['type'] == "3") ? "selected" : '' }}> Insurance Payment Code </option>
+                            <option value="4" {{ (!empty($transactionsNum['type']) && $transactionsNum['type'] == "4") ? "selected" : '' }}> Diagnostic Code </option>
+                            <option value="5" {{ (!empty($transactionsNum['type']) && $transactionsNum['type'] == "5") ? "selected" : '' }}> Modifier Code </option>
+                            <option value="6" {{ (!empty($transactionsNum['type']) && $transactionsNum['type'] == "6") ? "selected" : '' }}> Adjustment Code </option>
                         </select>
                         <span class="red">*</span>
                     </td>
@@ -84,8 +84,8 @@
 
                             @if (count($placeServices))
                                 @foreach ($placeServices as $placeService)
-                                    <option value="{!! $placeService->place_serviceid or '' !!}" {!! (!empty($transactionsNum['place']) && $transactionsNum['place'] == $placeService->place_serviceid) ? "selected" : '' !!}>
-                                        {!! $placeService->place_service or '' !!} {!! $placeService->description or '' !!}
+                                    <option value="{{ $placeService->place_serviceid or '' }}" {{ (!empty($transactionsNum['place']) && $transactionsNum['place'] == $placeService->place_serviceid) ? "selected" : '' }}>
+                                        {{ $placeService->place_service or '' }} {{ $placeService->description or '' }}
                                     </option>
                                 @endforeach
                             @endif
@@ -102,8 +102,8 @@
                             
                             @if (count($modifierCodes))
                                 @foreach ($modifierCodes as $modifierCode)
-                                    <option value="{!! $modifierCode->modifier_code or '' !!}" {!! (!empty($transactionsNum['modifier_code_1']) && $transactionsNum['modifier_code_1'] == $modifierCode->modifier_code) ? "selected" : '' !!}>
-                                        {!! $modifierCode->modifier_code !!} {!! $modifierCode->description !!}
+                                    <option value="{{ $modifierCode->modifier_code or '' }}" {{ (!empty($transactionsNum['modifier_code_1']) && $transactionsNum['modifier_code_1'] == $modifierCode->modifier_code) ? "selected" : '' }}>
+                                        {{ $modifierCode->modifier_code }} {{ $modifierCode->description }}
                                     </option>
                                 @endforeach
                             @endif
@@ -120,8 +120,8 @@
 
                                 @if (count($modifierCodes))
                                     @foreach ($modifierCodes as $modifierCode)
-                                        <option value="{!! $modifierCode->modifier_code or '' !!}" {!! (!empty($transactionsNum['modifier_code_2']) && $transactionsNum['modifier_code_2'] == $modifierCode->modifier_code) ? "selected" : '' !!}>
-                                        {!! $modifierCode->modifier_code !!} {!! $modifierCode->description !!}
+                                        <option value="{{ $modifierCode->modifier_code or '' }}" {{ (!empty($transactionsNum['modifier_code_2']) && $transactionsNum['modifier_code_2'] == $modifierCode->modifier_code) ? "selected" : '' }}>
+                                        {{ $modifierCode->modifier_code }} {{ $modifierCode->description }}
                                     </option>
                                     @endforeach
                                 @endif
@@ -133,7 +133,7 @@
                        Default Days/Units
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="days_units" value="{!! $transactionsNum['days_units'] or '' !!}" class="tbox singlenumber" style="width:30px"/>
+                        <input type="text" name="days_units" value="{{ $transactionsNum['days_units'] or '' }}" class="tbox singlenumber" style="width:30px"/>
                     </td>
                 </tr>
                 <tr bgcolor="#FFFFFF">
@@ -141,7 +141,7 @@
                         Sort By
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="sortby" value="{!! $transactionsNum['sortby'] or '' !!}" class="tbox" style="width:30px"/>
+                        <input type="text" name="sortby" value="{{ $transactionsNum['sortby'] or '' }}" class="tbox" style="width:30px"/>
                     </td>
                 </tr>
                 <tr bgcolor="#FFFFFF">
@@ -149,7 +149,7 @@
                        Price
                     </td>
                     <td valign="top" class="frmdata">
-                        $<input type="text" name="amount" value="{!! $transactionsNum['amount'] or '' !!}" class="tbox" style="width:100px"/>
+                        $<input type="text" name="amount" value="{{ $transactionsNum['amount'] or '' }}" class="tbox" style="width:100px"/>
                     </td>
                 </tr>
                 <tr bgcolor="#FFFFFF">
@@ -158,8 +158,8 @@
                     </td>
                     <td valign="top" class="frmdata">
                         <select name="status" class="tbox">
-                            <option value="1" {!! (!empty($transactionsNum['status']) && $transactionsNum['status'] == "1") ? "selected" : '' !!}>Active</option>
-                            <option value="2" {!! (!empty($transactionsNum['status']) && $transactionsNum['status'] == "2") ? "selected" : '' !!}>In-Active</option>
+                            <option value="1" {{ (!empty($transactionsNum['status']) && $transactionsNum['status'] == "1") ? "selected" : '' }}>Active</option>
+                            <option value="2" {{ (!empty($transactionsNum['status']) && $transactionsNum['status'] == "2") ? "selected" : '' }}>In-Active</option>
                         </select>
                     </td>
                 </tr>
@@ -169,9 +169,9 @@
                     </td>
                     <td valign="top" class="frmdata">
                         <select name="amount_adjust" class="tbox">
-                            <option value="0" {!! (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == 0) ? "selected" : '' !!}>{!! $dssAmountAdjustUser !!}</option>
-                            <option value="1" {!! (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == 1) ? "selected" : '' !!}>{!! $dssAmountAdjustNegative !!}</option>
-                            <option value="2" {!! (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == 2) ? "selected" : '' !!}>{!! $dssAmountAdjustPositive !!}</option>
+                            <option value="0" {{ (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == 0) ? "selected" : '' }}>{{ $dssAmountAdjustUser }}</option>
+                            <option value="1" {{ (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == 1) ? "selected" : '' }}>{{ $dssAmountAdjustNegative }}</option>
+                            <option value="2" {{ (!empty($transactionsNum['amount_adjust']) && $transactionsNum['amount_adjust'] == 2) ? "selected" : '' }}>{{ $dssAmountAdjustPositive }}</option>
                         </select>
                     </td>
                 </tr>
@@ -180,7 +180,7 @@
                         Description
                     </td>
                     <td valign="top" class="frmdata">
-                        <textarea class="tbox" name="description" style="width:100%;">{!! $transactionsNum['description'] or '' !!}</textarea>
+                        <textarea class="tbox" name="description" style="width:100%;">{{ $transactionsNum['description'] or '' }}</textarea>
                     </td>
                 </tr>
                 <tr>
@@ -189,11 +189,11 @@
                             * Required Fields
                         </span><br />
                         <input type="hidden" name="transaction_codesub" value="1" />
-                        <input type="hidden" name="ed" value="{!! $transactionsNum['transaction_codeid'] or '' !!}" />
-                        <input type="submit" value="{!! $buttonText or '' !!} Transaction Code" class="button" />
+                        <input type="hidden" name="ed" value="{{ $transactionsNum['transaction_codeid'] or '' }}" />
+                        <input type="submit" value="{{ $buttonText or '' }} Transaction Code" class="button" />
 
                         <script type="text/javascript">
-                            var delid = '{!! $transactionsNum['transaction_codeid'] or '' !!}';
+                            var delid = '{{ $transactionsNum['transaction_codeid'] or '' }}';
                         </script>
                         
                         @if (count($transactionsNum))

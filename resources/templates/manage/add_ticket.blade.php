@@ -20,7 +20,7 @@
 
         @if (!empty($alert))
             <script>
-                alert('{!! $alert !!}');
+                alert('{{ $alert }}');
             </script>
         @endif
 
@@ -48,8 +48,8 @@
 
                                             @if (count($nonActiveCategories))
                                                 @foreach ($nonActiveCategories as $nonActiveCategory)
-                                                    <option {!! ($categoryId == $nonActiveCategory->id) ? "selected='selected'" : "" !!} value="{!! $nonActiveCategory->id or '' !!}">
-                                                        {!! $nonActiveCategory->title !!}
+                                                    <option {{ ($categoryId == $nonActiveCategory->id) ? "selected='selected'" : "" }} value="{{ $nonActiveCategory->id or '' }}">
+                                                        {{ $nonActiveCategory->title }}
                                                     </option>
                                                 @endforeach
                                             @endif
@@ -73,8 +73,8 @@
 
                                             @if (count($billingCompanies))
                                                 @foreach ($billingCompanies as $billingCompany)
-                                                    <option {!! ($companyId == $billingCompany->id) ? "selected='selected'" : "" !!} value="{!! $billingCompany->id or '' !!}">
-                                                        {!! $billingCompany->name !!}
+                                                    <option {{ ($companyId == $billingCompany->id) ? "selected='selected'" : "" }} value="{{ $billingCompany->id or '' }}">
+                                                        {{ $billingCompany->name }}
                                                     </option>
                                                 @endforeach
                                             @endif
@@ -93,7 +93,7 @@
                             <li id="foli8" class="complex"> 
                                 <div>
                                     <span>
-                                        <input id="title" name="title" type="text" class="field text addr tbox" value="{!! $title !!}" tabindex="2" maxlength="255" />
+                                        <input id="title" name="title" type="text" class="field text addr tbox" value="{{ $title }}" tabindex="2" maxlength="255" />
                                         <label for="firstname">Title</label>
                                     </span>
                                 </div>
@@ -110,7 +110,7 @@
                                 </label>
                                 <div>
                                     <span class="full">
-                                        <textarea name="body" id="body" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;">{!! $body !!}</textarea>
+                                        <textarea name="body" id="body" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;">{{ $body }}</textarea>
                                     </span>
                                 </div>
                             </li>
@@ -145,11 +145,11 @@
                             * Required Fields
                         </span><br />
                         <input type="hidden" name="ticketsub" value="1" />
-                        <input type="submit" value=" {!! $buttonText !!} Ticket" class="button" />
+                        <input type="submit" value=" {{ $buttonText }} Ticket" class="button" />
                     </td>
                 </tr>
             </table>
-            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
         </form>
     </body>
 </html>

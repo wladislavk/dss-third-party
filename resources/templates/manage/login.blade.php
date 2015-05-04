@@ -15,12 +15,12 @@
                            Please Enter Your Login Information 
                         </td>
                     </tr>
-                
+
                     @if (!empty($msg))
                         <tr class="row">
                             <td colspan="2" >
                                 <span class="red">
-                                    {!! $msg !!}
+                                    {{ $msg }}
                                 </span>
                             </td>
                         </tr>

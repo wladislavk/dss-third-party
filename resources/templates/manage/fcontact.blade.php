@@ -20,7 +20,7 @@
     <div align="center" class="red">
         <b>
             @if (!empty($message))
-                {!! $message !!}
+                {{ $message }}
             @endif
         </b>
     </div>
@@ -35,24 +35,24 @@
 
                         @for ($pCount = 0; $pCount < $noPages; $pCount++)
                             @if ($indexPage == $pCount)
-                                <strong>{!! $pCount + 1 !!}</strong>
+                                <strong>{{ $pCount + 1 }}</strong>
                             @else
-                                <a href="#" onclick='setRouteParameters("/manage/fcontact", "{\"page\": \"{!! $pCount !!}\", \"sort\": \"{!! $sort !!}\", \"sortdir\": \"{!! $sortdir !!}\", \"contacttype\": \"{!! $contacttype !!}\"}", "{!! csrf_token() !!}"); return false;' class="fp">
-                                {!! $pCount + 1 !!}</a>
+                                <a href="#" onclick='setRouteParameters("/manage/fcontact", "{\"page\": \"{{ $pCount }}\", \"sort\": \"{{ $sort }}\", \"sortdir\": \"{{ $sortdir }}\", \"contacttype\": \"{{ $contacttype }}\"}", "{{ csrf_token() }}"); return false;' class="fp">
+                                {{ $pCount + 1 }}</a>
                             @endif
                         @endfor
                     </td>
                 </tr>
             @endif
             <tr class="tr_bg_h">
-                <td valign="top" class="col_head  {!! (!empty($sort) && $sort == 'company') ? 'arrow_' . strtolower($sortdir) : '' !!}" width="30%">
-                    <a href="#" onclick='setRouteParameters("/manage/fcontact", "{\"sort\": \"company\", \"sortdir\": \"{!! (!empty($sort) && $sort == 'company' && $sortdir == 'ASC') ? 'DESC' : 'ASC' !!}\"}", "{!! csrf_token() !!}"); return false;'>Company</a>
+                <td valign="top" class="col_head  {{ (!empty($sort) && $sort == 'company') ? 'arrow_' . strtolower($sortdir) : '' }}" width="30%">
+                    <a href="#" onclick='setRouteParameters("/manage/fcontact", "{\"sort\": \"company\", \"sortdir\": \"{{ (!empty($sort) && $sort == 'company' && $sortdir == 'ASC') ? 'DESC' : 'ASC' }}\"}", "{{ csrf_token() }}"); return false;'>Company</a>
                 </td>
-                <td valign="top" class="col_head  {!! (!empty($sort) && $sort == 'type') ? 'arrow_' . strtolower($sortdir) : '' !!}" width="20%">
-                    <a href="#" onclick='setRouteParameters("/manage/fcontact", "{\"sort\": \"type\", \"sortdir\": \"{!! (!empty($sort) && $sort == 'type' && $sortdir == 'ASC') ? 'DESC' : 'ASC' !!}\"}", "{!! csrf_token() !!}"); return false;'>Type</a>
+                <td valign="top" class="col_head  {{ (!empty($sort) && $sort == 'type') ? 'arrow_' . strtolower($sortdir) : '' }}" width="20%">
+                    <a href="#" onclick='setRouteParameters("/manage/fcontact", "{\"sort\": \"type\", \"sortdir\": \"{{ (!empty($sort) && $sort == 'type' && $sortdir == 'ASC') ? 'DESC' : 'ASC' }}\"}", "{{ csrf_token() }}"); return false;'>Type</a>
                 </td>
-                <td valign="top" class="col_head  {!! (!empty($sort) && $sort == 'name') ? 'arrow_' . strtolower($sortdir) : '' !!}" width="30%">
-                    <a href="#" onclick='setRouteParameters("/manage/fcontact", "{\"sort\": \"name\", \"sortdir\": \"{!! (!empty($sort) && $sort == 'name' && $sortdir == 'ASC') ? 'DESC' : 'ASC' !!}\"}", "{!! csrf_token() !!}"); return false;'>Name</a>
+                <td valign="top" class="col_head  {{ (!empty($sort) && $sort == 'name') ? 'arrow_' . strtolower($sortdir) : '' }}" width="30%">
+                    <a href="#" onclick='setRouteParameters("/manage/fcontact", "{\"sort\": \"name\", \"sortdir\": \"{{ (!empty($sort) && $sort == 'name' && $sortdir == 'ASC') ? 'DESC' : 'ASC' }}\"}", "{{ csrf_token() }}"); return false;'>Name</a>
                 </td>
                 <td valign="top" class="col_head" width="20%">
                     Action
@@ -74,22 +74,22 @@
                     @endif
 
                         <td valign="top">
-                            {!! $fcontact->company !!}
+                            {{ $fcontact->company }}
                         </td>
                         <td valign="top">
                             @if (!empty($fcontact->contacttypeid) && !empty($contactType[$fcontact->contacttypeid]))
-                                {!! $contactType[$fcontact->contacttypeid] !!}
+                                {{ $contactType[$fcontact->contacttypeid] }}
                             @endif
                         </td>
                         <td valign="top">
-                            {!! $fcontact->lastname or '' !!} {!! $fcontact->middlename or '' !!}, {!! $fcontact->firstname or '' !!}
+                            {{ $fcontact->lastname or '' }} {{ $fcontact->middlename or '' }}, {{ $fcontact->firstname or '' }}
                         </td>
                         <td valign="top">
-                            <a href="#" onclick="loadPopup('/manage/view_contact/{!! $fcontact->contactid !!}/corporate=1'); return false;" class="editlink" title="EDIT">
+                            <a href="#" onclick="loadPopup('/manage/view_contact/{{ $fcontact->contactid }}/corporate=1'); return false;" class="editlink" title="EDIT">
                                 Quick View
                             </a>
                             |
-                            <a href="#" onclick="loadPopup('/manage/view_fcontact{!! !empty($fcontact->contactid) ? '/' . $fcontact->contactid : '' !!}'); return false;" class="editlink" title="EDIT">
+                            <a href="#" onclick="loadPopup('/manage/view_fcontact{{ !empty($fcontact->contactid) ? '/' . $fcontact->contactid : '' }}'); return false;" class="editlink" title="EDIT">
                                 View Full
                             </a>
                         </td>

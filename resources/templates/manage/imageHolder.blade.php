@@ -7,9 +7,9 @@
         {!! HTML::style('/js/cloud-zoom.1.0.2.min.js') !!}
     </head>
     <body>
-        <a href="{!! $folder !!}/{!! $image !!}" class='cloud-zoom'>
-            <img height='250' src="{!! $folder !!}/{!! $image !!}" />
+        <a href="{{ $folder }}/{{ $image }}" class='cloud-zoom'>
+            <img height='250' src="{{ $folder }}/{{ $image }}" />
         </a><br />
-        <img height='500' src="{!! $folder !!}/{!! $image !!}" />
+        <img height='500' src="{{ $folder }}/{{ $image }}" />
     </body>
 </html>

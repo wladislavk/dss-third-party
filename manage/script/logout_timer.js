@@ -1,68 +1,104 @@
-lo_timer = '';
-w_timer = '';
-timer_length = 60*60*1000;
-w_timer_length = 15*60*1000; 
-startTimeMS = 0;
-function set_interval()
-{
-startTimeMS = (new Date()).getTime();
-lo_timer=setInterval("auto_logout()",timer_length);
-w_timer=setInterval("warn_logout()",w_timer_length);
-}
-
-function update_logout_timer(){
-  t = timer_length - ( (new Date()).getTime() - startTimeMS );
-  m = Math.floor(t/60000);
-  $('#logout_time_remaining').text(m+" minutes");
-}
-
-window.setInterval("update_logout_timer()", 30000);
-
-function reset_interval( new_time )
-{
-window.clearInterval(lo_timer);
-window.clearInterval(w_timer);
-startTimeMS = (new Date()).getTime();
-if(new_time != 0){
-  lo_timer=window.setInterval("auto_logout()",new_time);
-  if(new_time - (45*60*1000) < 1000){
-    w_timer=window.setInterval("warn_logout()",1000);
-  }else{
-    w_timer=window.setInterval("warn_logout()",(new_time-(45*60*1000)));
-  }
-}else{
-  lo_timer=window.setInterval("auto_logout()",timer_length);
-  w_timer=window.setInterval("warn_logout()",w_timer_length);
-}
-$('#warn_logout').hide();
-}
-
-
-
-function warn_logout(){
-  $('#warn_logout').show();
-}
-
-
-function auto_logout()
-{
-                                    $.ajax({
-                                        url: "includes/check_logout.php",
-                                        type: "post",
-                                        success: function(data){
-                                                var r = $.parseJSON(data);
-                                                if(r.reset_time){
-							reset_interval(r.reset_time);
-                                                }else{
-							window.location = 'logout.php';
-                                                }
-                                        },
-                                        failure: function(data){
-                                               window.location = 'logout.php';
-                                        }
-                                  });
-}
+function reset_interval(){}
 
 $(document).ready(function(){
-  set_interval();
+    var seconds = 1000,
+        minutes = 60*seconds,
+        hours = 60*minutes,
+        modalWait = 15*minutes,
+        logoutWait = 1*hours,
+        ticker = 1*seconds - 1,
+        lastActivity = currentTime(),
+        interval = 0,
+        waitingForResponse = false,
+        modalWindow = $('#warn_logout'),
+        cancelButton = 'a:contains(logged)',
+        timerDisplay = $('#logout_time_remaining');
+
+    function currentTime () {
+        return (new Date).getTime();
+    }
+
+    function formatTime (time) {
+        var h = Math.floor(time/hours),
+            m = Math.floor((time - h*hours)/minutes),
+            s = Math.floor((time - h*hours - m*minutes)/seconds),
+            time;
+
+        function plural (n, text) {
+            return n + ' ' + (n == 1 ? text : text + 's');
+        }
+
+        if (h) {
+            time = plural(h, 'hour');
+
+            if (m) {
+                time += ', ' + plural(m, 'minute');
+            }
+
+            return time;
+        }
+
+        if (m) {
+            time = plural(m, 'minute');
+
+            if (m < 2 && s) {
+                time += ', ' + plural(s, 'second');
+            }
+
+            return time;
+        }
+
+        return plural(s, 'second');
+    }
+
+    $(document).delegate('body', 'keydown mousemove', function(){
+        if (modalWindow.is(':visible')) {
+            return;
+        }
+
+        lastActivity = currentTime();
+    });
+
+    modalWindow.delegate(cancelButton, 'click', function(){
+        modalWindow.hide();
+        lastActivity = currentTime();
+    });
+
+    interval = setInterval(function(){
+        var now = currentTime(),
+            inactiveTime = now - lastActivity,
+            timeBeforeModal = modalWait - inactiveTime,
+            timeBeforeLogout = logoutWait - inactiveTime;
+
+        timeBeforeModal = timeBeforeModal > 0 ? timeBeforeModal : 0;
+        timeBeforeLogout = timeBeforeLogout > 0 ? timeBeforeLogout : 0;
+
+        timerDisplay.text(formatTime(timeBeforeLogout));
+
+        if (timeBeforeLogout <= 0) {
+            if (waitingForResponse) {
+                return;
+            }
+
+            waitingForResponse = true;
+
+            $.post('/manage/includes/check_logout.php', function(json){
+                var newLast = currentTime() + (json.reset_time || 0) - logoutWait;
+
+                if (json.reset_time) {
+                    lastActivity = newLast > lastActivity ? newLast : lastActivity;
+                }
+                else {
+                    clearInterval(interval);
+                    window.location = '/manage/logout.php';
+                }
+
+                waitingForResponse = false;
+            }, 'json');
+        }
+
+        if (timeBeforeModal <= 0 && !modalWindow.is(':visible')) {
+            modalWindow.show();
+        }
+    }, ticker);
 });

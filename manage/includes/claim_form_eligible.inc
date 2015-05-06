@@ -999,6 +999,7 @@ if ($another_plan == "") {
           $sql .= " user.npi ";
         }
 
+        $pri_claim_id = ($_GET['instype']==2 ? $orig_claim_id : $insuranceid);
         $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS place_description, user.first_name as provider_first_name, user.last_name as provider_last_name "
              . "FROM "
              . "  dental_ledger ledger "
@@ -1007,7 +1008,7 @@ if ($another_plan == "") {
              . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
              . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
              . "  WHERE "
-             . "  ledger.primary_claim_id = " . $insuranceid . " "
+             . "  ledger.primary_claim_id = " . $pri_claim_id . " "
              . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
              . "  AND ledger.docid = '" . $docid . "' "
              . "  AND trxn_code.docid = '" . $docid . "' "

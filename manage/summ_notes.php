@@ -21,12 +21,13 @@ $sql = "select n.*, CONCAT(u.first_name,' ',u.last_name) signed_name, p.adddate 
 $my = $db->getResults($sql);
 
 include 'partials/patient_notes.php'; ?>
-        <a href="print_notes.php?pid=<?=(!empty($_GET['pid']) ? $_GET['pid'] : '');?>" target="_blank" class="addButton" style="float: left;">
-                Print All Progress Notes
-        </a>
-        <button onClick="sign_notes(); return false;" class="addButton" style="float: right;">
-                Sign Selected Notes
-        </button>
+
+<a href="print_notes.php?pid=<?=(!empty($_GET['pid']) ? $_GET['pid'] : '');?>" target="_blank" class="addButton" style="float: left;">
+  Print All Progress Notes
+</a>
+<button onClick="sign_notes(); return false;" class="addButton" style="float: right;">
+  Sign Selected Notes
+</button>
 
 
 <script type="text/javascript">
@@ -75,11 +76,5 @@ function add_note(pid){
   });
 }
 </script>
-<a href="print_notes.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>" target="_blank" class="addButton" style="float: left;">
-    Print All Progress Notes
-</a>
-<button onClick="sign_notes(); return false;" class="addButton" style="float: right;">
-    Sign Selected Notes
-</button>
 
 <script src="js/summ_notes.js" type="text/javascript"></script>

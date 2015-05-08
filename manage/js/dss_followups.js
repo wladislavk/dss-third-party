@@ -3,7 +3,7 @@ function show_new_followup(){
 }
 
 function gotoQuestionnaire(){
-  parent.window.location = 'q_page1.php?pid=<?= $_GET['pid']; ?>';
+  parent.window.location = 'q_page1.php?pid=' + getParameterByName('pid');
 }
 
 function update_ess(f, v){

@@ -24,11 +24,13 @@ include_once '../includes/calendarinc.php';
 
 <?php
 
-  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn u.userid as user_id from dental_patients p
+  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn, u.userid as user_id from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
          LEFT JOIN dental_users u ON u.userid = p.docid
          WHERE p.patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+
   $r = $db->getRow($s);
+
   $doc_name = (!empty($r['doc_name']) ? $r['doc_name'] : '');
   $doc_array = explode(' ',$doc_name);
   $doc_first_name = $doc_array[0];

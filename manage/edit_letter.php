@@ -258,10 +258,8 @@ foreach ($master_q as $master_r) {
     }
   }
 
-$s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' LIMIT 1"; ////
+$s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' LIMIT 1";
   // Get Contact Info for Recipients
-  //$s = "SELECT referred_source FROM dental_patients where patientid=".mysqli_real_escape_string($con, $_GET['pid'])." LIMIT 1";
-
   $r = $db->getRow($s);
 
   $source = $r['referred_source'];

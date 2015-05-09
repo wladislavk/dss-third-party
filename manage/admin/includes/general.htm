@@ -1427,9 +1427,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
   //$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs2/' . $filename, 'F');
   //Close and output PDF document
   $file = $_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename;
-  if (file_exists($file)) {
-    $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename, 'F');
-  }
+  $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename, 'F');
 }
 
 

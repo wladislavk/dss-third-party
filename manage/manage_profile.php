@@ -25,24 +25,24 @@
 <?php
     } else {
       $in_sql = "UPDATE dental_users SET
-    	username='".mysqli_real_escape_string($con,$_POST['username'])."',
-    	npi='".mysqli_real_escape_string($con,$_POST['npi'])."',
-    	medicare_npi='".mysqli_real_escape_string($con,$_POST['medicare_npi'])."',
-    	medicare_ptan='".mysqli_real_escape_string($con,$_POST['medicare_ptan'])."',
-    	tax_id_or_ssn='".mysqli_real_escape_string($con,$_POST['tax_id_or_ssn'])."',
-    	ein='".mysqli_real_escape_string($con,$_POST['ein'])."',
-    	ssn='".mysqli_real_escape_string($con,$_POST['ssn'])."',
-    	practice='".mysqli_real_escape_string($con,$_POST['practice'])."',
-    	first_name='".mysqli_real_escape_string($con,$_POST['first_name'])."',
+      username='".mysqli_real_escape_string($con,$_POST['username'])."',
+      npi='".mysqli_real_escape_string($con,$_POST['npi'])."',
+      medicare_npi='".mysqli_real_escape_string($con,$_POST['medicare_npi'])."',
+      medicare_ptan='".mysqli_real_escape_string($con,$_POST['medicare_ptan'])."',
+      tax_id_or_ssn='".mysqli_real_escape_string($con,$_POST['tax_id_or_ssn'])."',
+      ein='".mysqli_real_escape_string($con,$_POST['ein'])."',
+      ssn='".mysqli_real_escape_string($con,$_POST['ssn'])."',
+      practice='".mysqli_real_escape_string($con,$_POST['practice'])."',
+      first_name='".mysqli_real_escape_string($con,$_POST['first_name'])."',
             last_name='".mysqli_real_escape_string($con,$_POST['last_name'])."',
-    	email='".mysqli_real_escape_string($con,$_POST['email'])."',
-    	address='".mysqli_real_escape_string($con,$_POST['address'])."',
-    	city='".mysqli_real_escape_string($con,$_POST['city'])."',
-    	state='".mysqli_real_escape_string($con,$_POST['state'])."',
-    	zip='".mysqli_real_escape_string($con,$_POST['zip'])."',
-    	phone='".mysqli_real_escape_string($con,$_POST['phone'])."',
-    	updated_at=now()
-    	WHERE userid='".$_SESSION['userid']."'";
+      email='".mysqli_real_escape_string($con,$_POST['email'])."',
+      address='".mysqli_real_escape_string($con,$_POST['address'])."',
+      city='".mysqli_real_escape_string($con,$_POST['city'])."',
+      state='".mysqli_real_escape_string($con,$_POST['state'])."',
+      zip='".mysqli_real_escape_string($con,$_POST['zip'])."',
+      phone='".mysqli_real_escape_string($con,$_POST['phone'])."',
+      updated_at=now()
+      WHERE userid='".$_SESSION['userid']."'";
 
       $db->query($in_sql);
 
@@ -51,7 +51,7 @@
       $userid = $u['edx_id'];
       shell_exec('sh edx_scripts/edxEditUser.sh '.$userid.' "'.$_POST['username'].'" "'.$_POST['email'].'" "ff&#x@fe@" "'.$_POST['first_name']. ' '.$_POST['last_name'].'"');
       form_update_all($_SESSION['docid']);
-	  }
+    }
   }
 
   if(isset($_POST["practice_submit"]))
@@ -73,7 +73,7 @@
       state='".mysqli_real_escape_string($con,$_POST['state'])."',
       zip='".mysqli_real_escape_string($con,$_POST['zip'])."',
       phone='".mysqli_real_escape_string($con,$_POST['phone'])."',
-  	  fax='".mysqli_real_escape_string($con,$_POST['fax'])."',
+      fax='".mysqli_real_escape_string($con,$_POST['fax'])."',
       use_service_npi = '".mysqli_real_escape_string($con,$_POST['use_service_npi'])."',
       service_name = '".mysqli_real_escape_string($con,$_POST['service_name'])."',
       service_address = '".mysqli_real_escape_string($con,$_POST['service_address'])."',
@@ -88,7 +88,7 @@
       service_tax_id_or_ssn = '".mysqli_real_escape_string($con,$_POST['service_tax_id_or_ssn'])."',
       service_ssn = '".mysqli_real_escape_string($con,$_POST['service_ssn'])."',
       service_ein = '".mysqli_real_escape_string($con,$_POST['service_ein'])."',
-	    updated_at=now()
+      updated_at=now()
       WHERE userid='".$_SESSION['docid']."'";
 
     $db->query($in_sql);
@@ -98,9 +98,9 @@
     $userid = $u['edx_id'];
     shell_exec('sh edx_scripts/edxEditUser.sh '.$userid.' "'.$_POST['username'].'" "'.$_POST['email'].'" "ff&#x@fe@" "'.$_POST['first_name']. ' '.$_POST['last_name'].'"');
 
-		$lc_sql = "SELECT * FROM dental_locations WHERE  default_location=1 AND docid='".$_SESSION["docid"]."'";
-		
-		if($db->getNumberRows($lc_sql) == 0){
+    $lc_sql = "SELECT * FROM dental_locations WHERE  default_location=1 AND docid='".$_SESSION["docid"]."'";
+    
+    if($db->getNumberRows($lc_sql) == 0){
       $loc_sql = "INSERT INTO dental_locations SET
         location = '".s_for($_POST['mailing_practice'])."', 
         name = '".s_for($_POST["mailing_name"])."', 
@@ -112,8 +112,8 @@
         phone = '".s_for(num($_POST["mailing_phone"]))."',
         fax = '".s_for(num($_POST["mailing_fax"]))."',
         default_location=1, 
-				docid='".$_SESSION["docid"]."'";
-		} else {
+        docid='".$_SESSION["docid"]."'";
+    } else {
       $loc_sql = "UPDATE dental_locations SET
         location = '".s_for($_POST['mailing_practice'])."', 
         name = '".s_for($_POST["mailing_name"])."', 
@@ -121,11 +121,11 @@
         city = '".s_for($_POST["mailing_city"])."', 
         state = '".s_for($_POST["mailing_state"])."', 
         zip = '".s_for($_POST["mailing_zip"])."', 
-				email = '".s_for($_POST["mailing_email"])."',
+        email = '".s_for($_POST["mailing_email"])."',
         phone = '".s_for(num($_POST["mailing_phone"]))."',
         fax = '".s_for(num($_POST["mailing_fax"]))."'
         where default_location=1 AND docid='".$_SESSION["docid"]."'";
-		}
+    }
     $db->query($loc_sql);
 
     form_update_all($_SESSION['docid']);
@@ -145,7 +145,7 @@
     $in_sql = "UPDATE dental_users SET
       letter_margin_header = '".mysqli_real_escape_string($con,$_POST['letter_margin_header'])."',
       letter_margin_footer = '".mysqli_real_escape_string($con,$_POST['letter_margin_footer'])."',
-  		letter_margin_top = '".mysqli_real_escape_string($con,$_POST['letter_margin_top'])."',
+      letter_margin_top = '".mysqli_real_escape_string($con,$_POST['letter_margin_top'])."',
       letter_margin_bottom = '".mysqli_real_escape_string($con,$_POST['letter_margin_bottom'])."',
       letter_margin_left = '".mysqli_real_escape_string($con,$_POST['letter_margin_left'])."',
       letter_margin_right = '".mysqli_real_escape_string($con,$_POST['letter_margin_right'])."'
@@ -153,9 +153,9 @@
 
     $db->query($in_sql);
     if(isset($_POST['margins_test'])){
-    	$title = "Test Letter";
-    	$filename = "test_margins_".$docid.".pdf";
-    	$html = "
+      $title = "Test Letter";
+      $filename = "test_margins_".$docid.".pdf";
+      $html = "
         <p>
           name<br />
           practice<br />
@@ -187,12 +187,12 @@
         <br />
         </p>
       ";
-     	//CREATE LETTER HERE
-    	create_pdf($title, $filename, $html, null, '', '', '', $_SESSION['docid'] ); 
+      //CREATE LETTER HERE
+      create_pdf($title, $filename, $html, null, '', '', '', $_SESSION['docid'] ); 
 ?>
-    	<script type="text/javascript">
-    		window.open('letterpdfs/<?php echo  $filename; ?>');
-    	</script>
+      <script type="text/javascript">
+        window.open('letterpdfs/<?php echo  $filename; ?>');
+      </script>
 <?php
     }
   }
@@ -213,11 +213,11 @@
   $rec_disp = 20;
 
   if(!empty($_REQUEST["page"])) {
-  	$index_val = $_REQUEST["page"];
+    $index_val = $_REQUEST["page"];
   } else {
     $index_val = 0;
   }
-	
+  
   $i_val = $index_val * $rec_disp;
   $sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by title";
   
@@ -232,7 +232,7 @@
   <script src="admin/popup/popup.js" type="text/javascript"></script>
 
   <span class="admin_head">
-  	Manage Profile
+    Manage Profile
   </span>
   <br />
   <br />
@@ -240,7 +240,7 @@
   <a href="legal_docs.php">View Legal Documents</a>
   <br />
   <div align="center" class="red">
-  	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
+    <b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
   </div>
 
 <?php
@@ -287,7 +287,7 @@
         <label>EIN or SSN:</label>
         <span class="value">
           <input type="checkbox" name="ein" value="1" <?php echo  ($user['ein']==1)?'checked="checked"':""; ?> /> EIN 
-    		  <input type="checkbox" name="ssn" value="1" <?php echo  ($user['ssn']==1)?'checked="checked"':""; ?> />SSN
+          <input type="checkbox" name="ssn" value="1" <?php echo  ($user['ssn']==1)?'checked="checked"':""; ?> />SSN
         </span>
       </div>
       <div class="detail">
@@ -338,10 +338,10 @@
     <h4>Practice Logo</h4>
 
     <?php if($practice['logo'] <> "") { ?>
-  		<img src="display_file.php?f=<?php echo $practice['logo'];?>" />
+      <img src="display_file.php?f=<?php echo $practice['logo'];?>" />
     <?php } ?>
 
-    <a href="Javascript:;"  onclick="Javascript: loadPopup('add_user_logo.php');" class="editlink" title="EDIT">
+    <a href="#" onclick="loadPopup('add_user_logo.php')" class="editlink" title="EDIT">
       Edit
     </a>
 
@@ -514,7 +514,7 @@
 
       <div class="detail">
         <label>&nbsp;</label>
-    	  <input type="submit" name="practice_submit" value="Update Practice" />
+        <input type="submit" name="practice_submit" value="Update Practice" />
       </div>
     </form>
   </div>
@@ -553,17 +553,17 @@
         <div class="detail">
           <label>&nbsp;</label>
           <input type="submit" name="margins_submit" value="Update Margins" />
-        	<input type="submit" name="margins_reset" value="Reset Margins" />
-        	<input type="submit" name="margins_test" value="Print Test Letter" />
-        	<p style="color:#933;">Warning!  Adjusting the letter margins will cause your letter template to no longer align with #9 envelope address fields.  Click “Reset” if you wish to restore the default margins.</p>
+          <input type="submit" name="margins_reset" value="Reset Margins" />
+          <input type="submit" name="margins_test" value="Print Test Letter" />
+          <p style="color:#933;">Warning!  Adjusting the letter margins will cause your letter template to no longer align with #9 envelope address fields.  Click “Reset” if you wish to restore the default margins.</p>
         </div>
       </form>
 
       <div style="width:100%">
         <div id="num_nine" class="third letter_templates">
-      	  <h4>#9 Envelope</h4>
-      	  <img style="border:solid 2px #000;" src="images/letter_template_number9-envelope.png" /><br /><br />
-      	  <input type="button" onclick="set_num_nine();return false;" value="select" />
+          <h4>#9 Envelope</h4>
+          <img style="border:solid 2px #000;" src="images/letter_template_number9-envelope.png" /><br /><br />
+          <input type="button" onclick="set_num_nine();return false;" value="select" />
         </div>
         <div id="num_nine" class="third letter_templates">
           <h4> No return address + Left-aligned + Single Spacing</h4>
@@ -593,27 +593,27 @@
       <h3>Letter Margins</h3>
       <div class="detail">
         <label>Header:</label>
-    	  48
+        48
       </div>
       <div class="detail">
         <label>Footer:</label>
-    	  26
+        26
       </div>
       <div class="detail">
         <label>Top:</label>
-    	  14
+        14
       </div>
       <div class="detail">
         <label>Bottom:</label>
-    	  40
+        40
       </div>
       <div class="detail">
         <label>Left:</label>
-    	  18
+        18
       </div>
       <div class="detail">
         <label>Right:</label>
-    	  18
+        18
       </div>
     </div>
   <?php } ?>
@@ -623,9 +623,9 @@
     <?php
       if(isset($_POST['auto_letters'])) {
         $sql = "UPDATE dental_users SET
-        	tracker_letters = '".mysqli_real_escape_string($con,$_POST['tracker_letters'])."',
-        	intro_letters = '".mysqli_real_escape_string($con,$_POST['intro_letters'])."'
-        	WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+          tracker_letters = '".mysqli_real_escape_string($con,$_POST['tracker_letters'])."',
+          intro_letters = '".mysqli_real_escape_string($con,$_POST['intro_letters'])."'
+          WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
         
         $db->query($sql);
       }
@@ -661,7 +661,7 @@
   </div>
   <div id="backgroundPopup"></div>
 
-  <br /><br />	
+  <br /><br />  
   <?php include "includes/bottom.htm";?>
 
 

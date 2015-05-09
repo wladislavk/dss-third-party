@@ -31,16 +31,16 @@
   $parent_status = $status_r['status'];
   $letter_doc = $status_r['docid'];
 
-  $pat_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+  $pat_sql = "SELECT docid FROM dental_patients WHERE patientid='" . mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : '')) . "'";
   
   $pat = $db->getRow($pat_sql);
 
-  $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))." ORDER BY adddate DESC LIMIT 1";
-  
+  $itype_sql = "SELECT * FROM dental_q_image WHERE imagetypeid=4 AND patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' ORDER BY adddate DESC LIMIT 1"; /////
+
   $itype = $db->getRow($itype_sql);
+
   $patient_photo = $itype['image_file'];
 
-  //Check and make sure user can access this patient
   if ($_SESSION['docid'] != $letter_doc && (!isset($_SESSION['adminuserid']) || $_SESSION['adminuserid'] == '')) {
 ?>
 
@@ -258,10 +258,10 @@ foreach ($master_q as $master_r) {
     }
   }
 
+$s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' LIMIT 1";
   // Get Contact Info for Recipients
-  $s = "SELECT referred_source FROM dental_patients where patientid=".mysqli_real_escape_string($con, $_GET['pid'])." LIMIT 1";
-  
   $r = $db->getRow($s);
+
   $source = $r['referred_source'];
   if ($topatient) {
     $contact_info = get_contact_info($patientid, $md_list, $md_referral_list, $pat_referral_list);
@@ -563,9 +563,10 @@ foreach ($master_q as $master_r) {
   
   $reason_seeking_tx = $db->getRow($reason_query)['reason_seeking_tx'];
 
-  $cc_sql = "select chief_complaint_text from dental_q_page1 WHERE patientid=".mysqli_real_escape_string($con, $patientid);
-  
+  $cc_sql = "select chief_complaint_text from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, (!empty($patientid) ? $patientid : ''))."'";
+
   $cc_row = $db->getRow($cc_sql);
+
   $reason_seeking_tx = $cc_row['chief_complaint_text'];
 
   $q1_sql = "select * from dental_q_page1 where patientid='".$patientid."'";

@@ -1,11 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include_once('classes/tc_calendar.php');
 	include 'includes/top.htm';?>
-require_once('classes/tc_calendar.php');
-include 'includes/top.htm';
-
-?>
-
 	<div class="row">
 		<?php if (is_admin($_SESSION['admin_access'])) { ?>
 			<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">

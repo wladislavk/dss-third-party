@@ -661,7 +661,7 @@ if ($another_plan == "") {
 ?>
         <h4>Primary Claim
         <?php if(!empty($sec_r)){ ?>
-                (<a href="insurance_claim_eligible.php?insid=<?php echo $sec_r['insuranceid']; ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">Secondary is <?php echo $sec_r['insuranceid']; ?></a>)
+                (<a href="insurance_claim_eligible.php?insid=<?php echo $sec_r['insuranceid']; ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&instype=2">Secondary is <?php echo $sec_r['insuranceid']; ?></a>)
         <?php } ?>
         </h4>
 <?php } ?>
@@ -978,13 +978,13 @@ if ($another_plan == "") {
              . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
              . "  JOIN dental_users user ON user.userid = ledger.docid "
              . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
-             . "WHERE "
+             . "  WHERE "
              . "  ledger.status = " . DSS_TRXN_PENDING . " "
              . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
              . "  AND ledger.docid = " . $docid . " "
              . "  AND trxn_code.docid = " . $docid . " "
              . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
-             . "ORDER BY "
+             . "  ORDER BY "
              . "  ledger.service_date ASC";
       } else {
         $sql = "SELECT "
@@ -999,6 +999,7 @@ if ($another_plan == "") {
           $sql .= " user.npi ";
         }
 
+        $pri_claim_id = ($_GET['instype']==2 ? $orig_claim_id : $insuranceid);
         $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS place_description, user.first_name as provider_first_name, user.last_name as provider_last_name "
              . "FROM "
              . "  dental_ledger ledger "
@@ -1006,13 +1007,13 @@ if ($another_plan == "") {
              . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
              . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
              . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
-             . "WHERE "
-             . "  ledger.primary_claim_id = " . $insuranceid . " "
+             . "  WHERE "
+             . "  ledger.primary_claim_id = " . $pri_claim_id . " "
              . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
              . "  AND ledger.docid = '" . $docid . "' "
              . "  AND trxn_code.docid = '" . $docid . "' "
              . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
-             . "ORDER BY "
+             . "  ORDER BY "
              . "  ledger.service_date ASC";
       }
 

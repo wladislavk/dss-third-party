@@ -151,19 +151,19 @@ if(isset($_POST['submitbut'])){
                                 case 'add1':
                                     if($field!='' && $data[$id] !=''){
                                         $patientadd = true;
-                                        $s .= $field . " = '" .$data[$id]."', ";
+                                        $s .= $field . " = '" .mysql_real_escape_string($data[$id])."', ";
                                     }
                                     break;
                                 case 'city':
                                     if($field!='' && $data[$id] !=''){
                                         $patientcity = true;
-                                        $s .= $field . " = '" .$data[$id]."', ";
+                                        $s .= $field . " = '" .mysql_real_escape_string($data[$id])."', ";
                                     }
                                     break;
                                 case 'state':
                                     if($field!='' && $data[$id] !=''){
                                         $patientstate = true;
-                                        $s .= $field . " = '" .$data[$id]."', ";
+                                        $s .= $field . " = '" .mysql_real_escape_string($data[$id])."', ";
                                     }
                                     break;
                                 case 'zip':
@@ -193,7 +193,7 @@ if(isset($_POST['submitbut'])){
 
                     			default:
                     				if($field!=''){
-                    		  			$s .= $field . " = '" .$data[$id]."', ";
+                    		  			$s .= $field . " = '" .mysql_real_escape_string($data[$id])."', ";
                     				}
                     				break;
                             }

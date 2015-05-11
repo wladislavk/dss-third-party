@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset='utf-8'>
-        <title>{!! $siteName !!}</title>
+        <title>{{ $siteName }}</title>
 
         @section('references')
             <!-- ========================= Styles ========================= -->
@@ -60,7 +60,7 @@
         @show
     </head>
 
-    <body onload="{!! $onClick !!}">
+    <body onload="{{ $onClick }}">
         <table width="980" border="0" cellpadding="0" cellspacing="0" align="center">
             <tr>
                 <td colspan="2" align="right" ></td>
@@ -70,7 +70,7 @@
                     <div class="suckertreemenu2">
                         <ul id="topmenu2">
                             <li>
-                                <a href="index"> Notifications ({!! $messageCount or '' !!})</a>
+                                <a href="index"> Notifications ({{ $messageCount or '' }})</a>
                             </li>
 
                             @if (!empty($numSupport))
@@ -78,7 +78,7 @@
                             @else
                                 <li id="header_support">
                             @endif
-                                <a href="support">Support ({!! $numSupport or '' !!})</a>
+                                <a href="support">Support ({{ $numSupport or '' }})</a>
                             </li>
 
                             <li>
@@ -89,7 +89,7 @@
 
                     <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
                         <span id="task_header">
-                            My Tasks (<span id="task_count">{!! $numTasks or '' !!}</span>)
+                            My Tasks (<span id="task_count">{{ $numTasks or '' }}</span>)
                         </span>
 
                         <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
@@ -97,19 +97,19 @@
                                    <h4 id="task_od_header" style="color:red;" class="task_od_header">Overdue</h4>
                                    <ul id="task_od_list">
                                        @foreach ($overdueTasks as $overdueTask)
-                                        <li class="task_item task_{!! $overdueTask->id !!}" style="clear:both;">
-                                            <div class="task_extra" id="task_extra_{!! $overdueTask->id !!}" >
-                                                <a href="#" onclick="delete_task('{!! $overdueTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $overdueTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                        <li class="task_item task_{{ $overdueTask->id }}" style="clear:both;">
+                                            <div class="task_extra" id="task_extra_{{ $overdueTask->id }}" >
+                                                <a href="#" onclick="delete_task('{{ $overdueTask->id }}')" class="task_delete"></a>
+                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $overdueTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
-                                            <input type="checkbox" class="task_status" style="float:left;" value="{!! $overdueTask->id !!}" />
+                                            <input type="checkbox" class="task_status" style="float:left;" value="{{ $overdueTask->id }}" />
 
                                             <div style="float:left; width:170px;">
-                                                {!! $overdueTask->task !!}
+                                                {{ $overdueTask->task }}
 
                                                 @if ($overdueTask->firstname != '' && $overdueTask->lastname != '')
-                                                    (<a href="add_patient/ed/{!! $overdueTask->patientid !!}/preview/1/addtopat/1/pid/{!! $overdueTask->patientid !!}">{!! $overdueTask->firstname . ' ' . $overdueTask->lastname !!}</a>)
+                                                    (<a href="add_patient/ed/{{ $overdueTask->patientid }}/preview/1/addtopat/1/pid/{{ $overdueTask->patientid }}">{{ $overdueTask->firstname . ' ' . $overdueTask->lastname }}</a>)
                                                 @endif
                                             </div>
                                         </li>
@@ -121,19 +121,19 @@
                                 <h4 id="task_tod_header" class="task_tod_header">Today</h4>
                                 <ul id="task_tod_list">
                                     @foreach ($todayTasks as $todayTask)
-                                        <li class="task_item task_{!! $todayTask->id !!}" style="clear:both;">
-                                            <div class="task_extra" id="task_extra_{!! $todayTask->id !!}" >
-                                                <a href="#" onclick="delete_task('{!! $todayTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $todayTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                        <li class="task_item task_{{ $todayTask->id }}" style="clear:both;">
+                                            <div class="task_extra" id="task_extra_{{ $todayTask->id }}" >
+                                                <a href="#" onclick="delete_task('{{ $todayTask->id }}')" class="task_delete"></a>
+                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $todayTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
-                                            <input type="checkbox" class="task_status" style="float:left;" value="{!! $todayTask->id !!}" />
+                                            <input type="checkbox" class="task_status" style="float:left;" value="{{ $todayTask->id }}" />
 
                                             <div style="float:left; width:170px;">
-                                                {!! $todayTask->task !!}
+                                                {{ $todayTask->task }}
 
                                                 @if ($todayTask->firstname != '' && $todayTask->lastname != '')
-                                                    (<a href="add_patient/ed/{!! $todayTask->patientid !!}/preview/1/addtopat/1/pid/{!! $todayTask->patientid !!}">{!! $todayTask->firstname . ' ' . $todayTask->lastname !!}</a>)
+                                                    (<a href="add_patient/ed/{{ $todayTask->patientid }}/preview/1/addtopat/1/pid/{{ $todayTask->patientid }}">{{ $todayTask->firstname . ' ' . $todayTask->lastname }}</a>)
                                                 @endif
                                             </div>
                                         </li>
@@ -145,19 +145,19 @@
                                 <h4 id="task_tom_header" class="task_tom_header">Tomorrow</h4>
                                 <ul id="task_tom_list">
                                     @foreach ($tomorrowTasks as $tomorrowTask)
-                                        <li class="task_item task_{!! $tomorrowTask->id !!}" style="clear:both;">
-                                            <div class="task_extra" id="task_extra_{!! $tomorrowTask->id !!}" >
-                                                <a href="#" onclick="delete_task('{!! $tomorrowTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $tomorrowTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                        <li class="task_item task_{{ $tomorrowTask->id }}" style="clear:both;">
+                                            <div class="task_extra" id="task_extra_{{ $tomorrowTask->id }}" >
+                                                <a href="#" onclick="delete_task('{{ $tomorrowTask->id }}')" class="task_delete"></a>
+                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $tomorrowTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
-                                            <input type="checkbox" class="task_status" style="float:left;" value="{!! $tomorrowTask->id !!}" />
+                                            <input type="checkbox" class="task_status" style="float:left;" value="{{ $tomorrowTask->id }}" />
 
                                             <div style="float:left; width:170px;">
-                                                {!! $tomorrowTask->task !!}
+                                                {{ $tomorrowTask->task }}
 
                                                 @if ($tomorrowTask->firstname != '' && $tomorrowTask->lastname != '')
-                                                    (<a href="add_patient/ed/{!! $tomorrowTask->patientid !!}/preview/1/addtopat/1/pid/{!! $tomorrowTask->patientid !!}">{!! $tomorrowTask->firstname . ' ' . $tomorrowTask->lastname !!}</a>)
+                                                    (<a href="add_patient/ed/{{ $tomorrowTask->patientid }}/preview/1/addtopat/1/pid/{{ $tomorrowTask->patientid }}">{{ $tomorrowTask->firstname . ' ' . $tomorrowTask->lastname }}</a>)
                                                 @endif
                                             </div>
                                         </li>
@@ -169,19 +169,19 @@
                                 <h4 id="task_tw_header" class="task_tw_header">This Week</h4>
                                 <ul id="task_tw_list">
                                     @foreach ($thisWeekTasks as $thisWeekTask)
-                                        <li class="task_item task_{!! $thisWeekTask->id !!}" style="clear:both;">
-                                            <div class="task_extra" id="task_extra_{!! $thisWeekTask->id !!}" >
-                                                <a href="#" onclick="delete_task('{!! $thisWeekTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $thisWeekTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                        <li class="task_item task_{{ $thisWeekTask->id }}" style="clear:both;">
+                                            <div class="task_extra" id="task_extra_{{ $thisWeekTask->id }}" >
+                                                <a href="#" onclick="delete_task('{{ $thisWeekTask->id }}')" class="task_delete"></a>
+                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $thisWeekTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
-                                            <input type="checkbox" class="task_status" style="float:left;" value="{!! $thisWeekTask->id !!}" />
+                                            <input type="checkbox" class="task_status" style="float:left;" value="{{ $thisWeekTask->id }}" />
 
                                             <div style="float:left; width:170px;">
-                                                {!! $thisWeekTask->task !!}
+                                                {{ $thisWeekTask->task }}
 
                                                 @if ($thisWeekTask->firstname != '' && $thisWeekTask->lastname != '')
-                                                    (<a href="add_patient/ed/{!! $thisWeekTask->patientid !!}/preview/1/addtopat/1/pid/{!! $thisWeekTask->patientid !!}">{!! $thisWeekTask->firstname . ' ' . $thisWeekTask->lastname !!}</a>)
+                                                    (<a href="add_patient/ed/{{ $thisWeekTask->patientid }}/preview/1/addtopat/1/pid/{{ $thisWeekTask->patientid }}">{{ $thisWeekTask->firstname . ' ' . $thisWeekTask->lastname }}</a>)
                                                 @endif
                                             </div>
                                         </li>
@@ -193,19 +193,19 @@
                                 <h4 id="task_nw_header" class="task_nw_header">Next Week</h4>
                                 <ul id="task_nw_list">
                                     @foreach ($nextWeekTasks as $nextWeekTask)
-                                        <li class="task_item task_{!! $nextWeekTask->id !!}" style="clear:both;">
-                                            <div class="task_extra" id="task_extra_{!! $nextWeekTask->id !!}" >
-                                                <a href="#" onclick="delete_task('{!! $nextWeekTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $nextWeekTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                        <li class="task_item task_{{ $nextWeekTask->id }}" style="clear:both;">
+                                            <div class="task_extra" id="task_extra_{{ $nextWeekTask->id }}" >
+                                                <a href="#" onclick="delete_task('{{ $nextWeekTask->id }}')" class="task_delete"></a>
+                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $nextWeekTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
-                                            <input type="checkbox" class="task_status" style="float:left;" value="{!! $nextWeekTask->id !!}" />
+                                            <input type="checkbox" class="task_status" style="float:left;" value="{{ $nextWeekTask->id }}" />
 
                                             <div style="float:left; width:170px;">
-                                                {!! $nextWeekTask->task !!}
+                                                {{ $nextWeekTask->task }}
 
                                                 @if ($nextWeekTask->firstname != '' && $nextWeekTask->lastname != '')
-                                                    (<a href="add_patient/ed/{!! $nextWeekTask->patientid !!}/preview/1/addtopat/1/pid/{!! $nextWeekTask->patientid !!}">{!! $nextWeekTask->firstname . ' ' . $nextWeekTask->lastname !!}</a>)
+                                                    (<a href="add_patient/ed/{{ $nextWeekTask->patientid }}/preview/1/addtopat/1/pid/{{ $nextWeekTask->patientid }}">{{ $nextWeekTask->firstname . ' ' . $nextWeekTask->lastname }}</a>)
                                                 @endif
                                             </div>
                                         </li>
@@ -217,19 +217,19 @@
                                 <h4 id="task_lat_header" class="task_lat_header">Later</h4>
                                 <ul id="task_lat_list">
                                     @foreach ($laterTasks as $laterTask)
-                                        <li class="task_item task_{!! $laterTask->id !!}" style="clear:both;">
-                                            <div class="task_extra" id="task_extra_{!! $laterTask->id !!}" >
-                                                <a href="#" onclick="delete_task('{!! $laterTask->id !!}')" class="task_delete"></a>
-                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $laterTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                        <li class="task_item task_{{ $laterTask->id }}" style="clear:both;">
+                                            <div class="task_extra" id="task_extra_{{ $laterTask->id }}" >
+                                                <a href="#" onclick="delete_task('{{ $laterTask->id }}')" class="task_delete"></a>
+                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $laterTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                             </div>
 
-                                            <input type="checkbox" class="task_status" style="float:left;" value="{!! $laterTask->id !!}" />
+                                            <input type="checkbox" class="task_status" style="float:left;" value="{{ $laterTask->id }}" />
 
                                             <div style="float:left; width:170px;">
-                                                {!! $laterTask->task !!}
+                                                {{ $laterTask->task }}
 
                                                 @if ($laterTask->firstname != '' && $laterTask->lastname != '')
-                                                    (<a href="add_patient/ed/{!! $laterTask->patientid !!}/preview/1/addtopat/1/pid/{!! $laterTask->patientid !!}">{!! $laterTask->firstname . ' ' . $laterTask->lastname !!}</a>)
+                                                    (<a href="add_patient/ed/{{ $laterTask->patientid }}/preview/1/addtopat/1/pid/{{ $laterTask->patientid }}">{{ $laterTask->firstname . ' ' . $laterTask->lastname }}</a>)
                                                 @endif
                                             </div>
                                         </li>
@@ -259,7 +259,7 @@
                             <form>
                                 <div id="patient_search_div">
                                     <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" /><br />
-                                    <input type="hidden" id="token" name="_token" value="{!! csrf_token() !!}">
+                                    <input type="hidden" id="token" name="_token" value="{{ csrf_token() }}">
 
                                     <div id="search_hints"  class="search_hints" style="display:none;">
                                         <ul id="patient_list">
@@ -270,12 +270,12 @@
                             </form>
 
                             <button onclick="window.location='add_patient'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
-                            <button onclick="loadPopup('/manage/task/add{!! !empty($patientId) ? '/' . $patientId : '' !!}')" style="padding: 3px; margin-top:27px;">+ Add Task</button>
+                            <button onclick="loadPopup('/manage/task/add{{ !empty($patientId) ? '/' . $patientId : '' }}')" style="padding: 3px; margin-top:27px;">+ Add Task</button>
                         </div>
 
                         @if (!empty($logo))
                             <div style="float:right;margin:13px 15px 0 0;">
-                                <img src="display_file/f/{!! $logo !!}" />
+                                <img src="display_file/f/{{ $logo }}" />
                             </div>
                         @endif
 
@@ -299,10 +299,10 @@
                                         @else
                                             <span class="name">
                                         @endif
-                                            {!! $theName or '' !!}
+                                            {{ $theName or '' }}
 
                                             @if (!empty($premed) && $premed == 1 || !empty($premed) && $premed ==1)
-                                                <a href="q_page3/pid/{!! $patientId or '' !!}" title="{!! $title !!}" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</a>
+                                                <a href="q_page3/pid/{{ $patientId or '' }}" title="{{ $title }}" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</a>
                                             @endif
                                         </span>
                                     </div>
@@ -310,25 +310,25 @@
 
                                 @if (!empty($numPatientTasks))
                                     <div class="task_menu" id="pat_task_menu" style="float:left; margin:10px 0 0 10px;">
-                                        <span id="pat_task_header" style="font-size:14px; font-weight:normal; color:#fff;">Tasks({!! $numPatientTasks !!})</span>
+                                        <span id="pat_task_header" style="font-size:14px; font-weight:normal; color:#fff;">Tasks({{ $numPatientTasks }})</span>
 
                                         <div class="task_list" id="pat_task_list" style="display:none;">
                                             @if (count($overdueTasks))
                                                 <h4 id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
                                                 <ul id="pat_task_od_list">
                                                     @foreach ($overdueTasks as $overdueTask)
-                                                        <li class="task_item task_{!! $overdueTask->id !!}" style="clear:both;">
-                                                            <div class="task_extra" id="task_extra_{!! $overdueTask->id !!}" >
-                                                                <a href="#" onclick="delete_task('{!! $overdueTask->id !!}')" class="task_delete"></a>
-                                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $overdueTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                                        <li class="task_item task_{{ $overdueTask->id }}" style="clear:both;">
+                                                            <div class="task_extra" id="task_extra_{{ $overdueTask->id }}" >
+                                                                <a href="#" onclick="delete_task('{{ $overdueTask->id }}')" class="task_delete"></a>
+                                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $overdueTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                                             </div>
 
-                                                            <input type="checkbox" class="task_status" value="{!! $overdueTask->id !!}" />
+                                                            <input type="checkbox" class="task_status" value="{{ $overdueTask->id }}" />
 
-                                                            {!! $overdueTask->task !!}
+                                                            {{ $overdueTask->task }}
 
                                                             @if ($overdueTask->firstname != '' && $overdueTask->lastname != '')
-                                                                (<a href="add_patient/ed/{!! $overdueTask->patientid !!}/preview/1/addtopat/1/pid/{!! $overdueTask->patientid !!}">{!! $overdueTask->firstname . ' ' . $overdueTask->lastname !!}</a>)
+                                                                (<a href="add_patient/ed/{{ $overdueTask->patientid }}/preview/1/addtopat/1/pid/{{ $overdueTask->patientid }}">{{ $overdueTask->firstname . ' ' . $overdueTask->lastname }}</a>)
                                                             @endif
                                                         </li>
                                                     @endforeach
@@ -339,18 +339,18 @@
                                                 <h4 id="pat_task_tod_header" class="task_tod_header">Today</h4>
                                                 <ul id="pat_task_tod_list">
                                                     @foreach ($todayTasks as $todayTask)
-                                                        <li class="task_item task_{!! $todayTask->id !!}" style="clear:both;">
-                                                            <div class="task_extra" id="task_extra_{!! $todayTask->id !!}" >
-                                                                <a href="#" onclick="delete_task('{!! $todayTask->id !!}')" class="task_delete"></a>
-                                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $todayTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                                        <li class="task_item task_{{ $todayTask->id }}" style="clear:both;">
+                                                            <div class="task_extra" id="task_extra_{{ $todayTask->id }}" >
+                                                                <a href="#" onclick="delete_task('{{ $todayTask->id }}')" class="task_delete"></a>
+                                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $todayTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                                             </div>
 
-                                                            <input type="checkbox" class="task_status" value="{!! $todayTask->id !!}" />
+                                                            <input type="checkbox" class="task_status" value="{{ $todayTask->id }}" />
 
-                                                            {!! $todayTask->task !!}
+                                                            {{ $todayTask->task }}
 
                                                             @if ($todayTask->firstname != '' && $todayTask->lastname != '')
-                                                                (<a href="add_patient/ed/{!! $todayTask->patientid !!}/preview/1/addtopat/1/pid/{!! $todayTask->patientid !!}">{!! $todayTask->firstname . ' ' . $todayTask->lastname !!}</a>)
+                                                                (<a href="add_patient/ed/{{ $todayTask->patientid }}/preview/1/addtopat/1/pid/{{ $todayTask->patientid }}">{{ $todayTask->firstname . ' ' . $todayTask->lastname }}</a>)
                                                             @endif
                                                         </li>
                                                     @endforeach
@@ -361,18 +361,18 @@
                                                 <h4 id="pat_task_tom_header" class="task_tom_header">Tomorrow</h4>
                                                 <ul id="pat_task_tom_list">
                                                     @foreach ($tomorrowTasks as $tomorrowTask)
-                                                        <li class="task_item task_{!! $tomorrowTask->id !!}" style="clear:both;">
-                                                            <div class="task_extra" id="task_extra_{!! $tomorrowTask->id !!}" >
-                                                                <a href="#" onclick="delete_task('{!! $tomorrowTask->id !!}')" class="task_delete"></a>
-                                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $tomorrowTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                                        <li class="task_item task_{{ $tomorrowTask->id }}" style="clear:both;">
+                                                            <div class="task_extra" id="task_extra_{{ $tomorrowTask->id }}" >
+                                                                <a href="#" onclick="delete_task('{{ $tomorrowTask->id }}')" class="task_delete"></a>
+                                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $tomorrowTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                                             </div>
 
-                                                            <input type="checkbox" class="task_status" value="{!! $tomorrowTask->id !!}" />
+                                                            <input type="checkbox" class="task_status" value="{{ $tomorrowTask->id }}" />
 
-                                                            {!! $tomorrowTask->task !!}
+                                                            {{ $tomorrowTask->task }}
 
                                                             @if ($tomorrowTask->firstname != '' && $tomorrowTask->lastname != '')
-                                                                (<a href="add_patient/ed/{!! $tomorrowTask->patientid !!}/preview/1/addtopat/1/pid/{!! $tomorrowTask->patientid !!}">{!! $tomorrowTask->firstname . ' ' . $tomorrowTask->lastname !!}</a>)
+                                                                (<a href="add_patient/ed/{{ $tomorrowTask->patientid }}/preview/1/addtopat/1/pid/{{ $tomorrowTask->patientid }}">{{ $tomorrowTask->firstname . ' ' . $tomorrowTask->lastname }}</a>)
                                                             @endif
                                                         </li>
                                                     @endforeach
@@ -383,18 +383,18 @@
                                                 <h4 id="pat_task_fut_header" class="task_fut_header">Future</h4>
                                                 <ul id="pat_task_fut_list">
                                                     @foreach ($futureTasks as $futureTask)
-                                                        <li class="task_item task_{!! $futureTask->id !!}" style="clear:both;">
-                                                            <div class="task_extra" id="task_extra_{!! $futureTask->id !!}" >
-                                                                <a href="#" onclick="delete_task('{!! $futureTask->id !!}')" class="task_delete"></a>
-                                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $futureTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                                        <li class="task_item task_{{ $futureTask->id }}" style="clear:both;">
+                                                            <div class="task_extra" id="task_extra_{{ $futureTask->id }}" >
+                                                                <a href="#" onclick="delete_task('{{ $futureTask->id }}')" class="task_delete"></a>
+                                                                <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $futureTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                                             </div>
 
-                                                            <input type="checkbox" class="task_status" value="{!! $futureTask->id !!}" />
+                                                            <input type="checkbox" class="task_status" value="{{ $futureTask->id }}" />
 
-                                                            {!! $futureTask->task !!}
+                                                            {{ $futureTask->task }}
 
                                                             @if ($futureTask->firstname != '' && $futureTask->lastname != '')
-                                                                (<a href="add_patient/ed/{!! $futureTask->patientid !!}/preview/1/addtopat/1/pid/{!! $futureTask->patientid !!}">{!! $futureTask->firstname . ' ' . $futureTask->lastname !!}</a>)
+                                                                (<a href="add_patient/ed/{{ $futureTask->patientid }}/preview/1/addtopat/1/pid/{{ $futureTask->patientid }}">{{ $futureTask->firstname . ' ' . $futureTask->lastname }}</a>)
                                                             @endif
                                                         </li>
                                                     @endforeach
@@ -407,17 +407,17 @@
 
                             @if (!empty($patientId))
                                 @if (!empty($hideWarnings))
-                                    <a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="show_patient_warnings" onclick="hideWarnings('hidePatWarnings', null, '{!! Session::get('_token') !!}');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
-                                     <a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="hide_patient_warnings" onclick="hideWarnings('hidePatWarnings', {!! $patientId !!}, '{!! Session::get('_token') !!}');$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
+                                    <a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="show_patient_warnings" onclick="hideWarnings('hidePatWarnings', null, '{{ Session::get('_token') }}');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
+                                     <a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="hide_patient_warnings" onclick="hideWarnings('hidePatWarnings', {{ $patientId }}, '{{ Session::get('_token') }}');$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
                                 @else 
-                                    <a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="show_patient_warnings" onclick="hideWarnings('hidePatWarnings', null, '{!! Session::get('_token') !!}');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
-                                     <a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="hide_patient_warnings" onclick="hideWarnings('hidePatWarnings', {!! $patientId !!}, '{!! Session::get('_token') !!}');$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
+                                    <a href="#" style="float:left; margin-left:10px;margin-top:8px;display:none" class="button" id="show_patient_warnings" onclick="hideWarnings('hidePatWarnings', null, '{{ Session::get('_token') }}');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
+                                     <a href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="hide_patient_warnings" onclick="hideWarnings('hidePatWarnings', {{ $patientId }}, '{{ Session::get('_token') }}');$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
                                 @endif
                             @endif
 
                             <div class="suckertreemenu">
                                 <span style="line-height:38px; margin-right:10px;font-size:20px; color:#fff; float:right;">
-                                    Welcome {!! $username !!}
+                                    Welcome {{ $username }}
                                 </span>
                             </div>
 
@@ -427,81 +427,81 @@
                                         @if (!empty($path))
                                             <li>
                                                 @if ($path == '/manage/flowsheet3')
-                                                    <a class="nav_active" href="flowsheet3/pid/{!! $patientId !!}/addtopat/1">Tracker</a>
+                                                    <a class="nav_active" href="flowsheet3/pid/{{ $patientId }}/addtopat/1">Tracker</a>
                                                 @else
-                                                    <a href="flowsheet3/pid/{!! $patientId !!}/addtopat/1">Tracker</a>
+                                                    <a href="flowsheet3/pid/{{ $patientId }}/addtopat/1">Tracker</a>
                                                 @endif
                                             </li>
 
                                             <li>
                                                 @if ($path == '/manage/dss_summ')
-                                                    <a class="nav_active" href="dss_summ/pid/{!! $patientId !!}/addtopat/1">Summary Sheet</a>
+                                                    <a class="nav_active" href="dss_summ/pid/{{ $patientId }}/addtopat/1">Summary Sheet</a>
                                                 @else
-                                                    <a href="dss_summ/pid/{!! $patientId !!}/addtopat/1">Summary Sheet</a>
+                                                    <a href="dss_summ/pid/{{ $patientId }}/addtopat/1">Summary Sheet</a>
                                                 @endif
                                             </li>
 
                                             <li>
                                                 @if ($path == '/manage/ledger')
-                                                    <a class="nav_active" href="manage_ledger/pid/{!! $patientId !!}/addtopat/1">Ledger</a>
+                                                    <a class="nav_active" href="manage_ledger/pid/{{ $patientId }}/addtopat/1">Ledger</a>
                                                 @else
-                                                    <a href="manage_ledger/pid/{!! $patientId !!}/addtopat/1">Ledger</a>
+                                                    <a href="manage_ledger/pid/{{ $patientId }}/addtopat/1">Ledger</a>
                                                 @endif
                                             </li>
 
                                             <li>
                                                 @if ($path == '/manage/insurance')
-                                                    <a class="nav_active" href="insurance/pid/{!! $patientId !!}/addtopat/1">Insurance</a>
+                                                    <a class="nav_active" href="insurance/pid/{{ $patientId }}/addtopat/1">Insurance</a>
                                                 @else
-                                                    <a href="insurance/pid/{!! $patientId !!}/addtopat/1">Insurance</a>
+                                                    <a href="insurance/pid/{{ $patientId }}/addtopat/1">Insurance</a>
                                                 @endif
                                             </li>
 
                                             <li>
                                                 @if ($path == '/manage/progress_notes')
-                                                    <a class="nav_active" href="dss_summ/sect/notes/pid/{!! $patientId !!}/addtopat/1">Progress Notes</a>
+                                                    <a class="nav_active" href="dss_summ/sect/notes/pid/{{ $patientId }}/addtopat/1">Progress Notes</a>
                                                 @else
-                                                    <a href="dss_summ/sect/notes/pid/{!! $patientId !!}/addtopat/1">Progress Notes</a>
+                                                    <a href="dss_summ/sect/notes/pid/{{ $patientId }}/addtopat/1">Progress Notes</a>
                                                 @endif
                                             </li>
 
                                             <li>
                                                 @if ($path == '/manage/patient_letters')
-                                                    <a class="nav_active" href="dss_summ/sect/letters/pid/{!! $patientId !!}/addtopat/1">Letters</a>
+                                                    <a class="nav_active" href="dss_summ/sect/letters/pid/{{ $patientId }}/addtopat/1">Letters</a>
                                                 @else
-                                                    <a href="dss_summ/sect/letters/pid/{!! $patientId !!}/addtopat/1">Letters</a>
+                                                    <a href="dss_summ/sect/letters/pid/{{ $patientId }}/addtopat/1">Letters</a>
                                                 @endif
                                             </li>
 
                                             <li>
                                                 @if ($path == '/manage/q_image')
-                                                    <a class="nav_active" href="q_image/pid/{!! $patientId !!}">Images</a>
+                                                    <a class="nav_active" href="q_image/pid/{{ $patientId }}">Images</a>
                                                 @else
-                                                    <a href="q_image/pid/{!! $patientId !!}">Images</a>
+                                                    <a href="q_image/pid/{{ $patientId }}">Images</a>
                                                 @endif
                                             </li>
 
                                             <li>
                                                 @if ((str_contains($path, 'q_page') || str_contains($path, 'q_sleep')))
-                                                    <a class="nav_active" href="q_page1/pid/{!! $patientId !!}/addtopat/1">Questionnaire</a>
+                                                    <a class="nav_active" href="q_page1/pid/{{ $patientId }}/addtopat/1">Questionnaire</a>
                                                 @else
-                                                    <a href="q_page1/pid/{!! $patientId !!}/addtopat/1">Questionnaire</a>
+                                                    <a href="q_page1/pid/{{ $patientId }}/addtopat/1">Questionnaire</a>
                                                 @endif
                                             </li>
 
                                             <li>
                                                 @if (str_contains($path, 'ex_page'))
-                                                    <a class="nav_active" href="ex_page4/pid/{!! $patientId !!}/addtopat/1">Clinical Exam</a>
+                                                    <a class="nav_active" href="ex_page4/pid/{{ $patientId }}/addtopat/1">Clinical Exam</a>
                                                 @else
-                                                    <a href="ex_page4/pid/{!! $patientId !!}/addtopat/1">Clinical Exam</a>
+                                                    <a href="ex_page4/pid/{{ $patientId }}/addtopat/1">Clinical Exam</a>
                                                 @endif
                                             </li>
 
                                             <li class="last">
                                                 @if ($path == '/manage/patient/add')
-                                                    <a class="nav_active" href="add_patient/ed/{!! $patientId !!}/preview/1/addtopat/1/pid/{!! $patientId !!}">Patient Info</a>
+                                                    <a class="nav_active" href="add_patient/ed/{{ $patientId }}/preview/1/addtopat/1/pid/{{ $patientId }}">Patient Info</a>
                                                 @else
-                                                    <a href="add_patient/ed/{!! $patientId !!}/preview/1/addtopat/1/pid/{!! $patientId !!}">Patient Info</a>
+                                                    <a href="add_patient/ed/{{ $patientId }}/preview/1/addtopat/1/pid/{{ $patientId }}">Patient Info</a>
                                                 @endif
                                             </li>
                                         @endif
@@ -537,19 +537,19 @@
                             @endif
 
                                 @if (!empty($showWarningProfile))
-                                    <a class="warning" href="patient_changes/pid/{!! $patientId !!}">
+                                    <a class="warning" href="patient_changes/pid/{{ $patientId }}">
                                         <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
                                     </a>
                                 @endif
 
                                 @if (!empty($showWarningQuestionnaire))
-                                    <a class="warning" href="q_page1/pid/{!! $patientId !!}/addtopat/1" >
+                                    <a class="warning" href="q_page1/pid/{{ $patientId }}/addtopat/1" >
                                         <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
                                     </a>
                                 @endif
 
                                 @if (!empty($showWarningBounced))
-                                    <a class="warning" href="add_patient/ed/{!! $patientId !!}/pid/{!! $patientId !!}/addtopat/1" >
+                                    <a class="warning" href="add_patient/ed/{{ $patientId }}/pid/{{ $patientId }}/addtopat/1" >
                                         <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
                                     </a>
                                 @endif
@@ -558,8 +558,8 @@
                                     <span class="warning">Warning! Patient has the following rejected claims: <br />
 
                                         @foreach ($rejectedInsurance as $rejected)
-                                            <a href="view_claim/claimid/{!! $rejected->insuranceid !!}/pid/{!! $patientId !!}">
-                                                {!! $rejected->insuranceid !!} - {!! date('m/d/Y', strtotime($rejected->adddate)) !!}
+                                            <a href="view_claim/claimid/{{ $rejected->insuranceid }}/pid/{{ $patientId }}">
+                                                {{ $rejected->insuranceid }} - {{ date('m/d/Y', strtotime($rejected->adddate)) }}
                                             </a>
                                             <br />
                                         @endforeach
@@ -571,25 +571,25 @@
                                     <span class="warning">Patient has the following Home Sleep Tests: <br />
 
                                         @foreach ($hstUncompleted as $hst)
-                                            HST was requested {!! date('m/d/Y', strtotime($hst['adddate'])) !!}
+                                            HST was requested {{ date('m/d/Y', strtotime($hst['adddate'])) }}
                                             and is currently
 
                                             @if (!empty($DSS_HST_REJECTED) && $hst->status == $DSS_HST_REJECTED)
-                                                <a href="hst/status/4/viewed/0">{!! $hstStatusLabel !!}</a>
+                                                <a href="hst/status/4/viewed/0">{{ $hstStatusLabel }}</a>
                                             @else
-                                                {!! $hstStatusLabel !!}
+                                                {{ $hstStatusLabel }}
                                             @endif
 
                                             @if (!empty($DSS_HST_SCHEDULED) && $hst->status == $DSS_HST_SCHEDULED)
-                                                - {!! $hst->office_notes !!}
+                                                - {{ $hst->office_notes }}
                                             @endif
 
                                             @if (!empty($DSS_HST_REJECTED) && $hst->status == $DSS_HST_REJECTED)
-                                                - {!! $hst->rejected_reason !!}
+                                                - {{ $hst->rejected_reason }}
                                             @endif
 
                                             @if (!empty($DSS_HST_REJECTED) && $hst->status == $DSS_HST_SCHEDULED && $hst->rejecteddate != '')
-                                                - {!! date('m/d/Y h:i a', strtotime($hst->rejecteddate)) !!}
+                                                - {{ date('m/d/Y h:i a', strtotime($hst->rejecteddate)) }}
                                             @endif
 
                                             @if (!empty($DSS_HST_REJECTED) && $hst->status == $DSS_HST_REJECTED)

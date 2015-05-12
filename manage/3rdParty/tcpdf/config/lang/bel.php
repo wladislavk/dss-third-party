@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 //============================================================+
 // File name   : bel.php
 // Begin       : 2010-10-26

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 //============================================================+
 // File name   : qrcode.php
 // Version     : 1.0.009

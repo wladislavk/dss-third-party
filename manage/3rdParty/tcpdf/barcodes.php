@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 //============================================================+
 // File name   : barcodes.php
 // Version     : 1.0.017

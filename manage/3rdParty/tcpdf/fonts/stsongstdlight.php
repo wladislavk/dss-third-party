@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 $type = 'cidfont0';
 $name = 'STSongStd-Light-Acro';
 $displayname = 'STSong Light (Simp. Chinese)';

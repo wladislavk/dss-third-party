@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 $type='TrueTypeUnicode';
 $name='DejaVuSansMono-Bold';
 $desc=array('Ascent'=>928,'Descent'=>-236,'CapHeight'=>13,'Flags'=>33,'FontBBox'=>'[-447 -394 731 1052]','ItalicAngle'=>0,'StemV'=>120,'MissingWidth'=>602);

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 // CHINESE TRADITIONAL
 $type='cidfont0';
 $dw=1000;

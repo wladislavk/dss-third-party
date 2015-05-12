@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 //============================================================+
 // File name   : unicode_data.php
 // Begin       : 2008-01-01

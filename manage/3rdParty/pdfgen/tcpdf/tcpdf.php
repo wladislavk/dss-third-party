@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 //============================================================+
 // File name   : tcpdf.php
 // Begin       : 2002-08-03

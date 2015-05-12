@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 require_once './pdfGenerator.php';
 require_once './pdfWrapper.php';

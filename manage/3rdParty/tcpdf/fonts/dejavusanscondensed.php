@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 $type='TrueTypeUnicode';
 $name='DejaVuSansCondensed';
 $desc=array('Ascent'=>928,'Descent'=>-236,'CapHeight'=>26,'Flags'=>32,'FontBBox'=>'[-918 -415 1513 1167]','ItalicAngle'=>0,'StemV'=>70,'MissingWidth'=>540);

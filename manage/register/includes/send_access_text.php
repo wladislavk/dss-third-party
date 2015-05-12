@@ -27,7 +27,7 @@
   // is the name next to it
   if($r['phone']!='') {
     // instantiate a new Twilio Rest Client
-    $client = new Services_Twilio($AccountSid, $AuthToken);
+    $client = new \Services_Twilio($AccountSid, $AuthToken);
           // Send a new outgoing SMS 
     if($send_texts){
       $sms = $client->account->sms_messages->create(

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 /**
  * Helper class to wrap an object with a modified interface created by

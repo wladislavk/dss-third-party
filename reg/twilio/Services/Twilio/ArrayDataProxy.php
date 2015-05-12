@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 /**
  * DataProxy implementation using an array for storage backend.

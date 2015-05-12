@@ -143,10 +143,10 @@
                                 
                                 $key_r= $db->getRow($key_sql);
 
-                                Stripe::setApiKey($key_r['stripe_secret_key']);
+                                \Stripe::setApiKey($key_r['stripe_secret_key']);
 
                                 try{
-                                    $charge = Stripe_Charge::retrieve($charge_r["stripe_charge"]);
+                                    $charge = \Stripe_Charge::retrieve($charge_r["stripe_charge"]);
                                 } catch (Exception $e) {
                                     // Something else happened, completely unrelated to Stripe
                                     $body = $e->getJsonBody();

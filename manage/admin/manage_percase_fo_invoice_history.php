@@ -261,10 +261,10 @@ $key_sql = "SELECT stripe_secret_key FROM companies c
 $key_q = mysqli_query($con, $key_sql);
 $key_r= mysqli_fetch_assoc($key_q);
 
-Stripe::setApiKey($key_r['stripe_secret_key']);
+\Stripe::setApiKey($key_r['stripe_secret_key']);
 
 try{
-  $charge = Stripe_Charge::retrieve($charge_r["stripe_charge"]);
+  $charge = \Stripe_Charge::retrieve($charge_r["stripe_charge"]);
 } catch (Exception $e) {
   // Something else happened, completely unrelated to Stripe
   $body = $e->getJsonBody();

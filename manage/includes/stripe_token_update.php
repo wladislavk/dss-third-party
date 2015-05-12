@@ -21,8 +21,8 @@
     
     $key_r= $db->getRow($key_sql);
 
-    Stripe::setApiKey($key_r['stripe_secret_key']);
-    $customer = Stripe_Customer::retrieve($token);
+    \Stripe::setApiKey($key_r['stripe_secret_key']);
+    $customer = \Stripe_Customer::retrieve($token);
     try {
         $new_card = $customer->cards->create(array("card" => array(
             "number" => $number,
@@ -32,26 +32,26 @@
             "name" => $cname,
             "address_zip" => $zip
         )));
-    } catch(Stripe_CardError $e) {
+    } catch(\Stripe_CardError $e) {
         // Since it's a decline, Stripe_CardError will be caught
         $body = $e->getJsonBody();
         $err  = $body['error'];
         echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
         trigger_error("Die called", E_USER_ERROR);
-    } catch (Stripe_InvalidRequestError $e) {
+    } catch (\Stripe_InvalidRequestError $e) {
         // Invalid parameters were supplied to Stripe's API
         $body = $e->getJsonBody();
         $err  = $body['error'];
         echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
         trigger_error("Die called", E_USER_ERROR);
-    } catch (Stripe_AuthenticationError $e) {
+    } catch (\Stripe_AuthenticationError $e) {
         // Authen-rication with Stripe's API failed
         // (maybe you changed API keys recently)
         return $e;
-    } catch (Stripe_ApiConnectionError $e) {
+    } catch (\Stripe_ApiConnectionError $e) {
         // Network communication with Stripe failed
         return $e;
-    } catch (Stripe_Error $e) {
+    } catch (\Stripe_Error $e) {
         // Display a very generic error to the user, and maybe send
         // yourself an email
         return $e;
@@ -65,26 +65,26 @@
     try {
         // create a Customer
         $customer->save();
-    } catch(Stripe_CardError $e) {
+    } catch(\Stripe_CardError $e) {
         // Since it's a decline, Stripe_CardError will be caught
         $body = $e->getJsonBody();
         $err  = $body['error'];
         echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
         trigger_error("Die called", E_USER_ERROR);
-    } catch (Stripe_InvalidRequestError $e) {
+    } catch (\Stripe_InvalidRequestError $e) {
         // Invalid parameters were supplied to Stripe's API
         $body = $e->getJsonBody();
         $err  = $body['error'];
         echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
         trigger_error("Die called", E_USER_ERROR);
-    } catch (Stripe_AuthenticationError $e) {
+    } catch (\Stripe_AuthenticationError $e) {
         // Authen-rication with Stripe's API failed
         // (maybe you changed API keys recently)
         return $e;
-    } catch (Stripe_ApiConnectionError $e) {
+    } catch (\Stripe_ApiConnectionError $e) {
         // Network communication with Stripe failed
         return $e;
-    } catch (Stripe_Error $e) {
+    } catch (\Stripe_Error $e) {
         // Display a very generic error to the user, and maybe send
         // yourself an email
         return $e;

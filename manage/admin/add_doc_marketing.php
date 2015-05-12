@@ -232,7 +232,7 @@ if($_POST["doc_marketingub"] == 1)
             <td valign="top" class="frmdata" colspan="2">
                 <?php
                     
-                    $oFCKeditor = new FCKeditor('description') ;
+                    $oFCKeditor = new \FCKeditor('description') ;
                     
                     $oFCKeditor->ToolbarSet = 'MyToolbar';
                     $oFCKeditor->BasePath = 'fckeditor/';

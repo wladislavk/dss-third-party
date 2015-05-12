@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 /*
  CharacterStream implementation using an array in Swift Mailer.

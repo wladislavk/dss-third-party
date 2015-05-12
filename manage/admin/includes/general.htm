@@ -1138,7 +1138,7 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 
   $db = new Db();
 	require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/swift-4.0.6/lib/swift_required.php');
-	$email = Swift_Message::newInstance();
+	$email = \Swift_Message::newInstance();
 
 	$to = "$to_name <$to_email>";
 	$from = "$from_name <$from_email>";
@@ -1158,8 +1158,8 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 		$footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_email_footer.jpg";
 	}
 
-	$header_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($header_path)) . "\" alt=\"Dental Sleep Solutions\" />";
-	$footer_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($footer_path)) . "\" alt=\"Dental Sleep Solutions\" />";
+	$header_html =	"<img src=\"" . $email->embed(\Swift_Image::fromPath($header_path)) . "\" alt=\"Dental Sleep Solutions\" />";
+	$footer_html =	"<img src=\"" . $email->embed(\Swift_Image::fromPath($footer_path)) . "\" alt=\"Dental Sleep Solutions\" />";
 
 	$TextMessage = strip_tags($message,"<br>");
 	$HTMLMessage = "$header_html<table width=\"600px\"><tr><td>$message</tr></td></table>$footer_html"; 
@@ -1169,12 +1169,12 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 	$email->setTo(array($to_email => $to_name));
 	$email->setBody($HTMLMessage, 'text/html');
 	if ($attachment != '') {
-		$email->attach(Swift_Attachment::fromPath($attachment));
+		$email->attach(\Swift_Attachment::fromPath($attachment));
 	}
 
-	$transport = Swift_SendmailTransport::newInstance('/usr/sbin/sendmail -bs');
+	$transport = \Swift_SendmailTransport::newInstance('/usr/sbin/sendmail -bs');
 
-	$mailer = Swift_Mailer::newInstance($transport);
+	$mailer = \Swift_Mailer::newInstance($transport);
 
 	if (!$mailer->send($email, $failures)) {
 		if (count($failures) > 0) {

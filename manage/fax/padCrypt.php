@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?>// Common to All
+// Common to All
 <?php
 /**
  * padCrypt.php

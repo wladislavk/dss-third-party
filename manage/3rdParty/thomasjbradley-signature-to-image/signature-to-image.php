@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 /**
  *  Signature to Image: A supplemental script for Signature Pad that
  *  generates an image of the signature’s JSON output server-side using PHP.

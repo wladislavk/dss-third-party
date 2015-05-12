@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 header('Content-type: image/png');
 

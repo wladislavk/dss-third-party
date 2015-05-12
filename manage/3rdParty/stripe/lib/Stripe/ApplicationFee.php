@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 class Stripe_ApplicationFee extends Stripe_ApiResource
 {

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 class Stripe_Token extends Stripe_ApiResource
 {

@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 class Stripe_RateLimitError extends Stripe_InvalidRequestError
 {

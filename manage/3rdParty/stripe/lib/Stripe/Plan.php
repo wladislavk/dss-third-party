@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 class Stripe_Plan extends Stripe_ApiResource
 {

@@ -22,6 +22,7 @@ if(!isset($_GET['noheaders'])){
 </script>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="js/add_patient.js"></script>
 <script type="text/javascript" src="js/masks.js"></script>
 <script type="text/javascript" src="script/logout_timer.js"></script>
 <script type="text/javascript" src="js/jquery.cookie.js"></script>
@@ -30,7 +31,6 @@ if(!isset($_GET['noheaders'])){
 <script type="text/javascript" src="script/wufoo.js"></script>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/add_patient.css" type="text/css" media="screen" />
-<script type="text/javascript" src="js/add_patient.js"></script>
 <script src="script/autocomplete.js" type="text/javascript"></script>
 <script src="script/autocomplete_local.js" type="text/javascript"></script>
 <?php
@@ -713,7 +713,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     }?>
     <script type="text/javascript">
       //alert("<?php echo $msg;?>");
-      parent.window.location='add_patient.php?ed=<?php echo $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?php echo $_GET['pid']; ?>&msg=<?php echo $msg;?><?php echo $sendPin; ?>';
+      parent.window.location='add_patient.php?ed=<?php echo $_GET['pid']; ?>&addtopat=1&pid=<?php echo $_GET['pid']; ?>&msg=<?php echo $msg;?><?php echo $sendPin; ?>';
     </script>
     <?php
     trigger_error("Die called", E_USER_ERROR);

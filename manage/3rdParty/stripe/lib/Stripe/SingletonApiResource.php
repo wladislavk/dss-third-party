@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 abstract class Stripe_SingletonApiResource extends Stripe_ApiResource
 {

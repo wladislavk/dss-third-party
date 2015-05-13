@@ -14,7 +14,7 @@
 
     $key_r = $db->getRow($key_sql);
 
-    Stripe::setApiKey($key_r['stripe_secret_key']);
+    \Stripe::setApiKey($key_r['stripe_secret_key']);
 
     if ($key_r['cc_id'] == '') {
         ?>No card on record.<?php
@@ -22,7 +22,7 @@
 
 <?php
     }else{
-        $customer = Stripe_Customer::retrieve($key_r['cc_id']);
+        $customer = \Stripe_Customer::retrieve($key_r['cc_id']);
         ?>Active card is <?php echo  $customer->active_card['type']; ?> ending in: <?php
         echo($customer->active_card['last4']);
         ?> <a href="#" onclick="$('#card_form').show();$('#payment_proceed_update').show();$(this).hide();return false;" id="show_but">Update</a>

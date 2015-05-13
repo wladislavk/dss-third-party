@@ -23,10 +23,10 @@ $key_sql = "SELECT stripe_secret_key FROM companies c
 $key_q = mysqli_query($con,$key_sql);
 $key_r= mysqli_fetch_assoc($key_q);
 
-Stripe::setApiKey($key_r['stripe_secret_key']);
+\Stripe::setApiKey($key_r['stripe_secret_key']);
 
 
-$cards = Stripe_Customer::retrieve($r['cc_id'])->cards->all();
+$cards = \Stripe_Customer::retrieve($r['cc_id'])->cards->all();
 $last4 = $cards['data'][0]['last4'];
 
 
@@ -37,26 +37,26 @@ if(isset($_POST['bill_submit'])){
 
 
 try{
-    $charge = Stripe_Charge::create(array(
+    $charge = \Stripe_Charge::create(array(
       "amount" => $amount, # $15.00 this time
       "currency" => "usd",
       "customer" => $customerID)
     );
-} catch(Stripe_CardError $e) {
+} catch(\Stripe_CardError $e) {
   // Since it's a decline, Stripe_CardError will be caught
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   trigger_error("Die called", E_USER_ERROR);
-} catch (Stripe_InvalidRequestError $e) {
+} catch (\Stripe_InvalidRequestError $e) {
   // Invalid parameters were supplied to Stripe's API
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   trigger_error("Die called", E_USER_ERROR);
-} catch (Stripe_AuthenticationError $e) {
+} catch (\Stripe_AuthenticationError $e) {
   // Authentication with Stripe's API failed
   // (maybe you changed API keys recently)
   $body = $e->getJsonBody();
@@ -64,14 +64,14 @@ try{
   echo "Authentication Error. Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   trigger_error("Die called", E_USER_ERROR);
-} catch (Stripe_ApiConnectionError $e) {
+} catch (\Stripe_ApiConnectionError $e) {
   // Network communication with Stripe failed
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   trigger_error("Die called", E_USER_ERROR);
-} catch (Stripe_Error $e) {
+} catch (\Stripe_Error $e) {
   // Display a very generic error to the user, and maybe send
   // yourself an email
   $body = $e->getJsonBody();

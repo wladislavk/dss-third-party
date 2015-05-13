@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 // e.g. metadata on Stripe objects.
 class Stripe_AttachedObject extends Stripe_Object

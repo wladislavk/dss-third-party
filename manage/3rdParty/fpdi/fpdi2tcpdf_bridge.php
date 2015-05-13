@@ -26,7 +26,7 @@
  * 
  * It'll be loaded and extended by FPDF_TPL.
  */
-class FPDF extends \TCPDF {
+class FPDF extends TCPDF {
     
 	function _putstream($s) {
 		$this->_out($this->_getstream($s));
@@ -54,7 +54,7 @@ class FPDF extends \TCPDF {
 				if ($this->encrypted) {
 				    $value[1] = $this->_unescape($value[1]);
                     $value[1] = $this->_encrypt_data($this->_current_obj_id, $value[1]);
-                 	$value[1] = \TCPDF_STATIC::_escape($value[1]);
+                 	$value[1] = TCPDF_STATIC::_escape($value[1]);
                 } 
     			break;
     			

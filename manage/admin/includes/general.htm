@@ -891,7 +891,7 @@ function deliver_created_letter($letterid){
     include 'class.fax.php';
     $filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
     $fileType = "pdf";
-    $fts = new FTSSamples($doc_company);
+    $fts = new \FTSSamples($doc_company);
     $fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
     if($fax_send["status"] !== true){
       ?>
@@ -1094,7 +1094,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 			include 'class.fax.php';
     	$filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
     	$fileType = "pdf";
-			$fts = new FTSSamples($doc_company);
+			$fts = new \FTSSamples($doc_company);
 			$fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType, $firstname);
 			if($fax_send !== true){
 			  if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){

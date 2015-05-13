@@ -1,3 +1,5 @@
+<?php namespace Ds3\Libraries\Legacy; ?>
+
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
   <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>
 
@@ -2698,9 +2700,9 @@ if($insurancetype == '1'){
        . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
        . "WHERE "
        . "  ledger.status = " . DSS_TRXN_PENDING . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $docid . " "
-       . "  AND trxn_code.docid = " . $docid . " "
+       . "  AND ledger.patientid = '" . $_GET['pid'] . "'"
+       . "  AND ledger.docid = '" . $docid . "'"
+       . "  AND trxn_code.docid = '" . $docid . "'"
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
@@ -2723,11 +2725,11 @@ if($insurancetype == '1'){
        . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
        . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
        . "WHERE "
-       . "  (ledger.primary_claim_id = " . $insuranceid . " "
-       . "  OR ledger.secondary_claim_id = " . $insuranceid . ") "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = '" . $docid . "' "
-       . "  AND trxn_code.docid = '" . $docid . "' "
+       . "  (ledger.primary_claim_id = '" . $insuranceid . "'"
+       . "  OR ledger.secondary_claim_id = '" . $insuranceid . "')"
+       . "  AND ledger.patientid = '" . $_GET['pid'] . "'"
+       . "  AND ledger.docid = '" . $docid . "'"
+       . "  AND trxn_code.docid = '" . $docid . "'"
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";

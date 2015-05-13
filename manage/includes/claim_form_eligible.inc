@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 if (!function_exists('s_for')) {
     require_once dirname(__FILE__) . '/../admin/includes/general.htm';

@@ -66,7 +66,7 @@
 		} else {
 		}
 	
-		if($_POST['ed'] == '') 
+		if($_POST['ed'] == '') {
 			$ins_sql = " insert into dental_ledger set 
 			patientid = '".s_for($_GET['pid'])."',
 			service_date = '".s_for($service_date)."',
@@ -103,10 +103,11 @@
 		</script>
 <?php
 		trigger_error("Die called", E_USER_ERROR);
-	} else {
+		} else {
 		$pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
     	$pat_my2 = $db->getResults($pat_sql2);
-    	if ($pat_my2) foreach ($pat_my2 as $pat_myarray2) {   
+
+    	if ($pat_my2) foreach ($pat_my2 as $pat_myarray2) {
 		    $pat_sql3 = $db->query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".(!empty($_GET['pid']) ? $_GET['pid'] : '')."','".(!empty($pat_myarray2['service_date']) ? $pat_myarray2['service_date'] : '')."','".(!empty($pat_myarray2['description']) ? $pat_myarray2['description'] : '')."','".(!empty($pat_myarray2['amount']) ? $pat_myarray2['amount'] : '')."','".(!empty($pat_myarray2['paid_amount']) ? $pat_myarray2['paid_amount'] : '')."','".(!empty($pat_myarray2['transaction_code']) ? $pat_myarray2['transaction_code'] : '')."','".(!empty($pat_myarray2['ip_address']) ? $pat_myarray2['ip_address'] : '')."','".(!empty($pat_myarray2['transaction_type']) ? $pat_myarray2['transaction_type'] : '')."');");
 		    if(!$pat_sql3){
 		    	echo "There was an error updating the ledger record.  Please contact your system administrator.";
@@ -115,9 +116,10 @@
 			$service_date = date('Y-m-d', strtotime((!empty($_POST['service_date']) ? $_POST['service_date'] : '')));
 			$entry_date = date('Y-m-d', strtotime((!empty($_POST['entry_date']) ? $_POST['entry_date'] : '')));
 			$transaction_type = (!empty($_POST['transaction_type']) ? $_POST['transaction_type'] : '');
-			$transaction_code = (!empty($_POST['proccode']) ? $_POST['proccode'] : '');;
+			$transaction_code = (!empty($_POST['proccode']) ? $_POST['proccode'] : '');
 			
-			$tsql = "SELECT transaction_code, description from dental_transaction_code where transaction_codeid=".$transaction_code;
+			
+			$tsql = "SELECT transaction_code, description from dental_transaction_code where transaction_codeid='".$transaction_code."'";
 			
 			$trow = $db->getRow($tsql);
 			$transaction_code = $trow['transaction_code'];
@@ -183,15 +185,16 @@
 
 			$msg = "Edited Successfully";
 ?>
-		<script type="text/javascript">
-			parent.window.location = 'manage_ledger.php?msg=<?php echo $msg;?>&pid=<?php echo $_GET['pid'];?>';
-		</script>
+			<script type="text/javascript">
+				parent.window.location = 'manage_ledger.php?msg=<?php echo $msg;?>&pid=<?php echo $_GET['pid'];?>';
+			</script>
 <?php
 			trigger_error("Die called", E_USER_ERROR);
+			}
 		}
 	}
 	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-	
+
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
 	if($pat_myarray['patientid'] == '') {

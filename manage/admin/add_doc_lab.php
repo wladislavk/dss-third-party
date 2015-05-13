@@ -231,7 +231,7 @@ if(!empty($_POST["doc_labub"]) && $_POST["doc_labub"] == 1)
             <td valign="top" class="frmdata" colspan="2">
                 <?php
                     
-                    $oFCKeditor = new FCKeditor('description') ;
+                    $oFCKeditor = new \FCKeditor('description') ;
                     
                     $oFCKeditor->ToolbarSet = 'MyToolbar';
                     $oFCKeditor->BasePath = 'fckeditor/';

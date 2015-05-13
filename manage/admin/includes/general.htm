@@ -1279,7 +1279,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/config/lang/eng
 require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
 
 // Extend the TCPDF class to create custom Header and Footer
-class MYPDF extends TCPDF {
+class MYPDF extends \TCPDF {
 
   public $footerText = '';
   //Page header
@@ -1321,7 +1321,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
     $pdf_header = $header;
     $pdf_footer = $footer;
     // Extend the TCPDF class to create custom Header and Footer
-    class FAXPDF extends TCPDF {
+    class FAXPDF extends \TCPDF {
       //Page header
       public function Header() {
         // Logo

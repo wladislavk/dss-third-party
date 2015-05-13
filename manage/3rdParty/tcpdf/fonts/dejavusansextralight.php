@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 $type='TrueTypeUnicode';
 $name='DejaVuSans-ExtraLight';
 $desc=array('Ascent'=>928,'Descent'=>-236,'CapHeight'=>59,'Flags'=>32,'FontBBox'=>'[-733 -269 1659 1104]','ItalicAngle'=>0,'StemV'=>70,'MissingWidth'=>600);

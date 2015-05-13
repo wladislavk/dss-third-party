@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 //
 //  FPDF_TPL - Version 1.2.2
 //

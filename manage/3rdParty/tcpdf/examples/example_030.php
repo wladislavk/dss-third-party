@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 //============================================================+
 // File name   : example_030.php
 // Begin       : 2008-06-09
@@ -108,7 +108,7 @@ $pdf->CoonsPatchMesh(20, 155, 80, 80, $yellow, $blue, $green, $red);
 // write label
 $pdf->Text(20, 240, 'CoonsPatchMesh()');
 
-// set the coordinates for the cubic Bézier points x1,y1 ... x12, y12 of the patch (see coons_patch_mesh_coords.jpg)
+// set the coordinates for the cubic Bï¿½zier points x1,y1 ... x12, y12 of the patch (see coons_patch_mesh_coords.jpg)
 $coords = array(
 	0.00,0.00, 0.33,0.20,             //lower left
 	0.67,0.00, 1.00,0.00, 0.80,0.33,  //lower right

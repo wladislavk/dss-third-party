@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 /**
  * Excepttion class for Services_Twilio_Twiml.

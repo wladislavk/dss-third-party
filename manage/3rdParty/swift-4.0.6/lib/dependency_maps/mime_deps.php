@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
 
 require_once dirname(__FILE__) . '/../mime_types.php';
 

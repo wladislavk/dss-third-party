@@ -15,7 +15,9 @@ include_once '../includes/calendarinc.php';
   <script src="js/lib/jquery-1.10.2.min.js"></script>
   <script src="js/lib/jquery-ui-1.10.3.custom.min.js"></script>
   <script src="../script/autocomplete_local.js"></script>
-
+  <script>
+    var eligibleApiKey = <?= json_encode(DSS_DEFAULT_ELIGIBLE_API_KEY) ?>;
+  </script>
   <script src="js/eligible.js"></script>
   <script src="js/sample_1.js"></script>
 

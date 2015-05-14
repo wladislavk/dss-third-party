@@ -63,7 +63,7 @@
 					$txcode = $db->getRow($descsql);
 
 					if($form['procedure_code'] == '1' && $form['service_date'] != '' && $form['amount'] != ''){
-						$sqlinsertqry2 .= "( NULL , '".$_POST['patientid']."', '".$form['service_date']."', '".$form['entry_date']."', '".$txcode['description']."', NULL, '".$form['amount']."', 'Charge', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form['status']."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."'),";                                                                             
+						$sqlinsertqry2 .= "( NULL , '".$_POST['patientid']."', '".$form['service_date']."', '".$form['entry_date']."', '".$txcode['description']."', NULL, '".$form['amount']."', 'Charge', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form['status']."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."'),";
 					} elseif($form['procedure_code'] == '2' && $form['service_date'] != '' && $form['amount'] != '' || $form['procedure_code'] == '3' && $form['service_date'] != '' && $form['amount'] != '') {
 						$sqlinsertqry2 .= "( NULL , '".$_POST['patientid']."', '".$form['service_date']."', '".$form['entry_date']."', '".$txcode['description']."', NULL, NULL, 'Credit', '".$form['amount']."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form['status']."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."'),";
 					}elseif($form['procedure_code'] == '6' && $form['proccode'] == '100' && $form['service_date'] != '' && $form['amount'] != ''){
@@ -93,10 +93,13 @@
 						$d++;
 					}
 				}
-			}
 
-			$sqlinsertqry2 = substr($sqlinsertqry2, 0, -1).";";
-			$insqry = $db->query($sqlinsertqry2);
+				if (strripos($sqlinsertqry2, ',') == (strlen($sqlinsertqry2) - 1)) {
+					$sqlinsertqry2 = substr($sqlinsertqry2, 0, -1) . ";";
+				}
+
+				$insqry = $db->query($sqlinsertqry2);
+			}
 ?>
 	</body>
 </html>

@@ -43,7 +43,11 @@ if(isset($_POST['bill_submit'])){
     $cr = mysqli_fetch_assoc($cq);
 try{
     $charge = \Stripe_Charge::retrieve($cr['stripe_charge']);
-    $charge->refunds->create();
+    if ($amount) {
+        $charge->refunds->create(array('amount' => $amount));
+    } else {
+        $charge->refunds->create();
+    }
 } catch(\Stripe_CardError $e) {
   // Since it's a decline, Stripe_CardError will be caught
   $body = $e->getJsonBody();

@@ -49,9 +49,9 @@ if(isset($_REQUEST['deleteid'])){
     foreach ($q4 as $r4) {
         array_push($ids4, $r4['patientid']);
     }
-	$s = "UPDATE dental_patients SET status=1 WHERE patientid IN(".implode($ids3, ',').")";
+	$s = "UPDATE dental_patients SET status=1 WHERE patientid IN('" . implode($ids3, "', '") . "')";
 	$db->query($s);
-	$s = "UPDATE dental_patients SET status=2 WHERE patientid IN(".implode($ids4, ',').")";
+	$s = "UPDATE dental_patients SET status=2 WHERE patientid IN('" . implode($ids4, "', '") . "')";
     $db->query($s);
 ?>
 <script type="text/javascript">
@@ -70,7 +70,7 @@ if(isset($_REQUEST['deleteid'])){
         foreach ($q as $r) {
             array_push($ids, $r['patientid']);
         }
-        $s = "DELETE FROM dental_patients WHERE patientid IN(".implode($ids, ',').")";
+        $s = "DELETE FROM dental_patients WHERE patientid IN('" . implode($ids, "', '") . "')";
         $db->query($s);
 ?>  
 <script type="text/javascript">

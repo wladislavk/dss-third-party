@@ -571,6 +571,7 @@ if ($another_plan == "") {
     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 
     <script src="https://eligibleapi.com/js/eligible-claim-1500-2014.min.js"></script>
+    <script type="text/javascript" src="js/claim_form_eligible.js"></script>
 
     <link href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" rel="stylesheet">
 
@@ -585,7 +586,7 @@ if ($another_plan == "") {
     <div style="width:250px;float:left;">
       Instructions to E-File: Enter electronic Payer ID or Name in Box 1.  Verify all claim details.  Click “Submit” on bottom left of claim to e-file your claim.
     </div>
-    <input type="button" onclick="change_form(<?php echo  $v2_form; ?>);" value="Switch to Paper File" style="float:right;margin-right:20px;" />
+    <input type="button" onclick="change_form('<?php echo  $v2_form; ?>');" value="Switch to Paper File" style="float:right;margin-right:20px;" />
     <?php if (!empty($is_front_office)) { ?>
       <input type="button" onclick="window.location='view_claim.php?claimid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>'; return false;" value="Back to Insurance Page" style="float:right;">
     <?php } elseif ($is_back_office) { ?>
@@ -1249,8 +1250,6 @@ if($federal_tax_id_number != ''){
       });
     });
 </script>
-
-  <script type="text/javascript" src="js/claim_form_eligible.js"></script>
 
   <div id="change_confirm" style="display:none;top:0;height:100%;background:#fff; position:fixed; top:20px; width:100%; opacity:90%;">
     <p>MESSAGE</p>

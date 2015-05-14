@@ -743,7 +743,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 
     curl_setopt($ch, CURLOPT_POST, 1);
 
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -787,14 +787,11 @@ if(!$success){
 claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
   claim_status_history_update($_GET['insid'], '', DSS_CLAIM_REJECTED, '', $_SESSION['adminuserid']);
 
-  $confirm = "Submission failed. ";
-  $errors = $json_response->{"errors"}->{"messages"};
-                                        foreach($errors as $error){
-                                          $confirm .= mysqli_real_escape_string($con, $error).", ";
-                                        }
+  $errors = array_map(function($each){ return $each->message; }, $json_response->errors);
+  $confirm = 'Submission failed: ' . implode($errors, ', ');
 ?>
 <script type="text/javascript">
-   alert('RESPONSE: <?= $confirm; ?>');
+   alert('RESPONSE: <?= htmlspecialchars($confirm) ?>');
    window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>"; 
 </script>
 <?php

@@ -606,7 +606,7 @@
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $result = curl_exec ($ch);
     curl_close ($ch);
@@ -635,7 +635,7 @@
     invoice_add_claim('1', $_SESSION['docid'], (!empty($_GET['insid']) ? $_GET['insid'] : ''));
 
     if(!$success){
-        $errors = $json_response->{"errors"}->{"messages"};
+        $errors = array_map(function($each){ return $each->message; }, $json_response->errors);
         $e_msg = implode($errors, ', ');
         $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
 
@@ -644,7 +644,7 @@
 
 ?>
         <script type="text/javascript">
-           alert('Submission failed due to the following errors: <?php echo  $e_msg; ?> ');
+           alert('Submission failed due to the following errors: <?= htmlspecialchars($e_msg) ?> ');
            window.location = "manage_claims.php?status=0&insid=<?php echo  $_GET['insid']; ?>"; 
         </script>
 <?php

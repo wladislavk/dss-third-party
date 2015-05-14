@@ -861,8 +861,7 @@ if ($another_plan == "") {
     $('input[name="claim[diagnosis_codes][11]"]').val("<?= $diagnosis_k?>");
     $('input[name="claim[diagnosis_codes][12]"]').val("<?= $diagnosis_l;?>");
 
-
-
+<?php
 
   if($is_pri_pending){
     $sql = "SELECT "

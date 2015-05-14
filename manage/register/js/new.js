@@ -364,8 +364,8 @@ function add_cc()
                 exp_year: $('.card-expiry-year').val(),
                 cvc: $('.card-cvc').val(),
                 zip: $('.card-zip').val(),
-                companyid: "<?php echo   addslashes($c_r['id']); ?>", 
-                company: "<?php echo   addslashes($c_r['name']); ?>"
+                companyid: $('[name=companyid]').val(),
+                company: $('[name=companyname]').val()
             },
             success: function(data){
                 var r = $.parseJSON(data);

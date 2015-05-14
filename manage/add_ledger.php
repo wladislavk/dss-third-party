@@ -117,7 +117,7 @@
 			$transaction_type = (!empty($_POST['transaction_type']) ? $_POST['transaction_type'] : '');
 			$transaction_code = (!empty($_POST['proccode']) ? $_POST['proccode'] : '');;
 			
-			$tsql = "SELECT transaction_code, description from dental_transaction_code where transaction_codeid=".$transaction_code;
+			$tsql = "SELECT transaction_code, description from dental_transaction_code where transaction_codeid = '" . $transaction_code . "'";
 			
 			$trow = $db->getRow($tsql);
 			$transaction_code = $trow['transaction_code'];

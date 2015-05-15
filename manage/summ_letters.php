@@ -135,12 +135,10 @@ if ($patient_info) {
                           OR dental_letters.parentid=0)
                   AND dental_letters.templateid LIKE '".$filter."' GROUP BY dental_letters.letterid, dental_letters.parentid ORDER BY dental_letters.letterid ASC;";
   $letters_res = $db->getResults($letters_query);
-  if (!empty($letters_res)) {
-  	print "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error selecting letters from the database.";
-  } else {
-    foreach ($letters_res as $row) {
-  		$dental_letters[] = $row;
-  	}
+  if (count($letters_res)) {
+      foreach ($letters_res as $row) {
+  		  $dental_letters[] = $row;
+  	   }
   }
 
   if ($dental_letters) {

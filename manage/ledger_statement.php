@@ -498,9 +498,15 @@
 
 	$db->query($state_sql);
 
-	if (file_exists($filename)) {
+    /**
+     * @Todo Optimize the PDF creation to NOT create it if the file already exists
+     * This comparison needs to be done BEFORE starting parsing the HTML for the PDF
+     */
+    if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $filename)) {
         $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
+    }
 
+    if (file_exists($_SERVER['DOCUMENT_ROOT'] . $filename)) {
         ?>
 		<script type="text/javascript">
 			window.location = "<?php echo  $filename; ?>";

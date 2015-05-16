@@ -136,9 +136,9 @@ if ($patient_info) {
                   AND dental_letters.templateid LIKE '".$filter."' GROUP BY dental_letters.letterid, dental_letters.parentid ORDER BY dental_letters.letterid ASC;";
   $letters_res = $db->getResults($letters_query);
   if (count($letters_res)) {
-      foreach ($letters_res as $row) {
-  		  $dental_letters[] = $row;
-  	   }
+    foreach ($letters_res as $row) {
+      $dental_letters[] = $row;
+    }
   }
 
   if ($dental_letters) {

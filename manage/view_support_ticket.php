@@ -5,9 +5,9 @@ include "includes/top.htm";
 <a href="support.php" style="float:right; margin-right:20px;" class="button">Return to support</a>
 
 <?php
-$v_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE create_type = 0 && id = ".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''));
+$v_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE create_type = 0 && id = '".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '')) . "'";
 $db->query($v_sql);
-$v_sql = "UPDATE dental_support_responses SET viewed=1 WHERE response_type = 0 && ticket_id = ".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : ''));
+$v_sql = "UPDATE dental_support_responses SET viewed=1 WHERE response_type = 0 && ticket_id = '".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '')) . "'";
 $db->query($v_sql);
 if(isset($_POST['respond'])){
   if($_POST['body']!='' || $_FILES['attachment']['name'][0]!=''){
@@ -19,7 +19,7 @@ if(isset($_POST['respond'])){
           	adddate = now(),
           	ip_address = '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'
         		";
-    $r_id = $db->getNumberRows($s);
+    $r_id = $db->getInsertId($s);
   }
 
   if(!empty($_POST['close']) && $_POST['close']==2){
@@ -29,7 +29,14 @@ if(isset($_POST['respond'])){
     $db->query($s);
   }
 
-  if($_POST['reopen']==1){
+  if(!empty($_GET['ed'])) {
+    $closedTickers = "SELECT * FROM dental_support_tickets WHERE id = '".mysqli_real_escape_string($con,$_GET['ed'])."' AND status=2";
+    $countTicket = $db->getNumberRows($closedTickers);
+  } else {
+    $countTicket = 0;
+  }
+
+  if($countTicket && $_POST['reopen']==1){
     $s = "UPDATE dental_support_tickets SET
             status='1'
             WHERE id = '".mysqli_real_escape_string($con,$_GET['ed'])."'";
@@ -44,7 +51,7 @@ if(isset($_POST['respond'])){
     if($_FILES['attachment']['tmp_name'][$i]!=''){
       $extension = preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['attachment']["name"][$i]));
       $attachment = "support_attachment_".$r_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
-      move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../shared/q_file/" . $attachment);
+      move_uploaded_file($_FILES['attachment']["tmp_name"][$i], '../../../shared/q_file/' . $attachment);
 
       $a_sql = "INSERT INTO dental_support_attachment SET
                   filename = '".mysqli_real_escape_string($con,$attachment)."',

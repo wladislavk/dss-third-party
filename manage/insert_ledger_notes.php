@@ -13,6 +13,16 @@
 				$sqlinsertqry = '';
 			}
 
+            $serviceDate = date('Y-m-d', strtotime(!empty($_POST['entry_date']) ? $_POST['entry_date'] : ''));
+            $entryDate = date('Y-m-d', strtotime(!empty($_POST['entry_date']) ? $_POST['entry_date'] : ''));
+            $note = mysqli_real_escape_string($con, !empty($_POST['note']) ? $_POST['note'] : '');
+            $private = !empty($_POST['private']) ? 1 : 0;
+            $addDate = date('m/d/Y');
+            $ipAddress = $_SERVER['REMOTE_ADDR'];
+            $producerId = !empty($_POST['producer']) ? $_POST['producer'] : '';
+            $patientId = !empty($_POST['patientid']) ? $_POST['patientid'] : '';
+            $docId = !empty($_POST['docid']) ? $_POST['docid'] : '';
+
 			$sqlinsertqry .= "INSERT INTO `dental_ledger_note` (
 				`service_date` ,
 				`entry_date` ,
@@ -23,9 +33,17 @@
 				`producerid`,
 				`patientid`,
 				`docid`
-				) VALUES ";
-			$private = (!empty($_POST['private']))?1:0;
-			$sqlinsertqry .= "( '".date('Y-m-d', strtotime((!empty($_POST['entry_date']) ? $_POST['entry_date'] : '')))."', '".date('Y-m-d', strtotime((!empty($_POST['entry_date']) ? $_POST['entry_date'] : '')))."', '".mysqli_real_escape_string($con,(!empty($_POST['note']) ? $_POST['note'] : ''))."', '".$private."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".(!empty($_POST['producer']) ? $_POST['producer'] : '')."', ".(!empty($_POST['patientid']) ? $_POST['patientid'] : '').", ".(!empty($_POST['docid']) ? $_POST['docid'] : '').")";
+				) VALUES (
+				'$serviceDate',
+				'$entryDate',
+				'$note',
+				'$private',
+				'$addDate',
+				'$ipAddress',
+				'$producerId',
+				'$patientId',
+				'$docId'
+				)";
 
 			$insqry = $db->query($sqlinsertqry);
 			if(!$insqry){

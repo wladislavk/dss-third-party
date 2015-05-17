@@ -28,7 +28,7 @@
             $help_id = $db->getInsertId($help_sql);  
             //USER ROLES
             //remove previous roles
-        	$del_role_sql = "delete from help_wp.wp_usermeta where useri_d=".mysqli_real_escape_string($GLOBALS['con'], $help_id)." AND meta_key = 'wp_capabilities'";
+        	$del_role_sql = "delete from help_wp.wp_usermeta where user_id=".mysqli_real_escape_string($GLOBALS['con'], $help_id)." AND meta_key = 'wp_capabilities'";
         	
             $db->query($del_role_sql);    
             $role_sql = "insert into help_wp.wp_usermeta (user_id, meta_key, meta_value) values (".mysqli_real_escape_string($GLOBALS['con'], $help_id).", 'wp_capabilities', 'a:1:{s:10:\"subscriber\";b:1;}');";

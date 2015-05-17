@@ -14,7 +14,7 @@
     $jpg = substr( $file, 0, -4 ) . '';
 ?>
     <br />
-<div style="float:left;"><a href="#" onclick="send_letter('<?php echo (!empty($_GET['id']) ? $_GET['id'] : ''); ?>')">Looks Good! SEND!</a> | <a href="#" onclick="parent.disablePopupClean();">Cancel/Revise</a></div>
+
 <?php
     exec('gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -r300 -sOutputFile='.$jpg.'-%01d.jpg '. $file)
 ?>
@@ -40,7 +40,7 @@
 ?>
 
     <div style="float:left;">
-        <a href="#" onclick="send_letter('<?php echo (!empty($_GET['id']) ? $_GET['id'] : ''); ?>', <?php echo (isset($reload) ? $reload : ''); ?>, '<?php echo (isset($page) ? $page : ''); ?>')">Looks Good! SEND!</a> | <a href="#" onclick="parent.disablePopupClean();">Cancel/Revise</a>
+        <a href="#" onclick="send_letter('<?php echo (!empty($_GET['id']) ? $_GET['id'] : 'null'); ?>', <?php echo ($reload ? 'true' : 'false'); ?>, '<?php echo (isset($page) ? $page : 'null'); ?>')">Looks Good! SEND!</a> | <a href="#" onclick="parent.disablePopupClean();">Cancel/Revise</a>
     </div>
     <?php
         $fsql = "SELECT fax, preferredcontact from dental_contact WHERE contactid='".mysqli_real_escape_string($con,$r['md_list'])."' OR 

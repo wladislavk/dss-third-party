@@ -1,7 +1,6 @@
 <html>
 <head><base href="/legacy-loader/html-output.php">
     <Script type="text/javascript">
-        alert( "You are now being redirected..." );
         window.location = 'redirected.php';
     </script>
 </head>

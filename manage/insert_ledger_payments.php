@@ -32,8 +32,8 @@
                     `payer`
                     ) VALUES ";
 
-                $lsql = "SELECT * FROM dental_ledger WHERE (primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."  or secondary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '');
-                
+                $lsql = "SELECT * FROM dental_ledger WHERE (primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."  or secondary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '').")";
+
                 $lq = $db->getResults($lsql);
                 if ($lq) foreach ($lq as $row){
                     $id = $row['ledgerid'];

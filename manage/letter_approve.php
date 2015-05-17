@@ -60,5 +60,7 @@
             }
         }
     ?>
-
+    <div style="float:left;">
+        <a href="#" onclick="send_letter('<?php echo (!empty($_GET['id']) ? $_GET['id'] : 'null'); ?>', <?php echo ($reload ? 'true' : 'false'); ?>, '<?php echo (isset($page) ? $page : 'null'); ?>')">Looks Good! SEND!</a> | <a href="#" onclick="parent.disablePopupClean();">Cancel/Revise</a>
+    </div>
     <script type="text/javascript" src="/manage/js/letter_approve.js"></script>

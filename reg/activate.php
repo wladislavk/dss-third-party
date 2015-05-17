@@ -23,38 +23,38 @@ $location_info = mysqli_fetch_assoc($location_result);
 
   $n = $location_info['phone'];
 /*
-                $recover_hash = substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);
-                $ins_sql = "UPDATE dental_patients set access_code='".$recover_hash."' WHERE patientid='".$r['patientid']."'";
-                mysqli_query($con, $ins_sql);
+  $recover_hash = substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);
+  $ins_sql = "UPDATE dental_patients set access_code='".$recover_hash."' WHERE patientid='".$r['patientid']."'";
+  mysqli_query($con, $ins_sql);
 
-        // iterate over all our friends. $number is a phone number above, and $name 
-        // is the name next to it
-        if($r['cell_phone']!='') {
+  // iterate over all our friends. $number is a phone number above, and $name 
+  // is the name next to it
+
+  if ($r['cell_phone']!='') {
     // instantiate a new Twilio Rest Client
     $client = new \Services_Twilio($AccountSid, $AuthToken);
-          // Send a new outgoing SMS 
-          if($send_texts){
-            $sms = $client->account->sms_messages->create(
-              // the number we are sending from, must be a valid Twilio number
-              $twilio_number,
+    // Send a new outgoing SMS 
+    if ($send_texts) {
+      $sms = $client->account->sms_messages->create(
+        // the number we are sending from, must be a valid Twilio number
+        $twilio_number,
 
-              // the number we are sending to - Any phone number
-              $r['cell_phone'],
+        // the number we are sending to - Any phone number
+        $r['cell_phone'],
 
-              // the sms body 
-              "Your access code is ".$recover_hash
-            );
-          }
-        }
+        // the sms body 
+        "Your access code is ".$recover_hash
+      );
+    }
+  }
 */
-      }else{
+}else{
 		?>
 			<script type="text/javascript">
 				window.location = 'login.php';
 			</script>
 		<?php
       }
-
 ?>
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
@@ -79,7 +79,7 @@ function send_text(from, but){
 	  if(from=="button"){
 	    $('#sent_text').html("Text message sent! Please allow up to 1 minute to receive the message, then enter your access code on this page.")
 	  }else{ 
-            $('#sent_text').html("We sent a text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.  Please enter the code we sent you.").show('slow');
+      $('#sent_text').html("We sent a text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.  Please enter the code we sent you.").show('slow');
 	  }
         }else{
           if(r.error == "cell"){
@@ -116,7 +116,6 @@ $(document).ready(function(){
 
   <div class="login_content" id="first2_sect">
      <h3>Enter your access code</h3>
-     <!--<p>We sent a text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.  Please enter the code we sent you.</p>-->
      <p id="sent_text" class="error">
 	<?php
   	  if($r['access_type']==2){
@@ -133,7 +132,7 @@ $(document).ready(function(){
 <?php
   if($r['access_type']==2){
 ?>
-       <span><a href="#" onclick="$('#text_instructions').show('slow');">Didn’t receive a PIN code?</a></span>
+       <span><a href="#" onclick="$('#text_instructions').show('slow');">Didn't receive a PIN code?</a></span>
        <div style="display:none;" id="text_instructions">
           <p>
 		Didn't receive a PIN access code from <?= $r['mailing_practice']; ?>? Don't worry. Just call the office at <?= format_phone($n); ?> and ask them to provide you the PIN again. Then enter your PIN below to register.

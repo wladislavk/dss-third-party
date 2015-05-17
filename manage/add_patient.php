@@ -22,7 +22,6 @@ if(!isset($_GET['noheaders'])){
 </script>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-<script type="text/javascript" src="js/add_patient.js"></script>
 <script type="text/javascript" src="js/masks.js"></script>
 <script type="text/javascript" src="script/logout_timer.js"></script>
 <script type="text/javascript" src="js/jquery.cookie.js"></script>
@@ -31,6 +30,7 @@ if(!isset($_GET['noheaders'])){
 <script type="text/javascript" src="script/wufoo.js"></script>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/add_patient.css" type="text/css" media="screen" />
+<script type="text/javascript" src="js/add_patient.js"></script>
 <script src="script/autocomplete.js" type="text/javascript"></script>
 <script src="script/autocomplete_local.js" type="text/javascript"></script>
 <?php
@@ -164,10 +164,10 @@ function trigger_letter3($pid) {
 //
 // Sends registration email to patient
 */
-function sendRegEmail($id, $e, $l, $old_email=''){
+function sendRegEmail($id, $e, $l, $old_email='', $con){
 
   $db = new Db();
-  $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$id)."'";
+  $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $id)."'";
   $r = $db->getRow($s);
   if($r['recover_hash']=='' || $e!=$old_email){
     $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
@@ -625,7 +625,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     }
     if(isset($_POST['sendReg']) && $doc_patient_portal && $_POST['use_patient_portal']){
       if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
-        sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email']); 
+        sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email'], $con); 
       }else{?>
         <script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script><?php
       }

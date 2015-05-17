@@ -8,7 +8,6 @@ class Loader
 {
     public static $redirectRegex = '@^
             \s*<script[^>]*?>\s*
-                (?:alert\(.*?\);\s*)?
                 (?:
                     window\.location\.replace\(\s*
                         (?<replaceDelimiter>["\'])(?<replacePath>.+)\k<replaceDelimiter>

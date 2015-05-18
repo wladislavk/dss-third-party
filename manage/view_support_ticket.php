@@ -167,7 +167,7 @@ foreach ($r_q as $r) {?>
         <a href="#" id="add_attachment_but" onclick="add_attachment();return false;" style="display:none;" class="button">Add Additional</a>
         <div style="float:right;">
 <?php 
-if(!empty($t['status']) && ($t['status']==DSS_TICKET_STATUS_OPEN || $t['status'] == DSS_TICKET_STATUS_REOPENED)){ ?>
+if(isset($t['status']) && ($t['status']==DSS_TICKET_STATUS_OPEN || $t['status'] == DSS_TICKET_STATUS_REOPENED)){ ?>
           <input type="checkbox" value="2" name="close" /> Close Ticket<br />
 <?php 
 }else{ ?>

@@ -56,7 +56,8 @@ $sql = "SELECT "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid AND users.billing_company_id='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'"
      . "  JOIN dental_user_company uc ON uc.userid = claim.docid " 
-     . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
+     . "  JOIN dental_users users2 ON claim.userid = users2.userid "
+     . "  LEFT JOIN companies c ON c.id = users.billing_company_id ";
 }
 else{
 $sql = "SELECT "
@@ -83,7 +84,8 @@ $sql = "SELECT "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
      . "  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'"
-     . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
+     . "  JOIN dental_users users2 ON claim.userid = users2.userid "
+     . "  LEFT JOIN companies c ON c.id = users.billing_company_id ";
 }
 // . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
 

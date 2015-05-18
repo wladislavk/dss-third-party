@@ -12,6 +12,8 @@ class FTSSamples
 	
 	public function __construct ()
 	{
+        global $con;
+
 		$this->serviceEndpointUrl = "https://api.sfaxme.com/api/";
 		$this->securityContext = ""; //<--- Required but leave blank exactly as it is here
                 $key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";

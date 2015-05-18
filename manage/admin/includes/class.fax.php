@@ -285,6 +285,8 @@ class FTSAESHelper
 	
 	public function __construct($pSecurityContext)
 	{
+        global $con;
+
                 $key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";
                 $key_q = mysqli_query($con, $key_sql);
                 $keys = mysqli_fetch_assoc($key_q);

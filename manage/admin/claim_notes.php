@@ -481,8 +481,7 @@ if ($is_pending) {
   <?php
   } else {
     $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";
-    $inscoarray = mysql_query($inscoquery);
-    $inscoinfo = mysql_fetch_array($inscoarray);
+    $inscoinfo = $db->getResults($inscoquery);
   ?>
 <ul>
   <li><label>Insurance Co.:</label><span class="value"><?php echo $inscoinfo['company']; ?></span></li>

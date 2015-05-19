@@ -40,6 +40,7 @@
 									<div class="dp75">
 										<div>
 			                <input type="hidden" name="companyid" value="<?php echo   $c_r['id']; ?>" />
+                            <input type="hidden" name="companyname" value="<?php echo   $c_r['name']; ?>" />
 											<div id="welcome_errors" class="form_errors" style="display:none"></div>
                       <div class="sepH_b">
                         <label class="lbl_a"><strong>1.</strong> Registration Code <span class="req">*</span></label>

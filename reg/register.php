@@ -33,6 +33,12 @@ include 'includes/completed.php';
       $q = mysqli_query($con, $sql);
       $p = mysqli_fetch_assoc($q);
   }
+
+$c_sql = "SELECT c.id, c.name, c.stripe_publishable_key from companies c
+    JOIN dental_user_company uc ON uc.companyid=c.id
+    WHERE uc.userid='".mysqli_real_escape_string($con, $p['patientid'])."'";
+
+$c_r = $db->getRow($c_sql);
 ?>
 				<div id="content_wrapper">
 					<div id="main_content" class="cf">
@@ -40,6 +46,8 @@ include 'includes/completed.php';
 						<h2 class="sepH_c">Step-by-Step Patient Registration </h2>
 	<form action="register.php" name="register_form" id="register_form" method="post">
 		<input type="hidden" id="last_reg_sect" name="last_reg_sect" value="<?= $p['last_reg_sect']; ?>" />
+        <input type="hidden" name="companyid" value="<?php echo   $c_r['id']; ?>" />
+        <input type="hidden" name="companyname" value="<?php echo   $c_r['name']; ?>" />
 		<input type="hidden" id="patientid" name="patientid" value="<?= $_SESSION['pid']; ?>" />
 							<ul id="status" class="cf">
 							<?php $pagenum = 1; ?>

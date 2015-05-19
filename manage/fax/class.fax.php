@@ -12,6 +12,8 @@ class FTSSamples
 	
 	public function __construct ()
 	{
+        global $con;
+
 		$this->serviceEndpointUrl = "https://api.sfaxme.com/api/";
 		$this->securityContext = ""; //<--- Required but leave blank exactly as it is here
                 $key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";
@@ -280,9 +282,14 @@ class FTSAESHelper
 		{
 			$tokenDataInput .= "&Client=" . $this->pTokenClient;
 		}
-		
-		$AES = new AES_Encryption($this->pEncryptionKey, $this->pEncryptionInitVector, "PKCS7", "cbc");
-		$tokenDataEncoded = base64_encode($AES->encrypt($tokenDataInput));
+
+		try {
+			$AES = new AES_Encryption($this->pEncryptionKey, $this->pEncryptionInitVector, "PKCS7", "cbc");
+			$tokenDataEncoded = base64_encode($AES->encrypt($tokenDataInput));
+		} catch (Exception $e) {
+			error_log(__CLASS__ . ': Wrong initialization values for AES Encryption');
+			$tokenDataEncoded = null;
+		}
 		
 		return $tokenDataEncoded;
 	}

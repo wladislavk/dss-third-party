@@ -53,6 +53,8 @@
             <h2 class="sepH_c">Step-by-Step User Registration</h2>
 	        <form action="register.php" id="register_form" method="post">
 		        <input type="hidden" id="userid" name="userid" value="<?php echo $regid; ?>" />
+                <input type="hidden" name="companyid" value="<?php echo   $c_r['id']; ?>" />
+                <input type="hidden" name="companyname" value="<?php echo   $c_r['name']; ?>" />
 					<ul id="status" class="cf">
 					    <?php $pagenum = 1; ?>
 						<li class="active"><span class="large"><?php echo  $pagenum++; ?>. Welcome</span></li>

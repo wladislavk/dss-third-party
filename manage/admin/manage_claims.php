@@ -589,7 +589,7 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
                 <?php
                 }
             }
-        }
+        
 
         ?>
 				    <?php if($myarray["status"] == DSS_CLAIM_PENDING || $myarray["status"] == DSS_CLAIM_REJECTED){ ?>
@@ -678,7 +678,9 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 /></td>
 			</tr>
 	<?php
-	}?>
+}
+  }
+  ?>
 </table>
 </form>
 

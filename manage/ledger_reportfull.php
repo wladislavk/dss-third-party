@@ -11,7 +11,7 @@ else
 $i_val = $index_val * $rec_disp;
 
 $sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."'";
-        if(!empty($_POST['dailysub']) && $_POST['dailysub'] != 1 && !empty($_POST['monthlysub']) && $_POST['monthlysub'] != 1){ 
+        if((empty($_POST['dailysub']) || $_POST['dailysub'] != 1) && (empty($_POST['monthlysub']) && $_POST['monthlysub'] != 1)){
 $sql = "
 select 
         'ledger',
@@ -134,7 +134,7 @@ $num_users = count($my);
         (<i><?php echo $thename;?></i>)
     <?php }?>
 
-    <?php if(!empty($_POST['dailysub']) && $_POST['dailysub'] != 1 && !empty($_POST['monthlysub']) && $_POST['monthlysub'] != 1){ ?>
+    <?php if((empty($_POST['dailysub']) || $_POST['dailysub'] != 1) && (empty($_POST['monthlysub']) || $_POST['monthlysub'] != 1)){ ?>
        (<i><?php echo  date('m/d/Y'); ?></i>)
     <?php } ?>
 
@@ -245,7 +245,7 @@ $num_users = count($my);
             <?php echo date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
         </td>
         <td valign="top" width="10%">
-            <a href="manage_ledger.php?pid=<?php echo $myarray['patientid']; ?>&addtopat=1"><?php echo st((!empty($myarray['lastname']) ? $myarray['lastname'] : '').", ".(!empty($myarray['firstname']) ? $myarray['firstname'] : ''));?></a>
+            <a href="manage_ledger.php?pid=<?php echo $myarray['patientid']; ?>&addtopat=1"><?php echo st((!empty($pat_myarray['lastname']) ? $pat_myarray['lastname'] : '').", ".(!empty($pat_myarray['firstname']) ? $pat_myarray['firstname'] : ''));?></a>
         </td>
         <td valign="top" width="10%">
             <?php echo st($myarray['name']);?>

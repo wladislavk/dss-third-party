@@ -32,7 +32,6 @@ if (typeof String.prototype.trim !== 'function') {
         $('.initial_list').css("display", "none");
         $('#search_hints').css("display", "inline");
         sendValue($('#patient_search').val());
-
         if ($(this).val() > 2) {
           window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
         }
@@ -354,7 +353,7 @@ function sendValue(partial_name)
           .fadeIn();
      } else {
       if (data.error) {
-        alert(data.error);
+        alert('Could not select patient from database');
       } else {
         $('.json_patient').remove();
         $('.create_new').remove();

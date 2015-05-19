@@ -92,7 +92,7 @@ TRIGGERING LETTERS
 =======================================================*/
 // Trigger Letter 1 and 2 if New MD was added
 function trigger_letter1and2($pid) {
-
+  $con = $GLOBALS['con'];
   $db = new Db();
   //prevent letters from being generated if letters or intro letters disabled
   $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($GLOBALS['con'],$_SESSION['docid'])."'";
@@ -164,14 +164,16 @@ function trigger_letter3($pid) {
 //
 // Sends registration email to patient
 */
-function sendRegEmail($id, $e, $l, $old_email=''){
+function sendRegEmail($id, $e, $l, $old_email='', $con){
 
   $db = new Db();
   $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$id)."'";
   $r = $db->getRow($s);
   if($r['recover_hash']=='' || $e!=$old_email){
     $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
-    $ins_sql = "UPDATE dental_patients set text_num=0, access_type=1, text_date=NOW(), access_code='', registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
+    $access_code = rand(100000, 999999);
+
+    $ins_sql = "UPDATE dental_patients set text_num=0, access_type=1, text_date=NOW(), access_code='" . $access_code . "', registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
     $db->query($ins_sql);
   }else{
     $ins_sql = "UPDATE dental_patients set access_type=1, registration_senton=NOW(), registration_status=1 WHERE patientid='".$r['patientid']."'";
@@ -625,7 +627,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     }
     if(isset($_POST['sendReg']) && $doc_patient_portal && $_POST['use_patient_portal']){
       if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
-        sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email']); 
+        sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email'], $con); 
       }else{?>
         <script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script><?php
       }
@@ -961,7 +963,7 @@ $pending_vob_status = $vob_myarray['status'];
 
 $thesql = "select * from dental_patients where patientid='".$request_ed."'";
 $themyarray = $db->getRow($thesql);
-  
+
 if(isset($msg) && $msg != ''){
   $firstname = $_POST['firstname'];
   $middlename = $_POST['middlename'];

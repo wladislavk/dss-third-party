@@ -1,4 +1,6 @@
 var clickedBut;
+var existingPatient = patientId = getParameterByName('pid');
+
 $(document).ready(function() {
 
   var pid = getParameterByName('pid');

@@ -94,219 +94,260 @@ $num_users=mysqli_num_rows($my);
 
 
 <script type="text/javascript">
-        // Patient Search Suggestion Script
-        var selection = 1;
-        var selectedUrl = '';
-        var searchVal = ""; // global variable to hold the last valid search string
-        $(document).ready(function() {
-                $('#patient_search').keyup(function(e) {
-                                var a = e.which; // ascii decimal value
-                                //var c = String.fromCharCode(a);
-                                var listSize = $('#patient_list li').size();
-                                var stringSize = $(this).val().length;
-                                if ($(this).val().trim() == "") {
-                                        $('#search_hints').css('display', 'none');
-                                        $('.json_patient').remove();
-                                        $('.create_new').remove();
-                                        $('.initial_list').css("display", "table-row");
-                                } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
-                                        $('.initial_list').css("display", "none");
-                                        $('#search_hints').css("display", "inline");
-                                        sendValue($('#patient_search').val());
-                                        if ($(this).val() > 2) {
-                                                window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
-                                        }
-                                }
-                });
-                $(document).keyup(function(e) {
-                        switch (e.which) {
-                                case 38:
-                                        move_selection('up');
-                                        break;
-                                case 40:
-                                        move_selection('down');
-                                        break;
-                                case 13:
-                                        if($('#search_hints').css('display') == 'inline' || $('#search_hints').css('display') == 'block'){      
-                                          if (selectedUrl != '') {
-                                                window.location = window.selectedUrl;
-                                          }
-                                        }
-                                        break;
-                        }
-                });
-                $('#patient_search').click(function() {
-                        if ($(this).val() == 'Patient Search') {
-                                $(this).val('');
-                        }
-                });
-                $('#patient_list > li').hover(function() {
-                        if($(this).data("pattype")!="no"){
-                          $(this).css('cursor','pointer');
-                        }
-                        window.selection = $(this).data("number");
-                        set_selected(window.selection);
-                }, function() {
-                        if($(this).data("pattype")!="no"){
-                          $(this).css('cursor','auto');
-                        }
-                        $('#patient_list li').removeClass('list_hover');
-                        window.selectedUrl = '';
-                });
-                $('#patient_list > li').click(function() {
-                    if($(this).data("pattype")=="new"){
-                        n = $('#patient_search').val();
-                        window.location = "add_patient.php?search="+n;
-                    }else if($(this).data("pattype")=="no"){
-                        //do nothing
-                    }else{
-                        if (selectedUrl != '') {
-                                window.location = window.selectedUrl;
-                        }
-                        $('#patient_search').val($(this).html());
-                        sendValue($(this).html());
+    // Patient Search Suggestion Script
+    var selection = 1;
+    var selectedUrl = '';
+    var searchVal = ""; // global variable to hold the last valid search string
+    $(document).ready(function() {
+        $('#patient_search').keyup(function(e) {
+                var a = e.which; // ascii decimal value
+                //var c = String.fromCharCode(a);
+                var listSize = $('#patient_list li').size();
+                var stringSize = $(this).val().length;
+                if ($(this).val().trim() == "") {
+                    $('#search_hints').css('display', 'none');
+                    $('.json_patient').remove();
+                    $('.create_new').remove();
+                    $('.initial_list').css("display", "table-row");
+                } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
+                    $('.initial_list').css("display", "none");
+                    $('#search_hints').css("display", "inline");
+                    sendValue($('#patient_search').val());
+                    if ($(this).val() > 2) {
+                        window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
                     }
-                });
-                $('*').click(function() {
-                        $('.search_hints').css('display', 'none');
-                });
+                }
         });
-        function sendValue(partial_name) {
-                $.post(
-                
-                "list_patients.php",
-
-                { 
-                        "partial_name": partial_name 
-                },
-
-                function(data) {
-                        if (data.length == 0) {
-                                $('.json_patient').remove();
-                                $('.create_new').remove();
-                                $('.no_matches').remove();
-                                //$('#search_hints').css('display', 'none');
-                               var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('no_matches').data("pattype", "no");
-                                        template_list_new(newLi, "No Matches")
-                                                .appendTo('#patient_list')
-                                                .fadeIn();
-                                var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('create_new').data("pattype", "new");
-                                        template_list_new(newLi, "Add patient with this name&#8230;")
-                                                .appendTo('#patient_list')
-                                                .fadeIn();
-                        }else{
-                        if (data.error) {
-                                //alert(data.error);
-                        } else {
-                                $('.json_patient').remove();
-                                $('.create_new').remove();
-                               $('.no_matches').remove();
- 
-                                for (i in data) {
-                                        var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').data("number", parseInt(i)+1).data("patientid", data[i].patientid).data("patient_info", data[i].patient_info);
-                                        template_list(newLi, data[i])
-                                                .appendTo('#patient_list')
-                                                .fadeIn();
-                                        <?php if ($_SERVER['PHP_SELF'] == "/manage/manage_patient.php") { ?>
-                                        if (data[i].stat == "1") {
-                                                var tr_class = "tr_active";
-                                        } else {
-                                                var tr_class = "tr_inactive";
-                                        }
-                                        var newRow = $('#patients .template').clone().removeClass('template').addClass('json_patient').addClass(tr_class);
-                                        template_table(newRow, data[i])
-                                                .appendTo('#patients')
-                                                .fadeIn();
-                                        <?php } ?>
-                                }
-                           }
-                        }
-                },
-
-                "json"
-                );
-        }
-        function move_selection(direction) {
-                if ($('#patient_list > li.list_hover').size() == 0) {
-                        window.selection = 0;
-                }
-                if (direction == 'up' && window.selection != 0) {
-                        if (window.selection != 1) {
-                                window.selection--;
-                        }
-                } else if (direction == 'down') {
-                        if (window.selection != ($("#patient_list li").size() -1)) {
-                                window.selection++;
-                        }
-                }
-                set_selected(window.selection);
-        }
-        function set_selected(menuitem) {
-                $('#patient_list li').removeClass('list_hover');
-                $('#patient_list li').eq(menuitem).addClass('list_hover');
-                var pid = $('#patient_list li').eq(menuitem).data("patientid");
-                var patient_info = $('#patient_list li').eq(menuitem).data("patient_info");
-                    if($('#patient_list li').eq(menuitem).data("pattype")=="new"){
-                        n = $('#patient_search').val();
-                        window.selectedUrl = "add_patient.php?search="+n;
-                    }else if($('#patient_list li').eq(menuitem).data("pattype")=="no"){
-                        window.selectedUrl = '';
-                    }else{
-
-                        window.selectedUrl = "view_patient.php?pid=" + pid;
+        $(document).keyup(function(e) {
+            switch (e.which) {
+                case 38:
+                    move_selection('up');
+                    break;
+                case 40:
+                    move_selection('down');
+                    break;
+                case 13:
+                    if($('#search_hints').css('display') == 'inline' || $('#search_hints').css('display') == 'block'){
+                      if (selectedUrl != '') {
+                        window.location = window.selectedUrl;
+                      }
                     }
-        }
-        function template_list(li, patient) {
-                if(patient.middlename != null){
-                var mid = patient.middlename
-                }else{
-                        var mid = '';
+                    break;
+            }
+        });
+        $('#patient_search').click(function() {
+            if ($(this).val() == 'Patient Search') {
+                $(this).val('');
+            }
+        });
+        $('#patient_list > li').hover(function() {
+            if($(this).data("pattype")!="no"){
+              $(this).css('cursor','pointer');
+            }
+            window.selection = $(this).data("number");
+            set_selected(window.selection);
+        }, function() {
+            if($(this).data("pattype")!="no"){
+              $(this).css('cursor','auto');
+            }
+            $('#patient_list li').removeClass('list_hover');
+            window.selectedUrl = '';
+        });
+        $('#patient_list > li').click(function() {
+            if($(this).data("pattype")=="new"){
+            n = $('#patient_search').val();
+            window.location = "add_patient.php?search="+n;
+            }else if($(this).data("pattype")=="no"){
+            //do nothing
+            }else{
+            if (selectedUrl != '') {
+                window.location = window.selectedUrl;
+            }
+            $('#patient_search').val($(this).html());
+            sendValue($(this).html());
+            }
+        });
+        $('*').click(function() {
+            $('.search_hints').css('display', 'none');
+        });
+    });
+
+    var isManagePatient = <?= $_SERVER['PHP_SELF'] === '/manage/manage_patient.php' ? 'true' : 'false' ?>;
+    var searchBounce = 600,
+        searchTimeout = 0,
+        searchRequest = null;
+
+    function handleResults (data) {
+        if (data.length == 0) {
+            $('.json_patient').remove();
+            $('.create_new').remove();
+            $('.no_matches').remove();
+
+            var newLi = $('#patient_list .template').clone(true)
+                .removeClass('template')
+                .addClass('no_matches')
+                .data("pattype", "no");
+
+            template_list_new(newLi, "No Matches")
+                .appendTo('#patient_list')
+                .fadeIn();
+
+            var newLi = $('#patient_list .template').clone(true)
+                .removeClass('template')
+                .addClass('create_new')
+                .data("pattype", "new");
+
+            template_list_new(newLi, "Add patient with this name&#8230;")
+                .appendTo('#patient_list')
+                .fadeIn();
+        } else if (data.error) {
+            //alert(data.error);
+            $('.json_patient').remove();
+            $('.create_new').remove();
+            $('.no_matches').remove();
+        } else {
+            $('.json_patient').remove();
+            $('.create_new').remove();
+            $('.no_matches').remove();
+
+            for (i in data) {
+                var newLi = $('#patient_list .template').clone(true)
+                    .removeClass('template')
+                    .addClass('json_patient')
+                    .data("number", parseInt(i) + 1)
+                    .data("patientid", data[i].patientid)
+                    .data("patient_info", data[i].patient_info);
+
+                template_list(newLi, data[i])
+                    .appendTo('#patient_list')
+                    .fadeIn();
+
+                if (isManagePatient) {
+                    if (data[i].stat == "1") {
+                        var tr_class = "tr_active";
+                    } else {
+                        var tr_class = "tr_inactive";
+                    }
+
+                    var newRow = $('#patients .template').clone()
+                        .removeClass('template')
+                        .addClass('json_patient')
+                        .addClass(tr_class);
+
+                    template_table(newRow, data[i])
+                        .appendTo('#patients')
+                        .fadeIn();
                 }
-                li.html(patient.lastname + ", " + patient.firstname + " " + mid+ " - "+patient.doctor);
-                return li;
+            }
         }
-        function template_list_new(li, str) {
-                li.html(str);
-                return li;
+    }
+
+    function sendValue (searchTerm) {
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
         }
 
-
-        function template_table(row, patient) {
-                var pm = "";
-                if (patient.premedcheck == "1") {
-                        var pm = "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*Med";
-                }
-                if(patient.middlename != null){                        var mid = patient.middlename
-                }else{
-                        var mid = '';
-                }
-                if (patient.patient_info == 1) {
-                        row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + mid + "</a>" + pm);
-                        row.find('.flowsheet').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\">" + patient.fspage1_complete + "</a>");
-                        row.find('.next_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.next_visit + "</a>");
-                        row.find('.last_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_visit + "</a>");
-                        row.find('.last_treatment').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_treatment + "</a>");
-                        row.find('.appliance').html("<a href=\"dss_summ.php?pid=" + patient.patientid + "\">" + patient.device + "</a>");
-                        row.find('.appliance_since').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.delivery_date + "</a>");
-                        row.find('.vob').html("<a href=\"manage_insurance.php?pid=" + patient.patientid + "\">" + patient.vob + "</a>");
-                        row.find('.rxlomn').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\">" + patient.rxlomn + "</a>");
-                        row.find('.ledger').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\">" + patient.ledger + "</a>");
-                } else {
-                        row.html("<td><a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + mid + "</a>" + pm+"</td><td colspan=\"9\" align=\"center\" class=\"pat_incomplete\">-- Patient Incomplete --</td>");
-                        /*
-                        row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
-                        row.find('.flowsheet').html(patient.fspage1_complete);
-                        row.find('.next_visit').html(patient.next_visit);
-                        row.find('.last_visit').html(patient.last_visit);
-                        row.find('.last_treatment').html(patient.last_treatment);
-                        row.find('.appliance').html(patient.device);
-                        row.find('.appliance_since').html(patient.delivery_date);
-                        row.find('.vob').html(patient.vob);
-                        row.find('.ledger').html(patient.ledger)
-                        */
-                }
-                return row;
+        if (searchRequest) {
+            searchRequest.abort();
+            searchRequest = null;
         }
+
+        searchTimeout = setTimeout(function(){
+            searchRequest = $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "list_patients.php",
+                data: { partial_name: searchTerm },
+                success: handleResults,
+                complete: function(){
+                    searchTimeout = 0;
+                    searchRequest = null;
+                }
+            });
+        }, searchBounce);
+    }
+
+    function move_selection(direction) {
+        if ($('#patient_list > li.list_hover').size() == 0) {
+            window.selection = 0;
+        }
+        if (direction == 'up' && window.selection != 0) {
+            if (window.selection != 1) {
+                window.selection--;
+            }
+        } else if (direction == 'down') {
+            if (window.selection != ($("#patient_list li").size() -1)) {
+                window.selection++;
+            }
+        }
+        set_selected(window.selection);
+    }
+    function set_selected(menuitem) {
+        $('#patient_list li').removeClass('list_hover');
+        $('#patient_list li').eq(menuitem).addClass('list_hover');
+        var pid = $('#patient_list li').eq(menuitem).data("patientid");
+        var patient_info = $('#patient_list li').eq(menuitem).data("patient_info");
+            if($('#patient_list li').eq(menuitem).data("pattype")=="new"){
+            n = $('#patient_search').val();
+            window.selectedUrl = "add_patient.php?search="+n;
+            }else if($('#patient_list li').eq(menuitem).data("pattype")=="no"){
+            window.selectedUrl = '';
+            }else{
+
+            window.selectedUrl = "view_patient.php?pid=" + pid;
+            }
+    }
+    function template_list(li, patient) {
+        if(patient.middlename != null){
+        var mid = patient.middlename
+        }else{
+            var mid = '';
+        }
+        li.html(patient.lastname + ", " + patient.firstname + " " + mid+ " - "+patient.doctor);
+        return li;
+    }
+    function template_list_new(li, str) {
+        li.html(str);
+        return li;
+    }
+
+
+    function template_table(row, patient) {
+        var pm = "";
+        if (patient.premedcheck == "1") {
+            var pm = "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*Med";
+        }
+        if(patient.middlename != null){            var mid = patient.middlename
+        }else{
+            var mid = '';
+        }
+        if (patient.patient_info == 1) {
+            row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + mid + "</a>" + pm);
+            row.find('.flowsheet').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\">" + patient.fspage1_complete + "</a>");
+            row.find('.next_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.next_visit + "</a>");
+            row.find('.last_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_visit + "</a>");
+            row.find('.last_treatment').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_treatment + "</a>");
+            row.find('.appliance').html("<a href=\"dss_summ.php?pid=" + patient.patientid + "\">" + patient.device + "</a>");
+            row.find('.appliance_since').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.delivery_date + "</a>");
+            row.find('.vob').html("<a href=\"manage_insurance.php?pid=" + patient.patientid + "\">" + patient.vob + "</a>");
+            row.find('.rxlomn').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\">" + patient.rxlomn + "</a>");
+            row.find('.ledger').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\">" + patient.ledger + "</a>");
+        } else {
+            row.html("<td><a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + mid + "</a>" + pm+"</td><td colspan=\"9\" align=\"center\" class=\"pat_incomplete\">-- Patient Incomplete --</td>");
+            /*
+            row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
+            row.find('.flowsheet').html(patient.fspage1_complete);
+            row.find('.next_visit').html(patient.next_visit);
+            row.find('.last_visit').html(patient.last_visit);
+            row.find('.last_treatment').html(patient.last_treatment);
+            row.find('.appliance').html(patient.device);
+            row.find('.appliance_since').html(patient.delivery_date);
+            row.find('.vob').html(patient.vob);
+            row.find('.ledger').html(patient.ledger)
+            */
+        }
+        return row;
+    }
 </script>
                                                                                                           
 

@@ -146,7 +146,7 @@
                             <td>Note</td>
                         </tr>
                         <?php
-                            $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_GET['cid']) ? $_GET['cid'] : '')." or secondary_claim_id=".$_GET['cid'].")";
+                            $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' or secondary_claim_id='".$_GET['cid']."'";
                             
                             $lq = $db->getResults($lsql);
                             if ($lq) foreach ($lq as $row){

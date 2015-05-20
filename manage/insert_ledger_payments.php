@@ -319,12 +319,12 @@
                     $db->query($secsql);
                 }
 
-                if(empty($insqry)){
+                if(!$pid){
         ?>
                     <script type="text/javascript">
                         alert('Could not add ledger payments, please close this window and contact your system administrator');
                     </script>                               
-                    <?php echo $sqlinsertqry; ?>
+                    <?php error_log('Could not add ledger payments: ' . $sqlinsertqry) ?>
         <?php
                 } else {
                     claim_history_update($_POST['claimid'], $_SESSION['userid'], $_SESSION['adminuserid']);

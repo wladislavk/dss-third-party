@@ -39,7 +39,7 @@
                     `followup`,
                     `note`
                     ) VALUES ";
-                $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."  or secondary_claim_id=".$_POST['claimid'].")";
+                $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id='" . (!empty($_POST['claimid']) ? $_POST['claimid'] : '') . "' or secondary_claim_id='" . $_POST['claimid'] . "'";
 
                 $lq = $db->getResults($lsql);
                 if ($lq) foreach ($lq as $row){
@@ -66,7 +66,7 @@
 
                 $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
                 $insqry = $db->query($sqlinsertqry);
-                $pid = mysql_insert_id();
+                $pid = mysqli_insert_id($con);
 
                 payment_history_update($pid, $_SESSION['userid'], '');
                     $paysql = "SELECT SUM(lp.amount) as payment

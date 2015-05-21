@@ -329,48 +329,81 @@ function popitup(url)
   return false;
 }
 
-function sendValue(partial_name)
-{
-  $.post(
-    "list_patients.php",
-    { 
-      "partial_name": partial_name 
-    }, function(data) {
-      if (data.length == 0) {
-        $('.json_patient').remove();
-        $('.create_new').remove();
-        $('.no_matches').remove();
-        var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('no_matches').data("pattype", "no");
-        
-        template_list_new(newLi, "No Matches")
-          .appendTo('#patient_list')
-          .fadeIn();
+var searchBounce = 600,
+  searchTimeout = 0,
+  searchRequest = null;
 
-        var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('create_new').data("pattype", "new");
+function handleResults (data) {
+  if (data.length == 0) {
+    $('.json_patient').remove();
+    $('.create_new').remove();
+    $('.no_matches').remove();
 
-        template_list_new(newLi, "Add patient with this name&#8230;")
-          .appendTo('#patient_list')
-          .fadeIn();
-     } else {
-      if (data.error) {
-        alert('Could not select patient from database');
-      } else {
-        $('.json_patient').remove();
-        $('.create_new').remove();
-        $('.no_matches').remove();
- 
-        for (i in data) {
-          var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').data("number", parseInt(i)+1).data("patientid", data[i].patientid).data("patient_info", data[i].patient_info);
-          template_list(newLi, data[i])
-            .appendTo('#patient_list')
-            .fadeIn();
-        }
+    var newLi = $('#patient_list .template').clone(true)
+      .removeClass('template')
+      .addClass('no_matches')
+      .data("pattype", "no");
 
-        console.log('END = '+$('#patient_search').val()+"|"+(new Date().getTime()));
+    template_list_new(newLi, "No Matches")
+      .appendTo('#patient_list')
+      .fadeIn();
+
+    var newLi = $('#patient_list .template').clone(true)
+      .removeClass('template')
+      .addClass('create_new')
+      .data("pattype", "new");
+
+    template_list_new(newLi, "Add patient with this name&#8230;")
+      .appendTo('#patient_list')
+      .fadeIn();
+  } else if (data.error) {
+    $('.json_patient').remove();
+    $('.create_new').remove();
+    $('.no_matches').remove();
+    alert('Could not select patient from database');
+  } else {
+    $('.json_patient').remove();
+    $('.create_new').remove();
+    $('.no_matches').remove();
+
+    for (i in data) {
+      var newLi = $('#patient_list .template').clone(true)
+        .removeClass('template')
+        .addClass('json_patient')
+        .data("number", parseInt(i) + 1)
+        .data("patientid", data[i].patientid)
+        .data("patient_info", data[i].patient_info);
+
+      template_list(newLi, data[i])
+        .appendTo('#patient_list')
+        .fadeIn();
+    }
+  }
+}
+
+function sendValue (searchTerm) {
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
+  }
+
+  if (searchRequest) {
+    searchRequest.abort();
+    searchRequest = null;
+  }
+
+  searchTimeout = setTimeout(function(){
+    searchRequest = $.ajax({
+      type: "post",
+      dataType: "json",
+      url: "list_patients.php",
+      data: { partial_name: searchTerm },
+      success: handleResults,
+      complete: function(){
+        searchTimeout = 0;
+        searchRequest = null;
       }
-     }
-    }, "json"
-  );
+    });
+  }, searchBounce);
 }
 
 function move_selection(direction)

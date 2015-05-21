@@ -51,13 +51,17 @@ if(isset($_POST['respond'])){
     if($_FILES['attachment']['tmp_name'][$i]!=''){
       $extension = preg_replace('/^.*[.]([^.]+)$/', '$1', ($_FILES['attachment']["name"][$i]));
       $attachment = "support_attachment_".$r_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
-      move_uploaded_file($_FILES['attachment']["tmp_name"][$i], '/../../../shared/q_file' . $attachment);
+      $uploaded = move_uploaded_file($_FILES['attachment']["tmp_name"][$i], './../../../shared/q_file/' . $attachment);
 
-      $a_sql = "INSERT INTO dental_support_attachment SET
-                  filename = '".mysqli_real_escape_string($con,$attachment)."',
-                  ticket_id='".mysqli_real_escape_string($con,$_GET['ed'])."',
-                  response_id='".mysqli_real_escape_string($con,$r_id)."'";
-      $db->query($a_sql);
+      if ($uploaded) {
+        $a_sql = "INSERT INTO dental_support_attachment SET
+              filename = '".mysqli_real_escape_string($con,$attachment)."',
+              ticket_id='".mysqli_real_escape_string($con,$_GET['ed'])."',
+              response_id='".mysqli_real_escape_string($con,$r_id)."'";
+        $db->query($a_sql);
+      } else {
+        error_log("Support ticket: could not save attachment $attachment");
+      }
     }
   }?>
 <script type="text/javascript">

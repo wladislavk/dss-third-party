@@ -12,6 +12,8 @@ class FTSSamples
 	
 	public function __construct ()
 	{
+        global $con;
+
 		$this->serviceEndpointUrl = "https://api.sfaxme.com/api/";
 		$this->securityContext = ""; //<--- Required but leave blank exactly as it is here
                 $key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";
@@ -68,7 +70,8 @@ class FTSSamples
 		//curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 		curl_setopt($ch, CURLOPT_NOBODY, false); 
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
 		
@@ -121,30 +124,9 @@ $body = json_decode(substr($responseBody, $header_size), true);
 		}
 		else
 		{
-			//something went wrong so investigate result and error information
-			
-			//get result information from response headers
-			$xwsResultCode = $responseInfo["http_code"];
-			echo "ResultCode=" . $xwsResultCode ;
-			
-			//get error information from response headers
-			$xwsErrorCode = $responseInfo["http_code"];
-			
-			echo "ErrorCode=" . $xwsErrorCode ;
-                        //something went wrong so investigate result and error information
-
-                        //get result information from response headers
-                        $xwsResultCode = (int)$headers["XwsResultCode"];
-                        $xwsResultInfo = $headers["XwsResultInfo"];
-
-                        //echo "ResultCode=" . $xwsResultCode . "ResultInfo=" . $xwsResultInfo;
-
-                        //get error information from response headers
-                        $xwsErrorCode = (int)$headers["XwsErrorCode"];
-                        $xwsErrorInfo = $headers["XwsErrorInfo"];
-
-                        //echo "ErrorCode=" . $xwsErrorCode . "ErrorInfo=" . $xwsErrorInfo;
-                        return $headers;
+			error_log(__CLASS__ . " - Post data: " . print_r($postData, true));
+			error_log(__CLASS__ . " - Raw response: " . $responseBody);
+			return $headers;
 		}
 	}
 

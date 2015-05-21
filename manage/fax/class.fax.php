@@ -73,6 +73,7 @@ class FTSSamples
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+		    curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
 		
 		//specific cURL options for HTTPS sites
 		//see http://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/

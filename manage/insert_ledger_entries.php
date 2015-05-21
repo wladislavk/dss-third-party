@@ -164,13 +164,13 @@
 
 	            claim_history_update((!empty($claim_id) ? $claim_id : ''), $_SESSION['userid'], '');
 
-                if(empty($insqry)){
+                if(empty($ins_id)){
         ?>
                     <script type="text/javascript">
                         alert('Could not add ledger entries, please close this window and contact your system administrator');
                         eraseCookie('tempforledgerentry');
-                    </script>                               
-                    <?php echo  $sqlinsertqry; ?>
+                        parent.window.location = parent.window.location;
+                    </script>
         <?php
                 } else {
         ?>

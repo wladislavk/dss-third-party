@@ -27,13 +27,13 @@
     <div align="center" class="red">
         <b>
             @if (!empty($message))
-                {!! $message !!}
+                {{ $message }}
             @endif
         </b>
     </div>
 
     <form name="sortfrm" action="/manage/custom" method="post">
-    <input type="hidden" name="_token" id="token" value="{!! csrf_token() !!}">
+    <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
             <tr bgColor="#ffffff">
                 <td  align="right" colspan="15" class="bp">
@@ -42,9 +42,9 @@
 
                         @for ($pCount = 0; $pCount < $noPages; $pCount++)
                             @if ($indexPage == $pCount)
-                                <strong>{!! $pCount + 1 !!}</strong>
+                                <strong>{{ $pCount + 1 }}</strong>
                             @else
-                                <a href="#" onclick='setRouteParameters("/manage/custom", "{\"pageNumber\": \"{!! $pCount !!}\" }", "{!! csrf_token() !!}"); return false;'>{!! $pCount + 1 !!}</a>
+                                <a href="#" onclick='setRouteParameters("/manage/custom", "{\"pageNumber\": \"{{ $pCount }}\" }", "{{ csrf_token() }}"); return false;'>{{ $pCount + 1 }}</a>
                             @endif
                         @endfor
                     @endif
@@ -76,10 +76,10 @@
                         <tr class = 'tr_inactive'>
                     @endif
                     <td valign="top" width="80%">
-                        {!! $custom['title'] !!}
+                        {{ $custom['title'] }}
                     </td>
                     <td valign="top" width="20%">
-                        <a href="#" onclick="loadPopup('/manage/custom/{!! $custom['customid'] !!}/edit')" class="editlink" title="EDIT">Edit</a>
+                        <a href="#" onclick="loadPopup('/manage/custom/{{ $custom['customid'] }}/edit')" class="editlink" title="EDIT">Edit</a>
                     </td>
                     </tr>
                 @endforeach

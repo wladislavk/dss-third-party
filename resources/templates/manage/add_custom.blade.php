@@ -28,31 +28,31 @@
         <br /><br />
         <div align="center" class="red">
             @if (!empty($message))
-                {!! $message !!}
+                {{ $message }}
             @endif
         </div>
-        <form name="customfrm" action="/manage/add_custom{!! !empty($ed) ? '/' . $ed : '' !!}" method="post" onSubmit="return customabc(this)">
+        <form name="customfrm" action="/manage/add_custom{{ !empty($ed) ? '/' . $ed : '' }}" method="post" onSubmit="return customabc(this)">
         <input type="hidden" name="add" value="1">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">
-                        {!! $butText !!} Custom Text
+                        {{ $butText }} Custom Text
                         @if (!empty($title))
-                            &quot;{!! $title !!}&quot;
+                            &quot;{{ $title }}&quot;
                         @endif
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Title:
                                     <span id="req_0" class="req">*</span>
                                 </label>
                                 <div>
                                     <span class="full">
-                                         <input id="title" name="title" type="text" class="field text addr tbox" value="{!! $title or '' !!}" tabindex="5" style="width:600px;" maxlength="255"/>
+                                         <input id="title" name="title" type="text" class="field text addr tbox" value="{{ $title or '' }}" tabindex="5" style="width:600px;" maxlength="255"/>
                                     </span>
                                     <label>&nbsp;</label>
                                 </div>
@@ -70,7 +70,7 @@
                                 </label>
                                 <div>
                                     <span class="full">
-                                        <textarea name="description" id="description" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;">{!! $description or '' !!}</textarea>
+                                        <textarea name="description" id="description" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;">{{ $description or '' }}</textarea>
                                     </span>
                                     <label>&nbsp;</label>
                                 </div>
@@ -84,8 +84,8 @@
                     </td>
                     <td valign="top" class="frmdata">
                         <select name="status" class="tbox" tabindex="22">
-                             <option value="1" {!! (!empty($status) && $status == "1") ? "selected" : '' !!}>Active</option>
-                             <option value="2" {!! (!empty($status) && $status == "2") ? "selected" : '' !!}>In-Active</option>
+                             <option value="1" {{ (!empty($status) && $status == "1") ? "selected" : '' }}>Active</option>
+                             <option value="2" {{ (!empty($status) && $status == "2") ? "selected" : '' }}>In-Active</option>
                         </select>
                         <br />&nbsp;
                     </td>
@@ -96,10 +96,10 @@
                             * Required Fields
                         </span><br />
                         <input type="hidden" name="customsub" value="1" />
-                        <input type="hidden" name="ed" value="{!! $customid or '' !!}" />
-                        <input type="submit" value="{!! $butText !!} Custom Text" class="button" />
+                        <input type="hidden" name="ed" value="{{ $customid or '' }}" />
+                        <input type="submit" value="{{ $butText }} Custom Text" class="button" />
                         <script type="text/javascript">
-                            var deleteId = '{!! $ed or '' !!}';
+                            var deleteId = '{{ $ed or '' }}';
                         </script>
 
                         @if (!empty($customid))
@@ -110,7 +110,7 @@
                     </td>
                 </tr>
             </table>
-            <input id="token" type="hidden" name="_token" value="{!! csrf_token() !!}">
+            <input id="token" type="hidden" name="_token" value="{{ csrf_token() }}">
         </form>
 
     </body>

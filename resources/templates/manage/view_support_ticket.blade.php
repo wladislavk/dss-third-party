@@ -23,25 +23,25 @@
 <div style="width:96%; margin:0 auto;">
     <div id="support_ticket">
         <span class="admin_head">
-            {!! $ticket->title or '' !!} - {!! $companyName !!}
+            {{ $ticket->title or '' }} - {{ $companyName }}
         </span>
         <br />
         <br />
-        <div class="response_type_{!! !empty($ticket->create_type) ? $ticket->create_type : '' !!}">
-            {!! $ticket->body or '' !!}
+        <div class="response_type_{{ !empty($ticket->create_type) ? $ticket->create_type : '' }}">
+            {{ $ticket->body or '' }}
             @if (!empty($ticket->attachment))
-                | <a href="/manage/display_file/{!! $ticket->attachment !!}" target="_blank">View Attachment</a>
+                | <a href="/manage/display_file/{{ $ticket->attachment }}" target="_blank">View Attachment</a>
             @endif
 
             @if (count($attachments))
                 @foreach ($attachments as $attachment)
-                    | <a href="/manage/display_file/{!! $attachment->filename !!}" target="_blank">View Attachment</a>
+                    | <a href="/manage/display_file/{{ $attachment->filename }}" target="_blank">View Attachment</a>
                 @endforeach
             @endif
 
             <div class="info">
-                {!! $name !!}
-                {!! Carbon\Carbon::parse($ticket->adddate)->format('m/d/Y h:i:s a') !!}
+                {{ $name }}
+                {{ Carbon\Carbon::parse($ticket->adddate)->format('m/d/Y h:i:s a') }}
             </div>
         </div>
     </div>
@@ -49,21 +49,21 @@
 
         @if (count($responses))
             @foreach ($responses as $response)
-                <div class="response_type_{!! $response->response_type !!}">
-                    {!! $response->body !!}
+                <div class="response_type_{{ $response->response_type }}">
+                    {{ $response->body }}
                     @if (!empty($response->attachment))
-                        | <a href="/manage/display_file/{!! $response->attachment !!}" target="_blank">View Attachment</a>
+                        | <a href="/manage/display_file/{{ $response->attachment }}" target="_blank">View Attachment</a>
                     @endif
 
                     @if (count($response->attachments))
                         @foreach ($response->attachments as $attachment)
-                            | <a href="/manage/display_file/{!! $attachment->filename !!}" target="_blank">View Attachment</a>
+                            | <a href="/manage/display_file/{{ $attachment->filename }}" target="_blank">View Attachment</a>
                         @endforeach
                     @endif
 
                     <div class="info">
-                        {!! $response->name !!}
-                        {!! $response->add_date !!}
+                        {{ $response->name }}
+                        {{ $response->add_date }}
                     </div>
                 </div>
             @endforeach
@@ -73,10 +73,10 @@
     </div>
     <div id="respond">
         <h4>Respond</h4>
-        <form action="/manage/view_support_ticket/{!! $id !!}" method="post"  enctype="multipart/form-data">
+        <form action="/manage/view_support_ticket/{{ $id }}" method="post"  enctype="multipart/form-data">
             <textarea name="body" style="width: 400px; height:100px;"></textarea><br />
             <input type="submit" name="respond" value="Submit Response" style="float:left;"/>
-            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div style="width:300px;">
                 <div id="attachments">
                     <span>

@@ -16,21 +16,21 @@
     <br />
     <br />
     <div align="right">
-        <button style="margin-right:20px; float:right;" onclick="loadPopup('/manage/transaction_code/add');" class="addButton"> Add New Transaction Code</button>
+        <button style="margin-right:20px; float:right;" onclick="loadPopup('/manage/transaction_code/add');" class="addButton">Add New Transaction Code</button>
         &nbsp;&nbsp;
     </div>
     <br />
     <div align="center" class="red">
         <b>
             @if (!empty($message))
-                {!! $message !!}
+                {{ $message }}
             @endif
         </b>
     </div>
     &nbsp;
-    <b>Total Records: {!! $totalRec !!}</b>
+    <b>Total Records: {{ $totalRec }}</b>
     <form name="sortfrm" action="/manage/transaction_code/add" method="post">
-        <input id="token" type="hidden" name="_token" value="{!! csrf_token() !!}">
+        <input id="token" type="hidden" name="_token" value="{{ csrf_token() }}">
         <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
             <tr bgColor="#ffffff">
                 <td  align="right" colspan="15" class="bp">
@@ -40,9 +40,9 @@
 
                         @for ($pCount = 0; $pCount < $noPages; $pCount++)
                             @if ($indexVal == $pCount)
-                                <strong>{!! $pCount + 1 !!}</strong>
+                                <strong>{{ $pCount + 1 }}</strong>
                             @else
-                                <a href="#" onclick='setRouteParameters("/manage/transaction_code", "{\"page\": \"{!! $pCount !!}\" }", "{!! csrf_token() !!}"); return false;'>{!! $pCount + 1 !!}</a>
+                                <a href="#" onclick='setRouteParameters("/manage/transaction_code", "{\"page\": \"{{ $pCount }}\" }", "{{ csrf_token() }}"); return false;'>{{ $pCount + 1 }}</a>
                             @endif
                         @endfor
                     @endif
@@ -84,10 +84,10 @@
                         <tr class="tr_inactive">
                     @endif
                     <td valign="top">
-                        {!! $transaction['transaction_code'] !!}
+                        {{ $transaction['transaction_code'] }}
                     </td>
                     <td valign="top">
-                        {!! substr($transaction['description'], 0, 25) !!}
+                        {{ substr($transaction['description'], 0, 25) }}
                     </td>
                     <td valign="top">
 
@@ -106,13 +106,13 @@
                         @endif
                     </td>
                     <td valign="top" align="center">
-                        <input type="text" name="sortby[]" value="{!! $transaction['sortby'] !!}" class="tbox" style="width:30px"/>
+                        <input type="text" name="sortby[]" value="{{ $transaction['sortby'] }}" class="tbox" style="width:30px"/>
                     </td>
                     <td valign="top" align="center">
-                        {!! $transaction['amount'] !!}
+                        {{ $transaction['amount'] }}
                     </td>
                     <td valign="top">
-                        <a href="#" onclick="loadPopup('transaction_code/{!! $transaction['transaction_codeid'] !!}/edit');" class="editlink" title="EDIT">
+                        <a href="#" onclick="loadPopup('transaction_code/{{ $transaction['transaction_codeid'] }}/edit');" class="editlink" title="EDIT">
                             Edit
                         </a>
                     </td>

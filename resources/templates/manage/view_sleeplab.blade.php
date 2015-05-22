@@ -19,47 +19,46 @@
         <div style="padding-top:10px;background: #fff; width: 98%; height:380px; margin-left: 1%;">
             <div class="info">
                 <label>Name:</label>
-                <span class="value">{!! $sleeplabData['name'] !!}</span>
+                <span class="value">{{ $sleeplabData['name'] }}</span>
             </div>
             <div class="info">
                 <label>Company:</label>
-                <span class="value">{!! $sleepLabs['0']->company !!} </span>
+                <span class="value">{{ $sleepLabs['0']->company }} </span>
             </div>
             <div class="info">
                 <label>Address:</label>
-                <span class="value">{!! $sleepLabs['0']->add1 !!}</span>
+                <span class="value">{{ $sleepLabs['0']->add1 }}</span>
             </div>
             <div class="info">
                 <label>&nbsp;</label>
-                <span class="value">{!! $sleepLabs['0']->add2 !!}</span>
+                <span class="value">{{ $sleepLabs['0']->add2 }}</span>
             </div>
             <div class="info">
                 <label>&nbsp;</label>
-                <span class="value">{!! $sleepLabs['0']->city or '' !!} {!! $sleepLabs['0']->state or '' !!} {!! $sleepLabs['0']->zip or '' !!}</span>
+                <span class="value">{{ $sleepLabs['0']->city or '' }} {{ $sleepLabs['0']->state or '' }} {{ $sleepLabs['0']->zip or '' }}</span>
             </div>
             <div class="info">
                 <label>Phone:</label>
-                <span class="value">{!! $sleepLabs['0']->phone1 !!}</span>
+                <span class="value">{{ $sleepLabs['0']->phone1 }}</span>
             </div>
             <div class="info">
                 <label>Phone 2:</label>
-                <span class="value">{!! $sleepLabs['0']->phone2 !!}</span>
+                <span class="value">{{ $sleepLabs['0']->phone2 }}</span>
             </div>
             <div class="info">
                 <label>Fax:</label>
-                <span class="value">{!! $sleepLabs['0']->fax !!}</span>
+                <span class="value">{{ $sleepLabs['0']->fax }}</span>
             </div>
             <div class="info">
                 <label>Email:</label>
-                <span class="value">{!! $sleepLabs['0']->email !!}</span>
+                <span class="value">{{ $sleepLabs['0']->email }}</span>
             </div>
             <div class="info">
                 <label>Notes:</label>
-                <span class="value">{!! $sleepLabs['0']->notes !!}</span>
+                <span class="value">{{ $sleepLabs['0']->notes }}</span>
             </div>
-            <a href="/manage/sleeplab/add/{!! $ed !!}" style="margin-right:10px; float:right;">Edit</a>
+            <a href="/manage/sleeplab/add/{{ $ed }}" style="margin-right:10px; float:right;">Edit</a>
         </div>
     </body>
-
 
 </html>

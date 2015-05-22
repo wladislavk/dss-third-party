@@ -36,22 +36,22 @@
 
         @if (!empty($message))
             <div align="center" class="red">
-                {!! $message !!}
+                {{ $message }}
             </div>
         @endif
 
-        <form name="stafffrm" action="/manage/add_staff{!! !empty($getTypeUsers['userid']) ? '/' . $getTypeUsers['userid'] : '' !!}" method="post" onSubmit="return staffabc(this)">
+        <form name="stafffrm" action="/manage/add_staff{{ !empty($getTypeUsers['userid']) ? '/' . $getTypeUsers['userid'] : '' }}" method="post" onSubmit="return staffabc(this)">
             <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <input type="hidden" name="add" value="1" />
-                <input type="hidden" name="_token" id="token" value="{!! csrf_token() !!}">
+                <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                 <tr>
                     <td colspan="2" class="cat_head">
 
                         @if (!empty($buttonText))
-                            {!! $buttonText !!} Staff
+                            {{ $buttonText }} Staff
 
                             @if (!empty($getTypeUsers['username']))
-                                &quot;{!! $getTypeUsers['username'] !!}&quot;
+                                &quot;{{ $getTypeUsers['username'] }}&quot;
                             @endif
                         @endif
                     </td>
@@ -61,7 +61,7 @@
                         Username
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="username" value="{!! $getTypeUsers['username'] or '' !!}" class="tbox" />
+                        <input type="text" name="username" value="{{ $getTypeUsers['username'] or '' }}" class="tbox" />
                         <span class="red">*</span>
                     </td>
                 </tr>
@@ -72,7 +72,7 @@
                             Password
                         </td>
                         <td valign="top" class="frmdata">
-                            <input type="text" name="password" value="{!! $getTypeUsers['password'] or '' !!}" class="tbox" />
+                            <input type="text" name="password" value="{{ $getTypeUsers['password'] or '' }}" class="tbox" />
                             <span class="red">*</span>
                         </td>
                     </tr>
@@ -83,7 +83,7 @@
                         First Name
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="first_name" value="{!! $getTypeUsers['first_name'] or '' !!}" class="tbox" />
+                        <input type="text" name="first_name" value="{{ $getTypeUsers['first_name'] or '' }}" class="tbox" />
                         <span class="red">*</span>
                     </td>
                 </tr>
@@ -92,7 +92,7 @@
                         Last Name
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="last_name" value="{!! $getTypeUsers['last_name'] or '' !!}" class="tbox" />
+                        <input type="text" name="last_name" value="{{ $getTypeUsers['last_name'] or '' }}" class="tbox" />
                         <span class="red">*</span>
                     </td>
                 </tr>
@@ -101,7 +101,7 @@
                         Email
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="email" value="{!! $getTypeUsers['email'] or '' !!}" class="tbox" />
+                        <input type="text" name="email" value="{{ $getTypeUsers['email'] or '' }}" class="tbox" />
                         <span class="red">*</span>
                     </td>
                 </tr>
@@ -113,7 +113,7 @@
                         </div>
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! (!empty($getTypeUsers['producer']) && $getTypeUsers['producer'] == 1) ? "checked" : '' !!} value="1" id="producer" name="producer" />
+                        <input type="checkbox" {{ (!empty($getTypeUsers['producer']) && $getTypeUsers['producer'] == 1) ? "checked" : '' }} value="1" id="producer" name="producer" />
                     </td>
                 </tr>
                 <tr class="producer_field" bgcolor="#FFFFFF">
@@ -121,7 +121,7 @@
                        Producer bills insurance under their name?
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! count($getTypeUsers['producer_files']) && $getTypeUsers['producer_files'] == 1 ? "checked" : '' !!} value="1" id="producer_files" name="producer_files" />
+                        <input type="checkbox" {{ count($getTypeUsers['producer_files']) && $getTypeUsers['producer_files'] == 1 ? "checked" : '' }} value="1" id="producer_files" name="producer_files" />
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor"#ffffff;">
@@ -134,7 +134,7 @@
                         NPI
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="npi" value="{!! $getTypeUsers['npi'] or '' !!}" class="tbox" />
+                        <input type="text" name="npi" value="{{ $getTypeUsers['npi'] or '' }}" class="tbox" />
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">
@@ -142,7 +142,7 @@
                         Medicare Provider (NPI/DME) Number
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="medicare_npi" value="{!! $getTypeUsers['medicare_npi'] or '' !!}" class="tbox" />
+                        <input type="text" name="medicare_npi" value="{{ $getTypeUsers['medicare_npi'] or '' }}" class="tbox" />
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">
@@ -150,7 +150,7 @@
                         Medicare PTAN Number
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="medicare_ptan" value="{!! $getTypeUsers['medicare_ptan'] or '' !!}" class="tbox" />
+                        <input type="text" name="medicare_ptan" value="{{ $getTypeUsers['medicare_ptan'] or '' }}" class="tbox" />
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">
@@ -158,7 +158,7 @@
                         Tax ID or SSN
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="tax_id_or_ssn" value="{!! $getTypeUsers['tax_id_or_ssn'] or '' !!}" class="tbox" />
+                        <input type="text" name="tax_id_or_ssn" value="{{ $getTypeUsers['tax_id_or_ssn'] or '' }}" class="tbox" />
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">
@@ -166,8 +166,8 @@
                         EIN or SSN
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! (!empty($getTypeUsers['ein']) && $getTypeUsers['ein'] == 1) ? "checked" : '' !!} value="1" name="ein" /> EIN
-                        <input type="checkbox" {!! (!empty($getTypeUsers['ssn']) && $getTypeUsers['ssn'] == 1) ? "checked" : '' !!} value="1" name="ssn" /> SSN
+                        <input type="checkbox" {{ (!empty($getTypeUsers['ein']) && $getTypeUsers['ein'] == 1) ? "checked" : '' }} value="1" name="ein" /> EIN
+                        <input type="checkbox" {{ (!empty($getTypeUsers['ssn']) && $getTypeUsers['ssn'] == 1) ? "checked" : '' }} value="1" name="ssn" /> SSN
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">
@@ -175,7 +175,7 @@
                         Practice
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="practice" value="{!! $getTypeUsers['practice'] or '' !!}" class="tbox" />
+                        <input type="text" name="practice" value="{{ $getTypeUsers['practice'] or '' }}" class="tbox" />
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">
@@ -183,7 +183,7 @@
                         Address
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="text" name="address" class="tbox" id="address" value="{!! $getTypeUsers['address'] or '' !!}" />
+                        <input type="text" name="address" class="tbox" id="address" value="{{ $getTypeUsers['address'] or '' }}" />
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">
@@ -191,7 +191,7 @@
                         City
                     </td>
                     <td valign="top" class="frmdata">
-                        <input id="city" type="text" value="{!! $getTypeUsers['city'] or '' !!}" name="city" class="tbox" />
+                        <input id="city" type="text" value="{{ $getTypeUsers['city'] or '' }}" name="city" class="tbox" />
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">
@@ -199,7 +199,7 @@
                         State
                     </td>
                     <td valign="top" class="frmdata">
-                        <input id="state" type="text" value="{!! $getTypeUsers['state'] or '' !!}" name="state" class="tbox" />
+                        <input id="state" type="text" value="{{ $getTypeUsers['state'] or '' }}" name="state" class="tbox" />
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">
@@ -207,7 +207,7 @@
                         Zip
                     </td>
                     <td valign="top" class="frmdata">
-                        <input id="zip" type="text" name="zip" value="{!! $getTypeUsers['zip'] or '' !!}" class="tbox" />
+                        <input id="zip" type="text" name="zip" value="{{ $getTypeUsers['zip'] or '' }}" class="tbox" />
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">
@@ -215,7 +215,7 @@
                         Phone
                     </td>
                     <td valign="top" class="frmdata">
-                        <input id="phone" type="text" name="phone" value="{!! $getTypeUsers['phone'] or '' !!}" class="tbox" />
+                        <input id="phone" type="text" name="phone" value="{{ $getTypeUsers['phone'] or '' }}" class="tbox" />
                     </td>
                 </tr>
                 <tr>
@@ -226,7 +226,7 @@
                         </div>
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! (!empty($getTypeUsers['sign_notes']) && $getTypeUsers['sign_notes'] == 1) ? "checked" : '' !!} value="1" name="sign_notes" />
+                        <input type="checkbox" {{ (!empty($getTypeUsers['sign_notes']) && $getTypeUsers['sign_notes'] == 1) ? "checked" : '' }} value="1" name="sign_notes" />
                     </td>
                 </tr>
                 <tr>
@@ -234,7 +234,7 @@
                     Use Course?
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! (!empty($getTypeUsers['use_course']) && $getTypeUsers['use_course'] == 1) ? "checked" : '' !!} value="1" name="use_course" />
+                        <input type="checkbox" {{ (!empty($getTypeUsers['use_course']) && $getTypeUsers['use_course'] == 1) ? "checked" : '' }} value="1" name="use_course" />
                     </td>
                 </tr>
 
@@ -247,7 +247,7 @@
                             </div>
                         </td>
                         <td valign="top" class="frmdata">
-                            <input type="checkbox" {!! (!empty($getTypeUsers['manage_staff']) && $getTypeUsers['manage_staff'] == 1) ? "checked" : '' !!} value="1" name="manage_staff" />
+                            <input type="checkbox" {{ (!empty($getTypeUsers['manage_staff']) && $getTypeUsers['manage_staff'] == 1) ? "checked" : '' }} value="1" name="manage_staff" />
                         </td>
                     </tr>
                 @endif
@@ -260,7 +260,7 @@
                         </div>
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! (!empty($getTypeUsers['post_ledger_adjustments']) && $getTypeUsers['post_ledger_adjustments'] == 1) ? "checked" : '' !!} value="1" name="post_ledger_adjustments" />
+                        <input type="checkbox" {{ (!empty($getTypeUsers['post_ledger_adjustments']) && $getTypeUsers['post_ledger_adjustments'] == 1) ? "checked" : '' }} value="1" name="post_ledger_adjustments" />
                     </td>
                 </tr>
                 <tr>
@@ -271,7 +271,7 @@
                         </div> 
                     </td>
                     <td valign="top" class="frmdata">
-                        <input type="checkbox" {!! (!empty($getTypeUsers['edit_ledger_entries']) && $getTypeUsers['edit_ledger_entries'] == 1) ? "checked" : '' !!} value="1" name="edit_ledger_entries" />
+                        <input type="checkbox" {{ (!empty($getTypeUsers['edit_ledger_entries']) && $getTypeUsers['edit_ledger_entries'] == 1) ? "checked" : '' }} value="1" name="edit_ledger_entries" />
                     </td>
                 </tr>
                 <tr bgcolor="#FFFFFF">
@@ -283,8 +283,8 @@
                     </td>
                     <td valign="top" class="frmdata">
                         <select name="status" class="tbox">
-                            <option value="1" {!! ($getTypeUsers['status'] == "1") ? "selected" : '' !!}>Active</option>
-                            <option value="2" {!! ($getTypeUsers['status'] == "2") ? "selected" : '' !!}>In-Active</option>
+                            <option value="1" {{ ($getTypeUsers['status'] == "1") ? "selected" : '' }}>Active</option>
+                            <option value="2" {{ ($getTypeUsers['status'] == "2") ? "selected" : '' }}>In-Active</option>
                         </select>
                     </td>
                 </tr>
@@ -294,13 +294,13 @@
                             * Required Fields
                         </span><br />
                         <input type="hidden" name="staffsub" value="1" />
-                        <input type="hidden" name="ed" value="{!! !empty($getTypeUsers['userid']) !!}" />
-                        <input type="hidden" name="logins" value="{!! !empty($getTypeLoginsNumber) or '' !!}" />
-                        <input type="submit" value="{!! $buttonText !!} Staff" class="button" />
+                        <input type="hidden" name="ed" value="{{ !empty($getTypeUsers['userid']) }}" />
+                        <input type="hidden" name="logins" value="{{ !empty($getTypeLoginsNumber) or '' }}" />
+                        <input type="submit" value="{{ $buttonText }} Staff" class="button" />
 
                         <script type="text/javascript">
-                            var deleteId    = "{!! $getTypeUsers['userid'] or '' !!}";
-                            var countLogins = "{!! !empty($getTypeLoginsNumber) or '' !!}";
+                            var deleteId    = "{{ $getTypeUsers['userid'] or '' }}";
+                            var countLogins = "{{ !empty($getTypeLoginsNumber) or '' }}";
                         </script>
 
                         @if ($getTypeUsers['userid'] != '')

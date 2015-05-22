@@ -37,31 +37,31 @@
 
         @if (count($openTickets))
             @foreach ($openTickets as $openTicket)
-                <tr class="{!! (($openTicket->viewed == '0' && $openTicket->create_type == '0') || $openTicket->response_viewed == '0') ? 'unviewed' : '' !!}"> 
-                    <td>{!! $openTicket->title !!}</td>
-                    <td>{!! substr($openTicket->body, 0, 50) !!}</td>
+                <tr class="{{ (($openTicket->viewed == '0' && $openTicket->create_type == '0') || $openTicket->response_viewed == '0') ? 'unviewed' : '' }}"> 
+                    <td>{{ $openTicket->title }}</td>
+                    <td>{{ substr($openTicket->body, 0, 50) }}</td>
 
                     @if (!empty($openTicket->company_name))
-                        <td>{!! $openTicket->company_name !!}</td>
+                        <td>{{ $openTicket->company_name }}</td>
                     @else
                         <td>Dental Sleep Solutions</td>
                     @endif
 
-                    <td>{!! Carbon\Carbon::parse($openTicket->latest)->format('m/d/Y') !!}</td>
-                    <td>{!! $dssTicketStatusLabels[$openTicket->status] !!}</td>
+                    <td>{{ Carbon\Carbon::parse($openTicket->latest)->format('m/d/Y') }}</td>
+                    <td>{{ $dssTicketStatusLabels[$openTicket->status] }}</td>
                     <td>
-                        <a href="/manage/view_support_ticket/{!! $openTicket->id !!}">View</a>
+                        <a href="/manage/view_support_ticket/{{ $openTicket->id }}">View</a>
 
                         @if (!empty($openTicket->attachment) || !empty($openTicket->response_attachment) || !empty($openTicket->ticket_attachment))
                             <span class="attachment"></span>
                         @endif
 
                         @if ((!empty($openTicket->ticket_read) && $openTicket->response_viewed != '0') || $openTicket->response_viewed == '1')
-                            | <a href="#" onclick='setRouteParameters("/manage/support", "{\"rid\": \"{!! $openTicket->id !!}\"}", "{!! csrf_token() !!}"); return false;'>Mark Unread</a>
+                            | <a href="#" onclick='setRouteParameters("/manage/support", "{\"rid\": \"{{ $openTicket->id }}\"}", "{{ csrf_token() }}"); return false;'>Mark Unread</a>
                         @endif
 
                         @if (($openTicket->create_type === 0 && $openTicket->viewed != '1') || $openTicket->response_viewed === '0')
-                            | <a href="#" onclick='setRouteParameters("/manage/support", "{\"urid\": \"{!! $openTicket->id !!}\"}", "{!! csrf_token() !!}"); return false;'>Mark Read</a>
+                            | <a href="#" onclick='setRouteParameters("/manage/support", "{\"urid\": \"{{ $openTicket->id }}\"}", "{{ csrf_token() }}"); return false;'>Mark Read</a>
                         @endif
                     </td>
                 </tr>
@@ -98,19 +98,19 @@
         @if (count($closedTickets))
             @foreach ($closedTickets as $closedTicket)
                 <tr> 
-                    <td>{!! $closedTicket->title !!}</td>
-                    <td>{!! substr($closedTicket->body, 0, 50) !!}</td>
+                    <td>{{ $closedTicket->title }}</td>
+                    <td>{{ substr($closedTicket->body, 0, 50) }}</td>
 
                     @if (!empty($closedTicket->company_name))
-                        <td>{!! $closedTicket->company_name !!}</td>
+                        <td>{{ $closedTicket->company_name }}</td>
                     @else
                         <td>Dental Sleep Solutions</td>
                     @endif
 
-                    <td>{!! Carbon\Carbon::parse($closedTicket->latest)->format('m/d/Y') !!}</td>
-                    <td>{!! $dssTicketStatusLabels[$closedTicket->status] !!}</td>
+                    <td>{{ Carbon\Carbon::parse($closedTicket->latest)->format('m/d/Y') }}</td>
+                    <td>{{ $dssTicketStatusLabels[$closedTicket->status] }}</td>
                     <td>
-                        <a href="/manage/view_support_ticket/{!! $closedTicket->id !!}">View</a>
+                        <a href="/manage/view_support_ticket/{{ $closedTicket->id }}">View</a>
                     </td>
                 </tr>
             @endforeach

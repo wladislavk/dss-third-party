@@ -34,7 +34,7 @@
 
                             <ul>
                                 <li><a href="ledger_reportfull">Ledger</a></li>
-                                <li><a href="claims">Claims ({!! $numPendingClaims or '' !!})</a></li>
+                                <li><a href="claims">Claims ({{ $numPendingClaims or '' }})</a></li>
                                 <li><a href="performance">Performance</a></li>
                                 <li><a href="screeners/contacted/0">Pt. Screener</a></li>
                                 <li><a href='vobs'>VOB History</a></li>
@@ -82,7 +82,7 @@
                                     
                                     <ul>
                                         @foreach ($documentCategories as $documentCategorie)
-                                            <li><a class="submenu_item" href="view_documents/cat/{!! $documentCategorie->categoryid !!}">{!! $documentCategorie->name !!}</a></li>
+                                            <li><a class="submenu_item" href="view_documents/cat/{{ $documentCategorie->categoryid }}">{{ $documentCategorie->name }}</a></li>
                                         @endforeach
                                     </ul>
                                 </li>
@@ -132,23 +132,23 @@
                 <div class="notsuckertreemenu">
                     <ul id="notmenu">
                         <li>
-                            <a href="#" class=" count_{!! $numPortal or '' !!} notification bad_count">{!! $numPortal or '' !!} Web Portal <div class="arrow_right"></div></a>
+                            <a href="#" class=" count_{{ $numPortal or '' }} notification bad_count">{{ $numPortal or '' }} Web Portal <div class="arrow_right"></div></a>
                             <ul>
                                 <li>
-                                    <a href="patient_contacts" class=" count_{!! $numPatientContacts or '' !!} notification bad_count">
-                                        <span class="count">{!! $numPatientContacts or '' !!}</span>
+                                    <a href="patient_contacts" class=" count_{{ $numPatientContacts or '' }} notification bad_count">
+                                        <span class="count">{{ $numPatientContacts or '' }}</span>
                                         <span class="label">Pt Contacts</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="patient_insurance" class=" count_{!! $numPatientInsurance or '' !!} notification bad_count">
-                                        <span class="count">{!! $numPatientInsurance or '' !!}</span>
+                                    <a href="patient_insurance" class=" count_{{ $numPatientInsurance or '' }} notification bad_count">
+                                        <span class="count">{{ $numPatientInsurance or '' }}</span>
                                         <span class="label">Pt Insurance</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="patient_changes" class=" count_{!! $numC or '' !!} notification bad_count">
-                                        <span class="count">{!! $numC or '' !!}</span>
+                                    <a href="patient_changes" class=" count_{{ $numC or '' }} notification bad_count">
+                                        <span class="count">{{ $numC or '' }}</span>
                                         <span class="label">Pt Changes</span>
                                     </a>
                                 </li>
@@ -158,89 +158,89 @@
                 </div>
 
                 @if (!empty($useLetters))
-                    <a href="letters/status/pending" class=" count_{!! $numPendingLetters or '' !!} notification {!! ($numPendingLetters == 0) ? 'good_count' : 'bad_count' !!}">
+                    <a href="letters/status/pending" class=" count_{{ $numPendingLetters or '' }} notification {{ ($numPendingLetters == 0) ? 'good_count' : 'bad_count' }}">
                         <span class="count">
-                            {!! $numPendingLetters or '' !!}
+                            {{ $numPendingLetters or '' }}
                         </span>
                         <span class="label">Letters</span>
                     </a>
                 @endif
 
                 @if ($showBlock['unmailedLetters'])
-                    <a href="letters/status/sent/mailed/0" class=" count_{!! $numUnmailedLetters or '' !!} notification bad_count">
-                        <span class="count">{!! $numUnmailedLetters or '' !!}</span>
+                    <a href="letters/status/sent/mailed/0" class=" count_{{ $numUnmailedLetters or '' }} notification bad_count">
+                        <span class="count">{{ $numUnmailedLetters or '' }}</span>
                         <span class="label">Unmailed Letters</span>
                     </a>
                 @endif
 
-                <a href="vobs/status/{!! $DSS_PREAUTH_COMPLETE or '' !!}/viewed/0" class=" count_{!! $numPreauth or '' !!} notification {!! ($numPreauth == 0) ? 'good_count' : 'great_count' !!}">
-                    <span class="count">{!! $numPreauth or '' !!}</span>
+                <a href="vobs/status/{{ $DSS_PREAUTH_COMPLETE or '' }}/viewed/0" class=" count_{{ $numPreauth or '' }} notification {{ ($numPreauth == 0) ? 'good_count' : 'great_count' }}">
+                    <span class="count">{{ $numPreauth or '' }}</span>
                     <span class="label">VOBs</span>
                 </a>
 
-                <a href="hst/status/{!! $DSS_HST_COMPLETE or '' !!}/viewed/0" class=" count_{!! $numHst or '' !!} notification {!! ($numHst == 0) ? 'good_count' : 'great_count' !!}">
-                    <span class="count">{!! $numHst or '' !!}</span>
+                <a href="hst/status/{{ $DSS_HST_COMPLETE or '' }}/viewed/0" class=" count_{{ $numHst or '' }} notification {{ ($numHst == 0) ? 'good_count' : 'great_count' }}">
+                    <span class="count">{{ $numHst or '' }}</span>
                     <span class="label">HSTs</span>
                 </a>
 
-                <a href="hst/status/{!! $DSS_HST_REJECTED or '' !!}/viewed/0" class=" count_{!! $numRejectedHst or '' !!} notification {!! ($numRejectedHst == 0) ? 'good_count' : 'bad_count' !!}">
-                    <span class="count">{!! $numRejectedHst or '' !!}</span>
+                <a href="hst/status/{{ $DSS_HST_REJECTED or '' }}/viewed/0" class=" count_{{ $numRejectedHst or '' }} notification {{ ($numRejectedHst == 0) ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ $numRejectedHst or '' }}</span>
                     <span class="label">Rejected HSTs</span>
                 </a>
 
-                <a href="hst/status/{!! $DSS_HST_REQUESTED or '' !!}/viewed/0" class=" count_{!! $numRequestedHst or '' !!} notification {!! ($numRequestedHst == 0) ? 'good_count' : 'bad_count' !!}">
-                    <span class="count">{!! $numRequestedHst or '' !!}</span>
+                <a href="hst/status/{{ $DSS_HST_REQUESTED or '' }}/viewed/0" class=" count_{{ $numRequestedHst or '' }} notification {{ ($numRequestedHst == 0) ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ $numRequestedHst or '' }}</span>
                     <span class="label">Unsent HSTs</span>
                 </a>
 
                 @if (!empty($showBlock['pendingNodssClaims']))
-                    <a href="claims" class="notification  count_{!! $numPendingNodssClaims or '' !!} {!! ($numPendingNodssClaims == 0) ? 'good_count' : 'bad_count' !!}">
-                        <span class="count">{!! $numPendingNodssClaims or '' !!}</span>
+                    <a href="claims" class="notification  count_{{ $numPendingNodssClaims or '' }} {{ ($numPendingNodssClaims == 0) ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ $numPendingNodssClaims or '' }}</span>
                         <span class="label">Pending Claims</span>
                     </a>
                 @endif
 
                 @if (!empty($showBlock['pendingClaims']))
-                    <a href="claims" class="notification count_{!! $numPendingClaims or '' !!} {!! ($numPendingClaims == 0) ? 'good_count' : 'bad_count' !!}">
-                        <span class="count">{!! $numPendingClaims or '' !!}</span>
+                    <a href="claims" class="notification count_{{ $numPendingClaims or '' }} {{ ($numPendingClaims == 0) ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ $numPendingClaims or '' }}</span>
                         <span class="label">Pending Claims</span>
                     </a>
                 @endif
 
                 @if (!empty($showBlock['unmailedClaims']))
-                    <a href="claims/unmailed/1" class="notification  count_{!! $numUnmailedClaims or '' !!} {!! ($numUnmailedClaims == 0) ? 'good_count' : 'bad_count' !!}">
-                        <span class="count">{!! $numUnmailedClaims or '' !!}</span>
+                    <a href="claims/unmailed/1" class="notification  count_{{ $numUnmailedClaims or '' }} {{ ($numUnmailedClaims == 0) ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ $numUnmailedClaims or '' }}</span>
                         <span class="label">Unmailed Claims</span>
                     </a>
                 @endif
 
-                <a href="rejected_claims" class=" count_{!! $numRejectedClaims or '' !!} notification {!! ($numRejectedClaims == 0) ? 'good_count' : 'bad_count' !!}">
-                    <span class="count">{!! $numRejectedClaims or '' !!}</span>
+                <a href="rejected_claims" class=" count_{{ $numRejectedClaims or '' }} notification {{ ($numRejectedClaims == 0) ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ $numRejectedClaims or '' }}</span>
                     <span class="label">Rejected Claims</span>
                 </a>
 
-                <a href="unsigned_notes" class=" count_{!! $numUnsigned or '' !!} notification {!! ($numUnsigned == 0) ? 'good_count' : 'bad_count' !!}">
-                    <span class="count">{!! $numUnsigned or '' !!}</span>
+                <a href="unsigned_notes" class=" count_{{ $numUnsigned or '' }} notification {{ ($numUnsigned == 0) ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ $numUnsigned or '' }}</span>
                     <span class="label">Unsigned Notes</span>
                 </a>
 
-                <a href="vobs/status/{!! $DSS_PREAUTH_REJECTED or '' !!}/viewed/0" class=" count_{!! $numAlerts or '' !!} notification bad_count">
-                    <span class="count">{!! $numAlerts or '' !!}</span>
+                <a href="vobs/status/{{ $DSS_PREAUTH_REJECTED or '' }}/viewed/0" class=" count_{{ $numAlerts or '' }} notification bad_count">
+                    <span class="count">{{ $numAlerts or '' }}</span>
                     <span class="label">Alerts</span>
                 </a>
 
-                <a href="faxes" class="notification  count_{!! $numFaxAlerts or '' !!} {!! ($numFaxAlerts == 0) ? 'good_count' : 'bad_count' !!}">
-                    <span class="count">{!! $numFaxAlerts or '' !!}</span>
+                <a href="faxes" class="notification  count_{{ $numFaxAlerts or '' }} {{ ($numFaxAlerts == 0) ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ $numFaxAlerts or '' }}</span>
                     <span class="label">Failed Faxes</span>
                 </a>
 
-                <a href="pending_patient" class="notification  count_{!! $numPendingDuplicates or '' !!} {!! ($numPendingDuplicates == 0) ? 'good_count' : 'bad_count' !!}">
-                    <span class="count">{!! $numPendingDuplicates or '' !!}</span>
+                <a href="pending_patient" class="notification  count_{{ $numPendingDuplicates or '' }} {{ ($numPendingDuplicates == 0) ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ $numPendingDuplicates or '' }}</span>
                     <span class="label">Pending Duplicates</span>
                 </a>
 
-                <a href="email_bounces" class="notification  count_{!! $numBounce or '' !!} {!! ($numBounce == 0) ? 'good_count' : 'bad_count' !!}">
-                    <span class="count">{!! $numBounce or '' !!}</span>
+                <a href="email_bounces" class="notification  count_{{ $numBounce or '' }} {{ ($numBounce == 0) ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ $numBounce or '' }}</span>
                     <span class="label">Email Bounces</span>
                 </a>
             </div>
@@ -256,17 +256,17 @@
 
                         <ul class="task_od_list">
                             @foreach ($overdueTasks as $overdueTask)
-                                <li class="task_item task_{!! $overdueTask->id !!}" style="clear:both;">
-                                    <div class="task_extra" id="task_extra_{!! $overdueTask->id !!}" >
-                                        <a href="#" onclick="delete_task('{!! $overdueTask->id !!}')" class="task_delete"></a>
-                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $overdueTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                <li class="task_item task_{{ $overdueTask->id }}" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_{{ $overdueTask->id }}" >
+                                        <a href="#" onclick="delete_task('{{ $overdueTask->id }}')" class="task_delete"></a>
+                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $overdueTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                     </div>
 
-                                    <input type="checkbox" style="float:left; " class="task_status" value="{!! $overdueTask->id !!}" />
+                                    <input type="checkbox" style="float:left; " class="task_status" value="{{ $overdueTask->id }}" />
                                     
-                                    <div style="float:left; width:170px;">{!! $overdueTask->task !!}
+                                    <div style="float:left; width:170px;">{{ $overdueTask->task }}
                                         @if ($overdueTask->firstname != '' && $overdueTask->lastname != '')
-                                            (<a href="add_patient/ed/{!! $overdueTask->patientid !!}/preview/1/addtopat/1/pid/{!! $overdueTask->patientid !!}">{!! $overdueTask->firstname . ' ' . $overdueTask->lastname !!}</a>)
+                                            (<a href="add_patient/ed/{{ $overdueTask->patientid }}/preview/1/addtopat/1/pid/{{ $overdueTask->patientid }}">{{ $overdueTask->firstname . ' ' . $overdueTask->lastname }}</a>)
                                         @endif
                                     </div>
                                 </li>
@@ -279,17 +279,17 @@
 
                         <ul class="task_tod_list">
                             @foreach ($todayTasks as $todayTask)
-                                <li class="task_item task_{!! $todayTask->id !!}" style="clear:both;">
-                                    <div class="task_extra" id="task_extra_{!! $todayTask->id !!}" >
-                                        <a href="#" onclick="delete_task('{!! $todayTask->id !!}')" class="task_delete"></a>
-                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $todayTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                <li class="task_item task_{{ $todayTask->id }}" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_{{ $todayTask->id }}" >
+                                        <a href="#" onclick="delete_task('{{ $todayTask->id }}')" class="task_delete"></a>
+                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $todayTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                     </div>
 
-                                    <input type="checkbox" style="float:left; " class="task_status" value="{!! $todayTask->id !!}" />
+                                    <input type="checkbox" style="float:left; " class="task_status" value="{{ $todayTask->id }}" />
                                     
-                                    <div style="float:left; width:170px;">{!! $todayTask->task !!}
+                                    <div style="float:left; width:170px;">{{ $todayTask->task }}
                                         @if ($todayTask->firstname != '' && $todayTask->lastname != '')
-                                            (<a href="add_patient/ed/{!! $todayTask->patientid !!}/preview/1/addtopat/1/pid/{!! $todayTask->patientid !!}">{!! $todayTask->firstname . ' ' . $todayTask->lastname !!}</a>)
+                                            (<a href="add_patient/ed/{{ $todayTask->patientid }}/preview/1/addtopat/1/pid/{{ $todayTask->patientid }}">{{ $todayTask->firstname . ' ' . $todayTask->lastname }}</a>)
                                         @endif
                                     </div>
                                 </li>
@@ -302,17 +302,17 @@
 
                         <ul class="task_tom_list">
                             @foreach ($tomorrowTasks as $tomorrowTask)
-                                <li class="task_item task_{!! $tomorrowTask->id !!}" style="clear:both;">
-                                    <div class="task_extra" id="task_extra_{!! $tomorrowTask->id !!}" >
-                                        <a href="#" onclick="delete_task('{!! $tomorrowTask->id !!}')" class="task_delete"></a>
-                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $tomorrowTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                <li class="task_item task_{{ $tomorrowTask->id }}" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_{{ $tomorrowTask->id }}" >
+                                        <a href="#" onclick="delete_task('{{ $tomorrowTask->id }}')" class="task_delete"></a>
+                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $tomorrowTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                     </div>
 
-                                    <input type="checkbox" style="float:left; " class="task_status" value="{!! $tomorrowTask->id !!}" />
+                                    <input type="checkbox" style="float:left; " class="task_status" value="{{ $tomorrowTask->id }}" />
                                     
-                                    <div style="float:left; width:170px;">{!! $tomorrowTask->task !!}
+                                    <div style="float:left; width:170px;">{{ $tomorrowTask->task }}
                                         @if ($tomorrowTask->firstname != '' && $tomorrowTask->lastname != '')
-                                            (<a href="add_patient/ed/{!! $tomorrowTask->patientid !!}/preview/1/addtopat/1/pid/{!! $tomorrowTask->patientid !!}">{!! $tomorrowTask->firstname . ' ' . $tomorrowTask->lastname !!}</a>)
+                                            (<a href="add_patient/ed/{{ $tomorrowTask->patientid }}/preview/1/addtopat/1/pid/{{ $tomorrowTask->patientid }}">{{ $tomorrowTask->firstname . ' ' . $tomorrowTask->lastname }}</a>)
                                         @endif
                                     </div>
                                 </li>
@@ -325,17 +325,15 @@
 
                         <ul class="task_tw_list">
                             @foreach ($thisWeekTasks as $thisWeekTask)
-                                <li class="task_item task_{!! $thisWeekTask->id !!}" style="clear:both;">
-                                    <div class="task_extra" id="task_extra_{!! $thisWeekTask->id !!}" >
-                                        <a href="#" onclick="delete_task('{!! $thisWeekTask->id !!}')" class="task_delete"></a>
-                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $thisWeekTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                <li class="task_item task_{{ $thisWeekTask->id }}" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_{{ $thisWeekTask->id }}" >
+                                        <a href="#" onclick="delete_task('{{ $thisWeekTask->id }}')" class="task_delete"></a>
+                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $thisWeekTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                     </div>
-
-                                    <input type="checkbox" style="float:left; " class="task_status" value="{!! $thisWeekTask->id !!}" />
-                                    
-                                    <div style="float:left; width:170px;">{!! $thisWeekTask->task !!}
+                                    <input type="checkbox" style="float:left; " class="task_status" value="{{ $thisWeekTask->id }}" />
+                                    <div style="float:left; width:170px;">{{ $thisWeekTask->task }}
                                         @if ($thisWeekTask->firstname != '' && $thisWeekTask->lastname != '')
-                                            (<a href="add_patient/ed/{!! $thisWeekTask->patientid !!}/preview/1/addtopat/1/pid/{!! $thisWeekTask->patientid !!}">{!! $thisWeekTask->firstname . ' ' . $thisWeekTask->lastname !!}</a>)
+                                            (<a href="add_patient/ed/{{ $thisWeekTask->patientid }}/preview/1/addtopat/1/pid/{{ $thisWeekTask->patientid }}">{{ $thisWeekTask->firstname . ' ' . $thisWeekTask->lastname }}</a>)
                                         @endif
                                     </div>
                                 </li>
@@ -348,17 +346,15 @@
 
                         <ul class="task_nw_list">
                             @foreach ($nextWeekTasks as $nextWeekTask)
-                                <li class="task_item task_{!! $nextWeekTask->id !!}" style="clear:both;">
-                                    <div class="task_extra" id="task_extra_{!! $nextWeekTask->id !!}" >
-                                        <a href="#" onclick="delete_task('{!! $nextWeekTask->id !!}')" class="task_delete"></a>
-                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $nextWeekTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                <li class="task_item task_{{ $nextWeekTask->id }}" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_{{ $nextWeekTask->id }}" >
+                                        <a href="#" onclick="delete_task('{{ $nextWeekTask->id }}')" class="task_delete"></a>
+                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $nextWeekTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                     </div>
-
-                                    <input type="checkbox" style="float:left; " class="task_status" value="{!! $nextWeekTask->id !!}" />
-                                    
-                                    <div style="float:left; width:170px;">{!! $nextWeekTask->task !!}
+                                    <input type="checkbox" style="float:left; " class="task_status" value="{{ $nextWeekTask->id }}" />
+                                    <div style="float:left; width:170px;">{{ $nextWeekTask->task }}
                                         @if ($nextWeekTask->firstname != '' && $nextWeekTask->lastname != '')
-                                            (<a href="add_patient/ed/{!! $nextWeekTask->patientid !!}/preview/1/addtopat/1/pid/{!! $nextWeekTask->patientid !!}">{!! $nextWeekTask->firstname . ' ' . $nextWeekTask->lastname !!}</a>)
+                                            (<a href="add_patient/ed/{{ $nextWeekTask->patientid }}/preview/1/addtopat/1/pid/{{ $nextWeekTask->patientid }}">{{ $nextWeekTask->firstname . ' ' . $nextWeekTask->lastname }}</a>)
                                         @endif
                                     </div>
                                 </li>
@@ -371,21 +367,19 @@
 
                         <ul class="task_lat_list">
                             @foreach ($laterTasks as $laterTask)
-                                <li class="task_item task_{!! $laterTask->id !!}" style="clear:both;">
-                                    <div class="task_extra" id="task_extra_{!! $laterTask->id !!}" >
-                                        <a href="#" onclick="delete_task('{!! $laterTask->id !!}')" class="task_delete"></a>
-                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {!! $laterTask->id !!}}", "{!! csrf_token() !!}"); return false;' class="task_edit">Edit</a>
+                                <li class="task_item task_{{ $laterTask->id }}" style="clear:both;">
+                                    <div class="task_extra" id="task_extra_{{ $laterTask->id }}" >
+                                        <a href="#" onclick="delete_task('{{ $laterTask->id }}')" class="task_delete"></a>
+                                        <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $laterTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                     </div>
-
-                                    <input type="checkbox" style="float:left; " class="task_status" value="{!! $laterTask->id !!}" />
-                                    
+                                    <input type="checkbox" style="float:left; " class="task_status" value="{{ $laterTask->id }}" />
                                     <div style="float:left; width:170px;">
-                                        {!! date('M d', strtotime($laterTask->due_date)) !!}
+                                        {{ date('M d', strtotime($laterTask->due_date)) }}
                                         -
-                                        {!! $laterTask->task !!}
+                                        {{ $laterTask->task }}
 
                                         @if ($laterTask->firstname != '' && $laterTask->lastname != '')
-                                            (<a href="add_patient/ed/{!! $laterTask->patientid !!}/preview/1/addtopat/1/pid/{!! $laterTask->patientid !!}">{!! $laterTask->firstname . ' ' . $laterTask->lastname !!}</a>)
+                                            (<a href="add_patient/ed/{{ $laterTask->patientid }}/preview/1/addtopat/1/pid/{{ $laterTask->patientid }}">{{ $laterTask->firstname . ' ' . $laterTask->lastname }}</a>)
                                         @endif
                                     </div>
                                 </li>
@@ -406,7 +400,7 @@
                     <div class="task_menu index_task">
                         <ul>
                             @foreach ($memoAdmins as $memoAdmin)
-                                <li>{!! $memoAdmin->memo !!}</li>
+                                <li>{{ $memoAdmin->memo }}</li>
                             @endforeach
                         </ul>
                     </div>

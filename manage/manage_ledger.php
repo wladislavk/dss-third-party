@@ -743,7 +743,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 <?php 
       }elseif(!empty($myarray['ledger']) && $myarray['ledger']=='claim'){
         if($myarray['status']!=DSS_CLAIM_SENT && $myarray['status']!=DSS_CLAIM_SEC_SENT && $myarray['status']!=DSS_CLAIM_PAID_INSURANCE && $myarray['status']!=DSS_CLAIM_PAID_PATIENT && $myarray['status']!=DSS_CLAIM_PAID_SEC_INSURANCE ){ ?>
-        <a href="insurance.php?insid=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>" class="editlink" title="EDIT">
+        <a href="insurance_v2.php?insid=<?php echo $myarray["ledgerid"];?>&pid=<?php echo $_GET['pid'];?>" class="editlink" title="EDIT">
           Edit 
         </a>
 <?php 

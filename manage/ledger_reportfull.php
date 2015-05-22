@@ -11,79 +11,89 @@ else
 $i_val = $index_val * $rec_disp;
 
 $sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."'";
-        if((empty($_POST['dailysub']) || $_POST['dailysub'] != 1) && (empty($_POST['monthlysub']) && $_POST['monthlysub'] != 1)){
-$sql = "
-select 
-        'ledger',
-        dl.ledgerid,
-        dl.service_date,
-        dl.entry_date,
-        dl.amount,
-        dl.paid_amount,
-        dl.status, 
-        dl.description,
-        CONCAT(p.first_name,' ',p.last_name) as name, 
-        pat.patientid,
-        pat.firstname, 
-        pat.lastname as last_name,
-        '' as payer,
-        '' as payment_type
-    from dental_ledger dl 
-        JOIN dental_patients as pat ON dl.patientid = pat.patientid
-        LEFT JOIN dental_users as p ON dl.producerid=p.userid 
-    where dl.docid='".$_SESSION['docid']."' 
-    AND dl.service_date=CURDATE()
-and (dl.paid_amount IS NULL || dl.paid_amount = 0)
-                GROUP BY dl.ledgerid
- UNION
-    select
-                'ledger_paid',
-                dl.ledgerid,
-                dl.service_date,
-                dl.entry_date,
-                dl.amount,
-                dl.paid_amount,
-                dl.status, 
-                dl.description,
-                CONCAT(p.first_name,' ',p.last_name), 
-                pat.patientid,
-                pat.firstname, 
-                pat.lastname as last_name,
-                tc.type,
-        ''
-        from dental_ledger dl 
-                JOIN dental_patients as pat ON dl.patientid = pat.patientid
-                LEFT JOIN dental_users as p ON dl.producerid=p.userid 
-        LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
-        where dl.docid='".$_SESSION['docid']."' 
-    AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
-        AND dl.service_date=CURDATE()
- UNION
-        select 
-                'ledger_payment',
-                dlp.id,
-                dlp.payment_date,
-                dlp.entry_date,
-        '',
-        dlp.amount,
-        '',
-        '',
-        CONCAT(p.first_name,' ',p.last_name), 
-        pat.patientid,
-                pat.firstname,
-        pat.lastname as last_name,
-                dlp.payer,
-                dlp.payment_type
-        from dental_ledger dl 
-        JOIN dental_patients pat on dl.patientid = pat.patientid
-                LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' 
-                        AND dlp.amount != 0
-            AND dlp.payment_date=CURDATE()
-";
 
-        }
+if (
+    (empty($_POST['dailysub']) || $_POST['dailysub'] != 1) &&
+    (empty($_POST['monthlysub']) && $_POST['monthlysub'] != 1)
+) {
+    $sessionDocId = intval($_SESSION['docid']);
+    $sql = "
+        SELECT
+            'ledger'         AS ledger,
+            dl.ledgerid      AS ledgerid,
+            dl.service_date  AS service_date,
+            dl.entry_date    AS entry_date,
+            dl.amount        AS amount,
+            dl.paid_amount   AS paid_amount,
+            dl.status        AS status,
+            dl.description   AS description,
+            CONCAT(p.first_name, ' ', p.last_name) AS name,
+            pat.patientid    AS patientid,
+            pat.firstname    AS firstname,
+            pat.lastname     AS lastname,
+            ''               AS payer,
+            ''               AS payment_type
+        FROM dental_ledger dl
+            JOIN dental_patients AS pat ON dl.patientid = pat.patientid
+            LEFT JOIN dental_users AS p ON dl.producerid = p.userid
+        WHERE dl.docid = $sessionDocId
+            AND dl.service_date = CURDATE()
+            AND (dl.paid_amount IS NULL || dl.paid_amount = 0)
+        GROUP BY dl.ledgerid
+
+    UNION
+
+        SELECT
+            'ledger_paid'    AS ledger,
+            dl.ledgerid      AS ledgerid,
+            dl.service_date  AS service_date,
+            dl.entry_date    AS entry_date,
+            dl.amount        AS amount,
+            dl.paid_amount   AS paid_amount,
+            dl.status        AS status,
+            dl.description   AS description,
+            CONCAT(p.first_name, ' ', p.last_name) AS name,
+            pat.patientid    AS patientid,
+            pat.firstname    AS firstname,
+            pat.lastname     AS lastname,
+            tc.type          AS payer,
+            ''               AS payment_type
+        FROM dental_ledger dl
+            JOIN dental_patients AS pat ON dl.patientid = pat.patientid
+            LEFT JOIN dental_users AS p ON dl.producerid = p.userid
+            LEFT JOIN dental_transaction_code tc
+                ON tc.transaction_code = dl.transaction_code
+                AND tc.docid = $sessionDocId
+        WHERE dl.docid = $sessionDocId
+            AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+            AND dl.service_date = CURDATE()
+
+    UNION
+
+        SELECT
+            'ledger_payment' AS ledger,
+            dlp.id           AS ledgerid,
+            dlp.payment_date AS service_date,
+            dlp.entry_date   AS entry_date,
+            ''               AS amount,
+            dlp.amount       AS paid_amount,
+            ''               AS status,
+            ''               AS description,
+            CONCAT(p.first_name ,' ', p.last_name) AS name,
+            pat.patientid    AS patientid,
+            pat.firstname    AS firstname,
+            pat.lastname     AS lastname,
+            dlp.payer        AS payer,
+            dlp.payment_type AS payment_type
+        FROM dental_ledger dl
+            JOIN dental_patients pat ON dl.patientid = pat.patientid
+            LEFT JOIN dental_users p ON dl.producerid = p.userid
+            LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid = dl.ledgerid
+        WHERE dl.docid = $sessionDocId
+            AND dlp.amount != 0
+            AND dlp.payment_date = CURDATE()
+    ";
+}
 
 if(!isset($_REQUEST['sort'])){
   $_REQUEST['sort'] = 'service_date';
@@ -94,9 +104,9 @@ if(isset($_REQUEST['sort'])){
   if($_REQUEST['sort']=='producer'){
     $sql .= " ORDER BY name ".$_REQUEST['sortdir'];
   }elseif($_REQUEST['sort']=='patient'){
-    $sql .= " ORDER BY last_name ".$_REQUEST['sortdir'];
+    $sql .= " ORDER BY lastname ".$_REQUEST['sortdir'];
   }elseif($_REQUEST['sort']=='paid_amount'){
-    $sql .= " ORDER BY dl.paid_amount ".$_REQUEST['sortdir'];
+    $sql .= " ORDER BY paid_amount ".$_REQUEST['sortdir'];
   }else{
     $sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
   }

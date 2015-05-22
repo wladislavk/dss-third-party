@@ -45,7 +45,7 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Title:
                                     <span id="req_0" class="req">*</span>

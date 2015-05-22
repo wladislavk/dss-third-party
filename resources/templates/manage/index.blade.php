@@ -330,9 +330,7 @@
                                         <a href="#" onclick="delete_task('{{ $thisWeekTask->id }}')" class="task_delete"></a>
                                         <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $thisWeekTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                     </div>
-
                                     <input type="checkbox" style="float:left; " class="task_status" value="{{ $thisWeekTask->id }}" />
-                                    
                                     <div style="float:left; width:170px;">{{ $thisWeekTask->task }}
                                         @if ($thisWeekTask->firstname != '' && $thisWeekTask->lastname != '')
                                             (<a href="add_patient/ed/{{ $thisWeekTask->patientid }}/preview/1/addtopat/1/pid/{{ $thisWeekTask->patientid }}">{{ $thisWeekTask->firstname . ' ' . $thisWeekTask->lastname }}</a>)
@@ -353,9 +351,7 @@
                                         <a href="#" onclick="delete_task('{{ $nextWeekTask->id }}')" class="task_delete"></a>
                                         <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $nextWeekTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                     </div>
-
                                     <input type="checkbox" style="float:left; " class="task_status" value="{{ $nextWeekTask->id }}" />
-                                    
                                     <div style="float:left; width:170px;">{{ $nextWeekTask->task }}
                                         @if ($nextWeekTask->firstname != '' && $nextWeekTask->lastname != '')
                                             (<a href="add_patient/ed/{{ $nextWeekTask->patientid }}/preview/1/addtopat/1/pid/{{ $nextWeekTask->patientid }}">{{ $nextWeekTask->firstname . ' ' . $nextWeekTask->lastname }}</a>)
@@ -376,9 +372,7 @@
                                         <a href="#" onclick="delete_task('{{ $laterTask->id }}')" class="task_delete"></a>
                                         <a href="#" onclick='loadPopup("/manage/task/add", "{\"id\": {{ $laterTask->id }} }", "{{ csrf_token() }}"); return false;' class="task_edit">Edit</a>
                                     </div>
-
                                     <input type="checkbox" style="float:left; " class="task_status" value="{{ $laterTask->id }}" />
-                                    
                                     <div style="float:left; width:170px;">
                                         {{ date('M d', strtotime($laterTask->due_date)) }}
                                         -

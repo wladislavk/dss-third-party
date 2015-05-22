@@ -125,7 +125,7 @@
                 <tr class="image_sect"> 
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex">    
+                            <li id="foli8" class="complex">
                                 <span>
                                     Title
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -139,7 +139,7 @@
                 <tr id="orig_file" class="image_sect"> 
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex">    
+                            <li id="foli8" class="complex">
                                 <span>
                                     Image
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

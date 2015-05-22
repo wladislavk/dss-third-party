@@ -74,7 +74,7 @@
                 <td valign="top" class="col_head" colspan="10" align="center">
                     No Records
                 </td>
-            </tr>   
+            </tr>
         @else
             @foreach ($sleepLabs as $sleepLab)
                 @if ($sleepLab->status == 1) 

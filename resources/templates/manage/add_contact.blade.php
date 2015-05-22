@@ -225,7 +225,7 @@
                 <tr class="content physician"> 
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex">    
+                            <li id="foli8" class="complex">
                                 <div>
                                     <span style="font-size:10px;">
                                         These fields required for Medicare referring physicians.
@@ -236,7 +236,7 @@
                                     </span>
                                 </div>
                             </li>
-                            <li id="foli8" class="complex">    
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Other ID For Claim Forms
                                 </label>
@@ -265,7 +265,7 @@
                         </ul>
                     </td>
                 </tr>
-                <tr class="content physician insurance other"> 
+                <tr class="content physician insurance other">
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
                             <li id="foli8" class="complex">    
@@ -316,7 +316,7 @@
 
                         @if (!empty($contact->contactid))
                             <a style="float:right;" href="duplicate_contact/winner/{{ $contact->contactid }}" title="Duplicate">
-                                Is This a Duplicate? 
+                                Is This a Duplicate?
                             </a>
                             <br />
 

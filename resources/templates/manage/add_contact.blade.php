@@ -348,13 +348,13 @@
 
         @if (!empty($showBlock['updateReferredBy']))
             <script>
-                parent.updateReferredBy('<option value="{{ $insertContactId !!}" selected="selected">{{ $contactInfo["company"] !!}</option>', '{{ $fromId !!}');
+                parent.updateReferredBy('<option value="{{ $insertContactId }}" selected="selected">{{ $contactInfo["company"] }}</option>', '{{ $fromId }}');
             </script>
         @endif
 
         @if (!empty($showBlock['updateContactField']))
             <script>
-                parent.updateContactField('{{ $inField !!}', "{{ $showBlock['updateContactField']['name'] !!}", '{{ $idField !!}', "{{ $showBlock['updateContactField']['id'] !!}");
+                parent.updateContactField('{{ $inField }}', "{{ $showBlock['updateContactField']['name'] }}", '{{ $idField }}', "{{ $showBlock['updateContactField']['id'] }}");
             </script>
         @endif
 

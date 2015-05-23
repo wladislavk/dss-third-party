@@ -2,10 +2,12 @@
 
 require_once dirname(__FILE__) . '/../../../includes/autoloader.php';
 
-	$config_db_name = "dentalsl_main_dev";
-	$config_db_user = "root";
-	$config_db_pass = "";
-	$config_db_host = "localhost";
+    define('ROOT_DIR', $_SERVER['DOCUMENT_ROOT']);
+
+    $config_db_name = "dentalsl_site_dev_new";
+    $config_db_user = "root";
+    $config_db_pass = "";
+    $config_db_host = "localhost";
 
 	session_start();
 	$con = 	mysqli_connect($config_db_host,$config_db_user,$config_db_pass) or trigger_error('connection failure', E_USER_ERROR);

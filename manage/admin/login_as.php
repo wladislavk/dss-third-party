@@ -13,15 +13,6 @@
 
                 /*$ins_sql = "insert into dental_log (userid,adddate,ip_address) values('".$check_myarray['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
                 mysqli_query($con,$ins_sql);*/
-/*
-                session_register("userid");
-                session_register("username");
-                session_register("name");
-                session_register("user_access");
-                session_register("docid");
-                session_register("companyid");
-                session_register("user_type");
-*/
 
                 $_SESSION['userid']=$check_myarray['userid'];
                 $_SESSION['username']=$check_myarray['username'];

@@ -1075,11 +1075,9 @@ class PDF extends FPDI {
     $sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysqli_real_escape_string($con,$file)."' WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
     $db->query($sql);
 
-	if (file_exists("../../../shared/q_file/".$file)) {
-        $handle = fopen("../../../shared/q_file/".$file, 'x+');
-    	fwrite($handle, $fdf);
-    	fclose($handle);
-    }
+    $handle = fopen("../../../shared/q_file/".$file, 'x+');
+    fwrite($handle, $fdf);
+    fclose($handle);
 
 	$xfdf_file_path = '../../../shared/q_file/'.$file;
     $pdf_template_path = 'claim_v2.pdf';

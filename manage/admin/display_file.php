@@ -5,16 +5,18 @@ require dirname(__FILE__) . '/includes/sescheck.php';
 
 $basepath = dirname(__FILE__) . '/../../../../shared/q_file';
 
-$filename = $_GET['f'];
-//$filename = preg_replace('@[\./\\]+@','_',$filename);
-if (file_exists($basepath . '/' . $filename)) {
-    $filetype = mime_content_type($basepath . '/' . $filename);  
-} else {
-    $filetype = '';
+$filename = (!empty($_GET['f']) ? $_GET['f'] : '');
+$filetype = '';
+$exists = file_exists($basepath . '/' . $filename);
+
+if ($exists) {
+    $filetype = mime_content_type($basepath . '/' . $filename);
+} else if (!empty($_GET['type']) && $_GET['type'] === 'image') {
+    $filetype = 'image/gif';
 }
 
-if (!file_exists($basepath . '/' . $filename) && !empty($_GET['type']) && $_GET['type'] === 'image') {
-    $filetype = 'image/gif';
+if (!$filetype) {
+    $filetype = 'application/octet-stream';
 }
 
 switch ($filetype) {
@@ -24,7 +26,7 @@ switch ($filetype) {
     case 'image/gif':
     case 'image/giff':
     case 'image/bmp':
-        if (file_exists($basepath . '/' . $filename)) {
+        if ($exists) {
             header('Content-Type: ' . $filetype);
             readfile($basepath . '/' . $filename);
         }

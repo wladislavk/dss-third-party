@@ -497,14 +497,7 @@
 				  ip_address = '".$_SERVER['REMOTE_ADDR']."'";
 
 	$db->query($state_sql);
-
-    /**
-     * @Todo Optimize the PDF creation to NOT create it if the file already exists
-     * This comparison needs to be done BEFORE starting parsing the HTML for the PDF
-     */
-    if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $filename)) {
-        $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
-    }
+    $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
 
     if (file_exists($_SERVER['DOCUMENT_ROOT'] . $filename)) {
         ?>

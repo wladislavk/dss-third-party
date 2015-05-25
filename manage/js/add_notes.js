@@ -45,7 +45,7 @@ function save_draft(){
   var noteContent = $('#notes')[0].value;
   var procedureDate = $('#procedure_date')[0].value;
   var editorInitials = $('#editor_initials')[0].value;
-  var post_data = { ed_initials: editorInitials, ed:<?=$_GET['ed']?>, notes: noteContent, procedure_date: procedureDate };
+  var post_data = { ed_initials: editorInitials, ed: getParameterByName('ed'), notes: noteContent, procedure_date: procedureDate };
   $.post("create_draft_note.php",post_data, function(data){
     if (data.indexOf('logged_out')!= -1 || data.indexOf('login.php') != -1){
       alert("you have been logged out elsewhere. Redirecting to login page.");

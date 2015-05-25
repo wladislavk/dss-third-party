@@ -1,11 +1,8 @@
 <?php
 	include_once('admin/includes/main_include.php');
 	include("includes/sescheck.php");
-	include("includes/calendarinc.php");
 	include_once('admin/includes/password.php');
-?>
-	<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-<?php
+
     $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 
     $sign_r = $db->getRow($sign_sql);
@@ -165,13 +162,14 @@
 		$doc_r = $db->getRow($doc_sql);
 	?>	
 
-	<script type="text/javascript" src="js/add_notes.js"></script>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<link href="css/admin.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+		<script src="script/autocomplete.js"></script>
+		<script type="text/javascript" src="js/add_notes.js"></script>
 		<script language="javascript" type="text/javascript" src="script/validation.js"></script>
 		<link rel="stylesheet" href="css/form.css" type="text/css" />
 		<script type="text/javascript" src="script/wufoo.js"></script>
@@ -180,6 +178,9 @@
 		<script language="JavaScript" src="calendar1.js"></script>
 		<script language="JavaScript" src="calendar2.js"></script>
     	<?php
+		
+		include("includes/calendarinc.php");
+
 		  $thesql = "select n.*, CONCAT(u.first_name,' ',u.last_name) added_name from dental_notes n
 					LEFT JOIN dental_users u on u.userid=n.userid
 					where notesid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";

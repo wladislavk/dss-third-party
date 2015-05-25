@@ -103,7 +103,7 @@
 		</script>
 <?php
 		die();
-	} else {
+	} else if (count($_POST)) {
 		$pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
     	$pat_my2 = $db->getResults($pat_sql2);
     	if ($pat_my2) foreach ($pat_my2 as $pat_myarray2) {   
@@ -474,6 +474,7 @@
 
 function create_claim($pid, $prod)
 {
+	$db = new Db();
 	$pat_sql = "select * from dental_patients where patientid='".s_for($pid)."'";
 
 	$pat_myarray = $db->getRow($pat_sql);
@@ -786,5 +787,3 @@ function create_claim($pid, $prod)
 
         return $primary_claim_id;
 }
-
-?>

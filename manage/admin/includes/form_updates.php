@@ -4448,10 +4448,8 @@ function create_form_pdf($html, $filename, $title, $backoffice, $fontsize = 10, 
           $pdf->Output('../../../../shared/q_file/' . $filename, 'F');
 	  @chmod('../../../../shared/q_file/'. $filename,0777);
         }else{
-        	if (file_exists('../../../shared/q_file/' . $filename)) {
-          		$pdf->Output('../../../shared/q_file/' . $filename, 'F');
-	  			@chmod('../../../shared/q_file/'. $filename,0777);
-	  		}
+          	$pdf->Output('../../../shared/q_file/' . $filename, 'F');
+	  		@chmod('../../../shared/q_file/'. $filename,0777);
         }
 }
 

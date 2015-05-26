@@ -28,11 +28,8 @@
             }
             
             $file = "signature_" . $_SESSION['userid'] . "_" . $signature_id . ".png";
-            
-            if (file_exists('../../../shared/q_file/'.$file)) {
-                $s = imagepng($img, '../../../shared/q_file/'.$file);
-                imagedestroy($img);
-            }
+            $s = imagepng($img, '../../../shared/q_file/'.$file);
+            imagedestroy($img);
         }
     }
 ?>

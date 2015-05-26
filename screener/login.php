@@ -32,10 +32,8 @@ if($_POST["loginsub"] == 1)
 	if(mysqli_num_rows($check_my) == 1) 
 	{
 		$check_myarray = mysqli_fetch_array($check_my);
-		
-		session_register("screener_user");
+
 		$_SESSION['screener_user']=$check_myarray['userid'];
-                session_register("screener_doc");
 	        if($check_myarray['docid'] != 0)
                 {
                         $_SESSION['screener_doc']=$check_myarray['docid'];

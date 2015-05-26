@@ -16,8 +16,7 @@ if($_POST["loginsub"] == 1)
 	if(mysqli_num_rows($check_my) == 1) 
 	{
 		$check_myarray = mysqli_fetch_array($check_my);
-		
-		session_register("adminuserid");
+
 		$_SESSION['adminuserid']=$check_myarray['adminid'];
 		?>
 		<script type="text/javascript">

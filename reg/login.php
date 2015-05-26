@@ -18,7 +18,6 @@ if(isset($_POST['loginbut'])){
         $check_sql = "SELECT dp.patientid, dp.email, dp.registered, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where dp.status='1' && du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".mysqli_real_escape_string($con, $_POST['login'])."' and dp.password='".$pass."' ";
         $check_my = mysqli_query($con, $check_sql);
   if(mysqli_num_rows($check_my) > 0){
-                session_register("pid");
     $p = mysqli_fetch_assoc($check_my);
                 $_SESSION['pid']=$p['patientid'];
     if($p['registered'] == 1){

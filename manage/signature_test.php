@@ -20,19 +20,16 @@
                     user_id='".mysqli_real_escape_string($con,$_SESSION['userid'])."',
                     adddate=now(),
                     ip_address='".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'";
- 
+
             $signature_id = $db->getInsertId($s);
 
             if (!empty($json)) {
                 $img = sigJsonToImage($json);
             }
-
+            
             $file = "signature_" . $_SESSION['userid'] . "_" . $signature_id . ".png";
-
-            if (!file_exists('../../../shared/q_file/' . $file)) {
-                $s = imagepng($img, '../../../shared/q_file/' . $file);
-                imagedestroy($img);
-            }
+            $s = imagepng($img, '../../../shared/q_file/'.$file);
+            imagedestroy($img);
         }
     }
 ?>

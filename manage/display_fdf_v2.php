@@ -9,11 +9,9 @@
   // FDF data, push ti back to the user with a header() call, etc.
   // write the file out
 
-	if (file_exists("../../../shared/q_file/".$file)) {
-    $handle = fopen("../../../shared/q_file/".$file, 'x+');
-  	fwrite($handle, $fdf);
-  	fclose($handle);
-  }
+  $handle = fopen("../../../shared/q_file/".$file, 'x+');
+  fwrite($handle, $fdf);
+  fclose($handle);
 
 	$xfdf_file_path = '../../../shared/q_file/'.$file;
   $pdf_template_path = 'claim_v2.pdf';

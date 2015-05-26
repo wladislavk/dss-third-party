@@ -892,11 +892,9 @@
     
     $db->query($sql);
 
-    if (file_exists("../../../shared/q_file/".$file)) {
-        $handle = fopen("../../../shared/q_file/".$file, 'x+');
-        fwrite($handle, $fdf);
-        fclose($handle);
-    }
+    $handle = fopen("../../../shared/q_file/".$file, 'x+');
+    fwrite($handle, $fdf);
+    fclose($handle);
 
     $xfdf_file_path = '../../../shared/q_file/'.$file;
     $pdf_template_path = 'claim.pdf';

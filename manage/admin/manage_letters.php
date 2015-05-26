@@ -151,20 +151,7 @@ if(!isset($_REQUEST['sort'])){
 $sort = $_REQUEST['sort'];
 $sortdir = $_REQUEST['sortdir'];
 
-// Letters count and Oldest letter
-//$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' ORDER BY generated_date ASC;";
-$dental_letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.pat_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters.mailed_date FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ".$doc_filter." ORDER BY dental_letters.letterid ASC;";
 
-$dental_letters_res = $db->getResults($dental_letters_query);
-
-$pending_letters = count($dental_letters_res);
-$generated_date = (!empty($dental_letters_res[0]) ? $dental_letters_res[0] : '');
-$seconds_per_day = 86400;
-if($generated_date){
-$oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day);
-}else{
-$oldest_letter = '0';
-}
 // Select Letters into Array
 if ($status == 'pending') {
   if(is_super($_SESSION['admin_access'])){
@@ -311,6 +298,23 @@ LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid
   }
 }
 
+$pending_letters = count($dental_letters);
+$generated_date = $pending_letters ? $dental_letters[0]['generated_date'] : 0;
+
+if ($generated_date){
+    try {
+        // Add the root namespace to DateTime when merging to Loader branch
+        $today = new DateTime('now');
+        $past = new DateTime();
+        $past->setTimestamp($generated_date);
+        $oldest_letter = $today->diff($past)->format('%a');
+    } catch (Exception $e) {
+        // Empty catch block
+    }
+} else {
+    $oldest_letter = 0;
+}
+
 // Calculate numer of pages
 $num_pages = floor(count($dental_letters) / $page_limit);
 if (count($dental_letters) % $page_limit) {
@@ -324,10 +328,10 @@ foreach ($dental_letters as $key => $letter) {
   $dental_letters[$key]['mailed'] = $letter['mailed_date'];
   $dental_letters[$key]['status'] = $letter['status'];
   $dental_letters[$key]['date_sent'] = $letter['date_sent'];
-  $franchisee_query = "SELECT dental_users.name FROM dental_users WHERE userid='".$letter['docid']."'";
+  $franchisee_query = "SELECT name FROM dental_users WHERE userid='".$letter['docid']."'";
   
   $result = $db->getRow($franchisee_query);
-  $dental_letters[$key]['franchisee'] = $result['dental_users.name'];
+  $dental_letters[$key]['franchisee'] = $result['name'];
 	// Get Username
 	$username_query = "SELECT name from dental_users WHERE userid = '" . $letter['userid'] . "';";
 	

@@ -90,7 +90,7 @@
                     <td><?php echo  ($p['copay'] > 0 ? $p['copay'] : ""); ?></td>
                     <td><?php echo  ($p['coins'] > 0 ? $p['coins'] : ""); ?></td>
                     <td><?php echo  ($p['overpaid'] > 0 ? $p['overpaid'] : ""); ?></td>
-                    <td><?php echo  $p['followup']; ?></td>
+                    <td><?= preg_replace('/ .*$/', '', $p['followup']) ?></td>
                     <td><?php echo  $p['note']; ?></td>
                   </tr>
             <?php 
@@ -155,7 +155,7 @@
                                     <td><?php echo  $row['service_date']; ?></td>
                                     <td><?php echo  $row['description']; ?></td>
                                     <td>$<?php echo  $row['amount']; ?></td>
-                                    <td><input class="dollar_input" type="text" name="allowed_<?= $row['ledgerid']; ?>" value="<?php echo  (!empty($row['allowed']) ? $row['allowed'] : ''); ?>" /></td>
+                                    <td><input class="allowed_amount dollar_input" type="text" name="allowed_<?= $row['ledgerid']; ?>" value="<?php echo  (!empty($row['allowed']) ? $row['allowed'] : ''); ?>" /></td>
                                     <td><input class="payment_amount dollar_input" type="text" name="amount_<?= $row['ledgerid']; ?>" /></td>
                                     <td><input class="dollar_input" type="text" name="ins_paid_<?= $row['ledgerid']; ?>" value="<?php echo  (!empty($row['ins_paid']) ? $row['ins_paid'] : ''); ?>" /></td>
                                     <td><input class="dollar_input" type="text" name="deductible_<?= $row['ledgerid']; ?>" value="<?php echo  (!empty($row['deductible']) ? $row['deductible'] : ''); ?>" /></td>

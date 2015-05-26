@@ -616,9 +616,7 @@ if($other_intolerance != ''){ ?>
                 <input type="text" name="ir_max" id="ir_max" size="5" value="<?php echo $protrusion_to; ?>" onchange="checkIncisal()"  />
             </td>
         </tr>
-<?php if(!empty($sect) && $sect == 'summ'){ ?>
-<script src="js/summ_summ_check.js" type="text/javascript"></script>
-<?php } ?>
+        <script src="js/summ_summ_check.js" type="text/javascript"></script>
         <tr>
             <td width="17%" height="4">
                 Best Eccovision&nbsp;&nbsp;

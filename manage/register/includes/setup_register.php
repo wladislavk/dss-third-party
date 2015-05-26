@@ -13,7 +13,6 @@
         $psql = "UPDATE dental_users set access_code='' WHERE userid='".mysqli_real_escape_string($con, $r['userid'])."'";
         
         $db->query($psql);
-        session_register("regid");
         $_SESSION['regid'] = $r['userid'];
 	    echo '{"success":true}';
     }else{

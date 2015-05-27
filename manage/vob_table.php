@@ -24,7 +24,7 @@ if (count($my) > 0) { ?>
 
 <?php 
   foreach ($my as $preauth) {
-    if(!empty($preauth['status']) && $preauth['status']==DSS_PREAUTH_PENDING){ ?>
+    if(isset($preauth['status']) && $preauth['status']==DSS_PREAUTH_PENDING){ ?>
 
     <tr class="tr_bg">
       <td valign="top" align="center">

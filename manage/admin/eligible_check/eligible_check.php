@@ -536,7 +536,7 @@ $(document).ready(function(){
       ?>
 	<tr>
 	  <td><?php echo  $r['adddate']; ?></td>
-          <td><a href="manage/admin/view_eligibility_response.php?id=<?php echo $r['id']; ?>">View</a></td>
+          <td><a href="/manage/admin/view_eligibility_response.php?id=<?php echo $r['id']; ?>">View</a></td>
         </tr>
 
 <?php

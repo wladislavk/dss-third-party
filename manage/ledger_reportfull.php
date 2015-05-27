@@ -261,14 +261,15 @@ $num_users = count($my);
             <?php echo st($myarray['name']);?>
         </td>
         <td valign="top" width="30%">
-            <?php echo  (($myarray['ledgerid'] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
-        <?php echo  (($myarray['ledgerid'] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
-        <?php echo  (($myarray['ledgerid'] == 'ledger'))?$myarray["description"]:'';?>
+            <?php echo  (($myarray['ledger'] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
+        <?php echo  (($myarray['ledger'] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
+        <?php echo  (($myarray['ledger'] == 'ledger'))?$myarray["description"]:'';?>
         <?php echo $myarray["description"];?>
         </td>
         <td valign="top" align="right" width="10%">
         <?php
-            if($myarray['ledgerid'] == 'ledger'){
+
+            if($myarray['ledger'] == 'ledger'){
                 if($myarray["amount"] <> 0){
                     echo number_format($myarray["amount"],2);
                     $tot_charges += $myarray["amount"];
@@ -277,11 +278,11 @@ $num_users = count($my);
         ?>
             &nbsp;
         </td>
-            <?php if($myarray['ledgerid'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
+            <?php if($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
         <td>
         </td>
             <?php
-                if($myarray['ledgerid']!='claim'){
+                if($myarray['ledger']!='claim'){
                 $tot_adj += st($myarray["paid_amount"]);
                 }
             } ?>
@@ -292,8 +293,8 @@ $num_users = count($my);
             }?>
             &nbsp;
         </td>
-            <?php if(!($myarray['ledgerid'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
-                if($myarray['ledgerid']!='claim'){
+            <?php if(!($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
+                if($myarray['ledger']!='claim'){
                     $tot_credit += st($myarray["paid_amount"]);
                 }
             ?>

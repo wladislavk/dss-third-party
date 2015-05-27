@@ -96,7 +96,6 @@ if (typeof String.prototype.trim !== 'function') {
       $('.search_hints').css('display', 'none');
     });
 
-    $('#future_dental_det').css('display', 'none');
     $('#hideshow1').css('display', 'block');
     $('#hideshow2').css('display', 'none');
     $('#hideshow3').css('display', 'none');

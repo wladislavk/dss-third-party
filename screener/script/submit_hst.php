@@ -36,6 +36,8 @@ $s = "INSERT INTO dental_hst SET
 	";
 	$hst = mysqli_query($con, $s);
 	$hst_id = mysqli_insert_id($con);
+
+if($hst_id){
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
   $epworth_my = mysqli_query($con, $epworth_sql);
   $epworth_number = mysqli_num_rows($epworth_my);
@@ -53,20 +55,25 @@ $s = "INSERT INTO dental_hst SET
     }
   }
 
-
-if($hst){
   echo '{"success":true}';
 }else{
   echo '{"error":true}';
 }
 
-function num($n, $phone=true){
-$n = preg_replace('/\D/', '', $n);
-if(!$phone){return $n; }
-$pattern = '/([1]*)(.*)/';
-preg_match($pattern, $n, $matches);
-return $matches[2];
+if (!function_exists('num')) {
+    function num($n, $phone=true){
+        $n = preg_replace('/\D/', '', $n);
+
+        if (!$phone) {
+            return $n;
+        }
+
+        $pattern = '/([1]*)(.*)/';
+
+        if (preg_match($pattern, $n, $matches)) {
+            return $matches[2];
+        }
+
+        return $n;
+    }
 }
-
-?>
-

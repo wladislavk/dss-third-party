@@ -3,6 +3,13 @@ var screenerid='';
 function submit_screener(){
   $('#sect4_next').hide();
   $('#sect4_next_dis').show();
+
+    function onFailure () {
+        $('#sect4_next').show();
+        $('#sect4_next_dis').hide();
+        alert('There was an error communicating with the server, please try again in a few minutes');
+    }
+
   $.ajax({
     url: "script/submit_screener.php",
     type: "post",
@@ -58,6 +65,7 @@ function submit_screener(){
     success: function(data){
       var r = $.parseJSON(data);
       if(r.error){
+          onFailure();
       }else{
  	screenerid=r.screenerid;
 	//update view results div
@@ -249,9 +257,7 @@ function submit_screener(){
 
       }
     },
-    failure: function(data){
-      alert('fail');
-    }
+    failure: onFailure
   });	
 
 }

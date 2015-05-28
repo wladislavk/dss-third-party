@@ -60,7 +60,7 @@ if($hst_id){
   echo '{"error":true}';
 }
 
-if (!function_exists('num')) {
+if (!function_exists(__NAMESPACE__ . '\\num')) {
     function num($n, $phone=true){
         $n = preg_replace('/\D/', '', $n);
 

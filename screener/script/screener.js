@@ -225,7 +225,7 @@ function submit_screener(){
 
       }
     },
-    failure: onFailure
+    error: onFailure
   });	
 
 }
@@ -490,6 +490,15 @@ $(document).ready(function(){
 });
 
 function submit_hst(){
+  var $button = $('#secthst #sect4_next');
+
+  function onFailure () {
+    $button.removeClass('disabled');
+    alert('There was a problem communicating with the server, please try again in a few minutes');
+  }
+
+  $button.addClass('disabled').show();
+
   $.ajax({
     url: "script/submit_hst.php",
     type: "post",
@@ -510,10 +519,12 @@ function submit_hst(){
     success: function(data){
       var r = $.parseJSON(data);
       if(r.error){
+        onFailure();
       }else{
-	window.location = 'index.php';
+        window.location = 'index.php';
       }
-    }
+    },
+    error: onFailure
    });
 }
 

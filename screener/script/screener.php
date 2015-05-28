@@ -257,7 +257,7 @@ function submit_screener(){
 
       }
     },
-    failure: onFailure
+    error: onFailure
   });	
 
 }
@@ -488,6 +488,14 @@ function submit_hst(){
   if($('#hst_first_name').val()=='' || $('#hst_last_name').val() == '' || $('#hst_dob').val()=='' || $('#hst_phone').val()=='' || $('#hst_email').val() == '' ||$('input[name=hst_company_id]:checked').length == 0){
     alert('All fields are required.');
   }else{
+  var $button = $('#secthst #sect4_next');
+
+  function onFailure () {
+    $button.removeClass('disabled');
+    alert('There was a problem communicating with the server, please try again in a few minutes');
+  }
+
+  $button.addClass('disabled').show();
   $.ajax({
     url: "script/submit_hst.php",
     type: "post",
@@ -519,11 +527,13 @@ function submit_hst(){
     success: function(data){
       var r = $.parseJSON(data);
       if(r.error){
+        onFailure();
       }else{
 	alert('HST submitted for approval and is in your Pending HST queue.');
 	window.location = 'index.php';
       }
-    }
+    },
+    error: onFailure
    });
   }
 }

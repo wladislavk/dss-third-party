@@ -156,8 +156,7 @@
       $title = "Test Letter";
       $filename = "test_margins_".$docid.".pdf";
       $html = "
-        <p>
-          name<br />
+        <p>name<br />
           practice<br />
           address
         </p>
@@ -167,8 +166,7 @@
         <table border=\"0\">
           <tr>
             <td width=\"70\"></td>
-            <td>
-              name<br />
+            <td>name<br />
               practice
               address<br />
               city, state zip<br />

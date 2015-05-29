@@ -586,11 +586,12 @@ if ($another_plan == "") {
     <div style="width:250px;float:left;">
       Instructions to E-File: Enter electronic Payer ID or Name in Box 1.  Verify all claim details.  Click “Submit” on bottom left of claim to e-file your claim.
     </div>
-    <input type="button" onclick="change_form('<?php echo  $v2_form; ?>');" value="Switch to Paper File" style="float:right;margin-right:20px;" />
+    <input type="button" onclick="change_form();" value="Switch to Paper File" style="float:right;margin-right:20px;" />
     <?php if (!empty($is_front_office)) { ?>
       <input type="button" onclick="window.location='view_claim.php?claimid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>'; return false;" value="Back to Insurance Page" style="float:right;">
     <?php } elseif ($is_back_office) { ?>
-      <input type="button" onclick="window.location='manage_claims.php'; return false;" value="Back to Insurance Page" style="float:right;">
+      <input type="button" onclick="window.location='manage_claims.php'; return false;" value="Back to Insurance Page" style="float:right;" />
+      <input type="button" class="print-button" onclick="window.location='claim_notes.php?id=<?php echo  (!empty($_GET['insid']) ? $_GET['insid'] : ''); ?>&pid=<?php echo  $_GET['pid']; ?>'" value="View Notes" style="float:right;" />
     <?php } ?>
     <?php if($is_rejected) { ?>
       <div style="clear:both;margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
@@ -891,11 +892,11 @@ if ($another_plan == "") {
        . "  dental_ledger ledger "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
-       . "  ledger.primary_claim_id = " . $orig_claim_id . " "
-       . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
-       . "  AND ledger.docid = " . $docid . " "
-       . "  AND trxn_code.docid = " . $docid . " "
-       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
+       . "  ledger.primary_claim_id = '" . $orig_claim_id . "' "
+       . "  AND ledger.patientid = '" . (!empty($_GET['pid']) ? $_GET['pid'] : '') . "' "
+       . "  AND ledger.docid = '" . $docid . "' "
+       . "  AND trxn_code.docid = '" . $docid . "' "
+       . "  AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "' "
        . "ORDER BY "
        . "  ledger.service_date ASC";
     $charge_my = mysqli_query($con, $sql);
@@ -926,7 +927,7 @@ if ($another_plan == "") {
                 LEFT JOIN dental_users p ON dl.producerid=p.userid
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$docid."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
-                        AND primary_claim_id=".$orig_claim_id."
+                        AND primary_claim_id='".$orig_claim_id."'
                         AND dlp.amount != 0
                         AND dlp.payer = 0
         ";
@@ -1008,8 +1009,8 @@ if ($another_plan == "") {
              . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
              . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
              . "  WHERE "
-             . "  ledger.primary_claim_id = " . $pri_claim_id . " "
-             . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
+             . "  ledger.primary_claim_id = '" . $pri_claim_id . "' "
+             . "  AND ledger.patientid = '" . (!empty($_GET['pid']) ? $_GET['pid'] : '') . "' "
              . "  AND ledger.docid = '" . $docid . "' "
              . "  AND trxn_code.docid = '" . $docid . "' "
              . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -1188,10 +1189,10 @@ if($federal_tax_id_number != ''){
              . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
              . "WHERE "
              . "  ledger.status = " . DSS_TRXN_PENDING . " "
-             . "  AND ledger.primary_claim_id = " . $insuranceid . " "
-           . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
-           . "  AND ledger.docid = " . $docid . " "
-           . "  AND trxn_code.docid = " . $docid . " "
+             . "  AND ledger.primary_claim_id = '" . $insuranceid . "' "
+           . "  AND ledger.patientid = '" . (!empty($_GET['pid']) ? $_GET['pid'] : '') . "' "
+           . "  AND ledger.docid = '" . $docid . "' "
+           . "  AND trxn_code.docid = '" . $docid . "' "
            . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
            . "ORDER BY "
            . "  ledger.service_date ASC";
@@ -1223,7 +1224,7 @@ if($federal_tax_id_number != ''){
                   LEFT JOIN dental_users p ON dl.producerid=p.userid
                   LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                   where dl.docid='".$docid."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
-                  AND primary_claim_id=".(!empty($_GET['insid']) ? $_GET['insid'] : '')."
+                  AND primary_claim_id='".(!empty($_GET['insid']) ? $_GET['insid'] : '')."'
                   AND dlp.amount != 0
                   AND dlp.payer = 0";
         }
@@ -1248,7 +1249,68 @@ if($federal_tax_id_number != ''){
       $('input').each( function(){
         // $(this).val($(this).val().toUpperCase());
       });
+      $('input, select').bind('change', function(){
+          form_changed=true;
+      });
     });
+
+  $(".date_field").keydown(function(e){
+      var key = e.charCode || e.keyCode || 0;
+
+      // allow backspace, tab, delete, arrows, numbers and keypad numbers ONLY
+      return (
+          key == 8 ||
+              key == 9 ||
+              key == 46 ||
+              key == 189 ||
+              key == 191 ||
+              (key >= 37 && key <= 40) ||
+              (key >= 48 && key <= 57) ||
+              (key >= 96 && key <= 105));
+  });
+  $(".number_field").keydown(function(e){
+      var key = e.charCode || e.keyCode || 0;
+
+      // allow backspace, tab, delete, numbers and keypad numbers ONLY
+      return (
+          key == 8 ||
+              key == 9 ||
+              key == 46 ||
+              key == 110 ||
+              key == 190 ||
+              (key >= 48 && key <= 57) ||
+              (key >= 96 && key <= 105));
+  });
+
+  function file_reject_claim(){
+      if($('#p_m_ins_payer_id').val()==""){
+          alert('Insurance payer must be selected to electronically file claim.');
+          return false;
+      }
+      c = confirm('You are about to resubmit a rejected claim. Please make sure you have corrected all errors, then click OK to resend the claim.');
+      return c;
+  }
+  function file_claim(){
+      if($('#p_m_ins_payer_id').val()==""){
+          alert('Insurance payer must be selected to electronically file claim.');
+          return false;
+      }
+      c = confirm('You are about to electronically submit this claim, are you sure?');
+      return c;
+  }
+
+  function change_form(){
+      if(form_changed){
+          if(confirm('Your changes to this claim will be lost if you change to electronic submission. Click \'Ok\' to proceed or \'Cancel\' to return to paper form.')){
+              window.location = "<?= $v2_form ?>";
+          }
+      }else{
+          window.location = "<?= $v2_form ?>";
+      }
+      return false;
+  }
+
+  form_changed=false;
 </script>
 
   <div id="change_confirm" style="display:none;top:0;height:100%;background:#fff; position:fixed; top:20px; width:100%; opacity:90%;">

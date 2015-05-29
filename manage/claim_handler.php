@@ -26,6 +26,7 @@
 
     //confirm ledger transactions and make sure they haven't changed.
     function confirm_ledger_trxns(){
+        global $con;
         $db = new Db();
 
         $num = 0;

@@ -43,10 +43,10 @@ $flow_pg2_info_res = $db->getResults($flow_pg2_info_query);
 foreach ($flow_pg2_info_res as $row) {
     $datesched = (!empty($row['date_scheduled']))?date('m/d/Y', strtotime($row['date_scheduled'])):'';   
     
-    $datecomp = (!empty($row['date_completed']))?date('m/d/Y', strtotime($row['date_completed'])):'';
+    $datecomp = (!empty($row['date_completed']) && strtotime($row['date_completed']))?date('m/d/Y', strtotime($row['date_completed'])):'';
     $id = $row['id'];
 
-    if ($datecomp !='') { ?>
+    if ($datecomp == date('m/d/Y')) { ?>
     <tr id="completed_row_<?php echo $id; ?>">
         <td>
             <input class="completed_date flow_comp_calendar form-control date text-center" id="completed_date_<?php echo $id; ?>" type="text" value="<?php echo $datecomp; ?>" />

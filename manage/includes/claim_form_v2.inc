@@ -282,6 +282,7 @@ die();
 	$diagnosis_k = $_POST['diagnosis_k'];
 	$diagnosis_l = $_POST['diagnosis_l'];
 	$medicaid_resubmission_code = (!empty($_POST['medicaid_resubmission_code']) ? $_POST['medicaid_resubmission_code'] : '');
+    $resubmission_code_fill = $_POST['resubmission_code_fill'];
 	$original_ref_no = $_POST['original_ref_no'];
 	$prior_authorization_number = $_POST['prior_authorization_number'];
 	$service_date1_from = (!empty($_POST['service_date1_from']) ? $_POST['service_date1_from'] : '');
@@ -529,6 +530,7 @@ die();
 		diagnosis_k = '".s_for($diagnosis_k)."',
 		diagnosis_l = '".s_for($diagnosis_l)."',
 		medicaid_resubmission_code = '".s_for($medicaid_resubmission_code)."',
+		resubmission_code_fill = '".s_for($resubmission_code_fill)."',
 		original_ref_no = '".s_for($original_ref_no)."',
 		prior_authorization_number = '".s_for($prior_authorization_number)."',
 		service_date1_from = '".s_for($service_date1_from)."',
@@ -793,6 +795,7 @@ die();
     diagnosis_k = '".s_for($diagnosis_k)."',
     diagnosis_l = '".s_for($diagnosis_l)."',
 		medicaid_resubmission_code = '".s_for($medicaid_resubmission_code)."',
+		resubmission_code_fill = '".s_for($resubmission_code_fill)."',
 		original_ref_no = '".s_for($original_ref_no)."',
 		prior_authorization_number = '".s_for($prior_authorization_number)."',
 		service_date1_from = '".s_for($service_date1_from)."',
@@ -1168,6 +1171,7 @@ $diagnosis_j = st($myarray['diagnosis_j']);
 $diagnosis_k = st($myarray['diagnosis_k']);
 $diagnosis_l = st($myarray['diagnosis_l']);
 $medicaid_resubmission_code = st($myarray['medicaid_resubmission_code']);
+$resubmission_code_fill = st($myarray['resubmission_code_fill']);
 $original_ref_no = st($myarray['original_ref_no']);
 $prior_authorization_number = st($myarray['prior_authorization_number']);
 $service_date1_from = st($myarray['service_date1_from']);
@@ -2285,9 +2289,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						Name of Referring Provider or Other Source
 				<select name="name_referring_provider_qualifier">
                     <option value=""></option>
-                    <option value="DN" <?= ($name_referring_provider_qualifier=="DN" || $insurancetype == '1' )?'checked="checked"':''; ?>>DN - Referring Provider</option>
-                    <option value="DK" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DK")?'checked="checked"':''; ?>>DK - Ordering Provider</option>
-					<option value="DQ" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DQ")?'checked="checked"':''; ?>>DQ - Supervising Provider</option>
+                    <option value="DN" <?= ($name_referring_provider_qualifier=="DN" || $insurancetype == '1' )?'selected="selected"':''; ?>>DN - Referring Provider</option>
+                    <option value="DK" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DK")?'selected="selected"':''; ?>>DK - Ordering Provider</option>
+					<option value="DQ" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DQ")?'selected="selected"':''; ?>>DQ - Supervising Provider</option>
 				</select>
 								<input type="text" value="<?php echo  $referring_provider; ?>" name="referring_provider" class="inbox_line3" size="20" />
 								
@@ -2530,9 +2534,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						<span class="num">22.</span> 
 						Resubmission Code
                                 <select name="resubmission_code_fill">
-                                        <option value="">New Claim</option>
-                                        <option value="7">Resubmitted Claim</option>
-                                        <option value="8">Void/Cancel Prior Claim</option>
+                                    <option value="" <?php echo $resubmission_code_fill==""?'selected="selected"':''; ?>>New Claim</option>
+                                    <option value="7" <?php echo $resubmission_code_fill=="7"?'selected="selected"':''; ?>>Resubmitted Claim</option>
+                                    <option value="8" <?php echo $resubmission_code_fill=="8"?'selected="selected"':''; ?>>Void/Cancel Prior Claim</option>
                                 </select>
 						<br />
 						Original Ref. No.
@@ -3052,7 +3056,7 @@ if ($is_pending) {
 											</td>
 											                
 											<td valign="top" width="90%">
-												<input type="text" value="<?php echo $service_practice;?>" name="service_facility_info_name" class="inbox_line3" size="40" />
+                                                <input type="text" value="<?php echo ($service_facility_info_name && $service_facility_info_name != "")?$service_facility_info_name:$service_practice;?>" name="service_facility_info_name" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
@@ -3060,7 +3064,7 @@ if ($is_pending) {
 												<span class="small_cap">Address:</span>		
 											</td>
 											<td valign="top" width="90%">
-												<input type="text" value="<?php echo $service_address;?>" name="service_facility_info_address" class="inbox_line3" size="40" />
+                                                <input type="text" value="<?php echo ($service_facility_info_address && $service_facility_info_address != '')?$service_facility_info_address:$service_address;?>" name="service_facility_info_address" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
@@ -3068,14 +3072,14 @@ if ($is_pending) {
 												<span class="small_cap">City/State/Zip:</span>		
 											</td>
 											<td valign="top" width="90%">
-												<input type="text" value="<?php echo $service_city;?>, <?php echo $service_state;?> <?php echo $service_zip;?>" name="service_facility_info_city" class="inbox_line3" size="40" />
+                                                <input type="text" value="<?php echo ($service_facility_info_city && $service_facility_info_city != "")?$service_facility_info_city:($service_city.', '.$service_state.' '.$service_zip);?>" name="service_facility_info_city" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 									</table>
 									<span class="num_a">
 										a.
 									</span>
-									<input type="text" value="<?php echo  ($insurancetype == '1')?$service_medicare_npi:$service_npi; ?>" name="service_info_a" class="inbox_line3" size="15" />
+                                    <input type="text" value="<?= ($service_info_a && $service_info_a != '')?$service_info_a:(($insurancetype == '1')?$service_medicare_npi:$service_npi); ?>" name="service_info_a" class="inbox_line3" size="15" />
 									
 									<span class="num_a">
 										b.
@@ -3123,7 +3127,7 @@ if ($is_pending) {
 									<span class="small_cap">Name:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" value="<?php echo $practice;?>" name="billing_provider_name" class="inbox_line3" size="40" />
+                                    <input type="text" value="<?php echo ($billing_provider_name && $billing_provider_name != '')?$billing_provider_name:$practice;?>" name="billing_provider_name" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 							<tr>
@@ -3131,7 +3135,7 @@ if ($is_pending) {
 									<span class="small_cap">Address:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" value="<?php echo $address;?>" name="billing_provider_address" class="inbox_line3" size="40" />
+                                    <input type="text" value="<?php echo $billing_provider_address;?>" name="billing_provider_address" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 							<tr>
@@ -3139,14 +3143,14 @@ if ($is_pending) {
 									<span class="small_cap">City/State/Zip:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" value="<?php echo $city;?>, <?php echo $state;?> <?php echo $zip;?>" name="billing_provider_city" class="inbox_line3" size="40" />
+                                    <input type="text" value="<?php echo ($billing_provider_city && $billing_provider_city != '')?$billing_provider_city:$city.', '.$state.' '.$zip;?>" name="billing_provider_city" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 						</table>
 						<span class="num_a">
 							a.
 						</span>
-						<input type="text" value="<?php echo  ($insurancetype == '1')?$medicare_npi:$npi; ?>" name="billing_provider_a" class="inbox_line3" size="15" />
+                        <input type="text" value="<?= ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>" name="billing_provider_a" class="inbox_line3" size="15" />
 						
 						<span class="num_a">
 							b.

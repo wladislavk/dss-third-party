@@ -46,7 +46,7 @@ foreach ($flow_pg2_info_res as $row) {
     $datecomp = (!empty($row['date_completed']) && strtotime($row['date_completed']))?date('m/d/Y', strtotime($row['date_completed'])):'';
     $id = $row['id'];
 
-    if ($datecomp !='') { ?>
+    if ($datecomp == date('m/d/Y')) { ?>
     <tr id="completed_row_<?php echo $id; ?>">
         <td>
             <input class="completed_date flow_comp_calendar form-control date text-center" id="completed_date_<?php echo $id; ?>" type="text" value="<?php echo $datecomp; ?>" />

@@ -6,7 +6,6 @@ require_once('includes/patient_info.php');
 if ($patient_info) {
  ?>
 <script type="text/javascript">
-
  function updatelabs(i,c){
 	$('#sleepstudies').contents().find('.place_select').append("<option value='"+i+"'>"+c+"</option>");
 	disablePopupRefClean();
@@ -694,9 +693,10 @@ mysqli_query($con, $s1);
                 $old_referred_source = $s_r['referred_source'];
 
       $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_notes='".$referred_notes."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';";  
-$s1 = "UPDATE dental_flow_pg2_info SET date_completed = '".date('Y-m-d', strtotime($copyreqdate))."' WHERE patientid='".$pid."' AND stepid='1';";
-mysqli_query($con, $s1);
-
+if (!empty($copyreqdate)) {
+    $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '".date('Y-m-d', strtotime($copyreqdate))."' WHERE patientid='".$pid."' AND stepid='1';";
+    mysqli_query($con, $s1);
+}
  if($old_referred_by != $referred_by || $old_referred_source != $referred_source){
                         if($referred_by){
                                 $sql = "UPDATE dental_letters SET md_referral_list=".$referred_by." WHERE patientid=".mysqli_real_escape_string($con, $pid)."";
@@ -836,7 +836,7 @@ print $datesched . " " . $letter ? "true":"false" . " " . $topstep . " " . $last
 				$dateTime = date_create_from_format("m/d/Y", $datestring);
 				$date = date('Y-m-d H:i:s', $dateTime->getTimestamp());
 			} else {
-				$date = NULL;
+				$date = date('Y-m-d H:i:s');
 			}
 			$columns .= ", date_completed";
 			$values .= ", '$date'";

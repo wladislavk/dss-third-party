@@ -12,7 +12,7 @@ class FTSSamples
 	
 	public function __construct ()
 	{
-        global $con;
+        $con = $GLOBALS['con'];
 
 		$this->serviceEndpointUrl = "https://api.sfaxme.com/api/";
 		$this->securityContext = ""; //<--- Required but leave blank exactly as it is here
@@ -267,7 +267,7 @@ class FTSAESHelper
 	
 	public function __construct($pSecurityContext)
 	{
-        global $con;
+        $con = $GLOBALS['con'];
 
                 $key_sql = "SELECT * FROM companies WHERE id='".mysqli_real_escape_string($con, $_SESSION['companyid'])."'";
                 $key_q = mysqli_query($con, $key_sql);

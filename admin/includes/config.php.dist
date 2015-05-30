@@ -13,6 +13,7 @@ require_once dirname(__FILE__) . '/../../includes/autoloader.php';
     $con = mysqli_connect($config_db_host, $config_db_user, $config_db_pass) or trigger_error('connection failure', E_USER_ERROR);
     $GLOBALS['con'] = $con;
     mysqli_select_db($con, $config_db_name);
+    $GLOBALS['con'] = $con;
     
     $base_path = 'http://' . $_SERVER['HTTP_HOST'] . '/dental/';
 

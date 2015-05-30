@@ -109,7 +109,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
              . "  `ledgerid` = $ledgerid";
         $query = mysqli_query($con, $sql);
         if (!$query) {
-            echo mysqli_errno($con$con) . ": " . mysqli_error($con). "\n";
+            error_log('SQL error [' . mysqli_errno($con) . "]: " . mysqli_error($con));
         }
         $num++;
     }
@@ -155,7 +155,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         <?php
         trigger_error("Die called", E_USER_ERROR);
     }
-    
+
     // Put POST values into variables
         //$pica1 = $_POST['pica1'];
         //$pica2 = $_POST['pica2'];
@@ -179,11 +179,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $insured_lastname = $_POST['subscriber']['last_name'];
         $insured_middle = $_POST['subscriber']['middle_name'];
         if($_POST['dependent']['relationship'] == '01'){
-            $patient_relation_insured = "Spouse";    
+            $patient_relation_insured = "Spouse";
         }else if($_POST['dependent']['relationship'] == '19'){
-            $patient_relation_insured = "Child";    
+            $patient_relation_insured = "Child";
         }else if($_POST['dependent']['relationship'] == 'G8'){
-            $patient_relation_insured = "Other";    
+            $patient_relation_insured = "Other";
         } else {
             $patient_relation_insured = "Self";
         }
@@ -210,7 +210,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         if($other_payer == "true"){
             $another_plan = "YES";
         }
-        else 
+        else
         {
             $another_plan = "NO";
         }
@@ -686,7 +686,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 rendering_provider_org_6  = '".mysqli_real_escape_string($con, $rendering_provider_org_6)."',
                 rendering_provider_npi_6  = '".mysqli_real_escape_string($con, $rendering_provider_npi_6)."',
                 responsibility_sequence = '".mysqli_real_escape_string($con, $responsibility_sequence)."'";
-                
+
                 if(isset($_POST['reject_but'])){
                   $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
                   $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";
@@ -701,7 +701,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 $trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
                 update_ledger_trxns($_POST['ed'], $trxn_status);
 
-	$pat_sql = "UPDATE dental_patients SET 
+	$pat_sql = "UPDATE dental_patients SET
 			                p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
                 p_m_eligible_payer_name = '".mysqli_real_escape_string($con, $p_m_eligible_payer_name)."'
 		WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
@@ -709,7 +709,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 
 
     $url = 'https://gds.eligibleapi.com/v1.5/claims.json';
-    
+
     $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
     $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $docid)."'";
     $api_key_query = mysqli_query($con, $api_key_sql);
@@ -754,7 +754,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 $json_response = json_decode($result);
 $ref_id = $json_response->{"reference_id"};
 $success = $json_response->{"success"};
-$up_sql = "INSERT INTO dental_claim_electronic SET 
+$up_sql = "INSERT INTO dental_claim_electronic SET
         claimid='".mysqli_real_escape_string($con, $_GET['insid'])."',
         reference_id = '".mysqli_real_escape_string($con, $ref_id)."',
         response='".mysqli_real_escape_string($con, $result)."',
@@ -768,7 +768,7 @@ if($success){
     $event = "claim_rejected";
 }
 $eligible_response_sql = "INSERT INTO dental_eligible_response SET
-  response = '".mysqli_real_escape_string($con, $json_response)."',
+  response = '".mysqli_real_escape_string($con, $result)."',
   reference_id = '".mysqli_real_escape_string($con, $ref_id)."',
   event_type = '".mysqli_real_escape_string($con, $event)."',
   adddate = now(),
@@ -780,8 +780,9 @@ claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
 $dce_id = mysqli_insert_id($con);
 invoice_add_efile('2', $_SESSION['admincompanyid'], $dce_id);
 invoice_add_claim('1', $docid, $_GET['insid']);
-echo $result;
+
 if(!$success){
+    error_log('Claim submission failed: ' . $result);
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
   mysqli_query($con, $up_sql);
 claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
@@ -792,7 +793,7 @@ claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
 ?>
 <script type="text/javascript">
    alert('RESPONSE: <?= htmlspecialchars($confirm) ?>');
-   window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>"; 
+   window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>";
 </script>
 <?php
 }elseif($result == "Invalid JSON"){
@@ -800,7 +801,7 @@ claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
 ?>
 <script type="text/javascript">
    alert('RESPONSE: <?= $confirm; ?>');
-   window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>"; 
+   window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>";
 </script>
 <?php
 }else{
@@ -808,7 +809,7 @@ claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
 <script type="text/javascript">
   c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');
   if(c){
-   window.location = "manage_claims.php?status=0"; 
+   window.location = "manage_claims.php?status=0";
   }
 </script>
 <?php

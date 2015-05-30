@@ -12,7 +12,7 @@ class FTSSamples
 	
 	public function __construct ()
 	{
-        global $con;
+        $con = $GLOBALS['con'];
 
 		$this->serviceEndpointUrl = "https://api.sfaxme.com/api/";
 		$this->securityContext = ""; //<--- Required but leave blank exactly as it is here

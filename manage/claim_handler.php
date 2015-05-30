@@ -772,6 +772,7 @@
     invoice_add_claim('1', $docid, $_GET['insid']);
 
     if(!$success){
+        error_log('Claim submission failed: ' . $result);
         $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
 
         $db->query($up_sql);

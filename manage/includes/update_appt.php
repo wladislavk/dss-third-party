@@ -28,10 +28,10 @@
 			}
 		}
 	}
-if (!empty($_REQUEST['comp_date']) {
+
 	$s = "update dental_flow_pg2_info set date_completed='".date('Y-m-d', strtotime($comp_date))."' WHERE id=".mysqli_real_escape_string($con,$id)." AND patientid=".mysqli_real_escape_string($con,$pid);
 	$q = $db->query($s);
-}
+
 	if(!empty($q)) {
 	  echo '{"success":true}';
 	} else {

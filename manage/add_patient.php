@@ -631,10 +631,10 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
         <script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script><?php
       }
     }
-if (!empty($_POST['copyreqdate'])) {
+
     $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '".date('Y-m-d', strtotime($_POST['copyreqdate']))."' WHERE patientid='".$_POST['ed']."' AND stepid='1';";
     $db->query($s1);
-}
+  
     if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
       if($old_referred_source == 2 && $_POST['referred_source'] ==2){
         //PHYSICIAN -> PHYSICIAN

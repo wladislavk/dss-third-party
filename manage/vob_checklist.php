@@ -136,7 +136,7 @@ if ($patient_info) {
     $ins_error = false;
   }elseif(!empty($_SESSION['user_type']) && !empty($pat_r['p_m_dss_file']) && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
     $ins_error = false;
-  }elseif($pat_r['p_m_dss_file']!=1){
+  }elseif($pat_r['p_m_dss_file']!=''){
     $ins_error = true;
   }else{
     $ins_error = false;

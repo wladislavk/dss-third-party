@@ -36,14 +36,9 @@
     $other_insured_dob =str_replace('-','/',$pat_myarray['ins2_dob']);
     $other_insured_insurance_plan = strtoupper(st($pat_myarray['s_m_ins_plan']));
 
-    if($pat_myarray['p_m_ins_type']==1){
-        $insured_policy_group_feca = "NONE";
-        $insured_insurance_plan = '';
-        $insured_employer_school_name = '';
-    }else{
-        $insured_policy_group_feca = $pat_myarray['p_m_ins_grp'];
-        $insured_insurance_plan = $pat_myarray['p_m_ins_plan'];
-    }
+    $insured_policy_group_feca = $pat_myarray['p_m_ins_grp'];
+    $insured_insurance_plan = $pat_myarray['p_m_ins_plan'];
+    $insured_employer_school_name = '';
 
     $other_insured_policy_group_feca = strtoupper(st($pat_myarray['s_m_ins_grp']));
     $referredby =strtoupper($pat_myarray['referred_by']);
@@ -437,10 +432,9 @@
     }
 
     if(empty($insured_phone)) {
-    	$insured_phone_code = substr($pat_myarray['home_phone'], 0, 4);
+        $insured_phone_code = substr($pat_myarray['home_phone'], 0, 4);
+        $insured_phone = substr($pat_myarray['home_phone'], 3);
     }
-
-    $insured_phone = substr($pat_myarray['home_phone'], 3);
 
     if(empty($insured_dob)) {
     	$insured_dob = $pat_myarray['ins_dob'];	
@@ -460,12 +454,6 @@
 
     if(empty($insured_insurance_plan)) {
     	$insured_insurance_plan = $pat_myarray['plan_name'];	
-    }
-        
-    if($pat_myarray['p_m_ins_type']==1){
-        $insured_policy_group_feca = "NONE";
-        $insured_insurance_plan = '';
-        $insured_employer_school_name = '';
     }
 
     $accept_assignmentnew =strtoupper($pat_myarray['p_m_ins_ass']);
@@ -575,14 +563,6 @@
     if(empty($npi)){ $npi = $docinfo['npi']; }
     if(empty($medicare_npi)){ $medicare_npi = $docinfo['medicare_npi']; }
 
-    if($insurancetype == 1){
-        $service_npi = "";
-        $service_facility_info_name = "";
-        $service_facility_info_address = "";
-        $service_facility_info_city = "";
-        $service_medicare_npi = "";
-    }
-
     $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".(isset($diagnosis_1) ? $diagnosis_1 : '');
     
     $ins_diag_myarray = $db->getRow($ins_diag_sql);
@@ -652,10 +632,10 @@
         << /T(".$field_path.".pt_sex_f_chkbox[0]) /V(".(($patient_sex == "F" || $patient_sex == "Female")?1:'').") >>
         << /T(".$field_path.".insured_name_ln_fn_mi_fill[0]) /V(".$insured_lastname.", ".$insured_firstname.((trim($insured_middle)!='')?", ".$insured_middle:'').") >>
         << /T(".$field_path.".pt_address_fill[0]) /V(".$insured_address.") >>
-        << /T(".$field_path.".pt_relation_self_chkbox[0]) /V(".(($patient_relation_insured == "Self")?1:'').") >>
-        << /T(".$field_path.".pt_relation_spouse_chkbox[0]) /V(".(($patient_relation_insured == "Spouse")?1:'').") >>
-        << /T(".$field_path.".pt_relation_child_chkbox[0]) /V(".(($patient_relation_insured == "Child")?1:'').") >>
-        << /T(".$field_path.".pt_relation_other_chkbox[0]) /V(".(($patient_relation_insured == "Others")?1:'').") >>
+        << /T(".$field_path.".pt_relation_self_chkbox[0]) /V(".((strtoupper($patient_relation_insured) == "SELF")?1:'').") >>
+        << /T(".$field_path.".pt_relation_spouse_chkbox[0]) /V(".((strtoupper($patient_relation_insured) == "SPOUSE" || $patient_relation_insured == '01')?1:'').") >>
+        << /T(".$field_path.".pt_relation_child_chkbox[0]) /V(".((strtoupper($patient_relation_insured) == "CHILD"|| $patient_relation_insured == '19')?1:'').") >>
+        << /T(".$field_path.".pt_relation_other_chkbox[0]) /V(".((strtoupper($patient_relation_insured) == "OTHER" || $patient_relation_insured == 'G8')?1:'').") >>
         << /T(".$field_path.".insured_address_fill[0]) /V(".$insured_address.") >>
         << /T(".$field_path.".pt_city_fill[0]) /V(".$insured_city.") >>
         << /T(".$field_path.".pt_state_fill[0]) /V(".$insured_state.") >>
@@ -912,7 +892,7 @@
       << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".(!empty($billing_provider_phone) ? $billing_provider_phone : '').") >>
       << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper((!empty($billing_provider_name) ? $billing_provider_name : ''))."\n".strtoupper((!empty($billing_provider_address) ? $billing_provider_address : ''))."\n".strtoupper((!empty($billing_provider_city) ? $billing_provider_city : '')).") >>
       << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".(!empty($signature_physician) ? $signature_physician : '').") >>  
-      << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/y').") >>
+      << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/y', strtotime($physician_signed_date)).") >>
       << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".(!empty($service_info_a) ? $service_info_a : '').") >>
       << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".(!empty($service_info_b_other) ? $service_info_b_other : '').") >>
       << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".(($insurancetype == '1')?$medicare_npi:$npi).") >>

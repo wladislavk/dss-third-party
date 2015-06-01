@@ -36,6 +36,7 @@
             @if (!empty($message))
                 {{ $message }}
             @endif
+
         </b>
     </div>
 

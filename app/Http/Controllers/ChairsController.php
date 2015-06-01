@@ -26,12 +26,12 @@ class ChairsController extends Controller
     ) {
         $this->request = Request::all();
 
-        $this->deleteId    = GeneralFunctions::getRouteParameter('deleteId');
-        $this->pageNumber  = GeneralFunctions::getRouteParameter('pageNumber');
+        $this->deleteId   = GeneralFunctions::getRouteParameter('deleteId');
+        $this->pageNumber = GeneralFunctions::getRouteParameter('pageNumber');
 
-        $this->chairs  = $chairs;
-        $this->users   = $users;
-        $this->logins  = $logins;
+        $this->chairs = $chairs;
+        $this->users  = $users;
+        $this->logins = $logins;
     }
 
     public function manage()
@@ -121,10 +121,10 @@ class ChairsController extends Controller
         }
 
         $data = array(
-            'buttonText'  => $buttonText,
-            'ed'          => Route::input('ed'),
-            'message'     => !empty(Session::get('message')) ? Session::get('message') : '',
-            'closePopup'  => !empty(Session::get('closePopup')) ? Session::get('closePopup') : null
+            'buttonText' => $buttonText,
+            'ed'         => Route::input('ed'),
+            'message'    => !empty(Session::get('message')) ? Session::get('message') : '',
+            'closePopup' => !empty(Session::get('closePopup')) ? Session::get('closePopup') : null
         );
 
         if (count($resources)) {
@@ -150,8 +150,8 @@ class ChairsController extends Controller
 
                 $message = 'Edited Successfully' . $this->request['name'];
             } else {
-                $data['name'] = $this->request['name'];
-                $data['rank'] = $this->request['rank'];
+                $data['name']  = $this->request['name'];
+                $data['rank']  = $this->request['rank'];
                 $data['docid'] = Session::get('docId');
 
                 $this->chairs->insertData($data);

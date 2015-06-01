@@ -8,8 +8,6 @@ class ChairsRepository implements ChairsInterface
 {
     public function getResource($where, $whereId = null, $order = null, $orderName = null, $limit = null, $offset = null)
     {
-        
-    //dd($where, $whereId, $order, $dir, $limit, $offset);
         $resource = new Resource();
 
         if (!empty($where)) {

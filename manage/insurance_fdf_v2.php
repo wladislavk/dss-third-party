@@ -764,7 +764,7 @@
             << /T(".$field_path.".diagnosis_k[0]) /V(".(!empty($diagnosis_k) ? $diagnosis_k : '').") >>
             << /T(".$field_path.".diagnosis_l[0]) /V(".(!empty($diagnosis_l) ? $diagnosis_l : '').") >>
             << /T(".$field_path.".resubmission_code_fill[0]) /V(".(!empty($resubmission_code) ? $resubmission_code : '').") >>
-            << /T(".$field_path.".orignial_ref_no_fill[0]) /V(".(!empty($original_ref_no) ? $original_ref_no : '').") >>
+            << /T(".$field_path.".originial_ref_no_fill[0]) /V(".(!empty($original_ref_no) ? $original_ref_no : '').") >>
             << /T(".$field_path.".prior_auth_number_fill[0]) /V(".(!empty($prior_authorization_number) ? $prior_authorization_number : '').") >>";
 
     $prefix = array( 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX');

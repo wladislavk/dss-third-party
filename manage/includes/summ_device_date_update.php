@@ -1,9 +1,14 @@
 <?php
   include_once '../admin/includes/main_include.php';
 
-  $d = (!empty($_REQUEST['device_date']) ? $_REQUEST['device_date'] : '');
   $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
-  $d = date('Y-m-d', strtotime($d));
+
+  if (!empty($_REQUEST['device_date'])) {
+    $d = date('Y-m-d', strtotime($_REQUEST['device_date']));
+  } else {
+    $d = date('Y-m-d');
+  }
+
   $sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
 
   if($db->getNumberRows($sql)==0){

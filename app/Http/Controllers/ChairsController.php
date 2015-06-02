@@ -100,7 +100,7 @@ class ChairsController extends Controller
         array(
             'id'    => (!empty(Route::input('ed')) ? Route::input('ed') : null)));
 
-            if (count($resources)) {
+        if (count($resources)) {
             $resource = $resources[0];
 
             $data['docid'] = $resource->docid;

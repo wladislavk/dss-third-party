@@ -11,12 +11,14 @@ class ChairsRepository implements ChairsInterface
         $resource = new Resource();
 
         if (!empty($where)) {
+
             foreach ($where as $attribute => $value) {
                 $resource = $resource->where($attribute, $value);
             }
         }
 
         if (!empty($whereId)) {
+
             foreach ($whereId as $attribute => $value) {
                 $resource = $resource->where($attribute, $value);
             }
@@ -71,7 +73,9 @@ class ChairsRepository implements ChairsInterface
     {
         $resource = new Resource();
 
-        $resourceDelete = $resource->where('docid', '=', $where)->where('id', '=', $whereId)->delete();
+        $resourceDelete = $resource->where('docid', '=', $where)
+                                   ->where('id', '=', $whereId)
+                                   ->delete();
 
         return $resourceDelete;
     }

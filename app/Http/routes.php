@@ -34,6 +34,7 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->get('staff/{ed}/edit', 'StaffController@index');
     $router->get('staff/add', 'StaffController@index');
     $router->post('add_staff/{ed?}', 'StaffController@add');
+    $router->get('chairs/{ed}/edit', 'ChairsController@index');
     $router->get('chairs/add', 'ChairsController@index');
     $router->post('add_chairs/{ed?}', 'ChairsController@add');
 

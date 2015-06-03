@@ -29,7 +29,13 @@
 		}
 	}
 
-	$s = "update dental_flow_pg2_info set date_completed='".date('Y-m-d', strtotime($comp_date))."' WHERE id=".mysqli_real_escape_string($con,$id)." AND patientid=".mysqli_real_escape_string($con,$pid);
+	if (!empty($comp_date)) {
+		$dateCompleted = date('Y-m-d', strtotime($comp_date));
+	} else {
+		$dateCompleted = date('Y-m-d');
+	}
+
+	$s = "update dental_flow_pg2_info set date_completed='" . $dateCompleted . "' WHERE id=".mysqli_real_escape_string($con,$id)." AND patientid=".mysqli_real_escape_string($con,$pid);
 	$q = $db->query($s);
 
 	if(!empty($q)) {

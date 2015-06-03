@@ -3,7 +3,7 @@ namespace Ds3\Http\Controllers;
 
 use Ds3\Http\Controllers\Controller;
 use Ds3\Libraries\GeneralFunctions;
-use Ds3\Contracts\ChairsInterface;
+use Ds3\Contracts\ResourceInterface;
 use Ds3\Contracts\UserInterface;
 use Ds3\Contracts\LoginInterface;
 use Request;
@@ -20,7 +20,7 @@ class ChairsController extends Controller
     private $logins;
 
     public function __construct(
-        ChairsInterface $chairs,
+        ResourceInterface $chairs,
         UserInterface $users,
         LoginInterface $logins
     ) {
@@ -57,13 +57,22 @@ class ChairsController extends Controller
         $order     = 'rank';
         $orderName = 'name';
 
-        $resources = $this->chairs->getResource(array('docid' => Session::get('docId')), $whereId = null, $order, $orderName, $numberOfRecordsDisplayed, $skipValues);
+        $resources = $this->chairs->getResource(
+            array('docid' => Session::get('docId')),
+            $whereId = null,
+            $order,
+            $orderName,
+            $numberOfRecordsDisplayed,
+            $skipValues
+        );
 
-        $resourcesNumber = $this->chairs->getResource(array(
-            'docid' => Session::get('docId')));
+        $resourcesNumber = $this->chairs->getResource(
+            array('docid' => Session::get('docId'))
+        );
 
-        $users = $this->users->getTypeUsers(array(
-            'userid' => Session::get('userId')));
+        $users = $this->users->getTypeUsers(
+            array('userid' => Session::get('userId'))
+        );
 
         $totalRecords = count($resourcesNumber);
 
@@ -86,7 +95,9 @@ class ChairsController extends Controller
             'message'                  => Session::get('message'),
             'docId'                    => Session::get('docId'),
             'userId'                   => Session::get('userId'),
-            'numberOfRecordsDisplayed' => $numberOfRecordsDisplayed
+            'numberOfRecordsDisplayed' => $numberOfRecordsDisplayed,
+            'patientId'                => Route::input('pid'),
+            'path'                     => Request::path()
         ));
 
         return view('manage.chairs', $data);
@@ -95,10 +106,9 @@ class ChairsController extends Controller
     public function index()
     {
         $resources = $this->chairs->getResource(
-        array(
-            'docid' => Session::get('docId')),
-        array(
-            'id'    => (!empty(Route::input('ed')) ? Route::input('ed') : null)));
+            array('docid' => Session::get('docId')),
+            array('id'    => Route::input('ed'))
+        );
 
         if (count($resources)) {
             $resource = $resources[0];
@@ -107,7 +117,9 @@ class ChairsController extends Controller
             $data['name']  = $resource->name;
             $data['rank']  = $resource->rank;
 
-            $logins = $this->logins->getLogins(array('userid' => $resource['id']));
+            $logins = $this->logins->getLogins(
+                array('userid' => $resource['id'])
+            );
 
             if (count($logins)) {
                 $data['countLogins'] = count($logins);
@@ -123,8 +135,8 @@ class ChairsController extends Controller
         $data = array(
             'buttonText' => $buttonText,
             'ed'         => Route::input('ed'),
-            'message'    => !empty(Session::get('message')) ? Session::get('message') : '',
-            'closePopup' => !empty(Session::get('closePopup')) ? Session::get('closePopup') : null
+            'message'    => Session::get('message'),
+            'closePopup' => Session::get('closePopup')
         );
 
         if (count($resources)) {
@@ -146,7 +158,9 @@ class ChairsController extends Controller
                 $data['name'] = $this->request['name'];
                 $data['rank'] = $this->request['rank'];
 
-                $this->chairs->updateData(array('id' => Route::input('ed')), $data);
+                $this->chairs->updateData(
+                    array('id' => Route::input('ed')), $data
+                );
 
                 $message = 'Edited Successfully' . $this->request['name'];
             } else {

@@ -53,7 +53,7 @@
                             @if ($indexPage == $pCount)
                                 <strong>{{ $pCount + 1 }}</strong>
                             @else
-                                <a href="#" onclick='setRouteParameters("/manage/chairs", "{\"pageNumber\": \"{{ $pCount }}\" }}", "{{ csrf_token() }}"); return false;'>{{ $pCount + 1 }}</a>
+                                <a href="#" onclick='setRouteParameters("/manage/chairs", "{\"pageNumber\": \"{{ $pCount }}\" }", "{{ csrf_token() }}"); return false;'>{{ $pCount + 1 }}</a>
                             @endif
                         @endfor
                     </td>

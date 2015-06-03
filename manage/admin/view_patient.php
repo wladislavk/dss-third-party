@@ -487,7 +487,13 @@ $ed_sql .="
 		}
 		}
 
-  	$s1 = "UPDATE dental_flow_pg2_info SET date_completed = '".date('Y-m-d', strtotime($_POST['copyreqdate']))."' WHERE patientid='".$_POST['ed']."' AND stepid='1';";
+    if (!empty($_POST['copyreqdate'])) {
+      $dateCompleted = date('Y-m-d', strtotime($_POST['copyreqdate']));
+    } else {
+      $dateCompleted = date('Y-m-d');
+    }
+
+  	$s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".$_POST['ed']."' AND stepid='1';";
     $db->query($s1);
 	
 		if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
@@ -734,7 +740,13 @@ $ed_sql .="
       $stepid = '1';
       $segmentid = '1';
       $scheduled = strtotime($copyreqdate);
-      $gen_date = date('Y-m-d H:i:s', strtotime($_POST["copyreqdate"]));
+
+      if (!empty($_POST["copyreqdate"])) {
+        $gen_date = date('Y-m-d H:i:s', strtotime($_POST["copyreqdate"]));
+      } else {
+        $gen_date = date('Y-m-d');
+      }
+
       $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$gen_date."');";
       $flow_pg2_info_insert = $db->query($flow_pg2_info_query);
 

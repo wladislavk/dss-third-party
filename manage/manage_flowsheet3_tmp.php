@@ -694,7 +694,14 @@ mysqli_query($con, $s1);
                 $old_referred_source = $s_r['referred_source'];
 
       $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_notes='".$referred_notes."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';";  
-$s1 = "UPDATE dental_flow_pg2_info SET date_completed = '".date('Y-m-d', strtotime($copyreqdate))."' WHERE patientid='".$pid."' AND stepid='1';";
+
+if (!empty($copyreqdate)) {
+  $dateCompleted = date('Y-m-d', strtotime($copyreqdate));
+} else {
+  $dateCompleted = date('Y-m-d');
+}
+
+$s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".$pid."' AND stepid='1';";
 mysqli_query($con, $s1);
 
  if($old_referred_by != $referred_by || $old_referred_source != $referred_source){
@@ -836,7 +843,7 @@ print $datesched . " " . $letter ? "true":"false" . " " . $topstep . " " . $last
 				$dateTime = date_create_from_format("m/d/Y", $datestring);
 				$date = date('Y-m-d H:i:s', $dateTime->getTimestamp());
 			} else {
-				$date = NULL;
+				$date = date('Y-m-d');
 			}
 			$columns .= ", date_completed";
 			$values .= ", '$date'";

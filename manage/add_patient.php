@@ -632,7 +632,13 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       }
     }
 
-    $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '".date('Y-m-d', strtotime($_POST['copyreqdate']))."' WHERE patientid='".$_POST['ed']."' AND stepid='1';";
+    if (!empty($_POST['copyreqdate'])) {
+      $dateCompleted = date('Y-m-d', strtotime($_POST['copyreqdate']));
+    } else {
+      $dateCompleted = date('Y-m-d');
+    }
+
+    $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".$_POST['ed']."' AND stepid='1';";
     $db->query($s1);
   
     if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
@@ -913,8 +919,14 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     $segmentid = '1';
     $scheduled = strtotime(!empty($copyreqdate) ? $copyreqdate : '');
     $gen_date = date('Y-m-d H:i:s', strtotime($_POST["copyreqdate"]));
+
+    if (empty($_POST["copyreqdate"])) {
+      $gen_date = date('Y-m-d');
+    }
+
     $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$gen_date."');";
     $flow_pg2_info_insert = $db->query($flow_pg2_info_query);
+
     if (!$flow_pg2_info_insert) {
       $message = "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error inserting Initial Contact Information to Flowsheet Page 2";
     }
@@ -1949,7 +1961,7 @@ for($i=80;$i<=500;$i++){?>
             </label>
             <div>
               <div style="float:left;">
-<?php if(!isset($pid)){ $copyreqdate = date('m/d/Y'); } ?>
+<?php if(empty($copyreqdate)){ $copyreqdate = date('m/d/Y'); } ?>
                 <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo $copyreqdate; ?>"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" value="example 11/11/1234" />
                 <label>Date</label>
               </div>

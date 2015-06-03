@@ -43,7 +43,7 @@
         $chief_complaint_text = $_POST['chief_complaint_text'];	
 		$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
 		
-		$complaint_my = $db->getRow($complaint_sql);
+		$complaint_my = $db->getResults($complaint_sql);
 		$comp_arr = '';
 	
 		if ($complaint_my) foreach ($complaint_my as $complaint_myarray) {

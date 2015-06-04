@@ -1,6 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
     include_once('includes/constants.inc');
     include_once('admin/includes/main_include.php');
+    include_once 'includes/claim_functions.php';
     include_once 'admin/includes/claim_functions.php';
     include_once 'admin/includes/invoice_functions.php';
 
@@ -262,7 +263,7 @@
     $rendering_provider_id1 = (!empty($_POST['claim']['service_lines'][0]['rendering_provider']['secondary_id']) ? $_POST['claim']['service_lines'][0]['rendering_provider']['secondary_id'] : '');
  	// WHAT IS THE SECOND ID
     $rendering_provider_entity_1 = (!empty($_POST['claim']['service_lines'][0]['rendering_provider']['entity']) ? $_POST['claim']['service_lines'][0]['rendering_provider']['entity'] : '');
-    $rendering_provider_first_name_1 = (!epmty($_POST['claim']['service_lines'][0]['rendering_provider']['first_name']) ? $_POST['claim']['service_lines'][0]['rendering_provider']['first_name'] : '');
+    $rendering_provider_first_name_1 = (!empty($_POST['claim']['service_lines'][0]['rendering_provider']['first_name']) ? $_POST['claim']['service_lines'][0]['rendering_provider']['first_name'] : '');
     $rendering_provider_last_name_1 = (!empty($_POST['claim']['service_lines'][0]['rendering_provider']['last_name']) ? $_POST['claim']['service_lines'][0]['rendering_provider']['last_name'] : '');
     $rendering_provider_org_1 = (!empty($_POST['claim']['service_lines'][0]['rendering_provider']['organization_name']) ? $_POST['claim']['service_lines'][0]['rendering_provider']['organization_name'] : '');
     $rendering_provider_npi_1 = (!empty($_POST['claim']['service_lines'][0]['rendering_provider']['npi']) ? $_POST['claim']['service_lines'][0]['rendering_provider']['npi'] : '');
@@ -760,7 +761,7 @@
         $event = "claim_rejected";
     }
     $eligible_response_sql = "INSERT INTO dental_eligible_response SET
-                response = '".mysqli_real_escape_string($con, $json_response)."',
+                response = '".mysqli_real_escape_string($con, $result)."',
                 reference_id = '".mysqli_real_escape_string($con, $ref_id)."',
                 event_type = '".mysqli_real_escape_string($con, $event)."',
                 adddate = now(),

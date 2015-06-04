@@ -716,8 +716,10 @@
     $data = array(); //Initializing parameter array
 
     if($test_result['eligible_test']){
-        $data['test'] = 'true';
+        // $data['test'] = 'true';
     }
+    // @Todo: undo hot fix #140
+    $data['test'] = 'true';
 
     $data['api_key'] = $api_key; //Setting your api key
 

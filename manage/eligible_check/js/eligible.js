@@ -41,6 +41,9 @@ function EligibleRequest(endpoint, successCallback, errorCallback, debug) {
   // Converts a json object to a query string for http
   this.objectToUrlParameters = function (obj) {
     var parameters = new Array();
+    if (obj.hasOwnProperty('test')) {
+      obj.test = 'true';
+    }
     for (var key in obj) {
       parameters.push(key + "=" + encodeURIComponent(obj[key]));
     }

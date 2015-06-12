@@ -12,7 +12,7 @@
     }
 
     $sql = "SELECT pi.* FROM dental_percase_invoice pi
-    	    WHERE pi.status != '".DSS_INVOICE_PENDING."'AND pi.docid=".mysqli_real_escape_string($con,$_SESSION['docid'])." ORDER BY adddate DESC";
+    	    WHERE pi.status != '".DSS_INVOICE_PENDING."'AND pi.docid=".mysqli_real_escape_string($con,$_SESSION['docid'])." ORDER BY pi.due_date DESC";
     
     if (!isset($rec_disp)) {
         $rec_disp = 1;

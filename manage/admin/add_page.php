@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -33,7 +33,7 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
 				parent.window.location='manage_pages.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -47,7 +47,7 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
 				parent.window.location='manage_pages.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }
@@ -130,7 +130,7 @@ if(!empty($_POST["pagesub"]) && $_POST["pagesub"] == 1)
             <td valign="top" class="frmdata" colspan="2">
                 <?php
                     
-                    $oFCKeditor = new FCKeditor('description') ;
+                    $oFCKeditor = new \FCKeditor('description') ;
                     
                     $oFCKeditor->ToolbarSet = 'MyToolbar';
                     $oFCKeditor->BasePath = 'fckeditor/';

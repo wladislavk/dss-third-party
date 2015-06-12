@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 	function mlaphp_autoloader($class)
 	{

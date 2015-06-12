@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 //+----------------------------------------------------------------------+
 //| WAMP (XP-SP3/2.2/5.2/5.1.0)                                          |

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 include "includes/patient_nav.php";
 ?>
@@ -43,7 +43,7 @@ if(!empty($_GET['own']) && $_GET['own']==1){
                         window.location='q_page2.php?pid=<?=$_GET['pid']?>&addtopat=1';
                 </script>
                 <?
-                die();
+                trigger_error("Die called", E_USER_ERROR);
 
 }
 ?>
@@ -207,7 +207,7 @@ if(!empty($_POST['q_page2sub']) && $_POST['q_page2sub'] == 1)
 		</script>
 		<?
 		}
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -274,7 +274,7 @@ if(!empty($_POST['q_page2sub']) && $_POST['q_page2sub'] == 1)
 		</script>
 		<?
 		}
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -291,7 +291,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 

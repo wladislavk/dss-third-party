@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -39,7 +39,7 @@ if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1)
 				parent.window.location='manage_device_guide_settings.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -75,7 +75,7 @@ if(!empty($_POST["setsub"]) && $_POST["setsub"] == 1)
 				parent.window.location='manage_device_guide_settings.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 }
 

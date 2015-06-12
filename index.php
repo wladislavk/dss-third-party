@@ -1,4 +1,4 @@
-<? include"includes/top.htm";
+<?php namespace Ds3\Libraries\Legacy; ?><? include"includes/top.htm";
 
 $home_sql = "select * from homepage";
 $home_my = mysqli_query($con, $home_sql);

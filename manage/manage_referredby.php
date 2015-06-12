@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]))
@@ -13,7 +13,7 @@ if(!empty($_REQUEST["delid"]))
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 

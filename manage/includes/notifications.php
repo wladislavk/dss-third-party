@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 function create_notification($pid, $docid, $n, $n_type, $s=1){
 

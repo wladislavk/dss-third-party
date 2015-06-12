@@ -1,10 +1,10 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 
 
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 global $ADODB_INCLUDED_LIB;
 $ADODB_INCLUDED_LIB = 1;
@@ -46,7 +46,7 @@ function adodb_strip_order_by($sql)
 if (false) {
 	$sql = 'select * from (select a from b order by a(b),b(c) desc)';
 	$sql = '(select * from abc order by 1)';
-	die(adodb_strip_order_by($sql));
+	trigger_error(adodb_strip_order_by($sql), E_USER_ERROR);
 }
 
 function adodb_probetypes(&$array,&$types,$probe=8)
@@ -542,7 +542,7 @@ function _adodb_pageexecute_all_rows(&$zthis, $sql, $nrows, $page,
 	return $rsreturn;
 }
 
-// Iván Oliva version
+// Ivï¿½n Oliva version
 function _adodb_pageexecute_no_last_page(&$zthis, $sql, $nrows, $page, $inputarr=false, $secs2cache=0) 
 {
 

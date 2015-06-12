@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include "includes/top.htm";
 ?>
 <!--
@@ -7,7 +7,7 @@
 	</script>
 -->
 <?php
-	//die();
+	//trigger_error("Die called", E_USER_ERROR);
 	if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
 		$del_sql = "delete from dental_forms where formid='".$_REQUEST["delid"]."'";
 		
@@ -18,7 +18,7 @@
 			window.location = "<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -31,7 +31,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$rec_disp = 20;

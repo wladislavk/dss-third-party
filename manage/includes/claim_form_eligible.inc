@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 if (!function_exists('s_for')) {
     require_once dirname(__FILE__) . '/../admin/includes/general.htm';
@@ -76,7 +76,7 @@ if (!function_exists('s_for')) {
       print '<script type="text/javascript">';
       print '  window.location="manage_patient.php";';
       print '</script>';
-    	die(); // already did a javascript redirect...just die
+    	trigger_error("Die called", E_USER_ERROR); // already did a javascript redirect...just die
 
     }
   }

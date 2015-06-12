@@ -1,4 +1,4 @@
-<?
+<?php namespace Ds3\Libraries\Legacy; ?><?
 include "includes/top.htm";
 
 include 'includes/patient_nav.php';
@@ -19,7 +19,7 @@ if($pat_myarray['patientid'] == '')
                 window.location = 'manage_patient.php';
         </script>
         <?
-        die();
+        trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select * from dental_q_image where patientid='".$_GET['pid']."'";

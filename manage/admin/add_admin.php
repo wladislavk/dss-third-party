@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 session_start();
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -40,7 +40,7 @@ if($_POST["adminsub"] == 1)
 				name = '".s_for($_POST["name"])."', 
 				email = '".s_for($_POST["email"])."' 
 			where adminid='".$_POST["ed"]."'";
-			mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+			mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
 			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
@@ -50,7 +50,7 @@ if($_POST["adminsub"] == 1)
 				parent.window.location='manage_admin.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -67,7 +67,7 @@ if($_POST["adminsub"] == 1)
 				email = '".s_for($_POST["email"])."', 
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
+			mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 
 			$msg = "Added Successfully";
 			?>
@@ -76,7 +76,7 @@ if($_POST["adminsub"] == 1)
 				parent.window.location='manage_admin.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

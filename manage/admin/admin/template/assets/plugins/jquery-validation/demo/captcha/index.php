@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 // Make the page validate
 ini_set('session.use_trans_sid', '0');

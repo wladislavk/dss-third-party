@@ -275,6 +275,6 @@ function FileUpload( $resourceType, $currentFolder, $sCommand )
 
 	SendUploadResults( $sErrorNumber, $sFileUrl, $sFileName ) ;
 
-	exit ;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 ?>

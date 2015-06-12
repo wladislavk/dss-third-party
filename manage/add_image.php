@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include_once('admin/includes/main_include.php');
 include_once('includes/constants.inc');
 include("includes/sescheck.php");
@@ -88,7 +88,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
 parent.window.location='q_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>';
 </script>
 <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 }?>
 
@@ -227,7 +227,7 @@ if(!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1){
     parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
 </script>
 <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 
     if($uploaded ){		
@@ -247,7 +247,7 @@ if(!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1){
     parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
 </script>
 <?php
-      			die();
+      			trigger_error("Die called", E_USER_ERROR);
     		}else{
       			$ins_sql = " insert into dental_q_image set 
                       			patientid = '".s_for($_GET['pid'])."',
@@ -293,7 +293,7 @@ if(!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1){
   parent.window.location="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid'];?>"
 </script>
 <?php
-        				die();
+        				trigger_error("Die called", E_USER_ERROR);
       			} elseif($_REQUEST['return']=='patinfo'){?>
 <script type="text/javascript">
 	<?php if($_REQUEST['return_field']=='profile'){ ?>
@@ -306,13 +306,13 @@ if(!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1){
 		parent.disablePopupClean();
 </script>
 <?php
-                die();
+                trigger_error("Die called", E_USER_ERROR);
       			} else {?>
 <script type="text/javascript">
     parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>';
 </script>
 <?php
-        				die();
+        				trigger_error("Die called", E_USER_ERROR);
       			}
     		}
     }else{?>

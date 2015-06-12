@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
     if(!isset($_GET['print'])){
         include "includes/top.htm";
     }else{
@@ -21,7 +21,7 @@
     		window.location = 'ledger.php';
     	</script>
 	<?php
-	   die();
+	   trigger_error("Die called", E_USER_ERROR);
     }
 
     if(!isset($_REQUEST['sort'])){

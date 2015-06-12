@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
 ?>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />

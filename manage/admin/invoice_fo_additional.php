@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
   require_once '../3rdParty/stripe/lib/Stripe.php';
 include '../includes/calendarinc.php';
@@ -113,7 +113,7 @@ $count_q = mysqli_query($con, $sql);
 $num_docs = mysqli_num_rows($count_q);
 
 $sql .= " limit 1";
-$q = mysqli_query($con, $sql) or die(mysqli_error($con));
+$q = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $count_invoices = (isset($_GET['ci']) && $_GET['ci']!='')?$_GET['ci']:$num_docs;
 $count_current = (isset($_GET['cc']) && $_GET['cc']!='')?$_GET['cc']:1;
 if($num_docs == 0){
@@ -125,7 +125,7 @@ if($num_docs == 0){
 }
 $user = mysqli_fetch_assoc($q);
 $s = "SELECT id FROM dental_percase_invoice WHERE docid='".$user['userid']."' AND status='".DSS_INVOICE_PENDING."' AND invoice_type=".DSS_INVOICE_TYPE_BC_FO;
-$q = mysqli_query($con, $s) or die(mysqli_error($con));
+$q = mysqli_query($con, $s) or trigger_error(mysqli_error($con), E_USER_ERROR);
 if(mysqli_num_rows($q) > 0){
 $r = mysqli_fetch_assoc($q);
 $invoice_id = $r['id'];
@@ -212,7 +212,7 @@ $total_amount = 0;
           $total_amount += $_POST['producer_amount'];
         }
  	$in_sql .= " WHERE id = '".$invoice_id."'";
-    mysqli_query($con, $in_sql) or die(mysqli_error($con));
+    mysqli_query($con, $in_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 
   while($e0486 = mysqli_fetch_assoc($e0486_q)){
     $id = $e0486['id'];
@@ -238,7 +238,7 @@ $total_amount = 0;
         " new_fee_amount = '".mysqli_real_escape_string($con, $_POST['pat_new_amount_'.$id])."', " .
         " new_fee_invoice_id = '".mysqli_real_escape_string($con, $invoice_id)."' " .
         " WHERE patientid = '".$id."'";
-      mysqli_query($con, $up_sql) or die(mysqli_error($con));
+      mysqli_query($con, $up_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
     }
 
   }
@@ -419,7 +419,7 @@ $total_amount = 0;
           $total_amount += $_POST['producer_amount'];
         }
 
-    mysqli_query($con, $in_sql) or die(mysqli_error($con));
+    mysqli_query($con, $in_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
     $invoice_id = mysqli_insert_id($con);
 
 }
@@ -492,7 +492,7 @@ $total_amount = 0;
 		JOIN companies c ON uc.companyid = c.id
 		LEFT JOIN dental_plans p ON p.id=u.billing_plan_id
 		WHERE u.userid='".mysqli_real_escape_string($con, $user['userid'])."'";
-  $doc_q = mysqli_query($con, $doc_sql) or die(mysqli_error($con));
+  $doc_q = mysqli_query($con, $doc_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 if(mysqli_num_rows($doc_q) == 0){
   //If no plan get company fees
   $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type, c.name as company_name, p.name as plan_name
@@ -704,7 +704,7 @@ Invoice Due Date:
 					FROM dental_patients p
 					LEFT JOIN dental_insurance_preauth vob ON p.patientid= vob.patient_id AND vob.invoice_id IS NOT NULL
 					WHERE p.patientid='".$claim['patientid']."' LIMIT 1";
-			$cpat_q = mysqli_query($con, $cpat_sql) or die(mysqli_error($con));
+			$cpat_q = mysqli_query($con, $cpat_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 			$cpat_r = mysqli_fetch_assoc($cpat_q);
 			if($cpat_r['new_fee_invoice_id']=='' && $cpat_r['invoice_id']==''){ ?>
 
@@ -919,17 +919,17 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
     $key_q = mysqli_query($con, $key_sql);
     $key_r= mysqli_fetch_assoc($key_q);
     
-    Stripe::setApiKey($key_r['stripe_secret_key']);
+    \Stripe::setApiKey($key_r['stripe_secret_key']);
     $status = 1;
     
     try{
-        $charge = Stripe_Charge::create(array(
+        $charge = \Stripe_Charge::create(array(
             "amount" => ($amount*100), # $15.00 this time
             "currency" => "usd",
             "customer" => $customerID
         ));
     }
-    catch (Stripe_CardError $e) {
+    catch (\Stripe_CardError $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
             WHERE id='".mysqli_real_escape_string($con, $invoiceid)."'";
@@ -937,7 +937,7 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         mysqli_query($con, $invoice_sql);
         $status = 2;
     }
-    catch (Stripe_InvalidRequestError $e) {
+    catch (\Stripe_InvalidRequestError $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
             WHERE id='".mysqli_real_escape_string($con, $invoiceid)."'";
@@ -945,7 +945,7 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         mysqli_query($con, $invoice_sql);
         $status = 2;
     }
-    catch (Stripe_AuthenticationError $e) {
+    catch (\Stripe_AuthenticationError $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
             WHERE id='".mysqli_real_escape_string($con, $invoiceid)."'";
@@ -953,7 +953,7 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         mysqli_query($con, $invoice_sql);
         $status = 2;
     }
-    catch (Stripe_ApiConnectionError $e) {
+    catch (\Stripe_ApiConnectionError $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
             WHERE id='".mysqli_real_escape_string($con, $invoiceid)."'";
@@ -961,7 +961,7 @@ function bill_card ($customerID, $amount, $userid, $invoiceid) {
         mysqli_query($con, $invoice_sql);
         $status = 2;
     }
-    catch (Stripe_Error $e) {
+    catch (\Stripe_Error $e) {
         $invoice_sql = "UPDATE dental_percase_invoice SET
             status=2
             WHERE id='".mysqli_real_escape_string($con, $invoiceid)."'";

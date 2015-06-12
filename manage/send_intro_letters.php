@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 //Prod letter ids 4242 through 4733 (492)
 require($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/main_include.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/config/lang/eng.php');

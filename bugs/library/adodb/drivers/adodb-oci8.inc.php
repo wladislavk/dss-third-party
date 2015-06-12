@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /*
 
   version V5.06 16 Oct 2008  (c) 2000-2009 John Lim. All rights reserved.
@@ -15,7 +15,7 @@
 */
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 /*
 NLS_Date_Format
@@ -30,8 +30,8 @@ For Oracle the default is dd-mon-yy or dd-mon-yyyy, and for SQL-92 the default i
 yy-mm-dd or yyyy-mm-dd.
 
 Using 'RR' in the format forces two-digit years less than or equal to 49 to be
-interpreted as years in the 21st century (2000–2049), and years over 50 as years in
-the 20th century (1950–1999). Setting the RR format as the default for all two-digit
+interpreted as years in the 21st century (2000ï¿½2049), and years over 50 as years in
+the 20th century (1950ï¿½1999). Setting the RR format as the default for all two-digit
 year entries allows you to become year-2000 compliant. For example:
 NLS_DATE_FORMAT='RR-MM-DD'
 

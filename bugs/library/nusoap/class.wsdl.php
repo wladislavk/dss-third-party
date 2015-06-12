@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 
 
@@ -943,7 +943,7 @@ class wsdl extends nusoap_base {
 						        } 
 						    } 
 						    if (!isset($typePrefix)) {
-						        die("$partType has no namespace!");
+						        trigger_error("$partType has no namespace!", E_USER_ERROR);
 						    } 
 						}
 						$ns = $this->getNamespaceFromPrefix($typePrefix);

@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 include_once 'includes/main_include.php';
 include_once 'includes/sescheck.php';
@@ -32,7 +32,7 @@ if(!empty($_POST["memosub"]) && $_POST["memosub"] == 1)
 		</script>
 		<?
 		
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	
 }
 

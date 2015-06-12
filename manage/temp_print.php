@@ -1,4 +1,4 @@
-<?php include "admin/includes/main_include.php";
+<?php namespace Ds3\Libraries\Legacy; ?><?php include "admin/includes/main_include.php";
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysqli_query($con, $pat_sql);
@@ -15,7 +15,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 
@@ -66,13 +66,13 @@ Dear Sir or Madam:
 
 I received your denial of coverage for the Mandibular Repositioning Device that has been prescribed for <strong><?=$name?></strong> by <strong><?=$ref_name;?></strong> and I am writing on behalf of <strong><?=$name1?></strong> to appeal that decision.  You have based your decision on (INSERT REASON WHY THEY ARE DENYING HERE).<br /><br />
 
-<strong>Mr. <?=$name;?></strong> has been treated with a Mandibular Repositioning Device by <strong>Dr. <?=$_SESSION['name'];?></strong> to treat <strong>his</strong> documented sleep apnea.  This is neither an oral splint or appliance or a dental splint or dental brace.  It is a Mandibular Repositioning Device, specifically considered as Durable Medical Equipment, and specifically coded as a MEDICAL treatment for a MEDICAL diagnosis.  While these appliances are intraoral, they are not meant to treat the teeth. Instead, they reposition the jaw and tongue to open up the airway. Because the treatment is used to treat a medical condition, it cannot be considered “dental”.<br /><br />
+<strong>Mr. <?=$name;?></strong> has been treated with a Mandibular Repositioning Device by <strong>Dr. <?=$_SESSION['name'];?></strong> to treat <strong>his</strong> documented sleep apnea.  This is neither an oral splint or appliance or a dental splint or dental brace.  It is a Mandibular Repositioning Device, specifically considered as Durable Medical Equipment, and specifically coded as a MEDICAL treatment for a MEDICAL diagnosis.  While these appliances are intraoral, they are not meant to treat the teeth. Instead, they reposition the jaw and tongue to open up the airway. Because the treatment is used to treat a medical condition, it cannot be considered ï¿½dentalï¿½.<br /><br />
 
 It is gross negligence to deny payment for a Mandibular Repositioning Device under these circumstances.<br /><br />
 
 The American Academy of Sleep Medicine published a Practice Parameters paper (Sleep, February 2006) on the use of oral appliances to treat sleep apnea.  This paper stated that the abundance of evidence based research on oral appliance therapy has shown Mandibular Repositioners to be successful enough that they recommend their use as a first line of therapy for mild to moderate sleep apnea, as well as for patients who are more severe and prefer them to CPAP or cannot tolerate CPAP.<br /><br />
 
-This letter should explain why treatment for <strong><?=$name1?></strong> should be covered under “medical reimbursement".   I look forward to the opportunity to discuss this appeal and this case with you over the telephone.<br /><br />
+This letter should explain why treatment for <strong><?=$name1?></strong> should be covered under ï¿½medical reimbursement".   I look forward to the opportunity to discuss this appeal and this case with you over the telephone.<br /><br />
 
 Sincerely,<br /><br /><br /><br /><br>
 

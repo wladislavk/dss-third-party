@@ -66,10 +66,10 @@ function MakeFont($fontfile, $fmfile, $embedded=true, $enc='cp1252', $patch=arra
 	}
 	ini_set('auto_detect_line_endings', '1');
 	if (!file_exists($fontfile)) {
-		die('Error: file not found: '.$fontfile);
+		trigger_error('Error: file not found: '.$fontfile, E_USER_ERROR);
 	}
 	if (!file_exists($fmfile)) {
-		die('Error: file not found: '.$fmfile);
+		trigger_error('Error: file not found: '.$fmfile, E_USER_ERROR);
 	}
 	$cidtogidmap = '';
 	$map = array();
@@ -83,7 +83,7 @@ function MakeFont($fontfile, $fmfile, $embedded=true, $enc='cp1252', $patch=arra
 		} elseif ($ffext == 'pfb') {
 			$type = 'Type1';
 		} else {
-			die('Error: unrecognized font file extension: '.$ffext);
+			trigger_error('Error: unrecognized font file extension: '.$ffext, E_USER_ERROR);
 		}
 		if ($enc) {
 			$map = ReadMap($enc);
@@ -104,7 +104,7 @@ function MakeFont($fontfile, $fmfile, $embedded=true, $enc='cp1252', $patch=arra
 		if (($ffext == 'ttf') OR ($ffext == 'otf')) {
 			$type = 'TrueTypeUnicode';
 		} else {
-			die('Error: not a TrueType font: '.$ffext);
+			trigger_error('Error: not a TrueType font: '.$ffext, E_USER_ERROR);
 		}
 		$fm = ReadUFM($fmfile, $cidtogidmap);
 		$dw = $fm['MissingWidth'];
@@ -144,7 +144,7 @@ function MakeFont($fontfile, $fmfile, $embedded=true, $enc='cp1252', $patch=arra
 		}
 		$f = fopen($fontfile,'rb');
 		if (!$f) {
-			die('Error: Unable to open '.$fontfile);
+			trigger_error('Error: Unable to open '.$fontfile, E_USER_ERROR);
 		}
 		$file = fread($f, filesize($fontfile));
 		fclose($f);
@@ -157,7 +157,7 @@ function MakeFont($fontfile, $fmfile, $embedded=true, $enc='cp1252', $patch=arra
 			}
 			$pos = strpos($file, 'eexec');
 			if (!$pos) {
-				die('Error: font file does not seem to be valid Type1');
+				trigger_error('Error: font file does not seem to be valid Type1', E_USER_ERROR);
 			}
 			$size1 = $pos + 6;
 			if ($header AND (ord($file{$size1}) == 128)) {
@@ -166,7 +166,7 @@ function MakeFont($fontfile, $fmfile, $embedded=true, $enc='cp1252', $patch=arra
 			}
 			$pos = strpos($file, '00000000');
 			if (!$pos) {
-				die('Error: font file does not seem to be valid Type1');
+				trigger_error('Error: font file does not seem to be valid Type1', E_USER_ERROR);
 			}
 			$size2 = $pos - $size1;
 			$file = substr($file, 0, ($size1 + $size2));
@@ -219,7 +219,7 @@ function ReadMap($enc) {
 	$file = dirname(__FILE__).'/enc/'.strtolower($enc).'.map';
 	$a = file($file);
 	if (empty($a)) {
-		die('Error: encoding not found: '.$enc);
+		trigger_error('Error: encoding not found: '.$enc, E_USER_ERROR);
 	}
 	$cc2gn = array();
 	foreach ($a as $l) {
@@ -247,7 +247,7 @@ function ReadUFM($file, &$cidtogidmap) {
 	//Read a font metric file
 	$a = file($file);
 	if (empty($a)) {
-		die('File not found');
+		trigger_error('File not found', E_USER_ERROR);
 	}
 	$widths = array();
 	$fm = array();
@@ -307,7 +307,7 @@ function ReadUFM($file, &$cidtogidmap) {
 		$fm['MissingWidth'] = 600;
 	}
 	if(!isset($fm['FontName'])) {
-		die('FontName not found');
+		trigger_error('FontName not found', E_USER_ERROR);
 	}
 	$fm['Widths'] = $widths;
 	return $fm;
@@ -320,7 +320,7 @@ function ReadAFM($file,&$map) {
 	//Read a font metric file
 	$a = file($file);
 	if(empty($a)) {
-		die('File not found');
+		trigger_error('File not found', E_USER_ERROR);
 	}
 	$widths = array();
 	$fm = array();
@@ -419,7 +419,7 @@ function ReadAFM($file,&$map) {
 		}
 	}
 	if (!isset($fm['FontName'])) {
-		die('FontName not found');
+		trigger_error('FontName not found', E_USER_ERROR);
 	}
 	if (!empty($map)) {
 		if (!isset($widths['.notdef'])) {
@@ -535,7 +535,7 @@ function MakeFontEncoding($map) {
 function SaveToFile($file, $s, $mode='t') {
 	$f = fopen($file, 'w'.$mode);
 	if(!$f) {
-		die('Can\'t write to file '.$file);
+		trigger_error('Can\'t write to file '.$file, E_USER_ERROR);
 	}
 	fwrite($f, $s, strlen($s));
 	fclose($f);
@@ -555,7 +555,7 @@ function CheckTTF($file) {
 	//Check if font license allows embedding
 	$f = fopen($file, 'rb');
 	if (!$f) {
-		die('Error: unable to open '.$file);
+		trigger_error('Error: unable to open '.$file, E_USER_ERROR);
 	}
 	//Extract number of tables
 	fseek($f, 4, SEEK_CUR);

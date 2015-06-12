@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
 * Locate a byte index given a UTF-8 character index
 * @version $Id: position.php,v 1.1 2006/10/01 00:01:31 harryf Exp $

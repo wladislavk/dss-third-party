@@ -1,4 +1,4 @@
-<?php  
+<?php namespace Ds3\Libraries\Legacy; ?><?php  
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
@@ -73,7 +73,7 @@ if(isset($_REQUEST["delid"])  && $_SESSION['admin_access']==1) {
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&fid=<?php echo $_REQUEST['fid']?>&pid=<?php echo $_REQUEST['pid']?>";
 	</script>
 	<?php 
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(isset($_REQUEST['sendid'])){
@@ -334,12 +334,12 @@ AND
 
 $sql .= " 
 ORDER BY " . $sort_by_sql;
-$my = mysqli_query($con,$sql) or die(mysqli_error($con));
+$my = mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con,$sql) or die(mysqli_error($con));
+$my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -661,7 +661,7 @@ $my=mysqli_query($con,$sql) or die(mysqli_error($con));
         					left join admin a ON n.creator_id = a.adminid
         				where n.claim_id='".mysqli_real_escape_string($con, $myarray['insuranceid'])."'
         				ORDER BY adddate ASC";
- 				$n_q = mysqli_query($con, $n_sql) or die(mysqli_error($con));
+ 				$n_q = mysqli_query($con, $n_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 				while($n = mysqli_fetch_assoc($n_q)){
 					echo $n['note'] .' - '. $n['creator_name'].'<br />';
 				}

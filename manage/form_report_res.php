@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include "includes/top.htm";
 
 	if (!empty($_POST['dailysub']) && $_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1) {
@@ -7,7 +7,7 @@
 			window.location = 'patient_report.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$rec_disp = 200;

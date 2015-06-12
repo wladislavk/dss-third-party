@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # MantisBT - a php based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -410,7 +410,7 @@
 				gpc_clear_cookie( 'view_all_cookie' );
 				error_proceed_url( 'view_all_set.php?type=0' );
 				trigger_error( ERROR_FILTER_TOO_OLD, ERROR );
-				exit; # stop here
+				trigger_error("Exit called", E_USER_ERROR); # stop here
 			}
 		}
 	} else {
@@ -498,7 +498,7 @@
 					gpc_clear_cookie( 'view_all_cookie' );
 					error_proceed_url( 'view_all_set.php?type=0' );
 					trigger_error( ERROR_FILTER_TOO_OLD, ERROR );
-					exit; # stop here
+					trigger_error("Exit called", E_USER_ERROR); # stop here
 				}
 				break;
 		# Generalise the filter

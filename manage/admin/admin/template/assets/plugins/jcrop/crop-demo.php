@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	$targ_w = $targ_h = 150;
@@ -15,6 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	header('Content-type: image/jpeg');
 	imagejpeg($dst_r,null,$jpeg_quality);
 
-	exit;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 ?>

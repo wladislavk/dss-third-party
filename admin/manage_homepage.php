@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
 include "fckeditor/fckeditor.php";
 
@@ -15,7 +15,7 @@ if($_POST["homepagesub"] == 1)
 		window.location='manage_homepage.php?msg=<?=$msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $thesql = "select * from homepage";
@@ -52,7 +52,7 @@ else
 		<td valign="top" class="frmdata" colspan="2">
 			<?php
 				
-				$oFCKeditor = new FCKeditor('description') ;
+				$oFCKeditor = new \FCKeditor('description') ;
 				
 				$oFCKeditor->ToolbarSet = 'MyToolbar';
 				$oFCKeditor->BasePath = 'fckeditor/';

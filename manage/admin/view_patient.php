@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 include_once('../includes/constants.inc');
 include_once('../includes/dental_patient_summary.php');
@@ -54,12 +54,12 @@ include "../includes/similar.php";
         //$letter1 = create_letter($letter1id, $pid, '', '', $recipients_list);
         if (!is_numeric($letter1)) {
           print $letter1;
-          die();
+          trigger_error("Die called", E_USER_ERROR);
         }
       }
       if (!is_numeric($letter2)) {
         print $letter2;
-        die();
+        trigger_error("Die called", E_USER_ERROR);
       }
     }
   }
@@ -70,7 +70,7 @@ function trigger_letter3($pid) {
   //$letter = create_letter($letterid, $pid, '', $topatient);
   if (!is_numeric($letter)) {
     print $letter;
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     return $letter;
   }
@@ -549,7 +549,7 @@ $ed_sql .="
 			parent.window.location='add_patient.php?ed=<?php echo  $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?php echo  $_GET['pid']; ?>&msg=<?php echo $msg;?><?php echo  $sendPin; ?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -757,7 +757,7 @@ $ed_sql .="
           parent.window.location='duplicate_patients.php?pid=<?php echo  $pid; ?>';
         </script>
   <?
-      die();
+      trigger_error("Die called", E_USER_ERROR);
 
 		}else{
 		$msg = "Patient ".$_POST["firstname"]." ".$_POST["lastname"]." added Successfully";
@@ -772,7 +772,7 @@ $ed_sql .="
 			parent.window.location='add_patient.php?pid=<?php echo  $pid; ?>&ed=<?php echo $pid; ?>&addtopat=1<?php echo  $sendPin; ?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 

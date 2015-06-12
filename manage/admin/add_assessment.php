@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -30,7 +30,7 @@ if(!empty($_POST["mult_assessmentsub"]) && $_POST["mult_assessmentsub"] == 1)
 		parent.window.location='manage_assessment.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1)
 				parent.window.location='manage_assessment.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["assessmentsub"]) && $_POST["assessmentsub"] == 1)
 				parent.window.location='manage_assessment.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

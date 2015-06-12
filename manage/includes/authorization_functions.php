@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 function authorize($u, $p, $l){
   $db = new Db();

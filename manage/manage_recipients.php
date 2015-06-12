@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 
 if($_POST['q_recipientssub'] == 1){
@@ -26,7 +26,7 @@ if($_POST['q_recipientssub'] == 1){
 						adddate = now(),
 						ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		$db->query($ins_sql) or die($ins_sql." | ".mysqli_error($con));
+		$db->query($ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Added Successfully";?>
 		<script type="text/javascript">
@@ -34,7 +34,7 @@ if($_POST['q_recipientssub'] == 1){
 			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}else{
 		$ed_sql = "update dental_q_recipients set 
 					referring_physician = '".s_for($referring_physician)."',
@@ -43,7 +43,7 @@ if($_POST['q_recipientssub'] == 1){
 					patient_info = '".s_for($patient_info)."'
 					where q_recipientsid = '".s_for($_POST['ed'])."'";
 		
-		$db->query($ed_sql) or die($ed_sql." | ".mysqli_error($con));
+		$db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		//echo $ed_sql;
 		$msg = "Edited Successfully";?>
@@ -52,7 +52,7 @@ if($_POST['q_recipientssub'] == 1){
 			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -67,7 +67,7 @@ if($pat_myarray['patientid'] == ''){?>
 		window.location = 'manage_patient.php';
 	</script>
 	<?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 $sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
 $myarray = $db->getRow($sql);

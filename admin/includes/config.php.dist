@@ -1,4 +1,6 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
+
+require_once dirname(__FILE__) . '/../../includes/autoloader.php';
 
     define('ROOT_DIR', $_SERVER['DOCUMENT_ROOT']);
 
@@ -8,7 +10,8 @@
     $config_db_host = "localhost";
 
     session_start();
-    $con = mysqli_connect($config_db_host, $config_db_user, $config_db_pass) or die('connection failure');
+    $con = mysqli_connect($config_db_host, $config_db_user, $config_db_pass) or trigger_error('connection failure', E_USER_ERROR);
+    $GLOBALS['con'] = $con;
     mysqli_select_db($con, $config_db_name);
     $GLOBALS['con'] = $con;
     

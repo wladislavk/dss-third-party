@@ -1,9 +1,9 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once("../twilio/twilio.config.php");
 require_once '../../manage/admin/includes/main_include.php';
 
     // instantiate a new Twilio Rest Client
-    $client = new Services_Twilio($AccountSid, $AuthToken);
+    $client = new \Services_Twilio($AccountSid, $AuthToken);
 
     // make an associative array of people we know, indexed by phone number. Feel
     // free to change/add your own phone number and name here.

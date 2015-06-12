@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/config.php';
 $db = new Db();

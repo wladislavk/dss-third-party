@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once('../3rdParty/tcpdf/config/lang/eng.php');
 include_once('../3rdParty/tcpdf/tcpdf.php');
 include_once('includes/main_include.php');
@@ -511,7 +511,7 @@ $html .= '<!-- END main table -->
 
 
 $title = "test";
-                $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
         // set document information
         $pdf->SetCreator(PDF_CREATOR);

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 session_start();
 require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
@@ -22,7 +22,7 @@ require_once '../3rdParty/tcpdf/tcpdf.php';
 require_once '../3rdParty/fpdi/fpdi.php';
 
 
-class PDF extends FPDI {
+class PDF extends \FPDI {
     /**
      * "Remembers" the template id of the imported page
      */

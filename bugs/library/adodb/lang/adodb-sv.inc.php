@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 // Christian Tiberg" christian@commsoft.nu
 $ADODB_LANG_ARRAY = array (
 			'LANG'                      => 'en',

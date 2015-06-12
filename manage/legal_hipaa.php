@@ -1,4 +1,4 @@
-
+<?php namespace Ds3\Libraries\Legacy; ?>
 <h3>HIPAA AGREEMENT</h3>
 <h4>Dental Sleep Solutions Franchising, LLC, User Agreement</h4>
 <p>(Effective January 1, 2013)</p>

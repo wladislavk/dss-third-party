@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once 'includes/main_include.php';
 include_once 'includes/sescheck.php';
 include_once 'includes/password.php';
@@ -81,7 +81,7 @@ if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
 				parent.window.location='manage_staff.php?msg=<?=$msg;?>&docid=<?=$_GET['docid'];?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -138,7 +138,7 @@ if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
 				parent.window.location='manage_staff.php?msg=<?=$msg;?>&docid=<?=$_GET['docid'];?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

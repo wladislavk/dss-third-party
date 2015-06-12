@@ -1,4 +1,4 @@
-<?php include 'includes/top.htm'; ?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm'; ?>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">

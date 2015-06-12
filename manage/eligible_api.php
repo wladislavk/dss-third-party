@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="css/eligible_api.css" />
+<?php namespace Ds3\Libraries\Legacy; ?><link rel="stylesheet" href="css/eligible_api.css" />
 <?php
   $s = "SELECT p.*, c.company, u.name as doc_name, u.npi, u.userid as user_id from dental_patients p
         LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
@@ -135,4 +135,3 @@
 ?>
 
   <div id="api_output"></div>
-

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 session_start();
 require_once('../manage/admin/includes/main_include.php');
 include_once '../manage/includes/constants.inc';
@@ -8,7 +8,7 @@ if(!isset($_SESSION['screener_doc'])){
 		window.location = 'login.php';
 	</script>
   <?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 ?>

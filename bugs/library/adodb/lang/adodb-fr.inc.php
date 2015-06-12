@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 $ADODB_LANG_ARRAY = array (
 	'LANG'                      => 'fr',

@@ -1,4 +1,4 @@
-<?php include 'includes/top.htm';?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';?>
 
 <?
 include_once('../manage/admin/includes/password.php');
@@ -24,7 +24,7 @@ if($_POST['passsub'] == 1)
 			window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>";
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -43,7 +43,7 @@ if($_POST['passsub'] == 1)
 			window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>";
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 ?>

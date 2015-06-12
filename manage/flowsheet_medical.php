@@ -1,4 +1,4 @@
-<div >
+<?php namespace Ds3\Libraries\Legacy; ?><div >
 <?php
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flow = $db->getRow($flowquery);

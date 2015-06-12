@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include "includes/top.htm";
 
 	if(isset($_REQUEST["delid"]) && $_REQUEST["delid"] != "") {
@@ -11,7 +11,7 @@
 			window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	if(isset($_POST["flowsheetsub"]) && $_POST["flowsheetsub"] == 1) {
@@ -150,7 +150,7 @@
 				window.location = '<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>&pid=<?php echo $_GET['pid'];?>';
 			</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			$patientid = $_GET['pid'];
 			$getcstep_query = "SELECT step,sstep FROM dental_flowsheet_new WHERE patientid =".$patientid;
@@ -276,7 +276,7 @@
 				window.location='<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>&pid=<?php echo $_GET['pid'];?>';
 			</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 
@@ -290,7 +290,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$sql = "select * from dental_flowsheet_new where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate";

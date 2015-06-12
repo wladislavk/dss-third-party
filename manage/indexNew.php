@@ -1,4 +1,4 @@
-<?php include 'includes/top.htm';?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/popup2.js" type="text/javascript"></script>
@@ -246,7 +246,7 @@ while($ddlistpname4 = (mysqli_fetch_array($myddlist4))){
 if($_SESSION['userid'] != '')
 {
 	$welcome_sql = "select * from dental_doc_welcome where status=1 and (docid = '' or docid like '%~".$_SESSION['docid']."~%') order by sortby";
-	$welcome_my = mysqli_query($con, $welcome_sql) or die($welcome_sql." | ".mysqli_error($con));
+	$welcome_my = mysqli_query($con, $welcome_sql) or trigger_error($welcome_sql." | ".mysqli_error($con), E_USER_ERROR);
 	
 	while($welcome_myarray = mysqli_fetch_array($welcome_my)) 
 	{
@@ -315,7 +315,7 @@ if($_SESSION['userid'] != '')
 	  </tr>
 		<?
 		$insurance_sql = "select * from dental_doc_insurance where status=1 and (docid = '' or docid like '%~".$_SESSION['docid']."~%') order by sortby";
-		$insurance_my = mysqli_query($con, $insurance_sql) or die($insurance_sql." | ".mysqli_error($con));
+		$insurance_my = mysqli_query($con, $insurance_sql) or trigger_error($insurance_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		if(mysqli_num_rows($insurance_my) == 0)
 		{

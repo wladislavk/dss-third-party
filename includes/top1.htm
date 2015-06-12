@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 session_start();
 require_once('admin/includes/config.php');
 
@@ -19,7 +19,7 @@ else
 if($_GET['said'] <> '')
 	$sa_sql .= " and sleep_apneaid='".s_for($_GET['said'])."'";	*/
 $sa_sql .= " order by sortby limit 1";
-$sa_my = mysqli_query($con, $sa_sql) or die(mysqli_error($con)." | ".$sa_sql);
+$sa_my = mysqli_query($con, $sa_sql) or trigger_error(mysqli_error($con)." | ".$sa_sql, E_USER_ERROR);
 $sa_myarray = mysqli_fetch_array($sa_my);
 
 $page_title = st($sa_myarray['title']);

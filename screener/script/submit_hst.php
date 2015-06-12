@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once '../../manage/admin/includes/main_include.php';
 $screenerid = $_REQUEST['screenerid'];
 $docid = $_REQUEST['docid'];
@@ -60,7 +60,7 @@ if($hst_id){
   echo '{"error":true}';
 }
 
-if (!function_exists('num')) {
+if (!function_exists(__NAMESPACE__ . '\\num')) {
     function num($n, $phone=true){
         $n = preg_replace('/\D/', '', $n);
 

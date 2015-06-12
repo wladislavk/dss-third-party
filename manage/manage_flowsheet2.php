@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
 
 if($_REQUEST["delid"] != "")
@@ -13,7 +13,7 @@ if($_REQUEST["delid"] != "")
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if($_POST["flowsheetsub"] == 1)
@@ -147,7 +147,7 @@ if($_POST["flowsheetsub"] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
+		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Added Successfully - Please complete step 1 in the flowsheet \"INQUIRY CALL\"";
 		?>
@@ -156,7 +156,7 @@ if($_POST["flowsheetsub"] == 1)
 			window.location='<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -282,7 +282,7 @@ if($_POST["flowsheetsub"] == 1)
 		sstep = '".$sstep."',
 		step = '".$step."' where flowsheetid='".$_POST["ed"]."'";
 		
-		mysqli_query($con, $up_sql) or die($up_sql." | ".mysqli_error($con));
+		mysqli_query($con, $up_sql) or trigger_error($up_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Edited Successfully";
 		?>
@@ -291,7 +291,7 @@ if($_POST["flowsheetsub"] == 1)
 			window.location='<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -308,11 +308,11 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select * from dental_flowsheet_new where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate";
-$my = mysqli_query($con, $sql) or die(mysqli_error($con));
+$my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $myarray = mysqli_fetch_array($my);
 
 $flowsheetid = st($myarray['flowsheetid']);
@@ -946,7 +946,7 @@ else
 						<span class="left">
 							<? 
 							$slab_sql = "select * from dental_sleeplab where docid='".$_SESSION['docid']."' order by company";
-							$s_my = mysqli_query($con, $slab_sql) or die(mysqli_error($con)." | ".$slab_sql);
+							$s_my = mysqli_query($con, $slab_sql) or trigger_error(mysqli_error($con)." | ".$slab_sql, E_USER_ERROR);
 							?>
 								
 							<select name="sleep_lab" class="field text addr tbox">

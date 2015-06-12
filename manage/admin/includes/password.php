@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 function create_salt(){
 $salt = substr(sha1(uniqid(rand(), true)), 0, 12);

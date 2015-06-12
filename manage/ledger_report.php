@@ -1,4 +1,4 @@
-<?php include "includes/top.htm";?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include "includes/top.htm";?>
 <link rel="stylesheet" href="css/ledger.css" />
 <?php
 if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] != 1 && !empty($_REQUEST['monthlysub']) && $_REQUEST['monthlysub'] != 1 && !empty($_REQUEST['weeklysub']) && $_REQUEST['weeklysub'] != 1 && !empty($_REQUEST['rangesub']) && $_REQUEST['rangesub'] != 1 && empty($_GET['pid'])){?>
@@ -6,7 +6,7 @@ if(!empty($_REQUEST['dailysub']) && $_REQUEST['dailysub'] != 1 && !empty($_REQUE
 		window.location = 'ledger.php';
 	</script>
 	<?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!isset($_REQUEST['sort'])){

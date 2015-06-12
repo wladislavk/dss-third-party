@@ -31,7 +31,7 @@ function SendResults( $errorNumber, $fileUrl = '', $fileName = '', $customMsg = 
 	echo '<script type="text/javascript">' ;
 	echo 'window.parent.OnUploadCompleted(' . $errorNumber . ',"' . str_replace( '"', '\\"', $fileUrl ) . '","' . str_replace( '"', '\\"', $fileName ) . '", "' . str_replace( '"', '\\"', $customMsg ) . '") ;' ;
 	echo '</script>' ;
-	exit ;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 // Check if this uploader has been enabled.

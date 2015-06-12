@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "../../includes/fmFunctions_edu.php";
 include "../../includes/fmTop.php";
 ?>

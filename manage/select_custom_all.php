@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include "admin/includes/main_include.php";
 
 	if(!empty($_POST['selsub']) && $_POST['selsub'] == 1) {
@@ -8,7 +8,7 @@
 			parent.disablePopupRefClean();
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";

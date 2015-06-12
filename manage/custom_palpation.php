@@ -1,4 +1,4 @@
-<?php include "admin/includes/main_include.php"; ?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include "admin/includes/main_include.php"; ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -22,7 +22,7 @@
 				window.location = "<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 			</script>
 	<?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 
 		$rec_disp = 20;
@@ -60,7 +60,7 @@
 				disablePopupRefClean();
 			</script>
 	<?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	?>
 

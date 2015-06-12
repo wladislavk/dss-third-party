@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -30,7 +30,7 @@ if(!empty($_POST["mult_modifier_codesub"]) && $_POST["mult_modifier_codesub"] ==
 		parent.window.location='manage_modifier_code.php?msg=<?=$msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["modifier_codesub"]) && $_POST["modifier_codesub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["modifier_codesub"]) && $_POST["modifier_codesub"] == 1)
 				parent.window.location='manage_modifier_code.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["modifier_codesub"]) && $_POST["modifier_codesub"] == 1)
 				parent.window.location='manage_modifier_code.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # MantisBT - a php based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -60,7 +60,7 @@ $t_valid_fields = array(
 if( !in_array( $f_dest_field, $t_valid_fields ) ) {
 	echo '<p>Invalid destination field (' . $f_dest_field . ') specified.</p>';
 	echo '</body></html>';
-	exit;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 # @@@ check that source and destination are compatible

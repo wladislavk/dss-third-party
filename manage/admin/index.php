@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include 'includes/main_include.php';
 	include_once 'includes/password.php';
 	include_once '../includes/constants.inc';
@@ -31,14 +31,14 @@
             <script type="text/javascript">
                 window.location.replace('index.php?msg=Email sent');
             </script>
-<?php             die();
+<?php             trigger_error("Die called", E_USER_ERROR);
         } else {
             $msg = 'Email address not found';
 ?>
             <script type="text/javascript">
                 window.location.replace('index.php?msg=<?php echo  $msg;?>');
             </script>
-<?php             die();
+<?php             trigger_error("Die called", E_USER_ERROR);
         }
 	}
 
@@ -68,20 +68,20 @@
 		        <script type="text/javascript">
 		            window.location.replace('home.php');
 		        </script>
-<?php             	die();
+<?php             	trigger_error("Die called", E_USER_ERROR);
         	} else {
 ?>
 		        <script type="text/javascript">
 		            window.location.replace('index.php?msg=Wrong+username+or+password');
 		        </script>
-<?php             	die();
+<?php             	trigger_error("Die called", E_USER_ERROR);
         	}
     	} else {
 ?>
 	        <script type="text/javascript">
 	            window.location.replace('index.php?msg=Incorrect+security+code');
 	        </script>
-<?php         	die();
+<?php         	trigger_error("Die called", E_USER_ERROR);
     	}
 	}
 ?>

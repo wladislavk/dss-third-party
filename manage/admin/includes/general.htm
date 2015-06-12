@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 
 // Set the following two variables to allow/disable email.  It will be sent via paper mail if disabled or not set.
@@ -891,7 +891,7 @@ function deliver_created_letter($letterid){
     include 'class.fax.php';
     $filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
     $fileType = "pdf";
-    $fts = new FTSSamples($doc_company);
+    $fts = new \FTSSamples($doc_company);
     $fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
     if($fax_send["status"] !== true){
       ?>
@@ -1094,7 +1094,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 			include 'class.fax.php';
     	$filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
     	$fileType = "pdf";
-			$fts = new FTSSamples($doc_company);
+			$fts = new \FTSSamples($doc_company);
 			$fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType, $firstname);
 			if($fax_send !== true){
 			  if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
@@ -1138,7 +1138,7 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 
   $db = new Db();
 	require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/swift-4.0.6/lib/swift_required.php');
-	$email = Swift_Message::newInstance();
+	$email = \Swift_Message::newInstance();
 
 	$to = "$to_name <$to_email>";
 	$from = "$from_name <$from_email>";
@@ -1158,8 +1158,8 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 		$footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_email_footer.jpg";
 	}
 
-	$header_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($header_path)) . "\" alt=\"Dental Sleep Solutions\" />";
-	$footer_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($footer_path)) . "\" alt=\"Dental Sleep Solutions\" />";
+	$header_html =	"<img src=\"" . $email->embed(\Swift_Image::fromPath($header_path)) . "\" alt=\"Dental Sleep Solutions\" />";
+	$footer_html =	"<img src=\"" . $email->embed(\Swift_Image::fromPath($footer_path)) . "\" alt=\"Dental Sleep Solutions\" />";
 
 	$TextMessage = strip_tags($message,"<br>");
 	$HTMLMessage = "$header_html<table width=\"600px\"><tr><td>$message</tr></td></table>$footer_html"; 
@@ -1169,12 +1169,12 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 	$email->setTo(array($to_email => $to_name));
 	$email->setBody($HTMLMessage, 'text/html');
 	if ($attachment != '') {
-		$email->attach(Swift_Attachment::fromPath($attachment));
+		$email->attach(\Swift_Attachment::fromPath($attachment));
 	}
 
-	$transport = Swift_SendmailTransport::newInstance('/usr/sbin/sendmail -bs');
+	$transport = \Swift_SendmailTransport::newInstance('/usr/sbin/sendmail -bs');
 
-	$mailer = Swift_Mailer::newInstance($transport);
+	$mailer = \Swift_Mailer::newInstance($transport);
 
 	if (!$mailer->send($email, $failures)) {
 		if (count($failures) > 0) {
@@ -1279,7 +1279,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/config/lang/eng
 require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
 
 // Extend the TCPDF class to create custom Header and Footer
-class MYPDF extends TCPDF {
+class MYPDF extends \TCPDF {
 
   public $footerText = '';
   //Page header
@@ -1321,7 +1321,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
     $pdf_header = $header;
     $pdf_footer = $footer;
     // Extend the TCPDF class to create custom Header and Footer
-    class FAXPDF extends TCPDF {
+    class FAXPDF extends \TCPDF {
       //Page header
       public function Header() {
         // Logo

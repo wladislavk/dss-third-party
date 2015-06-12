@@ -1,4 +1,4 @@
-<?
+<?php namespace Ds3\Libraries\Legacy; ?><?
 session_start();
 include('includes/config.php');
 include_once('../manage/admin/includes/password.php');
@@ -11,7 +11,7 @@ if($_POST["loginsub"] == 1)
 
         $pass = gen_password($_POST['password'], $salt_row['salt']);
 	$check_sql = "SELECT * FROM admin where username='".mysqli_real_escape_string($con, $_POST['username'])."' and password='".$pass."'";
-	$check_my = mysqli_query($con, $check_sql) or die(mysqli_error($con).' | '.$check_sql);
+	$check_my = mysqli_query($con, $check_sql) or trigger_error(mysqli_error($con).' | '.$check_sql, E_USER_ERROR);
 	
 	if(mysqli_num_rows($check_my) == 1) 
 	{
@@ -23,7 +23,7 @@ if($_POST["loginsub"] == 1)
 			window.location.replace('home.php');
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -33,7 +33,7 @@ if($_POST["loginsub"] == 1)
 			window.location.replace('index.php?msg=<?=$msg;?>');
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 

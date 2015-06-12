@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # MantisBT - a php based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -55,7 +55,7 @@
 		}
 
 		print_header_redirect( $t_uri );
-		exit;
+		trigger_error("Exit called", E_USER_ERROR);
 	}
 
 	# Login page shouldn't be indexed by search engines

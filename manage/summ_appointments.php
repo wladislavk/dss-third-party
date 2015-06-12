@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 session_start();
 require_once('admin/includes/main_include.php');
 ?>
@@ -429,7 +429,7 @@ $sql = "SELECT "
      . "ORDER BY "
      . "  front_office_request_date DESC "
      . "LIMIT 1";
-$my = mysqli_query($con, $sql) or die(mysqli_error($con));
+$my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $preauth = mysqli_fetch_array($my);
 update_patient_summary($_GET['pid'], 'vob', $preauth['status']);
 

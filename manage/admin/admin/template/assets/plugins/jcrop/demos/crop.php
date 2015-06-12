@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 /**
  * Jcrop image cropping plugin for jQuery
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	header('Content-type: image/jpeg');
 	imagejpeg($dst_r,null,$jpeg_quality);
 
-	exit;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 // If not a POST request, display page below:

@@ -1,7 +1,7 @@
-<?php
-    include_once "includes/top.htm";
-    include_once('includes/patient_info.php');
-    if ($patient_info) {
+<?php namespace Ds3\Libraries\Legacy; ?><?php
+	include_once "includes/top.htm";
+	include_once('includes/patient_info.php');
+	if ($patient_info) {
 ?>
     <script type="text/javascript" src="js/ex_page4.js"></script>
     <script type="text/javascript" src="/manage/js/select_teeth_cross.js"></script>
@@ -75,30 +75,30 @@
                     window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
 <?php
-            }
-            die();
-        } else {
-            $ed_sql = " update dental_ex_page4 set 
-            exam_teeth = '".s_for($exam_teeth_arr)."',
-            other_exam_teeth = '".s_for($other_exam_teeth)."',
-            caries = '".s_for($caries)."',
-            where_facets = '".s_for($where_facets)."',
-            missing = '".s_for($missing)."',
-            cracked_fractured = '".s_for($cracked_fractured)."',
-            old_worn_inadequate_restorations = '".s_for($old_worn_inadequate_restorations)."',
-            dental_class_right = '".s_for($dental_class_right)."',
-            dental_division_right = '".s_for($dental_division_right)."',
-            dental_class_left = '".s_for($dental_class_left)."',
-            dental_division_left = '".s_for($dental_division_left)."',
-            additional_paragraph = '".s_for($additional_paragraph)."',
-            initial_tooth = '".s_for($initial_tooth)."',
-            open_proximal = '".s_for($open_proximal)."',
-            deistema = '".s_for($deistema)."',
-            crossbite = '".s_for($crossbite)."'
-            where ex_page4id = '".s_for($_POST['ed'])."'";
-
-            $db->query($ed_sql);
-            $msg = "Edited Successfully";
+			}
+			trigger_error("Die called", E_USER_ERROR);
+		} else {
+			$ed_sql = " update dental_ex_page4 set 
+			exam_teeth = '".s_for($exam_teeth_arr)."',
+			other_exam_teeth = '".s_for($other_exam_teeth)."',
+			caries = '".s_for($caries)."',
+			where_facets = '".s_for($where_facets)."',
+			missing = '".s_for($missing)."',
+			cracked_fractured = '".s_for($cracked_fractured)."',
+			old_worn_inadequate_restorations = '".s_for($old_worn_inadequate_restorations)."',
+			dental_class_right = '".s_for($dental_class_right)."',
+			dental_division_right = '".s_for($dental_division_right)."',
+			dental_class_left = '".s_for($dental_class_left)."',
+			dental_division_left = '".s_for($dental_division_left)."',
+			additional_paragraph = '".s_for($additional_paragraph)."',
+			initial_tooth = '".s_for($initial_tooth)."',
+			open_proximal = '".s_for($open_proximal)."',
+			deistema = '".s_for($deistema)."',
+			crossbite = '".s_for($crossbite)."'
+			where ex_page4id = '".s_for($_POST['ed'])."'";
+		
+			$db->query($ed_sql);
+			$msg = "Edited Successfully";
             if(isset($_POST['ex_pagebtn_proceed'])){
 ?>
                 <script type="text/javascript">
@@ -111,10 +111,10 @@
                     window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
                 </script>
 <?php
-            }
-            die();
-        }
-    }
+			}
+			trigger_error("Die called", E_USER_ERROR);
+		}
+	}
 
     $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
     $pat_myarray = $db->getRow($pat_sql);
@@ -126,8 +126,8 @@
             window.location = 'manage_patient.php';
         </script>
 <?php
-        die();
-    }
+		trigger_error("Die called", E_USER_ERROR);
+	}
 
     $sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
     $myarray = $db->getRow($sql);

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once('../includes/general_functions.php');

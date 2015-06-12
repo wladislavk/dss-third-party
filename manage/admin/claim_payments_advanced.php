@@ -1,4 +1,4 @@
-<?php include 'includes/top.htm';?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';?>
 
 <?
 require '../includes/constants.inc';
@@ -9,7 +9,7 @@ $c_sql = "SELECT CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_na
                 JOIN dental_patients p ON i.patientid=p.patientid
                 JOIN dental_users u ON u.userid=p.docid
 		WHERE i.insuranceid='".mysqli_real_escape_string($con, $_GET['id'])."'";
-$c_q = mysqli_query($con, $c_sql) or die(mysqli_error($con));
+$c_q = mysqli_query($con, $c_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $c = mysqli_fetch_assoc($c_q);
 
 

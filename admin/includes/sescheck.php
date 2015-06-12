@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 	if($_SESSION["adminuserid"] == "")
 	{
 		?>
@@ -7,7 +7,7 @@
 			window.location = "index.php";
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 ?>

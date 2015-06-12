@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include_once('admin/includes/main_include.php');
 	include("includes/sescheck.php");
 	include_once('admin/includes/password.php');
@@ -10,7 +10,7 @@
 ?>
 		<br />You do not have permissions to edit resources.
 <?php
-	  	die();
+	  	trigger_error("Die called", E_USER_ERROR);
 	}
 ?>
 	<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
@@ -55,7 +55,7 @@
 					parent.window.location='manage_chairs.php?msg=<?php echo urlencode($msg);?>';
 				</script>
 <?php
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			} else {
 				$ins_sql = "insert into dental_resources (name, rank, docid) values ('".s_for($_POST["name"])."', '" . mysqli_real_escape_string($con, $_POST['rank']) . "', '" . intval($_SESSION['docid']) ."')";
 	            $userid = $db->getInsertId($ins_sql);
@@ -65,7 +65,7 @@
 					parent.window.location='manage_chairs.php?msg=<?php echo urlencode($msg);?>';
 				</script>
 <?php
-				die();
+				trigger_error("Die called", E_USER_ERROR);
 			}
 		}
 	}

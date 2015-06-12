@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # MantisBT - a php based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -51,7 +51,7 @@
 
 		if ( HTTP_AUTH == config_get( 'login_method' ) ) {
 			auth_http_prompt();
-			exit;
+			trigger_error("Exit called", E_USER_ERROR);
 		}
 	}
 

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 include 'includes/top.htm';
 include_once '../includes/constants.inc';
@@ -37,7 +37,7 @@ $c = mysqli_fetch_assoc($c_q);
 	left join admin a ON n.creator_id = a.adminid
 	where n.claim_id='".mysqli_real_escape_string($con,$_GET['id'])."'
 	ORDER BY adddate ASC";
- $n_q = mysqli_query($con,$n_sql) or die(mysqli_error($con));
+ $n_q = mysqli_query($con,$n_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 ?>
 </span>
 <br /><br />

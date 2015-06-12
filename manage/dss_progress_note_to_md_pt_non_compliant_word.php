@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 # This line will stream the file to the user rather than spray it across the screen
 header("Content-type: application/octet-stream");
@@ -22,7 +22,7 @@ if($pat_myarray['patientid'] == ''){?>
 		window.location = 'manage_patient.php';
 	</script>
 	<?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $ref_sql = "select * from dental_q_recipients where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
@@ -138,7 +138,7 @@ We delivered a <strong>???</strong> dental device on <strong>???</strong>.  <br>
 
 I regret to inform you that she has become non compliant with dental device therapy due to <strong>???</strong>.<br><br>
 
-I am referring <?php $h_h1?> back to you to discuss other treatment alternatives.  Thank you again for the opportunity to participate in Patient’s therapy; please know that we will do our best to follow through with all patients to ensure successful treatment.<br><br>
+I am referring <?php $h_h1?> back to you to discuss other treatment alternatives.  Thank you again for the opportunity to participate in Patientï¿½s therapy; please know that we will do our best to follow through with all patients to ensure successful treatment.<br><br>
 
 Sincerely,<br><br><br><br>
 

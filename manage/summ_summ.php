@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 $sql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 $r = $db->getRow($sql);
 
@@ -75,7 +75,7 @@ if(isset($_POST['device_submit'])){
                           adddate = now(),
                           ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-        $db->query($ex_ins_sql) or die($ex_ins_sql." | ".mysqli_error($con));
+        $db->query($ex_ins_sql) or trigger_error($ex_ins_sql." | ".mysqli_error($con), E_USER_ERROR);
     }
     $sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
     $row = $db->getRow($sql);

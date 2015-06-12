@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 //inserts row into dental_insurance_history
 function claim_history_update($insid, $userid, $adminid){

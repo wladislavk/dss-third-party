@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 session_start();
 require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
@@ -32,7 +32,7 @@ if (isset($_REQUEST['ed'])) {
 	 . "  LEFT OUTER JOIN dental_ins_diagnosis id ON id.ins_diagnosisid = preauth.diagnosis_code "
          . "WHERE "
          . "  preauth.id = " . $_REQUEST['ed'];
-		$my = mysqli_query($con, $sql) or die(mysqli_error($con));
+		$my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 		$preauth = mysqli_fetch_array($my);
 		// load dynamic preauth info
 		$sql = "SELECT "
@@ -155,7 +155,7 @@ if (isset($_REQUEST['ed'])) {
                                 update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
     }
     $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";
-    mysqli_query($con, $sql) or die($sql." | ".mysqli_error($con));
+    mysqli_query($con, $sql) or trigger_error($sql." | ".mysqli_error($con), E_USER_ERROR);
     
     //echo $ed_sql.mysqli_error($con);
     $task_label = (!empty($_POST['completed'])) ? 'Completed' : 'Updated';

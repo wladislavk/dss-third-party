@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"])  && is_super($_SESSION['admin_access']))
@@ -13,7 +13,7 @@ if(!empty($_REQUEST["delid"])  && is_super($_SESSION['admin_access']))
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
@@ -54,7 +54,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
 

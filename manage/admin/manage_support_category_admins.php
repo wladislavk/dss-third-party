@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 
 if(!empty($_POST["update"]))
@@ -19,7 +19,7 @@ if(!empty($_POST["update"]))
                 window.location="manage_support_categories.php?msg=<?php echo $msg?>";
         </script>
         <?
-        die();
+        trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select a.*,

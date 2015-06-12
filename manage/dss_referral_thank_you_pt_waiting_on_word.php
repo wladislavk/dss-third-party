@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 	# This line will stream the file to the user rather than spray it across the screen
 	header("Content-type: application/octet-stream");
 
@@ -20,7 +20,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";

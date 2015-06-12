@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # MantisBT - a php based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -95,7 +95,7 @@
 			{
 				// Test for GD-Library(-Version)
 				$this->gd_version = get_gd_version();
-				if($this->gd_version == 0) die("There is no GD-Library-Support enabled. The Captcha-Class cannot be used!");
+				if($this->gd_version == 0) trigger_error("There is no GD-Library-Support enabled. The Captcha-Class cannot be used!", E_USER_ERROR);
 				if($this->debug) echo "\n<br />-Captcha-Debug: The available GD-Library has major version ".$this->gd_version;
 
 				// extracts config array
@@ -125,12 +125,12 @@
 					}
 					$this->TTF_RANGE = $temp;
 					if($this->debug) echo "\n<br />-Captcha-Debug: Valid TrueType-files: (".count($this->TTF_RANGE).")";
-					//if(count($this->TTF_RANGE) < 1) die('No Truetypefont available for the CaptchaClass.');
+					//if(count($this->TTF_RANGE) < 1) trigger_error('No Truetypefont available for the CaptchaClass.', E_USER_ERROR);
 				}
 				else
 				{
 					if($this->debug) echo "\n<br />-Captcha-Debug: Check given TrueType-File! (".$this->TTF_RANGE.")";
-					if(!is_readable($this->TTF_folder.$this->TTF_RANGE)) die('No Truetypefont available for the CaptchaClass.');
+					if(!is_readable($this->TTF_folder.$this->TTF_RANGE)) trigger_error('No Truetypefont available for the CaptchaClass.', E_USER_ERROR);
 				}
 
 				// select first TrueTypeFont

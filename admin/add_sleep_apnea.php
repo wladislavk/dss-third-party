@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 session_start();
 require_once('includes/config.php');
 include("includes/sescheck.php");
@@ -43,12 +43,12 @@ if($_POST["sleep_apneaub"] == 1)
 				parent.window.location='manage_sleep_apnea.php?msg=<?=$msg;?>&cid=<?=$_POST["categoryid"]?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
 			$ins_sql = "insert into sleep_apnea set title = '".s_for($_POST["title"])."', categoryid = '".s_for($_POST["categoryid"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."', sortby = '".$sby."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
+			mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -57,7 +57,7 @@ if($_POST["sleep_apneaub"] == 1)
 				parent.window.location='manage_sleep_apnea.php?msg=<?=$msg;?>&cid=<?=$_POST["categoryid"]?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }
@@ -168,7 +168,7 @@ if($_POST["sleep_apneaub"] == 1)
             <td valign="top" class="frmdata" colspan="2">
                 <?php
                     
-                    $oFCKeditor = new FCKeditor('description') ;
+                    $oFCKeditor = new \FCKeditor('description') ;
                     
                     $oFCKeditor->ToolbarSet = 'MyToolbar';
                     $oFCKeditor->BasePath = 'fckeditor/';

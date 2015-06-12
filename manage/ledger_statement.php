@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	//header("Content-type:application/pdf");
 
 	// It will be called downloaded.pdf
@@ -66,7 +66,7 @@
 				</script>
 			<?php } ?>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 
 		if(isset($_REQUEST["delclaimid"]) && $_REQUEST["delclaimid"] != "") {
@@ -91,7 +91,7 @@
                 </script>
             <?php } ?>
 <?php
-        	die();
+        	trigger_error("Die called", E_USER_ERROR);
 		}
 
 		$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -105,7 +105,7 @@
 				window.location = 'manage_patient.php';
 			</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 
 		$rec_disp = 200;
@@ -450,7 +450,7 @@
 	$html = $head . (!empty($html) ? $html : '');
 
 	$title = "test";
-    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
     // set document information
     $pdf->SetCreator(PDF_CREATOR);

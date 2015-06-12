@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -30,7 +30,7 @@ if(!empty($_POST["mult_joint_examsub"]) && $_POST["mult_joint_examsub"] == 1)
 		parent.window.location='manage_joint_exam.php?msg=<?=$msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["joint_examsub"]) && $_POST["joint_examsub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["joint_examsub"]) && $_POST["joint_examsub"] == 1)
 				parent.window.location='manage_joint_exam.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["joint_examsub"]) && $_POST["joint_examsub"] == 1)
 				parent.window.location='manage_joint_exam.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

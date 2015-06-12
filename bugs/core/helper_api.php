@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # MantisBT - a php based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -302,7 +302,7 @@ function helper_ensure_confirmed( $p_message, $p_button_label ) {
 	print_hr();
 	echo "</div>\n";
 	html_page_bottom();
-	exit;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 /**

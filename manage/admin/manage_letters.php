@@ -1,4 +1,4 @@
-<?php include 'includes/top.htm'; 
+<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm'; 
 
 function franchisee_asc($a, $b) {
   return strcmp ($a['franchisee'], $b['franchisee']);
@@ -304,8 +304,8 @@ $generated_date = $pending_letters ? $dental_letters[0]['generated_date'] : 0;
 if ($generated_date){
     try {
         // Add the root namespace to DateTime when merging to Loader branch
-        $today = new DateTime('now');
-        $past = new DateTime();
+        $today = new \DateTime('now');
+        $past = new \DateTime();
         $past->setTimestamp($generated_date);
         $oldest_letter = $today->diff($past)->format('%a');
     } catch (Exception $e) {

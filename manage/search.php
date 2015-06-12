@@ -1,4 +1,4 @@
-<?php include 'includes/top.htm'; ?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm'; ?>
 
     <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
     <script src="admin/popup/popup2.js" type="text/javascript"></script>
@@ -41,7 +41,7 @@
 
                 <?php include 'includes/bottom.htm'; ?> 
         <?php
-                    exit;
+                    trigger_error("Exit called", E_USER_ERROR);
             }
             // check for a search parameter
             if (!isset($var)) {
@@ -71,7 +71,7 @@
 
                 <?php include 'includes/bottom.htm';?> 
         <?php
-                exit;
+                trigger_error("Exit called", E_USER_ERROR);
             }
 
             $sql = "select * from dental_patients where docid='".$_SESSION['docid']."'";

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include 'admin/includes/main_include.php';
 
 	if($_SESSION['userid'] == '') {
@@ -8,7 +8,7 @@
 			window.close();
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	if(!empty($_POST['passsub']) && $_POST['passsub'] == 1) {
@@ -21,7 +21,7 @@
 				window.location = "<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>";
 			</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			$up_sql = "update dental_users set password='".mysqli_real_escape_string($con, $_POST['new_pass'])."' where userid='".s_for($_SESSION['userid'])."'";
 			
@@ -32,7 +32,7 @@
 				window.location = "<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>";
 			</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 ?>

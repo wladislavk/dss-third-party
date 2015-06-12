@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
 
 
@@ -15,7 +15,7 @@ $my = mysqli_query($con, $sql);
 $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $num_users=mysqli_num_rows($my);
 ?>
 

@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/header.php";
 include 'includes/questionnaire_sections.php';
 ?>
@@ -94,7 +94,7 @@ if($_POST['q_page1sub'] == 1)
 		adddate = '".date('m/d/Y')."',
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
+		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 	        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
 		mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
 		$msg = "Added Successfully";
@@ -104,7 +104,7 @@ if($_POST['q_page1sub'] == 1)
 			window.location='<?= $_POST['goto_p']; ?>?msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -128,7 +128,7 @@ if($_POST['q_page1sub'] == 1)
 		main_reason_other = '".s_for($main_reason_other)."'
 		where patientid = '".s_for($_SESSION['pid'])."'";
 		
-		mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 	        mysqli_query($con, "UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");		
                 mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
 		$msg = "Edited Successfully";
@@ -138,7 +138,7 @@ if($_POST['q_page1sub'] == 1)
 			window.location='<?= $_POST['goto_p']; ?>?msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
   }else{
     //symptoms status is not 0
@@ -148,7 +148,7 @@ if($_POST['q_page1sub'] == 1)
                         window.location='<?= $_POST['goto_p']; ?>?msg=<?=$msg;?>';
                 </script>
                 <?
-                die();
+                trigger_error("Die called", E_USER_ERROR);
 
   }
 }
@@ -173,7 +173,7 @@ if($pat_myarray['patientid'] == '')
 		//window.location = 'manage_patient.php';
 	</script>
 	<?
-	//die();
+	//trigger_error("Die called", E_USER_ERROR);
 }
 $sql = "select * from dental_q_page1 where patientid='".$_SESSION['pid']."' ";
 $my = mysqli_query($con, $sql);

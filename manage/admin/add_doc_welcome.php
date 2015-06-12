@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -109,7 +109,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 			parent.window.location='manage_doc_welcome.php?msg=<?php echo $msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -123,7 +123,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
 			parent.window.location='manage_doc_welcome.php?msg=<?php echo $msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -231,7 +231,7 @@ if(!empty($_POST["doc_welcomeub"]) && $_POST["doc_welcomeub"] == 1)
             <td valign="top" class="frmdata" colspan="2">
                 <?php
                     
-                    $oFCKeditor = new FCKeditor('description') ;
+                    $oFCKeditor = new \FCKeditor('description') ;
                     
                     $oFCKeditor->ToolbarSet = 'MyToolbar';
                     $oFCKeditor->BasePath = 'fckeditor/';

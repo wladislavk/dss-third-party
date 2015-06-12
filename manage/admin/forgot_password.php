@@ -1,4 +1,4 @@
-<?
+<?php namespace Ds3\Libraries\Legacy; ?><?
 session_start();
 include('includes/main_include.php');
 include_once('includes/password.php');
@@ -40,7 +40,7 @@ $message .= DSS_EMAIL_FOOTER;
                         window.location.replace('index.php?msg=Email sent');
                 </script>
                 <?
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         }
         else
         {
@@ -50,7 +50,7 @@ $message .= DSS_EMAIL_FOOTER;
                         window.location.replace('forgot_password.php?msg=<?=$msg;?>');
                 </script>
                 <?
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         }
 }
 

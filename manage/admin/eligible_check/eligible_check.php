@@ -1,4 +1,4 @@
-  <link href="eligible_check/css/sample_1.css" rel="stylesheet" media="screen">
+<?php namespace Ds3\Libraries\Legacy; ?>  <link href="eligible_check/css/sample_1.css" rel="stylesheet" media="screen">
 
   <script src="../script/autocomplete_local.js"></script>
 

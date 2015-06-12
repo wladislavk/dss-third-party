@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 session_start();
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -109,7 +109,7 @@ if(!empty($_POST["compsub"]) && $_POST["compsub"] == 1)
 				parent.window.location='manage_companies.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 }
 
 ?>

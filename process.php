@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 if(isset($_POST['submit'])) {
    $to = 'dryatros@gmail.com' ;     //put your email address on which you want to receive the information
    $subject = 'Contact Form Submission - DSS Site';   //set the subject of email.

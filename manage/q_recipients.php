@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include "includes/top.htm";
 
 	if(isset($_POST['q_recipientssub']) && $_POST['q_recipientssub'] == 1) {
@@ -236,7 +236,7 @@
 				window.location = '<?php echo $_POST['goto_p']?>.php?ex=<?php echo $_GET['ex']?>&pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 			</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			$ed_sql = " update dental_q_recipients set 
 				referring_physician = '".s_for($referring_physician)."',
@@ -262,7 +262,7 @@
 				window.location = '<?php echo $_POST['goto_p']?>.php?ex=<?php echo $_GET['ex']?>&pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 			</script>
 <?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 
@@ -276,7 +276,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";

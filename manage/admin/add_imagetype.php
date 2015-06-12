@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -30,7 +30,7 @@ if(!empty($_POST["mult_imagetypesub"]) && $_POST["mult_imagetypesub"] == 1)
 		parent.window.location='manage_imagetype.php?msg=<?=$msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["imagetypesub"]) && $_POST["imagetypesub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["imagetypesub"]) && $_POST["imagetypesub"] == 1)
 				parent.window.location='manage_imagetype.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["imagetypesub"]) && $_POST["imagetypesub"] == 1)
 				parent.window.location='manage_imagetype.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

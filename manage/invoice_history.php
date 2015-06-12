@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
     include "includes/top.htm";
     include_once '3rdParty/stripe/lib/Stripe.php';
     $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
@@ -8,7 +8,7 @@
 ?>
         <h3 style="margin-left:20px;">You are not permitted to view this page.</h3>
 <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 
     $sql = "SELECT pi.* FROM dental_percase_invoice pi
@@ -143,10 +143,10 @@
                                 
                                 $key_r= $db->getRow($key_sql);
 
-                                Stripe::setApiKey($key_r['stripe_secret_key']);
+                                \Stripe::setApiKey($key_r['stripe_secret_key']);
 
                                 try{
-                                    $charge = Stripe_Charge::retrieve($charge_r["stripe_charge"]);
+                                    $charge = \Stripe_Charge::retrieve($charge_r["stripe_charge"]);
                                 } catch (Exception $e) {
                                     // Something else happened, completely unrelated to Stripe
                                     $body = $e->getJsonBody();

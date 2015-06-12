@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
     include "includes/top.htm";
     include_once('includes/patient_info.php');
 
@@ -51,7 +51,7 @@
                 window.location = '<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
             </script>
 <?php
-            die();
+            trigger_error("Die called", E_USER_ERROR);
         } else {
             $ed_sql = " update dental_q_page4 set 
                 family_had = '".s_for($family_had_arr)."',
@@ -72,7 +72,7 @@
                 window.location = '<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
             </script>
 <?php
-          die();
+          trigger_error("Die called", E_USER_ERROR);
         }
     }
 
@@ -86,7 +86,7 @@
             window.location = 'manage_patient.php';
         </script>
 <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 
     $sql = "select * from dental_q_page4 where patientid='".$_GET['pid']."'";

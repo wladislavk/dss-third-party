@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -30,7 +30,7 @@ if(!empty($_POST["mult_contacttypesub"]) && $_POST["mult_contacttypesub"] == 1)
 		parent.window.location='manage_contacttype.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["contacttypesub"]) && $_POST["contacttypesub"] == 1)
@@ -71,7 +71,7 @@ if(!empty($_POST["contacttypesub"]) && $_POST["contacttypesub"] == 1)
 				parent.window.location='manage_contacttype.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ if(!empty($_POST["contacttypesub"]) && $_POST["contacttypesub"] == 1)
 				parent.window.location='manage_contacttype.php?msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

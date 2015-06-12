@@ -1,4 +1,6 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?
+
+require_once dirname(__FILE__) . '/../../../includes/autoloader.php';
 
     define('ROOT_DIR', $_SERVER['DOCUMENT_ROOT']);
 
@@ -12,7 +14,7 @@
     mysqli_select_db($con, $config_db_name);
     $GLOBALS['con'] = $con;
 
-    include ROOT_DIR . '/manage/admin/classes/Db.php';
+	include ROOT_DIR . '/manage/admin/classes/Db.php';
 
     $db = new Db();
     $GLOBALS['db'] = $db;

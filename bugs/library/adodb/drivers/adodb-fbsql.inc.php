@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /*
  @version V5.06 16 Oct 2008  (c) 2000-2009 John Lim (jlim#natsoft.com). All rights reserved.
  Released under both BSD license and Lesser GPL library license. 
@@ -9,7 +9,7 @@
 */ 
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 if (! defined("_ADODB_FBSQL_LAYER")) {
  define("_ADODB_FBSQL_LAYER", 1 );

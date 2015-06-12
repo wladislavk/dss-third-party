@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /*
 	@author dhtmlx.com
 	@license GPL, see license.txt
@@ -492,7 +492,7 @@ class Connector {
 				if (!$this->access->check("read")){
 					LogMaster::log("Access control: read operation blocked");
 					echo "Access denied";
-					die();
+					trigger_error("Die called", E_USER_ERROR);
 				}
 				$wrap = new SortInterface($this->request);
 				$this->apply_sorts($wrap);
@@ -683,7 +683,7 @@ class Connector {
 		$time=microtime(true)-$this->exec_time;
 		LogMaster::log("Done in {$time}s");
 		flush();
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	
 	/*! set xml encoding

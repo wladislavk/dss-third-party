@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /* 
 	To run sample application you need to have:
 	- PHP

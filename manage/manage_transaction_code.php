@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 
 $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
@@ -6,7 +6,7 @@ $r = $db->getRow($sql);
 if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1){ ?>
 	You are not authorized to access this page.
 	<?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_REQUEST["delid"]))
@@ -21,7 +21,7 @@ if(!empty($_REQUEST["delid"]))
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
@@ -60,7 +60,7 @@ if(!empty($_POST['sortsub']) && $_POST['sortsub'] == 1)
 		window.location.replace("<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg;?>");
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
 

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 include "includes/patient_nav.php";
 ?>
@@ -60,7 +60,7 @@ if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysqli_error($con));
+		mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
@@ -79,7 +79,7 @@ if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1)
 		</script>
 		<?
 		}
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -90,7 +90,7 @@ if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1)
 		tonsils_grade = '".s_for($tonsils_grade)."'
 		where ex_page2id = '".s_for($_POST['ed'])."'";
 		
-		mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysqli_error($con));
+		mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Edited Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
@@ -109,7 +109,7 @@ if(!empty($_POST['ex_page2sub']) && $_POST['ex_page2sub'] == 1)
 		</script>
 		<?
 		}
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -128,7 +128,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select * from dental_ex_page2 where patientid='".$_GET['pid']."'";

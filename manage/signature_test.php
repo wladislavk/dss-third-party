@@ -1,7 +1,7 @@
-<?php include_once 'admin/includes/main_include.php'; ?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include_once 'admin/includes/main_include.php'; ?>
 
 <?php
-    if(/*isset($_POST['sign_but'])*/1){
+    if(isset($_POST['sign_but'])){
         $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
         
         $r = $db->getRow($sql);
@@ -50,7 +50,7 @@
             $sign_sql = "SELECT * FROM dental_user_signatures WHERE user_id='".mysqli_real_escape_string($con,$_SESSION['userid'])."' ORDER BY adddate DESC LIMIT 1";
 
             $sign = $db->getRow($sign_sql);
-            if(file_exists('../../../shared/q_file/signature_'.$_SESSION['userid'].'_'.$sign['id'].'.png')) {
+            if(file_exists('../../../shared/q_file/signature_' . $_SESSION['userid'] . '_' . $sign['id'] . '.png')) {
         ?>
             <img src='display_file.php?f=signature_<?php echo $_SESSION['userid'];?>_<?php echo $sign['id'];?>.png' />
             <a href="#" onclick="$('#update_signature').show();return false;">Update Signature</a>

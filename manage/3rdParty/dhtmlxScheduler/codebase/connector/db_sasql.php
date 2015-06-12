@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once("db_common.php");
 /*! SaSQL implementation of DataWrapper
 **/

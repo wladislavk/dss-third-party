@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 //include "includes/general_functions.php";
@@ -80,7 +80,7 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1){
 	parent.window.location='support.php?msg=<?php echo $msg;?>';
 </script>
 <?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 /*
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

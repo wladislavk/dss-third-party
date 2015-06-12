@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
     include "includes/constants.inc";
 
     if($_GET['dailysub']) {

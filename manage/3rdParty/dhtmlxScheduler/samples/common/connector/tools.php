@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /*
 	@author dhtmlx.com
 	@license GPL, see license.txt
@@ -243,7 +243,7 @@ class LogMaster{
 			echo LogMaster::get_session_log();
 			echo "\n</xmp></pre>";
 		}
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	
 	/*! enable logging

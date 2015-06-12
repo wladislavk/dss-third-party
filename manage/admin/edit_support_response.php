@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 session_start();
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -10,7 +10,7 @@ if($_POST["ressub"] == 1)
 			$ed_sql = "update dental_support_responses set 
 				body = '".mysqli_real_escape_string($con, $_POST["body"])."'
 			where id='".$_POST["id"]."'";
-			mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+			mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 
 			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
@@ -20,7 +20,7 @@ if($_POST["ressub"] == 1)
 				parent.window.location='view_support_ticket.php?ed=<?=$_GET['ed'];?>&msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 }
 
 ?>

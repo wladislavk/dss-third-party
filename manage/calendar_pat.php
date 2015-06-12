@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include "includes/top.htm";
 	include_once('includes/constants.inc');
 	include_once('includes/formatters.php');

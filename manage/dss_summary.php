@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 include 'includes/top.htm';
 
@@ -334,7 +334,7 @@ if($_POST['summarysub'] == 1) {
 			window.location='<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		$ed_sql = " update dental_summary set 
 			patient_name = '".s_for($patient_name)."',
@@ -503,7 +503,7 @@ if($_POST['summarysub'] == 1) {
 			window.location='<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -519,7 +519,7 @@ if($pat_myarray['patientid'] == '') {
 		window.location = 'manage_patient.php';
 	</script>
 <?php
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $q1_sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";

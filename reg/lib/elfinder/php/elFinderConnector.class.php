@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 // mb_internal_encoding("UTF-8");
 
@@ -121,12 +121,12 @@ class elFinderConnector {
 			if (!empty($data['volume'])) {
 				$data['volume']->close($data['pointer'], $data['info']['hash']);
 			}
-			exit();
+			trigger_error("Exit called", E_USER_ERROR);
 		} else {
 			if (!empty($data['raw']) && !empty($data['error'])) {
-				exit($data['error']);
+                trigger_error($data['error'], E_USER_ERROR);
 			} else {
-				exit(json_encode($data));
+                trigger_error(json_encode($data), E_USER_ERROR);
 			}
 		}
 		

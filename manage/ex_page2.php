@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
     include "includes/top.htm";
     include_once('includes/patient_info.php');
     if ($patient_info) {
@@ -49,7 +49,7 @@
             		</script>
 <?php
                 }
-                die();
+                trigger_error("Die called", E_USER_ERROR);
 	        } else {
         		$ed_sql = " update dental_ex_page2 set 
         		mallampati = '".s_for($mallampati)."',
@@ -74,7 +74,7 @@
             		</script>
 <?php
                 }
-                die();
+                trigger_error("Die called", E_USER_ERROR);
 	        }
         }
 
@@ -88,7 +88,7 @@
         		window.location = 'manage_patient.php';
         	</script>
 <?php
-        	die();
+        	trigger_error("Die called", E_USER_ERROR);
         }
 
         $sql = "select * from dental_ex_page2 where patientid='".$_GET['pid']."'";

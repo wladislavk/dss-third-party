@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
@@ -19,7 +19,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
 	    <?php } ?>
         </script>
         <?
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
     else
     {
@@ -38,7 +38,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
             <?php } ?>
         </script>
         <?
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 }
 

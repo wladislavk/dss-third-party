@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once dirname(__FILE__) . '/includes/sescheck.php';
 
 $basepath = dirname(__FILE__) . '/../../../shared/q_file';
@@ -42,4 +42,4 @@ switch ($filetype) {
             header('HTTP/1.0 404 Not Found');
         }
         break;
-}
+}?>

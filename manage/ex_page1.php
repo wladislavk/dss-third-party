@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
     include "includes/top.htm";
     require_once('includes/patient_info.php');
     if ($patient_info) {
@@ -65,7 +65,7 @@
         		</script>
 <?php
 		    }
-		  die();
+		  trigger_error("Die called", E_USER_ERROR);
 	    } else {
     		$ed_sql = " update dental_ex_page1 set 
     		blood_pressure = '".s_for($blood_pressure)."',
@@ -99,7 +99,7 @@
         		</script>
 <?php
             }
-		    die();
+		    trigger_error("Die called", E_USER_ERROR);
 	    }
     }
 
@@ -113,7 +113,7 @@
     		window.location = 'manage_patient.php';
     	</script>
 <?php
-    	die();
+    	trigger_error("Die called", E_USER_ERROR);
     }
 
     $bmi_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";

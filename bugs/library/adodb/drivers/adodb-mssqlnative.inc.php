@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /* 
 V5.10 10 Nov 2009   (c) 2000-2009 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
@@ -19,10 +19,10 @@ Set tabs to 4 for best viewing.
 */
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 if (!function_exists('sqlsrv_configure')) {
-	die("mssqlnative extension not installed");
+	trigger_error("mssqlnative extension not installed", E_USER_ERROR);
 }
 
 if (!function_exists('sqlsrv_set_error_handling')) {

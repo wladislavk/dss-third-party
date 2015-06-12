@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once("../twilio/twilio.config.php");
 require_once '../../manage/admin/includes/main_include.php';
 
@@ -12,7 +12,7 @@ require_once '../../manage/admin/includes/main_include.php';
   $r = mysqli_fetch_assoc($q);
   if($r['text_num'] >= 5 && strtotime($r['text_date'])>(time()-3600)){
     echo '{"error":"limit"}';
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   }
   if($r['access_code']=='' || strtotime($r['access_code_date']) < time()-86400){
                 $recover_hash = rand(100000, 999999);//substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);
@@ -25,7 +25,7 @@ require_once '../../manage/admin/includes/main_include.php';
         // is the name next to it
         if($r['cell_phone']!='') {
     // instantiate a new Twilio Rest Client
-    $client = new Services_Twilio($AccountSid, $AuthToken);
+    $client = new \Services_Twilio($AccountSid, $AuthToken);
           // Send a new outgoing SMS 
           if($send_texts){
             $sms = $client->account->sms_messages->create(

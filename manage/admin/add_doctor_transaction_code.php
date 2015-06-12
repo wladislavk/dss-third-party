@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 //session_start();
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -23,7 +23,7 @@ if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesu
 			if(mysqli_num_rows($query_check) == 0)
 			{
 				$ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysqli_query($con,$ins_sql) or die($ins_sql.mysqli_error($con));
+				mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			}
 			
 		}
@@ -36,7 +36,7 @@ if(!empty($_POST["mult_transaction_codesub"]) && $_POST["mult_transaction_codesu
 		parent.window.location='manage_transaction_code.php?msg=<?php echo $msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
@@ -73,7 +73,7 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
                                 days_units = '".s_for($_POST['days_units'])."',
 				amount_adjust = '".s_for($_POST['amount_adjust'])."',
 				sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."' where transaction_codeid='".$_POST["ed"]."'";
-			mysqli_query($con,$ed_sql) or die($ed_sql." | ".mysqli_error($con));
+			mysqli_query($con,$ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
 			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
@@ -83,7 +83,7 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
 				parent.window.location='manage_doctor_transaction_code.php?docid=<?php echo  $_GET['docid']; ?>&msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -93,7 +93,7 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
                                 days_units = '".s_for($_POST['days_units'])."',
                                 amount_adjust = '".s_for($_POST['amount_adjust'])."',
 				sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', docid=".$_GET['docid'];
-			mysqli_query($con,$ins_sql) or die($ins_sql.mysqli_error($con));
+			mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -102,7 +102,7 @@ if(!empty($_POST["transaction_codesub"]) && $_POST["transaction_codesub"] == 1)
 				parent.window.location='manage_doctor_transaction_code.php?docid=<?php echo  $_GET['docid']; ?>&msg=<?php echo $msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

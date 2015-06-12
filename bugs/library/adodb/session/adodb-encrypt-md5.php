@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 /*
 V5.10 10 Nov 2009   (c) 2000-2009 John Lim (jlim#natsoft.com). All rights reserved.
@@ -11,7 +11,7 @@ V5.10 10 Nov 2009   (c) 2000-2009 John Lim (jlim#natsoft.com). All rights reserv
 */
 
 // security - hide paths
-if (!defined('ADODB_SESSION')) die();
+if (!defined('ADODB_SESSION')) trigger_error("Die called", E_USER_ERROR);
 
 include_once ADODB_SESSION . '/crypt.inc.php';
 

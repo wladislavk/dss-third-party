@@ -1,8 +1,8 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 include('admin/includes/main_include.php');
 
-if ($_REQUEST['key'] != $cron_key) die();
+if ($_REQUEST['key'] != $cron_key) trigger_error("Die called", E_USER_ERROR);
 
 // Trigger Letter 12
 $lateconsult_query = "SELECT dental_flow_pg2_info.patientid, dental_patients.docid, dental_patients.salutation, dental_patients.firstname, dental_patients.lastname FROM dental_flow_pg2_info JOIN dental_patients ON dental_flow_pg2_info.patientid=dental_patients.patientid WHERE dental_flow_pg2_info.date_scheduled <= DATE_SUB(NOW(), INTERVAL 30 day) AND dental_flow_pg2_info.date_completed = '0000-00-00' AND dental_flow_pg2_info.segmentid = '2' GROUP BY dental_flow_pg2_info.patientid;";
@@ -117,7 +117,7 @@ foreach ($second_case_patients as $patient) {
       $letter = create_letter($letterid, $patient['patientid'], '', $topatient);
       if (!is_numeric($letter)) {
         print $letter;
-        die();
+        trigger_error("Die called", E_USER_ERROR);
       }
       $sentto[] = $patient['patientid'];
     }

@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/general_functions.php');
@@ -35,7 +35,7 @@ if(!empty($_POST["sleeplabsub"]) && $_POST["sleeplabsub"] == 1){
 			parent.window.location='manage_sleeplab.php?msg=<?php echo $msg;?>';
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}else{
 		$ins_sql = "insert into dental_sleeplab 
             		set 
@@ -72,7 +72,7 @@ if(!empty($_POST["sleeplabsub"]) && $_POST["sleeplabsub"] == 1){
 			parent.window.location='manage_sleeplab.php?msg=<?php echo $msg;?>';
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

@@ -1,11 +1,11 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 
 
 $sql = "select * from dental_doc_dvd where doc_dvdid='".s_for($_GET['id'])."'";
-$my = mysqli_query($con, $sql) or die(mysqli_error($con));
+$my = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $myarray = mysqli_fetch_array($my);
 $num_users=mysqli_num_rows($my);
 
@@ -16,7 +16,7 @@ if(st($myarray['title']) == '')
 		parent.disablePopup1();
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 ?>
 

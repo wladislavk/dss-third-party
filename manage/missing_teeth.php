@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "admin/includes/main_include.php";
 
 $mt_arr = explode(',',$_GET['mt']);

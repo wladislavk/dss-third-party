@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -19,7 +19,7 @@ $sql = "SELECT c.contactid, c.company "
         .               " AND docid = '" . mysqli_real_escape_string($con, $_GET['fid']) . "' "
         .               " AND c.status=1 "
 	.		" AND merge_id IS NULL ORDER BY c.company ASC";
-$result = mysqli_query($con, $sql) or die(mysqli_error($con));
+$result = mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 
 $patients = array();
 $i = 0;

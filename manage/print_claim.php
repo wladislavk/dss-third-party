@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
     include_once('includes/constants.inc');
     include_once('admin/includes/main_include.php');
 
@@ -19,7 +19,7 @@
     include_once '3rdParty/tcpdf/tcpdf.php';
     include_once '3rdParty/fpdi/fpdi.php';
 
-    class PDF extends FPDI {
+    class PDF extends \FPDI {
         /**
          * "Remembers" the template id of the imported page
          */

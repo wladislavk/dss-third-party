@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
   if($_GET['backoffice'] == '1') {
     include 'admin/includes/top.htm';
 ?>
@@ -16,7 +16,7 @@
 ?>
     <h2>Unable to find letter.</h2>
   <?php
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   }
 ?>
 
@@ -47,7 +47,7 @@
     <h2>You are not permitted to view this letter.</h2>
 
 <?php
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   }
 
   $masterid = $_GET['lid'];
@@ -1970,7 +1970,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
           <?php
             }
 
-	          die();
+	          trigger_error("Die called", E_USER_ERROR);
             continue;
           }
           ?>

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
  * File containing the ezcBase class.
  *
@@ -427,7 +427,7 @@ class ezcBase
                 else
                 {
                     // Can not be tested as it would abort the PHP script.
-                    die( "\nThe {$component} component depends on the default PHP extension '{$value}', which is not loaded.\n" );
+                    trigger_error( "\nThe {$component} component depends on the default PHP extension '{$value}', which is not loaded.\n" , E_USER_ERROR);
                 }
                 break;
 
@@ -440,7 +440,7 @@ class ezcBase
                 else
                 {
                     // Can not be tested as it would abort the PHP script.
-                    die( "\nThe {$component} component depends on the PHP version '{$value}', but the current version is '{$phpVersion}'.\n" );
+                    trigger_error( "\nThe {$component} component depends on the PHP version '{$value}', but the current version is '{$phpVersion}'.\n" , E_USER_ERROR);
                 }
                 break;
         }

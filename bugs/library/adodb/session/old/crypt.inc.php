@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 //	 Session Encryption by Ari Kuorikoski <ari.kuorikoski@finebyte.com>
 class MD5Crypt{
 		function keyED($txt,$encrypt_key)

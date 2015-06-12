@@ -1,4 +1,4 @@
-<?
+<?php namespace Ds3\Libraries\Legacy; ?><?
 require_once('includes/main_include.php');
 include_once('includes/password.php');
 

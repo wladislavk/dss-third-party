@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 /*
 $Id: nusoap.php,v 1.123 2010/04/26 20:15:08 snichol Exp $
@@ -3680,7 +3680,7 @@ class nusoap_server extends nusoap_base {
 			$this->appendDebug($this->wsdl->getDebug());
 			$this->wsdl->clearDebug();
 			if($err = $this->wsdl->getError()){
-				die('WSDL ERROR: '.$err);
+				trigger_error('WSDL ERROR: '.$err, E_USER_ERROR);
 			}
 		}
 	}
@@ -4419,16 +4419,16 @@ class nusoap_server extends nusoap_base {
 		global $HTTP_SERVER_VARS;
 
 		if($this->externalWSDLURL){
-			die('You cannot bind to an external WSDL file, and register methods outside of it! Please choose either WSDL or no WSDL.');
+			trigger_error('You cannot bind to an external WSDL file, and register methods outside of it! Please choose either WSDL or no WSDL.', E_USER_ERROR);
 		}
 		if (! $name) {
-			die('You must specify a name when you register an operation');
+			trigger_error('You must specify a name when you register an operation', E_USER_ERROR);
 		}
 		if (!is_array($in)) {
-			die('You must provide an array for operation inputs');
+			trigger_error('You must provide an array for operation inputs', E_USER_ERROR);
 		}
 		if (!is_array($out)) {
-			die('You must provide an array for operation outputs');
+			trigger_error('You must provide an array for operation outputs', E_USER_ERROR);
 		}
 		if(false == $namespace) {
 		}
@@ -5525,7 +5525,7 @@ class wsdl extends nusoap_base {
 						        } 
 						    } 
 						    if (!isset($typePrefix)) {
-						        die("$partType has no namespace!");
+						        trigger_error("$partType has no namespace!", E_USER_ERROR);
 						    } 
 						}
 						$ns = $this->getNamespaceFromPrefix($typePrefix);

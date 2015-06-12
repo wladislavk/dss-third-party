@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "admin/includes/main_include.php";
 ?>
 <!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
@@ -50,7 +50,7 @@ if($_POST['thortonsub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
+		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>
@@ -59,7 +59,7 @@ if($_POST['thortonsub'] == 1)
 			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -72,7 +72,7 @@ if($_POST['thortonsub'] == 1)
 		tot_score = '".s_for($tot_score)."'
 		where thortonid = '".s_for($_POST['ed'])."'";
 		
-		mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Edited Successfully";
 		?>
@@ -81,7 +81,7 @@ if($_POST['thortonsub'] == 1)
 			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 

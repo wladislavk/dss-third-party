@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include_once('admin/includes/main_include.php');
 	include_once('includes/constants.inc');
 	include_once('includes/general_functions.php');
@@ -28,7 +28,7 @@
 				window.location = "login.php";
 			</script>
 		<?php 
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 
 		// Create Filename
@@ -181,7 +181,7 @@
 				window.location.href = 'manage_sleep_studies.php?pid=<?php echo($_POST["patientid"]); ?>';
 			</script>
 		<?php
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		?>
 		

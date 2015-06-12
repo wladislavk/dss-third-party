@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
  * Base class for elFinder volume.
  * Provide 2 layers:

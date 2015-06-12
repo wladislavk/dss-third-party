@@ -1,11 +1,11 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
   include 'includes/top.htm';
 
   if(!$use_letters){ 
 ?>
     <h3 style="width:100%; text-align:center;">Letters feature has been disabled.</h3>
 <?php
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   }
 ?>
 

@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include "includes/top.htm";
 	include_once "includes/constants.inc";
 	include_once('includes/patient_info.php');
@@ -13,7 +13,7 @@
 			window.location = "manage_insurance.php?msg=<?php echo $msg?>&pid=<?php echo $_REQUEST['pid'];?>";
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} elseif(isset($_REQUEST['no_but'])) {
         $up_sql = "update dental_ledger set primary_claim_id='0', status='0' where primary_claim_id='".$_REQUEST["delid"]."'";
         
@@ -23,7 +23,7 @@
             window.location = "manage_insurance.php?msg=<?php echo $msg?>&pid=<?php echo $_REQUEST['pid'];?>";
         </script>
 <?php
-	    die();
+	    trigger_error("Die called", E_USER_ERROR);
 	}
 ?>
 	<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />

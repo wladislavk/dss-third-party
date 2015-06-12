@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
 
 if(!empty($_REQUEST["delid"]))
@@ -13,7 +13,7 @@ if(!empty($_REQUEST["delid"]))
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&docid=<?=$_GET['docid'];?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $doc_sql = "select * from dental_users where userid = '".s_for($_GET['docid'])."'";
@@ -27,7 +27,7 @@ if(st($doc_myarray['username']) == '')
 		// window.location = "manage_users.php?msg=Invalid Information.";
 	</script>
 	<?
-	// die();
+	// trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;

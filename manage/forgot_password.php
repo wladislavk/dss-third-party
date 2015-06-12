@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once('admin/includes/main_include.php');
 include_once('admin/includes/password.php');
 include_once('includes/constants.inc');
@@ -48,7 +48,7 @@ http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray
 			window.location.replace('login.php?msg=Email sent');
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	} else {
 		$msg='Email address not found';
 		?>
@@ -56,7 +56,7 @@ http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray
 			window.location.replace('forgot_password.php?msg=<?php echo $msg;?>');
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 ?>

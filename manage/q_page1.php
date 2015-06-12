@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include "includes/top.htm";
 	require_once('includes/patient_info.php');
 	if ($patient_info) {
@@ -26,7 +26,7 @@
                 window.location = 'q_page1.php?pid=<?php echo $_GET['pid']?>&addtopat=1';
             </script>
 <?php
-            die();
+            trigger_error("Die called", E_USER_ERROR);
 		}
 
 ?>
@@ -130,7 +130,7 @@
 				</script>
 <?php
 			}
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			$ed_sql = " update dental_q_page1 set 
 	                exam_date = '".s_for($exam_date)."',
@@ -171,7 +171,7 @@
 				</script>
 <?php
 			}
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -184,7 +184,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
     $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";

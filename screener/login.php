@@ -1,4 +1,4 @@
-<?
+<?php namespace Ds3\Libraries\Legacy; ?><?
 session_start();
 require_once('../manage/admin/includes/main_include.php');
 include_once('../manage/admin/includes/password.php');
@@ -47,7 +47,7 @@ if($_POST["loginsub"] == 1)
 			window.location.replace('index.php');
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -57,7 +57,7 @@ if($_POST["loginsub"] == 1)
 			window.location.replace('login.php?msg=<?=$msg;?>');
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 ?>

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /* 
   V5.06 16 Oct 2008   (c) 2006 John Lim (jlim#natsoft.com). All rights reserved.
 
@@ -16,7 +16,7 @@
 */
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
   define("_ADODB_DB2_LAYER", 2 );
 	 

@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 session_start();
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -32,7 +32,7 @@ if($_POST["areasub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update spine_area set area = '".s_for($_POST["area"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where areaid='".$_POST["ed"]."'";
-			mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+			mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
 			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
@@ -42,12 +42,12 @@ if($_POST["areasub"] == 1)
 				parent.window.location='manage_area.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
 			$ins_sql = "insert into spine_area set area = '".s_for($_POST["area"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
+			mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -56,7 +56,7 @@ if($_POST["areasub"] == 1)
 				parent.window.location='manage_area.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

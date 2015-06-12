@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include_once('admin/includes/main_include.php');
 	include("includes/sescheck.php");
 
@@ -12,7 +12,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$sql = "select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' ";

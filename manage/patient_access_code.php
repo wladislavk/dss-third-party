@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
     include_once('admin/includes/main_include.php');
     include("includes/sescheck.php");
     include_once('admin/includes/password.php');
@@ -112,7 +112,7 @@
             window.location = 'letterpdfs/<?php echo  $filename; ?>';
         </script>
     <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
     ?>
 

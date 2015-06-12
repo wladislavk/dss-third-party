@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 /**
   V5.10 10 Nov 2009   (c) 2000-2009 John Lim (jlim#natsoft.com). All rights reserved.
@@ -39,7 +39,7 @@ In ADOdb, named quotes for MS SQL Server use ". From the MSSQL Docs:
 */
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 class ADODB2_mssqlnative extends ADODB_DataDict {
 	var $databaseType = 'mssqlnative';

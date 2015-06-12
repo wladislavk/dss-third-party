@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once 'admin/includes/main_include.php';
 require_once 'includes/constants.inc';
 $request_body = file_get_contents('php://input');

@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
     include_once('admin/includes/main_include.php');
     include("includes/sescheck.php");
     include_once "admin/includes/general.htm";
@@ -39,7 +39,7 @@
         			</script>
                 <?php } ?>
     		    <?php
-    		          die();
+    		          trigger_error("Die called", E_USER_ERROR);
             } else {
                 $up_sql = "update dental_claim_notes set 
                            note = '".mysqli_real_escape_string($con,$_POST['note'])."'
@@ -58,7 +58,7 @@
                     </script>
                 <?php } ?>
             <?php
-                die();
+                trigger_error("Die called", E_USER_ERROR);
             }
         }
         ?>

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 // +----------------------------------------------------------------------+
 // | Copyright (c) 2001-2008 Liip AG                                      |
@@ -168,7 +168,7 @@ class ConnectorSecurity{
             "remote" => $_SERVER["REMOTE_ADDR"]
         ));
         LogMaster::log("Request data", $_POST);
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
     static function checkCSRF($edit){
         if (ConnectorSecurity::$security_key){

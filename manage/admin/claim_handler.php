@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 session_start();
 require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
@@ -153,7 +153,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
         </script>
         <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 
     // Put POST values into variables
@@ -695,7 +695,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
                 }
                 $ed_sql .= " where insuranceid = '".s_for($_GET['insid'])."'";
 
-                mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+                mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
             }
                 // update the ledger trxns passed in with the form
                 $trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;

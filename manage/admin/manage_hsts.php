@@ -1,4 +1,4 @@
-<?php  
+<?php namespace Ds3\Libraries\Legacy; ?><?php  
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
@@ -61,7 +61,7 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?php 
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
@@ -163,7 +163,7 @@ if(isset($_GET['status']) && isset($_GET['from']) && $_GET['from']=='view' && $t
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con,$sql) or die(mysqli_error($con));
+$my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />

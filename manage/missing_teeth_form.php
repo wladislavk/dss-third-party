@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once "admin/includes/main_include.php";
 
 if(!empty($_POST['missingsub']) && $_POST['missingsub'] == 1)
@@ -59,7 +59,7 @@ if(!empty($_POST['missingsub']) && $_POST['missingsub'] == 1)
 			window.location='<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid']?>&mt=<?php echo $_GET['mt']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}else{
 		$ed_sql = " update dental_missing set 
 						rec = '".s_for($rec)."',
@@ -84,7 +84,7 @@ if(!empty($_POST['missingsub']) && $_POST['missingsub'] == 1)
 			window.location='<?php echo $_SERVER['PHP_SELF']?>?pid=<?php echo $_GET['pid']?>&mt=<?php echo $_GET['mt']?>&msg=<?php echo $msg;?>';
 		</script>
 		<?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	
 }

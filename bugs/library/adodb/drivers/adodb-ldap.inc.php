@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /*
   V5.10 10 Nov 2009   (c) 2000-2009 John Lim (jlim#natsoft.com). All rights reserved.
    Released under both BSD license and Lesser GPL library license. 
@@ -15,7 +15,7 @@
 */ 
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (!defined('ADODB_DIR')) trigger_error("Die called", E_USER_ERROR);
 
 if (!defined('LDAP_ASSOC')) {
 	 define('LDAP_ASSOC',ADODB_FETCH_ASSOC);
@@ -149,7 +149,7 @@ class ADODB_ldap extends ADOConnection {
 	function _inject_bind_options( $options ) {
 		foreach( $options as $option ) {
 			ldap_set_option( $this->_connectionID, $option["OPTION_NAME"], $option["OPTION_VALUE"] )
-				or die( "Unable to set server option: " . $option["OPTION_NAME"] );
+				or trigger_error( "Unable to set server option: " . $option["OPTION_NAME"] , E_USER_ERROR);
 		}
 	}
 	

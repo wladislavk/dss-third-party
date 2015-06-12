@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once '../admin/includes/main_include.php';
 include_once '../admin/includes/invoice_functions.php';
 require_once('../includes/constants.inc');

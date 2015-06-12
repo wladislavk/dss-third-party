@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 include 'manage/admin/includes/config.php';
 
@@ -8,7 +8,7 @@ $q = mysql_query($s);
 while($r = mysql_fetch_assoc($q)){
   	$userid = $r['userid'];
 	$code_sql = "insert into dental_transaction_code (transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, docid, amount_adjust) SELECT transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, ".$userid.", amount_adjust FROM dental_transaction_code WHERE default_code=1";
-        //mysql_query($code_sql) or die($code_sql.mysql_error());
+        //mysql_query($code_sql) or trigger_error($code_sql.mysql_error(), E_USER_ERROR);
 }
 
 
@@ -36,7 +36,7 @@ $q = mysql_query($s);
 while($r = mysql_fetch_assoc($q)){
         $userid = $r['userid'];
                         $custom_sql = "insert into dental_custom (title, description, docid) SELECT title, description, ".$userid." FROM dental_custom WHERE default_text=1";
-                        //mysql_query($custom_sql) or die($custom_sql.mysql_error());
+                        //mysql_query($custom_sql) or trigger_error($custom_sql.mysql_error(), E_USER_ERROR);
 
 }
 ?>

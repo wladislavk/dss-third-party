@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
   include 'includes/main_include.php';
   include '../includes/constants.inc';
         $check_sql = "SELECT userid, username, email FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_GET['id'])."'";
@@ -31,7 +31,7 @@ $message .= DSS_EMAIL_FOOTER;
                 ?><br />
 			<h3>Password reset and user has been emailed.</h3>
                 <?
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         }
 
 ?>

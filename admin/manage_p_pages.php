@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
 
 if($_REQUEST["delid"] != "")
@@ -13,7 +13,7 @@ if($_REQUEST["delid"] != "")
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;
@@ -30,7 +30,7 @@ $total_rec = mysqli_num_rows($my);
 $no_p_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $num_p_pages=mysqli_num_rows($my);
 ?>
 

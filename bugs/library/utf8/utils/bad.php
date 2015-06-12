@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
 * @version $Id: bad.php,v 1.2 2006/02/26 13:20:44 harryf Exp $
 * Tools for locating / replacing bad bytes in UTF-8 strings

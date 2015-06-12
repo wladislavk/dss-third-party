@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include_once('../admin/includes/main_include.php');
 	include("sescheck.php");
 
@@ -17,6 +17,6 @@
 		header("Content-type: $type");
 		header("Content-Disposition: attachment; filename=$name");
 		echo $content;
-		exit;
+		trigger_error("Exit called", E_USER_ERROR);
 	}
 ?>

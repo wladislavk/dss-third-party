@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include ('../../common/connector/scheduler_connector.php');
 	include ('../../common/config.php');
 	

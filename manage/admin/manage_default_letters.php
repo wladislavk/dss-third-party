@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 
 if(isset($_POST['update_btn'])){
@@ -19,7 +19,7 @@ $sql = "select * from dental_letter_templates WHERE companyid='".mysqli_real_esc
 ?>
 You do not have permission to edit default letters.
 <?php 
-die();
+trigger_error("Die called", E_USER_ERROR);
 } 
 
 

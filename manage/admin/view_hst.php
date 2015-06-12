@@ -1,4 +1,4 @@
-<?
+<?php namespace Ds3\Libraries\Legacy; ?><?
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
@@ -26,7 +26,7 @@ if (isset($_REQUEST['ed'])) {
          . "  JOIN dental_patients p ON p.patientid = hst.patient_id "
          . "WHERE "
          . "  hst.id = " . $_POST['hst_id'];
-                $my = mysqli_query($con,$sql) or die(mysqli_error($con));
+                $my = mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
                 $hst = mysqli_fetch_array($my);
 
 
@@ -145,7 +145,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                                         adddate = now(),
                                         ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                                        mysqli_query($con,$ins_sql) or die($ins_sql." | ".mysqli_error($con));
+                                        mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 	}
 
    }
@@ -183,7 +183,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 	}
     }
     $sql .= "WHERE id = '" . $_POST["hst_id"] . "'";
-    mysqli_query($con,$sql) or die($sql." | ".mysqli_error($con));
+    mysqli_query($con,$sql) or trigger_error($sql." | ".mysqli_error($con), E_USER_ERROR);
     
     //echo $ed_sql.mysqli_error($con);
     $msg = "HST Updated Successfully";

@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/header.php";
 include 'includes/questionnaire_sections.php';
 ?>
@@ -40,7 +40,7 @@ if($_POST['q_sleepsub'] == 1)
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
+                mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
                 $ins_sql = " insert into dental_thorton set 
                 patientid = '".s_for($_SESSION['pid'])."',
                 snore_1 = '".s_for($snore_1)."',
@@ -52,7 +52,7 @@ if($_POST['q_sleepsub'] == 1)
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
+                mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
         $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
         $exist_q = mysqli_query($con, $exist_sql);
         if(mysqli_num_rows($exist_q) == 0)
@@ -61,13 +61,13 @@ if($_POST['q_sleepsub'] == 1)
                         ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
                         tss='".s_for($tot_score)."',
                         patientid='".$_SESSION['pid']."'";
-                mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+                mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
         }else{
                 $ed_sql = "update dental_q_page1 set
                         ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
                         tss='".s_for($tot_score)."'
                         WHERE patientid='".$_SESSION['pid']."'";
-                mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+                mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 	}
                 mysqli_query($con, "UPDATE dental_patients SET sleep_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
                 mysqli_query($con, "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
@@ -78,7 +78,7 @@ if($_POST['q_sleepsub'] == 1)
                         window.location='<?=$_POST['goto_p']; ?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
                 </script>
                 <?
-                die();
+                trigger_error("Die called", E_USER_ERROR);
         }
         else
         {
@@ -88,7 +88,7 @@ if($_POST['q_sleepsub'] == 1)
 		analysis = '".s_for($analysis)."'
 		where q_sleepid = '".s_for($_POST['ed'])."'";
 		
-		mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		$ed_sql = " update dental_thorton set 
                 snore_1 = '".s_for($snore_1)."',
                 snore_2 = '".s_for($snore_2)."',
@@ -98,7 +98,7 @@ if($_POST['q_sleepsub'] == 1)
                 tot_score = '".s_for($tot_score)."'
                 where thortonid = '".s_for($_POST['ted'])."'";
 
-                mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+                mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
         $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
         $exist_q = mysqli_query($con, $exist_sql);
         if(mysqli_num_rows($exist_q) == 0)
@@ -107,14 +107,14 @@ if($_POST['q_sleepsub'] == 1)
                         ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
                         tss='".s_for($tot_score)."',
                         patientid='".$_SESSION['pid']."'";
-                mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+                mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
         }else{
 
 		$ed_sql = "update dental_q_page1 set
 			ess='".mysqli_real_escape_string($con, $_POST['epTot'])."',
 			tss='".s_for($tot_score)."'
 			WHERE patientid='".$_SESSION['pid']."'";
-		mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		//echo $ed_sql;
 	}
                 mysqli_query($con, "UPDATE dental_patients SET sleep_status=1 WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'");
@@ -126,7 +126,7 @@ if($_POST['q_sleepsub'] == 1)
 			window.location='<?= $_POST['goto_p']; ?>?msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -162,7 +162,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select * from dental_q_sleep where patientid='".$_SESSION['pid']."'";

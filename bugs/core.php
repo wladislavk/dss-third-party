@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # MantisBT - a php based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@
  */
 if ( file_exists( 'mantis_offline.php' ) && !isset( $_GET['mbadmin'] ) ) {
 	include( 'mantis_offline.php' );
-	exit;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 $g_request_time = microtime(true);
@@ -138,7 +138,7 @@ spl_autoload_register( '__autoload' );
 if ( ($t_output = ob_get_contents()) != '') {
 	echo 'Possible Whitespace/Error in Configuration File - Aborting. Output so far follows:<br />';
 	echo var_dump($t_output);
-	die;
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 require_once( 'utility_api.php' );
@@ -161,7 +161,7 @@ if ( false === $t_config_inc_found ) {
 			header( "Location: admin/install.php" );
 		}
 
-		exit; # additional output can cause problems so let's just stop output here
+		trigger_error("Exit called", E_USER_ERROR); # additional output can cause problems so let's just stop output here
 	}
 }
 

@@ -1,6 +1,6 @@
-<?php
-    include_once('admin/includes/main_include.php');
-    include("includes/sescheck.php");
+<?php namespace Ds3\Libraries\Legacy; ?><?php
+	include_once('admin/includes/main_include.php');
+	include("includes/sescheck.php");
 
     $q = (!empty($_GET["q"]) ? $_GET["q"] : '');
     $pco = (!empty($_GET["pco"]) ? $_GET["pco"] : '');

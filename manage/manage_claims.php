@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 include_once "includes/constants.inc";
 
@@ -26,7 +26,7 @@ if(isset($_REQUEST["delid"]))
             window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
     </script>
     <?php
-    die();
+    trigger_error("Die called", E_USER_ERROR);
 }
 
 $pend_sql = "select i.*, p.firstname, p.lastname,

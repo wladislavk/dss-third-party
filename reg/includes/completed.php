@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	if (!empty($_SESSION['pid'])) {
 		$pid = $_SESSION['pid'];
 	} else {

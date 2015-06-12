@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include "admin/includes/main_include.php";
 
 	$sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and status='".$_GET['st']."' order by lastname, firstname";

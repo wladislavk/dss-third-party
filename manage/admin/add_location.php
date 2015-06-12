@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once 'includes/main_include.php';
 include_once 'includes/sescheck.php';
 include_once '../includes/general_functions.php';
@@ -32,7 +32,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
 			parent.window.location='manage_locations.php?docid=<?php echo  $_POST['docid']; ?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -56,7 +56,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
 			parent.window.location='manage_locations.php?docid=<?php echo  $_POST['docid']; ?>&msg=<?php echo $msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 ?>

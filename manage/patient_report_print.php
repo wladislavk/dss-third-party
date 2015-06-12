@@ -1,4 +1,4 @@
-<?php  
+<?php namespace Ds3\Libraries\Legacy; ?><?php  
 include "admin/includes/main_include.php";
 
 if(isset($_POST['dailysub']) && $_POST['dailysub'] != 1 && isset($_POST['monthlysub']) && $_POST['monthlysub'] != 1)
@@ -7,7 +7,7 @@ if(isset($_POST['dailysub']) && $_POST['dailysub'] != 1 && isset($_POST['monthly
 		window.location = 'patient_report.php';
 	</script>
 	<?php 
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' ";

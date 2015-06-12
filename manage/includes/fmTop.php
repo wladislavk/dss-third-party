@@ -1,4 +1,4 @@
-<?
+<?php namespace Ds3\Libraries\Legacy; ?><?
 session_start();
 require_once('admin/includes/main_include.php');
 
@@ -10,7 +10,7 @@ if($_SESSION['userid'] == '')
 		window.location = "login.php";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";

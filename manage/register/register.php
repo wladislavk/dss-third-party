@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
     include 'includes/header.php';
     include '../../reg/includes/completed.php';
 ?>
@@ -28,7 +28,7 @@
             window.location = '../login.php';
         </script>
 <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
     }
 
     $p = array();

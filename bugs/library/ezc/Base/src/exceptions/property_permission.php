@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
  * File containing the ezcPropertyReadOnlyException class
  *

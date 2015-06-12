@@ -1,4 +1,4 @@
-<?php include '../../manage/admin/includes/main_include.php'; ?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include '../../manage/admin/includes/main_include.php'; ?>
 <?php include '../../manage/includes/constants.inc'; ?>
 <?php require_once '../../manage/includes/general_functions.php'; ?>
 <?php require_once '../../manage/includes/notifications.php'; ?>

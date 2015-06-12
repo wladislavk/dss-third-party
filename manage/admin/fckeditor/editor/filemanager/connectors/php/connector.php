@@ -82,6 +82,6 @@ function DoResponse()
 
 	CreateXmlFooter() ;
 
-	exit ;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 ?>

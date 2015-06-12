@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 
 class Db
 {
@@ -12,7 +12,7 @@ class Db
 	{
 		if($query_string)
 		{
-			$result = mysqli_query($this->con, $query_string) or die($query_string . ' ' . mysqli_error($this->con));
+			$result = mysqli_query($this->con, $query_string) or trigger_error($query_string . ' ' . mysqli_error($this->con), E_USER_ERROR);
 			return $result;
 		}
 		return;

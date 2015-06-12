@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 include_once('includes/dental_patient_summary.php');
 include_once('includes/patient_info.php');
@@ -52,7 +52,7 @@ if(!empty($_REQUEST["delid"]))
                 <?php } ?>
   </script>
   <?php
-  die();
+  trigger_error("Die called", E_USER_ERROR);
 }
 
 if(isset($_REQUEST["delstatementid"]) && $_REQUEST["delstatementid"] != ""){
@@ -64,7 +64,7 @@ if(isset($_REQUEST["delstatementid"]) && $_REQUEST["delstatementid"] != ""){
                   window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>&pid=<?php echo $_GET['pid'];?>";
         </script>
         <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_REQUEST["delclaimid"]))
@@ -91,7 +91,7 @@ if(!empty($_REQUEST["delclaimid"]))
                 <?php } ?>
         </script>
         <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
   
 }
 
@@ -116,7 +116,7 @@ if(!empty($_REQUEST["delnoteid"]))
                 <?php } ?>
         </script>
         <?php
-        die();
+        trigger_error("Die called", E_USER_ERROR);
 
 }
 
@@ -133,7 +133,7 @@ if(empty($pat_myarray['patientid']))
     //window.location = 'manage_patient.php';
   </script>
   <?php
-  //die();
+  //trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 2000;

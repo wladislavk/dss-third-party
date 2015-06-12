@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # MantisBT - a php based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -100,7 +100,7 @@ function print_header_redirect( $p_url, $p_die = true, $p_sanitize = false, $p_a
 	}
 
 	if( $p_die ) {
-		die;
+		trigger_error("Die called", E_USER_ERROR);
 
 		# additional output can cause problems so let's just stop output here
 	}

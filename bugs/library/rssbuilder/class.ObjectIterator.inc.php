@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
 * Class for creating an RSS-feed
 * @author Michael Wimmer <flaimo@gmail.com>

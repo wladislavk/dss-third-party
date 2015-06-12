@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # MantisBT - a php based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -113,7 +113,7 @@ function access_denied() {
 			echo '</center>';
 		}
 	}
-	exit;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 /**

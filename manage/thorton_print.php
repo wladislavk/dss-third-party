@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "admin/includes/main_include.php";
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -14,7 +14,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 

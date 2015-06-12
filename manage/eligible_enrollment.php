@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 session_start();
 require_once('includes/constants.inc');
 require_once('admin/includes/main_include.php');
@@ -794,7 +794,7 @@ if(!$success){
 //echo($result);
 
 /*
-die();
+trigger_error("Die called", E_USER_ERROR);
 $prefix = array( 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX');
 
 // Get modifier codes

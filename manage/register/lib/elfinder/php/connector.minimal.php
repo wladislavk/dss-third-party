@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
 error_reporting(0); // Set E_ALL for debuging
 

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 require_once('../includes/constants.inc');
 $PUBLISHABLE_KEY = 'E1q20FOFf0-DcsrnQdltikaQrVI4nwwfhgXZ';
 $API_KEY = DSS_DEFAULT_ELIGIBLE_API_KEY;

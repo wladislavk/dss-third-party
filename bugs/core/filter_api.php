@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 # MantisBT - a php based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -1653,7 +1653,7 @@ function filter_get_bug_rows( &$p_page_number, &$p_per_page, &$p_page_count, &$p
 			}
 		}
 
-		# echo var_dump( $t_clauses ); exit;
+		# echo var_dump( $t_clauses ); trigger_error("Exit called", E_USER_ERROR);
 		if( 1 < count( $t_clauses ) ) {
 			$t_where_tmp = array();
 			foreach( $t_clauses as $t_clause ) {

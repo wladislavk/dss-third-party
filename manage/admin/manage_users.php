@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
 if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
@@ -21,17 +21,17 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 	$key_q = mysqli_query($con,$key_sql);
 	$key_r= mysqli_fetch_assoc($key_q);
 
-	Stripe::setApiKey($key_r['stripe_secret_key']);
+	\Stripe::setApiKey($key_r['stripe_secret_key']);
 
         try{
-	  $cu = Stripe_Customer::retrieve($r['cc_id']);
+	  $cu = \Stripe_Customer::retrieve($r['cc_id']);
 	  $cu->delete();
-        } catch(Stripe_CardError $e) {
+        } catch(\Stripe_CardError $e) {
 	  // Since it's a decline, Stripe_CardError will be caught
 	  $body = $e->getJsonBody();
 	  $err  = $body['error'];
 	  echo $err['message'];
-	} catch (Stripe_InvalidRequestError $e) {
+	} catch (\Stripe_InvalidRequestError $e) {
 	  // Invalid parameters were supplied to Stripe's API
 	  $body = $e->getJsonBody();
 	  $err  = $body['error'];
@@ -45,7 +45,7 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;

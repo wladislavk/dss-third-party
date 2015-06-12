@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
   include_once("../../../reg/twilio/twilio.config.php");
   include_once '../../admin/includes/main_include.php';
 
@@ -12,7 +12,7 @@
   $r = $db->getRow($s);
   if($r['text_num'] >= 5 && strtotime($r['text_date'])>(time()-3600)){
     echo '{"error":"limit"}';
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   }
 
   if($r['access_code']=='' || strtotime($r['access_code_date']) < time()-86400){
@@ -27,7 +27,7 @@
   // is the name next to it
   if($r['phone']!='') {
     // instantiate a new Twilio Rest Client
-    $client = new Services_Twilio($AccountSid, $AuthToken);
+    $client = new \Services_Twilio($AccountSid, $AuthToken);
           // Send a new outgoing SMS 
     if($send_texts){
       $sms = $client->account->sms_messages->create(

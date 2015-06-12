@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include "includes/top.htm";
 
 	if($_GET['rsource'] == DSS_REFERRED_PHYSICIAN) {

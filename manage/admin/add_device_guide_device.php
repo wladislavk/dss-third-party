@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 session_start();
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -12,7 +12,7 @@ if($_POST["devsub"] == 1)
 			$ed_sql = "update dental_device_guide_devices set 
 				name = '".mysqli_real_escape_string($con, $_POST["name"])."'
 			where id='".$_POST["ed"]."'";
-			mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+			mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 
   $set_sql = "SELECT * FROM dental_device_guide_settings";
   $set_q = mysqli_query($con, $set_sql);
@@ -47,7 +47,7 @@ if($_POST["devsub"] == 1)
 				parent.window.location='manage_device_guide_devices.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
@@ -57,7 +57,7 @@ if($_POST["devsub"] == 1)
                                 name = '".mysqli_real_escape_string($con, $_POST["name"])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
+			mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			$d_id = mysqli_insert_id($con);
 
   $set_sql = "SELECT * FROM dental_device_guide_settings";
@@ -80,7 +80,7 @@ if($_POST["devsub"] == 1)
 				parent.window.location='manage_device_guide_devices.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 }
 

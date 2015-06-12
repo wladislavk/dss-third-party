@@ -1,4 +1,4 @@
-<? include "admin/includes/main_include.php";
+<?php namespace Ds3\Libraries\Legacy; ?><? include "admin/includes/main_include.php";
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysqli_query($con, $pat_sql);
@@ -13,7 +13,7 @@ if($pat_myarray['patientid'] == '')
 		parent.disablePopup1();
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 200;
@@ -30,7 +30,7 @@ $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $num_users=mysqli_num_rows($my);
 
 ?>

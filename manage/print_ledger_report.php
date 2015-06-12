@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 //include "includes/top.htm";
 
 session_start();
@@ -37,7 +37,13 @@ $sql .= " order by service_date";
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
-$my = $db->getResults($sql) or die('No Results for print');
+$my = $db->getResults($sql);
+
+if (!$my) {
+    echo 'No Results for print';
+    trigger_error('Die called', E_USER_ERROR);
+}
+
 $num_users = count($my);
 //echo $sql; 
 ?>

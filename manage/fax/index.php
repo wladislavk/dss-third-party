@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include 'class.fax.php';
                 $faxNumber = "18883935968";                                           //<--- IMPORTANT: Enter a valid fax number

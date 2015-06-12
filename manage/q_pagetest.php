@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top2.htm";
 
 if($_POST['q_page1sub'] == 1)
@@ -101,7 +101,7 @@ if($_POST['q_page1sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
+		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Added Successfully";
 		?>
@@ -110,7 +110,7 @@ if($_POST['q_page1sub'] == 1)
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>#form';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -137,7 +137,7 @@ if($_POST['q_page1sub'] == 1)
 		main_reason_other = '".s_for($main_reason_other)."'
 		where q_page1id = '".s_for($_POST['ed'])."'";
 		
-		mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		$msg = "Edited Successfully";
 		?>
@@ -146,7 +146,7 @@ if($_POST['q_page1sub'] == 1)
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>#form';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 
@@ -163,7 +163,7 @@ if($pat_myarray['patientid'] == '')
 		window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 $sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
 $my = mysqli_query($con, $sql);

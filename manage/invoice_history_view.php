@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
     include "includes/top.htm";
 
     $invoice_sql = "SELECT i.*, u.name FROM dental_percase_invoice i 

@@ -1,4 +1,4 @@
-<?php include 'includes/top.htm';?>
+<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';?>
 <br />
 <div class="page-header">
 	Page Heading

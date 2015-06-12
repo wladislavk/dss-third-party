@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 if(!isset($_GET['noheaders'])){
   include "includes/top.htm";
   include_once('includes/constants.inc');
@@ -22,7 +22,6 @@ if(!isset($_GET['noheaders'])){
 </script>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-<script type="text/javascript" src="js/add_patient.js"></script>
 <script type="text/javascript" src="js/masks.js"></script>
 <script type="text/javascript" src="script/logout_timer.js"></script>
 <script type="text/javascript" src="js/jquery.cookie.js"></script>
@@ -31,6 +30,7 @@ if(!isset($_GET['noheaders'])){
 <script type="text/javascript" src="script/wufoo.js"></script>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/add_patient.css" type="text/css" media="screen" />
+<script type="text/javascript" src="js/add_patient.js"></script>
 <script src="script/autocomplete.js" type="text/javascript"></script>
 <script src="script/autocomplete_local.js" type="text/javascript"></script>
 <?php
@@ -66,7 +66,7 @@ function trigger_letter20($pid) {
   $letter = create_letter($letterid, $pid, '', '', '', '', $pt_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 20: " . $letter;
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     return $letter;
   }
@@ -115,7 +115,7 @@ function trigger_letter1and2($pid) {
         $num_rows = $db->getNumberRows($letter_query);
         /*if(empty($num_rows)) {
           print "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error Selecting Letters from Database";
-          die();
+          trigger_error("Die called", E_USER_ERROR);
         }*/
         if ($num_rows == 0 && $contact != "") {
           $c_sql = "select * from dental_contact where contactid='".mysqli_real_escape_string($GLOBALS['con'],$contact)."' and status=1";
@@ -135,12 +135,12 @@ function trigger_letter1and2($pid) {
         $letter1 = create_letter($letter1id, $pid, '', '', $recipients_list);
         if (!is_numeric($letter1)) {
           print $letter1;
-          die();
+          trigger_error("Die called", E_USER_ERROR);
         }
       }
       if (!is_numeric($letter2)) {
         print $letter2;
-        die();
+        trigger_error("Die called", E_USER_ERROR);
       }
     }
   }
@@ -152,7 +152,7 @@ function trigger_letter3($pid) {
   $letter = create_letter($letterid, $pid, '', $topatient);
   if (!is_numeric($letter)) {
     print $letter;
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     return $letter;
   }
@@ -166,7 +166,7 @@ function trigger_letter3($pid) {
 function sendRegEmail($id, $e, $l, $old_email='', $con){
 
   $db = new Db();
-  $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$id)."'";
+  $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $id)."'";
   $r = $db->getRow($s);
   if($r['recover_hash']=='' || $e!=$old_email){
     $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
@@ -531,7 +531,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       preferredcontact = '".s_for($_POST["preferredcontact"])."'
       where 
       patientid='".$_POST["ed"]."'";
-    $db->query($ed_sql) or die($ed_sql." | ".mysqli_error($con));
+    $db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
     $db->query("UPDATE dental_patients set email='".mysqli_real_escape_string($con,$_POST['email'])."' WHERE parent_patientid='".mysqli_real_escape_string($con,$_POST["ed"])."'"); 
 
     //Remove pending vobs if ins info has changed.
@@ -551,7 +551,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
                     viewed = 1
                     WHERE patient_id = '".mysqli_real_escape_string($con,$_REQUEST['ed'])."'
                     AND (status = ".DSS_PREAUTH_PENDING." OR status=".DSS_PREAUTH_PREAUTH_PENDING.")";
-      $vob_update = $db->query($vob_sql) or die(mysqli_error($con));
+      $vob_update = $db->query($vob_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
       if(mysqli_affected_rows($GLOBALS['con']) >= 1){
         $c = create_vob( $_POST['ed'] );
       /*
@@ -723,7 +723,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       parent.window.location='add_patient.php?ed=<?php echo $_GET['pid']; ?>&addtopat=1&pid=<?php echo $_GET['pid']; ?>&msg=<?php echo $msg;?><?php echo $sendPin; ?>';
     </script>
     <?php
-    die();
+    trigger_error("Die called", E_USER_ERROR);
   } else {
     //echo('in');
     $clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
@@ -937,7 +937,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       parent.window.location='duplicate_patients.php?pid=<?php echo $pid; ?>';
       </script>
 <?php
-      die();
+      trigger_error("Die called", E_USER_ERROR);
     }else{
       $msg = "Patient ".$_POST["firstname"]." ".$_POST["lastname"]." added Successfully";
       if(isset($_POST['sendPin'])){
@@ -950,7 +950,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
         parent.window.location='add_patient.php?pid=<?php echo $pid; ?>&ed=<?php echo $pid; ?>&addtopat=1<?php echo $sendPin; ?>';
       </script>
 <?php
-      die();
+      trigger_error("Die called", E_USER_ERROR);
     }
   }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 ?>
 
@@ -19,7 +19,7 @@ if(isset($_POST['respond'])){
           	adddate = now(),
           	ip_address = '".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."'
         		";
-    $r_id = $db->getInsertId($s);
+      $r_id = $db->getInsertId($s);
   }
 
   if(!empty($_POST['close']) && $_POST['close']==2){

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 session_start();
 //header("Content-type:application/pdf");
 
@@ -18,7 +18,7 @@ $docr = mysqli_fetch_assoc($docq);
 
 //START PDF
 $title = "test";
-                $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
@@ -212,7 +212,7 @@ $sql = "select
 ";
 
 
-$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $num_users=mysqli_num_rows($my);
 
 $html = '';

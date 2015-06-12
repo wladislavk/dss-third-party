@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 	if($_GET['backoffice'] == '1') {
 	  include 'admin/includes/top.htm';
 	} else {

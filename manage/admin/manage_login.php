@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
 
 $rec_disp = 20;
@@ -15,7 +15,7 @@ $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $num_users=mysqli_num_rows($my);
 ?>
 
@@ -71,7 +71,7 @@ $num_users=mysqli_num_rows($my);
 		while($myarray = mysqli_fetch_array($my))
 		{
 			$user_sql = "select * from dental_users where userid='".st($myarray['userid'])."'";
-			$user_my = mysqli_query($con, $user_sql) or die(mysqli_error($con)." | ".$user_sql);
+			$user_my = mysqli_query($con, $user_sql) or trigger_error(mysqli_error($con)." | ".$user_sql, E_USER_ERROR);
 			$user_myarray = mysqli_fetch_array($user_my);
 						
 			$tr_class = "tr_active";

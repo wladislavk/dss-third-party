@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "includes/top.htm";
 require_once '../3rdParty/stripe/lib/Stripe.php';
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
@@ -9,7 +9,7 @@ $my = mysqli_query($con, $sql);
 $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $num_users=mysqli_num_rows($my);
 
 $doc_sql = "SELECT * from dental_users WHERE userid=".mysqli_real_escape_string($con, $_GET['docid']);
@@ -261,16 +261,16 @@ $key_sql = "SELECT stripe_secret_key FROM companies c
 $key_q = mysqli_query($con, $key_sql);
 $key_r= mysqli_fetch_assoc($key_q);
 
-Stripe::setApiKey($key_r['stripe_secret_key']);
+\Stripe::setApiKey($key_r['stripe_secret_key']);
 
 try{
-  $charge = Stripe_Charge::retrieve($charge_r["stripe_charge"]);
+  $charge = \Stripe_Charge::retrieve($charge_r["stripe_charge"]);
 } catch (Exception $e) {
   // Something else happened, completely unrelated to Stripe
   $body = $e->getJsonBody();
   $err  = $body['error'];       
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-  //die();
+  //trigger_error("Die called", E_USER_ERROR);
 
 }
 echo $charge->card->last4;

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?php namespace Ds3\Libraries\Legacy; ?><!DOCTYPE html>
 
 <!-- 
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.1.1
@@ -63,7 +63,7 @@ include_once('includes/password.php');
 	$address=$_REQUEST['addr'];
 	$address=$_REQUEST['addr'];
 	$check_sql = "SELECT * FROM admin WHERE adminid=".$id1;
-	$check_my = mysqli_query($con, $check_sql) or die(mysqli_error($con).' | '.$check_sql);
+	$check_my = mysqli_query($con, $check_sql) or trigger_error(mysqli_error($con).' | '.$check_sql, E_USER_ERROR);
 	$check = mysqli_fetch_assoc($check_my);
 
 
@@ -76,7 +76,7 @@ if (isset($_POST['lock_submit'])) {
             window.location.replace(addrr);
         </script>
             <?php
-            die();
+            trigger_error("Die called", E_USER_ERROR);
         }
 	else{ 
 		 echo "<script type='text/javascript'>
@@ -87,7 +87,7 @@ if (isset($_POST['lock_submit'])) {
             window.location.replace('extra_lock.php?id='+id_val+'&&msg=Wrong+password');
         </script>
             <?php
-            die();
+            trigger_error("Die called", E_USER_ERROR);
         }
 	
 }

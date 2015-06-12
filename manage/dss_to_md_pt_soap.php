@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 	if($_GET['backoffice'] == '1') {
 		include 'admin/includes/top.htm';
 	} else {
@@ -182,7 +182,7 @@
 		$letter = create_letter($letterid, $pid, '', $topatient);
 		if (!is_numeric($letter)) {
 			print $letter;
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			return $letter;
 		}

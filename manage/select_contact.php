@@ -1,4 +1,4 @@
-<? 
+<?php namespace Ds3\Libraries\Legacy; ?><? 
 include "admin/includes/main_include.php";
 
 $rec_disp = 40;
@@ -15,7 +15,7 @@ $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con, $sql) or die(mysqli_error($con));
+$my=mysqli_query($con, $sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $num_contact=mysqli_num_rows($my);
 ?>
 
@@ -79,7 +79,7 @@ $num_contact=mysqli_num_rows($my);
 		while($myarray = mysqli_fetch_array($my))
 		{
 			$contype_sql = "SELECT * FROM dental_contacttype where status=1 and contacttypeid='".s_for($myarray['contacttypeid'])."' ";
-			$contype_my = mysqli_query($con, $contype_sql) or die($contype_sql." | ".mysqli_error($con));
+			$contype_my = mysqli_query($con, $contype_sql) or trigger_error($contype_sql." | ".mysqli_error($con), E_USER_ERROR);
 			$contype_myarray = mysqli_fetch_array($contype_my);
 			
 			if($myarray["status"] == 1)

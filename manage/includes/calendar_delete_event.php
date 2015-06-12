@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	$docid = $_SESSION['docid'];
 	$e_id = $_POST['e_id'];
 

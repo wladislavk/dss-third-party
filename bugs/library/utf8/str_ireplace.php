@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
 * @version $Id: str_ireplace.php,v 1.2 2007/08/12 01:20:46 harryf Exp $
 * @package utf8

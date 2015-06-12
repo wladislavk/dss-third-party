@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 // Copyright (c) 2004-2005 ars Cognita Inc., all rights reserved
 /* ******************************************************************************
     Released under both BSD license and Lesser GPL library license. 
@@ -1615,11 +1615,11 @@ class adoSchema {
 		// Process the file
 		while( $data = fread( $fp, 4096 ) ) {
 			if( !xml_parse( $xmlParser, $data, feof( $fp ) ) ) {
-				die( sprintf(
+                trigger_error( sprintf(
 					"XML error: %s at line %d",
 					xml_error_string( xml_get_error_code( $xmlParser) ),
 					xml_get_current_line_number( $xmlParser)
-				) );
+				), E_USER_ERROR);
 			}
 		}
 		
@@ -1660,11 +1660,11 @@ class adoSchema {
 		$xmlParser = $this->create_parser();
 		
 		if( !xml_parse( $xmlParser, $xmlstring, TRUE ) ) {
-			die( sprintf(
+            trigger_error( sprintf(
 				"XML error: %s at line %d",
 				xml_error_string( xml_get_error_code( $xmlParser) ),
 				xml_get_current_line_number( $xmlParser)
-			) );
+			), E_USER_ERROR);
 		}
 		
 		xml_parser_free( $xmlParser );
@@ -2050,7 +2050,7 @@ class adoSchema {
 	function SchemaFileVersion( $filename ) {
 		// Open the file
 		if( !($fp = fopen( $filename, 'r' )) ) {
-			// die( 'Unable to open file' );
+			// trigger_error( 'Unable to open file' , E_USER_ERROR);
 			return FALSE;
 		}
 		

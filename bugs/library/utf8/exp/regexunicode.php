@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 /**
 * This was an experiment to see how a PCRE based UTF-8 to unicode
 * code point converter would perform, vs. a character by character

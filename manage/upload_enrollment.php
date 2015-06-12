@@ -67,7 +67,7 @@ if(isset($json_response->{"error"})){
     WHERE reference_id='".mysqli_real_escape_string($con, $ref_id)."'";
     mysqli_query($con, $up_sql);
   echo "<p>Your enrollment has been submitted.</p>";
-  die();
+    trigger_error('Die called', E_USER_ERROR);
 }
 }
 ?>

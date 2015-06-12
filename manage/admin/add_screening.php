@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 session_start();
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
@@ -17,7 +17,7 @@ if($_POST["mult_screeningsub"] == 1)
 			if(mysqli_num_rows($query_check) == 0)
 			{
 				$ins_sql = "insert into dental_screening set screening = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-				mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
+				mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			}
 			
 		}
@@ -30,7 +30,7 @@ if($_POST["mult_screeningsub"] == 1)
 		parent.window.location='manage_screening.php?msg=<?=$msg;?>';
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 if($_POST["screeningsub"] == 1)
@@ -62,7 +62,7 @@ if($_POST["screeningsub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_screening set screening = '".s_for($_POST["screening"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where screeningid='".$_POST["ed"]."'";
-			mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+			mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 			
 			//echo $ed_sql.mysqli_error($con);
 			$msg = "Edited Successfully";
@@ -72,12 +72,12 @@ if($_POST["screeningsub"] == 1)
 				parent.window.location='manage_screening.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 		else
 		{
 			$ins_sql = "insert into dental_screening set screening = '".s_for($_POST["screening"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-			mysqli_query($con, $ins_sql) or die($ins_sql.mysqli_error($con));
+			mysqli_query($con, $ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 			
 			$msg = "Added Successfully";
 			?>
@@ -86,7 +86,7 @@ if($_POST["screeningsub"] == 1)
 				parent.window.location='manage_screening.php?msg=<?=$msg;?>';
 			</script>
 			<?
-			die();
+			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
 }

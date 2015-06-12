@@ -297,7 +297,7 @@ EOF;
 	$rpl = array( '\\' => '\\\\', '"' => '\\"' ) ;
 	echo 'window.parent.OnUploadCompleted(' . $errorNumber . ',"' . strtr( $fileUrl, $rpl ) . '","' . strtr( $fileName, $rpl ) . '", "' . strtr( $customMsg, $rpl ) . '") ;' ;
 	echo '</script>' ;
-	exit ;
+	trigger_error("Exit called", E_USER_ERROR);
 }
 
 ?>

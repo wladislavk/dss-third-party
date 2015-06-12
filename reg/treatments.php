@@ -1,4 +1,4 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/header.php";
 include 'includes/questionnaire_sections.php';
 ?>
@@ -108,7 +108,7 @@ if($_POST['q_page2sub'] == 1)
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
-		mysqli_query($con, $ins_sql) or die($ins_sql." | ".mysqli_error($con));
+		mysqli_query($con, $ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
                 for($i=0;$i<$num_surgery;$i++){
                         if($_POST['surgery_id_'.$i]==0){
                                 if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
@@ -133,7 +133,7 @@ if($_POST['q_page2sub'] == 1)
 			window.location='<?=$_POST['goto_p'];?>?msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 	else
 	{
@@ -167,7 +167,7 @@ if($_POST['q_page2sub'] == 1)
 		surgery = '".s_for($surgery)."'
 		where patientid = '".s_for($_SESSION['pid'])."'";
 		
-		mysqli_query($con, $ed_sql) or die($ed_sql." | ".mysqli_error($con));
+		mysqli_query($con, $ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 
                 for($i=0;$i<$num_surgery;$i++){
                         if($_POST['surgery_id_'.$i]==0){
@@ -193,7 +193,7 @@ if($_POST['q_page2sub'] == 1)
 			window.location='<?=$_POST['goto_p'];?>?msg=<?=$msg;?>';
 		</script>
 		<?
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 }
 

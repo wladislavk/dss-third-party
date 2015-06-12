@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 	include "admin/includes/main_include.php";
 
 	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -12,7 +12,7 @@
 			window.location = 'manage_patient.php';
 		</script>
 <?php
-		die();
+		trigger_error("Die called", E_USER_ERROR);
 	}
 
 	$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
@@ -129,7 +129,7 @@
 								<br><br>
 								Dear <strong><?php echo st($pat_myarray['firstname']);?></strong>,<br><br>
 
-								Thank you for taking the time to undergo the overnight sleep study utilizing the <strong>???</strong> sleep recorder.   I have summarized the results in the table below.  The “Before” column refers to your last sleep study, while the “After” column is with your dental sleep device in place. <br /><br />
+								Thank you for taking the time to undergo the overnight sleep study utilizing the <strong>???</strong> sleep recorder.   I have summarized the results in the table below.  The ï¿½Beforeï¿½ column refers to your last sleep study, while the ï¿½Afterï¿½ column is with your dental sleep device in place. <br /><br />
 								<table width="98%" border="1" cellspacing="0" cellpadding="6">
 									<tr>
 										<td width="214" valign="top">&nbsp;</td>
@@ -176,7 +176,7 @@
 
 								I would also like to send a progress note to your physician(s) with your permission.  Remember that the treatment of OSA often requires a team healthcare approach.  Please give me a call if you have any questions.  Also, I am recommending that your primary care physician (PCP) make a determination on the need for a follow up PSG (attended sleep study) to confirm our findings.  Please proceed with their recommendations in this regard.   <br /><br />
 
-								At this point, unless you have any other concerns, we are finished with your Dental Sleep Therapy.  We would like to see you on an annual basis for continued evaluation of treatment.  Of course we are happy to see you prior to then if you have any problems or concerns. Thank you again for the opportunity to work with you.  Please don’t hesitate to call if you have any questions.  <br /><br />
+								At this point, unless you have any other concerns, we are finished with your Dental Sleep Therapy.  We would like to see you on an annual basis for continued evaluation of treatment.  Of course we are happy to see you prior to then if you have any problems or concerns. Thank you again for the opportunity to work with you.  Please donï¿½t hesitate to call if you have any questions.  <br /><br />
 
 								Sincerely,<br><br><br><br>
 								<strong><?php echo $_SESSION['name']?>, DDS</strong><br><br>

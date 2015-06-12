@@ -1,8 +1,8 @@
-<?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 if(is_billing($_SESSION['admin_access'])){
   ?><h2>You are not authorized to view this page.</h2><?php
-  die();
+  trigger_error("Die called", E_USER_ERROR);
 }
 
 if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
@@ -17,7 +17,7 @@ if(!empty($_REQUEST["delid"]) && $_SESSION['admin_access']==1)
 		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
 	</script>
 	<?
-	die();
+	trigger_error("Die called", E_USER_ERROR);
 }
 
 $rec_disp = 20;

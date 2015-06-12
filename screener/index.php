@@ -58,7 +58,7 @@ if(!isset($_SESSION['screener_doc'])){
 <div class="dp50">
 <h3 class="sepH_a">Dental Sleep Solutions - Patient Health Assessment</h3>
                                                                                                         <p style="font-size:14px;">More than 20 million Americans suffer from Obstructive Sleep Apnea (OSA). Despite this high prevalence, 93% of women and 82% of men with moderate to severe OSA remain UNDIAGNOSED and UNAWARE that they have a deadly disease.<br />
-Please complete this short questionnaire to determine your risk of OSA. Your information is confidential and will only be shared with with healthcare providers for diagnostic and treatment purposes.</p>
+Please complete this short questionnaire to determine your risk of OSA. Your information is confidential and will only be shared with healthcare providers for diagnostic and treatment purposes.</p>
 <br />
 <p>Please enter your contact information to complete this brief health assessment.</p>
 <br />
@@ -329,7 +329,10 @@ Please complete this short questionnaire to determine your risk of OSA. Your inf
         <input type="checkbox" name="rx_heartburn" value="1" />
         <label>Heartburn (Gastroesophageal Reflux)</label>
   </div>
-
+  <div class="field half">
+        <input type="checkbox" name="rx_afib" value="1" />
+        <label>Atrial Fibrillation</label>
+  </div>
 
 
 <a href="#" onclick="submit_screener()" id="sect4_next" class="fr next btn btn_medium btn_d">Next</a>

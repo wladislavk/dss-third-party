@@ -406,6 +406,8 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $billing_provider_name = $_POST['billing_provider']['organization_name'];
         $billing_provider_address = $_POST['billing_provider']['address']['street_line_1'];
         $billing_provider_city = $_POST['billing_provider']['address']['city'];
+        $billing_provider_state = $_POST['billing_provider']['address']['state'];
+        $billing_provider_zip = $_POST['billing_provider']['address']['zip'];
         $billing_provider_a = $_POST['billing_provider']['npi'];
         $reject_reason = $_POST['reject_reason'];
         $insurance_type_arr = $insurance_type;

@@ -714,19 +714,28 @@
     $test_query = mysqli_query($con, $test_sql);
     $test_result = mysqli_fetch_assoc($test_query);
 
-    $data = array(); //Initializing parameter array
+    // Eligible API requires ALL the fields from the form
+    $data = $_POST;
 
+    // @Todo: fix #140
     if($test_result['eligible_test']){
-        // $data['test'] = 'true';
+        $data['test'] = 'true';
     }
-    // @Todo: undo hot fix #140
-    $data['test'] = 'true';
 
     $data['api_key'] = $api_key; //Setting your api key
 
-    $data['eligibleToken'] = (!empty($_POST["eligibleToken"]) ? $_POST["eligibleToken"] : ''); // Reading eligibleToken and passing to claims endpoint
+    // If the diagnosis codes array is not zero based, the array will be encoded as a JSON object
+    if (isset($data['claim']) && isset($data['claim']['diagnosis_codes'])) {
+        if (is_array($data['claim']['diagnosis_codes'])) {
+            $data['claim']['diagnosis_codes'] = array_values($data['claim']['diagnosis_codes']);
+        } else {
+            $data['claim']['diagnosis_codes'] = array();
+        }
+    }
 
-    $data['scrub_eligibility'] = 'true';
+    // Remove extra fiels or Eligible API will fail
+    unset($data['code']);
+    unset($data['eligibleToken']);
 
     //Curl post call to claim end point
     $ch = curl_init();
@@ -782,14 +791,25 @@
         claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
         claim_status_history_update($_GET['insid'], '', DSS_CLAIM_REJECTED, '', $_SESSION['adminuserid']);
 
-        $confirm = "Submission failed. ";
-        $errors = $json_response->{"errors"}->{"messages"};
-        foreach($errors as $error){
-            $confirm .= mysqli_real_escape_string($con, $error).", ";
+        $confirm = array('Submission failed.');
+        $errors = $json_response->errors;
+
+        if (is_array($errors) && count($errors)) {
+            foreach ($errors as $error) {
+                $confirm []= $error->message;
+            }
+        } else {
+            $confirm = array('The processing API is experiencing high load at the moment and the request could not be processed.');
         }
-?>
+
+        ?>
         <script type="text/javascript">
-            alert('RESPONSE: <?= $confirm; ?>');
+            var apiErrors = <?= json_encode($confirm) ?>;
+            var message = apiErrors.shift();
+            if (apiErrors.length) {
+                message += '\n\n* ' + apiErrors.join('\n* ');
+            }
+            alert('RESPONSE: ' + message);
             window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>";
         </script>
 <?php

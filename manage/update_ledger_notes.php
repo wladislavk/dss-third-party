@@ -56,6 +56,8 @@
 								`transaction_code`
 							   ) VALUES ";
 
+        $txcode['description'] = mysql_real_escape_string($txcode['description']);
+        
 			if (!empty($_POST['form'])) foreach($_POST['form'] as $form) {
 				if($d <= $i) {
 					$descsql = "SELECT description, transaction_code FROM dental_transaction_code WHERE transaction_codeid='".$form['proccode']."' LIMIT 1;";

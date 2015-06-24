@@ -106,6 +106,7 @@
                     $_SESSION['docid'] = mysql_real_escape_string($_SESSION['docid']);
                     $_SERVER['REMOTE_ADDR'] = mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
                     $txcode['transaction_code'] = mysql_real_escape_string($txcode['transaction_code']);
+                    $txcode['description'] = mysql_real_escape_string($txcode['description']);
 
                     if($d <= $i){
                         if($form['status']==1) {

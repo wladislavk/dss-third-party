@@ -100,6 +100,13 @@
                         $amount = $form['amount'];
                     }
 
+                    $_POST['patientid'] = mysql_real_escape_string($_POST['patientid']);
+                    $txcode['description'] = mysql_real_escape_string($txcode['description']);
+                    $_SESSION['userid'] = mysql_real_escape_string($_SESSION['userid']);
+                    $_SESSION['docid'] = mysql_real_escape_string($_SESSION['docid']);
+                    $_SERVER['REMOTE_ADDR'] = mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
+                    $txcode['transaction_code'] = mysql_real_escape_string($txcode['transaction_code']);
+
                     if($d <= $i){
                         if($form['status']==1) {
                             $form_claim_id = $claim_id;

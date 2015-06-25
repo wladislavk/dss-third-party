@@ -2,13 +2,11 @@
 
 namespace Ds3\Libraries\Legacy;
 
-require_once dirname(__FILE__) . '/../../includes/autoloader.php';
-
 session_start();
 
-define('ROOT_DIR', Config::get('app.legacy_path'));
+define('ROOT_DIR', config('app.legacy_path'));
 
-$dbConfig = Config::get('database.connections.mysql');
+$dbConfig = config('database.connections.mysql');
 
 $config_db_name = $dbConfig['database'];
 $config_db_user = $dbConfig['username'];
@@ -22,8 +20,8 @@ mysqli_select_db($con, $config_db_name) or trigger_error('DB selection failure',
 
 $GLOBALS['con'] = $con;
 
-$base_path = Config::get('app.url');
-$site_name = Config::get('app.name');
-$site_url = Config::get('app.domain');
+$base_path = config('app.url');
+$site_name = config('app.name');
+$site_url = config('app.domain');
 
 include 'general.htm';

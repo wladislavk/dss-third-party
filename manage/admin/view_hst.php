@@ -25,7 +25,7 @@ if (isset($_REQUEST['ed'])) {
          . "  dental_hst hst "
          . "  JOIN dental_patients p ON p.patientid = hst.patient_id "
          . "WHERE "
-         . "  hst.id = " . $_POST['hst_id'];
+         . "  hst.id = '" . $_POST['hst_id'] . "'";
                 $my = mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
                 $hst = mysqli_fetch_array($my);
 
@@ -175,7 +175,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 				 . " office_notes = '".s_for($_POST['office_notes'])."', "
 				 . " rejected_reason = '".s_for($_POST['rejected_reason'])."', "
 				 . " sleep_study_id = '".s_for($sleepid)."', "
-         			 . " status = " . s_for($_POST['status']) . " ";
+         			 . " status = '" . s_for($_POST['status']) . "' ";
     if($hst['status'] != $_POST['status']){
       $sql .= ", updatedate=now() ";
 	if($_POST['status']==DSS_HST_REJECTED){

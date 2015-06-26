@@ -28,30 +28,28 @@ $router->group(['prefix' => 'manage'], function() use ($router) {
     $router->get('view_sleeplab/{ed?}', 'SleepLabController@view');
     $router->get('add_sleeplab/{ed?}', 'SleepLabController@index');
     $router->post('add_sleeplab/{ed?}', 'SleepLabController@add');
-    $router->get('add_ticket', 'TicketController@show');
-    $router->post('add_ticket', 'TicketController@add');
-    $router->post('view_support_ticket/{id}', 'TicketController@submitResponse');
     $router->get('custom/add', 'CustomController@index');
     $router->get('custom/{ed}/edit', 'CustomController@index');
     $router->post('add_custom/{ed?}', 'CustomController@add');
     $router->get('staff/{ed}/edit', 'StaffController@index');
     $router->get('staff/add', 'StaffController@index');
     $router->post('add_staff/{ed?}', 'StaffController@add');
+    $router->get('chairs/{ed}/edit', 'ChairsController@index');
+    $router->get('chairs/add', 'ChairsController@index');
+    $router->post('add_chairs/{ed?}', 'ChairsController@add');
 
     $router->group(['middleware' => 'header'], function() use ($router){
         $router->get('index', 'IndexController@index'); 
-        $router->get('patient/add/{pid?}', 'PatientController@index');
-        $router->post('patient/add/{pid?}', 'PatientController@add');
-        $router->get('patient/{pid}/duplicate', 'PatientController@duplicate');
+        $router->get('add_patient/{pid?}', 'PatientController@index');
+        $router->post('add_patient/{pid?}', 'PatientController@add');
+        $router->get('duplicate_patient/{pid?}', 'PatientController@duplicate');
         $router->get('contact', 'ContactController@manage');
         $router->get('tasks', 'TaskController@manageTasks');
         $router->get('sleeplab', 'SleepLabController@manage');
-        $router->get('support', 'TicketController@support');
-        $router->get('view_support_ticket/{id}', 'TicketController@view');
         $router->get('fcontact', 'ContactController@manageCorporate');
         $router->get('custom', 'CustomController@manage');
         $router->get('staff', 'StaffController@manage');
-        $router->get('chairs', 'ChairsController@manage');
+        $router->get('chairs/{pid?}', 'ChairsController@manage');
     });
 });
 

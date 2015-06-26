@@ -228,8 +228,8 @@ class UserServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            'Ds3\Contracts\ChairsInterface',
-            'Ds3\Repositories\ChairsRepository'
+            'Ds3\Contracts\ResourceInterface',
+            'Ds3\Repositories\ResourceRepository'
         );
     }
 }

@@ -3370,7 +3370,7 @@ if (!class_exists('TCPDF', false)) {
 		* @since 1.0
 		* @see AddFont(), SetFontSize()
 		*/
-		public function SetFont($family, $style='', $size=0, $fontfile='') {
+		public function SetFont($family, $style='', $size=0, $fontfile='', $subset='default') {
 			//Select a font; size given in points
 			if ($size == 0) {
 				$size = $this->FontSizePt;
@@ -7472,7 +7472,7 @@ if (!class_exists('TCPDF', false)) {
 		* @param string $s string to output.
 		* @access protected
 		*/
-		protected function _putstream($s) {
+		protected function _putstream($s, $n=0) {
 			if ($this->encrypted) {
 				$s = $this->_RC4($this->_objectkey($this->n), $s);
 			}

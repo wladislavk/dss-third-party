@@ -892,7 +892,7 @@
       << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".(!empty($billing_provider_phone) ? $billing_provider_phone : '').") >>
       << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper((!empty($billing_provider_name) ? $billing_provider_name : ''))."\n".strtoupper((!empty($billing_provider_address) ? $billing_provider_address : ''))."\n".strtoupper((!empty($billing_provider_city) ? $billing_provider_city : '')).") >>
       << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".(!empty($signature_physician) ? $signature_physician : '').") >>  
-      << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/y', strtotime($physician_signed_date)).") >>
+      << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/y', strtotime(str_replace('-','/', $physician_signed_date))).") >>
       << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".(!empty($service_info_a) ? $service_info_a : '').") >>
       << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".(!empty($service_info_b_other) ? $service_info_b_other : '').") >>
       << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".(($insurancetype == '1')?$medicare_npi:$npi).") >>

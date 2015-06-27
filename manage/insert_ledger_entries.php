@@ -100,13 +100,13 @@
                         $amount = $form['amount'];
                     }
 
-                    $_POST['patientid'] = mysql_real_escape_string($_POST['patientid']);
-                    $txcode['description'] = mysql_real_escape_string($txcode['description']);
-                    $_SESSION['userid'] = mysql_real_escape_string($_SESSION['userid']);
-                    $_SESSION['docid'] = mysql_real_escape_string($_SESSION['docid']);
-                    $_SERVER['REMOTE_ADDR'] = mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
-                    $txcode['transaction_code'] = mysql_real_escape_string($txcode['transaction_code']);
-                    $txcode['description'] = mysql_real_escape_string($txcode['description']);
+                    $_POST['patientid'] = mysqli_real_escape_string($con, $_POST['patientid']);
+                    $txcode['description'] = mysqli_real_escape_string($con, $txcode['description']);
+                    $_SESSION['userid'] = mysqli_real_escape_string($con, $_SESSION['userid']);
+                    $_SESSION['docid'] = mysqli_real_escape_string($con, $_SESSION['docid']);
+                    $_SERVER['REMOTE_ADDR'] = mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR']);
+                    $txcode['transaction_code'] = mysqli_real_escape_string($con, $txcode['transaction_code']);
+                    $txcode['description'] = mysqli_real_escape_string($con, $txcode['description']);
 
                     if($d <= $i){
                         if($form['status']==1) {

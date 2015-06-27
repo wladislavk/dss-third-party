@@ -94,7 +94,7 @@
 
 		$insertions = array();
 
-        $txcode['description'] = mysql_real_escape_string($txcode['description']);
+        $txcode['description'] = mysqli_real_escape_string($con, $txcode['description']);
 
 			if (!empty($_POST['form'])) foreach($_POST['form'] as $form){
 				if($d <= $i){

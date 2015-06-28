@@ -1,23 +1,29 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
+<?php
 
-require_once dirname(__FILE__) . '/../../../includes/autoloader.php';
+namespace Ds3\Libraries\Legacy;
 
-    define('ROOT_DIR', $_SERVER['DOCUMENT_ROOT']);
+session_start();
 
-    $config_db_name = "dentalsl_site_dev_new";
-    $config_db_user = "root";
-    $config_db_pass = "";
-    $config_db_host = "localhost";
+define('ROOT_DIR', config('app.legacy_path'));
 
-    session_start();
-    $con = mysqli_connect($config_db_host, $config_db_user, $config_db_pass) or trigger_error('connection failure', E_USER_ERROR);
-    mysqli_select_db($con, $config_db_name);
-    $GLOBALS['con'] = $con;
+$dbConfig = config('database.connections.mysql');
 
-	include ROOT_DIR . '/manage/admin/classes/Db.php';
+$config_db_name = $dbConfig['database'];
+$config_db_user = $dbConfig['username'];
+$config_db_pass = $dbConfig['password'];
+$config_db_host = $dbConfig['host'];
 
-    $db = new Db();
-    $GLOBALS['db'] = $db;
-    
-    $base_path = 'http://staging1.dss.xforty.com/dental/manage/';
-    $sitename = 'Dental';
+$con = mysqli_connect($config_db_host, $config_db_user, $config_db_pass)
+    or trigger_error('DB connection failure', E_USER_ERROR);
+
+mysqli_select_db($con, $config_db_name) or trigger_error('DB selection failure', E_USER_ERROR);
+
+$GLOBALS['con'] = $con;
+
+include ROOT_DIR . '/manage/admin/classes/Db.php';
+
+$db = new Db();
+$GLOBALS['db'] = $db;
+
+$base_path = config('app.url') . 'manage/';
+$sitename = config('app.name');

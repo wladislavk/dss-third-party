@@ -2,6 +2,7 @@
 namespace Ds3\Http\Middleware;
 
 use Illuminate\Contracts\Routing\Middleware;
+use Illuminate\Foundation\Application;
 use Illuminate\Config\Repository as Config;
 use Ds3\Libraries\Legacy\Loader;
 use Ds3\Libraries\Legacy\LoaderException;
@@ -10,10 +11,15 @@ use Closure;
 class LegacyLoader implements Middleware
 {
     private $config;
+    private $debugBar = null;
 
-    public function __construct(Config $config)
+    public function __construct(Application $app, Config $config)
     {
         $this->config = $config;
+
+        if ($config->get('app.debug') && $app['debugbar']) {
+            $this->debugBar = $app['debugbar'];
+        }
     }
 
     public function handle($request, Closure $next)
@@ -65,6 +71,11 @@ class LegacyLoader implements Middleware
             }
 
             $response = $loader->load($legacyFile, $queryString);
+
+            if ($this->debugBar) {
+                $response = $this->debugBar->modifyResponse($request, $response);
+            }
+
             return $response;
         } catch (LoaderException $exception) {
             // Legacy file not found

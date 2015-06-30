@@ -12,7 +12,7 @@ var UIIdleTimeout = function () {
                     
             // start the idle timer plugin
             $.idleTimeout('#idle-timeout-dialog', '.modal-content button:last', {
-                idleAfter: /*900*/5, // 5 seconds
+                idleAfter: 900, // 5 seconds
                 // timeout: 2100000, //30 seconds to timeout
                 warningLength: 30,
                 pollingInterval: /*300*/5, // 5 seconds

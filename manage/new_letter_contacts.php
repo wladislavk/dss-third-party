@@ -40,6 +40,13 @@
     $contact_sql = "SELECT docsleep, docpcp, docdentist, docent, docmdother, docmdother2, docmdother3 FROM dental_patients where patientid = '".s_for((!empty($_POST['patientid']) ? $_POST['patientid'] : ''))."';";
     
     $row = $db->getRow($contact_sql);
+
+    foreach ($row as $key=>$value) {
+        if (strtolower($value) === 'not set') {
+            $row[$key] = '';
+        }
+    }
+
     if($row['docsleep']!=''){
         $sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contact.middlename, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contacttype.contacttype, dental_contact.status FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$row['docsleep'].");";
 

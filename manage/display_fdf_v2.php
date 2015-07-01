@@ -36,6 +36,8 @@
      * include a background template for every page
      */
     function Header() {
+      $db = new Db();
+
       if (is_null($this->_tplIdx)) {
           $this->setSourceFile($this->_template);
           $this->_tplIdx = $this->importPage(1);

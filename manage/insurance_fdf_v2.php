@@ -519,7 +519,7 @@
         $ref_name = $r['firstname']." ".$r['lastname'];
     }
 
-    $qua_sql = "select * from dental_qualifier where qualifierid=".(isset($field_17a_dd) ? $field_17a_dd : '');
+    $qua_sql = "select * from dental_qualifier where qualifierid='".(isset($field_17a_dd) ? $field_17a_dd : '') . "'";
     
     $qua_myarray = $db->getRow($qua_sql);
     $seventeenA = (!empty($qua_myarray['qualifier']) ? $qua_myarray['qualifier'] : '');
@@ -563,28 +563,28 @@
     if(empty($npi)){ $npi = $docinfo['npi']; }
     if(empty($medicare_npi)){ $medicare_npi = $docinfo['medicare_npi']; }
 
-    $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".(isset($diagnosis_1) ? $diagnosis_1 : '');
+    $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".(isset($diagnosis_1) ? $diagnosis_1 : '') . "'";
     
     $ins_diag_myarray = $db->getRow($ins_diag_sql);
     $dia = explode('.', (!empty($ins_diag_myarray['ins_diagnosis']) ? $ins_diag_myarray['ins_diagnosis'] : ''));
     $diagnosis_1_left_fill = $dia[0];
     $diagnosis_1_right_fill = (!empty($dia[1]) ? $dia[1] : '');
 
-    $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".(isset($diagnosis_2) ? $diagnosis_2 : '');
+    $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".(isset($diagnosis_2) ? $diagnosis_2 : '') . "'";
     
     $ins_diag_myarray = $db->getRow($ins_diag_sql);                            
     $dia = explode('.', (!empty($ins_diag_myarray['ins_diagnosis']) ? $ins_diag_myarray['ins_diagnosis'] : ''));
     $diagnosis_2_left_fill = $dia[0];
     $diagnosis_2_right_fill = (!empty($dia[1]) ? $dia[1] : '');
 
-    $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".(isset($diagnosis_3) ? $diagnosis_3 : '');
+    $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".(isset($diagnosis_3) ? $diagnosis_3 : '') . "'";
 
     $ins_diag_myarray = $db->getRow($ins_diag_sql);                            
     $dia = explode('.', (!empty($ins_diag_myarray['ins_diagnosis']) ? $ins_diag_myarray['ins_diagnosis'] : ''));
     $diagnosis_3_left_fill = $dia[0];
     $diagnosis_3_right_fill = (!empty($dia[1]) ? $dia[1] : '');
 
-    $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".(isset($diagnosis_4) ? $diagnosis_4 : '');
+    $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".(isset($diagnosis_4) ? $diagnosis_4 : '') . "'";
     
     $ins_diag_myarray = $db->getRow($ins_diag_sql);                            
     $dia = explode('.', (!empty($ins_diag_myarray['ins_diagnosis']) ? $ins_diag_myarray['ins_diagnosis'] : ''));
@@ -750,7 +750,7 @@
             << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".((!empty($outside_lab) && $outside_lab == "YES")?1:'').") >>
             << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".((!empty($outside_lab) && $outside_lab == "NO")?1:'').") >>
             << /T(".$field_path.".charges_fill[0]) /V(".(!empty($s_charges) ? $s_charges : '').") >>
-            << /T(".$field_path.".icd_ind[0]) /V(".(!empty($icd_ind) ?$icd_ind: ''.") >>
+            << /T(".$field_path.".icd_ind[0]) /V(".(!empty($icd_ind) ?$icd_ind: '').") >>
             << /T(".$field_path.".diagnosis_a[0]) /V(".(!empty($diagnosis_a) ? $diagnosis_a : '').") >>
             << /T(".$field_path.".diagnosis_b[0]) /V(".(!empty($diagnosis_b) ? $diagnosis_b : '').") >>
             << /T(".$field_path.".diagnosis_c[0]) /V(".(!empty($diagnosis_c) ? $diagnosis_c : '').") >>
@@ -899,7 +899,7 @@
       << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".(!empty($billing_provider_b_other) ? $billing_provider_b_other : '').") >>
     ";
 
-    $fdf .= "
+  $fdf .= "
     ]
     /F (".$pdf_doc.") 
     >>
@@ -912,7 +912,7 @@
     >>
     %%EOF
     ";
-  }
+
   $fdf .= "
   << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".$array['placeofservice'].") >>
   << /T(".$field_path.".".$p."_EMG_fill[0]) /V(".$array['emg'].") >>
@@ -927,7 +927,6 @@
   << /T(".$field_path.".".$p."_days_or_units_fill[0]) /V(".$array['daysorunits'].") >>
   << /T(".$field_path.".".$p."_EPSDT_fill[0]) /V(".$array['epsdt'].") >>
   << /T(".$field_path.".".$p."_rendering_provider_fill[0]) /V(".$array['provider_id'].") >> ";
-}
 
   // re-calculate balance due
   //$balance_due = $total_charge - $amount_paid;
@@ -1028,21 +1027,6 @@ require_once '3rdParty/tcpdf/tcpdf.php';
 require_once '3rdParty/fpdi/fpdi.php';
 
 
-class PDF extends \FPDI {
-    /**
-     * "Remembers" the template id of the imported page
-     */
-    var $_tplIdx;
-    var $_template;
-    
-    /**
-     * include a background template for every page
-     */
-    function Header() {
-        if (is_null($this->_tplIdx)) {
-            $this->setSourceFile($this->_template);
-            $this->_tplIdx = $this->importPage(1);
-        }
     $d = date('YmdHms');
     $file = "fdf_".(!empty($_GET['insid']) ? $_GET['insid'] : '')."_".(!empty($_GET['pid']) ? $_GET['pid'] : '')."_".$d.".fdf";
     if(!empty($_REQUEST['type']) && $_REQUEST['type']=="secondary"){
@@ -1083,6 +1067,7 @@ class PDF extends \FPDI {
          */
         function Header()
         {
+            $db = new Db();
             if (is_null($this->_tplIdx)) {
                 $this->setSourceFile($this->_template);
                 $this->_tplIdx = $this->importPage(1);

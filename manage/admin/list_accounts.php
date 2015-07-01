@@ -31,7 +31,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 
 if (!$result) {
-	$patients = array("error" => $sql."Error: Could not select users from database");
+	$patients = array("error" => "Error: Could not select users from database");
 }
 
 echo json_encode($patients);

@@ -36,7 +36,7 @@
     }
 
     if (!$result) {
-    	$patients = array("error" => $sql."Error: Could not select patients from database");
+    	$patients = array("error" => "Error: Could not select patients from database");
     }
 
     echo json_encode($patients);

@@ -520,6 +520,7 @@ function claim_history_update($insid, $userid, $adminid){
     			WHERE i.insuranceid='".mysqli_real_escape_string($con,$insid)."'";
 
   $hid = $db->getInsertId($sql);
+if($insid!='' && $insid!=0){
   $sql = "INSERT INTO dental_ledger_history(
     ledgerid,
     formid,
@@ -603,6 +604,7 @@ function claim_history_update($insid, $userid, $adminid){
                         WHERE l.primary_claim_id='".mysqli_real_escape_string($con,$insid)."'";
 
   $db->query($sql);
+}
   return $hid;
 }
 

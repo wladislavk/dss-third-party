@@ -446,9 +446,8 @@
                                             <div class="sepH_b">
                                                 <label class="lbl_a"><strong>3.</strong> Retype Password:</label><input class="inpt_a validate" id="password2" name="confirm_password" type="password" onkeyup="checkPass()" maxlength="255" />
                                             </div>
-                                                <a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
-                                                <a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>
-                                            </div>
+                                            <a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
+                                            <a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>
                                         </div>
                                     </div>
                                 </div>
@@ -465,54 +464,54 @@
                                         <div>
                                             <div class="form_errors" style="display:none"></div>
 			                                <input type="hidden" id="cc_id" value="<?php echo  (isset($p['cc_id']) && $p['cc_id']=='')?0:1; ?>" />
-                                        <div class="sepH_b half">
-                                            <label class="lbl_a"><strong>1.</strong> Card Number:</label><input type="text" size="20" autocomplete="off" class="inpt_a ccmask card-number"/>
-                                        </div>
-                                        <div class="sepH_b half">
-                                            <label class="lbl_a"><strong>2.</strong> Card CVC (security code):</label><input class="inpt_a card-cvc cvcmask" id="card-cvc" name="card-cvc" type="text" />
-                                        </div>
-                                        <div class="sepH_b half clear">
-                                            <label class="lbl_a"><strong>3.</strong> Expiration Month (MM):</label><input class="inpt_a small card-expiry-month mmmask" id="card-expiry-month" name="card-expiry-month" type="text" /> 
-                                        </div>
-                                        <div class="sepH_b half">
-                                            <label class="lbl_a"><strong>4.</strong> Expiration Year (YYYY):</label><input class="inpt_a small card-expiry-year yyyymask" id="card-expiry-year" name="card-expiry-year" type="text" />
-                                        </div>
-                                        <div class="sepH_b half clear">
-                                            <label class="lbl_a"><strong>5.</strong> Name on Card:</label><input class="inpt_a card-name" id="card-name" name="card-name" type="text" />
-                                        </div>
-                                        <div class="sepH_b half">
-                                            <label class="lbl_a"><strong>6.</strong> Card Zipcode:</label><input class="inpt_a small card-zip zipmask" id="card-zip" name="card-zip" type="text" />
-                                        </div>
-                                        <div id="loader" style="display:none;">
-                                            <img src="../images/DSS-ajax-animated_loading-gif.gif" />
-                                        </div>
-                                        <div class="cf">
-                                            <a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
-                                            <a href="#" onclick="add_cc(); return false;" id="payment_proceed" class="fr btn btn_dL">Proceed &raquo;</a>
+                                            <div class="sepH_b half">
+                                                <label class="lbl_a"><strong>1.</strong> Card Number:</label><input type="text" size="20" autocomplete="off" class="inpt_a ccmask card-number"/>
+                                            </div>
+                                            <div class="sepH_b half">
+                                                <label class="lbl_a"><strong>2.</strong> Card CVC (security code):</label><input class="inpt_a card-cvc cvcmask" id="card-cvc" name="card-cvc" type="text" />
+                                            </div>
+                                            <div class="sepH_b half clear">
+                                                <label class="lbl_a"><strong>3.</strong> Expiration Month (MM):</label><input class="inpt_a small card-expiry-month mmmask" id="card-expiry-month" name="card-expiry-month" type="text" /> 
+                                            </div>
+                                            <div class="sepH_b half">
+                                                <label class="lbl_a"><strong>4.</strong> Expiration Year (YYYY):</label><input class="inpt_a small card-expiry-year yyyymask" id="card-expiry-year" name="card-expiry-year" type="text" />
+                                            </div>
+                                            <div class="sepH_b half clear">
+                                                <label class="lbl_a"><strong>5.</strong> Name on Card:</label><input class="inpt_a card-name" id="card-name" name="card-name" type="text" />
+                                            </div>
+                                            <div class="sepH_b half">
+                                                <label class="lbl_a"><strong>6.</strong> Card Zipcode:</label><input class="inpt_a small card-zip zipmask" id="card-zip" name="card-zip" type="text" />
+                                            </div>
                                             <div id="loader" style="display:none;">
                                                 <img src="../images/DSS-ajax-animated_loading-gif.gif" />
+                                            </div>
+                                            <div class="cf">
+                                                <a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
+                                                <a href="#" onclick="add_cc(); return false;" id="payment_proceed" class="fr btn btn_dL">Proceed &raquo;</a>
+                                                <div id="loader" style="display:none;">
+                                                    <img src="../images/DSS-ajax-animated_loading-gif.gif" />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="page">
-						<div class="pageInside">
-							<div class="last sepH_c">
-								<h3 class="sepH_b">Congratulations! Your new Dental Sleep Solutions&reg; software account has been created!</h3>
-								<p  class="sepH_b">You have successfully registered your software account! Click the button below to begin exploring your new software account.</p>
-							<div class="cf">
-                                <a href="../index.php" class="fr btn btn_dL">Click to Log On</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-        </div>
-	</form>
-    <div style="clear:both;"></div>
+                        <div class="page">
+    						<div class="pageInside">
+    							<div class="last sepH_c">
+    								<h3 class="sepH_b">Congratulations! Your new Dental Sleep Solutions&reg; software account has been created!</h3>
+    								<p  class="sepH_b">You have successfully registered your software account! Click the button below to begin exploring your new software account.</p>
+    							<div class="cf">
+                                    <a href="../index.php" class="fr btn btn_dL">Click to Log On</a>
+    							</div>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+            </div>
+    	</form>
+        <div style="clear:both;"></div>
 
     <script type="text/javascript" src="https://js.stripe.com/v1/"></script>
     <!-- jQuery is used only for this example; it isn't required to use Stripe -->

@@ -21,10 +21,10 @@ jQuery(document).ready(function() {
 	//alert(addr);
 	var redirUrl_path = 'extra_lock.php?id=' + userid + '&&addr=' + path_name;
 	$.idleTimeout('#idle-timeout-dialog', '.modal-content button:last', {
-        idleAfter: 900, // 5 seconds
-        timeout: 2100000, //30 seconds to timeout
-        pollingInterval: 300, // 5 seconds
-        keepAliveURL: 'admin/template/demo/idletimeout_keepalive.php',
+        idleAfter: 900, // 15 minutes
+        warningLength: 1800, // 30 minutes
+        pollingInterval: 20,
+        keepAliveURL: '/manage/admin/demo/idletimeout_keepalive.php',
         serverResponseEquals: 'OK',
         onTimeout: function(){
             window.location = logout.php;

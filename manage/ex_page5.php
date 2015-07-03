@@ -294,7 +294,7 @@
 				$pal_arr2 = explode('|',$val);
 				
 				$palid[$i] = $pal_arr2[0];
-				$palseq[$i] = (!empty($pal_arr2[1]) ? $pal_arr2[1] : '');
+				$palseq[$i] = isset($pal_arr2[1]) ? $pal_arr2[1] : '';
 			}
 		}
 
@@ -307,7 +307,7 @@
 				$palR_arr2 = explode('|',$val);
 				
 				$palRid[$i] = $palR_arr2[0];
-				$palRseq[$i] = (!empty($palR_arr2[1]) ? $palR_arr2[1] : '');
+				$palRseq[$i] = isset($palR_arr2[1]) ? $palR_arr2[1] : '';
 			}
 		}
 
@@ -401,13 +401,13 @@
 												if(@array_search($palpation_myarray['palpationid'],$palid) === false){
 													$chk = '';
 												} else {
-													$chk = (!empty($palseq[@array_search($palpation_myarray['palpationid'],$palid)]) ? $palseq[@array_search($palpation_myarray['palpationid'],$palid)] : '');
+													$chk = isset($palseq[@array_search($palpation_myarray['palpationid'],$palid)]) ? $palseq[@array_search($palpation_myarray['palpationid'],$palid)] : '';
 												}
 												
 												if(@array_search($palpation_myarray['palpationid'],$palRid) === false) {
 													$chkR = '';
 												} else {
-													$chkR = (!empty($palRseq[@array_search($palpation_myarray['palpationid'],$palRid)]) ? $palRseq[@array_search($palpation_myarray['palpationid'],$palRid)] : '');
+													$chkR = isset($palRseq[@array_search($palpation_myarray['palpationid'],$palRid)]) ? $palRseq[@array_search($palpation_myarray['palpationid'],$palRid)] : '';
 												}
 										?>
 			                                <tr>

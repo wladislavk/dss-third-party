@@ -14,7 +14,7 @@
     	eligible_id='".mysqli_real_escape_string($con,$d['eligible_id'])."',
     	adddate=now(),
             ip_address='".$_SERVER['REMOTE_ADDR']."',
-    	response='".(!empty($_REQUEST['response']) ? $_REQUEST['response'] : '')."'";
+    	response='".(!empty($_REQUEST['response']) ? mysqli_real_escape_string($con, $_REQUEST['response']) : '')."'";
 
     $eid = $db->getInsertId($s);
     $type = (isset($_REQUEST['type']))?$_REQUEST['type']:'1';

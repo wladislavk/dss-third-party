@@ -16,7 +16,7 @@
 <?php
   include_once "../includes/constants.inc";
 
-  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn, u.userid as doc_id, u.eligible_test from dental_patients p
+  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn, u.userid as doc_id from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
          LEFT JOIN dental_users u ON u.userid = p.docid
          WHERE p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
@@ -35,8 +35,7 @@
       $api_key = $api_key_result['eligible_api_key'];
     }
   }
-?>
-<?php
+
   $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$r['docid']."'";
 
   $docinfo = $db->getRow($getdocinfo);
@@ -95,7 +94,7 @@
       $d_zip = '';
     }
     $medicare = $r['p_m_ins_type'] == 1;
-    $eligible_test = $r['eligible_test'] == 1;
+    $eligible_test = $docinfo['eligible_test'] == 1;
   ?>
 
     <div class="form-group hidden">

@@ -106,14 +106,15 @@ include_once '../includes/calendarinc.php';
     $d_zip = '';
   }
   $medicare = $r['p_m_ins_type'] == 1;
+  $eligible_test = $docinfo['eligible_test'] == 1;
 ?>
 
     <div class="form-group hidden">
       <label for="member_dob" class="col-lg-2 control-label">Test?</label>
 		
       <div class="col-lg-10">
-        <input type="radio" name="test" id="test_yes" value="true"> Yes
-        <input type="radio" name="test" id="test_no" value="false" checked="checked"> No
+        <input type="radio" name="test" id="test_yes" value="true" <?= $eligible_test ? 'checked="checked"' : '' ?>> Yes
+        <input type="radio" name="test" id="test_no" value="false" <?= !$eligible_test ? 'checked="checked"' : '' ?>> No
       </div>
     </div>
 

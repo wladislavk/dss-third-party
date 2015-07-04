@@ -94,9 +94,7 @@ var fetchCoverage = function () {
       dependent_group_id: $("#dependent_group_id").val(),
       dependent_state: $("#dependent_state").val(),
       dependent_city: $("#dependent_city").val(),
-      dependent_zip: $("#dependent_zip").val(),
-
-      test: "false"
+      dependent_zip: $("#dependent_zip").val()
     }
   };
 

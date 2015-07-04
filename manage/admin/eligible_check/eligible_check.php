@@ -16,7 +16,7 @@
 <?php
   include_once "../includes/constants.inc";
 
-  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn, u.userid as doc_id from dental_patients p
+  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn, u.userid as doc_id, u.eligible_test from dental_patients p
          LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
          LEFT JOIN dental_users u ON u.userid = p.docid
          WHERE p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
@@ -95,14 +95,15 @@
       $d_zip = '';
     }
     $medicare = $r['p_m_ins_type'] == 1;
+    $eligible_test = $r['eligible_test'] == 1;
   ?>
 
     <div class="form-group hidden">
       <label for="member_dob" class="col-lg-2 control-label">Test?</label>
 
       <div class="col-lg-10">
-        <input type="radio" name="test" id="test_yes" value="true"> Yes
-        <input type="radio" name="test" id="test_no" value="false" checked="checked"> No
+        <input type="radio" name="test" id="test_yes" value="true" <?= $eligible_test ? 'checked="checked"' : '' ?>> Yes
+        <input type="radio" name="test" id="test_no" value="false" <?= !$eligible_test ? 'checked="checked"' : '' ?>> No
       </div>
     </div>
 

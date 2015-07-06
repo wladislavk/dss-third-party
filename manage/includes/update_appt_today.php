@@ -57,7 +57,7 @@ if(!empty($create)){
 
   $s .=" date_completed = CURDATE()";
   $q = $db->query($s);
-  $insert_id = $db->getInsertId($s);
+  $insert_id = $db->getInsertId();
 
 	if(!empty($q)){ 
 	  $db->query("DELETE FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysqli_real_escape_string($con,$pid)."'");

@@ -22,21 +22,27 @@ else
 	
 $i_val = $index_val * $rec_disp;
 
+$docId = intval($_SESSION['docid']);
+$dbType = mysqli_real_escape_string($con, DSS_TRXN_TYPE_ADJ);
 
-$sql = "SELECT  "
-     . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
-     . " a.amount as adjusted_amount, "
-     . "p.firstname, p.lastname, p.patientid "
-     . "FROM dental_ledger dl  "
-     . "JOIN dental_patients p ON p.patientid=dl.patientid "
-     . " LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."' "
-     . " LEFT JOIN (SELECT patientid, SUM(paid_amount) amount FROM dental_ledger 
-         LEFT JOIN dental_transaction_code tc2 on tc2.transaction_code = dental_ledger.transaction_code AND tc2.docid='".$_SESSION['docid']."' 
-           WHERE tc2.type='".mysqli_real_escape_string($con, DSS_TRXN_TYPE_ADJ)."' 
-           group by patientid) a ON a.patientid=dl.patientid "
-     . "WHERE dl.docid='".$_SESSION['docid']."'  "
-     . " AND tc.type!='".mysqli_real_escape_string($con,DSS_TRXN_TYPE_ADJ)."' OR tc.type IS NULL "
-     . "GROUP BY dl.patientid ORDER BY p.lastname ASC";
+$sql = "SELECT
+        SUM(dl.amount) AS amount, SUM(dl.paid_amount) AS paid_amount,
+        a.amount AS adjusted_amount,
+        p.firstname, p.lastname, p.patientid
+    FROM dental_ledger dl
+        JOIN dental_patients p ON p.patientid=dl.patientid
+        LEFT JOIN dental_transaction_code tc ON (tc.transaction_code = dl.transaction_code AND tc.docid=$docId)
+        LEFT JOIN (
+            SELECT patientid, SUM(paid_amount) amount
+            FROM dental_ledger
+                LEFT JOIN dental_transaction_code tc2 ON
+                    (tc2.transaction_code = dental_ledger.transaction_code AND tc2.docid=$docId)
+           WHERE tc2.type='$dbType'
+           GROUP BY patientid
+        ) a ON a.patientid=dl.patientid
+    WHERE dl.docid=$docId AND (tc.type != '$dbType' OR tc.type IS NULL)
+    GROUP BY dl.patientid
+    ORDER BY p.lastname ASC";
 $my = $db->getResults($sql);
 
 /*

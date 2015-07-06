@@ -8,6 +8,12 @@ require_once('../includes/constants.inc');
 <?php
 include_once '../includes/calendarinc.php';
 ?>
+<style>
+    #eligibility-check-history {
+        overflow-y: scroll;
+        height: 250px;
+    }
+</style>
   <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
   <link href="css/cupertino/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" media="screen">
   <link href="css/sample_1.css" rel="stylesheet" media="screen">
@@ -505,7 +511,7 @@ include_once '../includes/calendarinc.php';
         <input type="hidden" class="form-control" id="service_type" value="12">
         <button type="submit" id="submit-button" class="btn btn-primary btn-lg"><div id="submit-button-inner">Submit</div></button>
         <?php if($medicare){ ?>
-            <button type="submit" id="submit-button-medicare" class="btn btn-primary btn-lg"><div id="submit-button-inner">Medicare Check</div></button>
+            <button type="submit" id="submit-button-medicare" class="btn btn-primary btn-lg"><div id="submit-button-medicare-inner">Medicare Check</div></button>
         <?php } ?>
       </div>
     </div>
@@ -514,29 +520,34 @@ include_once '../includes/calendarinc.php';
 
 </div>
 <div id="coverage_container"></div>
-  <h2>Eligibility Check History</h2>
-<table>
-  <tr>
-    <th width="200">Date</th>
-    <th>View</th>
-  </tr>
+<h2>Eligibility Check History</h2>
+<div id="eligibility-check-history">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th width="200">Date</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
 
-<?php 
-  $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
-  $q = $db->getResults($s);
-  if ($q) {
-    foreach ($q as $r) {?>
+            $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysqli_real_escape_string($con, (!empty($_GET['pid']) ? $_GET['pid'] : ''))."' order by adddate desc";
 
-	<tr>
-        <td><?= $r['adddate']; ?></td>
-        <td><a href="/manage/view_eligibility_response.php?id=<?=$r['id']; ?>" target="_top">View</a></td>
-    </tr>
+            $q = $db->getResults($s);
 
-<?php
-     }
-   }?>
-</table>
-
+            if (empty($q)) { ?>
+            <?php } else {
+                foreach ($q as $r) { ?>
+                    <tr>
+                        <td><?= htmlspecialchars($r['adddate']) ?></td>
+                        <td><a href="/manage/view_eligibility_response.php?id=<?= intval($r['id']) ?>" target="_top">View</a></td>
+                    </tr>
+                <?php }
+            } ?>
+        </tbody>
+    </table>
+</div>
 <script src="js/eligible_check.js"></script>
 
 <link rel="stylesheet" href="css/eligible_check.css" type="text/css" media="screen" />

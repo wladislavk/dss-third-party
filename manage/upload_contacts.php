@@ -174,12 +174,12 @@ if(isset($_POST['submitbut'])){
                                 	$cts = "SELECT contacttypeid FROM dental_contacttype WHERE contacttype='".mysqli_real_escape_string($con,$c)."'";
                                 	$ctr = $db->getRow($ctq);
                                 	if($ctr['contacttypeid']!=''){
-                                		$s .= $field . " = '" .$ctr['contacttypeid']."', ";
+                                        //$s .= $field . " = '" .$ctr['contacttypeid']."', ";
                                 	}
                                 	break;
                                 default:
                                 	if($field!=''){
-                                			$s .= $field . " = '" .$data[$id]."', ";
+                                			$s .= $field . " = '" .mysqli_real_escape_string($con, $data[$id])."', ";
                                 	}
                                 	break;
                             }

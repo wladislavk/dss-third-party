@@ -1,4 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?>  <link href="eligible_check/css/sample_1.css" rel="stylesheet" media="screen">
+<?php namespace Ds3\Libraries\Legacy; ?>
+
+<link href="eligible_check/css/sample_1.css" rel="stylesheet" media="screen">
+<style>
+    #eligibility-check-history {
+        overflow-y: scroll;
+        height: 250px
+    }
+</style>
 
   <script src="../script/autocomplete_local.js"></script>
 
@@ -522,29 +530,35 @@ $(document).ready(function(){
 
 </div>
 <div id="coverage_container"></div>
-  <h2>Eligibility Check History</h2>
-<table>
-  <tr>
-    <th width="200">Date</th>
-    <th>View</th>
-  </tr>
+<h2>Eligibility Check History</h2>
+<div id="eligibility-check-history">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th width="200">Date</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' order by adddate desc";
 
-  <?php $s = "SELECT * FROM dental_eligibility WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
-    
-    $q = $db->getResults($s);
-    if (!empty($q)) foreach ($q as $r){
-      ?>
-	<tr>
-	  <td><?php echo  $r['adddate']; ?></td>
-          <td><a href="/manage/admin/view_eligibility_response.php?id=<?php echo $r['id']; ?>">View</a></td>
-        </tr>
+            $q = $db->getResults($s);
 
-<?php
-
-
-   }
-?>
-</table>
+            if (empty($q)) { ?>
+                <tr>
+                    <td colspan="2" class="center text-center">Eligibility history is empty</td>
+                </tr>
+            <?php } else {
+                foreach ($q as $r) { ?>
+                    <tr>
+                        <td><?= htmlspecialchars($r['adddate']) ?></td>
+                        <td><a href="/manage/admin/view_eligibility_response.php?id=<?= intval($r['id']) ?>">View</a></td>
+                    </tr>
+                <?php }
+            } ?>
+        </tbody>
+    </table>
+</div>
 
 <link href="/manage/admin/css/eligible_check.css" rel="stylesheet" media="screen">
 

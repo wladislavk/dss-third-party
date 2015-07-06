@@ -1017,7 +1017,7 @@ $doc_username = $docr['username'];
 		if($docsleep){
 		  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
-                        WHERE contactid=".$docsleep;
+                        WHERE contactid='".$docsleep."'";
 
                   $d = $db->getRow($dsql);
                   $docsleep_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
@@ -1029,7 +1029,7 @@ $doc_username = $docr['username'];
 		if($docpcp){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
-                        WHERE contactid=".$docpcp;
+                        WHERE contactid='".$docpcp."'";
                   $d = $db->getRow($dsql);
                   $docpcp_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
@@ -1040,7 +1040,7 @@ $doc_username = $docr['username'];
 		if($docdentist){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
-                        WHERE contactid=".$docdentist;
+                        WHERE contactid='".$docdentist."'";
 
                   $d = $db->getRow($dsql);
                   $docdentist_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
@@ -1052,7 +1052,7 @@ $doc_username = $docr['username'];
 		if($docent){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
-                        WHERE contactid=".$docent;
+                        WHERE contactid='".$docent."'";
 
                   $d = $db->getRow($dsql);
                   $docent_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
@@ -1064,7 +1064,7 @@ $doc_username = $docr['username'];
 		if($docmdother){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
 				LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
-			WHERE contactid=".$docmdother;
+			WHERE contactid='".$docmdother."'";
 
                   $d = $db->getRow($dsql);
                   $docmdother_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
@@ -1076,7 +1076,7 @@ $doc_username = $docr['username'];
 		if($docmdother2){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
-                        WHERE contactid=".$docmdother2;
+                        WHERE contactid='".$docmdother2."'";
                   $d = $db->getRow($dsql);
                   $docmdother2_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
@@ -1087,7 +1087,7 @@ $doc_username = $docr['username'];
 		if($docmdother3){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
-                        WHERE contactid=".$docmdother3;
+                        WHERE contactid='".$docmdother3."'";
                   
                   $d = $db->getRow($dsql);
                   $docmdother3_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');

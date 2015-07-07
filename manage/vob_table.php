@@ -44,7 +44,12 @@ if (count($my) > 0) { ?>
     </tr>
 <?php 
     } elseif(!empty($preauth['status']) && $preauth['status']==DSS_PREAUTH_REJECTED){ ?>
-
+        <tr class="tr_bg">
+            <td valign="top" align="center" style="color:#930;">
+                Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and has been rejected because "<strong><?= $preauth['reject_reason']; ?></strong>".
+                <a class="vob_request reject" data-reject="<?= addslashes($preauth['reject_reason']);?>" data-ut="<?= $_SESSION['user_type']; ?>" data-pid="<?= $_GET['pid']; ?>"></a>
+            </td>
+        </tr>
         <?php } elseif (!empty($preauth['status']) && $preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
         <tr class="tr_bg">
           <td valign="top" colspan="3" align="center">

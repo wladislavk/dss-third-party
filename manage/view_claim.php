@@ -75,29 +75,70 @@
   
   $i_val = $index_val * $rec_disp;
 
-  $sql = "select 'ledger', dl.ledgerid, dl.service_date, dl.entry_date, p.name, dl.description,
-          dl.amount, '' as paid_amount, di.status, '' AS filename, '' as payer, '' as payment_type
-          from dental_ledger dl 
-          INNER JOIN dental_insurance di ON dl.primary_claim_id = di.insuranceid
-          JOIN dental_users p ON dl.producerid=p.userid 
-          JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
-          where dl.primary_claim_id=".(!empty($_GET['claimid']) ? $_GET['claimid'] : '')."  AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' 
-          GROUP BY dl.ledgerid 
-          UNION
-          select 'ledger_payment', dlp.id, dlp.payment_date, dlp.entry_date,
-                  p.name, '', '', dlp.amount, '', dl.primary_claim_id, dlp.payer,
-                  dlp.payment_type from dental_ledger dl 
-                  LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                  LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                  where (dl.primary_claim_id=".$_GET['claimid']." or dl.secondary_claim_id=".$_GET['claimid'].")  AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
-                  AND (primary_claim_id=".$_GET['claimid']." or secondary_claim_id=".$_GET['claimid'].") 
-                  AND dlp.amount != 0
-          UNION
-          SELECT 'eob', dif.id, dif.adddate, dif.adddate, 'EOB', CONCAT('EOB - ', dif.claimtype, ' Insurance'),
-          '', '', di.status, dif.filename, '', ''
-          from dental_insurance_file dif
-          JOIN dental_insurance di ON di.insuranceid=dif.claimid
-          where dif.claimid=".mysqli_real_escape_string($con,(!empty($_GET['claimid']) ? $_GET['claimid'] : ''))."";
+$docId = intval($_SESSION['docid']);
+$claimId = intval($_GET['claimid']);
+$patientId = intval($_GET['pid']);
+
+  $sql = "SELECT
+        'ledger',
+        dl.ledgerid,
+        dl.service_date,
+        dl.entry_date,
+        p.name,
+        dl.description,
+        dl.amount,
+        '' AS paid_amount,
+        di.status,
+        '' AS filename,
+        '' AS payer,
+        '' AS payment_type
+    FROM dental_ledger dl
+        INNER JOIN dental_insurance di ON dl.primary_claim_id = di.insuranceid
+        LEFT JOIN dental_users p ON dl.producerid = p.userid
+        LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
+    WHERE dl.primary_claim_id = $claimId
+        AND dl.docid = $docId
+        AND dl.patientid = $patientId
+    GROUP BY dl.ledgerid
+UNION
+    SELECT
+        'ledger_payment',
+        dlp.id,
+        dlp.payment_date,
+        dlp.entry_date,
+        p.name,
+        '',
+        '',
+        dlp.amount,
+        '',
+        dl.primary_claim_id,
+        dlp.payer,
+        dlp.payment_type
+    FROM dental_ledger dl
+        JOIN dental_users p ON dl.producerid = p.userid
+        JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+    WHERE (dl.primary_claim_id = $claimId OR dl.secondary_claim_id = $claimId)
+        AND dl.docid = $docId
+        AND dl.patientid = $patientId
+        AND (primary_claim_id = $claimId OR secondary_claim_id = $claimId)
+        AND dlp.amount != 0
+UNION
+    SELECT
+        'eob',
+        dif.id,
+        dif.adddate,
+        dif.adddate,
+        'EOB',
+        CONCAT('EOB - ', dif.claimtype, ' Insurance'),
+        '',
+        '',
+        di.status,
+        dif.filename,
+        '',
+        ''
+    FROM dental_insurance_file dif
+        JOIN dental_insurance di ON di.insuranceid = dif.claimid
+    WHERE dif.claimid = $claimId";
 
   if (isset($_REQUEST['sort'])) {
     if ($_REQUEST['sort'] == 'producer') {

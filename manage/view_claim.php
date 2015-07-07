@@ -220,9 +220,23 @@ Claim <?= $_GET['claimid']; ?>
 
   <br />
   <div style="float:left; margin-left:20px;">
-    <?php if(((!empty($claim['status']) && ($claim['status'] == DSS_CLAIM_PENDING || $claim['status'] == DSS_CLAIM_REJECTED ||$claim['status'] == DSS_CLAIM_DISPUTE))
-            && $pat['p_m_dss_file']=='2') || !empty($claim['status']) && (($claim['status'] == DSS_CLAIM_SEC_PENDING || $claim['status'] == DSS_CLAIM_SEC_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_DISPUTE)
-            && $pat['s_m_dss_file']=='2')){ ?>	
+    <?php if (!empty($claim['status']) && (
+        (
+            (
+                $claim['status'] == DSS_CLAIM_PENDING ||
+                $claim['status'] == DSS_CLAIM_REJECTED ||
+                $claim['status'] == DSS_CLAIM_DISPUTE
+            ) &&
+            $pat['p_m_dss_file'] == 2
+        ) || (
+            (
+                $claim['status'] == DSS_CLAIM_SEC_PENDING ||
+                $claim['status'] == DSS_CLAIM_SEC_REJECTED ||
+                $claim['status'] == DSS_CLAIM_SEC_DISPUTE
+            ) &&
+            $pat['s_m_dss_file'] == 2
+        )
+    )) { ?>
               <button onclick="Javascript: window.location='insurance_v2.php?insid=<?php echo $_GET["claimid"];?>&pid=<?php echo (!empty($_GET["pid"]) ? $_GET["pid"] : '');?>';" class="addButton mainButton">
                 <?php if($claim['status'] == DSS_CLAIM_REJECTED || $claim['status'] == DSS_CLAIM_SEC_REJECTED) { ?>
                   Refile Paper

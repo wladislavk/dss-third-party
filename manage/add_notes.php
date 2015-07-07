@@ -149,17 +149,20 @@
 	<?php
 	    $sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
 	    $my = $db->getResults($sql);
-	    $title_str = "";
-	    $desc_str = ""; 
-	    if ($my) foreach ($my as $myarray) {
-	    	$desc_str .= st(trim( preg_replace( '/\n\r|\r\n/','%n%', $myarray['description']))) . '##';
-	    }
 
-	    $desc_str = substr($desc_str, 0, strlen($desc_str) - 2);
-	    $desc_str = addslashes($desc_str);
+    $customNotes = [];
 
-	    $doc_sql = "SELECT name from dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
-		$doc_r = $db->getRow($doc_sql);
+    if ($my) {
+        foreach ($my as $myarray) {
+            $customNotes []= [
+                'title' => trim($myarray['title']),
+                'description' => trim($myarray['description'])
+            ];
+        }
+    }
+
+    $doc_sql = "SELECT name from dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+    $doc_r = $db->getRow($doc_sql);
 	?>	
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -173,6 +176,9 @@
 		<script language="javascript" type="text/javascript" src="script/validation.js"></script>
 		<link rel="stylesheet" href="css/form.css" type="text/css" />
 		<script type="text/javascript" src="script/wufoo.js"></script>
+        <script type="text/javascript">
+            var customNotes = <?= json_encode($customNotes) ?>;
+        </script>
 	</head>
 	<body>
 		<script language="JavaScript" src="calendar1.js"></script>
@@ -225,20 +231,13 @@
 		        	<td valign="top" colspan="2" class="frmhead">
 						Text Templates
 						<span class="red">*</span>
-			            <select name="title" class="tbox" onChange="change_desc(this.value, '<?php echo $desc_str; ?>')">
+			            <select name="title" class="tbox">
 			                <option value="">Select</option>
-			                <?php
-	                            $j = 0;
-	                            $my = $db->getResults($sql);
-	                            if ($my) foreach ($my as $myarray) {
-	                        ?>
-		                            <option value="<?php echo $j;?>">
-		                        		<?php echo st($myarray['title']);?>
+			                    <?php foreach ($customNotes as $index=>$note) { ?>
+		                            <option value="<?= $index ?>" <?= $note['title'] === '' ? 'style="font-style: italic"' : '' ?>>
+		                        		<?= htmlspecialchars($note['title'] ?: 'no title') ?>
 		                    		</option>
-	                        <?php
-	                                $j++;
-	                            }
-	                        ?>
+	                            <?php } ?>
 	            		</select>
 						<span style="float:right;">
 							<?php

@@ -1,19 +1,26 @@
 $(document).ready(function() {
-	var cal72 = new calendar2(document.forms['notesfrm'].elements['procedure_date']);
-  var minutes = 1;
-  var interval = 1000 * 60 * minutes; //interval is 60000ms, or 1 minute
-  setInterval(save_draft, interval);
-});
+    var cal72 = new calendar2(document.forms['notesfrm'].elements['procedure_date']),
+        minutes = 1,
+        interval = 1000 * 60 * minutes; //interval is 60000ms, or 1 minute
 
-function change_desc(fa, desc_str)
-{
-    if(fa != '') {
-        var desc_arr = desc_str.split('##');
-        document.getElementById("notes").value = desc_arr[fa].replace(/\%n\%/g,'\r\n').replace(/&amp;/g,'&');
-    } else {
-        document.getElementById("notes").value = "";
-    }
-}
+    setInterval(save_draft, interval);
+
+    $('select[name=title]').change(function(){
+        var index = $(this).val();
+
+        try {
+            index = parseInt(index);
+
+            if (customNotes[index]) {
+                $('#notes').val(customNotes[index]['description']);
+                return;
+            }
+        }
+        catch (e) {}
+
+        $('#notes').val('');
+    });
+});
 
 function delete_note(patientid, notesid)
 {

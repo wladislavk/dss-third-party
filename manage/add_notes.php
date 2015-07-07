@@ -155,8 +155,8 @@
     if ($my) {
         foreach ($my as $myarray) {
             $customNotes []= [
-                'title' => trim($myarray['title']),
-                'description' => trim($myarray['description'])
+                'title' => trim(utf8_encode($myarray['title'])),
+                'description' => trim(utf8_encode($myarray['description']))
             ];
         }
     }

@@ -305,7 +305,7 @@
 							<?php } ?>
 						</div>
 
-						<a href="#" onclick="delete_note(<?php echo  $themyarray['patientid']; ?>, <?php echo $themyarray['notesid']; ?>);return false;" style="float:left;">Delete</a>
+						<a href="#" onclick="delete_note(<?= ($themyarray['patientid']) ?>, <?= $themyarray['parentid'] ?: $themyarray['notesid'] ?>);return false;" style="float:left;">Delete</a>
 						<p style="font-size:9px; text-align:left; margin-left:70px;">NOTE: For a Progress Note to be legally valid it must be SIGNED. SIGNED means that the note is stored permanently and can no longer be edited. If you wish to make future edits to a Progress Note then select UNSIGNED, but it will not become a legal part of the Patient's chart until SIGNED.</p>
 						<?php if($_SESSION['docid'] != $_SESSION['userid']) { ?>
 							<div id="cred_div" style="display:none;">

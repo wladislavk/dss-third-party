@@ -25,12 +25,7 @@ $(document).ready(function() {
 function delete_note(patientid, notesid)
 {
 	if(confirm('Progress Note will be deleted, are you sure?')){
-		if (patientid != '') {
-			var	inputValue = patientid;
-		} else {
-			var inputValue = notesid;
-		}
-		parent.window.location = "dss_summ.php?pid=" + patientid + "&del_note=" + inputValue;
+		parent.window.location = "dss_summ.php?pid=" + patientid + "&del_note=" + notesid;
 	}
 }
 

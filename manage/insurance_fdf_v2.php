@@ -502,18 +502,18 @@
 
     $inscoinfo = $db->getRow($inscoquery);
 
-    $referredby_sql = "select * from dental_contact where `contactid` = ".$referredby." LIMIT 1;";
+    $referredby_sql = "select * from dental_contact where `contactid` = '".$referredby."' LIMIT 1;";
     
     $referredby_my = $db->query($referredby_sql);
 
 
     if($referred_source==1){
-        $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referredby;
+        $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid='".$referredby."'";
         
         $r = $db->getRow($rsql);
         $ref_name = $r['firstname'].", ".$r['lastname'];                
     }elseif($referred_source==2){
-        $rsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$referredby;
+        $rsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid='".$referredby."'";
         
         $r = $db->getRow($rsql);
         $ref_name = $r['firstname']." ".$r['lastname'];
@@ -795,11 +795,11 @@
           . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
           . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
           . "WHERE "
-          . "  ledger.primary_claim_id = " . (!empty($insuranceid) ? $insuranceid : '') . " "
-          . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
-          . "  AND ledger.docid = " . $docid . " "
-          . "  AND trxn_code.docid = " . $docid . " "
-          . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
+          . "  ledger.primary_claim_id = '" . (!empty($insuranceid) ? $insuranceid : '') . "' "
+          . "  AND ledger.patientid = '" . (!empty($_GET['pid']) ? $_GET['pid'] : '') . "' "
+          . "  AND ledger.docid = '" . $docid . "' "
+          . "  AND trxn_code.docid = '" . $docid . "' "
+          . "  AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "' "
           . "ORDER BY "
           . "  ledger.service_date ASC";
 

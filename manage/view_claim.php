@@ -76,8 +76,8 @@
   $i_val = $index_val * $rec_disp;
 
 $docId = intval($_SESSION['docid']);
-$claimId = intval($_GET['claimid']);
-$patientId = intval($_GET['pid']);
+$claimId = isset($_GET['claimid']) ? intval($_GET['claimid']) : 0;
+$patientId = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
 
   $sql = "SELECT
         'ledger',
@@ -155,24 +155,24 @@ UNION
   $my = $db->getResults($sql);
   $num_users = count($my);
 
-  $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysqli_real_escape_string($con,(!empty($_GET['claimid']) ? $_GET['claimid'] : ''));
+  $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = $claimId";
   $claim = $db->getRow($csql);
 
-  $psql = "SELECT * FROM dental_patients WHERE patientid=".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''));
+  $psql = "SELECT * FROM dental_patients WHERE patientid = $patientId";
   $pat = $db->getRow($psql);
 ?>
 <span style="float:right; font-size: 26px; margin-right: 20px; font-weight: bold; color:#f00;">
 <?php
-  $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id='".mysqli_real_escape_string($con,$_GET['claimid'])."'";
+  $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id = $claimId";
   $sec_r = $db->getRow($sec_sql);
   if(!empty($sec_r)){
 ?>
-Primary Claim <?= $_GET['claimid']; ?> - (<a href="view_claim.php?claimid=<?php echo $sec_r['insuranceid']; ?>&pid=<?php echo $_GET['pid']; ?>">Secondary is <?php echo $sec_r['insuranceid']; ?></a>) 
+Primary Claim <?= $claimId ?> - (<a href="view_claim.php?claimid=<?php echo $sec_r['insuranceid']; ?>&pid=<?= $patientId ?>">Secondary is <?php echo $sec_r['insuranceid']; ?></a>)
 <?php
   }else{
 ?>
-Claim <?= $_GET['claimid']; ?>
-<?php echo (($claim['primary_claim_id'])?' - (<a href="view_claim.php?claimid='.$claim['primary_claim_id'].'&pid='.$_GET['pid'].'">Secondary to '.$claim['primary_claim_id'].'</a>)':''); ?>
+Claim <?= $claimId ?>
+<?php echo (($claim['primary_claim_id'])?' - (<a href="view_claim.php?claimid='.$claim['primary_claim_id'].'&pid='.$patientId.'">Secondary to '.$claim['primary_claim_id'].'</a>)':''); ?>
   <?php } ?>
 <?= " - ".$thename; ?></span>
 
@@ -181,7 +181,7 @@ Claim <?= $_GET['claimid']; ?>
   </span>
   &nbsp;&nbsp;&nbsp;
 
-<?php echo (!empty($name) ? $name : '');?>
+<?php echo ($name ?: '');?>
 <?php if(!empty($pat_myarray['add1'])) {?>
   <br />
   &nbsp;&nbsp;&nbsp;
@@ -220,24 +220,28 @@ Claim <?= $_GET['claimid']; ?>
 
   <br />
   <div style="float:left; margin-left:20px;">
-    <?php if (!empty($claim['status']) && (
+    <?php if (
         (
             (
                 $claim['status'] == DSS_CLAIM_PENDING ||
                 $claim['status'] == DSS_CLAIM_REJECTED ||
                 $claim['status'] == DSS_CLAIM_DISPUTE
-            ) &&
+            )
+            &&
             $pat['p_m_dss_file'] == 2
-        ) || (
+        )
+        ||
+        (
             (
                 $claim['status'] == DSS_CLAIM_SEC_PENDING ||
                 $claim['status'] == DSS_CLAIM_SEC_REJECTED ||
                 $claim['status'] == DSS_CLAIM_SEC_DISPUTE
-            ) &&
+            )
+            &&
             $pat['s_m_dss_file'] == 2
         )
-    )) { ?>
-              <button onclick="Javascript: window.location='insurance_v2.php?insid=<?php echo $_GET["claimid"];?>&pid=<?php echo (!empty($_GET["pid"]) ? $_GET["pid"] : '');?>';" class="addButton mainButton">
+    ) { ?>
+              <button onclick="Javascript: window.location='insurance_v2.php?insid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton mainButton">
                 <?php if($claim['status'] == DSS_CLAIM_REJECTED || $claim['status'] == DSS_CLAIM_SEC_REJECTED) { ?>
                   Refile Paper
                 <?php } else { ?>
@@ -245,13 +249,12 @@ Claim <?= $_GET['claimid']; ?>
                 <?php } ?>
               </button>
     <?php
-      $api_sql = "SELECT use_eligible_api FROM dental_users
-                  WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
-      
+      $api_sql = "SELECT use_eligible_api FROM dental_users WHERE userid = $docId";
       $api_r = $db->getRow($api_sql);
+
       if ($api_r['use_eligible_api'] == 1) {
     ?>
-        <button onclick="Javascript: window.location='insurance_eligible.php?insid=<?php echo $_GET["claimid"];?>&pid=<?php echo (!empty($_GET["pid"]) ? $_GET["pid"] : '');?>';" class="addButton mainButton">
+        <button onclick="Javascript: window.location='insurance_eligible.php?insid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton mainButton">
 		<?php if($claim['status'] == DSS_CLAIM_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_REJECTED){ ?>
             Refile E-File
 		<?php } else { ?>
@@ -261,20 +264,20 @@ Claim <?= $_GET['claimid']; ?>
 
     <?php } ?>
   	<?php } else { ?>
-          <button onclick="Javascript: window.location='insurance_v2.php?insid=<?php echo (!empty($_GET["claimid"]) ? $_GET["claimid"] : '');?>&pid=<?php echo (!empty($_GET["pid"]) ? $_GET["pid"] : '');?>';" class="addButton">
+          <button onclick="Javascript: window.location='insurance_v2.php?insid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton">
   		      View CMS 1500
           </button>
   	<?php } ?>
   </div>
 
   <div align="right" style="clear: right;">
-    <button onclick="Javascript: window.location = 'add_ledger_payments.php?cid=<?php echo (!empty($_GET["claimid"]) ? $_GET["claimid"] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>';" class="addButton mainButton">
+    <button onclick="Javascript: window.location = 'add_ledger_payments.php?cid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton mainButton">
       Make Payment
     </button>
     &nbsp;&nbsp;
 
     <?php
-      if(!empty($claim['status']) && ($claim['status'] == DSS_CLAIM_PAID_INSURANCE || $claim['status']== DSS_CLAIM_PAID_PATIENT) &&
+      if(($claim['status'] == DSS_CLAIM_PAID_INSURANCE || $claim['status']== DSS_CLAIM_PAID_PATIENT) &&
     	    $pat['s_m_relation']!='' && $pat['s_m_partyfname'] != "" && $pat['s_m_partylname'] != "" &&
           $pat['s_m_relation'] != "" && $pat['ins2_dob'] != "" && $pat['s_m_gender'] != "" &&
           $pat['s_m_ins_co'] != "" && $pat['s_m_ins_grp'] != "" && $pat['s_m_ins_type'] != '')
@@ -282,7 +285,7 @@ Claim <?= $_GET['claimid']; ?>
       	$s_sql = "SELECT * FROM dental_insurance WHERE primary_claim_id='".$claim['insuranceid']."'";
       	if($db->getNumberRows($s_sql)==0){
     ?>
-          <button onclick="Javascript: window.location='view_claim.php?claimid=<?php echo $_GET["claimid"];?>&pid=<?php echo $_GET['pid'];?>&file=1';" class="addButton">
+          <button onclick="Javascript: window.location='view_claim.php?claimid=<?= $claimId ?>&pid=<?= $patientId ?>&file=1';" class="addButton">
             File Secondary
           </button>
           &nbsp;&nbsp;
@@ -291,30 +294,29 @@ Claim <?= $_GET['claimid']; ?>
     ?>
 
     <?php
-      $api_sql = "SELECT use_eligible_api FROM dental_users
-                  WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+      $api_sql = "SELECT use_eligible_api FROM dental_users WHERE userid = $docId";
       $api_r = $db->getRow($api_sql);
 
       if ($api_r['use_eligible_api']==1) {
     ?>
-        <button onclick="Javascript: window.location='claim_history.php?cid=<?php echo (!empty($_GET["claimid"]) ? $_GET["claimid"] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>';" class="addButton">
-          View History 
+        <button onclick="Javascript: window.location='claim_history.php?cid=<?= $claimId ?>&pid=<?= $patientId ?>';" class="addButton">
+          View History
         </button>
         &nbsp;&nbsp;
     <?php } ?>
 
-      <button onclick="Javascript: window.location='print_ledger_report.php?<?php echo  (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
+      <button onclick="Javascript: window.location='print_ledger_report.php?<?= $patientId ? "pid=$patientId" : '' ?> class="addButton">
         Print Ledger
       </button>
   	  &nbsp;&nbsp;&nbsp;&nbsp;
   	
-      <button onclick="Javascript: loadPopup('add_ledger_note.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>');" class="addButton">
+      <button onclick="Javascript: loadPopup('add_ledger_note.php?pid=<?= $patientId ?>');" class="addButton">
         Add Note 
       </button>
       &nbsp;&nbsp;
         
-    <?php if(!empty($claim['status']) && $claim['status'] == DSS_CLAIM_DISPUTE) {
-      $s = "SELECT filename FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysqli_real_escape_string($con,$_GET['claimid'])."'";
+    <?php if($claim['status'] == DSS_CLAIM_DISPUTE) {
+      $s = "SELECT filename FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid = $claimId";
       $file = $db->getRow($s);
     ?>
              
@@ -323,8 +325,8 @@ Claim <?= $_GET['claimid']; ?>
       </a>
       &nbsp;&nbsp;
    
-    <?php } elseif (!empty($claim['status']) && $claim['status'] == DSS_CLAIM_SEC_DISPUTE) { 
-            $s = "SELECT filename FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysqli_real_escape_string($con,$_GET['claimid'])."'";
+    <?php } elseif ($claim['status'] == DSS_CLAIM_SEC_DISPUTE) {
+            $s = "SELECT filename FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid = $claimId";
             $file = $db->getRow($s);
     ?> 
             <a href='display_file.php?f=<?php echo  $file['filename']; ?>' target="_blank" class="button">
@@ -352,28 +354,28 @@ Claim <?= $_GET['claimid']; ?>
 
     	<tr class="tr_bg_h">
     		<td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'service_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-    			<a href="manage_ledger.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=service_date&sortdir=<?php echo ($_REQUEST['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
+    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=service_date&sortdir=<?php echo ($_REQUEST['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
     		</td>
     		<td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-    			<a href="manage_ledger.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>
+    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>
     		</td>
         <td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'producer')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
-          <a href="manage_ledger.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=producer&sortdir=<?php echo ($_REQUEST['sort']=='producer'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Producer</a>
+          <a href="manage_ledger.php?pid=<?= $patientId ?>&sort=producer&sortdir=<?php echo ($_REQUEST['sort']=='producer'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Producer</a>
         </td>
     		<td valign="top" class="col_head  <?php echo  ($_REQUEST['sort'] == 'description')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
-    			<a href="manage_ledger.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description</a>
+    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description</a>
     		</td>
     		<td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-    			<a href="manage_ledger.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=amount&sortdir=<?php echo ($_REQUEST['sort']=='amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Charges</a>
+    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=amount&sortdir=<?php echo ($_REQUEST['sort']=='amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Charges</a>
     		</td>
     		<td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-    			<a href="manage_ledger.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits</a>
+    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits</a>
     		</td>
     		<td valign="top" class="col_head" width="10%">
     			Balance
     		</td>
     		<td valign="top" class="col_head <?php echo  ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
-    			<a href="manage_ledger.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
+    			<a href="manage_ledger.php?pid=<?= $patientId ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
     		</td>
         <td valign="top" class="col_head" width="5%">
           Action 
@@ -479,7 +481,7 @@ Claim <?= $_GET['claimid']; ?>
       <tr>
         <td colspan="8">
         	<center>
-        		<button onclick="Javascript: window.location='manage_ledger.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : '');?>';return false;" class="addButton">
+        		<button onclick="Javascript: window.location='manage_ledger.php?pid=<?= $patientId ?>';return false;" class="addButton">
               Return to Patient Ledger
             </button>
           </center>
@@ -509,7 +511,7 @@ Claim <?= $_GET['claimid']; ?>
 <?php 
   if(isset($_GET['inspay']) && $_GET['inspay']==1){ ?>
     <script type="text/javascript">
-    	window.location('add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>');
+    	window.location('add_ledger_payments.php?cid=<?= $claimId ?>&pid=<?= $patientId ?>');
     </script>
 <?php } ?>
 

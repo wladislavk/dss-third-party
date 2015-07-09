@@ -305,7 +305,7 @@ Claim <?= $claimId ?>
         &nbsp;&nbsp;
     <?php } ?>
 
-      <button onclick="Javascript: window.location='print_ledger_report.php?<?= $patientId ? "pid=$patientId" : '' ?> class="addButton">
+      <button onclick="Javascript: window.location='print_ledger_report.php?<?= $patientId ? "pid=$patientId" : '' ?>';" class="addButton">
         Print Ledger
       </button>
   	  &nbsp;&nbsp;&nbsp;&nbsp;

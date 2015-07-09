@@ -476,6 +476,7 @@
 
 function create_claim($pid, $prod)
 {
+    $con = $GLOBALS['con'];
 	$db = new Db();
 	$pat_sql = "select * from dental_patients where patientid='".mysqli_real_escape_string($con, $pid)."'";
 

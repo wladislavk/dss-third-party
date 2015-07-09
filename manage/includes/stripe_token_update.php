@@ -100,7 +100,7 @@
     //  "customer" => $customer->id)
     //);
 
-    $sql = "UPDATE dental_users SET cc_id='".mysqli_real_escape_string($con,$customer->id)."', 
+    $sql = "UPDATE dental_users SET cc_id='".mysqli_real_escape_string($con,$customer->id)."'
 	 	    WHERE userid='".mysqli_real_escape_string($con,$id)."'";
     
     $db->query($sql);

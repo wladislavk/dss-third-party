@@ -126,11 +126,19 @@ if(!empty($create)){
     }
   }
 
-  if(!empty($letterid)){
-  	$letterid = array_unique($letterid);
-    while(($key = array_search('0', $letterid)) !== false) {
-      unset($letterid[$key]);
-    }
+  if (!empty($letterid)) {
+    // Cast values to integers
+    array_walk($letterid, function(&$each){
+      $each = intval($each);
+    });
+
+    // Remove duplicates
+    $letterid = array_unique($letterid);
+
+    // Keep values greater than zero
+    $letterid = array_filter($letterid, function($each){
+      return $each > 0;
+    });
   }
 
   $letter_count = 0;

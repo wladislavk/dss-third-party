@@ -332,7 +332,7 @@ if(!empty($_GET['pid'])){
                 $tr_class = "tr_inactive";
             }
             $tr_class = "tr_active";?>
-    <tr onclick="window.location = 'manage_ledger.php?pid=<?php echo $myarray['patientid']; ?>'" class="clickable_row <?php echo $tr_class;?> <?php echo $myarray[0]; ?>">
+    <tr onclick="window.location = 'manage_ledger.php?pid=<?php echo $myarray['patientid']; ?>'" class="clickable_row <?php echo $tr_class;?> <?php echo $myarray['ledger']; ?>">
         <td valign="top" width="10%">
             <?php echo date('m-d-Y',strtotime(st($myarray["service_date"])));?>
         </td>
@@ -346,10 +346,10 @@ if(!empty($_GET['pid'])){
             <?php echo st($myarray["name"]);?>
         </td>
         <td valign="top" width="30%">
-<?php 
-            if($myarray[0]=='ledger_payment'){ 
-                echo $dss_trxn_payer_labels[$myarray['payer']]; ?> Payment - <?php echo $dss_trxn_pymt_type_labels[$myarray['payment_type']]; 
-            }else{ 
+<?php
+            if($myarray['ledger']=='ledger_payment'){
+                echo $dss_trxn_payer_labels[$myarray['payer']]; ?> Payment - <?php echo $dss_trxn_pymt_type_labels[$myarray['payment_type']];
+            }else{
                 echo st($myarray["description"]);
                 echo ($myarray['primary_claim_id'])?" (".$myarray['primary_claim_id'].")":'';
             } ?>
@@ -360,27 +360,27 @@ if(!empty($_GET['pid'])){
                 $tot_charge += $myarray["amount"];?>
                 &nbsp;
         </td>
-<?php 
-            if($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
+<?php
+            if($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
         <td></td>
-            <?php 
+            <?php
                 $tot_adj += st($myarray["paid_amount"]);
             } ?>
         <td valign="top" align="right" width="10%">
             <?php echo number_format(st($myarray["paid_amount"] ? $myarray["paid_amount"] : 0), 2);?>
             &nbsp;
         </td>
-<?php 
-            if(!($myarray[0] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ ?>
+<?php
+            if(!($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ ?>
         <td></td>
-            <?php 
-                $tot_credit += st($myarray["paid_amount"]); 
+            <?php
+                $tot_credit += st($myarray["paid_amount"]);
             } ?>
         <td valign="top" width="5%">&nbsp;
-<?php 
-            if($myarray[0] == 'ledger'){
+<?php
+            if($myarray['ledger'] == 'ledger'){
                 echo $dss_trxn_status_labels[$myarray["status"]];
-            }elseif($myarray[0] == 'claim'){
+            }elseif($myarray['ledger'] == 'claim'){
                 echo $dss_claim_status_labels[$myarray["status"]];
             }
 		}?>       	

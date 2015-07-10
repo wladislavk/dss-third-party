@@ -102,7 +102,17 @@ if(!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1){
         if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 ){
             $uploaded = false;
         }else{
-            if ($_POST['imagetypeid'] ==0 || (array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) ) {
+            $ftype = isset($_FILES["image_file"]["type"]) ? $_FILES["image_file"]["type"] : '';
+            $fname = isset($_FILES["image_file"]["name"]) ? $_FILES["image_file"]["name"] : '';
+            $lastdot = strrpos($fname, ".");
+            $name = substr($fname, 0, $lastdot);
+            $extension = substr($fname, $lastdot + 1);
+
+            if (
+                $_POST['imagetypeid'] == 0 ||
+                (array_search($ftype, $dss_file_types) !== false) ||
+                (array_search(strtolower($extension), $dss_file_extensions) !== false)
+            ) {
                 if($imagetypeid == '0'){
                     $fname = $_FILES["image_file_1"]["name"];
                     $lastdot = strrpos($fname,".");
@@ -181,10 +191,6 @@ if(!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1){
                     $filesize = $_FILES["image_file"]["size"];
                     if($filesize <= DSS_IMAGE_MAX_SIZE){
                     		if($_FILES["image_file"]["name"] <> ''){
-                      			$fname = $_FILES["image_file"]["name"];
-                      			$lastdot = strrpos($fname,".");
-                      			$name = substr($fname,0,$lastdot);
-                      			$extension = substr($fname,$lastdot+1);
                       			$banner1 = $name.'_'.date('dmy_Hi');
                       			$banner1 = str_replace(" ","_",$banner1);
                       			$banner1 = str_replace(".","_",$banner1);

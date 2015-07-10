@@ -199,6 +199,18 @@ $dss_file_types[DSS_FILE_APP_DOCX] = "application/vnd.openxmlformats-officedocum
 $dss_file_types[DSS_FILE_APP_XLS] = "application/vnd.ms-excel";
 $dss_file_types[DSS_FILE_APP_XLSX] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
+// Detect the extension if the filetype attribute is not reliable
+$dss_file_extensions = array();
+$dss_file_extensions[DSS_FILE_IMAGE_GIF] = "gif";
+$dss_file_extensions[DSS_FILE_IMAGE_JPEG] = "jpg";
+$dss_file_extensions[DSS_FILE_IMAGE_PJPEG] = "pjpeg";
+$dss_file_extensions[DSS_FILE_IMAGE_PNG] = "png";
+$dss_file_extensions[DSS_FILE_APP_PDF] = "pdf";
+$dss_file_extensions[DSS_FILE_IMAGE_BMP] = "bmp";
+$dss_file_extensions[DSS_FILE_APP_DOC] = "doc";
+$dss_file_extensions[DSS_FILE_APP_DOCX] = "docx";
+$dss_file_extensions[DSS_FILE_APP_XLS] = "xls";
+$dss_file_extensions[DSS_FILE_APP_XLSX] = "xlsx";
 
 define('DSS_IMAGE_MAX_SIZE', 10000000);
 define('DSS_IMAGE_MAX_WIDTH', 2000);

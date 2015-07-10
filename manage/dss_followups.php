@@ -3,24 +3,56 @@ include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 
 if(isset($_POST['submitaddfu'])){
-  $patientid = $_POST['patientid'];
-  $ep_dateadd = date("Y-m-d H:i:s", strtotime($_POST['ep_dateadd']));
-  $devadd = $_POST['devadd'];
-  $dsetadd = $_POST['dsetadd'];
-	$nightsperweek = $_POST['nightsperweek'];
-  $ep_eadd = $_POST['ep_eadd_new'];
-  $ep_tsadd = $_POST['ep_tsadd_new'];
-  $ep_sadd = $_POST['ep_sadd'];
-  $ep_eladd = $_POST['ep_eladd'];
-  $sleep_qualadd = $_POST['sleep_qualadd'];
-  $ep_hadd = $_POST['ep_hadd'];
-  $ep_wadd = $_POST['ep_wadd'];
-  $wapnadd = $_POST['wapnadd'];
-  $hours_sleepadd = $_POST['hours_sleepadd'];
-  $appt_notesadd = $_POST['appt_notesadd'];
-  $insertquery = "INSERT INTO dentalsummfu (`patientid`, `ep_dateadd`,`devadd`,`dsetadd`,`nightsperweek`,`ep_eadd`,`ep_tsadd`,`ep_sadd`,`ep_eladd`,`sleep_qualadd`,`ep_hadd`,`ep_wadd`,`wapnadd`,`hours_sleepadd`,`appt_notesadd`) VALUES (".$patientid.", '".$ep_dateadd."', '".$devadd."','".$dsetadd."','".$nightsperweek."','".$ep_eadd."','".$ep_tsadd."','".$ep_sadd."','".$ep_eladd."','".$sleep_qualadd."','".$ep_hadd."','".$ep_wadd."','".$wapnadd."','".$hours_sleepadd."','".$appt_notesadd."');";
+  $patientid = mysqli_real_escape_string($con, $_POST['patientid']);
+  $ep_dateadd = mysqli_real_escape_string($con, date("Y-m-d H:i:s", strtotime($_POST['ep_dateadd'])));
+  $devadd = mysqli_real_escape_string($con, $_POST['devadd']);
+  $dsetadd = mysqli_real_escape_string($con, $_POST['dsetadd']);
+	$nightsperweek = mysqli_real_escape_string($con, $_POST['nightsperweek']);
+  $ep_eadd = mysqli_real_escape_string($con, $_POST['ep_eadd_new']);
+  $ep_tsadd = mysqli_real_escape_string($con, $_POST['ep_tsadd_new']);
+  $ep_sadd = mysqli_real_escape_string($con, $_POST['ep_sadd']);
+  $ep_eladd = mysqli_real_escape_string($con, $_POST['ep_eladd']);
+  $sleep_qualadd = mysqli_real_escape_string($con, $_POST['sleep_qualadd']);
+  $ep_hadd = mysqli_real_escape_string($con, $_POST['ep_hadd']);
+  $ep_wadd = mysqli_real_escape_string($con, $_POST['ep_wadd']);
+  $wapnadd = mysqli_real_escape_string($con, $_POST['wapnadd']);
+  $hours_sleepadd = mysqli_real_escape_string($con, $_POST['hours_sleepadd']);
+  $appt_notesadd = mysqli_real_escape_string($con, $_POST['appt_notesadd']);
+  $insertquery = "INSERT INTO dentalsummfu (
+        `patientid`,
+        `ep_dateadd`,
+        `devadd`,
+        `dsetadd`,
+        `nightsperweek`,
+        `ep_eadd`,
+        `ep_tsadd`,
+        `ep_sadd`,
+        `ep_eladd`,
+        `sleep_qualadd`,
+        `ep_hadd`,
+        `ep_wadd`,
+        `wapnadd`,
+        `hours_sleepadd`,
+        `appt_notesadd`
+      ) VALUES (
+        '$patientid',
+        '$ep_dateadd',
+        '$devadd',
+        '$dsetadd',
+        '$nightsperweek',
+        '$ep_eadd',
+        '$ep_tsadd',
+        '$ep_sadd',
+        '$ep_eladd',
+        '$sleep_qualadd',
+        '$ep_hadd',
+        '$ep_wadd',
+        '$wapnadd',
+        '$hours_sleepadd',
+        '$appt_notesadd'
+      );";
   $fu_id = $db->getInsertId($insertquery);
-  if(!$insert){
+  if(!$fu_id){
     echo "Could not insert follow up, please try again!";
   }else{
     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";

@@ -1021,6 +1021,8 @@ function check_billed () {
 <?php
 
 function bill_card ($customerID, $amount, $userid, $invoiceid) {
+  $con = $GLOBALS['con'];
+
   if($amount==0){
     ?>
     <script type="text/javascript">

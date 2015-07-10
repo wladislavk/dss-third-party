@@ -4,19 +4,20 @@ include_once('/../admin/includes/main_include.php');
 function similar_doctors($id){
     $db = new Db();
     $con = $GLOBALS['con'];
+    $id = intval($id);
 
     $s = "SELECT * from dental_patient_contacts WHERE id='".$id."'";
     $r = $db->getRow($s);
 
     $s2 = "SELECT * FROM dental_contact WHERE " .
           "contacttypeid != '11' AND " .
-          "((firstname = '".$r['firstname']."' AND " .
-          "lastname = '".$r['lastname']."') " .
+          "((firstname = '".mysqli_real_escape_string($con, $r['firstname'])."' AND " .
+          "lastname = '".mysqli_real_escape_string($con, $r['lastname'])."') " .
           " OR " .
-          "(add1 = '".$r['address1']."' AND add1!='' AND " .
-          "city = '".$r['city']."' AND city!='' AND " .
-          "state = '".$r['state']."' AND state!='' AND " .
-          "zip = '".$r['zip']."' AND zip!='')) 
+          "(add1 = '".mysqli_real_escape_string($con, $r['address1'])."' AND add1!='' AND " .
+          "city = '".mysqli_real_escape_string($con, $r['city'])."' AND city!='' AND " .
+          "state = '".mysqli_real_escape_string($con, $r['state'])."' AND state!='' AND " .
+          "zip = '".mysqli_real_escape_string($con, $r['zip'])."' AND zip!='')) 
           AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 
     $q2 = $db->getResults($s2);
@@ -37,18 +38,19 @@ function similar_doctors($id){
 function similar_contacts($id){
     $db = new Db();
     $con = $GLOBALS['con'];
+    $id = intval($id);
 
     $s = "SELECT * from dental_contact WHERE contactid='".$id."'";
     $r = $db->getRow($s);
 
     $s2 = "SELECT * FROM dental_contact WHERE status IN (1,2) AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND " .
-          "((firstname = '".$r['firstname']."' AND " .
-          "lastname = '".$r['lastname']."') " .
+          "((firstname = '".mysqli_real_escape_string($con, $r['firstname'])."' AND " .
+          "lastname = '".mysqli_real_escape_string($con, $r['lastname'])."') " .
           " OR " .
-          "(add1 = '".$r['add1']."' AND add1!='' AND " .
-          "city = '".$r['city']."' AND city!='' AND " .
-          "state = '".$r['state']."' AND state!='' AND " .
-          "zip = '".$r['zip']."' AND zip!='')) 
+          "(add1 = '".mysqli_real_escape_string($con, $r['add1'])."' AND add1!='' AND " .
+          "city = '".mysqli_real_escape_string($con, $r['city'])."' AND city!='' AND " .
+          "state = '".mysqli_real_escape_string($con, $r['state'])."' AND state!='' AND " .
+          "zip = '".mysqli_real_escape_string($con, $r['zip'])."' AND zip!='')) 
           AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 
     $q2 = $db->getResults($s2);
@@ -83,9 +85,9 @@ function similar_patients($id){
     $s2 = "SELECT * FROM dental_patients WHERE " .
     		"patientid != '".$id."' AND " .
     		"status='1' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND " .
-    		"((firstname = '".$r['firstname']."' AND " .
-    	        "lastname = '".$r['lastname']."') OR " .
-    		"(add1 = '".$r['add1']."' AND add1!= '' AND city = '".$r['city']."' AND city!='' AND state = '".$r['state']."' AND state!='' AND zip = '".$r['zip']."' AND zip!=''))
+    		"((firstname = '".mysqli_real_escape_string($con, $r['firstname'])."' AND " .
+    	        "lastname = '".mysqli_real_escape_string($con, $r['lastname'])."') OR " .
+    		"(add1 = '".mysqli_real_escape_string($con, $r['add1'])."' AND add1!= '' AND city = '".mysqli_real_escape_string($con, $r['city'])."' AND city!='' AND state = '".mysqli_real_escape_string($con, $r['state'])."' AND state!='' AND zip = '".mysqli_real_escape_string($con, $r['zip'])."' AND zip!=''))
                     AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
     		 
     $q2 = $db->getResults($s2);
@@ -104,21 +106,21 @@ function similar_patients($id){
 }
 
 function similar_insurance($id){
-
     $db = new Db();
     $con = $GLOBALS['con'];
+    $id = intval($id);
 
     $s = "SELECT * from dental_patient_insurance WHERE id='".$id."'";
     $r = $db->getRow($s);
 
     $s2 = "SELECT * FROM dental_contact WHERE " .
           "contacttypeid =  '11' AND " .
-          "(company LIKE '%".$r['company']."%' " .
+          "(company LIKE '%".mysqli_real_escape_string($con, $r['company'])."%' " .
           " OR " .
-          "(add1 = '".$r['address1']."' AND add1!='' AND " .
-          "city = '".$r['city']."' AND city!='' AND " .
-          "state = '".$r['state']."' AND state!='' AND " .
-          "zip = '".$r['zip']."' AND zip!='')) 
+          "(add1 = '".mysqli_real_escape_string($con, $r['address1'])."' AND add1!='' AND " .
+          "city = '".mysqli_real_escape_string($con, $r['city'])."' AND city!='' AND " .
+          "state = '".mysqli_real_escape_string($con, $r['state'])."' AND state!='' AND " .
+          "zip = '".mysqli_real_escape_string($con, $r['zip'])."' AND zip!='')) 
           AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 
     $q2 = $db->getResults($s2);
@@ -137,5 +139,3 @@ function similar_insurance($id){
 
     return $docs;
 }
-
-?>

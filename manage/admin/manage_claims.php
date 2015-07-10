@@ -640,7 +640,7 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 		?><a href="manage_claims.php?status=<?php echo  (!empty($_GET['status']) ? $_GET['status'] : ''); ?>&sendid=<?php echo  $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a><?php            } ?>
 
 				</td>
-	<td valign="top" <?php echo  ($myarray['num_fo_notes']>0)?' info ':''; ?><?php echo ($myarray['num_notes']>0)?' notes_col ':''; ?>">
+	<td valign="top" class="<?= $myarray['num_fo_notes'] > 0 ? ' info ' : '' ?><?= $myarray['num_notes'] > 0 ? ' notes_col ' : '' ?>">
 		<a href="claim_notes.php?id=<?php echo  $myarray['insuranceid']; ?>&pid=<?php echo $myarray['patientid'];?>">View (<?php echo  $myarray['num_notes'];?>)
 		<?php 			if($myarray['notes_last']!=''){
 				echo date('m/d/y h:i a', strtotime($myarray['notes_last']));

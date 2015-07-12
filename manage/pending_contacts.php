@@ -48,10 +48,14 @@ if(isset($_REQUEST['deleteid'])){
     foreach ($q4 as $r4) {
         array_push($ids4, $r4['contactid']);
     }
-	$s = "UPDATE dental_contact SET status=1 WHERE contactid IN(".implode($ids3, ',').")";
-	$db->query($s);
-	$s = "UPDATE dental_contact SET status=2 WHERE contactid IN(".implode($ids4, ',').")";
-    $db->query($s);
+    if (count($ids3)) {
+	    $s = "UPDATE dental_contact SET status=1 WHERE contactid IN('".implode($ids3, "','")."')";
+	    $db->query($s);
+    }
+    if (count($ids4)) {
+        $s = "UPDATE dental_contact SET status=2 WHERE contactid IN('".implode($ids4, "','")."')";
+        $db->query($s);
+    }
 ?>  
 <script type="text/javascript">
     window.location = "pending_contacts.php";

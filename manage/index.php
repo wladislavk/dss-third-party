@@ -3,6 +3,9 @@
   $sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'";
   $r = $db->getRow($sql);
 
+  $manageStaffSql = "SELECT manage_staff from dental_users WHERE userid='" . mysqli_real_escape_string($con, $_SESSION['userid']) . "'";
+  $manageStaff = $db->getRow($manageStaffSql);
+
   if ($r['homepage'] != '1'): 
 ?>
 
@@ -69,7 +72,7 @@
                 </li>
                 <li><a href="change_list.php">Change List</a></li>
 
-                <?php                   if ($_SESSION['userid'] == $_SESSION['docid'] || $r['manage_staff'] == 1):
+                <?php if ($_SESSION['userid'] == $_SESSION['docid'] || $manageStaff['manage_staff'] == 1):
                 ?>
                   
                   <li><a class="submenu_item" href="manage_transaction_code.php">Transaction Code</a></li>

@@ -32,13 +32,20 @@
                     `payer`
                     ) VALUES ";
 
-                $lsql = "SELECT * FROM dental_ledger WHERE (primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."  or secondary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '').")";
+                $lsql = "SELECT * FROM dental_ledger WHERE (primary_claim_id='".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."'  or secondary_claim_id='".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."')";
 
                 $lq = $db->getResults($lsql);
                 if ($lq) foreach ($lq as $row){
                     $id = $row['ledgerid'];
+
+                    if (!empty($_POST['payment_date_'.$id])) {
+                        $paymentDate = date('Y-m-d', strtotime($_POST['payment_date_'.$id]));
+                    } else {
+                        $paymentDate = null;
+                    }
+
                     if($_POST['amount_'.$id]!=''){
-                        $sqlinsertqry .= "(".$id.", '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', '".date('Y-m-d')."', '".str_replace(',','',$_POST['amount_'.$id])."', '".str_replace(',','',$_POST['allowed_'.$id])."','".$_POST['payment_type']."', '".$_POST['payer']."'),";
+                        $sqlinsertqry .= "(".$id.", '" . $paymentDate . "', '".date('Y-m-d')."', '".str_replace(',','',$_POST['amount_'.$id])."', '".str_replace(',','',$_POST['allowed_'.$id])."','".$_POST['payment_type']."', '".$_POST['payer']."'),";
                     }
                 }
 

@@ -68,6 +68,7 @@ function save_draft(){
 
           if (!isNaN(newEd)) {
             localEd = newEd;
+            $('[name=ed]').val(localEd);
           }
         } catch (e) {}
       }

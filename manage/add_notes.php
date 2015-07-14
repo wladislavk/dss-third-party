@@ -20,6 +20,7 @@ if (!empty($_GET['forced'])) {
 		if($_POST['ed'] == '') {
 			$ins_sql = "insert into dental_notes set 
 						patientid = '".s_for($_GET['pid'])."',
+						status = 1,
 						notes = '".s_for($notes)."',
 						editor_initials = '".s_for($editor_initials)."',
 						procedure_date = '".s_for($procedure_date)."',
@@ -72,10 +73,21 @@ if (!empty($_GET['forced'])) {
 			} 
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
-			$p_r = $db->getRow("select parentid FROM dental_notes WHERE notesid='".$_POST["ed"]."'");
+            $noteId = intval($_POST['ed']);
+			$p_r = $db->getRow("select parentid, status FROM dental_notes WHERE notesid='$noteId'");
 			$parentid = $p_r['parentid'];
-			$ins_sql = "insert into dental_notes set 
-		                patientid = '".s_for($_GET['pid'])."',
+            $isDraft = $p_r['status'] == 2;
+
+            if ($isDraft) {
+                $ins_sql = "UPDATE dental_notes SET ";
+            }
+            else {
+                $ins_sql = "INSERT INTO dental_notes SET ";
+            }
+
+			$ins_sql .= "
+			            patientid = '".s_for($_GET['pid'])."',
+		                status = 1,
 		                notes = '".s_for($notes)."',
 		                editor_initials = '".s_for($editor_initials)."',
 		                procedure_date = '".s_for($procedure_date)."',
@@ -85,7 +97,7 @@ if (!empty($_GET['forced'])) {
               	$ins_sql .= " signed_id='".s_for($_SESSION['userid'])."', signed_on=now(), ";
             } elseif(isset($_POST['signstaff'])) {
 	            $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."'";
-	            
+
 	            $salt_row = $db->getRow($salt_sql);
 				$pass = gen_password($_POST['password'], $salt_row['salt']);
 				$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysqli_real_escape_string($con,$_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
@@ -108,6 +120,7 @@ if (!empty($_GET['forced'])) {
 
 			$up_sql = "update dental_notes set 
 						patientid = '".s_for($_GET['pid'])."',
+						status = 1,
 						notes = '".s_for($notes)."',
 						editor_initials = '".s_for($editor_initials)."',
 						procedure_date = '".s_for($procedure_date)."',
@@ -116,8 +129,12 @@ if (!empty($_GET['forced'])) {
               	$up_sql .= " signed_id='".s_for($_SESSION['userid'])."', signed_on=now(), ";
             }
             
-            $up_sql .= " userid = '".s_for($_SESSION['userid'])."' where notesid='".$_POST["ed"]."'";
-		
+            $up_sql .= " userid = '".s_for($_SESSION['userid'])."' where notesid='$noteId'";
+
+            if ($isDraft) {
+                $ins_sql .= " WHERE notesid = '$noteId'";
+            }
+
 			$db->query($ins_sql);
 			$msg = "Edited Successfully";
 ?>

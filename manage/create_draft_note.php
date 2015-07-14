@@ -16,7 +16,6 @@ ob_end_clean();
 if ($_POST['ed'] != ''){ //post from editing
   if ($_SESSION['userid'] != ''){
     $update_sql = "UPDATE dental_notes SET
-    status = 2,
     notes = '".s_for($_POST['notes'])."',
     editor_initials='".s_for($_POST['ed_initials'])."',
     procedure_date='".s_for(date('Y-m-d', strtotime($_POST['procedure_date'])))."',

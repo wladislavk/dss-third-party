@@ -1204,12 +1204,27 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
       			$replace[] = "<strong>" . $other_mds . "</strong>";
       		}
 
-          $new_template[$cur_template_num] = str_replace($replace, $search, (!empty($_POST['letter'.$cur_template_num]) ? $_POST['letter'.$cur_template_num] : ''));
-          
-          // Letter hasn't been edited, but a new template exists in hidden field
-       		if ($new_template[$cur_template_num] == null && !empty($_POST['new_template'][$cur_template_num])) {
-      			$new_template[$cur_template_num] = html_entity_decode($_POST['new_template'][$cur_template_num], ENT_COMPAT | ENT_QUOTES, "UTF-8");
+          /**
+
+          */
+
+          if (!empty($_POST['letter' . $cur_template_num])) {
+            $new_template[$cur_template_num] = str_replace($replace, $search, $_POST['letter' . $cur_template_num]);
+            $letterid = $_POST['editLetterId'];
           }
+
+          // Letter hasn't been edited, but a new template exists in hidden field
+       		if ($new_template[$cur_template_num] == null) {
+            if (!empty($master_r['template'])) {
+              $new_template[$cur_template_num] = html_entity_decode($master_r['template'], ENT_COMPAT | ENT_QUOTES, "UTF-8");
+            } else {
+              $new_template[$cur_template_num] = html_entity_decode($_POST['new_template'][$cur_template_num], ENT_COMPAT | ENT_QUOTES, "UTF-8");
+            }
+          }
+
+          /**
+
+          */
 
           // Template hasn't changed
           if ($new_template[$cur_template_num] == $orig_template) {
@@ -1795,6 +1810,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         				  <?php print html_entity_decode( preg_replace('/(&Acirc;|&nbsp;)+/i', '', htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8")), ENT_COMPAT | ENT_IGNORE,"UTF-8"); ?>
         				</div>
         				<input type="hidden" name="new_template[<?php echo $cur_letter_num?>]" value="<?php echo preg_replace('/(&Acirc;|&nbsp;)+/i', '',htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8"))?>" />
+                <input type="hidden" name="editLetterId" value="<?php echo $master_r['letterid']; ?>">
         			</td>
         		</tr>
         	</table>
@@ -1908,11 +1924,11 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
    	          $num_contacts = num_letter_contacts($_GET['lid']);
   	          
               if($_POST['send_letter'][$cur_letter_num] != null){
-                create_letter_pdf($saveletterid);
+                create_letter_pdf($_POST['editLetterId']);
           ?>
                 <script type="text/javascript">
                   $(document).ready( function(){
-                    loadPopup("letter_approve.php?id=<?php echo $saveletterid; ?>&pid=<?php echo  $_GET['pid']; ?>&backoffice=<?php echo  $_GET['backoffice']; ?><?php echo  ($parent)?'&parent=1':''; ?>&goto=<?php echo  $_GET['goto']; ?>");
+                    loadPopup("letter_approve.php?id=<?php echo $_POST['editLetterId']; ?>&pid=<?php echo  $_GET['pid']; ?>&backoffice=<?php echo  $_GET['backoffice']; ?><?php echo  ($parent)?'&parent=1':''; ?>&goto=<?php echo  $_GET['goto']; ?>");
                   });
                 </script>
           <?php

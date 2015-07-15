@@ -10,7 +10,7 @@
 ?>
 
 <link rel="stylesheet" href="css/letters.css" />
-<script src="js/letters.js" type="text/javascript"></script>
+<script src="js/letters.js?v<?= time() ?>" type="text/javascript"></script>
 
 <?php
 

@@ -15,6 +15,7 @@ if(isset($_REQUEST['useid'])){
 	$pcr = $db->getRow($pcsql);
 	$psql = "UPDATE dental_patients SET ";
 	switch($pcr['insurancetype']){
+        default: // Assume: insurance type not set equals primary
 		case '1':
 			$psql .= " p_m_ins_co ";
 			break;

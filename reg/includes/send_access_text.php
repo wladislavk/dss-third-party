@@ -6,7 +6,7 @@ require_once '../../manage/admin/includes/main_include.php';
   $hash = $_REQUEST['hash'];
 
   $s = "SELECT * FROM dental_patients WHERE
-	patientid=".mysqli_real_escape_string($con, $id)." AND
+	patientid='".mysqli_real_escape_string($con, $id)."' AND
 	recover_hash='".mysqli_real_escape_string($con, $hash)."'";
   $q = mysqli_query($con, $s);
   $r = mysqli_fetch_assoc($q);

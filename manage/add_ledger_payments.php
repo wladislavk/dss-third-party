@@ -314,7 +314,7 @@ function showAuthBox()
       $lq = $db->getResults($lsql);
       foreach ($lq as $row) {
     ?>
-        <div style="height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
+        <div style="height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;" class="claims">
         <span style="width:80px;margin: 0 10px 0 0; float:left;"><?php echo  $row['service_date']; ?></span>
         <span style="width:180px;margin: 0 10px 0 0; float:left;"><?php echo  $row['description']; ?></span>
         <span style="width:100px;margin: 0 10px 0 0; float:left;">$<?php echo  $row['amount']; ?></span>

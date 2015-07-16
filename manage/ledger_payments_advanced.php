@@ -168,7 +168,7 @@
                                     <td><input class="coins dollar_input" type="text" name="coins_<?= $row['ledgerid']; ?>" value="<?php echo  (!empty($row['coins']) ? $row['coins'] : ''); ?>" /></td>
                                     <td><input class="overpaid dollar_input" type="text" name="overpaid_<?= $row['ledgerid']; ?>" value="<?php echo  (!empty($row['overpaid']) ? $row['overpaid'] : ''); ?>" /></td>
                                     <td><input class="followup calendar_top" type="text" id="followup_<?= $row['ledgerid']; ?>" name="followup_<?= $row['ledgerid']; ?>" value="<?= $row['followup']; ?>" /></td>
-                                    <td><input class="calendar_top payment_date" type="text" id="payment_date_<?= $row['ledgerid']; ?>" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></td>
+                                    <td><input class="calendar_top payment_date" type="text" readonly id="payment_date_<?= $row['ledgerid']; ?>" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></td>
                                     <td><input class="note" type="text" name="note_<?= $row['ledgerid']; ?>" value="<?php echo  (!empty($row['note']) ? $row['note'] : ''); ?>" /></td>
                                 </tr>
                         <?php

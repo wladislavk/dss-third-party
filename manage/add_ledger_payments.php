@@ -35,7 +35,7 @@ function validSubmission(f)
 
   if (!authShown) {
   //CHECK PAYMENT IS ENTERED
-  /*
+
   payment = false
   $('.payment_amount').each( function(){
     if( $(this).val()!=''){
@@ -47,7 +47,6 @@ function validSubmission(f)
     alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
     returnval = false;
   }
-  */
 
   isEmptyPaymentDate = false;
 

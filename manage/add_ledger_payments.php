@@ -35,6 +35,7 @@ function validSubmission(f)
 
   if (!authShown) {
   //CHECK PAYMENT IS ENTERED
+  /*
   payment = false
   $('.payment_amount').each( function(){
     if( $(this).val()!=''){
@@ -45,6 +46,25 @@ function validSubmission(f)
   if(!payment){
     alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
     returnval = false;
+  }
+  */
+
+  isEmptyPaymentDate = false;
+
+  for (var i = 0; i < $('.claims').length; i++) {
+    var claim = $($('.claims')[i]);
+
+    if (claim.find('.payment_amount').val() != '') {
+      if (claim.find('.payment_date').val() == '') {
+        isEmptyPaymentDate = true;
+        break;
+      }
+    }
+  }
+
+  if (isEmptyPaymentDate) {
+    alert('Fields "Paid Amount" and "Payment Date" are required for line-items with data entered in other fields.');
+    return false;
   }
 
   //DISPUTE CLAIM
@@ -183,7 +203,7 @@ function showAuthBox()
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script language="text/javascript" src="calendar1.js"></script>
 <script language="text/javascript" src="calendar2.js"></script>
-<script type="text/javascript" src="js/add_ledger_payments.js"></script>
+<script type="text/javascript" src="js/add_ledger_payment.js"></script>
 
 <form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
   <div style="width:200px; margin:0 auto; text-align:center;">
@@ -218,9 +238,20 @@ function showAuthBox()
       </tr>
   <?php
       foreach ($p_sql as $p) {
+        if (!empty($p['followup']) && strtotime($p['followup']) > 0) {
+          $followUp = $p['followup'];
+        } else {
+          $followUp = '';
+        }
+
+        if (!empty($p['payment_date']) && strtotime($p['payment_date']) > 0) {
+          $paymentDate = date('m/d/Y', strtotime($p['payment_date']));
+        } else {
+          $paymentDate = '';
+        }
   ?>
     <tr>
-      <td><?php echo  date('m/d/Y', strtotime($p['payment_date'])); ?></td>
+      <td><?php echo  $paymentDate; ?></td>
       <td><?php echo  date('m/d/Y', strtotime($p['entry_date'])); ?></dt>
       <td><?php echo  $p['description']; ?></td>
       <td><?php echo  $dss_trxn_payer_labels[$p['payer']]; ?></td>
@@ -232,7 +263,7 @@ function showAuthBox()
       <td><?php echo  ($p['copay'] > 0 ? $p['copay'] : ""); ?></td>
       <td><?php echo  ($p['coins'] > 0 ? $p['coins'] : ""); ?></td>
       <td><?php echo  ($p['overpaid'] > 0 ? $p['overpaid'] : ""); ?></td>
-      <td><?php echo  $p['followup']; ?></td>
+      <td><?php echo  $followUp; ?></td>
       <td><?php echo  $p['note']; ?></td>
     </tr>
 

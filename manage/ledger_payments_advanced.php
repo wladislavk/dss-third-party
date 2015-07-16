@@ -64,7 +64,7 @@
                     <th>Payment Type</th>
                     <th>Billed Amount</th>
                     <th>Allowed</th>
-                      <th>Paid Amount</th>
+                    <th>Paid Amount</th>
                     <th>Ins. Paid</th>
                     <th>Deductible</th>
                     <th>Copay</th>
@@ -75,6 +75,11 @@
                   </tr>
             <?php
                     if ($p_sql) foreach ($p_sql as $p){
+                        if (!empty($p['followup']) && strtotime($p['followup']) > 0) {
+                            $followUp = preg_replace('/ .*$/', '', $p['followup']);
+                        } else {
+                            $followUp = '';
+                        }
             ?>
                   <tr>
                     <td><?php echo  date('m/d/Y', strtotime($p['payment_date'])); ?></td>
@@ -82,15 +87,15 @@
                     <td><?php echo  $p['description']; ?></td>
                     <td><?php echo  $dss_trxn_payer_labels[$p['payer']]; ?></td>
                     <td><?php echo  $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></td>
-                      <td><?= ($p['ledger_amount'] > 0 ? $p['ledger_amount'] : ""); ?></td>
+                    <td><?php echo  ($p['ledger_amount'] > 0 ? $p['ledger_amount'] : ""); ?></td>
                     <td><?php echo  ($p['amount_allowed'] > 0 ? $p['amount_allowed'] : ""); ?></td>
-                      <td><?php echo  ($p['amount'] > 0 ? $p['amount'] : ""); ?></td>
-                      <td><?php echo  ($p['ins_paid'] > 0 ?  $p['ins_paid'] : ""); ?></td>
+                    <td><?php echo  ($p['amount'] > 0 ? $p['amount'] : ""); ?></td>
+                    <td><?php echo  ($p['ins_paid'] > 0 ?  $p['ins_paid'] : ""); ?></td>
                     <td><?php echo  ($p['deductible'] > 0 ? $p['deductible'] : ""); ?></td>
                     <td><?php echo  ($p['copay'] > 0 ? $p['copay'] : ""); ?></td>
                     <td><?php echo  ($p['coins'] > 0 ? $p['coins'] : ""); ?></td>
                     <td><?php echo  ($p['overpaid'] > 0 ? $p['overpaid'] : ""); ?></td>
-                    <td><?= preg_replace('/ .*$/', '', $p['followup']) ?></td>
+                    <td><?php echo  $followUp ?></td>
                     <td><?php echo  $p['note']; ?></td>
                   </tr>
             <?php 
@@ -151,7 +156,7 @@
                             $lq = $db->getResults($lsql);
                             if ($lq) foreach ($lq as $row){
                         ?>
-                                <tr>
+                                <tr class="claims">
                                     <td><?php echo  $row['service_date']; ?></td>
                                     <td><?php echo  $row['description']; ?></td>
                                     <td>$<?php echo  $row['amount']; ?></td>

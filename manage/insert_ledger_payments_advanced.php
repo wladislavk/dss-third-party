@@ -44,6 +44,13 @@
                 $lq = $db->getResults($lsql);
                 if ($lq) foreach ($lq as $row){
                     $id = $row['ledgerid'];
+
+                    if (!empty($_POST['followup_'.$id])) {
+                        $followUp = date('Y-m-d', strtotime($_POST['followup_'.$id]));
+                    } else {
+                        $followUp = null;
+                    }
+
                     if($_POST['amount_'.$id]!=''){
                         $sqlinsertqry .= "(
                             ".$id.", 
@@ -58,7 +65,7 @@
                             '".mysqli_real_escape_string($con,$_POST['copay_'.$id])."',
                             '".mysqli_real_escape_string($con,$_POST['coins_'.$id])."',
                             '".mysqli_real_escape_string($con,$_POST['overpaid_'.$id])."',
-                            '".date('Y-m-d', strtotime($_POST['followup_'.$id]))."',
+                            '".$followUp."',
                             '".mysqli_real_escape_string($con,$_POST['note_'.$id])."'
                             ),";
                     }

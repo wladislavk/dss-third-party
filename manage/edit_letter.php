@@ -59,6 +59,13 @@
 
   $master_c = $db->getResults($master_sql);
   $master_q = $db->getResults($master_sql);
+
+  if (count($master_c) === 1 && empty($master_c['edit_date'])) {
+    $isNewLetter = true;
+  } else {
+    $isNewLetter = false;
+  }
+
   $master_num = 0;
   $cur_letter_num = 0;
   $cur_template_num = 0;
@@ -1919,16 +1926,21 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
                 $send_method = '';
               }
 
-
               $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $message, $send_method, $font_size, $font_family);
    	          $num_contacts = num_letter_contacts($_GET['lid']);
+
+              if ($isNewLetter) {
+                $createLetterPdfId = $saveletterid;
+              } else {
+                $createLetterPdfId = $_POST['editLetterId'];
+              }
   	          
               if($_POST['send_letter'][$cur_letter_num] != null){
-                create_letter_pdf($_POST['editLetterId']);
+                create_letter_pdf($createLetterPdfId);
           ?>
                 <script type="text/javascript">
                   $(document).ready( function(){
-                    loadPopup("letter_approve.php?id=<?php echo $_POST['editLetterId']; ?>&pid=<?php echo  $_GET['pid']; ?>&backoffice=<?php echo  $_GET['backoffice']; ?><?php echo  ($parent)?'&parent=1':''; ?>&goto=<?php echo  $_GET['goto']; ?>");
+                    loadPopup("letter_approve.php?id=<?php echo $createLetterPdfId; ?>&pid=<?php echo  $_GET['pid']; ?>&backoffice=<?php echo  $_GET['backoffice']; ?><?php echo  ($parent)?'&parent=1':''; ?>&goto=<?php echo  $_GET['goto']; ?>");
                   });
                 </script>
           <?php

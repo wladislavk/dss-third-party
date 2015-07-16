@@ -274,25 +274,29 @@ function showAuthBox()
       <span style="width:180px;margin: 0 10px 0 0; float:left;">Description</span>
       <span style="width:100px;margin: 0 10px 0 0; float:left;">Amount</span>
       <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">Payment Date</span>
+      <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">Amount Allowed</span>
       <span style="float:left;font-weight:bold;">Paid Amount</span>
     </div>
 
     <?php
-      $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".(!empty($_GET['cid']) ? $_GET['cid'] : '');
+      $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."'";
       $lq = $db->getResults($lsql);
       foreach ($lq as $row) {
     ?>
         <div style="height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
-          <span style="width:80px;margin: 0 10px 0 0; float:left;"><?php echo  $row['service_date']; ?></span>
-          <span style="width:180px;margin: 0 10px 0 0; float:left;"><?php echo  $row['description']; ?></span>
-          <span style="width:100px;margin: 0 10px 0 0; float:left;">$<?php echo  $row['amount']; ?></span>
-          <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">
-            <input style="width:140px" class="calendar_top" id="payment_date_<?= $row['ledgerid'] ?>" type="text" name="payment_date_<?php echo  $row['ledgerid']; ?>" value="<?php echo  date('m/d/Y'); ?>" />
-          </span>
-          <span style="float:left;font-weight:bold;">
+        <span style="width:80px;margin: 0 10px 0 0; float:left;"><?php echo  $row['service_date']; ?></span>
+        <span style="width:180px;margin: 0 10px 0 0; float:left;"><?php echo  $row['description']; ?></span>
+        <span style="width:100px;margin: 0 10px 0 0; float:left;">$<?php echo  $row['amount']; ?></span>
+        <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">
+            <input style="width:140px" readonly class="calendar_top" id="payment_date_<?= $row['ledgerid'] ?>" type="text" name="payment_date_<?php echo  $row['ledgerid']; ?>" value="<?php echo  date('m/d/Y'); ?>" />
+        </span>
+        <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">
+            <input style="width:140px" type="text" class="allowed_amount dollar_input" name="allowed_<?= $row['ledgerid']; ?>" />
+        </span>
+        <span style="float:left;font-weight:bold;">
             <input class="payment_amount dollar_input" style="width:140px;" type="text" name="amount_<?php echo  $row['ledgerid']; ?>" />
-          </span>
-        </div>
+        </span>
+    </div>
     <?php } ?>
 
     <br />

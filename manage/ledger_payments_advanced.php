@@ -3,7 +3,7 @@
     include_once "includes/constants.inc";
     require "includes/calendarinc.php";
 
-    $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' or dl.secondary_claim_id=".$_GET['cid'].");";
+    $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' or dl.secondary_claim_id='".$_GET['cid']."');";
     $payments = $db->getRow($sql);
     $csql = "SELECT i.*, CONCAT(p.firstname, ' ',p.lastname) name FROM dental_insurance i JOIN dental_patients p ON p.patientid=i.patientid WHERE i.insuranceid='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."';";
     $claim = $db->getRow($csql);
@@ -47,7 +47,7 @@
                 <input type="hidden" value="0" id="currval" />
             </div>
             <?php
-                $sql = "SELECT dlp.*, dl.description, dl.amount as ledger_amount FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' or dl.secondary_claim_id=".$_GET['cid'].");";
+                $sql = "SELECT dlp.*, dl.description, dl.amount as ledger_amount FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' or dl.secondary_claim_id='".$_GET['cid']."');";
                 $p_sql = $db->getResults($sql);
                 if(count($p_sql)==0){
             ?>
@@ -135,7 +135,7 @@
                             <td>Description</td>
                             <td>Billled Amount</td>
                             <td>Allowed</td>
-                            <td>Paid Amount <span class="req">*</span><</td>
+                            <td>Paid Amount <span class="req">*</span></td>
                             <td>Ins. Paid</td>
                             <td>Deductible</td>
                             <td>Copay</td>
@@ -163,7 +163,7 @@
                                     <td><input class="dollar_input" type="text" name="coins_<?= $row['ledgerid']; ?>" value="<?php echo  (!empty($row['coins']) ? $row['coins'] : ''); ?>" /></td>
                                     <td><input class="dollar_input" type="text" name="overpaid_<?= $row['ledgerid']; ?>" value="<?php echo  (!empty($row['overpaid']) ? $row['overpaid'] : ''); ?>" /></td>
                                     <td><input class="calendar_top" type="text" id="followup_<?= $row['ledgerid']; ?>" name="followup_<?= $row['ledgerid']; ?>" value="<?= $row['followup']; ?>" /></td>
-                                    <td><input class="calendar_top" type="text" id="payment_date_<?= $row['ledgerid']; ?>" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></td>
+                                    <td><input class="calendar_top" type="text" readonly id="payment_date_<?= $row['ledgerid']; ?>" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></td>
                                     <td><input type="text" name="note_<?= $row['ledgerid']; ?>" value="<?php echo  (!empty($row['note']) ? $row['note'] : ''); ?>" /></td>
                                 </tr>
                         <?php

@@ -4,17 +4,39 @@ function validSubmission(f)
     returnval = true;
     if(!authShown){
         //CHECK PAYMENT IS ENTERED
-        payment = false
-        $('.payment_amount').each( function(){
-            if( $(this).val()!=''){
-            payment = true;
-            }
-        });
 
-        if( !payment ){
-            alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
+        isEmptyPaymentAmount = false;
+        isEmptyPaymentDate = false;
+
+        for (var i = 0; i < $('.claims').length; i++) {
+            var claim = $($('.claims')[i]);
+
+            if (claim.find('.allowed_amount').val() != '' ||
+                claim.find('.ins_paid').val() != '' ||
+                claim.find('.deductible').val() != '' ||
+                claim.find('.copay').val() != '' ||
+                claim.find('.coins').val() != '' ||
+                claim.find('.overpaid').val() != '' ||
+                claim.find('.followup').val() != '' ||
+                claim.find('.note').val() != ''
+            ) {
+                if (claim.find('.payment_amount').val() == '') {
+                    isEmptyPaymentAmount = true;
+                    break;
+                }
+
+                if (claim.find('.payment_date').val() == '') {
+                    isEmptyPaymentDate = true;
+                    break;
+                }
+            }
+        }
+
+        if (isEmptyPaymentAmount || isEmptyPaymentDate) {
+            alert('Fields "Paid Amount" and "Payment Date" are required for line-items with data entered in other fields.');
             return false;
         }
+
         allowed = false;
         $('.allowed_amount').each( function(){
             if( $(this).val()!=''){

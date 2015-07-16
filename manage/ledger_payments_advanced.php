@@ -39,7 +39,7 @@
             var user_access = <?php echo  ($_SESSION['user_access']==2) ? 1 : 0;?>;
         </script>
 
-        <script type="text/javascript" src="/manage/js/ledger_payments_advanced.js"></script>
+        <script type="text/javascript" src="/manage/js/ledger_payments_advanced.js?v=<?= time() ?>"></script>
         <link rel="stylesheet" href="css/form.css" type="text/css" />
 
         <form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments_advanced.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data"> 

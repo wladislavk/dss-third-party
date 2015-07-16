@@ -32,37 +32,45 @@
 function validSubmission(f)
 {
   returnval = true;
+  var alertMessage = '';
 
   if (!authShown) {
   //CHECK PAYMENT IS ENTERED
 
-  payment = false
-  $('.payment_amount').each( function(){
-    if( $(this).val()!=''){
-      payment = true;
+  // Use a class to mark the valid rows
+  $('.payment_amount').removeClass('isValid').each(function(){
+    var $payment = $(this),
+        $parent = $payment.closest('.claims'),
+        $date = $parent.find('[id^=payment_date]'),
+        $allowed = $parent.find('.allowed_amount'),
+        hasPayment = $payment.val().trim() != '',
+        hasAllowed = $allowed.val().trim() != '',
+        hasDate = $date.val().trim() != '';
+
+    if (
+      ((hasPayment || hasAllowed) && !hasDate) ||
+      (hasAllowed && (!hasPayment || !hasDate))
+    ) {
+      alertMessage = 'Fields "Paid Amount" and "Payment Date" are required for line-items with data entered in other fields.';
+      return false;
+    }
+
+    if (hasAllowed && !hasPayment) {
+      alertMessage = 'You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.';
+      return false;
+    }
+
+    if (hasPayment) {
+      $payment.addClass('isValid');
     }
   });
 
-  if(!payment){
-    alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
-    returnval = false;
+  if (!alertMessage.length && !$('.payment_amount.isValid').length) {
+    alertMessage = 'You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.'
   }
 
-  isEmptyPaymentDate = false;
-
-  for (var i = 0; i < $('.claims').length; i++) {
-    var claim = $($('.claims')[i]);
-
-    if (claim.find('.payment_amount').val() != '') {
-      if (claim.find('.payment_date').val() == '') {
-        isEmptyPaymentDate = true;
-        break;
-      }
-    }
-  }
-
-  if (isEmptyPaymentDate) {
-    alert('Fields "Paid Amount" and "Payment Date" are required for line-items with data entered in other fields.');
+  if (alertMessage.length) {
+    alert(alertMessage);
     return false;
   }
 
@@ -202,7 +210,7 @@ function showAuthBox()
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script language="text/javascript" src="calendar1.js"></script>
 <script language="text/javascript" src="calendar2.js"></script>
-<script type="text/javascript" src="js/add_ledger_payment.js"></script>
+<script type="text/javascript" src="js/add_ledger_payment.js?v=<?= time() ?>"></script>
 
 <form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
   <div style="width:200px; margin:0 auto; text-align:center;">

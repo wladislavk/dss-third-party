@@ -114,8 +114,8 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     }
 
     // Ids are already escaped
-    $ledger_ids = join("', '", $added_ledger_ids);
-    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".mysqli_real_escape_string($con, $primary_claim_id)."' AND ledgerid NOT IN ('".$ledger_ids."')";
+    $ledger_ids = "'" . join("', '", $added_ledger_ids) . "'";
+    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".mysqli_real_escape_string($con, $primary_claim_id)."' AND ledgerid NOT IN (".$ledger_ids.")";
 
     $upr = $db->getRow($upsql);
     if($upr['num_ledger']>0){

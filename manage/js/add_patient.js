@@ -13,7 +13,7 @@ $(document).ready(function() {
     window.onbeforeunload = null;
   });
 
-  $('input,select').keypress(function() {
+  $('input,select').keypress(function(event) {
     return event.keyCode != 13; 
   });
 

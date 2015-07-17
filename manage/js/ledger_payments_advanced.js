@@ -5,48 +5,54 @@ function validSubmission(f)
     if(!authShown){
         //CHECK PAYMENT IS ENTERED
 
-        isEmptyPaymentAmount = false;
-        isEmptyPaymentDate = false;
+        var isEmptyPaymentAmount = false,
+            isEmptyPaymentDate = false,
+            isEmptyAllowedAmount = false;
 
-        for (var i = 0; i < $('.claims').length; i++) {
-            var claim = $($('.claims')[i]);
+        $('.claims').removeClass('isValid').each(function(){
+            var claim = $(this),
+                hasPayment = claim.find('.payment_amount').val().trim() != '',
+                hasAllowed = claim.find('.allowed_amount').val().trim() != '',
+                hasDate = claim.find('.payment_date').val().trim() != '',
+                hasExtraFields = false;
 
-            if (claim.find('.allowed_amount').val() != '' ||
-                claim.find('.ins_paid').val() != '' ||
-                claim.find('.deductible').val() != '' ||
-                claim.find('.copay').val() != '' ||
-                claim.find('.coins').val() != '' ||
-                claim.find('.overpaid').val() != '' ||
-                claim.find('.followup').val() != '' ||
-                claim.find('.note').val() != ''
-            ) {
-                if (claim.find('.payment_amount').val() == '') {
+            claim.find('input[type=text]').not('.payment_amount, .payment_date').each(function(){
+                hasExtraFields = hasExtraFields || $(this).val().trim() != '';
+            });
+
+            if (hasExtraFields) {
+                if (!hasPayment) {
                     isEmptyPaymentAmount = true;
-                    break;
+                    return false;
                 }
 
-                if (claim.find('.payment_date').val() == '') {
+                if (!hasDate) {
                     isEmptyPaymentDate = true;
-                    break;
+                    return false;
                 }
             }
-        }
+
+            if (hasPayment) {
+                claim.addClass('isValid');
+
+                if (!hasAllowed) {
+                    isEmptyAllowedAmount = true;
+                }
+            }
+        });
 
         if (isEmptyPaymentAmount || isEmptyPaymentDate) {
             alert('Fields "Paid Amount" and "Payment Date" are required for line-items with data entered in other fields.');
             return false;
         }
 
-        allowed = false;
-        $('.allowed_amount').each( function(){
-            if( $(this).val()!=''){
-                allowed = true;
-            }
-
-        });
-
-        if( !allowed ){
+        if (isEmptyAllowedAmount) {
            returnval = confirm('You did not enter "Amount Allowed". This information is normally listed on the patient\'s EOB.  Proceed anyway?');
+        }
+
+        if (!$('.claims.isValid').length) {
+            alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
+            return false;
         }
 
         //DISPUTE CLAIM

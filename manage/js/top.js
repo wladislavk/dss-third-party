@@ -14,26 +14,35 @@ if (typeof String.prototype.trim !== 'function') {
   var searchVal = ""; // global variable to hold the last valid search string
   var local_pat_data = new Array();
 
+function consoleLog () {
+    if (typeof console !== 'undefined' && typeof console.log === 'function') {
+        console.log.apply(console, arguments);
+    }
+}
+
   $(document).ready(function() {
-    $('#patient_search').keypress(function(event) { return event.keyCode != 13; });
-    $('#patient_search').keyup(function(e) {
-      console.log('START = '+$('#patient_search').val()+"|"+(new Date().getTime()));
+    $('#patient_search, #pat_name').keypress(function(event) { return event.keyCode != 13; });
+    $('#patient_search, #pat_name').keyup(function(e) {
+      var $this = $(this);
 
+      consoleLog('START', $this.val(), (new Date().getTime()));
+
+      var $parent = $this.parent();
       var a = e.which; // ascii decimal value
-      var listSize = $('#patient_list li').size();
-      var stringSize = $(this).val().length;
+      var listSize = $parent.find('#patient_list li, .search_list li').size();
+      var stringSize = $this.val().length;
 
-      if ($(this).val().trim() == "") {
-        $('#search_hints').css('display', 'none');
-        $('.json_patient').remove();
-        $('.create_new').remove();
-        $('.initial_list').css("display", "table-row");
-      } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
-        $('.initial_list').css("display", "none");
-        $('#search_hints').css("display", "inline");
-        sendValue($('#patient_search').val());
-        if ($(this).val() > 2) {
-          window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
+      if ($this.val().trim() == "") {
+        $parent.find('.search_hints').css('display', 'none');
+        $parent.find('.json_patient').remove();
+        $parent.find('.create_new').remove();
+        $parent.find('.initial_list').css("display", "table-row");
+      } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($this.val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
+        $parent.find('.initial_list').css("display", "none");
+        $parent.find('.search_hints').css("display", "inline");
+        sendValue($this.val(), $parent.find('#patient_list, .search_list'));
+        if ($this.val() > 2) {
+          window.searchVal = $this.val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
         }
       }
     });
@@ -47,49 +56,60 @@ if (typeof String.prototype.trim !== 'function') {
           move_selection('down');
           break;
         case 13:
-          if($('#search_hints').css('display') == 'inline' || $('#search_hints').css('display') == 'block'){  
+          if ($('.search_hints').is(':visible')) {
             if (selectedUrl != '') {
-            window.location = window.selectedUrl;
+              window.location = window.selectedUrl;
             }
           }
           break;
       }
     });
 
-    $('#patient_search').click(function() {
-      if ($(this).val() == 'Patient Search') {
-        $(this).val('');
+    $('#patient_search, #pat_name').click(function() {
+      var $this = $(this);
+
+      if ($this.val() == 'Patient Search' || $this.val() == 'Search Calendar') {
+        $this.val('');
       }
     });
 
-    $('#patient_list > li').hover(function() {
-      if ($(this).data("pattype")!="no") {
-        $(this).css('cursor','pointer');
+    $('#patient_list > li, .search_list li').hover(function() {
+      var $this = $(this);
+
+      if ($this.data("pattype") != "no") {
+        $this.css('cursor','pointer');
       }
-      window.selection = $(this).data("number");
+      window.selection = $this.data("number");
       set_selected(window.selection);
     }, function() {
-      if ($(this).data("pattype")!="no") {
-        $(this).css('cursor','auto');
+      var $this = $(this);
+
+      if ($this.data("pattype") != "no") {
+        $this.css('cursor','auto');
       }
 
-      $('#patient_list li').removeClass('list_hover');
+      $('#patient_list li, .search_list li').removeClass('list_hover');
       window.selectedUrl = '';
     });
 
-    $('#patient_list > li').click(function() {
-        if($(this).data("pattype")=="new"){
-      n = $('#patient_search').val();
-      window.location = "add_patient.php?search="+n;
-        }else if($(this).data("pattype")=="no"){
-      //do nothing
-                    }else{
-      if (selectedUrl != '') {
-        window.location = window.selectedUrl;
-      }
-      $('#patient_search').val($(this).html());
-      sendValue($(this).html());
+    $('#patient_list > li, .search_list li').click(function() {
+      var $this = $(this),
+          $parent = $this.closest('.search_hints').parent(),
+          $search = $parent.find('input[type=text]');
+
+      if ($this.data("pattype") == "new") {
+        n = $search.val();
+        window.location = "add_patient.php?search="+n;
+      } else if ($this.data("pattype") == "no") {
+        //do nothing
+      } else {
+        if (selectedUrl != '') {
+          window.location = window.selectedUrl;
         }
+
+        $search.val($this.html());
+        sendValue($this.html(), $parent.find('#patient_list, .search_list'));
+      }
     });
 
     $('*').click(function() {
@@ -332,7 +352,9 @@ var searchBounce = 600,
   searchTimeout = 0,
   searchRequest = null;
 
-function handleResults (data) {
+function handleResults (data, $reference) {
+  var $target = typeof $reference === 'undefined' ? $('#patient_list') : $reference;
+
   if (data.length == 0) {
     $('.json_patient').remove();
     $('.create_new').remove();
@@ -344,7 +366,7 @@ function handleResults (data) {
       .data("pattype", "no");
 
     template_list_new(newLi, "No Matches")
-      .appendTo('#patient_list')
+      .appendTo($target)
       .fadeIn();
 
     var newLi = $('#patient_list .template').clone(true)
@@ -353,7 +375,7 @@ function handleResults (data) {
       .data("pattype", "new");
 
     template_list_new(newLi, "Add patient with this name&#8230;")
-      .appendTo('#patient_list')
+      .appendTo($target)
       .fadeIn();
   } else if (data.error) {
     $('.json_patient').remove();
@@ -374,13 +396,13 @@ function handleResults (data) {
         .data("patient_info", data[i].patient_info);
 
       template_list(newLi, data[i])
-        .appendTo('#patient_list')
+        .appendTo($target)
         .fadeIn();
     }
   }
 }
 
-function sendValue (searchTerm) {
+function sendValue (searchTerm, $reference) {
   if (searchTimeout) {
     clearTimeout(searchTimeout);
   }
@@ -396,7 +418,9 @@ function sendValue (searchTerm) {
       dataType: "json",
       url: "list_patients.php",
       data: { partial_name: searchTerm },
-      success: handleResults,
+      success: function(data){
+        handleResults(data, $reference);
+      },
       complete: function(){
         searchTimeout = 0;
         searchRequest = null;
@@ -407,7 +431,7 @@ function sendValue (searchTerm) {
 
 function move_selection(direction)
 {
-  if ($('#patient_list > li.list_hover').size() == 0) {
+  if ($('#patient_list:visible > li.list_hover, .search_list:visible > li.list_hover').size() == 0) {
     window.selection = 0;
   }
 
@@ -416,7 +440,7 @@ function move_selection(direction)
       window.selection--;
     }
   } else if (direction == 'down') {
-    if (window.selection != ($("#patient_list li").size() -1)) {
+    if (window.selection != ($("#patient_list:visible li, .search_list:visible > li").size() -1)) {
       window.selection++;
     }
   }
@@ -426,21 +450,30 @@ function move_selection(direction)
 
 function set_selected(menuitem)
 {
-  $('#patient_list li').removeClass('list_hover');
-  $('#patient_list li').eq(menuitem).addClass('list_hover');
-  var pid = $('#patient_list li').eq(menuitem).data("patientid");
-  var patient_info = $('#patient_list li').eq(menuitem).data("patient_info");
-  
-  if ($('#patient_list li').eq(menuitem).data("pattype")=="new") {
-    n = $('#patient_search').val();
-    window.selectedUrl = "add_patient.php?search=" + n;
-  } else if($('#patient_list li').eq(menuitem).data("pattype") == "no") {
-     window.selectedUrl = '';
+  var $item = $('#patient_list:visible li, .search_list:visible li').eq(menuitem),
+      $parent = $item.closest('.search_hints').parent(),
+      $search = $parent.find('input[type=text]'),
+      pid = $item.data("patientid"),
+      patient_info = $item.data("patient_info");
+
+  $('#patient_list li, .search_list li').removeClass('list_hover');
+  $item.addClass('list_hover');
+
+  // Different target pages for calendar search and regular search
+  if ($parent.is('#cal_search')) {
+    window.selectedUrl = "/manage/calendar_pat.php?pid=" + pid;
   } else {
-    if (patient_info == 1) {
-      window.selectedUrl = "/manage/manage_flowsheet3.php?pid=" + pid;
+    if ($item.data("pattype") == "new") {
+      n = $search.val();
+      window.selectedUrl = "add_patient.php?search=" + n;
+    } else if($item.data("pattype") == "no") {
+      window.selectedUrl = '';
     } else {
-      window.selectedUrl = "/manage/add_patient.php?pid=" + pid + "&ed=" + pid;
+      if (patient_info == 1) {
+        window.selectedUrl = "/manage/manage_flowsheet3.php?pid=" + pid;
+      } else {
+        window.selectedUrl = "/manage/add_patient.php?pid=" + pid + "&ed=" + pid;
+      }
     }
   }
 }

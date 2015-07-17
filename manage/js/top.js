@@ -403,6 +403,13 @@ function handleResults (data, $reference) {
 }
 
 function sendValue (searchTerm, $reference) {
+  var $parent = $reference.closest('.search_hints').parent();
+
+  // Restrict ajax search to only search bars, like patient and calendar
+  if (!$parent.length || !$parent.is('[id*=search]')) {
+    return;
+  }
+
   if (searchTimeout) {
     clearTimeout(searchTimeout);
   }
@@ -458,6 +465,11 @@ function set_selected(menuitem)
 
   $('#patient_list li, .search_list li').removeClass('list_hover');
   $item.addClass('list_hover');
+
+  // Restrict redirection to results from search bars, like patient and calendar searches
+  if (!$parent.length || !$parent.is('[id*=search]')) {
+    return;
+  }
 
   // Different target pages for calendar search and regular search
   if ($parent.is('#cal_search')) {

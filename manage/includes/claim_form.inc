@@ -1261,7 +1261,7 @@ if (empty($prior_authorization_number)) {
 input{text-transform:uppercase;}
 </style>
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>
+    <script type="text/javascript" src="/manage/script/autocomplete_local.js?v=<?= time() ?>"></script>
     <script language="javascript" type="text/javascript" src="<?php echo $manage_path?>script/validation.js"></script>
 </head>
 

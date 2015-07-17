@@ -30,7 +30,7 @@ if(!isset($_GET['noheaders'])){
 <script type="text/javascript" src="script/wufoo.js"></script>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/add_patient.css" type="text/css" media="screen" />
-<script type="text/javascript" src="js/add_patient.js"></script>
+<script type="text/javascript" src="js/add_patient.js?v=<?= time() ?>"></script>
 <script src="script/autocomplete.js" type="text/javascript"></script>
 <script src="script/autocomplete_local.js" type="text/javascript"></script>
 <?php
@@ -85,7 +85,7 @@ if ($pt_referralid) {
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
-<script type="text/javascript" src="/manage/js/add_patient.js"></script>
+<script type="text/javascript" src="/manage/js/add_patient.js?v=<?= time() ?>"></script>
 <?php
 /*=======================================================
 TRIGGERING LETTERS

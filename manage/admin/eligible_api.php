@@ -4,7 +4,7 @@ require_once('../includes/constants.inc');
 ?>
 <link rel="stylesheet" href="../css/eligible_api.css" />
  <script type="text/javascript" src="../script/autocomplete.js"></script>
- <script type="text/javascript" src="../script/autocomplete_local.js"></script>
+ <script type="text/javascript" src="../script/autocomplete_local.js?v=<?= time() ?>"></script>
 
 <?php
   $s = "SELECT p.*, c.company, u.name as doc_name, u.npi, u.userid as doc_id from dental_patients p

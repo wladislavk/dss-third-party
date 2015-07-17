@@ -9,22 +9,12 @@
 			var cpl = data;
 			var array_index = 0;
 			for(var i=0; i<cpl.length;i++){
-				//var endpoint_index = -1;
-				/*for(j=0;j<cpl[i]['supported_endpoints'].length;j++){
-				  if(endpoint == cpl[i]['supported_endpoints'][j].endpoint){
-				    endpoint_index = j;
-				  }
-				}*/
-				//if(!endpoint || endpoint_index != -1){
-					local_data[array_index] = new Array();
-					local_data[array_index]['payer_id'] = cpl[i]['payer_id'];
-					local_data[array_index]['payer_name'] = cpl[i]['names'].join(',');
-					local_data[array_index]['enrollment_required'] = cpl[i]['enrollment_required'];
-					if(hinttype == 'ins_payer' && endpoint_index != -1){ 
-						local_data[array_index]['enrollment_mandatory_fields'] = cpl[i]['supported_endpoints'][endpoint_index].enrollment_mandatory_fields;
-					}
-					array_index++;
-				//}
+				local_data[array_index] = new Array();
+				local_data[array_index]['payer_id'] = cpl[i]['payer_id'];
+				local_data[array_index]['payer_name'] = cpl[i]['names'].join(',');
+				local_data[array_index]['enrollment_required'] = cpl[i]['enrollment_required'];
+				local_data[array_index]['enrollment_mandatory_fields'] = cpl[i]['enrollment_mandatory_fields'];
+				array_index++;
 			}
 		});
                 $('#'+in_field).keyup(function(e) {
@@ -155,7 +145,6 @@
         }
 function update_referredby_local(in_field, name, id_field, id, source, t, hint, enrollment, check_enrollment, npi, office_type, enrollment_mandatory_fields){
 
-  console.log(enrollment_mandatory_fields);
   if(enrollment_mandatory_fields != ''){
 	var emf = enrollment_mandatory_fields.split(',');
 	$('.formControl').removeClass('required');

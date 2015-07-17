@@ -42,6 +42,8 @@
                 $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id='" . (!empty($_POST['claimid']) ? $_POST['claimid'] : '') . "' or secondary_claim_id='" . $_POST['claimid'] . "'";
 
                 $lq = $db->getResults($lsql);
+                $paymentsToAdd = 0;
+
                 if ($lq) foreach ($lq as $row){
                     $id = $row['ledgerid'];
 
@@ -52,6 +54,7 @@
                     }
 
                     if($_POST['amount_'.$id]!=''){
+                        $paymentsToAdd++;
                         $sqlinsertqry .= "(
                             ".$id.", 
                             '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', 
@@ -71,11 +74,14 @@
                     }
                 }
 
-                $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
-                $insqry = $db->query($sqlinsertqry);
-                $pid = mysqli_insert_id($con);
+                if ($paymentsToAdd) {
+                    $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
+                    $insqry = $db->query($sqlinsertqry);
+                    $pid = mysqli_insert_id($con);
 
-                payment_history_update($pid, $_SESSION['userid'], '');
+                    payment_history_update($pid, $_SESSION['userid'], '');
+                }
+
                     $paysql = "SELECT SUM(lp.amount) as payment
                                 FROM dental_ledger_payment lp
                                 JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
@@ -344,28 +350,29 @@
                         $db->query($secsql);
                     }
 
-                    if(!$insqry){
-        ?>
-                        <script type="text/javascript">
-                            alert('Could not add ledger payments, please close this window and contact your system administrator');
-                        </script>                               
-                        <?php echo  $sqlinsertqry; ?>
-        <?php
-                    }else{
+                    if (!$pid) { ?>
+                        <?php if ($paymentsToAdd) { ?>
+                            <script type="text/javascript">
+                                alert('Could not add ledger payments, please close this window and contact your system administrator');
+                            </script>
+                            <?php error_log('Could not add ledger payments: ' . $sqlinsertqry) ?>
+                        <?php } else { ?>
+                            <script type="text/javascript">
+                                alert('There were no payments to add. Please verify the amounts and try again.');
+                                history.go(-1);
+                            </script>
+                        <?php } ?>
+                    <?php } else {
                         claim_history_update($_POST['claimid'], $_SESSION['userid'], $_SESSION['adminuserid']);
-        ?>
+                        ?>
                         <script type="text/javascript">
                             alert('<?php echo  $msg; ?>');
                             history.go(-1);
                         </script>
-        <?php
-                    }
-            }else{ //NOT AUTHORIZED
-        ?>
-                <script type="text/javascript">
-                    alert('YOU ARE NOT AUTHORIZED TO COMPLETE THIS REQUEST');
-                    history.go(-1);
-                </script>
-        <?php
-            }
-        ?>
+                    <?php }
+                } else { //NOT AUTHORIZED ?>
+                    <script type="text/javascript">
+                        alert('YOU ARE NOT AUTHORIZED TO COMPLETE THIS REQUEST');
+                        history.go(-1);
+                    </script>
+                <?php } ?>

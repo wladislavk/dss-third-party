@@ -6,7 +6,7 @@ will be deleted. The new testing API rolled into Laravel 5.1 makes testing prett
 
 See: http://laravel.com/docs/5.1/testing
 
-Test have become trivial.
+Writing tests have become pretty easy.
 
 Initial Steps for getting this setup. Post GIT Pull of course.
 

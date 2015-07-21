@@ -18,5 +18,5 @@ This will install gulp and laravel-elixer.
 4. once this install has finished you can run a sample test to make sure testing works as follows:
 $ gulp tdd
 
-That's pretty much it to get started. All tests will reside on the default tests folder. There are a few examples pre-loaded in the folder.
+That's pretty much it to get started. All tests will reside in the default tests folder. There are a few examples pre-loaded in the folder.
 

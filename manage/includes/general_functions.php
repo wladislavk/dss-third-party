@@ -1,8 +1,8 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
-
-
-
+function isFaultyUpload ($uploadError) {
+    return !in_array($uploadError, array(UPLOAD_ERR_OK, UPLOAD_ERR_NO_FILE));
+}
 
 function uploadImage($image, $file_path, $type = 'general'){
   $uploadedfile = $image['tmp_name'];

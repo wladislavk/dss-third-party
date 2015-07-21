@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace DSSApi\Events;
 
 abstract class Event
 {

@@ -1,5 +1,5 @@
 suites:
     main:
-        namespace: App
-        psr4_prefix: App
+        namespace: DSSApi
+        psr4_prefix: DSSApi
         src_path: app

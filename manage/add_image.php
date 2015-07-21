@@ -11,11 +11,11 @@ $maxFileSizeExceeded = 'There was an error with the file upload. Please verify t
 $errorMessage = '';
 
 if (isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && !$_FILES) {
-    error_log('Max file size exceeded AND PHP didn\'t populate POST and FILES global variables');
+    error_log('Max file size exceeded AND PHP didn\'t populate FILES global variable, and POST might be corrupt');
     $errorMessage = $maxFileSizeExceeded;
 }
 
-if (isset($_POST['submitnewsleeplabsumm'])) {
+if (!$errorMessage && isset($_POST['submitnewsleeplabsumm'])) {
     $date = s_for($_POST['date']);
     $sleeptesttype = s_for($_POST['sleeptesttype']);
     $place = s_for($_POST['place']);
@@ -124,7 +124,7 @@ if (isset($_POST['submitnewsleeplabsumm'])) {
     }
 }
 
-if (!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
+if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
     $title = $_POST['title'];
     $imagetypeid = $_POST['imagetypeid'];
 

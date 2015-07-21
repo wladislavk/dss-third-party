@@ -1,10 +1,21 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php
+
 include_once('admin/includes/main_include.php');
 include_once('includes/constants.inc');
 include("includes/sescheck.php");
 include_once('includes/general_functions.php');
 
-if(isset($_POST['submitnewsleeplabsumm'])){
+$uploaded = false;
+
+$maxFileSizeExceeded = 'There was an error with the file upload. Please verify that the file does not exceed 10MB and try again.';
+$errorMessage = '';
+
+if (isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && !$_FILES) {
+    error_log('Max file size exceeded AND PHP didn\'t populate FILES global variable, and POST might be corrupt');
+    $errorMessage = $maxFileSizeExceeded;
+}
+
+if (!$errorMessage && isset($_POST['submitnewsleeplabsumm'])) {
     $date = s_for($_POST['date']);
     $sleeptesttype = s_for($_POST['sleeptesttype']);
     $place = s_for($_POST['place']);
@@ -31,197 +42,235 @@ if(isset($_POST['submitnewsleeplabsumm'])){
     $interpolation = s_for($_POST['interpolation']);
     $copyreqdate = s_for($_POST['copyreqdate']);
     $sleeplab = s_for($_POST['sleeplab']);
-    $patientid = $_GET['pid'];
+    $patientid = intval($_GET['pid']);
 
-    if($_FILES["ss_file"]["name"] <> ''){
-        $fname = $_FILES["ss_file"]["name"];
-        $lastdot = strrpos($fname,".");
-        $name = substr($fname,0,$lastdot);
-        $extension = substr($fname,$lastdot+1);
-        $banner1 = $name.'_'.date('dmy_Hi');
-        $banner1 = str_replace(" ","_",$banner1);
-        $banner1 = str_replace(".","_",$banner1);
-        $banner1 = str_replace("'","_",$banner1);
-        $banner1 = str_replace("&","amp",$banner1);
-        $banner1 = preg_replace("/[^a-zA-Z0-9_]/", "", $banner1);
-        $banner1 .= ".".$extension;
+    $banner1 = '';
+    $image_id = '';
 
-        $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
+    if (isset($_FILES['ss_file'])) {
+        $errorNo = $_FILES['ss_file']['error'];
 
-  			if($uploaded){
-            $ins_sql = " insert into dental_q_image set 
-                          patientid = '".s_for($_GET['pid'])."',
-                          title = '".$sleeptesttype." ".$date."',
-                          imagetypeid = '1',
-                          image_file = '".s_for($banner1)."',
-                          userid = '".s_for($_SESSION['userid'])."',
-                          docid = '".s_for($_SESSION['docid'])."',
-                          adddate = now(),
-                          ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-          
-            $image_id = $db->getInsertId($ins_sql);
-  			}
-    }else{
+        if (isFaultyUpload($errorNo)) {
+            error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
+            $errorMessage = $maxFileSizeExceeded;
+        } else {
+            $fname = $_FILES["ss_file"]["name"] ?: 'unnamed_file';
+            $lastdot = strrpos($fname,".");
+            $name = substr($fname,0,$lastdot);
+            $extension = substr($fname,$lastdot+1);
+            $banner1 = $name.'_'.date('dmy_Hi');
+            $banner1 = str_replace(" ","_",$banner1);
+            $banner1 = str_replace(".","_",$banner1);
+            $banner1 = str_replace("'","_",$banner1);
+            $banner1 = str_replace("&","amp",$banner1);
+            $banner1 = preg_replace("/[^a-zA-Z0-9_]/", "", $banner1);
+            $banner1 .= ".".$extension;
+
+            $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
+
+            if ($uploaded) {
+                $ins_sql = " insert into dental_q_image set
+                              patientid = '".s_for($_GET['pid'])."',
+                              title = '".$sleeptesttype." ".$date."',
+                              imagetypeid = '1',
+                              image_file = '".s_for($banner1)."',
+                              userid = '".s_for($_SESSION['userid'])."',
+                              docid = '".s_for($_SESSION['docid'])."',
+                              adddate = now(),
+                              ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
+                $image_id = $db->getInsertId($ins_sql);
+            } else {
+                error_log('SS file upload save error. Error message should be stored above this line.');
+                $errorMessage = $maxFileSizeExceeded;
+            }
+        }
+    } else {
         $banner1 = '';
-  			$image_id = '';
+        $image_id = '';
     }
-    $q = "INSERT INTO `dental_summ_sleeplab` (
-            `id` , `date` , `sleeptesttype` , `place` , `diagnosising_doc`, `diagnosising_npi`, `ahi` , `ahisupine` ,
-            `rdi` , `rdisupine` , `o2nadir` , `t9002` , `dentaldevice` , `devicesetting` , `diagnosis` ,
-            `filename` , `notes`, `testnumber`, `sleeplab`, `patiendid`, `image_id`
-          )
-          VALUES (NULL,'".
+
+    if (!$errorMessage) {
+        $q = "INSERT INTO `dental_summ_sleeplab` (
+                `id` , `date` , `sleeptesttype` , `place` , `diagnosising_doc`, `diagnosising_npi`, `ahi` , `ahisupine` ,
+                `rdi` , `rdisupine` , `o2nadir` , `t9002` , `dentaldevice` , `devicesetting` , `diagnosis` ,
+                `filename` , `notes`, `testnumber`, `sleeplab`, `patiendid`, `image_id`
+            )
+            VALUES (NULL,'".
             $date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".
             $rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".
             $banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."', '".$image_id."')";
-    error_log($q);
-    $run_q = $db->getInsertId($q);
-    if(empty($run_q)){
-        echo "Could not add sleep lab... Please try again.";
-    }else{
-        if($uploaded){
+
+        error_log("SS save query: $q");
+        $run_q = $db->getInsertId($q);
+
+        if (empty($run_q)) {
+            $errorMessage = 'Could not add sleep lab... Please try again.';
+        }
+    }
+
+    if (!empty($run_q)) {
+        if ($uploaded) {
             $ins_id = $run_q;
         }
-       $msg = "Successfully added sleep lab". $uploaded;
-?>
-<script type="text/javascript">
-parent.window.location='q_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>';
-</script>
-<?php
+
+        $msg = "Successfully added sleep lab". ($uploaded ? ' but the file upload failed' : '');
+        ?>
+        <script type="text/javascript">
+            parent.window.location='q_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>';
+        </script>
+        <?php
         trigger_error("Die called", E_USER_ERROR);
     }
-}?>
+}
 
-<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
-
-<?php
-if(!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1){
+if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
     $title = $_POST['title'];
     $imagetypeid = $_POST['imagetypeid'];
-    if((isset($_FILES['image_file']['tmp_name']) && $_FILES['image_file']['tmp_name']!='') || $_POST['ed'] == ''){
-        if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 ){
-            $uploaded = false;
-        }else{
-            $ftype = isset($_FILES["image_file"]["type"]) ? $_FILES["image_file"]["type"] : '';
-            $fname = isset($_FILES["image_file"]["name"]) ? $_FILES["image_file"]["name"] : '';
-            $lastdot = strrpos($fname, ".");
-            $name = substr($fname, 0, $lastdot);
-            $extension = substr($fname, $lastdot + 1);
 
-            if (
-                $_POST['imagetypeid'] == 0 ||
-                (array_search($ftype, $dss_file_types) !== false) ||
-                (array_search(strtolower($extension), $dss_file_extensions) !== false)
-            ) {
-                if($imagetypeid == '0'){
-                    $fname = $_FILES["image_file_1"]["name"];
+    $primaryFileUpload = isset($_FILES['image_file']);
+    $secondaryFileUpload = isset($_FILES['image_file1']);
+
+    $primaryError = false;
+    $secondaryError = false;
+
+    if ($primaryFileUpload) {
+        $primaryError = $_FILES['image_file']['error'];
+
+        if (isFaultyUpload($primaryError)) {
+            error_log("[Image file] file upload error [{$primaryError}]: {$dss_file_upload_errors[$primaryError]}");
+            $errorMessage = $maxFileSizeExceeded;
+        }
+    }
+
+    if ($secondaryFileUpload) {
+        $secondaryError = $_FILES['image_file1']['error'];
+
+        if (isFaultyUpload($secondaryError)) {
+            error_log("[Image file (1)] file upload error [{$secondaryError}]: {$dss_file_upload_errors[$secondaryError]}");
+            $errorMessage = $maxFileSizeExceeded;
+        }
+    }
+
+    if (
+        $_POST['ed'] == '' ||
+        ($primaryFileUpload && !isFaultyUpload($primaryError)) ||
+        ($secondaryFileUpload && !isFaultyUpload($secondaryError))
+    ) {
+        $ftype = isset($_FILES["image_file"]["type"]) ? $_FILES["image_file"]["type"] : '';
+        $fname = isset($_FILES["image_file"]["name"]) ? $_FILES["image_file"]["name"] : '';
+        $lastdot = strrpos($fname, ".");
+        $name = substr($fname, 0, $lastdot);
+        $extension = substr($fname, $lastdot + 1);
+
+        if (
+            $_POST['imagetypeid'] == 0 ||
+            (array_search($ftype, $dss_file_types) !== false) ||
+            (array_search(strtolower($extension), $dss_file_extensions) !== false)
+        ) {
+            if ($imagetypeid == '0') {
+                $fname = $_FILES["image_file_1"]["name"];
+                $lastdot = strrpos($fname,".");
+                $name = substr($fname,0,$lastdot);
+                $extension = substr($fname,$lastdot+1);
+                $banner1 = $name.'_'.date('dmy_Hi');
+                $banner1 = str_replace(" ","_",$banner1);
+                $banner1 = str_replace(".","_",$banner1);
+                $banner1 = str_replace("'","_",$banner1);
+                $banner1 = str_replace("&","amp",$banner1);
+                $banner1 .= ".".$extension;
+
+                // Get new sizes
+                $newwidth = 1500;
+                $newheight = 1500;
+
+                // Load
+                $thumb = imagecreatetruecolor($newwidth, $newheight);
+
+                for ($i=1; $i<=9; $i++) {
+                    $fname = $_FILES["image_file_".$i]["name"];
                     $lastdot = strrpos($fname,".");
                     $name = substr($fname,0,$lastdot);
-                    $extension = substr($fname,$lastdot+1);
-                    $banner1 = $name.'_'.date('dmy_Hi');
-                    $banner1 = str_replace(" ","_",$banner1);
-                    $banner1 = str_replace(".","_",$banner1);
-                    $banner1 = str_replace("'","_",$banner1);
-                    $banner1 = str_replace("&","amp",$banner1);
-                    $banner1 .= ".".$extension;
+                    $extension2 = substr($fname,$lastdot+1);
 
-                    // Get new sizes
-                    $newwidth = 1500;
-                    $newheight = 1500;
-
-                		// Load
-                		$thumb = imagecreatetruecolor($newwidth, $newheight);
-                		for($i=1;$i<=9;$i++){
-                        $fname = $_FILES["image_file_".$i]["name"];
-                        $lastdot = strrpos($fname,".");
-                        $name = substr($fname,0,$lastdot);
-                        $extension2 = substr($fname,$lastdot+1);
-                  			switch(strtolower($extension2)){
-                    			  case 'jpg':
-                    			  case 'jpeg':
-                        				$source = imagecreatefromjpeg($_FILES["image_file_".$i]["tmp_name"]);
-                        				break;
-                            case 'gif':
-                                $source = imagecreatefromgif($_FILES["image_file_".$i]["tmp_name"]);
-                                break;
-                            case 'png':
-                                $source = imagecreatefrompng($_FILES["image_file_".$i]["tmp_name"]);
-                                break;
-                  			}
-                  			list($width, $height) = getimagesize($_FILES["image_file_".$i]["tmp_name"]);
-                  			$x = (($i-1)%3)*500;
-                  			$y = floor(($i-1)/3)*500;	
-                  			// Resize
-                  			imagecopyresized($thumb, $source, $x, $y, 0, 0, 500, 500, $width, $height);
-
-                		}
-
-              			$fname = $_FILES["image_file_1"]["name"];
-                    $lastdot = strrpos($fname,".");
-                    $name = substr($fname,0,$lastdot);
-                    $extension = substr($fname,$lastdot+1);
-                    $banner1 = $name.'_'.date('dmy_Hi');
-                    $banner1 = str_replace(" ","_",$banner1);
-                    $banner1 = str_replace(".","_",$banner1);
-                    $banner1 = str_replace("'","_",$banner1);
-                    $banner1 = str_replace("&","amp",$banner1);
-                    $banner1 .= ".".$extension;
-
-                		// Output
-                    switch(strtolower($extension)){
+                    switch (strtolower($extension2)) {
                         case 'jpg':
                         case 'jpeg':
-                            imagejpeg($thumb, "../../../shared/q_file/".$banner1);
+                            $source = imagecreatefromjpeg($_FILES["image_file_".$i]["tmp_name"]);
                             break;
                         case 'gif':
-                            imagegif($thumb, "../../../shared/q_file/".$banner1);                               
+                            $source = imagecreatefromgif($_FILES["image_file_".$i]["tmp_name"]);
                             break;
                         case 'png':
-                            imagepng($thumb, "../../../shared/q_file/".$banner1);
+                            $source = imagecreatefrompng($_FILES["image_file_".$i]["tmp_name"]);
                             break;
                     }
 
-                		@chmod("../../../shared/q_file/".$banner1,0777);
-                		// Free up memory
-                		//imagedestroy($thumb);
-                		$uploaded = true;
+                    list($width, $height) = getimagesize($_FILES["image_file_".$i]["tmp_name"]);
+                    $x = (($i-1)%3)*500;
+                    $y = floor(($i-1)/3)*500;
+                    // Resize
+                    imagecopyresized($thumb, $source, $x, $y, 0, 0, 500, 500, $width, $height);
+                }
 
-            	  }else{ //ALL OTHER IMAGES
+                $fname = $_FILES["image_file_1"]["name"];
+                $lastdot = strrpos($fname,".");
+                $name = substr($fname,0,$lastdot);
+                $extension = substr($fname,$lastdot+1);
+                $banner1 = $name.'_'.date('dmy_Hi');
+                $banner1 = str_replace(" ","_",$banner1);
+                $banner1 = str_replace(".","_",$banner1);
+                $banner1 = str_replace("'","_",$banner1);
+                $banner1 = str_replace("&","amp",$banner1);
+                $banner1 .= ".".$extension;
 
-                    $filesize = $_FILES["image_file"]["size"];
-                    if($filesize <= DSS_IMAGE_MAX_SIZE){
-                    		if($_FILES["image_file"]["name"] <> ''){
-                      			$banner1 = $name.'_'.date('dmy_Hi');
-                      			$banner1 = str_replace(" ","_",$banner1);
-                      			$banner1 = str_replace(".","_",$banner1);
-                            $banner1 = str_replace("'","_",$banner1);
-                            $banner1 = str_replace("&","amp",$banner1);
-                      			$banner1 .= ".".$extension;
-                      			$profile = ($_POST['imagetypeid']==4)?'profile':'general';
-                      			$uploaded = uploadImage($_FILES['image_file'], "../../../shared/q_file/".$banner1, $profile);
-                      			if($_POST['image_file_old'] <> ''){
-                        				@unlink("../../../shared/q_file/".$_POST['image_file_old']);
-                      			}
-                    		}else{
-                      			$banner1 = $_POST['image_file_old'];
+                // Output
+                switch (strtolower($extension)) {
+                    case 'jpg':
+                    case 'jpeg':
+                        imagejpeg($thumb, "../../../shared/q_file/".$banner1);
+                        break;
+                    case 'gif':
+                        imagegif($thumb, "../../../shared/q_file/".$banner1);
+                        break;
+                    case 'png':
+                        imagepng($thumb, "../../../shared/q_file/".$banner1);
+                        break;
+                }
+
+                @chmod("../../../shared/q_file/".$banner1,0777);
+                // Free up memory
+                //imagedestroy($thumb);
+                $uploaded = true;
+            } else { //ALL OTHER IMAGES
+                $filesize = $_FILES["image_file"]["size"];
+
+                if ($filesize <= DSS_IMAGE_MAX_SIZE) {
+                    if ($_FILES["image_file"]["name"] <> '') {
+                        $banner1 = $name.'_'.date('dmy_Hi');
+                        $banner1 = str_replace(" ","_",$banner1);
+                        $banner1 = str_replace(".","_",$banner1);
+                        $banner1 = str_replace("'","_",$banner1);
+                        $banner1 = str_replace("&","amp",$banner1);
+                        $banner1 .= ".".$extension;
+                        $profile = ($_POST['imagetypeid']==4)?'profile':'general';
+                        $uploaded = uploadImage($_FILES['image_file'], "../../../shared/q_file/".$banner1, $profile);
+
+                        if ($_POST['image_file_old'] <> '') {
+                            @unlink("../../../shared/q_file/".$_POST['image_file_old']);
                         }
-                    }else{ ?>
-<script type="text/javascript">
-    alert('Max image size exceeded. Uploaded files can be no larger than 10 megabytes.');
-</script>
-<?php
-                    		$uploaded = false;
-                    }     
-                }	
-            } else { ?>
-<script type="text/javascript">
-//alert('<?php echo $_FILES["image_file"]["type"];?>');
-    alert("Invalid File Type");
-</script>
-<?php
+                    } else {
+                        $banner1 = $_POST['image_file_old'];
+                    }
+                } else {
+                    $errorMessage = $maxFileSizeExceeded;
+                    $uploaded = false;
+                }
             }
+        } else {
+            $errorMessage = 'Invalid File Type. The uploaded file has an invalid format or an incorrect file extension.';
         }
-    }else{
+    } else {
         $ed_sql = " update dental_q_image set 
                       title = '".s_for($title)."',
                       imagetypeid = '".s_for($imagetypeid)."' ";
@@ -229,33 +278,35 @@ if(!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1){
         $db->query($ed_sql);
 
         $msg = "Edited Successfully";?>
-<script type="text/javascript">
-    parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
-</script>
-<?php
+        <script type="text/javascript">
+            parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
+        </script>
+        <?php
         trigger_error("Die called", E_USER_ERROR);
     }
 
-    if($uploaded ){		
-    		if($_POST["ed"] != ""){
-      			$ed_sql = " update dental_q_image set 
+    if ($uploaded) {
+        if ($_POST["ed"] != "") {
+            $ed_sql = " update dental_q_image set
                     			title = '".s_for($title)."',
                     			imagetypeid = '".s_for($imagetypeid)."' ";
-      			if($uploaded){
-        			  $ed_sql .= ", image_file = '".s_for($banner1)."' ";
-      			}
-      			$ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
-      			$db->query($ed_sql);
 
-      			$msg = "Edited Successfully";?>
+            if ($uploaded) {
+                $ed_sql .= ", image_file = '".s_for($banner1)."' ";
+            }
 
-<script type="text/javascript">
-    parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
-</script>
-<?php
-      			trigger_error("Die called", E_USER_ERROR);
-    		}else{
-      			$ins_sql = " insert into dental_q_image set 
+            $ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
+            $db->query($ed_sql);
+
+            $msg = "Edited Successfully";?>
+
+            <script type="text/javascript">
+                parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
+            </script>
+            <?php
+            trigger_error("Die called", E_USER_ERROR);
+        } else {
+            $ins_sql = " insert into dental_q_image set
                       			patientid = '".s_for($_GET['pid'])."',
                       			title = '".s_for($title)."',
                       			imagetypeid = '".s_for($imagetypeid)."',
@@ -266,80 +317,85 @@ if(!empty($_POST["imagesub"]) && $_POST["imagesub"] == 1){
                       			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
             $imageid = $db->getInsertId($ins_sql);
-            if($_POST['imagetypeid']==6){
+
+            if ($_POST['imagetypeid'] == 6) {
                 $rx_sql = "SELECT rx_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
                 $rx_r = $db->getRow($rx_sql);
-                if($rx_r['rx_imgid']=='' || $_POST['rx_update']==1){
+
+                if ($rx_r['rx_imgid'] == '' || $_POST['rx_update'] == 1) {
                     $rx_sql = "UPDATE dental_flow_pg1 SET rx_imgid='".$imageid."', rxrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
                     $db->query($rx_sql);
                 }
             }
 
-            if($_POST['imagetypeid']==7){
+            if ($_POST['imagetypeid'] == 7) {
                 $lomn_sql = "SELECT lomn_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
                 $lomn_r = $db->getRow($lomn_sql);
-                if($lomn_r['lomn_imgid']=='' || $_POST['lomn_update']==1){
+
+                if ($lomn_r['lomn_imgid'] == '' || $_POST['lomn_update'] == 1) {
                     $lomn_sql = "UPDATE dental_flow_pg1 SET lomn_imgid='".$imageid."', lomnrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
                     $db->query($lomn_sql);
                 }
             }
 
-            if($_POST['imagetypeid']==14){
+            if ($_POST['imagetypeid'] == 14) {
                 $rxlomn_sql = "SELECT rxlomn_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
                 $rxlomn_r = $db->getRow($rxlomn_sql);
-                if($rxlomn_r['rxlomn_imgid']=='' || $_POST['rxlomn_update']==1){
+
+                if ($rxlomn_r['rxlomn_imgid'] == '' || $_POST['rxlomn_update'] == 1) {
                     $rxlomn_sql = "UPDATE dental_flow_pg1 SET rxlomn_imgid='".$imageid."', rxlomnrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
                     $db->query($rxlomn_sql);
                 }
             }
 
-      			$msg = "Uploaded Successfully";
-      			if ($_REQUEST['flow'] == "1") {?>
-<script type="text/javascript">
-  parent.window.location="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid'];?>"
-</script>
-<?php
-        				trigger_error("Die called", E_USER_ERROR);
-      			} elseif($_REQUEST['return']=='patinfo'){?>
-<script type="text/javascript">
-	<?php if($_REQUEST['return_field']=='profile'){ ?>
-		parent.updateProfileImage('<?php echo $banner1; ?>');
-	<?php }elseif($_POST['imagetypeid']==10){ ?>
-		parent.updateInsCard('<?php echo $banner1; ?>', 'p_m_ins_card');
-	<?php }elseif($_POST['imagetypeid']==12){ ?>
-    parent.updateInsCard('<?php echo $banner1; ?>', 's_m_ins_card');
-  <?php } ?>
-		parent.disablePopupClean();
-</script>
-<?php
+            $msg = "Uploaded Successfully";
+
+            if ($_REQUEST['flow'] == "1") {?>
+                <script type="text/javascript">
+                    parent.window.location="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid'];?>"
+                </script>
+                <?php
                 trigger_error("Die called", E_USER_ERROR);
-      			} else {?>
-<script type="text/javascript">
-    parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>';
-</script>
-<?php
-        				trigger_error("Die called", E_USER_ERROR);
-      			}
-    		}
-    }else{?>
-<script type="text/javascript">
-    //alert("Max image size exceeded. Uploaded files can be no larger than 10 megabytes.");
-</script>
-<?php
+            } else if ($_REQUEST['return'] == 'patinfo') { ?>
+                <script type="text/javascript">
+                    <?php if($_REQUEST['return_field']=='profile'){ ?>
+                    parent.updateProfileImage('<?php echo $banner1; ?>');
+                    <?php }elseif($_POST['imagetypeid']==10){ ?>
+                    parent.updateInsCard('<?php echo $banner1; ?>', 'p_m_ins_card');
+                    <?php }elseif($_POST['imagetypeid']==12){ ?>
+                    parent.updateInsCard('<?php echo $banner1; ?>', 's_m_ins_card');
+                    <?php } ?>
+                    parent.disablePopupClean();
+                </script>
+                <?php
+                trigger_error("Die called", E_USER_ERROR);
+            } else { ?>
+                <script type="text/javascript">
+                    parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>';
+                </script>
+                <?php
+                trigger_error("Die called", E_USER_ERROR);
+            }
+        }
     }
 }
 
-?>
+if ($errorMessage) { ?>
+    <script type="text/javascript">
+        alert(<?= json_encode($errorMessage) ?>);
+    </script>
+<?php }
 
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-<script type="text/javascript" src="script/wufoo.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link href="css/admin.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/form.css" type="text/css" />
+    <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+    <script language="javascript" type="text/javascript" src="script/validation.js"></script>
+    <script type="text/javascript" src="script/wufoo.js"></script>
 </head>
 <body>
 <div id="loader" style="position:absolute;width:100%; height:98%; display:none;">

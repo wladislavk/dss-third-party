@@ -8,15 +8,14 @@ See: http://laravel.com/docs/5.1/testing
 
 Writing tests have become pretty easy.
 
+
+
 Initial Steps for getting this setup. Post GIT Pull of course.
 
 1. ssh into the vagrant box
-2. open gulpfile.js and make sure phpUnit is included as a mix - mix.phpUnit();
-3. and run
-$npm install
-This will install gulp and laravel-elixer.
-4. once this install has finished you can run a sample test to make sure testing works as follows:
-$ gulp tdd
+2. composer install if you've not already done so.
+
+See https://github.com/laracasts/Integrated/wiki/Installation-and-Setup - easy peasy.
 
 That's pretty much it to get started. All tests will reside in the default tests folder. There are a few examples pre-loaded in the folder.
 

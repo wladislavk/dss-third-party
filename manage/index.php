@@ -291,7 +291,7 @@
                   <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
                   
                     <?php                      if ($od_r['firstname'] != '' && $od_r['lastname'] != ''){
-                      echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+                      echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                      }
                     ?>
                   </div>
@@ -324,7 +324,7 @@
                     <?php echo $od_r['task']; ?>
 
                     <?php                      if($od_r['firstname']!='' && $od_r['lastname']!=''){
-                      echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+                      echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                      } 
                     ?>
                   </div>
@@ -353,7 +353,7 @@
                       <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
                       
                         <?php                          if($od_r['firstname']!='' && $od_r['lastname']!=''){
-                          echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+                          echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                          } 
                         ?>
 
@@ -384,7 +384,7 @@
                     <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
                    
                       <?php                        if($od_r['firstname']!='' && $od_r['lastname']!=''){
-                        echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+                        echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                         } 
                       ?>
 
@@ -414,7 +414,7 @@
                   <input type="checkbox" class="task_status" style="float:left;" value="<?php echo $od_r['id']; ?>" />
                   <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
                     <?php                      if($od_r['firstname']!='' && $od_r['lastname']!=''){
-                      echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+                      echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                       } 
                     ?>
                   </div>
@@ -447,7 +447,7 @@
                     <?php echo $od_r['task']; ?>
 
                     <?php                      if($od_r['firstname']!='' && $od_r['lastname']!=''){
-                      echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+                      echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
                      } 
                     ?>
 

@@ -8,8 +8,6 @@ See: http://laravel.com/docs/5.1/testing
 
 Writing tests have become pretty easy.
 
-
-
 Initial Steps for getting this setup. Post GIT Pull of course.
 
 1. ssh into the vagrant box
@@ -19,7 +17,7 @@ Initial Steps for getting this setup. Post GIT Pull of course.
         - then run sudo apt-get install phpunit a 2nd time, also ignore the fact that it will try to start apache...
         Now just run phpunit without vendor/bin/phpunit and all works fine.
 
-See https://github.com/laracasts/Integrated/wiki/Installation-and-Setup - easy peasy.
+Note* - Laracasts integrated package is no longer required, its all backed into 5.1
 
 That's pretty much it to get started. All tests will reside in the default tests folder. There are a few examples pre-loaded in the folder.
 

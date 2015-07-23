@@ -54,7 +54,7 @@ if (!$errorMessage && isset($_POST['submitnewsleeplabsumm'])) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
         } else {
-            $fname = $_FILES["ss_file"]["name"] ?: 'unnamed_file';
+            $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
             $lastdot = strrpos($fname,".");
             $name = substr($fname,0,$lastdot);
             $extension = substr($fname,$lastdot+1);

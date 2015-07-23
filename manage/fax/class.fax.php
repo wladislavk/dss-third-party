@@ -123,7 +123,7 @@ class FTSSamples
 		}
 	}
 
-	public function OutboundFaxSatus($transmissionId) 
+	public function OutboundFaxStatus($transmissionId) 
 	{ 
 		// key parameters
 		$sendfaxQueueId = ""; //<--- IMPORTANT: Enter a valid transmissionId

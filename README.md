@@ -14,6 +14,10 @@ Initial Steps for getting this setup. Post GIT Pull of course.
 
 1. ssh into the vagrant box
 2. composer install if you've not already done so.
+3. running vendor/bin/phpunit does not work out of the box for some reason.
+   Fix* - sudo apt-get install phpunit - this will throw an error, ignore the error and run sudo apt-get update --fix-missing
+        - then run sudo apt-get install phpunit a 2nd time, also ignore the fact that it will try to start apache...
+        Now just run phpunit without vendor/bin/phpunit and all works fine.
 
 See https://github.com/laracasts/Integrated/wiki/Installation-and-Setup - easy peasy.
 

@@ -1,5 +1,5 @@
 suites:
     main:
-        namespace: DSSApi
-        psr4_prefix: DSSApi
+        namespace: DentalSleepSolutions
+        psr4_prefix: DentalSleepSolutions
         src_path: app

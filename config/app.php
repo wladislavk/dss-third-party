@@ -140,9 +140,9 @@ return [
         /*
          * Application Service Providers...
          */
-        DSSApi\Providers\AppServiceProvider::class,
-        DSSApi\Providers\EventServiceProvider::class,
-        DSSApi\Providers\RouteServiceProvider::class,
+        DentalSleepSolutions\Providers\AppServiceProvider::class,
+        DentalSleepSolutions\Providers\EventServiceProvider::class,
+        DentalSleepSolutions\Providers\RouteServiceProvider::class,
 
     ],
 

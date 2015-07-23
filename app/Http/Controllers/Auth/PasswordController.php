@@ -1,8 +1,8 @@
 <?php
 
-namespace DSSApi\Http\Controllers\Auth;
+namespace DentalSleepSolutions\Http\Controllers\Auth;
 
-use DSSApi\Http\Controllers\Controller;
+use DentalSleepSolutions\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class PasswordController extends Controller

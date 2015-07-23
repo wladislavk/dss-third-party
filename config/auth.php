@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'model' => DSSApi\User::class,
+    'model' => DentalSleepSolutions\User::class,
 
     /*
     |--------------------------------------------------------------------------

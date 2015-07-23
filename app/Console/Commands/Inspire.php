@@ -1,6 +1,6 @@
 <?php
 
-namespace DSSApi\Console\Commands;
+namespace DentalSleepSolutions\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Inspiring;

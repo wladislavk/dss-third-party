@@ -30,7 +30,7 @@ return [
     ],
 
     'stripe' => [
-        'model'  => DSSApi\User::class,
+        'model'  => DentalSleepSolutions\User::class,
         'key'    => '',
         'secret' => '',
     ],

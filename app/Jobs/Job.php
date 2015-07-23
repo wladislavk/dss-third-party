@@ -1,6 +1,6 @@
 <?php
 
-namespace DSSApi\Jobs;
+namespace DentalSleepSolutions\Jobs;
 
 use Illuminate\Bus\Queueable;
 

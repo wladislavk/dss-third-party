@@ -833,7 +833,7 @@
         << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V(".$array['modcode4'].") >>
         << /T(".$field_path.".".$p."_diagnosis_pointer_fill[0]) /V(".$diagnosis_array[$array['diagnosispointer']].") >> 
         << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format(floor($array['amount']),0,'.','').") >>
-        << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents($array['amount']-floor($array['amount'])).") >>
+        << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents(roundToCents($array['amount'])).") >>
         << /T(".$field_path.".".$p."_days_or_units_fill[0]) /V(".$array['daysorunits'].") >>
         << /T(".$field_path.".".$p."_EPSDT_fill[0]) /V(".$array['epsdt'].") >>
         << /T(".$field_path.".".$p."_rendering_provider_fill[0]) /V(".$array['provider_id'].") >> ";
@@ -881,11 +881,11 @@
       << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".((strtolower($accept_assignment) == "no")?1:'').") >>
       
       << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format(floor($total_charge),0,'.','').") >>
-      << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents(floor(($total_charge-floor($total_charge))*100)).") >>
+      << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents(roundToCents($total_charge)).") >>
       << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format(floor($amount_paid),0,'.','').") >>
-      << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".fill_cents(floor(($amount_paid-floor($amount_paid))*100)).") >>
+      << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".fill_cents(roundToCents($amount_paid)).") >>
       << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format(floor($balance_due),0,'.','').") >>
-      << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents(floor(($balance_due-floor($balance_due))*100)).") >>
+      << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents(roundToCents($balance_due)).") >>
       
       << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper((!empty($service_facility_info_name) ? $service_facility_info_name : ''))."\n".strtoupper((!empty($service_facility_info_address) ? $service_facility_info_address : ''))."\n".strtoupper((!empty($service_facility_info_city) ? $service_facility_info_city : '')).") >>
       << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".(!empty($billing_provider_phone_code) ? $billing_provider_phone_code : '').") >>
@@ -923,7 +923,7 @@
   << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V(".$array['modcode4'].") >>
   << /T(".$field_path.".".$p."_diagnosis_pointer_fill[0]) /V(".$diagnosis_array[$array['diagnosispointer']].") >> 
   << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format(floor($array['amount']),0,'.','').") >>
-  << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents(round(($array['amount']-floor($array['amount']))*100)).") >>
+  << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents(roundToCents($array['amount'])).") >>
   << /T(".$field_path.".".$p."_days_or_units_fill[0]) /V(".$array['daysorunits'].") >>
   << /T(".$field_path.".".$p."_EPSDT_fill[0]) /V(".$array['epsdt'].") >>
   << /T(".$field_path.".".$p."_rendering_provider_fill[0]) /V(".$array['provider_id'].") >> ";
@@ -958,11 +958,11 @@ $fdf .= "
   << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".((strtolower($accept_assignment) == "no" || $accept_assignment == "C")?1:'').") >>
   
   << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format(floor($total_charge),0,'.','').") >>
-  << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents(round(($total_charge-floor($total_charge))*100)).") >>
+  << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents(roundToCents($total_charge)).") >>
   << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format(floor($amount_paid),0,'.','').") >>
-  << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".fill_cents(round(($amount_paid-floor($amount_paid))*100)).") >>
+  << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".fill_cents(roundToCents($amount_paid)).") >>
   << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format(floor($balance_due),0,'.','').") >>
-  << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents(round(($balance_due-floor($balance_due))*100)).") >>
+  << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents(roundToCents($balance_due)).") >>
   
   << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($service_facility_info_name)."\n".strtoupper($service_facility_info_address)."\n".strtoupper($service_facility_info_city).") >>
   << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".$billing_provider_phone_code.") >>
@@ -1108,13 +1108,13 @@ require_once '3rdParty/fpdi/fpdi.php';
 
     $pdf->Output('insurance_claim.pdf', 'D');
 
-    function fill_cents($v)
-    {
-        if($v<10){
-            return '0'.$v;
-        }else{
-            return $v;
-        }
+    function roundToCents ($amount) {
+        $cents = floor($amount*100) - floor($amount)*100;
+        $cents = intval($cents);
+
+        return $cents;
     }
 
-?>
+    function fill_cents ($v) {
+        return $v < 10 ? "0$v" : $v;
+    }

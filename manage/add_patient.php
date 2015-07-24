@@ -22,7 +22,7 @@ if(!isset($_GET['noheaders'])){
 </script>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-<script type="text/javascript" src="js/add_patient.js"></script>
+<script type="text/javascript" src="js/add_patient.js?v=<?= time() ?>"></script>
 <script type="text/javascript" src="js/masks.js"></script>
 <script type="text/javascript" src="script/logout_timer.js"></script>
 <script type="text/javascript" src="js/jquery.cookie.js"></script>
@@ -85,7 +85,7 @@ if ($pt_referralid) {
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
-<script type="text/javascript" src="/manage/js/add_patient.js"></script>
+<script type="text/javascript" src="/manage/js/add_patient.js?v=<?= time() ?>"></script>
 <?php
 /*=======================================================
 TRIGGERING LETTERS

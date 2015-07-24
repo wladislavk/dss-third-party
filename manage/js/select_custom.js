@@ -1,10 +1,17 @@
-function change_desc()
-{
-	var fa = $("select[name='title']").prop("selectedIndex") - 1;
+$(document).ready(function(){
+    $('select[name=title]').change(function(){
+        var index = $(this).val();
 
-	if(fa > -1) {
-		$('#description').val(desc_arr[fa]);
-	} else {
-		$('#description').val("");
-	}
-}
+        try {
+            index = parseInt(index);
+
+            if (customNotes[index]) {
+                $('#description').val(customNotes[index]['description']);
+                return;
+            }
+        }
+        catch (e) {}
+
+        $('#description').val('');
+    });
+});

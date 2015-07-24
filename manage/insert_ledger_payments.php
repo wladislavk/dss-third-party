@@ -19,8 +19,6 @@
                 $psql = "SELECT * FROM dental_patients p WHERE p.patientid='".(!empty($_POST['patientid']) ? $_POST['patientid'] : '')."';";
 
                 $pat = $db->getRow($psql);
-                $msg = "Payments have been added.";
-                echo "<br />";
 
                 $sqlinsertqry = "INSERT INTO `dental_ledger_payment` (
                     `ledgerid` ,
@@ -32,20 +30,38 @@
                     `payer`
                     ) VALUES ";
 
-                $lsql = "SELECT * FROM dental_ledger WHERE (primary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."  or secondary_claim_id=".(!empty($_POST['claimid']) ? $_POST['claimid'] : '').")";
+                $lsql = "SELECT * FROM dental_ledger WHERE (primary_claim_id='".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."'  or secondary_claim_id='".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."')";
 
                 $lq = $db->getResults($lsql);
+                $paymentsToAdd = 0;
+
                 if ($lq) foreach ($lq as $row){
                     $id = $row['ledgerid'];
+
+                    if (!empty($_POST['payment_date_'.$id])) {
+                        $paymentDate = date('Y-m-d', strtotime($_POST['payment_date_'.$id]));
+                    } else {
+                        $paymentDate = null;
+                    }
+
                     if($_POST['amount_'.$id]!=''){
-                        $sqlinsertqry .= "(".$id.", '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', '".date('Y-m-d')."', '".str_replace(',','',$_POST['amount_'.$id])."', '".str_replace(',','',$_POST['allowed_'.$id])."','".$_POST['payment_type']."', '".$_POST['payer']."'),";
+                        $paymentsToAdd++;
+                        $sqlinsertqry .= "(".$id.", '" . $paymentDate . "', '".date('Y-m-d')."', '".str_replace(',','',$_POST['amount_'.$id])."', '".str_replace(',','',$_POST['allowed_'.$id])."','".$_POST['payment_type']."', '".$_POST['payer']."'),";
                     }
                 }
 
-                $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
-                $pid = $db->getInsertId($sqlinsertqry);
-                
-                payment_history_update($pid, $_SESSION['userid'], '');
+                if ($paymentsToAdd) {
+                    $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
+                    $pid = $db->getInsertId($sqlinsertqry);
+
+                    $msg = "$paymentsToAdd payments have been added.";
+                    echo "<br />";
+
+                    payment_history_update($pid, $_SESSION['userid'], '');
+                } else {
+                    $msg = "No payments were added. Please verify the amounts and try again.";
+                    echo "<br />";
+                }
 
                 $paysql = "SELECT SUM(lp.amount) as payment
                             FROM dental_ledger_payment lp
@@ -319,28 +335,29 @@
                     $db->query($secsql);
                 }
 
-                if(!$pid){
-        ?>
-                    <script type="text/javascript">
-                        alert('Could not add ledger payments, please close this window and contact your system administrator');
-                    </script>                               
-                    <?php error_log('Could not add ledger payments: ' . $sqlinsertqry) ?>
-        <?php
-                } else {
+                if (!$pid) { ?>
+                    <?php if ($paymentsToAdd) { ?>
+                        <script type="text/javascript">
+                            alert('Could not add ledger payments, please close this window and contact your system administrator');
+                        </script>
+                        <?php error_log('Could not add ledger payments: ' . $sqlinsertqry) ?>
+                    <?php } else { ?>
+                        <script type="text/javascript">
+                            alert('There were no payments to add. Please verify the amounts and try again.');
+                            history.go(-1);
+                        </script>
+                    <?php } ?>
+                <?php } else {
                     claim_history_update($_POST['claimid'], $_SESSION['userid'], $_SESSION['adminuserid']);
-        ?>
-                <script type="text/javascript">
-                    alert('<?php echo  $msg; ?>');
-                    history.go(-1);
-                </script>
-        <?php
-                }
-            } else { //NOT AUTHORIZED
-        ?>
+                    ?>
+                    <script type="text/javascript">
+                        alert('<?php echo  $msg; ?>');
+                        history.go(-1);
+                    </script>
+                <?php }
+            } else { //NOT AUTHORIZED ?>
                 <script type="text/javascript">
                     alert('YOU ARE NOT AUTHORIZED TO COMPLETE THIS REQUEST');
                     history.go(-1);
                 </script>
-        <?php
-            }
-        ?>
+            <?php } ?>

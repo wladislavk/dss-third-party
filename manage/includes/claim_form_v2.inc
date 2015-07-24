@@ -1,7 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?>
 
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-  <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>
+  <script type="text/javascript" src="/manage/script/autocomplete_local.js?v=<?= time() ?>"></script>
 
 <?php
 
@@ -31,7 +31,7 @@ function confirm_ledger_trxns(){
         $sql = "SELECT * "
              . "  FROM dental_ledger "
              . "WHERE "
-             . " ledgerid = ".$ledgerid;
+             . " ledgerid = '".mysqli_real_escape_string($con, $ledgerid) . "'";
         $query = $db->getRow($sql);
 
 	if(!empty($query)){
@@ -75,17 +75,18 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $modifiercode3_num = 'modifiercode3_'.$num;
         $modifiercode4_num = 'modifiercode4_'.$num;
         
-        $placeofservice = $_POST[$placeofservicenum];
-        $emg = $_POST[$emgnum];             
-        $diagnosispointer = $_POST['service_lines'][$num]['diagnosis_code_pointers'][0]; 
-        $daysorunits = $_POST[$daysorunitsnum];
-        $epsdt = $_POST[$epsdtnum];
-        $idqual = $_POST[$idqualnum];
-        $modifiercode = $_POST[$modifiercodenum];
-        $modifiercode2 = $_POST[$modifiercode2_num];
-        $modifiercode3 = $_POST[$modifiercode3_num];
-        $modifiercode4 = $_POST[$modifiercode4_num];
-        $ledgerid = $_POST[$ledgeridnum];
+        $placeofservice = mysqli_real_escape_string($con, $_POST[$placeofservicenum]);
+        $emg = mysqli_real_escape_string($con, $_POST[$emgnum]);             
+        $diagnosispointer = mysqli_real_escape_string($con, $_POST['service_lines'][$num]['diagnosis_code_pointers'][0]); 
+        $daysorunits = mysqli_real_escape_string($con, $_POST[$daysorunitsnum]);
+        $epsdt = mysqli_real_escape_string($con, $_POST[$epsdtnum]);
+        $idqual = mysqli_real_escape_string($con, $_POST[$idqualnum]);
+        $modifiercode = mysqli_real_escape_string($con, $_POST[$modifiercodenum]);
+        $modifiercode2 = mysqli_real_escape_string($con, $_POST[$modifiercode2_num]);
+        $modifiercode3 = mysqli_real_escape_string($con, $_POST[$modifiercode3_num]);
+        $modifiercode4 = mysqli_real_escape_string($con, $_POST[$modifiercode4_num]);
+        $ledgerid = mysqli_real_escape_string($con, $_POST[$ledgeridnum]);
+        
         array_push($added_ledger_ids, $ledgerid);
 
         $sql = "UPDATE "
@@ -104,7 +105,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
              . "  `status` = '$trxn_status', "
              . "  `primary_claim_id` = '$primary_claim_id' "
              . "WHERE "
-             . "  `ledgerid` = $ledgerid";
+             . "  `ledgerid` = '$ledgerid'";
         $query = $db->query($sql);
         if (!$query) {
             echo mysqli_errno($con) . ": " . mysqli_error($con). "\n";
@@ -112,16 +113,17 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $num++;
     }
 
-    $ledger_ids = implode(',', $added_ledger_ids);
-    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
+    // Ids are already escaped
+    $ledger_ids = "'" . join("', '", $added_ledger_ids) . "'";
+    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".mysqli_real_escape_string($con, $primary_claim_id)."' AND ledgerid NOT IN (".$ledger_ids.")";
 
     $upr = $db->getRow($upsql);
     if($upr['num_ledger']>0){
-	$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$primary_claim_id."'";
+	$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con, $primary_claim_id)."'";
 
         $prod_r = $db->getRow($prod_s);
         $claim_producer = $prod_r['producer'];
-  	$s = "SELECT insuranceid from dental_insurance where producer = '".mysqli_real_escape_string($con,$claim_producer)." AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+  	$s = "SELECT insuranceid from dental_insurance where producer = '".mysqli_real_escape_string($con,$claim_producer)."' AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
   	$q = $db->getRow($s);
   	if(!empty($q)){
           $r = $q;
@@ -130,7 +132,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
           $claim_id = create_claim($_GET['pid'], $claim_producer);
   	}
 
-	$update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
+	$update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN ('".$ledger_ids."')";
 	$db->query($update_sql);
 
     }
@@ -139,7 +141,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 
 // deleting specified claim form
 if (!empty($_REQUEST["delid"]) ? $_REQUEST["delid"] : '') {
-	$del_sql = "delete from dental_procedure where procedureid='" . $_REQUEST["delid"] . "'";
+	$del_sql = "delete from dental_procedure where procedureid='" . mysqli_real_escape_string($con, $_REQUEST["delid"]) . "'";
 	$db->query($del_sql);
 	
 	$msg= "Deleted Successfully";
@@ -1358,7 +1360,7 @@ $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".mysqli_real_escape_string($con, $_GET['pid'])."' ORDER BY id DESC LIMIT 1;";
 
   $d = $db->getRow($sleepstudies);
   $diagnosis_1 = (!empty($d['diagnosis']) ? $d['diagnosis'] : '');
@@ -1372,7 +1374,7 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.filename IS NOT NULL AND ss.patiendid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC LIMIT 1;";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".mysqli_real_escape_string($con, !empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC LIMIT 1;";
 
   $d = $db->getRow($sleepstudies);
   $referring_provider = $d['diagnosising_doc'];
@@ -1396,7 +1398,7 @@ if (empty($prior_authorization_number)) {
          . "FROM "
          . "  dental_insurance_preauth "
          . "WHERE "
-         . "  patient_id = '" . $_GET['pid'] . "' "
+         . "  patient_id = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
          . "  AND status = " . DSS_PREAUTH_COMPLETE . " "
          . "ORDER BY "
          . "  date_completed desc "
@@ -1681,7 +1683,7 @@ if (!empty($is_back_office) || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWAR
                 $p_m_ins_payer_id = st(!empty($pat_myarray["s_m_eligible_id"]) ? $pat_myarray["s_m_eligible_id"] : '');
                 if($p_m_ins_payer_id){
                   $dsql = "SELECT name, payer_id FROM dental_ins_payer
-                        WHERE id=".mysqli_real_escape_string($con,$s_m_ins_payer_id);
+                        WHERE id='".mysqli_real_escape_string($con,$s_m_ins_payer_id)."'";
 
                   $d = $db->getRow($dsql);
                   $s_m_ins_payer_name = $d['payer_id']." - ".$d['name'];
@@ -2731,7 +2733,7 @@ if($insurancetype == '1'){
        . "WHERE "
        . "  (ledger.primary_claim_id = '" . $insuranceid . "'"
        . "  OR ledger.secondary_claim_id = '" . $insuranceid . "')"
-       . "  AND ledger.patientid = '" . $_GET['pid'] . "'"
+       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "'"
        . "  AND ledger.docid = '" . $docid . "'"
        . "  AND trxn_code.docid = '" . $docid . "'"
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -2930,11 +2932,11 @@ if ($is_pending) {
        . "  dental_ledger ledger "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
-       . "  ledger.status = " . DSS_TRXN_PENDING . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $docid . " "
-       . "  AND trxn_code.docid = " . $docid . " "
-       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
+       . "  ledger.status = '" . DSS_TRXN_PENDING . "' "
+       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
+       . "  AND ledger.docid = '" . $docid . "' "
+       . "  AND trxn_code.docid = '" . $docid . "' "
+       . "  AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "' "
        . "ORDER BY "
        . "  ledger.service_date ASC";
     $charge_my = $db->getRow($sql);
@@ -2950,11 +2952,11 @@ if ($is_pending) {
        . "  dental_ledger ledger "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
-       . "  ledger.primary_claim_id = " . $orig_claim_id . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $docid . " "
-       . "  AND trxn_code.docid = " . $docid . " "
-       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
+       . "  ledger.primary_claim_id = '" . $orig_claim_id . "' "
+       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
+       . "  AND ledger.docid = '" . $docid . "' "
+       . "  AND trxn_code.docid = '" . $docid . "' "
+       . "  AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "' "
        . "ORDER BY "
        . "  ledger.service_date ASC";
     $charge_my = $db->getRow($sql);
@@ -2971,11 +2973,11 @@ if ($is_pending) {
        . "  dental_ledger ledger "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
-       . "  ledger.status = " . DSS_TRXN_PENDING . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $docid . " "
-       . "  AND trxn_code.docid = " . $docid . " "
-       . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
+       . "  ledger.status = '" . DSS_TRXN_PENDING . "' "
+       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
+       . "  AND ledger.docid = '" . $docid . "' "
+       . "  AND trxn_code.docid = '" . $docid . "' "
+       . "  AND trxn_code.type IN ('" . DSS_TRXN_TYPE_PATIENT . "','" . DSS_TRXN_TYPE_INS . "','" . DSS_TRXN_TYPE_ADJ . "') "
        . "ORDER BY "
        . "  ledger.service_date ASC";
   if($status == DSS_CLAIM_SEC_PENDING){
@@ -2985,7 +2987,7 @@ if ($is_pending) {
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."' 
-                        AND primary_claim_id=".$orig_claim_id." 
+                        AND primary_claim_id='".$orig_claim_id."'
                         AND dlp.amount != 0
 			AND dlp.payer = 0
 	";

@@ -27,6 +27,26 @@
 						where f.id='".(!empty($_REQUEST["id"]) ? $_REQUEST["id"] : '')."'";
 
 			$themyarray = $db->getRow($thesql);
+
+        // If the lookup table is no longer valid, use the sfax_response (API response) field
+        $faxError = '';
+
+        if ($themyarray['error_description'] && $themyarray['error_resolution']) {
+            $faxError = $themyarray['error_description'] . ' - ' . $themyarray['error_resolution'];
+        } else if ($themyarray['sfax_response']) {
+            $apiResponse = @json_decode($themyarray['sfax_response']);
+
+            if (!empty($apiResponse->ResultMessage)) {
+                $faxError = $apiResponse->ResultMessage;
+            } else if (!empty($apiResponse->RecipientFaxStatusItems[0]->ResultMessage)) {
+                $faxError = $apiResponse->RecipientFaxStatusItems[0]->ResultMessage;
+            } else if (!empty($apiResponse['ResultMessage'])) {
+                $faxError = $apiResponse['ResultMessage'];
+            }
+        }
+
+        $faxError = $faxError ?: 'Unknown error';
+
 		?>
 
 		<link rel="stylesheet" href="/manage/css/fax_errors.css" type="text/css" />
@@ -38,7 +58,7 @@
 			</div>
 			<div class="info">
 			    <label>&nbsp; </label>
-			    <span class="value"><?php echo  $themyarray['description']; ?></span>
+			    <span class="value"><?= htmlspecialchars($faxError) ?></span>
 			</div>
 			<div class="info">
 			    <label>&nbsp; </label>

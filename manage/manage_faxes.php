@@ -48,7 +48,7 @@ if (count($my)) {
                 Patient
             </td>
             <td valign="top" class="col_head" width="15%">
-                Correspondance
+                Correspondence
             </td>
             <td valign="top" class="col_head" width="15%">
                 Error
@@ -244,7 +244,7 @@ function updateFaxes(v){
         </td>
         <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'letter_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
             <a href="manage_faxes.php?sort=letter_name&sortdir=<?php echo ($_REQUEST['sort']=='letter_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-                Correspondance
+                Correspondence
             </a>
         </td>
         <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'sfax_status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">

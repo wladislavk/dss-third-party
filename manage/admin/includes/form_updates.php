@@ -4416,7 +4416,7 @@ function create_form_pdf($html, $filename, $title, $backoffice, $fontsize = 10, 
         $pdf->SetAuthor('Dental Sleep Solutions');
         $pdf->SetTitle($title);
         $pdf->SetSubject($title);
-        $pdf->SetKeywords('DSS Correspondance');
+        $pdf->SetKeywords('DSS Correspondence');
 
         // set default monospaced font
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);

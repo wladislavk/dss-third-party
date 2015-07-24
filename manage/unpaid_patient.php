@@ -69,10 +69,14 @@ $num_users = count($my);
 	<button onclick="Javascript:window.location='ledger_reportfull.php';" class="addButton">
        Daily Ledger
     </button>
-	&nbsp;&nbsp;
-	<button onclick="window.location='unpaid_patient.php?print';" class="addButton">
-		Print
-	</button>
+    &nbsp;&nbsp;
+    <button onclick="window.location='unpaid_patient.php?print';" class="addButton">
+        Print
+    </button>
+    &nbsp;&nbsp;
+    <button onclick="window.location='ledger_unpaid_statements.php';" class="addButton">
+        Print All Statements
+    </button>
     &nbsp;&nbsp;
 </div>
 <br />

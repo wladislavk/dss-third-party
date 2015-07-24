@@ -219,7 +219,6 @@ class BaseRepository implements BaseInterface
      */
     protected function executeSave($data)
     {
-        $data = $this->setBooleanFields($data);
         $this->instance->fill($data);
         $this->instance->save();
 
@@ -237,32 +236,6 @@ class BaseRepository implements BaseInterface
         $instance = $this->find($id);
 
         return $instance->delete();
-    }
-
-    /**
-     * Set the model's boolean fields from the input data
-     *
-     * @param array $data
-     * @return array
-     */
-    protected function setBooleanFields($data)
-    {
-        foreach ($this->getModelBooleanFields() as $booleanField)
-        {
-            $data[$booleanField] = array_get($data, $booleanField, 0);
-        }
-
-        return $data;
-    }
-
-    /**
-     * Retrieve the boolean fields from the model
-     *
-     * @return array
-     */
-    protected function getModelBooleanFields()
-    {
-        return $this->instance->getBooleanFields();
     }
 
     /**

@@ -94,11 +94,6 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
 
         $this->instance = parent::store($data);
 
-        if ( ! $this->hasErrors())
-        {
-
-        }
-
         return $this->instance;
     }
 
@@ -114,11 +109,6 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
         $data = $data ?: \Input::all();
 
         $this->instance = parent::update($id, $data);
-
-        if ( ! $this->hasErrors())
-        {
-
-        }
 
         return $this->instance;
     }

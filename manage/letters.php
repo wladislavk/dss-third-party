@@ -201,7 +201,7 @@ if (count($dental_letters) % $page_limit) {
 
 if (!empty($dental_letters)){
   foreach ($dental_letters as $key => $letter) {
-    // Get Correspondance Column
+    // Get Correspondence Column
     $template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '" . $letter['templateid'] . "';";
 
     if ($letter['template_type'] == '0') {
@@ -210,7 +210,7 @@ if (!empty($dental_letters)){
       $template_sql = "SELECT name FROM dental_letter_templates_custom WHERE id = '" . $letter['templateid'] . "';";
     }
 
-    $correspondance = $db->getRow($template_sql);
+    $correspondence = $db->getRow($template_sql);
     $dental_letters[$key]['id'] = $letter['letterid'];
 
     if (!empty($letter['pdf_path'])) {
@@ -219,7 +219,7 @@ if (!empty($dental_letters)){
       $dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid'];
     }
 
-    $dental_letters[$key]['subject'] = $correspondance['name'];
+    $dental_letters[$key]['subject'] = $correspondence['name'];
     // Get Recipients for Sent to Column
     if(isset($letter['patientid'])){
       $s = "SELECT referred_source FROM dental_patients where patientid=" . mysqli_real_escape_string($con,$letter['patientid']) . " LIMIT 1";

@@ -161,7 +161,7 @@ else {
 }
 
 if (!empty($dental_letters)) foreach ($dental_letters as $key => $letter) {
-    // Get Correspondance Column
+    // Get Correspondence Column
     if ($letter['template_type']=='0') {
         $template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '".$letter['templateid']."';";
     }
@@ -170,8 +170,8 @@ if (!empty($dental_letters)) foreach ($dental_letters as $key => $letter) {
     }
     
     $template_res = mysqli_query($con,$template_sql);
-    $correspondance = array();
-    $correspondance = mysqli_fetch_assoc($template_res);
+    $correspondence = array();
+    $correspondence = mysqli_fetch_assoc($template_res);
     $dental_letters[$key]['id'] = $letter['letterid'];
     $dental_letters[$key]['mailed'] = $letter['mailed_date'];
     $dental_letters[$key]['mailed_once'] = $letter['mailed_once'];
@@ -183,7 +183,7 @@ if (!empty($dental_letters)) foreach ($dental_letters as $key => $letter) {
         $dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid']."&goto=letter";
     }
     
-    $dental_letters[$key]['subject'] = $correspondance['name'];
+    $dental_letters[$key]['subject'] = $correspondence['name'];
     
     if ($letter['templateid'] == 99) {
         $dental_letters[$key]['subject'] = "User Generated";
@@ -422,7 +422,7 @@ if ($f_num > 0) { ?>
             <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='userid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">User ID</a>
         </th>-->
         <th class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">
-            <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Correspondance</a>
+            <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Correspondence</a>
         </th>
         <th class="col_head <?= ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">
             <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Sent To</a>
@@ -543,7 +543,7 @@ function delete_pending_letter (lid, type, rid, par) {
 <table class="table table-bordered table-hover">
     <tr class="tr_bg_h">
         <th class="col_head <?= ($_REQUEST['sort2'] == 'userid')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sort2dir=<?php echo ($_REQUEST['sort2']=='userid'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">User ID</a></th>
-        <th class="col_head <?= ($_REQUEST['sort2'] == 'subject')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=subject&sort2dir=<?php echo ($_REQUEST['sort2']=='subject'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Correspondance</a></th>
+        <th class="col_head <?= ($_REQUEST['sort2'] == 'subject')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=subject&sort2dir=<?php echo ($_REQUEST['sort2']=='subject'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Correspondence</a></th>
         <th class="col_head <?= ($_REQUEST['sort2'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sent2to&sort2dir=<?php echo ($_REQUEST['sort2']=='sentto'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Sent To</a></th>
         <th class="col_head <?= ($_REQUEST['sort2'] == 'method')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=method&sort2dir=<?php echo ($_REQUEST['sort2']=='method'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Method</a></th>
         <th class="col_head <?= ($_REQUEST['sort2'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=generated_date&sort2dir=<?php echo ($_REQUEST['sort2']=='generated_date'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Generated On</a></th>

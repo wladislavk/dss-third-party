@@ -30,6 +30,16 @@ class ApiAdminMemoController extends ApiBaseController
         $this->memo = $memo;
     }
 
+
+    public function index()
+    {
+        if($memos = $this->memo->all())
+        {
+            return response()->json(['status' => true,'memos' => $memos],200);
+        }
+        return response()->json(['status' => false],404);
+    }
+
     /**
      *
      * @return \Illuminate\Http\JsonResponse

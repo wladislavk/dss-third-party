@@ -8,7 +8,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
+use DentalSleepSolutions\Http\Requests\Request;
 use \DentalSleepSolutions\Interfaces\MemoAdminInterface;
+use Illuminate\Support\Facades\Input;
 
 class ApiAdminMemoController extends ApiBaseController
 {
@@ -34,27 +36,45 @@ class ApiAdminMemoController extends ApiBaseController
      */
     public function store()
     {
-        $this->memo->store([]);
-        return response()->json(['status' => true],200);
+        if($memo = $this->memo->store(Input::all()))
+        {
+            return response()->json(['status' => true,'memo_id' => $memo->memo_id],200);
+        }
+        return response()->json(['status' => false],404);
     }
 
-    public function update()
+    public function update($memo_id)
     {
-        return response()->json(['status' => true],200);
+        if($this->memo->update($memo_id,Input::all()))
+        {
+            return response()->json(['status' => true],200);
+        }
+        return response()->json(['status' => false],404);
     }
 
-    public function show()
+    public function show($memo_id)
     {
-        return response()->json(['status' => true],200);
+        $memo = $this->memo->find($memo_id);
+        if($memo)
+        {
+            return response()->json(['status' => true, 'memo' => $memo],200);
+        }
+        return response()->json(['status' => false],404);
     }
 
-    public function edit()
+    public function edit($memo_id)
     {
-        return response()->json(['status' => true],200);
+        $memo = $this->memo->find($memo_id);
+        return response()->json(['status' => true, 'memo' => $memo],200);
     }
 
-    public function destroy()
+    public function destroy($memo_id)
     {
-        return response()->json(['status' => true],200);
+        if($this->memo->destroy($memo_id))
+        {
+            return response()->json(['status' => true],200);
+        }
+        return response()->json(['status' => false,],404);
     }
+
 }

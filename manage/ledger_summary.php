@@ -4,14 +4,15 @@
   <ul>
 <?php
 $ch_total = 0;
-$ch_sql = "SELECT dl.description, sum(dl.amount) amount FROM dental_ledger dl
+$ch_sql = "SELECT description, sum(amount) as amount FROM (SELECT dl.description, di.status, dl.amount FROM dental_ledger dl
         		JOIN dental_patients p ON p.patientid=dl.patientid
-        		WHERE amount != '' 
+            LEFT JOIN dental_insurance di on di.insuranceid = dl.primary_claim_id
+        		WHERE amount != ''
         		AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' ";
 if(isset($_GET['pid'])){
   $ch_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
 }
-	$ch_sql .= " GROUP BY dl.description";
+  $ch_sql .= ") as ch WHERE status IS NULL OR status != '" . DSS_CLAIM_REJECTED . "' GROUP BY description";
 $ch_q = $db->getResults($ch_sql);
 if ($ch_q) foreach ($ch_q as $ch_r) { ?>
     <li><label><?php echo $ch_r['description']; ?></label> $<?php echo number_format($ch_r['amount'],2); ?></li>

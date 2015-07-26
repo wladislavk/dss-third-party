@@ -7399,12 +7399,14 @@ class TCPDF {
 				$imsize = array($pw, $ph);
 			} else {
 				// image from string
-				$imgdata = base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
 				$originalFile = $file;
+				$imgdata = base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
 				$file = K_PATH_CACHE.'img_'.md5($imgdata);
-				$fp = fopen($file, 'w');
-				fwrite($fp, $imgdata);
-				fclose($fp);
+				if (!file_exists($file)) {
+					$fp = fopen($file, 'w');
+					fwrite($fp, $imgdata);
+					fclose($fp);
+				}
 				unset($imgdata);
 				$cached_file = true;
 				$imsize = @getimagesize($file);

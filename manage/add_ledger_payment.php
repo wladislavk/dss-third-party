@@ -48,7 +48,7 @@ $payments = $db->getResults($sql);
     <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="/manage/js/masks.js"></script>
     <?php include 'includes/calendarinc.php' ?>
-    <script type="text/javascript" src="js/add_ledger_payment.js"></script>
+    <script type="text/javascript" src="js/add_ledger_payment.js?v=<?= time() ?>"></script>
 </head>
 
 <body>

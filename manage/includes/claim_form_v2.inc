@@ -1565,7 +1565,7 @@ if (!empty($is_back_office)){
 ?>
 
 <?php
-if(!empty($is_front_office) && $fdf_file!=''){
+if(!empty($is_front_office) && !$is_sent && $fdf_file!=''){
 ?>
 		<a href="display_fdf_v2.php?f=<?php echo $fdf_file; ?>" class="print-button" >Print Claim Form</a>
 <?php

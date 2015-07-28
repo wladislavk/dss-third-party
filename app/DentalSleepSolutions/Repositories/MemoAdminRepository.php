@@ -24,7 +24,10 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
      */
     public function all($orderBy = 'memo_id', $relations = [])
     {
-        throw new \BadMethodCallException('Must implement.');
+        $instance = $this->getQueryBuilder();
+        return $instance->with($relations)
+            ->orderBy($orderBy)
+            ->get();
     }
 
     /**

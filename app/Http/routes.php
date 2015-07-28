@@ -11,5 +11,9 @@
 |
 */
 
+Route::get('/', function(){
+   return view('memolist');
+});
+
 // API Routes
 include('apiroutes.php');

@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    send_text("load", false);
+    send_text("load", false, getParameterByName('id'), getParameterByName('hash'));
 
     /* Using custom settings */    
     $("a#saas_agree_but").fancybox({
@@ -21,7 +21,7 @@ function send_text(from, but, idGet, hashGet, phone)
         data: {id: idGet, hash: hashGet},
         success: function( data ) {
             var r = $.parseJSON(data);
-            if (r.success) { 
+            if (r.success) {
                 if(from == "button") {
                     $('#sent_text').html("Text message sent! Please allow up to 1 minute to receive the message, then enter your access code on this page.")
                 }else{ 

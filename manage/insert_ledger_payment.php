@@ -26,19 +26,21 @@
                 `payer`
                 ) VALUES ";
 
-            if (!empty($_POST['form'])) foreach($_POST['form'] as $form){
-                $sqlinsertqry .= "(".$_POST['ledgerid'].", '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".str_replace(',','',$form['amount'])."', '".$form['payment_type']."', '".$form['payer']."'),";
+            if (!empty($_POST['form'])) {
+                foreach ($_POST['form'] as $form) {
+                    $sqlinsertqry .= "(".$_POST['ledgerid'].", '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".str_replace(',','',$form['amount'])."', '".$form['payment_type']."', '".$form['payer']."'),";
+                }
+
+                $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
+                $insqry = $db->query($sqlinsertqry);
             }
 
-            $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
-            $insqry = $db->query($sqlinsertqry);
-            if (!$insqry) {
+            if (empty($insqry)) {
         ?>
                 <script type="text/javascript">
                     alert('Could not add ledger payments, please close this window and contact your system administrator');
                     eraseCookie('tempforledgerentry');
-                </script>                               
-                <?php echo  $sqlinsertqry; ?>
+                </script>
         <?php
             } else {
         ?>

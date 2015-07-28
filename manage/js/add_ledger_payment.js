@@ -65,7 +65,7 @@ function appendElement() {
     var divIdName = 'innerdiv'+num;
     var tempforledgerentry = readCookie('tempforledgerentry');
     newdiv.setAttribute('id',divIdName);  
-    newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date" class="calendar" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" ><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly">' +
+    newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="form['+tempforledgerentry+'][service_date]" class="calendar" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" ><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly">' +
                        '<select id="form['+tempforledgerentry+'][payer]" name="form['+tempforledgerentry+'][payer]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="' + DSS_TRXN_PAYER_PRIMARY + '">' + dss_trxn_payer_labels_primary + '</option><option value="' + DSS_TRXN_PAYER_SECONDARY + '">' + dss_trxn_payer_labels_secondary + '<option value="' + DSS_TRXN_PAYER_PATIENT + '">' + dss_trxn_payer_labels_patient +
                        '<option value="' + DSS_TRXN_PAYER_WRITEOFF + '">' + dss_trxn_payer_labels_writeoff + '<option value="' + DSS_TRXN_PAYER_DISCOUNT + '">' + dss_trxn_payer_labels_discount + '</select><select id="form['+tempforledgerentry+'][payment_type]" name="form['+tempforledgerentry+'][payment_type]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="' + DSS_TRXN_PYMT_CREDIT +
                        '">' + dss_trxn_pymt_type_labels_credit + '</option><option value="' + DSS_TRXN_PYMT_DEBIT + '">' + dss_trxn_pymt_type_labels_debit + '</option><option value="' + DSS_TRXN_PYMT_CHECK + '">' + dss_trxn_pymt_type_labels_check + '</option><option value="' + DSS_TRXN_PYMT_CASH + '">' + dss_trxn_pymt_type_labels_cash + '</option><option value="' + DSS_TRXN_PYMT_WRITEOFF +
@@ -90,7 +90,7 @@ function appendElement() {
     var day = currentTime.getDate()
     var year = currentTime.getFullYear()
     var todaysdate = month + "/" + day + "/" + year;  
-    newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date" class="calendar" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" ><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly">' +
+    newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="form['+tempforledgerentry+'][service_date]" class="calendar" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" ><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly">' +
                        '<select id="form['+tempforledgerentry+'][payer]" name="form['+tempforledgerentry+'][payer]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="' + DSS_TRXN_PAYER_PRIMARY + '">' + dss_trxn_payer_labels_primary + '</option><option value="' + DSS_TRXN_PAYER_SECONDARY + '">' + dss_trxn_payer_labels_secondary + '<option value="' + DSS_TRXN_PAYER_PATIENT + '">' + dss_trxn_payer_labels_patient +
                        '<option value="' + DSS_TRXN_PAYER_WRITEOFF + '">' + dss_trxn_payer_labels_writeoff + '<option value="' + DSS_TRXN_PAYER_DISCOUNT + '">' + dss_trxn_payer_labels_discount + '</select><select id="form['+tempforledgerentry+'][payment_type]" name="form['+tempforledgerentry+'][payment_type]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="' + DSS_TRXN_PYMT_CREDIT +
                        '">' + dss_trxn_pymt_type_labels_credit + '</option><option value="' + DSS_TRXN_PYMT_DEBIT + '">' + dss_trxn_pymt_type_labels_debit + '</option><option value="' + DSS_TRXN_PYMT_CHECK + '">' + dss_trxn_pymt_type_labels_check + '</option><option value="' + DSS_TRXN_PYMT_CASH + '">' + dss_trxn_pymt_type_labels_cash + '</option><option value="' + DSS_TRXN_PYMT_WRITEOFF +
@@ -102,9 +102,22 @@ function appendElement() {
 
 function validate()
 {
-  if(document.getElementById('ledger_entry_service_date').value = ''){
-    alert('Please enter a service date');
-  }
+  var isValid = true;
+  $('input[id*=service_date]').each(function(){
+    if ($(this).val() == '') {
+      isValid = false;
+      alert('Please enter a service date');
+      return false;
+    }
+  });
+  $('input[id*=amount]').each(function(){
+    if ($(this).val() == '') {
+      isValid = false;
+      alert('Please enter the payment amount');
+      return false;
+    }
+  });
+  return isValid;
 }
 
 function showsubmitbutton()
@@ -117,5 +130,18 @@ function showsubmitbutton()
 
 function setupCal(tempforledgerentry)
 {
-  window["cal"+tempforledgerentry] = new calendar2(document.forms['ledgerentryform'].elements['form['+tempforledgerentry+'][service_date]']);
+  var cid = 'form[' + tempforledgerentry + '][service_date]'
+  window["cal"+tempforledgerentry] = Calendar.setup({
+      inputField : cid,
+      trigger    : cid,
+      fdow	   : 0,
+      align	   : "Bl////",
+      onSelect   : function() { this.hide() },
+      dateFormat : "%m/%d/%Y"
+  });
 }
+
+$(document).ready(function(){
+    appendElement();
+    $('form#ledgerentryform').submit(validate);
+});

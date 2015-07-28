@@ -76,20 +76,22 @@
 						<br />
 						<? 
 						$banner_sql = "select * from banner where status=1 order by rand() limit 1";
-						$banner_my = mysqli_query($con, $banner_sql);
-						$banner_myarray = mysqli_fetch_array($banner_my);
-						
-						if(st($banner_myarray['banner_file']) <> '')
+						if( $banner_my = mysqli_query($con, $banner_sql) )
 						{
-							if(st($banner_myarray['banner_link']) <> '')
+							$banner_myarray = mysqli_fetch_array($banner_my);
+						
+							if(st($banner_myarray['banner_file']) <> '')
 							{
-								?>
-								<a href="<?=st($banner_myarray['banner_link'])?>" target="_blank">
-								<?
-							}
-						?>
+								if(st($banner_myarray['banner_link']) <> '')
+								{
+									?>
+									<a href="<?=st($banner_myarray['banner_link'])?>" target="_blank">
+									<?
+								}
+							?>
 							<img src="banner_file/<?=st($banner_myarray['banner_file'])?>" width="300" height="250" border="0">
-						<? 
+							<? 
+							}
 						}?>
 					</td>
 				</tr>

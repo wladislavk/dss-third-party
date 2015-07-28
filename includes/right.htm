@@ -74,7 +74,9 @@
 				<tr>
 					<td align="center" valign="top">
 						<br />
-						<? 
+						<?
+						// TODO: revise this query and get rid of `order by rand()` construct
+						//       it affects performance and brings errors
 						$banner_sql = "select * from banner where status=1 order by rand() limit 1";
 						if( $banner_my = mysqli_query($con, $banner_sql) )
 						{

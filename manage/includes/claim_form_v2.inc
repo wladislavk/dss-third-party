@@ -2748,9 +2748,10 @@ if (empty($query)) {
   print "<br /><center><font style='color:#ff0000; font-weight:bold;'>There are currently no ledger entries to be submitted.</font></center><br />";
 } else {
 ?>
-  <?php $li = 0; ?>
+  <?php $li = 0; $realTotalAmount = 0; ?>
   <input type="hidden" name="ledgercount" value="<?php echo count($query); ?>">
-  <?php foreach ($query as $array) { ?>
+  <?php foreach ($query as $array) {
+        $realTotalAmount += $array['amount']; ?>
     <table style="margin-left:39px;">
       <tr>
         <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
@@ -3000,7 +3001,12 @@ if ($is_pending) {
  
   // re-calculate balance due
   $balance_due = $total_charge - $amount_paid;
-  
+
+  // Override value from faulty sql queries
+  if ($is_pending) {
+      $total_charge = $realTotalAmount;
+  }
+
   // format calculations
   $total_charge = number_format($total_charge, 2, '.','');
   $amount_paid = number_format($amount_paid, 2, '.','');

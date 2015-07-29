@@ -729,7 +729,6 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     // Eligible API requires ALL the fields from the form
     $data = $_POST;
 
-    // @Todo: fix #140
     if($test_result['eligible_test']){
         $data['test'] = 'true';
     }

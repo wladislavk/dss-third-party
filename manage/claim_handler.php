@@ -717,7 +717,6 @@
     // Eligible API requires ALL the fields from the form
     $data = $_POST;
 
-    // @Todo: fix #140
     if($test_result['eligible_test']){
         $data['test'] = 'true';
     }

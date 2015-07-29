@@ -50,6 +50,7 @@
             <link rel="stylesheet" type="text/css" href="css/login_ie.css" />
     <![endif]-->
 
+    <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
     <script type="text/javascript" src="/manage/register/js/activate.js"></script>
 
     <div id="login_container">

@@ -690,6 +690,7 @@ trigger_error("Die called", E_USER_ERROR);
 		
     // Update the claim in the dental_insurance table
 	} else {
+        $primary_claim_id = intval($_POST['ed']);
              $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 
              $pat_myarray = $db->getRow($pat_sql);
@@ -939,13 +940,13 @@ trigger_error("Die called", E_USER_ERROR);
 		}elseif($u_status){
 		  $ed_sql .= ", status = '".s_for($u_status)."'";
 		}
-		$ed_sql .= " where insuranceid = '".s_for($_POST['ed'])."'";
+		$ed_sql .= " where insuranceid = '$primary_claim_id'";
 
 
 		$db->query($ed_sql);
 		// update the ledger trxns passed in with the form
 		$trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
-		update_ledger_trxns($_POST['ed'], $trxn_status);
+		update_ledger_trxns($primary_claim_id, $trxn_status);
 
 
 		if(isset($_POST['p_m_ins_payer_id'])){
@@ -1487,12 +1488,13 @@ input{text-transform:uppercase;}
 	
 	<div align="right">
         <?php if ($is_sent) { ?>
-          Claim has been sent
-		<?php if($is_back_office){ ?>
-			<input type="submit" class="print-button" name="ex_pagebtn" value="Print Claim" />
-			<input type="submit" class="print-button" name="ex_statusbtn" value="Check Status" />
-		<?php } ?>
-	    <?php } else if (!empty($is_back_office)) { ?>
+            Claim has been sent
+            <!-- Give user ability to print claim again and update claim history -->
+            <input type="submit" class="print-button" name="ex_pagebtn" value="REPRINT Claim" title="Reprint your claim.&#013;&#013;If you make changes to the CMS 1500 form they will appear on the reprint&#013;and will be saved in claim history." />
+            <?php if ($is_back_office) { ?>
+                <input type="submit" class="print-button" name="ex_statusbtn" value="Check Status" />
+            <?php } ?>
+        <?php } else if (!empty($is_back_office)) { ?>
                <?php if($status == DSS_CLAIM_PENDING){ ?>
           Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?php echo DSS_CLAIM_SENT?>" checked="checked" />
 			<input type="hidden" name="status" value="<?php echo DSS_CLAIM_SENT?>" />
@@ -1565,7 +1567,7 @@ if (!empty($is_back_office)){
 ?>
 
 <?php
-if(!empty($is_front_office) && $fdf_file!=''){
+if(!empty($is_front_office) && $is_sent && $fdf_file!=''){
 ?>
 		<a href="display_fdf_v2.php?f=<?php echo $fdf_file; ?>" class="print-button" >Print Claim Form</a>
 <?php
@@ -3207,7 +3209,10 @@ if ($is_pending) {
 
 		<div style="float:right;">
 
-        <?php if (!$is_sent) {  ?>
+        <?php if (
+            !$is_sent &&
+            !in_array($status, [DSS_CLAIM_PENDING, DSS_CLAIM_SEC_PENDING, DSS_CLAIM_REJECTED, DSS_CLAIM_SEC_REJECTED])
+        ) { // Based on "else if" blocks from above ?>
           <input type="submit" name="ex_pagebtn"
                 <?php if($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED){ ?>
 onclick="return confirm('This claim has been rejected. By printing this claim the status will be changed to SENT, and the rejection notification will be removed. Click OK to proceed.');"

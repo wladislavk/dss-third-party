@@ -90,9 +90,17 @@
                         <h4 class="modal-title">Memo Editor</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="scroller" style="height:200px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="scroller" style="height:275px" data-always-visible="1" data-rail-visible1="1">
                             <div class="row">
                                 <div class="col-md-12">
+                                    <div class="alert" v-if="errors">
+                                        <a class="close" data-dismiss="alert">×</a>
+                                        <ul>
+                                            <li v-repeat="e:errors">
+                                                @{{ e }}
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <div class="form-group date">
                                         <label for="docid" class="col-md-3 control-label">End Date</label>
                                         <div class="input-append date datepicker col-md-9">

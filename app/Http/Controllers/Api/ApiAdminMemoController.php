@@ -7,10 +7,10 @@
  */
 
 namespace DentalSleepSolutions\Http\Controllers\Api;
-
 use DentalSleepSolutions\Http\Requests\Request;
 use \DentalSleepSolutions\Interfaces\MemoAdminInterface;
 use Illuminate\Support\Facades\Input;
+use Mockery\CountValidator\Exception;
 
 class ApiAdminMemoController extends ApiBaseController
 {
@@ -20,6 +20,12 @@ class ApiAdminMemoController extends ApiBaseController
      * @var $memo
      */
     protected $memo;
+
+    private $rules = [
+        'memo' => 'required',
+        'off_date' => 'required',
+        'last_update' => 'required',
+    ];
 
     /**
      *
@@ -32,11 +38,20 @@ class ApiAdminMemoController extends ApiBaseController
 
     public function index()
     {
-        if($memos = $this->memo->all())
-        {
-            return response()->json(['status' => true,'message' => 'Memo list','data' => $memos],200);
+
+        $status = null;
+        $response = ['status' => null,'message' => 'Memo list','data' => []];
+        try {
+            $response['data'] = $this->memo->all();
+            $response['status'] = true;
+            $status = 200;
+        } catch(Exception $ex) {
+            $status = 200;
+            $response['status'] = false;
+        } finally {
+            return response()->json($response,$status);
         }
-        return response()->json(['status' => false,'message' => 'Error fetching Memos!'],404);
+
     }
 
     /**
@@ -45,47 +60,101 @@ class ApiAdminMemoController extends ApiBaseController
      */
     public function store()
     {
-        if($memo = $this->memo->store(Input::all()))
-        {
-            $memos = $this->memo->all();
-            return response()->json(['status' => true,'message' => 'Memo created successfully!','data' => $memos],200);
+        $status = null;
+        $response = ['status' => null,'message' => 'Memo added successfully.','data' => []];
+
+        try {
+
+            $validator = \Validator::make(Input::all(),$this->rules);
+
+            if($validator->fails())
+            {
+                throw new Exception($validator->errors());
+            }
+
+            $this->memo->store(Input::all());
+            $response['data'] = $this->memo->all();
+            $response['status'] = true;
+            $status = 200;
+
+        } catch(Exception $ex) {
+            $status = 404;
+            $response['status'] = false;
+            $response['message'] = $ex->getMessage();
+        } finally {
+            return response()->json($response,$status);
         }
-        return response()->json(['status' => false,'message' => 'Memo was not created!'],404);
+
     }
 
     public function update($memo_id)
     {
-        if($this->memo->update($memo_id,Input::all()))
-        {
-            $memos = $this->memo->all();
-            return response()->json(['status' => true,'message' => 'Memo updated!', 'data' => $memos],200);
+        $status = null;
+        $response = ['status' => null,'message' => 'Memo updated successfully.','data' => []];
+
+        try {
+
+            $validator = \Validator::make(Input::all(),$this->rules);
+
+            if($validator->fails())
+            {
+                throw new Exception($validator->errors());
+            }
+
+            $this->memo->update($memo_id,Input::all());
+            $response['data'] = $this->memo->all();
+            $response['status'] = true;
+            $status = 200;
+
+        } catch(Exception $ex) {
+            $status = 404;
+            $response['status'] = false;
+        } finally {
+            return response()->json($response,$status);
         }
-        return response()->json(['status' => false,'message' => 'Memo could not be updated!'],404);
+
     }
 
     public function show($memo_id)
     {
-        $memo = $this->memo->find($memo_id);
-        if($memo)
-        {
-            return response()->json(['status' => true,'message' => 'Memo found', 'memo' => $memo],200);
+        $status = null;
+        $response = [];
+        try {
+
+        } catch(Exception $ex) {
+            $status = 200;
+            $response['status'] = false;
+        } finally {
+
         }
-        return response()->json(['status' => false,'message' => 'Memo does not exist!'],404);
     }
 
     public function edit($memo_id)
     {
-        $memo = $this->memo->find($memo_id);
-        return response()->json(['status' => true, 'memo' => $memo],200);
+        $status = null;
+        $response = [];
+        try {
+
+        } catch(Exception $ex) {
+
+        } finally {
+
+        }
     }
 
     public function destroy($memo_id)
     {
-        if($this->memo->destroy($memo_id))
-        {
-            return response()->json(['status' => true],200);
+        $status = null;
+        $response = [];
+        try {
+
+        } catch(Exception $ex) {
+            $status = 200;
+            $response['status'] = false;
+        } finally {
+
         }
-        return response()->json(['status' => false,],404);
+
     }
 
 }

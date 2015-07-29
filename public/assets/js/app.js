@@ -1,3 +1,11 @@
+/**
+ *
+ * Very rudimentary Proof of Concept. Most of this code should and could be refactored...
+ * Brendan
+ *
+ */
+
+
 var memos = new Vue({
 
     el: '.memoManager',
@@ -25,19 +33,23 @@ var memos = new Vue({
             postValues = {'memo': this.fields.memoText, 'off_date': this.fields.off_date, 'last_update': moment().format("YYYY-MM-DD") };
             if(this.fields.memo_id != 0) {
                 this.$http.put('/api/v1/memo/' + this.fields.memo_id,postValues,function(data,status,request) {
-                    if(status == 200) {
-                        this.$set('memos', data.data);
-                        alert('Memo updated.')
-                        $('#responsive').modal('hide');
-                    }
+                    this.$set('memos', data.data);
+                    alert('Memo updated.')
+                    $('#responsive').modal('hide');
+                }).error(function (data, status, request) {
+                    var message = JSON.parse(data.message);
+                    this.$set('errors', message);
+                    console.log(message);
                 })
             } else {
                 this.$http.post('/api/v1/memo',postValues,function(data,status,request) {
-                    if(status == 200) {
-                        this.$set('memos', data.data);
-                        alert('Memo created.')
-                        $('#responsive').modal('hide');
-                    }
+                    this.$set('memos', data.data);
+                    alert('Memo created.')
+                    $('#responsive').modal('hide');
+                }).error(function (data, status, request) {
+                    var message = JSON.parse(data.message);
+                    this.$set('errors', message);
+                    console.log(message);
                 })
             }
         },

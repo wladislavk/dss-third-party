@@ -1489,11 +1489,13 @@ input{text-transform:uppercase;}
         <?php if ($is_sent) { ?>
             Claim has been sent
             <?php if ($is_back_office) { ?>
-                <input type="submit" class="print-button" name="ex_pagebtn" value="Print Claim" />
+                // in backoffice give user ability to print claim again and update claim history            
+                <input type="submit" class="print-button" name="ex_pagebtn" value="REPRINT Claim" title="Reprint your claim. If you make changes to the CMS 1500 form they will appear on the reprint and will be saved in claim history." />
                 <input type="submit" class="print-button" name="ex_statusbtn" value="Check Status" />
             <?php } ?>
-            <?php if ($is_front_office) { // in frontoffice give user ability to print claim again without updating stored claim ?>
-                <input type="submit" class="print-button" name="ex_pagebtn" value="REPRINT Claim" title="Reprint your claim.&#013;&#013;If you make changes to the CMS 1500 form they will appear on the reprint,&#013;but will not be saved." />
+            <?php if($is_front_office){ ?>
+                // in frontoffice give user ability to print claim again and update claim history
+                <input type="submit" class="print-button" name="ex_pagebtn" value="REPRINT Claim" title="Reprint your claim. If you make changes to the CMS 1500 form they will appear on the reprint and will be saved in claim history."/>
             <?php } ?>
         <?php } else if (!empty($is_back_office)) { ?>
                <?php if($status == DSS_CLAIM_PENDING){ ?>

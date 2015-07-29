@@ -3209,7 +3209,10 @@ if ($is_pending) {
 
 		<div style="float:right;">
 
-        <?php if (!$is_sent) {  ?>
+        <?php if (
+            !$is_sent &&
+            !in_array($status, [DSS_CLAIM_PENDING, DSS_CLAIM_SEC_PENDING, DSS_CLAIM_REJECTED, DSS_CLAIM_SEC_REJECTED])
+        ) { // Based on "else if" blocks from above ?>
           <input type="submit" name="ex_pagebtn"
                 <?php if($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED){ ?>
 onclick="return confirm('This claim has been rejected. By printing this claim the status will be changed to SENT, and the rejection notification will be removed. Click OK to proceed.');"

@@ -3,26 +3,28 @@
 </div>
 
 <script type="text/javascript">
-nv.addGraph(function() {
-  var chart = nv.models.multiBarChart().width(450).height(300);
+$(document).ready(function(){
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart().width(450).height(300);
 
-  chart.xAxis
-     .axisLabel('Date')
-      .showMaxMin(false)      
-      .tickFormat(function(d) {return d3.time.format("%x")(new Date(d*1000));});
+    chart.xAxis
+       .axisLabel('Date')
+        .showMaxMin(false)      
+        .tickFormat(function(d) {return d3.time.format("%x")(new Date(d*1000));});
 
-  chart.yAxis
-      .tickFormat(d3.format(',f'));
+    chart.yAxis
+        .tickFormat(d3.format(',f'));
 
-  chart.stacked(true);
+    chart.stacked(true);
 
-  d3.select('#screened svg')
-      .datum(screened_data())
-    .transition().duration(500).call(chart);
+    d3.select('#screened svg')
+        .datum(screened_data())
+      .transition().duration(500).call(chart);
 
-  nv.utils.windowResize(function() { d3.select('#screened svg').call(chart) });
-  return chart;
-}); 
+    nv.utils.windowResize(function() { d3.select('#screened svg').call(chart) });
+    return chart;
+  });
+});
  
  
 function screened_data(){

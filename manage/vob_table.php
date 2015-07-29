@@ -104,7 +104,7 @@ if (count($my) > 0) { ?>
         <tr class="tr_bg">
           <td>Has patient's out of pocket expense been met?</td>
           <td class=<?php echo  $out_table_class?>><?php echo  ($preauth['out_of_pocket_met'] == '0') ? 'No' : 'Yes' ?></td>
-          <td class=<?php echo  $in_table_class?>><?php echo  (!empty($preauth['in_out_of_pocket_met']) && $preauth['in_out_of_pocket_met'] == '0') ? 'No' : 'Yes' ?></td>
+          <td class=<?php echo  $in_table_class?>><?php echo  (isset($preauth['in_out_of_pocket_met']) && $preauth['in_out_of_pocket_met'] == '0') ? 'No' : 'Yes' ?></td>
         </tr>
         <tr class="tr_bg">
           <td>Insurance plan notes</td>

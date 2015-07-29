@@ -37,7 +37,7 @@
     <div class="page-content-wrapper">
         <div class="page-content">
             <div id="memos">
-                <a href="#responsive" data-toggle="modal" class="btn btn-success pull-right">
+                <a href="#responsive" data-toggle="modal" class="btn btn-success pull-right" v-on="click: addMemo">
                     Add Memo
                     <span class="glyphicon glyphicon-plus"></span>
                 </a>
@@ -96,7 +96,7 @@
                                     <div class="form-group date">
                                         <label for="docid" class="col-md-3 control-label">End Date</label>
                                         <div class="input-append date datepicker col-md-9">
-                                            <input class="form-control text-center" type="text" name="offdate" value="" v-model="off_date">
+                                            <input class="form-control text-center" type="text" name="offdate" value="@{{ fields.off_date }}" v-model="fields.off_date">
                                           <span class="input-group-addon add-on">
                                             <i class="glyphicon glyphicon-calendar"></i>
                                           </span>
@@ -105,7 +105,7 @@
                                     <div class="form-group">
                                         <label for="body" class="col-md-3 control-label">Message</label>
                                         <div class="col-md-9">
-                                            <textarea name="memobox" id="memobox" class="form-control" placeholder="Memo" v-model="memoText"></textarea>
+                                            <textarea name="memobox" id="memobox" class="form-control" placeholder="Memo" v-model="fields.memoText"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" data-dismiss="modal" class="btn default">Close</button>
-                        <button type="button" class="btn green" v-on="click: saveMemo">Save changes</button>
+                        <button class="btn green" v-on="click: saveMemo">Save changes</button>
                     </div>
                 </form>
             </div>
@@ -137,6 +137,7 @@
 <script src="assets/plugins/jquery.cokie.min.js" type="text/javascript"></script>
 <script src="assets/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
 
+<script src="assets/js/moment.js"></script>
 <script src="assets/js/vue.js"></script>
 <script src="assets/js/vue-resource.min.js"></script>
 <script src="assets/js/app.js"></script>

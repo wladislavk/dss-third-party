@@ -30,7 +30,6 @@ class ApiAdminMemoController extends ApiBaseController
         $this->memo = $memo;
     }
 
-
     public function index()
     {
         if($memos = $this->memo->all())
@@ -48,7 +47,8 @@ class ApiAdminMemoController extends ApiBaseController
     {
         if($memo = $this->memo->store(Input::all()))
         {
-            return response()->json(['status' => true,'message' => 'Memo created successfully!'],200);
+            $memos = $this->memo->all();
+            return response()->json(['status' => true,'message' => 'Memo created successfully!','data' => $memos],200);
         }
         return response()->json(['status' => false,'message' => 'Memo was not created!'],404);
     }
@@ -57,7 +57,8 @@ class ApiAdminMemoController extends ApiBaseController
     {
         if($this->memo->update($memo_id,Input::all()))
         {
-            return response()->json(['status' => true,'message' => 'Memo updated!'],200);
+            $memos = $this->memo->all();
+            return response()->json(['status' => true,'message' => 'Memo updated!', 'data' => $memos],200);
         }
         return response()->json(['status' => false,'message' => 'Memo could not be updated!'],404);
     }

@@ -416,15 +416,15 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 <?php } ?>
 
 <?php if(isset($_GET['closedby']) && $_GET['closedby']==1){ ?>
-<a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?php echo (!empty($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary"> Show All Claims </a>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?php echo (isset($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary"> Show All Claims </a>
 <?php }else{ ?>
-<a style="float:right;margin-right:3px;"  href="manage_claims.php?closedby=1&status=<?php echo (!empty($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary" title="Show only claims closed by frontoffice (not backoffice) user."> Frontoffice Closed </a>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?closedby=1&status=<?php echo (isset($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary" title="Show only claims closed by frontoffice (not backoffice) user."> Frontoffice Closed </a>
 <?php } ?>
 
 <?php if(isset($_GET['notes']) && $_GET['notes']==1){ ?>
-<a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?php echo (!empty($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary"> Show All Claims </a>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?php echo (isset($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary"> Show All Claims </a>
 <?php }else{ ?>
-<a style="float:right;margin-right:3px;"  href="manage_claims.php?notes=1&status=<?php echo (!empty($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary" title="Show only claims that have notes"> Show Claim w Notes </a>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?notes=1&status=<?php echo (isset($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (!empty($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary" title="Show only claims that have notes"> Show Claim w Notes </a>
 <?php } ?>
 <div style="clear:both;"></div>
 </div>
@@ -436,7 +436,7 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?php 
-				 paging($no_pages,$index_val,"status=".(!empty($_GET['status']) ? $_GET['status'] : '')."&notes=".(!empty($_GET['notes']) ? $_GET['notes'] : '')."&fid=".(!empty($_GET['fid']) ? $_GET['fid'] : '')."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : '')."&sort_by=".(!empty($_GET['sort_by']) ? $_GET['sort_by'] : '')."&sort_dir=".(!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''));
+				 paging($no_pages,$index_val,"status=".(isset($_GET['status']) ? $_GET['status'] : '')."&notes=".(!empty($_GET['notes']) ? $_GET['notes'] : '')."&fid=".(!empty($_GET['fid']) ? $_GET['fid'] : '')."&pid=".(!empty($_GET['pid']) ? $_GET['pid'] : '')."&sort_by=".(!empty($_GET['sort_by']) ? $_GET['sort_by'] : '')."&sort_dir=".(!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''));
 			?>
 		</TD>
 	</TR>

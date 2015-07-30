@@ -2,6 +2,38 @@ var currentTime = new Date();
 var month = currentTime.getMonth() + 1;
 var day = currentTime.getDate();
 var year = currentTime.getFullYear();
+
+var template = '<div>' +
+    '<input type="text" name="form[%uniqueId%][service_date]" id="service_date_field_%uniqueId%" ' +
+        'class="calendar" value="%todayDate%" ' +
+        'style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" />' +
+    '<input type="text" name="form[%uniqueId%][entry_date]" ' +
+        'value="%todayDate%" readonly="readonly" ' +
+        'style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" />' +
+    '<select id="payer_field_%uniqueId%" name="form[%uniqueId%][payer]" ' +
+        'style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">' +
+        '<option value="' + DSS_TRXN_PAYER_PRIMARY + '">' + dss_trxn_payer_labels_primary + '</option>' +
+        '<option value="' + DSS_TRXN_PAYER_SECONDARY + '">' + dss_trxn_payer_labels_secondary + '</option>' +
+        '<option value="' + DSS_TRXN_PAYER_PATIENT + '">' + dss_trxn_payer_labels_patient + '</option>' +
+        '<option value="' + DSS_TRXN_PAYER_WRITEOFF + '">' + dss_trxn_payer_labels_writeoff + '</option>' +
+        '<option value="' + DSS_TRXN_PAYER_DISCOUNT + '">' + dss_trxn_payer_labels_discount + '</option>' +
+    '</select>' +
+    '<select id="form[%uniqueId%][payment_type]" name="form[%uniqueId%][payment_type]"' +
+        'style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">' +
+        '<option value="' + DSS_TRXN_PYMT_CREDIT + '">' + dss_trxn_pymt_type_labels_credit + '</option>' +
+        '<option value="' + DSS_TRXN_PYMT_DEBIT + '">' + dss_trxn_pymt_type_labels_debit + '</option>' +
+        '<option value="' + DSS_TRXN_PYMT_CHECK + '">' + dss_trxn_pymt_type_labels_check + '</option>' +
+        '<option value="' + DSS_TRXN_PYMT_CASH + '">' + dss_trxn_pymt_type_labels_cash + '</option>' +
+        '<option value="' + DSS_TRXN_PYMT_WRITEOFF + '">' + dss_trxn_pymt_type_labels_writeoff + '</option>' +
+    '</select>' +
+    '<div style="float:right;color:#FFF; font-weight:bold;font-size:18px;">' +
+        '<input type="text" id="amount_field_%uniqueId%"' +
+            'class="dollar_input" name="form[%uniqueId%][amount]"' +
+            'style="margin: 0; float: left; width:75px;margin-right:10px;">' +
+        '<button class="remove" onclick="removeRow(%uniqueId%);return false;">X</button>' +
+    '</div>' +
+    '<div style="clear: both; height: 10px;"></div>';
+
 if(month < 10){
   month = '0'+(currentTime.getMonth() + 1);  
 }
@@ -40,65 +72,34 @@ function eraseCookie(name)
   createCookie(name,"",-1);
 }
 
-function validate(tempforledgerentry)
-{
-  if(document.getElementById("form[" + tempforledgerentry + "][service_date]")  == ''){
-    alert("DIE");
-  }
-}
-
 function appendElement() {
   if (readCookie('tempforledgerentry') == null || readCookie('tempforledgerentry') == 0) {
-    createCookie('tempforledgerentry',1,'');
-    var ni = document.getElementById('FormFields');
-    var numi = document.getElementById('currval');
-    var num = (document.getElementById('currval').value -1)  + 2;
-    numi.value = num;
-
-    var currentTime = new Date()
-    var month = currentTime.getMonth() + 1
-    var day = currentTime.getDate()
-    var year = currentTime.getFullYear()
-    var todaysdate = month + "/" + day + "/" + year;
-
-    var newdiv = document.createElement('div');
-    var divIdName = 'innerdiv'+num;
-    var tempforledgerentry = readCookie('tempforledgerentry');
-    newdiv.setAttribute('id',divIdName);  
-    newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="form['+tempforledgerentry+'][service_date]" class="calendar" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" ><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly">' +
-                       '<select id="form['+tempforledgerentry+'][payer]" name="form['+tempforledgerentry+'][payer]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="' + DSS_TRXN_PAYER_PRIMARY + '">' + dss_trxn_payer_labels_primary + '</option><option value="' + DSS_TRXN_PAYER_SECONDARY + '">' + dss_trxn_payer_labels_secondary + '<option value="' + DSS_TRXN_PAYER_PATIENT + '">' + dss_trxn_payer_labels_patient +
-                       '<option value="' + DSS_TRXN_PAYER_WRITEOFF + '">' + dss_trxn_payer_labels_writeoff + '<option value="' + DSS_TRXN_PAYER_DISCOUNT + '">' + dss_trxn_payer_labels_discount + '</select><select id="form['+tempforledgerentry+'][payment_type]" name="form['+tempforledgerentry+'][payment_type]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="' + DSS_TRXN_PYMT_CREDIT +
-                       '">' + dss_trxn_pymt_type_labels_credit + '</option><option value="' + DSS_TRXN_PYMT_DEBIT + '">' + dss_trxn_pymt_type_labels_debit + '</option><option value="' + DSS_TRXN_PYMT_CHECK + '">' + dss_trxn_pymt_type_labels_check + '</option><option value="' + DSS_TRXN_PYMT_CASH + '">' + dss_trxn_pymt_type_labels_cash + '</option><option value="' + DSS_TRXN_PYMT_WRITEOFF +
-                       '">' + dss_trxn_pymt_type_labels_writeoff + '</option></select><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><input type="text" id="form['+tempforledgerentry+'][amount]" class="dollar_input" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></div><div style="clear: both; height: 10px;"></div>';
-    ni.appendChild(newdiv);
-    setupCal(tempforledgerentry);
+    currentCount = 1;
   } else if(readCookie('tempforledgerentry') > 0) {
-    currentcplus = (parseInt(readCookie('tempforledgerentry'),10) + 1);
+    currentCount = parseInt(readCookie('tempforledgerentry'), 10) + 1;
     eraseCookie('tempforledgerentry');
-    createCookie('tempforledgerentry',currentcplus,'');
-    var content = document.getElementById('FormFields').innerHTML;
-    var ni = document.getElementById('FormFields');
-    var numi = document.getElementById('currval');
-    var num = (document.getElementById('currval').value -1) + 2;
-    numi.value = num;
-    var newdiv = document.createElement('div');
-    var divIdName = 'innerdiv' + num;
-    var tempforledgerentry = readCookie('tempforledgerentry');
-    newdiv.setAttribute('id',divIdName);
-    var currentTime = new Date()
-    var month = currentTime.getMonth() + 1
-    var day = currentTime.getDate()
-    var year = currentTime.getFullYear()
-    var todaysdate = month + "/" + day + "/" + year;  
-    newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="form['+tempforledgerentry+'][service_date]" class="calendar" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" ><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly">' +
-                       '<select id="form['+tempforledgerentry+'][payer]" name="form['+tempforledgerentry+'][payer]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="' + DSS_TRXN_PAYER_PRIMARY + '">' + dss_trxn_payer_labels_primary + '</option><option value="' + DSS_TRXN_PAYER_SECONDARY + '">' + dss_trxn_payer_labels_secondary + '<option value="' + DSS_TRXN_PAYER_PATIENT + '">' + dss_trxn_payer_labels_patient +
-                       '<option value="' + DSS_TRXN_PAYER_WRITEOFF + '">' + dss_trxn_payer_labels_writeoff + '<option value="' + DSS_TRXN_PAYER_DISCOUNT + '">' + dss_trxn_payer_labels_discount + '</select><select id="form['+tempforledgerentry+'][payment_type]" name="form['+tempforledgerentry+'][payment_type]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="' + DSS_TRXN_PYMT_CREDIT +
-                       '">' + dss_trxn_pymt_type_labels_credit + '</option><option value="' + DSS_TRXN_PYMT_DEBIT + '">' + dss_trxn_pymt_type_labels_debit + '</option><option value="' + DSS_TRXN_PYMT_CHECK + '">' + dss_trxn_pymt_type_labels_check + '</option><option value="' + DSS_TRXN_PYMT_CASH + '">' + dss_trxn_pymt_type_labels_cash + '</option><option value="' + DSS_TRXN_PYMT_WRITEOFF +
-                       '">' + dss_trxn_pymt_type_labels_writeoff + '</option></select><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><input type="text" id="form['+tempforledgerentry+'][amount]" class="dollar_input" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></div><div style="clear: both; height: 10px;"></div>';
-    ni.appendChild(newdiv);    
-    setupCal(tempforledgerentry);
   }
-}  
+
+  createCookie('tempforledgerentry', currentCount, '');
+
+  var currentTime = new Date(),
+    month = currentTime.getMonth() + 1,
+    day = currentTime.getDate(),
+    year = currentTime.getFullYear(),
+    todayDate = month + "/" + day + "/" + year,
+    uniqueId = readCookie('tempforledgerentry');
+
+  var newDiv = $('<div />', {
+      id: 'payment_' + uniqueId
+  });
+
+  newDiv.html(template.replace(/%uniqueId%/g, uniqueId).replace(/%todayDate%/g, todayDate));
+
+  $('#FormFields').append(newDiv);
+  afterUpdateFormFields();
+
+  setupCal(uniqueId);
+}
 
 function validate()
 {
@@ -128,10 +129,11 @@ function showsubmitbutton()
   document.getElementById('submitbtn').style.cssFloat = "right";
 }
 
-function setupCal(tempforledgerentry)
+function setupCal(uniqueId)
 {
-  var cid = 'form[' + tempforledgerentry + '][service_date]'
-  window["cal"+tempforledgerentry] = Calendar.setup({
+  var cid = 'service_date_field_' + uniqueId;
+
+  window["cal"+uniqueId] = Calendar.setup({
       inputField : cid,
       trigger    : cid,
       fdow	   : 0,
@@ -139,6 +141,24 @@ function setupCal(tempforledgerentry)
       onSelect   : function() { this.hide() },
       dateFormat : "%m/%d/%Y"
   });
+}
+
+function removeRow(id)
+{
+    $('#payment_' + id).remove();
+    afterUpdateFormFields();
+}
+
+function afterUpdateFormFields () {
+    var count = $('[id^=payment_]').length;
+
+    $('#currval').val(count);
+
+    if (count < 2) {
+        $('.remove').attr('disabled', 'disabled');
+    } else {
+        $('.remove').removeAttr('disabled');
+    }
 }
 
 $(document).ready(function(){

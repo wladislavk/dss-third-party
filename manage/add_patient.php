@@ -725,9 +725,8 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     <?php
     trigger_error("Die called", E_USER_ERROR);
   } else {
-    //echo('in');
-    $clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
-    $clogin = preg_replace("[^A-Za-z]", "", $clogin);
+    $clogin = strtolower(substr($_POST["firstname"], 0, 1) . $_POST["lastname"]);
+    $clogin = preg_replace('/[^a-z]+/i', '', $clogin);
     $csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
     $cq = $db->getResults($csql);
     $carray = array();

@@ -312,7 +312,20 @@
         $amount_paid = str_replace(",", '',strtoupper($myarray['amount_paid']));
         $balance_due = str_replace(",", '',strtoupper($myarray['balance_due']));
         $signature_physician =strtoupper($myarray['signature_physician']);
-        $physician_signed_date =strtoupper($myarray['physician_signed_date']);
+        // $physician_signed_date = strtoupper($myarray['physician_signed_date']);
+
+        if (!empty($myarray['physician_signed_date'])) {
+            $dateFromDatabase = str_replace('/', '-', $myarray['physician_signed_date']);
+            $physician_signed_date = date_create_from_format('m-d-y', $dateFromDatabase);
+            if ($physician_signed_date) {
+                $physician_signed_date = $physician_signed_date->format('m/d/y');
+            } else {
+                $physician_signed_date = date_create_from_format('m-d-Y', $dateFromDatabase)->format('m/d/y');
+            }
+        } else {
+            $physician_signed_date = '';
+        }
+
         $service_facility_info_name = strtoupper(st($myarray['service_facility_info_name']));
         $service_facility_info_address = strtoupper(st($myarray['service_facility_info_address']));
         $service_facility_info_city = strtoupper(st($myarray['service_facility_info_city']));
@@ -892,7 +905,7 @@
       << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".escapeFdf((!empty($billing_provider_phone) ? $billing_provider_phone : '')).") >>
       << /T(".$field_path.".billing_provider_info_fill[0]) /V(".escapeFdf(strtoupper((!empty($billing_provider_name) ? $billing_provider_name : ''))."\n".strtoupper((!empty($billing_provider_address) ? $billing_provider_address : ''))."\n".strtoupper((!empty($billing_provider_city) ? $billing_provider_city : ''))).") >>
       << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".escapeFdf((!empty($signature_physician) ? $signature_physician : '')).") >>  
-      << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".escapeFdf(date('m/d/y', strtotime(str_replace('-','/', $physician_signed_date)))).") >>
+      << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".escapeFdf($physician_signed_date).") >>
       << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".escapeFdf((!empty($service_info_a) ? $service_info_a : '')).") >>
       << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".escapeFdf((!empty($service_info_b_other) ? $service_info_b_other : '')).") >>
       << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf((($insurancetype == '1')?$medicare_npi:$npi)).") >>

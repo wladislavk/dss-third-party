@@ -32,7 +32,7 @@ var template = '<div>' +
             'style="margin: 0; float: left; width:75px;margin-right:10px;">' +
         '<button class="remove" onclick="removeRow(%uniqueId%);return false;">X</button>' +
     '</div>' +
-    '<div style="clear: both; height: 10px;"></div>'
+    '<div style="clear: both; height: 10px;"></div>';
 
 if(month < 10){
   month = '0'+(currentTime.getMonth() + 1);  

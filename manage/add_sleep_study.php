@@ -7,8 +7,7 @@ include_once('includes/general_functions.php');
 include("includes/calendarinc.php");
 
 // $preferDefault allows to ignore post data when the form has been saved
-function postField ($name, $default='', $preferDefault=false) 
-{
+function postField ($name, $default='', $preferDefault=false) {
     if (!$preferDefault && isset($_POST[$name])) 
     {
         return $_POST[$name];
@@ -17,13 +16,11 @@ function postField ($name, $default='', $preferDefault=false)
     return $default;
 }
 
-function escapedField ($name, $default='', $preferDefault=false) 
-{
+function escapedField ($name, $default='', $preferDefault=false) {
     return htmlspecialchars(postField($name, $default, $preferDefault));
 }
 
-function selected ($value, $reference) 
-{
+function selected ($value, $reference) {
     if ($value == $reference) 
     {
         return 'selected="selected"';
@@ -44,8 +41,7 @@ $isNewStudy = isset($_POST['submitnewsleeplabsumm']);
 $changesSaved = false;
 
 if ( isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && !$_FILES && 
-     ($isDeleteStudy || $isUpdateStudy || $isNewStudy) ) 
-{
+     ($isDeleteStudy || $isUpdateStudy || $isNewStudy) ) {
     error_log('Max file size exceeded AND PHP didn\'t populate FILES global variable, and POST might be corrupt');
     $errorMessage = $maxFileSizeExceeded;
 }
@@ -58,8 +54,7 @@ $sql = "SELECT dentaldevice
     LIMIT 1;";
 $result = $db->getResults($sql);
 
-if ($result) 
-{
+if ($result) {
     $deviceid = 0;
 
     foreach ($result as $row) 
@@ -76,24 +71,20 @@ $s_lab_query = "SELECT *
     ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC";
 $num_labs = $db->getNumberRows($s_lab_query);
 
-if ($isNewStudy) 
-{
+if ($isNewStudy) {
     $num_labs++;
 }
 
 $msg = '';
 
-if ($isDeleteStudy) 
-{
+if ($isDeleteStudy) {
     $id = intval($_POST['sleeplabid']);
     $q = "DELETE FROM dental_summ_sleeplab WHERE id = '$id'";
 
     $changesSaved = !!$db->query($q);
 
     $msg = $changesSaved ? 'Successfully deleted sleep lab study.' : 'Could not delete sleep lab study, please try again.';
-} else 
-if ($isUpdateStudy) 
-{
+} else if ($isUpdateStudy) {
     $id = s_for($_POST['sleeplabid']);
     $date = s_for($_POST['date']);
     $sleeptesttype = s_for($_POST['sleeptesttype']);
@@ -123,16 +114,13 @@ if ($isUpdateStudy)
 
     $banner1 = $prev_filename;
 
-    if (isset($_FILES['ss_file'])) 
-    {
+    if (isset($_FILES['ss_file'])) {
         $errorNo = $_FILES['ss_file']['error'];
 
-        if (isFaultyUpload($errorNo)) 
-        {
+        if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
-        } else 
-        {
+        } else {
             $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
             $lastdot = strrpos($fname,".");
             $name = substr($fname,0,$lastdot);
@@ -146,10 +134,8 @@ if ($isUpdateStudy)
 
             $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
 
-            if ($uploaded) 
-            {
-                if ($image_id != '') 
-                {
+            if ($uploaded) {
+                if ($image_id != '') {
                     $ins_sql = " update dental_q_image set
                             image_file = '".s_for($banner1)."'
                             WHERE imageid='".$image_id."'
@@ -157,12 +143,10 @@ if ($isUpdateStudy)
                             ;";
                     $db->query($ins_sql);
 
-                    if (file_exists("../../../shared/q_file/" . $prev_filename)) 
-                    {
+                    if (file_exists("../../../shared/q_file/" . $prev_filename)) {
                         unlink("../../../shared/q_file/" . $prev_filename);
                     }
-                } else 
-                {
+                } else {
                     $ins_sql = " insert into dental_q_image set
                             patientid = '".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."',
                             title = '".$sleeptesttype." ".$date."',
@@ -175,8 +159,7 @@ if ($isUpdateStudy)
 
                     $image_id = $db->getInsertId($ins_sql);
                 }
-            } else 
-            {
+            } else {
                 error_log('SS file upload save error. Error message should be stored above this line.');
                 $errorMessage = $maxFileSizeExceeded;
             }
@@ -216,13 +199,10 @@ if ($isUpdateStudy)
               title = '$sleeptesttype $date'
               WHERE image_file='$banner1'";
     $db->query($i_sql);
-    if( empty($errorMessage) )
-    {
+    if( empty($errorMessage) ) {
         $msg = $changesSaved ? 'Successfully updated sleep lab study.' : 'Could not update sleep lab study, please try again.';
     }
-} else 
-if ($isNewStudy) 
-{
+} else if ($isNewStudy) {
     $date = s_for($_POST['date']);
     $sleeptesttype = s_for($_POST['sleeptesttype']);
     $place = s_for($_POST['place']);
@@ -247,16 +227,13 @@ if ($isNewStudy)
     $banner1 = '';
     $image_id = '';
 
-    if (isset($_FILES['ss_file'])) 
-    {
+    if (isset($_FILES['ss_file'])) {
         $errorNo = $_FILES['ss_file']['error'];
 
-        if (isFaultyUpload($errorNo)) 
-        {
+        if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
-        } else 
-        {
+        } else {
             $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
             $lastdot = strrpos($fname,".");
             $name = substr($fname,0,$lastdot);
@@ -270,8 +247,7 @@ if ($isNewStudy)
 
             $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
 
-            if ($uploaded) 
-            {
+            if ($uploaded) {
                 $ins_sql = " insert into dental_q_image set
                     patientid = '".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."',
                     title = '".$sleeptesttype. " " .$date."',
@@ -282,9 +258,8 @@ if ($isNewStudy)
                     adddate = now(),
                     ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                $db->getInsertId($ins_sql);
-            } else 
-            {
+                $image_id = $db->getInsertId($ins_sql);
+            } else {
                 error_log('SS file upload save error. Error message should be stored above this line.');
                 $errorMessage = $maxFileSizeExceeded;
             }
@@ -344,8 +319,7 @@ if ($isNewStudy)
         )";
     $changesSaved = !!$db->query($q);
 
-    if( empty($errorMessage) )
-    {
+    if( empty($errorMessage) ) {
         $msg = $changesSaved ? 'Successfully added sleep lab study.' : 'Could not add sleep lab study, please try again.';
     }
 }

@@ -40,22 +40,25 @@
 		$fields[] = "referredby_notes";
 		$fields[] = "dea_number";
 		$first = true;
+		$updated = false;
 
-		$up_sql = "UPDATE dental_contact SET ";
 		foreach($fields as $field){
 			if(empty($w_r[$field]) && !empty($l_r[$field])) {
 				if(!$first) {
 					$up_sql .= ", ".$field."='".$l_r[$field]."'";
 				} else {
-					$up_sql .= $field."='".$l_r[$field]."'";
+					$up_sql = "UPDATE dental_contact SET " . $field . "='" . $l_r[$field] . "'";
 					$first = false;
+					$updated = true;
 				}
 			}
 		}
 
-		$up_sql .= " WHERE contactid='".mysqli_real_escape_string($con, $w_r['contactid'])."'";
-		
-		$db->query($up_sql);
+		if ($updated) {
+			$up_sql .= " WHERE contactid='".mysqli_real_escape_string($con, $w_r['contactid'])."'";
+			$db->query($up_sql);
+		}
+
 		$loser_sql = "UPDATE dental_contact SET merge_id='".mysqli_real_escape_string($con, $w_r['contactid'])."', merge_date=NOW() WHERE contactid='".mysqli_real_escape_string($con, $l_r['contactid'])."'";
 		
 		$db->query($loser_sql);

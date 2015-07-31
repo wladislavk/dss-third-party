@@ -1020,7 +1020,13 @@ $result_pdf = $pdf_name;
 $command = "$pdftk $pdf_template_path fill_form $xfdf_file_path output $result_pdf flatten";
 
 
-exec( $command, $output, $ret );
+exec( $command, $output, $exitStatus );
+
+if ($exitStatus) {
+    error_log("Print claim failed. PDFtk command: $command");
+    error_log("PDFtk output:\n\t" . join("\n\t", $output));
+    error_log("PDFtk exit status: $exitStatus");
+}
 
 
 require_once '3rdParty/tcpdf/tcpdf.php';
@@ -1050,7 +1056,13 @@ require_once '3rdParty/fpdi/fpdi.php';
     $result_pdf = $pdf_name;
     $command = "$pdftk $pdf_template_path fill_form $xfdf_file_path output $result_pdf flatten";
 
-    exec( $command, $output, $ret );
+    exec( $command, $output, $exitStatus );
+
+    if ($exitStatus) {
+        error_log("Print claim failed. PDFtk command: $command");
+        error_log("PDFtk output:\n\t" . join("\n\t", $output));
+        error_log("PDFtk exit status: $exitStatus");
+    }
 
     include_once '3rdParty/tcpdf/tcpdf.php';
     include_once '3rdParty/fpdi/fpdi.php';

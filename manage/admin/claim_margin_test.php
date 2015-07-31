@@ -15,7 +15,13 @@ $pdftk = '/usr/bin/pdftk';
 $result_pdf = "../../../../shared/q_file/claim_margin_admin_".$_SESSION['adminuserid']."_".date('YmdHis').".pdf"; 
 $command = "$pdftk $pdf_template_path fill_form $xfdf_file_path output $result_pdf flatten";
 
-exec( $command, $output, $ret );
+exec( $command, $output, $exitStatus );
+
+if ($exitStatus) {
+    error_log("Print claim failed. PDFtk command: $command");
+    error_log("PDFtk output:\n\t" . join("\n\t", $output));
+    error_log("PDFtk exit status: $exitStatus");
+}
 
 
 require_once '../3rdParty/tcpdf/tcpdf.php';

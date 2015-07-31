@@ -316,11 +316,12 @@
 
         if (!empty($myarray['physician_signed_date'])) {
             $dateFromDatabase = str_replace('/', '-', $myarray['physician_signed_date']);
-            $physician_signed_date = date_create_from_format('m-d-y', $dateFromDatabase);
-            if ($physician_signed_date) {
-                $physician_signed_date = $physician_signed_date->format('m/d/y');
+            if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromDatabase)) {
+                $physician_signed_date = $physician_signed_date->format('m/d/Y');
+            } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromDatabase)) {
+                $physician_signed_date = $physician_signed_date->format('m/d/Y');
             } else {
-                $physician_signed_date = date_create_from_format('m-d-Y', $dateFromDatabase)->format('m/d/y');
+                $physician_signed_date = date('m/d/Y');
             }
         } else {
             $physician_signed_date = '';

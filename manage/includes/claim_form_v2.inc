@@ -1,7 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?>
 
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-  <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>
+  <script type="text/javascript" src="/manage/script/autocomplete_local.js?v=<?= time() ?>"></script>
 
 <?php
 
@@ -31,7 +31,7 @@ function confirm_ledger_trxns(){
         $sql = "SELECT * "
              . "  FROM dental_ledger "
              . "WHERE "
-             . " ledgerid = ".$ledgerid;
+             . " ledgerid = '".mysqli_real_escape_string($con, $ledgerid) . "'";
         $query = $db->getRow($sql);
 
 	if(!empty($query)){
@@ -75,17 +75,18 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $modifiercode3_num = 'modifiercode3_'.$num;
         $modifiercode4_num = 'modifiercode4_'.$num;
         
-        $placeofservice = $_POST[$placeofservicenum];
-        $emg = $_POST[$emgnum];             
-        $diagnosispointer = $_POST['service_lines'][$num]['diagnosis_code_pointers'][0]; 
-        $daysorunits = $_POST[$daysorunitsnum];
-        $epsdt = $_POST[$epsdtnum];
-        $idqual = $_POST[$idqualnum];
-        $modifiercode = $_POST[$modifiercodenum];
-        $modifiercode2 = $_POST[$modifiercode2_num];
-        $modifiercode3 = $_POST[$modifiercode3_num];
-        $modifiercode4 = $_POST[$modifiercode4_num];
-        $ledgerid = $_POST[$ledgeridnum];
+        $placeofservice = mysqli_real_escape_string($con, $_POST[$placeofservicenum]);
+        $emg = mysqli_real_escape_string($con, $_POST[$emgnum]);             
+        $diagnosispointer = mysqli_real_escape_string($con, $_POST['service_lines'][$num]['diagnosis_code_pointers'][0]); 
+        $daysorunits = mysqli_real_escape_string($con, $_POST[$daysorunitsnum]);
+        $epsdt = mysqli_real_escape_string($con, $_POST[$epsdtnum]);
+        $idqual = mysqli_real_escape_string($con, $_POST[$idqualnum]);
+        $modifiercode = mysqli_real_escape_string($con, $_POST[$modifiercodenum]);
+        $modifiercode2 = mysqli_real_escape_string($con, $_POST[$modifiercode2_num]);
+        $modifiercode3 = mysqli_real_escape_string($con, $_POST[$modifiercode3_num]);
+        $modifiercode4 = mysqli_real_escape_string($con, $_POST[$modifiercode4_num]);
+        $ledgerid = mysqli_real_escape_string($con, $_POST[$ledgeridnum]);
+        
         array_push($added_ledger_ids, $ledgerid);
 
         $sql = "UPDATE "
@@ -104,7 +105,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
              . "  `status` = '$trxn_status', "
              . "  `primary_claim_id` = '$primary_claim_id' "
              . "WHERE "
-             . "  `ledgerid` = $ledgerid";
+             . "  `ledgerid` = '$ledgerid'";
         $query = $db->query($sql);
         if (!$query) {
             echo mysqli_errno($con) . ": " . mysqli_error($con). "\n";
@@ -112,16 +113,17 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $num++;
     }
 
-    $ledger_ids = implode(',', $added_ledger_ids);
-    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
+    // Ids are already escaped
+    $ledger_ids = "'" . join("', '", $added_ledger_ids) . "'";
+    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".mysqli_real_escape_string($con, $primary_claim_id)."' AND ledgerid NOT IN (".$ledger_ids.")";
 
     $upr = $db->getRow($upsql);
     if($upr['num_ledger']>0){
-	$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$primary_claim_id."'";
+	$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con, $primary_claim_id)."'";
 
         $prod_r = $db->getRow($prod_s);
         $claim_producer = $prod_r['producer'];
-  	$s = "SELECT insuranceid from dental_insurance where producer = '".mysqli_real_escape_string($con,$claim_producer)." AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+  	$s = "SELECT insuranceid from dental_insurance where producer = '".mysqli_real_escape_string($con,$claim_producer)."' AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
   	$q = $db->getRow($s);
   	if(!empty($q)){
           $r = $q;
@@ -130,7 +132,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
           $claim_id = create_claim($_GET['pid'], $claim_producer);
   	}
 
-	$update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
+	$update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN ('".$ledger_ids."')";
 	$db->query($update_sql);
 
     }
@@ -139,7 +141,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 
 // deleting specified claim form
 if (!empty($_REQUEST["delid"]) ? $_REQUEST["delid"] : '') {
-	$del_sql = "delete from dental_procedure where procedureid='" . $_REQUEST["delid"] . "'";
+	$del_sql = "delete from dental_procedure where procedureid='" . mysqli_real_escape_string($con, $_REQUEST["delid"]) . "'";
 	$db->query($del_sql);
 	
 	$msg= "Deleted Successfully";
@@ -392,7 +394,21 @@ trigger_error("Die called", E_USER_ERROR);
 	$amount_paid = $_POST['amount_paid'];
 	$balance_due = (!empty($_POST['balance_due']) ? $_POST['balance_due'] : '');
 	$signature_physician = $_POST['signature_physician'];
-	$physician_signed_date = (($_POST['physician_signed_date']!=date('m/d/Y'))?$_POST['physician_signed_date']:'');
+	// $physician_signed_date = (($_POST['physician_signed_date']!=date('m/d/Y'))?$_POST['physician_signed_date']:'');
+
+    if ($_POST['physician_signed_date'] != date('m/d/Y')) {
+        $dateFromPost = str_replace('/', '-', $_POST['physician_signed_date']);
+        if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromPost)) {
+            $physician_signed_date = $physician_signed_date->format('m/d/Y');
+        } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromPost)) {
+            $physician_signed_date = $physician_signed_date->format('m/d/Y');
+        } else {
+            $physician_signed_date = date('m/d/Y');
+        }
+    } else {
+        $physician_signed_date = '';
+    }
+
 	$service_facility_info_name = $_POST['service_facility_info_name'];
 	$service_facility_info_address = $_POST['service_facility_info_address'];
 	$service_facility_info_city = $_POST['service_facility_info_city'];
@@ -688,6 +704,7 @@ trigger_error("Die called", E_USER_ERROR);
 		
     // Update the claim in the dental_insurance table
 	} else {
+        $primary_claim_id = intval($_POST['ed']);
              $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 
              $pat_myarray = $db->getRow($pat_sql);
@@ -937,13 +954,13 @@ trigger_error("Die called", E_USER_ERROR);
 		}elseif($u_status){
 		  $ed_sql .= ", status = '".s_for($u_status)."'";
 		}
-		$ed_sql .= " where insuranceid = '".s_for($_POST['ed'])."'";
+		$ed_sql .= " where insuranceid = '$primary_claim_id'";
 
 
 		$db->query($ed_sql);
 		// update the ledger trxns passed in with the form
 		$trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
-		update_ledger_trxns($_POST['ed'], $trxn_status);
+		update_ledger_trxns($primary_claim_id, $trxn_status);
 
 
 		if(isset($_POST['p_m_ins_payer_id'])){
@@ -1288,7 +1305,21 @@ $claim_codes = st($myarray['claim_codes']);
 $other_claim_id = st($myarray['other_claim_id']);
 $nucc_30 = st($myarray['nucc_30']);
 $signature_physician = st($myarray['signature_physician']);
-$physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('m/d/Y'));
+// $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('m/d/Y'));
+
+if (!empty($myarray['physician_signed_date'])) {
+    $dateFromDatabase = str_replace('/', '-', $myarray['physician_signed_date']);
+    if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromDatabase)) {
+        $physician_signed_date = $physician_signed_date->format('m/d/Y');
+    } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromDatabase)) {
+        $physician_signed_date = $physician_signed_date->format('m/d/Y');
+    } else {
+        $physician_signed_date = date('m/d/Y');
+    }
+} else {
+    $physician_signed_date = date('m/d/Y');
+}
+
 $service_facility_info_name = st($myarray['service_facility_info_name']);
 $service_facility_info_address = st($myarray['service_facility_info_address']);
 $service_facility_info_city = st($myarray['service_facility_info_city']);
@@ -1358,7 +1389,7 @@ $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".mysqli_real_escape_string($con, $_GET['pid'])."' ORDER BY id DESC LIMIT 1;";
 
   $d = $db->getRow($sleepstudies);
   $diagnosis_1 = (!empty($d['diagnosis']) ? $d['diagnosis'] : '');
@@ -1372,7 +1403,7 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.filename IS NOT NULL AND ss.patiendid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC LIMIT 1;";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".mysqli_real_escape_string($con, !empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC LIMIT 1;";
 
   $d = $db->getRow($sleepstudies);
   $referring_provider = $d['diagnosising_doc'];
@@ -1396,7 +1427,7 @@ if (empty($prior_authorization_number)) {
          . "FROM "
          . "  dental_insurance_preauth "
          . "WHERE "
-         . "  patient_id = '" . $_GET['pid'] . "' "
+         . "  patient_id = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
          . "  AND status = " . DSS_PREAUTH_COMPLETE . " "
          . "ORDER BY "
          . "  date_completed desc "
@@ -1485,12 +1516,13 @@ input{text-transform:uppercase;}
 	
 	<div align="right">
         <?php if ($is_sent) { ?>
-          Claim has been sent
-		<?php if($is_back_office){ ?>
-			<input type="submit" class="print-button" name="ex_pagebtn" value="Print Claim" />
-			<input type="submit" class="print-button" name="ex_statusbtn" value="Check Status" />
-		<?php } ?>
-	    <?php } else if (!empty($is_back_office)) { ?>
+            Claim has been sent
+            <!-- Give user ability to print claim again and update claim history -->
+            <input type="submit" class="print-button" name="ex_pagebtn" value="REPRINT Claim" title="Reprint your claim.&#013;&#013;If you make changes to the CMS 1500 form they will appear on the reprint&#013;and will be saved in claim history." />
+            <?php if ($is_back_office) { ?>
+                <input type="submit" class="print-button" name="ex_statusbtn" value="Check Status" />
+            <?php } ?>
+        <?php } else if (!empty($is_back_office)) { ?>
                <?php if($status == DSS_CLAIM_PENDING){ ?>
           Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?php echo DSS_CLAIM_SENT?>" checked="checked" />
 			<input type="hidden" name="status" value="<?php echo DSS_CLAIM_SENT?>" />
@@ -1563,7 +1595,7 @@ if (!empty($is_back_office)){
 ?>
 
 <?php
-if(!empty($is_front_office) && $fdf_file!=''){
+if(!empty($is_front_office) && $is_sent && $fdf_file!=''){
 ?>
 		<a href="display_fdf_v2.php?f=<?php echo $fdf_file; ?>" class="print-button" >Print Claim Form</a>
 <?php
@@ -1681,7 +1713,7 @@ if (!empty($is_back_office) || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWAR
                 $p_m_ins_payer_id = st(!empty($pat_myarray["s_m_eligible_id"]) ? $pat_myarray["s_m_eligible_id"] : '');
                 if($p_m_ins_payer_id){
                   $dsql = "SELECT name, payer_id FROM dental_ins_payer
-                        WHERE id=".mysqli_real_escape_string($con,$s_m_ins_payer_id);
+                        WHERE id='".mysqli_real_escape_string($con,$s_m_ins_payer_id)."'";
 
                   $d = $db->getRow($dsql);
                   $s_m_ins_payer_name = $d['payer_id']." - ".$d['name'];
@@ -2731,7 +2763,7 @@ if($insurancetype == '1'){
        . "WHERE "
        . "  (ledger.primary_claim_id = '" . $insuranceid . "'"
        . "  OR ledger.secondary_claim_id = '" . $insuranceid . "')"
-       . "  AND ledger.patientid = '" . $_GET['pid'] . "'"
+       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "'"
        . "  AND ledger.docid = '" . $docid . "'"
        . "  AND trxn_code.docid = '" . $docid . "'"
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -2746,9 +2778,10 @@ if (empty($query)) {
   print "<br /><center><font style='color:#ff0000; font-weight:bold;'>There are currently no ledger entries to be submitted.</font></center><br />";
 } else {
 ?>
-  <?php $li = 0; ?>
+  <?php $li = 0; $realTotalAmount = 0; ?>
   <input type="hidden" name="ledgercount" value="<?php echo count($query); ?>">
-  <?php foreach ($query as $array) { ?>
+  <?php foreach ($query as $array) {
+        $realTotalAmount += $array['amount']; ?>
     <table style="margin-left:39px;">
       <tr>
         <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
@@ -2930,11 +2963,11 @@ if ($is_pending) {
        . "  dental_ledger ledger "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
-       . "  ledger.status = " . DSS_TRXN_PENDING . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $docid . " "
-       . "  AND trxn_code.docid = " . $docid . " "
-       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
+       . "  ledger.status = '" . DSS_TRXN_PENDING . "' "
+       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
+       . "  AND ledger.docid = '" . $docid . "' "
+       . "  AND trxn_code.docid = '" . $docid . "' "
+       . "  AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "' "
        . "ORDER BY "
        . "  ledger.service_date ASC";
     $charge_my = $db->getRow($sql);
@@ -2950,11 +2983,11 @@ if ($is_pending) {
        . "  dental_ledger ledger "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
-       . "  ledger.primary_claim_id = " . $orig_claim_id . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $docid . " "
-       . "  AND trxn_code.docid = " . $docid . " "
-       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
+       . "  ledger.primary_claim_id = '" . $orig_claim_id . "' "
+       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
+       . "  AND ledger.docid = '" . $docid . "' "
+       . "  AND trxn_code.docid = '" . $docid . "' "
+       . "  AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "' "
        . "ORDER BY "
        . "  ledger.service_date ASC";
     $charge_my = $db->getRow($sql);
@@ -2971,11 +3004,11 @@ if ($is_pending) {
        . "  dental_ledger ledger "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
-       . "  ledger.status = " . DSS_TRXN_PENDING . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $docid . " "
-       . "  AND trxn_code.docid = " . $docid . " "
-       . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
+       . "  ledger.status = '" . DSS_TRXN_PENDING . "' "
+       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
+       . "  AND ledger.docid = '" . $docid . "' "
+       . "  AND trxn_code.docid = '" . $docid . "' "
+       . "  AND trxn_code.type IN ('" . DSS_TRXN_TYPE_PATIENT . "','" . DSS_TRXN_TYPE_INS . "','" . DSS_TRXN_TYPE_ADJ . "') "
        . "ORDER BY "
        . "  ledger.service_date ASC";
   if($status == DSS_CLAIM_SEC_PENDING){
@@ -2985,7 +3018,7 @@ if ($is_pending) {
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."' 
-                        AND primary_claim_id=".$orig_claim_id." 
+                        AND primary_claim_id='".$orig_claim_id."'
                         AND dlp.amount != 0
 			AND dlp.payer = 0
 	";
@@ -2998,7 +3031,12 @@ if ($is_pending) {
  
   // re-calculate balance due
   $balance_due = $total_charge - $amount_paid;
-  
+
+  // Override value from faulty sql queries
+  if ($is_pending) {
+      $total_charge = $realTotalAmount;
+  }
+
   // format calculations
   $total_charge = number_format($total_charge, 2, '.','');
   $amount_paid = number_format($amount_paid, 2, '.','');
@@ -3046,7 +3084,9 @@ if ($is_pending) {
 									Signed
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									Date: 
-									<input type="text" value="<?php echo $physician_signed_date?>" name="physician_signed_date" class="inbox_line3 datealtoptfullmask" size="10" />
+                                    <div style="text-align: right">
+									   <input type="text" value="<?php echo $physician_signed_date?>" name="physician_signed_date" class="inbox_line3 datealtoptfullmask" size="10" />
+                                    </div>
 								</td>
 								<td valign="top" width="50%">
 									<span class="num">32.</span> 
@@ -3199,7 +3239,10 @@ if ($is_pending) {
 
 		<div style="float:right;">
 
-        <?php if (!$is_sent) {  ?>
+        <?php if (
+            !$is_sent &&
+            !in_array($status, [DSS_CLAIM_PENDING, DSS_CLAIM_SEC_PENDING, DSS_CLAIM_REJECTED, DSS_CLAIM_SEC_REJECTED])
+        ) { // Based on "else if" blocks from above ?>
           <input type="submit" name="ex_pagebtn"
                 <?php if($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED){ ?>
 onclick="return confirm('This claim has been rejected. By printing this claim the status will be changed to SENT, and the rejection notification will be removed. Click OK to proceed.');"

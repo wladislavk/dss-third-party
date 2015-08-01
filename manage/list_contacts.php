@@ -36,7 +36,7 @@
     }
 
     if (!$result) {
-    	$patients = array("error" => "Could not select patients from database");
+    	$patients = array("error" => "Error: No matching contact found.");
     }
 
     echo json_encode($patients);

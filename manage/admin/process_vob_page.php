@@ -18,7 +18,7 @@ $sql = "SELECT "
 		 . "FROM "
 		 . "  dental_insurance_preauth preauth "
 		 . "WHERE "
-		 . "  preauth.id = '" . $_GET['ed'] . "'";
+		 . "  preauth.id = '" . mysqli_real_escape_string($con, $_GET['ed']) . "'";
 $result = $db->getRow($sql);
 $pid = (!empty($result['patient_id']) ? $result['patient_id'] : '');
 
@@ -33,7 +33,7 @@ if (isset($_GET['ed'])) {
          . "  LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
 	 . "  LEFT OUTER JOIN dental_ins_diagnosis id ON id.ins_diagnosisid = preauth.diagnosis_code "
          . "WHERE "
-         . "  preauth.id = " . (!empty($_GET['ed']) ? $_GET['ed'] : '');
+         . "  preauth.id = '" . mysqli_real_escape_string($con, !empty($_GET['ed']) ? $_GET['ed'] : '') . "'";
 
 		$preauth = $db->getRow($sql);
 		// load dynamic preauth info
@@ -57,7 +57,7 @@ if (isset($_GET['ed'])) {
 		 . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
 		 . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
 		 . "WHERE "
-		 . "  p.patientid = ".$preauth['patientid'];
+		 . "  p.patientid = '".mysqli_real_escape_string($con, $preauth['patientid']) . "'";
 
 		$my_array = $db->getRow($sql);
 		$preauth = array_merge($preauth, $my_array);
@@ -155,11 +155,11 @@ if (isset($_GET['ed'])) {
 	 . "updated_by = '".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."' ";
     
     if(isset($_POST['reject_but'])){
-        $sql .= ", status = " . DSS_PREAUTH_REJECTED . " ";
+        $sql .= ", status = '" . DSS_PREAUTH_REJECTED . "' ";
 	$sql .= ", reject_reason = '" . mysqli_real_escape_string($con, $_POST['reject_reason']) ."' ";
         $sql .= ", viewed = 0 ";
     }elseif (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
-        $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
+        $sql .= ", status = '" . DSS_PREAUTH_COMPLETE . "' ";
         $sql .= ", date_completed = NOW() ";
 	$sql .= ", viewed = 0 ";
 
@@ -179,13 +179,13 @@ if (isset($_GET['ed'])) {
 	}
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
     } elseif($_POST['is_pre_auth_required']==1){ 
-        $sql .= ", status = " . DSS_PREAUTH_PREAUTH_PENDING . " ";
+        $sql .= ", status = '" . DSS_PREAUTH_PREAUTH_PENDING . "' ";
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_PREAUTH_PENDING);
     } else {
-        $sql .= ", status = " . DSS_PREAUTH_PENDING . " ";
+        $sql .= ", status = '" . DSS_PREAUTH_PENDING . "' ";
                                 update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
     }
-    $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";
+    $sql .= "WHERE id = '" . mysqli_real_escape_string($con, $_POST["preauth_id"]) . "'";
     mysqli_query($con, $sql) or trigger_error($sql." | ".mysqli_error($con), E_USER_ERROR);
     
     //echo $ed_sql.mysqli_error($con);

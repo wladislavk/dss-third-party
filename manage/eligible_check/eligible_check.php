@@ -22,7 +22,7 @@ include_once '../includes/calendarinc.php';
   </script>
   <script src="js/lib/jquery-1.10.2.min.js"></script>
   <script src="js/lib/jquery-ui-1.10.3.custom.min.js"></script>
-  <script src="../script/autocomplete_local.js"></script>
+  <script src="../script/autocomplete_local.js?v=<?= time() ?>"></script>
   <script src="js/eligible.js"></script>
   <script src="js/sample_1.js"></script>
 
@@ -169,7 +169,7 @@ include_once '../includes/calendarinc.php';
       <label for="payer_id" class="col-lg-2 control-label">Payer ID</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="payer_name" autocomplete="off">
+        <input type="text" class="form-control" id="payer_name" autocomplete="off" value="<?php echo $r['p_m_eligible_payer_id']; ?>">
 <br />
 <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
         <ul id="ins_payer_list" class="search_list">

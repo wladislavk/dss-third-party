@@ -10,7 +10,7 @@
 ?>
 
 <link rel="stylesheet" href="css/letters.css" />
-<script src="js/letters.js" type="text/javascript"></script>
+<script src="js/letters.js?v<?= time() ?>" type="text/javascript"></script>
 
 <?php
 
@@ -139,19 +139,14 @@ $sortdir = $_REQUEST['sortdir'];
 $docid = $_SESSION['docid'];
 
 // Select Letters into Array
-if ($status == 'pending') {
+
   $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.pat_referral_list, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters.template_type FROM dental_letters 
     LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
     WHERE dental_letters.docid='" . $docid . "' AND dental_letters.delivered=0 AND dental_letters.status = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = $db->getResults($letters_query);
-  if (!count($letters_res)) {
-    print "MYSQL ERROR:" . mysqli_errno($con) . ": " . mysqli_error($con) . "<br/>" . "Error selecting letters from the database.";
-  } else {
-    foreach ($letters_res as $row) {
-      $dental_letters[] = $row;
-    }
-  }
-} elseif ($status == 'sent') {
+  $count_pending_letters = count($letters_res);
+
+if ($status == 'sent') {
   $letters_query = "SELECT dental_letters.letterid, 
     dental_letters.templateid, 
     dental_letters.patientid, 
@@ -182,25 +177,31 @@ if ($status == 'pending') {
   }
   
   $letters_query .= " ORDER BY dental_letters.letterid ASC;";
-  $letters_res = $db->getResults($letters_query); 
-  if (!count($letters_res)) {
-    print "MYSQL ERROR:" . mysqli_errno($con) . ": " . mysqli_error($con) . "<br/>" . "Error selecting letters from the database.";
+  $letters_res = $db->getResults($letters_query);
+}
+
+if (!count($letters_res)) {
+    
   } else {
     foreach ($letters_res as $row) {
       $dental_letters[] = $row;
     }
   }
-}
-
 // Calculate numer of pages
 $num_pages = floor(count($dental_letters) / $page_limit);
 if (count($dental_letters) % $page_limit) {
   $num_pages++;
 }
 
+    $dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters ORDER BY generated_date ASC LIMIT 1";
+    $result_dental_letters = $db->getRow($dental_letters_query);
+
+    $seconds_per_day = 86400;
+    $oldest_letter_res = floor((time() - $result_dental_letters['generated_date']) / $seconds_per_day);
+
 if (!empty($dental_letters)){
   foreach ($dental_letters as $key => $letter) {
-    // Get Correspondance Column
+    // Get Correspondence Column
     $template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '" . $letter['templateid'] . "';";
 
     if ($letter['template_type'] == '0') {
@@ -209,7 +210,7 @@ if (!empty($dental_letters)){
       $template_sql = "SELECT name FROM dental_letter_templates_custom WHERE id = '" . $letter['templateid'] . "';";
     }
 
-    $correspondance = $db->getRow($template_sql);
+    $correspondence = $db->getRow($template_sql);
     $dental_letters[$key]['id'] = $letter['letterid'];
 
     if (!empty($letter['pdf_path'])) {
@@ -218,7 +219,7 @@ if (!empty($dental_letters)){
       $dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid'];
     }
 
-    $dental_letters[$key]['subject'] = $correspondance['name'];
+    $dental_letters[$key]['subject'] = $correspondence['name'];
     // Get Recipients for Sent to Column
     if(isset($letter['patientid'])){
       $s = "SELECT referred_source FROM dental_patients where patientid=" . mysqli_real_escape_string($con,$letter['patientid']) . " LIMIT 1";
@@ -325,44 +326,43 @@ if (!empty($dental_letters)){
       $dental_letters[$key]['old'] = true;
     }
   }
-  
+
   // Sort the letters array
   if ($_REQUEST['sort'] == "patient_name" && $_REQUEST['sortdir'] == "ASC") {
-    usort($dental_letters, 'name_asc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\name_asc'); 
   }
   if ($_REQUEST['sort'] == "patient_name" && $_REQUEST['sortdir'] == "DESC") {
-    usort($dental_letters, 'name_desc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\name_desc'); 
   }
   if ($_REQUEST['sort'] == "subject" && $_REQUEST['sortdir'] == "ASC") {
-    usort($dental_letters, 'subject_asc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\subject_asc'); 
   }
   if ($_REQUEST['sort'] == "subject" && $_REQUEST['sortdir'] == "DESC") {
-    usort($dental_letters, 'subject_desc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\subject_desc'); 
   }
   if ($_REQUEST['sort'] == "sentto" && $_REQUEST['sortdir'] == "ASC") {
-    usort($dental_letters, 'sentto_asc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\sentto_asc'); 
   }
   if ($_REQUEST['sort'] == "sentto" && $_REQUEST['sortdir'] == "DESC") {
-    usort($dental_letters, 'sentto_desc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\sentto_desc'); 
   }
   if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "ASC") {
-    usort($dental_letters, 'generated_date_asc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\generated_date_asc'); 
   }
   if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
-    usort($dental_letters, 'generated_date_desc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\generated_date_desc'); 
   }
   if ($_REQUEST['sort'] == "date_sent" && $_REQUEST['sortdir'] == "ASC") {
-    usort($dental_letters, 'date_sent_asc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\date_sent_asc'); 
   }
   if ($_REQUEST['sort'] == "date_sent" && $_REQUEST['sortdir'] == "DESC") {
-    usort($dental_letters, 'date_sent_desc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\date_sent_desc'); 
   }
-
   if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "ASC") {
-    usort($dental_letters, 'send_method_asc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\send_method_asc'); 
   }
   if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
-    usort($dental_letters, 'send_method_desc'); 
+    usort($dental_letters, 'ds3\libraries\legacy\send_method_desc'); 
   }
 
 }
@@ -403,8 +403,8 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
   </form>
 </div>
 <div class="letters-tryptych2">
-  <h2>You have <span class="blue"><?php echo $pending_letters; ?></span> letters to review.</h1>
-  <h2>The oldest letter is <span class="red"><?php echo $oldest_letter; ?> day(s) old.</h1>
+  <h2>You have <span class="blue"><?php echo $unmailed_letters + $count_pending_letters; ?></span> letters to review.</h1>
+  <h2>The oldest letter is <span class="red"><?php echo $oldest_letter_res; ?> day(s) old.</h1>
 </div>
 <div class="letters-tryptych3">
 <?php if ($status != "sent" || $mailed == "0"): ?>
@@ -447,7 +447,7 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
         <a href="letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=send_method&sortdir=<?php echo ($_REQUEST['sort']=='send_method'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Method</a>
       </td>
       <td class="col_head <?php echo ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">
-        <a href="letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a>
+        <a href="letters.php?status=<?php echo $status;?>&page=<?php echo $page;?>&filter=<?php echo $filter;?>&sort=generated_date&mailed=0&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a>
       </td>
   <?php if ($status == "sent"): ?>
       <td class="col_head <?php echo ($_REQUEST['sort'] == 'date_sent')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">

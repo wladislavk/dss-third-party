@@ -7,11 +7,9 @@
         height: 250px
     }
 </style>
-
-  <script src="../script/autocomplete_local.js"></script>
-
   <script src="../js/lib/jquery-1.10.2.min.js"></script>
   <script src="../js/lib/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="../script/autocomplete_local.js?v=<?= time() ?>"></script>
   <script src="eligible_check/js/eligible.js"></script>
   <script src="eligible_check/js/sample_1.js"></script>
   <script type="text/javascript" src="/manage/admin/js/eligible_check.js"></script>

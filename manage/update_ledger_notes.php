@@ -12,9 +12,20 @@
 			if (!isset($sqlinsertqry)) {
 				$sqlinsertqry = '';
 			}
-			$sqlinsertqry .= "UPDATE `dental_ledger_note` SET "; 
-			$private = (!empty($_POST['private']) && $_POST['private'])?1:0;
-			$sqlinsertqry .= "service_date = '".date('Y-m-d', strtotime((!empty($_POST['entry_date']) ? $_POST['entry_date'] : '')))."', entry_date = '".date('Y-m-d', strtotime((!empty($_POST['entry_date']) ? $_POST['entry_date'] : '')))."', note = '".(!empty($_POST['note']) ? $_POST['note'] : '')."', private = '".$private."', producerid = '".(!empty($_POST['producer']) ? $_POST['producer'] : '')."' WHERE id=".(!empty($_POST['id']) ? $_POST['id'] : '');
+			$private = !empty($_POST['private']) && $_POST['private'];
+            $serviceDate = date('Y-m-d', strtotime(!empty($_POST['entry_date']) ? $_POST['entry_date'] : ''));
+            $entryDate = date('Y-m-d', strtotime(!empty($_POST['entry_date']) ? $_POST['entry_date'] : ''));
+            $note = !empty($_POST['note']) ? mysqli_real_escape_string($con, $_POST['note']) : '';
+            $producerId = !empty($_POST['producer']) ? intval($_POST['producer']) : '';
+            $noteId = !empty($_POST['id']) ? intval($_POST['id']) : '';
+
+            $sqlinsertqry = "UPDATE dental_ledger_note SET
+                    service_date = '$serviceDate',
+                    entry_date = '$entryDate',
+                    note = '$note',
+                    private = '$private',
+                    producerid = '$producerId'
+                WHERE id = '$noteId'";
 
 			$insqry = $db->query($sqlinsertqry);
 			if (!$insqry) {

@@ -7,6 +7,19 @@ require_once('includes/general_functions.php');
 ?>
 <div style="width:90%; margin-left:5%;">
 <?php
+
+function getContactTypeList () {
+    $db = new Db();
+    $list = array();
+    $types = $db->getResults('SELECT contacttypeid, contacttype FROM dental_contacttype');
+
+    foreach ($types as $type) {
+        $list[$type['contacttype']] = $type['contacttypeid'];
+    }
+
+    return $list;
+}
+
 if(isset($_POST['submitbut'])){
     $csv = array();
     // check there are no errors
@@ -26,6 +39,9 @@ if(isset($_POST['submitbut'])){
 
                 $error_count = 0;
                 $error_array = array();
+
+                $contactTypeList = getContactTypeList();
+
                 while(($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
                     // number of fields in the csv
                     $num = count($data);
@@ -130,24 +146,18 @@ if(isset($_POST['submitbut'])){
                                       $notes .= $data[$id]." ";
                                     break;
                                 case 'status':
-                                	if(strtolower(trim($data[$id])) == 'true'){
-                                        $s .= $field . " = '3', ";
-                                	}else{
-                                        $s .= $field . " = '4', ";
-                                	}
+                                	$s .= "status = '" . (strtolower(trim($data[$id])) == 'true' ? 3 : 4) . "', ";
                                 	break;
                                 case 'phone1':
                                 case 'phone2':
                                 case 'fax':
-                                	if($field!=''){
-                                        $s .= $field . " = '" .num($data[$id])."', ";
-                                		if($field=='fax'){
-                                            $s .= " preferredcontact = 'fax', ";
-                                		}
+                                    $s .= $field . " = '" .num($data[$id])."', ";
+                                    if($field=='fax'){
+                                        $s .= " preferredcontact = 'fax', ";
                                     }
                                 	break;
                                 case 'contacttypeid':
-                                	switch(strtolower($data[$id])){
+                                	switch(strtolower(trim($data[$id]))){
                                 		case 'insurance':
                                 			$c = "Insurance";
                                 			break;
@@ -171,10 +181,8 @@ if(isset($_POST['submitbut'])){
                                 			$c = "Other Physician";
                                 			break;
                                 	}
-                                	$cts = "SELECT contacttypeid FROM dental_contacttype WHERE contacttype='".mysqli_real_escape_string($con,$c)."'";
-                                	$ctr = $db->getRow($ctq);
-                                	if($ctr['contacttypeid']!=''){
-                                        $s .= $field . " = '" .$ctr['contacttypeid']."', ";
+                                	if(isset($contactTypeList[$c])){
+                                        $s .= $field . " = '" .intval($contactTypeList[$c])."', ";
                                 	}
                                 	break;
                                 default:

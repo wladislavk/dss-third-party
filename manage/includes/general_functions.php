@@ -1,8 +1,8 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
-
-
-
+function isFaultyUpload ($uploadError) {
+    return !in_array($uploadError, array(UPLOAD_ERR_OK, UPLOAD_ERR_NO_FILE));
+}
 
 function uploadImage($image, $file_path, $type = 'general'){
   $uploadedfile = $image['tmp_name'];
@@ -226,9 +226,9 @@ if(  preg_match( '/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches ) )
 }
 
 function split_phone($num, $a){
-        $num = preg_replace("[^0-9]", "", $num);
-        preg_match('/([0-1]*)(.*)/',$num, $m);
-        $num = $m[2];
+        $num = preg_replace("/[^0-9]/", "", $num);
+        // preg_match('/([0-1]*)(.*)/',$num, $m);
+        // $num = $m[2];
   if($a){
         return substr($num, 0, 3);
   }else{

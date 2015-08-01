@@ -30,7 +30,7 @@ if (!isset($_SESSION['userid'])) {
   } else {
     if(!empty($_SESSION['loginid'])) {
       $cur_page_full = $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
-      $cur_ins_sql = "insert into dental_login_detail (loginid,userid,cur_page,adddate,ip_address) values('".$_SESSION['loginid']."','".$_SESSION['userid']."','".$cur_page_full."',now(),'".$_SERVER['REMOTE_ADDR']."')";
+      $cur_ins_sql = "insert into dental_login_detail (loginid,userid,cur_page,adddate,ip_address) values('".mysqli_real_escape_string($con,$_SESSION['loginid'])."','".mysqli_real_escape_string($con,$_SESSION['userid'])."','".mysqli_real_escape_string($con,$cur_page_full)."',now(),'".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."')";
       $db->query($cur_ins_sql);
     }
 
@@ -70,50 +70,50 @@ if (!isset($_SESSION['userid'])) {
                          JOIN dental_users user ON user.userid = ledger.docid
                          JOIN dental_patients p ON p.patientid = ledger.patientid
                     WHERE 
-                         ledger.status = " . DSS_TRXN_PENDING ." 
-                         AND ledger.docid = " . $_SESSION['docid'] . "
-                         AND trxn_code.docid = " . $_SESSION['docid'] . "
-                         AND trxn_code.type = " . DSS_TRXN_TYPE_MED;
+                         ledger.status = '" . DSS_TRXN_PENDING ."'
+                         AND ledger.docid = '" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'
+                         AND trxn_code.docid = '" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'
+                         AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "'";
 
     $num_pending_claims = $db->getNumberRows($claim_query);
 
-    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE."))";
+    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status IN ('".DSS_CLAIM_PENDING."', '".DSS_CLAIM_SEC_PENDING."', '".DSS_CLAIM_DISPUTE."', '".DSS_CLAIM_SEC_DISPUTE."'))";
 
     $num_pending_claims = $db->getNumberRows($claim_query);
 
     $claim_query = "SELECT i.* FROM dental_insurance i 
                     JOIN dental_patients p ON p.patientid=i.patientid
                     WHERE
-                        ((p.p_m_dss_file='2' AND (i.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_DISPUTE."))) OR
-                        (p.s_m_dss_file='2' AND (i.status IN (".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_SEC_DISPUTE."))))
+                        ((p.p_m_dss_file='2' AND (i.status IN ('".DSS_CLAIM_PENDING."', '".DSS_CLAIM_DISPUTE."'))) OR
+                        (p.s_m_dss_file='2' AND (i.status IN ('".DSS_CLAIM_SEC_PENDING."', '".DSS_CLAIM_SEC_DISPUTE."'))))
                         AND i.docid = '".$docid."'";
     $num_pending_nodss_claims = $db->getNumberRows($claim_query);
 
-    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND mailed_date IS NULL AND sec_mailed_date IS NULL AND status !=  ".DSS_CLAIM_PENDING." AND status != ".DSS_CLAIM_SEC_PENDING;
+    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND mailed_date IS NULL AND sec_mailed_date IS NULL AND status !=  '".DSS_CLAIM_PENDING."' AND status != '".DSS_CLAIM_SEC_PENDING."'";
 
     $num_unmailed_claims = $db->getNumberRows($claim_query);
 
-    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status IN (".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_SEC_REJECTED."))";
+    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status IN ('".DSS_CLAIM_REJECTED."', '".DSS_CLAIM_SEC_REJECTED."'))";
 
     $num_rejected_claims = $db->getNumberRows($claim_query);
 
-    $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_COMPLETE." AND (viewed IS NULL OR viewed != 1);";
+    $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status='".DSS_PREAUTH_COMPLETE."' AND (viewed IS NULL OR viewed != 1);";
 
     $num_preauth = $db->getNumberRows($preauth_query);
 
-    $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_PENDING.";";
+    $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status='".DSS_PREAUTH_PENDING."'";
 
     $num_pending_preauth = $db->getNumberRows($preauth_query);
 
-    $hst_query = "SELECT * FROM dental_hst WHERE doc_id = '".$docid."' AND status=".DSS_HST_COMPLETE." AND (viewed IS NULL OR viewed != 1);";
+    $hst_query = "SELECT * FROM dental_hst WHERE doc_id = '".$docid."' AND status='".DSS_HST_COMPLETE."' AND (viewed IS NULL OR viewed != 1);";
 
     $num_hst = $db->getNumberRows($hst_query);
 
-    $hst_query = "SELECT * FROM dental_hst WHERE doc_id = '".$docid."' AND status=".DSS_HST_REQUESTED." AND (viewed IS NULL OR viewed != 1);";
+    $hst_query = "SELECT * FROM dental_hst WHERE doc_id = '".$docid."' AND status='".DSS_HST_REQUESTED."' AND (viewed IS NULL OR viewed != 1);";
 
     $num_requested_hst = $db->getNumberRows($hst_query);
 
-    $hst_query = "SELECT * FROM dental_hst WHERE doc_id = '".$docid."' AND status=".DSS_HST_REJECTED." AND (viewed IS NULL OR viewed != 1);";
+    $hst_query = "SELECT * FROM dental_hst WHERE doc_id = '".$docid."' AND status='".DSS_HST_REJECTED."' AND (viewed IS NULL OR viewed != 1);";
 
     $num_rejected_hst = $db->getNumberRows($hst_query);
 
@@ -156,7 +156,7 @@ if (!isset($_SESSION['userid'])) {
 
     $num_unsigned = $db->getNumberRows($unsigned_query);
 
-    $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_REJECTED." AND (viewed IS NULL OR viewed != 1);";
+    $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status='".DSS_PREAUTH_REJECTED."' AND (viewed IS NULL OR viewed != 1);";
 
     $num_rejected_preauth = $db->getNumberRows($preauth_query);
 
@@ -166,8 +166,8 @@ if (!isset($_SESSION['userid'])) {
 
     $support_query = "SELECT * FROM dental_support_tickets t
           LEFT JOIN dental_support_responses r ON r.ticket_id = t.id
-         WHERE t.docid='".$_SESSION['docid']."' AND ((r.viewed=0 AND r.response_type=0) OR (t.viewed=0 AND t.create_type=0)
-      OR (t.status=".DSS_TICKET_STATUS_CLOSED." AND r.viewed=0 AND r.response_type=0 AND r.body != '') 
+         WHERE t.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND ((r.viewed=0 AND r.response_type=0) OR (t.viewed=0 AND t.create_type=0)
+      OR (t.status='".DSS_TICKET_STATUS_CLOSED."' AND r.viewed=0 AND r.response_type=0 AND r.body != '')
 
     )  group by t.id";
 
@@ -212,7 +212,7 @@ if (!isset($_SESSION['userid'])) {
 
     <script language="javascript" type="text/javascript" src="script/validation.js"></script>
 
-    <script language="javascript" type="text/javascript" src="js/top.js"></script>
+    <script language="javascript" type="text/javascript" src="js/top.js?v=<?= time() ?>"></script>
 
     <script language="javascript" type="text/javascript" src="script/hideshow.js"></script>
 
@@ -240,7 +240,7 @@ if (!isset($_SESSION['userid'])) {
   $hideallblocks = 0;
   if($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php" || $_SERVER['PHP_SELF'] == "/manage/manage_flowsheet4.php")
     {
-      $getstepqrysql = "SELECT * FROM dental_flow_pg2 WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' LIMIT 1;";
+      $getstepqrysql = "SELECT * FROM dental_flow_pg2 WHERE patientid='".mysqli_real_escape_string($con,!empty($_GET['pid']) ? $_GET['pid'] : '')."' LIMIT 1;";
 
       $stepquery = $db->getRow($getstepqrysql);
       $stepquery = array($stepquery['steparray']);
@@ -272,7 +272,7 @@ if (!isset($_SESSION['userid'])) {
 <?php if (isset($_GET['pid']) && $_GET['pid']!= '') { ?> 
   <?php
       $title = '';
-      $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid=".$_GET['pid'];
+      $sql = "select * from dental_patients where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
       $my = $db->getResults($sql);
       foreach ($my as $myarray) {
@@ -283,7 +283,7 @@ if (!isset($_SESSION['userid'])) {
           $title .= "Pre-medication: " . $myarray['premed']."\n";
         }
         
-        $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid=".mysqli_real_escape_string($con,$_GET['pid']);
+        $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
         $myq3array = $db->getRow($sqlq3);
         $allergen = $myq3array['allergenscheck'];
@@ -641,7 +641,7 @@ if (!isset($_SESSION['userid'])) {
 
       <script type="text/javascript" src="js/task.js"></script> 
       <script type="text/javascript" src="script/autocomplete.js"></script>
-      <script type="text/javascript" src="script/autocomplete_local.js"></script>
+      <script type="text/javascript" src="script/autocomplete_local.js?v=<?= time() ?>"></script>
  
       <div style="height:89px; width:100%; background:url(images/dss_01.png) #0b5c82 no-repeat top left;"> 
         <div style="margin-top:10px; margin-left:20px; float:left;">
@@ -995,13 +995,13 @@ if (!isset($_SESSION['userid'])) {
               p.firstname as patfirstname, p.lastname as patlastname
               FROM dental_patient_contacts pc 
               INNER JOIN dental_patients p ON pc.patientid=p.patientid
-              WHERE p.docid='".$_SESSION['docid']."' AND
+              WHERE p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND
               p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
             $total_contacts = $db->getNumberRows($contacts_sql);
 
             $insurance_sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname FROM dental_patient_insurance pi INNER JOIN dental_patients p ON pi.patientid=p.patientid 
-                WHERE p.docid='".$_SESSION['docid']."' AND
+                WHERE p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND
                 p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
             $total_insurance = $db->getNumberRows($insurance_sql);

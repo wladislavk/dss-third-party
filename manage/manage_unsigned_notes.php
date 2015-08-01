@@ -93,7 +93,7 @@
                                 <td valign="top" width="35%">
                                     Added By:
                                     <span style="font-weight:normal;">
-                                        <?php echo st($user_myarray["name"]);?>
+                                        <?php echo st($user_myarray["first_name"] . ' ' . $user_myarray['last_name']);?>
                                     </span>
                                 </td>
                                 <td valign="top" width="30%">

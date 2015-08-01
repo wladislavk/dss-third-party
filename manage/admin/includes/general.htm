@@ -1164,7 +1164,7 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 	$TextMessage = strip_tags($message,"<br>");
 	$HTMLMessage = "$header_html<table width=\"600px\"><tr><td>$message</tr></td></table>$footer_html"; 
 	
-	$email->setSubject('Dental Sleep Solutions Correspondance');
+	$email->setSubject('Dental Sleep Solutions Correspondence');
 	$email->setFrom(array($from_email => $from_name));
 	$email->setTo(array($to_email => $to_name));
 	$email->setBody($HTMLMessage, 'text/html');
@@ -1352,7 +1352,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
   $pdf->SetAuthor('Dental Sleep Solutions');
   $pdf->SetTitle($title);
   $pdf->SetSubject($title);
-  $pdf->SetKeywords('DSS Correspondance');
+  $pdf->SetKeywords('DSS Correspondence');
 
   // set default monospaced font
   $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -1654,6 +1654,7 @@ function get_billing_franchisees() {
 function get_patients($franchisee_id = -1) {
 
   $db = new Db();  
+  $con = $GLOBALS['con'];
   $sql = "SELECT * FROM dental_patients WHERE docid = $franchisee_id ORDER BY lastname ASC, firstname ASC";
   // return $db->getResults($sql);
   return mysqli_query($con,$sql);

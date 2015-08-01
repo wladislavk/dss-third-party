@@ -48,7 +48,7 @@ if (count($my)) {
                 Patient
             </td>
             <td valign="top" class="col_head" width="15%">
-                Correspondance
+                Correspondence
             </td>
             <td valign="top" class="col_head" width="15%">
                 Error
@@ -96,7 +96,28 @@ if (count($my)) {
             <?php } ?>
             </td>
             <td valign="top">
-                <?php echo st($myarray["error_description"]); ?> - <?php echo st($myarray["error_resolution"]); ?>
+                <?php
+
+                // If the lookup table is no longer valid, use the sfax_response (API response) field
+                $faxError = '';
+
+                if ($myarray['error_description'] && $myarray['error_resolution']) {
+                    $faxError = $myarray['error_description'] . ' - ' . $myarray['error_resolution'];
+                } else if ($myarray['sfax_response']) {
+                    $apiResponse = @json_decode($myarray['sfax_response']);
+
+                    if (!empty($apiResponse->ResultMessage)) {
+                        $faxError = $apiResponse->ResultMessage;
+                    } else if (!empty($apiResponse->RecipientFaxStatusItems[0]->ResultMessage)) {
+                        $faxError = $apiResponse->RecipientFaxStatusItems[0]->ResultMessage;
+                    } else if (!empty($apiResponse['ResultMessage'])) {
+                        $faxError = $apiResponse['ResultMessage'];
+                    }
+                }
+
+                echo $faxError ?: 'Unknown error';
+
+                ?>
             </td>
             <td valign="top">
             <?php if($myarray['pdf_path'] && $myarray['letter_status']!=DSS_LETTER_PENDING){ ?>
@@ -223,7 +244,7 @@ function updateFaxes(v){
         </td>
         <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'letter_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
             <a href="manage_faxes.php?sort=letter_name&sortdir=<?php echo ($_REQUEST['sort']=='letter_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-                Correspondance
+                Correspondence
             </a>
         </td>
         <td valign="top" class="col_head <?php echo ($_REQUEST['sort'] == 'sfax_status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">

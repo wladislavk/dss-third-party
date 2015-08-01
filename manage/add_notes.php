@@ -3,6 +3,11 @@
 	include("includes/sescheck.php");
 	include_once('admin/includes/password.php');
 
+// Log info to debug #216
+if (!empty($_GET['forced'])) {
+    error_log("The following browser requested a forced template load: {$_SERVER['HTTP_USER_AGENT']}");
+}
+
     $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
 
     $sign_r = $db->getRow($sign_sql);
@@ -15,6 +20,7 @@
 		if($_POST['ed'] == '') {
 			$ins_sql = "insert into dental_notes set 
 						patientid = '".s_for($_GET['pid'])."',
+						status = 1,
 						notes = '".s_for($notes)."',
 						editor_initials = '".s_for($editor_initials)."',
 						procedure_date = '".s_for($procedure_date)."',
@@ -67,10 +73,21 @@
 			} 
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
-			$p_r = $db->getRow("select parentid FROM dental_notes WHERE notesid='".$_POST["ed"]."'");
+            $noteId = intval($_POST['ed']);
+			$p_r = $db->getRow("select parentid, status FROM dental_notes WHERE notesid='$noteId'");
 			$parentid = $p_r['parentid'];
-			$ins_sql = "insert into dental_notes set 
-		                patientid = '".s_for($_GET['pid'])."',
+            $isDraft = $p_r['status'] == 2;
+
+            if ($isDraft) {
+                $ins_sql = "UPDATE dental_notes SET ";
+            }
+            else {
+                $ins_sql = "INSERT INTO dental_notes SET ";
+            }
+
+			$ins_sql .= "
+			            patientid = '".s_for($_GET['pid'])."',
+		                status = 1,
 		                notes = '".s_for($notes)."',
 		                editor_initials = '".s_for($editor_initials)."',
 		                procedure_date = '".s_for($procedure_date)."',
@@ -80,7 +97,7 @@
               	$ins_sql .= " signed_id='".s_for($_SESSION['userid'])."', signed_on=now(), ";
             } elseif(isset($_POST['signstaff'])) {
 	            $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."'";
-	            
+
 	            $salt_row = $db->getRow($salt_sql);
 				$pass = gen_password($_POST['password'], $salt_row['salt']);
 				$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysqli_real_escape_string($con,$_POST['username'])."' and password='".$pass."' and status=1 AND (sign_notes=1 OR userid=".$_SESSION['docid'].")";
@@ -103,6 +120,7 @@
 
 			$up_sql = "update dental_notes set 
 						patientid = '".s_for($_GET['pid'])."',
+						status = 1,
 						notes = '".s_for($notes)."',
 						editor_initials = '".s_for($editor_initials)."',
 						procedure_date = '".s_for($procedure_date)."',
@@ -111,8 +129,12 @@
               	$up_sql .= " signed_id='".s_for($_SESSION['userid'])."', signed_on=now(), ";
             }
             
-            $up_sql .= " userid = '".s_for($_SESSION['userid'])."' where notesid='".$_POST["ed"]."'";
-		
+            $up_sql .= " userid = '".s_for($_SESSION['userid'])."' where notesid='$noteId'";
+
+            if ($isDraft) {
+                $ins_sql .= " WHERE notesid = '$noteId'";
+            }
+
 			$db->query($ins_sql);
 			$msg = "Edited Successfully";
 ?>
@@ -151,6 +173,7 @@
 	    $my = $db->getResults($sql);
 
     $customNotes = [];
+    $currentNote = null;
 
     if ($my) {
         foreach ($my as $myarray) {
@@ -158,6 +181,10 @@
                 'title' => trim(utf8_encode($myarray['title'])),
                 'description' => trim(utf8_encode($myarray['description']))
             ];
+        }
+
+        if (isset($_GET['title']) && isset($customNotes[$_GET['title']])) {
+            $currentNote = $_GET['title'];
         }
     }
 
@@ -191,7 +218,7 @@
 					LEFT JOIN dental_users u on u.userid=n.userid
 					where notesid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 			$themyarray = $db->getRow($thesql);
-			$notes = st($themyarray['notes']);
+			$notes = is_null($currentNote) ? st($themyarray['notes']) : st($customNotes[$currentNote]['description']);
 			$editor_initials = st($themyarray['editor_initials']);
 			$procedure_date = ($themyarray['procedure_date']!='')?date('m/d/Y', strtotime($themyarray['procedure_date'])):'';
 			$but_unsigned_text = "Save and keep UNSIGNED";
@@ -216,7 +243,10 @@
     		}
     	?>
 	
-	    <form name="notesfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid']?>" method="post" onSubmit="return notesabc(this)">
+	    <form action="?" method="get">
+            <input type="hidden" name="add" value="1" />
+            <input type="hidden" name="pid" value="<?= intval($_GET['pid']) ?>" />
+            <input type="hidden" name="forced" value="1" />
 		    <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 		        <tr>
 		            <td colspan="2" class="cat_head" style="font-size:16px;">
@@ -234,11 +264,15 @@
 			            <select name="title" class="tbox">
 			                <option value="">Select</option>
 			                    <?php foreach ($customNotes as $index=>$note) { ?>
-		                            <option value="<?= $index ?>" <?= $note['title'] === '' ? 'style="font-style: italic"' : '' ?>>
+		                            <option value="<?= $index ?>" <?= !is_null($currentNote) && $index == $currentNote ? 'selected="selected"' : '' ?> <?= $note['title'] === '' ? 'style="font-style: italic"' : '' ?>>
 		                        		<?= htmlspecialchars($note['title'] ?: 'no title') ?>
 		                    		</option>
 	                            <?php } ?>
 	            		</select>
+                        <span title="Click here if the text template does not load automatically.&#013;Your changes will be lost" style="cursor: pointer;">
+                            <input type="submit" class="button" value="Load">
+                            ?
+                        </span>
 						<span style="float:right;">
 							<?php
 								$r_sql = "SELECT n.parentid, u.name FROM dental_notes n LEFT JOIN dental_users u ON n.userid=u.userid
@@ -262,6 +296,10 @@
 						</span>
 		            </td>
 				</tr>
+            </table>
+        </form>
+        <form name="notesfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid']?>" method="post" onSubmit="return notesabc(this)">
+            <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 				<tr>
 		        	<td colspan="2" valign="top" class="frmdata">
 						<textarea id="notes" name="notes" class="tbox" style="width:100%; height:190px;"><?php echo $notes;?></textarea>

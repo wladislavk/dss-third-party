@@ -7398,7 +7398,24 @@ class TCPDF {
 				$ph = $this->getHTMLUnitToUnits($h, 0, $this->pdfunit, true) * $this->imgscale * $this->k;
 				$imsize = array($pw, $ph);
 			} else {
-				$this->Error('[Image] Unable to get image: '.$file);
+				// image from string
+				$originalFile = $file;
+				$imgdata = base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
+				$file = K_PATH_CACHE.'img_'.md5($imgdata);
+				if (!file_exists($file)) {
+					$fp = fopen($file, 'w');
+					fwrite($fp, $imgdata);
+					fclose($fp);
+				}
+				unset($imgdata);
+				$cached_file = true;
+				$imsize = @getimagesize($file);
+				if ($imsize === FALSE) {
+					unlink($file);
+					$cached_file = false;
+					$this->Error('[Image] Unable to get image, unable to replace it with empty image: '.$originalFile);
+				}
+				unset($originalFile);
 			}
 		}
 		// get original image width and height in pixels

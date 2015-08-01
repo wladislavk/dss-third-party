@@ -1,3 +1,6 @@
+var localEd = getParameterByName('ed'),
+    patientId = getParameterByName('pid');
+
 $(document).ready(function() {
     var cal72 = new calendar2(document.forms['notesfrm'].elements['procedure_date']),
         minutes = 1,
@@ -47,8 +50,8 @@ function save_draft(){
   var noteContent = $('#notes')[0].value;
   var procedureDate = $('#procedure_date')[0].value;
   var editorInitials = $('#editor_initials')[0].value;
-  var post_data = { ed_initials: editorInitials, ed: getParameterByName('ed'), notes: noteContent, procedure_date: procedureDate };
-  $.post("create_draft_note.php",post_data, function(data){
+  var post_data = { ed_initials: editorInitials, ed: localEd, notes: noteContent, procedure_date: procedureDate };
+  $.post("create_draft_note.php?pid=" + encodeURIComponent(patientId), post_data, function(data){
     if (data.indexOf('logged_out')!= -1 || data.indexOf('login.php') != -1){
       alert("you have been logged out elsewhere. Redirecting to login page.");
       parent.window.location="login.php";
@@ -59,6 +62,16 @@ function save_draft(){
     }
     else
     {
+      if (data.match(/\d+/)) {
+        try {
+          var newEd = parseInt(data);
+
+          if (!isNaN(newEd)) {
+            localEd = newEd;
+            $('[name=ed]').val(localEd);
+          }
+        } catch (e) {}
+      }
       var d = new Date();
       $('#autosave_note').text("Last autosaved at: "+pad_time(d.getHours())+":"+pad_time(d.getMinutes())+":"+pad_time(d.getSeconds()));
     }

@@ -22,6 +22,7 @@ if(!isset($_GET['noheaders'])){
 </script>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="js/add_patient.js?v=<?= time() ?>"></script>
 <script type="text/javascript" src="js/masks.js"></script>
 <script type="text/javascript" src="script/logout_timer.js"></script>
 <script type="text/javascript" src="js/jquery.cookie.js"></script>
@@ -30,7 +31,6 @@ if(!isset($_GET['noheaders'])){
 <script type="text/javascript" src="script/wufoo.js"></script>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/add_patient.css" type="text/css" media="screen" />
-<script type="text/javascript" src="js/add_patient.js"></script>
 <script src="script/autocomplete.js" type="text/javascript"></script>
 <script src="script/autocomplete_local.js" type="text/javascript"></script>
 <?php
@@ -85,7 +85,7 @@ if ($pt_referralid) {
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
-<script type="text/javascript" src="/manage/js/add_patient.js"></script>
+<script type="text/javascript" src="/manage/js/add_patient.js?v=<?= time() ?>"></script>
 <?php
 /*=======================================================
 TRIGGERING LETTERS
@@ -476,10 +476,10 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
       p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
       p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-      p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."'," . 
-      // s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
-      // s_m_eligible_payer_name = '".mysqli_real_escape_string($con,$s_m_eligible_payer_name)."',
-    " has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
+      p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
+      s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
+      s_m_eligible_payer_name = '".mysqli_real_escape_string($con,$s_m_eligible_payer_name)."',
+      has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
       s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
       s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
       s_m_partylname = '".s_for($_POST["s_m_partylname"])."', 
@@ -725,9 +725,8 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     <?php
     trigger_error("Die called", E_USER_ERROR);
   } else {
-    //echo('in');
-    $clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
-    $clogin = preg_replace("[^A-Za-z]", "", $clogin);
+    $clogin = strtolower(substr($_POST["firstname"], 0, 1) . $_POST["lastname"]);
+    $clogin = preg_replace('/[^a-z]+/i', '', $clogin);
     $csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
     $cq = $db->getResults($csql);
     $carray = array();
@@ -809,10 +808,10 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
                   p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
                   p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
                   p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
-                  p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."', " . 
-                  // s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
-                  // s_m_eligible_payer_name = '".mysqli_real_escape_string($con,$s_m_eligible_payer_name)."',
-                " has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
+                  p_m_eligible_payer_name = '".mysqli_real_escape_string($con,$p_m_eligible_payer_name)."',
+                  s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
+                  s_m_eligible_payer_name = '".mysqli_real_escape_string($con,$s_m_eligible_payer_name)."',
+                  has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
                   s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
                   s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
                   s_m_partylname = '".s_for($_POST["s_m_partylname"])."',  

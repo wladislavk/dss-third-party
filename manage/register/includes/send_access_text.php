@@ -6,7 +6,7 @@
   $hash = $_REQUEST['hash'];
 
   $s = "SELECT * FROM dental_users WHERE
-      	userid=".mysqli_real_escape_string($con, $id)." AND
+      	userid='".mysqli_real_escape_string($con, $id)."' AND
       	recover_hash='".mysqli_real_escape_string($con, $hash)."'";
 
   $r = $db->getRow($s);

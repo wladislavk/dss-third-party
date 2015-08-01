@@ -4,27 +4,55 @@ function validSubmission(f)
     returnval = true;
     if(!authShown){
         //CHECK PAYMENT IS ENTERED
-        payment = false
-        $('.payment_amount').each( function(){
-            if( $(this).val()!=''){
-            payment = true;
+
+        var isEmptyPaymentAmount = false,
+            isEmptyPaymentDate = false,
+            isEmptyAllowedAmount = false;
+
+        $('.claims').removeClass('isValid').each(function(){
+            var claim = $(this),
+                hasPayment = claim.find('.payment_amount').val().trim() != '',
+                hasAllowed = claim.find('.allowed_amount').val().trim() != '',
+                hasDate = claim.find('.payment_date').val().trim() != '',
+                hasExtraFields = false;
+
+            claim.find('input[type=text]').not('.payment_amount, .payment_date').each(function(){
+                hasExtraFields = hasExtraFields || $(this).val().trim() != '';
+            });
+
+            if (hasExtraFields) {
+                if (!hasPayment) {
+                    isEmptyPaymentAmount = true;
+                    return false;
+                }
+
+                if (!hasDate) {
+                    isEmptyPaymentDate = true;
+                    return false;
+                }
+            }
+
+            if (hasPayment) {
+                claim.addClass('isValid');
+
+                if (!hasAllowed) {
+                    isEmptyAllowedAmount = true;
+                }
             }
         });
 
-        if( !payment ){
-            alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
+        if (isEmptyPaymentAmount || isEmptyPaymentDate) {
+            alert('Fields "Paid Amount" and "Payment Date" are required for line-items with data entered in other fields.');
             return false;
         }
-        allowed = false;
-        $('.allowed_amount').each( function(){
-            if( $(this).val()!=''){
-                allowed = true;
-            }
 
-        });
-
-        if( !allowed ){
+        if (isEmptyAllowedAmount) {
            returnval = confirm('You did not enter "Amount Allowed". This information is normally listed on the patient\'s EOB.  Proceed anyway?');
+        }
+
+        if (!$('.claims.isValid').length) {
+            alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
+            return false;
         }
 
         //DISPUTE CLAIM

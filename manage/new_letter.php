@@ -491,8 +491,12 @@ if (isset($_POST['submit'])) {
 	$md_referrals = $_POST['contacts']['md_referrals'];
 	$mds = $_POST['contacts']['mds'];
 	$send_method = $_POST['send_method'];
-	foreach ($md_referrals as $id) {
-		$md_referral_list .= $id . ",";
+	if ($md_referrals) {
+		foreach ($md_referrals as $id) {
+			$md_referral_list .= $id . ",";
+		}
+	} else {
+		$md_referral_list = '';
 	}
 	if ($mds) {
 		foreach ($mds as $id) {

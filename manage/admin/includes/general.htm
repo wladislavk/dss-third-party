@@ -1398,7 +1398,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
   $pdf->SetFooterMargin($margin_footer);
 
   //set auto page breaks
-  $pdf->SetAutoPageBreak(TRUE, $margin_bottom);
+  $pdf->SetAutoPageBreak(TRUE, /*$margin_bottom*/20);
 
   //set image scale factor
   $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);

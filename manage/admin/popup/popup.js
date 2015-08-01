@@ -166,6 +166,7 @@ function disablePopupClean(){
                 eraseCookie('tempforledgerentry');
                 popupStatus = 0;
         }
+        parent.window.location.href = parent.window.location.href;
 }
 //disabling popup with jQuery magic!
 function disablePopupRef(){

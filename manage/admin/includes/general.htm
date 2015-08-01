@@ -1654,6 +1654,7 @@ function get_billing_franchisees() {
 function get_patients($franchisee_id = -1) {
 
   $db = new Db();  
+  $con = $GLOBALS['con'];
   $sql = "SELECT * FROM dental_patients WHERE docid = $franchisee_id ORDER BY lastname ASC, firstname ASC";
   // return $db->getResults($sql);
   return mysqli_query($con,$sql);

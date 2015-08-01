@@ -39,23 +39,17 @@
 		$fields[] = "referredby_info";
 		$fields[] = "referredby_notes";
 		$fields[] = "dea_number";
-		$first = true;
-		$updated = false;
+        $up_sql = [];
 
 		foreach($fields as $field){
 			if(empty($w_r[$field]) && !empty($l_r[$field])) {
-				if(!$first) {
-					$up_sql .= ", ".$field."='".$l_r[$field]."'";
-				} else {
-					$up_sql = "UPDATE dental_contact SET " . $field . "='" . $l_r[$field] . "'";
-					$first = false;
-					$updated = true;
-				}
+				$up_sql []= $field . "='" . $db->escape($l_r[$field]) . "'";
 			}
 		}
 
-		if ($updated) {
-			$up_sql .= " WHERE contactid='".mysqli_real_escape_string($con, $w_r['contactid'])."'";
+		if (count($up_sql)) {
+            $up_sql = join(', ', $up_sql);
+			$up_sql = "UPDATE dental_contact SET $up_sql WHERE contactid='" . $db->escape($w_r['contactid']) . "'";
 			$db->query($up_sql);
 		}
 

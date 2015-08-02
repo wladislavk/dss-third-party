@@ -84,7 +84,7 @@ function uploadImage($image, $file_path, $type = 'general'){
     imagedestroy($tmp);
 
   }else{
-    if($image['size'] <= DSS_FILE_MAX_SIZE){
+    if( ($image['size'] > 0 && $image['size'] <= DSS_FILE_MAX_SIZE) ){
 
       @move_uploaded_file($image["tmp_name"],$file_path);
       $uploaded = true;

@@ -394,7 +394,21 @@ trigger_error("Die called", E_USER_ERROR);
 	$amount_paid = $_POST['amount_paid'];
 	$balance_due = (!empty($_POST['balance_due']) ? $_POST['balance_due'] : '');
 	$signature_physician = $_POST['signature_physician'];
-	$physician_signed_date = (($_POST['physician_signed_date']!=date('m/d/Y'))?$_POST['physician_signed_date']:'');
+	// $physician_signed_date = (($_POST['physician_signed_date']!=date('m/d/Y'))?$_POST['physician_signed_date']:'');
+
+    if ($_POST['physician_signed_date'] != date('m/d/Y')) {
+        $dateFromPost = str_replace('/', '-', $_POST['physician_signed_date']);
+        if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromPost)) {
+            $physician_signed_date = $physician_signed_date->format('m/d/Y');
+        } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromPost)) {
+            $physician_signed_date = $physician_signed_date->format('m/d/Y');
+        } else {
+            $physician_signed_date = date('m/d/Y');
+        }
+    } else {
+        $physician_signed_date = '';
+    }
+
 	$service_facility_info_name = $_POST['service_facility_info_name'];
 	$service_facility_info_address = $_POST['service_facility_info_address'];
 	$service_facility_info_city = $_POST['service_facility_info_city'];
@@ -1291,7 +1305,21 @@ $claim_codes = st($myarray['claim_codes']);
 $other_claim_id = st($myarray['other_claim_id']);
 $nucc_30 = st($myarray['nucc_30']);
 $signature_physician = st($myarray['signature_physician']);
-$physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('m/d/Y'));
+// $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('m/d/Y'));
+
+if (!empty($myarray['physician_signed_date'])) {
+    $dateFromDatabase = str_replace('/', '-', $myarray['physician_signed_date']);
+    if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromDatabase)) {
+        $physician_signed_date = $physician_signed_date->format('m/d/Y');
+    } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromDatabase)) {
+        $physician_signed_date = $physician_signed_date->format('m/d/Y');
+    } else {
+        $physician_signed_date = date('m/d/Y');
+    }
+} else {
+    $physician_signed_date = date('m/d/Y');
+}
+
 $service_facility_info_name = st($myarray['service_facility_info_name']);
 $service_facility_info_address = st($myarray['service_facility_info_address']);
 $service_facility_info_city = st($myarray['service_facility_info_city']);
@@ -3056,7 +3084,9 @@ if ($is_pending) {
 									Signed
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									Date: 
-									<input type="text" value="<?php echo $physician_signed_date?>" name="physician_signed_date" class="inbox_line3 datealtoptfullmask" size="10" />
+                                    <div style="text-align: right">
+									   <input type="text" value="<?php echo $physician_signed_date?>" name="physician_signed_date" class="inbox_line3 datealtoptfullmask" size="10" />
+                                    </div>
 								</td>
 								<td valign="top" width="50%">
 									<span class="num">32.</span> 

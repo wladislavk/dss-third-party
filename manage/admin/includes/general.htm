@@ -1398,7 +1398,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
   $pdf->SetFooterMargin($margin_footer);
 
   //set auto page breaks
-  $pdf->SetAutoPageBreak(TRUE, $margin_bottom);
+  $pdf->SetAutoPageBreak(TRUE, /*$margin_bottom*/20);
 
   //set image scale factor
   $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -1654,6 +1654,7 @@ function get_billing_franchisees() {
 function get_patients($franchisee_id = -1) {
 
   $db = new Db();  
+  $con = $GLOBALS['con'];
   $sql = "SELECT * FROM dental_patients WHERE docid = $franchisee_id ORDER BY lastname ASC, firstname ASC";
   // return $db->getResults($sql);
   return mysqli_query($con,$sql);

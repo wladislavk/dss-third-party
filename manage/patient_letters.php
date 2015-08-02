@@ -211,7 +211,7 @@
                 }
 	        }
 
-            $total_contacts = count((!empty($contacts['patient']) ? $contacts['patient'] : '')) + count((!empty($contacts['mds']) ? $contacts['mds'] : '')) + count((!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : ''));
+            $total_contacts = count((!empty($contacts['patient']) ? $contacts['patient'] : null)) + count((!empty($contacts['mds']) ? $contacts['mds'] : null)) + count((!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : null));
             $dental_letters[$key]['total_contacts'] = $total_contacts;
             
             if ($total_contacts > 1) {
@@ -397,23 +397,29 @@
 			                    <?php if($total_contacts > 1) { ?>
                                     <a href="#" onclick="$('#contacts_<?php echo  $id; ?>').toggle(); return false;"><?php echo  $sentto; ?></a>
                                     <div style="display:none;" id="contacts_<?php echo  $id; ?>">
-                                        <?php foreach($pending_letters[$i]['patient'] as $pat) { ?>
-                                            <br />
-                                            <?php echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname']; ?>
-                                            <a href="#" onclick="delete_pending_letter('<?php echo  $pat['letterid']; ?>', 'patient', '<?php echo  $pat['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
-                                        <?php }
-				                            foreach($pending_letters[$i]['mds'] as $md) {
-					                    ?>
+                                        <?php if (!empty($pending_letters[$i]['patient'])) {
+                                            foreach($pending_letters[$i]['patient'] as $pat) { ?>
                                                 <br />
-                                                <?php echo $md['salutation']." ".$md['firstname']." ".$md['lastname']; ?>
-                                                <a href="#" onclick="delete_pending_letter('<?php echo  $md['letterid']; ?>', 'md', '<?php echo  $md['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
+                                                <?php echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname']; ?>
+                                                <a href="#" onclick="delete_pending_letter('<?php echo  $pat['letterid']; ?>', 'patient', '<?php echo  $pat['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
                                         <?php }
-                                            foreach($pending_letters[$i]['md_referrals'] as $md_referral){
+                                            }
+                                            if (!empty($pending_letters[$i]['mds'])) {
+				                                foreach($pending_letters[$i]['mds'] as $md) {
+					                    ?>
+                                                    <br />
+                                                    <?php echo $md['salutation']." ".$md['firstname']." ".$md['lastname']; ?>
+                                                    <a href="#" onclick="delete_pending_letter('<?php echo  $md['letterid']; ?>', 'md', '<?php echo  $md['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
+                                        <?php   }
+                                            }
+                                            if (!empty($pending_letters[$i]['md_referrals'])) {
+                                                foreach($pending_letters[$i]['md_referrals'] as $md_referral){
                                         ?>
                                                 <br />
-                                                <?php echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname']; ?>
-                                                <a href="#" onclick="delete_pending_letter('<?php echo  $md_referral['letterid']; ?>', 'md_referral', '<?php echo  $md_referral['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
-                                        <?php } ?>
+                                                    <?php echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname']; ?>
+                                                    <a href="#" onclick="delete_pending_letter('<?php echo  $md_referral['letterid']; ?>', 'md_referral', '<?php echo  $md_referral['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
+                                        <?php }
+                                        } ?>
                                     </div>
                                 <?php } else {
     				                echo $sentto;

@@ -249,10 +249,32 @@ $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
-?>
 
-<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/popup.js" type="text/javascript"></script>
+$pending_selected = ($status == DSS_PREAUTH_PENDING) ? 'selected' : '';
+$complete_selected = ($status == DSS_PREAUTH_COMPLETE) ? 'selected' : '';
+
+?>
+<link rel="stylesheet" type="text/css" media="screen" href="popup/popup.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/manage/css/search-hints.css" />
+<script type="text/javascript" src="popup/popup.js"></script>
+<script type="text/javascript" src="/manage/admin/js/manage_vobs.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    if ($('#patient_hints').length) {
+        setup_autocomplete(
+            'patient_name', 'patient_hints', 'pid', '',
+            'list_patients_search.php?fid=<?php echo $fid; ?>', 'patient',
+            getParameterByName('pid')
+        );
+
+        setup_autocomplete(
+            'insurance_name', 'insurance_hints', 'iid', '',
+            'list_insurance_search.php?fid=<?= $fid ?>', 'insurance',
+            getParameterByName('pid')
+        );
+    }
+});
+</script>
 
 <div class="page-header">
 	Manage Verification of Benefits
@@ -262,82 +284,54 @@ $my = $db->getResults($sql);
 </div>
 
 <div style="width:98%;margin:auto;">
-  <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="get">
-    Status:
-    <select name="status">
-      <?php $pending_selected = ($status == DSS_PREAUTH_PENDING) ? 'selected' : ''; ?>
-      <?php $complete_selected = ($status == DSS_PREAUTH_COMPLETE) ? 'selected' : ''; ?>
-      <option value="">Any</option>
-      <option value="<?php echo DSS_PREAUTH_PENDING?>" <?php echo $pending_selected?>><?php echo $dss_preauth_status_labels[DSS_PREAUTH_PENDING]?></option>
-      <option value="<?php echo DSS_PREAUTH_COMPLETE?>" <?php echo $complete_selected?>><?php echo $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]?></option>
-    </select>
-    &nbsp;&nbsp;&nbsp;
-
-    Account:
-<input type="text" id="account_name" onclick="updateval(this)" autocomplete="off" name="account_name" value="<?php echo  ($fid!='')?$account_name:'Type contact name'; ?>" />
-
-<br />        <div id="account_hints" class="search_hints" style="display:none;">
-                <ul id="account_list" class="search_list">
-                        <li class="template" style="display:none">Doe, John S</li>
-                </ul>
-<script type="text/javascript" src="/manage/admin/js/manage_vobs.js"></script>
-                                        </div>
-<input type="hidden" name="fid" id="fid" value="<?php echo $fid;?>" />
-
-<?php /*
-    <select name="fid">
-      <option value="">Any</option>
-      <?php 
-        $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees();
-        if ($franchisees) foreach ($franchisees as $row) {
-          $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
-        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['first_name']." ".$row['last_name']; ?></option>
-      <?php } ?>
-    </select>
-    &nbsp;&nbsp;&nbsp;
-*/ ?>
-
-    <?php if (!empty($fid)) { ?>
-      Patients:
-<input type="text" id="patient_name" onclick="updateval(this)" autocomplete="off" name="patient_name" value="<?php echo  ($pid!='')?$patient_name:'Type patient name'; ?>" />
-
-<br />        <div id="patient_hints" class="search_hints" style="display:none;">
+    <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="get">
+        Status:
+        <select name="status">
+            <option value="">Any</option>
+            <option value="<?= DSS_PREAUTH_PENDING ?>" <?= $pending_selected ?>>
+                <?= $dss_preauth_status_labels[DSS_PREAUTH_PENDING] ?>
+            </option>
+            <option value="<?= DSS_PREAUTH_COMPLETE ?>" <?= $complete_selected ?>>
+                <?= $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]?>
+            </option>
+        </select>
+        &nbsp;&nbsp;&nbsp;
+        Account:
+        <input type="text" id="account_name" onclick="updateval(this)" autocomplete="off" name="account_name"
+             value="<?= ($fid != '') ? $account_name : 'Type contact name' ?>" />
+        <div id="account_hints" class="search_hints" style="display:none;">
+            <ul id="account_list" class="search_list">
+                <li class="template" style="display:none">Doe, John S</li>
+            </ul>
+        </div>
+        <?php if (!empty($fid)) { ?>
+            Patients:
+            <input type="text" id="patient_name" onclick="updateval(this)" autocomplete="off" name="patient_name"
+                 value="<?= ($pid != '') ? $patient_name : 'Type patient name' ?>" />
+            <div id="patient_hints" class="search_hints" style="display:none;">
                 <ul id="patient_list" class="search_list">
-                        <li class="template" style="display:none">Doe, John S</li>
+                    <li class="template" style="display:none">Doe, John S</li>
                 </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('patient_name', 'patient_hints', 'pid', '', 'list_patients_search.php?fid=<?php echo $fid; ?>', 'patient', '<?php echo  $_GET['pid']; ?>');
-});
-</script>
-                                        </div>
-<input type="hidden" name="pid" id="pid" value="<?php echo $pid;?>" />
-
-      &nbsp;&nbsp;&nbsp;
-      Insurance:
-
-<input type="text" id="insurance_name" onclick="updateval(this)" autocomplete="off" name="insurance_name" value="<?php echo  ($iid!='')?$insurance_name:'Type contact name'; ?>" />
-
-<br />        <div id="insurance_hints" class="search_hints" style="display:none;">
+            </div>
+            <input type="hidden" name="pid" id="pid" value="<?= $pid ?>" />
+            &nbsp;&nbsp;&nbsp;
+            Insurance:
+            <input type="text" id="insurance_name" onclick="updateval(this)" autocomplete="off" name="insurance_name"
+                 value="<?= ($iid != '') ? $insurance_name : 'Type contact name' ?>" />
+            <div id="insurance_hints" class="search_hints" style="display:none;">
                 <ul id="insurance_list" class="search_list">
-                        <li class="template" style="display:none">Doe, John S</li>
+                    <li class="template" style="display:none">Doe, John S</li>
                 </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('insurance_name', 'insurance_hints', 'iid', '', 'list_insurance_search.php?fid=<?php echo $fid; ?>', 'insurance', '<?php echo  $_GET['pid']; ?>');
-});
-</script>
-                                        </div>
-<input type="hidden" name="iid" id="iid" value="<?php echo $iid;?>" />
-
-<?php   }
- ?>
-    
-    <input type="hidden" name="sort_by" value="<?php echo $sort_by?>"/>
-    <input type="hidden" name="sort_dir" value="<?php echo $sort_dir?>"/>
-    <input type="submit" value="Filter List" class="btn btn-primary">
-    <input type="button" value="Reset" onclick="window.location='<?php echo $_SERVER['PHP_SELF']?>'" class="btn btn-primary">
-  </form>
+            </div>
+            <input type="hidden" name="iid" id="iid" value="<?= $iid ?>" />
+        <?php } ?>
+        <input type="hidden" name="fid" id="fid" value="<?= $fid ?>" />
+        <input type="hidden" name="sort_by" value="<?= $sort_by ?>" />
+        <input type="hidden" name="sort_dir" value="<?= $sort_dir ?> "/>
+        <input type="submit" value="Filter List" class="btn btn-primary">
+        <input type="button" value="Reset" onclick="window.location='<?= $_SERVER['PHP_SELF'] ?>'"
+             class="btn btn-primary">
+    </form>
 </div>
 
 <form name="pagefrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">

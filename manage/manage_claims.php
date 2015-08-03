@@ -35,7 +35,7 @@ $pend_sql = "select i.*, p.firstname, p.lastname,
         (SELECT e.adddate FROM dental_claim_electronic e WHERE e.claimid=i.insuranceid ORDER by e.adddate DESC LIMIT 1) electronic_adddate
  from dental_insurance i left join dental_patients p on i.patientid=p.patientid 
 	LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=i.insuranceid 
-	where i.docid='".$_SESSION['docid']."' "; 
+	where p.docid='".$_SESSION['docid']."' ";
 $pend_sql .= " AND (i.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_SEC_REJECTED."))" ;
 
 if(isset($_GET['sort2'])){
@@ -57,7 +57,7 @@ $sql = "select i.*, p.firstname, p.lastname,
 	(SELECT e.adddate FROM dental_claim_electronic e WHERE e.claimid=i.insuranceid ORDER by e.adddate DESC LIMIT 1) electronic_adddate
 	from dental_insurance i left join dental_patients p on i.patientid=p.patientid 
 	LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=i.insuranceid 
-	where i.docid='".$_SESSION['docid']."' ";
+	where p.docid='".$_SESSION['docid']."' ";
 
 if($_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE){
     $sql .= " AND i.status NOT  IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_SEC_REJECTED.")";

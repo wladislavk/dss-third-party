@@ -23,7 +23,7 @@ class ApiAdminMemoController extends ApiBaseController
 
     private $rules = [
         'memo' => 'required',
-        'off_date' => 'required',
+        'off_date' => 'required|date_format:Y-m-d',
         'last_update' => 'required',
     ];
 

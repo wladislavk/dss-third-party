@@ -156,7 +156,10 @@
       <label for="payer_id" class="col-lg-2 control-label">Payer ID</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="payer_name" autocomplete="off">
+        <input type="text" class="form-control" id="payer_name" autocomplete="off" value="<?php
+      if( !empty($r['p_m_eligible_payer_id']) && !empty($r['p_m_eligible_payer_name']) ) {
+        echo $r['p_m_eligible_payer_id'] . ' - ' . $r['p_m_eligible_payer_name'];
+      }?>">
 <br />
 <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
         <ul id="ins_payer_list" class="search_list">

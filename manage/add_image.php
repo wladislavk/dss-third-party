@@ -379,14 +379,8 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
         }
     }
 }
-
-if ($errorMessage) { ?>
-    <script type="text/javascript">
-        alert(<?= json_encode($errorMessage) ?>);
-    </script>
-<?php }
-
 ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -586,5 +580,13 @@ for($i=1;$i<=9;$i++){ ?>
   	</tr>
 </table>
 <script src="js/add_image.js" type="text/javascript"></script>
+
+<?php if ($errorMessage) { ?>
+<script type="text/javascript">
+    alert(<?= json_encode($errorMessage) ?>);
+</script>
+<?php }
+
+?>
 </body>
 </html>

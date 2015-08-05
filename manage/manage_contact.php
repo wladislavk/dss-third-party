@@ -64,9 +64,9 @@ $sortDir = $sortDir === 'ASC' ? 'ASC' : 'DESC';
 	 		from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='" . $_SESSION['docid'] . "' AND merge_id IS NULL AND dc.status=1 ";
 	}
 
-	if (isset($_GET['letter'])) {
-	  $sql .= "AND (dc.lastname LIKE '" . $db->escape($_GET['letter']) . "%' OR
-		(dc.lastname='' AND dc.company LIKE  '" . $db->escape($_GET['letter']) . "%'))";
+	if ($byLetter) {
+	  $sql .= "AND (dc.lastname LIKE '" . $db->escape($byLetter) . "%' OR
+		(dc.lastname='' AND dc.company LIKE  '" . $db->escape($byLetter) . "%'))";
 	}
 
 	if ($sortBy) {
@@ -167,7 +167,7 @@ $sortDir = $sortDir === 'ASC' ? 'ASC' : 'DESC';
 						<?php
 						  	endforeach;
 
-							if (isset($_GET['letter']) && $_GET['letter'] != ''):
+							if ($byLetter):
 						?>
 							<a href="manage_contact.php?status=<?php echo $_GET['status'];?>&sort=<?= htmlspecialchars($sortBy) ?>&sortdir=<?= $sortDir ?>&contacttype=<?= htmlspecialchars($contactType) ?>">Show All</a>
 						<?php endif ?>

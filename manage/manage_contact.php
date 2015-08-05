@@ -72,13 +72,16 @@ $sortDir = $sortDir === 'ASC' ? 'ASC' : 'DESC';
 	if ($sortBy) {
 		switch ($sortBy) {
 		  case 'company':
-		    $sql .= " ORDER BY company $sortDir, lastname ASC, firstname ASC, dct.contacttype ASC";
+		    $sql .= " ORDER BY IF (company = '' OR company IS NULL, 1, 0) $sortDir,
+		        company $sortDir, lastname ASC, firstname ASC, dct.contacttype ASC";
 		    break;
 		  case 'type':
-		    $sql .= " ORDER BY dct.contacttype $sortDir, lastname ASC, firstname ASC, company ASC";
+		    $sql .= " ORDER BY IF (dct.contacttype = '' OR dct.contacttype IS NULL, 1, 0) $sortDir,
+		        dct.contacttype $sortDir, lastname ASC, firstname ASC, company ASC";
 		    break;
 		  default:
-		    $sql .= " ORDER BY lastname $sortDir, firstname $sortDir, company ASC, dct.contacttype ASC";
+		    $sql .= " ORDER BY IF (lastname = '' OR lastname IS NULL, 1, 0) $sortDir,
+		        lastname $sortDir, firstname $sortDir, company ASC, dct.contacttype ASC";
 		    break;
 		}
 	}
@@ -102,6 +105,9 @@ $sortDir = $sortDir === 'ASC' ? 'ASC' : 'DESC';
 
 	<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="css/manage.css" type="text/css" media="screen" />
+    <style type="text/css">
+        .name-empty { font-weight: normal; }
+    </style>
 	<script src="admin/popup/popup.js" type="text/javascript"></script>
 
 	<span class="admin_head">Manage Contact</span><br /><br />&nbsp;
@@ -235,8 +241,20 @@ $sortDir = $sortDir === 'ASC' ? 'ASC' : 'DESC';
 						} else {
 							$tr_class = "tr_inactive";
 						}
-						
-						$name = st($myarray['lastname']) . " " . st($myarray['middlename']) . ", " . st($myarray['firstname']);
+
+
+                        $noFirst = empty($myarray['firstname']);
+                        $noMiddle = empty($myarray['middlename']);
+                        $noLast = empty($myarray['lastname']);
+
+                        if ($noFirst && $noMiddle && $noLast) {
+                            $name = '<i class="name-empty">Empty name</i>';
+                        } else {
+                            $name = ($noLast ? '<i class="name-empty">Empty last name</i>' : st($myarray['lastname'])) .
+                                ($noMiddle ? '' : ' ' . st($myarray['middlename'])) .
+                                ', ' .
+                                ($noFirst ? '<i class="name-empty">empty first name</i>' : st($myarray['firstname']));
+                        }
 				?>
 
 					<tr class="<?php echo $tr_class;?>">
@@ -254,7 +272,7 @@ $sortDir = $sortDir === 'ASC' ? 'ASC' : 'DESC';
 
 						<td valign="top" width="10%">
 							<?php
-							    $ref_sql = "SELECT * FROM dental_patients WHERE (parent_patientid IS NULL OR parent_patientid='') AND referred_source=2 AND referred_by='" . mysqli_real_escape_string($con,$myarray['contactid']) . "'";
+							    $ref_sql = "SELECT * FROM dental_patients WHERE (parent_patientid IS NULL OR parent_patientid='') AND referred_source=2 AND referred_by='" . $db->escape($myarray['contactid']) . "'";
 							    $ref_q = $db->getResults($ref_sql);
 							    $num_ref = count($ref_q);
 							?>

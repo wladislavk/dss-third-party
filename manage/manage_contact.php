@@ -1,8 +1,16 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include "includes/top.htm";
-?>
 
-<?php
+use Illuminate\Support\Facades\Input as Input;
+
+$contactType = Input::get('contacttype', '');
+$byLetter = strtoupper(Input::get('letter', ''));
+$sortBy = Input::get('sort', 'name');
+$sortDir = strtoupper(Input::get('sortdir', 'asc'));
+
+$byLetter = preg_replace('/[^a-z]+/i', '', $byLetter);
+$sortBy = $sortBy ?: ($byLetter ? 'name' : '');
+$sortDir = $sortDir === 'ASC' ? 'ASC' : 'DESC';
 
 	if (!empty($_REQUEST["delid"])) {
 		delete_contact_letters($_REQUEST["delid"]);
@@ -45,32 +53,32 @@
 	}
 		
 	$i_val = $index_val * $rec_disp;
-	$contact_type_holder = (!empty($_GET['contacttype']) ? $_GET['contacttype'] : '');
+	$contact_type_holder = $contactType;
 
 	if (isset($contact_type_holder) && $contact_type_holder != '') {
-		$sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='" . $_SESSION['docid'] . "' and dct.contacttypeid='" . $contact_type_holder . "' AND merge_id IS NULL AND dc.status=1 ";
+		$sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='" . $_SESSION['docid'] . "' and dct.contacttypeid='" . $db->escape($contact_type_holder) . "' AND merge_id IS NULL AND dc.status=1 ";
 	} elseif (isset($_GET['status']) && $_GET['status'] != '') {
-		$sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='" . $_SESSION['docid'] . "' AND merge_id IS NULL AND dc.status=" . mysqli_real_escape_string($con,$_GET['status']) . " ";
+		$sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='" . $_SESSION['docid'] . "' AND merge_id IS NULL AND dc.status=" . $db->escape($_GET['status']) . " ";
 	} else {
 		$sql = "select dc.*
 	 		from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='" . $_SESSION['docid'] . "' AND merge_id IS NULL AND dc.status=1 ";
 	}
 
 	if (isset($_GET['letter'])) {
-	  $sql .= "AND (dc.lastname LIKE '" . mysqli_real_escape_string($con,$_GET['letter']) . "%' OR
-		(dc.lastname='' AND dc.company LIKE  '" . mysqli_real_escape_string($con,$_GET['letter']) . "%'))";
+	  $sql .= "AND (dc.lastname LIKE '" . $db->escape($_GET['letter']) . "%' OR
+		(dc.lastname='' AND dc.company LIKE  '" . $db->escape($_GET['letter']) . "%'))";
 	}
 
-	if (!empty($_GET['sort'])) { 
-		switch ($_GET['sort']) {
+	if ($sortBy) {
+		switch ($sortBy) {
 		  case 'company':
-		    $sql .= " ORDER BY company " . $_GET['sortdir'];
+		    $sql .= " ORDER BY company $sortDir, lastname ASC, firstname ASC, dct.contacttype ASC";
 		    break;
 		  case 'type':
-		    $sql .= " ORDER BY dct.contacttype " . $_GET['sortdir'];
+		    $sql .= " ORDER BY dct.contacttype $sortDir, lastname ASC, firstname ASC, company ASC";
 		    break;
 		  default:
-		    $sql .= " ORDER BY lastname " . $_GET['sortdir'] . ", firstname " . $_GET['sortdir'];
+		    $sql .= " ORDER BY lastname $sortDir, firstname $sortDir, company ASC, dct.contacttype ASC";
 		    break;
 		}
 	}
@@ -155,13 +163,13 @@
 					  		$letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
 					  		foreach ($letters as $let):
 					    ?>
-					    	<a <?php echo (!empty($_GET['letter']) && $_GET['letter'] == $let) ? 'class="selected_letter"' : ''; ?> href="manage_contact.php?letter=<?php echo $let; ?>&status=<?php echo (!empty($_GET['status']) ? $_GET['status'] : ''); ?>&sort=<?php echo (!empty($_GET['sort']) ? $_GET['sort'] : ''); ?>&sortdir=<?php echo (!empty($_GET['sortdir']) ? $_GET['sortdir'] : ''); ?>&contacttype=<?php echo (!empty($_GET['contacttype']) ? $_GET['contacttype'] : ''); ?>"><?php echo $let; ?></a>
+					    	<a <?= $byLetter === $let ? 'class="selected_letter"' : '' ?> href="manage_contact.php?letter=<?= $let ?>&status=<?php echo (!empty($_GET['status']) ? $_GET['status'] : ''); ?>&sort=<?= htmlspecialchars($sortBy) ?>&sortdir=<?= $sortDir ?>&contacttype=<?= htmlspecialchars($contactType) ?>"><?php echo $let; ?></a>
 						<?php
 						  	endforeach;
 
 							if (isset($_GET['letter']) && $_GET['letter'] != ''):
 						?>
-							<a href="manage_contact.php?status=<?php echo $_GET['status'];?>&sort=<?php echo $_GET['sort'];?>&sortdir=<?php echo $_GET['sortdir'];?>&contacttype=<?php echo  $_GET['contacttype'];?>">Show All</a>
+							<a href="manage_contact.php?status=<?php echo $_GET['status'];?>&sort=<?= htmlspecialchars($sortBy) ?>&sortdir=<?= $sortDir ?>&contacttype=<?= htmlspecialchars($contactType) ?>">Show All</a>
 						<?php endif ?>
 					</div>
 				</td>
@@ -171,22 +179,32 @@
 						Pages:
 
 						<?php
-							paging($no_pages, $index_val, "letter=" . (!empty($_GET['letter']) ? $_GET['letter'] : '') . "&status=" . (!empty($_GET['status']) ? $_GET['status'] : '') . "&sort=" . (!empty($_GET['sort']) ? $_GET['sort'] : '') . "&sortdir=" . (!empty($_GET['sortdir']) ? $_GET['sortdir'] : '') . "&contacttype=" . (!empty($_GET['contacttype']) ? $_GET['contacttype'] : ''));
-						?>
+
+                        paging(
+                            $no_pages,
+                            $index_val,
+                            'letter=' . htmlspecialchars($byLetter) .
+                            '&status=' . (!empty($_GET['status']) ? $_GET['status'] : '') .
+                            '&sort=' . htmlspecialchars($sortBy) .
+                            '&sortdir=' . htmlspecialchars($sortDir) .
+                            '&contacttype=' . htmlspecialchars($contactType)
+                        );
+
+                        ?>
 					<?php endif ?>
 				</td>        
 			</tr>
 			<tr class="tr_bg_h">
-	            <td valign="top" class="col_head  <?php echo  (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'name') ? 'arrow_' . strtolower($_REQUEST['sortdir']) : ''; ?>" width="20%">
-	                <a href="manage_contact.php?sort=name&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'name' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Name</a>
+	            <td valign="top" class="col_head  <?= $sortBy === 'name' ? 'arrow_' . strtolower($sortDir) : '' ?>" width="20%">
+	                <a href="manage_contact.php?<?= $byLetter ? 'letter=' . htmlspecialchars($byLetter) . '&' : '' ?>sort=name&sortdir=<?= $sortBy === 'name' && $sortDir === 'ASC' ? 'DESC' : 'ASC' ?>">Name</a>
 	            </td>
 
-	            <td valign="top" class="col_head  <?php echo  (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'company') ? 'arrow_' . strtolower($_REQUEST['sortdir']) : ''; ?>" width="25%">
-	                <a href="manage_contact.php?sort=company&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'company' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Company</a>
+	            <td valign="top" class="col_head  <?=$sortBy === 'company' ? 'arrow_' . strtolower($sortDir) : '' ?>" width="25%">
+	                <a href="manage_contact.php?<?= $byLetter ? 'letter=' . htmlspecialchars($byLetter) . '&' : '' ?>sort=company&sortdir=<?= $sortBy === 'company' && $sortDir === 'ASC' ? 'DESC' : 'ASC' ?>">Company</a>
 	            </td>
 
-	            <td valign="top" class="col_head  <?php echo  (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'type') ? 'arrow_' . strtolower($_REQUEST['sortdir']) : ''; ?>" width="25%">
-	                <a href="manage_contact.php?sort=type&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'type' && $_REQUEST['sortdir'] == 'ASC') ? 'DESC' : 'ASC'; ?>">Contact Type</a>
+	            <td valign="top" class="col_head  <?= $sortBy === 'type' ? 'arrow_' . strtolower($sortDir) : '' ?>" width="25%">
+	                <a href="manage_contact.php?<?= $byLetter ? 'letter=' . htmlspecialchars($byLetter) . '&' : '' ?>sort=type&sortdir=<?= $sortBy === 'type' && $sortDir === 'ASC' ? 'DESC' : 'ASC' ?>">Contact Type</a>
 	            </td>
 
 				<td valign="top" class="col_head" width="10%">

@@ -22,12 +22,12 @@ $db = new Db();
                             FROM (
                                 SELECT @cnt := COUNT(*) + 1,
                                     @lim := 1
-                                FROM banner
+                                FROM video
                             ) vars
                             STRAIGHT_JOIN (
                                 SELECT r.*,
                                     @lim := @lim - 1
-                                FROM banner r
+                                FROM video r
                                 WHERE (@cnt := @cnt - 1)
                                     AND RAND() < @lim / @cnt
                             ) target";

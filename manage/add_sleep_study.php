@@ -77,250 +77,253 @@ if ($isNewStudy) {
 
 $msg = '';
 
-if ($isDeleteStudy) {
-    $id = intval($_POST['sleeplabid']);
-    $q = "DELETE FROM dental_summ_sleeplab WHERE id = '$id'";
+// An early error message means the POST data is corrupted and the file upload failed
+if (!$errorMessage) {
+    if ($isDeleteStudy) {
+        $id = intval($_POST['sleeplabid']);
+        $q = "DELETE FROM dental_summ_sleeplab WHERE id = '$id'";
 
-    $changesSaved = !!$db->query($q);
+        $changesSaved = !!$db->query($q);
 
-    $msg = $changesSaved ? 'Successfully deleted sleep lab study.' : 'Could not delete sleep lab study, please try again.';
-} else if ($isUpdateStudy) {
-    $id = s_for($_POST['sleeplabid']);
-    $date = s_for($_POST['date']);
-    $sleeptesttype = s_for($_POST['sleeptesttype']);
-    $place = s_for($_POST['place']);
-    $diagnosising_doc = (strpos($_POST['diagnosising_doc'], ' - '))?substr($_POST['diagnosising_doc'], 0, (strrpos($_POST['diagnosising_doc'],' - '))):$_POST['diagnosising_doc'];
-    $diagnosising_npi = s_for($_POST['diagnosising_npi']);
-    $ahi = s_for($_POST['ahi']);
-    $ahisupine = s_for($_POST['ahisupine']);
-    $rdi = s_for($_POST['rdi']);
-    $rdisupine = s_for($_POST['rdisupine']);
-    $o2nadir = s_for($_POST['o2nadir']);
-    $t9002 = s_for($_POST['t9002']);
-    $dentaldevice = s_for($_POST['dentaldevice']);
-    $devicesetting = s_for($_POST['devicesetting']);
-    $diagnosis = s_for($_POST['diagnosis']);
-    $notes = s_for($_POST['notes']);
-    $testnumber = s_for($_POST['testnumber']);
-    $needed = s_for($_POST['needed']);
-    $scheddate = s_for($_POST['scheddate']);
-    $completed = s_for($_POST['completed']);
-    $patientid = (!empty($_GET['pid']) ? $_GET['pid'] : '');
+        $msg = $changesSaved ? 'Successfully deleted sleep lab study.' : 'Could not delete sleep lab study, please try again.';
+    } else if ($isUpdateStudy) {
+        $id = s_for($_POST['sleeplabid']);
+        $date = s_for($_POST['date']);
+        $sleeptesttype = s_for($_POST['sleeptesttype']);
+        $place = s_for($_POST['place']);
+        $diagnosising_doc = (strpos($_POST['diagnosising_doc'], ' - '))?substr($_POST['diagnosising_doc'], 0, (strrpos($_POST['diagnosising_doc'],' - '))):$_POST['diagnosising_doc'];
+        $diagnosising_npi = s_for($_POST['diagnosising_npi']);
+        $ahi = s_for($_POST['ahi']);
+        $ahisupine = s_for($_POST['ahisupine']);
+        $rdi = s_for($_POST['rdi']);
+        $rdisupine = s_for($_POST['rdisupine']);
+        $o2nadir = s_for($_POST['o2nadir']);
+        $t9002 = s_for($_POST['t9002']);
+        $dentaldevice = s_for($_POST['dentaldevice']);
+        $devicesetting = s_for($_POST['devicesetting']);
+        $diagnosis = s_for($_POST['diagnosis']);
+        $notes = s_for($_POST['notes']);
+        $testnumber = s_for($_POST['testnumber']);
+        $needed = s_for($_POST['needed']);
+        $scheddate = s_for($_POST['scheddate']);
+        $completed = s_for($_POST['completed']);
+        $patientid = (!empty($_GET['pid']) ? $_GET['pid'] : '');
 
-    $s = "SELECT filename, image_id from dental_summ_sleeplab WHERE id='".$id."'";
-    $prevfile_result = $db->getResults($s);
-    $prev_filename = $prevfile_result[0]['filename'];
-    $image_id = $prevfile_result[0]['image_id'];
+        $s = "SELECT filename, image_id from dental_summ_sleeplab WHERE id='".$id."'";
+        $prevfile_result = $db->getResults($s);
+        $prev_filename = $prevfile_result[0]['filename'];
+        $image_id = $prevfile_result[0]['image_id'];
 
-    $banner1 = $prev_filename;
+        $banner1 = $prev_filename;
 
-    if (isset($_FILES['ss_file'])) {
-        $errorNo = $_FILES['ss_file']['error'];
+        if (isset($_FILES['ss_file'])) {
+            $errorNo = $_FILES['ss_file']['error'];
 
-        if (isFaultyUpload($errorNo)) {
-            error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
-            $errorMessage = $maxFileSizeExceeded;
-        } else {
-            $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
-            $lastdot = strrpos($fname,".");
-            $name = substr($fname,0,$lastdot);
-            $extension = substr($fname,$lastdot+1);
-            $banner1 = $name.'_'.date('dmy_Hi');
-            $banner1 = str_replace(" ","_",$banner1);
-            $banner1 = str_replace(".","_",$banner1);
-            $banner1 = str_replace("'","_",$banner1);
-            $banner1 = str_replace("&","amp",$banner1);
-            $banner1 .= ".".$extension;
+            if (isFaultyUpload($errorNo)) {
+                error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
+                $errorMessage = $maxFileSizeExceeded;
+            } else {
+                $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
+                $lastdot = strrpos($fname,".");
+                $name = substr($fname,0,$lastdot);
+                $extension = substr($fname,$lastdot+1);
+                $banner1 = $name.'_'.date('dmy_Hi');
+                $banner1 = str_replace(" ","_",$banner1);
+                $banner1 = str_replace(".","_",$banner1);
+                $banner1 = str_replace("'","_",$banner1);
+                $banner1 = str_replace("&","amp",$banner1);
+                $banner1 .= ".".$extension;
 
-            $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
+                $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
 
-            if ($uploaded) {
-                if ($image_id != '') {
-                    $ins_sql = " update dental_q_image set
-                            image_file = '".s_for($banner1)."'
-                            WHERE imageid='".$image_id."'
-                            AND patientid='".$patientid."'
-                            ;";
-                    $db->query($ins_sql);
+                if ($uploaded) {
+                    if ($image_id != '') {
+                        $ins_sql = " update dental_q_image set
+                                image_file = '".s_for($banner1)."'
+                                WHERE imageid='".$image_id."'
+                                AND patientid='".$patientid."'
+                                ;";
+                        $db->query($ins_sql);
 
-                    if (file_exists("../../../shared/q_file/" . $prev_filename)) {
-                        unlink("../../../shared/q_file/" . $prev_filename);
+                        if (file_exists("../../../shared/q_file/" . $prev_filename)) {
+                            unlink("../../../shared/q_file/" . $prev_filename);
+                        }
+                    } else {
+                        $ins_sql = " insert into dental_q_image set
+                                patientid = '".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."',
+                                title = '".$sleeptesttype." ".$date."',
+                                imagetypeid = '1',
+                                image_file = '".s_for($banner1)."',
+                                userid = '".s_for($_SESSION['userid'])."',
+                                docid = '".s_for($_SESSION['docid'])."',
+                                adddate = now(),
+                                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
+                        $image_id = $db->getInsertId($ins_sql);
                     }
                 } else {
+                    error_log('SS file upload save error. Error message should be stored above this line.');
+                    $errorMessage = $maxFileSizeExceeded;
+                }
+            }
+        }
+
+        // Set default message. In case everything goes ok the message will be updated
+        $msg = $errorMessage ?: 'There was an error uploading the attachment. Please try again.';
+
+        $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
+        $q = "UPDATE dental_summ_sleeplab SET
+            `date` = '$date',
+            `sleeptesttype`  = '$sleeptesttype',
+            `place`  = '$place',
+            `diagnosising_doc` = '$diagnosising_doc',
+            `diagnosising_npi` = '$diagnosising_npi',
+            `ahi`  = '$ahi',
+            `ahisupine`  = '$ahisupine',
+            `rdi`  = '$rdi',
+            `rdisupine`  = '$rdisupine',
+            `o2nadir`  = '$o2nadir',
+            `t9002`  = '$t9002',
+            `dentaldevice`  = '$dentaldevice',
+            `devicesetting`  = '$devicesetting',
+            `diagnosis`  = '$diagnosis',
+            `filename` = '$banner1',
+            `notes`  = '$notes',
+            `testnumber` = '$testnumber',
+            `needed` = '$needed',
+            `scheddate` = '$scheddate',
+            `completed` = '$completed',
+            `image_id` = '$image_id'
+            WHERE id='$id'";
+        $changesSaved = !!$db->query($q);
+
+        $i_sql = "UPDATE dental_q_image SET
+                  title = '$sleeptesttype $date'
+                  WHERE image_file='$banner1'";
+        $db->query($i_sql);
+        if( empty($errorMessage) ) {
+            $msg = $changesSaved ? 'Successfully updated sleep lab study.' : 'Could not update sleep lab study, please try again.';
+        }
+    } else if ($isNewStudy) {
+        $date = s_for($_POST['date']);
+        $sleeptesttype = s_for($_POST['sleeptesttype']);
+        $place = s_for($_POST['place']);
+        $diagnosising_doc = substr($_POST['diagnosising_doc'], 0, strrpos($_POST['diagnosising_doc'], ' - '));
+        $diagnosising_npi = s_for($_POST['diagnosising_npi']);
+        $ahi = s_for($_POST['ahi']);
+        $ahisupine = s_for($_POST['ahisupine']);
+        $rdi = s_for($_POST['rdi']);
+        $rdisupine = s_for($_POST['rdisupine']);
+        $o2nadir = s_for($_POST['o2nadir']);
+        $t9002 = s_for($_POST['t9002']);
+        $dentaldevice = s_for($_POST['dentaldevice']);
+        $devicesetting = s_for($_POST['devicesetting']);
+        $diagnosis = s_for($_POST['diagnosis']);
+        $notes = s_for($_POST['notes']);
+        $testnumber = s_for($_POST['testnumber']);
+        $needed = s_for($_POST['needed']);
+        $scheddate = s_for($_POST['scheddate']);
+        $completed = s_for($_POST['completed']);
+        $patientid = (!empty($_GET['pid']) ? $_GET['pid'] : '');
+
+        $banner1 = '';
+        $image_id = '';
+
+        if (isset($_FILES['ss_file'])) {
+            $errorNo = $_FILES['ss_file']['error'];
+
+            if (isFaultyUpload($errorNo)) {
+                error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
+                $errorMessage = $maxFileSizeExceeded;
+            } else {
+                $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
+                $lastdot = strrpos($fname,".");
+                $name = substr($fname,0,$lastdot);
+                $extension = substr($fname,$lastdot+1);
+                $banner1 = $name.'_'.date('dmy_Hi');
+                $banner1 = str_replace(" ","_",$banner1);
+                $banner1 = str_replace(".","_",$banner1);
+                $banner1 = str_replace("'","_",$banner1);
+                $banner1 = str_replace("&","amp",$banner1);
+                $banner1 .= ".".$extension;
+
+                $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
+
+                if ($uploaded) {
                     $ins_sql = " insert into dental_q_image set
-                            patientid = '".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."',
-                            title = '".$sleeptesttype." ".$date."',
-                            imagetypeid = '1',
-                            image_file = '".s_for($banner1)."',
-                            userid = '".s_for($_SESSION['userid'])."',
-                            docid = '".s_for($_SESSION['docid'])."',
-                            adddate = now(),
-                            ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+                        patientid = '".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."',
+                        title = '".$sleeptesttype. " " .$date."',
+                        imagetypeid = '1',
+                        image_file = '".s_for($banner1)."',
+                        userid = '".s_for($_SESSION['userid'])."',
+                        docid = '".s_for($_SESSION['docid'])."',
+                        adddate = now(),
+                        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
                     $image_id = $db->getInsertId($ins_sql);
+                } else {
+                    error_log('SS file upload save error. Error message should be stored above this line.');
+                    $errorMessage = $maxFileSizeExceeded;
                 }
-            } else {
-                error_log('SS file upload save error. Error message should be stored above this line.');
-                $errorMessage = $maxFileSizeExceeded;
             }
         }
-    }
 
-    // Set default message. In case everything goes ok the message will be updated
-    $msg = $errorMessage ?: 'There was an error uploading the attachment. Please try again.';
+        $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
 
-    $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
-    $q = "UPDATE dental_summ_sleeplab SET
-        `date` = '$date',
-        `sleeptesttype`  = '$sleeptesttype',
-        `place`  = '$place',
-        `diagnosising_doc` = '$diagnosising_doc',
-        `diagnosising_npi` = '$diagnosising_npi',
-        `ahi`  = '$ahi',
-        `ahisupine`  = '$ahisupine',
-        `rdi`  = '$rdi',
-        `rdisupine`  = '$rdisupine',
-        `o2nadir`  = '$o2nadir',
-        `t9002`  = '$t9002',
-        `dentaldevice`  = '$dentaldevice',
-        `devicesetting`  = '$devicesetting',
-        `diagnosis`  = '$diagnosis',
-        `filename` = '$banner1',
-        `notes`  = '$notes',
-        `testnumber` = '$testnumber',
-        `needed` = '$needed',
-        `scheddate` = '$scheddate',
-        `completed` = '$completed',
-        `image_id` = '$image_id'
-        WHERE id='$id'";
-    $changesSaved = !!$db->query($q);
+        $q = "INSERT INTO `dental_summ_sleeplab` (
+                `id` ,
+                `date` ,
+                `sleeptesttype` ,
+                `place` ,
+                `diagnosising_doc`,
+                `diagnosising_npi`,
+                `ahi` ,
+                `ahisupine` ,
+                `rdi` ,
+                `rdisupine` ,
+                `o2nadir` ,
+                `t9002` ,
+                `dentaldevice` ,
+                `devicesetting` ,
+                `diagnosis` ,
+                `filename` ,
+                `notes`,
+                `testnumber`,
+                `needed`,
+                `scheddate`,
+                `completed`,
+                `patiendid`,
+                `image_id`
+            ) VALUES (
+                NULL,
+                '$date',
+                '$sleeptesttype',
+                '$place',
+                '$diagnosising_doc',
+                '$diagnosising_npi',
+                '$ahi',
+                '$ahisupine',
+                '$rdi',
+                '$rdisupine',
+                '$o2nadir',
+                '$t9002',
+                '$dentaldevice',
+                '$devicesetting',
+                '$diagnosis',
+                '$banner1',
+                '$notes',
+                '$testnumber',
+                '$needed',
+                '$scheddate',
+                '$completed',
+                '$patientid',
+                '$image_id'
+            )";
+        $changesSaved = !!$db->query($q);
 
-    $i_sql = "UPDATE dental_q_image SET
-              title = '$sleeptesttype $date'
-              WHERE image_file='$banner1'";
-    $db->query($i_sql);
-    if( empty($errorMessage) ) {
-        $msg = $changesSaved ? 'Successfully updated sleep lab study.' : 'Could not update sleep lab study, please try again.';
-    }
-} else if ($isNewStudy) {
-    $date = s_for($_POST['date']);
-    $sleeptesttype = s_for($_POST['sleeptesttype']);
-    $place = s_for($_POST['place']);
-    $diagnosising_doc = substr($_POST['diagnosising_doc'], 0, strrpos($_POST['diagnosising_doc'], ' - '));
-    $diagnosising_npi = s_for($_POST['diagnosising_npi']);
-    $ahi = s_for($_POST['ahi']);
-    $ahisupine = s_for($_POST['ahisupine']);
-    $rdi = s_for($_POST['rdi']);
-    $rdisupine = s_for($_POST['rdisupine']);
-    $o2nadir = s_for($_POST['o2nadir']);
-    $t9002 = s_for($_POST['t9002']);
-    $dentaldevice = s_for($_POST['dentaldevice']);
-    $devicesetting = s_for($_POST['devicesetting']);
-    $diagnosis = s_for($_POST['diagnosis']);
-    $notes = s_for($_POST['notes']);
-    $testnumber = s_for($_POST['testnumber']);
-    $needed = s_for($_POST['needed']);
-    $scheddate = s_for($_POST['scheddate']);
-    $completed = s_for($_POST['completed']);
-    $patientid = (!empty($_GET['pid']) ? $_GET['pid'] : '');
-
-    $banner1 = '';
-    $image_id = '';
-
-    if (isset($_FILES['ss_file'])) {
-        $errorNo = $_FILES['ss_file']['error'];
-
-        if (isFaultyUpload($errorNo)) {
-            error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
-            $errorMessage = $maxFileSizeExceeded;
-        } else {
-            $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
-            $lastdot = strrpos($fname,".");
-            $name = substr($fname,0,$lastdot);
-            $extension = substr($fname,$lastdot+1);
-            $banner1 = $name.'_'.date('dmy_Hi');
-            $banner1 = str_replace(" ","_",$banner1);
-            $banner1 = str_replace(".","_",$banner1);
-            $banner1 = str_replace("'","_",$banner1);
-            $banner1 = str_replace("&","amp",$banner1);
-            $banner1 .= ".".$extension;
-
-            $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
-
-            if ($uploaded) {
-                $ins_sql = " insert into dental_q_image set
-                    patientid = '".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."',
-                    title = '".$sleeptesttype. " " .$date."',
-                    imagetypeid = '1',
-                    image_file = '".s_for($banner1)."',
-                    userid = '".s_for($_SESSION['userid'])."',
-                    docid = '".s_for($_SESSION['docid'])."',
-                    adddate = now(),
-                    ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-
-                $image_id = $db->getInsertId($ins_sql);
-            } else {
-                error_log('SS file upload save error. Error message should be stored above this line.');
-                $errorMessage = $maxFileSizeExceeded;
-            }
+        if( empty($errorMessage) ) {
+            $msg = $changesSaved ? 'Successfully added sleep lab study.' : 'Could not add sleep lab study, please try again.';
         }
-    }
-
-    $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
-
-    $q = "INSERT INTO `dental_summ_sleeplab` (
-            `id` ,
-            `date` ,
-            `sleeptesttype` ,
-            `place` ,
-            `diagnosising_doc`,
-            `diagnosising_npi`,
-            `ahi` ,
-            `ahisupine` ,
-            `rdi` ,
-            `rdisupine` ,
-            `o2nadir` ,
-            `t9002` ,
-            `dentaldevice` ,
-            `devicesetting` ,
-            `diagnosis` ,
-            `filename` ,
-            `notes`,
-            `testnumber`,
-            `needed`,
-            `scheddate`,
-            `completed`,
-            `patiendid`,
-            `image_id`
-        ) VALUES (
-            NULL,
-            '$date',
-            '$sleeptesttype',
-            '$place',
-            '$diagnosising_doc',
-            '$diagnosising_npi',
-            '$ahi',
-            '$ahisupine',
-            '$rdi',
-            '$rdisupine',
-            '$o2nadir',
-            '$t9002',
-            '$dentaldevice',
-            '$devicesetting',
-            '$diagnosis',
-            '$banner1',
-            '$notes',
-            '$testnumber',
-            '$needed',
-            '$scheddate',
-            '$completed',
-            '$patientid',
-            '$image_id'
-        )";
-    $changesSaved = !!$db->query($q);
-
-    if( empty($errorMessage) ) {
-        $msg = $changesSaved ? 'Successfully added sleep lab study.' : 'Could not add sleep lab study, please try again.';
     }
 }
 

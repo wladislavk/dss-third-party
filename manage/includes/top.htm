@@ -173,19 +173,16 @@ if (!isset($_SESSION['userid'])) {
 
     $num_support = $db->getNumberRows($support_query);
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
     <title><?php echo $sitename;?></title>
     <link href="css/admin.css" rel="stylesheet" type="text/css" />
     <link href="css/task.css" rel="stylesheet" type="text/css" />
     <link href="css/notifications.css" rel="stylesheet" type="text/css" />
     <link href="css/search-hints.css" rel="stylesheet" type="text/css">
     <link href="css/top.css" rel="stylesheet" type="text/css" />
-
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
     <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
@@ -194,13 +191,11 @@ if (!isset($_SESSION['userid'])) {
     <script type="text/javascript" src="3rdParty/jquery.tablesorter.widgets.js"></script>
     <script type="text/javascript" src="js/masks.js"></script>
     <script type="text/javascript" src="calendar2.js"></script>
-
     <?php if ($_SERVER['SERVER_NAME'] == "stage.dss-rh.xforty.com") { ?>
       <script type="text/javascript" src="script/logout_timer_long.js"></script>
     <?php } else { ?>
       <script type="text/javascript" src="script/logout_timer.js"></script>
     <?php } ?>
-
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
     <script type="text/javascript" src="js/ddlevelsmenu.js">
       /***********************************************
@@ -209,33 +204,24 @@ if (!isset($_SESSION['userid'])) {
       * Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
       ***********************************************/
     </script>
-
     <script language="javascript" type="text/javascript" src="script/validation.js"></script>
-
     <script language="javascript" type="text/javascript" src="js/top.js?v=<?= time() ?>"></script>
-
     <script language="javascript" type="text/javascript" src="script/hideshow.js"></script>
-
+    <script type="text/javascript" src="/manage/js/file-upload-check.js"></script>
 <?php
   include('includes/calendarinc.php');
 
-  if ($_SERVER["SCRIPT_NAME"] == "/manage/q_image.php") {
-?>
+  if ($_SERVER["SCRIPT_NAME"] == "/manage/q_image.php") { ?>
     <!-- Load the Cloud Zoom CSS file -->
     <link href="css/cloud-zoom.css" rel="stylesheet" type="text/css" />
-  
     <!-- You can load the jQuery library from the Google Content Network.
     Probably better than from your own server. -->
-
     <!-- Load the Cloud Zoom JavaScript file -->
     <script type="text/JavaScript" src="js/cloud-zoom.1.0.2.min.js"></script>
-
 <?php } ?>
-
     <link rel="stylesheet" href="css/letter-form.css" type="text/css" />
     <link rel="stylesheet" href="css/form.css" type="text/css" />
     <script type="text/javascript" src="script/wufoo.js"></script>
-
 <?php
   $hideallblocks = 0;
   if($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php" || $_SERVER['PHP_SELF'] == "/manage/manage_flowsheet4.php")

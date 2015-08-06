@@ -1,4 +1,10 @@
-<?php namespace Ds3\Libraries\Legacy; ?><table width="340" border="0" cellspacing="0" cellpadding="0">
+<?php
+
+namespace Ds3\Libraries\Legacy;
+
+$db = new Db();
+
+?><table width="340" border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td align="center" valign="top" class="box">
 			<a href="#">
@@ -12,11 +18,22 @@
 					<td align="center" valign="top">
 						<br />
 						<?             
-						$video_sql = "select * from video where status=1 order by rand() limit 1";
-						$video_my = mysqli_query($con, $video_sql);
-						$video_myarray = mysqli_fetch_array($video_my);
-						
-						if(st($video_myarray['video_file']) <> '')
+						$video_sql = "SELECT *
+                            FROM (
+                                SELECT @cnt := COUNT(*) + 1,
+                                    @lim := 1
+                                FROM banner
+                            ) vars
+                            STRAIGHT_JOIN (
+                                SELECT r.*,
+                                    @lim := @lim - 1
+                                FROM banner r
+                                WHERE (@cnt := @cnt - 1)
+                                    AND RAND() < @lim / @cnt
+                            ) target";
+						$video_myarray = $db->getRow($video_sql);
+
+						if($video_myarray && st($video_myarray['video_file']) <> '')
 						{
 						?>
 							<script language="javascript">
@@ -74,14 +91,23 @@
 				<tr>
 					<td align="center" valign="top">
 						<br />
-						<?
-						// TODO: revise this query and get rid of `order by rand()` construct
-						//       it affects performance and brings errors
-						$banner_sql = "select * from banner where status=1 order by rand() limit 1";
-						if( $banner_my = mysqli_query($con, $banner_sql) )
+						<?php
+
+						$banner_sql = "SELECT *
+                            FROM (
+                                SELECT @cnt := COUNT(*) + 1,
+                                    @lim := 1
+                                FROM banner
+                            ) vars
+                            STRAIGHT_JOIN (
+                                SELECT r.*,
+                                    @lim := @lim - 1
+                                FROM banner r
+                                WHERE (@cnt := @cnt - 1)
+                                    AND RAND() < @lim / @cnt
+                            ) target";
+						if( $banner_myarray = $db->getRow($banner_sql) )
 						{
-							$banner_myarray = mysqli_fetch_array($banner_my);
-						
 							if(st($banner_myarray['banner_file']) <> '')
 							{
 								if(st($banner_myarray['banner_link']) <> '')

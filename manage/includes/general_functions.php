@@ -94,7 +94,18 @@ function uploadImage($image, $file_path, $type = 'general'){
     }
   }
 
-                        @chmod($file_path,0777);
+  if ($uploaded) {
+    @chmod($file_path,0777);
+
+    // Ensure the file really exists
+    $uploaded = file_exists($file_path);
+
+    if (!$uploaded) {
+      error_reporting("Upload Image: failed to save $file_path");
+      error_reporting('Upload Image: $_FILES data - ' . json_encode($_FILES));
+    }
+  }
+
   return $uploaded;
 }
 

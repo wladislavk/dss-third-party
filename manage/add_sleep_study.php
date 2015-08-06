@@ -354,7 +354,7 @@ $pat_r = $db->getRow($pat_sql);
 <link rel="stylesheet" type="text/css" href="css/add_sleep_study.css" media="screen" />
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
 <script type="text/javascript">parent.updateiframe(<?= $num_labs ?>);</script>
-<script src="js/add_sleep_study.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/add_sleep_study.js?v=<?= time() ?>"></script>
 <?php if ($errorMessage) { ?>
     <script type="text/javascript">
         alert(<?= json_encode($errorMessage) ?>);

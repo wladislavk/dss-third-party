@@ -1,5 +1,12 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
+define('SHARED_FOLDER', __DIR__ . '/../../../../shared/');
+define('Q_FILE_FOLDER', SHARED_FOLDER . '/q_file/');
+
+function isSharedFile ($name) {
+    return strlen($name) && is_file(SHARED_FOLDER . $name);
+}
+
 function isFaultyUpload ($uploadError) {
     return !in_array($uploadError, array(UPLOAD_ERR_OK, UPLOAD_ERR_NO_FILE));
 }
@@ -191,8 +198,6 @@ $headers = 'From: Dental Sleep Solutions <patient@dentalsleepsolutions.com>' . "
 }
 }
 
-
-
 function showPatientValue($table, $pid, $f, $pv, $fv, $showValues = true, $show=true, $type="text"){
   if($pv != $fv && $show){
 	?>
@@ -215,7 +220,6 @@ function showPatientValue($table, $pid, $f, $pv, $fv, $showValues = true, $show=
 	<?php
   }
 }
-
 
 function num($n, $phone=true){
 $n = preg_replace('/\D/', '', $n);
@@ -247,5 +251,3 @@ function split_phone($num, $a){
   }
   return $num;
 }
-
-?>

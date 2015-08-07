@@ -262,7 +262,7 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
 <div id="perio_chart" style="display:none;">
-<iframe name="perio_iframe" id="perio_iframe" src="missing_teeth_form.php?pid=<?=$_GET['pid']?>&mt=<?= $missing ?>" width="920" height="840"></iframe>
+<iframe name="perio_iframe" id="perio_iframe" src="/manage/missing_teeth_form.php?pid=<?=$_GET['pid']?>&mt=<?= $missing ?>" width="920" height="840"></iframe>
 </div>
                     <br />
 					

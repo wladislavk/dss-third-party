@@ -145,14 +145,17 @@ class ApiAdminMemoController extends ApiBaseController
     public function destroy($memo_id)
     {
         $status = null;
-        $response = [];
+        $response = ['status' => null,'message' => 'Memo deleted successfully.','data' => []];
         try {
-
-        } catch(Exception $ex) {
+            $this->memo->destroy($memo_id);
+            $response['data'] = $this->memo->all();
+            $response['status'] = true;
             $status = 200;
+        } catch(Exception $ex) {
+            $status = 404;
             $response['status'] = false;
         } finally {
-
+            return response()->json($response,$status);
         }
 
     }

@@ -34,6 +34,7 @@ var memos = new Vue({
         saveMemo: function(e) {
             e.preventDefault();
             var off_date = $(".input-group.date").datepicker('getFormattedDate');
+            off_date = off_date!=''?off_date:this.fields.off_date;
             postValues = {'memo': this.fields.memoText, 'off_date': off_date, 'last_update': moment().format("YYYY-MM-DD") };
             if(this.fields.memo_id != 0) {
                 this.$http.put(apiPath + this.fields.memo_id,postValues,function(data,status,request) {

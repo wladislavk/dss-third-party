@@ -46,7 +46,7 @@ class ApiAdminMemoController extends ApiBaseController
             $response['status'] = true;
             $status = 200;
         } catch(Exception $ex) {
-            $status = 200;
+            $status = 404;
             $response['status'] = false;
         } finally {
             return response()->json($response,$status);
@@ -109,6 +109,7 @@ class ApiAdminMemoController extends ApiBaseController
         } catch(Exception $ex) {
             $status = 404;
             $response['status'] = false;
+            $response['message'] = $ex->getMessage();
         } finally {
             return response()->json($response,$status);
         }
@@ -154,6 +155,7 @@ class ApiAdminMemoController extends ApiBaseController
         } catch(Exception $ex) {
             $status = 404;
             $response['status'] = false;
+            $response['message'] = $ex->getMessage();
         } finally {
             return response()->json($response,$status);
         }

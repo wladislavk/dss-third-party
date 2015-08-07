@@ -20,7 +20,6 @@ var memos = new Vue({
     methods: {
         addMemo: function(e) {
 
-            alert('k');
             this.fields.memo_id = 0;
             this.fields.off_date = '';
             this.fields.memoText = '';

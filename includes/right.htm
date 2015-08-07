@@ -17,8 +17,15 @@ $db = new Db();
 				<tr>
 					<td align="center" valign="top">
 						<br />
-						<?             
-						$video_sql = "SELECT *
+						<?php
+
+                        /**
+                         * This query returns a single, random result
+                         * http://stackoverflow.com/a/1244588/208067
+                         *
+                         * To change the limit, edit @lim := 1
+                         */
+                        $video_sql = "SELECT *
                             FROM (
                                 SELECT @cnt := COUNT(*) + 1,
                                     @lim := 1
@@ -93,7 +100,13 @@ $db = new Db();
 						<br />
 						<?php
 
-						$banner_sql = "SELECT *
+                        /**
+                         * This query returns a single, random result
+                         * http://stackoverflow.com/a/1244588/208067
+                         *
+                         * To change the limit, edit @lim := 1
+                         */
+                        $banner_sql = "SELECT *
                             FROM (
                                 SELECT @cnt := COUNT(*) + 1,
                                     @lim := 1

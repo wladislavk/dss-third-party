@@ -4,7 +4,7 @@ define('SHARED_FOLDER', __DIR__ . '/../../../../shared/');
 define('Q_FILE_FOLDER', SHARED_FOLDER . '/q_file/');
 
 function isSharedFile ($name) {
-    return strlen($name) && is_file(SHARED_FOLDER . $name);
+    return strlen($name) && is_file(Q_FILE_FOLDER . $name);
 }
 
 function isFaultyUpload ($uploadError) {

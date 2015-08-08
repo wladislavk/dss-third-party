@@ -390,6 +390,7 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
     <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
     <script language="javascript" type="text/javascript" src="script/validation.js"></script>
     <script type="text/javascript" src="script/wufoo.js"></script>
+    <script type="text/javascript" src="/manage/js/file-upload-check.js"></script>
 </head>
 <body>
 <div id="loader" style="position:absolute;width:100%; height:98%; display:none;">

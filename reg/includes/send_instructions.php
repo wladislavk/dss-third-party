@@ -46,7 +46,7 @@ from dental_users u inner join dental_patients p on u.userid=p.docid
   $uq = mysqli_query($con, $location_query);
   $ur = mysqli_fetch_assoc($uq);
   $n = format_phone($ur['mailing_phone']);
-  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE && isSharedFile($ur['logo'])){
     $logo = "/manage/q_file/".$ur['logo'];
   }else{
     $logo = "/reg/images/email/reg_logo.gif";

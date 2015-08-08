@@ -1,5 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
+require_once __DIR__ . '/../../includes/general_functions.php';
 
 // Set the following two variables to allow/disable email.  It will be sent via paper mail if disabled or not set.
 $allowemail = false;
@@ -1030,7 +1031,7 @@ function deliver_letter($letterid, $message) {
 		$title = "Dental Sleep Solutions";
 		$filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
 		if($send_method == 'fax' && $use_digital_fax){
-      if($user_type == DSS_USER_TYPE_SOFTWARE){
+      if($user_type == DSS_USER_TYPE_SOFTWARE && isSharedFile($logo)){
         $cover_image = "/manage/q_file/".$logo;
       }else{
         $cover_image = "/manage/images/logo.gif";

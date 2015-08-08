@@ -540,7 +540,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
                                         WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
                                  $bu_q = mysqli_query($con, $bu_sql);
                           while($bu_r = mysqli_fetch_assoc($bu_q)){ ?>
-<?php if($bu_r['logo']){ ?>
+<?php if($bu_r['logo'] && isSharedFile($bu_r['logo'])){ ?>
   <img src="../manage/q_file/<?= $bu_r['logo']; ?>" /><br />
 <?php } ?>
 

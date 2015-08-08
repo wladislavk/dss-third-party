@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+
+namespace Ds3\Libraries\Legacy;
+
+
 include_once('admin/includes/main_include.php');
 include_once("includes/sescheck.php"); 
 include_once('includes/constants.inc');
@@ -8,8 +12,7 @@ include("includes/calendarinc.php");
 
 // $preferDefault allows to ignore post data when the form has been saved
 function postField ($name, $default='', $preferDefault=false) {
-    if (!$preferDefault && isset($_POST[$name])) 
-    {
+    if (!$preferDefault && isset($_POST[$name])) {
         return $_POST[$name];
     }
 
@@ -21,8 +24,7 @@ function escapedField ($name, $default='', $preferDefault=false) {
 }
 
 function selected ($value, $reference) {
-    if ($value == $reference) 
-    {
+    if ($value == $reference) {
         return 'selected="selected"';
     }
 
@@ -40,10 +42,15 @@ $isNewStudy = isset($_POST['submitnewsleeplabsumm']);
 
 $changesSaved = false;
 
-if ( isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && !$_FILES && 
-     ($isDeleteStudy || $isUpdateStudy || $isNewStudy) ) {
+// If Content-Length is set, and is bigger than 1 MB but there are no files, then we assume a failed upload
+if (!empty($_SERVER['CONTENT_LENGTH']) && ($_SERVER['CONTENT_LENGTH'] >= 1024*1024) && !$_FILES) {
     error_log('Max file size exceeded AND PHP didn\'t populate FILES global variable, and POST might be corrupt');
     $errorMessage = $maxFileSizeExceeded;
+
+    // Abort any action
+    $isDeleteStudy = false;
+    $isUpdateStudy = false;
+    $isNewStudy = false;
 }
 
 // Determine Type of Appliance
@@ -347,7 +354,7 @@ $pat_r = $db->getRow($pat_sql);
 <link rel="stylesheet" type="text/css" href="css/add_sleep_study.css" media="screen" />
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
 <script type="text/javascript">parent.updateiframe(<?= $num_labs ?>);</script>
-<script src="js/add_sleep_study.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/add_sleep_study.js?v=<?= time() ?>"></script>
 <?php if ($errorMessage) { ?>
     <script type="text/javascript">
         alert(<?= json_encode($errorMessage) ?>);

@@ -174,7 +174,8 @@ class Loader
             $response = new RedirectResponse($redirection, 302, $this->outputHeaders);
         } else {
             $this->outputBuffer = self::injectBaseTag($this->outputBuffer, $relativePath, $queryString);
-            $response = new Response($this->outputBuffer, 200, $this->outputHeaders);
+            $responseCode = http_response_code() ?: 200;
+            $response = new Response($this->outputBuffer, $responseCode, $this->outputHeaders);
         }
 
         return $response;

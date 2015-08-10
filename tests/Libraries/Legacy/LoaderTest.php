@@ -221,6 +221,16 @@ class LoaderTest extends TestCase {
         // $this->assertEquals('/legacy-loader/redirected.php', $response->getTargetUrl());
     }
 
+    public function testLoadWith404Header()
+    {
+        $this->loader->setLegacyPath(__DIR__);
+
+        // Again, header() cannot be unit tested
+        // $response = $this->loader->load('legacy-loader/404-header.php');
+        // $this->assertInstanceOf('Illuminate\Http\Response', $response);
+        // $this->assertEquals(404, $response->getStatusCode());
+    }
+
     private function readFile($fileName)
     {
         $output = '';

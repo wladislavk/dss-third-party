@@ -1,54 +1,54 @@
 {
-	"name": "laravel/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
-	"license": "MIT",
-	"type": "project",
-	"require": {
+    "name": "laravel/laravel",
+    "description": "The Laravel Framework.",
+    "keywords": ["framework", "laravel"],
+    "license": "MIT",
+    "type": "project",
+    "require": {
         "laravel/framework": "5.0.*",
-		"illuminate/html": "5.0.*",
-		"mockery/mockery": "0.9.*",
-		"barryvdh/laravel-debugbar": "~1.8@dev"
+        "illuminate/html": "5.0.*",
+        "mockery/mockery": "0.9.*",
+        "barryvdh/laravel-debugbar": "~1.8@dev",
+        "intouch/laravel-newrelic": "~2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "phpspec/phpspec": "~2.1"
+    },
+    "autoload": {
+        "classmap": [
+            "database"
+        ],
+        "psr-4": {
+            "Ds3\\": "app/",
+            "Ds3\\Admin\\Contracts\\"    : "app/Contracts",
+            "Ds3\\Admin\\Repositories\\" : "app/Repositories",
+            "Ds3\\Auth\\"                : "app/Http/Controller/Auth",
+            "Ds3\\Ds3Auth\\"             : "app/Http/Controller/Ds3Auth",
+            "Ds3\\Contracts\\"           : "app/Http/Controllers/Contracts",
+            "Ds3\\Repositories\\"        : "app/Http/Controllers/Repositories"
 
-	},
-	"require-dev": {
-		"phpunit/phpunit": "~4.0",
-		"phpspec/phpspec": "~2.1"
-	},
-	"autoload": {
-		"classmap": [
-			"database"
-		],
-		"psr-4": {
-			"Ds3\\": "app/",
-            "Ds3\\Admin\\Contracts\\"	: "app/Contracts",
-            "Ds3\\Admin\\Repositories\\": "app/Repositories",
-            "Ds3\\Auth\\"				: "app/Http/Controller/Auth",
-            "Ds3\\Ds3Auth\\"            : "app/Http/Controller/Ds3Auth",
-            "Ds3\\Contracts\\"          : "app/Http/Controllers/Contracts",
-            "Ds3\\Repositories\\"       : "app/Http/Controllers/Repositories"
-
-		}
-	},
-	"autoload-dev": {
-		"classmap": [
-			"tests/TestCase.php"
-		]
-	},
-	"scripts": {
-		"post-install-cmd": [
-			"php artisan clear-compiled",
-			"php artisan optimize"
-		],
-		"post-update-cmd": [
-			"php artisan clear-compiled",
-			"php artisan optimize"
-		],
-		"post-create-project-cmd": [
-			"php artisan key:generate"
-		]
-	},
-	"config": {
-		"preferred-install": "dist"
-	}
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/TestCase.php"
+        ]
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "php artisan clear-compiled",
+            "php artisan optimize"
+        ],
+        "post-update-cmd": [
+            "php artisan clear-compiled",
+            "php artisan optimize"
+        ],
+        "post-create-project-cmd": [
+            "php artisan key:generate"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
 }

@@ -52,7 +52,8 @@ return [
         'Illuminate\View\ViewServiceProvider',
 
         'Illuminate\Html\HtmlServiceProvider',
-        'Barryvdh\Debugbar\ServiceProvider'
+        'Barryvdh\Debugbar\ServiceProvider',
+        'Intouch\LaravelNewrelic\NewrelicServiceProvider'
     ],
 
     'manifest' => storage_path().'/framework',

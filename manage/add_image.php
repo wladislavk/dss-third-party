@@ -8,6 +8,7 @@ include_once('includes/general_functions.php');
 $uploaded = false;
 
 $maxFileSizeExceeded = 'There was an error with the file upload. Please verify that the file does not exceed 10MB and try again.';
+$noFileName = 'There was an error with the file upload. Please ensure the filename does not contain strange characters and try again.';
 $errorMessage = '';
 
 if (isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && !$_FILES) {
@@ -53,7 +54,10 @@ if (!$errorMessage && isset($_POST['submitnewsleeplabsumm'])) {
         if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
-        } else {
+        } elseif (!strlen(trim($_FILES['ss_file']['name']))) {
+            error_log("SS file upload error: The file upload misses the filename");
+            $errorMessage = $noFileName;
+        } elseif (!$errorNo) {
             $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
             $lastdot = strrpos($fname,".");
             $name = substr($fname,0,$lastdot);
@@ -83,6 +87,7 @@ if (!$errorMessage && isset($_POST['submitnewsleeplabsumm'])) {
             } else {
                 error_log('SS file upload save error. Error message should be stored above this line.');
                 $errorMessage = $maxFileSizeExceeded;
+                $banner1 = '';
             }
         }
     } else {
@@ -129,7 +134,7 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
     $imagetypeid = $_POST['imagetypeid'];
 
     $primaryFileUpload = isset($_FILES['image_file']);
-    $secondaryFileUpload = isset($_FILES['image_file1']);
+    $secondaryFileUpload = isset($_FILES['image_file_1']);
 
     $primaryError = false;
     $secondaryError = false;
@@ -140,22 +145,28 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
         if (isFaultyUpload($primaryError)) {
             error_log("[Image file] file upload error [{$primaryError}]: {$dss_file_upload_errors[$primaryError]}");
             $errorMessage = $maxFileSizeExceeded;
+        } elseif (!strlen(trim($_FILES['ss_file']['name']))) {
+            error_log("SS file upload error: The file upload misses the filename");
+            $errorMessage = $noFileName;
         }
     }
 
     if ($secondaryFileUpload) {
-        $secondaryError = $_FILES['image_file1']['error'];
+        $secondaryError = $_FILES['image_file_1']['error'];
 
         if (isFaultyUpload($secondaryError)) {
             error_log("[Image file (1)] file upload error [{$secondaryError}]: {$dss_file_upload_errors[$secondaryError]}");
             $errorMessage = $maxFileSizeExceeded;
+        } elseif (!strlen(trim($_FILES['ss_file']['name']))) {
+            error_log("SS file upload error: The file upload misses the filename");
+            $errorMessage = $noFileName;
         }
     }
 
     if (
         $_POST['ed'] == '' ||
-        ($primaryFileUpload && !isFaultyUpload($primaryError)) ||
-        ($secondaryFileUpload && !isFaultyUpload($secondaryError))
+        ($primaryFileUpload && $primaryError === 0) ||
+        ($secondaryFileUpload && $secondaryError === 0)
     ) {
         $ftype = isset($_FILES["image_file"]["type"]) ? $_FILES["image_file"]["type"] : '';
         $fname = isset($_FILES["image_file"]["name"]) ? $_FILES["image_file"]["name"] : '';
@@ -239,9 +250,11 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                 }
 
                 @chmod("../../../shared/q_file/".$banner1,0777);
-                // Free up memory
-                //imagedestroy($thumb);
-                $uploaded = true;
+                $uploaded = file_exists("../../../shared/q_file/$banner1");
+
+                if (!$uploaded) {
+                    $banner1 = '';
+                }
             } else { //ALL OTHER IMAGES
                 $filesize = $_FILES["image_file"]["size"];
 
@@ -256,8 +269,12 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                         $profile = ($_POST['imagetypeid']==4)?'profile':'general';
                         $uploaded = uploadImage($_FILES['image_file'], "../../../shared/q_file/".$banner1, $profile);
 
-                        if ($_POST['image_file_old'] <> '') {
-                            @unlink("../../../shared/q_file/".$_POST['image_file_old']);
+                        if ($uploaded) {
+                            if ($_POST['image_file_old'] <> '') {
+                                @unlink("../../../shared/q_file/".$_POST['image_file_old']);
+                            }
+                        } else {
+                            $banner1 = '';
                         }
                     } else {
                         $banner1 = $_POST['image_file_old'];

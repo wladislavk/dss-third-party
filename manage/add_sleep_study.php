@@ -32,6 +32,7 @@ function selected ($value, $reference) {
 }
 
 $maxFileSizeExceeded = 'There was an error with the file upload. Please verify that the file does not exceed 10MB and try again.';
+$noFileName = 'There was an error with the file upload. Please ensure the filename does not contain strange characters and try again.';
 $errorMessage = '';
 
 $patientId = intval($_GET['pid']);
@@ -127,8 +128,11 @@ if ($isDeleteStudy) {
         if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
-        } else {
-            $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
+        } elseif (!strlen(trim($_FILES['ss_file']['name']))) {
+            error_log("SS file upload error: The file upload misses the filename");
+            $errorMessage = $noFileName;
+        } elseif (!$errorNo) {
+            $fname = $_FILES["ss_file"]["name"];
             $lastdot = strrpos($fname,".");
             $name = substr($fname,0,$lastdot);
             $extension = substr($fname,$lastdot+1);
@@ -167,8 +171,9 @@ if ($isDeleteStudy) {
                     $image_id = $db->getInsertId($ins_sql);
                 }
             } else {
-                error_log('SS file upload save error. Error message should be stored above this line.');
+                error_log('SS file upload save error. The error could be caused by an invalid filetype. ' . json_encode($_FILES));
                 $errorMessage = $maxFileSizeExceeded;
+                $banner1 = '';
             }
         }
     }
@@ -240,7 +245,10 @@ if ($isDeleteStudy) {
         if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
-        } else {
+        } elseif (!strlen(trim($_FILES['ss_file']['name']))) {
+            error_log("SS file upload error: The file upload misses the filename");
+            $errorMessage = $noFileName;
+        } elseif (!$errorNo) {
             $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
             $lastdot = strrpos($fname,".");
             $name = substr($fname,0,$lastdot);
@@ -267,8 +275,9 @@ if ($isDeleteStudy) {
 
                 $image_id = $db->getInsertId($ins_sql);
             } else {
-                error_log('SS file upload save error. Error message should be stored above this line.');
+                error_log('SS file upload save error. The error could be caused by an invalid filetype. ' . json_encode($_FILES));
                 $errorMessage = $maxFileSizeExceeded;
+                $banner1 = '';
             }
         }
     }
@@ -628,7 +637,7 @@ if ($s_lab_result) {
                     <td valign="top" class="odd">
                         <?php if ($s_lab['filename'] != '') { ?>
                             <div id="file_edit_<?php echo $s_lab['id']; ?>">
-                                <a href="display_file.php?f=<?php echo addslashes($s_lab['filename']); ?>" target="_blank" class="button">View</a>
+                                <a href="display_file.php?f=<?= rawurlencode($s_lab['filename']) ?>" target="_blank" class="button">View</a>
                                 <input type="button" id="edit" onclick="$('#file_edit_<?php echo $s_lab['id']; ?>').hide();$('#file_<?php echo $s_lab['id']; ?>').show();return false;" value="Edit" title="Edit" />
                             </div>
                             <input id="file_<?php echo $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="8" />

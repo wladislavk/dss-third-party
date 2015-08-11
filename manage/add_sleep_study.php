@@ -171,7 +171,7 @@ if ($isDeleteStudy) {
                     $image_id = $db->getInsertId($ins_sql);
                 }
             } else {
-                error_log('SS file upload save error. Error message should be stored above this line.');
+                error_log('SS file upload save error. The error could be caused by an invalid filetype. ' . json_encode($_FILES));
                 $errorMessage = $maxFileSizeExceeded;
                 $banner1 = '';
             }
@@ -275,7 +275,7 @@ if ($isDeleteStudy) {
 
                 $image_id = $db->getInsertId($ins_sql);
             } else {
-                error_log('SS file upload save error. Error message should be stored above this line.');
+                error_log('SS file upload save error. The error could be caused by an invalid filetype. ' . json_encode($_FILES));
                 $errorMessage = $maxFileSizeExceeded;
                 $banner1 = '';
             }

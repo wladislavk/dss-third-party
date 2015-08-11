@@ -134,7 +134,7 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
     $imagetypeid = $_POST['imagetypeid'];
 
     $primaryFileUpload = isset($_FILES['image_file']);
-    $secondaryFileUpload = isset($_FILES['image_file1']);
+    $secondaryFileUpload = isset($_FILES['image_file_1']);
 
     $primaryError = false;
     $secondaryError = false;

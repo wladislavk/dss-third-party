@@ -147,7 +147,7 @@ if ($isDeleteStudy) {
             $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
 
             if ($uploaded) {
-                if ($image_id != '') {
+                if ($image_id) {
                     $ins_sql = " update dental_q_image set
                             image_file = '".s_for($banner1)."'
                             WHERE imageid='".$image_id."'

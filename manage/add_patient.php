@@ -196,7 +196,7 @@ function sendRegEmail($id, $e, $l, $old_email='', $con){
   }
   $ur = $db->getRow($location_query);
   $n = $ur['mailing_phone'];
-  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE && isSharedFile($ur['logo'])){
     $logo = "/manage/q_file/".$ur['logo'];
   }else{
     $logo = "/reg/images/email/reg_logo.gif";
@@ -306,7 +306,7 @@ function sendRemEmail($id, $e){
   }
   $ur = $db->getRow($location_query);
   $n = $ur['mailing_phone'];
-  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE && isSharedFile($ur['logo'])){
     $logo = "/manage/q_file/".$ur['logo'];
   }else{
     $logo = "/reg/images/email/reg_logo.gif";

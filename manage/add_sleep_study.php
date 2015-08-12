@@ -128,19 +128,20 @@ if ($isDeleteStudy) {
         if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
-        } elseif (!strlen(trim($_FILES['ss_file']['name']))) {
+        } elseif (!$errorNo && !strlen(trim($_FILES['ss_file']['name']))) {
             error_log("SS file upload error: The file upload misses the filename");
             $errorMessage = $noFileName;
         } elseif (!$errorNo) {
             $fname = $_FILES["ss_file"]["name"];
             $lastdot = strrpos($fname,".");
+
             $name = substr($fname,0,$lastdot);
             $extension = substr($fname,$lastdot+1);
+
+            $name = preg_replace('/[^a-z0-9_]+/i', '-', $name);
+            $extension = preg_replace('/[^a-z0-9_]+/i', '', $extension);
+
             $banner1 = $name.'_'.date('dmy_Hi');
-            $banner1 = str_replace(" ","_",$banner1);
-            $banner1 = str_replace(".","_",$banner1);
-            $banner1 = str_replace("'","_",$banner1);
-            $banner1 = str_replace("&","amp",$banner1);
             $banner1 .= ".".$extension;
 
             $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
@@ -245,19 +246,20 @@ if ($isDeleteStudy) {
         if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
-        } elseif (!strlen(trim($_FILES['ss_file']['name']))) {
+        } elseif (!$errorNo && !strlen(trim($_FILES['ss_file']['name']))) {
             error_log("SS file upload error: The file upload misses the filename");
             $errorMessage = $noFileName;
         } elseif (!$errorNo) {
-            $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
+            $fname = $_FILES["ss_file"]["name"];
             $lastdot = strrpos($fname,".");
+
             $name = substr($fname,0,$lastdot);
             $extension = substr($fname,$lastdot+1);
+
+            $name = preg_replace('/[^a-z0-9_]+/i', '-', $name);
+            $extension = preg_replace('/[^a-z0-9_]+/i', '', $extension);
+
             $banner1 = $name.'_'.date('dmy_Hi');
-            $banner1 = str_replace(" ","_",$banner1);
-            $banner1 = str_replace(".","_",$banner1);
-            $banner1 = str_replace("'","_",$banner1);
-            $banner1 = str_replace("&","amp",$banner1);
             $banner1 .= ".".$extension;
 
             $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
@@ -374,7 +376,7 @@ if ($msg && $msg != $errorMessage) { ?>
         alert("<?= $msg ?>");
     </script>
 <?php } ?>
-<form id="new_sleep_study_form" action="dss_summ.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&addtopat=1" method="POST" style="float:left; width:185px;<?= $isNewStudy && !$changesSaved ? '' : 'display:none;' ?>" enctype="multipart/form-data">
+<form id="new_sleep_study_form" class="sleep-study-form" action="dss_summ.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&addtopat=1" method="POST" style="float:left; width:185px;<?= $isNewStudy && !$changesSaved ? '' : 'display:none;' ?>" enctype="multipart/form-data">
     <input type="hidden" name="submitnewsleeplabsumm" value="1" />
     <table class="sleeplabstable new_table <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
         <tr>
@@ -553,7 +555,7 @@ if ($s_lab_result) {
         $device = $device_result['device'];
 
         ?>
-        <form action="dss_summ.php?pid=<?= $patientId ?>&addtopat=1" style="float:left;" method="post" enctype="multipart/form-data">
+        <form class="sleep-study-form" action="dss_summ.php?pid=<?= $patientId ?>&addtopat=1" style="float:left;" method="post" enctype="multipart/form-data">
             <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
             <table id="sleepstudycrolltable" class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
                 <tr>

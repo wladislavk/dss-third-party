@@ -72,24 +72,20 @@ $(document).ready(function(){
 	update_home(document.getElementById('new_sleep_study_form'));
 	var cal1 = new calendar2(document.getElementById('date'));
 
-    var mega = 1024*1024,
-        maxFileSize = 10*mega;
-    // Alert the user when the file is too big
-    $('[type=file]').change(function(){
+    $('form.sleep-study-form').submit(function(){
         var $this = $(this),
-            fileSize = 0;
+            submit = true;
 
-        try {
-            fileSize = $this[0].files[0].size;
-        } catch (e) {}
-
-        if (fileSize >= maxFileSize) {
-            alert(
-                'The selected file (' + (fileSize/mega).toFixed(2) + ' MB) ' +
-                'exceeds the maximum allowed file size (' + (maxFileSize/mega).toFixed(2) + ' MB)\n\n' +
-                'Please select a different file.'
-            );
-            $this.val('');
+        if ($this.find('[type=file]').val()) {
+            return true;
         }
-    })
+
+        submit = confirm('Note: You did not attach a sleep study image to the sleep test. Proceed without image?');
+
+        if (!submit) {
+            $this.find('img.loading').hide();
+        }
+
+        return submit;
+    });
 });

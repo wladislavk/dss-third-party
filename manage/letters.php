@@ -402,8 +402,15 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
     </select>
   </form>
 </div>
+<?php
+    $count_letters = $unmailed_letters + $count_pending_letters;
+
+    if ($count_letters == 0) {
+        $oldest_letter_res = '0';
+    }
+?>
 <div class="letters-tryptych2">
-  <h2>You have <span class="blue"><?php echo $unmailed_letters + $count_pending_letters; ?></span> letters to review.</h1>
+  <h2>You have <span class="blue"><?php echo $count_letters; ?></span> letters to review.</h1>
   <h2>The oldest letter is <span class="red"><?php echo $oldest_letter_res; ?> day(s) old.</h1>
 </div>
 <div class="letters-tryptych3">

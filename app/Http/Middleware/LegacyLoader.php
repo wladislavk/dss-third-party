@@ -47,6 +47,11 @@ class LegacyLoader implements Middleware
                 $legacyFile = preg_replace('@^' . preg_quote($baseUrl) . '@', '', $url);
             }
 
+            // Set transaction name before modifying the URI
+            if (extension_loaded('newrelic')) {
+                newrelic_name_transaction($legacyFile);
+            }
+
             // Set default file when no file has been detected
             if ($legacyFile === '' || $legacyFile === '/') {
                 $legacyFile = 'index.php';

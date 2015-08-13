@@ -460,7 +460,7 @@ trigger_error("Die called", E_USER_ERROR);
                 $s_m_eligible_payer_name = '';
         }
 
-	
+        
 	// Insert new claim into dental_insurance table
 	if ($is_new_claim) {
 		$ins_sql = " insert into dental_insurance set 
@@ -1337,7 +1337,7 @@ $billing_provider_b_other = st($myarray['billing_provider_b_other']);
 $reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
 }
-if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $p_m_dss_file == 1 && $pat_myarray['s_m_dss_file'] ==1){
+if($pat_myarray['p_m_ins_type']=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $p_m_dss_file == 1 && $pat_myarray['s_m_dss_file'] ==1){
   $another_plan = 'YES';
 }else{
   $another_plan = 'NO';
@@ -1597,7 +1597,7 @@ if (!empty($is_back_office)){
 <?php
 if(!empty($is_front_office) && $is_sent && $fdf_file!=''){
 ?>
-		<a href="display_fdf_v2.php?f=<?php echo $fdf_file; ?>" class="print-button" >Print Claim Form</a>
+        <a href="display_fdf_v2.php?f=<?php echo $fdf_file;?>" class="print-button" >Print Claim Form</a>
 <?php
 }
 
@@ -2152,7 +2152,7 @@ Medicare
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if($insured_dob!=''){$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
+									<?php if(!isset($insured_dob)){$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
                   } ?>
 									<input type="text" value="<?php echo $insured_dob?>" name="insured_dob" class="inbox_line3 datealtfullmask" size="10"/>
 									mm-dd-yyyy
@@ -2323,9 +2323,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						Name of Referring Provider or Other Source
 				<select name="name_referring_provider_qualifier">
                     <option value=""></option>
-                    <option value="DN" <?= ($name_referring_provider_qualifier=="DN" || $insurancetype == '1' )?'selected="selected"':''; ?>>DN - Referring Provider</option>
-                    <option value="DK" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DK")?'selected="selected"':''; ?>>DK - Ordering Provider</option>
-					<option value="DQ" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DQ")?'selected="selected"':''; ?>>DQ - Supervising Provider</option>
+                    <option value="DN - Referring Provider" <?= ($name_referring_provider_qualifier=="DN" || $insurancetype == '1' )?'selected="selected"':''; ?>>DN - Referring Provider</option>
+                    <option value="DK - Ordering Provider" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DK")?'selected="selected"':''; ?>>DK - Ordering Provider</option>
+					<option value="DQ - Supervising Provider" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DQ")?'selected="selected"':''; ?>>DQ - Supervising Provider</option>
 				</select>
 								<input type="text" value="<?php echo  $referring_provider; ?>" name="referring_provider" class="inbox_line3" size="20" />
 								
@@ -2935,10 +2935,10 @@ if (empty($query)) {
 									<br />
 									<span class="small_cap">(For govt. claims, see back)</span>
 									<br />
-									<input type="radio" name="accept_assignment" value="A" <?php if($accept_assignment == "Yes" || $accept_assignment == "A") echo " checked";?> />
+									<input type="radio" name="accept_assignment" value="Yes" <?php if($accept_assignment == "Yes" || $accept_assignment == "A") echo " checked";?> />
 									YES
 									&nbsp;&nbsp;&nbsp;
-									<input type="radio" name="accept_assignment" value="C" <?php if($accept_assignment == "No" || $accept_assignment == "C") echo " checked";?> />
+									<input type="radio" name="accept_assignment" value="No" <?php if($accept_assignment == "No" || $accept_assignment == "C") echo " checked";?> />
 									NO
 								</td>
 							</tr>

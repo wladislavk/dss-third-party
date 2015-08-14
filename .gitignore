@@ -1,6 +1,5 @@
 composer.lock
 /vendor
-/config/database.php
 .env
 .phpintel
 .idea

@@ -54,20 +54,20 @@ if (!$errorMessage && isset($_POST['submitnewsleeplabsumm'])) {
         if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
-        } elseif (!strlen(trim($_FILES['ss_file']['name']))) {
+        } elseif (!$errorNo && !strlen(trim($_FILES['ss_file']['name']))) {
             error_log("SS file upload error: The file upload misses the filename");
             $errorMessage = $noFileName;
         } elseif (!$errorNo) {
-            $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
+            $fname = $_FILES["ss_file"]["name"];
             $lastdot = strrpos($fname,".");
+
             $name = substr($fname,0,$lastdot);
             $extension = substr($fname,$lastdot+1);
+
+            $name = preg_replace('/[^a-z0-9_]+/i', '-', $name);
+            $extension = preg_replace('/[^a-z0-9_]+/i', '', $extension);
+
             $banner1 = $name.'_'.date('dmy_Hi');
-            $banner1 = str_replace(" ","_",$banner1);
-            $banner1 = str_replace(".","_",$banner1);
-            $banner1 = str_replace("'","_",$banner1);
-            $banner1 = str_replace("&","amp",$banner1);
-            $banner1 = preg_replace("/[^a-zA-Z0-9_]/", "", $banner1);
             $banner1 .= ".".$extension;
 
             $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
@@ -145,7 +145,7 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
         if (isFaultyUpload($primaryError)) {
             error_log("[Image file] file upload error [{$primaryError}]: {$dss_file_upload_errors[$primaryError]}");
             $errorMessage = $maxFileSizeExceeded;
-        } elseif (!strlen(trim($_FILES['ss_file']['name']))) {
+        } elseif (!$primaryError && !strlen(trim($_FILES['ss_file']['name']))) {
             error_log("SS file upload error: The file upload misses the filename");
             $errorMessage = $noFileName;
         }
@@ -157,7 +157,7 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
         if (isFaultyUpload($secondaryError)) {
             error_log("[Image file (1)] file upload error [{$secondaryError}]: {$dss_file_upload_errors[$secondaryError]}");
             $errorMessage = $maxFileSizeExceeded;
-        } elseif (!strlen(trim($_FILES['ss_file']['name']))) {
+        } elseif (!$secondaryError && !strlen(trim($_FILES['ss_file']['name']))) {
             error_log("SS file upload error: The file upload misses the filename");
             $errorMessage = $noFileName;
         }
@@ -174,6 +174,9 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
         $name = substr($fname, 0, $lastdot);
         $extension = substr($fname, $lastdot + 1);
 
+        $name = preg_replace('/[^a-z0-9_]+/i', '-', $name);
+        $extension = preg_replace('/[^a-z0-9_]+/i', '', $extension);
+
         if (
             $_POST['imagetypeid'] == 0 ||
             (array_search($ftype, $dss_file_types) !== false) ||
@@ -184,11 +187,11 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                 $lastdot = strrpos($fname,".");
                 $name = substr($fname,0,$lastdot);
                 $extension = substr($fname,$lastdot+1);
+
+                $name = preg_replace('/[^a-z0-9_]+/i', '-', $name);
+                $extension = preg_replace('/[^a-z0-9_]+/i', '', $extension);
+
                 $banner1 = $name.'_'.date('dmy_Hi');
-                $banner1 = str_replace(" ","_",$banner1);
-                $banner1 = str_replace(".","_",$banner1);
-                $banner1 = str_replace("'","_",$banner1);
-                $banner1 = str_replace("&","amp",$banner1);
                 $banner1 .= ".".$extension;
 
                 // Get new sizes
@@ -224,17 +227,6 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                     imagecopyresized($thumb, $source, $x, $y, 0, 0, 500, 500, $width, $height);
                 }
 
-                $fname = $_FILES["image_file_1"]["name"];
-                $lastdot = strrpos($fname,".");
-                $name = substr($fname,0,$lastdot);
-                $extension = substr($fname,$lastdot+1);
-                $banner1 = $name.'_'.date('dmy_Hi');
-                $banner1 = str_replace(" ","_",$banner1);
-                $banner1 = str_replace(".","_",$banner1);
-                $banner1 = str_replace("'","_",$banner1);
-                $banner1 = str_replace("&","amp",$banner1);
-                $banner1 .= ".".$extension;
-
                 // Output
                 switch (strtolower($extension)) {
                     case 'jpg':
@@ -261,11 +253,8 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                 if ($filesize <= DSS_IMAGE_MAX_SIZE) {
                     if ($_FILES["image_file"]["name"] <> '') {
                         $banner1 = $name.'_'.date('dmy_Hi');
-                        $banner1 = str_replace(" ","_",$banner1);
-                        $banner1 = str_replace(".","_",$banner1);
-                        $banner1 = str_replace("'","_",$banner1);
-                        $banner1 = str_replace("&","amp",$banner1);
                         $banner1 .= ".".$extension;
+
                         $profile = ($_POST['imagetypeid']==4)?'profile':'general';
                         $uploaded = uploadImage($_FILES['image_file'], "../../../shared/q_file/".$banner1, $profile);
 

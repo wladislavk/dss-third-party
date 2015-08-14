@@ -57,7 +57,7 @@
         					<?php echo $myarray['added_by']; ?>
         				</td>
                         <td valign="top">
-                            <a href="display_file.php?f=<?php echo addslashes($myarray["image_file"]);?>" target="_blank" class="btn btn-default btn-sm">
+                            <a href="display_file.php?f=<?= rawurlencode($myarray["image_file"]) ?>" target="_blank" class="btn btn-default btn-sm">
                                 Preview
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             </a>

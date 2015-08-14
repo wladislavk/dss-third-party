@@ -1,7 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
 	include "includes/top.htm";
 
-use Illuminate\Support\Facades\Input as Input;
+use Illuminate\Support\Facades\Input;
 
 $contactType = Input::get('contacttype', '');
 $byLetter = strtoupper(Input::get('letter', ''));

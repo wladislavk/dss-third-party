@@ -2152,7 +2152,7 @@ Medicare
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if(!isset($insured_dob)){$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
+									<?php if(isset($insured_dob)){$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
                   } ?>
 									<input type="text" value="<?php echo $insured_dob?>" name="insured_dob" class="inbox_line3 datealtfullmask" size="10"/>
 									mm-dd-yyyy
@@ -2323,9 +2323,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						Name of Referring Provider or Other Source
 				<select name="name_referring_provider_qualifier">
                     <option value=""></option>
-                    <option value="DN - Referring Provider" <?= ($name_referring_provider_qualifier=="DN" || $insurancetype == '1' )?'selected="selected"':''; ?>>DN - Referring Provider</option>
-                    <option value="DK - Ordering Provider" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DK")?'selected="selected"':''; ?>>DK - Ordering Provider</option>
-					<option value="DQ - Supervising Provider" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DQ")?'selected="selected"':''; ?>>DQ - Supervising Provider</option>
+                    <option value="DN" <?= ($name_referring_provider_qualifier=="DN" || $insurancetype == '1' )?'selected="selected"':''; ?>>DN - Referring Provider</option>
+                    <option value="DK" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DK")?'selected="selected"':''; ?>>DK - Ordering Provider</option>
+					<option value="DQ" <?php echo  (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier=="DQ")?'selected="selected"':''; ?>>DQ - Supervising Provider</option>
 				</select>
 								<input type="text" value="<?php echo  $referring_provider; ?>" name="referring_provider" class="inbox_line3" size="20" />
 								

@@ -90,7 +90,7 @@ $my = $db->getResults($sql);
 </span>
 
 
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table id="not_completed_tasks" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
 		<td width="2%" class="col_head">
 		</td>

@@ -1,5 +1,8 @@
 # Intro
 
+This guide will cover installation for PHP Storm. I've included a link below for Netbeans.
+I know its possible for Sublime Text but you'll have to figure that one out yourself - Brendan.
+
 In general we follow [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) with the following exceptions:
 
 - Opening braces are always on the next line (for functions and control statements)

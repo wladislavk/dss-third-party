@@ -1,15 +1,15 @@
 <?php
 
 return [
-    'debug' => 'true',
-    'legacy_path' => '/var/www/html/legacy',
-    'url' => 'https://www.ds3soft.net/',
-    'domain' => 'DS3Soft.net',
-    'name' => 'Dental Sleep Solutions',
+    'debug' => env('APP_ENV') === 'production' ? false : env('APP_DEBUG', false),
+    'legacy_path' => env('LEGACY_PATH', '/var/www/html/legacy'),
+    'url' => env('APP_URL', 'https://www.dentalsleepsolutions.com/'),
+    'domain' => env('APP_URL_NAME', 'DentalSleepSolutions.com'),
+    'name' => env('APP_NAME', 'Dental Sleep Solutions'),
     'timezone' => 'US/Eastern',
     'locale' => 'en',
     'fallback_locale' => 'en',
-    'key' => env('APP_KEY') ?: '1xwz84Z6PQCoZhZprekX4BNzTtcc6yy4',
+    'key' => env('APP_KEY'),
     'cipher' => MCRYPT_RIJNDAEL_128,
     'log' => 'daily', // single, daily, syslog
 

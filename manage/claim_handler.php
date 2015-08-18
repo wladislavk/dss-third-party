@@ -690,7 +690,7 @@
     }
     // update the ledger trxns passed in with the form
     $trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
-    update_ledger_trxns((!empty($_POST['ed']) ? $_POST['ed'] : ''), $trxn_status);
+    update_ledger_trxns($_GET['insid'], $trxn_status);
 
 	$pat_sql = "UPDATE dental_patients SET 
 			    p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',

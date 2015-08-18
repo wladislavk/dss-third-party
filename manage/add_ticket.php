@@ -135,7 +135,7 @@ if(!empty($msg)) {?>
 <?php 
 }?>
                                 </select>
-                                <label for="contacttype">Category</label>
+                                <label for="at_category">Category</label>
                             </span>
                         </div>
                     </li>
@@ -165,7 +165,7 @@ foreach ($c_q as $c_r) {?>
 <?php 
 }?>
                             </select>
-                            <label for="contacttype">Send To</label>
+                            <label for="at_send_to">Send To</label>
                             </span>
                         </div>
                     </li>
@@ -179,7 +179,7 @@ foreach ($c_q as $c_r) {?>
                         <div>
                             <span>
                                 <input id="title" name="title" type="text" class="field text addr tbox" value="<?php echo $title?>" tabindex="2" maxlength="255" />
-                                <label for="firstname">Title</label>
+                                <label for="at_title">Title</label>
                             </span>
                         </div>   
                     </li>

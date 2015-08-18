@@ -47,7 +47,6 @@
 
     $sql = "select * from dental_insurance where insuranceid='".(!empty($_GET['insid']) ? $_GET['insid'] : '')."' and patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
     $my = $db->getResults($sql);
-
     $myarray = (!empty($my[0]) ? $my[0] : array());
     $dent_rows = count($my);
 
@@ -149,6 +148,7 @@
             $insured_middle =strtoupper($myarray['insured_middle']);
             $insured_lastname =strtoupper($myarray['insured_lastname']);
             $insured_dob =str_replace('-','/',$myarray['insured_dob']);
+
             $insured_insurance_plan =strtoupper($myarray['insured_insurance_plan']);
             $insured_policy_group_feca =strtoupper($myarray['insured_policy_group_feca']);
             $insured_address =strtoupper($myarray['insured_address']);
@@ -165,7 +165,7 @@
         $another_plan = strtoupper(st($myarray['another_plan']));
     }
 
-    if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
+    if($pat_myarray['p_m_ins_type']=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
         $another_plan = 'YES';
     }else{
         $another_plan = 'NO';
@@ -680,7 +680,7 @@
         << /T(".$field_path.".service_info_dd[0]) /V(".escapeFdf((!empty($service_info_dd) ? $service_info_dd : '')).") >>
         ";
 
-    if($insured_dob!=''){
+    if(!empty($insured_dob)){
         $fdf .= "
           << /T(".$field_path.".insured_dob_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($insured_dob))).") >>
           << /T(".$field_path.".insured_dob_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($insured_dob))).") >>
@@ -893,8 +893,8 @@
       << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".escapeFdf((($ssn == "1")?1:'')).") >>
       << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".escapeFdf((($ein == "1")?1:'')).") >>
       << /T(".$field_path.".pt_account_number_fill[0]) /V(".escapeFdf((!empty($patient_account_no) ? $patient_account_no : '')).") >>
-      << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "YES")?1:'')).") >>
-      << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "NO")?1:'')).") >>
+      << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "yes" || $accept_assignment == "A")?1:'')).") >>
+  << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "no" || $accept_assignment == "C")?1:'')).") >>
       
       << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".escapeFdf(number_format(floor($total_charge),0,'.','')).") >>
       << /T(".$field_path.".total_charge_cents_fill[0]) /V(".escapeFdf(fill_cents(roundToCents($total_charge))).") >>
@@ -902,7 +902,7 @@
       << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".escapeFdf(fill_cents(roundToCents($amount_paid))).") >>
       << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".escapeFdf(number_format(floor($balance_due),0,'.','')).") >>
       << /T(".$field_path.".balance_due_cents_fill[0]) /V(".escapeFdf(fill_cents(roundToCents($balance_due))).") >>
-      
+
       << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".escapeFdf(strtoupper((!empty($service_facility_info_name) ? $service_facility_info_name : ''))."\n".strtoupper((!empty($service_facility_info_address) ? $service_facility_info_address : ''))."\n".strtoupper((!empty($service_facility_info_city) ? $service_facility_info_city : ''))).") >>
       << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".escapeFdf((!empty($billing_provider_phone_code) ? $billing_provider_phone_code : '')).") >>
       << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".escapeFdf((!empty($billing_provider_phone) ? $billing_provider_phone : '')).") >>
@@ -912,7 +912,7 @@
       << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".escapeFdf((!empty($service_info_a) ? $service_info_a : '')).") >>
       << /T(".$field_path.".billing_provider_a[0]) /V(".escapeFdf((!empty($billing_provider_a) ? $billing_provider_a : '')).") >>
       << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".escapeFdf((!empty($service_info_b_other) ? $service_info_b_other : '')).") >>
-      << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf((($insurancetype == '1')?$medicare_npi:$npi)).") >>
+      << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf(((!empty($billing_provider_a) ? $billing_provider_a : ''))).") >>
       << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".escapeFdf((!empty($billing_provider_b_other) ? $billing_provider_b_other : '')).") >>
       << /T(".$field_path.".billing_provider_dd[0]) /V(".escapeFdf((!empty($billing_provider_dd) ? $billing_provider_dd : '')).") >>
     ";
@@ -991,7 +991,7 @@ $fdf .= "
   << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".escapeFdf($service_info_a).") >>
   << /T(".$field_path.".billing_provider_a[0]) /V(".escapeFdf($billing_provider_a).") >>
   << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".escapeFdf($service_info_b_other).") >>
-  << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf((($insurancetype == '1')?$medicare_npi:$npi)).") >>
+  << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf(((!empty($billing_provider_a) ? $billing_provider_a : ''))).") >>
   << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".escapeFdf($billing_provider_b_other).") >>
 ";
 

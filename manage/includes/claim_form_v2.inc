@@ -191,7 +191,6 @@ trigger_error("Die called", E_USER_ERROR);
 	$patient_lastname = $_POST['patient_lastname'];
 	$patient_firstname = $_POST['patient_firstname'];
 	$patient_middle = $_POST['patient_middle'];
-
   //we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
 	$patient_dob_raw = $_POST['patient_dob'];
   $patient_dob_pieces = explode('-', $patient_dob_raw);
@@ -241,7 +240,11 @@ trigger_error("Die called", E_USER_ERROR);
   $insured_dob_pieces[0] = $year;
   $insured_dob_pieces[1] = $month;
   $insured_dob_pieces[2] = $day;
-  $insured_dob = implode("-", $insured_dob_pieces);
+  if (!empty($insured_dob_pieces[0])) {
+    $insured_dob = implode("-", $insured_dob_pieces);
+  } else {
+    $insured_dob = null;
+  }
 	$insured_sex = $_POST['insured_sex'];
 	$other_insured_dob = (!empty($_POST['other_insured_dob']) ? $_POST['other_insured_dob'] : '');
 	$other_insured_sex = (!empty($_POST['other_insured_sex']) ? $_POST['other_insured_sex'] : '');
@@ -460,9 +463,10 @@ trigger_error("Die called", E_USER_ERROR);
                 $s_m_eligible_payer_name = '';
         }
 
-        
+
 	// Insert new claim into dental_insurance table
 	if ($is_new_claim) {
+
 		$ins_sql = " insert into dental_insurance set 
 		patientid = '".s_for($_GET['pid'])."',
 		pica1 = '".s_for($pica1)."',
@@ -695,7 +699,7 @@ trigger_error("Die called", E_USER_ERROR);
 		update_ledger_trxns($primary_claim_id, DSS_TRXN_PROCESSING);
 	claim_history_update($primary_claim_id, $_SESSION['userid'], $_SESSION['adminuserid']);	
 		$msg = "Added Successfully";
-		
+
 	    print '<script type="text/javascript">';
         print '  window.location="' . $called_from . '?pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
         print '</script>';
@@ -976,7 +980,7 @@ trigger_error("Die called", E_USER_ERROR);
 claim_history_update($primary_claim_id, $_SESSION['userid'], $_SESSION['adminuserid']);
 
 		$msg = "Edited Successfully";
-		
+
 	    print '<script type="text/javascript">';
 		if(isset($_POST['ex_pagebtn_elec'])){ 
         print '  window.location="' . $called_from . '?status=0&insid='.$_POST['ed'].'&type=primary&sendins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
@@ -1337,6 +1341,7 @@ $billing_provider_b_other = st($myarray['billing_provider_b_other']);
 $reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
 }
+
 if($pat_myarray['p_m_ins_type']=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $p_m_dss_file == 1 && $pat_myarray['s_m_dss_file'] ==1){
   $another_plan = 'YES';
 }else{
@@ -2152,7 +2157,7 @@ Medicare
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if(isset($insured_dob)){$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
+									<?php if(!empty($insured_dob)){$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
                   } ?>
 									<input type="text" value="<?php echo $insured_dob?>" name="insured_dob" class="inbox_line3 datealtfullmask" size="10"/>
 									mm-dd-yyyy
@@ -2220,9 +2225,9 @@ Medicare
 						<span class="num_a">d.</span> 
 						Is there another health benefit Plan?
 						<br />
-						<input type="radio" name="another_plan" value="YES" <?php if($another_plan == "YES") echo " checked";?> />YES
+						<input type="radio" name="another_plan" value="yes" <?php if($another_plan == "YES") echo " checked";?> />YES
 						&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="another_plan" value="NO" <?php if($another_plan == "NO") echo " checked";?> />NO
+						<input type="radio" name="another_plan" value="no" <?php if($another_plan == "NO" || empty($another_plan)) echo " checked";?> />NO
 						&nbsp;&nbsp;
 						<span class="small_cap"><i>if yes, return to and complete item 9 a-d</i></span>
 					</td>

@@ -135,7 +135,7 @@ if(!empty($msg)) {?>
 <?php 
 }?>
                                 </select>
-                                <label for="contacttype">Category</label>
+                                <label for="at_category">Category</label>
                             </span>
                         </div>
                     </li>
@@ -165,7 +165,7 @@ foreach ($c_q as $c_r) {?>
 <?php 
 }?>
                             </select>
-                            <label for="contacttype">Send To</label>
+                            <label for="at_send_to">Send To</label>
                             </span>
                         </div>
                     </li>

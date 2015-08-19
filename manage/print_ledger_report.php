@@ -493,6 +493,21 @@ $cur_balfinal = $cur_bal - $cur_bal2;?>
             </b>	
         </td>
     </tr>
+    <tr>
+        <td valign="top" colspan="5" align="right">
+            <b>Balance</b>
+        </td>
+        <td valign="top" align="right">
+            <b>
+                <?php echo "$".number_format($tot_charge - $tot_credit - $tot_adj,2); ?>
+                &nbsp;
+            </b>
+        </td>
+        <td valign="top" align="right">
+        </td>
+        <td valign="top">&nbsp;
+        </td>
+    </tr>
 </table>
 
 <?php include 'ledger_summary_report.php'; ?>

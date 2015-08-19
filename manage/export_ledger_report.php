@@ -46,11 +46,12 @@
     $sql .= " limit ".$i_val.",".$rec_disp.";";
     $num_users = $db->getNumberRows($sql);
 ?>
-    Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Ins
+    Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Adjustments,Ins
 
 <?php	
     $tot_charges = 0;
 	$tot_credit = 0;
+    $tot_adj = 0;
 	if(isset($_GET['pid'])) {
         $newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	} else {
@@ -131,8 +132,17 @@
             echo number_format($myarray["amount"],2,'.','').',';
             $tot_charge += $myarray["amount"];
 
-        	echo number_format(st($myarray["paid_amount"]),2,'.','').',';
-			$tot_credit += st($myarray["paid_amount"]);
+            if($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){
+                echo ',';
+                $tot_adj += st($myarray["paid_amount"]);
+            }
+            echo number_format(st($myarray["paid_amount"]),2,'.','').',';
+
+            if(!($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){
+                echo ',';
+                $tot_credit += st($myarray["paid_amount"]);
+            }
+
             if($myarray["status"] == 1) {
                 echo "Sent\r\n";
             } elseif($myarray["status"] == 2) {
@@ -143,5 +153,5 @@
 	 	}
 ?>
 
-,,,,Total,<?php echo "$".number_format($tot_charge,2,'.',''); ?>,<?php echo "$".number_format($tot_credit,2,'.',''); ?>,
-
+,,,,Total,<?php echo "$".number_format($tot_charge,2,'.',''); ?>,<?php echo "$".number_format($tot_credit,2,'.',''); ?>,<?php echo "$".number_format($tot_adj,2,'.',''); ?>,
+,,,,Balance,<?php echo "$".number_format($tot_charge - $tot_credit - $tot_adj,2,'.',''); ?>,,,

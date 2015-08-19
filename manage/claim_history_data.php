@@ -53,7 +53,7 @@
     ?>
         <p><strong>Error Response:</strong><br />
           <?php
-              if (!empty($errors)) {
+              if (!empty($d->{"errors"})) {
                 $errors = $d->{"errors"};
               } else {
                 $errors = array();

@@ -193,7 +193,10 @@ if (count($dental_letters) % $page_limit) {
   $num_pages++;
 }
 
-    $dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters ORDER BY generated_date ASC LIMIT 1";
+    $dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date
+        FROM dental_letters
+        WHERE dental_letters.docid='" . $docid . "'
+        ORDER BY generated_date ASC LIMIT 1";
     $result_dental_letters = $db->getRow($dental_letters_query);
 
     $seconds_per_day = 86400;

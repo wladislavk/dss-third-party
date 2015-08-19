@@ -143,13 +143,13 @@
                 $tot_credit += st($myarray["paid_amount"]);
             }
 
-            if($myarray["status"] == 1) {
-                echo "Sent\r\n";
-            } elseif($myarray["status"] == 2) {
-                echo "Filed\r\n";
-            } else {
-                echo "Pend\r\n";
-            }		
+            if ($myarray['ledger'] == 'ledger') {
+                echo $dss_trxn_status_labels[$myarray["status"]] . "\r\n";
+            } elseif ($myarray['ledger'] == 'claim') {
+                echo $dss_claim_status_labels[$myarray["status"]] . "\r\n";
+            }
+
+
 	 	}
 ?>
 

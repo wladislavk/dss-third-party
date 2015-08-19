@@ -317,7 +317,7 @@ function validate_name(){
     $('#sect1_next').show();
     $('#sect1_next_dis').hide();
   }
-  return return_val;
+  return false;
 }
 function validate_epworth(){
 

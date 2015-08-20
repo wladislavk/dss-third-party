@@ -132,13 +132,13 @@
             echo number_format($myarray["amount"],2,'.','').',';
             $tot_charge += $myarray["amount"];
 
-            if($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){
+            if($myarray['ledger'] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){
                 echo ',';
                 $tot_adj += st($myarray["paid_amount"]);
             }
             echo number_format(st($myarray["paid_amount"]),2,'.','').',';
 
-            if(!($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){
+            if(!($myarray['ledger'] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){
                 echo ',';
                 $tot_credit += st($myarray["paid_amount"]);
             }

@@ -1858,14 +1858,14 @@ for($i=80;$i<=500;$i++){?>
                 </select>
 <?php
       //showPatientValue('dental_patients', $_GET['pid'], 'weight', $pat_row['weight'], $weight, true, $showEdits);?>
-                <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label for="weight">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
               </span>
               <span>
                 <span style="color:#000000; padding-top:2px;">BMI</span>
                 <input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?php echo $bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
               </span>
               <span>
-                <label for="inches">
+                <label for="bmi">
                   &lt; 18.5 is Underweight
                   <br />
                   &nbsp;&nbsp;&nbsp;
@@ -1931,11 +1931,11 @@ for($i=80;$i<=500;$i++){?>
             <div>
               <span>
                 <input id="emergency_name" name="emergency_name" type="text" class="field text addr tbox" value="<?php echo $emergency_name?>" maxlength="255" style="width:200px;" />
-                <label for="home_phone">Name</label>
+                <label for="emergency_name">Name</label>
               </span>
               <span>
                 <input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="<?php echo $emergency_relationship?>" maxlength="255" style="width:150px;" />
-                <label for="home_phone">Relationship</label>
+                <label for="emergency_relationship">Relationship</label>
               </span>
               <span>
                 <input id="emergency_number" name="emergency_number" type="text" class="extphonemask field text addr tbox" value="<?php echo $emergency_number?>" maxlength="255" style="width:150px;" />
@@ -2009,37 +2009,37 @@ for($i=80;$i<=500;$i++){?>
             <div>
               <span>
                 <input id="employer" name="employer" type="text" class="field text addr tbox" value="<?php echo $employer; ?>" style="width:325px;"  maxlength="255"/>
-                <label for="add1">Employer</label>
+                <label for="employer">Employer</label>
               </span>
               <span>
                 <input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="<?php echo $emp_phone?>"  style="width:150px;" maxlength="255" />
-                <label for="state">&nbsp;&nbsp;Phone</label>
+                <label for="emp_phone">&nbsp;&nbsp;Phone</label>
               </span>
               <span>
                 <input id="emp_fax" name="emp_fax" type="text" class="phonemask field text addr tbox" value="<?php echo $emp_fax?>"  style="width:120px;" maxlength="255" />
-                <label for="state">Fax</label>
+                <label for="emp_fax">Fax</label>
               </span>
             </div>
             <div>
               <span>
                 <input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?php echo $emp_add1?>" style="width:225px;"  maxlength="255"/>
-                <label for="add1">Address1</label>
+                <label for="emp_add1">Address1</label>
               </span>
               <span>
                 <input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?php echo $emp_add2?>" style="width:175px;" maxlength="255" />
-                <label for="add2">Address2</label>
+                <label for="emp_add2">Address2</label>
               </span>
               <span>
                 <input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="<?php echo $emp_city?>" style="width:200px;" maxlength="255" />
-                <label for="city">City</label>
+                <label for="emp_city">City</label>
               </span>
               <span>
                 <input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?php echo $emp_state?>"  style="width:80px;" maxlength="255" />
-                <label for="state">State</label>
+                <label for="emp_state">State</label>
               </span>
               <span>
                 <input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="<?php echo $emp_zip?>" style="width:80px;" maxlength="255" />
-                <label for="zip">Zip Code </label>
+                <label for="emp_zip">Zip Code </label>
               </span>
             </div>
           </li>
@@ -2117,7 +2117,7 @@ if($exclusive_billing){
                   <option value="Female" <?php if($p_m_gender == 'Female') echo " selected";?>>Female</option>
                 </select>
                 <span id="req_0" class="req">*</span>
-                <label for="gender">Insured Gender</label>
+                <label for="p_m_gender">Insured Gender</label>
               </span>
             </div>
             <div>
@@ -2129,19 +2129,19 @@ if($exclusive_billing){
             <div>
               <span>
                 <input id="p_m_address" name="p_m_address" type="text" class="field text addr tbox" value="<?php echo $p_m_address?>" style="width:225px;"  maxlength="255"/>
-                <label for="add">Insured Address</label>
+                <label for="p_m_address">Insured Address</label>
               </span>
               <span>
                 <input id="p_m_city" name="p_m_city" type="text" class="field text addr tbox" value="<?php echo $p_m_city?>" style="width:200px;" maxlength="255" />
-                <label for="city">Insured City</label>
+                <label for="p_m_city">Insured City</label>
               </span>
               <span>
                 <input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="<?php echo $p_m_state?>"  style="width:80px;" maxlength="2" />
-                <label for="state">Insured State</label>
+                <label for="p_m_state">Insured State</label>
               </span>
               <span>
                 <input id="p_m_zip" name="p_m_zip" type="text" class="field text addr tbox" value="<?php echo $p_m_zip?>" style="width:80px;" maxlength="255" />
-                <label for="zip">Insured Zip Code </label>
+                <label for="p_m_zip">Insured Zip Code </label>
               </span>
             </div>
             <div>
@@ -2162,7 +2162,7 @@ if($exclusive_billing){
                  <option value="6" <?php if($p_m_ins_type == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
                  <option value="7" <?php if($p_m_ins_type == '7'){ echo " selected='selected'";} ?>>Other</option>
                 </select>
-                <label for="home_phone">Insurance Type</label>
+                <label for="p_m_ins_type">Insurance Type</label>
               </span>
               <span>
                 <input class="p_m_ins_ass" id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input class="p_m_ins_ass pay_to_patient_radio" id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
@@ -2208,7 +2208,7 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
               </span>
               <span>
                 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?php echo $p_m_ins_id?>" maxlength="255" style="width:190px;" />
-                <label for="home_phone">Insurance ID.</label>
+                <label for="p_m_ins_id">Insurance ID.</label>
               </span>
               <span>
                 <input id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox"
@@ -2218,7 +2218,7 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                   value="<?php echo $p_m_ins_grp?>" 
                 <?php } ?>
                   maxlength="255" style="width:100px;" />
-                <label for="home_phone">Group #</label>
+                <label for="p_m_ins_grp">Group #</label>
               </span>            
               <span>
                 <input id="p_m_ins_plan" name="p_m_ins_plan" type="text" class="field text addr tbox" 
@@ -2228,7 +2228,7 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                   value="<?php echo $p_m_ins_plan?>" 
                 <?php } ?>
                   maxlength="255" style="width:200px;" />
-                <label for="home_phone">Plan Name</label>
+                <label for="p_m_ins_plan">Plan Name</label>
               </span>
               <span>
                 <textarea id="p_m_ins_phone" name="p_m_ins_phone" class="field text addr tbox" disabled="disabled" style="width:190px;height:60px;background:#ccc;"></textarea>
@@ -2303,7 +2303,7 @@ if($api_r['use_eligible_api']==1){
                   <option value="Child" <?php if($s_m_relation == 'Child') echo " selected";?>>Child</option>
                   <option value="Other" <?php if($s_m_relation == 'Other') echo " selected";?>>Other</option>
                 </select>
-                <label for="work_phone">Relationship to insured party</label>
+                <label for="s_m_relation">Relationship to insured party</label>
               </span>
               <span>
                   <input id="s_m_partyfname" name="s_m_partyfname" type="text" class="field text addr tbox" value="<?php echo $s_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="s_m_partymname" name="s_m_partymname" type="text" class="field text addr tbox" value="<?php echo $s_m_partymname?>" maxlength="255" style="width:50px;" /><input id="s_m_partylname" name="s_m_partylname" type="text" class="field text addr tbox" value="<?php echo $s_m_partylname?>" maxlength="255" style="width:150px;" />
@@ -2320,7 +2320,7 @@ if($api_r['use_eligible_api']==1){
                   <option value="Female" <?php if($s_m_gender == 'Female') echo " selected";?>>Female</option>
                 </select>
                 <span id="req_0" class="req">*</span>
-                <label for="gender">Insured Gender</label>
+                <label for="s_m_gender">Insured Gender</label>
               </span>
             </div>
             <div>
@@ -2332,19 +2332,19 @@ if($api_r['use_eligible_api']==1){
             <div>
               <span>
                 <input id="s_m_address" name="s_m_address" type="text" class="field text addr tbox" value="<?php echo $s_m_address?>" style="width:225px;"  maxlength="255"/>
-                <label for="add">Insured Address</label>
+                <label for="s_m_address">Insured Address</label>
               </span>
               <span>
                 <input id="s_m_city" name="s_m_city" type="text" class="field text addr tbox" value="<?php echo $s_m_city?>" style="width:200px;" maxlength="255" />
-                <label for="city">Insured City</label>
+                <label for="s_m_city">Insured City</label>
               </span>
               <span>
                 <input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="<?php echo $s_m_state?>"  style="width:80px;" maxlength="2" />
-                <label for="state">Insured State</label>
+                <label for="s_m_state">Insured State</label>
               </span>
               <span>
                 <input id="s_m_zip" name="s_m_zip" type="text" class="field text addr tbox" value="<?php echo $s_m_zip?>" style="width:80px;" maxlength="255" />
-                <label for="zip">Insured Zip Code </label>
+                <label for="s_m_zip">Insured Zip Code </label>
               </span>
             </div>
             <div>

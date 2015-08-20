@@ -1,4 +1,9 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
+
+use Illuminate\Support\Facades\App;
+
+$dentalexpage4 = App::make('Ds3\Contracts\DentalExPage4Interface');
+
 	include_once "includes/top.htm";
 	include_once('includes/patient_info.php');
 	if ($patient_info) {
@@ -37,7 +42,7 @@
         if($exam_teeth_arr != '') $exam_teeth_arr = '~'.$exam_teeth_arr;
 
         if($_POST['ed'] == '') {
-            $ins_sql = " insert into dental_ex_page4 set 
+           /*         $ins_sql = " insert into dental_ex_page4 set 
             patientid = '".s_for($_GET['pid'])."',
             exam_teeth = '".s_for($exam_teeth_arr)."',
             other_exam_teeth = '".s_for($other_exam_teeth)."',
@@ -59,8 +64,32 @@
             docid = '".s_for($_SESSION['docid'])."',
             adddate = now(),
             ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-
-            $db->query($ins_sql);
+*/
+        $data = array(
+            'patientid' => s_for($_GET['pid']),
+            'exam_teeth' => s_for($exam_teeth_arr),
+            'other_exam_teeth' => s_for($other_exam_teeth),
+            'caries' => s_for($caries),
+            'where_facets' => s_for($where_facets),
+            'cracked_fractured' => s_for($cracked_fractured),
+            'missing' => s_for($missing),
+            'old_worn_inadequate_restorations' => s_for($old_worn_inadequate_restorations),
+            'dental_class_right' => s_for($dental_class_right),
+            'dental_division_right' => s_for($dental_division_right),
+            'dental_class_left' => s_for($dental_class_left),
+            'dental_division_left' => s_for($dental_division_left),
+            'additional_paragraph' => s_for($additional_paragraph),
+            'initial_tooth' => s_for($initial_tooth),
+            'open_proximal' => s_for($open_proximal),
+            'deistema' => s_for($deistema),
+            'crossbite' => s_for($crossbite),
+            'userid' => s_for($_SESSION['userid']),
+            'docid' => s_for($_SESSION['docid']),
+            'adddate' => now(),
+            'ip_address' => s_for($_SERVER['REMOTE_ADDR'])
+            );
+            // $db->query($ins_sql);
+            $dentalexpage4->save($data);
             
             $msg = "Added Successfully";
             if(isset($_POST['ex_pagebtn_proceed'])){
@@ -78,26 +107,27 @@
 			}
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
-			$ed_sql = " update dental_ex_page4 set 
-			exam_teeth = '".s_for($exam_teeth_arr)."',
-			other_exam_teeth = '".s_for($other_exam_teeth)."',
-			caries = '".s_for($caries)."',
-			where_facets = '".s_for($where_facets)."',
-			missing = '".s_for($missing)."',
-			cracked_fractured = '".s_for($cracked_fractured)."',
-			old_worn_inadequate_restorations = '".s_for($old_worn_inadequate_restorations)."',
-			dental_class_right = '".s_for($dental_class_right)."',
-			dental_division_right = '".s_for($dental_division_right)."',
-			dental_class_left = '".s_for($dental_class_left)."',
-			dental_division_left = '".s_for($dental_division_left)."',
-			additional_paragraph = '".s_for($additional_paragraph)."',
-			initial_tooth = '".s_for($initial_tooth)."',
-			open_proximal = '".s_for($open_proximal)."',
-			deistema = '".s_for($deistema)."',
-			crossbite = '".s_for($crossbite)."'
-			where ex_page4id = '".s_for($_POST['ed'])."'";
-		
-			$db->query($ed_sql);
+			$update_data  = array (
+            'exam_teeth' => s_for($exam_teeth_arr),
+            'other_exam_teeth' => s_for($other_exam_teeth),
+            'caries' => s_for($caries),
+            'where_facets' => s_for($where_facets),
+            'missing' => s_for($missing),
+            'cracked_fractured' => s_for($cracked_fractured),
+            'old_worn_inadequate_restorations' => s_for($old_worn_inadequate_restorations),
+            'dental_class_right' => s_for($dental_class_right),
+            'dental_division_right' => s_for($dental_division_right),
+            'dental_class_left' => '".s_for($dental_class_left)."',
+            'dental_division_left' => s_for($dental_division_left),
+            'additional_paragraph' => s_for($additional_paragraph),
+            'initial_tooth' => s_for($initial_tooth),
+            'open_proximal' => s_for($open_proximal),
+            'deistema' => s_for($deistema),
+            'crossbite' => s_for($crossbite)
+            );
+
+           $dentalexpage4->update($update_data,$_POST['ed']);
+           
 			$msg = "Edited Successfully";
             if(isset($_POST['ex_pagebtn_proceed'])){
 ?>
@@ -115,9 +145,8 @@
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
-
-    $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-    $pat_myarray = $db->getRow($pat_sql);
+ // $pat_sql = "select * from dental_patients where patientidd='".s_for($_GET['pid'])."'";
+    $pat_myarray = $dentalexpage4->findFromDentalPatients($_GET['pid']);
     $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
     if($pat_myarray['patientid'] == '') {
@@ -129,8 +158,9 @@
 		trigger_error("Die called", E_USER_ERROR);
 	}
 
-    $sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
-    $myarray = $db->getRow($sql);
+    // $sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
+    // $myarray = $db->getRow($sql);
+    $myarray = $dentalexpage4->where($_GET['pid']);
 
     $ex_page4id = st($myarray['ex_page4id']);
     $exam_teeth = st($myarray['exam_teeth']);

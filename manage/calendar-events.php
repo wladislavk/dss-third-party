@@ -13,23 +13,18 @@ $startInterval = !empty($_GET['from']) ? $db->escape($_GET['from']) . ' 00:00:00
 $endInterval = !empty($_GET['to']) ? $db->escape($_GET['to']) . ' 23:59:59' :
     $referenceDate->copy()->endOfMonth()->subWeek()->toDateTimeString();
 
+$conditional = strlen($eventId) ? "dc.event_id = '$eventId'" :
+    "(start_date BETWEEN '$startInterval' AND '$endInterval')
+    OR (end_date BETWEEN '$startInterval' AND '$endInterval')
+    OR (start_date <= '$startInterval' AND end_date >= '$endInterval')";
+
 $sql = "SELECT dc.*, dp.firstname, dp.lastname, dt.name AS etype
     FROM dental_calendar AS dc
         LEFT JOIN dental_patients AS dp ON dc.patientid = dp.patientid
         INNER JOIN dental_appt_types AS dt ON dc.category = dt.classname
     WHERE dc.docid='$docId'
         AND dt.docid='$docId'
-        AND (
-            dc.event_id = '$eventId'
-            OR (
-                '' = '$eventId'
-                AND (
-                    (start_date BETWEEN '$startInterval' AND '$endInterval')
-                    OR (end_date BETWEEN '$startInterval' AND '$endInterval')
-                    OR (start_date <= '$startInterval' AND end_date >= '$endInterval')
-                )
-            )
-        )
+        AND ($conditional)
     ORDER BY dc.id ASC";
 $eventList = $db->getResults($sql);
 

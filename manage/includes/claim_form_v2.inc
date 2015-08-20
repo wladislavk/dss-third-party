@@ -212,7 +212,8 @@ trigger_error("Die called", E_USER_ERROR);
 	$patient_state = $_POST['patient_state'];
 	$patient_status = (!empty($_POST['patient_status']) ? $_POST['patient_status'] : '');
     $work_status = (!empty($_POST['work_status']) ? $_POST['work_status'] : '');
-	$current_qual = (!empty($_POST['current_qual']) ? $_POST['current_qual'] : '');
+    $current_qual = (!empty($_POST['current_qual']) ? $_POST['current_qual'] : '');
+	$same_illness_qual = (!empty($_POST['same_illness_qual']) ? $_POST['same_illness_qual'] : '');
 	$patient_zip = $_POST['patient_zip'];
 	$patient_phone_code = num($_POST['patient_phone_code']);
 	$patient_phone = num($_POST['patient_phone'], false);
@@ -245,7 +246,6 @@ trigger_error("Die called", E_USER_ERROR);
   } else {
     $insured_dob_pieces = explode('/', $insured_dob_raw);
   }
-  $insured_dob_pieces = explode('-', $insured_dob_raw);
   $month = $insured_dob_pieces[0];
   $day = $insured_dob_pieces[1];
   $year = $insured_dob_pieces[2];
@@ -440,7 +440,8 @@ trigger_error("Die called", E_USER_ERROR);
 	$nucc_9a = (!empty($_POST['nucc_9a']) ? $_POST['nucc_9a'] : '');
 	$nucc_9b = $_POST['nucc_9b'];
 	$claim_codes = $_POST['claim_codes'];
-	$other_claim_id = $_POST['other_claim_id'];
+    $other_claim_id = $_POST['other_claim_id'];
+	$nucc_9c = $_POST['nucc_9c'];
 	$nucc_30 = $_POST['nucc_30'];
 	if(isset($_POST['reject_but'])){
 		$status = DSS_CLAIM_REJECTED;
@@ -529,7 +530,8 @@ trigger_error("Die called", E_USER_ERROR);
 		patient_signed_date = '".s_for($patient_signed_date)."',
 		insured_signature = '".s_for($insured_signature)."',
         date_current = '".s_for($date_current)."',
-		current_qual = '".s_for($current_qual)."',
+        current_qual = '".s_for($current_qual)."',
+		same_illness_qual = '".s_for($same_illness_qual)."',
 		date_same_illness = '".s_for($date_same_illness)."',
 		unable_date_from = '".s_for($unable_date_from)."',
 		unable_date_to = '".s_for($unable_date_to)."',
@@ -673,7 +675,8 @@ trigger_error("Die called", E_USER_ERROR);
 		nucc_9a = '".s_for($nucc_9a)."',
 		nucc_9b = '".s_for($nucc_9b)."',
 		claim_codes = '".s_for($claim_codes)."',
-		other_claim_id = '".s_for($other_claim_id)."',
+        other_claim_id = '".s_for($other_claim_id)."',
+		nucc_9c = '".s_for($nucc_9c)."',
 		nucc_30 = '".s_for($nucc_30)."',
 		signature_physician = '".s_for($signature_physician)."',
 		physician_signed_date = '".s_for($physician_signed_date)."',
@@ -796,7 +799,8 @@ trigger_error("Die called", E_USER_ERROR);
 		patient_signed_date = '".s_for($patient_signed_date)."',
 		insured_signature = '".s_for($insured_signature)."',
         date_current = '".s_for($date_current)."',
-		current_qual = '".s_for($current_qual)."',
+        current_qual = '".s_for($current_qual)."',
+		same_illness_qual = '".s_for($same_illness_qual)."',
 		date_same_illness = '".s_for($date_same_illness)."',
 		unable_date_from = '".s_for($unable_date_from)."',
 		unable_date_to = '".s_for($unable_date_to)."',
@@ -941,6 +945,7 @@ trigger_error("Die called", E_USER_ERROR);
     nucc_9b = '".s_for($nucc_9b)."',
     claim_codes = '".s_for($claim_codes)."',
     other_claim_id = '".s_for($other_claim_id)."',
+    nucc_9c = '".s_for($nucc_9c)."',
     nucc_30 = '".s_for($nucc_30)."',
 		signature_physician = '".s_for($signature_physician)."',
 		physician_signed_date = '".s_for($physician_signed_date)."',
@@ -1173,6 +1178,7 @@ $patient_signed_date = st($myarray['patient_signed_date']);
 $insured_signature = st($myarray['insured_signature']);
 $date_current = st($myarray['date_current']);
 $current_qual = st($myarray['current_qual']);
+$same_illness_qual = st($myarray['same_illness_qual']);
 $date_same_illness = st($myarray['date_same_illness']);
 $unable_date_from = st($myarray['unable_date_from']);
 $unable_date_to = st($myarray['unable_date_to']);
@@ -1318,6 +1324,7 @@ $nucc_9a = st($myarray['nucc_9a']);
 $nucc_9b = st($myarray['nucc_9b']);
 $claim_codes = st($myarray['claim_codes']);
 $other_claim_id = st($myarray['other_claim_id']);
+$nucc_9c = st($myarray['nucc_9c']);
 $nucc_30 = st($myarray['nucc_30']);
 $signature_physician = st($myarray['signature_physician']);
 // $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('m/d/Y'));
@@ -1353,7 +1360,8 @@ $reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
 }
 
-if($pat_myarray['p_m_ins_type']==1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $p_m_dss_file == 1 && $pat_myarray['s_m_dss_file'] ==1){
+
+if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $p_m_dss_file == 1 && $pat_myarray['s_m_dss_file'] ==1){
   $another_plan = 'YES';
 }else{
   $another_plan = 'NO';
@@ -2003,7 +2011,7 @@ Medicare
 								<td width="13" align="left" valign="top" class="b_line"></td>
 								<td width="196" align="left" valign="top" style="padding-left:4px;">
 									State<br />
-									<input value="<?php echo $patient_state?>" name="patient_state" type="text" class="inbox_line3" size="3" width="30" />
+									<input value="<?php echo $patient_state?>" name="patient_state" type="text" class="inbox_line3 statemask" size="3" width="30" />
 								</td>
 							</tr>
 						</table>
@@ -2030,7 +2038,7 @@ Medicare
 								<td width="13" align="left" valign="top" class="b_line"></td>
 								<td width="196" align="left" valign="top" style="padding-left:4px;">
 									State<br />
-									<input value="<?php echo $insured_state?>" name="insured_state" type="text" class="inbox_line3" size="3" width="30" />
+									<input value="<?php echo $insured_state?>" name="insured_state" type="text" class="inbox_line3 statemask" size="3" width="30" />
 								</td>
 							</tr>
 						</table>
@@ -2169,8 +2177,8 @@ Medicare
 									<br />
 									&nbsp;&nbsp;
 									<?php if(!empty($insured_dob)){$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
-                  } ?>
-                                    <input id="insured_dob" name="insured_dob" type="text" class="field text addr tbox calendar" value="<?php echo $insured_dob?>" style="width:100px;" maxlength="255" onChange="validateDate('insured_dob');"  value="example 11/11/1234" />
+                  }?>
+                                    <input id="insured_dob" name="insured_dob" type="text" class="field text addr tbox calendar" value="<?php echo  $insured_dob; ?>" style="width:100px;" maxlength="255" onChange="validateDate('insured_dob');"  value="example 11/11/1234" />
 									mm-dd-yyyy
 								</td>
 								<td width="42%" align="center" valign="top">
@@ -2302,7 +2310,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						Other Date
 						<br />
 						<span class="small_cap">QUAL.</span>
-									<input type="text" name="qual_2" class="inbox_line3" size="10"/>
+									<input type="text" name="same_illness_qual" class="inbox_line3" size="10" value="<?php echo (!empty($same_illness_qual) ? $same_illness_qual : ''); ?>"/>
 						&nbsp;&nbsp;
                         <input id="date_same_illness" name="date_same_illness" type="text" class="field text addr tbox calendar" value="<?php echo $date_same_illness?>" style="width:100px;" maxlength="255" onChange="validateDate('date_same_illness');"  value="example 11/11/1234" />
 						mm-dd-yy
@@ -2513,8 +2521,8 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 							(Relate A-L to service line below (24E))
 						</span>
                                 ICD IND. <select name="icd_ind">
-                                        <option value="9" <?php echo  (!empty($icd_ind) && $icd_ind=="9")?'selected="selected"':''; ?>>ICD-9-CM - 9</option>
-                                        <option value="0" <?php echo  (!empty($icd_ind) && $icd_ind=="0")?'selected="selected"':''; ?>>ICD-10-CM - 0</option>
+                                        <option value="9" <?php echo  ($icd_ind==9)?'selected="selected"':''; ?>>ICD-9-CM - 9</option>
+                                        <option value="0" <?php echo  ($icd_ind==0)?'selected="selected"':''; ?>>ICD-10-CM - 0</option>
                                 </select>
 
 						
@@ -2583,7 +2591,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						<span class="num">22.</span> 
 						Resubmission Code
                                 <select name="resubmission_code_fill">
-                                    <option value="" <?php echo $resubmission_code_fill==""?'selected="selected"':''; ?>>New Claim</option>
+                                    <option value="" <?php echo $resubmission_code_fill=="1"?'selected="selected"':''; ?>>New Claim</option>
                                     <option value="7" <?php echo $resubmission_code_fill=="7"?'selected="selected"':''; ?>>Resubmitted Claim</option>
                                     <option value="8" <?php echo $resubmission_code_fill=="8"?'selected="selected"':''; ?>>Void/Cancel Prior Claim</option>
                                 </select>
@@ -3136,7 +3144,7 @@ if ($is_pending) {
 									<span class="num_a">
 										a.
 									</span>
-                                    <input type="text" value="<?= ($service_info_a && $service_info_a != '')?$service_info_a:(($insurancetype == '1')?$service_medicare_npi:$service_npi); ?>" name="service_info_a" class="inbox_line3" size="15" />
+                                    <input type="text" value="<?= ($service_info_a && $service_info_a != '')?$service_info_a:(($insurancetype == '1')?$service_medicare_npi:$service_npi); ?>" name="service_info_a" class="inbox_line3 numbermask" size="15" />
 									
 									<span class="num_a">
 										b.
@@ -3174,10 +3182,10 @@ if ($is_pending) {
 
 						?>
 						<span class="style1">(
-						<input type="text" value="<?php echo  $billing_provider_phone_code; ?>" name="billing_provider_phone_code" size="3" class="inbox_line3" />
+						<input type="text" value="<?php echo  $billing_provider_phone_code; ?>" name="billing_provider_phone_code" size="3" class="inbox_line3 phonecodemask" />
 						)</span>
 						&nbsp;&nbsp;&nbsp;
-						<input type="text" value="<?php echo  $billing_provider_phone; ?>" name="billing_provider_phone" class="inbox_line3" size="13"  />
+						<input type="text" value="<?php echo  $billing_provider_phone; ?>" name="billing_provider_phone" class="inbox_line3 phonemask" size="13"  />
 						<table width="100%" cellpadding="1" cellspacing="1" border="0">
 							<tr>
 								<td valign="top" width="10%">
@@ -3192,7 +3200,7 @@ if ($is_pending) {
 									<span class="small_cap">Address:</span>		
 								</td>
 								<td valign="top" width="90%">
-                                    <input type="text" value="<?php echo $billing_provider_address;?>" name="billing_provider_address" class="inbox_line3" size="40" />
+                                    <input type="text" value="<?php echo ($billing_provider_address && $billing_provider_address != '')?$billing_provider_address:$address;?>" name="billing_provider_address" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 							<tr>
@@ -3207,7 +3215,7 @@ if ($is_pending) {
 						<span class="num_a">
 							a.
 						</span>
-                        <input type="text" value="<?= ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>" name="billing_provider_a" class="inbox_line3" size="15" />
+                        <input type="text" value="<?= ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>" name="billing_provider_a" class="inbox_line3 numbermask" size="15" />
 						
 						<span class="num_a">
 							b.

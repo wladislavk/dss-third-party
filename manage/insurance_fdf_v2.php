@@ -72,6 +72,8 @@
         $insured_firstname = strtoupper(st($myarray['insured_firstname']));
         $insured_middle = strtoupper(st($myarray['insured_middle']));
         $insured_dob = str_replace('-','/',st($myarray['insured_dob']));
+        $current_qual =strtoupper($myarray['current_qual']);
+        $same_illness_qual =strtoupper($myarray['same_illness_qual']);
         $insured_insurance_plan =strtoupper($myarray['insured_insurance_plan']);
         $insured_policy_group_feca =strtoupper($myarray['insured_policy_group_feca']);
 
@@ -119,6 +121,8 @@
             $insured_middle =strtoupper($myarray['other_insured_middle']);
             $insured_lastname =strtoupper($myarray['other_insured_lastname']);
             $insured_dob =str_replace('-','/',$myarray['other_insured_dob']);
+            $current_qual =strtoupper($myarray['current_qual']);
+            $same_illness_qual =strtoupper($myarray['same_illness_qual']);
             $insured_insurance_plan =strtoupper($myarray['other_insured_insurance_plan']);
             $insured_policy_group_feca =strtoupper($myarray['other_insured_policy_group_feca']);
             $insured_address =strtoupper($myarray['other_insured_address']);
@@ -148,7 +152,8 @@
             $insured_middle =strtoupper($myarray['insured_middle']);
             $insured_lastname =strtoupper($myarray['insured_lastname']);
             $insured_dob =str_replace('-','/',$myarray['insured_dob']);
-
+            $current_qual =strtoupper($myarray['current_qual']);
+            $same_illness_qual =strtoupper($myarray['same_illness_qual']);
             $insured_insurance_plan =strtoupper($myarray['insured_insurance_plan']);
             $insured_policy_group_feca =strtoupper($myarray['insured_policy_group_feca']);
             $insured_address =strtoupper($myarray['insured_address']);
@@ -161,11 +166,11 @@
         }
 
 
-        $reserved_local_use = strtoupper(st($myarray['reserved_local_use']));
+        $claim_codes = strtoupper(st($myarray['claim_codes']));
         $another_plan = strtoupper(st($myarray['another_plan']));
     }
 
-    if($pat_myarray['p_m_ins_type']==1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
+    if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
         $another_plan = 'YES';
     }else{
         $another_plan = 'NO';
@@ -349,6 +354,7 @@
         $nucc_30 =strtoupper($myarray['nucc_30']);
         $claim_codes =strtoupper($myarray['claim_codes']);
         $other_claim_id =strtoupper($myarray['other_claim_id']);
+        $nucc_9c =strtoupper($myarray['nucc_9c']);
         $icd_ind =strtoupper($myarray['icd_ind']);
         $resubmission_code_fill =strtoupper($myarray['resubmission_code_fill']);
         $name_referring_provider_qualifier=strtoupper($myarray['name_referring_provider_qualifier']);
@@ -688,6 +694,10 @@
         ";
     }
     $fdf .= "
+        << /T(".$field_path.".current_qual[0]) /V(".escapeFdf(!empty($current_qual) ? $current_qual : '').") >>
+        << /T(".$field_path.".same_illness_qual[0]) /V(".escapeFdf(!empty($same_illness_qual) ? $same_illness_qual : '').") >>
+    ";
+    $fdf .= "
         << /T(".$field_path.".insured_sex_m_chkbox[0]) /V(".escapeFdf((($insured_sex == "M" || $insured_sex == "Male")?1:'')).") >>
         << /T(".$field_path.".insured_sex_f_chkbox[0]) /V(".escapeFdf((($insured_sex == "F" || $insured_sex == "Female")?1:'')).") >>
         ";
@@ -705,8 +715,9 @@
         << /T(".$field_path.".employers_name_fill[0]) /V(".escapeFdf((!empty($other_insured_employer_school_name) ? $other_insured_employer_school_name : '')).") >>
         << /T(".$field_path.".insured_ins_plan_name_fill[0]) /V(".escapeFdf($insured_insurance_plan).") >>
         << /T(".$field_path.".box11b_nucc[0]) /V(".escapeFdf($other_claim_id).") >>
+        << /T(".$field_path.".box9c_nucc[0]) /V(".escapeFdf($nucc_9c).") >>
         << /T(".$field_path.".ins_plan_name_fill[0]) /V(".escapeFdf($other_insured_insurance_plan).") >>
-        << /T(".$field_path.".reserved_local_use_fill[0]) /V(".escapeFdf((!empty($reserved_local_use) ? $reserved_local_use : '')).") >>
+        << /T(".$field_path.".reserved_local_use_fill[0]) /V(".escapeFdf((!empty($claim_codes) ? $claim_codes : '')).") >>
         << /T(".$field_path.".another_health_benefit_yes_chkbox[0]) /V(".escapeFdf((($another_plan == "YES")?1:'')).") >>
         << /T(".$field_path.".another_health_benefit_no_chkbox[0]) /V(".escapeFdf((($another_plan == "NO")?1:'')).") >>
         << /T(".$field_path.".pt_signature_fill[0]) /V(".escapeFdf(((!empty($patient_signature))?'SIGNATURE ON FILE':'')).") >>
@@ -766,7 +777,7 @@
             << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".escapeFdf(((!empty($outside_lab) && $outside_lab == "YES")?1:'')).") >>
             << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".escapeFdf(((!empty($outside_lab) && $outside_lab == "NO")?1:'')).") >>
             << /T(".$field_path.".charges_fill[0]) /V(".escapeFdf((!empty($s_charges) ? $s_charges : '')).") >>
-            << /T(".$field_path.".icd_ind[0]) /V(".escapeFdf((!empty($icd_ind) ?$icd_ind: '')).") >>
+            << /T(".$field_path.".icd_ind[0]) /V(".escapeFdf((isset($icd_ind) ?$icd_ind: '')).") >>
             << /T(".$field_path.".diagnosis_a[0]) /V(".escapeFdf((!empty($diagnosis_a) ? $diagnosis_a : '')).") >>
             << /T(".$field_path.".diagnosis_b[0]) /V(".escapeFdf((!empty($diagnosis_b) ? $diagnosis_b : '')).") >>
             << /T(".$field_path.".diagnosis_c[0]) /V(".escapeFdf((!empty($diagnosis_c) ? $diagnosis_c : '')).") >>
@@ -779,8 +790,8 @@
             << /T(".$field_path.".diagnosis_j[0]) /V(".escapeFdf((!empty($diagnosis_j) ? $diagnosis_j : '')).") >>
             << /T(".$field_path.".diagnosis_k[0]) /V(".escapeFdf((!empty($diagnosis_k) ? $diagnosis_k : '')).") >>
             << /T(".$field_path.".diagnosis_l[0]) /V(".escapeFdf((!empty($diagnosis_l) ? $diagnosis_l : '')).") >>
-            << /T(".$field_path.".resubmission_code_fill[0]) /V(".escapeFdf((!empty($resubmission_code) ? $resubmission_code : '')).") >>
-            << /T(".$field_path.".originial_ref_no_fill[0]) /V(".escapeFdf((!empty($original_ref_no) ? $original_ref_no : '')).") >>
+            << /T(".$field_path.".medicaid_resubmission_code_fill[0]) /V(".escapeFdf((!empty($resubmission_code_fill) ? $resubmission_code_fill : '')).") >>
+            << /T(".$field_path.".original_ref_no_fill[0]) /V(".escapeFdf((!empty($original_ref_no) ? $original_ref_no : '')).") >>
             << /T(".$field_path.".name_referring_provider_qualifier[0]) /V(".escapeFdf((!empty($name_referring_provider_qualifier) ? $name_referring_provider_qualifier : '')).") >>
             << /T(".$field_path.".prior_auth_number_fill[0]) /V(".escapeFdf((!empty($prior_authorization_number) ? $prior_authorization_number : '')).") >>";
 

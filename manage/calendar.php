@@ -61,8 +61,7 @@ foreach ($appt_t_qu as $appt_t_r) {
 <script type="text/javascript" charset="utf-8">
 function initCal() {
 	scheduler.config.multi_day = true;
-	scheduler.config.xml_date="%Y-%m-%d %h:%i %A";
-	scheduler.config.json_date="%Y-%m-%d %H:%i";
+	scheduler.config.xml_date="%Y-%m-%d %H:%i:%s";
 	scheduler.config.hour_date="%h:%i%A";
 	scheduler.config.hour_size_px = 44;
 	scheduler.templates.tooltip_date_format=scheduler.date.date_to_str("%H:%i %m-%d-%Y");

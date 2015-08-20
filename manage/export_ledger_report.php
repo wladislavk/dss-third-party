@@ -71,12 +71,13 @@
         pat.patientid,
         pat.firstname, 
         pat.lastname,
-        '' as payer,
+        tc.type as payer,
         '' as payment_type,
         dl.primary_claim_id
         from dental_ledger dl 
         JOIN dental_patients as pat ON dl.patientid = pat.patientid
-        LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+        LEFT JOIN dental_users as p ON dl.producerid=p.userid
+        LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
         where dl.docid='".$_SESSION['docid']."' 
         AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'
         UNION

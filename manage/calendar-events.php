@@ -34,14 +34,29 @@ $sql = "SELECT dc.*, dp.firstname, dp.lastname, dt.name AS etype
 $eventList = $db->getResults($sql);
 
 foreach ($eventList as &$event) {
-    // $event['start_date'] = date('d/m/Y H:i', strtotime($event['start_date']));
-    // $event['end_date'] = date('d/m/Y H:i', strtotime($event['end_date']));
-
     $event['description'] = preg_replace('/[\r\n]+/', ' ', $event['description']);
     $event['rec_type'] = preg_replace('/[\r\n]+/', ' ', $event['rec_type']);
     $event['rec_pattern'] = preg_replace('/[\r\n]+/', ' ', $event['rec_pattern']);
 
-    unset($event['ip_address']);
+    $event = [
+        'start_date' => $event['start_date'],
+        'end_date' => $event['end_date'],
+        'text' => $event['description'],
+        'title' => $event['description'],
+        'rec_type' => $event['rec_type'],
+        'rec_pattern' => $event['rec_pattern'],
+        'event_length' => $event['event_length'],
+        'event_pid' => $event['event_pid'],
+        'category' => $event['category'],
+        'producer' => $event['producer_id'],
+        'resource' => $event['res_id'],
+        'patient' => $event['patientid'],
+        'id' => $event['event_id'],
+        'table_id' => $event['id'],
+        'patientfn' => $event['firstname'],
+        'patientln' => $event['lastname'],
+        'eventtype' => $event['etype']
+    ];
 }
 
 function safeJsonEncode ($object) {

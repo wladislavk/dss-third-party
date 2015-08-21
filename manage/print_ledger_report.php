@@ -95,16 +95,16 @@ if($_GET['pid'] <> ''){?>
 		<td valign="top" class="col_head" width="30%">
 			Description
 		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head" width="10%" style="text-align: right;">
 			Charges
 		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head" width="10%" style="text-align: right;">
 			Credits
 		</td>
-        <td valign="top" class="col_head" width="10%">
+        <td valign="top" class="col_head" width="10%" style="text-align: right;">
             Adj.
         </td>
-		<td valign="top" class="col_head" width="5%">
+		<td valign="top" class="col_head" width="5%"  style="text-align: left;">
 			Ins
 		</td>
 	</tr>
@@ -400,8 +400,6 @@ $newqueryid = "select
             echo number_format($myarray["amount"],2);
             $tot_charge += $myarray["amount"];
         }?>
-
-        	&nbsp;
     	</td>
 <?php 
         if((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
@@ -416,7 +414,6 @@ $newqueryid = "select
                 echo number_format(st($myarray["paid_amount"]),2); 
 			}
 		} ?>
-    		&nbsp;
 		</td>
 <?php 
         if(!(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ 
@@ -424,12 +421,12 @@ $newqueryid = "select
         <td></td>
 <?php 
         } ?>
-		<td valign="top" width="5%">&nbsp;
+		<td valign="top" align="left" width="5%">
 <?php 
         if(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger'){
-            echo $dss_trxn_status_labels[$myarray["status"]];
+            echo trim($dss_trxn_status_labels[$myarray["status"]]);
         }elseif(!empty($myarray['ledger']) && $myarray['ledger'] == 'claim'){
-            echo $dss_claim_status_labels[$myarray["status"]];
+            echo trim($dss_claim_status_labels[$myarray["status"]]);
         }
     }?>       	
 		</td>
@@ -477,20 +474,31 @@ $cur_balfinal = $cur_bal - $cur_bal2;?>
 
             <b>
             <?php echo "$".number_format($tot_charge,2); ?>
-            &nbsp;
             </b>
         </td>
-        <td valign="top">
+        <td valign="top" align="right">
             <b>
             <?php echo "$".number_format($tot_credit,2);?>
-            &nbsp;
             </b>
         </td>
-        <td valign="top">&nbsp;
+        <td valign="top" align="right">
             <b>
             <?php echo "$".number_format($tot_adj,2);?>
-            &nbsp;
             </b>	
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" colspan="5" align="right">
+            <b>Balance</b>
+        </td>
+        <td valign="top" align="right">
+            <b>
+                <?php echo "$".number_format($tot_charge - $tot_credit - $tot_adj,2); ?>
+            </b>
+        </td>
+        <td valign="top" align="right">
+        </td>
+        <td valign="top">
         </td>
     </tr>
 </table>

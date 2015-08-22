@@ -347,7 +347,7 @@ function validate_epworth(){
     $('#sect2_next_dis').hide();
     $('#epworth_error_box').html(error_text).show();
   }
-  return return_val;
+  return false;
 }
 
 function validate_sect3(){
@@ -458,7 +458,7 @@ function validate_sect3(){
     $('#sect3_next_dis').hide();
     $('#sect3_error_box').html(error_text).show();
   }
-  return return_val;
+  return false;
 
 }
 
@@ -536,6 +536,7 @@ function submit_hst(){
     error: onFailure
    });
   }
+    return false;
 }
 
 </script>

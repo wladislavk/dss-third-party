@@ -193,7 +193,10 @@ if (count($dental_letters) % $page_limit) {
   $num_pages++;
 }
 
-    $dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters ORDER BY generated_date ASC LIMIT 1";
+    $dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date
+        FROM dental_letters
+        WHERE dental_letters.docid='" . $docid . "'
+        ORDER BY generated_date ASC LIMIT 1";
     $result_dental_letters = $db->getRow($dental_letters_query);
 
     $seconds_per_day = 86400;
@@ -402,9 +405,18 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
     </select>
   </form>
 </div>
+<?php
+    $count_letters = $unmailed_letters + $count_pending_letters;
+
+    if ($count_letters == 0) {
+        $oldest_letter_res = '0';
+    }
+?>
 <div class="letters-tryptych2">
-  <h2>You have <span class="blue"><?php echo $unmailed_letters + $count_pending_letters; ?></span> letters to review.</h1>
-  <h2>The oldest letter is <span class="red"><?php echo $oldest_letter_res; ?> day(s) old.</h1>
+  <h2>You have <span class="blue"><?php echo $count_letters; ?></span> letters to review.</h2>
+  <?php if ($count_letters) { ?>
+    <h2>The oldest letter is <span class="red"><?php echo $oldest_letter_res; ?> day(s) old.</h2>
+  <?php } ?>
 </div>
 <div class="letters-tryptych3">
 <?php if ($status != "sent" || $mailed == "0"): ?>

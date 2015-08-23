@@ -317,7 +317,16 @@ include "includes/top.htm";
                                                 <?php } ?>
                                 </td>
                         </tr>
-
+    <tr class="tr_active">
+        <td valign="top">
+            Advanced Beneficiary Notice Medicare
+        </td>
+        <td valign="top">
+            <a href="view_user_form.php?file=advanced_beneficiary_notice_medicare&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                View
+            </a>
+        </td>
+    </tr>
 </table>
 </form>
 

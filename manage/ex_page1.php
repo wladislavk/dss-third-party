@@ -1,4 +1,9 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
+
+use Illuminate\Support\Facades\App;
+
+$dentalexpage1 = App::make('Ds3\Contracts\DentalExPage1Interface');
+
     include "includes/top.htm";
     require_once('includes/patient_info.php');
     if ($patient_info) {
@@ -29,28 +34,47 @@
     	if($tongue_arr != '') $tongue_arr = '~'.$tongue_arr;
 	
     	if($_POST['ed'] == '') {
-    		$ins_sql = " insert into dental_ex_page1 set 
-    		patientid = '".s_for($_GET['pid'])."',
-    		blood_pressure = '".s_for($blood_pressure)."',
-    		pulse = '".s_for($pulse)."',
-    		neck_measurement = '".s_for($neck_measurement)."',
-    		additional_paragraph = '".s_for($additional_paragraph)."',
-    		tongue = '".s_for($tongue_arr)."',
-    		userid = '".s_for($_SESSION['userid'])."',
-    		docid = '".s_for($_SESSION['docid'])."',
-    		adddate = now(),
-    		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+//    		$ins_sql = " insert into dental_ex_page1 set 
+//    		patientid = '".s_for($_GET['pid'])."',
+//    		blood_pressure = '".s_for($blood_pressure)."',
+//    		pulse = '".s_for($pulse)."',
+//    		neck_measurement = '".s_for($neck_measurement)."',
+//    		additional_paragraph = '".s_for($additional_paragraph)."',
+//    		tongue = '".s_for($tongue_arr)."',
+//    		userid = '".s_for($_SESSION['userid'])."',
+//    		docid = '".s_for($_SESSION['docid'])."',
+//    		adddate = now(),
+//    		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+            
+            $data = array(
+    		'patientid' 			=> s_for($_GET['pid']),
+    		'blood_pressure' 		=> s_for($blood_pressure),
+    		'pulse' 				=> s_for($pulse),
+    		'neck_measurement' 		=> s_for($neck_measurement),
+    		'additional_paragraph' 	=> s_for($additional_paragraph),
+    		'tongue' 				=> s_for($tongue_arr),
+    		'userid' 				=> s_for($_SESSION['userid']),
+    		'docid' 				=> s_for($_SESSION['docid']),
+    		'adddate' 				=> now(),
+    		'ip_address' 			=> s_for($_SERVER['REMOTE_ADDR'])
+    		);
     		
-    		$db->query($ins_sql);
-
-    		$pat_sql = "UPDATE dental_patients SET
-    		feet = '".s_for($feet)."',
-                    inches = '".s_for($inches)."',
-                    weight = '".s_for($weight)."',
-                    bmi = '".s_for($bmi)."'
-    		WHERE patientid='".s_for($_GET['pid'])."'";
-
-    		$db->query($pat_sql);
+    		// $db->query($ins_sql);
+    		$dentalexpage1->save($data);
+    		// $pat_sql = "UPDATE dental_patients SET
+    		// feet = '".s_for($feet)."',
+      //               inches = '".s_for($inches)."',
+      //               weight = '".s_for($weight)."',
+      //               bmi = '".s_for($bmi)."'
+    		// WHERE patientid='".s_for($_GET['pid'])."'";
+    		$pat_sql = array(
+    				'feet' => s_for($feet),
+                    'inches' => s_for($inches),
+                    'weight' => s_for($weight),
+                    'bmi' => s_for($bmi)
+    		);
+    		$dentalexpage1->updateDentalPatient($pat_sql, $_GET['pid']);
+    		// $db->query($pat_sql);
             $msg = "Added Successfully";
             if(isset($_POST['ex_pagebtn_proceed'])){
 ?>
@@ -67,24 +91,39 @@
 		    }
 		  trigger_error("Die called", E_USER_ERROR);
 	    } else {
-    		$ed_sql = " update dental_ex_page1 set 
-    		blood_pressure = '".s_for($blood_pressure)."',
-    		pulse = '".s_for($pulse)."',
-    		neck_measurement = '".s_for($neck_measurement)."',
-    		additional_paragraph = '".s_for($additional_paragraph)."',
-    		tongue = '".s_for($tongue_arr)."'
-    		where ex_page1id = '".s_for($_POST['ed'])."'";
+//    		$ed_sql = " update dental_ex_page1 set 
+//    		blood_pressure = '".s_for($blood_pressure)."',
+//    		pulse = '".s_for($pulse)."',
+//    		neck_measurement = '".s_for($neck_measurement)."',
+//    		additional_paragraph = '".s_for($additional_paragraph)."',
+//    		tongue = '".s_for($tongue_arr)."'
+//    		where ex_page1id = '".s_for($_POST['ed'])."'";
     		
-    		$db->query($ed_sql);
+    		$ed_sql = array(
+	    		'blood_pressure' 		=> s_for($blood_pressure),
+	    		'pulse' 				=> s_for($pulse),
+	    		'neck_measurement' 		=> s_for($neck_measurement),
+	    		'additional_paragraph' 	=> s_for($additional_paragraph),
+	    		'tongue' 				=> s_for($tongue_arr)
+			);
+    		$dentalexpage1->update($ed_sql,s_for($_POST['ed']));
+    		// $db->query($ed_sql);
 
-            $pat_sql = "UPDATE dental_patients SET
-            feet = '".s_for($feet)."',
-            inches = '".s_for($inches)."',
-            weight = '".s_for($weight)."',
-            bmi = '".s_for($bmi)."'
-            WHERE patientid='".s_for($_GET['pid'])."'";
+            // $pat_sql = "UPDATE dental_patients SET
+            // feet = '".s_for($feet)."',
+            // inches = '".s_for($inches)."',
+            // weight = '".s_for($weight)."',
+            // bmi = '".s_for($bmi)."'
+            // WHERE patientid='".s_for($_GET['pid'])."'";
+    		$pat_sql = array(
+    			'feet' => s_for($feet),
+	            'inches' => s_for($inches),
+	            'weight' => s_for($weight),
+	            'bmi' => s_for($bmi)
+    		);
 
-            $db->query($pat_sql);
+    		$dentalexpage1->updateDentalPatient($pat_sql, $_GET['pid']);
+            // $db->query($pat_sql);
 	        $msg = "Edited Successfully";
             if(isset($_POST['ex_pagebtn_proceed'])){
 ?>
@@ -103,9 +142,10 @@
 	    }
     }
 
-    $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+    // $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 
-    $pat_myarray = $db->getRow($pat_sql);
+    $pat_myarray = $dentalexpage1->findFromDentalPatients($_GET['pid']);
+    // $pat_myarray = $db->getRow($pat_sql);
     $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
     if($pat_myarray['patientid'] == '') {
 ?>
@@ -116,9 +156,9 @@
     	trigger_error("Die called", E_USER_ERROR);
     }
 
-    $bmi_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";
-    
-    $bmi_myarray = $db->getRow($bmi_sql);
+    // $bmi_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";
+    $bmi_myarray = $dentalexpage1->findFromDentalPatients($_GET['pid']);
+    // $bmi_myarray = $db->getRow($bmi_sql);
     $bmi = st($bmi_myarray['bmi']);
     $feet = st($bmi_myarray['feet']);
     $inches = st($bmi_myarray['inches']);

@@ -164,9 +164,10 @@ $dentalexpage1 = App::make('Ds3\Contracts\DentalExPage1Interface');
     $inches = st($bmi_myarray['inches']);
     $weight = st($bmi_myarray['weight']);
 
-    $sql = "select * from dental_ex_page1 where patientid='".$_GET['pid']."'";
-
-    $myarray = $db->getRow($sql);
+    // $sql = "select * from dental_ex_page1 where patientid='".$_GET['pid']."'";
+    // $myarray = $db->getRow($sql);
+    $myarray = $dentalexpage1->where('patientid',$_GET['pid']);
+        
     $ex_page1id = st($myarray['ex_page1id']);
     $blood_pressure = st($myarray['blood_pressure']);
     $pulse = st($myarray['pulse']);
@@ -314,9 +315,9 @@ $dentalexpage1 = App::make('Ds3\Contracts\DentalExPage1Interface');
                         <div>
                             <span>
                             	<?php
-        							$tongue_sql = "select * from dental_tongue where status=1 order by sortby";
-        							
-                                    $tongue_my = $db->getResults($tongue_sql);
+        							// $tongue_sql = "select * from dental_tongue where status=1 order by sortby";
+                                    $tongue_my = $dentalexpage1->getDentalTongue(1);
+                                    // $tongue_my = $db->getResults($tongue_sql);
         							if ($tongue_my) foreach ($tongue_my as $tongue_myarray) {
     							?>
         								<input type="checkbox" id="tongue" name="tongue[]" value="<?php echo st($tongue_myarray['tongueid'])?>" tabindex="9" <?php if(strpos($tongue,'~'.st($tongue_myarray['tongueid']).'~') === false) {} else { echo " checked";}?> />

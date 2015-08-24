@@ -1023,7 +1023,7 @@ $pat_sql = "select p.*, c.exclusive from dental_patients p
 
 $pat_myarray = $db->getRow($pat_sql);
 $p_m_dss_file = $pat_myarray['p_m_dss_file'];
-if($pat_myarray['exclusive']){ $p_m_dss_file = 1; }
+//if($pat_myarray['exclusive']){ $p_m_dss_file = 1; }
 $s_m_dss_file = $pat_myarray['s_m_dss_file'];
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $insurancetype = st($pat_myarray['p_m_ins_type']);

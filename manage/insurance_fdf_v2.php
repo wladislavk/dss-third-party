@@ -632,7 +632,7 @@
           << /T(".$field_path.".otherins_chkbox[0]) /V(".escapeFdf((($insurancetype == '7')?1:'')).") >>
 
           << /T(".$field_path.".box8_nucc[0]) /V(".escapeFdf((!empty($nucc_8a) ? $nucc_8a : '')).") >>
-          << /T(".$field_path.".insured_id_number_fill[0]) /V(".escapeFdf((!empty($nucc_9b) ? $nucc_9b : '')).") >>
+          << /T(".$field_path.".box9b_nucc[0]) /V(".escapeFdf((!empty($nucc_9b) ? $nucc_9b : '')).") >>
           << /T(".$field_path.".insured_id_number_fill[0]) /V(".escapeFdf($insured_id_number).") >>
           << /T(".$field_path.".insured_id_number_fill[0]) /V(".escapeFdf($insured_id_number).") >>
           << /T(".$field_path.".insured_id_number_fill[0]) /V(".escapeFdf($insured_id_number).") >>
@@ -683,7 +683,6 @@
         << /T(".$field_path.".pt_condition_place_fill[0]) /V(".escapeFdf((!empty($auto_accident_place) ? $auto_accident_place : '')).") >>
         << /T(".$field_path.".pt_condition_otheracc_yes_chkbox[0]) /V(".escapeFdf(((!empty($other_accident) && $other_accident == "YES")?1:'')).") >>
         << /T(".$field_path.".pt_condition_otheracc_no_chkbox[0]) /V(".escapeFdf(((!empty($other_accident) && $other_accident == "NO")?1:'')).") >>
-        << /T(".$field_path.".service_info_dd[0]) /V(".escapeFdf((!empty($service_info_dd) ? $service_info_dd : '')).") >>
         ";
 
     if(!empty($insured_dob)){
@@ -923,10 +922,9 @@
       << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".escapeFdf($physician_signed_date).") >>
       << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".escapeFdf((!empty($service_info_a) ? $service_info_a : '')).") >>
       << /T(".$field_path.".billing_provider_a[0]) /V(".escapeFdf((!empty($billing_provider_a) ? $billing_provider_a : '')).") >>
-      << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".escapeFdf((!empty($service_info_b_other) ? $service_info_b_other : '')).") >>
+      << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".escapeFdf((!empty($service_info_dd) ? $service_info_dd : ''))."".escapeFdf((!empty($service_info_b_other) ? $service_info_b_other : '')).") >>
       << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf(((!empty($billing_provider_a) ? $billing_provider_a : ''))).") >>
-      << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".escapeFdf((!empty($billing_provider_b_other) ? $billing_provider_b_other : '')).") >>
-      << /T(".$field_path.".billing_provider_dd[0]) /V(".escapeFdf((!empty($billing_provider_dd) ? $billing_provider_dd : '')).") >>
+      << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".escapeFdf((!empty($billing_provider_dd) ? $billing_provider_dd : ''))."".escapeFdf((!empty($billing_provider_b_other) ? $billing_provider_b_other : '')).") >>
     ";
 
   $fdf .= "
@@ -1002,9 +1000,7 @@ $fdf .= "
   << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".escapeFdf(date('m/d/y')).") >>
   << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".escapeFdf($service_info_a).") >>
   << /T(".$field_path.".billing_provider_a[0]) /V(".escapeFdf($billing_provider_a).") >>
-  << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".escapeFdf($service_info_b_other).") >>
   << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf(((!empty($billing_provider_a) ? $billing_provider_a : ''))).") >>
-  << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".escapeFdf($billing_provider_b_other).") >>
 ";
 
 

@@ -2591,7 +2591,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						<span class="num">22.</span> 
 						Resubmission Code
                                 <select name="resubmission_code_fill">
-                                    <option value="" <?php echo $resubmission_code_fill=="1"?'selected="selected"':''; ?>>New Claim</option>
+                                    <option value="1" <?php echo $resubmission_code_fill=="1"?'selected="selected"':''; ?>>New Claim</option>
                                     <option value="7" <?php echo $resubmission_code_fill=="7"?'selected="selected"':''; ?>>Resubmitted Claim</option>
                                     <option value="8" <?php echo $resubmission_code_fill=="8"?'selected="selected"':''; ?>>Void/Cancel Prior Claim</option>
                                 </select>

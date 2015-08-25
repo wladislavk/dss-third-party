@@ -170,7 +170,7 @@
         $another_plan = strtoupper(st($myarray['another_plan']));
     }
 
-    if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
+    if(!empty($other_insured_policy_group_feca) && !empty($other_insured_insurance_plan)){
         $another_plan = 'YES';
     }else{
         $another_plan = 'NO';
@@ -374,6 +374,16 @@
     $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
     $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED);
     $is_sent = (!empty($status) && ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT)) ? true : false;
+
+    $service_facility_sql = "select * from dental_qualifier where qualifierid='".(isset($service_info_dd) ? $service_info_dd : '') . "'";
+    $qua_array = $db->getRow($service_facility_sql);
+
+    $service_info = (!empty($qua_array['qualifier']) ? substr($qua_array['qualifier'], 0, 2) : '');
+
+    $billing_provider_sql = "select * from dental_qualifier where qualifierid='".(isset($billing_provider_dd) ? $billing_provider_dd : '') . "'";
+    $billing_array = $db->getRow($billing_provider_sql);
+
+    $billing_info = (!empty($billing_array['qualifier']) ? substr($billing_array['qualifier'], 0, 2) : '');
 
     if(empty($insured_sex)) {
     	$insured_sex = $pat_myarray['gender'];
@@ -922,9 +932,9 @@
       << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".escapeFdf($physician_signed_date).") >>
       << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".escapeFdf((!empty($service_info_a) ? $service_info_a : '')).") >>
       << /T(".$field_path.".billing_provider_a[0]) /V(".escapeFdf((!empty($billing_provider_a) ? $billing_provider_a : '')).") >>
-      << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".escapeFdf((!empty($service_info_dd) ? $service_info_dd : ''))."".escapeFdf((!empty($service_info_b_other) ? $service_info_b_other : '')).") >>
+      << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".escapeFdf((!empty($service_info) ? $service_info : ''))."".escapeFdf((!empty($service_info_b_other) ? $service_info_b_other : '')).") >>
       << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf(((!empty($billing_provider_a) ? $billing_provider_a : ''))).") >>
-      << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".escapeFdf((!empty($billing_provider_dd) ? $billing_provider_dd : ''))."".escapeFdf((!empty($billing_provider_b_other) ? $billing_provider_b_other : '')).") >>
+      << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".escapeFdf((!empty($billing_info) ? $billing_info : ''))."".escapeFdf((!empty($billing_provider_b_other) ? $billing_provider_b_other : '')).") >>
     ";
 
   $fdf .= "

@@ -1023,7 +1023,7 @@ $pat_sql = "select p.*, c.exclusive from dental_patients p
 
 $pat_myarray = $db->getRow($pat_sql);
 $p_m_dss_file = $pat_myarray['p_m_dss_file'];
-//if($pat_myarray['exclusive']){ $p_m_dss_file = 1; }
+if($pat_myarray['exclusive']){ $p_m_dss_file = 1; }
 $s_m_dss_file = $pat_myarray['s_m_dss_file'];
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $insurancetype = st($pat_myarray['p_m_ins_type']);
@@ -1097,7 +1097,7 @@ $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
 $p_m_dss_file = $pat_myarray['p_m_dss_file'];
-//if(!empty($pat_myarray['exclusive'])){ $p_m_dss_file = 1; }
+if(!empty($pat_myarray['exclusive'])){ $p_m_dss_file = 1; }
 $s_m_dss_file = $pat_myarray['s_m_dss_file'];
 $patient_lastname = st($myarray['patient_lastname']);
 $patient_firstname = st($myarray['patient_firstname']);
@@ -1361,7 +1361,7 @@ $status = st($myarray['status']);
 }
 
 
-if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $p_m_dss_file == 1 && $pat_myarray['s_m_dss_file'] ==1){
+if(!empty($other_insured_policy_group_feca) && !empty($other_insured_insurance_plan)){
   $another_plan = 'YES';
 }else{
   $another_plan = 'NO';

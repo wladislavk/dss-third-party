@@ -28,8 +28,8 @@
     
     $doc = $db->getRow($doc_sql);
 ?>
-    <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-    <script src="popup/popup.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+    <script src="admin/popup/popup.js" type="text/javascript"></script>
 
     <span class="admin_head">
         Invoice History - <?php echo  $doc['name']; ?>

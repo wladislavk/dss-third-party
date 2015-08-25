@@ -64,7 +64,7 @@ function initCal() {
 	scheduler.config.xml_date="%Y-%m-%d %H:%i:%s";
 	scheduler.config.hour_date="%h:%i%A";
 	scheduler.config.hour_size_px = 44;
-	scheduler.templates.tooltip_date_format=scheduler.date.date_to_str("%H:%i %m-%d-%Y");
+	scheduler.templates.tooltip_date_format=scheduler.date.date_to_str("%h:%i%A %m-%d-%Y");
 	scheduler.config.mark_now = true;
 	scheduler.config.details_on_create = true;
 	scheduler.config.details_on_dblclick=true;

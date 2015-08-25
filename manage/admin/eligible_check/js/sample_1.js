@@ -139,6 +139,7 @@ var coverageRequest = function (params) {
 
 // If there is an error with the ajax api request, show it on an alert box
 var errorCallback = function (xhr, textStatus, errorThrown) {
+    enable_submit();
   // Check for NPI on errorThrown, since it may be an enrollment issue (https://eligibleapi.com/rest#enrollments)
   if (typeof(errorThrown) === "String" && errorThrown.indexOf("NPI")) {
     alert("You should enroll your NPI though our website");
@@ -151,6 +152,7 @@ var errorCallback = function (xhr, textStatus, errorThrown) {
 
 // If the api call was done, process its response, this just either build the success api call, or the error related
 var successCallback = function (data) {
+    enable_submit();
   var coverage = new Coverage(data);
 
   if (coverage.hasError()) {
@@ -217,4 +219,10 @@ buildCoverageHTML = function(coverage) {
   }
 
   $('body').append(plugin.coverageSection);
+}
+
+function enable_submit (){
+    $('#submit-button').css('background-color', '#428bca');
+    $('#submit-button').prop("disabled",false);
+    $('#submit-button-inner').replaceWith('<div id="submit-button-inner">Submit</div>');
 }

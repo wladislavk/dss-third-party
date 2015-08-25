@@ -167,6 +167,10 @@
         </ul>
 </div>
 
+<script type="text/javascript">
+    eligibleApiKey = <?php echo "'".$api_key."'" ?>;
+</script>
+
 <input type="hidden" name="payer_id" id="payer_id" />
       </div>
     </div>

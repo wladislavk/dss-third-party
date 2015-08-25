@@ -762,7 +762,8 @@
                 adddate=now(),
                 ip_address='".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'
                 ";
-    mysqli_query($con, $up_sql);
+
+    $dce_id = $db->getInsertId($up_sql);
     if ($success) {
         $event = "claim_submitted";
     } else {
@@ -778,7 +779,7 @@
 
     claim_status_history_update($_GET['insid'], DSS_CLAIM_SENT, DSS_CLAIM_PENDING, '', $_SESSION['adminuserid']);
     claim_history_update($_GET['insid'], '', $_SESSION['adminuserid']);
-    $dce_id = $db->getInsertId($up_sql);
+
     invoice_add_efile('2', $_SESSION['admincompanyid'], $dce_id);
     invoice_add_claim('1', $docid, $_GET['insid']);
 

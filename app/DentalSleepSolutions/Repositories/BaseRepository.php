@@ -37,10 +37,10 @@ class BaseRepository implements BaseInterface
      * Return all records
      *
      * @param string $orderBy
-     * @param array $relations
+     * @param array  $relations
      * @return mixed
      */
-    public function all($orderBy = 'id', $relations = [])
+    public function all($orderBy = 'id', array $relations = [])
     {
         $instance = $this->getQueryBuilder();
 
@@ -54,16 +54,16 @@ class BaseRepository implements BaseInterface
     /**
      * Return paginated items
      *
-     * @param string $orderBy
-     * @param array $relations
+     * @param string  $orderBy
+     * @param array   $relations
      * @param integer $paginate
-     * @param array $parameters
+     * @param array   $parameters
      * @return mixed
      */
-    public function paginate($orderBy = 'name', $relations = [], $paginate = 25, $parameters = [])
+    public function paginate($orderBy = 'name', array $relations = [], $paginate = 25, array $parameters = [])
     {
         $instance = $this->getQueryBuilder();
-
+        $parameters = null;
         $this->parseOrder($orderBy);
 
         return $instance->with($relations)
@@ -76,10 +76,10 @@ class BaseRepository implements BaseInterface
      *
      * @param string $field
      * @param string $value
-     * @param array $relations
+     * @param array  $relations
      * @return mixed
      */
-    public function getBy($field, $value, $relations = [])
+    public function getBy($field, $value, array $relations = [])
     {
         $instance = $this->getQueryBuilder();
 
@@ -106,10 +106,10 @@ class BaseRepository implements BaseInterface
      * Find a single record
      *
      * @param integer $id
-     * @param array $relations
+     * @param array   $relations
      * @return mixed
      */
-    public function find($id, $relations = [])
+    public function find($id, array $relations = [])
     {
         $model = $this->getModelName();
 
@@ -122,10 +122,10 @@ class BaseRepository implements BaseInterface
      * Find a single record by a field and value
      * @param string $field
      * @param string $value
-     * @param array $relations
+     * @param array  $relations
      * @return mixed
      */
-    public function findBy($field, $value, $relations = [])
+    public function findBy($field, $value, array $relations = [])
     {
         $model = $this->getModelName();
 
@@ -163,7 +163,7 @@ class BaseRepository implements BaseInterface
      * @param array $data The input data
      * @return model instance
      */
-    public function store($data = null)
+    public function store(array $data = null)
     {
         $data = $data ?: \Input::all();
 
@@ -176,7 +176,7 @@ class BaseRepository implements BaseInterface
      * @param array $data The input data
      * @return model instance
      */
-    protected function executeStore($data)
+    protected function executeStore(array $data)
     {
         $this->instance = $this->getNewInstance();
 
@@ -186,11 +186,11 @@ class BaseRepository implements BaseInterface
     /**
      * Update the model instance
      *
-     * @param integer $id The model id
-     * @param array $data The input data
+     * @param integer $id
+     * @param array   $data
      * @return model instance
      */
-    public function update($id, $data = null)
+    public function update($id, array $data = null)
     {
         $data = $data ?: \Input::all();
 
@@ -200,11 +200,11 @@ class BaseRepository implements BaseInterface
     /**
      * Execute the update method
      *
-     * @param integer $id The model id
-     * @param array $data The input data
+     * @param integer $id
+     * @param array   $data
      * @return model instance
      */
-    protected function executeUpdate($id, $data)
+    protected function executeUpdate($id, array $data)
     {
         $this->instance = $this->find($id);
 
@@ -214,10 +214,10 @@ class BaseRepository implements BaseInterface
     /**
      * Save the model
      *
-     * @param $data
+     * @param array $data
      * @return object
      */
-    protected function executeSave($data)
+    protected function executeSave(array $data)
     {
         $this->instance->fill($data);
         $this->instance->save();
@@ -311,7 +311,8 @@ class BaseRepository implements BaseInterface
             $this->setOrderDirection('asc');
             $orderBy = substr_replace($orderBy, '', -3);
         }
-        else if (substr($orderBy, -4) == 'Desc')
+
+        if (substr($orderBy, -4) == 'Desc')
         {
             $this->setOrderDirection('desc');
             $orderBy = substr_replace($orderBy, '', -4);
@@ -361,5 +362,5 @@ class BaseRepository implements BaseInterface
     {
         return $this->orderDirection;
     }
-
 }
+

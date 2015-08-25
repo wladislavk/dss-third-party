@@ -13,16 +13,24 @@ use DentalSleepSolutions\Interfaces\MemoAdminInterface;
 class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
 {
 
+    /**
+     *
+     * @var string
+     *
+     * Main model name for the Memos Model
+     */
     protected $modelName = 'DentalSleepSolutions\MemoAdmin';
 
+
     /**
+     *
      * Return all memos
      *
-     * @param int $orderBy
-     * @param array $relations
+     * @param string $orderBy
+     * @param array  $relations
      * @return mixed
      */
-    public function all($orderBy = 'memo_id', $relations = [])
+    public function all($orderBy = 'memo_id', array $relations = [])
     {
         $instance = $this->getQueryBuilder();
         return $instance->with($relations)
@@ -31,28 +39,16 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
     }
 
     /**
+     *
      * Paginate items
      *
-     * @param string $orderBy
-     * @param array $relations
-     * @param int $paginate
-     * @param array $params
+     * @param string  $orderBy
+     * @param array   $relations
+     * @param integer $paginate
+     * @param array   $params
      * @return mixed
      */
-    public function paginate($orderBy = 'memo', $relations = [], $paginate = 50, $params = [])
-    {
-        throw new \BadMethodCallException('Must implement.');
-    }
-
-    /**
-     * Get all items by a field
-     *
-     * @param $field
-     * @param $value
-     * @param $relations
-     * @return mixed
-     */
-    public function getBy($field, $value, $relations = [])
+    public function paginate($orderBy = 'memo', array $relations = [], $paginate = 50, array $params = [])
     {
         throw new \BadMethodCallException('Must implement.');
     }
@@ -70,14 +66,17 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
     }
 
     /**
-     * Find a single item
      *
-     * @param $memo_id
-     * @param $relations
+     * Find a single item.
+     *
+     * @param integer $memo_id
+     * @param array   $relations
      * @return mixed
      */
-    public function find($memo_id, $relations = [])
+    public function find($memo_id, array $relations = [])
     {
+        $relations = null;
+
         $model = $this->getModelName();
 
         $this->instance = $model::find($memo_id);
@@ -91,7 +90,7 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
      * @param array $data
      * @return object
      */
-    public function store($data = null)
+    public function store(array $data = null)
     {
         $data = $data ?: \Input::all();
 
@@ -103,11 +102,11 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
     /**
      * Update memo
      *
-     * @param int $id
-     * @param array $data
+     * @param integer $id
+     * @param array   $data
      * @return object
      */
-    public function update($id, $data = null)
+    public function update($id, array $data = null)
     {
         $data = $data ?: \Input::all();
 
@@ -115,5 +114,4 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
 
         return $this->instance;
     }
-
 }

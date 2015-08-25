@@ -112,7 +112,7 @@ function trigger_letter1and2($pid) {
     foreach ($mdcontacts as $contact) {
       if ($contact != "Not Set") {
         $contact_query = '%,' .  $contact . ',%';
-        $letter_query = "SELECT md_list FROM dental_letters WHERE md_list IS NOT NULL AND CONCAT(',', md_list, ',') LIKE ".$contact_query." AND templateid IN(".$letter1id.",".$letter2id.");";
+        $letter_query = "SELECT md_list FROM dental_letters WHERE md_list IS NOT NULL AND CONCAT(',', md_list, ',') LIKE '".$contact_query."' AND templateid IN(".$letter1id.",".$letter2id.");";
         $num_rows = $db->getNumberRows($letter_query);
         /*if(empty($num_rows)) {
           print "MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error Selecting Letters from Database";

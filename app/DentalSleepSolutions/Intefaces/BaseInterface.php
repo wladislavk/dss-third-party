@@ -5,32 +5,32 @@ interface BaseInterface
     /**
      * Return all items
      *
-     * @param int $orderBy
-     * @param array $relations
+     * @param string $orderBy
+     * @param array  $relations
      * @return mixed
      */
-    public function all($orderBy = 'id', $relations = []);
+    public function all($orderBy = 'id', array $relations = []);
 
     /**
      * Paginate items
      *
-     * @param string $orderBy
-     * @param array $relations
-     * @param int $paginate
-     * @param array $parameters
+     * @param string  $orderBy
+     * @param array   $relations
+     * @param integer $paginate
+     * @param array   $parameters
      * @return mixed
      */
-    public function paginate($orderBy = 'name', $relations = [], $paginate = 50, $parameters = []);
+    public function paginate($orderBy = 'name', array $relations = [], $paginate = 50, array $parameters = []);
 
     /**
      * Get all items by a field
      *
-     * @param $field
-     * @param $value
-     * @param $relations
+     * @param string $field
+     * @param string $value
+     * @param array  $relations
      * @return mixed
      */
-    public function getBy($field, $value, $relations = []);
+    public function getBy($field, $value, array $relations = []);
 
     /**
      * List all items
@@ -44,21 +44,21 @@ interface BaseInterface
     /**
      * Find a single item
      *
-     * @param $id
-     * @param $relations
+     * @param integer $id
+     * @param array   $relations
      * @return mixed
      */
-    public function find($id, $relations = []);
+    public function find($id, array $relations = []);
 
     /**
      * Find a single item by a field
      *
-     * @param $field
-     * @param $value
-     * @param $relations
+     * @param string $field
+     * @param string $value
+     * @param array  $relations
      * @return mixed
      */
-    public function findBy($field, $value, $relations = []);
+    public function findBy($field, $value, array $relations = []);
 
     /**
      * Find a single record by multiple fields
@@ -75,21 +75,21 @@ interface BaseInterface
      * @param array $data
      * @return mixed
      */
-    public function store($data = null);
+    public function store(array $data = null);
 
     /**
      * Update an existing item
      *
-     * @param int $id
-     * @param array $data
+     * @param integer $id
+     * @param array   $data
      * @return mixed
      */
-    public function update($id, $data = null);
+    public function update($id, array $data = null);
 
     /**
      * Permanently remove an item from storage
      *
-     * @param $id
+     * @param integer $id
      * @return mixed
      */
     public function destroy($id);
@@ -97,7 +97,7 @@ interface BaseInterface
     /**
      * Checks whether the model has any errors
      *
-     * @return bool
+     * @return boolean
      */
     public function hasErrors();
 

@@ -64,7 +64,7 @@
                         </td>
 				        <?php if($office_type == DSS_OFFICE_TYPE_FRONT) { ?>
                             <td valign="top">
-                                <a href="Javascript:;"  onclick="Javascript: loadPopupRefer('add_image.php?ed=<?php echo $myarray["imageid"];?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : ''); ?>');" class="editlink btn btn-primary btn-sm" title="EDIT">
+                                <a href="Javascript:;"  onclick="Javascript: loadPopupRefer('add_image.php?ed=<?php echo $myarray["imageid"];?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?= $myarray['imagetypeid'] ?>');" class="editlink btn btn-primary btn-sm" title="EDIT">
                                     Edit
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 </a>

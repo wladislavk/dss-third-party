@@ -487,18 +487,18 @@ if(!empty($_GET['itro']) && $_GET['itro']==1){?>
 $rl_sql = "SELECT rx_imgid, lomn_imgid, rxlomn_imgid FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."'";
 $rl_r = $db->getRow($rl_sql);
 if($rl_r){
-    if($rl_r['lomn_imgid']!=''){?>
+    if($rl_r['lomn_imgid']==''){?>
 
-        <tr class="image_sect lomn_update" <?php echo ($_GET['sh']==7)?'':'style="display:none;"'; ?>>
+        <tr class="image_sect lomn_update" <?php echo ($imagetypeid==7)?'':'style="display:none;"'; ?>>
             <td valign="top" colspan="2" class="frmhead">
                 <input type="checkbox" value="1" name="lomn_update" /> Use this LOMN for insurance claims
             </td>
         </tr>
 <?php
     }
-    if($rl_r['rx_imgid']!=''){ ?>
+    if($rl_r['rx_imgid']==''){ ?>
 
-        <tr class="image_sect rx_update" <?php echo ($_GET['sh']==6)?'':'style="display:none;"'; ?>>
+        <tr class="image_sect rx_update" <?php echo ($imagetypeid==6)?'':'style="display:none;"'; ?>>
             <td valign="top" colspan="2" class="frmhead">
                 <input type="checkbox" value="1" name="rx_update" /> Use this RX for insurance claims
             </td>
@@ -506,9 +506,9 @@ if($rl_r){
 
 <?php
 }
-    if($rl_r['rxlomn_imgid']!=''){?>
+    if($rl_r['rxlomn_imgid']==''){?>
 
-        <tr class="image_sect rxlomn_update" <?php echo ($_GET['sh']==14)?'':'style="display:none;"'; ?>>
+        <tr class="image_sect rxlomn_update" <?php echo ($imagetypeid==14)?'':'style="display:none;"'; ?>>
             <td valign="top" colspan="2" class="frmhead">
                 <input type="checkbox" value="1" name="rxlomn_update" /> Use this LOMN / Rx. for insurance claims
             </td>

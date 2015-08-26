@@ -83,7 +83,7 @@ Please complete this short questionnaire to determine your risk of OSA. Your inf
 <img src="images/sleeping_couple.png" style="float:right;"/>
 <br />
                                                                                                                 <div class="cf">
-<a href="#" onclick="return validate_name();" id="sect1_next" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
+<a href="#"  id="sect1_next" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
 <span id="sect1_next_dis" class="fr next btn btn_large btn_d disabled">Proceed &raquo;</a>
                                                                                                                 </div>
 </div>
@@ -173,7 +173,7 @@ Please complete this short questionnaire to determine your risk of OSA. Your inf
         </div>
 <div style="clear:both;"></div>
 </div>
-<a href="#" onclick="return validate_epworth();" id="sect2_next" class="fr next btn btn_medium btn_d">Next</a>
+<a href="#" id="sect2_next" class="fr next btn btn_medium btn_d">Next</a>
 <span id="sect2_next_dis" class="fr next btn btn_medium btn_d disabled">Next</span>
 </div>
 <div class="sect" id="sect3">
@@ -281,7 +281,7 @@ Please complete this short questionnaire to determine your risk of OSA. Your inf
         <label class="question">Do you have trouble staying asleep once you fall asleep?</label>
   </div>
 
-<a href="#" onclick="return validate_sect3();" id="sect3_next" class="fr next btn btn_medium btn_d">Next</a>
+<a href="#" id="sect3_next" class="fr next btn btn_medium btn_d">Next</a>
 <span id="sect3_next_dis" class="fr next btn btn_medium btn_d disabled">Next</span>
 
 </div>
@@ -335,7 +335,7 @@ Please complete this short questionnaire to determine your risk of OSA. Your inf
   </div>
 
 
-<a href="#" onclick="submit_screener()" id="sect4_next" class="fr next btn btn_medium btn_d">Next</a>
+<a href="#" id="sect4_next" class="fr next btn btn_medium btn_d">Next</a>
 <span id="sect4_next_dis" class="fr next btn btn_medium btn_d disabled">Next</a>
 </div>
 
@@ -386,7 +386,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 <h2>Thank you for completing the survey. Please return the device to your provider.</h2>
 
 
-<a href="#" onclick="return show_doctor();" id="sect5_next" class="fr next btn btn_medium btn_d">Dentist Only - Click Here &raquo;</a>
+<a href="#" id="sect5_next" class="fr next btn btn_medium btn_d">Dentist Only - Click Here &raquo;</a>
 </div>
 
 
@@ -403,7 +403,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 <br />
 <div id="risk_image_doc"></div>
 
-<a href="#results" onclick="$('#results_div').toggle();" class="fl next btn btn_medium btn_d">View Results</a>
+<a href="#results" id="sect_results_next" class="fl next btn btn_medium btn_d">View Results</a>
 <?php
                           $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
                                         JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con, $_SESSION['screener_doc'])."'
@@ -412,7 +412,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
                                 if(mysqli_num_rows($bu_q)>0){
 ?>
 
-<a style="margin-left:20px;" href="#" onclick="return show_hst();" id="sect5_next" class="fr next btn btn_medium btn_d">Request HST (Doctor Only) &raquo;</a>
+<a style="margin-left:20px;" href="#" id="sect6_next" class="fr next btn btn_medium btn_d">Request HST (Doctor Only) &raquo;</a>
 <?php } ?>
 
 <a rel="fancyReg" href="#regModal" class="fr next btn btn_medium btn_d">Finish/Screen New Patient</a>
@@ -573,7 +573,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
         <input class="inpt_a" type="text" id="hst_email" name="hst_email" />
 </div>
 </div>
-<a href="#" onclick="submit_hst()" id="sect4_next" class="fr next btn btn_medium btn_d">Submit Request</a>
+<a href="#" id="sect7_next" class="fr next btn btn_medium btn_d">Submit Request</a>
           </div>
 <div style="clear:both;"></div>
 

@@ -277,11 +277,43 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
             $errorMessage = 'Invalid File Type. The uploaded file has an invalid format or an incorrect file extension.';
         }
     } else {
+        $imageid = intval($_POST['ed']);
+
         $ed_sql = " update dental_q_image set 
                       title = '".s_for($title)."',
                       imagetypeid = '".s_for($imagetypeid)."' ";
-        $ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
+        $ed_sql .= " where imageid = '$imageid'";
         $db->query($ed_sql);
+
+        if ($_POST['imagetypeid'] == 6) {
+            $rx_sql = "SELECT rx_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
+            $rx_r = $db->getRow($rx_sql);
+
+            if ($rx_r['rx_imgid'] == '' || $_POST['rx_update'] == 1) {
+                $rx_sql = "UPDATE dental_flow_pg1 SET rx_imgid='$imageid', rxrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
+                $db->query($rx_sql);
+            }
+        }
+
+        if ($_POST['imagetypeid'] == 7) {
+            $lomn_sql = "SELECT lomn_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
+            $lomn_r = $db->getRow($lomn_sql);
+
+            if ($lomn_r['lomn_imgid'] == '' || $_POST['lomn_update'] == 1) {
+                $lomn_sql = "UPDATE dental_flow_pg1 SET lomn_imgid='$imageid', lomnrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
+                $db->query($lomn_sql);
+            }
+        }
+
+        if ($_POST['imagetypeid'] == 14) {
+            $rxlomn_sql = "SELECT rxlomn_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
+            $rxlomn_r = $db->getRow($rxlomn_sql);
+
+            if ($rxlomn_r['rxlomn_imgid'] == '' || $_POST['rxlomn_update'] == 1) {
+                $rxlomn_sql = "UPDATE dental_flow_pg1 SET rxlomn_imgid='$imageid', rxlomnrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
+                $db->query($rxlomn_sql);
+            }
+        }
 
         $msg = "Edited Successfully";?>
         <script type="text/javascript">

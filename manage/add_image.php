@@ -466,7 +466,7 @@ if(!empty($msg)) {?>
 </div>
 <?php 
 }?>
-<form name="imagefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>" method="post" onSubmit="return imageabc(this);" enctype="multipart/form-data">
+<form name="imagefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid'];?>&sh=<?= $imagetypeid ?>" method="post" onSubmit="return imageabc(this);" enctype="multipart/form-data">
 		<input name="flow" type="hidden" value="<?php echo (!empty($_GET['flow']) ? $_GET['flow'] : '');?>" />
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
@@ -516,39 +516,45 @@ if(!empty($_GET['itro']) && $_GET['itro']==1){?>
             </td>
         </tr>
 <?php
+
 $rl_sql = "SELECT rx_imgid, lomn_imgid, rxlomn_imgid FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."'";
 $rl_r = $db->getRow($rl_sql);
-if($rl_r){
-    if($rl_r['lomn_imgid']==''){?>
 
-        <tr class="image_sect lomn_update" <?php echo ($imagetypeid==7)?'':'style="display:none;"'; ?>>
+if ($themyarray && in_array($themyarray['imageid'], $rl_r)) { ?>
+        <tr class="image_sect">
+            <td valign="top" colspan="2" class="frmhead">
+                This
+                <?= $themyarray['imageid'] == $rl_r['rx_imgid'] ? 'RX' : '' ?>
+                <?= $themyarray['imageid'] == $rl_r['lomn_imgid'] ? 'LOMN' : '' ?>
+                <?= $themyarray['imageid'] == $rl_r['rxlomn_imgid'] ? 'LOMN / Rx' : '' ?>
+                has been selected for use in insurance claims
+            </td>
+        </tr>
+<?php }
+
+    if (($imagetypeid == 7) && ($themyarray['imageid'] != $rl_r['lomn_imgid'])) { ?>
+        <tr class="image_sect lomn_update">
             <td valign="top" colspan="2" class="frmhead">
                 <input type="checkbox" value="1" name="lomn_update" /> Use this LOMN for insurance claims
             </td>
         </tr>
-<?php
-    }
-    if($rl_r['rx_imgid']==''){ ?>
+    <?php }
 
-        <tr class="image_sect rx_update" <?php echo ($imagetypeid==6)?'':'style="display:none;"'; ?>>
+    if (($imagetypeid == 6) && ($themyarray['imageid'] != $rl_r['rx_imgid'])) { ?>
+        <tr class="image_sect rx_update">
             <td valign="top" colspan="2" class="frmhead">
                 <input type="checkbox" value="1" name="rx_update" /> Use this RX for insurance claims
             </td>
         </tr>
+    <?php }
 
-<?php
-}
-    if($rl_r['rxlomn_imgid']==''){?>
-
-        <tr class="image_sect rxlomn_update" <?php echo ($imagetypeid==14)?'':'style="display:none;"'; ?>>
+    if (($imagetypeid == 14) && ($themyarray['imageid'] != $rl_r['rxlomn_imgid'])) { ?>
+        <tr class="image_sect rxlomn_update">
             <td valign="top" colspan="2" class="frmhead">
                 <input type="checkbox" value="1" name="rxlomn_update" /> Use this LOMN / Rx. for insurance claims
             </td>
         </tr>
-
-<?php
-    }
-} ?>
+<?php } ?>
         <tr class="image_sect"> 
             <td valign="top" colspan="2" class="frmhead">
                 <ul>

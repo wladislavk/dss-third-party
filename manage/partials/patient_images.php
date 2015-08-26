@@ -29,7 +29,14 @@
                 </td>
             </tr>
         <?php } else {
+            $patientId = intval($_GET['pid']);
+
+            $rxLomnSql = "SELECT rx_imgid, lomn_imgid, rxlomn_imgid FROM dental_flow_pg1 WHERE pid='$patientId'";
+            $rxLomn = $db->getRow($rxLomnSql);
+
                 if ($my) foreach ($my as $myarray) {
+                    $selectedForClaims = $rxLomn && in_array($myarray['imageid'], $rxLomn);
+
                     if($myarray["status"] == 1) {
                         $tr_class = "tr_active";
                     } else {
@@ -40,7 +47,8 @@
                     $i_type_myarray = $db->getRow($i_type_sql);
         ?>
                     <tr class="<?php echo $tr_class;?>">
-                        <td valign="top">
+                        <td valign="top" <?= $selectedForClaims ? 'title="This archive is on file for insurance claims"' : ''?>>
+                            <?= $selectedForClaims ? '*' : '' ?>
                             <?php if($myarray['imagetypeid']==0){ ?>
                                 Clinical Photos (Pre-Tx)
                             <?php } else { ?>

@@ -1152,8 +1152,8 @@ if(!empty($_GET['instype']) && $_GET['instype']==2){
   $insured_city = st($myarray['insured_city']);
   $insured_state = st($myarray['insured_state']);
   $insured_zip = st($myarray['insured_zip']);
-  $insured_phone_code = st($myarray['insured_phone_code']);
-  $insured_phone = st($myarray['insured_phone']);
+  $insured_phone_code = !empty(st($myarray['insured_phone_code'])) ? st($myarray['insured_phone_code']) : substr(st($pat_myarray['home_phone']), 0, 3);
+  $insured_phone = !empty(st($myarray['insured_phone'])) ? st($myarray['insured_phone']) : substr(st($pat_myarray['home_phone']), 3);
   $insured_sex = st($myarray['insured_sex']);
   $patient_relation_insured = st($myarray['patient_relation_insured']);
 }
@@ -1163,8 +1163,8 @@ $patient_state = st($myarray['patient_state']);
 $patient_status = st($myarray['patient_status']);
 $patient_status_array = explode('~',$patient_status);
 $patient_zip = st($myarray['patient_zip']);
-$patient_phone_code = st($myarray['patient_phone_code']);
-$patient_phone = st($myarray['patient_phone']);
+$patient_phone_code = !empty(st($myarray['patient_phone_code'])) ? st($myarray['patient_phone_code']) : substr(st($pat_myarray['home_phone']), 0, 3);
+$patient_phone = !empty(st($myarray['patient_phone'])) ? st($myarray['patient_phone']) : substr(st($pat_myarray['home_phone']), 3);
 $employment = st($myarray['employment']);
 $auto_accident = st($myarray['auto_accident']);
 $auto_accident_place = st($myarray['auto_accident_place']);

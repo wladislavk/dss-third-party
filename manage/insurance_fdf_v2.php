@@ -462,7 +462,7 @@
     }
 
     if(empty($insured_phone)) {
-        $insured_phone_code = substr($pat_myarray['home_phone'], 0, 4);
+        $insured_phone_code = substr($pat_myarray['home_phone'], 0, 3);
         $insured_phone = substr($pat_myarray['home_phone'], 3);
     }
 

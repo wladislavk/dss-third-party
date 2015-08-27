@@ -468,7 +468,7 @@ if(!empty($_GET['itro']) && $_GET['itro']==1){?>
 $patientId = intval($_GET['pid']);
 
 // These keys match the ones from claimRelatedArchiveType
-$claimRelatedArchivesSql = "SELECT rx_imgid AS `rx`, lomn_imgid AS `lomn`, rxlomn_imgid AS `both`
+$claimRelatedArchivesSql = "SELECT rx_imgid AS `rx`, lomn_imgid AS `lomn`, rxlomn_imgid AS `rxlomn`
         FROM dental_flow_pg1 WHERE pid='$patientId'
         UNION SELECT NULL, NULL, NULL";
 $claimRelatedArchives = $db->getRow($claimRelatedArchivesSql);
@@ -480,13 +480,13 @@ if ($themyarray && $claimRelatedType) { ?>
         <tr>
             <td valign="top" colspan="2" class="frmhead">
                 This archive is on file for insurance claims as
-                <?= $claimRelatedType === 'both' ? 'LOMN / Rx' : strtoupper($claimRelatedType) ?>
+                <?= $claimRelatedType === 'rxlomn' ? 'LOMN / Rx' : strtoupper($claimRelatedType) ?>
             </td>
         </tr>
 <?php } ?>
         <tr class="image_sect claim_file_update">
             <td valign="top" colspan="2" class="frmhead">
-                <label title="By selecting this option the current archive will replace any other LOMN/Rx on file">
+                <label title="By selecting this option the current archive will replace any other LOMN / Rx on file">
                     <input type="checkbox" value="1" name="claim_file_update"
                         <?= $claimRelatedType === $currentType ? 'disabled' : '' ?> <?= $claimRelatedType ? 'checked' : '' ?> />
                     Use this archive for insurance claims
@@ -585,7 +585,7 @@ function claimRelatedArchiveType($imageTypeId)
     }
 
     if ($imageTypeId === DSS_CLAIM_FILE_TYPE_BOTH) {
-        return 'both';
+        return 'rxlomn';
     }
 
     return '';
@@ -593,7 +593,9 @@ function claimRelatedArchiveType($imageTypeId)
 
 function updateClaimRelatedArchives($patientId, $imageId, $imageTypeId)
 {
-    if (!claimRelatedArchiveType($imageTypeId)) {
+    $imageType = claimRelatedArchiveType($imageTypeId);
+
+    if (!$imageType) {
         return false;
     }
 
@@ -601,7 +603,6 @@ function updateClaimRelatedArchives($patientId, $imageId, $imageTypeId)
 
     $patientId = intval($patientId);
     $imageId = intval($imageId);
-    $imageTypeId = intval($imageTypeId);
 
     $claimRelatedFilesSql = "SELECT rx_imgid, lomn_imgid, rxlomn_imgid, rxrec, lomnrec, rxlomnrec
         FROM dental_flow_pg1 WHERE pid='$patientId'";
@@ -625,16 +626,8 @@ function updateClaimRelatedArchives($patientId, $imageId, $imageTypeId)
         ];
     }
 
-    if ($imageTypeId === DSS_CLAIM_FILE_TYPE_RX) {
-        $prefix = 'rx';
-    } elseif ($imageTypeId === DSS_CLAIM_FILE_TYPE_LOMN) {
-        $prefix = 'lomn';
-    } else {
-        $prefix = 'rxlomn';
-    }
-
     // If the target claim file is the same as the new image id, nothing to do
-    if ($claimRelatedFiles["{$prefix}_imgid"] == $imageId) {
+    if ($claimRelatedFiles["{$imageType}_imgid"] == $imageId) {
         return false;
     }
 
@@ -649,8 +642,8 @@ function updateClaimRelatedArchives($patientId, $imageId, $imageTypeId)
         }
     }
 
-    $claimRelatedFiles["{$prefix}_imgid"] = $imageId;
-    $claimRelatedFiles["{$prefix}rec"] = date('m/d/Y');
+    $claimRelatedFiles["{$imageType}_imgid"] = $imageId;
+    $claimRelatedFiles["{$imageType}rec"] = date('m/d/Y');
 
     $updateValuesSql = [];
 

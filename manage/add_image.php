@@ -479,17 +479,17 @@ $currentType = claimRelatedArchiveType($imageTypeId);
 if ($themyarray && $claimRelatedType) { ?>
         <tr>
             <td valign="top" colspan="2" class="frmhead">
-                This archive is on file for insurance claims as
+                This image is on file for insurance claims as
                 <?= $claimRelatedType === 'rxlomn' ? 'LOMN / Rx' : strtoupper($claimRelatedType) ?>
             </td>
         </tr>
 <?php } ?>
-        <tr class="image_sect claim_file_update">
+        <tr class="image_sect claim_file_update" <?= !$themyarray ? 'style="display:none;"' : '' ?>>
             <td valign="top" colspan="2" class="frmhead">
-                <label title="By selecting this option the current archive will replace any other LOMN / Rx on file">
+                <label title="By selecting this option the current image will replace any other LOMN / Rx on file">
                     <input type="checkbox" value="1" name="claim_file_update"
                         <?= $claimRelatedType === $currentType ? 'disabled' : '' ?> <?= $claimRelatedType ? 'checked' : '' ?> />
-                    Use this archive for insurance claims
+                    Use this image for insurance claims
                 </label>
             </td>
         </tr>

@@ -404,3 +404,7 @@ $dss_file_upload_errors = array(
     UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
     UPLOAD_ERR_EXTENSION => 'A PHP extension stopped the file upload',
 );
+
+define('DSS_CLAIM_FILE_TYPE_RX', 6);
+define('DSS_CLAIM_FILE_TYPE_LOMN', 7);
+define('DSS_CLAIM_FILE_TYPE_BOTH', 14);

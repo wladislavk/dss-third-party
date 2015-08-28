@@ -1487,7 +1487,7 @@ input{text-transform:uppercase;}
 <link rel="stylesheet" href="<?php echo $admin_path?>popup/popup.css" type="text/css" media="screen" />
 <script type="text/javascript" src="<?php echo $admin_path?>script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="<?php echo $manage_path?>3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-    <script type="text/javascript" src="<?php echo $manage_path?>script/masks.js"></script>
+    <script type="text/javascript" src="<?php echo $manage_path?>script/masks.js?v=<?= time() ?>"></script>
 <script src="<?php echo $admin_path?>popup/popup.js" type="text/javascript"></script>
 
 <?php if ($is_sent || (!$is_new_claim && !$is_pending && !$is_rejected && !$is_disputed && $is_front_office)) { ?>

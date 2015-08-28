@@ -631,6 +631,17 @@ function updateClaimRelatedArchives($patientId, $imageId, $imageTypeId)
         return false;
     }
 
+    // LOMN/Rx (combined) is not compatible with separated images, they reset/cancel each other
+    if ($imageType === 'rxlomn') {
+        $claimRelatedFiles['rx_imgid'] = '';
+        $claimRelatedFiles['lomn_imgid'] = '';
+        $claimRelatedFiles['rxrec'] = '';
+        $claimRelatedFiles['lomnrec'] = '';
+    } else {
+        $claimRelatedFiles['rxlomn_imgid'] = '';
+        $claimRelatedFiles['rxlomnrec'] = '';
+    }
+
     // If this image id is being used at some other location, remove that value
     if (in_array($imageId, $claimRelatedFiles)) {
         $key = array_search($imageId, $claimRelatedFiles);

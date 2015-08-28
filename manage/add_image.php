@@ -385,21 +385,21 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
     <img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
 </div>
 <?php
-$thesql = "select * from dental_q_image where imageid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+$thesql = "select * from dental_q_image where imageid='".intval($_REQUEST["ed"])."'";
 $themyarray = $db->getRow($thesql);
 
 if(!empty($msg)){
   	$title = $_POST['title'];
-		$imageTypeId = $_POST['imagetypeid'];
+		$imageTypeId = intval($_POST['imagetypeid']);
 }else{
 		$title = st($themyarray['title']);
 		$image_file = st($themyarray['image_file']);
-		$imageTypeId = st($themyarray['imagetypeid']);
+		$imageTypeId = intval($themyarray['imagetypeid']);
 		$but_text = "Add ";
 }
 	
 if($imageTypeId == '')
-		$imageTypeId = $_GET['sh'];
+		$imageTypeId = intval($_GET['sh']);
 		
 if(!empty($themyarray["contactid"])){
 		$but_text = "Edit ";

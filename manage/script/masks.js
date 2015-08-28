@@ -7,4 +7,8 @@ $(document).ready(function(){
 	$('.singlenumber').mask('9');
 	$('.numbermask').mask('?9999999999');
 	$('.moneymask').mask('?%%%%%%%');
+    $('.phonecodemask').mask('?999');
+    $('.phonemask').mask('?9999999');
+    $.mask.definitions['%']='[A-Za-z\.]';
+    $('.statemask').mask('?%%');
 });

@@ -11,6 +11,8 @@ $(document).ready(function(){
 	$('.yyyymask').mask('2099');
         $('.zipmask').mask('99999');
 	$('.dollarmask').mask('%%%%%%%');
+  $('.numbermask').mask('?9999999999');
+  $('.statemask').mask('?%%');
 });
 
   $(document).delegate('.dollar_input', 'keydown', function(event){

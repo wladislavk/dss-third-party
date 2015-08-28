@@ -16,3 +16,6 @@
 ?>
 
 	<link rel="stylesheet" href="css/insurance_eligible.css">
+
+	<script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+    <script type="text/javascript" src="js/masks.js"></script>

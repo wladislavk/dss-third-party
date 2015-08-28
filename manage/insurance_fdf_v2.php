@@ -46,7 +46,6 @@
     $docid = $pat_myarray['docid'];
 
     $sql = "select * from dental_insurance where insuranceid='".(!empty($_GET['insid']) ? $_GET['insid'] : '')."' and patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-    
     $my = $db->getResults($sql);
     $myarray = (!empty($my[0]) ? $my[0] : array());
     $dent_rows = count($my);
@@ -73,6 +72,8 @@
         $insured_firstname = strtoupper(st($myarray['insured_firstname']));
         $insured_middle = strtoupper(st($myarray['insured_middle']));
         $insured_dob = str_replace('-','/',st($myarray['insured_dob']));
+        $current_qual =strtoupper($myarray['current_qual']);
+        $same_illness_qual =strtoupper($myarray['same_illness_qual']);
         $insured_insurance_plan =strtoupper($myarray['insured_insurance_plan']);
         $insured_policy_group_feca =strtoupper($myarray['insured_policy_group_feca']);
 
@@ -120,6 +121,8 @@
             $insured_middle =strtoupper($myarray['other_insured_middle']);
             $insured_lastname =strtoupper($myarray['other_insured_lastname']);
             $insured_dob =str_replace('-','/',$myarray['other_insured_dob']);
+            $current_qual =strtoupper($myarray['current_qual']);
+            $same_illness_qual =strtoupper($myarray['same_illness_qual']);
             $insured_insurance_plan =strtoupper($myarray['other_insured_insurance_plan']);
             $insured_policy_group_feca =strtoupper($myarray['other_insured_policy_group_feca']);
             $insured_address =strtoupper($myarray['other_insured_address']);
@@ -149,6 +152,8 @@
             $insured_middle =strtoupper($myarray['insured_middle']);
             $insured_lastname =strtoupper($myarray['insured_lastname']);
             $insured_dob =str_replace('-','/',$myarray['insured_dob']);
+            $current_qual =strtoupper($myarray['current_qual']);
+            $same_illness_qual =strtoupper($myarray['same_illness_qual']);
             $insured_insurance_plan =strtoupper($myarray['insured_insurance_plan']);
             $insured_policy_group_feca =strtoupper($myarray['insured_policy_group_feca']);
             $insured_address =strtoupper($myarray['insured_address']);
@@ -161,11 +166,11 @@
         }
 
 
-        $reserved_local_use = strtoupper(st($myarray['reserved_local_use']));
+        $claim_codes = strtoupper(st($myarray['claim_codes']));
         $another_plan = strtoupper(st($myarray['another_plan']));
     }
 
-    if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
+    if(!empty($other_insured_policy_group_feca) && !empty($other_insured_insurance_plan)){
         $another_plan = 'YES';
     }else{
         $another_plan = 'NO';
@@ -349,6 +354,7 @@
         $nucc_30 =strtoupper($myarray['nucc_30']);
         $claim_codes =strtoupper($myarray['claim_codes']);
         $other_claim_id =strtoupper($myarray['other_claim_id']);
+        $nucc_9c =strtoupper($myarray['nucc_9c']);
         $icd_ind =strtoupper($myarray['icd_ind']);
         $resubmission_code_fill =strtoupper($myarray['resubmission_code_fill']);
         $name_referring_provider_qualifier=strtoupper($myarray['name_referring_provider_qualifier']);
@@ -368,6 +374,16 @@
     $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
     $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED);
     $is_sent = (!empty($status) && ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT)) ? true : false;
+
+    $service_facility_sql = "select * from dental_qualifier where qualifierid='".(isset($service_info_dd) ? $service_info_dd : '') . "'";
+    $qua_array = $db->getRow($service_facility_sql);
+
+    $service_info = (!empty($qua_array['qualifier']) ? substr($qua_array['qualifier'], 0, 2) : '');
+
+    $billing_provider_sql = "select * from dental_qualifier where qualifierid='".(isset($billing_provider_dd) ? $billing_provider_dd : '') . "'";
+    $billing_array = $db->getRow($billing_provider_sql);
+
+    $billing_info = (!empty($billing_array['qualifier']) ? substr($billing_array['qualifier'], 0, 2) : '');
 
     if(empty($insured_sex)) {
     	$insured_sex = $pat_myarray['gender'];
@@ -446,7 +462,7 @@
     }
 
     if(empty($insured_phone)) {
-        $insured_phone_code = substr($pat_myarray['home_phone'], 0, 4);
+        $insured_phone_code = substr($pat_myarray['home_phone'], 0, 3);
         $insured_phone = substr($pat_myarray['home_phone'], 3);
     }
 
@@ -626,7 +642,7 @@
           << /T(".$field_path.".otherins_chkbox[0]) /V(".escapeFdf((($insurancetype == '7')?1:'')).") >>
 
           << /T(".$field_path.".box8_nucc[0]) /V(".escapeFdf((!empty($nucc_8a) ? $nucc_8a : '')).") >>
-          << /T(".$field_path.".insured_id_number_fill[0]) /V(".escapeFdf((!empty($nucc_9b) ? $nucc_9b : '')).") >>
+          << /T(".$field_path.".box9b_nucc[0]) /V(".escapeFdf((!empty($nucc_9b) ? $nucc_9b : '')).") >>
           << /T(".$field_path.".insured_id_number_fill[0]) /V(".escapeFdf($insured_id_number).") >>
           << /T(".$field_path.".insured_id_number_fill[0]) /V(".escapeFdf($insured_id_number).") >>
           << /T(".$field_path.".insured_id_number_fill[0]) /V(".escapeFdf($insured_id_number).") >>
@@ -679,13 +695,17 @@
         << /T(".$field_path.".pt_condition_otheracc_no_chkbox[0]) /V(".escapeFdf(((!empty($other_accident) && $other_accident == "NO")?1:'')).") >>
         ";
 
-    if($insured_dob!=''){
+    if(!empty($insured_dob)){
         $fdf .= "
           << /T(".$field_path.".insured_dob_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($insured_dob))).") >>
           << /T(".$field_path.".insured_dob_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($insured_dob))).") >>
           << /T(".$field_path.".insured_dob_yy_fill[0]) /V(".escapeFdf(date('Y', strtotime($insured_dob))).") >>
         ";
     }
+    $fdf .= "
+        << /T(".$field_path.".current_qual[0]) /V(".escapeFdf(!empty($current_qual) ? $current_qual : '').") >>
+        << /T(".$field_path.".same_illness_qual[0]) /V(".escapeFdf(!empty($same_illness_qual) ? $same_illness_qual : '').") >>
+    ";
     $fdf .= "
         << /T(".$field_path.".insured_sex_m_chkbox[0]) /V(".escapeFdf((($insured_sex == "M" || $insured_sex == "Male")?1:'')).") >>
         << /T(".$field_path.".insured_sex_f_chkbox[0]) /V(".escapeFdf((($insured_sex == "F" || $insured_sex == "Female")?1:'')).") >>
@@ -703,8 +723,10 @@
         << /T(".$field_path.".insured_employers_name_fill[0]) /V(".escapeFdf($insured_employer_school_name).") >>
         << /T(".$field_path.".employers_name_fill[0]) /V(".escapeFdf((!empty($other_insured_employer_school_name) ? $other_insured_employer_school_name : '')).") >>
         << /T(".$field_path.".insured_ins_plan_name_fill[0]) /V(".escapeFdf($insured_insurance_plan).") >>
+        << /T(".$field_path.".box11b_nucc[0]) /V(".escapeFdf($other_claim_id).") >>
+        << /T(".$field_path.".box9c_nucc[0]) /V(".escapeFdf($nucc_9c).") >>
         << /T(".$field_path.".ins_plan_name_fill[0]) /V(".escapeFdf($other_insured_insurance_plan).") >>
-        << /T(".$field_path.".reserved_local_use_fill[0]) /V(".escapeFdf((!empty($reserved_local_use) ? $reserved_local_use : '')).") >>
+        << /T(".$field_path.".reserved_local_use_fill[0]) /V(".escapeFdf((!empty($claim_codes) ? $claim_codes : '')).") >>
         << /T(".$field_path.".another_health_benefit_yes_chkbox[0]) /V(".escapeFdf((($another_plan == "YES")?1:'')).") >>
         << /T(".$field_path.".another_health_benefit_no_chkbox[0]) /V(".escapeFdf((($another_plan == "NO")?1:'')).") >>
         << /T(".$field_path.".pt_signature_fill[0]) /V(".escapeFdf(((!empty($patient_signature))?'SIGNATURE ON FILE':'')).") >>
@@ -764,7 +786,7 @@
             << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".escapeFdf(((!empty($outside_lab) && $outside_lab == "YES")?1:'')).") >>
             << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".escapeFdf(((!empty($outside_lab) && $outside_lab == "NO")?1:'')).") >>
             << /T(".$field_path.".charges_fill[0]) /V(".escapeFdf((!empty($s_charges) ? $s_charges : '')).") >>
-            << /T(".$field_path.".icd_ind[0]) /V(".escapeFdf((!empty($icd_ind) ?$icd_ind: '')).") >>
+            << /T(".$field_path.".icd_ind[0]) /V(".escapeFdf((isset($icd_ind) ?$icd_ind: '')).") >>
             << /T(".$field_path.".diagnosis_a[0]) /V(".escapeFdf((!empty($diagnosis_a) ? $diagnosis_a : '')).") >>
             << /T(".$field_path.".diagnosis_b[0]) /V(".escapeFdf((!empty($diagnosis_b) ? $diagnosis_b : '')).") >>
             << /T(".$field_path.".diagnosis_c[0]) /V(".escapeFdf((!empty($diagnosis_c) ? $diagnosis_c : '')).") >>
@@ -777,8 +799,9 @@
             << /T(".$field_path.".diagnosis_j[0]) /V(".escapeFdf((!empty($diagnosis_j) ? $diagnosis_j : '')).") >>
             << /T(".$field_path.".diagnosis_k[0]) /V(".escapeFdf((!empty($diagnosis_k) ? $diagnosis_k : '')).") >>
             << /T(".$field_path.".diagnosis_l[0]) /V(".escapeFdf((!empty($diagnosis_l) ? $diagnosis_l : '')).") >>
-            << /T(".$field_path.".resubmission_code_fill[0]) /V(".escapeFdf((!empty($resubmission_code) ? $resubmission_code : '')).") >>
-            << /T(".$field_path.".originial_ref_no_fill[0]) /V(".escapeFdf((!empty($original_ref_no) ? $original_ref_no : '')).") >>
+            << /T(".$field_path.".medicaid_resubmission_code_fill[0]) /V(".escapeFdf((!empty($resubmission_code_fill) ? $resubmission_code_fill : '')).") >>
+            << /T(".$field_path.".original_ref_no_fill[0]) /V(".escapeFdf((!empty($original_ref_no) ? $original_ref_no : '')).") >>
+            << /T(".$field_path.".name_referring_provider_qualifier[0]) /V(".escapeFdf((!empty($name_referring_provider_qualifier) ? $name_referring_provider_qualifier : '')).") >>
             << /T(".$field_path.".prior_auth_number_fill[0]) /V(".escapeFdf((!empty($prior_authorization_number) ? $prior_authorization_number : '')).") >>";
 
     $prefix = array( 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX');
@@ -891,8 +914,8 @@
       << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".escapeFdf((($ssn == "1")?1:'')).") >>
       << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".escapeFdf((($ein == "1")?1:'')).") >>
       << /T(".$field_path.".pt_account_number_fill[0]) /V(".escapeFdf((!empty($patient_account_no) ? $patient_account_no : '')).") >>
-      << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "yes")?1:'')).") >>
-      << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "no")?1:'')).") >>
+      << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "yes" || $accept_assignment == "A")?1:'')).") >>
+  << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "no" || $accept_assignment == "C")?1:'')).") >>
       
       << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".escapeFdf(number_format(floor($total_charge),0,'.','')).") >>
       << /T(".$field_path.".total_charge_cents_fill[0]) /V(".escapeFdf(fill_cents(roundToCents($total_charge))).") >>
@@ -900,7 +923,7 @@
       << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".escapeFdf(fill_cents(roundToCents($amount_paid))).") >>
       << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".escapeFdf(number_format(floor($balance_due),0,'.','')).") >>
       << /T(".$field_path.".balance_due_cents_fill[0]) /V(".escapeFdf(fill_cents(roundToCents($balance_due))).") >>
-      
+
       << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".escapeFdf(strtoupper((!empty($service_facility_info_name) ? $service_facility_info_name : ''))."\n".strtoupper((!empty($service_facility_info_address) ? $service_facility_info_address : ''))."\n".strtoupper((!empty($service_facility_info_city) ? $service_facility_info_city : ''))).") >>
       << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".escapeFdf((!empty($billing_provider_phone_code) ? $billing_provider_phone_code : '')).") >>
       << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".escapeFdf((!empty($billing_provider_phone) ? $billing_provider_phone : '')).") >>
@@ -908,9 +931,10 @@
       << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".escapeFdf((!empty($signature_physician) ? $signature_physician : '')).") >>  
       << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".escapeFdf($physician_signed_date).") >>
       << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".escapeFdf((!empty($service_info_a) ? $service_info_a : '')).") >>
-      << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".escapeFdf((!empty($service_info_b_other) ? $service_info_b_other : '')).") >>
-      << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf((($insurancetype == '1')?$medicare_npi:$npi)).") >>
-      << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".escapeFdf((!empty($billing_provider_b_other) ? $billing_provider_b_other : '')).") >>
+      << /T(".$field_path.".billing_provider_a[0]) /V(".escapeFdf((!empty($billing_provider_a) ? $billing_provider_a : '')).") >>
+      << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".escapeFdf((!empty($service_info) ? $service_info : ''))."".escapeFdf((!empty($service_info_b_other) ? $service_info_b_other : '')).") >>
+      << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf(((!empty($billing_provider_a) ? $billing_provider_a : ''))).") >>
+      << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".escapeFdf((!empty($billing_info) ? $billing_info : ''))."".escapeFdf((!empty($billing_provider_b_other) ? $billing_provider_b_other : '')).") >>
     ";
 
   $fdf .= "
@@ -985,9 +1009,8 @@ $fdf .= "
   << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".escapeFdf($signature_physician).") >>  
   << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".escapeFdf(date('m/d/y')).") >>
   << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".escapeFdf($service_info_a).") >>
-  << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".escapeFdf($service_info_b_other).") >>
-  << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf((($insurancetype == '1')?$medicare_npi:$npi)).") >>
-  << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".escapeFdf($billing_provider_b_other).") >>
+  << /T(".$field_path.".billing_provider_a[0]) /V(".escapeFdf($billing_provider_a).") >>
+  << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf(((!empty($billing_provider_a) ? $billing_provider_a : ''))).") >>
 ";
 
 
@@ -1013,6 +1036,7 @@ if($_REQUEST['type']=="secondary"){
 }else{
   $fdf_field = "primary_fdf";
 }
+
 invoice_add_claim('1', $docid, $_GET['insid']);
 $sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysqli_real_escape_string($con, $file)."' WHERE insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
 mysqli_query($con, $sql);

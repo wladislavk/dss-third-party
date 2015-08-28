@@ -1,6 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><script type="text/javascript">
 var screenerid='';
-function submit_screener(){
+function submit_screener(e){
+    e.preventDefault();
   $('#sect4_next').hide();
   $('#sect4_next_dis').show();
 
@@ -274,10 +275,19 @@ function next_sect(sect){
 
 $(document).ready( function(){
   next_sect(0);
+    $('#sect1_next').click(validate_name);
+    $('#sect2_next').click(validate_epworth);
+    $('#sect3_next').click(validate_sect3);
+    $('#sect4_next').click(submit_screener);
+    $('#sect5_next').click(show_doctor);
+    $('#sect6_next').click(show_hst);
+    $('#sect7_next').click(submit_hst);
+    $('#sect_results_next').click(show_results);
 });
 
 
-function validate_name(){
+function validate_name(e){
+    e.preventDefault();
   $('#sect1_next').hide();
     $('#sect1_next_dis').show();
   var return_val = true;
@@ -317,10 +327,10 @@ function validate_name(){
     $('#sect1_next').show();
     $('#sect1_next_dis').hide();
   }
-  return return_val;
-}
-function validate_epworth(){
 
+}
+function validate_epworth(e){
+    e.preventDefault();
     $('#sect2_next').hide();
     $('#sect2_next_dis').show();
  var return_val = true;
@@ -347,10 +357,10 @@ function validate_epworth(){
     $('#sect2_next_dis').hide();
     $('#epworth_error_box').html(error_text).show();
   }
-  return return_val;
 }
 
-function validate_sect3(){
+function validate_sect3(e){
+    e.preventDefault();
     $('#sect3_next').hide();
     $('#sect3_next_dis').show();
   var return_val = true;
@@ -458,15 +468,15 @@ function validate_sect3(){
     $('#sect3_next_dis').hide();
     $('#sect3_error_box').html(error_text).show();
   }
-  return return_val;
-
 }
 
-function show_hst(){
+function show_hst(e){
+    e.preventDefault();
   next_sect('hst');
 }
 
-function show_doctor(){
+function show_doctor(e){
+    e.preventDefault();
   next_sect('doctor');
 }
 
@@ -484,7 +494,8 @@ $(document).ready(function(){
 });
 
 
-function submit_hst(){
+function submit_hst(e){
+    e.preventDefault();
   if($('#hst_first_name').val()=='' || $('#hst_last_name').val() == '' || $('#hst_dob').val()=='' || $('#hst_phone').val()=='' || $('#hst_email').val() == '' ||$('input[name=hst_company_id]:checked').length == 0){
     alert('All fields are required.');
   }else{
@@ -538,4 +549,8 @@ function submit_hst(){
   }
 }
 
+function show_results(e){
+    e.preventDefault();
+    $('#results_div').toggle();
+}
 </script>

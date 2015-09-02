@@ -713,6 +713,8 @@ if (!function_exists('s_for')) {
     $('input[name="subscriber[id]"]').val("<?php echo  $insured_id_number;?>");
     $('input[name="claim[note]"]').val("<?php echo (!empty($reserved_local_use1) ? $reserved_local_use1 : '');?>");
     $('input[name="claim[date]"]').val("<?php echo (!empty($date_current) ?  dateFormat($date_current) : '');?>");
+    $('input[name="claim[icd_indicator]"]').val("<?php echo $icd_ind;?>");
+    $('input[name="claim[outside_lab_charges]"]').val("<?php echo (!empty($s_charges) ? $s_charges : '');?>");
 
     $('input[name="dependent[last_name]"]').val("<?php echo  $patient_lastname;?>");
     $('input[name="dependent[first_name]"]').val("<?php echo  $patient_firstname;?>");
@@ -724,7 +726,7 @@ if (!function_exists('s_for')) {
     $('input[name="dependent[address][street_line_1]"]').val("<?php echo  $patient_address;?>");
     $('input[name="dependent[address][city]"]').val("<?php echo  $patient_city;?>");
     $('input[name="dependent[address][state]"]').val("<?php echo  $patient_state;?>").addClass("statemask");
-    $('input[name="dependent[address][zip]"]').val("<?php echo  $patient_zip;?>");
+    $('input[name="dependent[address][zip]"]').val("<?php echo  $patient_zip;?>").addClass("zipmask");
     $('input[name="dependent[phone_number]"]').val("<?php echo  $patient_phone_code.$patient_phone;?>").addClass("numbermask");
     <?php if($patient_relation_insured == 'Spouse' || $patient_relation_insured == '01'){ ?>
           $('input[name="dependent[relationship]"][value="01"]').trigger('click');
@@ -741,7 +743,7 @@ if (!function_exists('s_for')) {
     $('input[name="subscriber[address][street_line_1]"]').val("<?= $insured_address;?>");
     $('input[name="subscriber[address][city]"]').val("<?= $insured_city;?>");
     $('input[name="subscriber[address][state]"]').val("<?= $insured_state;?>").addClass("statemask");
-    $('input[name="subscriber[address][zip]"]').val("<?= $insured_zip;?>");
+    $('input[name="subscriber[address][zip]"]').val("<?= $insured_zip;?>").addClass("zipmask");
     $('input[name="subscriber[phone_number]"]').val("<?= $insured_phone_code.$insured_phone;?>").addClass("numbermask");
     $('input[name="subscriber[group_id]"]').val("<?= $insured_policy_group_feca;?>");
     $('input[name="subscriber[group_name]"]').val("<?= $insured_insurance_plan;?>");
@@ -1150,7 +1152,7 @@ if($federal_tax_id_number != ''){
       $('input[name="service_facility[address][street_line_1]"]').val("<?php echo ($service_facility_info_address && $service_facility_info_address != '')?$service_facility_info_address:$service_address; ?>");
       $('input[name="service_facility[address][city]"]').val("<?php echo  $service_city; ?>");
       $('input[name="service_facility[address][state]"]').val("<?php echo  $service_state; ?>");
-      $('input[name="service_facility[address][zip]"]').val("<?php echo  $service_zip; ?>");
+      $('input[name="service_facility[address][zip]"]').val("<?php echo  $service_zip; ?>").addClass("zipmask");
       $('input[name="service_facility[npi]"]').val("<?php echo  ($service_info_a && $service_info_a != '')?$service_info_a:(($insurancetype == '1')?$service_medicare_npi:$service_npi); ?>");
       $('input[name="billing_provider[phone_number]"]').val("<?php echo  $phone; ?>").addClass("numbermask");
       $('input[name="billing_provider[organization_name]"]').val("<?php echo  $practice; ?>");
@@ -1158,7 +1160,7 @@ if($federal_tax_id_number != ''){
       $('input[name="billing_provider[address][street_line_2]"]').val("<?php echo $billing_provider_address; ?>");
       $('input[name="billing_provider[address][city]"]').val("<?php echo  $city; ?>");
       $('input[name="billing_provider[address][state]"]').val("<?php echo  $state; ?>");
-      $('input[name="billing_provider[address][zip]"]').val("<?php echo  $zip; ?>");
+      $('input[name="billing_provider[address][zip]"]').val("<?php echo  $zip; ?>").addClass("zipmask");
       $('input[name="billing_provider[npi]"]').val("<?php echo ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>").addClass("numbermask"); 
       $('input[name="billing_provider[taxonomy_code]"]').val("<?php echo !empty($billing_info) ? $billing_info : '' ?><?php echo !empty($billing_provider_b_other) ? $billing_provider_b_other : '' ?>");
       <?php if ($insured_signature): ?>

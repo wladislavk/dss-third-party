@@ -2521,8 +2521,8 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 							(Relate A-L to service line below (24E))
 						</span>
                                 ICD IND. <select name="icd_ind">
-                                        <option value="9" <?php echo  ($icd_ind==9)?'selected="selected"':''; ?>>ICD-9-CM - 9</option>
-                                        <option value="0" <?php echo  ($icd_ind==0)?'selected="selected"':''; ?>>ICD-10-CM - 0</option>
+                                        <option value="9" <?php echo  (isset($icd_ind) && $icd_ind==9)?'selected="selected"':''; ?>>ICD-9-CM - 9</option>
+                                        <option value="0" <?php echo  (isset($icd_ind) && $icd_ind==0)?'selected="selected"':''; ?>>ICD-10-CM - 0</option>
                                 </select>
 
 						

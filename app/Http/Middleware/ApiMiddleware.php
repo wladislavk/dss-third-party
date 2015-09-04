@@ -15,7 +15,9 @@ class ApiMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $http_origin = $_SERVER['HTTP_ORIGIN'];
+        //Todo - Refactor this entire function to support JWT instead of CORS
+
+        $http_origin = array_key_exists('HTTP_ORIGIN', $_SERVER) ? $_SERVER['HTTP_ORIGIN'] : $_SERVER['HTTP_HOST'];
         $allow_origins = null;
 
         if (strpos($http_origin,'ds3soft.net') !== false || strpos($http_origin,'ds3soft.local') !== false) {

@@ -153,7 +153,7 @@ if(!empty($_GET['msg']))
 		            <input type="hidden" name="loginsub" value="1">
 		            <input type="submit" name="btnsubmit" value=" Login " class="addButton">
 				<span style="float:right;">
-		            <a href="register/new.php">Register</a>
+		            <a href="/manage/register/new.php">Register</a>
 				|
 		            <a href="forgot_password.php">Forgot Password</a>
 				</span>

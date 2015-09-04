@@ -397,10 +397,12 @@ if(!empty($msg)){
 		$imageTypeId = intval($themyarray['imagetypeid']);
 		$but_text = "Add ";
 }
-	
+
 if($imageTypeId == '')
 		$imageTypeId = intval($_GET['sh']);
-		
+
+$forceMode = !empty($_GET['itro']) && $_GET['itro'] == 1;
+
 if(!empty($themyarray["contactid"])){
 		$but_text = "Edit ";
 }else{
@@ -435,8 +437,9 @@ if(!empty($themyarray["contactid"])){
 <?php
 $itype_sql = "select * from dental_imagetype where status=1 order by sortby";
 $itype_my = $db->getResults($itype_sql);
-if(!empty($_GET['itro']) && $_GET['itro']==1){?>
-                            <input type="hidden" id="imagetypeid" name="imagetypeid" value="<?php echo $_GET['sh']; ?>" />
+
+if ($forceMode) { ?>
+                            <input type="hidden" id="imagetypeid" name="imagetypeid" value="<?= $imageTypeId ?>" />
 <?php
     foreach ($itype_my as $itype_myarray) {
         if($imageTypeId == st($itype_myarray['imagetypeid'])){
@@ -484,11 +487,12 @@ if ($themyarray && $claimRelatedType) { ?>
             </td>
         </tr>
 <?php } ?>
-        <tr class="image_sect claim_file_update" <?= !$themyarray ? 'style="display:none;"' : '' ?>>
+        <tr class="image_sect claim_file_update" <?= $themyarray || $forceMode ? '' : 'style="display:none;"' ?>>
             <td valign="top" colspan="2" class="frmhead">
                 <label title="By selecting this option the current image will replace any other LOMN / Rx on file">
                     <input type="checkbox" value="1" name="claim_file_update"
-                        <?= $claimRelatedType === $currentType ? 'disabled' : '' ?> <?= $claimRelatedType ? 'checked' : '' ?> />
+                        <?= $claimRelatedType === $currentType ? 'disabled' : '' ?>
+                        <?= $claimRelatedType || ($forceMode && $currentType) ? 'checked' : '' ?> />
                     Use this image for insurance claims
                 </label>
             </td>
@@ -659,10 +663,17 @@ function updateClaimRelatedArchives($patientId, $imageId, $imageTypeId)
     $updateValuesSql = [];
 
     foreach ($claimRelatedFiles as $key=>$value) {
-        // The keys are safe values, we defined them before, no need to escape them
-        // The values can contain legacy data, better to escape them
-        $value = $db->escape($value);
-        $updateValuesSql []= "$key = '$value'";
+        /**
+         * The keys are safe values, we defined them before, no need to escape them
+         * The values can contain legacy data, better to escape them
+         *
+         * Faulty logic at some other places dictate that empty fields must be NULL
+         * otherwise this comparison will fail:
+         *
+         * $image_id != ""
+         */
+        $value = $value === '' ? 'NULL' : "'" . $db->escape($value) . "'";
+        $updateValuesSql []= "$key = $value";
     }
 
     $updateValuesSql = join(', ', $updateValuesSql);

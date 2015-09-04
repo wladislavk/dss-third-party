@@ -9,7 +9,9 @@
         "laravel/framework": "5.1.*",
         "eventhomes/laravel-fractalhelper": "^0.1.2",
         "tymon/jwt-auth": "^0.5.4",
-        "guzzlehttp/guzzle": "^6.0"
+        "guzzlehttp/guzzle": "^6.0",
+        "zircote/swagger-php": "*",
+        "curl/curl": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

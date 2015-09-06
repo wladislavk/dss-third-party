@@ -1,11 +1,11 @@
 <?php namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Interfaces\EnrollmentInterface;
+use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\CurlHandler;
 
-class ElligibleEnrollmentApiRepository extends BaseRepository implements EnrollmentInterface
+class EnrollmentPayersApiRepository extends BaseRepository implements EnrollmentPayersInterface
 {
 
     /**
@@ -22,7 +22,7 @@ class ElligibleEnrollmentApiRepository extends BaseRepository implements Enrollm
     protected $elligibleConfigurtion = null;
 
     /**
-     * @var Client
+     * @var $restClient
      */
     protected $restClient;
 
@@ -33,7 +33,6 @@ class ElligibleEnrollmentApiRepository extends BaseRepository implements Enrollm
         $handler = new CurlHandler();
         $stack = HandlerStack::create($handler); // Wrap w/ middleware
         $this->restClient = new Client(['handler' => $stack, 'base_uri' => $this->elligibleConfigurtion['base_uri']]);
-        dd($this->listPayers());
 
     }
 
@@ -116,89 +115,63 @@ SQL;
      *
      * @return mixed
      */
-    public function syncPayersFromProvider()
+    public function syncEnrollmentPayersFromProvider()
     {
         $model = $this->getModelName();
         $this->instance = $model::truncate();
 
-        $uri = $this->elligibleConfigurtion['base_uri'];
-        $uri .= $this->elligibleConfigurtion['request_uri']['enrollment_payers_list'];
-        $uri .= $this->elligibleConfigurtion['api_key'];
-
-        $contents = file_get_contents($uri);
+        $contents = $this->getFileContentsForEnrollmentPayersFromElligible(
+                    $this->elligibleConfigurtion['default_api_key']);
 
         if($contents!==FALSE)
         {
 
             $payers = json_decode($contents);
 
-            foreach ($payers as $payer)
-            {
-
-                $names = [];
-                $supported_endpoints = [];
-
-                foreach ($payer->names as $name)
-                {
-                    $names[] = ['name' => $name];
-                }
-
-                $row = ['payer_id' => $payer->payer_id, 'names' => json_encode($names),
-                        'supported_endpoints' => json_encode($payer->supported_endpoints)];
-
-                $this->store($row);
-
-            }
+            $this->savePayerToDatabase($payers);
 
         }
 
     }
 
-    public function createEnrollment() {
+    /**
+     *
+     *
+     * @return string
+     */
+    protected function getFileContentsForEnrollmentPayersFromElligible($apiKey)
+    {
+        $uri = $this->elligibleConfigurtion['base_uri'];
+        $uri .= $this->elligibleConfigurtion['request_uri']['enrollment_payers_list'];
+        $uri .= $apiKey;
 
-    }
-
-    public function updateEnrollment() {
-
-    }
-
-    public function retrieveEnrollment() {
-
-    }
-
-    public function listEnrollments() {
-
+        $contents = file_get_contents($uri);
+        return $contents;
     }
 
     /**
-     * Create new memo
      *
-     * @param array $data
-     * @return object
-     */
-    public function store(array $data = null)
-    {
-        $data = $data ?: \Input::all();
-
-        $this->instance = parent::store($data);
-
-        return $this->instance;
-    }
-
-    /**
-     * Update memo
      *
-     * @param integer $id
-     * @param array   $data
-     * @return object
+     * @param $payers
+     * @return void
      */
-    public function update($id, array $data = null)
+    protected function savePayerToDatabase(Object $payers)
     {
-        $data = $data ?: \Input::all();
+        foreach ($payers as $payer) {
 
-        $this->instance = parent::update($id, $data);
+            $names = [];
+            $supported_endpoints = [];
 
-        return $this->instance;
+            foreach ($payer->names as $name) {
+                $names[] = ['name' => $name];
+            }
+
+            $row = ['payer_id' => $payer->payer_id, 'names' => json_encode($names),
+                'supported_endpoints' => json_encode($payer->supported_endpoints)];
+
+            $this->store($row);
+
+        }
     }
 
 }

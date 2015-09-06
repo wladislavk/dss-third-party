@@ -25,6 +25,7 @@ class ApiServiceProvider extends ServiceProvider
     {
         //
         $this->app->bind('DentalSleepSolutions\\Interfaces\\MemoAdminInterface', 'DentalSleepSolutions\\Repositories\\MemoAdminRepository');
-        $this->app->bind('DentalSleepSolutions\\Interfaces\\EnrollmentInterface', 'DentalSleepSolutions\\Repositories\\ElligibleEnrollmentApiRepository');
+        $this->app->bind('DentalSleepSolutions\\Interfaces\\EnrollmentPayersInterface', 'DentalSleepSolutions\\Repositories\\EnrollmentPayersApiRepository');
+        $this->app->bind('DentalSleepSolutions\\Interfaces\\EnrollmentInterface', 'DentalSleepSolutions\\Repositories\\EnrollmentRepository');
     }
 }

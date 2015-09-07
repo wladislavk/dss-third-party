@@ -1,9 +1,6 @@
 <?php namespace DentalSleepSolutions\Repositories;
 
 use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\CurlHandler;
 
 class EnrollmentPayersApiRepository extends BaseRepository implements EnrollmentPayersInterface
 {
@@ -30,9 +27,6 @@ class EnrollmentPayersApiRepository extends BaseRepository implements Enrollment
     {
 
         $this->elligibleConfigurtion = config('elligibleapi');
-        $handler = new CurlHandler();
-        $stack = HandlerStack::create($handler); // Wrap w/ middleware
-        $this->restClient = new Client(['handler' => $stack, 'base_uri' => $this->elligibleConfigurtion['base_uri']]);
 
     }
 
@@ -113,15 +107,15 @@ SQL;
     /**
      *
      *
-     * @return mixed
+     * @param string $apiKey
+     * @return void
      */
-    public function syncEnrollmentPayersFromProvider()
+    public function syncEnrollmentPayersFromProvider($apiKey)
     {
         $model = $this->getModelName();
         $this->instance = $model::truncate();
-
-        $contents = $this->getFileContentsForEnrollmentPayersFromElligible(
-                    $this->elligibleConfigurtion['default_api_key']);
+        $apiKey = isset($apiKey) ? $apiKey : $this->elligibleConfigurtion['default_api_key'];
+        $contents = $this->getFileContentsForEnrollmentPayersFromElligible($apiKey);
 
         if($contents!==FALSE)
         {

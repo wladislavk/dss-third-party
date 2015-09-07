@@ -1,21 +1,9 @@
 <?php namespace DentalSleepSolutions\Interfaces;
 
+use DentalSleepSolutions\BusinessObject\Enrollment;
+
 interface EnrollmentInterface
 {
-    /**
-     * Fetches a list of payers from our local DB that require enrollment.
-     *
-     * @return mixed
-     */
-    public function listPayers();
-
-    /**
-     * Gets a payer from our local DB by payerId
-     *
-     * @param string $payerId
-     * @return mixed
-     */
-    public function getPayerById($payerId);
 
     /**
      *
@@ -23,36 +11,17 @@ interface EnrollmentInterface
      * @param $payerId
      * @return mixed
      */
-    public function getPayerSupportedEndpoints($payerId);
-
-    /**
-     * Queries our local database for a payer name
-     * e.g. name = 'ABC' will search the names field for a name that contains ABC
-     *
-     * @param string $name
-     * @return mixed
-     */
-    public function findPayerByName($name);
+    public function getRequiredFieldsForEnrollment($payerId);
 
     /**
      *
      *
-     * @param $name
+     * @param array $enrollmentParams
      * @return mixed
      */
-    public function findPayerWhereNameContains($name);
+    public function createEnrollment(array $enrollmentParams);
 
-    /**
-     *
-     *
-     * @return mixed
-     */
-    public function syncPayersFromProvider();
-
-
-    public function createEnrollment();
     public function retrieveEnrollment();
     public function listEnrollments();
-
 
 }

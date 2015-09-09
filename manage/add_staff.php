@@ -174,7 +174,7 @@
         <?php
             $thesql = "select * from dental_users where userid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 
-        	$themyarray = $db->getRow($thesql);
+            $themyarray = $db->getRow($thesql);
         	if(!empty($msg)) {
         		$username = $_POST['username'];
         		$password = $_POST['password'];
@@ -204,30 +204,45 @@
         		$manage_staff = $_POST['manage_staff'];
                 $sign_notes = $_POST['sign_notes'];
 	        } else {
-                    $producerArray = "select * from dental_users where userid='".(!empty($themyarray['producer']) ? $themyarray['producer'] : '')."'";
+                if (empty($themyarray['producer_files'])) {
+                    $producerArray = "select * from dental_users where userid='" . $_SESSION['userid'] . "'";
                     $producers = $db->getRow($producerArray);
+
+                    $npi = st($producers['npi']);
+                    $medicare_npi = st($producers['medicare_npi']);
+                    $medicare_ptan = st($producers['medicare_ptan']);
+                    $tax_id_or_ssn = st($producers['tax_id_or_ssn']);
+                    $ein = st($producers['ein']);
+                    $ssn = st($producers['ssn']);
+                    $practice = st($producers['practice']);
+                    $address = st($producers['address']);
+                    $city = st($producers['city']);
+                    $state = st($producers['state']);
+                    $zip = st($producers['zip']);
+                    $phone = st($producers['phone']);
+                } else {
+                    $npi = st($themyarray['npi']);
+                    $medicare_npi = st($themyarray['medicare_npi']);
+                    $medicare_ptan = st($themyarray['medicare_ptan']);
+                    $tax_id_or_ssn = st($themyarray['tax_id_or_ssn']);
+                    $ein = st($themyarray['ein']);
+                    $ssn = st($themyarray['ssn']);
+                    $practice = st($themyarray['practice']);
+                    $address = st($themyarray['address']);
+                    $city = st($themyarray['city']);
+                    $state = st($themyarray['state']);
+                    $zip = st($themyarray['zip']);
+                    $phone = st($themyarray['phone']);
+                }
+                
         		$username = st($themyarray['username']);
         		$password = st($themyarray['password']);
         		$first_name = st($themyarray['first_name']);
         		$last_name = st($themyarray['last_name']);
         		$email = st($themyarray['email']);
-        		$address = st($themyarray['address']);
-        		$phone = st($themyarray['phone']);
         		$status = st($themyarray['status']);
                 $producer = st($themyarray['producer']);
                 $producer_files = st($themyarray['producer_files']);
-		        $npi = st($producers['npi']);
-                $medicare_npi = st($producers['medicare_npi']);
-                $medicare_ptan = st($producers['medicare_ptan']);
-                $tax_id_or_ssn = st($producers['tax_id_or_ssn']);
-                $ein = st($producers['ein']);
-                $ssn = st($producers['ssn']);
-                $practice = st($producers['practice']);
-                $address = st($producers['address']);
-                $city = st($producers['city']);
-                $state = st($producers['state']);
-                $zip = st($producers['zip']);
-                $phone = st($producers['phone']);
         		$post_ledger_adjustments = st($themyarray['post_ledger_adjustments']);
         		$edit_ledger_entries = st($themyarray['edit_ledger_entries']);
         		$use_course = st($themyarray['use_course']);

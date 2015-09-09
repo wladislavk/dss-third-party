@@ -43,5 +43,10 @@ class Enrollment extends Model
      */
     protected $table = 'enrollment_payers_list';
 
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
+
 
 }

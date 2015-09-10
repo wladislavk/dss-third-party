@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    send_text("load", false, getParameterByName('id'), getParameterByName('hash'));
+    send_text("load", false, getParameterByName('id'), getParameterByName('hash'), phone);
 
     /* Using custom settings */    
     $("a#saas_agree_but").fancybox({

@@ -251,3 +251,20 @@ function split_phone($num, $a){
   }
   return $num;
 }
+
+function dateFormat($data) {
+  if (!empty($data)) {
+      $dateFromDatabase = str_replace('/', '-', $data);
+      if ($dateFormat = date_create_from_format('m-d-y', $dateFromDatabase)) {
+          $dateFormat = $dateFormat->format('Y-m-d');
+      } elseif ($dateFormat = date_create_from_format('m-d-Y', $dateFromDatabase)) {
+          $dateFormat = $dateFormat->format('Y-m-d');
+      } else {
+          $dateFormat = date('m/d/Y');
+      }
+  } else {
+      $dateFormat = '';
+  }
+
+  return $dateFormat;
+}

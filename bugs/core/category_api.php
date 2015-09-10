@@ -395,7 +395,7 @@ function category_cache_array_rows_by_project( $p_project_id_array ) {
 
 			if( $p_sort_by_project ) {
 				category_sort_rows_by_project( $p_project_id );
-				usort( $t_categories, 'ds3\Libraries\Legacy\category_sort_rows_by_project' );
+				usort( $t_categories, 'Ds3\Libraries\Legacy\category_sort_rows_by_project' );
 				category_sort_rows_by_project( null );
 			}
 			return $t_categories;
@@ -443,7 +443,7 @@ function category_cache_array_rows_by_project( $p_project_id_array ) {
 
 	if( $p_sort_by_project ) {
 		category_sort_rows_by_project( $p_project_id );
-		usort( $rows, 'ds3\Libraries\Legacy\category_sort_rows_by_project' );
+		usort( $rows, 'Ds3\Libraries\Legacy\category_sort_rows_by_project' );
 		category_sort_rows_by_project( null );
 	}
 

@@ -282,52 +282,52 @@
 
         // Sort the letters array
         if ($_REQUEST['sort'] == "userid" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\userid_asc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\userid_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\userid_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\userid_asc');
         }
         if ($_REQUEST['sort'] == "userid" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\userid_desc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\userid_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\userid_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\userid_desc');
         }
         if ($_REQUEST['sort'] == "subject" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\subject_asc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\subject_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\subject_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\subject_asc');
         }
         if ($_REQUEST['sort'] == "subject" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\subject_desc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\subject_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\subject_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\subject_desc');
         }
         if ($_REQUEST['sort'] == "method" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\method_asc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\method_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\method_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\method_asc');
         }
         if ($_REQUEST['sort'] == "method" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\method_desc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\method_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\method_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\method_desc');
         }
         if ($_REQUEST['sort'] == "sentto" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\sentto_asc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\sentto_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\sentto_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\sentto_asc');
         }
         if ($_REQUEST['sort'] == "sentto" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\sentto_desc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\sentto_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\sentto_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\sentto_desc');
         }
         if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\generated_date_asc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\generated_date_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\generated_date_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\generated_date_asc');
         }
         if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\generated_date_desc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\generated_date_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\generated_date_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\generated_date_desc');
         }
         if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\delivery_date_asc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\delivery_date_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\delivery_date_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\delivery_date_asc');
         }
         if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'ds3\Libraries\Legacy\delivery_date_desc'); 
-            usort($sent_letters, 'ds3\Libraries\Legacy\delivery_date_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\delivery_date_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\delivery_date_desc');
         }
 ?>
 

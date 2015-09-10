@@ -36,7 +36,7 @@ function plugin_sort( $p1, $p2 ) {
 }
 
 $t_plugins = plugin_find_all();
-uasort( $t_plugins, 'ds3\Libraries\Legacy\plugin_sort' );
+uasort( $t_plugins, 'Ds3\Libraries\Legacy\plugin_sort' );
 
 global $g_plugin_cache;
 

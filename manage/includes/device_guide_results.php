@@ -41,7 +41,7 @@
     }
   }
 
-  usort($d_array, "cmp");
+  usort($d_array, "Ds3\Libraries\Legacy\cmp");
 
   echo json_encode($d_array);
 

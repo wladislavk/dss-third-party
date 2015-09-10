@@ -53,6 +53,10 @@
     <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
     <script type="text/javascript" src="/manage/register/js/activate.js"></script>
 
+    <script>
+        var phone = '<?php echo  substr($r['phone'], strlen($r['phone'])-2); ?>';
+    </script>
+
     <div id="login_container">
         <h1>Dental Sleep Solutions</h1>
         <div class="login_content" id="first2_sect">

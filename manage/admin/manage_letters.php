@@ -416,58 +416,58 @@ foreach ($dental_letters as $key => $letter) {
 
 // Sort the letters array
 if ($_REQUEST['sort'] == "franchisee" && $_REQUEST['sortdir'] == "ASC") {
-  usort($dental_letters, 'franchisee_asc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\franchisee_asc');
 }
 if ($_REQUEST['sort'] == "franchisee" && $_REQUEST['sortdir'] == "DESC") {
-  usort($dental_letters, 'user_desc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\user_desc');
 }
 if ($_REQUEST['sort'] == "user" && $_REQUEST['sortdir'] == "ASC") {
-  usort($dental_letters, 'franchisee_asc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\franchisee_asc');
 }
 if ($_REQUEST['sort'] == "user" && $_REQUEST['sortdir'] == "DESC") {
- usort($dental_letters, 'user_desc'); 
+ usort($dental_letters, 'Ds3\Libraries\Legacy\user_desc');
 }
 if ($_REQUEST['sort'] == "patient_name" && $_REQUEST['sortdir'] == "ASC") {
-  usort($dental_letters, 'name_asc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\name_asc');
 }
 if ($_REQUEST['sort'] == "patient_name" && $_REQUEST['sortdir'] == "DESC") {
-  usort($dental_letters, 'name_desc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\name_desc');
 }
 if ($_REQUEST['sort'] == "subject" && $_REQUEST['sortdir'] == "ASC") {
-  usort($dental_letters, 'subject_asc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\subject_asc');
 }
 if ($_REQUEST['sort'] == "subject" && $_REQUEST['sortdir'] == "DESC") {
-  usort($dental_letters, 'subject_desc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\subject_desc');
 }
 if ($_REQUEST['sort'] == "sentto" && $_REQUEST['sortdir'] == "ASC") {
-  usort($dental_letters, 'sentto_asc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\sentto_asc');
 }
 if ($_REQUEST['sort'] == "sentto" && $_REQUEST['sortdir'] == "DESC") {
-  usort($dental_letters, 'sentto_desc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\sentto_desc');
 }
 if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "ASC") {
-  usort($dental_letters, 'generated_date_asc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\generated_date_asc');
 }
 if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
-  usort($dental_letters, 'generated_date_desc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\generated_date_desc');
 }
 if ($_REQUEST['sort'] == "date_sent" && $_REQUEST['sortdir'] == "ASC") {
-  usort($dental_letters, 'date_sent_asc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\date_sent_asc');
 }
 if ($_REQUEST['sort'] == "date_sent" && $_REQUEST['sortdir'] == "DESC") {
-  usort($dental_letters, 'date_sent_desc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\date_sent_desc');
 }
 if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "ASC") {
-  usort($dental_letters, 'delivery_date_asc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\delivery_date_asc');
 }
 if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
-  usort($dental_letters, 'delivery_date_desc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\delivery_date_desc');
 }
 if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "ASC") {
-  usort($dental_letters, 'send_method_asc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\send_method_asc');
 }
 if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
-  usort($dental_letters, 'send_method_desc'); 
+  usort($dental_letters, 'Ds3\Libraries\Legacy\send_method_desc');
 }
 
 

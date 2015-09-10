@@ -164,7 +164,7 @@ function tag_parse_string( $p_string ) {
 			);
 		}
 	}
-	usort( $t_tags, 'tag_cmp_name' );
+	usort( $t_tags, 'Ds3\Libraries\Legacy\tag_cmp_name' );
 	return $t_tags;
 }
 
@@ -206,7 +206,7 @@ function tag_parse_filters( $p_string ) {
 			continue;
 		}
 	}
-	usort( $t_tags, 'tag_cmp_name' );
+	usort( $t_tags, 'Ds3\Libraries\Legacy\tag_cmp_name' );
 	return $t_tags;
 }
 
@@ -510,7 +510,7 @@ function tag_bug_get_attached( $p_bug_id ) {
 		$rows[] = $row;
 	}
 
-	usort( $rows, 'tag_cmp_name' );
+	usort( $rows, 'Ds3\Libraries\Legacy\tag_cmp_name' );
 	return $rows;
 }
 

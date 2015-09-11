@@ -682,6 +682,9 @@ if (!function_exists('s_for')) {
 <script type="text/javascript">
   $(document).ready( function(){
 
+    // set a patient signed date
+    $('.input.grayout').find('input[placeholder="date"]').val('<?php echo $patient_signed_date; ?>');
+
     <?php
       if(isset($_GET['instype']) && $_GET['instype'] == 2) {
         $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";

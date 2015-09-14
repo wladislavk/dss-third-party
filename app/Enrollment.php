@@ -41,7 +41,7 @@ class Enrollment extends Model
      *
      * @var string
      */
-    protected $table = 'enrollment_payers_list';
+    protected $table = 'dental_eligible_enrollment';
 
     /**
      * @var bool

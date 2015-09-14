@@ -371,7 +371,7 @@ if (!function_exists('s_for')) {
     $amount_paid = st($myarray['amount_paid']);
     $balance_due = st($myarray['balance_due']);
     $signature_physician = st($myarray['signature_physician']);
-    $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('m/d/Y'));
+    $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('Y-m-d'));
     $service_facility_info_name = st($myarray['service_facility_info_name']);
     $service_facility_info_address = st($myarray['service_facility_info_address']);
     $service_facility_info_city = st($myarray['service_facility_info_city']);
@@ -422,8 +422,8 @@ if (!function_exists('s_for')) {
     }
   	$patient_signature = 1;
   	$signature_physician = "Signature on File";
-  	$patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
-    $physician_signed_date = date('m/d/Y');	
+  	$patient_signed_date = date('Y-m-d', strtotime($pat_myarray['adddate']));
+    $physician_signed_date = date('Y-m-d');	
   	$patient_phone_code = split_phone($pat_myarray['home_phone'], true);
   	$patient_phone = split_phone($pat_myarray['home_phone'], false);
   	$insured_phone_code = split_phone($pat_myarray['home_phone'], true);

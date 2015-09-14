@@ -191,7 +191,7 @@ trigger_error("Die called", E_USER_ERROR);
 	$patient_lastname = $_POST['patient_lastname'];
 	$patient_firstname = $_POST['patient_firstname'];
 	$patient_middle = $_POST['patient_middle'];
-  //we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
+  //we need to convert the DOB from yyyy-mm-dd to YYYY-MM-dd
 	$patient_dob_raw = $_POST['patient_dob'];
     $patient_dob_raw_pos = strpos($patient_dob_raw, '-');
     if ($patient_dob_raw_pos != false) {
@@ -238,7 +238,7 @@ trigger_error("Die called", E_USER_ERROR);
 	$other_accident = (!empty($_POST['other_accident']) ? $_POST['other_accident'] : '');
 	$insured_policy_group_feca = $_POST['insured_policy_group_feca'];
 	$other_insured_policy_group_feca = $_POST['other_insured_policy_group_feca'];
-	//we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
+	//we need to convert the DOB from yyyy-mm-dd to YYYY-MM-dd
   $insured_dob_raw = $_POST['insured_dob'];
   $insured_dob_raw_pos = strpos($insured_dob_raw, '-');
   if ($insured_dob_raw_pos != false) {
@@ -405,16 +405,16 @@ trigger_error("Die called", E_USER_ERROR);
 	$amount_paid = $_POST['amount_paid'];
 	$balance_due = (!empty($_POST['balance_due']) ? $_POST['balance_due'] : '');
 	$signature_physician = $_POST['signature_physician'];
-	// $physician_signed_date = (($_POST['physician_signed_date']!=date('m/d/Y'))?$_POST['physician_signed_date']:'');
+	// $physician_signed_date = (($_POST['physician_signed_date']!=date('Y-m-d'))?$_POST['physician_signed_date']:'');
 
-    if ($_POST['physician_signed_date'] != date('m/d/Y')) {
+    if ($_POST['physician_signed_date'] != date('Y-m-d')) {
         $dateFromPost = str_replace('/', '-', $_POST['physician_signed_date']);
         if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromPost)) {
-            $physician_signed_date = $physician_signed_date->format('m/d/Y');
+            $physician_signed_date = $physician_signed_date->format('Y-m-d');
         } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromPost)) {
-            $physician_signed_date = $physician_signed_date->format('m/d/Y');
+            $physician_signed_date = $physician_signed_date->format('Y-m-d');
         } else {
-            $physician_signed_date = date('m/d/Y');
+            $physician_signed_date = date('Y-m-d');
         }
     } else {
         $physician_signed_date = '';
@@ -1327,19 +1327,19 @@ $other_claim_id = st($myarray['other_claim_id']);
 $nucc_9c = st($myarray['nucc_9c']);
 $nucc_30 = st($myarray['nucc_30']);
 $signature_physician = st($myarray['signature_physician']);
-// $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('m/d/Y'));
+// $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('Y-m-d'));
 
 if (!empty($myarray['physician_signed_date'])) {
     $dateFromDatabase = str_replace('/', '-', $myarray['physician_signed_date']);
     if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromDatabase)) {
-        $physician_signed_date = $physician_signed_date->format('m/d/Y');
+        $physician_signed_date = $physician_signed_date->format('Y-m-d');
     } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromDatabase)) {
-        $physician_signed_date = $physician_signed_date->format('m/d/Y');
+        $physician_signed_date = $physician_signed_date->format('Y-m-d');
     } else {
-        $physician_signed_date = date('m/d/Y');
+        $physician_signed_date = date('Y-m-d');
     }
 } else {
-    $physician_signed_date = date('m/d/Y');
+    $physician_signed_date = date('Y-m-d');
 }
 
 $service_facility_info_name = st($myarray['service_facility_info_name']);
@@ -1384,8 +1384,8 @@ if($is_pri_pending){
 	}
 	$patient_signature = 1;
 	$signature_physician = "Signature on File";
-	$patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
-        $physician_signed_date = date('m/d/Y');	
+	$patient_signed_date = date('Y-m-d', strtotime($pat_myarray['adddate']));
+        $physician_signed_date = date('Y-m-d');	
 	$patient_phone_code = split_phone($pat_myarray['home_phone'], true);
 	$patient_phone = split_phone($pat_myarray['home_phone'], false);
 	$insured_phone_code = split_phone($pat_myarray['home_phone'], true);
@@ -1487,8 +1487,9 @@ input{text-transform:uppercase;}
 <link rel="stylesheet" href="<?php echo $admin_path?>popup/popup.css" type="text/css" media="screen" />
 <script type="text/javascript" src="<?php echo $admin_path?>script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="<?php echo $manage_path?>3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-    <script type="text/javascript" src="<?php echo $manage_path?>script/masks.js?v=<?= time() ?>"></script>
-<script src="<?php echo $admin_path?>popup/popup.js" type="text/javascript"></script>
+<script type="text/javascript" src="<?php echo $manage_path?>script/masks.js?v=<?= time() ?>"></script>
+<script type="text/javascript" src="<?php echo $admin_path?>popup/popup.js"></script>
+<script type="text/javascript" src="/manage/js/top.js?v=<?= time() ?>"></script>
 
 <?php if ($is_sent || (!$is_new_claim && !$is_pending && !$is_rejected && !$is_disputed && $is_front_office)) { ?>
   <script>
@@ -1930,10 +1931,16 @@ Medicare
 									Patient's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if($patient_dob!=''){$patient_dob = date('m-d-Y', strtotime($patient_dob));
+									<?php if($patient_dob!=''){$patient_dob = date('Y-m-d', strtotime($patient_dob));
                   } ?>
-                                    <input id="dob" name="patient_dob" type="text" class="field text addr tbox calendar" value="<?php echo $patient_dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" />
-									mm-dd-yyyy
+                                    <input id="dob" name="patient_dob" type="text" class="field text addr tbox calendar"
+                                         value="<?php echo $patient_dob?>"
+                                         style="width:100px;" maxlength="255"
+                                         onChange="validateDate('dob');"
+                                         placeholder="example 1980-21-11"
+                                         data-date-format="Y-m-d"
+                                    />
+									yyyy-mm-dd
 								</td>
 								<td width="42%" align="center" valign="top">
 									Sex
@@ -2176,10 +2183,15 @@ Medicare
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if(!empty($insured_dob)){$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
+									<?php if(!empty($insured_dob)){$insured_dob = date('Y-m-d', strtotime($insured_dob));
                   }?>
-                                    <input id="insured_dob" name="insured_dob" type="text" class="field text addr tbox calendar" value="<?php echo  $insured_dob; ?>" style="width:100px;" maxlength="255" onChange="validateDate('insured_dob');"  value="example 11/11/1234" />
-									mm-dd-yyyy
+                                    <input id="insured_dob" name="insured_dob" type="text" class="field text addr tbox calendar"
+                                        value="<?php echo  $insured_dob; ?>" style="width:100px;" maxlength="255"
+                                        onChange="validateDate('insured_dob');"
+                                        placeholder="example 1980-21-11"
+                                        data-date-format="Y-m-d"
+                                    />
+									yyyy-mm-dd
 								</td>
 								<td width="42%" align="center" valign="top">
 									Sex
@@ -2271,7 +2283,12 @@ Medicare
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						Date:
-                        <input id="patient_signed_date" name="patient_signed_date" type="text" class="field text addr tbox calendar" value="<?php echo $patient_signed_date?>" style="width:100px;" maxlength="255" onChange="validateDate('patient_signed_date');"  value="example 11/11/1234" />
+                        <input id="patient_signed_date" name="patient_signed_date" type="text" class="field text addr tbox calendar"
+                            value="<?php echo $patient_signed_date?>" style="width:100px;" maxlength="255"
+                            onChange="validateDate('patient_signed_date');"
+                            placeholder="example 1980-21-11"
+                            data-date-format="Y-m-d"
+                        />
 					</td>
 					<td align="left" valign="top">
 						<span class="num">13.</span>
@@ -2297,8 +2314,13 @@ Medicare
 DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 									<br />
 									&nbsp;&nbsp;
-                                    <input id="date_current" name="date_current" type="text" class="field text addr tbox calendar" value="<?php echo $date_current?>" style="width:100px;" maxlength="255" onChange="validateDate('date_current');"  value="example 11/11/1234" />
-									mm-dd-yy
+                                    <input id="date_current" name="date_current" type="text" class="field text addr tbox calendar"
+                                        value="<?php echo $date_current?>" style="width:100px;" maxlength="255"
+                                        onChange="validateDate('date_current');"
+                                        placeholder="example 1980-21-11"
+                                        data-date-format="Y-m-d"
+                                    />
+									yyyy-mm-dd
 									<span class="small_cap"> QUAL. </span>
 									<input type="text" name="current_qual" class="inbox_line3" value="<?php echo (!empty($current_qual) ? $current_qual : ''); ?>" size="10"/>
 								</td>
@@ -2312,8 +2334,13 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						<span class="small_cap">QUAL.</span>
 									<input type="text" name="same_illness_qual" class="inbox_line3" size="10" value="<?php echo (!empty($same_illness_qual) ? $same_illness_qual : ''); ?>"/>
 						&nbsp;&nbsp;
-                        <input id="date_same_illness" name="date_same_illness" type="text" class="field text addr tbox calendar" value="<?php echo $date_same_illness?>" style="width:100px;" maxlength="255" onChange="validateDate('date_same_illness');"  value="example 11/11/1234" />
-						mm-dd-yy
+                        <input id="date_same_illness" name="date_same_illness" type="text" class="field text addr tbox calendar"
+                            value="<?php echo $date_same_illness?>" style="width:100px;" maxlength="255"
+                            onChange="validateDate('date_same_illness');"
+                            placeholder="example 1980-21-11"
+                            data-date-format="Y-m-d"
+                        />
+						yyyy-mm-dd
 					</td>
 					<td valign="top">
 						<span class="num">16.</span> 
@@ -2325,8 +2352,14 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-                                    <input id="unable_date_from" name="unable_date_from" type="text" class="field text addr tbox calendar" value="<?php echo (!empty($unable_date_from) ? $unable_date_from : ''); ?>" style="width:100px;" maxlength="255" onChange="validateDate('unable_date_from');"  value="example 11/11/1234" />
-									mm-dd-yy
+                                    <input id="unable_date_from" name="unable_date_from" type="text" class="field text addr tbox calendar"
+                                        value="<?php echo (!empty($unable_date_from) ? $unable_date_from : ''); ?>"
+                                        style="width:100px;" maxlength="255"
+                                        onChange="validateDate('unable_date_from');"
+                                        placeholder="example 1980-21-11"
+                                        data-date-format="Y-m-d"
+                                    />
+									yyyy-mm-dd
 								</td>
 								
 								<td valign="middle" align="right" width="10%">
@@ -2334,8 +2367,14 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-                                    <input id="unable_date_to" name="unable_date_to" type="text" class="field text addr tbox calendar" value="<?php echo (!empty($unable_date_to) ? $unable_date_to : ''); ?>" style="width:100px;" maxlength="255" onChange="validateDate('unable_date_to');"  value="example 11/11/1234" />
-									mm-dd-yy
+                                    <input id="unable_date_to" name="unable_date_to" type="text" class="field text addr tbox calendar"
+                                        value="<?php echo (!empty($unable_date_to) ? $unable_date_to : ''); ?>"
+                                        style="width:100px;" maxlength="255"
+                                        onChange="validateDate('unable_date_to');"
+                                        placeholder="example 1980-21-11"
+                                        data-date-format="Y-m-d"
+                                    />
+									yyyy-mm-dd
 								</td>
 							</tr>
 						</table>
@@ -2466,8 +2505,14 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-                                    <input id="hospitalization_date_from" name="hospitalization_date_from" type="text" class="field text addr tbox calendar" value="<?php echo (!empty($hospitalization_date_from) ? $hospitalization_date_from : ''); ?>" style="width:100px;" maxlength="255" onChange="validateDate('hospitalization_date_from');"  value="example 11/11/1234" />
-                                    mm-dd-yy
+                                    <input id="hospitalization_date_from" name="hospitalization_date_from" type="text" class="field text addr tbox calendar"
+                                        value="<?php echo (!empty($hospitalization_date_from) ? $hospitalization_date_from : ''); ?>"
+                                        style="width:100px;" maxlength="255"
+                                        onChange="validateDate('hospitalization_date_from');"
+                                        placeholder="example 1980-21-11"
+                                        data-date-format="Y-m-d"
+                                    />
+                                    yyyy-mm-dd
 									
 								</td>
 								
@@ -2476,8 +2521,13 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-                                    <input id="hospitalization_date_to" name="hospitalization_date_to" type="text" class="field text addr tbox calendar" value="<?php echo (!empty($hospitalization_date_to) ? $hospitalization_date_to : ''); ?>" style="width:100px;" maxlength="255" onChange="validateDate('hospitalization_date_to');"  value="example 11/11/1234" />
-                                    mm-dd-yy
+                                    <input id="hospitalization_date_to" name="hospitalization_date_to" type="text" class="field text addr tbox calendar"
+                                        value="<?php echo (!empty($hospitalization_date_to) ? $hospitalization_date_to : ''); ?>"
+                                        style="width:100px;" maxlength="255"
+                                        onChange="validateDate('hospitalization_date_to');"
+                                        placeholder="example 1980-21-11"
+                                        />
+                                    yyyy-mm-dd
 								</td>
 							</tr>
 						</table>
@@ -2807,8 +2857,8 @@ if (empty($query)) {
         $realTotalAmount += $array['amount']; ?>
     <table style="margin-left:39px;">
       <tr>
-        <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
-        <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
+        <td width="106"><?php echo date('Y-m-d', strtotime($array['service_date'])); ?></td>
+        <td width="106"><?php echo date('Y-m-d', strtotime($array['service_date'])); ?></td>
         <td width="91">
 <?php echo  (!empty($pos) ? $pos : ''); ?>
 		<select style="width:76px" name="placeofservice<?php echo $li;?>">
@@ -3108,7 +3158,13 @@ if ($is_pending) {
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									Date: 
                                     <div style="text-align: right">
-                                       <input id="physician_signed_date" name="physician_signed_date" type="text" class="field text addr tbox calendar" value="<?php echo $physician_signed_date?>" style="width:100px;" maxlength="255" onChange="validateDate('physician_signed_date');"  value="example 11/11/1234" />
+                                       <input id="physician_signed_date" name="physician_signed_date" type="text" class="field text addr tbox calendar"
+                                           value="<?php echo $physician_signed_date?>" style="width:100px;"
+                                           maxlength="255"
+                                           onChange="validateDate('physician_signed_date');"
+                                           placeholder="example 1980-21-11"
+                                           data-date-format="Y-m-d"
+                                       />
                                     </div>
 								</td>
 								<td valign="top" width="50%">

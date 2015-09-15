@@ -759,10 +759,9 @@ if (!function_exists('s_for')) {
       $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
                       
       <?php
+      // DON'T consider the claim as Secondary, by default
         if($_GET['instype']==2 && $responsibility_sequence == ""){
           $seq='P';
-        } else if($responsibility_sequence == "") {
-          $seq='S';
         } else  if ($responsibility_sequence != ""){
           $seq = $responsibility_sequence;
         }

@@ -790,9 +790,9 @@ if (!function_exists('s_for')) {
       $('input[name="claim[other_accident]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
-    <?php if (strtolower($another_plan) == 'yes') { ?>
+    <?php if($another_plan == 'YES') { ?>
       $('input[name="other_payer"][value="true"]').attr("checked", "checked");
-    <?php } else { ?>
+    <?php } elseif($another_plan == 'NO') { ?>
       $('input[name="other_payer"][value="false"]').attr("checked", "checked");
     <?php } ?>
 

@@ -322,11 +322,13 @@
         if (!empty($myarray['physician_signed_date'])) {
             $dateFromDatabase = str_replace('/', '-', $myarray['physician_signed_date']);
             if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromDatabase)) {
-                $physician_signed_date = $physician_signed_date->format('m/d/Y');
+                $physician_signed_date = $physician_signed_date->format('Y-m-d');
             } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromDatabase)) {
-                $physician_signed_date = $physician_signed_date->format('m/d/Y');
+                $physician_signed_date = $physician_signed_date->format('Y-m-d');
+            } elseif ($physician_signed_date = date_create_from_format('Y-m-d', $dateFromDatabase)) {
+                $physician_signed_date = $physician_signed_date->format('Y-m-d');
             } else {
-                $physician_signed_date = date('m/d/Y');
+                $physician_signed_date = date('Y-m-d');
             }
         } else {
             $physician_signed_date = '';
@@ -799,7 +801,7 @@
             << /T(".$field_path.".diagnosis_j[0]) /V(".escapeFdf((!empty($diagnosis_j) ? $diagnosis_j : '')).") >>
             << /T(".$field_path.".diagnosis_k[0]) /V(".escapeFdf((!empty($diagnosis_k) ? $diagnosis_k : '')).") >>
             << /T(".$field_path.".diagnosis_l[0]) /V(".escapeFdf((!empty($diagnosis_l) ? $diagnosis_l : '')).") >>
-            << /T(".$field_path.".medicaid_resubmission_code_fill[0]) /V(".escapeFdf((!empty($resubmission_code_fill) ? $resubmission_code_fill : '')).") >>
+            << /T(".$field_path.".medicaid_resubmission_code_fill[0]) /V(".escapeFdf((!empty($resubmission_code_fill) && $resubmission_code_fill != 1 ? $resubmission_code_fill : '')).") >>
             << /T(".$field_path.".original_ref_no_fill[0]) /V(".escapeFdf((!empty($original_ref_no) ? $original_ref_no : '')).") >>
             << /T(".$field_path.".name_referring_provider_qualifier[0]) /V(".escapeFdf((!empty($name_referring_provider_qualifier) ? $name_referring_provider_qualifier : '')).") >>
             << /T(".$field_path.".prior_auth_number_fill[0]) /V(".escapeFdf((!empty($prior_authorization_number) ? $prior_authorization_number : '')).") >>";
@@ -937,35 +939,6 @@
       << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".escapeFdf((!empty($billing_info) ? $billing_info : ''))."".escapeFdf((!empty($billing_provider_b_other) ? $billing_provider_b_other : '')).") >>
     ";
 
-  $fdf .= "
-    ]
-    /F (".$pdf_doc.") 
-    >>
-    >>
-    endobj
-    trailer
-    <<
-    /Root 1 0 R
-
-    >>
-    %%EOF
-    ";
-
-  $fdf .= "
-  << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".escapeFdf($array['placeofservice']).") >>
-  << /T(".$field_path.".".$p."_EMG_fill[0]) /V(".escapeFdf($array['emg']).") >>
-  << /T(".$field_path.".".$p."_CPT_fill[0]) /V(".escapeFdf($array['transaction_code'] ).") >>
-  << /T(".$field_path.".".$p."_modifier_one_fill[0]) /V(".escapeFdf($array['modcode']).") >>
-  << /T(".$field_path.".".$p."_modifier_two_fill[0]) /V(".escapeFdf($array['modcode2']).") >>
-  << /T(".$field_path.".".$p."_modifier_three_fill[0]) /V(".escapeFdf($array['modcode3']).") >>
-  << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V(".escapeFdf($array['modcode4']).") >>
-  << /T(".$field_path.".".$p."_diagnosis_pointer_fill[0]) /V(".escapeFdf($diagnosis_array[$array['diagnosispointer']]).") >> 
-  << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".escapeFdf(number_format(floor($array['amount']),0,'.','')).") >>
-  << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".escapeFdf(fill_cents(roundToCents($array['amount']))).") >>
-  << /T(".$field_path.".".$p."_days_or_units_fill[0]) /V(".escapeFdf($array['daysorunits']).") >>
-  << /T(".$field_path.".".$p."_EPSDT_fill[0]) /V(".escapeFdf($array['epsdt']).") >>
-  << /T(".$field_path.".".$p."_rendering_provider_fill[0]) /V(".escapeFdf($array['provider_id']).") >> ";
-
   // re-calculate balance due
   //$balance_due = $total_charge - $amount_paid;
 
@@ -1007,16 +980,15 @@ $fdf .= "
   << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".escapeFdf($billing_provider_phone).") >>
   << /T(".$field_path.".billing_provider_info_fill[0]) /V(".escapeFdf(strtoupper($billing_provider_name)."\n".strtoupper($billing_provider_address)."\n".strtoupper($billing_provider_city)).") >>
   << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".escapeFdf($signature_physician).") >>  
-  << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".escapeFdf(date('m/d/y')).") >>
+  << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".escapeFdf(date('Y-m-d')).") >>
   << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".escapeFdf($service_info_a).") >>
   << /T(".$field_path.".billing_provider_a[0]) /V(".escapeFdf($billing_provider_a).") >>
   << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf(((!empty($billing_provider_a) ? $billing_provider_a : ''))).") >>
 ";
 
-
 $fdf .= "
 ]
-/F (".$pdf_doc.") 
+/F (".$pdf_doc.")
 >>
 >>
 endobj

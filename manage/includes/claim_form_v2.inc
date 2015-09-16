@@ -215,8 +215,7 @@ trigger_error("Die called", E_USER_ERROR);
     $current_qual = (!empty($_POST['current_qual']) ? $_POST['current_qual'] : '');
 	$same_illness_qual = (!empty($_POST['same_illness_qual']) ? $_POST['same_illness_qual'] : '');
 	$patient_zip = $_POST['patient_zip'];
-	$patient_phone_code = num($_POST['patient_phone_code'], false);
-	$patient_phone = num($_POST['patient_phone'], false);
+    list($patient_phone_code, $patient_phone) = parsePhoneNumber($_POST['patient_phone_code'], $_POST['patient_phone']);
 	$insured_id_number = $_POST['insured_id_number'];
 	$insured_firstname = $_POST['insured_firstname'];
 	$insured_lastname = $_POST['insured_lastname'];
@@ -226,8 +225,7 @@ trigger_error("Die called", E_USER_ERROR);
 	$insured_state = $_POST['insured_state'];
 	$insured_city = $_POST['insured_city'];
 	$insured_zip = $_POST['insured_zip'];
-	$insured_phone_code = num($_POST['insured_phone_code'], false);
-	$insured_phone = num($_POST['insured_phone'], false);
+    list($insured_phone_code, $insured_phone) = parsePhoneNumber($_POST['insured_phone_code'], $_POST['insured_phone']);
 	$other_insured_id_number = $_POST['other_insured_id_number'];
 	$other_insured_firstname = $_POST['other_insured_firstname'];
 	$other_insured_lastname = $_POST['other_insured_lastname'];
@@ -426,8 +424,9 @@ trigger_error("Die called", E_USER_ERROR);
 	$service_info_a = $_POST['service_info_a'];
 	$service_info_dd = $_POST['service_info_dd'];
 	$service_info_b_other = $_POST['service_info_b_other'];
-	$billing_provider_phone_code = $_POST['billing_provider_phone_code'];
-	$billing_provider_phone = $_POST['billing_provider_phone'];
+    list($billing_provider_phone_code, $billing_provider_phone) = parsePhoneNumber(
+        $_POST['billing_provider_phone_code'], $_POST['billing_provider_phone']
+    );
 	$billing_provider_name = $_POST['billing_provider_name'];
 	$billing_provider_address = $_POST['billing_provider_address'];
 	$billing_provider_city = $_POST['billing_provider_city'];
@@ -1126,8 +1125,9 @@ if(!empty($_GET['instype']) && $_GET['instype']==2){
   $insured_city = st($myarray['other_insured_city']);
   $insured_state = st($myarray['other_insured_state']);
   $insured_zip = st($myarray['other_insured_zip']);
-  $insured_phone_code = st($myarray['insured_phone_code']);
-  $insured_phone = st($myarray['insured_phone']);
+  list($insured_phone_code, $insured_phone) = parsePhoneNumber(
+      $myarray['insured_phone_code'], $myarray['insured_phone']
+  );
   $insured_sex = st($myarray['other_insured_sex']);
   $patient_relation_insured = st($myarray['patient_relation_other_insured']);
 }else{
@@ -1152,8 +1152,9 @@ if(!empty($_GET['instype']) && $_GET['instype']==2){
   $insured_city = st($myarray['insured_city']);
   $insured_state = st($myarray['insured_state']);
   $insured_zip = st($myarray['insured_zip']);
-  $insured_phone_code = st($myarray['insured_phone_code']);
-  $insured_phone = st($myarray['insured_phone']);
+  list($insured_phone_code, $insured_phone) = parsePhoneNumber(
+      $myarray['insured_phone_code'], $myarray['insured_phone']
+  );
   $insured_sex = st($myarray['insured_sex']);
   $patient_relation_insured = st($myarray['patient_relation_insured']);
 }
@@ -1163,8 +1164,7 @@ $patient_state = st($myarray['patient_state']);
 $patient_status = st($myarray['patient_status']);
 $patient_status_array = explode('~',$patient_status);
 $patient_zip = st($myarray['patient_zip']);
-$patient_phone_code = st($myarray['patient_phone_code']);
-$patient_phone = st($myarray['patient_phone']);
+list($patient_phone_code, $patient_phone) = parsePhoneNumber($myarray['patient_phone_code'], $myarray['patient_phone']);
 $employment = st($myarray['employment']);
 $auto_accident = st($myarray['auto_accident']);
 $auto_accident_place = st($myarray['auto_accident_place']);
@@ -1348,8 +1348,9 @@ $service_facility_info_city = st($myarray['service_facility_info_city']);
 $service_info_a = st($myarray['service_info_a']);
 $service_info_dd = st($myarray['service_info_dd']);
 $service_info_b_other = st($myarray['service_info_b_other']);
-$billing_provider_phone_code = st($myarray['billing_provider_phone_code']);
-$billing_provider_phone = st($myarray['billing_provider_phone']);
+list($billing_provider_phone_code, $billing_provider_phone) = parsePhoneNumber(
+    $myarray['billing_provider_phone_code'], $myarray['billing_provider_phone']
+);
 $billing_provider_name = st($myarray['billing_provider_name']);
 $billing_provider_address = st($myarray['billing_provider_address']);
 $billing_provider_city = st($myarray['billing_provider_city']);
@@ -1385,12 +1386,10 @@ if($is_pri_pending){
 	$patient_signature = 1;
 	$signature_physician = "Signature on File";
 	$patient_signed_date = date('Y-m-d', strtotime($pat_myarray['adddate']));
-        $physician_signed_date = date('Y-m-d');	
-	$patient_phone_code = split_phone($pat_myarray['home_phone'], true);
-	$patient_phone = split_phone($pat_myarray['home_phone'], false);
-	$insured_phone_code = split_phone($pat_myarray['home_phone'], true);
-	$insured_phone = split_phone($pat_myarray['home_phone'], false);
-	$patient_status = $pat_myarray['marital_status'];	
+        $physician_signed_date = date('Y-m-d');
+    list($patient_phone_code, $patient_phone) = parsePhoneNumber($pat_myarray['home_phone']);
+    list($insured_phone_code, $insured_phone) = parsePhoneNumber($pat_myarray['home_phone']);
+	$patient_status = $pat_myarray['marital_status'];
 	$insured_id_number = $pat_myarray['p_m_ins_id'];
 	$other_insured_id_number = $pat_myarray['s_m_ins_id'];
 	$insured_address = (!empty($myarray['insured_address']) ? $myarray['insured_address'] : '');
@@ -1464,6 +1463,14 @@ if (empty($prior_authorization_number)) {
         $prior_authorization_number = $myarray['pre_auth_num'];
     }
 }
+
+/**
+ * 0 - Treatment, 9 - Diagnosis
+ * Therefore, unset values must be Diagnosis
+ *
+ * Use strict comparison to differentiate unset values from zero
+ */
+$isDiagnosis = !isset($icd_ind) || ($icd_ind !== 0 && $icd_ind !== '0');
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -2570,11 +2577,15 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						<span class="small_cap">
 							(Relate A-L to service line below (24E))
 						</span>
-                                ICD IND. <select name="icd_ind">
-                                        <option value="9" <?php echo  (isset($icd_ind) && $icd_ind==9)?'selected="selected"':''; ?>>ICD-9-CM - 9</option>
-                                        <option value="0" <?php echo  (isset($icd_ind) && $icd_ind==0)?'selected="selected"':''; ?>>ICD-10-CM - 0</option>
-                                </select>
-
+                        ICD IND.
+                        <select name="icd_ind">
+                            <option value="9" <?= $isDiagnosis ? 'selected="selected"' : '' ?>>
+                                ICD-9-CM - 9
+                            </option>
+                            <option value="0" <?= !$isDiagnosis ? 'selected="selected"' : '' ?>>
+                                ICD-10-CM - 0
+                            </option>
+                        </select>
 						
 						<table width="100%" cellpadding="0" cellspacing="0" border="0">
 							<tr>
@@ -3455,3 +3466,19 @@ $('input, select').bind('change', function(){
 });
 
 </script>
+<?php
+
+/**
+ * Parse phone + area code, as some form will use a single field, while another one will use separated fields
+ * Return an array of two elements, each one having the proper amount of digits
+ *
+ * list($phone_code, $phone_number) = parsePhoneNumber($maybeEmptyAreaCode, $maybeFullPhoneNumber);
+ */
+function parsePhoneNumber ($areaCodeOrFullNumber, $phoneNumber='') {
+    $fullNumber = preg_replace('/\D+/', '', "{$areaCodeOrFullNumber}{$phoneNumber}");
+
+    return [
+        substr($fullNumber, 0, 3), // area code
+        substr($fullNumber, 3) // local number
+    ];
+}

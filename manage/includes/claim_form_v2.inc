@@ -132,7 +132,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
           $claim_id = create_claim($_GET['pid'], $claim_producer);
   	}
 
-	$update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN ('".$ledger_ids."')";
+	$update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
 	$db->query($update_sql);
 
     }

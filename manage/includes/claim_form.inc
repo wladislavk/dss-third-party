@@ -1145,11 +1145,28 @@ $billing_provider_b_other = st($myarray['billing_provider_b_other']);
 $reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
 }
-if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
-  $another_plan = 'YES';
-}else{
-  $another_plan = 'NO';
+
+/**
+ * Logic:
+ *
+ * IF dental_insurance.another_plan IS set THEN use another_plan
+ * IF dental_insurance.another_plan IS not set THEN read options from dental_patients.p_m_dss_file
+ */
+$another_plan = strtolower($another_plan);
+
+if ($another_plan != 'yes' && $another_plan != 'no') {
+    if (
+        $pat_myarray['p_m_ins_type'] !=1 &&
+        strtolower($pat_myarray['has_s_m_ins']) == 'yes' &&
+        $pat_myarray['p_m_dss_file'] == 1 &&
+        $pat_myarray['s_m_dss_file'] == 1
+    ) {
+        $another_plan = 'yes';
+    } else {
+        $another_plan = 'no';
+    }
 }
+
 if($is_pri_pending){
   $insured_sex = $pat_myarray['p_m_gender'];
   $other_insured_sex = $pat_myarray['s_m_gender'];
@@ -1421,7 +1438,7 @@ if(!$r['reference_id'] || !$w_r['response']){
 
 ?>
 <?php
-if (!empty($is_back_office) || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && ($is_pending || $is_rejected) && $p_m_dss_file == '2')){ 
+if (!empty($is_back_office) || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && ($is_pending || $is_rejected) && $p_m_dss_file == '2')){
                 $p_m_ins_payer_id = st($pat_myarray["p_m_eligible_id"]);
                 if($p_m_ins_payer_id){
                   $dsql = "SELECT name, payer_id FROM dental_ins_payer
@@ -1959,9 +1976,9 @@ $(document).ready(function(){
 						<span class="num_a">d.</span> 
 						Is there another health benefit Plan?
 						<br />
-						<input type="radio" name="another_plan" value="YES" <? if($another_plan == "YES") echo " checked";?> />YES
+						<input type="radio" name="another_plan" value="YES" <?= $another_plan == 'yes' ? 'checked' : '' ?> />YES
 						&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="another_plan" value="NO" <? if($another_plan == "NO") echo " checked";?> />NO
+						<input type="radio" name="another_plan" value="NO" <?= $another_plan != 'yes' ? 'checked' : '' ?> />NO
 						&nbsp;&nbsp;
 						<span class="small_cap"><i>if yes, return to and complete item 9 a-d</i></span>
 					</td>

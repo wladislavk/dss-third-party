@@ -260,7 +260,7 @@ function dateFormat($data) {
       } elseif ($dateFormat = date_create_from_format('m-d-Y', $dateFromDatabase)) {
           $dateFormat = $dateFormat->format('Y-m-d');
       } else {
-          $dateFormat = date('m/d/Y');
+          $dateFormat = date('Y-m-d');
       }
   } else {
       $dateFormat = '';

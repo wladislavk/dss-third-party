@@ -70,9 +70,9 @@ if (count($my)) {
         foreach ($my as $myarray) {
 
             if($myarray['template_type']=='0'){
-              $template_query = "SELECT name FROM dental_letter_templates WHERE id = ".$myarray['templateid'].";";
+              $template_query = "SELECT name FROM dental_letter_templates WHERE id = '" . $myarray['templateid'] . "';";
             }else{
-              $template_query = "SELECT name FROM dental_letter_templates_custom WHERE id = ".$myarray['templateid'].";";
+              $template_query = "SELECT name FROM dental_letter_templates_custom WHERE id = '" . $myarray['templateid'] . "';";
             }
 
             $title = $db->getRow($template_query);

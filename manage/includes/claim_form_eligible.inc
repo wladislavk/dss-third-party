@@ -395,11 +395,22 @@ if (!function_exists('s_for')) {
     $billing_info = (!empty($billing_array['qualifier']) ? substr($billing_array['qualifier'], 0, 2) : '');
   }
 
-    if (!empty($other_insured_policy_group_feca) && !empty($other_insured_insurance_plan)) {
-        $another_plan = 'YES';
+/**
+ * Logic:
+ *
+ * IF dental_insurance.another_plan IS set THEN use another_plan
+ * IF dental_insurance.another_plan IS not set THEN read options from dental_patients.p_m_dss_file
+ */
+$another_plan = isset($another_plan) ? $another_plan : '';
+$another_plan = strtolower($another_plan);
+
+if ($another_plan != 'yes' && $another_plan != 'no') {
+    if ((isset($p_m_dss_file) && $p_m_dss_file == 1) || (isset($s_m_dss_file) && $s_m_dss_file == 1)) {
+        $another_plan = 'yes';
     } else {
-        $another_plan = 'NO';
+        $another_plan = 'no';
     }
+}
 
   if($is_pri_pending){
     $insured_sex = $pat_myarray['p_m_gender'];
@@ -415,7 +426,7 @@ if (!function_exists('s_for')) {
   	$patient_zip = $pat_myarray['zip'];
   	$patient_dob = $pat_myarray['dob'];
 
-    if($pat_myarray['p_m_ins_ass']=='Yes'){
+    if (strtolower($pat_myarray['p_m_ins_ass']) == 'yes'){
       $insured_signature = 1;
     }else{
       $insured_signature = 0;
@@ -772,29 +783,29 @@ if (!function_exists('s_for')) {
       <?php
         }
 
-      if($employment == "YES") { ?>
+      if (strtolower($employment) == 'yes') { ?>
       $('input[name="claim[related_to_employment]"][value="true"]').attr("checked", "checked");
-    <?php } elseif($employment == "NO") { ?>
+    <?php } else { ?>
       $('input[name="claim[related_to_employment]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
-    <?php if($auto_accident == "YES") { ?>
+    <?php if (strtolower($auto_accident) == 'yes') { ?>
       $('input[name="claim[auto_accident]"][value="true"]').attr("checked", "checked");
-    <?php } elseif($auto_accident == "NO") { ?>
+    <?php } else { ?>
       $('input[name="claim[auto_accident]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
     $('input[name="claim[auto_accident_state]"]').val("<?php echo  $auto_accident_place;?>");
   
-    <?php if($other_accident == "YES") { ?>
+    <?php if (strtolower($other_accident) == 'yes') { ?>
       $('input[name="claim[other_accident]"][value="true"]').attr("checked", "checked");
-    <?php } elseif($other_accident == "NO") { ?>
+    <?php } else { ?>
       $('input[name="claim[other_accident]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
-    <?php if($another_plan == 'YES') { ?>
+    <?php if ($another_plan == 'yes') { ?>
       $('input[name="other_payer"][value="true"]').attr("checked", "checked");
-    <?php } elseif($another_plan == 'NO') { ?>
+    <?php } else { ?>
       $('input[name="other_payer"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
@@ -808,9 +819,9 @@ if (!function_exists('s_for')) {
     $('input[name="referring_provider[secondary_id]"]').val("<?php echo  $field_17a; ?>");
     $('input[name="referring_provider[npi]"]').val("<?php echo  $diagnosising_npi; ?>");
 
-    <?php if($outside_lab == "YES"){ ?>
+    <?php if (strtolower($outside_lab) == 'yes') { ?>
       $('input[name="claim[outside_lab]"][value="true"]').attr("checked", "checked");
-    <?php }elseif($outside_lab == "NO"){ ?>
+    <?php }else { ?>
       $('input[name="claim[outside_lab]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 

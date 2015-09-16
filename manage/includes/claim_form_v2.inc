@@ -1361,12 +1361,23 @@ $reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
 }
 
+/**
+ * Logic:
+ *
+ * IF dental_insurance.another_plan IS set THEN use another_plan
+ * IF dental_insurance.another_plan IS not set THEN read options from dental_patients.p_m_dss_file
+ */
+$another_plan = isset($another_plan) ? $another_plan : '';
+$another_plan = strtolower($another_plan);
 
-if(!empty($other_insured_policy_group_feca) && !empty($other_insured_insurance_plan)){
-  $another_plan = 'YES';
-}else{
-  $another_plan = 'NO';
+if ($another_plan != 'yes' && $another_plan != 'no') {
+    if ((isset($p_m_dss_file) && $p_m_dss_file == 1) || (isset($s_m_dss_file) && $s_m_dss_file == 1)) {
+        $another_plan = 'yes';
+    } else {
+        $another_plan = 'no';
+    }
 }
+
 if($is_pri_pending){
   $insured_sex = $pat_myarray['p_m_gender'];
   $other_insured_sex = $pat_myarray['s_m_gender'];
@@ -2263,9 +2274,9 @@ Medicare
 						<span class="num_a">d.</span> 
 						Is there another health benefit Plan?
 						<br />
-						<input type="radio" name="another_plan" value="yes" <?php if($another_plan == "YES") echo " checked";?> />YES
+						<input type="radio" name="another_plan" value="yes" <?= $another_plan == 'yes' ? 'checked' : ''?> />YES
 						&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="another_plan" value="no" <?php if($another_plan == "NO" || empty($another_plan)) echo " checked";?> />NO
+						<input type="radio" name="another_plan" value="no" <?= $another_plan != 'yes' ? 'checked' : '' ?> />NO
 						&nbsp;&nbsp;
 						<span class="small_cap"><i>if yes, return to and complete item 9 a-d</i></span>
 					</td>

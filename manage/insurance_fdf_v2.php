@@ -7,16 +7,11 @@
     include_once('admin/includes/invoice_functions.php');
 
     $field_path = "form1[0].#subform[0]";
-    if(!empty($_SERVER['HTTPS'])){
-        $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
-    }else{
-        $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
-    }
 
     $fdf_file = time().'.fdf';
 
     // need to know what file the data will go into
-    $pdf_doc= $path.'claim_v2.pdf';
+    $pdf_doc= __DIR__ . '/claim_v2.pdf';
     // generate the file content
 
     $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
@@ -1096,14 +1091,14 @@ require_once '3rdParty/fpdi/fpdi.php';
             }
 
             if(isset($_SESSION['adminuserid'])){
-                $d_sql = "SELECT claim_margin_top, claim_margin_left FROM admin where adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
+                $d_sql = "SELECT claim_margin_top, claim_margin_left FROM admin where adminid='".$db->escape($_SESSION['adminuserid'])."'";
                 
                 $d_r = $db->getRow($d_sql);
                 $claim_margin_left = $d_r['claim_margin_left'];
                 $claim_margin_top = $d_r['claim_margin_top'];
             }elseif(isset($_SESSION['userid'])){
-                $d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
-                
+                $d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".$db->escape($_SESSION['docid'])."'";
+
                 $d_r = $db->getRow($d_sql);
                 $claim_margin_left = $d_r['claim_margin_left'];
                 $claim_margin_top = $d_r['claim_margin_top'];

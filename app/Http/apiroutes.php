@@ -9,11 +9,23 @@
 Route::group(['prefix' => 'api/v1', 'before' => '', 'after' => 'allowOrigin'], function ()
 {
     Route::resource('memo','Api\ApiAdminMemoController');
-    Route::group(['prefix' => 'enrollment'], function(){
-        Route::get('payers',['as' => 'payers.list', 'uses' => 'Api\ApiEnrollmentsController@payersList']);
-        Route::post('create',['as' => 'create.enrollment', 'uses' => 'Api\ApiEnrollmentsController@createEnrollment']);
-        Route::put('update',['as' => 'update.enrollment', 'uses' => 'Api\ApiEnrollmentsController@updateEnrollment']);
-        Route::get('show',['as' => 'show.enrollment', 'uses' => 'Api\ApiEnrollmentsController@showEnrollment']);
-        Route::delete('delete',['as' => 'delete.enrollment', 'uses' => 'Api\ApiEnrollmentsController@destroyEnrollment']);
+
+    Route::group(['prefix' => 'enrollments'], function(){
+
+        Route::post('create',['as' => 'enrollments.create',
+                            'uses' => 'Api\ApiEnrollmentsController@createEnrollment']);
+
+        Route::post('update/{enrollmentid}',['as' => 'enrollments.update',
+                            'uses' => 'Api\ApiEnrollmentsController@updateEnrollment']);
+
+        Route::get('retrieve/{enrollmentid}',['as' => 'enrollments.retrieve',
+                            'uses' => 'Api\ApiEnrollmentsController@retrieveEnrollment']);
+
+        Route::delete('delete',['as' => 'enrollments.delete',
+                            'uses' => 'Api\ApiEnrollmentsController@destroyEnrollment']);
+
+        Route::get('list/{page?}',['as' => 'enrollments.list',
+            'uses' => 'Api\ApiEnrollmentsController@listEnrollments']);
+
     });
 });

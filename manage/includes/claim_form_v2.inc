@@ -191,7 +191,7 @@ trigger_error("Die called", E_USER_ERROR);
 	$patient_lastname = $_POST['patient_lastname'];
 	$patient_firstname = $_POST['patient_firstname'];
 	$patient_middle = $_POST['patient_middle'];
-  //we need to convert the DOB from yyyy-mm-dd to YYYY-MM-dd
+  //we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
 	$patient_dob_raw = $_POST['patient_dob'];
     $patient_dob_raw_pos = strpos($patient_dob_raw, '-');
     if ($patient_dob_raw_pos != false) {

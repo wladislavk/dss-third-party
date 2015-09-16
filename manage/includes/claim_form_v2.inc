@@ -236,7 +236,7 @@ trigger_error("Die called", E_USER_ERROR);
 	$other_accident = (!empty($_POST['other_accident']) ? $_POST['other_accident'] : '');
 	$insured_policy_group_feca = $_POST['insured_policy_group_feca'];
 	$other_insured_policy_group_feca = $_POST['other_insured_policy_group_feca'];
-	//we need to convert the DOB from yyyy-mm-dd to YYYY-MM-dd
+	//we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
   $insured_dob_raw = $_POST['insured_dob'];
   $insured_dob_raw_pos = strpos($insured_dob_raw, '-');
   if ($insured_dob_raw_pos != false) {

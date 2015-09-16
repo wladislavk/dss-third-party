@@ -1172,7 +1172,7 @@ if($federal_tax_id_number != ''){
       $('input[name="billing_provider[address][street_line_1]"]').val("<?php echo  $address; ?>");
       $('input[name="billing_provider[address][street_line_2]"]').val("<?php echo $billing_provider_address; ?>");
       $('input[name="billing_provider[address][city]"]').val("<?php echo  $city; ?>");
-      $('input[name="billing_provider[address][state]"]').val("<?= strtouppwer(trim($state)) ?>");
+      $('input[name="billing_provider[address][state]"]').val("<?= strtoupper(trim($state)) ?>");
       $('input[name="billing_provider[address][zip]"]').val("<?php echo  $zip; ?>").addClass("zipmask");
       $('input[name="billing_provider[npi]"]').val("<?php echo ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>").addClass("numbermask"); 
       $('input[name="billing_provider[taxonomy_code]"]').val("332B00000X");

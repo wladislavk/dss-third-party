@@ -1156,10 +1156,8 @@ $another_plan = strtolower($another_plan);
 
 if ($another_plan != 'yes' && $another_plan != 'no') {
     if (
-        $pat_myarray['p_m_ins_type'] !=1 &&
-        strtolower($pat_myarray['has_s_m_ins']) == 'yes' &&
-        $pat_myarray['p_m_dss_file'] == 1 &&
-        $pat_myarray['s_m_dss_file'] == 1
+        ($pat_myarray['p_m_ins_type'] != 1 && $pat_myarray['p_m_dss_file'] == 1) ||
+        (strtolower($pat_myarray['has_s_m_ins']) == 'yes' && $pat_myarray['s_m_dss_file'] == 1)
     ) {
         $another_plan = 'yes';
     } else {

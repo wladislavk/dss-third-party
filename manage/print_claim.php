@@ -42,10 +42,9 @@ class PDF extends \FPDI {
             $this->_tplIdx = $this->importPage(1);
         }
 
-        $h_con = $db->con;
-        $d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysqli_real_escape_string($h_con, $_SESSION['docid'])."'";
-
+        $d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".$db->escape($_SESSION['docid'])."'";
         $d_r = $db->getRow($d_sql);
+
         $this->useTemplate($this->_tplIdx, $d_r['claim_margin_left'], $d_r['claim_margin_top']);
     }
 

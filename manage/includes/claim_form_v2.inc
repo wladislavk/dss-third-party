@@ -3477,19 +3477,3 @@ $('input, select').bind('change', function(){
 });
 
 </script>
-<?php
-
-/**
- * Parse phone + area code, as some form will use a single field, while another one will use separated fields
- * Return an array of two elements, each one having the proper amount of digits
- *
- * list($phone_code, $phone_number) = parsePhoneNumber($maybeEmptyAreaCode, $maybeFullPhoneNumber);
- */
-function parsePhoneNumber ($areaCodeOrFullNumber, $phoneNumber='') {
-    $fullNumber = preg_replace('/\D+/', '', "{$areaCodeOrFullNumber}{$phoneNumber}");
-
-    return [
-        substr($fullNumber, 0, 3), // area code
-        substr($fullNumber, 3) // local number
-    ];
-}

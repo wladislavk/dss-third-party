@@ -312,22 +312,7 @@
         $amount_paid = str_replace(",", '',strtoupper($myarray['amount_paid']));
         $balance_due = str_replace(",", '',strtoupper($myarray['balance_due']));
         $signature_physician =strtoupper($myarray['signature_physician']);
-        // $physician_signed_date = strtoupper($myarray['physician_signed_date']);
-
-        if (!empty($myarray['physician_signed_date'])) {
-            $dateFromDatabase = str_replace('/', '-', $myarray['physician_signed_date']);
-            if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromDatabase)) {
-                $physician_signed_date = $physician_signed_date->format('Y-m-d');
-            } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromDatabase)) {
-                $physician_signed_date = $physician_signed_date->format('Y-m-d');
-            } elseif ($physician_signed_date = date_create_from_format('Y-m-d', $dateFromDatabase)) {
-                $physician_signed_date = $physician_signed_date->format('Y-m-d');
-            } else {
-                $physician_signed_date = date('Y-m-d');
-            }
-        } else {
-            $physician_signed_date = '';
-        }
+        $physician_signed_date = strtoupper($myarray['physician_signed_date']);
 
         $service_facility_info_name = strtoupper(st($myarray['service_facility_info_name']));
         $service_facility_info_address = strtoupper(st($myarray['service_facility_info_address']));
@@ -618,6 +603,24 @@
     $diagnosis_4_left_fill = $dia[0];
     $diagnosis_4_right_fill = (!empty($dia[1]) ? $dia[1] : '');
 
+    $patient_dob = dateToTime($patient_dob);
+    $insured_dob = dateToTime($insured_dob);
+    $other_insured_dob = dateToTime($other_insured_dob);
+    $date_current = dateToTime($date_current);
+    $date_same_illness = dateToTime($date_same_illness);
+    $unable_date_from = dateToTime($unable_date_from);
+    $unable_date_to = dateToTime($unable_date_to);
+    $hospitalization_date_from = dateToTime($hospitalization_date_from);
+    $hospitalization_date_to = dateToTime($hospitalization_date_to);
+    $patient_signed_date = dateFormat($patient_signed_date, false);
+    $physician_signed_date = dateFormat($physician_signed_date, false);
+
+    list($patient_phone_code, $patient_phone) = parsePhoneNumber($patient_phone_code, $patient_phone);
+    list($insured_phone_code, $insured_phone) = parsePhoneNumber($insured_phone_code, $insured_phone);
+    list($billing_provider_phone_code, $billing_provider_phone) = parsePhoneNumber(
+        $billing_provider_phone_code, $billing_provider_phone
+    );
+
     $fdf = "
         %FDF-1.2
         1 0 obj
@@ -649,9 +652,9 @@
           ";
     if($patient_dob!=''){
         $fdf .= "
-          << /T(".$field_path.".pt_birth_date_mm_fill[0]) /V(".escapeFdf(date('m',strtotime($patient_dob))).") >>
-          << /T(".$field_path.".pt_birth_date_dd_fill[0]) /V(".escapeFdf(date('d',strtotime($patient_dob))).") >>
-          << /T(".$field_path.".pt_birth_date_yy_fill[0]) /V(".escapeFdf(date('Y',strtotime($patient_dob))).") >>
+          << /T(".$field_path.".pt_birth_date_mm_fill[0]) /V(".escapeFdf(date('m', $patient_dob)).") >>
+          << /T(".$field_path.".pt_birth_date_dd_fill[0]) /V(".escapeFdf(date('d', $patient_dob)).") >>
+          << /T(".$field_path.".pt_birth_date_yy_fill[0]) /V(".escapeFdf(date('Y', $patient_dob)).") >>
         ";
     }
     $fdf .= "
@@ -694,9 +697,9 @@
 
     if(!empty($insured_dob)){
         $fdf .= "
-          << /T(".$field_path.".insured_dob_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($insured_dob))).") >>
-          << /T(".$field_path.".insured_dob_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($insured_dob))).") >>
-          << /T(".$field_path.".insured_dob_yy_fill[0]) /V(".escapeFdf(date('Y', strtotime($insured_dob))).") >>
+          << /T(".$field_path.".insured_dob_mm_fill[0]) /V(".escapeFdf(date('m', $insured_dob)).") >>
+          << /T(".$field_path.".insured_dob_dd_fill[0]) /V(".escapeFdf(date('d', $insured_dob)).") >>
+          << /T(".$field_path.".insured_dob_yy_fill[0]) /V(".escapeFdf(date('Y', $insured_dob)).") >>
         ";
     }
     $fdf .= "
@@ -709,9 +712,9 @@
         ";
     if($other_insured_dob!=''){
         $fdf .= "
-          << /T(".$field_path.".other_insured_dob_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($other_insured_dob))).") >>
-          << /T(".$field_path.".other_insured_dob_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($other_insured_dob))).") >>
-          << /T(".$field_path.".other_insured_dob_yy_fill[0]) /V(".escapeFdf(date('Y', strtotime($other_insured_dob))).") >>
+          << /T(".$field_path.".other_insured_dob_mm_fill[0]) /V(".escapeFdf(date('m', $other_insured_dob)).") >>
+          << /T(".$field_path.".other_insured_dob_dd_fill[0]) /V(".escapeFdf(date('d', $other_insured_dob)).") >>
+          << /T(".$field_path.".other_insured_dob_yy_fill[0]) /V(".escapeFdf(date('Y', $other_insured_dob)).") >>
         ";
     }
     $fdf .= "
@@ -734,30 +737,30 @@
     $fdf .= "<< /T(".$field_path.".insured_signature_fill[0]) /V(".escapeFdf(((!empty($insured_signature))?'SIGNATURE ON FILE':'')).") >>";
     if(!empty($date_current)){
         $fdf .= "
-          << /T(".$field_path.".date_of_current_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($date_current))).") >>
-          << /T(".$field_path.".date_of_current_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($date_current))).") >>
-          << /T(".$field_path.".date_of_current_yy_fill[0]) /V(".escapeFdf(date('y', strtotime($date_current))).") >>
+          << /T(".$field_path.".date_of_current_mm_fill[0]) /V(".escapeFdf(date('m', $date_current)).") >>
+          << /T(".$field_path.".date_of_current_dd_fill[0]) /V(".escapeFdf(date('d', $date_current)).") >>
+          << /T(".$field_path.".date_of_current_yy_fill[0]) /V(".escapeFdf(date('y', $date_current)).") >>
         ";
     }
     if(!empty($date_same_illness)){
         $fdf .= "
-          << /T(".$field_path.".pt_similar_illness_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($date_same_illness))).") >>
-          << /T(".$field_path.".pt_similar_illness_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($date_same_illness))).") >>
-          << /T(".$field_path.".pt_similar_illness_yy_fill[0]) /V(".escapeFdf(date('y', strtotime($date_same_illness))).") >>
+          << /T(".$field_path.".pt_similar_illness_mm_fill[0]) /V(".escapeFdf(date('m', $date_same_illness)).") >>
+          << /T(".$field_path.".pt_similar_illness_dd_fill[0]) /V(".escapeFdf(date('d', $date_same_illness)).") >>
+          << /T(".$field_path.".pt_similar_illness_yy_fill[0]) /V(".escapeFdf(date('y', $date_same_illness)).") >>
         ";
     }
     if(!empty($unable_date_from)){
         $fdf .= "
-          << /T(".$field_path.".date_pt_unable_work_from_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($unable_date_from))).") >>
-          << /T(".$field_path.".date_pt_unable_work_from_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($unable_date_from))).") >>
-          << /T(".$field_path.".date_pt_unable_work_from_yy_fill[0]) /V(".escapeFdf(date('y', strtotime($unable_date_from))).") >>
+          << /T(".$field_path.".date_pt_unable_work_from_mm_fill[0]) /V(".escapeFdf(date('m', $unable_date_from)).") >>
+          << /T(".$field_path.".date_pt_unable_work_from_dd_fill[0]) /V(".escapeFdf(date('d', $unable_date_from)).") >>
+          << /T(".$field_path.".date_pt_unable_work_from_yy_fill[0]) /V(".escapeFdf(date('y', $unable_date_from)).") >>
         ";
     }
     if(!empty($unable_date_to)){
         $fdf .= "
-          << /T(".$field_path.".date_pt_unable_work_to_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($unable_date_to))).") >>
-          << /T(".$field_path.".date_pt_unable_work_to_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($unable_date_to))).") >>
-          << /T(".$field_path.".date_pt_unable_work_to_yy_fill[0]) /V(".escapeFdf(date('y', strtotime($unable_date_to))).") >>
+          << /T(".$field_path.".date_pt_unable_work_to_mm_fill[0]) /V(".escapeFdf(date('m', $unable_date_to)).") >>
+          << /T(".$field_path.".date_pt_unable_work_to_dd_fill[0]) /V(".escapeFdf(date('d', $unable_date_to)).") >>
+          << /T(".$field_path.".date_pt_unable_work_to_yy_fill[0]) /V(".escapeFdf(date('y', $unable_date_to)).") >>
         ";
     }
     $fdf .= "
@@ -767,16 +770,16 @@
         ";
     if(!empty($hospitalization_date_from)){
         $fdf .= "
-          << /T(".$field_path.".hospitalization_date_from_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($hospitalization_date_from))).") >>
-          << /T(".$field_path.".hospitalization_date_from_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($hospitalization_date_from))).") >>
-          << /T(".$field_path.".hospitalization_date_from_yy_fill[0]) /V(".escapeFdf(date('y', strtotime($hospitalization_date_from))).") >>
+          << /T(".$field_path.".hospitalization_date_from_mm_fill[0]) /V(".escapeFdf(date('m', $hospitalization_date_from)).") >>
+          << /T(".$field_path.".hospitalization_date_from_dd_fill[0]) /V(".escapeFdf(date('d', $hospitalization_date_from)).") >>
+          << /T(".$field_path.".hospitalization_date_from_yy_fill[0]) /V(".escapeFdf(date('y', $hospitalization_date_from)).") >>
         ";
     }
     if(!empty($hospitalization_date_to)){
         $fdf .= "
-          << /T(".$field_path.".hospitalization_date_to_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($hospitalization_date_to))).") >>
-          << /T(".$field_path.".hospitalization_date_to_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($hospitalization_date_to))).") >>
-          << /T(".$field_path.".hospitalization_date_to_yy_fill[0]) /V(".escapeFdf(date('y', strtotime($hospitalization_date_to))).") >>
+          << /T(".$field_path.".hospitalization_date_to_mm_fill[0]) /V(".escapeFdf(date('m', $hospitalization_date_to)).") >>
+          << /T(".$field_path.".hospitalization_date_to_dd_fill[0]) /V(".escapeFdf(date('d', $hospitalization_date_to)).") >>
+          << /T(".$field_path.".hospitalization_date_to_yy_fill[0]) /V(".escapeFdf(date('y', $hospitalization_date_to)).") >>
         ";
     }
     $fdf .= "<< /T(".$field_path.".reserved_for_local_fill[0]) /V(".escapeFdf((!empty($reserved_local_use1) ? $reserved_local_use1 : '')).") >>
@@ -843,18 +846,21 @@
     if ($query) foreach ($query as $array) { 
         $p = $prefix[$c];
         $c++;
+
+        $service_date = dateToTime($array['service_date']);
+
         if($array['service_date']!=''){
             $fdf .= "
-              << /T(".$field_path.".".$p."_dates_of_service_from_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($array['service_date']))).") >>
-              << /T(".$field_path.".".$p."_dates_of_service_from_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($array['service_date']))).") >>
-              << /T(".$field_path.".".$p."_dates_of_service_from_yy_fill[0]) /V(".escapeFdf(date('y', strtotime($array['service_date']))).") >>
+              << /T(".$field_path.".".$p."_dates_of_service_from_mm_fill[0]) /V(".escapeFdf(date('m', $service_date)).") >>
+              << /T(".$field_path.".".$p."_dates_of_service_from_dd_fill[0]) /V(".escapeFdf(date('d', $service_date)).") >>
+              << /T(".$field_path.".".$p."_dates_of_service_from_yy_fill[0]) /V(".escapeFdf(date('y', $service_date)).") >>
             ";
         }
         if($array['service_date']){
             $fdf .= " 
-              << /T(".$field_path.".".$p."_dates_of_service_to_mm_fill[0]) /V(".escapeFdf(date('m', strtotime($array['service_date']))).") >>
-              << /T(".$field_path.".".$p."_dates_of_service_to_dd_fill[0]) /V(".escapeFdf(date('d', strtotime($array['service_date']))).") >>
-              << /T(".$field_path.".".$p."_dates_of_service_to_yy_fill[0]) /V(".escapeFdf(date('y', strtotime($array['service_date']))).") >>
+              << /T(".$field_path.".".$p."_dates_of_service_to_mm_fill[0]) /V(".escapeFdf(date('m', $service_date)).") >>
+              << /T(".$field_path.".".$p."_dates_of_service_to_dd_fill[0]) /V(".escapeFdf(date('d', $service_date)).") >>
+              << /T(".$field_path.".".$p."_dates_of_service_to_yy_fill[0]) /V(".escapeFdf(date('y', $service_date)).") >>
             ";
         }
         $fdf .= "

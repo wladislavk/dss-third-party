@@ -209,6 +209,7 @@
     $other_insured_insurance_plan = (!empty($_POST['other_payers'][0]['name']) ? $_POST['other_payers'][0]['name'] : '');
     $other_payer = (!empty($_POST['other_payer']) ? $_POST['other_payer'] : '');
     $responsibility_sequence = (!empty($_POST['other_payers'][0]['responsibility_sequence']) ? $_POST['other_payers'][0]['responsibility_sequence'] : '');
+    $icd_indicator = isset($_POST['claim']['icd_indicator']) ? $_POST['claim']['icd_indicator'] : '';
     if ($other_payer == "true") {
         $another_plan = "YES";
     } else {
@@ -224,7 +225,7 @@
     $unable_date_from = (!empty($_POST['claim']['last_wored_date']) ? $_POST['claim']['last_wored_date'] : '');
     $unable_date_to = (!empty($_POST['claim']['work_return_date']) ? $_POST['claim']['work_return_date'] : '');
     // SPLIT APART? $referring_provider = $_POST['referring_provider'];
-    $field_17a_dd = (!empty($_POST['referring_provider']['secondary_id_type']) ? $_POSTi['referring_provider']['secondary_id_type'] : '');
+    $field_17a_dd = (!empty($_POST['referring_provider']['secondary_id_type']) ? $_POST['referring_provider']['secondary_id_type'] : '');
     $field_17a = (!empty($_POST['referring_provider']['secondary_id']) ? $_POST['referring_provider']['secondary_id'] : '');
     $field_17b = (!empty($_POST['referring_provider']['npi']) ? $_POST['referring_provider']['npi'] : '');
     $hospitalization_date_from = (!empty($_POST['claim']['admission_date']) ? $_POST['claim']['admission_date'] : '');
@@ -504,7 +505,7 @@
                 diagnosis_2 = '" . s_for(!empty($diagnosis_2) ? $diagnosis_2 : '') . "',
                 diagnosis_3 = '" . s_for(!empty($diagnosis_3) ? $diagnosis_3 : '') . "',
                 diagnosis_4 = '" . s_for(!empty($diagnosis_4) ? $diagnosis_4 : '') . "',
-                icd_ind = '" . s_for($icd_ind) . "',
+                icd_ind = '" . s_for($icd_indicator) . "',
                 diagnosis_a = '" . s_for($diagnosis_a) . "',
                 diagnosis_b = '" . s_for($diagnosis_b) . "',
                 diagnosis_c = '" . s_for($diagnosis_c) . "',

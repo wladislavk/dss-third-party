@@ -252,19 +252,59 @@ function split_phone($num, $a){
   return $num;
 }
 
-function dateFormat($data) {
+function dateToTime ($unknownFormatDate, $defaultsNow=false) {
+    $dateFormats = ['d-Y-m', 'm-d-y', 'm-d-Y', 'Y-m-d'];
+    $timeFormats = ['', ' H:i:s'];
+    $parsedDate = null;
+
+    // Use a single delimiter
+    $unknownFormatDate = str_replace('/', '-', $unknownFormatDate);
+
+    foreach ($dateFormats as $date) {
+        foreach ($timeFormats as $time) {
+            $parsedDate = date_create_from_format("{$date}{$time}", $unknownFormatDate);
+
+            if ($parsedDate) {
+                break;
+            }
+        }
+
+        if ($parsedDate) {
+            break;
+        }
+    }
+
+    if (!$parsedDate && $defaultsNow) {
+        $parsedDate = date_create();
+    }
+
+    $time = $parsedDate ? $parsedDate->getTimestamp() : 0;
+
+    return $time;
+}
+
+function dateFormat ($data, $defaultsNow=true) {
   if (!empty($data)) {
-      $dateFromDatabase = str_replace('/', '-', $data);
-      if ($dateFormat = date_create_from_format('m-d-y', $dateFromDatabase)) {
-          $dateFormat = $dateFormat->format('Y-m-d');
-      } elseif ($dateFormat = date_create_from_format('m-d-Y', $dateFromDatabase)) {
-          $dateFormat = $dateFormat->format('Y-m-d');
-      } else {
-          $dateFormat = date('Y-m-d');
-      }
+      $timestamp = dateToTime($data, $defaultsNow);
+      $dateFormat = date('Y-m-d', $timestamp);
   } else {
       $dateFormat = '';
   }
 
   return $dateFormat;
+}
+
+/**
+ * Parse phone + area code, as some form will use a single field, while another one will use separated fields
+ * Return an array of two elements, each one having the proper amount of digits
+ *
+ * list($phone_code, $phone_number) = parsePhoneNumber($maybeEmptyAreaCode, $maybeFullPhoneNumber);
+ */
+function parsePhoneNumber ($areaCodeOrFullNumber, $phoneNumber='') {
+    $fullNumber = preg_replace('/\D+/', '', "{$areaCodeOrFullNumber}{$phoneNumber}");
+
+    return [
+        substr($fullNumber, 0, 3), // area code
+        substr($fullNumber, 3) // local number
+    ];
 }

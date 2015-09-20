@@ -45,7 +45,7 @@ $dentalexpage2 = App::make('Ds3\Contracts\DentalExPage2Interface');
                 'tonsils_grade'     => s_for($tonsils_grade),
                 'userid'            => s_for($_SESSION['userid']),
                 'docid'             => s_for($_SESSION['docid']),
-                'adddate'           => now(),
+                'adddate'           => date("Y-m-d H:i:s"),
                 'ip_address'        => s_for($_SERVER['REMOTE_ADDR'])
                 );
 

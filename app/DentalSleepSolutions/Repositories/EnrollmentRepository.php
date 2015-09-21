@@ -129,6 +129,7 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
 
         $this->elligibleParams['enrollment_npi'] = $enrollmentParams;
         $requestUri = $this->providerUri.$this->enrollmentsRoute.'/'.$enrollmentId;
+
         $this->checkAndSetProviderApiKey($apiKey);
         $data_string = $this->convertEnrollmentParamsToJson();
         $headers = $this->setupApiRequestHeaders($data_string);

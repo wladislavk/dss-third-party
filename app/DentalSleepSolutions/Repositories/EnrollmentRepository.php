@@ -167,7 +167,6 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
         $data_string = $this->convertEnrollmentParamsToJson();
 
         $requestUri = $this->setupRetrieveEnrollmentUrl($enrollmentId);
-
         $headers = $this->setupApiRequestHeaders($data_string);
         $response = \Requests::get($requestUri, $headers);
 

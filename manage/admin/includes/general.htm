@@ -1421,6 +1421,8 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 
   //fix to allow signature to show for both html and pdf
   $html = str_replace('display_file.php?f=', '../../../shared/q_file/' , $html);
+  $html = tidyHtml($html);
+
   // output the HTML content
   $pdf->writeHTML($html, true, false, true, false, '');
   //Close and output PDF document
@@ -1733,4 +1735,23 @@ function count_pages($pdfname) {
   $pdftext = file_get_contents($pdfname);
   $num = preg_match_all("/\/Page\W/", $pdftext, $dummy);
   return $num;
+}
+
+function tidyHtml ($html) {
+    $config = [
+        'clean' => true,
+        'drop-proprietary-attributes' => true,
+        'output-xhtml' => true,
+        'show-body-only' => true,
+        'wrap' => '0'
+    ];
+
+    try {
+        $tidy = new tidy();
+        $cleanHtml = $tidy->repairString($html, $config, 'utf8');
+    } catch (\Exception $e) {
+        $cleanHtml = $html;
+    }
+
+    return $cleanHtml;
 }

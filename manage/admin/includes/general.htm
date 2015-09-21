@@ -1746,9 +1746,9 @@ function tidyHtml ($html) {
         'wrap' => '0'
     ];
 
-    if (class_exists('tidy')) {
+    if (class_exists('\tidy')) {
         try {
-            $tidy = new tidy();
+            $tidy = new \tidy();
             $cleanHtml = $tidy->repairString($html, $config, 'utf8');
         } catch (\Exception $e) {
             $cleanHtml = $html;

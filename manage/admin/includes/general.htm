@@ -1746,10 +1746,14 @@ function tidyHtml ($html) {
         'wrap' => '0'
     ];
 
-    try {
-        $tidy = new tidy();
-        $cleanHtml = $tidy->repairString($html, $config, 'utf8');
-    } catch (\Exception $e) {
+    if (class_exists('tidy')) {
+        try {
+            $tidy = new tidy();
+            $cleanHtml = $tidy->repairString($html, $config, 'utf8');
+        } catch (\Exception $e) {
+            $cleanHtml = $html;
+        }
+    } else {
         $cleanHtml = $html;
     }
 

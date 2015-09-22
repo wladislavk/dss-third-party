@@ -27,5 +27,7 @@ Route::group(['prefix' => 'api/v1', 'before' => '', 'after' => 'allowOrigin'], f
         Route::get('list/{page?}',['as' => 'enrollments.list',
             'uses' => 'Api\ApiEnrollmentsController@listEnrollments']);
 
+
+
     });
 });

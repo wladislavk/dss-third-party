@@ -23,12 +23,12 @@ interface EnrollmentInterface
     /**
      *
      *
-     * @param int $enrollmentId
      * @param array $enrollmentParams
+     * @param int $enrollmentId
      * @param string $apiKey
      * @return mixed
      */
-    public function updateEnrollment($enrollmentId = 0,array $enrollmentParams, $apiKey = '');
+    public function updateEnrollment(array $enrollmentParams, $enrollmentId = 0, $apiKey = '');
 
     /**
      *

@@ -55,6 +55,6 @@ interface EnrollmentInterface
      * @param array $data
      * @return void
      */
-    public function saveEnrollmentDetailsToDatabase($data = []);
+    public function saveEnrollmentDetailsToDatabase(array $data = []);
 
 }

@@ -49,4 +49,20 @@ interface EnrollmentPayersInterface
      */
     public function syncEnrollmentPayersFromProvider($apiKey);
 
+    /**
+     *
+     *
+     * @param integer $payerId
+     * @return mixed
+     */
+    public function payerRequiresSignature($payerId);
+
+    /**
+     *
+     *
+     * @param integer $payerId
+     * @return mixed
+     */
+    public function payerRequiresBlueInkSignature($payerId);
+
 }

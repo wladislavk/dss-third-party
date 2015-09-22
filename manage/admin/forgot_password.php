@@ -79,4 +79,4 @@ $message .= DSS_EMAIL_FOOTER;
         </div>
     </div>
 </div>
-<?php require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>
+<?php // require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>

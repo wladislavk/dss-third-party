@@ -16,19 +16,19 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
     protected $modelName = 'DentalSleepSolutions\Enrollment';
 
     /**
-     * @var null
+     * @var mixed|string
      */
-    protected $elligibleConfigurtion = null;
+    protected $elligibleConfigurtion = '';
 
     /**
-     * @var null
+     * @var string
      */
-    protected $providerUri = null;
+    protected $providerUri = '';
 
     /**
-     * @var null
+     * @var string
      */
-    protected $enrollmentsRoute = null;
+    protected $enrollmentsRoute = '';
 
     /**
      * @var $restClient
@@ -85,7 +85,7 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
     }
 
     /**
-     *
+     * Submits an enrollment to Eliigible
      *
      * @param array  $enrollmentParams
      * @param string $apiKey
@@ -116,14 +116,14 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
     }
 
     /**
+     * Updates a enrollment on Elligible
      *
-     *
-     * @param int $enrollmentId
-     * @param array $enrollmentParams
-     * @param string $apiKey
+     * @param array   $enrollmentParams
+     * @param integer $enrollmentId
+     * @param string  $apiKey
      * @return mixed
      */
-    public function updateEnrollment($enrollmentId = 0,array $enrollmentParams, $apiKey = '')
+    public function updateEnrollment(array $enrollmentParams, $enrollmentId = 0, $apiKey = '')
     {
         $enrollmentParams['endpoint'] = 'coverage';
 
@@ -144,11 +144,10 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
         $this->setupEnrollmentResponseForCreateUpdate($enrollmentParams, $enrollmentResponse, $response);
 
         return $enrollmentResponse;
-
     }
 
     /**
-     *
+     * Fetches an enrollment from Elligible.
      *
      * @param integer $enrollmentId
      * @param array   $enrollmentParams
@@ -174,7 +173,7 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
     }
 
     /**
-     *
+     * List enrollments by page from Eligible
      *
      * @param integer $page
      * @param string  $apiKey
@@ -193,18 +192,18 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
 
 
     /**
-     *
+     * Saves an enrollment to our DB
      *
      * @param array $data
      * @return void
      */
-    public function saveEnrollmentDetailsToDatabase($data = [])
+    public function saveEnrollmentDetailsToDatabase(array $data = [])
     {
         $this->store($data);
     }
 
     /**
-     *
+     * If we are in test mode then include test as part of the generated url calls to Eligible
      *
      * @return void
      */
@@ -217,7 +216,7 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
     }
 
     /**
-     *
+     * Checks if an api key was supplied otherwise it uses the config based api key.
      *
      * @param string $apiKey
      * @return void
@@ -230,7 +229,7 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
     }
 
     /**
-     *
+     * Converts the enrollment params submited to a json string so we can submit as part of the payload to Eligible.
      *
      * @return string
      */
@@ -242,7 +241,7 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
     }
 
     /**
-     *
+     * Adds our specific string to a header to setup the content type.
      *
      * @param string $data_string
      * @return array
@@ -283,19 +282,24 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
         return $requestUri;
     }
 
+
     /**
+     * Grabs the response for the post/put API calls and adds it to the enrollmentResponse Object
+     * we effectivelty return this object to the controller and we potential return it to the main calling client.
      *
-     *
-     * @param array $enrollmentParams
-     * @param $enrollmentResponse
-     * @param $response
+     * @param array     $enrollmentParams
+     * @param \stdClass $enrollmentResponse
+     * @param string    $response
      * @return void
      */
-    protected function setupEnrollmentResponseForCreateUpdate(array $enrollmentParams, $enrollmentResponse, $response)
+    protected function setupEnrollmentResponseForCreateUpdate(
+        array $enrollmentParams,
+        \stdClass $enrollmentResponse,
+        $response
+    )
     {
         $enrollmentResponse->ip_address = $enrollmentParams['ip_address'];
         $enrollmentResponse->adddate = Carbon::now();
         $enrollmentResponse->response = $response->body;
     }
-
 }

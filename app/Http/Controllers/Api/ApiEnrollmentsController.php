@@ -34,6 +34,17 @@ class ApiEnrollmentsController extends ApiBaseController
     protected $enrollmentValues = [];
 
     /**
+     * @var boolean
+     */
+    protected $signatureRequired = false;
+
+    /**
+     * @var boolean
+     */
+    protected $blueInkSignatureRequired = false;
+
+
+    /**
      * @param EnrollmentInterface       $enrollments
      * @param EnrollmentPayersInterface $payers
      * @param UserSignaturesInterface   $signatures
@@ -112,18 +123,37 @@ class ApiEnrollmentsController extends ApiBaseController
      */
     public function createEnrollment(ApiEligibleEnrollmentRequest $request)
     {
-        $response = [];
+        $enrollmentParams = [];
 
         try
         {
-            if(null !== $request->get('payer_id') || !empty($request->get('payer_id')))
+            if (null !== $request->get('payer_id') || !empty($request->get('payer_id')))
             {
                 //What fields are required for this enrollment
-                $enrollmentRequiredFields = $this->checkEnrollmentFields($request->get('payer_id'));
+
+                $enrollmentRequiredFields       = $this->checkEnrollmentFields($request->get('payer_id'));
+
+                $this->signatureRequired        = $this->payers->payerRequiresSignature($request->get('payer_id'));
+
+                $this->blueInkSignatureRequired = $this->payers
+                                                       ->payerRequiresBlueInkSignature($request->get('payer_id'));
+
+                foreach ($enrollmentRequiredFields as $field)
+                {
+                    if (!$request->has($field))
+                    {
+                        $message = 'You have not supplied the required enrolment fields. - '
+                                .implode(",", $enrollmentRequiredFields);
+
+                        $this->createErrorResponse($message, 300);
+                    }
+                }
+
+                //setup the eligible enrollment array
+                $enrollmentParams = $this->setupEnrollmentArrayFromFormInput($request);
+
             }
 
-            //setup the eligible enrollment array
-            $enrollmentParams = $this->setupEnrollmentArrayFromFormInput($request);
             //create a new eligible enrollment
             $enrollment = $this->enrollments->createEnrollment($enrollmentParams);
             //dd($enrollment);
@@ -190,7 +220,7 @@ class ApiEnrollmentsController extends ApiBaseController
         try
         {
             $enrollmentParams = $this->setupEnrollmentArrayFromFormInput($request);
-            $enrollment = $this->enrollments->updateEnrollment($enrollmentId, $enrollmentParams);
+            $enrollment = $this->enrollments->updateEnrollment($enrollmentParams, $enrollmentId);
             return response()->json($enrollment, 200);
         }
         catch (Exception $ex)
@@ -233,6 +263,8 @@ class ApiEnrollmentsController extends ApiBaseController
      */
     private function setupEnrollmentArrayFromFormInput(ApiEligibleEnrollmentRequest $request)
     {
+        $signatureCordinates = [];
+
         $elligibleEnrollment['payer_id']            = $request->get('payer_id');
         $elligibleEnrollment['transaction_type']    = $request->get('transaction_type');
         $elligibleEnrollment['facility_name']       = $request->get('facility_name');
@@ -246,14 +278,18 @@ class ApiEnrollmentsController extends ApiBaseController
         $elligibleEnrollment['ptan']                = $request->get('ptan');
         $elligibleEnrollment['ip_address']          = $request->ip();
 
-        $signature = $this->getDentalUserSignature($request->get('user_id'));
-
         $elligibleEnrollment['authorized_signer'] = ['title' => $request->get('title'),
             'first_name' => $request->get('first_name'),
             'last_name' => $request->get('last_name'),
             'contact_number' => $request->get('contact_number'),
             'email' => $request->get('email'),
-            'signature' => ['coordinates' => $signature->signature_json]];
+            ];
+
+        if ($this->signatureRequired)
+        {
+            $signature = $this->getDentalUserSignature($request->get('user_id'));
+            $elligibleEnrollment['authorized_signer']['signature'] = ['coordinates' => $signature->signature_json];
+        }
 
         return $elligibleEnrollment;
     }
@@ -262,13 +298,13 @@ class ApiEnrollmentsController extends ApiBaseController
     /**
      *
      *
-     * @param ApiEligibleEnrollmentRequest  $request
-     * @param                               $enrollment
+     * @param ApiEligibleEnrollmentRequest $request
+     * @param \stdClass                    $enrollment
      * @return void
      */
     private function setEnrollmentValuesForSavingToDb(
         ApiEligibleEnrollmentRequest $request,
-        $enrollment
+        \stdClass $enrollment
     )
     {
         $this->enrollmentValues['user_id']                = $request->get('user_id');

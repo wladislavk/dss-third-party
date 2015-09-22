@@ -168,4 +168,29 @@ SQL;
         }
     }
 
+    /**
+     *
+     *
+     * @param integer $payerId
+     * @return mixed
+     */
+    public function payerRequiresSignature($payerId)
+    {
+        $endpoint = $this->getPayerSupportedEndpoints($payerId);
+        return $endpoint[0]->signature_required;
+    }
+
+    /**
+     *
+     *
+     * @param integer $payerId
+     * @return mixed
+     */
+    public function payerRequiresBlueInkSignature($payerId)
+    {
+        $endpoint = $this->getPayerSupportedEndpoints($payerId);
+        return $endpoint[0]->blue_ink_required;
+    }
+
+
 }

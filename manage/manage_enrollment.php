@@ -1,130 +1,121 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-include "includes/top.htm";
-require_once('includes/constants.inc');
+    include "includes/top.htm";
+    require_once('includes/constants.inc');
 
 ?>
 
-<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen"/>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
 	Manage Enrollment
 </span>
-<br />
-<br />
+<br/>
+<br/>
 &nbsp;
 
-<?php
-	$sql = "SELECT e.*, CONCAT(t.transaction_type,' - ',t.description) as transaction_type 
-			FROM dental_eligible_enrollment e
-			LEFT JOIN dental_enrollment_transaction_type t ON e.transaction_type_id = t.id
-			WHERE e.user_id = '".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
-	$my = $db->getResults($sql);
+<div id="enrollmentManager">
 
-  $api_key = DSS_DEFAULT_ELIGIBLE_API_KEY;
-  $api_key_sql = "SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid = '".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
-  $api_key_query = mysqli_query($con, $api_key_sql);
-  $api_key_result = mysqli_fetch_assoc($api_key_query);
-  if($api_key_result && !empty($api_key_result['eligible_api_key'])){
-    if(trim($api_key_result['eligible_api_key']) != ""){
-      $api_key = $api_key_result['eligible_api_key'];
-    }
-  }
-?>
-<div style="margin-left:10px;margin-right:10px;">
-	<button style="margin-right:10px; float:right;" onclick="loadPopup('add_enrollment.php')" class="addButton">
-		Add New Enrollment
-	</button>
-	&nbsp;&nbsp;
+    <div id="enrollments">
+
+        <div id="dom-docid" style="display: none;">
+            <?php
+                $output = $_SESSION['docid'];
+                echo htmlspecialchars($output);
+            ?>
+        </div>
+
+        <div id="dom-default-api-key" style="display: none;">
+            <?php
+                $output = DSS_DEFAULT_ELIGIBLE_API_KEY;
+                echo htmlspecialchars($output);
+            ?>
+        </div>
+
+        <div style="margin-left:10px;margin-right:10px;">
+            <button style="margin-right:10px; float:right;" onclick="loadPopup('add_enrollment.php')" class="addButton">
+                Add New Enrollment
+            </button>
+            &nbsp;&nbsp;
+        </div>
+        <br/>
+
+        <div align="center" class="red">
+            <b><?php echo(!empty($_GET['msg']) ? $_GET['msg'] : ''); ?></b>
+        </div>
+
+        <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+            <table class="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+                <thead>
+                <tr class="tr_bg_h">
+                    <th class="col_head">Provider</th>
+                    <th class="col_head">NPI</th>
+                    <th class="col_head">Payer ID</th>
+                    <th class="col_head">Service Type</th>
+                    <th class="col_head">Payer Name</th>
+                    <th class="col_head">Status</th>
+                    <th class="col_head">Response</th>
+                    <th class="col_head">Get Form</th>
+                </thead>
+                <tbody>
+                <tr v-repeat="e: enrollments">
+                    <td valign="top">
+                        {{ e.provider_name }}
+                    </td>
+                    <td valign="top">
+                        {{ e.npi }}
+                    </td>
+                    <td valign="top">
+                        {{ e.payer_id }}
+                    </td>
+                    <td valign="top">
+                        {{ e.transaction_type }}
+                    </td>
+                    <td valign="top">
+                        {{ e.payer_name }}
+                    </td>
+                    <td valign="top">
+                        {{ enrollmentStatusLabel(e.status); }}
+                    </td>
+                    <td valign="top">
+                        <a href="#"   onclick="$('#response_{{e.id}}').toggle();return false;"   style="display:block;">View</a> 
+                        <span id="response_{{e.id}}"
+                              style="display:none;"> 
+                            {{ e.response }}  
+                        </span> 
+                    </td>
+                    <td valign="top">
+                        <a href="https://gds.eligibleapi.com/v1.5/payers/{{ e.payer_id }}/enrollment_form?api_key={{ apikey }}&transaction_type=837P"
+                             target="_blank">PDF</a>
+                        <span v-if="e.download_url"><a class="btn btn-success" href="{{ e.download_url }}">Sign 
+                                Form</a> 
+                            <br/> 
+                            <a class="btn btn-success" href="#"  
+                               onclick="Javascript: loadPopup('upload_enrollment.php?id={{ e.reference_id }}');">Upload</a> </span>
+                        <span v-if="e.signed_download_url">
+                            <br/> 
+                            <a class="btn btn-success" href="{{ e.signed_download_url }}">View  Signed Form</a>
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+
+    </div>
+
 </div>
-<br />
-<div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
-</div>
-<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
-	<table class="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-		<thead>
-		<tr class="tr_bg_h">
-			<th class="col_head">Provider</th>
-			<th class="col_head">NPI</th>
-			<th class="col_head">Payer ID</th>
-			<th class="col_head">Service Type</th>
-			<th class="col_head">Payer Name</th>
-			<th class="col_head">Status</th>
-			<th class="col_head">Response</th>	  
-			<th class="col_head">Get Form</th>
-		</thead>
-		<?php
-		if ($my) {
-			foreach ($my as $myarray) { ?>
-		<tr >
-			<td valign="top">
-				<?php echo $myarray['provider_name']?>
-			</td>
-			<td valign="top">
-				<?php echo $myarray['npi']?>
-			</td>
-			<td valign="top">
-				<?php echo $myarray['payer_id']?>
-			</td>
-			<td valign="top">
-				<?php echo $myarray['transaction_type']; ?>
-			</td>
-			<td valign="top">
-				<?php echo $myarray['payer_name']?>
-			</td>
-			<td valign="top">
-				<?php echo st($dss_enrollment_labels[$myarray["status"]]);?>
-				<?php
-					$w_sql = "SELECT * from dental_eligible_response where reference_id='".mysqli_real_escape_string($con,$myarray['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
-					$w_r = $db->getRow($w_sql);
-					if($w_r['adddate'] !=''){
-						echo " - ".date('m/d/Y h:i a', strtotime($w_r['adddate']));
-					}else{	
-						echo " - ".date('m/d/Y h:i a', strtotime($myarray['adddate']));
-					}
-				?>
-			</td>
-			<td valign="top">
-				<a href="#" onclick="$('#response_<?php echo $myarray['id']; ?>').toggle();return false;" style="display:block;">View</a>
-				<span id="response_<?php echo $myarray['id']; ?>" style="display:none;">
-					<?php echo $myarray["response"]; ?> 
-				</span>
-			</td>
-			<td valign="top">
-				<a href="https://gds.eligibleapi.com/v1.5/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=<?php echo $api_key ?>&transaction_type=837P" target="_blank">PDF</a>
-                <?php if($myarray['download_url']){ ?>
-                    <a class="btn btn-success" href="<?php echo $myarray['download_url']; ?>">Sign Form</a>
-                    <br />
-                    <a class="btn btn-success" href="#" onclick="Javascript: loadPopup('upload_enrollment.php?id=<?= $myarray['reference_id']; ?>');">Upload</a>
-                    <?php
-                }
-                if($myarray['signed_download_url']){
-                    ?>
-                    <br />
-                    <a class="btn btn-success" href="<?php echo $myarray['download_url']; ?>">View Signed Form</a>
-                    <?php
-                }
-                ?>
-			</td>
-		</tr>
-			<? 	}
-		}?>
-	</table>
-</form>
+
 <div class="fullwidth">
-<?php //include 'eligible_enrollment/index.php'; ?>
+    <?php //include 'eligible_enrollment/index.php'; ?>
 </div>
-<!--
-<div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
-<div id="popupRefer" style="height:550px; width:750px;">
-    <a id="popupReferClose"><button>X</button></a>
-    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopupRef"></div>-->
-<br /><br />	
-<?php include "includes/bottom.htm";?>
+
+<br/><br/>
+
+<script src="/assets/vendor/moment.js" type="text/javascript"></script>
+<script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
+<script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
+<script src="/assets/app/enrollments.js" type="text/javascript"></script>
+
+<?php include "includes/bottom.htm"; ?>
+

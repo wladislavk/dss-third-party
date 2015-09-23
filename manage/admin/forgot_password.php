@@ -56,27 +56,36 @@ $message .= DSS_EMAIL_FOOTER;
 
 ?>
 
-<?php //require_once dirname(__FILE__) . '/includes/top.htm'; ?>
+<?php require_once dirname(__FILE__) . '/includes/login_top.htm'; ?>
 
-<div class="page-header">
-    <h2>Password Recovery</h2>
+<!-- BEGIN LOGO -->
+<div class="logo">
+    <h1  style="color:#ffffff;font-size:30px; margin:9px;">Dental Sleep <span style="color:#187eb7;">Solutions</span></h1>
 </div>
+<!-- END LOGO -->
 
-<div class="row">
-    <? if($_GET['msg'] != '') {?>
-    <div class="alert alert-danger text-center">
-        <? echo $_GET['msg'];?>
-    </div>
-    <? } ?>
-    <div class="col-md-6 col-md-push-3">
-        <div class="well">
-            <form name="loginfrm" method="post" action="<?=$_SERVER['PHP_SELF']?>" onsubmit="return loginabc(this)" class="form-inline text-center">
-                Email:
-                <input type="email" name="email" placeholder="Confirm your email" class="form-control">
-                <input type="hidden" name="emailsub" value="1">
-                <input type="submit" name="btnsubmit" value="Recover Password" class="btn btn-primary">
-            </form>
+<div class="content">
+    <?php if($_GET['msg'] != '') { ?>
+        <div class="alert alert-danger text-center">
+            <?= htmlspecialchars($_GET['msg']) ?>
         </div>
-    </div>
+    <?php } ?>
+
+    <form name="loginfrm" method="post" action="<?=$_SERVER['PHP_SELF']?>" onsubmit="return loginabc(this)" class="form-horizontal">
+        <h3 class="form-title">Password Recovery</h3>
+        <div class="form-group">
+            <div class="input-icon">
+                <i class="fa fa-envelope"></i>
+                <input type="email" name="email" placeholder="Email" autocomplete="off" class="form-control placeholder-no-fix" />
+            </div>
+        </div>
+        <div class="form-actions" style="margin-left:-35px;">
+            <input type="hidden" name="emailsub" value="1" />
+            <button type="submit" class="btn blue pull-right" name="btnsubmit">Recover Password
+                <i class="m-icon-swapright m-icon-white"></i>
+            </button>
+            <div class="clearfix"></div>
+        </div>
+    </form>
 </div>
-<?php require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>
+<div class="copyright">2014 &copy; dentalsleepsolutions.com</div>

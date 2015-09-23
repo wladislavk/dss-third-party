@@ -23,32 +23,43 @@ require_once '../../manage/admin/includes/main_include.php';
   }
         // iterate over all our friends. $number is a phone number above, and $name 
         // is the name next to it
+        $isCellError = false;
         if($r['cell_phone']!='') {
-    // instantiate a new Twilio Rest Client
-    $client = new \Services_Twilio($AccountSid, $AuthToken);
+          // instantiate a new Twilio Rest Client
+          $client = new \Services_Twilio($AccountSid, $AuthToken);
           // Send a new outgoing SMS 
           if($send_texts){
-            $sms = $client->account->sms_messages->create(
-              // the number we are sending from, must be a valid Twilio number
-              $twilio_number,
+            try {
+              $sms = $client->account->sms_messages->create(
+                // the number we are sending from, must be a valid Twilio number
+                $twilio_number,
 
-              // the number we are sending to - Any phone number
-              $r['cell_phone'],
+                // the number we are sending to - Any phone number
+                $r['cell_phone'],
 
-              // the sms body 
-              "Your Dental Sleep Solutions access code is ".$recover_hash
-            );
-		if(strtotime($r['text_date'])<(time()-3600) || $r['text_num']==0){
-		  mysqli_query($con, "UPDATE dental_patients SET text_num=1, text_date = NOW() WHERE patientid='".$r['patientid']."'");
-		}else{
-                  mysqli_query($con, "UPDATE dental_patients SET text_num=text_num+1 WHERE patientid='".$r['patientid']."'");
-		}
-		echo '{"success":true}';
-          }else{
-		echo '{"error":"inactive"}';
-	  }
-        }else{
-		echo '{"error":"cell"}';
-	}
+                // the sms body 
+                "Your Dental Sleep Solutions access code is ".$recover_hash
+              );
+
+		          if (strtotime($r['text_date'])<(time()-3600) || $r['text_num']==0) {
+		            mysqli_query($con, "UPDATE dental_patients SET text_num=1, text_date = NOW() WHERE patientid='".$r['patientid']."'");
+		          } else {
+                mysqli_query($con, "UPDATE dental_patients SET text_num=text_num+1 WHERE patientid='".$r['patientid']."'");
+		          }
+
+		          echo '{"success":true}';
+            } catch (\Services_Twilio_RestException $e) {
+              $isCellError = true;
+            }
+          } else {
+		        echo '{"error":"inactive"}';
+	        }
+        } else {
+		      $isCellError = true;
+	      }
+
+        if ($isCellError) {
+          echo '{"error":"cell"}';
+        }
 
 ?>

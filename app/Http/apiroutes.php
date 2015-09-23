@@ -24,10 +24,14 @@ Route::group(['prefix' => 'api/v1', 'before' => '', 'after' => 'allowOrigin'], f
         Route::delete('delete',['as' => 'enrollments.delete',
                             'uses' => 'Api\ApiEnrollmentsController@destroyEnrollment']);
 
-        Route::get('list/{page?}',['as' => 'enrollments.list',
+        Route::get('eligiblelist/{page?}',['as' => 'eligible.enrollments.list',
+            'uses' => 'Api\ApiEnrollmentsController@listEligibleEnrollments']);
+
+        Route::get('list/{userid?}',['as' => 'enrollments.list',
             'uses' => 'Api\ApiEnrollmentsController@listEnrollments']);
 
-
+        Route::get('apikey/{userid?}',['as' => 'enrollments.apikey',
+            'uses' => 'Api\ApiEnrollmentsController@getDentalUserCompanyApiKey']);
 
     });
 });

@@ -66,12 +66,32 @@ class ApiEnrollmentsController extends ApiBaseController
      * @param integer $page
      * @return \Illuminate\Http\JsonResponse
      */
-    public function listEnrollments($page = 1)
+    public function listEligibleEnrollments($page = 1)
     {
         try
         {
             $results = $this->enrollments->listEnrollments($page);
             $response = ['data' => $results, 'status' => true, 'message' => ''];
+            return response()->json($response, 200);
+        }
+        catch (Exception $ex)
+        {
+            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
+        }
+    }
+
+    /**
+     *
+     *
+     * @param integer $page
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function listEnrollments($userId = 0)
+    {
+        try
+        {
+            $results = $this->enrollments->listEnrollments($userId);
+            $response = ['data' => $results, 'status' => true, 'message' => 'List of Enrollments'];
             return response()->json($response, 200);
         }
         catch (Exception $ex)
@@ -359,4 +379,24 @@ class ApiEnrollmentsController extends ApiBaseController
     {
         return $this->signatures->findBy('user_id', $user_id);
     }
+
+    /**
+     *
+     *
+     * @param integer $user_id
+     * @return mixed
+     */
+    public function getDentalUserCompanyApiKey($userId)
+    {
+        try
+        {
+            $response = $this->enrollments->getUserCompanyEligibleApiKey($userId);
+            return response()->json($response, 200);
+        }
+        catch (Exception $ex)
+        {
+            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
+        }
+    }
+
 }

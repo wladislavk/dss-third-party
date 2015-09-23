@@ -179,7 +179,7 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
      * @param string  $apiKey
      * @return string
      */
-    public function listEnrollments($page = 1, $apiKey = '')
+    public function listEligibleEnrollments($page = 1, $apiKey = '')
     {
         $this->checkAndSetProviderApiKey($apiKey);
         $data_string = $this->convertEnrollmentParamsToJson();
@@ -302,4 +302,43 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
         $enrollmentResponse->adddate = Carbon::now();
         $enrollmentResponse->response = $response->body;
     }
+
+    /************************* Local DB Functions ***********************/
+
+    /**
+     *
+     *
+     * @param int $userId
+     * @return mixed
+     */
+    public function listEnrollments($userId)
+    {
+
+        $query = \DB::table('dental_eligible_enrollment as enrollments');
+        $query->join('dental_enrollment_transaction_type as types', function($joinClause){
+            $joinClause->on('enrollments.transaction_type_id', '=', 'types.id');
+        });
+        $query->select(array("enrollments.*", \DB::raw("CONCAT(types.transaction_type,' - ',types.description) as transaction_type")));
+        $query->where(\DB::raw('enrollments.user_id'),'=',$userId);
+
+        return $query->get();
+    }
+
+    /**
+     *
+     *
+     * @param int $userId
+     * @return mixed
+     */
+    public function getUserCompanyEligibleApiKey($userId)
+    {
+        $query = \DB::table('dental_user_company')
+            ->join('companies','dental_user_company.companyid','=','companies.id')
+            ->select(array('eligible_api_key'))
+            ->where('dental_user_company.userid','=',$userId)->first();
+
+        return $query;
+
+    }
+
 }

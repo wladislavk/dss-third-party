@@ -47,7 +47,7 @@ interface EnrollmentInterface
      * @param null $apiKey
      * @return mixed
      */
-    public function listEnrollments($page=1, $apiKey=null);
+    public function listEligibleEnrollments($page=1, $apiKey=null);
 
     /**
      *
@@ -56,5 +56,22 @@ interface EnrollmentInterface
      * @return void
      */
     public function saveEnrollmentDetailsToDatabase(array $data = []);
+
+
+    /**
+     *
+     *
+     * @param int $userId
+     * @return mixed
+     */
+    public function listEnrollments($userId);
+
+    /**
+     *
+     *
+     * @param int $userId
+     * @return mixed
+     */
+    public function getUserCompanyEligibleApiKey($userId);
 
 }

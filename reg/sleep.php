@@ -159,7 +159,7 @@ if($pat_myarray['patientid'] == '')
 {
 	?>
 	<script type="text/javascript">
-		window.location = 'manage_patient.php';
+		window.location = '/reg/login.php';
 	</script>
 	<?
 	trigger_error("Die called", E_USER_ERROR);

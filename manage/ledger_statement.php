@@ -13,19 +13,20 @@
 	include_once('includes/patient_info.php');
 	include_once('includes/constants.inc');
 
+    $sql = "SELECT  "
+         . "  dl.amount, sum(pay.amount) as paid_amount "
+         . "FROM dental_ledger dl  "
+         . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
+         . "WHERE dl.docid='".$_SESSION['docid']."' AND dl.patientid='".s_for($_GET['pid'])."'  "
+         . "GROUP BY dl.ledgerid";
+
+    $result = $db->getResults($sql);
+
 	$docr = array();
-	if ($patient_info) {
+	if ($patient_info || count($result)) {
 		$docsql = "SELECT * FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 		
-		$docr = $db->getRow($docsql); 
-		$sql = "SELECT  "
-				 . "  dl.amount, sum(pay.amount) as paid_amount "
-		     . "FROM dental_ledger dl  "
-		     . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
-		     . "WHERE dl.docid='".$_SESSION['docid']."' AND dl.patientid='".s_for($_GET['pid'])."'  "
-		     . "GROUP BY dl.ledgerid";
-
-		$result = $db->getResults($sql);
+		$docr = $db->getRow($docsql);
 		$ledger_balance = 0;
 		if ($result) foreach ($result as $row) {
 			$ledger_balance -= $row['amount'];

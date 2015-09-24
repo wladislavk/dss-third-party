@@ -296,7 +296,7 @@ $num_users=count($my);
                                 AND dl.patientid='$patientid'
                             LIMIT 1
                         ) dl2 ON 1
-                    WHERE dq3.patientid = '$patientid'
+                    WHERE dp.patientid = '$patientid'
                     LIMIT 1";
 
                 $additionalData = $db->getRow($query);

@@ -1111,7 +1111,11 @@ if(!empty($_GET['instype']) && $_GET['instype']==2){
   $other_insured_middle = st($myarray['insured_middle']);
   $other_insured_dob = st($myarray['insured_dob']);
   $other_insured_sex = st($myarray['insured_sex']);
-  $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+
+  if (empty($other_insured_insurance_plan)) {
+    $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+  }
+
   $other_insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
   $other_insured_id_number = st($myarray['insured_id_number']);
   $insured_id_number = st($myarray['other_insured_id_number']);
@@ -1138,7 +1142,11 @@ if(!empty($_GET['instype']) && $_GET['instype']==2){
   $other_insured_middle = st($myarray['other_insured_middle']);
   $other_insured_dob = st($myarray['other_insured_dob']);
   $other_insured_sex = st($myarray['other_insured_sex']);
-  $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+
+  if (empty($other_insured_insurance_plan)) {
+    $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+  }
+
   $other_insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
   $insured_id_number = st($myarray['insured_id_number']);
   $other_insured_id_number = st($myarray['other_insured_id_number']);
@@ -1481,7 +1489,7 @@ if (empty($prior_authorization_number)) {
  *
  * Use strict comparison to differentiate unset values from zero
  */
-$isDiagnosis = !isset($icd_ind) || ($icd_ind !== 0 && $icd_ind !== '0');
+$isDiagnosis = (!isset($icd_ind) || ($icd_ind !== 0 && $icd_ind !== '0')) && !$is_rejected;
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

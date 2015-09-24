@@ -35,7 +35,7 @@ $sql_sort = "SELECT p.patientid, p.status, p.lastname, p.firstname, p.middlename
 
 $sql_count = "SELECT count(*) as total_rec FROM dental_patients p";
 
-$sql .= " WHERE p.docid='".$_SESSION['docid']."'";
+$sql .= " WHERE p.docid='$docId'";
 if(isset($_GET['pid'])) {
     $sql .= " AND p.patientid = ".$_GET['pid'];
 }
@@ -215,56 +215,88 @@ $num_users=count($my);
 					FROM dental_patient_summary s WHERE s.pid='".mysqli_real_escape_string($con, $myarray["patientid"])."' LIMIT 1";
                 $summ = $db->getRow($summ_sql);*/
 
+                $docId = intval($_SESSION['docid']);
                 $patientid = mysqli_real_escape_string($con, $myarray['patientid']);
 
-                $query = "SELECT    dq3.allergenscheck,
-                                    pg2_info1.date_completed, pg2_info1.segmentid,
-                                    ( SELECT date_scheduled
-                                      FROM dental_flow_pg2_info
-                                      WHERE appointment_type=0 AND patientid='$patientid' LIMIT 1 ) as date_scheduled,
-                                    exp5.dentaldevice, exp5.dentaldevice_date, exp5.device,
-                                    fpg.rxlomnrec, fpg.lomnrec, fpg.rxrec,
-                                    ( SELECT SUM(dl.amount) AS amount1
-                                      FROM dental_ledger dl
-				                      WHERE dl.docid='".$_SESSION['docid']."'
-				                            AND (dl.paid_amount IS NULL || dl.paid_amount = 0)
-					                        AND dl.patientid='$patientid' LIMIT 1 ) as amount1,
-					                dl2.amount2,
-					                ( SELECT SUM(dlp.amount) amount3
-					                  FROM dental_ledger dl
-				                      LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-				                      WHERE dl.docid='".$_SESSION['docid']."'
-				                            AND dlp.amount IS NOT NULL AND dlp.amount != 0
-				                            AND dl.patientid='$patientid' LIMIT 1 ) as amount3,
-				                    dl2.amount4,
-                                    ( SELECT count(*) as numsleepstudy
-                                      FROM dental_summ_sleeplab ss
-                                      JOIN dental_patients p on ss.patiendid=p.patientid
-                                      WHERE (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != '')))
-                                            AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '')
-                                            AND (ss.filename!='' AND ss.filename IS NOT NULL)
-                                            AND ss.patiendid = '$patientid' ) as numsleepstudy
-                          FROM      dental_q_page3 dq3
-                          LEFT JOIN ( SELECT pg2_info.patientid, pg2_info.date_completed, pg2_info.segmentid
-                                      FROM dental_flow_pg2_info pg2_info
-                                      WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = '$patientid'
-                                      ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC LIMIT 1 ) pg2_info1 ON 1
+                $query = "SELECT
+                        dq3.allergenscheck,
+                        pg2_info1.date_completed,
+                        pg2_info1.segmentid,
+                        (
+                            SELECT date_scheduled
+                            FROM dental_flow_pg2_info
+                            WHERE appointment_type = 0 AND patientid = '$patientid'
+                            LIMIT 1
+                        ) AS date_scheduled,
+                        exp5.dentaldevice,
+                        exp5.dentaldevice_date,
+                        exp5.device,
+                        fpg.rxlomnrec,
+                        fpg.lomnrec,
+                        fpg.rxrec,
+                        (
+                            SELECT SUM(dl.amount) AS amount1
+                            FROM dental_ledger dl
+                            WHERE dl.docid = '$docId'
+                                AND (dl.paid_amount IS NULL || dl.paid_amount = 0)
+                                AND dl.patientid = '$patientid'
+                            LIMIT 1
+                        ) AS amount1,
+                        dl2.amount2,
+                        (
+                            SELECT SUM(dlp.amount) amount3
+                            FROM dental_ledger dl
+                                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                            WHERE dl.docid='$docId'
+                                AND dlp.amount IS NOT NULL
+                                AND dlp.amount != 0
+                                AND dl.patientid = '$patientid'
+                            LIMIT 1
+                        ) AS amount3,
+                        dl2.amount4,
+                        (
+                            SELECT COUNT(patientid) as numsleepstudy
+                            FROM dental_summ_sleeplab ss
+                                JOIN dental_patients p on ss.patientid=p.patientid
+                            WHERE (
+                                    p.p_m_ins_type != '1'
+                                    OR (
+                                        (ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '')
+                                        AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != '')
+                                    )
+                                )
+                                AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '')
+                                AND (ss.filename!='' AND ss.filename IS NOT NULL)
+                                AND ss.patientid = '$patientid'
+                        ) AS numsleepstudy
+                    FROM dental_q_page3 dq3
+                        LEFT JOIN (
+                            SELECT pg2_info.patientid, pg2_info.date_completed, pg2_info.segmentid
+                            FROM dental_flow_pg2_info pg2_info
+                            WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = '$patientid'
+                            ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC
+                            LIMIT 1
+                        ) pg2_info1 ON 1
+                        LEFT JOIN (
+                            SELECT exp5.dentaldevice, exp5.dentaldevice_date, dd.device
+                            FROM dental_ex_page5 exp5
+                                LEFT JOIN dental_device dd ON dd.deviceid=exp5.dentaldevice
+                            WHERE patientid = '$patientid'
+                            LIMIT 1
+                        ) exp5 ON 1
+                        LEFT JOIN dental_flow_pg1 fpg ON fpg.pid=dq3.patientid
+                        LEFT JOIN (
+                            SELECT SUM(dl.amount) amount2, SUM(dl.paid_amount) amount4
+                            FROM dental_ledger dl
+                                LEFT JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
+                            WHERE dl.docid = '$docId'
+                                AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
+                                AND dl.patientid='$patientid'
+                            LIMIT 1
+                        ) dl2 ON 1
+                    WHERE dq3.patientid = '$patientid'
+                    LIMIT 1";
 
-                          LEFT JOIN ( SELECT exp5.dentaldevice, exp5.dentaldevice_date, dd.device
-                                      FROM dental_ex_page5 exp5
-                                      LEFT JOIN dental_device dd ON dd.deviceid=exp5.dentaldevice
-                                      WHERE patientid='$patientid' LIMIT 1 ) exp5 ON 1
-
-                          LEFT JOIN  dental_flow_pg1 fpg ON fpg.pid=dq3.patientid
-
-					      LEFT JOIN ( SELECT SUM(dl.amount) amount2, SUM(dl.paid_amount) amount4
-					                  FROM dental_ledger dl
-				        	          LEFT JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
-				                      WHERE dl.docid='".$_SESSION['docid']."'
-				                            AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
-					                        AND dl.patientid='$patientid' LIMIT 1) dl2 ON 1
-
-                          WHERE dq3.patientid='$patientid' LIMIT 1" ;
                 $additionalData = $db->getRow($query);
 
                 ?>

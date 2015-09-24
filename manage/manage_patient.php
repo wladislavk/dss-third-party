@@ -257,7 +257,7 @@ $num_users=count($my);
                         ) AS amount3,
                         dl2.amount4,
                         (
-                            SELECT COUNT(patientid) as numsleepstudy
+                            SELECT COUNT(*) as numsleepstudy
                             FROM dental_summ_sleeplab ss
                                 JOIN dental_patients p on ss.patiendid=p.patientid
                             WHERE (
@@ -341,7 +341,7 @@ $num_users=count($my);
                                 $ins_error = false;
                             }
 
-                            $numsleepstudy = $additionalData['p_m_dss_file'];
+                            $numsleepstudy = $additionalData['numsleepstudy'];
 
                             if($numsleepstudy == 0){
                                 $study_error = true;

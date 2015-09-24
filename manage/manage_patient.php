@@ -258,7 +258,7 @@ $num_users=count($my);
                         (
                             SELECT COUNT(patientid) as numsleepstudy
                             FROM dental_summ_sleeplab ss
-                                JOIN dental_patients p on ss.patientid=p.patientid
+                                JOIN dental_patients p on ss.patiendid=p.patientid
                             WHERE (
                                     p.p_m_ins_type != '1'
                                     OR (
@@ -268,9 +268,10 @@ $num_users=count($my);
                                 )
                                 AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '')
                                 AND (ss.filename!='' AND ss.filename IS NOT NULL)
-                                AND ss.patientid = '$patientid'
+                                AND ss.patiendid = '$patientid'
                         ) AS numsleepstudy
-                    FROM dental_q_page3 dq3
+                    FROM dental_patients dp
+                        LEFT JOIN dental_q_page3 dq3 ON dq3.patientid = dp.patientid
                         LEFT JOIN (
                             SELECT pg2_info.patientid, pg2_info.date_completed, pg2_info.segmentid
                             FROM dental_flow_pg2_info pg2_info

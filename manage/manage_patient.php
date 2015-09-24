@@ -220,6 +220,7 @@ $num_users=count($my);
                 $patientid = mysqli_real_escape_string($con, $myarray['patientid']);
 
                 $query = "SELECT
+                        dp.p_m_dss_file,
                         dq3.allergenscheck,
                         pg2_info1.date_completed,
                         pg2_info1.segmentid,

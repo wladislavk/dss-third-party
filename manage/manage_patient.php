@@ -331,11 +331,12 @@ $num_users=count($my);
 
                         <td valign="top">
                             <?php
-                            if( $additionalData['p_m_dss_file'] != '' &&
-                                $additionalData['p_m_dss_file'] != 1 &&
-                                $_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE) {
+
+                            if($additionalData['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
+                                $ins_error = false;
+                            }elseif($additionalData['p_m_dss_file']!=1){
                                 $ins_error = true;
-                            } else {
+                            }else{
                                 $ins_error = false;
                             }
 

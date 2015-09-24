@@ -27,6 +27,8 @@ if(!isset($_REQUEST['sort']) || $_REQUEST['sort'] == ''){
     $_REQUEST['sortdir'] = 'ASC';
 }
 
+$docId = intval($_SESSION['docid']);
+
 $sql = '';
 
 $sql_sort = "SELECT p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, p.p_m_dss_file,
@@ -215,7 +217,6 @@ $num_users=count($my);
 					FROM dental_patient_summary s WHERE s.pid='".mysqli_real_escape_string($con, $myarray["patientid"])."' LIMIT 1";
                 $summ = $db->getRow($summ_sql);*/
 
-                $docId = intval($_SESSION['docid']);
                 $patientid = mysqli_real_escape_string($con, $myarray['patientid']);
 
                 $query = "SELECT

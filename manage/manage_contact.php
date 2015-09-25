@@ -242,6 +242,7 @@ $sortDir = $sortDir === 'ASC' ? 'ASC' : 'DESC';
 							$tr_class = "tr_inactive";
 						}
 
+                        $contactId = intval($myarray['contactid']);
 
                         $noFirst = empty($myarray['firstname']);
                         $noMiddle = empty($myarray['middlename']);
@@ -272,17 +273,32 @@ $sortDir = $sortDir === 'ASC' ? 'ASC' : 'DESC';
 
 						<td valign="top" width="10%">
 							<?php
-							    $ref_sql = "SELECT * FROM dental_patients WHERE (parent_patientid IS NULL OR parent_patientid='') AND referred_source=2 AND referred_by='" . $db->escape($myarray['contactid']) . "'";
+							    $ref_sql = "SELECT patientid, firstname, lastname
+							        FROM dental_patients
+							        WHERE (parent_patientid IS NULL OR parent_patientid = '')
+							            AND referred_source = 2
+							            AND referred_by = '$contactId'";
 							    $ref_q = $db->getResults($ref_sql);
 							    $num_ref = count($ref_q);
 							?>
-
+                            <?= $contactId ?>
 							<?php echo ($num_ref) ? '<a href="#" onclick="$(\'#ref_pat_' . $myarray['contactid'] . '\').toggle();return false;">' . $num_ref . '</a>':''; ?>
 						</td>
 
 	                    <td valign="top" width="10%">
 							<?php
-							    $pat_sql = "SELECT * FROM dental_patients WHERE (parent_patientid IS NULL OR parent_patientid='') AND (docpcp='" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docent = '" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docsleep='" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docdentist='" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docmdother='" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docmdother2 = '" . mysqli_real_escape_string($con,$myarray['contactid']) . "' OR docmdother3='" . mysqli_real_escape_string($con,$myarray['contactid']) . "')";
+							    $pat_sql = "SELECT patientid, firstname, lastname
+							        FROM dental_patients
+							        WHERE (parent_patientid IS NULL OR parent_patientid = '')
+							            AND (
+							                docpcp = '$contactId'
+							                OR docent = '$contactId'
+							                OR docsleep = '$contactId'
+							                OR docdentist = '$contactId'
+							                OR docmdother = '$contactId'
+							                OR docmdother2 = '$contactId'
+							                OR docmdother3 = '$contactId'
+							            )";
 							    $pat_q = $db->getResults($pat_sql);
 							    $num_pat = count($pat_q);
 							?>

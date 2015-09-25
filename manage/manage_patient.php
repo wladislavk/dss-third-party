@@ -287,7 +287,7 @@ $num_users=count($my);
                             WHERE patientid = '$patientid'
                             LIMIT 1
                         ) exp5 ON 1
-                        LEFT JOIN dental_flow_pg1 fpg ON fpg.pid=dq3.patientid
+                        LEFT JOIN dental_flow_pg1 fpg ON fpg.pid=dp.patientid
                         LEFT JOIN (
                             SELECT SUM(dl.amount) amount2, SUM(dl.paid_amount) amount4
                             FROM dental_ledger dl

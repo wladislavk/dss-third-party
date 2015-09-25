@@ -192,20 +192,7 @@ trigger_error("Die called", E_USER_ERROR);
 	$patient_firstname = $_POST['patient_firstname'];
 	$patient_middle = $_POST['patient_middle'];
   //we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
-	$patient_dob_raw = $_POST['patient_dob'];
-    $patient_dob_raw_pos = strpos($patient_dob_raw, '-');
-    if ($patient_dob_raw_pos != false) {
-      $patient_dob_pieces = explode('-', $patient_dob_raw);
-    } else {
-      $patient_dob_pieces = explode('/', $patient_dob_raw);
-    }
-      $month = $patient_dob_pieces[0];
-      $day = $patient_dob_pieces[1];
-      $year = $patient_dob_pieces[2];
-      $patient_dob_pieces[0] = $year;
-      $patient_dob_pieces[1] = $month;
-      $patient_dob_pieces[2] = $day;
-      $patient_dob = implode("/", $patient_dob_pieces);
+	$patient_dob = dateFormat($_POST['patient_dob'], false);
 	$patient_sex = $_POST['patient_sex'];
 	$patient_address = $_POST['patient_address'];
 	$patient_city = $_POST['patient_city'];
@@ -237,22 +224,9 @@ trigger_error("Die called", E_USER_ERROR);
 	$insured_policy_group_feca = $_POST['insured_policy_group_feca'];
 	$other_insured_policy_group_feca = $_POST['other_insured_policy_group_feca'];
 	//we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
-  $insured_dob_raw = $_POST['insured_dob'];
-  $insured_dob_raw_pos = strpos($insured_dob_raw, '-');
-  if ($insured_dob_raw_pos != false) {
-    $insured_dob_pieces = explode('-', $insured_dob_raw);
-  } else {
-    $insured_dob_pieces = explode('/', $insured_dob_raw);
-  }
-  $month = $insured_dob_pieces[0];
-  $day = $insured_dob_pieces[1];
-  $year = $insured_dob_pieces[2];
-  $insured_dob_pieces[0] = $year;
-  $insured_dob_pieces[1] = $month;
-  $insured_dob_pieces[2] = $day;
-  $insured_dob = implode("/", $insured_dob_pieces);
+   $insured_dob = dateFormat($_POST['insured_dob'], false);
 	$insured_sex = $_POST['insured_sex'];
-	$other_insured_dob = (!empty($_POST['other_insured_dob']) ? $_POST['other_insured_dob'] : '');
+	$other_insured_dob = dateFormat($_POST['other_insured_dob'], false);
 	$other_insured_sex = (!empty($_POST['other_insured_sex']) ? $_POST['other_insured_sex'] : '');
 	$insured_employer_school_name = (!empty($_POST['insured_employer_school_name']) ? $_POST['insured_employer_school_name'] : '');
 	$other_insured_employer_school_name = (!empty($_POST['other_insured_employer_school_name']) ? $_POST['other_insured_employer_school_name'] : '');
@@ -403,21 +377,7 @@ trigger_error("Die called", E_USER_ERROR);
 	$amount_paid = $_POST['amount_paid'];
 	$balance_due = (!empty($_POST['balance_due']) ? $_POST['balance_due'] : '');
 	$signature_physician = $_POST['signature_physician'];
-	// $physician_signed_date = (($_POST['physician_signed_date']!=date('Y-m-d'))?$_POST['physician_signed_date']:'');
-
-    if ($_POST['physician_signed_date'] != date('Y-m-d')) {
-        $dateFromPost = str_replace('/', '-', $_POST['physician_signed_date']);
-        if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromPost)) {
-            $physician_signed_date = $physician_signed_date->format('Y-m-d');
-        } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromPost)) {
-            $physician_signed_date = $physician_signed_date->format('Y-m-d');
-        } else {
-            $physician_signed_date = date('Y-m-d');
-        }
-    } else {
-        $physician_signed_date = '';
-    }
-
+	$physician_signed_date = dateFormat($_POST['physician_signed_date'], false);
 	$service_facility_info_name = $_POST['service_facility_info_name'];
 	$service_facility_info_address = $_POST['service_facility_info_address'];
 	$service_facility_info_city = $_POST['service_facility_info_city'];
@@ -1327,21 +1287,7 @@ $other_claim_id = st($myarray['other_claim_id']);
 $nucc_9c = st($myarray['nucc_9c']);
 $nucc_30 = st($myarray['nucc_30']);
 $signature_physician = st($myarray['signature_physician']);
-// $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('Y-m-d'));
-
-if (!empty($myarray['physician_signed_date'])) {
-    $dateFromDatabase = str_replace('/', '-', $myarray['physician_signed_date']);
-    if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromDatabase)) {
-        $physician_signed_date = $physician_signed_date->format('Y-m-d');
-    } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromDatabase)) {
-        $physician_signed_date = $physician_signed_date->format('Y-m-d');
-    } else {
-        $physician_signed_date = date('Y-m-d');
-    }
-} else {
-    $physician_signed_date = date('Y-m-d');
-}
-
+$physician_signed_date = dateFormat($myarray['physician_signed_date']);
 $service_facility_info_name = st($myarray['service_facility_info_name']);
 $service_facility_info_address = st($myarray['service_facility_info_address']);
 $service_facility_info_city = st($myarray['service_facility_info_city']);
@@ -1396,8 +1342,8 @@ if($is_pri_pending){
 	}
 	$patient_signature = 1;
 	$signature_physician = "Signature on File";
-	$patient_signed_date = date('Y-m-d', strtotime($pat_myarray['adddate']));
-        $physician_signed_date = date('Y-m-d');
+	$patient_signed_date = dateFormat($pat_myarray['adddate']);
+    $physician_signed_date = date('Y-m-d');
     list($patient_phone_code, $patient_phone) = parsePhoneNumber($pat_myarray['home_phone']);
     list($insured_phone_code, $insured_phone) = parsePhoneNumber($pat_myarray['home_phone']);
 	$patient_status = $pat_myarray['marital_status'];
@@ -1407,7 +1353,7 @@ if($is_pri_pending){
 	$insured_city = (!empty($myarray['insured_city']) ? $myarray['insured_city'] : '');
 	$insured_state = (!empty($myarray['insured_state']) ? $myarray['insured_state'] : '');
 	$insured_zip = (!empty($myarray['insured_zip']) ? $myarray['insured_zip'] : '');
-	$insured_dob = $pat_myarray['ins_dob'];	
+	$insured_dob = dateFormat($pat_myarray['ins_dob'], false);
 	$patient_relation_insured = $pat_myarray['p_m_relation'];
 	$insured_employer_school_name = $pat_myarray['employer'];
 	if($pat_myarray['p_m_ins_type']==1){
@@ -1474,6 +1420,24 @@ if (empty($prior_authorization_number)) {
         $prior_authorization_number = $myarray['pre_auth_num'];
     }
 }
+
+$patient_dob = dateFormat($patient_dob, false);
+$insured_dob = dateFormat($insured_dob, false);
+$other_insured_dob = dateFormat($other_insured_dob, false);
+$date_current = dateFormat($date_current, false);
+$date_same_illness = dateFormat($date_same_illness, false);
+$unable_date_from = dateFormat($unable_date_from, false);
+$unable_date_to = dateFormat($unable_date_to, false);
+$hospitalization_date_from = dateFormat($hospitalization_date_from, false);
+$hospitalization_date_to = dateFormat($hospitalization_date_to, false);
+$patient_signed_date = dateFormat($patient_signed_date, false);
+$physician_signed_date = dateFormat($physician_signed_date, false);
+
+list($patient_phone_code, $patient_phone) = parsePhoneNumber($patient_phone_code, $patient_phone);
+list($insured_phone_code, $insured_phone) = parsePhoneNumber($insured_phone_code, $insured_phone);
+list($billing_provider_phone_code, $billing_provider_phone) = parsePhoneNumber(
+    $billing_provider_phone_code, $billing_provider_phone
+);
 
 /**
  * 0 - Treatment, 9 - Diagnosis
@@ -1949,8 +1913,6 @@ Medicare
 									Patient's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if($patient_dob!=''){$patient_dob = date('Y-m-d', strtotime($patient_dob));
-                  } ?>
                                     <input id="dob" name="patient_dob" type="text" class="field text addr tbox calendar"
                                          value="<?php echo $patient_dob?>"
                                          style="width:100px;" maxlength="255"
@@ -2201,8 +2163,6 @@ Medicare
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if(!empty($insured_dob)){$insured_dob = date('Y-m-d', strtotime($insured_dob));
-                  }?>
                                     <input id="insured_dob" name="insured_dob" type="text" class="field text addr tbox calendar"
                                         value="<?php echo  $insured_dob; ?>" style="width:100px;" maxlength="255"
                                         onChange="validateDate('insured_dob');"
@@ -2879,8 +2839,8 @@ if (empty($query)) {
         $realTotalAmount += $array['amount']; ?>
     <table style="margin-left:39px;">
       <tr>
-        <td width="106"><?php echo date('Y-m-d', strtotime($array['service_date'])); ?></td>
-        <td width="106"><?php echo date('Y-m-d', strtotime($array['service_date'])); ?></td>
+        <td width="106"><?= dateFormat($array['service_date']); ?></td>
+        <td width="106"><?= dateFormat($array['service_date']); ?></td>
         <td width="91">
 <?php echo  (!empty($pos) ? $pos : ''); ?>
 		<select style="width:76px" name="placeofservice<?php echo $li;?>">

@@ -6,7 +6,7 @@
 	$pco = (!empty($_GET["pco"]) ? $_GET["pco"] : '');
 	$t = (!empty($_GET['t']) ? $_GET['t'] : '');
 
-	$sql = sprintf("SELECT transaction_code from dental_transaction_code WHERE transaction_codeid=%s", mysqli_real_escape_string($con,$q));
+	$sql = sprintf("SELECT transaction_code from dental_transaction_code WHERE transaction_codeid='%s'", mysqli_real_escape_string($con,$q));
 	
 	$ro = $db->getRow($sql);
 	$tc = $ro['transaction_code'];

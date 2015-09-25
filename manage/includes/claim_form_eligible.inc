@@ -115,7 +115,11 @@ if (!function_exists('s_for')) {
       $other_insured_middle = st($myarray['insured_middle']);
       $other_insured_dob = st($pat_myarray['ins_dob']);
       $other_insured_sex = st($pat_myarray['s_m_gender']);
-      $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+
+      if (empty($other_insured_insurance_plan)) {
+        $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+      }
+      
       $other_insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
       $other_insured_address = st($myarray['insured_address']);
       $other_insured_city = st($myarray['insured_city']);
@@ -156,7 +160,11 @@ if (!function_exists('s_for')) {
       $other_insured_middle = st($myarray['other_insured_middle']);
       $other_insured_dob = st($myarray['other_insured_dob']);
       $other_insured_sex = st($myarray['other_insured_sex']);
-      $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+
+      if (empty($other_insured_insurance_plan)) {
+        $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+      }
+
       $other_insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
       $other_insured_address = st($myarray['other_insured_address']);
       $other_insured_city = st($myarray['other_insured_city']);

@@ -1,6 +1,7 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+use Log;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 
@@ -169,6 +170,11 @@ class Loader
 
         $redirection = self::getRedirection($this->outputHeaders, $this->outputBuffer, $relativePath);
 
+        if (preg_match('/[\n\r]/', $redirection)) {
+            Log::warning("Redirection contains newline chars: $redirection");
+            $redirection = preg_replace('/[\n\r].*/', '', $redirection);
+        }
+
         if ($redirection) {
             unset($this->outputHeaders['location']);
             $response = new RedirectResponse($redirection, 302, $this->outputHeaders);
@@ -280,12 +286,17 @@ class Loader
             $headerName = $header;
             $headerValue = '';
 
-            if (preg_match('@(?<name>.+?)(?:$|:\s*(?<value>.*))@', $header, $match)) {
-                $headerName = strtolower($match['name']);
-                $headerValue = isset($match['value']) ? $match['value'] : '';
+            if (preg_match('/[\n\r]/', $header)) {
+                Log::warning("Header contains newline chars: $header");
+            } else {
+                if (preg_match('@(?<name>.+?)(?:$|:\s*(?<value>.*))@', $header, $match)) {
+                    $headerName = strtolower($match['name']);
+                    $headerValue = isset($match['value']) ? $match['value'] : '';
+                }
+
+                $this->outputHeaders[$headerName] = $headerValue;
             }
 
-            $this->outputHeaders[$headerName] = $headerValue;
             header_remove($headerName);
         }
 

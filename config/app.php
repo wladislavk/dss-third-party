@@ -4,6 +4,7 @@ return [
     'debug' => env('APP_ENV') === 'production' ? false : env('APP_DEBUG', false),
     'legacy_path' => env('LEGACY_PATH', '/var/www/html/legacy'),
     'url' => env('APP_URL', 'https://www.dentalsleepsolutions.com/'),
+    'apiUrl' => env('API_URL', 'https://api.dentalsleepsolutions.com/'),
     'domain' => env('APP_URL_NAME', 'DentalSleepSolutions.com'),
     'name' => env('APP_NAME', 'Dental Sleep Solutions'),
     'timezone' => 'US/Eastern',

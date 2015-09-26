@@ -43,6 +43,8 @@ class ApiEnrollmentsController extends ApiBaseController
      */
     protected $blueInkSignatureRequired = false;
 
+    protected $transcationType = 0;
+
 
     /**
      * @param EnrollmentInterface       $enrollments
@@ -285,8 +287,12 @@ class ApiEnrollmentsController extends ApiBaseController
     {
         $signatureCordinates = [];
 
+        $transactionTypes = $this->enrollments->getEnrollmentTransactionType($request->get('transaction_type_id'));
+        $this->transcationType = $transactionTypes->transaction_type;
+
         $elligibleEnrollment['payer_id']            = $request->get('payer_id');
-        $elligibleEnrollment['transaction_type']    = $request->get('transaction_type');
+        $elligibleEnrollment['transaction_type_id'] = $request->get('transaction_type_id');
+        $elligibleEnrollment['transaction_type']    = $this->transcationType;
         $elligibleEnrollment['facility_name']       = $request->get('facility_name');
         $elligibleEnrollment['provider_name']       = $request->get('provider_name');
         $elligibleEnrollment['tax_id']              = $request->get('tax_id');
@@ -329,7 +335,8 @@ class ApiEnrollmentsController extends ApiBaseController
     {
         $this->enrollmentValues['user_id']                = $request->get('user_id');
         $this->enrollmentValues['payer_id']               = $request->get('payer_id');
-        $this->enrollmentValues['transaction_type_id']    = $request->get('transaction_type');
+        $this->enrollmentValues['transaction_type_id']    = $request->get('transaction_type_id');
+        $this->enrollmentValues['transaction_type']       = $this->transcationType;
         $this->enrollmentValues['facility_name']          = $request->get('facility_name');
         $this->enrollmentValues['provider_name']          = $request->get('provider_name');
         $this->enrollmentValues['tax_id']                 = $request->get('tax_id');
@@ -399,4 +406,17 @@ class ApiEnrollmentsController extends ApiBaseController
         }
     }
 
+    public function getEnrollmentTransactionType($id=0)
+    {
+
+     try
+        {
+            $response = $this->enrollments->getEnrollmentTransactionType($id);
+            return response()->json($response, 200);
+        }
+        catch (Exception $ex)
+        {
+            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
+        }   
+    }
 }

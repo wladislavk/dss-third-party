@@ -30,8 +30,11 @@ Route::group(['prefix' => 'api/v1', 'before' => '', 'after' => 'allowOrigin'], f
         Route::get('list/{userid?}',['as' => 'enrollments.list',
             'uses' => 'Api\ApiEnrollmentsController@listEnrollments']);
 
-        Route::get('apikey/{userid?}',['as' => 'enrollments.apikey',
+        Route::get('apikey/{userid}',['as' => 'enrollments.apikey',
             'uses' => 'Api\ApiEnrollmentsController@getDentalUserCompanyApiKey']);
+
+        Route::get('type/{id}',['as' => 'enrollments.type',
+            'uses' => 'Api\ApiEnrollmentsController@getEnrollmentTransactionType']);
 
     });
 });

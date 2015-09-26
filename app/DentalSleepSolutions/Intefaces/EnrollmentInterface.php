@@ -74,4 +74,11 @@ interface EnrollmentInterface
      */
     public function getUserCompanyEligibleApiKey($userId);
 
+    /**
+     * [getEnrollmentTransactionType description]
+     * @param  integer $id 
+     * @return mixed     
+     */
+    public function getEnrollmentTransactionType($id);
+
 }

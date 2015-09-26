@@ -130,7 +130,7 @@ require_once('includes/constants.inc');
 
     <div style='display:none'>
 
-        <div id="enrollmentForm" style="padding:15px; background:url(../images/tall.jpg) #BFCFDC;">
+        <div id="enrollmentForm" style="padding:15px; background:url(../images/tall.jpg) #BFCFDC; z-index: 1000;">
 
             <form name="enrollForm">
                 <?php

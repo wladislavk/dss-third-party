@@ -49,11 +49,23 @@ var enrollments = new Vue({
 
         fetchEnrollments:function()
         {
+            $.blockUI({ css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            }, message: "<h1>Fetching enrollments please wait...</h1>", baseZ:5000 });
+
             this.$http.get(enrollmentApiPath + 'list/' + docId, function (data, status, request) {
                 this.$set('enrollments', data.data);
                 //console.log(data.data);
+                $.unblockUI();
             }).error(function (data, status, request) {
                 // handle error
+                $.unblockUI();
             });
         },
 
@@ -118,6 +130,15 @@ var enrollments = new Vue({
 
             //console.log(postValues);
 
+            $.blockUI({ css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            }, message: "<h1>Creating enrollment please wait...</h1>", baseZ:10000 });
 
             this.$http.post(enrollmentApiPath + 'create',postValues,function(data,status,request) {
                 this.fetchEnrollments();
@@ -125,7 +146,7 @@ var enrollments = new Vue({
                 $.colorbox.close();
             }).error(function (data, status, request) {
                 var message = data;
-                console.log(message);
+                $.unblockUI();
                 this.$set('errors', message);
             })
 

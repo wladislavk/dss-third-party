@@ -30,11 +30,12 @@ enrollmentLabels[enrollmentStatuses.DSS_ENROLLMENT_PDF_SENT] = 'PDF Sent';
 var enrollments = new Vue({
     el: '#enrollmentManager',
         data: {
+            fields: {
+                transaction_type:null
+            },
             enrollments:[],
             apikey:[],
-        fields: {
-
-        }
+            selectedEnrollmentType:null
     },
 
     ready: function() {
@@ -45,7 +46,8 @@ var enrollments = new Vue({
     },
     methods: {
 
-        fetchEnrollments:function() {
+        fetchEnrollments:function()
+        {
             this.$http.get(enrollmentApiPath + 'list/' + docId, function (data, status, request) {
                 this.$set('enrollments', data.data);
                 //console.log(data.data);
@@ -54,7 +56,8 @@ var enrollments = new Vue({
             });
         },
 
-        fetchApiKey:function() {
+        fetchApiKey:function()
+        {
             this.$http.get(enrollmentApiPath + 'apikey/' + docId, function (data, status, request) {
                 if(data != null) {
                     this.$set('apikey', data.eligible_api_key);
@@ -68,10 +71,80 @@ var enrollments = new Vue({
             });
         },
 
+        fetchEnrrollmentType : function()
+        {
+            this.$http.get(enrollmentApiPath + 'type/' + docId, function (data, status, request) {
+                if(data != null) {
+                    this.$set('selectedEnrollmentType', data.transaction_type);
+                }
+                else {
+                    this.$set('selectedEnrollmentType', []);
+                }
+                $('#selected_transaction_type').val(this.selectedEnrollmentType);
+                console.log(this.selectedEnrollmentType);
+            }).error(function (data, status, request) {
+                // handle error
+            });
+        },
+
+        createEnrollment: function (e) {
+
+            e.preventDefault();
+
+            this.fetchEnrrollmentType();
+            var payer_id = $('#payer_id').val().split("-")[0];
+            var provider = JSON.parse( $('#provider_select').val() );
+
+            var postValues = {
+                user_id:$('#user_id').val(),
+                transaction_type_id:$('#transaction_type').val(),
+                selected_transaction_type:$('#selected_transaction_type').val(),
+                payer_id:payer_id,
+                facility_name:$('#facility_name').val(),
+                provider_name:provider.provider_name,
+                tax_id:$('#tax_id').val(),
+                address:$('#address').val(),
+                city:$('#city').val(),
+                state:$('#state').val(),
+                zip:$('#zip').val(),
+                first_name:$('#first_name').val(),
+                last_name:$('#last_name').val(),
+                contact_number:$('#contact_number').val(),
+                email:$('#email').val(),
+                npi:provider.npi,
+                ptan:provider.medicare_ptan
+            };
+
+            //console.log(postValues);
+
+
+            this.$http.post(enrollmentApiPath + 'create',postValues,function(data,status,request) {
+                this.fetchEnrollments();
+                alert('Enrollment successfully created.');
+                $.colorbox.close();
+            }).error(function (data, status, request) {
+                var message = JSON.parse(data.message);
+                this.$set('errors', message);
+            })
+
+
+        },
+
+        setEnrollmentType : function()
+        {
+
+        },
+
         enrollmentStatusLabel: function(status) {
             return enrollmentLabels[status];
         },
 
     },
 
+});
+
+$(document).ready(function() {
+    $('.addButton').colorbox({inline:true, width:"40%", closeButton: true,
+        onClosed:function(){ location.reload(); }
+    });
 });

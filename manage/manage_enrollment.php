@@ -34,10 +34,10 @@ require_once('includes/constants.inc');
         </div>
 
         <div style="margin-left:10px;margin-right:10px;">
-            <button style="margin-right:10px; float:right;" onclick="loadPopup('add_enrollment.php')" class="addButton1">
-                Add New Enrollment
+            <button style="margin-right:10px; float:right; display: none;" onclick="loadPopup('add_enrollment.php')" class="addButton1">
+                Old Add New Enrollment
             </button>
-            <a href="#enrollmentForm" class="addButton" id="load-add-enrollment">Test</a>
+            <a href="#enrollmentForm" class="addButton" id="load-add-enrollment" style="margin-right:10px; float:right;">Add New Enrollment</a>
             &nbsp;&nbsp;
         </div>
         <br/>

@@ -29,7 +29,14 @@
                 </td>
             </tr>
         <?php } else {
+            $patientId = intval($_GET['pid']);
+
+            $rxLomnSql = "SELECT rx_imgid, lomn_imgid, rxlomn_imgid FROM dental_flow_pg1 WHERE pid='$patientId'";
+            $rxLomn = $db->getRow($rxLomnSql);
+
                 if ($my) foreach ($my as $myarray) {
+                    $selectedForClaims = $rxLomn && in_array($myarray['imageid'], $rxLomn);
+
                     if($myarray["status"] == 1) {
                         $tr_class = "tr_active";
                     } else {
@@ -40,7 +47,8 @@
                     $i_type_myarray = $db->getRow($i_type_sql);
         ?>
                     <tr class="<?php echo $tr_class;?>">
-                        <td valign="top">
+                        <td valign="top" <?= $selectedForClaims ? 'title="This archive is on file for insurance claims"' : ''?>>
+                            <?= $selectedForClaims ? '*' : '' ?>
                             <?php if($myarray['imagetypeid']==0){ ?>
                                 Clinical Photos (Pre-Tx)
                             <?php } else { ?>
@@ -57,14 +65,14 @@
         					<?php echo $myarray['added_by']; ?>
         				</td>
                         <td valign="top">
-                            <a href="display_file.php?f=<?php echo addslashes($myarray["image_file"]);?>" target="_blank" class="btn btn-default btn-sm">
+                            <a href="display_file.php?f=<?= rawurlencode($myarray["image_file"]) ?>" target="_blank" class="btn btn-default btn-sm">
                                 Preview
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             </a>
                         </td>
 				        <?php if($office_type == DSS_OFFICE_TYPE_FRONT) { ?>
                             <td valign="top">
-                                <a href="Javascript:;"  onclick="Javascript: loadPopupRefer('add_image.php?ed=<?php echo $myarray["imageid"];?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : ''); ?>');" class="editlink btn btn-primary btn-sm" title="EDIT">
+                                <a href="Javascript:;"  onclick="Javascript: loadPopupRefer('add_image.php?ed=<?php echo $myarray["imageid"];?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?= $myarray['imagetypeid'] ?>');" class="editlink btn btn-primary btn-sm" title="EDIT">
                                     Edit
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 </a>

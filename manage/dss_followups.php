@@ -3,21 +3,21 @@ include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 
 if(isset($_POST['submitaddfu'])){
-  $patientid = mysqli_real_escape_string($con, $_POST['patientid']);
-  $ep_dateadd = mysqli_real_escape_string($con, date("Y-m-d H:i:s", strtotime($_POST['ep_dateadd'])));
-  $devadd = mysqli_real_escape_string($con, $_POST['devadd']);
-  $dsetadd = mysqli_real_escape_string($con, $_POST['dsetadd']);
-	$nightsperweek = mysqli_real_escape_string($con, $_POST['nightsperweek']);
-  $ep_eadd = mysqli_real_escape_string($con, $_POST['ep_eadd_new']);
-  $ep_tsadd = mysqli_real_escape_string($con, $_POST['ep_tsadd_new']);
-  $ep_sadd = mysqli_real_escape_string($con, $_POST['ep_sadd']);
-  $ep_eladd = mysqli_real_escape_string($con, $_POST['ep_eladd']);
-  $sleep_qualadd = mysqli_real_escape_string($con, $_POST['sleep_qualadd']);
-  $ep_hadd = mysqli_real_escape_string($con, $_POST['ep_hadd']);
-  $ep_wadd = mysqli_real_escape_string($con, $_POST['ep_wadd']);
-  $wapnadd = mysqli_real_escape_string($con, $_POST['wapnadd']);
-  $hours_sleepadd = mysqli_real_escape_string($con, $_POST['hours_sleepadd']);
-  $appt_notesadd = mysqli_real_escape_string($con, $_POST['appt_notesadd']);
+  $patientid = $db->escape($_POST['patientid']);
+  $ep_dateadd = $db->escape(date("Y-m-d H:i:s", strtotime($_POST['ep_dateadd'])));
+  $devadd = $db->escape($_POST['devadd']);
+  $dsetadd = $db->escape($_POST['dsetadd']);
+	$nightsperweek = $db->escape($_POST['nightsperweek']);
+  $ep_eadd = $db->escape($_POST['ep_eadd_new']);
+  $ep_tsadd = $db->escape($_POST['ep_tsadd_new']);
+  $ep_sadd = $db->escape($_POST['ep_sadd']);
+  $ep_eladd = $db->escape($_POST['ep_eladd']);
+  $sleep_qualadd = $db->escape($_POST['sleep_qualadd']);
+  $ep_hadd = $db->escape($_POST['ep_hadd']);
+  $ep_wadd = $db->escape($_POST['ep_wadd']);
+  $wapnadd = $db->escape($_POST['wapnadd']);
+  $hours_sleepadd = $db->escape($_POST['hours_sleepadd']);
+  $appt_notesadd = $db->escape($_POST['appt_notesadd']);
   $insertquery = "INSERT INTO dentalsummfu (
         `patientid`,
         `ep_dateadd`,
@@ -61,7 +61,7 @@ if(isset($_POST['submitaddfu'])){
       $i = "INSERT INTO dentalsummfu_ess SET
               epworthid='".$epworth_myarray['epworthid']."',
               followupid='".$fu_id."',
-              answer='".mysqli_real_escape_string($con,$_POST['epworth_new_'.$epworth_myarray['epworthid']])."',
+              answer='".$db->escape($_POST['epworth_new_'.$epworth_myarray['epworthid']])."',
               adddate=now(),
               ip_address='".$_SERVER['REMOTE_ADDR']."'";
       $db->query($i);
@@ -70,29 +70,29 @@ if(isset($_POST['submitaddfu'])){
       $i = "INSERT INTO dentalsummfu_tss SET
               thorntonid='".$thorntonid."',
               followupid='".$fu_id."',
-              answer='".mysqli_real_escape_string($con,$_POST['thornton_new_'.$thorntonid])."',
+              answer='".$db->escape($_POST['thornton_new_'.$thorntonid])."',
               adddate=now(),
               ip_address='".$_SERVER['REMOTE_ADDR']."'";
       $db->query($i);
     }
   }
 }elseif(isset($_POST['submitupdatefu'])){
-  $id = $_POST['id'];
-  $patientid = $_POST['patientid'];
+  $id = $db->escape($_POST['id']);
+  $patientid = $db->escape($_POST['patientid']);
   $ep_dateadd = date("Y-m-d H:i:s", strtotime($_POST['ep_dateadd']));
-  $devadd = $_POST['devadd'];
-  $dsetadd = $_POST['dsetadd'];
-  $nightsperweek = $_POST['nightsperweek'];
-  $ep_eadd = $_POST['ep_eadd'];
-  $ep_tsadd = $_POST['ep_tsadd'];
-  $ep_sadd = $_POST['ep_sadd'];
-  $ep_eladd = $_POST['ep_eladd'];
-  $sleep_qualadd = $_POST['sleep_qualadd'];
-  $ep_hadd = $_POST['ep_hadd'];
-  $ep_wadd = $_POST['ep_wadd'];
-  $wapnadd = $_POST['wapnadd'];
-  $hours_sleepadd = $_POST['hours_sleepadd'];
-  $appt_notesadd = $_POST['appt_notesadd'];
+  $devadd = $db->escape($_POST['devadd']);
+  $dsetadd = $db->escape($_POST['dsetadd']);
+  $nightsperweek = $db->escape($_POST['nightsperweek']);
+  $ep_eadd = $db->escape($_POST['ep_eadd']);
+  $ep_tsadd = $db->escape($_POST['ep_tsadd']);
+  $ep_sadd = $db->escape($_POST['ep_sadd']);
+  $ep_eladd = $db->escape($_POST['ep_eladd']);
+  $sleep_qualadd = $db->escape($_POST['sleep_qualadd']);
+  $ep_hadd = $db->escape($_POST['ep_hadd']);
+  $ep_wadd = $db->escape($_POST['ep_wadd']);
+  $wapnadd = $db->escape($_POST['wapnadd']);
+  $hours_sleepadd = $db->escape($_POST['hours_sleepadd']);
+  $appt_notesadd = $db->escape($_POST['appt_notesadd']);
   $insertquery = "UPDATE dentalsummfu SET 
                   `ep_dateadd` = '".date('Y-m-d', strtotime($ep_dateadd))."',
                   `devadd` = '".$devadd."',
@@ -115,7 +115,7 @@ if(isset($_POST['submitaddfu'])){
     echo "Could not update follow up, please try again!";
   }else{
 
-    $d = "DELETE FROM dentalsummfu_ess WHERE followupid = '".mysqli_real_escape_string($con,$id)."'";
+    $d = "DELETE FROM dentalsummfu_ess WHERE followupid = '".$db->escape($id)."'";
     $db->query($d);
     $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
     $epworth_my = $db->getResults($epworth_sql);
@@ -123,18 +123,18 @@ if(isset($_POST['submitaddfu'])){
   		$i = "INSERT INTO dentalsummfu_ess SET
         			epworthid='".$epworth_myarray['epworthid']."',
         			followupid='".$id."',
-        			answer='".mysqli_real_escape_string($con,$_POST['epworth_'.$id.'_'.$epworth_myarray['epworthid']])."',
+        			answer='".$db->escape($_POST['epworth_'.$id.'_'.$epworth_myarray['epworthid']])."',
         			adddate=now(),
         			ip_address='".$_SERVER['REMOTE_ADDR']."'";
   		$db->query($i);
   	}
-    $d = "DELETE FROM dentalsummfu_tss WHERE followupid = '".mysqli_real_escape_string($con,$id)."'";
+    $d = "DELETE FROM dentalsummfu_tss WHERE followupid = '".$db->escape($id)."'";
     $db->query($d);
   	for($thorntonid=1;$thorntonid<=5;$thorntonid++){
       $i = "INSERT INTO dentalsummfu_tss SET
               thorntonid='".$thorntonid."',
               followupid='".$id."',
-              answer='".mysqli_real_escape_string($con,$_POST['thornton_'.$id.'_'.$thorntonid])."',
+              answer='".$db->escape($_POST['thornton_'.$id.'_'.$thorntonid])."',
               adddate=now(),
               ip_address='".$_SERVER['REMOTE_ADDR']."'";
       $db->query($i);
@@ -142,11 +142,11 @@ if(isset($_POST['submitaddfu'])){
   }
 }elseif(isset($_POST['submitdeletefu'])){
   $id = $_POST['id'];
-  $delsql = "DELETE FROM dentalsummfu WHERE followupid='".mysqli_real_escape_string($con,$id)."'";
+  $delsql = "DELETE FROM dentalsummfu WHERE followupid='".$db->escape($id)."'";
   $db->query($delsql);
 }
 
-$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY ep_dateadd DESC";
+$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY ep_dateadd DESC";
 $numf = $db->getNumberRows($fuquery_sql);
 $bodywidth = ($numf*160)+320;
 ?>
@@ -167,7 +167,7 @@ $bodywidth = ($numf*160)+320;
     <tr >
 	    <td >
 <?php
-$sqlex = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sqlex = "select * from dental_ex_page5 where patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $myarrayex = $db->getRow($sqlex);
 $dentaldevice = st($myarrayex['dentaldevice']);
 ?>
@@ -359,7 +359,7 @@ if($fuquery_array){
       <td style="background: #E4FFCF;">
   <?php
       $epworth_sql = "select e.*, fu.answer from dental_epworth e 
-                        LEFT JOIN dentalsummfu_ess fu ON fu.epworthid=e.epworthid AND fu.followupid='".mysqli_real_escape_string($con,$fuquery['followupid'])."'
+                        LEFT JOIN dentalsummfu_ess fu ON fu.epworthid=e.epworthid AND fu.followupid='".$db->escape($fuquery['followupid'])."'
                         where e.status=1 order by e.sortby";
       $epworth_my = $db->getResults($epworth_sql);
       $epworth_number = count($epworth_my);
@@ -379,7 +379,7 @@ if($fuquery_array){
   <?php
       for($thorntonid=1;$thorntonid<=5;$thorntonid++){
         $t_sql = "SELECT answer FROM dentalsummfu_tss
-                    WHERE followupid='".mysqli_real_escape_string($con,$fuquery['followupid'])."' 
+                    WHERE followupid='".$db->escape($fuquery['followupid'])."' 
                     AND thorntonid='".$thorntonid."'";
         $thornton_myarray = $db->getRow($t_sql);?>
         <input type="text" size="12" id="thornton_<?php echo $fuquery['followupid'];?>_<?php echo $thorntonid; ?>" name="thornton_<?php echo $fuquery['followupid'];?>_<?php echo $thorntonid; ?>" value="<?php echo $thornton_myarray['answer']; ?>" /><br />
@@ -464,13 +464,13 @@ if($fuquery_array){
   }
 }
 
-$q_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$q_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $q_row = $db->getRow($q_sql);
 
-$t_sql = "SELECT tot_score FROM dental_thorton WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$t_sql = "SELECT tot_score FROM dental_thorton WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $t_row = $db->getRow($t_sql);
 
-$s_sql = "SELECT analysis FROM dental_q_sleep WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$s_sql = "SELECT analysis FROM dental_q_sleep WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $s_row = $db->getRow($s_sql);
 $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
 ?>
@@ -482,7 +482,7 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
       <td colspan="4" style="background: #444;"><span style="color: #ccc;">Baseline</span></td>
     </tr>
 <?php
-$s = "SELECT * FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$s = "SELECT * FROM dental_q_page1 WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $r = $db->getRow($s);?>
     <tr>
       <td style="background: #F9FFDF;">

@@ -7,7 +7,10 @@ include_once('includes/general_functions.php');
 
 $uploaded = false;
 
+$patientId = intval($_GET['pid']);
+
 $maxFileSizeExceeded = 'There was an error with the file upload. Please verify that the file does not exceed 10MB and try again.';
+$noFileName = 'There was an error with the file upload. Please ensure the filename does not contain strange characters and try again.';
 $errorMessage = '';
 
 if (isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && !$_FILES) {
@@ -53,17 +56,20 @@ if (!$errorMessage && isset($_POST['submitnewsleeplabsumm'])) {
         if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
-        } else {
-            $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
+        } elseif (!$errorNo && !strlen(trim($_FILES['ss_file']['name']))) {
+            error_log("SS file upload error: The file upload misses the filename");
+            $errorMessage = $noFileName;
+        } elseif (!$errorNo) {
+            $fname = $_FILES["ss_file"]["name"];
             $lastdot = strrpos($fname,".");
+
             $name = substr($fname,0,$lastdot);
             $extension = substr($fname,$lastdot+1);
+
+            $name = preg_replace('/[^a-z0-9_]+/i', '-', $name);
+            $extension = preg_replace('/[^a-z0-9_]+/i', '', $extension);
+
             $banner1 = $name.'_'.date('dmy_Hi');
-            $banner1 = str_replace(" ","_",$banner1);
-            $banner1 = str_replace(".","_",$banner1);
-            $banner1 = str_replace("'","_",$banner1);
-            $banner1 = str_replace("&","amp",$banner1);
-            $banner1 = preg_replace("/[^a-zA-Z0-9_]/", "", $banner1);
             $banner1 .= ".".$extension;
 
             $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
@@ -83,6 +89,7 @@ if (!$errorMessage && isset($_POST['submitnewsleeplabsumm'])) {
             } else {
                 error_log('SS file upload save error. Error message should be stored above this line.');
                 $errorMessage = $maxFileSizeExceeded;
+                $banner1 = '';
             }
         }
     } else {
@@ -126,10 +133,11 @@ if (!$errorMessage && isset($_POST['submitnewsleeplabsumm'])) {
 
 if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
     $title = $_POST['title'];
-    $imagetypeid = $_POST['imagetypeid'];
+    $imageId = intval($_POST['ed']);
+    $imageTypeId = intval($_POST['imagetypeid']);
 
     $primaryFileUpload = isset($_FILES['image_file']);
-    $secondaryFileUpload = isset($_FILES['image_file1']);
+    $secondaryFileUpload = isset($_FILES['image_file_1']);
 
     $primaryError = false;
     $secondaryError = false;
@@ -140,22 +148,28 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
         if (isFaultyUpload($primaryError)) {
             error_log("[Image file] file upload error [{$primaryError}]: {$dss_file_upload_errors[$primaryError]}");
             $errorMessage = $maxFileSizeExceeded;
+        } elseif (!$primaryError && !strlen(trim($_FILES['ss_file']['name']))) {
+            error_log("SS file upload error: The file upload misses the filename");
+            $errorMessage = $noFileName;
         }
     }
 
     if ($secondaryFileUpload) {
-        $secondaryError = $_FILES['image_file1']['error'];
+        $secondaryError = $_FILES['image_file_1']['error'];
 
         if (isFaultyUpload($secondaryError)) {
             error_log("[Image file (1)] file upload error [{$secondaryError}]: {$dss_file_upload_errors[$secondaryError]}");
             $errorMessage = $maxFileSizeExceeded;
+        } elseif (!$secondaryError && !strlen(trim($_FILES['ss_file']['name']))) {
+            error_log("SS file upload error: The file upload misses the filename");
+            $errorMessage = $noFileName;
         }
     }
 
     if (
-        $_POST['ed'] == '' ||
-        ($primaryFileUpload && !isFaultyUpload($primaryError)) ||
-        ($secondaryFileUpload && !isFaultyUpload($secondaryError))
+        $imageId == '' ||
+        ($primaryFileUpload && $primaryError === 0) ||
+        ($secondaryFileUpload && $secondaryError === 0)
     ) {
         $ftype = isset($_FILES["image_file"]["type"]) ? $_FILES["image_file"]["type"] : '';
         $fname = isset($_FILES["image_file"]["name"]) ? $_FILES["image_file"]["name"] : '';
@@ -163,21 +177,24 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
         $name = substr($fname, 0, $lastdot);
         $extension = substr($fname, $lastdot + 1);
 
+        $name = preg_replace('/[^a-z0-9_]+/i', '-', $name);
+        $extension = preg_replace('/[^a-z0-9_]+/i', '', $extension);
+
         if (
-            $_POST['imagetypeid'] == 0 ||
+            $imageTypeId == 0 ||
             (array_search($ftype, $dss_file_types) !== false) ||
             (array_search(strtolower($extension), $dss_file_extensions) !== false)
         ) {
-            if ($imagetypeid == '0') {
+            if ($imageTypeId == '0') {
                 $fname = $_FILES["image_file_1"]["name"];
                 $lastdot = strrpos($fname,".");
                 $name = substr($fname,0,$lastdot);
                 $extension = substr($fname,$lastdot+1);
+
+                $name = preg_replace('/[^a-z0-9_]+/i', '-', $name);
+                $extension = preg_replace('/[^a-z0-9_]+/i', '', $extension);
+
                 $banner1 = $name.'_'.date('dmy_Hi');
-                $banner1 = str_replace(" ","_",$banner1);
-                $banner1 = str_replace(".","_",$banner1);
-                $banner1 = str_replace("'","_",$banner1);
-                $banner1 = str_replace("&","amp",$banner1);
                 $banner1 .= ".".$extension;
 
                 // Get new sizes
@@ -213,17 +230,6 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                     imagecopyresized($thumb, $source, $x, $y, 0, 0, 500, 500, $width, $height);
                 }
 
-                $fname = $_FILES["image_file_1"]["name"];
-                $lastdot = strrpos($fname,".");
-                $name = substr($fname,0,$lastdot);
-                $extension = substr($fname,$lastdot+1);
-                $banner1 = $name.'_'.date('dmy_Hi');
-                $banner1 = str_replace(" ","_",$banner1);
-                $banner1 = str_replace(".","_",$banner1);
-                $banner1 = str_replace("'","_",$banner1);
-                $banner1 = str_replace("&","amp",$banner1);
-                $banner1 .= ".".$extension;
-
                 // Output
                 switch (strtolower($extension)) {
                     case 'jpg':
@@ -239,25 +245,28 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                 }
 
                 @chmod("../../../shared/q_file/".$banner1,0777);
-                // Free up memory
-                //imagedestroy($thumb);
-                $uploaded = true;
+                $uploaded = file_exists("../../../shared/q_file/$banner1");
+
+                if (!$uploaded) {
+                    $banner1 = '';
+                }
             } else { //ALL OTHER IMAGES
                 $filesize = $_FILES["image_file"]["size"];
 
                 if ($filesize <= DSS_IMAGE_MAX_SIZE) {
                     if ($_FILES["image_file"]["name"] <> '') {
                         $banner1 = $name.'_'.date('dmy_Hi');
-                        $banner1 = str_replace(" ","_",$banner1);
-                        $banner1 = str_replace(".","_",$banner1);
-                        $banner1 = str_replace("'","_",$banner1);
-                        $banner1 = str_replace("&","amp",$banner1);
                         $banner1 .= ".".$extension;
+
                         $profile = ($_POST['imagetypeid']==4)?'profile':'general';
                         $uploaded = uploadImage($_FILES['image_file'], "../../../shared/q_file/".$banner1, $profile);
 
-                        if ($_POST['image_file_old'] <> '') {
-                            @unlink("../../../shared/q_file/".$_POST['image_file_old']);
+                        if ($uploaded) {
+                            if ($_POST['image_file_old'] <> '') {
+                                @unlink("../../../shared/q_file/".$_POST['image_file_old']);
+                            }
+                        } else {
+                            $banner1 = '';
                         }
                     } else {
                         $banner1 = $_POST['image_file_old'];
@@ -271,11 +280,15 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
             $errorMessage = 'Invalid File Type. The uploaded file has an invalid format or an incorrect file extension.';
         }
     } else {
-        $ed_sql = " update dental_q_image set 
-                      title = '".s_for($title)."',
-                      imagetypeid = '".s_for($imagetypeid)."' ";
-        $ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
+        $ed_sql = "UPDATE dental_q_image SET 
+                      title = '" . $db->escape($title) . "',
+                      imagetypeid = '$imageTypeId'
+                      WHERE imageid = '$imageId'";
         $db->query($ed_sql);
+
+        if ($_POST['claim_file_update'] == 1) {
+            updateClaimRelatedArchives($patientId, $imageId, $imageTypeId);
+        }
 
         $msg = "Edited Successfully";?>
         <script type="text/javascript">
@@ -289,7 +302,7 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
         if ($_POST["ed"] != "") {
             $ed_sql = " update dental_q_image set
                     			title = '".s_for($title)."',
-                    			imagetypeid = '".s_for($imagetypeid)."' ";
+                    			imagetypeid = '".s_for($imageTypeId)."' ";
 
             if ($uploaded) {
                 $ed_sql .= ", image_file = '".s_for($banner1)."' ";
@@ -301,7 +314,7 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
             $msg = "Edited Successfully";?>
 
             <script type="text/javascript">
-                parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>';
+                parent.window.location='q_image.php?pid=<?php echo $_GET['pid'];?>&sh=<?= $imageTypeId ?>';
             </script>
             <?php
             trigger_error("Die called", E_USER_ERROR);
@@ -309,43 +322,17 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
             $ins_sql = " insert into dental_q_image set
                       			patientid = '".s_for($_GET['pid'])."',
                       			title = '".s_for($title)."',
-                      			imagetypeid = '".s_for($imagetypeid)."',
+                      			imagetypeid = '".s_for($imageTypeId)."',
                       			image_file = '".s_for($banner1)."',
                       			userid = '".s_for($_SESSION['userid'])."',
                       			docid = '".s_for($_SESSION['docid'])."',
                       			adddate = now(),
                       			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-            $imageid = $db->getInsertId($ins_sql);
+            $imageId = $db->getInsertId($ins_sql);
 
-            if ($_POST['imagetypeid'] == 6) {
-                $rx_sql = "SELECT rx_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
-                $rx_r = $db->getRow($rx_sql);
-
-                if ($rx_r['rx_imgid'] == '' || $_POST['rx_update'] == 1) {
-                    $rx_sql = "UPDATE dental_flow_pg1 SET rx_imgid='".$imageid."', rxrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
-                    $db->query($rx_sql);
-                }
-            }
-
-            if ($_POST['imagetypeid'] == 7) {
-                $lomn_sql = "SELECT lomn_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
-                $lomn_r = $db->getRow($lomn_sql);
-
-                if ($lomn_r['lomn_imgid'] == '' || $_POST['lomn_update'] == 1) {
-                    $lomn_sql = "UPDATE dental_flow_pg1 SET lomn_imgid='".$imageid."', lomnrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
-                    $db->query($lomn_sql);
-                }
-            }
-
-            if ($_POST['imagetypeid'] == 14) {
-                $rxlomn_sql = "SELECT rxlomn_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
-                $rxlomn_r = $db->getRow($rxlomn_sql);
-
-                if ($rxlomn_r['rxlomn_imgid'] == '' || $_POST['rxlomn_update'] == 1) {
-                    $rxlomn_sql = "UPDATE dental_flow_pg1 SET rxlomn_imgid='".$imageid."', rxlomnrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
-                    $db->query($rxlomn_sql);
-                }
+            if ($_POST['claim_file_update'] == 1) {
+                updateClaimRelatedArchives($patientId, $imageId, $imageTypeId);
             }
 
             $msg = "Uploaded Successfully";
@@ -380,44 +367,42 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
     }
 }
 
-if ($errorMessage) { ?>
-    <script type="text/javascript">
-        alert(<?= json_encode($errorMessage) ?>);
-    </script>
-<?php }
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <link href="css/admin.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="css/form.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/admin.css" />
+    <link rel="stylesheet" type="text/css" href="css/form.css" />
     <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
-    <script language="javascript" type="text/javascript" src="script/validation.js"></script>
+    <script type="text/javascript" src="script/validation.js"></script>
     <script type="text/javascript" src="script/wufoo.js"></script>
+    <script type="text/javascript" src="/manage/js/file-upload-check.js"></script>
+    <script type="text/javascript" src="js/add_image.js?v=<?= time() ?>"></script>
 </head>
 <body>
 <div id="loader" style="position:absolute;width:100%; height:98%; display:none;">
     <img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
 </div>
 <?php
-$thesql = "select * from dental_q_image where imageid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
+$thesql = "select * from dental_q_image where imageid='".intval($_REQUEST["ed"])."'";
 $themyarray = $db->getRow($thesql);
 
 if(!empty($msg)){
   	$title = $_POST['title'];
-		$imagetypeid = $_POST['imagetypeid'];
+		$imageTypeId = intval($_POST['imagetypeid']);
 }else{
 		$title = st($themyarray['title']);
 		$image_file = st($themyarray['image_file']);
-		$imagetypeid = st($themyarray['imagetypeid']);
+		$imageTypeId = intval($themyarray['imagetypeid']);
 		$but_text = "Add ";
 }
-	
-if($imagetypeid == '')
-		$imagetypeid = $_GET['sh'];
-		
+
+if($imageTypeId == '')
+		$imageTypeId = intval($_GET['sh']);
+
+$forceMode = !empty($_GET['itro']) && $_GET['itro'] == 1;
+
 if(!empty($themyarray["contactid"])){
 		$but_text = "Edit ";
 }else{
@@ -426,14 +411,12 @@ if(!empty($themyarray["contactid"])){
 	
 <br /><br />
 	
-<?php 
-if(!empty($msg)) {?>
+<?php if (!empty($msg)) { ?>
 <div align="center" class="red">
     <?php echo $msg;?>
 </div>
-<?php 
-}?>
-<form name="imagefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid'];?>&sh=<?php echo $_GET['sh'];?>" method="post" onSubmit="return imageabc(this);" enctype="multipart/form-data">
+<?php } ?>
+<form name="imagefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo $_GET['pid'];?>&sh=<?= $imageTypeId ?>" method="post" onSubmit="return imageabc(this);" enctype="multipart/form-data">
 		<input name="flow" type="hidden" value="<?php echo (!empty($_GET['flow']) ? $_GET['flow'] : '');?>" />
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
@@ -454,11 +437,12 @@ if(!empty($msg)) {?>
 <?php
 $itype_sql = "select * from dental_imagetype where status=1 order by sortby";
 $itype_my = $db->getResults($itype_sql);
-if(!empty($_GET['itro']) && $_GET['itro']==1){?>
-                            <input type="hidden" id="imagetypeid" name="imagetypeid" value="<?php echo $_GET['sh']; ?>" />
+
+if ($forceMode) { ?>
+                            <input type="hidden" id="imagetypeid" name="imagetypeid" value="<?= $imageTypeId ?>" />
 <?php
     foreach ($itype_my as $itype_myarray) {
-        if($imagetypeid == st($itype_myarray['imagetypeid'])){
+        if($imageTypeId == st($itype_myarray['imagetypeid'])){
             echo $itype_myarray['imagetype'];
         }
 	  }
@@ -467,7 +451,7 @@ if(!empty($_GET['itro']) && $_GET['itro']==1){?>
                 								<option value=""></option>
 <?php 
     foreach ($itype_my as $itype_myarray) {?>
-              									<option value="<?php echo st($itype_myarray['imagetypeid']);?>" <? if($imagetypeid == st($itype_myarray['imagetypeid']) || !empty($_GET['it']) && $_GET['it']==$itype_myarray['imagetypeid']) echo " selected"; ?>>
+              									<option value="<?php echo st($itype_myarray['imagetypeid']);?>" <? if($imageTypeId == st($itype_myarray['imagetypeid']) || !empty($_GET['it']) && $_GET['it']==$itype_myarray['imagetypeid']) echo " selected"; ?>>
                 										<?php echo st($itype_myarray['imagetype']);?>
               									</option>
 <?php 
@@ -483,39 +467,36 @@ if(!empty($_GET['itro']) && $_GET['itro']==1){?>
             </td>
         </tr>
 <?php
-$rl_sql = "SELECT rx_imgid, lomn_imgid, rxlomn_imgid FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."'";
-$rl_r = $db->getRow($rl_sql);
-if($rl_r){
-    if($rl_r['lomn_imgid']!=''){?>
 
-        <tr class="image_sect lomn_update" <?php echo ($_GET['sh']==7)?'':'style="display:none;"'; ?>>
+$patientId = intval($_GET['pid']);
+
+// These keys match the ones from claimRelatedArchiveType
+$claimRelatedArchivesSql = "SELECT rx_imgid AS `rx`, lomn_imgid AS `lomn`, rxlomn_imgid AS `rxlomn`
+        FROM dental_flow_pg1 WHERE pid='$patientId'
+        UNION SELECT NULL, NULL, NULL";
+$claimRelatedArchives = $db->getRow($claimRelatedArchivesSql);
+
+$claimRelatedType = $themyarray ? array_search($themyarray['imageid'], $claimRelatedArchives) : '';
+$currentType = claimRelatedArchiveType($imageTypeId);
+
+if ($themyarray && $claimRelatedType) { ?>
+        <tr>
             <td valign="top" colspan="2" class="frmhead">
-                <input type="checkbox" value="1" name="lomn_update" /> Use this LOMN for insurance claims
+                This image is on file for insurance claims as
+                <?= $claimRelatedType === 'rxlomn' ? 'LOMN / Rx' : strtoupper($claimRelatedType) ?>
             </td>
         </tr>
-<?php
-    }
-    if($rl_r['rx_imgid']!=''){ ?>
-
-        <tr class="image_sect rx_update" <?php echo ($_GET['sh']==6)?'':'style="display:none;"'; ?>>
+<?php } ?>
+        <tr class="image_sect claim_file_update" <?= $themyarray || $forceMode ? '' : 'style="display:none;"' ?>>
             <td valign="top" colspan="2" class="frmhead">
-                <input type="checkbox" value="1" name="rx_update" /> Use this RX for insurance claims
+                <label title="By selecting this option the current image will replace any other LOMN / Rx on file">
+                    <input type="checkbox" value="1" name="claim_file_update"
+                        <?= $claimRelatedType === $currentType ? 'disabled' : '' ?>
+                        <?= $claimRelatedType || ($forceMode && $currentType) ? 'checked' : '' ?> />
+                    Use this image for insurance claims
+                </label>
             </td>
         </tr>
-
-<?php
-}
-    if($rl_r['rxlomn_imgid']!=''){?>
-
-        <tr class="image_sect rxlomn_update" <?php echo ($_GET['sh']==14)?'':'style="display:none;"'; ?>>
-            <td valign="top" colspan="2" class="frmhead">
-                <input type="checkbox" value="1" name="rxlomn_update" /> Use this LOMN / Rx. for insurance claims
-            </td>
-        </tr>
-
-<?php
-    }
-} ?>
         <tr class="image_sect"> 
             <td valign="top" colspan="2" class="frmhead">
                 <ul>
@@ -578,13 +559,127 @@ for($i=1;$i<=9;$i++){ ?>
         </tr>
     </table>
 </form>
-<table>
+
+<table bgcolor="#FFFFFF" cellpadding="5" cellspacing="1" width="700" align="center">
     <tr id="sleep_study" style="display:none;">
-    		<td colspan="2" class="frmhead">
-      			<?php include 'add_image_sleep_study.php'; ?>
-    		</td>
-  	</tr>
+        <td colspan="2" class="frmhead">
+                <?php include 'add_image_sleep_study.php'; ?>
+            </td>
+    </tr>
 </table>
-<script src="js/add_image.js" type="text/javascript"></script>
+<?php if ($errorMessage) { ?>
+<script type="text/javascript">
+    alert(<?= json_encode($errorMessage) ?>);
+</script>
+<?php } ?>
 </body>
 </html>
+<?php
+
+function claimRelatedArchiveType($imageTypeId)
+{
+    $imageTypeId = intval($imageTypeId);
+
+    if ($imageTypeId === DSS_CLAIM_FILE_TYPE_RX) {
+        return 'rx';
+    }
+
+    if ($imageTypeId === DSS_CLAIM_FILE_TYPE_LOMN) {
+        return 'lomn';
+    }
+
+    if ($imageTypeId === DSS_CLAIM_FILE_TYPE_BOTH) {
+        return 'rxlomn';
+    }
+
+    return '';
+}
+
+function updateClaimRelatedArchives($patientId, $imageId, $imageTypeId)
+{
+    $imageType = claimRelatedArchiveType($imageTypeId);
+
+    if (!$imageType) {
+        return false;
+    }
+
+    $db = new Db();
+
+    $patientId = intval($patientId);
+    $imageId = intval($imageId);
+
+    $claimRelatedFilesSql = "SELECT rx_imgid, lomn_imgid, rxlomn_imgid, rxrec, lomnrec, rxlomnrec
+        FROM dental_flow_pg1 WHERE pid='$patientId'";
+    $claimRelatedFiles = $db->getRow($claimRelatedFilesSql);
+
+    // The patient does not have its corresponding dental_flow_pg1 row
+    if (!$claimRelatedFiles) {
+        $claimRelatedFilesSql = "INSERT INTO dental_flow_pg1 (copyreqdate, pid)
+            SELECT copyreqdate, patientid
+            FROM dental_patients
+            WHERE patientid = '$patientId'";
+        $db->query($claimRelatedFilesSql);
+
+        $claimRelatedFiles = [
+            'rx_imgid' => '',
+            'lomn_imgid' => '',
+            'rxlomn_imgid' => '',
+            'rxrec' => '',
+            'lomnrec' => '',
+            'rxlomnrec' => '',
+        ];
+    }
+
+    // If the target claim file is the same as the new image id, nothing to do
+    if ($claimRelatedFiles["{$imageType}_imgid"] == $imageId) {
+        return false;
+    }
+
+    // LOMN/Rx (combined) is not compatible with separated images, they reset/cancel each other
+    if ($imageType === 'rxlomn') {
+        $claimRelatedFiles['rx_imgid'] = '';
+        $claimRelatedFiles['lomn_imgid'] = '';
+        $claimRelatedFiles['rxrec'] = '';
+        $claimRelatedFiles['lomnrec'] = '';
+    } else {
+        $claimRelatedFiles['rxlomn_imgid'] = '';
+        $claimRelatedFiles['rxlomnrec'] = '';
+    }
+
+    // If this image id is being used at some other location, remove that value
+    if (in_array($imageId, $claimRelatedFiles)) {
+        $key = array_search($imageId, $claimRelatedFiles);
+
+        if (strpos($key, '_imgid')) {
+            // Null the image id, and also the date
+            $claimRelatedFiles[$key] = '';
+            $claimRelatedFiles[str_replace('_imgid', 'rec', $key)] = '';
+        }
+    }
+
+    $claimRelatedFiles["{$imageType}_imgid"] = $imageId;
+    $claimRelatedFiles["{$imageType}rec"] = date('m/d/Y');
+
+    $updateValuesSql = [];
+
+    foreach ($claimRelatedFiles as $key=>$value) {
+        /**
+         * The keys are safe values, we defined them before, no need to escape them
+         * The values can contain legacy data, better to escape them
+         *
+         * Faulty logic at some other places dictate that empty fields must be NULL
+         * otherwise this comparison will fail:
+         *
+         * $image_id != ""
+         */
+        $value = $value === '' ? 'NULL' : "'" . $db->escape($value) . "'";
+        $updateValuesSql []= "$key = $value";
+    }
+
+    $updateValuesSql = join(', ', $updateValuesSql);
+    $updateSql = "UPDATE dental_flow_pg1 SET $updateValuesSql WHERE pid='$patientId'";
+
+    $db->query($updateSql);
+
+    return true;
+}

@@ -64,9 +64,9 @@ $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
 ?>
 
-<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/task.css" type="text/css" media="screen" />
-<script src="popup/popup.js" type="text/javascript"></script>
+<script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
 	Manage Tasks
@@ -84,13 +84,13 @@ $my = $db->getResults($sql);
 <div align="center" class="red">
 	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
 </div>
-<span style="float:right; margin-right:20px;">
+<span id="non_cp_pages" style="float:right; margin-right:20px;">
   Pages:
   <?php paging1($no_pages,$index_val,"sort1=".(!empty($_GET['sort1']) ? $_GET['sort1'] : '')."&sortdir1=".(!empty($_GET['sortdir1']) ? $_GET['sortdir1'] : '')."&page2=".(!empty($_GET['page2']) ? $_GET['page2'] : '')."&sort2=".(!empty($_GET['sort2']) ? $_GET['sort2'] : '')."&sortdir2=".(!empty($_GET['sortdir2']) ? $_GET['sortdir2'] : ''));?>
 </span>
 
 
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table id="not_completed_tasks" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
 		<td width="2%" class="col_head">
 		</td>
@@ -213,7 +213,7 @@ $my = $db->getResults($sql);
 ?>
 <br />
 <span class="admin_head">Completed</span>
-<span style="float:right; margin-right:20px;">
+<span id="cp_pages" style="float:right; margin-right:20px;">
   Pages:
   <?php paging2($no_pages,$index_val,"sort1=".(!empty($_GET['sort1']) ? $_GET['sort1'] : '')."&sortdir1=".(!empty($_GET['sortdir1']) ? $_GET['sortdir1'] : '')."&page1=".(!empty($_GET['page1']) ? $_GET['page1'] : '')."&sort2=".(!empty($_GET['sort2']) ? $_GET['sort2'] : '')."&sortdir2=".(!empty($_GET['sortdir2']) ? $_GET['sortdir2'] : ''));?>
 </span>

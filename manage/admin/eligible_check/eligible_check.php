@@ -156,34 +156,21 @@
       <label for="payer_id" class="col-lg-2 control-label">Payer ID</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="payer_name" autocomplete="off">
+        <input type="text" class="form-control" id="payer_name" autocomplete="off" value="<?php
+      if( !empty($r['p_m_eligible_payer_id']) && !empty($r['p_m_eligible_payer_name']) ) {
+        echo $r['p_m_eligible_payer_id'] . ' - ' . $r['p_m_eligible_payer_name'];
+      }?>">
 <br />
 <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
         <ul id="ins_payer_list" class="search_list">
                 <li class="template" style="display:none"></li>
         </ul>
 </div>
+
 <script type="text/javascript">
-function disable_submit (){
-  console.log("disabled");
-  $('#submit-button').css('background-color', '#999999');
-  $('#submit-button').prop("disabled",true);
-  $('#submit-button-inner').replaceWith('<img id="submit-button-inner" src="/manage/images/DSS-ajax-animated_loading-gif.gif"></img>');
-
-}
-function enable_submit (){
-  console.log("enabled");
-  $('#submit-button').css('background-color', '#428bca');
-  $('#submit-button').prop("disabled",false);
-  $('#submit-button-inner').replaceWith('<div id="submit-button-inner">Submit</div>');
-}
-$(document).ready(function(){
-  var api_key = <?php echo "'".$api_key."'" ?>;
-  setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?api_key='+api_key, 'ins_payer', '', true, false, '','','coverage');
-  $('#submit-button').on("click",null ,null , disable_submit);
-
-});
+    eligibleApiKey = <?php echo "'".$api_key."'" ?>;
 </script>
+
 <input type="hidden" name="payer_id" id="payer_id" />
       </div>
     </div>

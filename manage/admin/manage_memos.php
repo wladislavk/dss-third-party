@@ -107,6 +107,9 @@ include_once "../includes/constants.inc";
 
 <br /><br />
 
+<script>
+    var apiRoot = <?= json_encode(config('app.apiUrl')) ?>;
+</script>
 <script src="/assets/vendor/moment.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>

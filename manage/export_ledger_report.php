@@ -46,11 +46,12 @@
     $sql .= " limit ".$i_val.",".$rec_disp.";";
     $num_users = $db->getNumberRows($sql);
 ?>
-    Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Ins
+    Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Adjustments,Ins
 
 <?php	
     $tot_charges = 0;
 	$tot_credit = 0;
+    $tot_adj = 0;
 	if(isset($_GET['pid'])) {
         $newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 	} else {
@@ -70,12 +71,13 @@
         pat.patientid,
         pat.firstname, 
         pat.lastname,
-        '' as payer,
+        tc.type as payer,
         '' as payment_type,
         dl.primary_claim_id
         from dental_ledger dl 
         JOIN dental_patients as pat ON dl.patientid = pat.patientid
-        LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+        LEFT JOIN dental_users as p ON dl.producerid=p.userid
+        LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
         where dl.docid='".$_SESSION['docid']."' 
         AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'
         UNION
@@ -131,17 +133,26 @@
             echo number_format($myarray["amount"],2,'.','').',';
             $tot_charge += $myarray["amount"];
 
-        	echo number_format(st($myarray["paid_amount"]),2,'.','').',';
-			$tot_credit += st($myarray["paid_amount"]);
-            if($myarray["status"] == 1) {
-                echo "Sent\r\n";
-            } elseif($myarray["status"] == 2) {
-                echo "Filed\r\n";
-            } else {
-                echo "Pend\r\n";
-            }		
+            if($myarray['ledger'] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){
+                echo ',';
+                $tot_adj += st($myarray["paid_amount"]);
+            }
+            echo number_format(st($myarray["paid_amount"]),2,'.','').',';
+
+            if(!($myarray['ledger'] == 'ledger' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){
+                echo ',';
+                $tot_credit += st($myarray["paid_amount"]);
+            }
+
+            if ($myarray['ledger'] == 'ledger') {
+                echo $dss_trxn_status_labels[$myarray["status"]] . "\r\n";
+            } elseif ($myarray['ledger'] == 'claim') {
+                echo $dss_claim_status_labels[$myarray["status"]] . "\r\n";
+            }
+
+
 	 	}
 ?>
 
-,,,,Total,<?php echo "$".number_format($tot_charge,2,'.',''); ?>,<?php echo "$".number_format($tot_credit,2,'.',''); ?>,
-
+,,,,Total,<?php echo "$".number_format($tot_charge,2,'.',''); ?>,<?php echo "$".number_format($tot_credit,2,'.',''); ?>,<?php echo "$".number_format($tot_adj,2,'.',''); ?>,
+,,,,Balance,<?php echo "$".number_format($tot_charge - $tot_credit - $tot_adj,2,'.',''); ?>,,,

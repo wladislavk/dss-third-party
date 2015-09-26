@@ -1,5 +1,6 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
+require_once __DIR__ . '/../../includes/general_functions.php';
 
 // Set the following two variables to allow/disable email.  It will be sent via paper mail if disabled or not set.
 $allowemail = false;
@@ -1030,7 +1031,7 @@ function deliver_letter($letterid, $message) {
 		$title = "Dental Sleep Solutions";
 		$filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
 		if($send_method == 'fax' && $use_digital_fax){
-      if($user_type == DSS_USER_TYPE_SOFTWARE){
+      if($user_type == DSS_USER_TYPE_SOFTWARE && isSharedFile($logo)){
         $cover_image = "/manage/q_file/".$logo;
       }else{
         $cover_image = "/manage/images/logo.gif";
@@ -1398,7 +1399,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
   $pdf->SetFooterMargin($margin_footer);
 
   //set auto page breaks
-  $pdf->SetAutoPageBreak(TRUE, $margin_bottom);
+  $pdf->SetAutoPageBreak(TRUE, /*$margin_bottom*/20);
 
   //set image scale factor
   $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -1420,6 +1421,8 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 
   //fix to allow signature to show for both html and pdf
   $html = str_replace('display_file.php?f=', '../../../shared/q_file/' , $html);
+  $html = tidyHtml($html);
+
   // output the HTML content
   $pdf->writeHTML($html, true, false, true, false, '');
   //Close and output PDF document
@@ -1654,6 +1657,7 @@ function get_billing_franchisees() {
 function get_patients($franchisee_id = -1) {
 
   $db = new Db();  
+  $con = $GLOBALS['con'];
   $sql = "SELECT * FROM dental_patients WHERE docid = $franchisee_id ORDER BY lastname ASC, firstname ASC";
   // return $db->getResults($sql);
   return mysqli_query($con,$sql);
@@ -1731,4 +1735,27 @@ function count_pages($pdfname) {
   $pdftext = file_get_contents($pdfname);
   $num = preg_match_all("/\/Page\W/", $pdftext, $dummy);
   return $num;
+}
+
+function tidyHtml ($html) {
+    $config = [
+        'clean' => true,
+        'drop-proprietary-attributes' => true,
+        'output-xhtml' => true,
+        'show-body-only' => true,
+        'wrap' => '0'
+    ];
+
+    if (class_exists('\tidy')) {
+        try {
+            $tidy = new \tidy();
+            $cleanHtml = $tidy->repairString($html, $config, 'utf8');
+        } catch (\Exception $e) {
+            $cleanHtml = $html;
+        }
+    } else {
+        $cleanHtml = $html;
+    }
+
+    return $cleanHtml;
 }

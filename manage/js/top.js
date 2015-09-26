@@ -287,29 +287,27 @@ function focusIt(dtControl)
 function validateDate(dtControl)
 {
   input = document.getElementById(dtControl)
-  var validformat=/^\d{1,2}\/\d{1,2}\/\d{4}$/ //Basic check for format validity
-  var returnval=false
+  var dateFormat = input.getAttribute('data-date-format') || 'm/d/Y',
+    readableFormat = dateFormat.replace(/([mdy])/g, '$1$1').replace(/(Y)/g, '$1$1$1$1').toUpperCase();
+    regexValidator = new RegExp('^' +
+      dateFormat.replace(/[md]/g, '\\d{1,2}').replace(/y/g, '\\d{2}').replace(/Y/g, '\\d{4}') +
+    '$');
 
-  if (!validformat.test(input.value)) {
-    alert('Invalid Day, Month, or Year range detected. Please correct. Must be MM/DD/YYYY');
-  } else { //Detailed check for valid date ranges
-    var monthfield=input.value.explode("/")[0]
-    var dayfield=input.value.explode("/")[1]
-    var yearfield=input.value.explode("/")[2]
-    var dayobj = new Date(yearfield, monthfield-1, dayfield)
+  if (!regexValidator.test(input.value)) {
+    alert('Invalid Day, Month, or Year range detected. Please correct. Must be ' + readableFormat);
+  } else if (dateFormat === 'm/d/Y') {
+    var monthfield=input.value.explode("/")[0],
+      dayfield=input.value.explode("/")[1],
+      yearfield=input.value.explode("/")[2],
+      dayobj = new Date(yearfield, monthfield-1, dayfield)
 
     if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield)) {
-        alert('Invalid Day, Month, or Year range detected. Please correct. Must be MM/DD/YYYY')
-    } else {
-        returnval=true
+      alert('Invalid Day, Month, or Year range detected. Please correct. Must be ' + readableFormat);
+      return false;
     }
   }
   
-  if (!validformat.test(input.value)){
-  //document.getElementById(dtControl).focus;
-  }
-  
-  return returnval  
+  return true;
 }
 
 function validate()

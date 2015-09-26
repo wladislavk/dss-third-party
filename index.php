@@ -2,7 +2,10 @@
 
 $home_sql = "select * from homepage";
 $home_my = mysqli_query($con, $home_sql);
-$home_myarray = mysqli_fetch_array($home_my);
+$home_myarray = array();
+if ($home_my) {
+    $home_myarray = mysqli_fetch_array($home_my);
+}
 ?>  
 	<table width="960" border="0" cellspacing="0" cellpadding="0">
 		<tr>

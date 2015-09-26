@@ -115,7 +115,11 @@ if (!function_exists('s_for')) {
       $other_insured_middle = st($myarray['insured_middle']);
       $other_insured_dob = st($pat_myarray['ins_dob']);
       $other_insured_sex = st($pat_myarray['s_m_gender']);
-      $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+
+      if (empty($other_insured_insurance_plan)) {
+        $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+      }
+      
       $other_insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
       $other_insured_address = st($myarray['insured_address']);
       $other_insured_city = st($myarray['insured_city']);
@@ -156,7 +160,11 @@ if (!function_exists('s_for')) {
       $other_insured_middle = st($myarray['other_insured_middle']);
       $other_insured_dob = st($myarray['other_insured_dob']);
       $other_insured_sex = st($myarray['other_insured_sex']);
-      $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+
+      if (empty($other_insured_insurance_plan)) {
+        $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+      }
+
       $other_insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
       $other_insured_address = st($myarray['other_insured_address']);
       $other_insured_city = st($myarray['other_insured_city']);
@@ -232,6 +240,7 @@ if (!function_exists('s_for')) {
     $diagnosis_k = st($myarray['diagnosis_k']);
     $diagnosis_l = st($myarray['diagnosis_l']);
 
+    $claim_codes = st($myarray['claim_codes']);
     $medicaid_resubmission_code = st($myarray['medicaid_resubmission_code']);
     $original_ref_no = st($myarray['original_ref_no']);
     $prior_authorization_number = st($myarray['prior_authorization_number']);
@@ -370,7 +379,7 @@ if (!function_exists('s_for')) {
     $amount_paid = st($myarray['amount_paid']);
     $balance_due = st($myarray['balance_due']);
     $signature_physician = st($myarray['signature_physician']);
-    $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('m/d/Y'));
+    $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('Y-m-d'));
     $service_facility_info_name = st($myarray['service_facility_info_name']);
     $service_facility_info_address = st($myarray['service_facility_info_address']);
     $service_facility_info_city = st($myarray['service_facility_info_city']);
@@ -387,13 +396,27 @@ if (!function_exists('s_for')) {
     $billing_provider_b_other = st($myarray['billing_provider_b_other']);
     $reject_reason = st($myarray['reject_reason']);
     $status = st($myarray['status']);
+
+    $billing_provider_sql = "select * from dental_qualifier where qualifierid='".(isset($billing_provider_dd) ? $billing_provider_dd : '') . "'";
+    $billing_array = $db->getRow($billing_provider_sql);
+
+    $billing_info = (!empty($billing_array['qualifier']) ? substr($billing_array['qualifier'], 0, 2) : '');
   }
 
-if ($another_plan == "") {
-    if ($pat_myarray['p_m_ins_type'] != 1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] == 1) {
-        $another_plan = 'YES';
+/**
+ * Logic:
+ *
+ * IF dental_insurance.another_plan IS set THEN use another_plan
+ * IF dental_insurance.another_plan IS not set THEN read options from dental_patients.p_m_dss_file
+ */
+$another_plan = isset($another_plan) ? $another_plan : '';
+$another_plan = strtolower($another_plan);
+
+if ($another_plan != 'yes' && $another_plan != 'no') {
+    if ((isset($p_m_dss_file) && $p_m_dss_file == 1) || (isset($s_m_dss_file) && $s_m_dss_file == 1)) {
+        $another_plan = 'yes';
     } else {
-        $another_plan = 'NO';
+        $another_plan = 'no';
     }
 }
 
@@ -411,15 +434,15 @@ if ($another_plan == "") {
   	$patient_zip = $pat_myarray['zip'];
   	$patient_dob = $pat_myarray['dob'];
 
-    if($pat_myarray['p_m_ins_ass']=='Yes'){
+    if (strtolower($pat_myarray['p_m_ins_ass']) == 'yes'){
       $insured_signature = 1;
     }else{
       $insured_signature = 0;
     }
   	$patient_signature = 1;
   	$signature_physician = "Signature on File";
-  	$patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
-    $physician_signed_date = date('m/d/Y');	
+  	$patient_signed_date = date('Y-m-d', strtotime($pat_myarray['adddate']));
+    $physician_signed_date = date('Y-m-d');	
   	$patient_phone_code = split_phone($pat_myarray['home_phone'], true);
   	$patient_phone = split_phone($pat_myarray['home_phone'], false);
   	$insured_phone_code = split_phone($pat_myarray['home_phone'], true);
@@ -543,27 +566,15 @@ if ($another_plan == "") {
     $service_medicare_npi = (!empty($medicare_npi) ? $medicare_npi : '');
   }
 
-  if($insurancetype == 1){
-    $service_npi = "";
-    $service_practice = "";
-    $service_address = "";
-    $service_city = "";
-    $service_state = "";
-    $service_zip = "";
-    $service_medicare_npi = "";
-  }
   if ($service_info_a != "") {
     $service_npi = $service_info_a;
-  }
-  if ($billing_provider_a != "") {
-    $npi = $billing_provider_a;
   }
 ?>
 
 <html>
   <head>
     <!-- Jquery -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <!-- Jquery UI-->
 
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -690,6 +701,9 @@ if ($another_plan == "") {
 <script type="text/javascript">
   $(document).ready( function(){
 
+    // set a patient signed date
+    $('.input.grayout').find('input[placeholder="date"]').val('<?php echo $patient_signed_date; ?>');
+
     <?php
       if(isset($_GET['instype']) && $_GET['instype'] == 2) {
         $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";
@@ -714,10 +728,15 @@ if ($another_plan == "") {
     $('input[name="payer[address][street_line_1]"]').val("<?php echo  $inscoinfo['add1'];?>");
     $('input[name="payer[address][street_line_2]"]').val("<?php echo  $inscoinfo['add2'];?>");
     $('input[name="payer[address][city]"]').val("<?php echo  $inscoinfo['city'];?>");
-    $('input[name="payer[address][state]"]').val("<?php echo  trim($inscoinfo['state']);?>");
+    $('input[name="payer[address][state]"]').val("<?= strtoupper(trim($inscoinfo['state'])) ?>");
     $('input[name="payer[address][zip]"]').val("<?php echo  $inscoinfo['zip'];?>");
+    $('input[name="code"]').val("<?php echo $claim_codes;?>");
 
     $('input[name="subscriber[id]"]').val("<?php echo  $insured_id_number;?>");
+    $('input[name="claim[note]"]').val("<?php echo (!empty($reserved_local_use1) ? $reserved_local_use1 : '');?>");
+    $('input[name="claim[date]"]').val("<?php echo (!empty($date_current) ?  dateFormat($date_current) : '');?>");
+    $('input[name="claim[icd_indicator]"]').val("<?php echo $icd_ind;?>");
+    $('input[name="claim[outside_lab_charges]"]').val("<?php echo (!empty($s_charges) ? $s_charges : '');?>");
 
     $('input[name="dependent[last_name]"]').val("<?php echo  $patient_lastname;?>");
     $('input[name="dependent[first_name]"]').val("<?php echo  $patient_firstname;?>");
@@ -728,9 +747,9 @@ if ($another_plan == "") {
     $('input[name="dependent[gender]"][value="<?php echo  substr($patient_sex,0,1); ?>"]').attr("checked", "checked");
     $('input[name="dependent[address][street_line_1]"]').val("<?php echo  $patient_address;?>");
     $('input[name="dependent[address][city]"]').val("<?php echo  $patient_city;?>");
-    $('input[name="dependent[address][state]"]').val("<?php echo  $patient_state;?>");
-    $('input[name="dependent[address][zip]"]').val("<?php echo  $patient_zip;?>");
-    $('input[name="dependent[phone_number]"]').val("<?php echo  $patient_phone_code.$patient_phone;?>");
+    $('input[name="dependent[address][state]"]').val("<?= strtoupper(trim($patient_state)) ?>").addClass("statemask");
+    $('input[name="dependent[address][zip]"]').val("<?php echo  $patient_zip;?>").addClass("zipmask");
+    $('input[name="dependent[phone_number]"]').val("<?php echo  $patient_phone_code.$patient_phone;?>").addClass("numbermask");
     <?php if($patient_relation_insured == 'Spouse' || $patient_relation_insured == '01'){ ?>
           $('input[name="dependent[relationship]"][value="01"]').trigger('click');
     <?php }elseif($patient_relation_insured == 'Child' || $patient_relation_insured == '19'){ ?>
@@ -745,13 +764,13 @@ if ($another_plan == "") {
     $('input[name="subscriber[gender]"][value="<?= substr($insured_sex,0,1); ?>"]').attr("checked", "checked");
     $('input[name="subscriber[address][street_line_1]"]').val("<?= $insured_address;?>");
     $('input[name="subscriber[address][city]"]').val("<?= $insured_city;?>");
-    $('input[name="subscriber[address][state]"]').val("<?= $insured_state;?>");
-    $('input[name="subscriber[address][zip]"]').val("<?= $insured_zip;?>");
-    $('input[name="subscriber[phone_number]"]').val("<?= $insured_phone_code.$insured_phone;?>");
+    $('input[name="subscriber[address][state]"]').val("<?= strtoupper(trim($insured_state)) ?>").addClass("statemask");
+    $('input[name="subscriber[address][zip]"]').val("<?= $insured_zip;?>").addClass("zipmask");
+    $('input[name="subscriber[phone_number]"]').val("<?= $insured_phone_code.$insured_phone;?>").addClass("numbermask");
     $('input[name="subscriber[group_id]"]').val("<?= $insured_policy_group_feca;?>");
     $('input[name="subscriber[group_name]"]').val("<?= $insured_insurance_plan;?>");
 
-    <?php if($another_plan == 'YES'){ ?>
+
       $('input[name="other_payers[0][name]"]').val("<?= $other_insured_insurance_plan;?>");
       $('input[name="other_payers[0][subscriber][last_name]"]').val("<?= $other_insured_lastname;?>");
       $('input[name="other_payers[0][subscriber][first_name]"]').val("<?= $other_insured_firstname;?>");
@@ -759,10 +778,9 @@ if ($another_plan == "") {
       $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
                       
       <?php
+      // DON'T consider the claim as Secondary, by default
         if($_GET['instype']==2 && $responsibility_sequence == ""){
           $seq='P';
-        } else if($responsibility_sequence == "") {
-          $seq='S';
         } else  if ($responsibility_sequence != ""){
           $seq = $responsibility_sequence;
         }
@@ -772,50 +790,50 @@ if ($another_plan == "") {
 
       <?php
         }
-      }
-      if($employment == "YES") { ?>
+
+      if (strtolower($employment) == 'yes') { ?>
       $('input[name="claim[related_to_employment]"][value="true"]').attr("checked", "checked");
-    <?php } elseif($employment == "NO") { ?>
+    <?php } else { ?>
       $('input[name="claim[related_to_employment]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
-    <?php if($auto_accident == "YES") { ?>
+    <?php if (strtolower($auto_accident) == 'yes') { ?>
       $('input[name="claim[auto_accident]"][value="true"]').attr("checked", "checked");
-    <?php } elseif($auto_accident == "NO") { ?>
+    <?php } else { ?>
       $('input[name="claim[auto_accident]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
     $('input[name="claim[auto_accident_state]"]').val("<?php echo  $auto_accident_place;?>");
   
-    <?php if($other_accident == "YES") { ?>
+    <?php if (strtolower($other_accident) == 'yes') { ?>
       $('input[name="claim[other_accident]"][value="true"]').attr("checked", "checked");
-    <?php } elseif($other_accident == "NO") { ?>
+    <?php } else { ?>
       $('input[name="claim[other_accident]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
-    <?php if($another_plan == "YES") { ?>
+    <?php if ($another_plan == 'yes') { ?>
       $('input[name="other_payer"][value="true"]').attr("checked", "checked");
-    <?php } elseif($another_plan == "NO") { ?>
+    <?php } else { ?>
       $('input[name="other_payer"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
-    $('input[name="claim[last_worked_date]"]').val("<?php echo  $unable_date_from; ?>");
-    $('input[name="claim[work_return_date]"]').val("<?php echo  $unable_date_to; ?>");
-    $('input[name="claim[admission_date]"]').val("<?php echo  $hospitalization_date_from; ?>");
-    $('input[name="claim[discharge_date]"]').val("<?php echo  $hospitalization_date_to; ?>");
+    $('input[name="claim[last_worked_date]"]').val("<?php echo dateFormat($unable_date_from); ?>");
+    $('input[name="claim[work_return_date]"]').val("<?php echo dateFormat($unable_date_to); ?>");
+    $('input[name="claim[admission_date]"]').val("<?php echo dateFormat($hospitalization_date_from); ?>");
+    $('input[name="claim[discharge_date]"]').val("<?php echo dateFormat($hospitalization_date_to); ?>");
 
     $('input[name="referring_provider[first_name]"]').val("<?php echo  substr($referring_provider, 0, strpos($referring_provider,' ')); ?>");
     $('input[name="referring_provider[last_name]"]').val("<?php echo  substr($referring_provider, strpos($referring_provider,' ')); ?>");
     $('input[name="referring_provider[secondary_id]"]').val("<?php echo  $field_17a; ?>");
     $('input[name="referring_provider[npi]"]').val("<?php echo  $diagnosising_npi; ?>");
 
-    <?php if($outside_lab == "YES"){ ?>
+    <?php if (strtolower($outside_lab) == 'yes') { ?>
       $('input[name="claim[outside_lab]"][value="true"]').attr("checked", "checked");
-    <?php }elseif($outside_lab == "NO"){ ?>
+    <?php }else { ?>
       $('input[name="claim[outside_lab]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
-    $('input[name="claim[original_ref_number]"]').val("<?php echo $original_ref_no; ?>");
+    $('input[name="claim[payer_control_number]"]').val("<?php echo $original_ref_no; ?>");
     $('input[name="claim[prior_authorization_number]"]').val("<?php echo $prior_authorization_number; ?>");
   <?php
      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con, $diagnosis_1)."'";
@@ -1136,9 +1154,9 @@ if($federal_tax_id_number != ''){
   } else {
       $ein = $docinfo['ein'];
   }
-  if($accept_assignment=="Yes"){ ?>
+  if($accept_assignment=="Yes" || $accept_assignment == "A"){ ?>
         $('input[name="claim[accept_assignment_code]"][value="A"]').prop("checked", true);
-      <?php }elseif($accept_assignment=="No"){ ?>
+      <?php }elseif($accept_assignment=="No" || $accept_assignment == "C"){ ?>
         $('input[name="claim[accept_assignment_code]"][value="C"]').prop("checked", true);
       <?php } ?>
 
@@ -1151,19 +1169,20 @@ if($federal_tax_id_number != ''){
       <?php } ?>
 
       $('input[name="billing_provider[entity]"][value="true"]').click();
-      $('input[name="service_facility[name]"]').val("<?php echo  $service_practice; ?>");
-      $('input[name="service_facility[address][street_line_1]"]').val("<?php echo  $service_address; ?>");
+      $('input[name="service_facility[name]"]').val("<?php echo ($service_facility_info_name && $service_facility_info_name != "")?$service_facility_info_name:$service_practice; ?>");
+      $('input[name="service_facility[address][street_line_1]"]').val("<?php echo ($service_facility_info_address && $service_facility_info_address != '')?$service_facility_info_address:$service_address; ?>");
       $('input[name="service_facility[address][city]"]').val("<?php echo  $service_city; ?>");
       $('input[name="service_facility[address][state]"]').val("<?php echo  $service_state; ?>");
-      $('input[name="service_facility[address][zip]"]').val("<?php echo  $service_zip; ?>");
-      $('input[name="service_facility[npi]"]').val("<?php echo  ($insurancetype == '1')?$service_medicare_npi:$service_npi; ?>");
-      $('input[name="billing_provider[phone_number]"]').val("<?php echo  $phone; ?>");
+      $('input[name="service_facility[address][zip]"]').val("<?php echo  $service_zip; ?>").addClass("zipmask");
+      $('input[name="service_facility[npi]"]').val("<?php echo  ($service_info_a && $service_info_a != '')?$service_info_a:(($insurancetype == '1')?$service_medicare_npi:$service_npi); ?>");
+      $('input[name="billing_provider[phone_number]"]').val("<?php echo  $phone; ?>").addClass("numbermask");
       $('input[name="billing_provider[organization_name]"]').val("<?php echo  $practice; ?>");
       $('input[name="billing_provider[address][street_line_1]"]').val("<?php echo  $address; ?>");
+      $('input[name="billing_provider[address][street_line_2]"]').val("<?php echo $billing_provider_address; ?>");
       $('input[name="billing_provider[address][city]"]').val("<?php echo  $city; ?>");
-      $('input[name="billing_provider[address][state]"]').val("<?php echo  $state; ?>");
-      $('input[name="billing_provider[address][zip]"]').val("<?php echo  $zip; ?>");
-      $('input[name="billing_provider[npi]"]').val("<?php echo  ($insurancetype == '1')?$medicare_npi:$npi; ?>"); 
+      $('input[name="billing_provider[address][state]"]').val("<?= strtoupper(trim($state)) ?>");
+      $('input[name="billing_provider[address][zip]"]').val("<?php echo  $zip; ?>").addClass("zipmask");
+      $('input[name="billing_provider[npi]"]').val("<?php echo ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>").addClass("numbermask"); 
       $('input[name="billing_provider[taxonomy_code]"]').val("332B00000X");
       <?php if ($insured_signature): ?>
         $('input[name="claim[direct_payment_authorized]"]').prop('checked',true);
@@ -1245,7 +1264,7 @@ if($federal_tax_id_number != ''){
 ?>
       $('input[name="claim[total_charge]"]').val("<?php echo  $total_charge; ?>");
       $('input[name="claim[patient_amount_paid]"]').val("<?php echo  $amount_paid; ?>");
-      $('input[name="claim[signature_date]"]').val("<?php echo  date('Y-m-d'); ?>");
+      $('input[name="claim[signature_date]"]').val("<?php echo dateFormat($physician_signed_date); ?>");
       $('input').each( function(){
         // $(this).val($(this).val().toUpperCase());
       });
@@ -1309,8 +1328,8 @@ if($federal_tax_id_number != ''){
       }
       return false;
   }
-
   form_changed=false;
+
 </script>
 
   <div id="change_confirm" style="display:none;top:0;height:100%;background:#fff; position:fixed; top:20px; width:100%; opacity:90%;">

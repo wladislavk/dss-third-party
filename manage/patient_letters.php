@@ -211,7 +211,7 @@
                 }
 	        }
 
-            $total_contacts = count((!empty($contacts['patient']) ? $contacts['patient'] : '')) + count((!empty($contacts['mds']) ? $contacts['mds'] : '')) + count((!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : ''));
+            $total_contacts = count((!empty($contacts['patient']) ? $contacts['patient'] : null)) + count((!empty($contacts['mds']) ? $contacts['mds'] : null)) + count((!empty($contacts['md_referrals']) ? $contacts['md_referrals'] : null));
             $dental_letters[$key]['total_contacts'] = $total_contacts;
             
             if ($total_contacts > 1) {
@@ -282,52 +282,52 @@
 
         // Sort the letters array
         if ($_REQUEST['sort'] == "userid" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\userid_asc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\userid_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\userid_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\userid_asc');
         }
         if ($_REQUEST['sort'] == "userid" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\userid_desc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\userid_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\userid_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\userid_desc');
         }
         if ($_REQUEST['sort'] == "subject" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\subject_asc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\subject_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\subject_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\subject_asc');
         }
         if ($_REQUEST['sort'] == "subject" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\subject_desc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\subject_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\subject_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\subject_desc');
         }
         if ($_REQUEST['sort'] == "method" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\method_asc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\method_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\method_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\method_asc');
         }
         if ($_REQUEST['sort'] == "method" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\method_desc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\method_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\method_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\method_desc');
         }
         if ($_REQUEST['sort'] == "sentto" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\sentto_asc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\sentto_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\sentto_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\sentto_asc');
         }
         if ($_REQUEST['sort'] == "sentto" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\sentto_desc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\sentto_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\sentto_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\sentto_desc');
         }
         if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\generated_date_asc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\generated_date_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\generated_date_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\generated_date_asc');
         }
         if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\generated_date_desc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\generated_date_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\generated_date_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\generated_date_desc');
         }
         if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "ASC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\delivery_date_asc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\delivery_date_asc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\delivery_date_asc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\delivery_date_asc');
         }
         if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
-            usort($pending_letters, 'Ds3\Libraries\Legacy\delivery_date_desc'); 
-            usort($sent_letters, 'Ds3\Libraries\Legacy\delivery_date_desc'); 
+            usort($pending_letters, 'Ds3\Libraries\Legacy\delivery_date_desc');
+            usort($sent_letters, 'Ds3\Libraries\Legacy\delivery_date_desc');
         }
 ?>
 
@@ -397,23 +397,29 @@
 			                    <?php if($total_contacts > 1) { ?>
                                     <a href="#" onclick="$('#contacts_<?php echo  $id; ?>').toggle(); return false;"><?php echo  $sentto; ?></a>
                                     <div style="display:none;" id="contacts_<?php echo  $id; ?>">
-                                        <?php foreach($pending_letters[$i]['patient'] as $pat) { ?>
-                                            <br />
-                                            <?php echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname']; ?>
-                                            <a href="#" onclick="delete_pending_letter('<?php echo  $pat['letterid']; ?>', 'patient', '<?php echo  $pat['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
-                                        <?php }
-				                            foreach($pending_letters[$i]['mds'] as $md) {
-					                    ?>
+                                        <?php if (!empty($pending_letters[$i]['patient'])) {
+                                            foreach($pending_letters[$i]['patient'] as $pat) { ?>
                                                 <br />
-                                                <?php echo $md['salutation']." ".$md['firstname']." ".$md['lastname']; ?>
-                                                <a href="#" onclick="delete_pending_letter('<?php echo  $md['letterid']; ?>', 'md', '<?php echo  $md['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
+                                                <?php echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname']; ?>
+                                                <a href="#" onclick="delete_pending_letter('<?php echo  $pat['letterid']; ?>', 'patient', '<?php echo  $pat['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
                                         <?php }
-                                            foreach($pending_letters[$i]['md_referrals'] as $md_referral){
+                                            }
+                                            if (!empty($pending_letters[$i]['mds'])) {
+				                                foreach($pending_letters[$i]['mds'] as $md) {
+					                    ?>
+                                                    <br />
+                                                    <?php echo $md['salutation']." ".$md['firstname']." ".$md['lastname']; ?>
+                                                    <a href="#" onclick="delete_pending_letter('<?php echo  $md['letterid']; ?>', 'md', '<?php echo  $md['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
+                                        <?php   }
+                                            }
+                                            if (!empty($pending_letters[$i]['md_referrals'])) {
+                                                foreach($pending_letters[$i]['md_referrals'] as $md_referral){
                                         ?>
                                                 <br />
-                                                <?php echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname']; ?>
-                                                <a href="#" onclick="delete_pending_letter('<?php echo  $md_referral['letterid']; ?>', 'md_referral', '<?php echo  $md_referral['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
-                                        <?php } ?>
+                                                    <?php echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname']; ?>
+                                                    <a href="#" onclick="delete_pending_letter('<?php echo  $md_referral['letterid']; ?>', 'md_referral', '<?php echo  $md_referral['id']; ?>', 0); return false;" class="delete_letter" />Delete</a>
+                                        <?php }
+                                        } ?>
                                     </div>
                                 <?php } else {
     				                echo $sentto;

@@ -126,9 +126,9 @@
 	$my_num = count($my);
 ?>
 
-<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 
-<script src="popup/popup.js" type="text/javascript"></script>
+<script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
 	Manage Patient Screeners

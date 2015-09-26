@@ -5,7 +5,7 @@
  *
  */
 
-var apiPath = 'http://apitest.ds3soft.net/api/v1/memo/';
+var apiPath = apiRoot + 'api/v1/memo/';
 
 var memos = new Vue({
 

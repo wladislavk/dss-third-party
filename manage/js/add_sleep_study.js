@@ -71,4 +71,22 @@ $(document).ready(function(){
 	});
 	update_home(document.getElementById('new_sleep_study_form'));
 	var cal1 = new calendar2(document.getElementById('date'));
+
+    $('form.sleep-study-form').find('[name=submitnewsleeplabsumm], [name=submitupdatesleeplabsumm]').click(function(){
+        var $form = $(this).closest('form'),
+            $file = $form.find('[type=file]:visible'),
+            submit = true;
+
+        if (!$file.length || $file.val()) {
+            return true;
+        }
+
+        submit = confirm('Note: You did not attach a sleep study image to the sleep test. Proceed without image?');
+
+        if (!submit) {
+            $form.find('img.loading').hide();
+        }
+
+        return submit;
+    });
 });

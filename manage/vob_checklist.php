@@ -320,17 +320,17 @@ $api_r = $db->getRow($api_sql);
     <span>Sleep Study w/ Diagnosis</span>
   </a>
 
-<?php 
-    if(!$rx && !$lomn){ ?>
+<?php if (!$rx && !$lomn) { ?>
   <div id="combined_div">
-    <a id="rxlomn_item" onclick="loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=14&itro=1');" class="vob_item
-    <?php
-      if(!$rxlomn){
-        ?>error<?php
-      }else{
-        ?>success<?php
-      } ?>
-    ">
+    <a id="rxlomn_item"
+      <?php if ($rxlomn) { ?>
+        href="/manage/q_image.php?pid=<?= intval($_GET['pid']) ?>&sh=14"
+        class="vob_item success"
+      <?php } else { ?>
+        onclick="loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=14&itro=1');"
+        class="vob_item error"
+      <?php } ?>
+    >
       <div class="vob_icon vob_rx"></div>
       <span>LOMN / Rx. Combined</span>
     </a>
@@ -339,19 +339,18 @@ $api_r = $db->getRow($api_sql);
       <input name="rxlomn_file" type="file" id="rxlomn_file" />
     </form>
   </div>
+<?php } ?>
 
-<?php 
-    } ?>
-
-  <div <?php echo (!$rx && !$lomn)?'style="display:none;"':''; ?> id="rx_lomn_div">
-  <a id="rx_item" onclick="loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=6&itro=1');" class="vob_item
-  <?php
-    if(!$rx){
-      ?>error<?php
-    }else{
-      ?>success<?php
-    } ?>
-  ">
+<div <?php echo (!$rx && !$lomn)?'style="display:none;"':''; ?> id="rx_lomn_div">
+  <a id="rx_item"
+    <?php if ($rx) { ?>
+      href="/manage/q_image.php?pid=<?= intval($_GET['pid']) ?>&sh=6"
+      class="vob_item success"
+    <?php } else { ?>
+      onclick="loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=6&itro=1');"
+      class="vob_item error"
+    <?php } ?>
+  >
     <div class="vob_icon vob_rx"></div>
     <span>Rx.</span>
   </a>
@@ -359,14 +358,15 @@ $api_r = $db->getRow($api_sql);
   <form id="rx_form" action="manage_insurance.php?pid=<?php echo $_GET['pid']; ?>&addtopat=1&rx=1" enctype="multipart/form-data" method="post" style="display:none;">
     <input name="rx_file" type="file" id="rx_file" />
   </form>
-  <a id="lomn_item" onclick="loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=7&itro=1');"  class="vob_item
-  <?php
-    if(!$lomn){
-      ?>error<?php
-    }else{
-      ?>success<?php
-    } ?>
-  ">
+  <a id="lomn_item"
+    <?php if ($lomn) { ?>
+      href="/manage/q_image.php?pid=<?= intval($_GET['pid']) ?>&sh=7"
+      class="vob_item success"
+    <?php } else { ?>
+      onclick="loadPopup('add_image.php?pid=<?php echo $_GET['pid'];?>&sh=7&itro=1');"
+      class="vob_item error"
+    <?php } ?>
+  >
     <div class="vob_icon vob_lomn"></div>
     <span>LOMN</span>
   </a>

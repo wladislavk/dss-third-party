@@ -56,22 +56,22 @@ foreach ($appt_t_qu as $appt_t_r) {
 	}
 <?
 }?>
-		
 </style>
 
 <script type="text/javascript" charset="utf-8">
 function initCal() {
 	scheduler.config.multi_day = true;
-	scheduler.config.xml_date="%Y-%m-%d %h:%i %A";
+	scheduler.config.xml_date="%Y-%m-%d %H:%i:%s";
 	scheduler.config.hour_date="%h:%i%A";
 	scheduler.config.hour_size_px = 44;
-	scheduler.templates.tooltip_date_format=scheduler.date.date_to_str("%H:%i %m-%d-%Y");
+	scheduler.templates.tooltip_date_format=scheduler.date.date_to_str("%h:%i%A %m-%d-%Y");
 	scheduler.config.mark_now = true;
 	scheduler.config.details_on_create = true;
 	scheduler.config.details_on_dblclick=true;
 	scheduler.config.scroll_hour = 8;
 	scheduler.config.start_on_monday = false;
 	scheduler.config.separate_short_events = true;
+	scheduler.config.show_loading = true;
 	scheduler.locale.labels.chairs_tab = "Resources"
 	scheduler.locale.labels.timeline_tab = "Timeline"
 	scheduler.locale.labels.section_custom="Producer";
@@ -315,32 +315,6 @@ foreach ($chair_qu as $chair_r) {?>
 	];
 	scheduler.init('scheduler_here',null,"workweek");
 	scheduler._els["dhx_cal_data"][0].scrollTop = scheduler.config.hour_size_px*8;
-<?php
-//$sql = "SELECT * from dental_calendar WHERE docid='".$_SESSION['docid']." order by id asc'";
-$sql = "SELECT dc.*, dp.*, dt.name as etype from dental_calendar as dc left join dental_patients as dp on dc.patientid = dp.patientid inner join dental_appt_types as dt on dc.category = dt.classname WHERE dc.docid='".$_SESSION['docid']."' and dt.docid='".$_SESSION['docid']."' order by dc.id asc";
-$q = $db->getResults($sql);
-foreach ($q as $r) {?>
-	scheduler.addEvent({
-		start_date: "<?php echo date('d-m-Y H:i', strtotime($r['start_date'])); ?>",
-		end_date: "<?php echo date('d-m-Y H:i', strtotime($r['end_date'])); ?>",
-		text: "<?php echo str_replace("\n", " ", addslashes($r['description'])); ?>",
-		title: "<?php echo str_replace("\n", " ", addslashes($r['description'])); ?>",
-		rec_type: "<?php echo str_replace("\n", " ", addslashes($r['rec_type'])); ?>",
-		rec_pattern: "<?php echo str_replace("\n", " ", addslashes($r['rec_pattern'])); ?>",
-		event_length: "<?php echo $r['event_length']; ?>",
-		event_pid: "<?php echo $r['event_pid']; ?>",
-		category: "<?php echo $r['category']; ?>",
-		producer: "<?php echo $r['producer_id']; ?>",
-		resource: "<?php echo $r['res_id']; ?>",
-		patient: "<?php echo $r['patientid']; ?>",
-		id: "<?php echo $r['event_id']; ?>",
-		table_id: "<?php echo $r['id']; ?>",
-		patientfn: "<?php echo $r['firstname']; ?>",
-		patientln: "<?php echo $r['lastname']; ?>",
-		eventtype: "<?php echo $r['etype']; ?>",
-	});
-<?php
-}?>
 
 	function _lookup_ptname(id, callback){
 		$.ajax({
@@ -501,6 +475,9 @@ foreach ($q as $r) {?>
 		}
 		return true;
 	});
+
+    scheduler.setLoadMode('month');
+    scheduler.load('/manage/calendar-events.php', 'json');
 }
 
 function show_minical(){

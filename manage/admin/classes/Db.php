@@ -63,7 +63,7 @@ class Db
 		return mysqli_insert_id($this->con);
 	}
 
-	public function realEscapeString($string)
+	public function escape($string)
 	{
 		return mysqli_real_escape_string($this->con, $string);
 	}

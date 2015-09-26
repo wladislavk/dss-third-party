@@ -1,7 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php include '../manage/admin/includes/main_include.php'; ?>
 <?php require_once("twilio/twilio.config.php");
 
-$s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.mailing_phone, dp.docid FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
+$s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.practice, du.logo, du.mailing_phone, dp.docid FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
 	WHERE dp.patientid='".mysqli_real_escape_string($con, $_GET['id'])."' AND
 		dp.recover_hash='".mysqli_real_escape_string($con, $_GET['hash'])."' AND
 		dp.use_patient_portal='1' AND
@@ -9,6 +9,14 @@ $s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.ma
 $q = mysqli_query($con, $s);
     if(mysqli_num_rows($q) > 0){
       $r = mysqli_fetch_assoc($q);
+
+if (!empty($r['mailing_practice'])) {
+  $practice = $r['mailing_practice'];
+} elseif (!empty($r['practice'])) {
+  $practice = $r['practice'];
+} else {
+  $practice = '';
+}
 
 $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($con, $_GET['id'])."'";
 $loc_q = mysqli_query($con, $loc_sql);
@@ -110,7 +118,15 @@ $(document).ready(function(){
 
 <div id="login_container" class="activate">
   <div class="logos">
-    <div id="company_name"><?= $r['mailing_practice']; ?></div>
+    <div id="company_name">
+      <?php echo $practice;
+        $basepath = dirname(__FILE__) . '/../../../shared/q_file';
+        $exists = file_exists($basepath . '/' . $r['logo']);
+        if (!empty($r['logo']) && $exists) { 
+      ?>
+          <br /><img src="../manage/display_file.php?f=<?php echo $r['logo'];?>" id="company_logo">
+      <?php } ?>
+    </div>
     <h1>Dental Sleep Solutions</h1>
   </div>
 
@@ -135,7 +151,7 @@ $(document).ready(function(){
        <span><a href="#" onclick="$('#text_instructions').show('slow');">Didn't receive a PIN code?</a></span>
        <div style="display:none;" id="text_instructions">
           <p>
-		Didn't receive a PIN access code from <?= $r['mailing_practice']; ?>? Don't worry. Just call the office at <?= format_phone($n); ?> and ask them to provide you the PIN again. Then enter your PIN below to register.
+		Didn't receive a PIN access code from <?= $practice; ?>? Don't worry. Just call the office at <?= format_phone($n); ?> and ask them to provide you the PIN again. Then enter your PIN below to register.
           </p>
        </div>
 	<?php }else{ ?>

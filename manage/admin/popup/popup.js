@@ -166,6 +166,7 @@ function disablePopupClean(){
                 eraseCookie('tempforledgerentry');
                 popupStatus = 0;
         }
+        parent.window.location.href = parent.window.location.href;
 }
 //disabling popup with jQuery magic!
 function disablePopupRef(){
@@ -173,12 +174,12 @@ function disablePopupRef(){
         if(popupStatus==1){
         var answer = confirm("Are you sure you want to exit without saving?")
         if (answer){
-                                $("#backgroundPopupRef").fadeOut("slow");
+                $("#backgroundPopupRef").fadeOut("slow");
                 $("#popupRefer").fadeOut("slow");
                 popupStatus = 0;
-        }else{
+        }/*else{
                 parent.window.location.reload(true);
-        }
+        }*/
         }
 }
 function disablePopupRefClean(){

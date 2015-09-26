@@ -35,7 +35,8 @@ var enrollments = new Vue({
             },
             enrollments:[],
             apikey:[],
-            selectedEnrollmentType:null
+            selectedEnrollmentType:null,
+            errors: null
     },
 
     ready: function() {
@@ -123,7 +124,8 @@ var enrollments = new Vue({
                 alert('Enrollment successfully created.');
                 $.colorbox.close();
             }).error(function (data, status, request) {
-                var message = JSON.parse(data.message);
+                var message = data;
+                console.log(message);
                 this.$set('errors', message);
             })
 

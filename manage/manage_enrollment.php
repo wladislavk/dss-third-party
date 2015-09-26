@@ -80,20 +80,19 @@ require_once('includes/constants.inc');
                         {{ enrollmentStatusLabel(e.status); }}
                     </td>
                     <td valign="top">
-                        <a href="#"   onclick="$('#response_{{e.id}}').toggle();return false;"   style="display:block;">View</a> 
-                        <span id="response_{{e.id}}"
-                              style="display:none;"> 
+                        <a href="#response_{{e.id}}"   v-on="click: showHideResponse('response_' + e.id);"  style="display:block;">View</a> 
+                        <span style="display: none;">
+                        <div id="response_{{e.id}}" style='padding:10px; background:#fff;'> 
                             {{ e.response }}  
-                        </span> 
+                        </div> </span>
                     </td>
                     <td valign="top">
-                        <a href="https://gds.eligibleapi.com/v1.5/payers/{{ e.payer_id }}/enrollment_form?api_key={{ apikey }}&transaction_type=837P"
+                        <a href="https://gds.eligibleapi.com/v1.5/payers/{{ e.payer_id }}/enrollment_form?api_key={{ apikey }}&transaction_type={{ e.transaction_type.split('-')[0] }}"
                              target="_blank">PDF</a>
                         <span v-if="e.download_url"><a class="btn btn-success" href="{{ e.download_url }}">Sign 
                                 Form</a> 
                             <br/> 
-                            <a class="btn btn-success" href="#"  
-                               onclick="Javascript: loadPopup('upload_enrollment.php?id={{ e.reference_id }}');">Upload</a> </span>
+                            <a href="upload_enrollment.php?id={{ e.reference_id }}" class="iframe cboxElement btn btn-success" >Upload</a> </span>
                         <span v-if="e.signed_download_url">
                             <br/> 
                             <a class="btn btn-success" href="{{ e.signed_download_url }}">View  Signed Form</a>

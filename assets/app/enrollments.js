@@ -158,14 +158,31 @@ var enrollments = new Vue({
                 opacity: .5,
                 color: '#fff'
             }, message: message, baseZ:10000 });
-        }
+        },
+
+        showHideResponse: function(id)
+        {
+            //$('#' + id).toggle();
+            $.colorbox({width: "40%",
+                inline: true,
+                href: '#' + id
+            });
+        },
+
+        uploadEnrollment: function()
+        {
+            alert('ddd');
+            //loadPopup('upload_enrollment.php' + reference_id);
+        },
 
     },
 
 });
 
 $(document).ready(function() {
+
     $('.addButton').colorbox({inline:true, width:"40%", closeButton: true,
         onClosed:function(){ location.reload(); }
     });
+
 });

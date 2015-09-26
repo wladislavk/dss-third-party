@@ -114,7 +114,6 @@
                 }
 
                 $_POST['patientid'] = mysqli_real_escape_string($con, $_POST['patientid']);
-                $txcode['description'] = mysqli_real_escape_string($con, $txcode['description']);
                 $_SESSION['userid'] = mysqli_real_escape_string($con, $_SESSION['userid']);
                 $_SESSION['docid'] = mysqli_real_escape_string($con, $_SESSION['docid']);
                 $_SERVER['REMOTE_ADDR'] = mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR']);
@@ -131,34 +130,38 @@
                         $form_claim_id = '';
                     }
 
+
+
                     if( $form['procedure_code'] == '1' && $form['service_date'] != '' && $form['amount'] != '' )
                     {
-                        $sqlinsertqry .= "( NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, '".str_replace(',','', $amount)."', 'Charge', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."')";                                                                       
+                        $query_ins = "( NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, '".str_replace(',','', $amount)."', 'Charge', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."')";
                     } elseif( $form['procedure_code'] == '2' && $form['service_date'] != '' && $form['amount'] != '' || $form['procedure_code'] == '3' && $form['service_date'] != '' && $form['amount'] != '' )
                     {
-                        $sqlinsertqry .= "(
+                        $query_ins = "(
                             NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'Credit', '".str_replace(',','', $amount)."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."')";
                     } elseif( $form['procedure_code'] == '6' && $form['proccode'] == '100' && $form['service_date'] != '' && $form['amount'] != '' )
                     {
-                        $sqlinsertqry .= "(
+                        $query_ins = "(
                             NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'Debit-Prod Adj', '".str_replace(',','', $amount)."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."'
                                 )";
                     } elseif( $form['procedure_code'] == '6' && $form['proccode'] != '100' && $form['service_date'] != '' && $form['amount'] != '' )
                     {
-                        $sqlinsertqry .= "(
+                        $query_ins = "(
                             NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'Credit-Coll Adj', '".str_replace(',','', $amount)."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."'
                                 )";
                     } elseif( $form['service_date'] != '' && $form['amount'] != '' )
                     {
-                        $sqlinsertqry .= "(
+                        $query_ins = "(
                             NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, NULL, 'None', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."'
                                 )";
                     }
 
-                    $ins_id = $db->getInsertId($sqlinsertqry);
-                    if( strtolower($txcode['transaction_code'])=='e0486' )
-                    {
-                        invoice_add_e0486('1', $_SESSION['docid'], $ins_id, DSS_INVOICE_TYPE_BC_FO);
+                    if( !empty($query_ins) ) {
+                        $sqlinsertqry .= $query_ins;
+                        $ins_id = $db->getInsertId($sqlinsertqry);
+                        if (strtolower($txcode['transaction_code']) == 'e0486') {
+                            invoice_add_e0486('1', $_SESSION['docid'], $ins_id, DSS_INVOICE_TYPE_BC_FO);
+                        }
                     }
                 } elseif( $d == $i )
                 {
@@ -587,8 +590,8 @@
             billing_provider_a = '".s_for($billing_provider_a)."',
             billing_provider_dd = '".s_for($billing_provider_dd)."',
             billing_provider_b_other = '".s_for($billing_provider_b_other)."',
-    		p_m_eligible_payer_id = '".$db->realEscapeString($p_m_eligible_payer_id)."',
-            p_m_eligible_payer_name = '".$db->realEscapeString($p_m_eligible_payer_name)."',
+    		p_m_eligible_payer_id = '".$db->escape($p_m_eligible_payer_id)."',
+            p_m_eligible_payer_name = '".$db->escape($p_m_eligible_payer_name)."',
             status = '".s_for(DSS_CLAIM_PENDING)."',
             userid = '".s_for($_SESSION['userid'])."',
             docid = '".s_for($_SESSION['docid'])."',

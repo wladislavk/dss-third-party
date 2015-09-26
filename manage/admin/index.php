@@ -133,7 +133,7 @@
 			</div>
 			<div class="forget-password">
 				<h4>Forgot your password ?</h4>
-				<p>no worries, click <a id="forget-password" href="javascript:;">here</a>
+				<p>no worries, click <a id="forget-password" href="/manage/admin/forgot_password.php">here</a>
 				 to reset your password.
 				</p>
 			</div>

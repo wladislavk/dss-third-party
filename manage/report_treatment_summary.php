@@ -9,13 +9,14 @@
 </div>
 
 <script type="text/javascript">
- nv.addGraph(function() {  
+$(document).ready(function(){
+  nv.addGraph(function() {  
    var chart = nv.models.lineChart();
  
    chart.xAxis
        .axisLabel('Date')
-	.showMaxMin(false)	
-	.tickFormat(function(d) {return d3.time.format("%x")(new Date(d*1000));})
+  .showMaxMin(false)  
+  .tickFormat(function(d) {return d3.time.format("%x")(new Date(d*1000));})
  
    d3.select('#treatment svg')
        .datum(treatmentCount())
@@ -26,6 +27,7 @@
  
    return chart;
  });
+});
  
  
  

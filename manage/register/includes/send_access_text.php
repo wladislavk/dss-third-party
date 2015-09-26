@@ -25,33 +25,42 @@
 
   // iterate over all our friends. $number is a phone number above, and $name 
   // is the name next to it
+  $isCellError = true;
   if($r['phone']!='') {
     // instantiate a new Twilio Rest Client
     $client = new \Services_Twilio($AccountSid, $AuthToken);
           // Send a new outgoing SMS 
     if($send_texts){
-      $sms = $client->account->sms_messages->create(
-        // the number we are sending from, must be a valid Twilio number
-        $twilio_number,
+      try {
+        $sms = $client->account->sms_messages->create(
+          // the number we are sending from, must be a valid Twilio number
+          $twilio_number,
 
-        // the number we are sending to - Any phone number
-        $r['phone'],
+          // the number we are sending to - Any phone number
+          $r['phone'],
 
-        // the sms body 
-        "Your Dental Sleep Solutions access code is ".$recover_hash
-      );
+          // the sms body
+          "Your Dental Sleep Solutions access code is ".$recover_hash
+        );
 
-  		if(strtotime($r['text_date'])<(time()-3600) || $r['text_num'] == 0) {
-  		  $db->query("UPDATE dental_users SET text_num=1, text_date = NOW() WHERE userid='".$r['userid']."'");
-  		} else {
-        $db->query("UPDATE dental_users SET text_num=text_num+1 WHERE userid='".$r['userid']."'");
-  		}
+  		  if(strtotime($r['text_date'])<(time()-3600) || $r['text_num'] == 0) {
+  		    $db->query("UPDATE dental_users SET text_num=1, text_date = NOW() WHERE userid='".$r['userid']."'");
+  		  } else {
+          $db->query("UPDATE dental_users SET text_num=text_num+1 WHERE userid='".$r['userid']."'");
+  		  }
 
 		  echo '{"success":true}';
+      } catch (\Services_Twilio_RestException $e) {
+        $isCellError = true;
+      }
     }else{
 		  echo '{"error":"inactive"}';
 	  }
   } else {
-		echo '{"error":"cell"}';
-	}
-?>
+      $isCellError = true;
+  }
+
+  if ($isCellError) {
+    echo '{"error":"cell"}';
+  }
+

@@ -979,5 +979,5 @@
     }
 
 function escapeFdf ($value) {
-    return preg_replace("/[^a-z0-9,.'-]+/i", '', $value);
+    return addcslashes($value, '\()');
 }

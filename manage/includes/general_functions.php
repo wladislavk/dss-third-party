@@ -1,5 +1,12 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
+define('SHARED_FOLDER', __DIR__ . '/../../../../shared/');
+define('Q_FILE_FOLDER', SHARED_FOLDER . '/q_file/');
+
+function isSharedFile ($name) {
+    return strlen($name) && is_file(Q_FILE_FOLDER . $name);
+}
+
 function isFaultyUpload ($uploadError) {
     return !in_array($uploadError, array(UPLOAD_ERR_OK, UPLOAD_ERR_NO_FILE));
 }
@@ -84,7 +91,7 @@ function uploadImage($image, $file_path, $type = 'general'){
     imagedestroy($tmp);
 
   }else{
-    if($image['size'] <= DSS_FILE_MAX_SIZE){
+    if( ($image['size'] > 0 && $image['size'] <= DSS_FILE_MAX_SIZE) ){
 
       @move_uploaded_file($image["tmp_name"],$file_path);
       $uploaded = true;
@@ -94,7 +101,18 @@ function uploadImage($image, $file_path, $type = 'general'){
     }
   }
 
-                        @chmod($file_path,0777);
+  if ($uploaded) {
+    @chmod($file_path,0777);
+
+    // Ensure the file really exists
+    $uploaded = file_exists($file_path);
+
+    if (!$uploaded) {
+      error_reporting("Upload Image: failed to save $file_path");
+      error_reporting('Upload Image: $_FILES data - ' . json_encode($_FILES));
+    }
+  }
+
   return $uploaded;
 }
 
@@ -180,8 +198,6 @@ $headers = 'From: Dental Sleep Solutions <patient@dentalsleepsolutions.com>' . "
 }
 }
 
-
-
 function showPatientValue($table, $pid, $f, $pv, $fv, $showValues = true, $show=true, $type="text"){
   if($pv != $fv && $show){
 	?>
@@ -205,7 +221,6 @@ function showPatientValue($table, $pid, $f, $pv, $fv, $showValues = true, $show=
   }
 }
 
-
 function num($n, $phone=true){
 $n = preg_replace('/\D/', '', $n);
 if(!$phone){return $n; }
@@ -226,9 +241,9 @@ if(  preg_match( '/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches ) )
 }
 
 function split_phone($num, $a){
-        $num = preg_replace("[^0-9]", "", $num);
-        preg_match('/([0-1]*)(.*)/',$num, $m);
-        $num = $m[2];
+        $num = preg_replace("/[^0-9]/", "", $num);
+        // preg_match('/([0-1]*)(.*)/',$num, $m);
+        // $num = $m[2];
   if($a){
         return substr($num, 0, 3);
   }else{
@@ -237,4 +252,59 @@ function split_phone($num, $a){
   return $num;
 }
 
-?>
+function dateToTime ($unknownFormatDate, $defaultsNow=false) {
+    $dateFormats = ['d-Y-m', 'm-d-y', 'm-d-Y', 'Y-m-d'];
+    $timeFormats = ['', ' H:i:s'];
+    $parsedDate = null;
+
+    // Use a single delimiter
+    $unknownFormatDate = str_replace('/', '-', $unknownFormatDate);
+
+    foreach ($dateFormats as $date) {
+        foreach ($timeFormats as $time) {
+            $parsedDate = date_create_from_format("{$date}{$time}", $unknownFormatDate);
+
+            if ($parsedDate) {
+                break;
+            }
+        }
+
+        if ($parsedDate) {
+            break;
+        }
+    }
+
+    if (!$parsedDate && $defaultsNow) {
+        $parsedDate = date_create();
+    }
+
+    $time = $parsedDate ? $parsedDate->getTimestamp() : 0;
+
+    return $time;
+}
+
+function dateFormat ($data, $defaultsNow=true) {
+  if (!empty($data)) {
+      $timestamp = dateToTime($data, $defaultsNow);
+      $dateFormat = date('Y-m-d', $timestamp);
+  } else {
+      $dateFormat = '';
+  }
+
+  return $dateFormat;
+}
+
+/**
+ * Parse phone + area code, as some form will use a single field, while another one will use separated fields
+ * Return an array of two elements, each one having the proper amount of digits
+ *
+ * list($phone_code, $phone_number) = parsePhoneNumber($maybeEmptyAreaCode, $maybeFullPhoneNumber);
+ */
+function parsePhoneNumber ($areaCodeOrFullNumber, $phoneNumber='') {
+    $fullNumber = preg_replace('/\D+/', '', "{$areaCodeOrFullNumber}{$phoneNumber}");
+
+    return [
+        substr($fullNumber, 0, 3), // area code
+        substr($fullNumber, 3) // local number
+    ];
+}

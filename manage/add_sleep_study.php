@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+
+namespace Ds3\Libraries\Legacy;
+
+
 include_once('admin/includes/main_include.php');
 include_once("includes/sescheck.php"); 
 include_once('includes/constants.inc');
@@ -28,6 +32,7 @@ function selected ($value, $reference) {
 }
 
 $maxFileSizeExceeded = 'There was an error with the file upload. Please verify that the file does not exceed 10MB and try again.';
+$noFileName = 'There was an error with the file upload. Please ensure the filename does not contain strange characters and try again.';
 $errorMessage = '';
 
 $patientId = intval($_GET['pid']);
@@ -38,11 +43,15 @@ $isNewStudy = isset($_POST['submitnewsleeplabsumm']);
 
 $changesSaved = false;
 
-if (isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && !$_FILES && (
-        $isDeleteStudy || $isUpdateStudy || $isNewStudy)
-) {
+// If Content-Length is set, and is bigger than 1 MB but there are no files, then we assume a failed upload
+if (!empty($_SERVER['CONTENT_LENGTH']) && ($_SERVER['CONTENT_LENGTH'] >= 1024*1024) && !$_FILES) {
     error_log('Max file size exceeded AND PHP didn\'t populate FILES global variable, and POST might be corrupt');
     $errorMessage = $maxFileSizeExceeded;
+
+    // Abort any action
+    $isDeleteStudy = false;
+    $isUpdateStudy = false;
+    $isNewStudy = false;
 }
 
 // Determine Type of Appliance
@@ -56,7 +65,8 @@ $result = $db->getResults($sql);
 if ($result) {
     $deviceid = 0;
 
-    foreach ($result as $row) {
+    foreach ($result as $row) 
+    {
         $deviceid = $row['dentaldevice'];
     }
 
@@ -118,22 +128,26 @@ if ($isDeleteStudy) {
         if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
-        } else {
-            $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
+        } elseif (!$errorNo && !strlen(trim($_FILES['ss_file']['name']))) {
+            error_log("SS file upload error: The file upload misses the filename");
+            $errorMessage = $noFileName;
+        } elseif (!$errorNo) {
+            $fname = $_FILES["ss_file"]["name"];
             $lastdot = strrpos($fname,".");
+
             $name = substr($fname,0,$lastdot);
             $extension = substr($fname,$lastdot+1);
+
+            $name = preg_replace('/[^a-z0-9_]+/i', '-', $name);
+            $extension = preg_replace('/[^a-z0-9_]+/i', '', $extension);
+
             $banner1 = $name.'_'.date('dmy_Hi');
-            $banner1 = str_replace(" ","_",$banner1);
-            $banner1 = str_replace(".","_",$banner1);
-            $banner1 = str_replace("'","_",$banner1);
-            $banner1 = str_replace("&","amp",$banner1);
             $banner1 .= ".".$extension;
 
             $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
 
             if ($uploaded) {
-                if ($image_id != '') {
+                if ($image_id) {
                     $ins_sql = " update dental_q_image set
                             image_file = '".s_for($banner1)."'
                             WHERE imageid='".$image_id."'
@@ -158,47 +172,47 @@ if ($isDeleteStudy) {
                     $image_id = $db->getInsertId($ins_sql);
                 }
             } else {
-                error_log('SS file upload save error. Error message should be stored above this line.');
+                error_log('SS file upload save error. The error could be caused by an invalid filetype. ' . json_encode($_FILES));
                 $errorMessage = $maxFileSizeExceeded;
+                $banner1 = '';
             }
         }
     }
 
     // Set default message. In case everything goes ok the message will be updated
     $msg = $errorMessage ?: 'There was an error uploading the attachment. Please try again.';
-    
-    if (empty($errorMessage)) {
-        $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
-        $q = "UPDATE dental_summ_sleeplab SET
-            `date` = '$date',
-            `sleeptesttype`  = '$sleeptesttype',
-            `place`  = '$place',
-            `diagnosising_doc` = '$diagnosising_doc',
-            `diagnosising_npi` = '$diagnosising_npi',
-            `ahi`  = '$ahi',
-            `ahisupine`  = '$ahisupine',
-            `rdi`  = '$rdi',
-            `rdisupine`  = '$rdisupine',
-            `o2nadir`  = '$o2nadir',
-            `t9002`  = '$t9002',
-            `dentaldevice`  = '$dentaldevice',
-            `devicesetting`  = '$devicesetting',
-            `diagnosis`  = '$diagnosis',
-            `filename` = '$banner1',
-            `notes`  = '$notes',
-            `testnumber` = '$testnumber',
-            `needed` = '$needed',
-            `scheddate` = '$scheddate',
-            `completed` = '$completed',
-            `image_id` = '$image_id'
-            WHERE id='$id'";
-        $changesSaved = !!$db->query($q);
 
-        $i_sql = "UPDATE dental_q_image SET
-                  title = '$sleeptesttype $date'
-                  WHERE image_file='$banner1'";
-        $db->query($i_sql);
+    $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
+    $q = "UPDATE dental_summ_sleeplab SET
+        `date` = '$date',
+        `sleeptesttype`  = '$sleeptesttype',
+        `place`  = '$place',
+        `diagnosising_doc` = '$diagnosising_doc',
+        `diagnosising_npi` = '$diagnosising_npi',
+        `ahi`  = '$ahi',
+        `ahisupine`  = '$ahisupine',
+        `rdi`  = '$rdi',
+        `rdisupine`  = '$rdisupine',
+        `o2nadir`  = '$o2nadir',
+        `t9002`  = '$t9002',
+        `dentaldevice`  = '$dentaldevice',
+        `devicesetting`  = '$devicesetting',
+        `diagnosis`  = '$diagnosis',
+        `filename` = '$banner1',
+        `notes`  = '$notes',
+        `testnumber` = '$testnumber',
+        `needed` = '$needed',
+        `scheddate` = '$scheddate',
+        `completed` = '$completed',
+        `image_id` = '$image_id'
+        WHERE id='$id'";
+    $changesSaved = !!$db->query($q);
 
+    $i_sql = "UPDATE dental_q_image SET
+              title = '$sleeptesttype $date'
+              WHERE image_file='$banner1'";
+    $db->query($i_sql);
+    if( empty($errorMessage) ) {
         $msg = $changesSaved ? 'Successfully updated sleep lab study.' : 'Could not update sleep lab study, please try again.';
     }
 } else if ($isNewStudy) {
@@ -232,16 +246,20 @@ if ($isDeleteStudy) {
         if (isFaultyUpload($errorNo)) {
             error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
             $errorMessage = $maxFileSizeExceeded;
-        } else {
-            $fname = $_FILES["ss_file"]["name"] ?: 'unnamed-file.';
+        } elseif (!$errorNo && !strlen(trim($_FILES['ss_file']['name']))) {
+            error_log("SS file upload error: The file upload misses the filename");
+            $errorMessage = $noFileName;
+        } elseif (!$errorNo) {
+            $fname = $_FILES["ss_file"]["name"];
             $lastdot = strrpos($fname,".");
+
             $name = substr($fname,0,$lastdot);
             $extension = substr($fname,$lastdot+1);
+
+            $name = preg_replace('/[^a-z0-9_]+/i', '-', $name);
+            $extension = preg_replace('/[^a-z0-9_]+/i', '', $extension);
+
             $banner1 = $name.'_'.date('dmy_Hi');
-            $banner1 = str_replace(" ","_",$banner1);
-            $banner1 = str_replace(".","_",$banner1);
-            $banner1 = str_replace("'","_",$banner1);
-            $banner1 = str_replace("&","amp",$banner1);
             $banner1 .= ".".$extension;
 
             $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
@@ -257,68 +275,69 @@ if ($isDeleteStudy) {
                     adddate = now(),
                     ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
-                $db->getInsertId($ins_sql);
+                $image_id = $db->getInsertId($ins_sql);
             } else {
-                error_log('SS file upload save error. Error message should be stored above this line.');
+                error_log('SS file upload save error. The error could be caused by an invalid filetype. ' . json_encode($_FILES));
                 $errorMessage = $maxFileSizeExceeded;
+                $banner1 = '';
             }
         }
     }
 
-    if (empty($errorMessage)) {
-        $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
+    $diagnosising_doc = mysqli_real_escape_string($con, $diagnosising_doc);
 
-        $q = "INSERT INTO `dental_summ_sleeplab` (
-                `id` ,
-                `date` ,
-                `sleeptesttype` ,
-                `place` ,
-                `diagnosising_doc`,
-                `diagnosising_npi`,
-                `ahi` ,
-                `ahisupine` ,
-                `rdi` ,
-                `rdisupine` ,
-                `o2nadir` ,
-                `t9002` ,
-                `dentaldevice` ,
-                `devicesetting` ,
-                `diagnosis` ,
-                `filename` ,
-                `notes`,
-                `testnumber`,
-                `needed`,
-                `scheddate`,
-                `completed`,
-                `patiendid`,
-                `image_id`
-            ) VALUES (
-                NULL,
-                '$date',
-                '$sleeptesttype',
-                '$place',
-                '$diagnosising_doc',
-                '$diagnosising_npi',
-                '$ahi',
-                '$ahisupine',
-                '$rdi',
-                '$rdisupine',
-                '$o2nadir',
-                '$t9002',
-                '$dentaldevice',
-                '$devicesetting',
-                '$diagnosis',
-                '$banner1',
-                '$notes',
-                '$testnumber',
-                '$needed',
-                '$scheddate',
-                '$completed',
-                '$patientid',
-                '$image_id'
-            )";
-        $changesSaved = !!$db->query($q);
+    $q = "INSERT INTO `dental_summ_sleeplab` (
+            `id` ,
+            `date` ,
+            `sleeptesttype` ,
+            `place` ,
+            `diagnosising_doc`,
+            `diagnosising_npi`,
+            `ahi` ,
+            `ahisupine` ,
+            `rdi` ,
+            `rdisupine` ,
+            `o2nadir` ,
+            `t9002` ,
+            `dentaldevice` ,
+            `devicesetting` ,
+            `diagnosis` ,
+            `filename` ,
+            `notes`,
+            `testnumber`,
+            `needed`,
+            `scheddate`,
+            `completed`,
+            `patiendid`,
+            `image_id`
+        ) VALUES (
+            NULL,
+            '$date',
+            '$sleeptesttype',
+            '$place',
+            '$diagnosising_doc',
+            '$diagnosising_npi',
+            '$ahi',
+            '$ahisupine',
+            '$rdi',
+            '$rdisupine',
+            '$o2nadir',
+            '$t9002',
+            '$dentaldevice',
+            '$devicesetting',
+            '$diagnosis',
+            '$banner1',
+            '$notes',
+            '$testnumber',
+            '$needed',
+            '$scheddate',
+            '$completed',
+            '$patientid',
+            '$image_id'
+        )";
+    $changesSaved = !!$db->query($q);
 
+    if( empty($errorMessage) ) {
         $msg = $changesSaved ? 'Successfully added sleep lab study.' : 'Could not add sleep lab study, please try again.';
     }
 }
@@ -346,7 +365,7 @@ $pat_r = $db->getRow($pat_sql);
 <link rel="stylesheet" type="text/css" href="css/add_sleep_study.css" media="screen" />
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
 <script type="text/javascript">parent.updateiframe(<?= $num_labs ?>);</script>
-<script src="js/add_sleep_study.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/add_sleep_study.js?v=<?= time() ?>"></script>
 <?php if ($errorMessage) { ?>
     <script type="text/javascript">
         alert(<?= json_encode($errorMessage) ?>);
@@ -354,10 +373,10 @@ $pat_r = $db->getRow($pat_sql);
 <?php }
 if ($msg && $msg != $errorMessage) { ?>
     <script type="text/javascript">
-        alert(<?= json_encode($msg) ?>);
+        alert("<?= $msg ?>");
     </script>
 <?php } ?>
-<form id="new_sleep_study_form" action="dss_summ.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&addtopat=1" method="POST" style="float:left; width:185px;<?= $isNewStudy && !$changesSaved ? '' : 'display:none;' ?>" enctype="multipart/form-data">
+<form id="new_sleep_study_form" class="sleep-study-form" action="dss_summ.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&addtopat=1" method="POST" style="float:left; width:185px;<?= $isNewStudy && !$changesSaved ? '' : 'display:none;' ?>" enctype="multipart/form-data">
     <input type="hidden" name="submitnewsleeplabsumm" value="1" />
     <table class="sleeplabstable new_table <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
         <tr>
@@ -536,7 +555,7 @@ if ($s_lab_result) {
         $device = $device_result['device'];
 
         ?>
-        <form action="dss_summ.php?pid=<?= $patientId ?>&addtopat=1" style="float:left;" method="post" enctype="multipart/form-data">
+        <form class="sleep-study-form" action="dss_summ.php?pid=<?= $patientId ?>&addtopat=1" style="float:left;" method="post" enctype="multipart/form-data">
             <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
             <table id="sleepstudycrolltable" class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
                 <tr>
@@ -620,7 +639,7 @@ if ($s_lab_result) {
                     <td valign="top" class="odd">
                         <?php if ($s_lab['filename'] != '') { ?>
                             <div id="file_edit_<?php echo $s_lab['id']; ?>">
-                                <a href="display_file.php?f=<?php echo addslashes($s_lab['filename']); ?>" target="_blank" class="button">View</a>
+                                <a href="display_file.php?f=<?= rawurlencode($s_lab['filename']) ?>" target="_blank" class="button">View</a>
                                 <input type="button" id="edit" onclick="$('#file_edit_<?php echo $s_lab['id']; ?>').hide();$('#file_<?php echo $s_lab['id']; ?>').show();return false;" value="Edit" title="Edit" />
                             </div>
                             <input id="file_<?php echo $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="8" />
@@ -697,4 +716,4 @@ if ($s_lab_result) {
             </table>
         </form>
     <?php }
-}
+} ?>

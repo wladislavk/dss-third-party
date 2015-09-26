@@ -60,12 +60,6 @@
   $master_c = $db->getResults($master_sql);
   $master_q = $db->getResults($master_sql);
 
-  if (count($master_c) === 1 && empty($master_c['edit_date'])) {
-    $isNewLetter = true;
-  } else {
-    $isNewLetter = false;
-  }
-
   $master_num = 0;
   $cur_letter_num = 0;
   $cur_template_num = 0;
@@ -1215,18 +1209,10 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
           */
 
-          if (!empty($_POST['letter' . $cur_template_num])) {
-            $new_template[$cur_template_num] = str_replace($replace, $search, $_POST['letter' . $cur_template_num]);
-            $letterid = $_POST['editLetterId'];
-          }
+          $new_template[$cur_template_num] = str_replace($replace, $search, $_POST['letter' . $cur_template_num]);
 
-          // Letter hasn't been edited, but a new template exists in hidden field
-       		if ($new_template[$cur_template_num] == null) {
-            if (!empty($master_r['template'])) {
-              $new_template[$cur_template_num] = html_entity_decode($master_r['template'], ENT_COMPAT | ENT_QUOTES, "UTF-8");
-            } else {
+       		if ($new_template[$cur_template_num] == null && !empty($_POST['new_template'][$cur_template_num])) {
               $new_template[$cur_template_num] = html_entity_decode($_POST['new_template'][$cur_template_num], ENT_COMPAT | ENT_QUOTES, "UTF-8");
-            }
           }
 
           /**
@@ -1817,7 +1803,6 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         				  <?php print html_entity_decode( preg_replace('/(&Acirc;|&nbsp;)+/i', '', htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8")), ENT_COMPAT | ENT_IGNORE,"UTF-8"); ?>
         				</div>
         				<input type="hidden" name="new_template[<?php echo $cur_letter_num?>]" value="<?php echo preg_replace('/(&Acirc;|&nbsp;)+/i', '',htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8"))?>" />
-                <input type="hidden" name="editLetterId" value="<?php echo $master_r['letterid']; ?>">
         			</td>
         		</tr>
         	</table>
@@ -1928,19 +1913,13 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
               $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $message, $send_method, $font_size, $font_family);
    	          $num_contacts = num_letter_contacts($_GET['lid']);
-
-              if ($isNewLetter) {
-                $createLetterPdfId = $saveletterid;
-              } else {
-                $createLetterPdfId = $_POST['editLetterId'];
-              }
   	          
               if($_POST['send_letter'][$cur_letter_num] != null){
-                create_letter_pdf($createLetterPdfId);
+                create_letter_pdf($saveletterid);
           ?>
                 <script type="text/javascript">
                   $(document).ready( function(){
-                    loadPopup("letter_approve.php?id=<?php echo $createLetterPdfId; ?>&pid=<?php echo  $_GET['pid']; ?>&backoffice=<?php echo  $_GET['backoffice']; ?><?php echo  ($parent)?'&parent=1':''; ?>&goto=<?php echo  $_GET['goto']; ?>");
+                    loadPopup("letter_approve.php?id=<?php echo $saveletterid; ?>&pid=<?php echo  $_GET['pid']; ?>&backoffice=<?php echo  $_GET['backoffice']; ?><?php echo  ($parent)?'&parent=1':''; ?>&goto=<?php echo  $_GET['goto']; ?>");
                   });
                 </script>
           <?php

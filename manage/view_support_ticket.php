@@ -80,8 +80,8 @@ if (!empty($t['company_name'])){
 }
 ?>
 
-<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/popup.js" type="text/javascript"></script>
+<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<script src="admin/popup/popup.js" type="text/javascript"></script>
 <link rel="stylesheet" href="admin/css/support.css" type="text/css" />
 <div style="width:96%; margin:0 auto;">
   <div id="support_ticket">

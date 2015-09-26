@@ -28,7 +28,7 @@ function enable_submit_medicare(){
 $(document).ready(function(){
   var api_key = typeof eligibleApiKey === 'undefined' ? 'NotSet' : eligibleApiKey;
   setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?api_key='+api_key, 'ins_payer', '', true, false);
-  $('.form-coverage').bind("submit", disable_submit);
+  $('.form-coverage').on("submit", disable_submit);
   $('#submit-button-medicare').on("click", disable_submit_medicare);
 });
 

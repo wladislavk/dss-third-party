@@ -147,6 +147,9 @@
                       update_proof_of_delivery_form($_GET['did']);
                     }
                 }
+            } elseif ($_GET['file'] == 'advanced_beneficiary_notice_medicare') {
+                $output = 'advanced_beneficiary_notice_medicare';
+                $filename = '../../../shared/q_file/advanced_beneficiary_notice_medicare.pdf';
             }
         }
 

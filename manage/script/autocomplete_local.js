@@ -9,12 +9,18 @@
 			var cpl = data;
 			var array_index = 0;
 			for(var i=0; i<cpl.length;i++){
-				local_data[array_index] = new Array();
-				local_data[array_index]['payer_id'] = cpl[i]['payer_id'];
-				local_data[array_index]['payer_name'] = cpl[i]['names'].join(',');
-				local_data[array_index]['enrollment_required'] = cpl[i]['enrollment_required'];
-				local_data[array_index]['enrollment_mandatory_fields'] = cpl[i]['enrollment_mandatory_fields'];
-				array_index++;
+                if( typeof cpl[i]['names'] !== 'undefined' && cpl[i]['names'].length > 0 ) {
+                    for( var nameIndex = 0; nameIndex < cpl[i]['names'].length; nameIndex++ ) {
+                        if(!!cpl[i]['names'][nameIndex]) {
+                            local_data[array_index] = new Array();
+                            local_data[array_index]['payer_id'] = cpl[i]['payer_id'];
+                            local_data[array_index]['payer_name'] = cpl[i]['names'][nameIndex];
+                            local_data[array_index]['enrollment_required'] = cpl[i]['enrollment_required'];
+                            local_data[array_index]['enrollment_mandatory_fields'] = cpl[i]['enrollment_mandatory_fields'];
+                            array_index++;
+                        }
+                    }
+                }
 			}
 		});
                 $('#'+in_field).keyup(function(e) {

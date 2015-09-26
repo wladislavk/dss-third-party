@@ -461,7 +461,7 @@ if(!empty($_GET['pid'])){
         </td>
         <td valign="top" align="right">
             <b>
-                <?php echo "$".number_format($tot_charge-$tot_credit,2); ?>
+                <?php echo "$".number_format($tot_charge - $tot_credit - $tot_adj,2); ?>
                 &nbsp;
             </b>
         </td>

@@ -2,6 +2,11 @@
     include 'includes/top.htm';
     include_once 'includes/constants.inc';
 
+    $sign_sql = "SELECT sign_notes FROM dental_users where userid = '" . mysqli_real_escape_string($con, $_SESSION['userid']) . "'";
+
+    $sign_r = $db->getRow($sign_sql);
+    $user_sign = $sign_r['sign_notes'];
+
     //NEEDS OPTIMIZED
     $unsigned_query = "select distinct(patientid) from (select n.*, u.name signed_name, p.adddate as parent_adddate from
             (
@@ -102,7 +107,7 @@
                                             Status: <span style="font-size:14px;">Unsigned</span>
                                             <a href="#" onclick="loadPopup('add_notes.php?goto=manage_unsigned_notes.php&pid=<?php echo  $unsigned_r['patientid']; ?>&ed=<?php echo  $myarray['notesid']; ?>')">Edit</a>
                                             
-                                            <?php if ($myarray["docid"] == $_SESSION['userid']) { ?>
+                                            <?php if ($myarray["docid"] == $_SESSION['userid'] || $user_sign == 1) { ?>
                                                 /
                                                 <a href="dss_summ.php?return=unsigned&pid=<?php echo  $unsigned_r['patientid']; ?>&sid=<?php echo  $myarray['notesid'];?>&addtopat=1" onclick="return confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?');">Sign</a>
                                                 <input type="checkbox" class="sign_chbx sign_chbx_<?php echo  $unsigned_r['patientid']; ?>" name="sign[]" value="<?php echo  $myarray['notesid']; ?>" />

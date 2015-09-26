@@ -7,6 +7,10 @@
         </tr>
 <?php
 }else{
+    $sign_sql = "SELECT sign_notes FROM dental_users where userid = '" . $db->escape($_SESSION['userid']) . "'";
+
+    $sign_r = $db->getRow($sign_sql);
+    $user_sign = $sign_r['sign_notes'];
         foreach ($my as $myarray) {
                 if($myarray["signed_id"] != '')
                 {
@@ -60,7 +64,7 @@
                                                         <span style="font-size:14px;"><?php echo $status; ?></span>
                                                 <?php if(!empty($office_type) && $office_type == DSS_OFFICE_TYPE_FRONT){ ?>
                                                         <a href="#" onclick="loadPopup('add_notes.php?pid=<?php echo $_GET['pid']; ?>&ed=<?php echo $myarray['notesid']; ?>');return false;">Edit</a>
-                                                        <?php if($myarray["docid"]==$_SESSION['userid']){ ?>
+                                                        <?php if($myarray["docid"]==$_SESSION['userid'] || $user_sign == 1){ ?>
                                                         /
                                                         <a href="dss_summ.php?pid=<?php echo $_GET['pid']; ?>&sid=<?php echo $myarray['notesid'];?>&addtopat=1" onclick="return confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?');">Sign</a>
                                                         <input type="checkbox" class="sign_chbx" name="sign[]" value="<?php echo $myarray['notesid']; ?>" />

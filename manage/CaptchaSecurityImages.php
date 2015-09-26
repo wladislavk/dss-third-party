@@ -28,8 +28,16 @@ class CaptchaSecurityImages {
 	var $font = './monofont.ttf';
 
 	function generateCode($characters) {
-		/* list all possible characters, similar looking characters and vowels have been removed */
-		$possible = '23456789bcdfghjkmnpqrstvwxyz';
+        /**
+         * Prepare captcha for automated testing
+         * @see DSS-68
+         */
+        if (env('APP_ENV') === 'release') {
+            return 'cg8ga';
+        }
+        
+        /* list all possible characters, similar looking characters and vowels have been removed */
+        $possible = '23456789bcdfghjkmnpqrstvwxyz';
 		$code = '';
 		$i = 0;
 		while ($i < $characters) { 
@@ -75,5 +83,3 @@ $height = isset($_GET['height']) ? $_GET['height'] : '40';
 $characters = isset($_GET['characters']) && $_GET['characters'] > 1 ? $_GET['characters'] : '6';
 
 $captcha = new CaptchaSecurityImages($width,$height,$characters);
-
-?>

@@ -287,8 +287,7 @@ class ApiEnrollmentsController extends ApiBaseController
     {
         $signatureCordinates = [];
 
-        $transactionTypes = $this->enrollments->getEnrollmentTransactionType($request->get('transaction_type_id'));
-        $this->transcationType = $transactionTypes->transaction_type;
+        $this->setTransationTypeValue($request);
 
         $elligibleEnrollment['payer_id']            = $request->get('payer_id');
         $elligibleEnrollment['transaction_type_id'] = $request->get('transaction_type_id');
@@ -418,5 +417,17 @@ class ApiEnrollmentsController extends ApiBaseController
         {
             $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
         }   
+    }
+
+    /**
+     *
+     *
+     * @param ApiEligibleEnrollmentRequest $request
+     * @return void
+     */
+    private function setTransationTypeValue(ApiEligibleEnrollmentRequest $request)
+    {
+        $transactionTypes = $this->enrollments->getEnrollmentTransactionType($request->get('transaction_type_id'));
+        $this->transcationType = $transactionTypes->transaction_type;
     }
 }

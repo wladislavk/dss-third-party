@@ -149,7 +149,7 @@ SQL;
      * @param $payers
      * @return void
      */
-    protected function savePayerToDatabase(Object $payers)
+    protected function savePayerToDatabase(array $payers)
     {
         foreach ($payers as $payer) {
 

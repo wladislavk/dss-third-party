@@ -62,6 +62,20 @@ class ApiEnrollmentsController extends ApiBaseController
         $this->signatures  = $signatures;
     }
 
+    public function syncEnrollmentPayers()
+    {
+        try
+        {
+            $results = $this->payers->syncEnrollmentPayersFromProvider(null);
+            $response = ['data' => $results, 'status' => true, 'message' => ''];
+            return response()->json($response, 200);
+        }
+        catch (Exception $ex)
+        {
+            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
+        }
+    }
+
     /**
      *
      *

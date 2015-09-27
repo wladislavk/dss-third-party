@@ -36,5 +36,8 @@ Route::group(['prefix' => 'api/v1', 'before' => '', 'after' => 'allowOrigin'], f
         Route::get('type/{id}',['as' => 'enrollments.type',
             'uses' => 'Api\ApiEnrollmentsController@getEnrollmentTransactionType']);
 
+        Route::get('syncpayers',['as' => 'enrollments.syncpayers',
+            'uses' => 'Api\ApiEnrollmentsController@syncEnrollmentPayers']);
+
     });
 });

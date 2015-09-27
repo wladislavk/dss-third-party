@@ -1,6 +1,6 @@
 <?php
 
-namespace DSSApi;
+namespace DentalSleepSolutions;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;

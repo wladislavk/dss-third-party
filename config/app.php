@@ -78,7 +78,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY', 'tS30p7h1p7JUlOOJk8uyBXMM9psDf6nq'),
+    'key' => env('APP_KEY', 'ARandomString'),
 
     'cipher' => 'AES-256-CBC',
 
@@ -113,6 +113,7 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
+        Jlapp\Swaggervel\SwaggervelServiceProvider::class,
         Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
@@ -140,9 +141,10 @@ return [
         /*
          * Application Service Providers...
          */
-        DSSApi\Providers\AppServiceProvider::class,
-        DSSApi\Providers\EventServiceProvider::class,
-        DSSApi\Providers\RouteServiceProvider::class,
+        DentalSleepSolutions\Providers\AppServiceProvider::class,
+        DentalSleepSolutions\Providers\EventServiceProvider::class,
+        DentalSleepSolutions\Providers\RouteServiceProvider::class,
+        DentalSleepSolutions\Providers\ApiServiceProvider::class,
 
     ],
 

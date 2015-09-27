@@ -1,6 +1,6 @@
 <?php
 
-namespace DSSApi\Http\Middleware;
+namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;

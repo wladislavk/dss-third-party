@@ -1,6 +1,6 @@
 <?php
 
-namespace DSSApi\Http;
+namespace DentalSleepSolutions\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -13,11 +13,12 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        \DSSApi\Http\Middleware\EncryptCookies::class,
+        \DentalSleepSolutions\Http\Middleware\EncryptCookies::class,
         \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \DSSApi\Http\Middleware\VerifyCsrfToken::class,
+        \DentalSleepSolutions\Http\Middleware\VerifyCsrfToken::class,
+        \DentalSleepSolutions\Http\Middleware\ApiMiddleware::class,
     ];
 
     /**
@@ -26,8 +27,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \DSSApi\Http\Middleware\Authenticate::class,
+        'auth' => \DentalSleepSolutions\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest' => \DSSApi\Http\Middleware\RedirectIfAuthenticated::class,
+        'guest' => \DentalSleepSolutions\Http\Middleware\RedirectIfAuthenticated::class,
     ];
 }

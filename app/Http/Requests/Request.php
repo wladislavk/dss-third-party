@@ -1,6 +1,6 @@
 <?php
 
-namespace DSSApi\Http\Requests;
+namespace DentalSleepSolutions\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

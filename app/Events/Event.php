@@ -1,6 +1,6 @@
 <?php
 
-namespace DSSApi\Events;
+namespace DentalSleepSolutions\Events;
 
 abstract class Event
 {

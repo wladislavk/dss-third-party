@@ -1,6 +1,6 @@
 <?php
 
-namespace DSSApi\Exceptions;
+namespace DentalSleepSolutions\Exceptions;
 
 use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;

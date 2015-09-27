@@ -1,6 +1,6 @@
 <?php
 
-namespace DSSApi\Providers;
+namespace DentalSleepSolutions\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

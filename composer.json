@@ -4,26 +4,35 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/tralves/Swaggervel"
+        }
+    ],
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.1.*",
         "eventhomes/laravel-fractalhelper": "^0.1.2",
-        "tymon/jwt-auth": "^0.5.4"
+        "tymon/jwt-auth": "^0.5.4",
+        "zircote/swagger-php": "*",
+        "rmccue/requests": ">=1.0",
+        "jlapp/swaggervel": "master-dev"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~4.0",
         "phpspec/phpspec": "~2.1",
-        "laracasts/generators": "^1.1",
-        "laracasts/integrated": "^0.15.6"
+        "laracasts/generators": "^1.1"
     },
     "autoload": {
         "classmap": [
-            "database"
+            "database",
+            "app/DentalSleepSolutions"
         ],
         "psr-4": {
-            "DSSApi\\": "app/"
+            "DentalSleepSolutions\\": "app/"
         }
     },
     "autoload-dev": {

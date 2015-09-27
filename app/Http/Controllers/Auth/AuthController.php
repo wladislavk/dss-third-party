@@ -1,10 +1,10 @@
 <?php
 
-namespace DSSApi\Http\Controllers\Auth;
+namespace DentalSleepSolutions\Http\Controllers\Auth;
 
-use DSSApi\User;
+use DentalSleepSolutions\User;
 use Validator;
-use DSSApi\Http\Controllers\Controller;
+use DentalSleepSolutions\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 

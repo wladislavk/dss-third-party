@@ -18,20 +18,29 @@ var memos = new Vue({
         }
     },
     methods: {
-        addMemo: function(e) {
+
+        newMemo: function() {
 
             this.fields.memo_id = 0;
             this.fields.off_date = '';
             this.fields.memoText = '';
+            showModal();
 
         },
+
         editMemo: function(memo,e) {
+
             this.fields.off_date = memo.off_date;
             this.fields.memoText = memo.memo;
             this.fields.memo_id  = memo.memo_id;
+
+            showModal();
+
         },
+
         saveMemo: function(e) {
             e.preventDefault();
+            this.showBusy('Saving Memo please wait...');
             var off_date = $(".input-group.date").datepicker('getFormattedDate');
             off_date = off_date!=''?off_date:this.fields.off_date;
             postValues = {'memo': this.fields.memoText, 'off_date': off_date, 'last_update': moment().format("YYYY-MM-DD") };
@@ -54,10 +63,16 @@ var memos = new Vue({
                     this.$set('errors', message);
                 })
             }
+
+            document.getElementById("memoForm").reset();
+            $.unblockUI();
+
         },
+
         deleteMemo: function (memo,e) {
             if(confirm('Delete this Memo - Are you sure?'))
             {
+                this.showBusy('Deleting Memo please wait...');
                 this.$http.delete(apiPath + memo.memo_id, function (data, status, request) {
                     this.$set('memos', data.data);
                     alert('Memo deleted.');
@@ -66,7 +81,21 @@ var memos = new Vue({
                     alert(message);
                 })
             }
-        }
+            $.unblockUI();
+        },
+
+        showBusy: function(message) {
+            $.blockUI({ css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            }, message: message, baseZ:10000 });
+        },
+
     },
     ready: function() {
         // GET request

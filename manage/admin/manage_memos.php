@@ -7,14 +7,14 @@ include_once "../includes/constants.inc";
 	Manage Memos 
 </div>
 
-<button type="button" onclick="showModal();" data-toggle="modal" class="btn btn-success pull-right" v-on="click: addMemo()">
-    Add Memo
-    <span class="glyphicon glyphicon-plus"></span>
-</button>
-
-<br /><br />
-
 <div id="memoManager">
+
+    <button type="button" class="btn btn-success pull-right" v-on="click: newMemo();">
+        Add Memo
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+
+    <br /><br />
 
     <div id="memos">
 
@@ -47,7 +47,7 @@ include_once "../includes/constants.inc";
                     {{ m.off_date }}
                 </td>
                 <td valign="top">
-                    <a onclick="showModal();" data-toggle="modal" title="" class="btn btn-primary btn-sm" data-original-title="Edit Memo" v-on="click: editMemo(m)">
+                    <a data-toggle="modal" title="" class="btn btn-primary btn-sm" data-original-title="Edit Memo" v-on="click: editMemo(m)">
                         Edit
                         <span class="glyphicon glyphicon-pencil"></span></a>
                     <button class="btn btn-danger btn-sm"  v-on="click: deleteMemo(m)">Delete</button>

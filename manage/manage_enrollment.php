@@ -8,6 +8,14 @@ require_once('includes/constants.inc');
 <link href="css/add_enrollment.css" rel="stylesheet" type="text/css"/>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
+<script language="javascript" type="text/javascript" src="../script/validation.js"></script>
+<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
+<script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="/manage/js/masks.js"></script>
+<script type="text/javascript" src="/manage/script/autocomplete.js"></script>
+<script type="text/javascript" src="/manage/script/autocomplete_local.js?v=<?= time() ?>"></script>
+<link rel="stylesheet" href="/manage/css/form.css" type="text/css" />
+
 <span class="admin_head">
 	Manage Enrollment
 </span>
@@ -15,6 +23,7 @@ require_once('includes/constants.inc');
 <br/>
 &nbsp;
 
+<div id="enrollmentManager">
 <div id="enrollmentManager">
 
     <div id="enrollments">
@@ -142,18 +151,18 @@ require_once('includes/constants.inc');
                 if ($r['eligible_test'] == "1") {
                     ?>
                     <div>
-                        <label style="color:#fff;">Test?</label> <input type="checkbox" value="1" name="test"/>
+                        <label class="form-label">Test?</label> <input type="checkbox" value="1" name="test"/>
                     </div>
                 <?php } ?>
 
                 <table style="width: 80%;">
                     <tr>
-                        <td style="color:#fff;">Enroll Type</td>
+                        <td class="form-label">Enroll Type</td>
                         <td>
                             <input type="hidden" name="user_id" id="user_id" value="<?php echo $_SESSION['docid'];?>">
                             <input type="hidden" name="selected_transaction_type" id="selected_transaction_type">
                             <select id="transaction_type" name="transaction_type" v-model="fields.transaction_type"
-                                    v-on="change: setEnrollmentType">
+                                    v-on="change: setEnrollmentType();">
                                 <?php if ($t_q) foreach ($t_q as $t) { ?>
                                     <option
                                         value="<?php echo $t['id']; ?>"><?php echo $t['transaction_type']; ?><?php echo $t['description']; ?></option>
@@ -161,12 +170,11 @@ require_once('includes/constants.inc');
                             </select></td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">Insurance Co</td>
+                        <td class="form-label"><span id="payer_id_required" style="display: none">*</span> Insurance Co</td>
                         <td><input type="hidden" name="payer_id" id="payer_id">
                             <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off"
                                    name="ins_payer_name" value="Type insurance payer name" style="width:300px;" />
                             <br/>
-
                             <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
                                 <ul id="ins_payer_list" class="search_list">
                                     <li class="template" style="display:none"></li>
@@ -175,11 +183,11 @@ require_once('includes/constants.inc');
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            NPI to Enroll
+                        <td class="form-label">
+                            <span id="npi_required" style="display: none">*</span> NPI to Enroll
                         </td>
                         <td>
-                            <select id="provider_select" name="provider_select">
+                            <select id="provider_select" name="provider_select" v-on="change: providerOnChangeHandler(this);">
                                 <?php if ($q) foreach ($q as $r) { ?>
                                     <?php
                                     $us_sql = "SELECT * FROM dental_user_signatures where user_id='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
@@ -211,8 +219,8 @@ require_once('includes/constants.inc');
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            Facility Name
+                        <td class="form-label">
+                            <span id="facility_name_required" style="display: none">*</span> Facility Name
                         </td>
                         <td>
                             <input type="text" id="facility_name" name="facility_name" value="<?php echo $r['practice']; ?>"
@@ -220,8 +228,8 @@ require_once('includes/constants.inc');
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            Provider Name
+                        <td class="form-label">
+                            <span id="provider_name_required" style="display: none">*</span> Provider Name
                         </td>
                         <td>
                             <input type="text" id="provider_name" name="provider_name"
@@ -229,8 +237,8 @@ require_once('includes/constants.inc');
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            Tax ID
+                        <td class="form-label">
+                            <span id="tax_id_required" style="display: none">*</span> Tax ID
                         </td>
                         <td>
                             <input type="text" id="tax_id" name="tax_id" value="<?php echo $r['tax_id_or_ssn']; ?>"
@@ -238,8 +246,8 @@ require_once('includes/constants.inc');
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            Address
+                        <td class="form-label">
+                            <span id="address_required" style="display: none">*</span> Address
                         </td>
                         <td>
                             <input type="text" id="address" name="address" value="<?php echo $r['address']; ?>"
@@ -247,16 +255,16 @@ require_once('includes/constants.inc');
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            City
+                        <td class="form-label">
+                            <span id="city_required" style="display: none">*</span> City
                         </td>
                         <td>
                             <input type="text" id="city" name="city" value="<?php echo $r['city']; ?>" readonly="readonly"/>
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            State
+                        <td class="form-label">
+                            <span id="state_required" style="display: none">*</span> State
                         </td>
                         <td>
                             <input type="text" id="state" name="state" value="<?php echo $r['state']; ?>"
@@ -264,24 +272,24 @@ require_once('includes/constants.inc');
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            Zip
+                        <td class="form-label">
+                            <span id="zip_required" style="display: none">*</span> Zip
                         </td>
                         <td>
                             <input type="text" id="zip" name="zip" value="<?php echo $r['zip']; ?>" readonly="readonly"/>
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            NPI
+                        <td class="form-label">
+                            <span id="npi_required" style="display: none">*</span> NPI
                         </td>
                         <td>
                             <input type="text" id="npi" name="npi" value="<?php echo $r['npi']; ?>" readonly="readonly"/>
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            PTAN (Medicare)
+                        <td class="form-label">
+                            <span id="ptan_required" style="display: none">*</span> PTAN (Medicare)
                         </td>
                         <td>
                             <input type="text" id="ptan" name="ptan" value="<?= $r['medicare_ptan']; ?>"
@@ -289,8 +297,8 @@ require_once('includes/constants.inc');
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            First Name
+                        <td class="form-label">
+                            <span id="first_name_required" style="display: none">*</span> First Name
                         </td>
                         <td>
                             <input type="text" id="first_name" name="first_name" value="<?php echo $r['first_name']; ?>"
@@ -298,8 +306,8 @@ require_once('includes/constants.inc');
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            Last Name
+                        <td class="form-label">
+                            <span id="last_name_required" style="display: none">*</span> Last Name
                         </td>
                         <td>
                             <input type="text" id="last_name" name="last_name" value="<?php echo $r['last_name']; ?>"
@@ -307,8 +315,8 @@ require_once('includes/constants.inc');
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            Contact Number
+                        <td class="form-label">
+                            <span id="contact_number_required" style="display: none">*</span> Contact Number
                         </td>
                         <td>
                             <input type="text" id="contact_number" name="contact_number" value="<?php echo $r['phone']; ?>"
@@ -316,8 +324,8 @@ require_once('includes/constants.inc');
                         </td>
                     </tr>
                     <tr>
-                        <td style="color:#fff;">
-                            Email
+                        <td class="form-label">
+                            <span id="email_required" style="display: none">*</span> Email
                         </td>
                         <td>
                             <input type="text" id="email" name="email" value="<?php echo $r['email']; ?>"

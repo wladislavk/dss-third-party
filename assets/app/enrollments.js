@@ -21,11 +21,11 @@ var enrollmentStatuses = {
 };
 
 var enrollmentLabels = [];
-enrollmentLabels[enrollmentStatuses.DSS_ENROLLMENT_SUBMITTED] = 'Submitted';
-enrollmentLabels[enrollmentStatuses.DSS_ENROLLMENT_ACCEPTED] = 'Accepted';
-enrollmentLabels[enrollmentStatuses.DSS_ENROLLMENT_REJECTED] = 'Rejected';
-enrollmentLabels[enrollmentStatuses.DSS_ENROLLMENT_PDF_RECEIVED] = 'PDF Received';
-enrollmentLabels[enrollmentStatuses.DSS_ENROLLMENT_PDF_SENT] = 'PDF Sent';
+    enrollmentLabels[enrollmentStatuses.DSS_ENROLLMENT_SUBMITTED] = 'Submitted';
+    enrollmentLabels[enrollmentStatuses.DSS_ENROLLMENT_ACCEPTED] = 'Accepted';
+    enrollmentLabels[enrollmentStatuses.DSS_ENROLLMENT_REJECTED] = 'Rejected';
+    enrollmentLabels[enrollmentStatuses.DSS_ENROLLMENT_PDF_RECEIVED] = 'PDF Received';
+    enrollmentLabels[enrollmentStatuses.DSS_ENROLLMENT_PDF_SENT] = 'PDF Sent';
 
 var enrollments = new Vue({
     el: '#enrollmentManager',
@@ -33,6 +33,7 @@ var enrollments = new Vue({
             fields: {
                 transaction_type:null
             },
+            payer_id: '',
             enrollments:[],
             apikey:[],
             selectedEnrollmentType:null,
@@ -40,6 +41,21 @@ var enrollments = new Vue({
     },
 
     ready: function() {
+
+        $('.addButton').colorbox({inline:true, width:"40%", closeButton: true, title:'<strong>Field with * are required: Note required fields change based on Insurance Co selection.</strong>',
+            onClosed:function(){ location.reload(); }
+        });
+
+        $('#payer_id').change(function() {
+            $("[id*=_required]").css('display', 'none');
+            var payer_id = $('#payer_id').val().split("-")[0];
+            $.get( enrollmentApiPath + 'requiredfields/' + payer_id, function( response ) {
+                $.each( response.data , function( key, value) {
+                    $('#' + value + '_required').toggle();
+                    console.log(value);
+                });
+            });
+        });
 
         this.fetchEnrollments();
         this.fetchApiKey();
@@ -128,20 +144,58 @@ var enrollments = new Vue({
 
             this.$http.post(enrollmentApiPath + 'create',postValues,function(data,status,request) {
                 this.fetchEnrollments();
-                alert('Enrollment successfully created.');
+                swal("Success", "Enrollment successfully created.!", "success");
                 $.colorbox.close();
             }).error(function (data, status, request) {
-                var message = data;
                 $.unblockUI();
-                this.$set('errors', message);
+                var message = JSON.stringify(data);
+                //this.$set('errors', message);
+                this.handleErrors(data);
             })
-
 
         },
 
         setEnrollmentType : function()
         {
+            var t = $('#transaction_type').val();
+            $('#ins_payer_name').val('');
+            if(t == '1'){
+                setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', '','','','','','coverage');
+            }else if(t == '2'){
+                setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/payment/status.json', 'ins_payer');
+            }else if(t == '4'){
+                setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/era.json', 'ins_payer', '','','','','','payment reports');
+            }else if(t == '5'){
+                setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', '', 'ins_payer');
+            }else if(t == '6'){
+                setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/dental.json', 'ins_payer');
+            }else if(t == '7'){
+                setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/institutional.json', 'ins_payer', '','','','','','professional claims');
+            }
+        },
 
+        providerOnChangeHandler : function(me)
+        {
+            var json = $("#provider_select").val();
+            var r = $.parseJSON(json);
+            if(r.signature=="0"){
+                alert("Error - No e-signature on file for "+r.provider_name+".  In order to submit electronic enrollments this user must add an e-signature on his/her ‘Profile’ page.");
+                $('#provider_select option:first-child').attr("selected", "selected");
+                exit;
+            }
+            $('#facility_name').val(r.facility_name);
+            $('#provider_name').val(r.provider_name);
+            $('#tax_id').val(r.tax_id);
+            $('#address').val(r.address);
+            $('#city').val(r.city);
+            $('#state').val(r.state);
+            $('#zip').val(r.zip);
+            $('#npi').val(r.npi);
+            $('#ptan').val(r.medicare_ptan);
+            $('#first_name').val(r.first_name);
+            $('#last_name').val(r.last_name);
+            $('#contact_number').val(r.contact_number);
+            $('#email').val(r.email);
         },
 
         enrollmentStatusLabel: function(status) {
@@ -175,14 +229,22 @@ var enrollments = new Vue({
             //loadPopup('upload_enrollment.php' + reference_id);
         },
 
+        handleErrors: function(response)
+        {
+            var errors = typeof response.errors != 'undefined' ? JSON.parse(response.errors) : response;
+            var errorString = '<ul>';
+            $.each( errors, function( key, value) {
+                errorString += '<li>' + value + '</li>';
+            });
+            errorString += '</ul>';
+            //$.colorbox({width:"25%",html:errorString});
+            swal({ title: "Error!",   text: errorString,   type: "error",   confirmButtonText: "Ok", html:true });
+        },
+
     },
 
 });
 
 $(document).ready(function() {
-
-    $('.addButton').colorbox({inline:true, width:"40%", closeButton: true,
-        onClosed:function(){ location.reload(); }
-    });
 
 });

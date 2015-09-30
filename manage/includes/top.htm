@@ -288,6 +288,9 @@ if (!isset($_SESSION['userid'])) {
         $premed = $myarray['premedcheck'];
         $medicare = ($myarray['p_m_ins_type'] == 1);
 
+        // text for the alert box next to *Med
+        $alertText = $myarray['patient_notes'];
+
         if ($premed) {
           $title .= "Pre-medication: " . $myarray['premed']."\n";
         }
@@ -709,6 +712,10 @@ if (!isset($_SESSION['userid'])) {
                <?php } ?>
 
                <?php echo  (!empty($thename) ? $thename : ''); ?>
+
+               <?php if (!empty($alertText)) { ?>
+                <a href="#" title="<?php echo 'Notes: ' . $alertText; ?>" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Alert</a>
+               <?php } ?>
 
                <?php
                   if (!empty($premed) && $premed == 1 || !empty($allergen) && $allergen == 1) {

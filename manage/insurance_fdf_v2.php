@@ -337,7 +337,14 @@
         $claim_codes =strtoupper($myarray['claim_codes']);
         $other_claim_id =strtoupper($myarray['other_claim_id']);
         $nucc_9c =strtoupper($myarray['nucc_9c']);
-        $icd_ind =strtoupper($myarray['icd_ind']);
+
+        /**
+         * @see CS-29
+         *
+         * ICD-10 can be stored either as "0" (paper) or as "10" (e-file)
+         */
+        $icd_ind = "$icd_ind" === '0' || "$icd_ind" === '10' ? '' : $icd_ind;
+
         $resubmission_code_fill =strtoupper($myarray['resubmission_code_fill']);
         $name_referring_provider_qualifier=strtoupper($myarray['name_referring_provider_qualifier']);
         $status =strtoupper($myarray['status']);

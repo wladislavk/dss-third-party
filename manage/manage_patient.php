@@ -68,13 +68,21 @@ if(isset($_REQUEST['sort'])) {
 
 $sql_sort .= $sql;
 $sql_count .= $sql;
-
+$starttime = microtime(TRUE);
 $total_rec = $db->getRow($sql_count)['total_rec'];
+$endtime = microtime(TRUE);
+echo $endtime-$starttime;
+echo " Main Count Query<br>";
 
 $no_pages = $total_rec/$rec_disp;
 
 $sql_sort .= " limit ". $i_val.",".$rec_disp;
+$starttime = microtime(TRUE);
 $my=$db->getResults($sql_sort);
+$endtime = microtime(TRUE);
+echo $endtime-$starttime;
+echo " Main Query<br>";
+
 $num_users=count($my);
 
 
@@ -300,7 +308,11 @@ $num_users=count($my);
                     WHERE dp.patientid = '$patientid'
                     LIMIT 1";
 
+                $starttime = microtime(TRUE);
                 $additionalData = $db->getRow($query);
+                $endtime = microtime(TRUE);
+                echo $endtime-$starttime;
+                echo " Query for Patient Id = $patientid<br>";
 
                 ?>
                 <tr class="<?php echo $tr_class;?> initial_list">

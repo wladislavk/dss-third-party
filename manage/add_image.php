@@ -230,18 +230,15 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                     $aspectRatioOfWidth  = $width / $height;
                     $aspectRatioOfHeight = $height / $width;
 
+                    $newWidth = 500;
+                    $newHeight = 500;
+
                     if ($aspectRatioOfWidth < 1) {
                         $newWidth = floor(500 * $aspectRatioOfWidth);
                         $x += 500 - $newWidth;
                     } else {
-                        $newWidth = 500;
-                    }
-
-                    if ($aspectRatioOfHeight < 1) {
                         $newHeight = floor(500 * $aspectRatioOfHeight);
                         $y += 500 - $newHeight;
-                    } else {
-                        $newHeight = 500;
                     }
 
                     // Resize

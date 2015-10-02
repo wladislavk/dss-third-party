@@ -32,8 +32,10 @@ $docId = intval($_SESSION['docid']);
 $sql = '';
 
 $sql_sort = "SELECT p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, p.p_m_dss_file,
-                    s.vob, s.ledger, s.patient_info FROM dental_patients p
-             LEFT JOIN dental_patient_summary s ON p.patientid = s.pid ";
+                    s.vob, s.ledger, s.patient_info, dq3.allergenscheck
+             FROM dental_patients p
+             LEFT JOIN dental_patient_summary s ON p.patientid = s.pid
+             LEFT JOIN dental_q_page3 dq3 ON dq3.patientid = p.patientid";
 
 $sql_count = "SELECT count(*) as total_rec FROM dental_patients p";
 
@@ -220,100 +222,6 @@ $num_users=count($my);
             {
                 $tr_class = $myarray['status'] == 1 ? "tr_active" : "tr_inactive";
 
-                // No need this query - merged this query to the main query
-                /*$summ_sql = "SELECT s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment, s.vob, s.ledger, s.patient_info
-					FROM dental_patient_summary s WHERE s.pid='".mysqli_real_escape_string($con, $myarray["patientid"])."' LIMIT 1";
-                $summ = $db->getRow($summ_sql);*/
-
-                $patientid = mysqli_real_escape_string($con, $myarray['patientid']);
-
-                $query = "SELECT
-                        dp.p_m_dss_file,
-                        dq3.allergenscheck,
-                        pg2_info1.date_completed,
-                        pg2_info1.segmentid,
-                        (
-                            SELECT date_scheduled
-                            FROM dental_flow_pg2_info
-                            WHERE appointment_type = 0 AND patientid = '$patientid'
-                            LIMIT 1
-                        ) AS date_scheduled,
-                        exp5.dentaldevice,
-                        exp5.dentaldevice_date,
-                        exp5.device,
-                        fpg.rxlomnrec,
-                        fpg.lomnrec,
-                        fpg.rxrec,
-                        (
-                            SELECT SUM(dl.amount) AS amount1
-                            FROM dental_ledger dl
-                            WHERE dl.docid = '$docId'
-                                AND (dl.paid_amount IS NULL || dl.paid_amount = 0)
-                                AND dl.patientid = '$patientid'
-                            LIMIT 1
-                        ) AS amount1,
-                        dl2.amount2,
-                        (
-                            SELECT SUM(dlp.amount) amount3
-                            FROM dental_ledger dl
-                                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                            WHERE dl.docid='$docId'
-                                AND dlp.amount IS NOT NULL
-                                AND dlp.amount != 0
-                                AND dl.patientid = '$patientid'
-                            LIMIT 1
-                        ) AS amount3,
-                        dl2.amount4,
-                        (
-                            SELECT COUNT(*) as numsleepstudy
-                            FROM dental_summ_sleeplab ss
-                                JOIN dental_patients p on ss.patiendid=p.patientid
-                            WHERE (
-                                    p.p_m_ins_type != '1'
-                                    OR (
-                                        (ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '')
-                                        AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != '')
-                                    )
-                                )
-                                AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '')
-                                AND (ss.filename!='' AND ss.filename IS NOT NULL)
-                                AND ss.patiendid = '$patientid'
-                        ) AS numsleepstudy
-                    FROM dental_patients dp
-                        LEFT JOIN dental_q_page3 dq3 ON dq3.patientid = dp.patientid
-                        LEFT JOIN (
-                            SELECT pg2_info.patientid, pg2_info.date_completed, pg2_info.segmentid
-                            FROM dental_flow_pg2_info pg2_info
-                            WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = '$patientid'
-                            ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC
-                            LIMIT 1
-                        ) pg2_info1 ON 1
-                        LEFT JOIN (
-                            SELECT exp5.dentaldevice, exp5.dentaldevice_date, dd.device
-                            FROM dental_ex_page5 exp5
-                                LEFT JOIN dental_device dd ON dd.deviceid=exp5.dentaldevice
-                            WHERE patientid = '$patientid'
-                            LIMIT 1
-                        ) exp5 ON 1
-                        LEFT JOIN dental_flow_pg1 fpg ON fpg.pid=dp.patientid
-                        LEFT JOIN (
-                            SELECT SUM(dl.amount) amount2, SUM(dl.paid_amount) amount4
-                            FROM dental_ledger dl
-                                LEFT JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
-                            WHERE dl.docid = '$docId'
-                                AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
-                                AND dl.patientid='$patientid'
-                            LIMIT 1
-                        ) dl2 ON 1
-                    WHERE dp.patientid = '$patientid'
-                    LIMIT 1";
-
-                $starttime = microtime(TRUE);
-                $additionalData = $db->getRow($query);
-                $endtime = microtime(TRUE);
-                echo $endtime-$starttime;
-                echo " Query for Patient Id = $patientid<br>";
-
                 ?>
                 <tr class="<?php echo $tr_class;?> initial_list">
                     <td valign="top">
@@ -324,7 +232,7 @@ $num_users=count($my);
 									' . (!empty($myarray["middlename"]) ? st($myarray["middlename"]) : "") . '</a>';
 
 
-                            $allergen = $additionalData['allergenscheck'];
+                            $allergen = $myarray['allergenscheck'];
 
                             if($myarray["premedcheck"] == 1 || $allergen == 1) {
                                 echo "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*Med</font>";
@@ -332,8 +240,99 @@ $num_users=count($my);
                             ?>
                     </td>
                     <?php
+
                     if( $myarray['patient_info'] == 1 )
                     {
+
+                        $patientid = mysqli_real_escape_string($con, $myarray['patientid']);
+
+                        $query = "SELECT
+                                    dp.p_m_dss_file,
+                                    dq3.allergenscheck,
+                                    pg2_info1.date_completed,
+                                    pg2_info1.segmentid,
+                                    (
+                                        SELECT date_scheduled
+                                        FROM dental_flow_pg2_info
+                                        WHERE appointment_type = 0 AND patientid = '$patientid'
+                                        LIMIT 1
+                                    ) AS date_scheduled,
+                                    exp5.dentaldevice,
+                                    exp5.dentaldevice_date,
+                                    exp5.device,
+                                    fpg.rxlomnrec,
+                                    fpg.lomnrec,
+                                    fpg.rxrec,
+                                    (
+                                        SELECT SUM(dl.amount) AS amount1
+                                        FROM dental_ledger dl
+                                        WHERE dl.docid = '$docId'
+                                            AND (dl.paid_amount IS NULL || dl.paid_amount = 0)
+                                            AND dl.patientid = '$patientid'
+                                        LIMIT 1
+                                    ) AS amount1,
+                                    dl2.amount2,
+                                    (
+                                        SELECT SUM(dlp.amount) amount3
+                                        FROM dental_ledger dl
+                                            LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                                        WHERE dl.docid='$docId'
+                                            AND dlp.amount IS NOT NULL
+                                            AND dlp.amount != 0
+                                            AND dl.patientid = '$patientid'
+                                        LIMIT 1
+                                    ) AS amount3,
+                                    dl2.amount4,
+                                    (
+                                        SELECT COUNT(*) as numsleepstudy
+                                        FROM dental_summ_sleeplab ss
+                                            JOIN dental_patients p on ss.patiendid=p.patientid
+                                        WHERE (
+                                                p.p_m_ins_type != '1'
+                                                OR (
+                                                    (ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '')
+                                                    AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != '')
+                                                )
+                                            )
+                                            AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '')
+                                            AND (ss.filename!='' AND ss.filename IS NOT NULL)
+                                            AND ss.patiendid = '$patientid'
+                                    ) AS numsleepstudy
+                                FROM dental_patients dp
+                                    LEFT JOIN dental_q_page3 dq3 ON dq3.patientid = dp.patientid
+                                    LEFT JOIN (
+                                        SELECT pg2_info.patientid, pg2_info.date_completed, pg2_info.segmentid
+                                        FROM dental_flow_pg2_info pg2_info
+                                        WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = '$patientid'
+                                        ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC
+                                        LIMIT 1
+                                    ) pg2_info1 ON 1
+                                    LEFT JOIN (
+                                        SELECT exp5.dentaldevice, exp5.dentaldevice_date, dd.device
+                                        FROM dental_ex_page5 exp5
+                                            LEFT JOIN dental_device dd ON dd.deviceid=exp5.dentaldevice
+                                        WHERE patientid = '$patientid'
+                                        LIMIT 1
+                                    ) exp5 ON 1
+                                    LEFT JOIN dental_flow_pg1 fpg ON fpg.pid=dp.patientid
+                                    LEFT JOIN (
+                                        SELECT SUM(dl.amount) amount2, SUM(dl.paid_amount) amount4
+                                        FROM dental_ledger dl
+                                            LEFT JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
+                                        WHERE dl.docid = '$docId'
+                                            AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
+                                            AND dl.patientid='$patientid'
+                                        LIMIT 1
+                                    ) dl2 ON 1
+                                WHERE dp.patientid = '$patientid'
+                                LIMIT 1";
+
+                        $starttime = microtime(TRUE);
+                        $additionalData = $db->getRow($query);
+                        $endtime = microtime(TRUE);
+                        echo $endtime-$starttime;
+                        echo " Query for Patient Id = $patientid<br>";
+
                         $last_completed = $additionalData['date_completed'];
                         $last_segmentid = $additionalData['segmentid'];
                         $next_scheduled = $additionalData['date_scheduled'];

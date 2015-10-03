@@ -271,7 +271,14 @@ $num_users=count($my);
                                             AND dl.patientid = '$patientid'
                                         LIMIT 1
                                     ) AS amount1,
-                                    dl2.amount2,
+                                    (
+                                        SELECT SUM(dl.amount) amount2
+                                        FROM dental_ledger dl
+                                        WHERE dl.docid = '$docId'
+                                            AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
+                                            AND dl.patientid='$patientid'
+                                        LIMIT 1
+                                    ) AS amount2,
                                     (
                                         SELECT SUM(dlp.amount) amount3
                                         FROM dental_ledger dl
@@ -282,7 +289,14 @@ $num_users=count($my);
                                             AND dl.patientid = '$patientid'
                                         LIMIT 1
                                     ) AS amount3,
-                                    dl2.amount4,
+                                    (
+                                        SELECT SUM(dl.paid_amount) amount4
+                                        FROM dental_ledger dl
+                                        WHERE dl.docid = '$docId'
+                                            AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
+                                            AND dl.patientid='$patientid'
+                                        LIMIT 1
+                                    ) as amount4,
                                     (
                                         SELECT COUNT(*) as numsleepstudy
                                         FROM dental_summ_sleeplab ss
@@ -315,15 +329,6 @@ $num_users=count($my);
                                         LIMIT 1
                                     ) exp5 ON 1
                                     LEFT JOIN dental_flow_pg1 fpg ON fpg.pid=dp.patientid
-                                    LEFT JOIN (
-                                        SELECT SUM(dl.amount) amount2, SUM(dl.paid_amount) amount4
-                                        FROM dental_ledger dl
-                                            LEFT JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
-                                        WHERE dl.docid = '$docId'
-                                            AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
-                                            AND dl.patientid='$patientid'
-                                        LIMIT 1
-                                    ) dl2 ON 1
                                 WHERE dp.patientid = '$patientid'
                                 LIMIT 1";
 
@@ -331,7 +336,7 @@ $num_users=count($my);
                         $additionalData = $db->getRow($query);
                         $endtime = microtime(TRUE);
                         echo $endtime-$starttime;
-                        echo " Query for Patient Id = $patientid<br>";
+                        echo " Patient Id = $patientid<br>";
 
                         $last_completed = $additionalData['date_completed'];
                         $last_segmentid = $additionalData['segmentid'];

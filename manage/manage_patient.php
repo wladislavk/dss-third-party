@@ -3,8 +3,11 @@ include('includes/top.htm');
 // include('includes/constants.inc');
 include('includes/formatters.php');
 
+$db->SHOW_TIMESTAMP = true;
+//$db->SHOW_QUERY = true;
 if(isset($_REQUEST["delid"])) {
     $del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."'";
+
     $db->query($del_sql);
 
     $msg= "Deleted Successfully";
@@ -70,20 +73,13 @@ if(isset($_REQUEST['sort'])) {
 
 $sql_sort .= $sql;
 $sql_count .= $sql;
-$starttime = microtime(TRUE);
+
 $total_rec = $db->getRow($sql_count)['total_rec'];
-$endtime = microtime(TRUE);
-echo $endtime-$starttime;
-echo " Main Count Query<br>";
 
 $no_pages = $total_rec/$rec_disp;
 
 $sql_sort .= " limit ". $i_val.",".$rec_disp;
-$starttime = microtime(TRUE);
 $my=$db->getResults($sql_sort);
-$endtime = microtime(TRUE);
-echo $endtime-$starttime;
-echo " Main Query<br>";
 
 $num_users=count($my);
 
@@ -332,11 +328,7 @@ $num_users=count($my);
                                 WHERE dp.patientid = '$patientid'
                                 LIMIT 1";
 
-                        $starttime = microtime(TRUE);
                         $additionalData = $db->getRow($query);
-                        $endtime = microtime(TRUE);
-                        echo $endtime-$starttime;
-                        echo " Patient Id = $patientid<br>";
 
                         $last_completed = $additionalData['date_completed'];
                         $last_segmentid = $additionalData['segmentid'];

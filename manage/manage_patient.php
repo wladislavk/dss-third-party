@@ -3,8 +3,8 @@ include('includes/top.htm');
 // include('includes/constants.inc');
 include('includes/formatters.php');
 
-//$db->SHOW_TIMESTAMP = true;
-//$db->SHOW_QUERY = true;
+$db->SHOW_TIMESTAMP = true;
+$db->SHOW_QUERY = true;
 if(isset($_REQUEST["delid"])) {
     $del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."'";
 

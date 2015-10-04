@@ -260,40 +260,6 @@ $num_users=count($my);
                                     fpg.lomnrec,
                                     fpg.rxrec,
                                     (
-                                        SELECT SUM(dl.amount) AS amount1
-                                        FROM dental_ledger dl
-                                        WHERE dl.docid = '$docId'
-                                            AND (dl.paid_amount IS NULL || dl.paid_amount = 0)
-                                            AND dl.patientid = '$patientid'
-                                        LIMIT 1
-                                    ) AS amount1,
-                                    (
-                                        SELECT SUM(dl.amount) amount2
-                                        FROM dental_ledger dl
-                                        WHERE dl.docid = '$docId'
-                                            AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
-                                            AND dl.patientid='$patientid'
-                                        LIMIT 1
-                                    ) AS amount2,
-                                    (
-                                        SELECT SUM(dlp.amount) amount3
-                                        FROM dental_ledger dl
-                                            LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                                        WHERE dl.docid='$docId'
-                                            AND dlp.amount IS NOT NULL
-                                            AND dlp.amount != 0
-                                            AND dl.patientid = '$patientid'
-                                        LIMIT 1
-                                    ) AS amount3,
-                                    (
-                                        SELECT SUM(dl.paid_amount) amount4
-                                        FROM dental_ledger dl
-                                        WHERE dl.docid = '$docId'
-                                            AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
-                                            AND dl.patientid='$patientid'
-                                        LIMIT 1
-                                    ) as amount4,
-                                    (
                                         SELECT COUNT(*) as numsleepstudy
                                         FROM dental_summ_sleeplab ss
                                             JOIN dental_patients p on ss.patiendid=p.patientid
@@ -412,12 +378,41 @@ $num_users=count($my);
                         </td>
                         <td valign="top">
                             <?php
-                            $total = $additionalData['amount1'] + $additionalData['amount2'] - $additionalData['amount3'] - $additionalData['amount4'];
+
+                            $query = "SELECT SUM(dl.amount) AS amount1
+                                        FROM dental_ledger dl
+                                        WHERE dl.docid = '$docId'
+                                            AND (dl.paid_amount IS NULL || dl.paid_amount = 0)
+                                            AND dl.patientid = '$patientid'";
+                            $amount1 = $db->getRow($query)['amount1'];
+
+                            $query = "SELECT SUM(dl.amount) amount2
+                                        FROM dental_ledger dl
+                                        WHERE dl.docid = '$docId'
+                                            AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
+                                            AND dl.patientid='$patientid'";
+                            $amount2 = $db->getRow($query)['amount2'];
+
+                            $query = "SELECT SUM(dlp.amount) amount3
+                                        FROM dental_ledger dl
+                                            LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                                        WHERE dl.docid='$docId'
+                                            AND dlp.amount IS NOT NULL
+                                            AND dlp.amount != 0
+                                            AND dl.patientid = '$patientid'";
+                            $amount3 = $db->getRow($query)['amount3'];
+
+                            $query = "SELECT SUM(dl.paid_amount) amount4
+                                        FROM dental_ledger dl
+                                        WHERE dl.docid = '$docId'
+                                            AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
+                                            AND dl.patientid='$patientid'";
+                            $amount4 = $db->getRow($query)['amount4'];
+
+
+                            $total = $amount1 + $amount2 - $amount3 - $amount4;
                             ?>
                             <a href="manage_ledger.php?pid=<?php echo $myarray["patientid"];?>"><?php echo ($myarray['ledger'] == null ? 'N/A' : format_ledger(number_format($total,0))); ?></a>
-                            <?php
-                            echo isset($total1) ? $total1 : '';
-                            ?>
                         </td>
                         <?php
                     }else{

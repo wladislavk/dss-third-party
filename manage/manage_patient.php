@@ -3,7 +3,7 @@ include('includes/top.htm');
 // include('includes/constants.inc');
 include('includes/formatters.php');
 
-$db->SHOW_TIMESTAMP = true;
+//$db->SHOW_TIMESTAMP = true;
 //$db->SHOW_QUERY = true;
 if(isset($_REQUEST["delid"])) {
     $del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."'";
@@ -35,10 +35,12 @@ $docId = intval($_SESSION['docid']);
 $sql = '';
 
 $sql_sort = "SELECT p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, p.p_m_dss_file,
-                    s.vob, s.ledger, s.patient_info, dq3.allergenscheck
+                    s.vob, s.ledger, s.patient_info, dq3.allergenscheck,
+                    fpg.rxlomnrec, fpg.lomnrec, fpg.rxrec
              FROM dental_patients p
              LEFT JOIN dental_patient_summary s ON p.patientid = s.pid
-             LEFT JOIN dental_q_page3 dq3 ON dq3.patientid = p.patientid";
+             LEFT JOIN dental_q_page3 dq3 ON dq3.patientid = p.patientid
+             LEFT JOIN dental_flow_pg1 fpg ON fpg.pid = p.patientid";
 
 $sql_count = "SELECT count(*) as total_rec FROM dental_patients p";
 
@@ -239,28 +241,9 @@ $num_users=count($my);
 
                     if( $myarray['patient_info'] == 1 )
                     {
-
                         $patientid = mysqli_real_escape_string($con, $myarray['patientid']);
 
-                        $query = "SELECT
-                                    dp.p_m_dss_file,
-                                    dq3.allergenscheck,
-                                    pg2_info1.date_completed,
-                                    pg2_info1.segmentid,
-                                    (
-                                        SELECT date_scheduled
-                                        FROM dental_flow_pg2_info
-                                        WHERE appointment_type = 0 AND patientid = '$patientid'
-                                        LIMIT 1
-                                    ) AS date_scheduled,
-                                    exp5.dentaldevice,
-                                    exp5.dentaldevice_date,
-                                    exp5.device,
-                                    fpg.rxlomnrec,
-                                    fpg.lomnrec,
-                                    fpg.rxrec,
-                                    (
-                                        SELECT COUNT(*) as numsleepstudy
+                        $query = "SELECT COUNT(*) as numsleepstudy
                                         FROM dental_summ_sleeplab ss
                                             JOIN dental_patients p on ss.patiendid=p.patientid
                                         WHERE (
@@ -272,50 +255,47 @@ $num_users=count($my);
                                             )
                                             AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '')
                                             AND (ss.filename!='' AND ss.filename IS NOT NULL)
-                                            AND ss.patiendid = '$patientid'
-                                    ) AS numsleepstudy
-                                FROM dental_patients dp
-                                    LEFT JOIN dental_q_page3 dq3 ON dq3.patientid = dp.patientid
-                                    LEFT JOIN (
-                                        SELECT pg2_info.patientid, pg2_info.date_completed, pg2_info.segmentid
+                                            AND ss.patiendid = '$patientid'";
+
+                        $numsleepstudy = $db->getRow($query)['numsleepstudy'];
+
+                        $query = "SELECT date_scheduled
+                                        FROM dental_flow_pg2_info
+                                        WHERE appointment_type = 0 AND patientid = '$patientid'
+                                        LIMIT 1";
+                        $next_scheduled = $db->getRow($query)['date_scheduled'];
+
+
+                        $query = "SELECT pg2_info.date_completed, pg2_info.segmentid
                                         FROM dental_flow_pg2_info pg2_info
                                         WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = '$patientid'
                                         ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC
-                                        LIMIT 1
-                                    ) pg2_info1 ON 1
-                                    LEFT JOIN (
-                                        SELECT exp5.dentaldevice, exp5.dentaldevice_date, dd.device
+                                        LIMIT 1";
+                        $flow_pg2 = $db->getRow($query);
+                        $last_completed = $flow_pg2['date_completed'];
+                        $last_segmentid = $flow_pg2['segmentid'];
+
+                        $query = "SELECT exp5.dentaldevice_date, dd.device
                                         FROM dental_ex_page5 exp5
                                             LEFT JOIN dental_device dd ON dd.deviceid=exp5.dentaldevice
                                         WHERE patientid = '$patientid'
-                                        LIMIT 1
-                                    ) exp5 ON 1
-                                    LEFT JOIN dental_flow_pg1 fpg ON fpg.pid=dp.patientid
-                                WHERE dp.patientid = '$patientid'
-                                LIMIT 1";
-
-                        $additionalData = $db->getRow($query);
-
-                        $last_completed = $additionalData['date_completed'];
-                        $last_segmentid = $additionalData['segmentid'];
-                        $next_scheduled = $additionalData['date_scheduled'];
-                        $delivery_date = $additionalData['dentaldevice_date'];
-                        $device = $additionalData['device'];
+                                        LIMIT 1";
+                        $dental_page5 = $db->getRow($query);
+                        $delivery_date = $dental_page5['dentaldevice_date'];
+                        $device = $dental_page5['device'];
 
                         ?>
 
                         <td valign="top">
                             <?php
 
-                            if($additionalData['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
+                            if($myarray['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
                                 $ins_error = false;
-                            }elseif($additionalData['p_m_dss_file']!=1){
+                            }elseif($myarray['p_m_dss_file']!=1){
                                 $ins_error = true;
                             }else{
                                 $ins_error = false;
                             }
-
-                            $numsleepstudy = $additionalData['numsleepstudy'];
 
                             if($numsleepstudy == 0){
                                 $study_error = true;
@@ -364,11 +344,11 @@ $num_users=count($my);
                         <td valign="top">
                             <a href="manage_insurance.php?pid=<?php echo $myarray["patientid"];?>">
                                 <?php
-                                if( $additionalData['rxlomnrec'] != null  || ( $additionalData['lomnrec'] != null && $additionalData['rxrec'] != null) ) {
+                                if( $myarray['rxlomnrec'] != null  || ( $myarray['lomnrec'] != null && $myarray['rxrec'] != null) ) {
                                     echo 'Yes';
-                                } elseif( $additionalData['rxrec']!=null && $additionalData['lomnrec'] == null ) {
+                                } elseif( $myarray['rxrec']!=null && $myarray['lomnrec'] == null ) {
                                     echo 'Yes/No';
-                                } elseif( $additionalData['lomnrec'] != null && $additionalData['rxrec'] == null ) {
+                                } elseif( $myarray['lomnrec'] != null && $myarray['rxrec'] == null ) {
                                     echo 'No/Yes';
                                 } else {
                                     echo 'No';

@@ -386,12 +386,14 @@ $num_users=count($my);
                                             AND dl.patientid = '$patientid'";
                             $amount1 = $db->getRow($query)['amount1'];
 
-                            $query = "SELECT SUM(dl.amount) amount2
+                            $query = "SELECT SUM(dl.amount) amount2, SUM(dl.paid_amount) amount4
                                         FROM dental_ledger dl
                                         WHERE dl.docid = '$docId'
                                             AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
                                             AND dl.patientid='$patientid'";
-                            $amount2 = $db->getRow($query)['amount2'];
+                            $amounts = $db->getRow($query);
+                            $amount2 = $amounts['amount2'];
+                            $amount4 = $amounts['amount4'];
 
                             $query = "SELECT SUM(dlp.amount) amount3
                                         FROM dental_ledger dl
@@ -402,12 +404,12 @@ $num_users=count($my);
                                             AND dl.patientid = '$patientid'";
                             $amount3 = $db->getRow($query)['amount3'];
 
-                            $query = "SELECT SUM(dl.paid_amount) amount4
+                            /*$query = "SELECT
                                         FROM dental_ledger dl
                                         WHERE dl.docid = '$docId'
                                             AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
                                             AND dl.patientid='$patientid'";
-                            $amount4 = $db->getRow($query)['amount4'];
+                            $amount4 = $db->getRow($query)['amount4'];*/
 
 
                             $total = $amount1 + $amount2 - $amount3 - $amount4;

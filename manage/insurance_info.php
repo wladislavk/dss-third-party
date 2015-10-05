@@ -390,7 +390,7 @@ if ($is_pending) {
 <div style="display:block; float:left; width:48%;">
   <h3>Secondary</h3>
 <?php 
-if($myarray['has_s_m_ins']!='Yes'){?>
+if($pat_myarray['has_s_m_ins']!='Yes'){?>
   None
 <?php 
 }else{ ?>

@@ -56,41 +56,81 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
+
 if(is_super($_SESSION['admin_access'])){
-$sql = "select u.*, c.id as company_id, c.name as company_name, p.name as plan_name from dental_users u
-	LEFT JOIN dental_user_company uc ON uc.userid = u.userid
-        LEFT JOIN companies c ON c.id=uc.companyid
-	LEFT JOIN dental_plans p ON p.id=u.plan_id
-		 where u.user_access=2 ";
-if(isset($_GET['cid'])){
-  $sql .= " AND c.id='".mysqli_real_escape_string($con,$_GET['cid'])."' ";
-}
-	 $sql .= " order by u.last_name, u.first_name";
+    $sql = "select u.*, c.id as company_id, c.name as company_name, p.name as plan_name
+        from dental_users u
+            LEFT JOIN dental_user_company uc ON uc.userid = u.userid
+            LEFT JOIN companies c ON c.id=uc.companyid
+            LEFT JOIN dental_plans p ON p.id=u.plan_id
+        where u.user_access=2 ";
+    if (isset($_GET['cid'])) {
+        $sql .= " AND c.id='".mysqli_real_escape_string($con,$_GET['cid'])."' ";
+    }
 }elseif(is_admin($_SESSION['admin_access'])){
-  $sql = "SELECT u.*, c.id as company_id, c.name AS company_name, p.name as plan_name FROM dental_users u 
-		INNER JOIN dental_user_company uc ON uc.userid = u.userid
-		INNER JOIN companies c ON c.id=uc.companyid
-		LEFT JOIN dental_plans p ON p.id=u.plan_id
-		WHERE u.user_access=2 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'
-		ORDER BY u.last_name, u.first_name";
+    $companyId = $db->escape($_SESSION['admincompanyid']);
+    $sql = "SELECT u.*, c.id as company_id, c.name AS company_name, p.name as plan_name
+        FROM dental_users u
+            INNER JOIN dental_user_company uc ON uc.userid = u.userid
+            INNER JOIN companies c ON c.id=uc.companyid
+            LEFT JOIN dental_plans p ON p.id=u.plan_id
+        WHERE u.user_access=2 AND uc.companyid='$companyId'";
 }elseif(is_billing($_SESSION['admin_access'])){
   $a_sql = "SELECT ac.companyid FROM admin_company ac
 			JOIN admin a ON a.adminid = ac.adminid
 			WHERE a.adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
   $a_q = mysqli_query($con,$a_sql);
   $admin = mysqli_fetch_assoc($a_q);
-  $sql = "SELECT u.*, c.id as company_id, c.name AS company_name, p.name as plan_name FROM dental_users u 
-                INNER JOIN dental_user_company uc ON uc.userid = u.userid
-                INNER JOIN companies c ON c.id=uc.companyid
-        	LEFT JOIN dental_plans p ON p.id=u.plan_id
-                WHERE u.user_access=2 AND u.billing_company_id='".mysqli_real_escape_string($con,$admin['companyid'])."'
-                ORDER BY u.last_name, u.first_name";
+    $companyId = $db->escape($admin['companyid']);
+    $sql = "SELECT u.*, c.id as company_id, c.name AS company_name, p.name as plan_name
+        FROM dental_users u
+            INNER JOIN dental_user_company uc ON uc.userid = u.userid
+            INNER JOIN companies c ON c.id=uc.companyid
+            LEFT JOIN dental_plans p ON p.id=u.plan_id
+        WHERE u.user_access=2 AND u.billing_company_id='$companyId'";
 }
+
+$search = !empty($_GET['search']) ? $_GET['search'] : '';
+$hasSearch = false;
+
+if ($search) {
+    $searchString = $search;
+    $searchTerms = [];
+    $quotedTerms = [];
+    $singleTerms = [];
+
+    if (preg_match_all('/"(?P<quoted>.*?)"/', $searchString, $matches)) {
+        $quotedTerms = $matches['quoted'];
+        $searchString = preg_replace('/".*?"/', '', $searchString);
+    }
+
+    $singleTerms = preg_split('/[\s\r\t\n]+/', $searchString);
+
+    $searchTerms = array_merge($quotedTerms, $singleTerms);
+    $searchTerms = array_unique($searchTerms);
+    $searchTerms = array_filter($searchTerms, function($term){
+        return strlen($term);
+    });
+
+    if ($searchTerms) {
+        $hasSearch = true;
+
+        array_walk($searchTerms, function(&$term)use($db){
+            $term = $db->escape($term);
+            $term = "u.username LIKE '%$term%' OR u.first_name LIKE '%$term%' OR u.last_name LIKE '%$term%'";
+        });
+
+        $sql .= ' AND (' . join(' OR ', $searchTerms) . ') ';
+    }
+}
+
 $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-//$sql .= " limit ".$i_val.",".$rec_disp;
+$sql .= " order by u.last_name, u.first_name";
+$sql .= " limit ".$i_val.",".$rec_disp;
+
 $my=mysqli_query($con,$sql);
 $num_users=mysqli_num_rows($my);
 ?>
@@ -104,18 +144,24 @@ $num_users=mysqli_num_rows($my);
 <br />
 <br />
 
-<?php
-  if(isset($_GET['cid'])){
-?>
+<?php if ($hasSearch) { ?>
+    <h3>Results for search <code><?= htmlspecialchars($search) ?></code></h3>
+<?php } ?>
+
+<form class="form-group" name="user-search" action="?" method="get">
+    <input class="form-control input-xlarge input-inline" name="search" value="<?= htmlspecialchars($search) ?>"
+       placeholder="Multiple first names, last names or usernames" />
+    <button class="btn btn-primary" type="submit">Search</button>
+</form>
+
+<?php if (isset($_GET['cid']) || $hasSearch) { ?>
 <div style="float:left; margin-left:20px;">
         <a href="manage_users.php" class="btn btn-success">
                 View All 
         </a>
         &nbsp;&nbsp;
 </div>
-<?php
-  }
-?>
+<?php } ?>
 
 <?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 <!--<div align="right">
@@ -145,7 +191,7 @@ $num_users=mysqli_num_rows($my);
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val, $search ? 'search=' . rawurlencode($search) : '');
 			?>
 		</TD>        
 	</TR>

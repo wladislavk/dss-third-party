@@ -4,7 +4,7 @@ include('includes/top.htm');
 include('includes/formatters.php');
 
 $db->SHOW_TIMESTAMP = true;
-$db->SHOW_QUERY = true;
+//$db->SHOW_QUERY = true;
 if(isset($_REQUEST["delid"])) {
     $del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."'";
 
@@ -34,13 +34,8 @@ $docId = intval($_SESSION['docid']);
 
 $sql = '';
 
-$sql_sort = "SELECT p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, p.p_m_dss_file,
-                    s.vob, s.ledger, s.patient_info, dq3.allergenscheck,
-                    fpg.rxlomnrec, fpg.lomnrec, fpg.rxrec
-             FROM dental_patients p
-             LEFT JOIN dental_patient_summary s ON p.patientid = s.pid
-             LEFT JOIN dental_q_page3 dq3 ON dq3.patientid = p.patientid
-             LEFT JOIN dental_flow_pg1 fpg ON fpg.pid = p.patientid";
+$sql_sort = "SELECT p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, p.p_m_dss_file
+             FROM dental_patients p";
 
 $sql_count = "SELECT count(*) as total_rec FROM dental_patients p";
 
@@ -219,7 +214,7 @@ $num_users=count($my);
             foreach ($my as $myarray)
             {
                 $tr_class = $myarray['status'] == 1 ? "tr_active" : "tr_inactive";
-
+                $patientid = mysqli_real_escape_string($con, $myarray['patientid']);
                 ?>
                 <tr class="<?php echo $tr_class;?> initial_list">
                     <td valign="top">
@@ -229,8 +224,12 @@ $num_users=count($my);
 									' . st($myarray["firstname"]) . '&nbsp;
 									' . (!empty($myarray["middlename"]) ? st($myarray["middlename"]) : "") . '</a>';
 
-
-                            $allergen = $myarray['allergenscheck'];
+                            $query = "SELECT allergenscheck
+                                     FROM dental_q_page3
+                                     WHERE patientid = '$patientid'
+                                     LIMIT 1";
+                            $allergencheck = $db->getRow($query);
+                            $allergen = $allergencheck['allergenscheck'];
 
                             if($myarray["premedcheck"] == 1 || $allergen == 1) {
                                 echo "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*Med</font>";
@@ -239,10 +238,14 @@ $num_users=count($my);
                     </td>
                     <?php
 
-                    if( $myarray['patient_info'] == 1 )
-                    {
-                        $patientid = mysqli_real_escape_string($con, $myarray['patientid']);
+                    $query = "SELECT s.vob, s.ledger, s.patient_info
+                                  FROM dental_patient_summary s
+                                  WHERE s.pid = '$patientid'
+                                  LIMIT 1";
+                    $patient_summary = $db->getRow($query);
 
+                    if( $patient_summary['patient_info'] == 1 )
+                    {
                         $query = "SELECT COUNT(*) as numsleepstudy
                                         FROM dental_summ_sleeplab ss
                                             JOIN dental_patients p on ss.patiendid=p.patientid
@@ -257,7 +260,14 @@ $num_users=count($my);
                                             AND (ss.filename!='' AND ss.filename IS NOT NULL)
                                             AND ss.patiendid = '$patientid'";
 
-                        $numsleepstudy = $db->getRow($query)['numsleepstudy'];
+                        $numsleepstudy = $db->getRow($query);
+
+
+                        $query = "SELECT fpg.rxlomnrec, fpg.lomnrec, fpg.rxrec
+                                     FROM dental_flow_pg1 fpg
+                                     WHERE fpg.pid = '$patientid'
+                                     LIMIT 1";
+                        $fpg = $db->getRow($query);
 
                         $query = "SELECT date_scheduled
                                         FROM dental_flow_pg2_info
@@ -297,9 +307,9 @@ $num_users=count($my);
                                 $ins_error = false;
                             }
 
-                            if($numsleepstudy == 0){
+                            if( $numsleepstudy['numsleepstudy'] == 0 ) {
                                 $study_error = true;
-                            }else{
+                            } else {
                                 $study_error = false;
                             }
                             ?>
@@ -339,16 +349,16 @@ $num_users=count($my);
                             <a href="manage_flowsheet3.php?pid=<?php echo $myarray["patientid"];?>"><?php echo format_date($delivery_date, true); ?></a>
                         </td>
                         <td valign="top">
-                            <a href="manage_insurance.php?pid=<?php echo $myarray["patientid"];?>"><?php echo ($myarray['vob'] == null ? 'No' : ($myarray['vob']==1 ? "Yes": $dss_preauth_status_labels[$myarray['vob']])); ?></a>
+                            <a href="manage_insurance.php?pid=<?php echo $myarray["patientid"];?>"><?php echo ($patient_summary['vob'] == null ? 'No' : ($patient_summary['vob']==1 ? "Yes": $dss_preauth_status_labels[$patient_summary['vob']])); ?></a>
                         </td>
                         <td valign="top">
                             <a href="manage_insurance.php?pid=<?php echo $myarray["patientid"];?>">
                                 <?php
-                                if( $myarray['rxlomnrec'] != null  || ( $myarray['lomnrec'] != null && $myarray['rxrec'] != null) ) {
+                                if( $fpg['rxlomnrec'] != null  || ( $fpg['lomnrec'] != null && $fpg['rxrec'] != null) ) {
                                     echo 'Yes';
-                                } elseif( $myarray['rxrec']!=null && $myarray['lomnrec'] == null ) {
+                                } elseif( $fpg['rxrec']!=null && $fpg['lomnrec'] == null ) {
                                     echo 'Yes/No';
-                                } elseif( $myarray['lomnrec'] != null && $myarray['rxrec'] == null ) {
+                                } elseif( $fpg['lomnrec'] != null && $fpg['rxrec'] == null ) {
                                     echo 'No/Yes';
                                 } else {
                                     echo 'No';
@@ -394,7 +404,7 @@ $num_users=count($my);
 
                             $total = $amount1 + $amount2 - $amount3 - $amount4;
                             ?>
-                            <a href="manage_ledger.php?pid=<?php echo $myarray["patientid"];?>"><?php echo ($myarray['ledger'] == null ? 'N/A' : format_ledger(number_format($total,0))); ?></a>
+                            <a href="manage_ledger.php?pid=<?php echo $myarray["patientid"];?>"><?php echo ($patient_summary['ledger'] == null ? 'N/A' : format_ledger(number_format($total,0))); ?></a>
                         </td>
                         <?php
                     }else{

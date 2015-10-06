@@ -224,10 +224,25 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                     }
 
                     list($width, $height) = getimagesize($_FILES["image_file_".$i]["tmp_name"]);
-                    $x = (($i-1)%3)*500;
-                    $y = floor(($i-1)/3)*500;
+                    $x = (($i - 1) % 3) * 500;
+                    $y = floor(($i - 1) / 3) * 500;
+
+                    $aspectRatioOfWidth  = $width / $height;
+                    $aspectRatioOfHeight = $height / $width;
+
+                    $newWidth = 500;
+                    $newHeight = 500;
+
+                    if ($aspectRatioOfWidth < 1) {
+                        $newWidth = floor(500 * $aspectRatioOfWidth);
+                        $x += 500 - $newWidth;
+                    } else {
+                        $newHeight = floor(500 * $aspectRatioOfHeight);
+                        $y += 500 - $newHeight;
+                    }
+
                     // Resize
-                    imagecopyresized($thumb, $source, $x, $y, 0, 0, 500, 500, $width, $height);
+                    imagecopyresized($thumb, $source, $x, $y, 0, 0, $newWidth, $newHeight, $width, $height);
                 }
 
                 // Output

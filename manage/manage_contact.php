@@ -281,7 +281,6 @@ $sortDir = $sortDir === 'ASC' ? 'ASC' : 'DESC';
 							    $ref_q = $db->getResults($ref_sql);
 							    $num_ref = count($ref_q);
 							?>
-                            <?= $contactId ?>
 							<?php echo ($num_ref) ? '<a href="#" onclick="$(\'#ref_pat_' . $myarray['contactid'] . '\').toggle();return false;">' . $num_ref . '</a>':''; ?>
 						</td>
 

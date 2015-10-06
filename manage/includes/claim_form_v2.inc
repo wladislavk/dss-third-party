@@ -2783,11 +2783,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						</span>
                         ICD IND.
                         <select name="icd_ind">
-                            <?php if (!$icdEnforcement) { ?>
-                                <option value="9" <?= $icd_ind == 9 ? 'selected="selected"' : '' ?>>
-                                    ICD-9-CM - 9
-                                </option>
-                            <?php } ?>
+                            <option value="9" <?= $icd_ind == 9 ? 'selected="selected"' : '' ?>>
+                                ICD-9-CM - 9
+                            </option>
                             <option value="0" <?= $icdEnforcement || "$icd_ind" === '0' ? 'selected="selected"' : '' ?>>
                                 ICD-10-CM - 0
                             </option>

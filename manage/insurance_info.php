@@ -243,6 +243,11 @@ if($userinfo['tax_id_or_ssn'] != ''){
 $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
 $inscoinfo = $db->getRow($inscoquery);
 
+if ($pat_myarray['has_s_m_ins'] == 'Yes') {
+    $sec_inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";
+    $sec_inscoinfo = $db->getRow($sec_inscoquery);
+}
+
 $sql = "SELECT " . "  ledger.*, ";
 if($is_pending){
   $sql .= "trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_2 as modcode2, trxn_code.days_units as daysorunits, ";
@@ -395,10 +400,10 @@ if($pat_myarray['has_s_m_ins']!='Yes'){?>
 <?php 
 }else{ ?>
   <ul>
-    <li><label>Insurance Co.:</label><span class="value"><?php echo $inscoinfo['company']; ?></span></li>
-    <li><label>Insurance Addr:</label><span class="value"><?php echo $inscoinfo['add1']." ".$inscoinfo['add2']." ".$inscoinfo['city']." ".$inscoinfo['state']." ".$inscoinfo['zip']; ?></span></li>
-    <li><label>Insurance Phone: </label> <span class="value"><?php echo $inscoinfo['phone1']; ?></span></li>
-    <li><label>Insurance Fax: </label> <span class="value"><?php echo $inscoinfo['fax']; ?></span></li>
+    <li><label>Insurance Co.:</label><span class="value"><?php echo $sec_inscoinfo['company']; ?></span></li>
+    <li><label>Insurance Addr:</label><span class="value"><?php echo $sec_inscoinfo['add1']." ".$sec_inscoinfo['add2']." ".$sec_inscoinfo['city']." ".$sec_inscoinfo['state']." ".$sec_inscoinfo['zip']; ?></span></li>
+    <li><label>Insurance Phone: </label> <span class="value"><?php echo $sec_inscoinfo['phone1']; ?></span></li>
+    <li><label>Insurance Fax: </label> <span class="value"><?php echo $sec_inscoinfo['fax']; ?></span></li>
   </ul>
 
   <ul>

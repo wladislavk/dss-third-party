@@ -1,0 +1,1 @@
+ALTER TABLE dental_patients ADD INDEX `basic_details` (`patientid`, `firstname`, `lastname`);

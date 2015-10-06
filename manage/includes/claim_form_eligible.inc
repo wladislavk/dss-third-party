@@ -115,7 +115,11 @@ if (!function_exists('s_for')) {
       $other_insured_middle = st($myarray['insured_middle']);
       $other_insured_dob = st($pat_myarray['ins_dob']);
       $other_insured_sex = st($pat_myarray['s_m_gender']);
-      $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+
+      if (empty($other_insured_insurance_plan)) {
+        $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+      }
+      
       $other_insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
       $other_insured_address = st($myarray['insured_address']);
       $other_insured_city = st($myarray['insured_city']);
@@ -156,7 +160,11 @@ if (!function_exists('s_for')) {
       $other_insured_middle = st($myarray['other_insured_middle']);
       $other_insured_dob = st($myarray['other_insured_dob']);
       $other_insured_sex = st($myarray['other_insured_sex']);
-      $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+
+      if (empty($other_insured_insurance_plan)) {
+        $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+      }
+
       $other_insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
       $other_insured_address = st($myarray['other_insured_address']);
       $other_insured_city = st($myarray['other_insured_city']);
@@ -218,7 +226,15 @@ if (!function_exists('s_for')) {
     $diagnosis_2 = st($myarray['diagnosis_2']);
     $diagnosis_3 = st($myarray['diagnosis_3']);
     $diagnosis_4 = st($myarray['diagnosis_4']);
-    $icd_ind = st($myarray['icd_ind']);
+
+      /**
+       * @see CS-29
+       *
+       * ICD-10 can be stored as "0" (paper) or "10" (e-file)
+       * Since 2015-10-01, ICD-10 must be enforced
+       */
+    $icd_ind = st($myarray['idc_ind']);
+
     $diagnosis_a = st($myarray['diagnosis_a']);
     $diagnosis_b = st($myarray['diagnosis_b']);
     $diagnosis_c = st($myarray['diagnosis_c']);
@@ -727,7 +743,10 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     $('input[name="subscriber[id]"]').val("<?php echo  $insured_id_number;?>");
     $('input[name="claim[note]"]').val("<?php echo (!empty($reserved_local_use1) ? $reserved_local_use1 : '');?>");
     $('input[name="claim[date]"]').val("<?php echo (!empty($date_current) ?  dateFormat($date_current) : '');?>");
-    $('input[name="claim[icd_indicator]"]').val("<?php echo $icd_ind;?>");
+
+    <?php /* @see CS-29, ICD-10 must be enforced since 2015-10-01 */ ?>
+    // $('input[name="claim[icd_indicator]"]').val("<?php echo $icd_ind;?>");
+
     $('input[name="claim[outside_lab_charges]"]').val("<?php echo (!empty($s_charges) ? $s_charges : '');?>");
 
     $('input[name="dependent[last_name]"]').val("<?php echo  $patient_lastname;?>");
@@ -1032,8 +1051,24 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
       // Display ledger trxns
   ?>
   <?php
-      $li = 0; 
-      if ($query) foreach ($query as $array) { 
+
+      /**
+       * @see CS-29
+       *
+       * ICD-10 can be stored as "0" (paper) or "10" (e-file)
+       * Since 2015-10-01, ICD-10 must be enforced
+       */
+      $li = 0;
+      $oldestServiceDate = null;
+
+      if ($query) foreach ($query as $array) {
+        if (is_null($oldestServiceDate)) {
+          $oldestServiceDate = dateToTime($array['service_date']);
+        } else {
+          $currentServiceDate = dateToTime($array['service_date']);
+          $oldestServiceDate = $oldestServiceDate < $currentServiceDate ? $oldestServiceDate : $currentServiceDate;
+        }
+
         $pos = ($array['placeofservice']!='')?$array['placeofservice']:$array['place'];
         $dp = ($array['diagnosispointer']!='')?$array['diagnosispointer']:1;
   ?>
@@ -1056,8 +1091,26 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
         $li++;
       }
 
- if ($rendering_provider_first_name_1 != ""){
-  ?>
+    /**
+     * @see CS-29
+     *
+     * ICD-10 can be stored as "0" (paper) or "10" (e-file)
+     * Since 2015-10-01, ICD-10 must be enforced
+     */
+    if (is_null($oldestServiceDate)) {
+        $icdEnforcement = true;
+    } else {
+        $icdEnforcement = $oldestServiceDate >= dateToTime('2015-10-01');
+    }
+
+    if ($icdEnforcement) {
+        $icd_ind = '10';
+    } else {
+        $icd_ind = "$icd_ind" === '0' || "$icd_ind" === "10" ? '10' : $icd_ind;
+    } ?>
+      $('input[name="claim[icd_indicator]"]').val("<?= $icd_ind ?>");
+
+  <?php if ($rendering_provider_first_name_1 != "") { ?>
       <?php if ($rendering_provider_entity_1){ ?>
       $('input[name="claim[service_lines][0][rendering_provider][entity]"][value="true"]').trigger('click');
       <?php } else { ?>

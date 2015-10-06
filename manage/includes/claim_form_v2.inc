@@ -192,20 +192,7 @@ trigger_error("Die called", E_USER_ERROR);
 	$patient_firstname = $_POST['patient_firstname'];
 	$patient_middle = $_POST['patient_middle'];
   //we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
-	$patient_dob_raw = $_POST['patient_dob'];
-    $patient_dob_raw_pos = strpos($patient_dob_raw, '-');
-    if ($patient_dob_raw_pos != false) {
-      $patient_dob_pieces = explode('-', $patient_dob_raw);
-    } else {
-      $patient_dob_pieces = explode('/', $patient_dob_raw);
-    }
-      $month = $patient_dob_pieces[0];
-      $day = $patient_dob_pieces[1];
-      $year = $patient_dob_pieces[2];
-      $patient_dob_pieces[0] = $year;
-      $patient_dob_pieces[1] = $month;
-      $patient_dob_pieces[2] = $day;
-      $patient_dob = implode("/", $patient_dob_pieces);
+	$patient_dob = dateFormat($_POST['patient_dob'], false);
 	$patient_sex = $_POST['patient_sex'];
 	$patient_address = $_POST['patient_address'];
 	$patient_city = $_POST['patient_city'];
@@ -237,22 +224,9 @@ trigger_error("Die called", E_USER_ERROR);
 	$insured_policy_group_feca = $_POST['insured_policy_group_feca'];
 	$other_insured_policy_group_feca = $_POST['other_insured_policy_group_feca'];
 	//we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
-  $insured_dob_raw = $_POST['insured_dob'];
-  $insured_dob_raw_pos = strpos($insured_dob_raw, '-');
-  if ($insured_dob_raw_pos != false) {
-    $insured_dob_pieces = explode('-', $insured_dob_raw);
-  } else {
-    $insured_dob_pieces = explode('/', $insured_dob_raw);
-  }
-  $month = $insured_dob_pieces[0];
-  $day = $insured_dob_pieces[1];
-  $year = $insured_dob_pieces[2];
-  $insured_dob_pieces[0] = $year;
-  $insured_dob_pieces[1] = $month;
-  $insured_dob_pieces[2] = $day;
-  $insured_dob = implode("/", $insured_dob_pieces);
+   $insured_dob = dateFormat($_POST['insured_dob'], false);
 	$insured_sex = $_POST['insured_sex'];
-	$other_insured_dob = (!empty($_POST['other_insured_dob']) ? $_POST['other_insured_dob'] : '');
+	$other_insured_dob = dateFormat($_POST['other_insured_dob'], false);
 	$other_insured_sex = (!empty($_POST['other_insured_sex']) ? $_POST['other_insured_sex'] : '');
 	$insured_employer_school_name = (!empty($_POST['insured_employer_school_name']) ? $_POST['insured_employer_school_name'] : '');
 	$other_insured_employer_school_name = (!empty($_POST['other_insured_employer_school_name']) ? $_POST['other_insured_employer_school_name'] : '');
@@ -281,7 +255,15 @@ trigger_error("Die called", E_USER_ERROR);
 	$diagnosis_2 = (!empty($_POST['diagnosis_2']) ? $_POST['diagnosis_2'] : '');
 	$diagnosis_3 = (!empty($_POST['diagnosis_3']) ? $_POST['diagnosis_3'] : '');
 	$diagnosis_4 = (!empty($_POST['diagnosis_4']) ? $_POST['diagnosis_4'] : '');
-	$icd_ind = $_POST['icd_ind'];
+
+    /**
+     * @see CS-29
+     *
+     * ICD-10 code: "0" for paper forms, "10" for e-file
+     * Since 2015-10-01, ICD-10 must be enforced
+     */
+    $icd_ind = $_POST['icd_ind'];
+
 	$diagnosis_a = $_POST['diagnosis_a'];
 	$diagnosis_b = $_POST['diagnosis_b'];
 	$diagnosis_c = $_POST['diagnosis_c'];
@@ -403,21 +385,7 @@ trigger_error("Die called", E_USER_ERROR);
 	$amount_paid = $_POST['amount_paid'];
 	$balance_due = (!empty($_POST['balance_due']) ? $_POST['balance_due'] : '');
 	$signature_physician = $_POST['signature_physician'];
-	// $physician_signed_date = (($_POST['physician_signed_date']!=date('Y-m-d'))?$_POST['physician_signed_date']:'');
-
-    if ($_POST['physician_signed_date'] != date('Y-m-d')) {
-        $dateFromPost = str_replace('/', '-', $_POST['physician_signed_date']);
-        if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromPost)) {
-            $physician_signed_date = $physician_signed_date->format('Y-m-d');
-        } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromPost)) {
-            $physician_signed_date = $physician_signed_date->format('Y-m-d');
-        } else {
-            $physician_signed_date = date('Y-m-d');
-        }
-    } else {
-        $physician_signed_date = '';
-    }
-
+	$physician_signed_date = dateFormat($_POST['physician_signed_date'], false);
 	$service_facility_info_name = $_POST['service_facility_info_name'];
 	$service_facility_info_address = $_POST['service_facility_info_address'];
 	$service_facility_info_city = $_POST['service_facility_info_city'];
@@ -1111,7 +1079,11 @@ if(!empty($_GET['instype']) && $_GET['instype']==2){
   $other_insured_middle = st($myarray['insured_middle']);
   $other_insured_dob = st($myarray['insured_dob']);
   $other_insured_sex = st($myarray['insured_sex']);
-  $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+
+  if (empty($other_insured_insurance_plan)) {
+    $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+  }
+
   $other_insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
   $other_insured_id_number = st($myarray['insured_id_number']);
   $insured_id_number = st($myarray['other_insured_id_number']);
@@ -1138,7 +1110,11 @@ if(!empty($_GET['instype']) && $_GET['instype']==2){
   $other_insured_middle = st($myarray['other_insured_middle']);
   $other_insured_dob = st($myarray['other_insured_dob']);
   $other_insured_sex = st($myarray['other_insured_sex']);
-  $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+
+  if (empty($other_insured_insurance_plan)) {
+    $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+  }
+
   $other_insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
   $insured_id_number = st($myarray['insured_id_number']);
   $other_insured_id_number = st($myarray['other_insured_id_number']);
@@ -1197,7 +1173,15 @@ $diagnosis_1 = st($myarray['diagnosis_1']);
 $diagnosis_2 = st($myarray['diagnosis_2']);
 $diagnosis_3 = st($myarray['diagnosis_3']);
 $diagnosis_4 = st($myarray['diagnosis_4']);
+
+/**
+ * @see CS-29
+ *
+ * ICD-10 can be stored as "0" (paper) or "10" (e-file)
+ * Since 2015-10-01, ICD ind MUST be ICD-10
+ */
 $icd_ind = st($myarray['icd_ind']);
+
 $diagnosis_a = st($myarray['diagnosis_a']);
 $diagnosis_b = st($myarray['diagnosis_b']);
 $diagnosis_c = st($myarray['diagnosis_c']);
@@ -1327,21 +1311,7 @@ $other_claim_id = st($myarray['other_claim_id']);
 $nucc_9c = st($myarray['nucc_9c']);
 $nucc_30 = st($myarray['nucc_30']);
 $signature_physician = st($myarray['signature_physician']);
-// $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('Y-m-d'));
-
-if (!empty($myarray['physician_signed_date'])) {
-    $dateFromDatabase = str_replace('/', '-', $myarray['physician_signed_date']);
-    if ($physician_signed_date = date_create_from_format('m-d-y', $dateFromDatabase)) {
-        $physician_signed_date = $physician_signed_date->format('Y-m-d');
-    } elseif ($physician_signed_date = date_create_from_format('m-d-Y', $dateFromDatabase)) {
-        $physician_signed_date = $physician_signed_date->format('Y-m-d');
-    } else {
-        $physician_signed_date = date('Y-m-d');
-    }
-} else {
-    $physician_signed_date = date('Y-m-d');
-}
-
+$physician_signed_date = dateFormat($myarray['physician_signed_date']);
 $service_facility_info_name = st($myarray['service_facility_info_name']);
 $service_facility_info_address = st($myarray['service_facility_info_address']);
 $service_facility_info_city = st($myarray['service_facility_info_city']);
@@ -1396,8 +1366,8 @@ if($is_pri_pending){
 	}
 	$patient_signature = 1;
 	$signature_physician = "Signature on File";
-	$patient_signed_date = date('Y-m-d', strtotime($pat_myarray['adddate']));
-        $physician_signed_date = date('Y-m-d');
+	$patient_signed_date = dateFormat($pat_myarray['adddate']);
+    $physician_signed_date = date('Y-m-d');
     list($patient_phone_code, $patient_phone) = parsePhoneNumber($pat_myarray['home_phone']);
     list($insured_phone_code, $insured_phone) = parsePhoneNumber($pat_myarray['home_phone']);
 	$patient_status = $pat_myarray['marital_status'];
@@ -1407,7 +1377,7 @@ if($is_pri_pending){
 	$insured_city = (!empty($myarray['insured_city']) ? $myarray['insured_city'] : '');
 	$insured_state = (!empty($myarray['insured_state']) ? $myarray['insured_state'] : '');
 	$insured_zip = (!empty($myarray['insured_zip']) ? $myarray['insured_zip'] : '');
-	$insured_dob = $pat_myarray['ins_dob'];	
+	$insured_dob = dateFormat($pat_myarray['ins_dob'], false);
 	$patient_relation_insured = $pat_myarray['p_m_relation'];
 	$insured_employer_school_name = $pat_myarray['employer'];
 	if($pat_myarray['p_m_ins_type']==1){
@@ -1475,13 +1445,240 @@ if (empty($prior_authorization_number)) {
     }
 }
 
+$patient_dob = dateFormat($patient_dob, false);
+$insured_dob = dateFormat($insured_dob, false);
+$other_insured_dob = dateFormat($other_insured_dob, false);
+$date_current = dateFormat($date_current, false);
+$date_same_illness = dateFormat($date_same_illness, false);
+$unable_date_from = dateFormat($unable_date_from, false);
+$unable_date_to = dateFormat($unable_date_to, false);
+$hospitalization_date_from = dateFormat($hospitalization_date_from, false);
+$hospitalization_date_to = dateFormat($hospitalization_date_to, false);
+$patient_signed_date = dateFormat($patient_signed_date, false);
+$physician_signed_date = dateFormat($physician_signed_date, false);
+
+list($patient_phone_code, $patient_phone) = parsePhoneNumber($patient_phone_code, $patient_phone);
+list($insured_phone_code, $insured_phone) = parsePhoneNumber($insured_phone_code, $insured_phone);
+list($billing_provider_phone_code, $billing_provider_phone) = parsePhoneNumber(
+    $billing_provider_phone_code, $billing_provider_phone
+);
+
 /**
- * 0 - Treatment, 9 - Diagnosis
- * Therefore, unset values must be Diagnosis
+ * @see CS-29
  *
- * Use strict comparison to differentiate unset values from zero
+ * Service dates calculations rely on ledger transactions
  */
-$isDiagnosis = !isset($icd_ind) || ($icd_ind !== 0 && $icd_ind !== '0');
+$sql = "SELECT * FROM dental_place_service ps WHERE status=1";
+$placeServices = $db->getResults($sql);
+
+// Get modifier codes
+$mod_sql = "SELECT * FROM dental_modifier_code";
+$mod_my = $db->getResults($mod_sql);
+$mod_array = array();
+
+if ($mod_my) {
+    foreach ($mod_my as $mod_row) {
+        $mod_array[] = $mod_row;
+    }
+}
+
+// Load pending medical trxns if new claim form. Otherwise, load associated trxns.
+$sql = "";
+
+if ($is_new_claim) {
+    $sql = "SELECT "
+        . "  ledger.*, trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_1 as modcode2, trxn_code.days_units as daysorunits, ";
+
+    if ($insurancetype == '1') {
+        $sql .= " user.medicare_npi ";
+    } else {
+        $sql .= " user.npi ";
+    }
+
+    $sql .= " as 'provider_id', ps.place_service as 'place' "
+        . "FROM "
+        . "  dental_ledger ledger "
+        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+        . "  JOIN dental_users user ON user.userid = ledger.docid "
+        . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
+        . "WHERE "
+        . "  ledger.status = " . DSS_TRXN_PENDING . " "
+        . "  AND ledger.patientid = '" . $_GET['pid'] . "'"
+        . "  AND ledger.docid = '" . $docid . "'"
+        . "  AND trxn_code.docid = '" . $docid . "'"
+        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
+        . "ORDER BY "
+        . "  ledger.service_date ASC";
+} else {
+    $sql = "SELECT "
+        . "  ledger.*, ";
+
+    if ($is_pending || $is_rejected) {
+        $sql .= "trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_2 as modcode2, trxn_code.days_units as daysorunits, ";
+    }
+
+    if ($insurancetype == '1') {
+        $sql .= " user.medicare_npi ";
+    } else {
+        $sql .= " user.npi ";
+    }
+
+    $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS place_description "
+        . "FROM "
+        . "  dental_ledger ledger "
+        . "  JOIN dental_users user ON user.userid = ledger.docid "
+        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+        . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
+        . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
+        . "WHERE "
+        . "  (ledger.primary_claim_id = '" . $insuranceid . "'"
+        . "  OR ledger.secondary_claim_id = '" . $insuranceid . "')"
+        . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "'"
+        . "  AND ledger.docid = '" . $docid . "'"
+        . "  AND trxn_code.docid = '" . $docid . "'"
+        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
+        . "ORDER BY "
+        . "  ledger.service_date ASC";
+}
+
+$transactions = $db->getResults($sql);
+
+$realTotalAmount = 0;
+$oldestServiceDate = null;
+
+foreach ($transactions as $array) {
+    $realTotalAmount += $array['amount'];
+
+    if (is_null($oldestServiceDate)) {
+        $oldestServiceDate = dateToTime($array['service_date']);
+    } else {
+        $currentServiceDate = dateToTime($array['service_date']);
+        $oldestServiceDate = $oldestServiceDate < $currentServiceDate ? $oldestServiceDate : $currentServiceDate;
+    }
+}
+
+/**
+ * @see CS-29
+ *
+ * ICD indicator default relies on service dates
+ */
+$total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
+$amount_paid = (empty($amount_paid)) ? 0.00 : number_format($amount_paid, 2);
+$balance_due = (empty($balance_due)) ? 0.00 : number_format($balance_due,2);
+
+// We only calculate the dollar amounts when a new claim is created because
+// right now we aren't appending any trxns to an existing claim.
+if ($is_pending) {
+    // get total_charge
+    if ($is_pri_pending) {
+        $sql = "SELECT "
+            . "  SUM(ledger.amount) as 'total_charge' "
+            . "FROM "
+            . "  dental_ledger ledger "
+            . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+            . "WHERE "
+            . "  ledger.status = '" . DSS_TRXN_PENDING . "' "
+            . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
+            . "  AND ledger.docid = '" . $docid . "' "
+            . "  AND trxn_code.docid = '" . $docid . "' "
+            . "  AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "' "
+            . "ORDER BY "
+            . "  ledger.service_date ASC";
+        $charge_my = $db->getRow($sql);
+
+        if (!empty($charge_my)) {
+            $charge_row = $charge_my;
+            $total_charge = $charge_row['total_charge'];
+        }
+    }
+
+    if ($is_sec_pending) {
+        $sql = "SELECT "
+            . "  SUM(ledger.amount) as 'total_charge' "
+            . "FROM "
+            . "  dental_ledger ledger "
+            . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+            . "WHERE "
+            . "  ledger.primary_claim_id = '" . $orig_claim_id . "' "
+            . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
+            . "  AND ledger.docid = '" . $docid . "' "
+            . "  AND trxn_code.docid = '" . $docid . "' "
+            . "  AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "' "
+            . "ORDER BY "
+            . "  ledger.service_date ASC";
+        $charge_my = $db->getRow($sql);
+
+        if (!empty($charge_my)) {
+            $charge_row = $charge_my;
+            $total_charge = $charge_row['total_charge'];
+        }
+    }
+
+    // get amount paid
+    $sql = "SELECT "
+        . "  SUM(ledger.paid_amount) as 'amount_paid' "
+        . "FROM "
+        . "  dental_ledger ledger "
+        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+        . "WHERE "
+        . "  ledger.status = '" . DSS_TRXN_PENDING . "' "
+        . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
+        . "  AND ledger.docid = '" . $docid . "' "
+        . "  AND trxn_code.docid = '" . $docid . "' "
+        . "  AND trxn_code.type IN ('" . DSS_TRXN_TYPE_PATIENT . "','" . DSS_TRXN_TYPE_INS . "','" . DSS_TRXN_TYPE_ADJ . "') "
+        . "ORDER BY "
+        . "  ledger.service_date ASC";
+
+    if ($status == DSS_CLAIM_SEC_PENDING) {
+        $sql = "SELECT
+                sum(dlp.amount) as amount_paid
+        from dental_ledger dl
+                LEFT JOIN dental_users p ON dl.producerid=p.userid
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."'
+                        AND primary_claim_id='".$orig_claim_id."'
+                        AND dlp.amount != 0
+                        AND dlp.payer = 0";
+    }
+
+    $paid_my = $db->getRow($sql);
+
+    if (!empty($paid_my)) {
+        $paid_row = $paid_my;
+        $amount_paid = $paid_row['amount_paid'];
+    }
+
+    // re-calculate balance due
+    $balance_due = $total_charge - $amount_paid;
+
+    // Override value from faulty sql queries
+    if ($is_pending) {
+        $total_charge = $realTotalAmount;
+    }
+
+    // format calculations
+    $total_charge = number_format($total_charge, 2, '.','');
+    $amount_paid = number_format($amount_paid, 2, '.','');
+    $balance_due = number_format($balance_due, 2, '.','');
+}
+
+/**
+ * @see CS-29
+ *
+ * ICD-10 can be stored as "0" (paper) or "10" (e-file)
+ * Since 2015-10-01, ICD-10 must be enforced
+ */
+if (is_null($oldestServiceDate)) {
+    $icdEnforcement = true;
+} else {
+    $icdEnforcement = $oldestServiceDate >= dateToTime('2015-10-01');
+}
+
+if ($icdEnforcement) {
+    $icd_ind = 0;
+} else {
+    $icd_ind = "$icd_ind" === '0' || "$icd_ind" === "10" ? '0' : $icd_ind;
+}
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -1949,8 +2146,6 @@ Medicare
 									Patient's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if($patient_dob!=''){$patient_dob = date('Y-m-d', strtotime($patient_dob));
-                  } ?>
                                     <input id="dob" name="patient_dob" type="text" class="field text addr tbox calendar"
                                          value="<?php echo $patient_dob?>"
                                          style="width:100px;" maxlength="255"
@@ -2201,8 +2396,6 @@ Medicare
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if(!empty($insured_dob)){$insured_dob = date('Y-m-d', strtotime($insured_dob));
-                  }?>
                                     <input id="insured_dob" name="insured_dob" type="text" class="field text addr tbox calendar"
                                         value="<?php echo  $insured_dob; ?>" style="width:100px;" maxlength="255"
                                         onChange="validateDate('insured_dob');"
@@ -2590,10 +2783,10 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						</span>
                         ICD IND.
                         <select name="icd_ind">
-                            <option value="9" <?= $isDiagnosis ? 'selected="selected"' : '' ?>>
+                            <option value="9" <?= $icd_ind == 9 ? 'selected="selected"' : '' ?>>
                                 ICD-9-CM - 9
                             </option>
-                            <option value="0" <?= !$isDiagnosis ? 'selected="selected"' : '' ?>>
+                            <option value="0" <?= $icdEnforcement || "$icd_ind" === '0' ? 'selected="selected"' : '' ?>>
                                 ICD-10-CM - 0
                             </option>
                         </select>
@@ -2805,82 +2998,21 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						</table>
 <!-- START LEDGER TRXNS -->
 <?php
-// Get modifier codes
-$mod_sql = "SELECT * FROM dental_modifier_code";
-$mod_my = $db->getResults($mod_sql);
-$mod_array = array();
-if ($mod_my) foreach ($mod_my as $mod_row) {
-  $mod_array[] = $mod_row;
-}
 
-// Load pending medical trxns if new claim form. Otherwise, load associated trxns.
-$sql = "";
-if ($is_new_claim) {
-  $sql = "SELECT "
-       . "  ledger.*, trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_1 as modcode2, trxn_code.days_units as daysorunits, ";
-if($insurancetype == '1'){
-        $sql .= " user.medicare_npi ";
-}else{
-        $sql .= " user.npi ";
-}
-  $sql .= " as 'provider_id', ps.place_service as 'place' "
-       . "FROM "
-       . "  dental_ledger ledger "
-       . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-       . "  JOIN dental_users user ON user.userid = ledger.docid "
-       . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
-       . "WHERE "
-       . "  ledger.status = " . DSS_TRXN_PENDING . " "
-       . "  AND ledger.patientid = '" . $_GET['pid'] . "'"
-       . "  AND ledger.docid = '" . $docid . "'"
-       . "  AND trxn_code.docid = '" . $docid . "'"
-       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
-       . "ORDER BY "
-       . "  ledger.service_date ASC";
-} else {
-  $sql = "SELECT "
-       . "  ledger.*, ";
-if($is_pending || $is_rejected){
-  $sql .= "trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_2 as modcode2, trxn_code.days_units as daysorunits, ";
-}
-if($insurancetype == '1'){
-	$sql .= " user.medicare_npi ";
-}else{
-	$sql .= " user.npi ";
-}
-  $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS place_description "
-       . "FROM "
-       . "  dental_ledger ledger "
-       . "  JOIN dental_users user ON user.userid = ledger.docid "
-       . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-       . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
-       . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
-       . "WHERE "
-       . "  (ledger.primary_claim_id = '" . $insuranceid . "'"
-       . "  OR ledger.secondary_claim_id = '" . $insuranceid . "')"
-       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "'"
-       . "  AND ledger.docid = '" . $docid . "'"
-       . "  AND trxn_code.docid = '" . $docid . "'"
-       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
-       . "ORDER BY "
-       . "  ledger.service_date ASC";
-}
-$query = $db->getResults($sql);
 // Display ledger trxns
-if (empty($query)) {
+if (empty($transactions)) {
   print "<br /><center><font style='color:#ff0000; font-weight:bold;'>There was a database error when selecting ledger transactions.</font><br/><br/>" . mysqli_errno($con) . ": " . mysqli_error($con) . "</center><br />";
-} else if (count($query) == 0) {
+} else if (count($transactions) == 0) {
   print "<br /><center><font style='color:#ff0000; font-weight:bold;'>There are currently no ledger entries to be submitted.</font></center><br />";
 } else {
 ?>
-  <?php $li = 0; $realTotalAmount = 0; ?>
-  <input type="hidden" name="ledgercount" value="<?php echo count($query); ?>">
-  <?php foreach ($query as $array) {
-        $realTotalAmount += $array['amount']; ?>
+  <?php $li = 0; ?>
+  <input type="hidden" name="ledgercount" value="<?php echo count($transactions); ?>">
+  <?php foreach ($transactions as $array) { ?>
     <table style="margin-left:39px;">
       <tr>
-        <td width="106"><?php echo date('Y-m-d', strtotime($array['service_date'])); ?></td>
-        <td width="106"><?php echo date('Y-m-d', strtotime($array['service_date'])); ?></td>
+        <td width="106"><?= dateFormat($array['service_date']); ?></td>
+        <td width="106"><?= dateFormat($array['service_date']); ?></td>
         <td width="91">
 <?php echo  (!empty($pos) ? $pos : ''); ?>
 		<select style="width:76px" name="placeofservice<?php echo $li;?>">
@@ -2889,9 +3021,7 @@ if (empty($query)) {
 				$pos = ($array['placeofservice']!='')?$array['placeofservice']:$array['place'];
   				$dp = ($array['diagnosispointer']!='')?$array['diagnosispointer']:1; 
 
-				$sql = "SELECT * FROM dental_place_service ps WHERE status=1";
-				$q = $db->getResults($sql);
-				if (!empty($q)) foreach ($q as $psr){
+				if (!empty($placeServices)) foreach ($placeServices as $psr){
 				?><option value="<?php echo  $psr['place_service']; ?>" <?php echo  ($pos==$psr['place_service'])?'selected="selected"':''; ?>><?php echo  $psr['place_service']." ".$psr['description']; ?></option>
 			<?php
 				}
@@ -3040,105 +3170,6 @@ if (empty($query)) {
 						</table>
 					</td>
 					<td valign="top" colspan="2">
-					
-<?php
-$total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
-$amount_paid = (empty($amount_paid)) ? 0.00 : number_format($amount_paid, 2);
-$balance_due = (empty($balance_due)) ? 0.00 : number_format($balance_due,2);
-
-// We only calculate the dollar amounts when a new claim is created because
-// right now we aren't appending any trxns to an existing claim.
-if ($is_pending) {
-
-  // get total_charge
-  if($is_pri_pending){
-    $sql = "SELECT "
-       . "  SUM(ledger.amount) as 'total_charge' "
-       . "FROM "
-       . "  dental_ledger ledger "
-       . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-       . "WHERE "
-       . "  ledger.status = '" . DSS_TRXN_PENDING . "' "
-       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
-       . "  AND ledger.docid = '" . $docid . "' "
-       . "  AND trxn_code.docid = '" . $docid . "' "
-       . "  AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "' "
-       . "ORDER BY "
-       . "  ledger.service_date ASC";
-    $charge_my = $db->getRow($sql);
-    if (!empty($charge_my)) {
-      $charge_row = $charge_my;
-      $total_charge = $charge_row['total_charge'];
-    }
-  }
-  if($is_sec_pending){
-    $sql = "SELECT "
-       . "  SUM(ledger.amount) as 'total_charge' "
-       . "FROM "
-       . "  dental_ledger ledger "
-       . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-       . "WHERE "
-       . "  ledger.primary_claim_id = '" . $orig_claim_id . "' "
-       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
-       . "  AND ledger.docid = '" . $docid . "' "
-       . "  AND trxn_code.docid = '" . $docid . "' "
-       . "  AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "' "
-       . "ORDER BY "
-       . "  ledger.service_date ASC";
-    $charge_my = $db->getRow($sql);
-    if (!empty($charge_my)) {
-      $charge_row = $charge_my;
-      $total_charge = $charge_row['total_charge'];
-    }
-  }
-
-  // get amount paid
-  $sql = "SELECT "
-       . "  SUM(ledger.paid_amount) as 'amount_paid' "
-       . "FROM "
-       . "  dental_ledger ledger "
-       . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-       . "WHERE "
-       . "  ledger.status = '" . DSS_TRXN_PENDING . "' "
-       . "  AND ledger.patientid = '" . mysqli_real_escape_string($con, $_GET['pid']) . "' "
-       . "  AND ledger.docid = '" . $docid . "' "
-       . "  AND trxn_code.docid = '" . $docid . "' "
-       . "  AND trxn_code.type IN ('" . DSS_TRXN_TYPE_PATIENT . "','" . DSS_TRXN_TYPE_INS . "','" . DSS_TRXN_TYPE_ADJ . "') "
-       . "ORDER BY "
-       . "  ledger.service_date ASC";
-  if($status == DSS_CLAIM_SEC_PENDING){
-    $sql = "SELECT
-                sum(dlp.amount) as amount_paid
-        from dental_ledger dl 
-                LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."' 
-                        AND primary_claim_id='".$orig_claim_id."'
-                        AND dlp.amount != 0
-			AND dlp.payer = 0
-	";
-  }
-  $paid_my = $db->getRow($sql);
-  if (!empty($paid_my)) {
-    $paid_row = $paid_my;
-    $amount_paid = $paid_row['amount_paid'];
-  }
- 
-  // re-calculate balance due
-  $balance_due = $total_charge - $amount_paid;
-
-  // Override value from faulty sql queries
-  if ($is_pending) {
-      $total_charge = $realTotalAmount;
-  }
-
-  // format calculations
-  $total_charge = number_format($total_charge, 2, '.','');
-  $amount_paid = number_format($amount_paid, 2, '.','');
-  $balance_due = number_format($balance_due, 2, '.','');
-
-}
-?>
 
 <!-- START DOLLAR BOXES 28,29,30 -->
 <table width="100%" cellpadding="1" cellspacing="1" border="0" bgcolor="#000000">

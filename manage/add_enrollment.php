@@ -20,13 +20,13 @@
     <script type="text/javascript" src="/manage/script/autocomplete_local.js?v=<?= time() ?>"></script>
     <link rel="stylesheet" href="/manage/css/form.css" type="text/css" />
     <link href="/manage/css/search-hints.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="script/wufoo.js"></script>
+
     <style type="text/css">
         div { clear:both; }
     </style>
   </head>
 
-  <body>
+  <body id="enrollmentManager">
     <br />
     <?php
     if(isset($_POST["enroll_but"])) {
@@ -135,7 +135,7 @@
 
   <link href="css/add_enrollment.css" rel="stylesheet" type="text/css" />
 
-  <form name="contactfrm" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+  <form name="contactfrm">
     <?php
       $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE status=1 ORDER BY transaction_type ASC";
       
@@ -151,7 +151,7 @@
 	  <?php } ?>
     <div style="clear:both;">
     	<label style="color:#fff;">Enroll Type</label>
-      <select id="transaction_type" name="transaction_type" onchange="update_list()">
+      <select id="transaction_type" name="transaction_type" v-model="selectedEnrollmentType" v-on="change: setEnrollmentType" >
           <?php if ($t_q) foreach ($t_q as $t) { ?>
               <option value="<?php echo  $t['id']; ?>"><?php echo  $t['transaction_type']; ?> <?php echo  $t['description']; ?></option>
           <?php } ?>
@@ -274,7 +274,8 @@
       <label>Email</label>
     	<input type="text" id="email" name="email" value="<?php echo  $r['email']; ?>" readonly="readonly" />
     </div>
-    <input type="submit" value=" Enroll " name="enroll_but" class="button" />
+      <button class="button" name="enroll_but" class="button" v-on="click: createEnrollment">Enroll</button>
   </form>
-</body>
+
+  </body>
 </html>

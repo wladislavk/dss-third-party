@@ -8,3 +8,10 @@ label {
   display: block;
   float: left;
 }
+
+.form-label {
+  font-weight: bold;
+  text-align: left;
+  color: #fff;
+}
+

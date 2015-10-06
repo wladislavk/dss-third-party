@@ -1,100 +1,158 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
-if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
-{
 
-	$sql = "SELECT cc_id, edx_id FROM dental_users where userid='".$_REQUEST["delid"]."'";
-	$q = mysqli_query($con,$sql);
-	$r = mysqli_fetch_assoc($q);
+$showAll = !empty($_GET['all']);
+$search = !empty($_GET['search']) ? $_GET['search'] : '';
+$hasSearch = false;
+$userList = []; // Unfortunate name of the list of users
 
-	$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
-	mysqli_query($con,$del_sql);
+$totalUsers = 0;
+$totalPages = 0;
+$countDefault = 20;
+
+$showPerPage = !empty($_GET['count']) ? intval($_GET['count']) : $countDefault;
+$currentPage = !empty($_GET['page']) ? intval($_GET['page']) : 0;
+
+$showPerPage = $showPerPage > 0 ? $showPerPage : $countDefault;
+$currentOffset = $currentPage * $showPerPage;
+
+if (!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access'])) {
+    $deleteId = $db->escape($_REQUEST['delid']);
+    $sql = "SELECT cc_id, edx_id FROM dental_users where userid='$deleteId'";
+    $r = $db->getRow($sql);
+
+    if ($r) {
+        $sql = "delete from dental_users where userid='$deleteId'";
+        $db->query($sql);
         edx_user_delete($r['edx_id']);
 
-	if($r['cc_id']!=''){
-	require_once '../3rdParty/stripe/lib/Stripe.php';
-	$key_sql = "SELECT stripe_secret_key FROM companies c 
+        if ($r['cc_id'] != '') {
+            require_once '../3rdParty/stripe/lib/Stripe.php';
+            $sql = "SELECT stripe_secret_key FROM companies c
                 JOIN dental_user_company uc
                         ON c.id = uc.companyid
-                 WHERE uc.userid='".mysqli_real_escape_string($con,$_REQUEST['delid'])."'";
-	$key_q = mysqli_query($con,$key_sql);
-	$key_r= mysqli_fetch_assoc($key_q);
+                 WHERE uc.userid='$deleteId'";
+            $key_r = $db->getRow($sql);
 
-	\Stripe::setApiKey($key_r['stripe_secret_key']);
+            \Stripe::setApiKey($key_r['stripe_secret_key']);
 
-        try{
-	  $cu = \Stripe_Customer::retrieve($r['cc_id']);
-	  $cu->delete();
-        } catch(\Stripe_CardError $e) {
-	  // Since it's a decline, Stripe_CardError will be caught
-	  $body = $e->getJsonBody();
-	  $err  = $body['error'];
-	  echo $err['message'];
-	} catch (\Stripe_InvalidRequestError $e) {
-	  // Invalid parameters were supplied to Stripe's API
-	  $body = $e->getJsonBody();
-	  $err  = $body['error'];
-	  echo $err['message'];
-	} 
-	}
-	$msg= "Deleted Successfully";
-	?>
-	<script type="text/javascript">
-		//alert("Deleted Successfully");
-		window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
-	</script>
-	<?
-	trigger_error("Die called", E_USER_ERROR);
+            try {
+                $cu = \Stripe_Customer::retrieve($r['cc_id']);
+                $cu->delete();
+            } catch(\Stripe_CardError $e) {
+                // Since it's a decline, Stripe_CardError will be caught
+                $body = $e->getJsonBody();
+                $err  = $body['error'];
+                echo $err['message'];
+            } catch (\Stripe_InvalidRequestError $e) {
+                // Invalid parameters were supplied to Stripe's API
+                $body = $e->getJsonBody();
+                $err  = $body['error'];
+                echo $err['message'];
+            }
+        }
+
+        $msg = "Deleted Successfully";
+        ?>
+        <script type="text/javascript">
+            window.location="<?php echo $_SERVER['PHP_SELF']?>?msg=<?php echo $msg?>";
+        </script>
+        <?php
+        trigger_error("Die called", E_USER_ERROR);
+    }
 }
 
-$rec_disp = 20;
+if ($showAll || $search) {
+    if (is_super($_SESSION['admin_access'])) {
+        $sql = "SELECT u.*, c.id AS company_id, c.name AS company_name, p.name AS plan_name
+            FROM dental_users u
+                LEFT JOIN dental_user_company uc ON uc.userid = u.userid
+                LEFT JOIN companies c ON c.id=uc.companyid
+                LEFT JOIN dental_plans p ON p.id=u.plan_id
+            WHERE u.user_access=2 ";
 
-if(!empty($_REQUEST["page"]))
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
-$i_val = $index_val * $rec_disp;
-if(is_super($_SESSION['admin_access'])){
-$sql = "select u.*, c.id as company_id, c.name as company_name, p.name as plan_name from dental_users u
-	LEFT JOIN dental_user_company uc ON uc.userid = u.userid
-        LEFT JOIN companies c ON c.id=uc.companyid
-	LEFT JOIN dental_plans p ON p.id=u.plan_id
-		 where u.user_access=2 ";
-if(isset($_GET['cid'])){
-  $sql .= " AND c.id='".mysqli_real_escape_string($con,$_GET['cid'])."' ";
-}
-	 $sql .= " order by u.last_name, u.first_name";
-}elseif(is_admin($_SESSION['admin_access'])){
-  $sql = "SELECT u.*, c.id as company_id, c.name AS company_name, p.name as plan_name FROM dental_users u 
-		INNER JOIN dental_user_company uc ON uc.userid = u.userid
-		INNER JOIN companies c ON c.id=uc.companyid
-		LEFT JOIN dental_plans p ON p.id=u.plan_id
-		WHERE u.user_access=2 AND uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'
-		ORDER BY u.last_name, u.first_name";
-}elseif(is_billing($_SESSION['admin_access'])){
-  $a_sql = "SELECT ac.companyid FROM admin_company ac
-			JOIN admin a ON a.adminid = ac.adminid
-			WHERE a.adminid='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."'";
-  $a_q = mysqli_query($con,$a_sql);
-  $admin = mysqli_fetch_assoc($a_q);
-  $sql = "SELECT u.*, c.id as company_id, c.name AS company_name, p.name as plan_name FROM dental_users u 
+        if (isset($_GET['cid'])) {
+            $sql .= " AND c.id='".mysqli_real_escape_string($con,$_GET['cid'])."' ";
+        }
+    } elseif (is_admin($_SESSION['admin_access'])) {
+        $companyId = $db->escape($_SESSION['admincompanyid']);
+        $sql = "SELECT u.*, c.id AS company_id, c.name AS company_name, p.name AS plan_name
+            FROM dental_users u
                 INNER JOIN dental_user_company uc ON uc.userid = u.userid
                 INNER JOIN companies c ON c.id=uc.companyid
-        	LEFT JOIN dental_plans p ON p.id=u.plan_id
-                WHERE u.user_access=2 AND u.billing_company_id='".mysqli_real_escape_string($con,$admin['companyid'])."'
-                ORDER BY u.last_name, u.first_name";
+                LEFT JOIN dental_plans p ON p.id=u.plan_id
+            WHERE u.user_access=2 AND uc.companyid='$companyId'";
+    } elseif (is_billing($_SESSION['admin_access'])) {
+        $adminId = $db->escape($_SESSION['adminuserid']);
+        $a_sql = "SELECT ac.companyid
+            FROM admin_company ac
+                JOIN admin a ON a.adminid = ac.adminid
+            WHERE a.adminid='$adminId'";
+        $admin = $db->getRow($a_sql);
+
+        $companyId = $db->escape($admin['companyid']);
+        $sql = "SELECT u.*, c.id AS company_id, c.name AS company_name, p.name AS plan_name
+            FROM dental_users u
+                INNER JOIN dental_user_company uc ON uc.userid = u.userid
+                INNER JOIN companies c ON c.id=uc.companyid
+                LEFT JOIN dental_plans p ON p.id=u.plan_id
+            WHERE u.user_access=2 AND u.billing_company_id='$companyId'";
+    }
+
+    if (!$showAll && $search) {
+        $searchString = $search;
+        $quotedTerms = [];
+    
+        if (preg_match_all('/"(?P<quoted>.*?)"/', $searchString, $matches)) {
+            $quotedTerms = $matches['quoted'];
+            $searchString = preg_replace('/".*?"/', '', $searchString);
+        }
+    
+        $singleTerms = preg_split('/[\s\r\t\n]+/', $searchString);
+    
+        $searchTerms = array_merge($quotedTerms, $singleTerms);
+        $searchTerms = array_unique($searchTerms);
+        $searchTerms = array_filter($searchTerms, function($term){
+            return strlen($term);
+        });
+    
+        if ($searchTerms) {
+            $hasSearch = true;
+    
+            array_walk($searchTerms, function(&$term)use($db){
+                $term = $db->escape($term);
+                $term = "u.username LIKE '%$term%' OR u.first_name LIKE '%$term%' OR u.last_name LIKE '%$term%'";
+            });
+    
+            $sql .= ' AND (' . join(' OR ', $searchTerms) . ') ';
+        }
+    }
+    
+    $totalUsers = $db->getNumberRows($sql);
+    $totalPages = $totalUsers/$showPerPage;
+    
+    $sql .= " ORDER BY u.last_name, u.first_name";
+    $sql .= " LIMIT $currentOffset, $showPerPage";
+    
+    $userList = $db->getResults($sql);
 }
-$my = mysqli_query($con,$sql);
-$total_rec = mysqli_num_rows($my);
-$no_pages = $total_rec/$rec_disp;
 
-//$sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con,$sql);
-$num_users=mysqli_num_rows($my);
+$queryString = [];
+
+if ($search) {
+    $queryString['search'] = $search;
+}
+
+if (!$search && $showAll) {
+    $queryString['all'] = 1;
+}
+
+if ($showPerPage != $countDefault) {
+    $queryString['count'] = $showPerPage;
+}
+
 ?>
-
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
@@ -104,28 +162,26 @@ $num_users=mysqli_num_rows($my);
 <br />
 <br />
 
-<?php
-  if(isset($_GET['cid'])){
-?>
-<div style="float:left; margin-left:20px;">
-        <a href="manage_users.php" class="btn btn-success">
-                View All 
-        </a>
-        &nbsp;&nbsp;
-</div>
-<?php
-  }
-?>
+<?php if ($showAll) { ?>
+    <h3>Viewing all users</h3>
+<?php } elseif ($hasSearch) { ?>
+    <h3>Search results for <code><?= htmlspecialchars($search) ?></code></h3>
+<?php } ?>
 
-<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
-<!--<div align="right">
-        <button onclick="Javascript: loadPopup('add_users_reg.php');" class="btn btn-success">
-                Add New Registration User
-                <span class="glyphicon glyphicon-plus">
-        </button>
-        &nbsp;&nbsp;
+<form class="form-group" name="user-search" action="?" method="get">
+    <input class="form-control input-xlarge input-inline" name="search" value="<?= htmlspecialchars($search) ?>"
+       placeholder="Multiple first names, last names or usernames" />
+    <button class="btn btn-primary" type="submit">Search</button>
+</form>
+
+<div style="float:left; margin-left:20px;">
+    <a href="manage_users.php?all=1" class="btn btn-success <?= $showAll ? 'disabled' : '' ?>">
+        View All
+    </a>
+    &nbsp;&nbsp;
 </div>
--->
+
+<?php if (is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_users.php');" class="btn btn-success">
 		Add New User
@@ -140,15 +196,13 @@ $num_users=mysqli_num_rows($my);
 </div>
 
 <table class="table table-bordered table-hover">
-	<?php if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
+	<?php if ($totalUsers > $showPerPage) {?>
+	<tr bgColor="#ffffff">
+		<td align="right" colspan="15" class="bp">
 			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
-			?>
-		</TD>        
-	</TR>
+			<?php paging($totalPages, $currentPage, http_build_query($queryString)) ?>
+		</td>
+	</tr>
 	<?php }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="20%">
@@ -192,48 +246,43 @@ $num_users=mysqli_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<?php if(mysqli_num_rows($my) == 0)
-	{ ?>
+	<?php if (!count($userList)) { ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
-				No Records
+				<?= $showAll || $search ? 'No Records' : 'Perform a search, or click on View All' ?>
 			</td>
 		</tr>
-	<?php 
-	}
-	else
-	{
-		while($myarray = mysqli_fetch_array($my))
-		{
-			$staff_sql = "select count(userid) as staff_count from dental_users where docid='".st($myarray['userid'])."' and user_access=1";
+	<?php } else {
+		foreach ($userList as $user) {
+			$staff_sql = "select count(userid) as staff_count from dental_users where docid='".st($user['userid'])."' and user_access=1";
 			$staff_my = mysqli_query($con,$staff_sql);
 			$staff_myarray = mysqli_fetch_array($staff_my);
 			
-			$con_sql = "select count(contactid) as con_count from dental_contact where docid='".st($myarray['userid'])."'";
+			$con_sql = "select count(contactid) as con_count from dental_contact where docid='".st($user['userid'])."'";
 			$con_my = mysqli_query($con,$con_sql);
 			$con_myarray = mysqli_fetch_array($con_my);
 
-                        $loc_sql = "select count(id) as loc_count from dental_locations where docid='".st($myarray['userid'])."'";
+                        $loc_sql = "select count(id) as loc_count from dental_locations where docid='".st($user['userid'])."'";
                         $loc_my = mysqli_query($con,$loc_sql);
                         $loc_myarray = mysqli_fetch_array($loc_my);
 
-                        $pat_sql = "select count(patientid) as pat_count from dental_patients where docid='".st($myarray['userid'])."' ";
+                        $pat_sql = "select count(patientid) as pat_count from dental_patients where docid='".st($user['userid'])."' ";
                         $pat_my = mysqli_query($con,$pat_sql);
                         $pat_myarray = mysqli_fetch_array($pat_my);
 
-                        $inv_sql = "select count(id) as inv_count from dental_percase_invoice where docid='".st($myarray['userid'])."'  AND status != '".DSS_INVOICE_PENDING."'";
+                        $inv_sql = "select count(id) as inv_count from dental_percase_invoice where docid='".st($user['userid'])."'  AND status != '".DSS_INVOICE_PENDING."'";
                         $inv_my = mysqli_query($con,$inv_sql);
                         $inv_myarray = mysqli_fetch_array($inv_my);
 			
-			if($myarray["status"] == 1)
+			if($user["status"] == 1)
 			{
 				$tr_class = "";
 			}
-			elseif($myarray["status"] == 2)
+			elseif($user["status"] == 2)
 			{
 				$tr_class = "info";
 			}
-                        elseif($myarray["status"] == 3)
+                        elseif($user["status"] == 3)
                         {
                                 $tr_class = "warning";
                         }
@@ -244,33 +293,33 @@ $num_users=mysqli_num_rows($my);
 		?>
 			<tr class="<?php echo $tr_class;?>">
 				<td valign="top">
-					<?php echo st($myarray["first_name"]. " " .$myarray["last_name"]);?>
+					<?php echo st($user["first_name"]. " " .$user["last_name"]);?>
 				</td>
 				<td valign="top">
-					<?php if($myarray["status"] == 2){
-					  echo "Registration emailed: ".(($myarray["registration_email_date"]!='')?date('m/d/Y H:i a', strtotime($myarray["registration_email_date"])):'');
+					<?php if($user["status"] == 2){
+					  echo "Registration emailed: ".(($user["registration_email_date"]!='')?date('m/d/Y H:i a', strtotime($user["registration_email_date"])):'');
 					}else{ ?>
-					  <?php echo st($myarray["username"]);?>
+					  <?php echo st($user["username"]);?>
 					<?php } ?>
-				<?php if($myarray["status"] == 3){ ?>
+				<?php if($user["status"] == 3){ ?>
 					<br />
-					Activated on: <?php echo  ($myarray['adddate'])?date('m/d/Y',strtotime($myarray['adddate'])):''; ?>
+					Activated on: <?php echo  ($user['adddate'])?date('m/d/Y',strtotime($user['adddate'])):''; ?>
 					<br />
-					Suspended on: <?php echo  ($myarray['suspended_date'])?date('m/d/Y',strtotime($myarray['suspended_date'])):''; ?>
+					Suspended on: <?php echo  ($user['suspended_date'])?date('m/d/Y',strtotime($user['suspended_date'])):''; ?>
 					<br />
-					Suspended Reason: <?php echo  $myarray['suspended_reason']; ?>
+					Suspended Reason: <?php echo  $user['suspended_reason']; ?>
 				<?php } ?>
 				</td>
 				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 				<td valign="top">
-					<a href="/manage/admin/letterhead.php?uid=<?php echo st($myarray["userid"]);?>">Update Images</a>
+					<a href="/manage/admin/letterhead.php?uid=<?php echo st($user["userid"]);?>">Update Images</a>
 				</td>
 				
 				<td valign="top">
-					<?php if($myarray['status']!=2){ ?>
+					<?php if($user['status']!=2){ ?>
 					<form action="login_as.php" method="post" target="Doctor_Login">
-						<input type="hidden" name="username" value="<?php echo st($myarray["username"]);?>">
-						<input type="hidden" name="password" value="<?php echo st($myarray["password"]);?>">
+						<input type="hidden" name="username" value="<?php echo st($user["username"]);?>">
+						<input type="hidden" name="password" value="<?php echo st($user["password"]);?>">
 			            <input type="hidden" name="loginsub" value="1">
 			            <input type="submit" name="btnsubmit" value=" Login " class="btn btn-success">			
 					</form>
@@ -278,17 +327,17 @@ $num_users=mysqli_num_rows($my);
 				</td>
 				<?php } ?>
 			           <td valign="top" align="center">
-                    <a href="manage_locations.php?docid=<?php echo $myarray["userid"];?>" class="btn btn-danger pull-right" title="locations">
+                    <a href="manage_locations.php?docid=<?php echo $user["userid"];?>" class="btn btn-danger pull-right" title="locations">
                         <?php echo st($loc_myarray['loc_count']);?></a>
                                 </td>	
                 
 				<td valign="top" align="center">
-                    <a href="manage_contact.php?docid=<?php echo $myarray["userid"];?>" class="btn btn-danger pull-right" title="contacts">
+                    <a href="manage_contact.php?docid=<?php echo $user["userid"];?>" class="btn btn-danger pull-right" title="contacts">
                     	<?php echo st($con_myarray['con_count']);?></a>
 				</td>	
                 
 				<td valign="top" align="center">
-					<a href="manage_staff.php?docid=<?php echo $myarray["userid"];?>" class="btn btn-danger pull-right" title="staff">
+					<a href="manage_staff.php?docid=<?php echo $user["userid"];?>" class="btn btn-danger pull-right" title="staff">
                     	<?php echo st($staff_myarray['staff_count']);?></a>
 				</td>	
                                 <td valign="top" align="center">
@@ -296,28 +345,28 @@ $num_users=mysqli_num_rows($my);
                                 </td>
                                 <td valign="top" align="center">
 				<?php if(is_super($_SESSION['admin_access'])) { ?>
-                        <a href="manage_percase_invoice_history.php?docid=<?php echo  $myarray["userid"]; ?>"><?php echo st($inv_myarray['inv_count']);?></a>
+                        <a href="manage_percase_invoice_history.php?docid=<?php echo  $user["userid"]; ?>"><?php echo st($inv_myarray['inv_count']);?></a>
 				<?php }else{ ?>
-                        <a href="manage_percase_fo_invoice_history.php?docid=<?php echo  $myarray["userid"]; ?>"><?php echo st($inv_myarray['inv_count']);?></a>
+                        <a href="manage_percase_fo_invoice_history.php?docid=<?php echo  $user["userid"]; ?>"><?php echo st($inv_myarray['inv_count']);?></a>
 				<?php } ?>
                                 </td>
 
 				<?php if(is_super($_SESSION['admin_access'])){ ?>
 			 	<td valign="top" align="center">
-                                        	<a href="manage_users.php?cid=<?php echo  $myarray["company_id"]; ?>"><?php echo  $myarray["company_name"]; ?></a>
+                                        	<a href="manage_users.php?cid=<?php echo  $user["company_id"]; ?>"><?php echo  $user["company_name"]; ?></a>
 				</td>			
 				<?php } ?>
                                 <td valign="top" align="center">
-                                                <?php echo  $myarray["plan_name"]; ?>
+                                                <?php echo  $user["plan_name"]; ?>
                                 </td>
 				<td valign="top">
 				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?php echo $myarray["userid"];?>');" title="Edit Profile" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?php echo $user["userid"];?>');" title="Edit Profile" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
 				<?php } ?>
-				<a href="manage_enrollments.php?ed=<?php echo $myarray["userid"];?>" title="Manage Enrollments" class="btn btn-primary btn-sm">
+				<a href="manage_enrollments.php?ed=<?php echo $user["userid"];?>" title="Manage Enrollments" class="btn btn-primary btn-sm">
                                                 Enrollments 
                                          <span class="glyphicon glyphicon-pencil"></span></a>
 				</td>

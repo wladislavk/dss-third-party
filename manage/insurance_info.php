@@ -11,7 +11,6 @@ $patient_firstname = $patientInfo['firstname'];
 $patient_lastname = $patientInfo['lastname'];
 $patient_dob = $patientInfo['dob'];
 $patient_phone = $patientInfo['home_phone'];
-$patient_relation_insured = $patientInfo['p_m_relation'];
 $patient_sex = $patientInfo['gender'];
 
 $insured_firstname = $patientInfo['p_m_partyfname'];
@@ -21,6 +20,7 @@ $insured_id_number = $patientInfo['p_m_ins_id'];
 $insured_dob = $patientInfo['ins_dob'];
 $insured_sex = $patientInfo['p_m_gender'];
 $insured_policy_group_feca = $patientInfo['p_m_ins_grp'];
+$patient_relation_insured = $patientInfo['p_m_relation'];
 
 $other_insured_firstname = $patientInfo['s_m_partyfname'];
 $other_insured_lastname = $patientInfo['s_m_partylname'];
@@ -29,6 +29,7 @@ $other_insured_phone = $patient_phone;
 $other_insured_dob = $patientInfo['ins2_dob'];
 $other_insured_sex = $patientInfo['s_m_gender'];
 $other_insured_policy_group_feca = $patientInfo['s_m_ins_grp'];
+$patient_relation_other_insured = $patientInfo['s_m_relation'];
 
 $getDocInfo = "SELECT * FROM `dental_users` WHERE `userid` = '$docId'";
 $docInfo = $db->getRow($getDocInfo);
@@ -193,7 +194,7 @@ if ($hasSecondaryInsurance) {
     <li><label>Pt Ins ID:</label> <span class="value"><?= htmlspecialchars($insured_id_number) ?></span></li>
     <li><label>Pt Group #:</label> <span class="value"><?= htmlspecialchars($insured_policy_group_feca) ?></span></li>
     <li><label>Pt Phone:</label> <span class="value"><?= htmlspecialchars($patient_phone) ?></span></li>
-    <li><label>Pt Relation to Insd:</label> <span class="value"><?= htmlspecialchars($patient_relation_insured) ?></span></li>
+    <li><label>Pt Relation to Insd:</label> <span class="value"><?= htmlspecialchars($patient_relation_other_insured) ?></span></li>
   </ul>
 
   <ul>

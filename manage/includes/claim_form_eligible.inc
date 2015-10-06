@@ -1104,7 +1104,7 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     }
 
     if ($icdEnforcement) {
-        $icd_ind = 0;
+        $icd_ind = '10';
     } else {
         $icd_ind = "$icd_ind" === '0' || "$icd_ind" === "10" ? '10' : $icd_ind;
     } ?>

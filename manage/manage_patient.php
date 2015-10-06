@@ -3,7 +3,7 @@ include('includes/top.htm');
 // include('includes/constants.inc');
 include('includes/formatters.php');
 
-$db->SHOW_TIMESTAMP = true;
+//$db->SHOW_TIMESTAMP = true;
 //$db->SHOW_QUERY = true;
 if(isset($_REQUEST["delid"])) {
     $del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."'";
@@ -225,9 +225,9 @@ $num_users=count($my);
 									' . (!empty($myarray["middlename"]) ? st($myarray["middlename"]) : "") . '</a>';
 
                             $query = "SELECT allergenscheck
-                                     FROM dental_q_page3
-                                     WHERE patientid = '$patientid'
-                                     LIMIT 1";
+                                      FROM dental_q_page3
+                                      WHERE patientid = '$patientid'
+                                      LIMIT 1";
                             $allergencheck = $db->getRow($query);
                             $allergen = $allergencheck['allergenscheck'];
 
@@ -264,15 +264,15 @@ $num_users=count($my);
 
 
                         $query = "SELECT fpg.rxlomnrec, fpg.lomnrec, fpg.rxrec
-                                     FROM dental_flow_pg1 fpg
-                                     WHERE fpg.pid = '$patientid'
-                                     LIMIT 1";
+                                  FROM dental_flow_pg1 fpg
+                                  WHERE fpg.pid = '$patientid'
+                                  LIMIT 1";
                         $fpg = $db->getRow($query);
 
                         $query = "SELECT date_scheduled
-                                        FROM dental_flow_pg2_info
-                                        WHERE appointment_type = 0 AND patientid = '$patientid'
-                                        LIMIT 1";
+                                  FROM dental_flow_pg2_info
+                                  WHERE appointment_type = 0 AND patientid = '$patientid'
+                                  LIMIT 1";
                         $next_scheduled = $db->getRow($query)['date_scheduled'];
 
 
@@ -299,11 +299,11 @@ $num_users=count($my);
                         <td valign="top">
                             <?php
 
-                            if($myarray['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
+                            if( $myarray['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE ) {
                                 $ins_error = false;
-                            }elseif($myarray['p_m_dss_file']!=1){
+                            } elseif( $myarray['p_m_dss_file'] != 1) {
                                 $ins_error = true;
-                            }else{
+                            } else {
                                 $ins_error = false;
                             }
 

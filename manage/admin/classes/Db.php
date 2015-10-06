@@ -30,7 +30,6 @@ class Db
 
 			return $result;
 		}
-		return;
 	}
 
 	// Get the first result row
@@ -43,7 +42,6 @@ class Db
 			}
 			return $return;
 		}
-		return;
 	}
 
 	public function getResults($query_string)
@@ -58,7 +56,6 @@ class Db
 			}
 			return $return;
 		}
-		return;
 	}
 
 	// Get count of result rows
@@ -82,7 +79,6 @@ class Db
 			$indert_id = mysqli_insert_id($this->con);
 			return $indert_id;
 		}
-		return NULL;
 	}
 
 	public function escape($string)

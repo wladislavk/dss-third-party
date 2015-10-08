@@ -17,7 +17,7 @@ $is_pri_pending = ($status == DSS_CLAIM_PENDING) ? true : false;
 $is_sec_pending = ($status == DSS_CLAIM_SEC_PENDING) ? true : false;
 $is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
 $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false; 
-$is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED); 
+$is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED) || ($_GET['instype'] == 2);
 
 //confirm ledger transactions and make sure they haven't changed.
 function confirm_ledger_trxns(){
@@ -1071,7 +1071,8 @@ $patient_firstname = st($myarray['patient_firstname']);
 $patient_middle = st($myarray['patient_middle']);
 $patient_dob = st($myarray['patient_dob']);
 $patient_sex = st($myarray['patient_sex']);
-if(!empty($_GET['instype']) && $_GET['instype']==2){
+
+if ($is_secondary) {
   $insurancetype = st($myarray['other_insurance_type']);
   $other_insurancetype = $myarray['insurance_type'];
   $other_insured_firstname = st($myarray['insured_firstname']);
@@ -1987,8 +1988,8 @@ $(document).ready(function(){
 		</td>
 		<td width="50%">
 		  <table>
-		  		  <?php 
-	if(isset($_GET['instype']) && $_GET['instype']==2 || $is_secondary){
+		  		  <?php
+	if($is_secondary) {
 	  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'"; 
 	}else{
 	  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'"; 
@@ -2613,19 +2614,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 								<td valign="top" width="10%" style="border-bottom: 1px #000000 dashed;">
 									<select name="field_17a_dd" class="inbox_line3" style="width:40px;">
 										<option value=""></option>
-										<?php
-										if (!isset($qua_sql)) {
-											$qua_sql = '';
-										}
-
-										$qua_my = $db->getResults($qua_sql);
-										if (!empty($qua_my)) foreach ($qua_my as $qua_myarray)
-										{?>
-											<option value="<?php echo st($qua_myarray['qualifierid']);?>" <?php if($field_17a_dd == st($qua_myarray['qualifierid'])) echo " selected";?>>
-												<?php echo st($qua_myarray['qualifier']);?>
-											</option>
-										<?
-										}?>
+                                        <option value="P" <?= $is_secondary ? '' : 'selected' ?>>Primary</option>
+                                        <option value="S" <?= $is_secondary ? 'selected' : '' ?>>Secondary</option>
+                                        <option value="T">Tertiary</option>
 									</select>
 								</td>
 								<td valign="top" width="80%" style="border-bottom: 1px #000000 dashed; padding-bottom:3px;">

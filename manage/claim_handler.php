@@ -222,7 +222,7 @@
     $current_qual = (!empty($_POST['claim']['date_type']) ? $_POST['claim']['date_type'] : '');
     // NO NAME ON FIELD $date_same_illness = $_POST['date_same_illness'];
     // NO NAME ON FIELD $same_illness_qual = '';
-    $unable_date_from = (!empty($_POST['claim']['last_wored_date']) ? $_POST['claim']['last_wored_date'] : '');
+    $unable_date_from = (!empty($_POST['claim']['last_worked_date']) ? $_POST['claim']['last_worked_date'] : '');
     $unable_date_to = (!empty($_POST['claim']['work_return_date']) ? $_POST['claim']['work_return_date'] : '');
     // SPLIT APART? $referring_provider = $_POST['referring_provider'];
     $field_17a_dd = (!empty($_POST['referring_provider']['secondary_id_type']) ? $_POST['referring_provider']['secondary_id_type'] : '');

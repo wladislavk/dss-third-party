@@ -16,8 +16,9 @@ if (!function_exists('s_for')) {
   $is_sec_pending = ($status == DSS_CLAIM_SEC_PENDING) ? true : false;
   $is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
   $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
-  $_GET['instype'] == 2;
+  $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED) || ($_GET['instype'] == 2);
 
+  $seq = $is_secondary ? 'S' : 'P';
   $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
   
   $pat_myarray = $db->getRow($pat_sql);
@@ -107,7 +108,7 @@ if (!function_exists('s_for')) {
     $patient_dob = st($myarray['patient_dob']);
     $patient_sex = st($myarray['patient_sex']);
 
-    if(!empty($_GET['instype']) && $_GET['instype']==2){
+    if($is_secondary){
       $insurancetype = st($myarray['other_insurance_type']);
       $other_insurancetype = $myarray['insurance_type'];
       $other_insured_firstname = st($myarray['insured_firstname']);
@@ -713,7 +714,7 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     $('.input.grayout').find('input[placeholder="date"]').val('<?php echo $patient_signed_date; ?>');
 
     <?php
-      if(isset($_GET['instype']) && $_GET['instype'] == 2) {
+      if($is_secondary) {
         $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";
       } else {
         $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
@@ -721,8 +722,7 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
 
       $inscoinfo = $db->getRow($inscoquery);
     ?>
-      <?php if ($_GET['instype']==2){
-           ?>
+      <?php if ($is_secondary) { ?>
       $('input[name="payer[id]"]').val("<?= $s_m_eligible_payer_id;?>");
       $('input[name="payer[name]"]').val("<?= $s_m_eligible_payer_name;?>");
 
@@ -787,21 +787,9 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
       $('input[name="other_payers[0][subscriber][first_name]"]').val("<?= $other_insured_firstname;?>");
       $('input[name="other_payers[0][subscriber][middle_name]"]').val("<?= $other_insured_middle;?>");
       $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
-                      
-      <?php
-      // DON'T consider the claim as Secondary, by default
-        if($_GET['instype']==2 && $responsibility_sequence == ""){
-          $seq='P';
-        } else  if ($responsibility_sequence != ""){
-          $seq = $responsibility_sequence;
-        }
-        if($seq){
-      ?>
-        $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $seq?>");
+      $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $seq?>");
 
       <?php
-        }
-
       if (strtolower($employment) == 'yes') { ?>
       $('input[name="claim[related_to_employment]"][value="true"]').attr("checked", "checked");
     <?php } else { ?>
@@ -835,6 +823,7 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
 
     $('input[name="referring_provider[first_name]"]').val("<?php echo  substr($referring_provider, 0, strpos($referring_provider,' ')); ?>");
     $('input[name="referring_provider[last_name]"]').val("<?php echo  substr($referring_provider, strpos($referring_provider,' ')); ?>");
+    $('select[name="referring_provider[secondary_id_type]"]').val("<?php echo  $field_17a_dd; ?>");
     $('input[name="referring_provider[secondary_id]"]').val("<?php echo  $field_17a; ?>");
     $('input[name="referring_provider[npi]"]').val("<?php echo  $diagnosising_npi; ?>");
 
@@ -1029,7 +1018,7 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
           $sql .= " user.npi ";
         }
 
-        $pri_claim_id = ($_GET['instype']==2 ? $orig_claim_id : $insuranceid);
+        $pri_claim_id = ($is_secondary ? $orig_claim_id : $insuranceid);
         $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS place_description, user.first_name as provider_first_name, user.last_name as provider_last_name "
              . "FROM "
              . "  dental_ledger ledger "
@@ -1282,7 +1271,7 @@ if($federal_tax_id_number != ''){
              . "ORDER BY "
              . "  ledger.service_date ASC";
 
-        if($_GET['instype']==2 && $status == DSS_CLAIM_SEC_PENDING) {
+        if($is_secondary && $status == DSS_CLAIM_SEC_PENDING) {
           $sql = "SELECT sum(dlp.amount) as amount_paid
                   from dental_ledger dl
                   LEFT JOIN dental_users p ON dl.producerid=p.userid

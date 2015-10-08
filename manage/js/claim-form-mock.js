@@ -342,6 +342,51 @@ $(document).ready(function(){
             }).appendTo('body');
         }
 
+        function highlightElement ($element, value) {
+            $element.closest('td')
+                .addClass('debug-mismatch-data')
+                .attr('title', value.length ? 'New value: ' + value : 'The new value is empty');
+        }
+
+        function compareForms ($currentForm, $newForm) {
+            var $currentFields = $currentForm.find('input, select'),
+                $newFields = $newForm.find('input, select'),
+                fields = {}, debug = '';
+
+            $currentForm.find('td').removeClass('debug-mismatch-data');
+
+            $currentFields.each(function(){
+                var $this = $(this),
+                    $counterPart = $newForm.find('[name="' + this.name + '"]'),
+                    currentValue, newValue;
+
+                if (!$counterPart.length) {
+                    fields[this.name] = this.name;
+                    highlightElement($this, '<The field is no longer in the form>');
+                } else if ($this.is(':radio') || $this.is(':checkbox')) {
+                    $counterPart = $newForm.find('[name="' + this.name + '"][value="' + $this.val() + '"]');
+
+                    if ($this.is(':checked') !== $counterPart.is(':checked')) {
+                        fields[this.name] = this.name;
+                        highlightElement($this, $counterPart.is(':checked').toString());
+                    }
+                } else if ($this.val() !== $counterPart.val()) {
+                    fields[this.name] = this.name;
+                    highlightElement($this, $counterPart.val());
+                }
+            });
+
+            for (n in fields) {
+                debug += '\n' + n;
+            }
+
+            if (debug.length) {
+                debugLog('<pre>Mismatched fields: \n' + debug + '</pre>', true);
+            } else {
+                debugLog('False alarm, all is good!');
+            }
+        }
+
         activeFields.addClass('submission-disabled').attr('disabled', true);
 
         $.ajax({
@@ -364,7 +409,8 @@ $(document).ready(function(){
                         return;
                     }
 
-                    debugLog('There are differences in the updated claim form.');
+                    debugLog('There are differences in the updated claim form. Calculating differences...');
+                    compareForms($form, $newForm);
                 });
             },
             complete: function(){
@@ -373,8 +419,12 @@ $(document).ready(function(){
         });
     }
 
-    function debugLog (message) {
-        $('#debug-notifications').text(message);
+    function debugLog (message, asHtml) {
+        if (asHtml) {
+            $('#debug-notifications').html(message);
+        } else {
+            $('#debug-notifications').text(message);
+        }
     }
 
     $('<div>', {

@@ -35,7 +35,7 @@
     opacity: 0.7;
 }
 
-#debug-buttons #debug-notifications:hover {
+#debug-buttons:hover #debug-notifications {
     opacity: 1;
 }
 

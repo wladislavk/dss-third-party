@@ -1687,7 +1687,7 @@ if ($icdEnforcement) {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Health Insurance Claim Form</title>
-<link rel="stylesheet" href="<?php echo $manage_path?>form/form.css" type="text/css" />
+<link rel="stylesheet" href="/manage/form/form.css?v=<?= time() ?>" type="text/css" />
 <style type="text/css">
 <!--
 .style1 {font-size: 16px}
@@ -1700,6 +1700,7 @@ input{text-transform:uppercase;}
 <body>
 <?php echo (!empty($msg) ? $msg : ''); ?>
 
+<link href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo $admin_path?>popup/popup.css" type="text/css" media="screen" />
 <script type="text/javascript" src="<?php echo $admin_path?>script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="<?php echo $manage_path?>3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
@@ -1973,7 +1974,7 @@ $(document).ready(function(){
 
 
 <?php } ?>
-<table width="1185" border="0" align="center" cellpadding="0" cellspacing="0">
+<table border="0" align="center" cellpadding="0" cellspacing="0" id="claim-form-table">
 	<tr>
 		<td align="left" valign="top" width="50%">
 			<span><div class="box_bg">1500</div></span>
@@ -2132,11 +2133,14 @@ Medicare
 						<span class="small_cap">(Last Name, First Name, Middle Initial)</span>
 						<br />
 						<div style="padding-top:7px;">
-							<input type="text" value="<?php echo $patient_lastname?>" name="patient_lastname" class="inbox_line3" size="18" width="60" />
+							<input type="text" value="<?php echo $patient_lastname?>" name="patient_lastname"
+                                class="inbox_line3 inbox-third" size="18" width="60" />
 							&nbsp;
-							<input type="text" value="<?php echo $patient_firstname?>" name="patient_firstname" class="inbox_line3" size="18" />
+							<input type="text" value="<?php echo $patient_firstname?>" name="patient_firstname"
+                                class="inbox_line3 inbox-third" size="18" />
 							&nbsp;
-							<input type="text" value="<?php echo $patient_middle?>" name="patient_middle" class="inbox_line3" size="3" width="30" />
+							<input type="text" value="<?php echo $patient_middle?>" name="patient_middle"
+                                class="inbox_line3 inbox-third" size="3" width="30" />
 						</div>
 					</td>
 					<td width="300" align="left" valign="top">
@@ -2151,10 +2155,9 @@ Medicare
                                          value="<?php echo $patient_dob?>"
                                          style="width:100px;" maxlength="255"
                                          onChange="validateDate('dob');"
-                                         placeholder="example 1980-21-11"
+                                         placeholder="YYYY-MM-DD"
                                          data-date-format="Y-m-d"
                                     />
-									yyyy-mm-dd
 								</td>
 								<td width="42%" align="center" valign="top">
 									Sex
@@ -2173,11 +2176,14 @@ Medicare
 						<span class="small_cap">(Last Name, First Name, Middle Initial)</span>
 						<br />
 						<div style="padding-top:7px;">
-                                                        <input type="text" value="<?php echo $insured_lastname?>" name="insured_lastname" class="inbox_line3" size="18" width="60" />
+                            <input type="text" value="<?php echo $insured_lastname?>" name="insured_lastname"
+                                class="inbox_line3 inbox-third" size="18" width="60" />
                                                         &nbsp;
-							<input type="text" value="<?php echo $insured_firstname?>" name="insured_firstname" class="inbox_line3" size="18" />
+							<input type="text" value="<?php echo $insured_firstname?>" name="insured_firstname"
+                                class="inbox_line3 inbox-third" size="18" />
 							&nbsp;
-							<input type="text" value="<?php echo $insured_middle?>" name="insured_middle" class="inbox_line3" size="3" width="30" />
+							<input type="text" value="<?php echo $insured_middle?>" name="insured_middle"
+                                class="inbox_line3  inbox-third" size="3" width="30" />
 						</div>
 					</td>
 				</tr>
@@ -2237,7 +2243,7 @@ Medicare
 							</tr>
 						</table>
 					</td>
-					<td rowspan="2" align="left" valign="top">
+					<td rowspan="2" align="left" valign="top" class="grayout">
 						<span class="num">8.</span> 
 						Reserved for NUCC Use<br />
 						<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -2280,10 +2286,12 @@ Medicare
 									<span class="small_cap">(Include Area Code)</span>
 									<br />
 									<span class="style1">(
-									<input type="text" value="<?php echo  $patient_phone_code; ?>" name="patient_phone_code" size="3" class="inbox_line3 phonecodemask" />
+									<input type="text" value="<?php echo  $patient_phone_code; ?>" name="patient_phone_code"
+                                        size="3" class="inbox_line3 inbox-third phonecodemask" />
 									)</span>
 									&nbsp;&nbsp;&nbsp;
-									<input type="text" value="<?php echo $patient_phone?>" name="patient_phone" class="inbox_line3 phonemask" size="13"  />
+									<input type="text" value="<?php echo $patient_phone?>" name="patient_phone"
+                                        class="inbox_line3 inbox-half phonemask" size="13"  />
 								</td>
 							</tr>
 						</table>
@@ -2302,10 +2310,12 @@ Medicare
 									<span class="small_cap">(Include Area Code)</span>
 									<br />
 									<span class="style1">(
-									<input type="text" value="<?php echo $insured_phone_code?>" name="insured_phone_code" size="3" class="inbox_line3 phonecodemask" />
+									<input type="text" value="<?php echo $insured_phone_code?>" name="insured_phone_code"
+                                        size="3" class="inbox_line3 inbox-third phonecodemask" />
 									)</span>
 									&nbsp;&nbsp;&nbsp;
-									<input type="text" value="<?php echo $insured_phone?>" name="insured_phone" class="inbox_line3 phonemask" size="13" />
+									<input type="text" value="<?php echo $insured_phone?>" name="insured_phone"
+                                        class="inbox_line3 inbox-third phonemask" size="13" />
 								</td>
 							</tr>
 						</table>
@@ -2318,11 +2328,14 @@ Medicare
 						<span class="small_cap">(Last Name, first, Middle Initial)</span>
 						<br />
 						<div style="padding-top:7px;">
-							<input type="text" value="<?php echo $other_insured_lastname?>" name="other_insured_lastname" class="inbox_line3" size="18" />
+							<input type="text" value="<?php echo $other_insured_lastname?>" name="other_insured_lastname"
+                                class="inbox_line3 inbox-third" size="18" />
 							&nbsp;
-							<input type="text" value="<?php echo $other_insured_firstname?>" name="other_insured_firstname" class="inbox_line3" size="18" width="60" />
+							<input type="text" value="<?php echo $other_insured_firstname?>" name="other_insured_firstname"
+                                class="inbox_line3 inbox-third" size="18" width="60" />
 							&nbsp;
-							<input type="text" value="<?php echo $other_insured_middle?>" name="other_insured_middle" class="inbox_line3" size="3" width="30" />
+							<input type="text" value="<?php echo $other_insured_middle?>" name="other_insured_middle"
+                                class="inbox_line3 inbox-third" size="3" width="30" />
 						</div>
 					</td>
 					<td rowspan="4" align="left" valign="top">
@@ -2358,7 +2371,8 @@ Medicare
 									NO
 									&nbsp;&nbsp;
 									Place<span class="small_cap">(State)</span>
-									<input type="text" value="<?php echo (!empty($auto_accident_place) ? $auto_accident_place : '')?>" class="inbox_line3" size="10" name="auto_accident_place" />
+									<input type="text" value="<?php echo (!empty($auto_accident_place) ? $auto_accident_place : '')?>"
+                                        class="inbox_line3 inbox-third" size="10" name="auto_accident_place" />
 								</td>
 							</tr>
 							<tr>
@@ -2400,10 +2414,9 @@ Medicare
                                     <input id="insured_dob" name="insured_dob" type="text" class="field text addr tbox calendar"
                                         value="<?php echo  $insured_dob; ?>" style="width:100px;" maxlength="255"
                                         onChange="validateDate('insured_dob');"
-                                        placeholder="example 1980-21-11"
+                                        placeholder="YYYY-MM-DD"
                                         data-date-format="Y-m-d"
                                     />
-									yyyy-mm-dd
 								</td>
 								<td width="42%" align="center" valign="top">
 									Sex
@@ -2418,7 +2431,7 @@ Medicare
 					</td>
 				</tr>
 				<tr>
-					<td align="left" valign="top">
+					<td align="left" valign="top" class="grayout">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td align="left" valign="top">
@@ -2430,7 +2443,7 @@ Medicare
 							</tr>
 						</table>
 					</td>
-					<td align="left" valign="top">
+					<td align="left" valign="top" class="grayout">
 						<span class="num_a">b.</span>
 						Other Claim ID (Designated by NUCC)	
 						<br />
@@ -2438,7 +2451,7 @@ Medicare
 					</td>
 				</tr>
 				<tr>
-					<td align="left" valign="top">
+					<td align="left" valign="top" class="grayout">
 						<span class="num_a">c.</span>
 						Reserved for NUCC Use
 						<br />
@@ -2498,7 +2511,7 @@ Medicare
                         <input id="patient_signed_date" name="patient_signed_date" type="text" class="field text addr tbox calendar"
                             value="<?php echo $patient_signed_date?>" style="width:100px;" maxlength="255"
                             onChange="validateDate('patient_signed_date');"
-                            placeholder="example 1980-21-11"
+                            placeholder="YYYY-MM-DD"
                             data-date-format="Y-m-d"
                         />
 					</td>
@@ -2529,30 +2542,30 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                                     <input id="date_current" name="date_current" type="text" class="field text addr tbox calendar"
                                         value="<?php echo $date_current?>" style="width:100px;" maxlength="255"
                                         onChange="validateDate('date_current');"
-                                        placeholder="example 1980-21-11"
+                                        placeholder="YYYY-MM-DD"
                                         data-date-format="Y-m-d"
                                     />
-									yyyy-mm-dd
 									<span class="small_cap"> QUAL. </span>
-									<input type="text" name="current_qual" class="inbox_line3" value="<?php echo (!empty($current_qual) ? $current_qual : ''); ?>" size="10"/>
+									<input type="text" name="current_qual" class="inbox_line3 inbox-third"
+                                        value="<?php echo (!empty($current_qual) ? $current_qual : ''); ?>" size="10"/>
 								</td>
 							</tr>
 						</table>
 					</td>
-					<td valign="top">
+					<td valign="top" class="grayout">
 						<span class="num">15.</span> 
 						Other Date
 						<br />
 						<span class="small_cap">QUAL.</span>
-									<input type="text" name="same_illness_qual" class="inbox_line3" size="10" value="<?php echo (!empty($same_illness_qual) ? $same_illness_qual : ''); ?>"/>
+									<input type="text" name="same_illness_qual" class="inbox_line3 inbox-third" size="10"
+                                        value="<?php echo (!empty($same_illness_qual) ? $same_illness_qual : ''); ?>"/>
 						&nbsp;&nbsp;
                         <input id="date_same_illness" name="date_same_illness" type="text" class="field text addr tbox calendar"
                             value="<?php echo $date_same_illness?>" style="width:100px;" maxlength="255"
                             onChange="validateDate('date_same_illness');"
-                            placeholder="example 1980-21-11"
+                            placeholder="YYYY-MM-DD"
                             data-date-format="Y-m-d"
                         />
-						yyyy-mm-dd
 					</td>
 					<td valign="top">
 						<span class="num">16.</span> 
@@ -2568,10 +2581,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                                         value="<?php echo (!empty($unable_date_from) ? $unable_date_from : ''); ?>"
                                         style="width:100px;" maxlength="255"
                                         onChange="validateDate('unable_date_from');"
-                                        placeholder="example 1980-21-11"
+                                        placeholder="YYYY-MM-DD"
                                         data-date-format="Y-m-d"
                                     />
-									yyyy-mm-dd
 								</td>
 								
 								<td valign="middle" align="right" width="10%">
@@ -2583,10 +2595,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                                         value="<?php echo (!empty($unable_date_to) ? $unable_date_to : ''); ?>"
                                         style="width:100px;" maxlength="255"
                                         onChange="validateDate('unable_date_to');"
-                                        placeholder="example 1980-21-11"
+                                        placeholder="YYYY-MM-DD"
                                         data-date-format="Y-m-d"
                                     />
-									yyyy-mm-dd
 								</td>
 							</tr>
 						</table>
@@ -2711,10 +2722,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                                         value="<?php echo (!empty($hospitalization_date_from) ? $hospitalization_date_from : ''); ?>"
                                         style="width:100px;" maxlength="255"
                                         onChange="validateDate('hospitalization_date_from');"
-                                        placeholder="example 1980-21-11"
+                                        placeholder="YYYY-MM-DD"
                                         data-date-format="Y-m-d"
                                     />
-                                    yyyy-mm-dd
 									
 								</td>
 								
@@ -2727,9 +2737,8 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                                         value="<?php echo (!empty($hospitalization_date_to) ? $hospitalization_date_to : ''); ?>"
                                         style="width:100px;" maxlength="255"
                                         onChange="validateDate('hospitalization_date_to');"
-                                        placeholder="example 1980-21-11"
+                                        placeholder="YYYY-MM-DD"
                                         />
-                                    yyyy-mm-dd
 								</td>
 							</tr>
 						</table>
@@ -2773,7 +2782,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 							(Relate A-L to service line below (24E))
 						</span>
                         ICD IND.
-                        <select name="icd_ind">
+                        <select name="icd_ind" class="inbox-wide">
                             <option value="9" <?= $icd_ind == 9 ? 'selected="selected"' : '' ?>>
                                 ICD-9-CM - 9
                             </option>
@@ -2846,7 +2855,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 					<td valign="top">
 						<span class="num">22.</span> 
 						Resubmission Code
-                                <select name="resubmission_code_fill">
+                                <select name="resubmission_code_fill" class="inbox-wide">
                                     <option value="1" <?php echo $resubmission_code_fill=="1"?'selected="selected"':''; ?>>New Claim</option>
                                     <option value="7" <?php echo $resubmission_code_fill=="7"?'selected="selected"':''; ?>>Resubmitted Claim</option>
                                     <option value="8" <?php echo $resubmission_code_fill=="8"?'selected="selected"':''; ?>>Void/Cancel Prior Claim</option>
@@ -2866,7 +2875,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 				</tr>
 <!-- START BOX 24 -->				
 				<tr>
-					<td valign="top" colspan="3">
+					<td valign="top" colspan="3" class="vertical-center">
 						<a name="procedure"></a>
 						<span class="num">24.</span> 
 						<table width="100%" cellpadding="3" cellspacing="1" border="0" bgcolor="#000000" >
@@ -3071,7 +3080,7 @@ if (empty($transactions)) {
 	</td>
         <td width="100" align="right" style="padding-right:15px;">$<?php echo  number_format($array['amount'], 2); ?></td>
         <td width="54"><input style="width:39px;" type="text" name="daysorunits<?php echo $li;?>" value="<?php echo $array['daysorunits']; ?>"></td>
-        <td width="60"><input style="width:45px;" type="text" name="epsdt<?php echo $li;?>" value="<?php echo $array['epsdt']; ?>"></td>
+        <td width="60" class="grayout"><input style="width:45px;" type="text" name="epsdt<?php echo $li;?>" value="<?php echo $array['epsdt']; ?>"></td>
         <td width="52"><input style="width:37px;" type="text" name="idqual<?php echo $li;?>" value="<?php echo $array['idqual']; ?>"></td>
         <input type="hidden" name="ledgerid<?php echo $li;?>" value="<?php echo $array['ledgerid']; ?>">
 	<input type="hidden" name="service_date<?php echo $li;?>" value="<?php echo $array['service_date']; ?>">
@@ -3139,7 +3148,7 @@ if (empty($transactions)) {
 										</tr>
 									</table>
 								</td>
-								<td valign="top" width="30%">
+								<td valign="top" width="30%" class="grayout">
 									<span class="num">26.</span> 
 									Patient Account No.
 									<br />
@@ -3173,7 +3182,7 @@ if (empty($transactions)) {
       <span class="num">29.</span> Amount Paid<br/>
       $ <input type="text" value="<?php echo $amount_paid;?>" name="amount_paid" class="inbox_line3 number_field" size="15"/>
     </td>
-    <td valign="top" width="33%">
+    <td valign="top" width="33%" class="grayout">
       <span class="num">30.</span> RSVD for NUCC Use<br/>
       <input type="text" name="nucc_30" value="<?php echo  (!empty($nucc_30) ? $nucc_30 : ''); ?>" class="inbox_line3 " size="15" />
       <br/>
@@ -3206,7 +3215,7 @@ if (empty($transactions)) {
                                            value="<?php echo $physician_signed_date?>" style="width:100px;"
                                            maxlength="255"
                                            onChange="validateDate('physician_signed_date');"
-                                           placeholder="example 1980-21-11"
+                                           placeholder="YYYY-MM-DD"
                                            data-date-format="Y-m-d"
                                        />
                                     </div>
@@ -3244,7 +3253,8 @@ if (empty($transactions)) {
 									<span class="num_a">
 										a.
 									</span>
-                                    <input type="text" value="<?= ($service_info_a && $service_info_a != '')?$service_info_a:(($insurancetype == '1')?$service_medicare_npi:$service_npi); ?>" name="service_info_a" class="inbox_line3 numbermask" size="15" />
+                                    <input type="text" value="<?= ($service_info_a && $service_info_a != '')?$service_info_a:(($insurancetype == '1')?$service_medicare_npi:$service_npi); ?>"
+                                        name="service_info_a" class="inbox_line3 inbox-third numbermask" size="15" />
 									
 									<span class="num_a">
 										b.
@@ -3262,7 +3272,8 @@ if (empty($transactions)) {
 										<?
 										}?>
 									</select>
-									<input type="text" value="<?php echo (!empty($service_info_b_other) ? $service_info_b_other : '')?>" name="service_info_b_other" class="inbox_line3" size="15" />
+									<input type="text" value="<?php echo (!empty($service_info_b_other) ? $service_info_b_other : '')?>"
+                                        name="service_info_b_other" class="inbox_line3 inbox-third" size="15" />
 								</td>
 							</tr>
 						</table>
@@ -3281,11 +3292,14 @@ if (empty($transactions)) {
                                                                 $billing_provider_phone = split_phone($phone, false);
 
 						?>
+                        <br />
 						<span class="style1">(
-						<input type="text" value="<?php echo  $billing_provider_phone_code; ?>" name="billing_provider_phone_code" size="3" class="inbox_line3 phonecodemask" />
+						<input type="text" value="<?php echo  $billing_provider_phone_code; ?>"
+                            name="billing_provider_phone_code" size="3" class="inbox_line3 inbox-third phonecodemask" />
 						)</span>
 						&nbsp;&nbsp;&nbsp;
-						<input type="text" value="<?php echo  $billing_provider_phone; ?>" name="billing_provider_phone" class="inbox_line3 phonemask" size="13"  />
+						<input type="text" value="<?php echo  $billing_provider_phone; ?>" name="billing_provider_phone"
+                            class="inbox_line3 inbox-half phonemask" size="13"  />
 						<table width="100%" cellpadding="1" cellspacing="1" border="0">
 							<tr>
 								<td valign="top" width="10%">
@@ -3315,7 +3329,8 @@ if (empty($transactions)) {
 						<span class="num_a">
 							a.
 						</span>
-                        <input type="text" value="<?= ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>" name="billing_provider_a" class="inbox_line3 numbermask" size="15" />
+                        <input type="text" value="<?= ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>"
+                            name="billing_provider_a" class="inbox_line3 inbox-third numbermask" size="15" />
 						
 						<span class="num_a">
 							b.
@@ -3333,7 +3348,8 @@ if (empty($transactions)) {
 							<?
 							}?>
 						</select>
-						<input type="text" value="<?php echo (!empty($billing_provider_b_other) ? $billing_provider_b_other : '')?>" name="billing_provider_b_other" class="inbox_line3" size="15" />
+						<input type="text" value="<?php echo (!empty($billing_provider_b_other) ? $billing_provider_b_other : '')?>"
+                            name="billing_provider_b_other" class="inbox_line3 inbox-third" size="15" />
 					</td>
 				</tr>
 			</table>
@@ -3498,4 +3514,11 @@ $('input, select').bind('change', function(){
   form_changed=true; 
 });
 
+    $(document).ready(function(){
+        $('#claim-form-table')
+            .removeAttr('width')
+            .addClass('eligibleapi claim')
+            .find('td')
+            .addClass('label');
+    });
 </script>

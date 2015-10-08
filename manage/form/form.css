@@ -72,6 +72,41 @@ body {
 	background-repeat:repeat-y;
 	width:2px;
 	height:auto;
-	}				
-			
+	}
 
+
+table#claim-form-table {
+    width: 1185px!important;
+}
+
+.eligibleapi.claim .inbox_line1 {
+    width:10px!important;
+}
+
+.eligibleapi.claim .inbox-third {
+    width: 28%!important;
+}
+
+.eligibleapi.claim .inbox-half {
+    width: 48%!important;
+}
+
+.eligibleapi.claim select.inbox-wide {
+    max-width: 120px!important;
+    width: 120px!important;
+}
+
+.eligibleapi.claim.label,
+.eligibleapi.claim .label {
+    padding-right: 5px!important;
+}
+
+.eligibleapi.claim .label b {
+    display: inline-block;
+    width: 14px;
+}
+
+.eligibleapi.claim .label.vertical-center,
+.eligibleapi.claim .label.vertical-center td {
+    vertical-align: middle;
+}

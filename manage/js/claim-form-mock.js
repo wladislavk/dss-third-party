@@ -243,36 +243,6 @@ $(document).ready(function(){
         $('[disabled]:text, .grayout :text').val('');
     }
 
-    $('form').submit(function(e){
-        e.preventDefault();
-
-        var $form = $(this),
-            formData = $form.serialize(),
-            activeFields = $form.find('input:not([disabled]), select:not([disabled])');
-
-        activeFields.addClass('submission-disabled').attr('disabled', true);
-
-        $.ajax({
-            url: $form.attr('action') + '&json=1',
-            data: formData,
-            type: 'post',
-            success: function(data){
-                $.ajax({
-                    url: window.location.href + '&json=1',
-                    dataType: 'json',
-                    success: function(data){
-                        compareFields(data);
-                    }
-                })
-            },
-            complete: function(){
-                activeFields.removeClass('submission-disabled').removeAttr('disabled');
-            }
-        });
-
-        return false;
-    });
-
     function compareFields (baseData) {
         function walkObject (object, name, action) {
             if ($.isPlainObject(object) || $.isArray(object)) {
@@ -350,6 +320,63 @@ $(document).ready(function(){
         });
     }
 
+    function submitAndCompare () {
+        var $form = $('form#claim-form'),
+            formData = $form.serialize(),
+            activeFields = $form.find('input:not([disabled]), select:not([disabled])');
+
+        debugLog('Submitting form via ajax...');
+
+        function refreshIframe (action) {
+            var location = window.location.href,
+                iframe = $('iframe#comparison-form');
+
+            iframe.remove();
+
+            iframe = $('<iframe>', {
+                id: 'comparison-form',
+                style: 'display:none;',
+                src: location + '&v=' + Math.random()
+            }).load(function(){
+                action(iframe.contents().find('form#claim-form'));
+            }).appendTo('body');
+        }
+
+        activeFields.addClass('submission-disabled').attr('disabled', true);
+
+        $.ajax({
+            url: $form.attr('action') + '&json=1',
+            data: formData,
+            type: 'post',
+            error: function(){
+                debugLog('There was an error saving the claim.');
+            },
+            success: function(){
+                debugLog('Save successful. Preparing to load the updated claim form in the background...');
+
+                refreshIframe(function($newForm){
+                    if (!$newForm.length) {
+                        debugLog('There was an error when trying to load the updated claim form in the background.');
+                    }
+
+                    if (formData === $newForm.serialize()) {
+                        debugLog('The form fields are the same after saving.');
+                        return;
+                    }
+
+                    debugLog('There are differences in the updated claim form.');
+                });
+            },
+            complete: function(){
+                activeFields.removeClass('submission-disabled').removeAttr('disabled');
+            }
+        });
+    }
+
+    function debugLog (message) {
+        $('#debug-notifications').text(message);
+    }
+
     $('<div>', {
         id: 'debug-buttons'
     }).appendTo('body');
@@ -357,14 +384,22 @@ $(document).ready(function(){
     $('<button>', {
         class: 'dummy-data',
         text: 'Fill dummy data'
-    }).click(function(){ mockFields(); }).appendTo('#debug-buttons');
+    }).click(function(){ mockFields(); }).prependTo('#debug-buttons');
 
-    // Enable after refactoring the claim file
+    $('<button>', {
+        class: 'save-ajax-data',
+        text: 'Save without reload the page'
+    }).click(function(){ submitAndCompare(); }).prependTo('#debug-buttons');
+
+    $('<div>', {
+        id: 'debug-notifications'
+    }).prependTo('#debug-buttons');
+
     if (false) {
         $('<button>', {
             class: 'compare-data',
             text: 'Compare base data with current form'
-        }).click(function(){ compareFields(formData); }).appendTo('#debug-buttons');
+        }).click(function(){ compareFields(formData); }).prependTo('#debug-buttons');
     }
 
     window.mockFields = mockFields;

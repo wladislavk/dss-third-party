@@ -1756,7 +1756,7 @@ input{text-transform:uppercase;}
 	</h4>
 <?php } ?>
 <?php } ?>
-<form name="insurancefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?insid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '')?>&pid=<?php echo $_GET['pid']?>" method="post">
+<form name="insurancefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?insid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '')?>&pid=<?php echo $_GET['pid']?>" method="post" id="claim-form">
 	<input type="hidden" name="insurancesub" value="1" />
 	<input type="hidden" name="ed" value="<?php echo $insuranceid;?>" />
 	

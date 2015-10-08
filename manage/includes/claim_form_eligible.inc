@@ -707,7 +707,7 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
 
   */
   ?>
-  <form style="clear:both;" action="claim_handler.php?insid=<?php echo  (!empty($_REQUEST['insid']) ? $_REQUEST['insid'] : ''); ?>&pid=<?php echo  $_REQUEST['pid']; ?>" method="POST">
+  <form style="clear:both;" action="claim_handler.php?insid=<?php echo  (!empty($_REQUEST['insid']) ? $_REQUEST['insid'] : ''); ?>&pid=<?php echo  $_REQUEST['pid']; ?>" method="POST" id="claim-form">
       <div id="eligibleapi-claim-1500-form"></div>
   </form>
 

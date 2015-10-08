@@ -1,0 +1,32 @@
+#debug-buttons {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+}
+
+#debug-buttons button {
+    background-color: #0c0;
+    color: #eee;
+    margin: 6px;
+    padding: 0.4em;
+    opacity: 0.1;
+    font-weight: bold;
+    font-size: 0.6em;
+    cursor: pointer;
+}
+
+#debug-buttons button:hover {
+    opacity: 0.8;
+}
+
+.debug-missing-data {
+    background-color: #f33;
+}
+
+.debug-extra-data {
+    background-color: #66f;
+}
+
+.debug-mismatch-data {
+    background-color: #f90;
+}

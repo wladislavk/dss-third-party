@@ -343,9 +343,9 @@ $(document).ready(function(){
         }
 
         function highlightElement ($element, value) {
-            $element.closest('td')
-                .addClass('debug-mismatch-data')
-                .attr('title', value.length ? 'New value: ' + value : 'The new value is empty');
+            $element.addClass('debug-missing-data')
+                .attr('title', value.length ? 'New value: ' + value : 'The new value is empty')
+                .closest('td').addClass('debug-mismatch-data');
         }
 
         function compareForms ($currentForm, $newForm) {
@@ -381,7 +381,7 @@ $(document).ready(function(){
             }
 
             if (debug.length) {
-                debugLog('<pre>Mismatched fields: \n' + debug + '</pre>', true);
+                debugLog('<pre>Mismatched fields:\n' + debug + '</pre>', true);
             } else {
                 debugLog('False alarm, all is good!');
             }

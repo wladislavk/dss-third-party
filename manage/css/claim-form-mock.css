@@ -40,15 +40,15 @@
 }
 
 .debug-missing-data {
-    background-color: #f33;
+    background-color: #f99;
 }
 
 .debug-extra-data {
-    background-color: #66f;
+    background-color: #99f;
 }
 
 .debug-mismatch-data {
-    background-color: #f90;
+    background-color: #fd9;
 }
 
 iframe#comparison-form {

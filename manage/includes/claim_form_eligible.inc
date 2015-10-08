@@ -692,24 +692,10 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
         </h4>
 <?php } ?>
 
-    <form style="clear:both;" action="claim_handler.php?insid=<?php echo  (!empty($_REQUEST['insid']) ? $_REQUEST['insid'] : ''); ?>&pid=<?php echo  $_REQUEST['pid']; ?>" method="POST">
-
+    <form style="clear:both;" method="post" id="claim-form"
+        action="claim_handler.php?insid=<?= intval($_REQUEST['insid']) ?>&pid=<?= intval($_REQUEST['pid']) ?>">
         <div id="eligibleapi-claim-1500-form"></div>
-
     </form>
-
-<?php 
-  /**
-
-  */
-  //}
-  /**
-
-  */
-  ?>
-  <form style="clear:both;" action="claim_handler.php?insid=<?php echo  (!empty($_REQUEST['insid']) ? $_REQUEST['insid'] : ''); ?>&pid=<?php echo  $_REQUEST['pid']; ?>" method="POST" id="claim-form">
-      <div id="eligibleapi-claim-1500-form"></div>
-  </form>
 
 <script type="text/javascript">
   $(document).ready( function(){

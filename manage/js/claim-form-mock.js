@@ -204,7 +204,7 @@ $(document).ready(function(){
         $('.datePicker, [data-date-format]').val(date);
 
         $('[name*=zip]:text').val(zip);
-        $('[name=auto_accident_place]]:text').val(state);
+        $('[name=auto_accident_place]:text').val(state);
 
         $('[name*=phone]:text').each(function(){
             var $this = $(this);

@@ -1695,11 +1695,6 @@ if ($icdEnforcement) {
 input{text-transform:uppercase;}
 </style>
 <script language="javascript" type="text/javascript" src="<?php echo $manage_path?>script/validation.js"></script>
-</head>
-
-<body>
-<?php echo (!empty($msg) ? $msg : ''); ?>
-
 <link href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo $admin_path?>popup/popup.css" type="text/css" media="screen" />
 <script type="text/javascript" src="<?php echo $admin_path?>script/jquery-1.6.2.min.js"></script>
@@ -1708,6 +1703,12 @@ input{text-transform:uppercase;}
 <script type="text/javascript" src="<?php echo $admin_path?>popup/popup.js"></script>
 <script type="text/javascript" src="/manage/js/top.js?v=<?= time() ?>"></script>
 
+<?php if (config('app.debug')) { ?>
+    <link rel="stylesheet" href="/manage/css/claim-form-mock.css?v=<?= time() ?>" />
+    <script type="text/javascript" src="/manage/js/claim-form-mock-data.js?v=<?= time() ?>"></script>
+    <script type="text/javascript" src="/manage/js/claim-form-mock.js?v=<?= time() ?>"></script>
+<?php } ?>
+
 <?php if ($is_sent || (!$is_new_claim && !$is_pending && !$is_rejected && !$is_disputed && $is_front_office)) { ?>
   <script>
 	$(function() {
@@ -1715,7 +1716,10 @@ input{text-transform:uppercase;}
 	});
   </script>
 <?php } ?>
+</head>
 
+<body>
+<?php echo (!empty($msg) ? $msg : ''); ?>
 <?php if (!empty($is_front_office)) { ?>
   <a href="view_claim.php?claimid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '');?>&pid=<?php echo $_GET['pid']?>">
 	<b>&lt;&lt;Back to Manage Insurance Page</b></a>

@@ -596,7 +596,11 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     <link href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" rel="stylesheet">
 
     <link href="css/claim_form_eligible.css" rel="stylesheet">
-
+      <?php if (config('app.debug')) { ?>
+          <link rel="stylesheet" href="/manage/css/claim-form-mock.css?v=<?= time() ?>" />
+          <script type="text/javascript" src="/manage/js/claim-form-mock-data.js?v=<?= time() ?>"></script>
+          <script type="text/javascript" src="/manage/js/claim-form-mock.js?v=<?= time() ?>"></script>
+      <?php } ?>
     <script type="text/javascript">
       window.eligiblePublicKey="-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-"
     </script>

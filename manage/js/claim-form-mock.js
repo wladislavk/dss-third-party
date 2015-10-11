@@ -205,6 +205,7 @@ $(document).ready(function(){
 
         $('[name*=zip]:text').val(zip);
         $('[name=auto_accident_place]:text').val(state);
+        $('[name*=icd_indicator]').val(randomDigits(2));
 
         $('[name*=phone]:text').each(function(){
             var $this = $(this);
@@ -388,6 +389,8 @@ $(document).ready(function(){
         }
 
         activeFields.addClass('submission-disabled').attr('disabled', true);
+        $form.find('[class*=debug-]').removeClass('debug-mismatch-data debug-missing-data debug-empty-data');
+        $form.find('[title]').removeAttr('title');
 
         $.ajax({
             url: $form.attr('action') + '&json=1',

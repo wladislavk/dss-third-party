@@ -74,6 +74,9 @@ body {
 	height:auto;
 	}
 
+input[type=text], select {
+    text-transform: none;
+}
 
 table#claim-form-table {
     width: 1185px!important;

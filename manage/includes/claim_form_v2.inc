@@ -1686,7 +1686,7 @@ if ($icdEnforcement) {
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Health Insurance Claim Form</title>
+<title>Health Insurance Paper Claim Form</title>
 <link rel="stylesheet" href="/manage/form/form.css?v=<?= time() ?>" type="text/css" />
 <style type="text/css">
 <!--
@@ -2757,7 +2757,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 					<td valign="top">
 						<table width="100%" cellpadding="0" cellspacing="0" border="0">
 							<tr>
-								<td valign="top" width="40%">
+								<td valign="top" width="60%">
 									<span class="num">20.</span> 
 									Outside Lab?
 									<br />
@@ -2767,7 +2767,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 									<input type="radio" name="outside_lab" value="NO" <?php if(!empty($outside_lab) && $outside_lab == "NO") echo " checked";?> />
 									NO
 								</td>
-								<td valign="top" width="60%">
+								<td valign="top" width="40%">
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									S Charges
@@ -2857,16 +2857,35 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						</table>
 					</td>
 					<td valign="top">
-						<span class="num">22.</span> 
-						Resubmission Code
-                                <select name="resubmission_code_fill" class="inbox-wide">
-                                    <option value="1" <?php echo $resubmission_code_fill=="1"?'selected="selected"':''; ?>>New Claim</option>
-                                    <option value="7" <?php echo $resubmission_code_fill=="7"?'selected="selected"':''; ?>>Resubmitted Claim</option>
-                                    <option value="8" <?php echo $resubmission_code_fill=="8"?'selected="selected"':''; ?>>Void/Cancel Prior Claim</option>
-                                </select>
-						<br />
-						Original Ref. No.
-						<input type="text" value="<?php echo (!empty($original_ref_no) ? $original_ref_no : '')?>" name="original_ref_no" class="inbox_line3" size="30" />
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                                <td width="60%">
+                                    <span class="num">22.</span>
+                                    Resubmission Code
+                                    <br>
+                                    <label class="small_cap">
+                                        <input type="radio" name="resubmission_code_fill" value="1"
+                                            <?= $resubmission_code_fill == 1 ? 'checked' : '' ?> />
+                                        Original
+                                    </label>
+                                    <label class="small_cap">
+                                        <input type="radio" name="resubmission_code_fill" value="7"
+                                            <?= $resubmission_code_fill == 7 ? 'checked' : '' ?> />
+                                        Resubmission
+                                    </label>
+                                    <label class="small_cap">
+                                        <input type="radio" name="resubmission_code_fill" value="8"
+                                            <?= $resubmission_code_fill == 8 ? 'checked' : '' ?> />
+                                        Cancellation
+                                    </label>
+                                </td>
+                                <td width="40%">
+                                    Original Ref. No.
+                                    <input type="text" value="<?= $original_ref_no ?>" name="original_ref_no"
+                                        class="inbox_line3" size="30" />
+                                </td>
+                            </tr>
+                        </table>
 					</td>
 				</tr>
 				<tr>

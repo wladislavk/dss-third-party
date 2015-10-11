@@ -197,6 +197,7 @@
     $other_insured_firstname = (!empty($_POST['other_payers'][0]['subscriber']['first_name']) ? $_POST['other_payers'][0]['subscriber']['first_name'] : '');
     $other_insured_lastname = (!empty($_POST['other_payers'][0]['subscriber']['last_name']) ? $_POST['other_payers'][0]['subscriber']['last_name'] : '');
     $other_insured_middle = (!empty($_POST['other_payers'][0]['subscriber']['middle_name']) ? $_POST['other_payers'][0]['subscriber']['middle_name'] : '');
+    $claim_codes = $_POST['code'];
     $employment = (!empty($_POST['claim']['related_to_employment']) ? $_POST['claim']['related_to_employment'] : '');
     $auto_accident = (!empty($_POST['claim']['auto_accident']) ? $_POST['claim']['auto_accident'] : '');
     $auto_accident_place = (!empty($_POST['claim']['auto_accident_state']) ? $_POST['claim']['auto_accident_state'] : '');
@@ -210,6 +211,7 @@
     $other_payer = (!empty($_POST['other_payer']) ? $_POST['other_payer'] : '');
     $responsibility_sequence = (!empty($_POST['other_payers'][0]['responsibility_sequence']) ? $_POST['other_payers'][0]['responsibility_sequence'] : '');
     $icd_indicator = isset($_POST['claim']['icd_indicator']) ? $_POST['claim']['icd_indicator'] : '';
+    $reserved_local_use1 = isset($_POST['claim']['note']) ? $_POST['claim']['note'] : '';
     if ($other_payer == "true") {
         $another_plan = "YES";
     } else {
@@ -225,6 +227,17 @@
     $unable_date_from = (!empty($_POST['claim']['last_worked_date']) ? $_POST['claim']['last_worked_date'] : '');
     $unable_date_to = (!empty($_POST['claim']['work_return_date']) ? $_POST['claim']['work_return_date'] : '');
     // SPLIT APART? $referring_provider = $_POST['referring_provider'];
+    if (
+        !empty($_POST['referring_provider']['first_name']) &&
+        !empty($_POST['referring_provider']['last_name'])
+    ) {
+        $referring_provider = trim($_POST['referring_provider']['last_name']) . ', ' .
+            trim($_POST['referring_provider']['first_name']);
+    } else {
+        // This concatenation will cause to lose the "last_name" field IF the first_name field is empty
+        $referring_provider = trim($_POST['referring_provider']['first_name'] . $_POST['referring_provider']['last_name']);
+    }
+
     $field_17a_dd = (!empty($_POST['referring_provider']['secondary_id_type']) ? $_POST['referring_provider']['secondary_id_type'] : '');
     $field_17a = (!empty($_POST['referring_provider']['secondary_id']) ? $_POST['referring_provider']['secondary_id'] : '');
     $field_17b = (!empty($_POST['referring_provider']['npi']) ? $_POST['referring_provider']['npi'] : '');
@@ -245,7 +258,7 @@
     $diagnosis_k = (!empty($_POST['claim']['diagnosis_codes'][11]) ? $_POST['claim']['diagnosis_codes'][11] : '');
     $diagnosis_l = (!empty($_POST['claim']['diagnosis_codes'][12]) ? $_POST['claim']['diagnosis_codes'][12] : '');
     $resubmission_code = (!empty($_POST['claim']['frequency']) ? $_POST['claim']['frequency'] : '');
-    $original_ref_no = (!empty($_POST['claim']['original_ref_number']) ? $_POST['claim']['original_ref_number'] : '');
+    $original_ref_no = (!empty($_POST['claim']['payer_control_number']) ? $_POST['claim']['payer_control_number'] : '');
     $prior_authorization_number = (!empty($_POST['claim']['prior_authorization_number']) ? $_POST['claim']['prior_authorization_number'] : '');
     $service_date1_from = (!empty($_POST['claim']['service_lines'][0]['service_date_from']) ? $_POST['claim']['service_lines'][0]['service_date_from'] : '');
     $service_date1_to = (!empty($_POST['claim']['service_lines'][0]['service_date_to']) ? $_POST['claim']['service_lines'][0]['service_date_to'] : '');
@@ -518,6 +531,7 @@
                 diagnosis_j = '" . s_for($diagnosis_j) . "',
                 diagnosis_k = '" . s_for($diagnosis_k) . "',
                 diagnosis_l = '" . s_for($diagnosis_l) . "',
+                current_qual = '" . s_for($current_qual) . "',
                 medicaid_resubmission_code = '" . s_for(!empty($medicaid_resubmission_code) ? $medicaid_resubmission_code : '') . "',
                 original_ref_no = '" . s_for($original_ref_no) . "',
                 prior_authorization_number = '" . s_for($prior_authorization_number) . "',

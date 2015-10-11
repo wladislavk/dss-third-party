@@ -1,9 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
-if (!function_exists('s_for')) {
-    require_once dirname(__FILE__) . '/../admin/includes/general.htm';
-}
-
   $status_sql = "SELECT status FROM dental_insurance
                  WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
                  AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
@@ -18,7 +14,6 @@ if (!function_exists('s_for')) {
   $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
   $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED) || ($_GET['instype'] == 2);
 
-  $seq = $is_secondary ? 'S' : 'P';
   $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
   
   $pat_myarray = $db->getRow($pat_sql);
@@ -82,7 +77,6 @@ if (!function_exists('s_for')) {
     }
   }
 
-  $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
   // In the case where we have first come to this page, load the claim form
   // info from dental_insurance and place them into variables.
   $sql = "select * from dental_insurance where insuranceid='".(!empty($_GET['insid']) ? $_GET['insid'] : '')."' and patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
@@ -96,6 +90,9 @@ if (!function_exists('s_for')) {
   $p_m_eligible_payer_name = (!empty($myarray['p_m_eligible_payer_name']) ? $myarray['p_m_eligible_payer_name'] : '');
   $s_m_eligible_payer_id = (!empty($myarray['s_m_eligible_payer_id']) ? $myarray['s_m_eligible_payer_id'] : '');
   $s_m_eligible_payer_name = (!empty($myarray['s_m_eligible_payer_name']) ? $myarray['s_m_eligible_payer_name'] : '');
+  $responsibility_sequence = st($myarray['responsibility_sequence']);
+  $icd_indicator = st($myarray['icd_ind']);
+
   if(!$is_pri_pending){
     $pica1 = st($myarray['pica1']);
     $pica2 = st($myarray['pica2']);
@@ -151,8 +148,7 @@ if (!function_exists('s_for')) {
       $insured_phone_code = st($myarray['insured_phone_code']);
       $insured_phone = st($myarray['insured_phone']);
       $insured_sex = st($pat_myarray['s_m_gender']);
-      $patient_relation_insured = st($pat_myarray['s_m_relation']);
-      $patient_relation_other_insured = st($myarray['patient_relation_insured']);
+      $patient_relation_insured = st($myarray['patient_relation_insured']);
     } else {
       $insurancetype = st($myarray['insurance_type']);
       $other_insurancetype = $myarray['other_insurance_type'];
@@ -227,15 +223,7 @@ if (!function_exists('s_for')) {
     $diagnosis_2 = st($myarray['diagnosis_2']);
     $diagnosis_3 = st($myarray['diagnosis_3']);
     $diagnosis_4 = st($myarray['diagnosis_4']);
-
-      /**
-       * @see CS-29
-       *
-       * ICD-10 can be stored as "0" (paper) or "10" (e-file)
-       * Since 2015-10-01, ICD-10 must be enforced
-       */
-    $icd_ind = st($myarray['idc_ind']);
-
+    $current_qual = st($myarray['current_qual']);
     $diagnosis_a = st($myarray['diagnosis_a']);
     $diagnosis_b = st($myarray['diagnosis_b']);
     $diagnosis_c = st($myarray['diagnosis_c']);
@@ -449,7 +437,7 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
       $insured_signature = 0;
     }
   	$patient_signature = 1;
-  	$signature_physician = "Signature on File";
+  	//$signature_physician = "Signature on File";
   	$patient_signed_date = date('Y-m-d', strtotime($pat_myarray['adddate']));
     $physician_signed_date = date('Y-m-d');	
   	$patient_phone_code = split_phone($pat_myarray['home_phone'], true);
@@ -464,7 +452,7 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
   	$insured_state = (!empty($myarray['insured_state']) ? $myarray['insured_state'] : '');
   	$insured_zip = (!empty($myarray['insured_zip']) ? $myarray['insured_zip'] : '');
   	$insured_dob = $pat_myarray['ins_dob'];	
-  	$patient_relation_insured = $pat_myarray['p_m_relation'];
+  	// $patient_relation_insured = $pat_myarray['p_m_relation'];
     $patient_relation_other_insured = $pat_myarray['s_m_relation'];
   	$insured_employer_school_name = $pat_myarray['employer'];
 
@@ -582,6 +570,7 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
 
 <html>
   <head>
+      <title>Health Insurance E-File Claim Form</title>
     <!-- Jquery -->
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <!-- Jquery UI-->
@@ -733,10 +722,7 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     $('input[name="subscriber[id]"]').val("<?php echo  $insured_id_number;?>");
     $('input[name="claim[note]"]').val("<?php echo (!empty($reserved_local_use1) ? $reserved_local_use1 : '');?>");
     $('input[name="claim[date]"]').val("<?php echo (!empty($date_current) ?  dateFormat($date_current) : '');?>");
-
-    <?php /* @see CS-29, ICD-10 must be enforced since 2015-10-01 */ ?>
-    // $('input[name="claim[icd_indicator]"]').val("<?php echo $icd_ind;?>");
-
+    $('select[name="claim[date_type]"]').val(<?= $current_qual ?>);
     $('input[name="claim[outside_lab_charges]"]').val("<?php echo (!empty($s_charges) ? $s_charges : '');?>");
 
     $('input[name="dependent[last_name]"]').val("<?php echo  $patient_lastname;?>");
@@ -777,16 +763,16 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
       $('input[name="other_payers[0][subscriber][first_name]"]').val("<?= $other_insured_firstname;?>");
       $('input[name="other_payers[0][subscriber][middle_name]"]').val("<?= $other_insured_middle;?>");
       $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
-      $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $seq?>");
+      $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $responsibility_sequence ?>");
 
       <?php
-      if (strtolower($employment) == 'yes') { ?>
+      if (isOptionSelected($employment)) { ?>
       $('input[name="claim[related_to_employment]"][value="true"]').attr("checked", "checked");
     <?php } else { ?>
       $('input[name="claim[related_to_employment]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
-    <?php if (strtolower($auto_accident) == 'yes') { ?>
+    <?php if (isOptionSelected($auto_accident)) { ?>
       $('input[name="claim[auto_accident]"][value="true"]').attr("checked", "checked");
     <?php } else { ?>
       $('input[name="claim[auto_accident]"][value="false"]').attr("checked", "checked");
@@ -794,13 +780,13 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
 
     $('input[name="claim[auto_accident_state]"]').val("<?php echo  $auto_accident_place;?>");
   
-    <?php if (strtolower($other_accident) == 'yes') { ?>
+    <?php if (isOptionSelected($other_accident)) { ?>
       $('input[name="claim[other_accident]"][value="true"]').attr("checked", "checked");
     <?php } else { ?>
       $('input[name="claim[other_accident]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
-    <?php if ($another_plan == 'yes') { ?>
+    <?php if (isOptionSelected($another_plan)) { ?>
       $('input[name="other_payer"][value="true"]').attr("checked", "checked");
     <?php } else { ?>
       $('input[name="other_payer"][value="false"]').attr("checked", "checked");
@@ -811,13 +797,22 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     $('input[name="claim[admission_date]"]').val("<?php echo dateFormat($hospitalization_date_from); ?>");
     $('input[name="claim[discharge_date]"]').val("<?php echo dateFormat($hospitalization_date_to); ?>");
 
-    $('input[name="referring_provider[first_name]"]').val("<?php echo  substr($referring_provider, 0, strpos($referring_provider,' ')); ?>");
-    $('input[name="referring_provider[last_name]"]').val("<?php echo  substr($referring_provider, strpos($referring_provider,' ')); ?>");
+    <?php
+
+    if (strpos($referring_provider, ',') !== false) {
+        list($referring_provider_last, $referring_provider_first) = preg_split('/ *, */', $referring_provider, 2);
+    } else {
+        list($referring_provider_first, $referring_provider_last) = preg_split('/ +/', $referring_provider, 2);
+    }
+
+    ?>
+    $('input[name="referring_provider[first_name]"]').val("<?= $referring_provider_first ?>");
+    $('input[name="referring_provider[last_name]"]').val("<?= $referring_provider_last ?>");
     $('select[name="referring_provider[secondary_id_type]"]').val("<?php echo  $field_17a_dd; ?>");
     $('input[name="referring_provider[secondary_id]"]').val("<?php echo  $field_17a; ?>");
     $('input[name="referring_provider[npi]"]').val("<?php echo  $diagnosising_npi; ?>");
 
-    <?php if (strtolower($outside_lab) == 'yes') { ?>
+    <?php if (isOptionSelected($outside_lab)) { ?>
       $('input[name="claim[outside_lab]"][value="true"]').attr("checked", "checked");
     <?php }else { ?>
       $('input[name="claim[outside_lab]"][value="false"]').attr("checked", "checked");
@@ -946,19 +941,6 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     $amount_paid = $paid_row['amount_paid'];
   }
 
-      $ins_diag = $db->getRow($ins_diag_sql);
-    ?>
-  
-    $('input[name="claim[diagnosis_codes][3]"]').val("<?php echo  $ins_diag['ins_diagnosis']; ?>");
-
-    <?php
-      $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con,$diagnosis_4)."'";
-      $ins_diag = $db->getRow($ins_diag_sql);
-    ?>
-
-    $('input[name="claim[diagnosis_codes][4]"]').val("<?php echo  $ins_diag['ins_diagnosis']; ?>");
-
-    <?php
       // Get modifier codes
       $mod_sql = "SELECT * FROM dental_modifier_code";
 
@@ -1082,12 +1064,15 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
         $icdEnforcement = $oldestServiceDate >= dateToTime('2015-10-01');
     }
 
-    if ($icdEnforcement) {
-        $icd_ind = '10';
-    } else {
-        $icd_ind = "$icd_ind" === '0' || "$icd_ind" === "10" ? '10' : $icd_ind;
-    } ?>
-      $('input[name="claim[icd_indicator]"]').val("<?= $icd_ind ?>");
+    // if ($icdEnforcement) {
+    //     $icd_indicator = '10';
+    // } else {
+    //     $icd_indicator = "$icd_indicator" === '0' || "$icd_indicator" === "10" ? '10' : $icd_indicator;
+    // }
+
+    ?>
+      // ICD Indicator: <?= $icd_indicator ?> .
+      $('input[name="claim[icd_indicator]"]').val("<?= $icd_indicator ?>").addClass('numbermask');
 
   <?php if ($rendering_provider_first_name_1 != "") { ?>
       <?php if ($rendering_provider_entity_1){ ?>
@@ -1288,6 +1273,8 @@ if($federal_tax_id_number != ''){
 ?>
       $('input[name="claim[total_charge]"]').val("<?php echo  $total_charge; ?>");
       $('input[name="claim[patient_amount_paid]"]').val("<?php echo  $amount_paid; ?>");
+      $('input[name="claim[patient_signature_on_file]"]').prop('checked', <?= isOptionSelected($patient_signature) ? 'true' : 'false' ?>);
+      $('input[name="claim[provider_signature_on_file]"]').prop('checked', <?= isOptionSelected($signature_physician) ? 'true' : 'false' ?>);
       $('input[name="claim[signature_date]"]').val("<?php echo dateFormat($physician_signed_date); ?>");
       $('input').each( function(){
         // $(this).val($(this).val().toUpperCase());
@@ -1295,7 +1282,18 @@ if($federal_tax_id_number != ''){
       $('input, select').bind('change', function(){
           form_changed=true;
       });
-    });
+
+      // No DB columns for these fields
+      $('\
+          [name="dependent[address][street_line_2]"],\
+          [name="subscriber[address][street_line_2]"],\
+          [name="referring_provider[middle_name]"]\
+      ')
+          .attr('readonly', true)
+          .addClass('grayout')
+          .closest('td')
+          .addClass('grayout');
+  });
 
   $(".date_field").keydown(function(e){
       var key = e.charCode || e.keyCode || 0;
@@ -1365,3 +1363,15 @@ if($federal_tax_id_number != ''){
 
 </body>
 </html>
+<?php
+
+// Possible values: yes, true, 1
+function isOptionSelected ($value) {
+    if (is_string($value)) {
+        $value = strtolower(trim($value));
+
+        return $value === 'y' || $value === 'yes' || $value === 'true' || $value === '1';
+    }
+
+    return $value === 1 || $value === true;
+}

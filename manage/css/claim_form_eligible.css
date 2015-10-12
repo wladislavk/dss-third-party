@@ -1,3 +1,36 @@
 .claim.form-submit {
 	padding:5px 15px; cursor: pointer;
 }
+
+body {
+    margin-top: 100px;
+}
+
+#top-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-bottom: 2px solid #095d81;
+    padding: 1em;
+    font-family: arial,helvetica,sans-serif;
+    font-size: 14px;
+    text-transform: none;
+}
+
+#top-banner h1, #top-banner h2, #top-banner h3 {
+    margin: 0;
+}
+
+#top-banner ol{
+    list-style-type: decimal;
+
+}
+
+#top-banner ol li {
+    float:left;
+    margin: 0 10px;
+    padding: 0 30px 0 0;
+}

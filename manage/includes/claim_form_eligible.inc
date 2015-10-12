@@ -1222,7 +1222,7 @@ if($federal_tax_id_number != ''){
       $('input[name="billing_provider[address][city]"]').val("<?= $billing_provider_info['city'] ?>");
       $('[name="billing_provider[address][state]"]').val("<?= $billing_provider_info['stateCode'] ?>");
       $('input[name="billing_provider[address][zip]"]').val("<?= $billing_provider_info['zip'] ?>").addClass("zipmask");
-      $('input[name="billing_provider[npi]"]').val("<?php echo ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>").addClass("numbermask"); 
+      $('input[name="billing_provider[npi]"]').val("<?php echo ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>");
       $('input[name="billing_provider[taxonomy_code]"]').val("332B00000X");
       <?php if ($insured_signature): ?>
         $('input[name="claim[direct_payment_authorized]"]').prop('checked',true);
@@ -1392,15 +1392,3 @@ if($federal_tax_id_number != ''){
 
 </body>
 </html>
-<?php
-
-// Possible values: yes, true, 1
-function isOptionSelected ($value) {
-    if (is_string($value)) {
-        $value = strtolower(trim($value));
-
-        return $value === 'y' || $value === 'yes' || $value === 'true' || $value === '1';
-    }
-
-    return $value === 1 || $value === true;
-}

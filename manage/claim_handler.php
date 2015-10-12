@@ -413,7 +413,11 @@
     $billing_provider_phone = (!empty($_POST['billing_provider']['phone_number']) ? $_POST['billing_provider']['phone_number'] : '');
     $billing_provider_name = (!empty($_POST['billing_provider']['organization_name']) ? $_POST['billing_provider']['organization_name'] : '');
     $billing_provider_address = (!empty($_POST['billing_provider']['address']['street_line_1']) ? $_POST['billing_provider']['address']['street_line_1'] : '');
-    $billing_provider_city = (!empty($_POST['billing_provider']['address']['city']) ? $_POST['billing_provider']['address']['city'] : '');
+    $billing_provider_city = trim(
+        (!empty($_POST['billing_provider']['address']['city']) ? $_POST['billing_provider']['address']['city'] . ' ' : '') .
+        (!empty($_POST['billing_provider']['address']['state']) ? $_POST['billing_provider']['address']['state'] . ' ' : '') .
+        (!empty($_POST['billing_provider']['address']['zip']) ? $_POST['billing_provider']['address']['zip'] : '')
+    );
     $billing_provider_a = (!empty($_POST['billing_provider']['npi']) ? $_POST['billing_provider']['npi'] : '');
     $reject_reason = (!empty($_POST['reject_reason']) ? $_POST['reject_reason'] : '');
     $insurance_type_arr = (!empty($insurance_type) ? $insurance_type : '');

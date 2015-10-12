@@ -400,7 +400,8 @@ trigger_error("Die called", E_USER_ERROR);
     );
 	$billing_provider_name = $_POST['billing_provider_name'];
 	$billing_provider_address = $_POST['billing_provider_address'];
-	$billing_provider_city = $_POST['billing_provider_city'];
+    $billing_provider_city = $_POST['billing_provider_info']['city'] . ' ' .
+        $_POST['billing_provider_info']['state'] . ' ' . $_POST['billing_provider_info']['zip'];
 	$billing_provider_a = $_POST['billing_provider_a'];
 	$billing_provider_dd = $_POST['billing_provider_dd'];
 	$billing_provider_b_other = $_POST['billing_provider_b_other'];
@@ -1329,6 +1330,7 @@ list($billing_provider_phone_code, $billing_provider_phone) = parsePhoneNumber(
 $billing_provider_name = st($myarray['billing_provider_name']);
 $billing_provider_address = st($myarray['billing_provider_address']);
 $billing_provider_city = st($myarray['billing_provider_city']);
+$billing_provider_info = parseCityStateZip($billing_provider_city);
 $billing_provider_a = st($myarray['billing_provider_a']);
 $billing_provider_dd = st($myarray['billing_provider_dd']);
 $billing_provider_b_other = st($myarray['billing_provider_b_other']);
@@ -2309,10 +2311,11 @@ Medicare
 									Telephone 
 									<span class="small_cap">(Include Area Code)</span>
 									<br />
-									<span class="style1">(
-									<input type="text" value="<?php echo  $patient_phone_code; ?>" name="patient_phone_code"
+									<span class="style1">
+                                        (<input type="text" value="<?php echo  $patient_phone_code; ?>" name="patient_phone_code"
                                         size="3" class="inbox_line3 inbox-third phonecodemask" />
-									)</span>
+                                        )
+                                    </span>
 									&nbsp;&nbsp;&nbsp;
 									<input type="text" value="<?php echo $patient_phone?>" name="patient_phone"
                                         class="inbox_line3 inbox-half phonemask" size="13"  />
@@ -2333,10 +2336,11 @@ Medicare
 									Telephone 
 									<span class="small_cap">(Include Area Code)</span>
 									<br />
-									<span class="style1">(
-									<input type="text" value="<?php echo $insured_phone_code?>" name="insured_phone_code"
+									<span class="style1">
+                                        (<input type="text" value="<?php echo $insured_phone_code?>" name="insured_phone_code"
                                         size="3" class="inbox_line3 inbox-third phonecodemask" />
-									)</span>
+                                        )
+                                    </span>
 									&nbsp;&nbsp;&nbsp;
 									<input type="text" value="<?php echo $insured_phone?>" name="insured_phone"
                                         class="inbox_line3 inbox-third phonemask" size="13" />
@@ -2376,10 +2380,12 @@ Medicare
 									Employment? 
 									<span class="small_cap">(current Or Previous)</span>
 									<br />
-									<input type="radio" name="employment" value="YES" <?php if(!empty($employment) && $employment == "YES") echo " checked";?> />
+									<input type="radio" name="employment" value="YES"
+                                        <?= isOptionSelected($employment) ? 'checked' : '' ?> />
 									Yes
 									&nbsp;&nbsp;
-									<input type="radio" name="employment" value="NO" <?php if(!empty($employment) && $employment == "NO") echo " checked";?> />
+									<input type="radio" name="employment" value="NO"
+                                        <?= isOptionSelected($employment) ? '' : 'checked' ?> />
 									NO
 								</td>
 							</tr>
@@ -2388,13 +2394,15 @@ Medicare
 									<span class="num_a">b.</span> 
 									Auto Accident? 
 									<br />
-									<input type="radio" name="auto_accident" value="YES" <?php if(!empty($auto_accident) && $auto_accident == "YES") echo " checked";?> />
+									<input type="radio" name="auto_accident" value="YES"
+                                        <?= isOptionSelected($auto_accident) ? 'checked' : '' ?> />
 									Yes
 									&nbsp;&nbsp;
-									<input type="radio" name="auto_accident" value="NO" <?php if(!empty($auto_accident) && $auto_accident == "NO") echo " checked";?> />
+									<input type="radio" name="auto_accident" value="NO"
+                                        <?= isOptionSelected($auto_accident) ? '' : 'checked' ?> />
 									NO
 									&nbsp;&nbsp;
-									Place<span class="small_cap">(State)</span>
+									Place <span class="small_cap">(State)</span>
 									<input type="text" value="<?php echo (!empty($auto_accident_place) ? $auto_accident_place : '')?>"
                                         class="inbox_line3 inbox-third" size="10" name="auto_accident_place" />
 								</td>
@@ -2404,10 +2412,12 @@ Medicare
 									<span class="num_a">c.</span> 
 									Other Accident? 
 									<br />
-									<input type="radio" name="other_accident" value="YES" <?php if(!empty($other_accident) && $other_accident == "YES") echo " checked";?> />
+									<input type="radio" name="other_accident" value="YES"
+                                        <?= isOptionSelected($other_accident) ? 'checked' : '' ?> />
 									Yes
 									&nbsp;&nbsp;
-									<input type="radio" name="other_accident" value="NO" <?php if(!empty($other_accident) && $other_accident == "NO") echo " checked";?> />
+									<input type="radio" name="other_accident" value="NO"
+                                        <?= isOptionSelected($other_accident) ? '' : 'checked' ?> />
 									NO
 								</td>
 							</tr>
@@ -2789,7 +2799,6 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									S Charges
 									<br />
 									<input type="text" value="<?php echo (!empty($s_charges) ? $s_charges : ''); ?>" name="s_charges" class="inbox_line3" size="30" />
@@ -2900,6 +2909,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                                     </label>
                                 </td>
                                 <td width="40%">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     Original Ref. No.
                                     <input type="text" value="<?= $original_ref_no ?>" name="original_ref_no"
                                         class="inbox_line3" size="30" />
@@ -3057,7 +3067,6 @@ if (empty($transactions)) {
         <td width="106"><?= dateFormat($array['service_date']); ?></td>
         <td width="106"><?= dateFormat($array['service_date']); ?></td>
         <td width="91">
-<?php echo  (!empty($pos) ? $pos : ''); ?>
 		<select style="width:76px" name="placeofservice<?php echo $li;?>">
 			<option value=''>Select One</option>
 			<?php 
@@ -3107,18 +3116,18 @@ if (empty($transactions)) {
         <td width="92">
 		<!--diagnosispointer<?php echo $li;?>-->
 <table class="eligibleapi claim"><tbody><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="1" <?php echo  ($dp=="1")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">A</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="2" <?php echo  ($dp=="2")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">B</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="3" <?php echo  ($dp=="3")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">C</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="4" <?php echo  ($dp=="4")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">D</td></tr><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="5" <?php echo  ($dp=="5")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">E</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="6" <?php echo  ($dp=="6")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">F</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="7" <?php echo  ($dp=="7")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">G</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="8" <?php echo  ($dp=="8")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">H</td></tr><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="9" <?php echo  ($dp=="9")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">I</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="10" <?php echo  ($dp=="10")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">J</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="11" <?php echo  ($dp=="11")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">K</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="12" <?php echo  ($dp=="12")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">L</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="1" <?php echo  ($dp=="1")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][0]" type="checkbox"></td><td class="input-side-hint">A</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="2" <?php echo  ($dp=="2")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][1]" type="checkbox"></td><td class="input-side-hint">B</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="3" <?php echo  ($dp=="3")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][2]" type="checkbox"></td><td class="input-side-hint">C</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="4" <?php echo  ($dp=="4")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][3]" type="checkbox"></td><td class="input-side-hint">D</td></tr><tr class="eligibleapi claim">
+<td class="input-center-hint checkbox-container"><input class="input" value="5" <?php echo  ($dp=="5")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][4]" type="checkbox"></td><td class="input-side-hint">E</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="6" <?php echo  ($dp=="6")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][5]" type="checkbox"></td><td class="input-side-hint">F</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="7" <?php echo  ($dp=="7")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][6]" type="checkbox"></td><td class="input-side-hint">G</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="8" <?php echo  ($dp=="8")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][7]" type="checkbox"></td><td class="input-side-hint">H</td></tr><tr class="eligibleapi claim">
+<td class="input-center-hint checkbox-container"><input class="input" value="9" <?php echo  ($dp=="9")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][8]" type="checkbox"></td><td class="input-side-hint">I</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="10" <?php echo  ($dp=="10")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][9]" type="checkbox"></td><td class="input-side-hint">J</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="11" <?php echo  ($dp=="11")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][10]" type="checkbox"></td><td class="input-side-hint">K</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="12" <?php echo  ($dp=="12")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][11]" type="checkbox"></td><td class="input-side-hint">L</td>
 </tr></tbody></table>
 	</td>
         <td width="100" align="right" style="padding-right:15px;">$<?php echo  number_format($array['amount'], 2); ?></td>
@@ -3142,10 +3151,9 @@ if (empty($transactions)) {
 				</tr>
 <!-- /END BOX 24 -->
 				<tr>
-					<td valign="top" colspan="2">
-					
-						<table width="100%" cellpadding="1" cellspacing="1" border="0" bgcolor="#000000">
-							<tr bgcolor="#FFFFFF">
+					<td valign="top" colspan="2" height="100%">
+						<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+							<tr>
 								<td valign="top" width="40%">
 									<table width="100%" cellpadding="0" cellspacing="0" border="0">
 										<tr>
@@ -3191,12 +3199,14 @@ if (empty($transactions)) {
 										</tr>
 									</table>
 								</td>
+                                <td class="b_line label grayout" align="left" valign="top" width="13"></td>
 								<td valign="top" width="30%" class="grayout">
 									<span class="num">26.</span> 
 									Patient Account No.
 									<br />
 									<input type="text" value="<?php echo (!empty($patient_account_no) ? $patient_account_no : ''); ?>" name="patient_account_no" class="inbox_line3" size="20" />
 								</td>
+                                <td class="b_line label" align="left" valign="top" width="13"></td>
 								<td valign="top" width="30%">
 									<span class="num">27.</span> 
 									Accept Assignment?
@@ -3212,19 +3222,21 @@ if (empty($transactions)) {
 							</tr>
 						</table>
 					</td>
-					<td valign="top" colspan="2">
+					<td valign="top" colspan="2" height="100%">
 
 <!-- START DOLLAR BOXES 28,29,30 -->
-<table width="100%" cellpadding="1" cellspacing="1" border="0" bgcolor="#000000">
-  <tr bgcolor="#FFFFFF">
+<table width="100%" cellpadding="1" cellspacing="1" border="0" height="100%">
+  <tr>
     <td valign="top" width="33%">
       <span class="num">28.</span> Total Charge<br/>
       $ <input type="text" value="<?php echo $total_charge;?>" name="total_charge" class="inbox_line3 number_field" size="15" />
     </td>
+      <td class="b_line label" align="left" valign="top" width="13"></td>
     <td valign="top" width="33%">
       <span class="num">29.</span> Amount Paid<br/>
       $ <input type="text" value="<?php echo $amount_paid;?>" name="amount_paid" class="inbox_line3 number_field" size="15"/>
     </td>
+      <td class="b_line label grayout" align="left" valign="top" width="13"></td>
     <td valign="top" width="33%" class="grayout">
       <span class="num">30.</span> RSVD for NUCC Use<br/>
       <input type="text" name="nucc_30" value="<?php echo  (!empty($nucc_30) ? $nucc_30 : ''); ?>" class="inbox_line3 " size="15" />
@@ -3238,9 +3250,9 @@ if (empty($transactions)) {
 					</td>
 				</tr>
 				<tr>
-					<td valign="top" colspan="2">
-						<table width="100%" cellpadding="1" cellspacing="1" border="0" bgcolor="#000000">
-							<tr bgcolor="#FFFFFF">
+					<td valign="top" colspan="2" height="100%">
+						<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+							<tr>
 								<td valign="top" width="50%">
 									<span class="num">31.</span> 
 									Signature of Physician or Supplier Including Degrees or Credentals
@@ -3263,6 +3275,7 @@ if (empty($transactions)) {
                                        />
                                     </div>
 								</td>
+                                <td class="b_line label" align="left" valign="top" width="13"></td>
 								<td valign="top" width="50%">
 									<span class="num">32.</span> 
 									Service Facility Location Information
@@ -3351,10 +3364,11 @@ if (empty($transactions)) {
 
 						?>
                         <br />
-						<span class="style1">(
-						<input type="text" value="<?php echo  $billing_provider_phone_code; ?>"
+						<span class="style1">
+                            (<input type="text" value="<?php echo  $billing_provider_phone_code; ?>"
                             name="billing_provider_phone_code" size="3" class="inbox_line3 inbox-third phonecodemask" />
-						)</span>
+                            )
+                        </span>
 						&nbsp;&nbsp;&nbsp;
 						<input type="text" value="<?php echo  $billing_provider_phone; ?>" name="billing_provider_phone"
                             class="inbox_line3 inbox-half phonemask" size="13"  />
@@ -3379,9 +3393,23 @@ if (empty($transactions)) {
 								<td valign="top" width="10%">
 									<span class="small_cap">City/State/Zip:</span>		
 								</td>
-								<td valign="top" width="90%">
-                                    <input type="text" value="<?php echo ($billing_provider_city && $billing_provider_city != '')?$billing_provider_city:$city.', '.$state.' '.$zip;?>" name="billing_provider_city" class="inbox_line3" size="40" />
-								</td>
+                                <td valign="top">
+                                    <input type="text" name="billing_provider_info[city]" class="inbox_line3 inbox-third"
+                                           placeholder="City"
+                                           value="<?= $billing_provider_info['city'] ?>"
+                                        />
+                                    <select name="billing_provider_info[state]">
+                                        <?php foreach (stateList() as $stateCode=>$stateName) { ?>
+                                            <option value="<?= $stateCode ?>"
+                                                <?= ($billing_provider_info['stateCode'] == $stateCode ? 'selected' : '') ?>>
+                                                <?= "$stateCode - $stateName" ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                    <input type="text" name="billing_provider_info[zip]" class="inbox_line3 inbox-third"
+                                           placeholder="Zip"
+                                           value="<?= $billing_provider_info['zip'] ?>"
+                                        />
 							</tr>
 						</table>
 						<span class="num_a">

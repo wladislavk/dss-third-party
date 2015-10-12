@@ -436,3 +436,13 @@ function parseCityStateZip ($location) {
 
     return $location;
 }
+
+function isOptionSelected ($value) {
+    if (is_string($value)) {
+        $value = strtolower(trim($value));
+
+        return $value === 'y' || $value === 'yes' || $value === 'true' || $value === '1';
+    }
+
+    return $value === 1 || $value === true;
+}

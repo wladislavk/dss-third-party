@@ -173,7 +173,7 @@
     $patient_city = (!empty($_POST['dependent']['address']['city']) ? $_POST['dependent']['address']['city'] : '');
     $patient_state = (!empty($_POST['dependent']['address']['state']) ? $_POST['dependent']['address']['state'] : '');
     $patient_zip = (!empty($_POST['dependent']['address']['zip']) ? $_POST['dependent']['address']['zip'] : '');
-    $patient_phone = (!empty($_POST['dependent']['phone_number']) ? $_POST['dependent']['phone_number'] : '');
+    list($patient_phone_code, $patient_phone) = parsePhoneNumber($_POST['dependent']['phone_number']);
 	$patient_sex = (!empty($_POST['dependent']['gender']) ? $_POST['dependent']['gender'] : '');
     $insured_id_number = (!empty($_POST['subscriber']['id']) ? $_POST['subscriber']['id'] : '');
     $insured_firstname = (!empty($_POST['subscriber']['first_name']) ? $_POST['subscriber']['first_name'] : '');
@@ -193,7 +193,7 @@
     $insured_state = (!empty($_POST['subscriber']['address']['state']) ? $_POST['subscriber']['address']['state'] : '');
     $insured_city = (!empty($_POST['subscriber']['address']['city']) ? $_POST['subscriber']['address']['city'] : '');
     $insured_zip = (!empty($_POST['subscriber']['address']['zip']) ? $_POST['subscriber']['address']['zip'] : '');
-    $insured_phone = (!empty($_POST['subscriber']['phone_number']) ? $_POST['subscriber']['phone_number'] : '');
+    list($insured_phone_code, $insured_phone) = parsePhoneNumber($_POST['subscriber']['phone_number']);
     $other_insured_firstname = (!empty($_POST['other_payers'][0]['subscriber']['first_name']) ? $_POST['other_payers'][0]['subscriber']['first_name'] : '');
     $other_insured_lastname = (!empty($_POST['other_payers'][0]['subscriber']['last_name']) ? $_POST['other_payers'][0]['subscriber']['last_name'] : '');
     $other_insured_middle = (!empty($_POST['other_payers'][0]['subscriber']['middle_name']) ? $_POST['other_payers'][0]['subscriber']['middle_name'] : '');
@@ -257,7 +257,7 @@
     $diagnosis_j = (!empty($_POST['claim']['diagnosis_codes'][10]) ? $_POST['claim']['diagnosis_codes'][10] : '');
     $diagnosis_k = (!empty($_POST['claim']['diagnosis_codes'][11]) ? $_POST['claim']['diagnosis_codes'][11] : '');
     $diagnosis_l = (!empty($_POST['claim']['diagnosis_codes'][12]) ? $_POST['claim']['diagnosis_codes'][12] : '');
-    $resubmission_code = (!empty($_POST['claim']['frequency']) ? $_POST['claim']['frequency'] : '');
+    $resubmission_code_fill = (!empty($_POST['claim']['frequency']) ? $_POST['claim']['frequency'] : '');
     $original_ref_no = (!empty($_POST['claim']['payer_control_number']) ? $_POST['claim']['payer_control_number'] : '');
     $prior_authorization_number = (!empty($_POST['claim']['prior_authorization_number']) ? $_POST['claim']['prior_authorization_number'] : '');
     $service_date1_from = (!empty($_POST['claim']['service_lines'][0]['service_date_from']) ? $_POST['claim']['service_lines'][0]['service_date_from'] : '');
@@ -410,7 +410,7 @@
     );
 	//SPLIT APART?
     $service_info_a = (!empty($_POST['service_facility']['npi']) ? $_POST['service_facility']['npi'] : '');
-    $billing_provider_phone = (!empty($_POST['billing_provider']['phone_number']) ? $_POST['billing_provider']['phone_number'] : '');
+    list($billing_provider_phone_code, $billing_provider_phone) = parsePhoneNumber($_POST['billing_provider']['phone_number']);
     $billing_provider_name = (!empty($_POST['billing_provider']['organization_name']) ? $_POST['billing_provider']['organization_name'] : '');
     $billing_provider_address = (!empty($_POST['billing_provider']['address']['street_line_1']) ? $_POST['billing_provider']['address']['street_line_1'] : '');
     $billing_provider_city = trim(
@@ -541,6 +541,7 @@
                 diagnosis_l = '" . s_for($diagnosis_l) . "',
                 current_qual = '" . s_for($current_qual) . "',
                 medicaid_resubmission_code = '" . s_for(!empty($medicaid_resubmission_code) ? $medicaid_resubmission_code : '') . "',
+                resubmission_code_fill = '" . s_for($resubmission_code_fill) . "',
                 original_ref_no = '" . s_for($original_ref_no) . "',
                 prior_authorization_number = '" . s_for($prior_authorization_number) . "',
                 service_date1_from = '" . s_for($service_date1_from) . "',

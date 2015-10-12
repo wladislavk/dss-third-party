@@ -376,7 +376,7 @@ trigger_error("Die called", E_USER_ERROR);
 	$epsdt_family_plan6 = (!empty($_POST['epsdt_family_plan6']) ? $_POST['epsdt_family_plan6'] : '');
 	$id_qua6 = (!empty($_POST['id_qua6']) ? $_POST['id_qua6'] : '');
 	$rendering_provider_id6 = (!empty($_POST['rendering_provider_id6']) ? $_POST['rendering_provider_id6'] : '');
-	$federal_tax_id_number = num((!empty($_POST['federal_tax_id_number']) ? $_POST['federal_tax_id_number'] : ''), false);
+	$federal_tax_id_number = (!empty($_POST['federal_tax_id_number']) ? $_POST['federal_tax_id_number'] : '');
 	$ssn = (!empty($_POST['ssnein']) && $_POST['ssnein']=="ssn")?'1':'';
 	$ein = (!empty($_POST['ssnein']) && $_POST['ssnein']=="ein")?'1':'';
 	$patient_account_no = $_POST['patient_account_no'];
@@ -384,7 +384,8 @@ trigger_error("Die called", E_USER_ERROR);
 	$total_charge = $_POST['total_charge'];
 	$amount_paid = $_POST['amount_paid'];
 	$balance_due = (!empty($_POST['balance_due']) ? $_POST['balance_due'] : '');
-	$signature_physician = $_POST['signature_physician'];
+	// In Paper form, this is a placeholder
+    // $signature_physician = $_POST['signature_physician'];
 	$physician_signed_date = dateFormat($_POST['physician_signed_date'], false);
 	$service_facility_info_name = $_POST['service_facility_info_name'];
 	$service_facility_info_address = $_POST['service_facility_info_address'];
@@ -1372,7 +1373,6 @@ if($is_pri_pending){
 	  $insured_signature = 1;
 	}
 	$patient_signature = 1;
-	$signature_physician = "Signature on File";
 	$patient_signed_date = dateFormat($pat_myarray['adddate']);
     $physician_signed_date = date('Y-m-d');
     list($patient_phone_code, $patient_phone) = parsePhoneNumber($pat_myarray['home_phone']);
@@ -2000,7 +2000,7 @@ $(document).ready(function(){
 
 
 <?php } ?>
-<table border="0" align="center" cellpadding="0" cellspacing="0" id="claim-form-table">
+<table border="0" align="center" cellpadding="0" cellspacing="0" id="claim-form-table" class="eligibleapi claim">
 	<tr>
 		<td align="left" valign="top" width="50%">
 			<span><div class="box_bg">1500</div></span>
@@ -2659,9 +2659,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 								<td valign="top" width="10%" style="border-bottom: 1px #000000 dashed;">
 									<select name="field_17a_dd" class="inbox_line3" style="width:40px;">
 										<option value=""></option>
-                                        <option value="P" <?= $is_secondary ? '' : 'selected' ?>>Primary</option>
-                                        <option value="S" <?= $is_secondary ? 'selected' : '' ?>>Secondary</option>
-                                        <option value="T">Tertiary</option>
+                                        <option value="P" <?= $field_17a_dd == 'P' ? 'selected' : '' ?>>Primary</option>
+                                        <option value="S" <?= $field_17a_dd == 'S' ? 'selected' : '' ?>>Secondary</option>
+                                        <option value="T" <?= $field_17a_dd == 'T' ? 'selected' : '' ?>>Tertiary</option>
 									</select>
 								</td>
 								<td valign="top" width="80%" style="border-bottom: 1px #000000 dashed; padding-bottom:3px;">
@@ -2772,7 +2772,8 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                                         style="width:100px;" maxlength="255"
                                         onChange="validateDate('hospitalization_date_to');"
                                         placeholder="YYYY-MM-DD"
-                                        />
+                                        data-date-format="Y-m-d"
+                                    />
 								</td>
 							</tr>
 						</table>
@@ -3017,7 +3018,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 										MODIFIER
 									</span>
 								</td>
-								<td valign="bottom" align="center">
+								<td valign="bottom" align="center" width="160">
 									<span class="small_cap">
 										DIAGNOSIS <br />POINTER
 									</span>
@@ -3161,40 +3162,18 @@ if (empty($transactions)) {
 												<span class="num">25.</span> 
 												Federal Tax I.D.Number
 												<br />
-												<?php
-												  
-												  if($userinfo['tax_id_or_ssn'] != ''){
-													$tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
-												  }else{
-                                                                                                        $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
-												  }
-												  
-												?>
-												<input disabled="disabled" type="text" value="<?php echo $tax_id_or_ssn;?>" name="federal_tax_id_number" size="20" class="inbox_line3" />
+												<input type="text" value="<?= $federal_tax_id_number ?>"
+                                                    name="federal_tax_id_number" size="20" class="inbox_line3" />
 											</td>
 											<td valign="top" width="10%" align="center">
 												SSN
 												<br />
-                                                                                                <?php
-                                                                                                  if($userinfo['ssn'] != '' && $userinfo['producer_files']==1){
-                                                                                                        $ssn = $userinfo['ssn'];
-                                                                                                  }else{
-                                                                                                        $ssn = $docinfo['ssn'];
-                                                                                                  }
-                                                                                                ?>
-												<input type="radio" disabled="disabled" name="ssnein" value="ssn" <?php if($ssn == "1") echo " checked";?> />
+												<input type="radio" name="ssnein" value="ssn" <?php if($ssn == "1") echo " checked";?> />
 											</td>
 											<td valign="top" width="10%" align="center">
 												EIN
 												<br />
-                                                                                                <?php
-                                                                                                  if($userinfo['ein'] != '' && $userinfo['producer_files']==1){
-                                                                                                        $ein = $userinfo['ein'];
-                                                                                                  }else{                                                                                          
-                                                                                                        $ein = $docinfo['ein'];
-                                                                                                  }
-                                                                                                ?>
-												<input type="radio" disabled="disabled" name="ssnein" value="ein" <?php if($ein == "1") echo " checked";?> />
+												<input type="radio" name="ssnein" value="ein" <?php if($ein == "1") echo " checked";?> />
 											</td>
 										</tr>
 									</table>
@@ -3259,8 +3238,9 @@ if (empty($transactions)) {
 									<span class="small_cap">
 										(I certify that the statements on the reverse apply to this bill and are made a part thereof.)
 									</span>
-									<br />
-									<input type="text" class="inbox_line3" size="40" name="signature_physician" />
+									<br /><br />
+                                    <input type="text" class="inbox_line3 grayout" size="40" disabled />
+                                    <input type="hidden" name="signature_physician" value="<?= $signature_physician ?>" />
 									<br /><br />
 									Signed
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -3279,21 +3259,22 @@ if (empty($transactions)) {
 								<td valign="top" width="50%">
 									<span class="num">32.</span> 
 									Service Facility Location Information
+                                    <input type="text" style="visibility:hidden;width:1px;" class="spacer-dont-name" />
 									<table width="100%" cellpadding="1" cellspacing="1" border="0">
 										<tr>
 											<td valign="top" width="10%">
 												<span class="small_cap">Name:</span>		
 											</td>
 											                
-											<td valign="top" width="90%">
+											<td valign="top" width="90%" colspan="2">
                                                 <input type="text" value="<?php echo ($service_facility_info_name && $service_facility_info_name != "")?$service_facility_info_name:$service_practice;?>" name="service_facility_info_name" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" width="10%">
-												<span class="small_cap">Address:</span>		
+												<span class="small_cap">Address:</span>
 											</td>
-											<td valign="top" width="90%">
+											<td valign="top" width="90%" colspan="2">
                                                 <input type="text" value="<?php echo ($service_facility_info_address && $service_facility_info_address != '')?$service_facility_info_address:$service_address;?>" name="service_facility_info_address" class="inbox_line3" size="40" />
 											</td>
 										</tr>
@@ -3301,7 +3282,7 @@ if (empty($transactions)) {
                                             <td valign="top">
                                                 <span class="small_cap">City/State/Zip</span>
                                             </td>
-                                            <td valign="top">
+                                            <td valign="top" colspan="2">
                                                 <input type="text" name="service_facility_info[city]" class="inbox_line3 inbox-third"
                                                     placeholder="City"
                                                     value="<?= $service_facility_info['city'] ?>"
@@ -3318,66 +3299,66 @@ if (empty($transactions)) {
                                                     placeholder="Zip"
                                                     value="<?= $service_facility_info['zip'] ?>"
                                                     />
-											</td>
-										</tr>
-									</table>
-									<span class="num_a">
-										a.
-									</span>
-                                    <input type="text" value="<?= ($service_info_a && $service_info_a != '')?$service_info_a:(($insurancetype == '1')?$service_medicare_npi:$service_npi); ?>"
-                                        name="service_info_a" class="inbox_line3 inbox-third numbermask" size="15" />
-									
-									<span class="num_a">
-										b.
-									</span>
-									<select name="service_info_dd" class="inbox_line3" style="width:50px;">
-										<option value=""></option>
-										<?
-										$qua_sql = "select * from dental_qualifier where status=1 order by sortby";
-										$qua_my = $db->getResults($qua_sql);
-										if (!empty($qua_my)) foreach ($qua_my as $qua_myarray)
-										{?>
-											<option value="<?php echo st(!empty($qua_myarray['qualifierid']) ? $qua_myarray['qualifierid'] : '');?>" <?php if(!empty($service_info_dd) && $service_info_dd == st($qua_myarray['qualifierid'])) echo " selected";?>>
-												<?php echo st($qua_myarray['qualifier']);?>
-											</option>
-										<?
-										}?>
-									</select>
-									<input type="text" value="<?php echo (!empty($service_info_b_other) ? $service_info_b_other : '')?>"
-                                        name="service_info_b_other" class="inbox_line3 inbox-third" size="15" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" width="40%">
+                                                <span class="num_a">
+                                                    a.
+                                                </span>
+                                                <input type="text" value="<?= $service_info_a ?>"
+                                                    name="service_info_a" class="inbox_line3" size="15" />
+                                            </td>
+                                            <td>
+                                                <span class="num_a">
+                                                    b.
+                                                </span>
+                                                <select name="service_info_dd" class="inbox_line3" style="width:50px;">
+                                                    <option value=""></option>
+                                                    <?
+                                                    $qua_sql = "select * from dental_qualifier where status=1 order by sortby";
+                                                    $qua_my = $db->getResults($qua_sql);
+                                                    if (!empty($qua_my)) foreach ($qua_my as $qua_myarray)
+                                                    {?>
+                                                        <option value="<?php echo st(!empty($qua_myarray['qualifierid']) ? $qua_myarray['qualifierid'] : '');?>" <?php if(!empty($service_info_dd) && $service_info_dd == st($qua_myarray['qualifierid'])) echo " selected";?>>
+                                                            <?php echo st($qua_myarray['qualifier']);?>
+                                                        </option>
+                                                    <?
+                                                    }?>
+                                                </select>
+                                                <input type="text" value="<?php echo (!empty($service_info_b_other) ? $service_info_b_other : '')?>"
+                                                    name="service_info_b_other" class="inbox_line3 inbox-half" size="15" />
+                                            </td>
+                                        </tr>
+                                    </table>
 								</td>
 							</tr>
 						</table>
 					</td>
 					
 					<td valign="top" >
-					
-					
-						<span class="num">33.</span> 
-						Billing Provider Info & Ph#
-						<?php 
-							if(empty($billing_provider_phone_code))
-								$billing_provider_phone_code = split_phone($phone, true);
-
-                                                        if(empty($billing_provider_phone))
-                                                                $billing_provider_phone = split_phone($phone, false);
-
-						?>
-                        <br />
-						<span class="style1">
-                            (<input type="text" value="<?php echo  $billing_provider_phone_code; ?>"
-                            name="billing_provider_phone_code" size="3" class="inbox_line3 inbox-third phonecodemask" />
-                            )
-                        </span>
-						&nbsp;&nbsp;&nbsp;
-						<input type="text" value="<?php echo  $billing_provider_phone; ?>" name="billing_provider_phone"
-                            class="inbox_line3 inbox-half phonemask" size="13"  />
-						<table width="100%" cellpadding="1" cellspacing="1" border="0">
+                        <table width="100%" cellpadding="1" cellspacing="1" border="0">
+                            <tr>
+                                <td colspan="3" width="50%">
+                                    <span class="num">33.</span>
+                                    Billing Provider Info & Ph#
+                                </td>
+                                <td>
+                                    <span class="style1">
+                                        (<input type="text" value="<?php echo  $billing_provider_phone_code; ?>"
+                                        name="billing_provider_phone_code" size="3" class="inbox_line3 inbox-third phonecodemask" />
+                                        )
+                                    </span>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <input type="text" value="<?php echo  $billing_provider_phone; ?>" name="billing_provider_phone"
+                                        class="inbox_line3 inbox-half phonemask" size="13"  />
+                                </td>
+						    </tr>
 							<tr>
 								<td valign="top" width="10%">
 									<span class="small_cap">Name:</span>		
 								</td>
-								<td valign="top" width="90%">
+								<td valign="top" width="90%" colspan="3">
                                     <input type="text" value="<?php echo ($billing_provider_name && $billing_provider_name != '')?$billing_provider_name:$practice;?>" name="billing_provider_name" class="inbox_line3" size="40" />
 								</td>
 							</tr>
@@ -3385,7 +3366,7 @@ if (empty($transactions)) {
 								<td valign="top" width="10%">
 									<span class="small_cap">Address:</span>		
 								</td>
-								<td valign="top" width="90%">
+								<td valign="top" width="90%" colspan="3">
                                     <input type="text" value="<?php echo ($billing_provider_address && $billing_provider_address != '')?$billing_provider_address:$address;?>" name="billing_provider_address" class="inbox_line3" size="40" />
 								</td>
 							</tr>
@@ -3393,7 +3374,7 @@ if (empty($transactions)) {
 								<td valign="top" width="10%">
 									<span class="small_cap">City/State/Zip:</span>		
 								</td>
-                                <td valign="top">
+                                <td valign="top" colspan="3">
                                     <input type="text" name="billing_provider_info[city]" class="inbox_line3 inbox-third"
                                            placeholder="City"
                                            value="<?= $billing_provider_info['city'] ?>"
@@ -3410,32 +3391,39 @@ if (empty($transactions)) {
                                            placeholder="Zip"
                                            value="<?= $billing_provider_info['zip'] ?>"
                                         />
-							</tr>
-						</table>
-						<span class="num_a">
-							a.
-						</span>
-                        <input type="text" value="<?= ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>"
-                            name="billing_provider_a" class="inbox_line3 inbox-third numbermask" size="15" />
-						
-						<span class="num_a">
-							b.
-						</span>
-						<select name="billing_provider_dd" class="inbox_line3" style="width:50px;">
-							<option value=""></option>
-							<?
-							$qua_sql = "select * from dental_qualifier where status=1 order by sortby";
-							$qua_my = $db->getResults($qua_sql);
-							if (!empty($qua_my)) foreach ($qua_my as $qua_myarray)
-							{?>
-								<option value="<?php echo st($qua_myarray['qualifierid']);?>" <?php if(!empty($billing_provider_dd) && $billing_provider_dd == st($qua_myarray['qualifierid'])) echo " selected";?>>
-									<?php echo st($qua_myarray['qualifier']);?>
-								</option>
-							<?
-							}?>
-						</select>
-						<input type="text" value="<?php echo (!empty($billing_provider_b_other) ? $billing_provider_b_other : '')?>"
-                            name="billing_provider_b_other" class="inbox_line3 inbox-third" size="15" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span class="num_a">
+                                        a.
+                                    </span>
+                                    <input type="text" value="<?= ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>"
+                                        name="billing_provider_a" class="inbox_line3" size="15" />
+                                </td>
+                                <td colspan="2">
+                                    <span class="num_a">
+                                        b.
+                                    </span>
+                                    <select name="billing_provider_dd" class="inbox_line3" style="width:50px;">
+                                        <option value=""></option>
+                                        <?php
+
+                                        $qua_sql = "select * from dental_qualifier where status=1 order by sortby";
+                                        $qua_my = $db->getResults($qua_sql);
+
+                                        if (!empty($qua_my)) foreach ($qua_my as $qua_myarray) { ?>
+                                            <option value="<?php echo st($qua_myarray['qualifierid']);?>"
+                                                <?= (!empty($billing_provider_dd) && $billing_provider_dd == st($qua_myarray['qualifierid']) ? 'selected' : '') ?>>
+                                                <?php echo st($qua_myarray['qualifier']);?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                    <input type="text" value="<?= htmlspecialchars($billing_provider_b_other) ?>"
+                                        name="billing_provider_b_other" class="inbox_line3 inbox-half" size="15" />
+                                </td>
+                            </tr>
+                        </table>
 					</td>
 				</tr>
 			</table>

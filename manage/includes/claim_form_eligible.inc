@@ -239,6 +239,7 @@
 
     $claim_codes = st($myarray['claim_codes']);
     $medicaid_resubmission_code = st($myarray['medicaid_resubmission_code']);
+    $resubmission_code_fill = st($myarray['resubmission_code_fill']);
     $original_ref_no = st($myarray['original_ref_no']);
     $prior_authorization_number = st($myarray['prior_authorization_number']);
     $service_date1_from = st($myarray['service_date1_from']);
@@ -960,7 +961,6 @@ function stateDropdown (fieldName) {
   $paid_my = $db->getRow($sql);
   if (!empty($paid_my)) {
     $paid_row = $paid_my;
-    $amount_paid = $paid_row['amount_paid'];
   }
 
       // Get modifier codes
@@ -1102,6 +1102,7 @@ function stateDropdown (fieldName) {
     // }
 
     ?>
+      $('input[name="claim[frequency]"][value="<?= $resubmission_code_fill ?>"]').click();
       // ICD Indicator: <?= $icd_indicator ?> .
       $('input[name="claim[icd_indicator]"]').val("<?= $icd_indicator ?>").addClass('numbermask');
 
@@ -1169,31 +1170,6 @@ function stateDropdown (fieldName) {
       <?php
 }
 
-if($federal_tax_id_number != ''){
-  $tax_id_or_ssn = $federal_tax_id_number;
-} else if($userinfo['tax_id_or_ssn'] != '') {
-  $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
-} else {
-  $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
-}
-
-  if($userinfo['tax_id_or_ssn'] != '') {
-      $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
-  } else {
-      $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
-  }
-
-  if($userinfo['ssn'] != '' && $userinfo['producer_files']==1) {
-      $ssn = $userinfo['ssn'];
-  } else {
-      $ssn = $docinfo['ssn'];
-  }
-
-  if($userinfo['ein'] != '' && $userinfo['producer_files']==1) {
-      $ein = $userinfo['ein'];
-  } else {
-      $ein = $docinfo['ein'];
-  }
   if($accept_assignment=="Yes" || $accept_assignment == "A"){ ?>
         $('input[name="claim[accept_assignment_code]"][value="A"]').prop("checked", true);
       <?php }elseif($accept_assignment=="No" || $accept_assignment == "C"){ ?>
@@ -1209,20 +1185,19 @@ if($federal_tax_id_number != ''){
       <?php } ?>
 
       $('input[name="billing_provider[entity]"][value="true"]').click();
-      $('input[name="service_facility[name]"]').val("<?php echo ($service_facility_info_name && $service_facility_info_name != "")?$service_facility_info_name:$service_practice; ?>");
-      $('input[name="service_facility[address][street_line_1]"]').val("<?php echo ($service_facility_info_address && $service_facility_info_address != '')?$service_facility_info_address:$service_address; ?>");
+      $('input[name="service_facility[name]"]').val("<?= $service_facility_info_name ?>");
+      $('input[name="service_facility[address][street_line_1]"]').val("<?= $service_facility_info_address ?>");
       $('input[name="service_facility[address][city]"]').val("<?= $service_facility_info['city'] ?>");
       $('[name="service_facility[address][state]"]').val("<?= $service_facility_info['stateCode'] ?>");
       $('input[name="service_facility[address][zip]"]').val("<?= $service_facility_info['zip'] ?>").addClass("zipmask");
-      $('input[name="service_facility[npi]"]').val("<?php echo  ($service_info_a && $service_info_a != '')?$service_info_a:(($insurancetype == '1')?$service_medicare_npi:$service_npi); ?>");
-      $('input[name="billing_provider[phone_number]"]').val("<?php echo  $phone; ?>").addClass("numbermask");
-      $('input[name="billing_provider[organization_name]"]').val("<?php echo  $practice; ?>");
-      $('input[name="billing_provider[address][street_line_1]"]').val("<?php echo  $address; ?>");
-      $('input[name="billing_provider[address][street_line_2]"]').val("<?php echo $billing_provider_address; ?>");
+      $('input[name="service_facility[npi]"]').val("<?= $service_info_a ?>");
+      $('input[name="billing_provider[phone_number]"]').val("<?= $billing_provider_phone_code.$billing_provider_phone ?>").addClass("numbermask");
+      $('input[name="billing_provider[organization_name]"]').val("<?= $billing_provider_name ?>");
+      $('input[name="billing_provider[address][street_line_1]"]').val("<?= $billing_provider_address ?>");
       $('input[name="billing_provider[address][city]"]').val("<?= $billing_provider_info['city'] ?>");
       $('[name="billing_provider[address][state]"]').val("<?= $billing_provider_info['stateCode'] ?>");
       $('input[name="billing_provider[address][zip]"]').val("<?= $billing_provider_info['zip'] ?>").addClass("zipmask");
-      $('input[name="billing_provider[npi]"]').val("<?php echo ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>");
+      $('input[name="billing_provider[npi]"]').val("<?= $billing_provider_a ?>");
       $('input[name="billing_provider[taxonomy_code]"]').val("332B00000X");
       <?php if ($insured_signature): ?>
         $('input[name="claim[direct_payment_authorized]"]').prop('checked',true);
@@ -1290,12 +1265,10 @@ if($federal_tax_id_number != ''){
         $paid_my = $db->getResults($sql);
         if (($paid_my !== false) && (count($paid_my) > 0)) {
           $paid_row = $paid_my[0];
-          $amount_paid = $paid_row['amount_paid'];
         }
 
         // format calculations
         $total_charge = number_format($total_charge, 2, '.','');
-        $amount_paid = number_format($amount_paid, 2, '.','');
       }
 ?>
       $('input[name="claim[total_charge]"]').val("<?php echo  $total_charge; ?>");

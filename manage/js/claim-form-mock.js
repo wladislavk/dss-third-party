@@ -121,7 +121,7 @@ $(document).ready(function(){
         }
 
         function randomizeAddresses () {
-            $('[name*=state]:text').each(function(){
+            $('[name*=state]').each(function(){
                 var $this = $(this),
                     name = this.name,
                     entry = mockEntry();

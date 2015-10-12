@@ -40,6 +40,9 @@
 
 #debug-buttons:hover #debug-notifications {
     opacity: 0.9;
+}
+
+#debug-buttons #debug-notifications:hover {
     overflow: auto;
     max-height: 450px;
     transition: max-height 0.8s ease 0s;

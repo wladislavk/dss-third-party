@@ -388,8 +388,11 @@ trigger_error("Die called", E_USER_ERROR);
 	$physician_signed_date = dateFormat($_POST['physician_signed_date'], false);
 	$service_facility_info_name = $_POST['service_facility_info_name'];
 	$service_facility_info_address = $_POST['service_facility_info_address'];
-	$service_facility_info_city = $_POST['service_facility_info_city'];
-	$service_info_a = $_POST['service_info_a'];
+
+    $service_facility_info_city = $_POST['service_facility_info']['city'] . ' ' .
+        $_POST['service_facility_info']['state'] . ' ' . $_POST['service_facility_info']['zip'];
+
+    $service_info_a = $_POST['service_info_a'];
 	$service_info_dd = $_POST['service_info_dd'];
 	$service_info_b_other = $_POST['service_info_b_other'];
     list($billing_provider_phone_code, $billing_provider_phone) = parsePhoneNumber(
@@ -1316,6 +1319,7 @@ $physician_signed_date = dateFormat($myarray['physician_signed_date']);
 $service_facility_info_name = st($myarray['service_facility_info_name']);
 $service_facility_info_address = st($myarray['service_facility_info_address']);
 $service_facility_info_city = st($myarray['service_facility_info_city']);
+$service_facility_info = parseCityStateZip($service_facility_info_city);
 $service_info_a = st($myarray['service_info_a']);
 $service_info_dd = st($myarray['service_info_dd']);
 $service_info_b_other = st($myarray['service_info_b_other']);
@@ -1685,48 +1689,64 @@ if ($icdEnforcement) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Health Insurance Paper Claim Form</title>
-<link rel="stylesheet" href="/manage/form/form.css?v=<?= time() ?>" type="text/css" />
-<style type="text/css">
-<!--
-.style1 {font-size: 16px}
--->
-input{text-transform:uppercase;}
-</style>
-<script language="javascript" type="text/javascript" src="<?php echo $manage_path?>script/validation.js"></script>
-<link href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" rel="stylesheet">
-<link rel="stylesheet" href="<?php echo $admin_path?>popup/popup.css" type="text/css" media="screen" />
-<script type="text/javascript" src="<?php echo $admin_path?>script/jquery-1.6.2.min.js"></script>
-<script type="text/javascript" src="<?php echo $manage_path?>3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-<script type="text/javascript" src="<?php echo $manage_path?>script/masks.js?v=<?= time() ?>"></script>
-<script type="text/javascript" src="<?php echo $admin_path?>popup/popup.js"></script>
-<script type="text/javascript" src="/manage/js/top.js?v=<?= time() ?>"></script>
-
-<?php if (config('app.debug')) { ?>
-    <link rel="stylesheet" href="/manage/css/claim-form-mock.css?v=<?= time() ?>" />
-    <script type="text/javascript" src="/manage/js/claim-form-mock-data.js?v=<?= time() ?>"></script>
-    <script type="text/javascript" src="/manage/js/claim-form-mock.js?v=<?= time() ?>"></script>
-<?php } ?>
-
-<?php if ($is_sent || (!$is_new_claim && !$is_pending && !$is_rejected && !$is_disputed && $is_front_office)) { ?>
-  <script>
-	$(function() {
-	  //$('.print-button').removeAttr('disabled');
-	});
-  </script>
-<?php } ?>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Health Insurance Paper Claim Form</title>
+    <link rel="stylesheet" href="/manage/form/form.css?v=<?= time() ?>" type="text/css" />
+    <style type="text/css">
+        .style1 { font-size: 16px }
+        input { text-transform: uppercase; }
+    </style>
+    <script type="text/javascript" src="/manage/script/validation.js"></script>
+    <link rel="stylesheet" href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" />
+    <link rel="stylesheet" href="<?php echo $admin_path?>popup/popup.css" media="screen" />
+    <script type="text/javascript" src="<?php echo $admin_path?>script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="<?php echo $manage_path?>3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+    <script type="text/javascript" src="<?php echo $manage_path?>script/masks.js?v=<?= time() ?>"></script>
+    <script type="text/javascript" src="<?php echo $admin_path?>popup/popup.js"></script>
+    <script type="text/javascript" src="/manage/js/top.js?v=<?= time() ?>"></script>
+    <?php if (config('app.debug')) { ?>
+        <link rel="stylesheet" href="/manage/css/claim-form-mock.css?v=<?= time() ?>" />
+        <script type="text/javascript" src="/manage/js/claim-form-mock-data.js?v=<?= time() ?>"></script>
+        <script type="text/javascript" src="/manage/js/claim-form-mock.js?v=<?= time() ?>"></script>
+    <?php } ?>
 </head>
-
 <body>
+    <div id="top-banner">
+        <h2>Paper Claim Form</h2>
+        <?php if (!empty($is_front_office)) { ?>
+            <br />
+            <a href="/manage/view_claim.php?claimid=<?= intval($_GET['insid']) ?>&pid=<?= intval($_GET['pid']) ?>">
+                <strong>&lt;&lt;Back to Manage Insurance Page</strong>
+            </a>
+        <?php } else if ($is_back_office) { ?>
+            <br />
+            <a href="manage_claims.php">
+                <strong>&lt;&lt;Back to Manage Claims Page</strong>
+            </a>
+        <?php } ?>
+        <?php if ($status==DSS_CLAIM_PENDING || $status==DSS_CLAIM_REJECTED) { ?>
+            <?php if ($_SERVER['PHP_SELF'] == "/manage/admin/insurance_claim.php") { ?>
+                <?php if ($_SESSION['admin_access'] == 1) { ?>
+                    <a href="manage_claims.php?delid=<?= intval($insuranceid) ?>"
+                        onclick="javascript: return confirm('Are you sure you want to delete this claim?');"
+                        style="float:right; color:#f00; font-decoration:none;" class="editdel dellink"
+                        title="Delete Claim">
+                        Delete Claim
+                    </a>
+                <?php } ?>
+            <?php } else { ?>
+                <a href="manage_insurance.php?delid=<?php echo $insuranceid;?>&pid=<?php echo $_GET['pid']; ?>"
+                    onclick="javascript: return confirm('Are you sure you want to delete this claim?');"
+                    style="float:right; color:#f00; font-decoration:none;" class="editdel dellink"
+                    title="Delete Claim">
+                    Delete Claim
+                </a>
+            <?php } ?>
+        <?php } ?>
+    </div>
+
 <?php echo (!empty($msg) ? $msg : ''); ?>
-<?php if (!empty($is_front_office)) { ?>
-  <a href="view_claim.php?claimid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '');?>&pid=<?php echo $_GET['pid']?>">
-	<b>&lt;&lt;Back to Manage Insurance Page</b></a>
-<?php } else if ($is_back_office) { ?>
-  <a href="manage_claims.php">
-	<b>&lt;&lt;Back to Manage Claims Page</b></a>
-<?php } ?>
+
 <?php if(!empty($is_front_office)){ ?>
 <?php if($is_secondary){ ?>
         <h4>Secondary Claim (<a href="insurance_v2.php?insid=<?php echo $orig_claim_id; ?>&pid=<?php echo $_GET['pid']; ?>">Primary is <?php echo $orig_claim_id; ?></a>)</h4>
@@ -3265,11 +3285,26 @@ if (empty($transactions)) {
 											</td>
 										</tr>
 										<tr>
-											<td valign="top" width="10%">
-												<span class="small_cap">City/State/Zip:</span>		
-											</td>
-											<td valign="top" width="90%">
-                                                <input type="text" value="<?php echo ($service_facility_info_city && $service_facility_info_city != "")?$service_facility_info_city:($service_city.', '.$service_state.' '.$service_zip);?>" name="service_facility_info_city" class="inbox_line3" size="40" />
+                                            <td valign="top">
+                                                <span class="small_cap">City/State/Zip</span>
+                                            </td>
+                                            <td valign="top">
+                                                <input type="text" name="service_facility_info[city]" class="inbox_line3 inbox-third"
+                                                    placeholder="City"
+                                                    value="<?= $service_facility_info['city'] ?>"
+                                                    />
+                                                <select name="service_facility_info[state]">
+                                                    <?php foreach (stateList() as $stateCode=>$stateName) { ?>
+                                                        <option value="<?= $stateCode ?>"
+                                                            <?= ($service_facility_info['stateCode'] == $stateCode ? 'selected' : '') ?>>
+                                                            <?= "$stateCode - $stateName" ?>
+                                                        </option>
+                                                    <?php } ?>
+                                                </select>
+                                                <input type="text" name="service_facility_info[zip]" class="inbox_line3 inbox-third"
+                                                    placeholder="Zip"
+                                                    value="<?= $service_facility_info['zip'] ?>"
+                                                    />
 											</td>
 										</tr>
 									</table>
@@ -3379,26 +3414,8 @@ if (empty($transactions)) {
 		</td>
 	</tr>
 </table>
-                                <?php if($status==DSS_CLAIM_PENDING || $status==DSS_CLAIM_REJECTED){ ?>
-			<?php if($_SERVER['PHP_SELF'] == "/manage/admin/insurance_claim.php"){ ?>
-				<?php if( $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_claims.php?delid=<?php echo $insuranceid;?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
-                                                Delete
-                                        </a>
-				<?php } ?> 
-			<!--
-			<a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel dellink" title="REJECT">Reject</a>
-			<div id="reject_reason_div" <?php echo  ($myarray['status']==DSS_CLAIM_REJECTED)?'':'style="display:none;"'; ?> >
-				<label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?php echo  $reject_reason; ?></textarea>
-				<input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" />
-			</div>
-			-->
-			<?php }else{ ?>
-                    <a href="manage_insurance.php?delid=<?php echo $insuranceid;?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:left; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
-                                                Delete
-                                        </a>
-
-
+    <?php if ($status==DSS_CLAIM_PENDING || $status==DSS_CLAIM_REJECTED) { ?>
+        <?php if ($_SERVER['PHP_SELF'] != "/manage/admin/insurance_claim.php") { ?>
 		<div style="float:right;">
 
         <?php if (

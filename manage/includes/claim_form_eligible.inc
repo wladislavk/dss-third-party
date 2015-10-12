@@ -380,6 +380,7 @@
     $service_facility_info_name = st($myarray['service_facility_info_name']);
     $service_facility_info_address = st($myarray['service_facility_info_address']);
     $service_facility_info_city = st($myarray['service_facility_info_city']);
+    $service_facility_info = parseCityStateZip($service_facility_info_city);
     $service_info_a = st($myarray['service_info_a']);
     $service_info_dd = st($myarray['service_info_dd']);
     $service_info_b_other = st($myarray['service_info_b_other']);
@@ -388,6 +389,7 @@
     $billing_provider_name = st($myarray['billing_provider_name']);
     $billing_provider_address = st($myarray['billing_provider_address']);
     $billing_provider_city = st($myarray['billing_provider_city']);
+    $billing_provider_info = parseCityStateZip($billing_provider_city);
     $billing_provider_a = st($myarray['billing_provider_a']);
     $billing_provider_dd = st($myarray['billing_provider_dd']);
     $billing_provider_b_other = st($myarray['billing_provider_b_other']);
@@ -569,43 +571,46 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
 ?>
 
 <html>
-  <head>
-      <title>Health Insurance E-File Claim Form</title>
-    <!-- Jquery -->
+<head>
+    <title>Health Insurance E-File Claim Form</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" />
+    <link rel="stylesheet" href="/manage/css/claim_form_eligible.css?v=<?= time() ?>" />
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-    <!-- Jquery UI-->
-
-    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-
-    <script src="https://eligibleapi.com/js/eligible-claim-1500-2014.min.js"></script>
-    <script type="text/javascript" src="js/claim_form_eligible.js"></script>
-
-    <link href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" rel="stylesheet">
-
-    <link href="css/claim_form_eligible.css" rel="stylesheet">
-      <?php if (config('app.debug')) { ?>
-          <link rel="stylesheet" href="/manage/css/claim-form-mock.css?v=<?= time() ?>" />
-          <script type="text/javascript" src="/manage/js/claim-form-mock-data.js?v=<?= time() ?>"></script>
-          <script type="text/javascript" src="/manage/js/claim-form-mock.js?v=<?= time() ?>"></script>
-      <?php } ?>
-    <script type="text/javascript">
-      window.eligiblePublicKey="-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-"
-    </script>
-  </head>
-
-  <body>
-    <div style="width:250px;float:left;">
-      Instructions to E-File: Enter electronic Payer ID or Name in Box 1.  Verify all claim details.  Click “Submit” on bottom left of claim to e-file your claim.
-    </div>
-    <input type="button" onclick="change_form();" value="Switch to Paper File" style="float:right;margin-right:20px;" />
-    <?php if (!empty($is_front_office)) { ?>
-      <input type="button" onclick="window.location='view_claim.php?claimid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>'; return false;" value="Back to Insurance Page" style="float:right;">
-    <?php } elseif ($is_back_office) { ?>
-      <input type="button" onclick="window.location='manage_claims.php'; return false;" value="Back to Insurance Page" style="float:right;" />
-      <input type="button" class="print-button" onclick="window.location='claim_notes.php?id=<?php echo  (!empty($_GET['insid']) ? $_GET['insid'] : ''); ?>&pid=<?php echo  $_GET['pid']; ?>'" value="View Notes" style="float:right;" />
+    <script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="https://eligibleapi.com/js/eligible-claim-1500-2014.min.js"></script>
+    <script type="text/javascript" src="/manage/js/claim_form_eligible.js"></script>
+    <?php if (config('app.debug')) { ?>
+        <link rel="stylesheet" href="/manage/css/claim-form-mock.css?v=<?= time() ?>" />
+        <script type="text/javascript" src="/manage/js/claim-form-mock-data.js?v=<?= time() ?>"></script>
+        <script type="text/javascript" src="/manage/js/claim-form-mock.js?v=<?= time() ?>"></script>
     <?php } ?>
+    <script type="text/javascript">
+        window.eligiblePublicKey = "-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-";
+        var stateList = <?= json_encode(stateList()) ?>;
+    </script>
+</head>
+
+<body>
+    <div id="top-banner">
+        <h2>E-File Claim Form</h2>
+        <input type="button" onclick="change_form();" value="Switch to Paper File" style="float:right;margin-right:20px;" />
+        <?php if (!empty($is_front_office)) { ?>
+            <input type="button" value="Back to Insurance Page" style="float:right;"
+                onclick="window.location='view_claim.php?claimid=<?= intval($_GET['insid']) ?>&pid=<?= intval($_GET['pid']) ?>'; return false;" />
+        <?php } elseif ($is_back_office) { ?>
+            <input type="button" value="Back to Insurance Page" style="float:right;"
+                onclick="window.location='manage_claims.php'; return false;" />
+            <input type="button" class="print-button" value="View Notes" style="float:right;"
+                onclick="window.location='claim_notes.php?id=<?= intval($_GET['insid']) ?>&pid=<?= intval($_GET['pid']) ?>'" />
+        <?php } ?>
+        <ol>
+            <li>Enter electronic Payer ID or Name in Box 1.</li>
+            <li>Verify all claim details.</li>
+            <li>Click “Submit” on bottom left of claim to e-file your claim.</li>
+        </ol>
+    </div>
+
     <?php if($is_rejected) { ?>
       <div style="clear:both;margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
         <?php
@@ -687,10 +692,27 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     </form>
 
 <script type="text/javascript">
+function stateDropdown (fieldName) {
+    var options = '', stateCode;
+
+    // stateList is global
+    for (stateCode in stateList) {
+        options += '<option value="%code">%code - %name</option>'
+            .replace(/%code/g, stateCode)
+            .replace(/%name/g, stateList[stateCode]);
+    }
+
+    return '<select name="' + fieldName + '" class="input state">' + options + '</select>';
+}
+
   $(document).ready( function(){
 
     // set a patient signed date
     $('.input.grayout').find('input[placeholder="date"]').val('<?php echo $patient_signed_date; ?>');
+
+      // Replace service_facility[address][state] field with a dropdown
+      $('[name="service_facility[address][state]"]').replaceWith(stateDropdown('service_facility[address][state]'));
+      $('[name="billing_provider[address][state]"]').replaceWith(stateDropdown('billing_provider[address][state]'));
 
     <?php
       if($is_secondary) {
@@ -1052,6 +1074,15 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
         $li++;
       }
 
+      // Deactivate the ledger transactions that cannot be edited
+      for (;$li<6;$li++) { ?>
+          $('[name="claim[service_lines][<?= $li ?>][service_date_from]"]')
+              .closest('tr')
+              .addClass('grayout')
+              .find('input, select')
+              .attr('readonly', true);
+      <?php }
+
     /**
      * @see CS-29
      *
@@ -1169,7 +1200,7 @@ if($federal_tax_id_number != ''){
         $('input[name="claim[accept_assignment_code]"][value="C"]').prop("checked", true);
       <?php } ?>
 
-      $('input[name="billing_provider[tax_id]"]').val("<?php echo  $tax_id_or_ssn; ?>"); 
+      $('input[name="billing_provider[tax_id]"]').val("<?= $federal_tax_id_number ?>");
      
       <?php if($ssn=="1") { ?>
         $('input[name="billing_provider[tax_id_type]"][value="SY"]').attr("checked", "checked"); 
@@ -1180,17 +1211,17 @@ if($federal_tax_id_number != ''){
       $('input[name="billing_provider[entity]"][value="true"]').click();
       $('input[name="service_facility[name]"]').val("<?php echo ($service_facility_info_name && $service_facility_info_name != "")?$service_facility_info_name:$service_practice; ?>");
       $('input[name="service_facility[address][street_line_1]"]').val("<?php echo ($service_facility_info_address && $service_facility_info_address != '')?$service_facility_info_address:$service_address; ?>");
-      $('input[name="service_facility[address][city]"]').val("<?php echo  $service_city; ?>");
-      $('input[name="service_facility[address][state]"]').val("<?php echo  $service_state; ?>");
-      $('input[name="service_facility[address][zip]"]').val("<?php echo  $service_zip; ?>").addClass("zipmask");
+      $('input[name="service_facility[address][city]"]').val("<?= $service_facility_info['city'] ?>");
+      $('[name="service_facility[address][state]"]').val("<?= $service_facility_info['stateCode'] ?>");
+      $('input[name="service_facility[address][zip]"]').val("<?= $service_facility_info['zip'] ?>").addClass("zipmask");
       $('input[name="service_facility[npi]"]').val("<?php echo  ($service_info_a && $service_info_a != '')?$service_info_a:(($insurancetype == '1')?$service_medicare_npi:$service_npi); ?>");
       $('input[name="billing_provider[phone_number]"]').val("<?php echo  $phone; ?>").addClass("numbermask");
       $('input[name="billing_provider[organization_name]"]').val("<?php echo  $practice; ?>");
       $('input[name="billing_provider[address][street_line_1]"]').val("<?php echo  $address; ?>");
       $('input[name="billing_provider[address][street_line_2]"]').val("<?php echo $billing_provider_address; ?>");
-      $('input[name="billing_provider[address][city]"]').val("<?php echo  $city; ?>");
-      $('input[name="billing_provider[address][state]"]').val("<?= strtoupper(trim($state)) ?>");
-      $('input[name="billing_provider[address][zip]"]').val("<?php echo  $zip; ?>").addClass("zipmask");
+      $('input[name="billing_provider[address][city]"]').val("<?= $billing_provider_info['city'] ?>");
+      $('[name="billing_provider[address][state]"]').val("<?= $billing_provider_info['stateCode'] ?>");
+      $('input[name="billing_provider[address][zip]"]').val("<?= $billing_provider_info['zip'] ?>").addClass("zipmask");
       $('input[name="billing_provider[npi]"]').val("<?php echo ($billing_provider_a != '')?$billing_provider_a:(($insurancetype == '1')?$medicare_npi:$npi); ?>").addClass("numbermask"); 
       $('input[name="billing_provider[taxonomy_code]"]').val("332B00000X");
       <?php if ($insured_signature): ?>
@@ -1202,7 +1233,6 @@ if($federal_tax_id_number != ''){
 <?php
       $total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
       $amount_paid = (empty($amount_paid)) ? 0.00 : number_format($amount_paid, 2);
-      $balance_due = (empty($balance_due)) ? 0.00 : number_format($balance_due,2);
 
       // We only calculate the dollar amounts when a new claim is created because
       // right now we aren't appending any trxns to an existing claim.
@@ -1263,12 +1293,9 @@ if($federal_tax_id_number != ''){
           $amount_paid = $paid_row['amount_paid'];
         }
 
-        // re-calculate balance due
-        $balance_due = $total_charge - $amount_paid;
         // format calculations
         $total_charge = number_format($total_charge, 2, '.','');
         $amount_paid = number_format($amount_paid, 2, '.','');
-        $balance_due = number_format($balance_due, 2, '.','');
       }
 ?>
       $('input[name="claim[total_charge]"]').val("<?php echo  $total_charge; ?>");
@@ -1287,7 +1314,9 @@ if($federal_tax_id_number != ''){
       $('\
           [name="dependent[address][street_line_2]"],\
           [name="subscriber[address][street_line_2]"],\
-          [name="referring_provider[middle_name]"]\
+          [name="referring_provider[middle_name]"],\
+          [name="service_facility[address][street_line_2]"],\
+          [name="billing_provider[address][street_line_2]"]\
       ')
           .attr('readonly', true)
           .addClass('grayout')

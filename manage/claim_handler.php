@@ -398,12 +398,16 @@
     // NO NAME $patient_account_no = $_POST['patient_account_no'];
     $accept_assignment = (!empty($_POST['claim']['accept_assignment_code']) ? $_POST['claim']['accept_assignment_code'] : '');
     $total_charge = (!empty($_POST['claim']['total_charge']) ? $_POST['claim']['total_charge'] : '');
-    $amount_paid = (!empty($_POST['claim']['patient_amount_paid']) ? $_POST['claim']['patient_amount_paid'] : '');
+    $amount_paid = (!empty($_POST['claim']['patient_amount_paid']) ? $_POST['claim']['patient_amount_paid'] : NULL);
     $signature_physician = (!empty($_POST['claim']['provider_signature_on_file']) ? $_POST['claim']['provider_signature_on_file'] : '');
     $physician_signed_date = (($_POST['claim']['signature_date'] != date('m/d/Y')) ? $_POST['claim']['signature_date'] : '');
     $service_facility_info_name = (!empty($_POST['service_facility']['name']) ? $_POST['service_facility']['name'] : '');
     $service_facility_info_address = (!empty($_POST['service_facility']['address']['street_line_1']) ? $_POST['service_facility']['address']['street_line_1'] : '');
-    $service_facility_info_city = (!empty($_POST['service_facility']['address']['city']) ? $_POST['service_facility']['address']['city'] : '');
+    $service_facility_info_city = trim(
+        (!empty($_POST['service_facility']['address']['city']) ? $_POST['service_facility']['address']['city'] . ' ' : '') .
+        (!empty($_POST['service_facility']['address']['state']) ? $_POST['service_facility']['address']['state'] . ' ' : '') .
+        (!empty($_POST['service_facility']['address']['zip']) ? $_POST['service_facility']['address']['zip'] : '')
+    );
 	//SPLIT APART?
     $service_info_a = (!empty($_POST['service_facility']['npi']) ? $_POST['service_facility']['npi'] : '');
     $billing_provider_phone = (!empty($_POST['billing_provider']['phone_number']) ? $_POST['billing_provider']['phone_number'] : '');
@@ -636,8 +640,11 @@
                 ein = '" . s_for($ein) . "',
                 patient_account_no = '" . s_for(!empty($patient_account_no) ? $patient_account_no : '') . "',
                 accept_assignment = '" . s_for($accept_assignment) . "',
-                total_charge = '" . s_for($total_charge) . "',
-                amount_paid = '" . s_for($amount_paid) . "',
+                total_charge = '" . s_for($total_charge) . "', " .
+                (
+                    isset($amount_paid) && !is_null($amount_paid) ?
+                        "amount_paid = '" . s_for($amount_paid) . "', " : ''
+                ) . "
                 balance_due = '" . s_for(!empty($balance_due) ? $balance_due : '') . "',
                 claim_codes = '" . s_for($claim_codes) . "',
                 other_claim_id = '" . s_for($other_claim_id) . "',

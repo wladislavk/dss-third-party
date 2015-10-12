@@ -241,7 +241,10 @@ $(document).ready(function(){
             $('[name="dependent[relationship]"][value=G8]').attr('checked', true);
         }
 
-        $('[disabled]:text, .grayout :text').val('');
+        $('[disabled]:text, select[disabled], .grayout :text, .grayout select').val('');
+        $('[disabled]:radio, [disabled]:checkbox, .grayout :radio, .grayout :checkbox')
+            .removeAttr('checked')
+            .removeAttr('selected');
     }
 
     function compareFields (baseData) {

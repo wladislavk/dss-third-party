@@ -3580,9 +3580,9 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 <p class=MsoNormal style=\'line-height:115%\'><span style=\'line-height:115%;
 font-family:"Arial","sans-serif"\'>I am prescribing a Mandibular Advancement
 Device (<b>E0486</b>) for the above named patient who has been diagnosed with
-Obstructive Sleep Apnea (<b>G47.33</b>).   I concur that the recommended
+Obstructive Sleep Apnea (<b>G47.33</b>).  I concur that the recommended
 therapy is medically necessary and I now prescribe treatment utilizing an FDA
-approved Mandibular Advancement Device.  I strongly urge you to cover the costs
+approved Mandibular Advancement Device. Length of need is lifetime.  I strongly urge you to cover the costs
 of this therapy. Failure to do so would place the patient’s health in jeopardy.</span></p>
 
 <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>

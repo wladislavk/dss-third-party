@@ -745,7 +745,7 @@ function stateDropdown (fieldName) {
     $('input[name="subscriber[id]"]').val("<?php echo  $insured_id_number;?>");
     $('input[name="claim[note]"]').val("<?php echo (!empty($reserved_local_use1) ? $reserved_local_use1 : '');?>");
     $('input[name="claim[date]"]').val("<?php echo (!empty($date_current) ?  dateFormat($date_current) : '');?>");
-    $('select[name="claim[date_type]"]').val(<?= $current_qual ?>);
+    $('select[name="claim[date_type]"]').val("<?= $current_qual ?>");
     $('input[name="claim[outside_lab_charges]"]').val("<?php echo (!empty($s_charges) ? $s_charges : '');?>");
 
     $('input[name="dependent[last_name]"]').val("<?php echo  $patient_lastname;?>");
@@ -754,24 +754,24 @@ function stateDropdown (fieldName) {
 
     $('input[name="dependent[dob]"]').val("<?php echo date('Y-m-d', strtotime(str_replace('-','/',$patient_dob)));?>");
 
-    $('input[name="dependent[gender]"][value="<?php echo  substr($patient_sex,0,1); ?>"]').attr("checked", "checked");
+    $('input[name="dependent[gender]"][value="<?= substr($patient_sex, 0, 1) ?>"]').prop('checked', true);
     $('input[name="dependent[address][street_line_1]"]').val("<?php echo  $patient_address;?>");
     $('input[name="dependent[address][city]"]').val("<?php echo  $patient_city;?>");
     $('input[name="dependent[address][state]"]').val("<?= strtoupper(trim($patient_state)) ?>").addClass("statemask");
     $('input[name="dependent[address][zip]"]').val("<?php echo  $patient_zip;?>").addClass("zipmask");
     $('input[name="dependent[phone_number]"]').val("<?php echo  $patient_phone_code.$patient_phone;?>").addClass("numbermask");
     <?php if($patient_relation_insured == 'Spouse' || $patient_relation_insured == '01'){ ?>
-          $('input[name="dependent[relationship]"][value="01"]').trigger('click');
+          $('input[name="dependent[relationship]"][value="01"]').prop('checked', true);
     <?php }elseif($patient_relation_insured == 'Child' || $patient_relation_insured == '19'){ ?>
-          $('input[name="dependent[relationship]"][value="19"]').trigger('click');
+          $('input[name="dependent[relationship]"][value="19"]').prop('checked', true);
     <?php }elseif($patient_relation_insured == 'Other' || $patient_relation_insured == 'G8'){ ?>
-          $('input[name="dependent[relationship]"][value="G8"]').trigger('click');
+          $('input[name="dependent[relationship]"][value="G8"]').prop('checked', true);
     <?php } ?>
     $('input[name="subscriber[last_name]"]').val("<?= $insured_lastname;?>");
     $('input[name="subscriber[first_name]"]').val("<?= $insured_firstname;?>");
     $('input[name="subscriber[middle_name]"]').val("<?= $insured_middle;?>");
     $('input[name="subscriber[dob]"]').val("<?= date('Y-m-d', strtotime(str_replace('-','/',$insured_dob)));?>");
-    $('input[name="subscriber[gender]"][value="<?= substr($insured_sex,0,1); ?>"]').attr("checked", "checked");
+    $('input[name="subscriber[gender]"][value="<?= substr($insured_sex,0,1); ?>"]').prop('checked', true);
     $('input[name="subscriber[address][street_line_1]"]').val("<?= $insured_address;?>");
     $('input[name="subscriber[address][city]"]').val("<?= $insured_city;?>");
     $('input[name="subscriber[address][state]"]').val("<?= strtoupper(trim($insured_state)) ?>").addClass("statemask");
@@ -781,39 +781,27 @@ function stateDropdown (fieldName) {
     $('input[name="subscriber[group_name]"]').val("<?= $insured_insurance_plan;?>");
 
 
-      $('input[name="other_payers[0][name]"]').val("<?= $other_insured_insurance_plan;?>");
-      $('input[name="other_payers[0][subscriber][last_name]"]').val("<?= $other_insured_lastname;?>");
-      $('input[name="other_payers[0][subscriber][first_name]"]').val("<?= $other_insured_firstname;?>");
-      $('input[name="other_payers[0][subscriber][middle_name]"]').val("<?= $other_insured_middle;?>");
-      $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
-      $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $responsibility_sequence ?>");
+    $('input[name="other_payers[0][name]"]').val("<?= $other_insured_insurance_plan;?>");
+    $('input[name="other_payers[0][subscriber][last_name]"]').val("<?= $other_insured_lastname;?>");
+    $('input[name="other_payers[0][subscriber][first_name]"]').val("<?= $other_insured_firstname;?>");
+    $('input[name="other_payers[0][subscriber][middle_name]"]').val("<?= $other_insured_middle;?>");
+    $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
+    $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $responsibility_sequence ?>");
 
-      <?php
-      if (isOptionSelected($employment)) { ?>
-      $('input[name="claim[related_to_employment]"][value="true"]').attr("checked", "checked");
-    <?php } else { ?>
-      $('input[name="claim[related_to_employment]"][value="false"]').attr("checked", "checked");
-    <?php } ?>
+    <?php
 
-    <?php if (isOptionSelected($auto_accident)) { ?>
-      $('input[name="claim[auto_accident]"][value="true"]').attr("checked", "checked");
-    <?php } else { ?>
-      $('input[name="claim[auto_accident]"][value="false"]').attr("checked", "checked");
-    <?php } ?>
+    $employment = isOptionSelected($employment);
+    $auto_accident = isOptionSelected($auto_accident);
+    $other_accident = isOptionSelected($other_accident);
+    $another_plan = isOptionSelected($another_plan);
+    $outside_lab = isOptionSelected($outside_lab);
 
-    $('input[name="claim[auto_accident_state]"]').val("<?php echo  $auto_accident_place;?>");
-  
-    <?php if (isOptionSelected($other_accident)) { ?>
-      $('input[name="claim[other_accident]"][value="true"]').attr("checked", "checked");
-    <?php } else { ?>
-      $('input[name="claim[other_accident]"][value="false"]').attr("checked", "checked");
-    <?php } ?>
-
-    <?php if (isOptionSelected($another_plan)) { ?>
-      $('input[name="other_payer"][value="true"]').attr("checked", "checked");
-    <?php } else { ?>
-      $('input[name="other_payer"][value="false"]').attr("checked", "checked");
-    <?php } ?>
+    ?>
+    $('input[name="claim[related_to_employment]"][value="<?= json_encode(!!$employment) ?>"]').prop('checked', true);
+    $('input[name="claim[auto_accident]"][value="<?= json_encode(!!$auto_accident) ?>"]').prop('checked', true);
+    $('input[name="claim[auto_accident_state]"]').val("<?= $auto_accident_place ?>");
+    $('input[name="claim[other_accident]"][value="<?= json_encode(!!$other_accident) ?>"]').prop('checked', true);
+    $('input[name="other_payer"][value="<?= json_encode(!!$another_plan) ?>"]').prop('checked', true);
 
     $('input[name="claim[last_worked_date]"]').val("<?php echo dateFormat($unable_date_from); ?>");
     $('input[name="claim[work_return_date]"]').val("<?php echo dateFormat($unable_date_to); ?>");
@@ -834,12 +822,7 @@ function stateDropdown (fieldName) {
     $('select[name="referring_provider[secondary_id_type]"]').val("<?php echo  $field_17a_dd; ?>");
     $('input[name="referring_provider[secondary_id]"]').val("<?php echo  $field_17a; ?>");
     $('input[name="referring_provider[npi]"]').val("<?php echo  $diagnosising_npi; ?>");
-
-    <?php if (isOptionSelected($outside_lab)) { ?>
-      $('input[name="claim[outside_lab]"][value="true"]').attr("checked", "checked");
-    <?php }else { ?>
-      $('input[name="claim[outside_lab]"][value="false"]').attr("checked", "checked");
-    <?php } ?>
+    $('input[name="claim[outside_lab]"][value="<?= json_encode(!!$outside_lab) ?>"]').prop('checked', true);
 
     $('input[name="claim[payer_control_number]"]').val("<?php echo $original_ref_no; ?>");
     $('input[name="claim[prior_authorization_number]"]').val("<?php echo $prior_authorization_number; ?>");
@@ -1064,7 +1047,7 @@ function stateDropdown (fieldName) {
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][1]"]').val("<?php echo  $array['modcode2']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][2]"]').val("<?php echo  $array['modcode3']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][3]"]').val("<?php echo  $array['modcode4']; ?>");
-        $('input[name="claim[service_lines][<?php echo $li;?>][diagnosis_code_pointers][<?php echo $dp-1; ?>]"]').attr("checked","checked");
+        $('input[name="claim[service_lines][<?php echo $li;?>][diagnosis_code_pointers][<?php echo $dp-1; ?>]"]').prop('checked', true);
         $('input[name="claim[service_lines][<?php echo $li;?>][charge_amount]"]').val("<?php echo  number_format($array['amount'], 2,'.',''); ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][units]"]').val("<?php echo  $array['daysorunits']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][rendering_provider][first_name]"]').val("<?php echo  $array['provider_first_name']; ?>");
@@ -1102,15 +1085,15 @@ function stateDropdown (fieldName) {
     // }
 
     ?>
-      $('input[name="claim[frequency]"][value="<?= $resubmission_code_fill ?>"]').click();
+      $('input[name="claim[frequency]"][value="<?= $resubmission_code_fill ?>"]').prop('checked', true);
       // ICD Indicator: <?= $icd_indicator ?> .
       $('input[name="claim[icd_indicator]"]').val("<?= $icd_indicator ?>").addClass('numbermask');
 
   <?php if ($rendering_provider_first_name_1 != "") { ?>
       <?php if ($rendering_provider_entity_1){ ?>
-      $('input[name="claim[service_lines][0][rendering_provider][entity]"][value="true"]').trigger('click');
+      $('input[name="claim[service_lines][0][rendering_provider][entity]"][value="true"]').prop('checked', true);
       <?php } else { ?>
-      $('input[name="claim[service_lines][0][rendering_provider][entity]"][value=""]').prop("checked", true);
+      $('input[name="claim[service_lines][0][rendering_provider][entity]"][value=""]').prop('checked', true);
       <?php } ?>
       $('input[name="claim[service_lines][0][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_1; ?>");
       $('input[name="claim[service_lines][0][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_1;  ?>");
@@ -1118,9 +1101,9 @@ function stateDropdown (fieldName) {
       $('input[name="claim[service_lines][0][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_1;  ?>");
       $('input[name="claim[service_lines][0][units]"]').val("<?php echo $days_or_units1;  ?>");
       <?php if ($rendering_provider_entity_2){ ?>
-      $('input[name="claim[service_lines][1][rendering_provider][entity]"][value="true"]').trigger('click');
+      $('input[name="claim[service_lines][1][rendering_provider][entity]"][value="true"]').prop('checked', true);
       <?php } else { ?>
-      $('input[name="claim[service_lines][1][rendering_provider][entity]"][value=""]').prop("checked", true);
+      $('input[name="claim[service_lines][1][rendering_provider][entity]"][value=""]').prop('checked', true);
       <?php } ?>
       $('input[name="claim[service_lines][1][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_2; ?>");
       $('input[name="claim[service_lines][1][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_2;  ?>");
@@ -1128,9 +1111,9 @@ function stateDropdown (fieldName) {
       $('input[name="claim[service_lines][1][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_2;  ?>");
       $('input[name="claim[service_lines][1][units]"]').val("<?php echo $days_or_units2;  ?>");
       <?php if ($rendering_provider_entity_3){ ?>
-      $('input[name="claim[service_lines][2][rendering_provider][entity]"][value="true"]').trigger('click');
+      $('input[name="claim[service_lines][2][rendering_provider][entity]"][value="true"]').prop('checked', true);
       <?php } else { ?>
-      $('input[name="claim[service_lines][2][rendering_provider][entity]"][value=""]').prop("checked", true);
+      $('input[name="claim[service_lines][2][rendering_provider][entity]"][value=""]').prop('checked', true);
       <?php } ?>
       $('input[name="claim[service_lines][2][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_3; ?>");
       $('input[name="claim[service_lines][2][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_3;  ?>");
@@ -1138,9 +1121,9 @@ function stateDropdown (fieldName) {
       $('input[name="claim[service_lines][2][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_3;  ?>");
       $('input[name="claim[service_lines][2][units]"]').val("<?php echo $days_or_units3;  ?>");
       <?php if ($rendering_provider_entity_4){ ?>
-      $('input[name="claim[service_lines][3][rendering_provider][entity]"][value="true"]').trigger('click');
+      $('input[name="claim[service_lines][3][rendering_provider][entity]"][value="true"]').prop('checked', true);
       <?php } else { ?>
-      $('input[name="claim[service_lines][3][rendering_provider][entity]"][value=""]').prop("checked", true);
+      $('input[name="claim[service_lines][3][rendering_provider][entity]"][value=""]').prop('checked', true);
       <?php } ?>
       $('input[name="claim[service_lines][3][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_4; ?>");
       $('input[name="claim[service_lines][3][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_4;  ?>");
@@ -1148,9 +1131,9 @@ function stateDropdown (fieldName) {
       $('input[name="claim[service_lines][3][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_4;  ?>");
       $('input[name="claim[service_lines][3][units]"]').val("<?php echo $days_or_units4;  ?>");
       <?php if ($rendering_provider_entity_5){ ?>
-      $('input[name="claim[service_lines][4][rendering_provider][entity]"][value="true"]').trigger('click');
+      $('input[name="claim[service_lines][4][rendering_provider][entity]"][value="true"]').prop('checked', true);
       <?php } else { ?>
-      $('input[name="claim[service_lines][4][rendering_provider][entity]"][value=""]').prop("checked", true);
+      $('input[name="claim[service_lines][4][rendering_provider][entity]"][value=""]').prop('checked', true);
       <?php } ?>
       $('input[name="claim[service_lines][4][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_5; ?>");
       $('input[name="claim[service_lines][4][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_5;  ?>");
@@ -1158,9 +1141,9 @@ function stateDropdown (fieldName) {
       $('input[name="claim[service_lines][4][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_5;  ?>");
       $('input[name="claim[service_lines][4][units]"]').val("<?php echo $days_or_units5;  ?>");
       <?php if ($rendering_provider_entity_6){ ?>
-      $('input[name="claim[service_lines][5][rendering_provider][entity]"][value="true"]').trigger('click');
+      $('input[name="claim[service_lines][5][rendering_provider][entity]"][value="true"]').prop('checked', true);
       <?php } else { ?>
-      $('input[name="claim[service_lines][5][rendering_provider][entity]"][value=""]').prop("checked", true);
+      $('input[name="claim[service_lines][5][rendering_provider][entity]"][value=""]').prop('checked', true);
       <?php } ?>
       $('input[name="claim[service_lines][5][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_6; ?>");
       $('input[name="claim[service_lines][5][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_6;  ?>");
@@ -1170,21 +1153,23 @@ function stateDropdown (fieldName) {
       <?php
 }
 
-  if($accept_assignment=="Yes" || $accept_assignment == "A"){ ?>
-        $('input[name="claim[accept_assignment_code]"][value="A"]').prop("checked", true);
-      <?php }elseif($accept_assignment=="No" || $accept_assignment == "C"){ ?>
-        $('input[name="claim[accept_assignment_code]"][value="C"]').prop("checked", true);
+  if(isOptionSelected($accept_assignment) || $accept_assignment == "A"){ ?>
+        $('input[name="claim[accept_assignment_code]"][value="A"]').prop('checked', true);
+      <?php }elseif(!isOptionSelected($accept_assignment) || $accept_assignment == "C"){ ?>
+        $('input[name="claim[accept_assignment_code]"][value="C"]').prop('checked', true);
       <?php } ?>
 
       $('input[name="billing_provider[tax_id]"]').val("<?= $federal_tax_id_number ?>");
      
       <?php if($ssn=="1") { ?>
-        $('input[name="billing_provider[tax_id_type]"][value="SY"]').attr("checked", "checked"); 
+        $('input[name="billing_provider[tax_id_type]"][value="SY"]').prop('checked', true) 
       <?php } elseif($ein == "1") { ?>
-        $('input[name="billing_provider[tax_id_type]"][value="EI"]').attr("checked", "checked"); 
+        $('input[name="billing_provider[tax_id_type]"][value="EI"]').prop('checked', true) 
       <?php } ?>
 
-      $('input[name="billing_provider[entity]"][value="true"]').click();
+      // This property change might not fire the change in the view
+      $('input[name="billing_provider[entity]"][value="true"]').prop('checked', true);
+
       $('input[name="service_facility[name]"]').val("<?= $service_facility_info_name ?>");
       $('input[name="service_facility[address][street_line_1]"]').val("<?= $service_facility_info_address ?>");
       $('input[name="service_facility[address][city]"]').val("<?= $service_facility_info['city'] ?>");
@@ -1199,11 +1184,7 @@ function stateDropdown (fieldName) {
       $('input[name="billing_provider[address][zip]"]').val("<?= $billing_provider_info['zip'] ?>").addClass("zipmask");
       $('input[name="billing_provider[npi]"]').val("<?= $billing_provider_a ?>");
       $('input[name="billing_provider[taxonomy_code]"]').val("332B00000X");
-      <?php if ($insured_signature): ?>
-        $('input[name="claim[direct_payment_authorized]"]').prop('checked',true);
-      <?php else: ?>
-        $('input[name="claim[direct_payment_authorized]"]').prop('checked',false);
-      <?php endif; ?>
+      $('input[name="claim[direct_payment_authorized]"]').prop('checked', <?= $insured_signature ? 'true' : 'false' ?>);
 
 <?php
       $total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
@@ -1270,15 +1251,17 @@ function stateDropdown (fieldName) {
         // format calculations
         $total_charge = number_format($total_charge, 2, '.','');
       }
-?>
+
+      $patient_signature = isOptionSelected($patient_signature);
+      $signature_physician = isOptionSelected($signature_physician);
+
+      ?>
       $('input[name="claim[total_charge]"]').val("<?php echo  $total_charge; ?>");
       $('input[name="claim[patient_amount_paid]"]').val("<?php echo  $amount_paid; ?>");
-      $('input[name="claim[patient_signature_on_file]"]').prop('checked', <?= isOptionSelected($patient_signature) ? 'true' : 'false' ?>);
-      $('input[name="claim[provider_signature_on_file]"]').prop('checked', <?= isOptionSelected($signature_physician) ? 'true' : 'false' ?>);
+      $('input[name="claim[patient_signature_on_file]"]').prop('checked', <?= json_encode(!!$patient_signature) ?>);
+      $('input[name="claim[provider_signature_on_file]"]').prop('checked', <?= json_encode(!!$signature_physician) ?>);
       $('input[name="claim[signature_date]"]').val("<?php echo dateFormat($physician_signed_date); ?>");
-      $('input').each( function(){
-        // $(this).val($(this).val().toUpperCase());
-      });
+
       $('input, select').bind('change', function(){
           form_changed=true;
       });

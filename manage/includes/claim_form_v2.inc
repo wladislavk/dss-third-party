@@ -1,11 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
-
-  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-  <script type="text/javascript" src="/manage/script/autocomplete_local.js?v=<?= time() ?>"></script>
-
 <?php
-require_once ('calendarinc.php');
-$status_sql = "SELECT status FROM dental_insurance 
+namespace Ds3\Libraries\Legacy;
+
+$status_sql = "SELECT status FROM dental_insurance
 		WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
 			AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
@@ -154,34 +150,34 @@ if (!empty($_REQUEST["delid"]) ? $_REQUEST["delid"] : '') {
 
 	trigger_error("Die called", E_USER_ERROR); // already did a javascript redirect...just die
 }
+
 $is_new_claim = ((!isset($_REQUEST['insid']) || $_REQUEST['insid'] == '') && empty($_POST['ed'])) ? true : false;
 //print "\$is_new_claim: $is_new_claim";trigger_error("Exit called", E_USER_ERROR);
 
-if(!empty($_POST['ex_statusbtn'])){
-?>
-<script type="text/javascript">
-  window.location = '<?php echo  $called_from; ?>?insid=<?php echo  (!empty($_GET['insid']) ? $_GET['insid'] : ''); ?>&checkstatus=1&pid=<?php echo  $_GET['pid']; ?>';
-</script>
-<?php
-trigger_error("Die called", E_USER_ERROR);
+if (!empty($_POST['ex_statusbtn'])) { ?>
+    <script type="text/javascript">
+      window.location = '<?php echo  $called_from; ?>?insid=<?php echo  (!empty($_GET['insid']) ? $_GET['insid'] : ''); ?>&checkstatus=1&pid=<?php echo  $_GET['pid']; ?>';
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
 
-
-// process inserts/updates for claim form
-}elseif (!empty($_POST['insurancesub']) && $_POST['insurancesub'] == 1 || !empty($_POST['ex_pagebtn'])) {
-    if($is_sent){
+    // process inserts/updates for claim form
+} elseif (!empty($_POST['insurancesub']) && $_POST['insurancesub'] == 1 || !empty($_POST['ex_pagebtn'])) {
+    if ($is_sent) {
             print '<script type="text/javascript">';
         //print '  window.location="' . $called_from . '?showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
         print '  window.location="' . $called_from . '?status=0&insid='.(!empty($_GET['insid']) ? $_GET['insid'] : '').'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
         print '</script>';
     }
-    if(!confirm_ledger_trxns()){
-	?>
-	<script type="text/javascript">
-		window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
-	</script>
-	<?php
-	trigger_error("Die called", E_USER_ERROR);
+
+    if (!confirm_ledger_trxns()) { ?>
+        <script type="text/javascript">
+            window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
+        </script>
+        <?php
+        trigger_error("Die called", E_USER_ERROR);
     }
+
     // Put POST values into variables
 	$pica1 = $_POST['pica1'];
 	$pica2 = $_POST['pica2'];
@@ -1339,23 +1335,6 @@ $reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
 }
 
-/**
- * Logic:
- *
- * IF dental_insurance.another_plan IS set THEN use another_plan
- * IF dental_insurance.another_plan IS not set THEN read options from dental_patients.p_m_dss_file
- */
-$another_plan = isset($another_plan) ? $another_plan : '';
-$another_plan = strtolower($another_plan);
-
-if ($another_plan != 'yes' && $another_plan != 'no') {
-    if ((isset($p_m_dss_file) && $p_m_dss_file == 1) || (isset($s_m_dss_file) && $s_m_dss_file == 1)) {
-        $another_plan = 'yes';
-    } else {
-        $another_plan = 'no';
-    }
-}
-
 if($is_pri_pending){
   $insured_sex = $pat_myarray['p_m_gender'];
   $other_insured_sex = $pat_myarray['s_m_gender'];
@@ -1698,14 +1677,16 @@ if ($icdEnforcement) {
         .style1 { font-size: 16px }
         input { text-transform: uppercase; }
     </style>
-    <script type="text/javascript" src="/manage/script/validation.js"></script>
     <link rel="stylesheet" href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" />
     <link rel="stylesheet" href="<?php echo $admin_path?>popup/popup.css" media="screen" />
-    <script type="text/javascript" src="<?php echo $admin_path?>script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/manage/script/autocomplete_local.js?v=<?= time() ?>"></script>
+    <script type="text/javascript" src="/manage/script/validation.js"></script>
     <script type="text/javascript" src="<?php echo $manage_path?>3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="<?php echo $manage_path?>script/masks.js?v=<?= time() ?>"></script>
     <script type="text/javascript" src="<?php echo $admin_path?>popup/popup.js"></script>
     <script type="text/javascript" src="/manage/js/top.js?v=<?= time() ?>"></script>
+    <?php require_once __DIR__ . '/calendarinc.php' ?>
     <?php if (config('app.debug')) { ?>
         <link rel="stylesheet" href="/manage/css/claim-form-mock.css?v=<?= time() ?>" />
         <script type="text/javascript" src="/manage/js/claim-form-mock-data.js?v=<?= time() ?>"></script>
@@ -2515,9 +2496,9 @@ Medicare
 						<span class="num_a">d.</span> 
 						Is there another health benefit Plan?
 						<br />
-						<input type="radio" name="another_plan" value="yes" <?= $another_plan == 'yes' ? 'checked' : ''?> />YES
+						<input type="radio" name="another_plan" value="yes" <?= isOptionSelected($another_plan) ? 'checked' : ''?> />YES
 						&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="another_plan" value="no" <?= $another_plan != 'yes' ? 'checked' : '' ?> />NO
+						<input type="radio" name="another_plan" value="no" <?= !isOptionSelected($another_plan) ? 'checked' : '' ?> />NO
 						&nbsp;&nbsp;
 						<span class="small_cap"><i>if yes, return to and complete item 9 a-d</i></span>
 					</td>
@@ -2792,10 +2773,10 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 									<span class="num">20.</span> 
 									Outside Lab?
 									<br />
-									<input type="radio" name="outside_lab" value="YES"  <?php if(!empty($outside_lab) && $outside_lab == "YES") echo " checked";?>/>
+									<input type="radio" name="outside_lab" value="YES"  <?= isOptionSelected($outside_lab) ? 'checked' : ''?>/>
 									YES
 									&nbsp;&nbsp;
-									<input type="radio" name="outside_lab" value="NO" <?php if(!empty($outside_lab) && $outside_lab == "NO") echo " checked";?> />
+									<input type="radio" name="outside_lab" value="NO" <?= !isOptionSelected($outside_lab) ? 'checked' : '' ?> />
 									NO
 								</td>
 								<td valign="top" width="40%">
@@ -3080,7 +3061,10 @@ if (empty($transactions)) {
 				}
 			?>
 	</td>
-        <td width="41"><input  style="width:26px;"type="text" name="emg<?php echo $li;?>" value="<?php echo $array['emg']; ?>"></td>
+        <td width="41">
+            <input style="width:26px;" type="checkbox" name="emg<?php echo $li;?>" value="true"
+                <?= isOptionSelected($array['emg']) ? 'checked' : '' ?> />
+        </td>
         <td width="222"><?php echo $array['transaction_code'] . " - " .$array['description'] ; ?></td>
         <td width="191">
           <select name="modifiercode<?php echo $li;?>" style="width:171px;">
@@ -3192,10 +3176,10 @@ if (empty($transactions)) {
 									<br />
 									<span class="small_cap">(For govt. claims, see back)</span>
 									<br />
-									<input type="radio" name="accept_assignment" value="Yes" <?php if($accept_assignment == "Yes" || $accept_assignment == "A") echo " checked";?> />
+									<input type="radio" name="accept_assignment" value="Yes" <?php if (isOptionSelected($accept_assignment) || $accept_assignment == "A") echo " checked";?> />
 									YES
 									&nbsp;&nbsp;&nbsp;
-									<input type="radio" name="accept_assignment" value="No" <?php if($accept_assignment == "No" || $accept_assignment == "C") echo " checked";?> />
+									<input type="radio" name="accept_assignment" value="No" <?php if (!isOptionSelected($accept_assignment) || $accept_assignment == "C") echo " checked";?> />
 									NO
 								</td>
 							</tr>

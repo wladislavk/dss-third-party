@@ -87,7 +87,7 @@ $(document).ready(function(){
             });
 
             $('[name*=total_charge]:text').val(total.toFixed(3));
-            $('[name*=patient_amount_paid]:text').val((randomIndex(10000)/100).toFixed(3));
+            $('[name*=patient_amount_paid]:text, [name=amount_paid]:text').val((randomIndex(10000)/100).toFixed(2));
         }
 
         function randomizeNames () {

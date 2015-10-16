@@ -1,4 +1,31 @@
 $(document).ready(function(){
+    function getParam (name) {
+        var results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href);
+        return results !== null ? results[1] || '' : null;
+    }
+
+    function claimStatuses () {
+        return {
+            0: 'Primary - Pending',
+            1: 'Primary - Sent',
+            14: 'Primary - E-file Accepted',
+            3: 'Primary - Paid Insurance',
+            5: 'Primary - Paid Patient',
+            4: 'Primary - Rejected',
+            2: 'Primary - Dispute',
+            10: 'Primary - Patient Dispute',
+
+            6: 'Secondary - Pending',
+            7: 'Secondary - Sent',
+            15: 'Secondary - E-file Accepted',
+            9: 'Secondary - Paid Insurance',
+            11: 'Secondary - Paid Patient',
+            13: 'Secondary - Rejected',
+            8: 'Secondary - Dispute',
+            12: 'Secondary - Patient Dispute'
+        };
+    }
+
     function mockFields () {
         function randomIndex (length) {
             index = Math.floor(Math.random()*length);
@@ -60,7 +87,7 @@ $(document).ready(function(){
         }
 
         function randomizeDropdowns () {
-            $('select:not(.ui-datepicker-month, .ui-datepicker-year)').each(function(){
+            $('#claim-form select:not(.ui-datepicker-month, .ui-datepicker-year)').each(function(){
                 var $this = $(this),
                     options = $this.find('option');
 
@@ -353,8 +380,8 @@ $(document).ready(function(){
         }
 
         function compareForms ($currentForm, $newForm) {
-            var $currentFields = $currentForm.find('input, select'),
-                $newFields = $newForm.find('input, select'),
+            var $currentFields = $currentForm.find('input[name], select[name]'),
+                $newFields = $newForm.find('input[name], select[name]'),
                 fields = {}, debug = '';
 
             $currentForm.find('td').removeClass('debug-mismatch-data');
@@ -363,6 +390,10 @@ $(document).ready(function(){
                 var $this = $(this),
                     $counterPart = $newForm.find('[name="' + this.name + '"]'),
                     currentValue, newValue;
+
+                if (!this.name.length) {
+                    return;
+                }
 
                 if (!$counterPart.length) {
                     fields[this.name] = this.name;
@@ -577,6 +608,23 @@ $(document).ready(function(){
         }, 100);
     }
 
+    function changeClaimStatus (status) {
+        if (!status.length) {
+            return;
+        }
+
+        debugLog('Changing claim status to "' + claimStatuses()[status] + '"');
+
+        $.ajax({
+            url: '/manage/insurance-form.php',
+            type: 'get',
+            data: { insid: getParam('insid'), status: status },
+            success: function(){
+                debugLog('Status changed successfully to "' + claimStatuses()[status] + '"');
+            }
+        });
+    }
+
     function debugLog (message, asHtml) {
         if (asHtml) {
             $('#debug-notifications').html(message);
@@ -598,6 +646,21 @@ $(document).ready(function(){
         class: 'save-ajax-data',
         text: 'Save without reload the page'
     }).click(function(){ submitAndCompare(); }).prependTo('#debug-buttons');
+
+    $('<select>', {
+        name: 'claim-status'
+    }).each(function(){
+            var $this = $(this),
+                statuses = claimStatuses(),
+                n;
+
+            $this.append('<option>Select a status</option>');
+
+            for (n in statuses) {
+                $this.append('<option value="' + n + '">' + statuses[n] + '</option>');
+            }
+        })
+        .change(function(){ changeClaimStatus($(this).val()); }).prependTo('#debug-buttons');
 
     $('<div>', {
         id: 'debug-notifications'

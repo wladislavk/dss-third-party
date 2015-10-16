@@ -642,15 +642,26 @@ $efileToDb = [
     // 0-5 ledger transactions
     // %sl - service lines
     // %dp - diagnosis pointer
+    'service_date{%sl+1}_from'  => 'claim.service_lines.{%sl}.service_date_from',
+    'service_date{%sl+1}_to'    => 'claim.service_lines.{%sl}.service_date_to',
     'place_of_service{%sl+1}'   => 'claim.service_lines.{%sl}.place_of_service',
     'emg{%sl+1}'                => ['claim.service_lines.{%sl}.emergency', '::isDefined'],
+    'cpt_hcpcs{%sl+1}'          => 'claim.service_lines.{%sl}.procedure_code',
     'modifier{%sl+1}_1'         => 'claim.service_lines.{%sl}.procedure_modifiers.0',
     'modifier{%sl+1}_2'         => 'claim.service_lines.{%sl}.procedure_modifiers.1',
     'modifier{%sl+1}_3'         => 'claim.service_lines.{%sl}.procedure_modifiers.2',
     'modifier{%sl+1}_4'         => 'claim.service_lines.{%sl}.procedure_modifiers.3',
 
     'diagnosis_pointer{%sl+1}'  => 'claim.service_lines.{%sl}.diagnosis_code_pointers.0',
+    's_charges{%sl+1}_1'        => 'claim.service_lines.{%sl}.charge_amount',
     'days_or_units{%sl+1}'      => 'claim.service_lines.{%sl}.units',
+
+    'rendering_provider_entity_{%sl+1}'     => ['claim.service_lines.{%sl}.rendering_provider.entity', '::isChecked'],
+    'rendering_provider_first_name_{%sl+1}' => 'claim.service_lines.{%sl}.rendering_provider.first_name',
+    'rendering_provider_last_name_{%sl+1}'  => 'claim.service_lines.{%sl}.rendering_provider.last_name',
+    'rendering_provider_org_{%sl+1}'        => 'claim.service_lines.{%sl}.rendering_provider.organization_name',
+    'rendering_provider_npi_{%sl+1}'        => 'claim.service_lines.{%sl}.rendering_provider.npi',
+    'rendering_provider_id{%sl+1}'          => 'claim.service_lines.{%sl}.rendering_provider.secondary_id',
 
     'signature_physician'    => ['claim.provider_signature_on_file', '::isChecked'],
     'physician_signed_date'  => 'claim.signature_date',
@@ -689,6 +700,7 @@ $paperToDb = [
     'pica3' => 'pica3',
 
     'insurance_type'            => 'insurance_type',
+    'other_insurance_type'      => 'other_insurance_type',
 
     'insured_id_number'         => 'insured_id_number',
     'insured_lastname'          => 'insured_lastname',
@@ -704,6 +716,8 @@ $paperToDb = [
     'insured_dob'               => 'insured_dob',
     'insured_sex'               => 'insured_sex',
     'insured_insurance_plan'    => 'insured_insurance_plan',
+    'other_insured_id_number'   => 'other_insured_id_number',
+    'other_claim_id'            => 'other_claim_id',
 
     'patient_lastname'          => 'patient_lastname',
     'patient_firstname'         => 'patient_firstname',
@@ -725,6 +739,10 @@ $paperToDb = [
     'other_insured_middle'              => 'other_insured_middle',
     'other_insured_policy_group_feca'   => 'other_insured_policy_group_feca',
     'other_insured_insurance_plan'      => 'other_insured_insurance_plan',
+    'nucc_8a'                           => 'nucc_8a',
+    'nucc_8b'                           => 'nucc_8b',
+    'nucc_9b'                           => 'nucc_9b',
+    'nucc_9c'                           => 'nucc_9c',
 
     'name_referring_provider_qualifier' => 'name_referring_provider_qualifier',
     'referring_provider'                => 'referring_provider',
@@ -742,6 +760,8 @@ $paperToDb = [
     'insured_signature'         => 'insured_signature',
     'date_current'              => 'date_current',
     'current_qual'              => 'current_qual',
+    'same_illness_qual'         => 'same_illness_qual',
+    'date_same_illness'         => 'date_same_illness',
     'unable_date_from'          => 'unable_date_from',
     'unable_date_to'            => 'unable_date_to',
     'hospitalization_date_from' => 'hospitalization_date_from',
@@ -771,6 +791,8 @@ $paperToDb = [
 
     'diagnosis_pointer{%sl+1}'    => 'service_lines.{%sl}.diagnosis_code_pointers.0',
     'days_or_units{%sl+1}'        => 'daysorunits{%sl}',
+    'epsdt_family_plan{%sl+1}'    => 'epsdt{%sl}',
+    'id_qua{%sl+1}'               => 'idqual{%sl}',
 
     'signature_physician'    => ['signature_physician', '::isChecked'],
     'physician_signed_date'  => 'physician_signed_date',
@@ -778,8 +800,10 @@ $paperToDb = [
     'accept_assignment'      => ['accept_assignment', '::getAssignmentFromCode'],
     'total_charge'           => 'total_charge',
     'amount_paid'            => 'amount_paid',
+    'nucc_30'                => 'nucc_30',
 
     'federal_tax_id_number'         => 'federal_tax_id_number',
+    'patient_account_no'            => 'patient_account_no',
     'ssn'                           => ['ssnein', '::isSsn'],
     'ein'                           => ['ssnein', '::isEin'],
     'billing_provider_phone_code'   => [
@@ -813,6 +837,7 @@ $paperToDb = [
 ];
 
 $db = isset($db) ? $db : new Db();
+ini_set('xdebug.var_display_max_children', 300);
 
 if (!empty($_GET['insid']) && count($_POST)) {
     $insuranceId = intval($_GET['insid']);
@@ -834,6 +859,10 @@ if (!empty($_GET['insid']) && count($_POST)) {
         if (!strlen($dbFields['amount_paid'])) {
             unset($dbFields['amount_paid']);
         }
+
+        /**
+         * @ToDo Add user data here!
+         */
 
         // Prepare statements
         array_walk($dbFields, function (&$value, $column) use ($db) {
@@ -867,7 +896,49 @@ if (!empty($_GET['insid']) && count($_POST)) {
 
     header('Content-Type: text/json');
     echo json_encode($correspondingMap);
-} else if (isset($_GET['debug']) && config('app.debug')) { ?>
+} elseif (config('app.debug')) {
+    if (isset($_GET['insid']) && $_GET['status']) {
+        $insuranceId = intval($_GET['insid']);
+        $status = intval($_GET['status']);
+
+        $db->query("UPDATE dental_insurance SET status='$status' WHERE insuranceid='$insuranceId'");
+    } elseif (isset($_GET['compare-db-columns'])) {
+        $dbRow = $db->getRow('SELECT * FROM dental_insurance LIMIT 1');
+        $row = $dbRow;
+
+        $efile = ClaimFormDataMapperHelper::expandMap($efileToDb);
+        $paper = ClaimFormDataMapperHelper::expandMap($paperToDb);
+
+        $efileKeys = array_keys($efile);
+        $paperKeys = array_keys($paper);
+
+        array_map(function ($mapKeys) use ($row) {
+            $row = array_except($row, $mapKeys);
+
+            var_dump($row);
+            echo "<hr />\n";
+        }, [$efileKeys, $paperKeys]);
+
+        $row = array_except($row, $efileKeys);
+        $row = array_except($row, $paperKeys);
+
+        var_dump($row);
+        echo "<hr />\n";
+
+        $row = array_fill_keys(array_keys($dbRow), 'NOWHERE');
+
+        array_map(function ($keys) use (&$row) {
+            foreach ($keys as $key) {
+                if (!is_numeric($row[$key])) {
+                    $row[$key] = 0;
+                }
+
+                $row[$key]++;
+            }
+        }, [$efileKeys, $paperKeys]);
+
+        var_dump($row);
+    } elseif (isset($_GET['compare-forms'])) { ?>
 <html>
 <head>
     <title>
@@ -882,4 +953,5 @@ if (!empty($_GET['insid']) && count($_POST)) {
     </script>
 </head>
 </html>
-<?php }
+    <?php }
+}

@@ -458,13 +458,15 @@ $(document).ready(function(){
 
     function compareSideBySide () {
         setTimeout(function(){
-            var paper = $('<iframe>', {
+            var insuranceId = getParam('insid'),
+                patientId = getParam('pid'),
+                paper = $('<iframe>', {
                     style: 'width: 100%; height: 500px;',
-                    src: '/manage/insurance_v2.php?insid=130&pid=10'
+                    src: '/manage/insurance_v2.php?insid=' + insuranceId + '&pid=' + patientId
                 }),
                 efile = $('<iframe>', {
                     style: 'width: 100%; height: 500px;',
-                    src: '/manage/insurance_eligible.php?insid=130&pid=10'
+                    src: '/manage/insurance_eligible.php?insid=' + insuranceId + '&pid=' + patientId
                 }),
                 mapping = {},
                 paperCandidate, efileCandidate,

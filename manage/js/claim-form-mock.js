@@ -425,6 +425,158 @@ $(document).ready(function(){
         });
     }
 
+    function compareSideBySide () {
+        setTimeout(function(){
+            var paper = $('<iframe>', {
+                    style: 'width: 100%; height: 500px;',
+                    src: '/manage/insurance_v2.php?insid=130&pid=10'
+                }),
+                efile = $('<iframe>', {
+                    style: 'width: 100%; height: 500px;',
+                    src: '/manage/insurance_eligible.php?insid=130&pid=10'
+                }),
+                mapping = {},
+                paperCandidate, efileCandidate,
+                efileToPaperMap = {};
+
+            function compareForms () {
+                var efileFieldName, paperFieldName,
+                    $efileField, $paperField,
+                    method, valuesDiffer;
+
+                efile.contents().find('[name]').removeClass('debug-extra-data debug-mismatch-data');
+                paper.contents().find('[name]').removeClass('debug-extra-data debug-mismatch-data');
+
+                for (paperFieldName in efileToPaperMap) {
+                    efileFieldName = efileToPaperMap[paperFieldName];
+
+                    if (typeof efileFieldName !== 'string') {
+                        // Ignore comparison function by now, but retrieve it anyway
+                        method = ClaimFormDataMapperHelper.last(efileFieldName);
+                        efileFieldName = ClaimFormDataMapperHelper.head(efileFieldName);
+                    }
+
+                    efileFieldName = ClaimFormDataMapperHelper.dotNotationToBrackets(efileFieldName);
+                    paperFieldName = ClaimFormDataMapperHelper.dotNotationToBrackets(paperFieldName);
+
+                    $efileField = efile.contents().find('#claim-form [name="' + efileFieldName + '"]');
+                    $paperField = paper.contents().find('#claim-form [name="' + paperFieldName + '"]');
+
+                    if ($efileField.is(':radio, :checkbox')) {
+                        // Instead of using a comparison function, assume checkboxes and radio buttons
+                        // are in the exact same order in each form
+                        valuesDiffer = $efileField.index($efileField.find(':checked')) !==
+                            $paperField.index($paperField.find(':checked'));
+                    } else if ($paperField.length && $paperField.attr('name').match(/_phone/)) {
+                        // Some phone fields are separated in code and phone in paper, but whole phone in e-file
+                        if ($paperField.attr('name').match(/_phone_code/)) {
+                            valuesDiffer = $efileField.val() !== $paperField.val() &&
+                                $efileField.val().substr(0, 3) !== $paperField.val();
+                        } else {
+                            valuesDiffer = $efileField.val() !== $paperField.val() &&
+                                $efileField.val().substr(3) !== $paperField.val();
+                        }
+                    } else {
+                        valuesDiffer = $efileField.val() !== $paperField.val();
+                    }
+
+                    if (valuesDiffer) {
+                        $efileField.addClass('debug-extra-data');
+                        $paperField.addClass('debug-extra-data');
+                    } else {
+                        $efileField.addClass('debug-mismatch-data');
+                        $paperField.addClass('debug-mismatch-data');
+                    }
+                }
+            }
+
+            $('body')
+                .css({
+                    background: '#fff',
+                    height: '100%'
+                })
+                .html($('<table>', {
+                    cellpadding: 5,
+                    cellspacing: 0,
+                    border: 0,
+                    width: '100%',
+                    height: '100%'
+                }))
+                .append($('<script>', {
+                    src: '/manage/js/claim-tools.js'
+                }));
+
+            $('table')
+                .append('<tr height="500"><td id="paper-iframe"></td><td id="efile-iframe"></tr>')
+                .append('<tr style="font-size:1em;font-weight:bold;"><td style="text-align:right"><code id="paper-candidate"></code></td><td><code id="efile-candidate"></code></tr>')
+                .append('<tr><td id="actions" style="text-align:center" colspan="2"></td></tr>');
+
+            $('#paper-iframe').append(paper);
+            $('#efile-iframe').append(efile);
+            $('#actions')
+                .append($('<button>Compare forms</button>').click(function(){
+                    compareForms();
+                }));
+            /**
+             * Buttons to help map/match form fields
+                .append($('<button>Save</button>').click(function(){
+                    mapping[paperCandidate] = efileCandidate;
+                    paper.contents().find('[name="' + paperCandidate + '"]').addClass('debug-mismatch-data');
+                    efile.contents().find('[name="' + efileCandidate + '"]').addClass('debug-mismatch-data');
+                }))
+                .append($('<button style="float:right">Report</button>').click(function(){
+                    console.info(mapping);
+                    console.info(JSON.stringify(mapping));
+                }))
+             */
+
+            paper.load(function(){
+                console.info('paper iframe ready!');
+                /**
+                 * Action to help map/match form fields
+                paper.contents().find('#claim-form [name]').click(function(){
+                    var $this = $(this),
+                        $form = $this.closest('form');
+
+                    $form.find('.debug-extra-data').removeClass('debug-extra-data');
+                    $form.find('[name="' + this.name + '"]').addClass('debug-extra-data');
+
+                    paperCandidate = this.name;
+                    $('#paper-candidate').text(paperCandidate);
+                });
+                 */
+            });
+
+            efile.load(function(){
+                console.info('e-file iframe ready!');
+                /**
+                 * Action to help map/match form fields
+                efile.contents().find('#claim-form [name]').click(function(){
+                    var $this = $(this),
+                        $form = $this.closest('form');
+
+                    $form.find('.debug-extra-data').removeClass('debug-extra-data');
+                    $form.find('[name="' + this.name + '"]').addClass('debug-extra-data');
+
+                    efileCandidate = this.name;
+                    $('#efile-candidate').text(efileCandidate);
+                });
+                 */
+            });
+
+            $.ajax({
+                url: '/manage/insurance-form.php',
+                data: { map: 'efile-to-paper', expanded: true },
+                dataType: 'json',
+                success: function(map){
+                    console.info('data map ready!');
+                    efileToPaperMap = map;
+                },
+                error: function(){ console.info('data map failed!'); }
+            });
+        }, 100);
+    }
+
     function debugLog (message, asHtml) {
         if (asHtml) {
             $('#debug-notifications').html(message);
@@ -460,4 +612,5 @@ $(document).ready(function(){
 
     window.mockFields = mockFields;
     window.compareFields = compareFields;
+    window.compareSideBySide = compareSideBySide;
 });

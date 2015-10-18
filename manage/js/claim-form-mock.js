@@ -640,16 +640,19 @@ $(document).ready(function(){
     }).appendTo('body');
 
     $('<button>', {
+        id: 'debug-dummy-data',
         class: 'dummy-data',
         text: 'Fill dummy data'
     }).click(function(){ mockFields(); }).prependTo('#debug-buttons');
 
     $('<button>', {
+        id: 'debug-ajax-data',
         class: 'save-ajax-data',
         text: 'Save without reload the page'
     }).click(function(){ submitAndCompare(); }).prependTo('#debug-buttons');
 
     $('<select>', {
+        id: 'debug-claim-status',
         name: 'claim-status'
     }).each(function(){
             var $this = $(this),

@@ -6,22 +6,22 @@ $(document).ready(function(){
 
     function claimStatuses () {
         return {
-            0: 'Primary - Pending',
-            1: 'Primary - Sent',
+            0:  'Primary - Pending',
+            1:  'Primary - Sent',
             14: 'Primary - E-file Accepted',
-            3: 'Primary - Paid Insurance',
-            5: 'Primary - Paid Patient',
-            4: 'Primary - Rejected',
-            2: 'Primary - Dispute',
+            3:  'Primary - Paid Insurance',
+            5:  'Primary - Paid Patient',
+            4:  'Primary - Rejected',
+            2:  'Primary - Dispute',
             10: 'Primary - Patient Dispute',
 
-            6: 'Secondary - Pending',
-            7: 'Secondary - Sent',
+            6:  'Secondary - Pending',
+            7:  'Secondary - Sent',
             15: 'Secondary - E-file Accepted',
-            9: 'Secondary - Paid Insurance',
+            9:  'Secondary - Paid Insurance',
             11: 'Secondary - Paid Patient',
             13: 'Secondary - Rejected',
-            8: 'Secondary - Dispute',
+            8:  'Secondary - Dispute',
             12: 'Secondary - Patient Dispute'
         };
     }
@@ -666,7 +666,7 @@ $(document).ready(function(){
 
     $('<div>', {
         id: 'debug-notifications'
-    }).prependTo('#debug-buttons');
+    }).appendTo('#debug-buttons');
 
     if (false) {
         $('<button>', {

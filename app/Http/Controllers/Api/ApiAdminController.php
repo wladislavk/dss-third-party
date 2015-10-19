@@ -7,7 +7,7 @@ use Mockery\CountValidator\Exception;
 
 use \DentalSleepSolutions\Interfaces\AdminInterface;
 
-class ApiAdminsController extends ApiBaseController
+class ApiAdminController extends ApiBaseController
 {
     protected $admin;
 
@@ -39,7 +39,7 @@ class ApiAdminsController extends ApiBaseController
 
         try {
             $response['data']   = $this->admin->all();
-            $response['stasus'] = true;
+            $response['status'] = true;
             $status             = 200;
         } catch (Exception $ex) {
             $status              = 404;

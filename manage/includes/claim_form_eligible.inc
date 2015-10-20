@@ -93,10 +93,20 @@
   $responsibility_sequence = st($myarray['responsibility_sequence']);
   $icd_indicator = st($myarray['icd_ind']);
 
+$payer = [
+    'id' => $myarray['payer_id'],
+    'name' => $myarray['payer_name'],
+    'address' => [
+        'street_line_1' => $myarray['payer_address'],
+        'city' => $myarray['payer_city'],
+        'state' => $myarray['payer_state'],
+        'zip' => $myarray['payer_zip'],
+    ]
+];
+
+$billing_provider_taxonomy_code = $myarray['billing_provider_taxonomy_code'];
+
   if(!$is_pri_pending){
-    $pica1 = st($myarray['pica1']);
-    $pica2 = st($myarray['pica2']);
-    $pica3 = st($myarray['pica3']);
     $p_m_dss_file = $pat_myarray['p_m_dss_file'];
     $s_m_dss_file = $pat_myarray['s_m_dss_file'];
     $patient_lastname = st($myarray['patient_lastname']);
@@ -715,31 +725,13 @@ function stateDropdown (fieldName) {
       $('[name="service_facility[address][state]"]').replaceWith(stateDropdown('service_facility[address][state]'));
       $('[name="billing_provider[address][state]"]').replaceWith(stateDropdown('billing_provider[address][state]'));
 
-    <?php
-      if($is_secondary) {
-        $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";
-      } else {
-        $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
-      }
+    $('input[name="payer[id]"]').val("<?= st($payer['id']) ?>");
+    $('input[name="payer[name]"]').val("<?= st($payer['name']) ?>");
+    $('input[name="payer[address][street_line_1]"]').val("<?= st($payer['address']['street_line_1']) ?>");
+    $('input[name="payer[address][city]"]').val("<?= st($payer['address']['city']) ?>");
+    $('input[name="payer[address][state]"]').val("<?= st($payer['address']['state']) ?>");
+    $('input[name="payer[address][zip]"]').val("<?= st($payer['address']['zip']) ?>");
 
-      $inscoinfo = $db->getRow($inscoquery);
-    ?>
-      <?php if ($is_secondary) { ?>
-      $('input[name="payer[id]"]').val("<?= $s_m_eligible_payer_id;?>");
-      $('input[name="payer[name]"]').val("<?= $s_m_eligible_payer_name;?>");
-
-      <?php } else { ?>
-
-      $('input[name="payer[id]"]').val("<?= $p_m_eligible_payer_id;?>");
-      $('input[name="payer[name]"]').val("<?= $p_m_eligible_payer_name;?>");
-
-      <?php } ?>
-
-    $('input[name="payer[address][street_line_1]"]').val("<?php echo  $inscoinfo['add1'];?>");
-    $('input[name="payer[address][street_line_2]"]').val("<?php echo  $inscoinfo['add2'];?>");
-    $('input[name="payer[address][city]"]').val("<?php echo  $inscoinfo['city'];?>");
-    $('input[name="payer[address][state]"]').val("<?= strtoupper(trim($inscoinfo['state'])) ?>");
-    $('input[name="payer[address][zip]"]').val("<?php echo  $inscoinfo['zip'];?>");
     $('input[name="code"]').val("<?php echo $claim_codes;?>");
 
     $('input[name="subscriber[id]"]').val("<?php echo  $insured_id_number;?>");
@@ -1183,7 +1175,8 @@ function stateDropdown (fieldName) {
       $('[name="billing_provider[address][state]"]').val("<?= $billing_provider_info['stateCode'] ?>");
       $('input[name="billing_provider[address][zip]"]').val("<?= $billing_provider_info['zip'] ?>").addClass("zipmask");
       $('input[name="billing_provider[npi]"]').val("<?= $billing_provider_a ?>");
-      $('input[name="billing_provider[taxonomy_code]"]').val("332B00000X");
+      $('input[name="billing_provider[taxonomy_code]"]').val(<?= json_encode($billing_provider_taxonomy_code) ?>)
+          .attr('title', 'Common value: 332B00000X');
       $('input[name="claim[direct_payment_authorized]"]').prop('checked', <?= $insured_signature ? 'true' : 'false' ?>);
 
 <?php
@@ -1268,6 +1261,7 @@ function stateDropdown (fieldName) {
 
       // No DB columns for these fields
       $('\
+          [name="payer[address][street_line_2]"]\
           [name="dependent[address][street_line_2]"],\
           [name="subscriber[address][street_line_2]"],\
           [name="referring_provider[middle_name]"],\

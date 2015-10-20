@@ -219,6 +219,7 @@ if (!empty($_POST['ex_statusbtn'])) { ?>
 	$other_accident = (!empty($_POST['other_accident']) ? $_POST['other_accident'] : '');
 	$insured_policy_group_feca = $_POST['insured_policy_group_feca'];
 	$other_insured_policy_group_feca = $_POST['other_insured_policy_group_feca'];
+    $responsibility_sequence = !empty($_POST['responsibility_sequence']) ? $_POST['responsibility_sequence'] : '';
 	//we need to convert the DOB from mm-dd-yyyy to YYYY-MM-dd
    $insured_dob = dateFormat($_POST['insured_dob'], false);
 	$insured_sex = $_POST['insured_sex'];
@@ -484,6 +485,7 @@ if (!empty($_POST['ex_statusbtn'])) { ?>
 		other_accident = '".s_for($other_accident)."',
 		insured_policy_group_feca = '".s_for($insured_policy_group_feca)."',
 		other_insured_policy_group_feca = '".s_for($other_insured_policy_group_feca)."',
+		responsibility_sequence = '".s_for($responsibility_sequence)."',
 		insured_dob = '".s_for($insured_dob)."',
 		insured_sex = '".s_for($insured_sex)."',
 		other_insured_dob = '".s_for($other_insured_dob)."',
@@ -750,6 +752,7 @@ if (!empty($_POST['ex_statusbtn'])) { ?>
     other_insured_middle = '".s_for($other_insured_middle)."',
     insured_policy_group_feca = '".s_for($insured_policy_group_feca)."',
     other_insured_policy_group_feca = '".s_for($other_insured_policy_group_feca)."',
+    responsibility_sequence = '".s_for($responsibility_sequence)."',
     insured_dob = '".s_for($insured_dob)."',
     insured_sex = '".s_for($insured_sex)."',
     other_insured_dob = '".s_for($other_insured_dob)."',
@@ -1073,6 +1076,7 @@ $patient_firstname = st($myarray['patient_firstname']);
 $patient_middle = st($myarray['patient_middle']);
 $patient_dob = st($myarray['patient_dob']);
 $patient_sex = st($myarray['patient_sex']);
+$responsibility_sequence = $myarray['responsibility_sequence'];
 
 if ($is_secondary) {
   $insurancetype = st($myarray['other_insurance_type']);
@@ -2498,11 +2502,11 @@ Medicare
                                     <span class="num_a">e.</span>
                                     Res. sequence
                                     <br />
-                                    <select name="OTHER_INSURED_TODO_FIELD">
+                                    <select name="responsibility_sequence">
                                         <option value=""></option>
-                                        <option value="P" <?= $OTHER_INSURED_TODO_FIELD === 'P' ? 'selected' : '' ?>>Primary</option>
-                                        <option value="S" <?= $OTHER_INSURED_TODO_FIELD === 'S' ? 'selected' : '' ?>>Secondary</option>
-                                        <option value="T" <?= $OTHER_INSURED_TODO_FIELD === 'T' ? 'selected' : '' ?>>Tertiary</option>
+                                        <option value="P" <?= $responsibility_sequence === 'P' ? 'selected' : '' ?>>Primary</option>
+                                        <option value="S" <?= $responsibility_sequence === 'S' ? 'selected' : '' ?>>Secondary</option>
+                                        <option value="T" <?= $responsibility_sequence === 'T' ? 'selected' : '' ?>>Tertiary</option>
                                     </select>
                                 </td>
                             </tr>

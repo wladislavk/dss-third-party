@@ -501,6 +501,7 @@ $efileToPaper = [
     'other_insured_middle'              => 'other_payers.0.subscriber.middle_name',
     'other_insured_policy_group_feca'   => 'other_payers.0.subscriber.group_id',
     'other_insured_insurance_plan'      => 'other_payers.0.name',
+    'responsibility_sequence'           => 'other_payers.0.responsibility_sequence',
 
     'referring_provider'     => 'referring_provider.first_name',
     'field_17a_dd'           => 'referring_provider.secondary_id_type',
@@ -573,6 +574,14 @@ $efileToPaper = [
 ];
 
 $efileToDb = [
+    // Payer, new columns
+    'payer_id'                  => 'payer.id',
+    'payer_name'                => 'payer.name',
+    'payer_address'             => 'payer.address.street_line_1',
+    'payer_city'                => 'payer.address.city',
+    'payer_state'               => 'payer.address.state',
+    'payer_zip'                 => 'payer.address.zip',
+
     'insured_id_number'         => 'subscriber.id',
     'insured_lastname'          => 'subscriber.last_name',
     'insured_firstname'         => 'subscriber.first_name',
@@ -607,6 +616,7 @@ $efileToDb = [
     'other_insured_middle'              => 'other_payers.0.subscriber.middle_name',
     'other_insured_policy_group_feca'   => 'other_payers.0.subscriber.group_id',
     'other_insured_insurance_plan'      => 'other_payers.0.name',
+    'responsibility_sequence'           => 'other_payers.0.responsibility_sequence',
 
     'referring_provider'     => 'referring_provider.first_name',
     'field_17a_dd'           => 'referring_provider.secondary_id_type',
@@ -740,6 +750,7 @@ $paperToDb = [
     'other_insured_middle'              => 'other_insured_middle',
     'other_insured_policy_group_feca'   => 'other_insured_policy_group_feca',
     'other_insured_insurance_plan'      => 'other_insured_insurance_plan',
+    'responsibility_sequence'           => 'responsibility_sequence',
     'nucc_8a'                           => 'nucc_8a',
     'nucc_8b'                           => 'nucc_8b',
     'nucc_9b'                           => 'nucc_9b',

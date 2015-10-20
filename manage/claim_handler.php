@@ -165,6 +165,19 @@
     // Put POST values into variables
 	$payer_id = (!empty($_POST['payer']['id']) ? $_POST['payer']['id'] : '');
 	$payer_name = (!empty($_POST['payer']['id']) ? $_POST['payer']['id'] : '');
+
+// Ensure the POST fields exist
+$payer = [
+    'id' => !empty($_POST['payer']['id']) ? $_POST['payer']['id'] : '',
+    'name' => !empty($_POST['payer']['name']) ? $_POST['payer']['name'] : '',
+    'address' => [
+        'street_line_1' => !empty($_POST['payer']['address']['street_line_1']) ? $_POST['payer']['address']['street_line_1'] : '',
+        'city' => !empty($_POST['payer']['address']['city']) ? $_POST['payer']['address']['city'] : '',
+        'state' => !empty($_POST['payer']['address']['state']) ? $_POST['payer']['address']['state'] : '',
+        'zip' => !empty($_POST['payer']['address']['zip']) ? $_POST['payer']['address']['zip'] : '',
+    ]
+];
+
     $patient_lastname = (!empty($_POST['dependent']['last_name']) ? $_POST['dependent']['last_name'] : '');
     $patient_firstname = (!empty($_POST['dependent']['first_name']) ? $_POST['dependent']['first_name'] : '');
     $patient_middle = (!empty($_POST['dependent']['middle_name']) ? $_POST['dependent']['middle_name'] : '');
@@ -419,6 +432,7 @@
         (!empty($_POST['billing_provider']['address']['zip']) ? $_POST['billing_provider']['address']['zip'] : '')
     );
     $billing_provider_a = (!empty($_POST['billing_provider']['npi']) ? $_POST['billing_provider']['npi'] : '');
+    $billing_provider_taxonomy_code = $_POST['billing_provider']['taxonomy_code'];
     $reject_reason = (!empty($_POST['reject_reason']) ? $_POST['reject_reason'] : '');
     $insurance_type_arr = (!empty($insurance_type) ? $insurance_type : '');
     $p_m_eligible_payer_id = (!empty($_POST['payer']['id']) ? $_POST['payer']['id'] : '');
@@ -455,8 +469,12 @@
 
     if( $patient_lastname != '') {
         $ed_sql = " update dental_insurance set
-                pica2 = '" . s_for($pica2) . "',
-                pica3 = '" . s_for($pica3) . "',
+                payer_id = '".s_for($payer['id'])."',
+                payer_name = '".s_for($payer['name'])."',
+                payer_address = '".s_for($payer['address']['street_line_1'])."',
+                payer_city = '".s_for($payer['address']['city'])."',
+                payer_state = '".s_for($payer['address']['state'])."',
+                payer_zip = '".s_for($payer['address']['zip'])."',
                 patient_lastname = '" . s_for($patient_lastname) . "',
                 patient_firstname = '" . s_for($patient_firstname) . "',
                 patient_middle = '" . s_for($patient_middle) . "',
@@ -669,6 +687,7 @@
                 billing_provider_a = '" . s_for($billing_provider_a) . "',
                 billing_provider_dd = '" . s_for(!empty($billing_provider_dd) ? $billing_provider_dd : '') . "',
                 billing_provider_b_other = '" . s_for(!empty($billing_provider_b_other) ? $billing_provider_b_other : '') . "',
+                billing_provider_taxonomy_code = '".s_for($billing_provider_taxonomy_code)."',
                 p_m_eligible_payer_id = '" . $p_m_eligible_payer_id . "',
                 p_m_eligible_payer_name = '" . mysql_real_escape_string($p_m_eligible_payer_name) . "',
                 s_m_eligible_payer_id = '" . mysql_real_escape_string($s_m_eligible_payer_id) . "',

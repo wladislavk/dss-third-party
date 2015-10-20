@@ -865,11 +865,6 @@ if ($query) foreach ($query as $array) {
 // re-calculate balance due
 //$balance_due = $total_charge - $amount_paid;
 
-if($userinfo['tax_id_or_ssn'] != ''){
-    $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
-}else{
-    $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
-}
 
 if($userinfo['ssn'] != '' && $userinfo['producer_files']==1){
     $ssn = $userinfo['ssn'];
@@ -896,7 +891,7 @@ if (!isset($balance_due)) {
 }
 
 $fdf .= "
-      << /T(".$field_path.".fed_tax_id_number_fill[0]) /V(".escapeFdf($tax_id_or_ssn).") >>
+      << /T(".$field_path.".fed_tax_id_number_fill[0]) /V(".escapeFdf($federal_tax_id_number).") >>
       << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".escapeFdf(isOptionSelected($ssn == "1") ? 1 : '').") >>
       << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".escapeFdf(isOptionSelected($ein == "1") ? 1 : '').") >>
       << /T(".$field_path.".pt_account_number_fill[0]) /V(".escapeFdf((!empty($patient_account_no) ? $patient_account_no : '')).") >>
@@ -926,12 +921,6 @@ $fdf .= "
 // re-calculate balance due
 //$balance_due = $total_charge - $amount_paid;
 
-if($userinfo['tax_id_or_ssn'] != ''){
-    $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
-}else{
-    $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
-}
-
 if($userinfo['ssn'] != '' && $userinfo['producer_files']==1){
     $ssn = $userinfo['ssn'];
 }else{
@@ -945,7 +934,7 @@ if($userinfo['ein'] != '' && $userinfo['producer_files']==1){
 }
 
 $fdf .= "
-  << /T(".$field_path.".fed_tax_id_number_fill[0]) /V(".escapeFdf($tax_id_or_ssn).") >>
+  << /T(".$field_path.".fed_tax_id_number_fill[0]) /V(".escapeFdf($federal_tax_id_number).") >>
   << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".escapeFdf((($ssn == "1")?1:'')).") >>
   << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".escapeFdf((($ein == "1")?1:'')).") >>
   << /T(".$field_path.".pt_account_number_fill[0]) /V(".escapeFdf($patient_account_no).") >>
@@ -964,7 +953,7 @@ $fdf .= "
   << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".escapeFdf($billing_provider_phone).") >>
   << /T(".$field_path.".billing_provider_info_fill[0]) /V(".escapeFdf(strtoupper($billing_provider_name)."\n".strtoupper($billing_provider_address)."\n".strtoupper($billing_provider_city)).") >>
   << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".escapeFdf($signature_physician).") >>  
-  << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".escapeFdf(date('Y-m-d')).") >>
+  << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".escapeFdf($physician_signed_date).") >>
   << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".escapeFdf($service_info_a).") >>
   << /T(".$field_path.".billing_provider_a[0]) /V(".escapeFdf($billing_provider_a).") >>
   << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".escapeFdf(((!empty($billing_provider_a) ? $billing_provider_a : ''))).") >>

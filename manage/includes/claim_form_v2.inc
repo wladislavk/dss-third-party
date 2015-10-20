@@ -2485,10 +2485,28 @@ Medicare
 				</tr>
 				<tr>
 					<td align="left" valign="top">
-						<span class="num_a">d.</span>
-						Insurance Plan Name or Program Name
-						<br />
-						<input value="<?php echo $other_insured_insurance_plan?>" name="other_insured_insurance_plan" type="text" class="inbox_line3" size="28"  />
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td>
+                                    <span class="num_a">d.</span>
+                                    Insurance Plan Name or Program Name
+                                    <br />
+                                    <input value="<?php echo $other_insured_insurance_plan?>" type="text"
+                                        class="inbox_line3" size="28" name="other_insured_insurance_plan" />
+                                </td>
+                                <td>
+                                    <span class="num_a">e.</span>
+                                    Res. sequence
+                                    <br />
+                                    <select name="OTHER_INSURED_TODO_FIELD">
+                                        <option value=""></option>
+                                        <option value="P" <?= $OTHER_INSURED_TODO_FIELD === 'P' ? 'selected' : '' ?>>Primary</option>
+                                        <option value="S" <?= $OTHER_INSURED_TODO_FIELD === 'S' ? 'selected' : '' ?>>Secondary</option>
+                                        <option value="T" <?= $OTHER_INSURED_TODO_FIELD === 'T' ? 'selected' : '' ?>>Tertiary</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
 					</td>
 					<td align="left" valign="top">
 						<span class="num_a">10d.</span>
@@ -2642,12 +2660,12 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 									<span class="num">17<span class="num_a">a.</span></span> 
 								</td>
 								<td valign="top" width="10%" style="border-bottom: 1px #000000 dashed;">
-									<select name="field_17a_dd" class="inbox_line3" style="width:40px;">
-										<option value=""></option>
-                                        <option value="P" <?= $field_17a_dd == 'P' ? 'selected' : '' ?>>Primary</option>
-                                        <option value="S" <?= $field_17a_dd == 'S' ? 'selected' : '' ?>>Secondary</option>
-                                        <option value="T" <?= $field_17a_dd == 'T' ? 'selected' : '' ?>>Tertiary</option>
-									</select>
+                                    <select name="field_17a_dd" class="inbox_line3" style="width:40px;">
+                                        <option value=""></option>
+                                        <option value="0B" <?= $field_17a_dd == '0B' ? 'selected' : '' ?>>State License Number</option>
+                                        <option value="1G" <?= $field_17a_dd == '1G' ? 'selected' : '' ?>>Provider UPIN Number</option>
+                                        <option value="G2" <?= $field_17a_dd == 'G2' ? 'selected' : '' ?>>Provider Commercial Number</option>
+                                    </select>
 								</td>
 								<td valign="top" width="80%" style="border-bottom: 1px #000000 dashed; padding-bottom:3px;">
 									<input type="text" value="<?php echo (!empty($field_17a) ? $field_17a : ''); ?>" name="field_17a" class="inbox_line3" size="30"/>

@@ -695,6 +695,7 @@ $efileToDb = [
 ];
 
 $paperToDb = [
+    // PICA fields will disappear
     'pica1' => 'pica1',
     'pica2' => 'pica2',
     'pica3' => 'pica3',

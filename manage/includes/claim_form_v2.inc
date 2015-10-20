@@ -1989,9 +1989,12 @@ $(document).ready(function(){
 			<span class="heading1">Health Insurance Claim Form</span><br />
 			<span>Approved By National Uniform Claim Committee 08/05</span><br /><br />
 			<span>
-				<input value="<?php echo (!empty($pica1) ? $pica1 : '');?>" name="pica1" type="text"  class="inbox_line1" maxlength="1"/>
-				<input value="<?php echo (!empty($pica2) ? $pica2 : '');?>" name="pica2" type="text"  class="inbox_line1" maxlength="1"/>
-				<input value="<?php echo (!empty($pica3) ? $pica3 : '');?>" name="pica3" type="text"  class="inbox_line1" maxlength="1"/>
+				<input value="<?php echo (!empty($pica1) ? $pica1 : '');?>" name="pica1" type="text" readonly
+                    class="inbox_line1 grayout" maxlength="1"/>
+				<input value="<?php echo (!empty($pica2) ? $pica2 : '');?>" name="pica2" type="text" readonly
+                    class="inbox_line1 grayout" maxlength="1"/>
+				<input value="<?php echo (!empty($pica3) ? $pica3 : '');?>" name="pica3" type="text" readonly
+                    class="inbox_line1 grayout" maxlength="1"/>
 				PICA
 			</span>
 		</td>

@@ -717,6 +717,7 @@ if (!empty($_POST['ex_statusbtn'])) { ?>
                $u_status = false;
              }
 		$ed_sql = " update dental_insurance set 
+		pica1 = '".s_for($pica1)."',
 		pica2 = '".s_for($pica2)."',
 		pica3 = '".s_for($pica3)."',
 		patient_lastname = '".s_for($patient_lastname)."',
@@ -1990,7 +1991,7 @@ $(document).ready(function(){
 			<span>
 				<input value="<?php echo (!empty($pica1) ? $pica1 : '');?>" name="pica1" type="text"  class="inbox_line1" maxlength="1"/>
 				<input value="<?php echo (!empty($pica2) ? $pica2 : '');?>" name="pica2" type="text"  class="inbox_line1" maxlength="1"/>
-				<input value="<?php echo (!empty($pica1) ? $pica1 : '');?>" name="pica3" type="text"  class="inbox_line1" maxlength="1"/>
+				<input value="<?php echo (!empty($pica3) ? $pica3 : '');?>" name="pica3" type="text"  class="inbox_line1" maxlength="1"/>
 				PICA
 			</span>
 		</td>

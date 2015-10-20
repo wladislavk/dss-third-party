@@ -173,12 +173,6 @@ if (!empty($myarray)) {
     $another_plan = strtoupper(st($myarray['another_plan']));
 }
 
-if(!empty($other_insured_policy_group_feca) && !empty($other_insured_insurance_plan)){
-    $another_plan = 'YES';
-}else{
-    $another_plan = 'NO';
-}
-
 if (!empty($myarray)) {
     $patient_signature =strtoupper($myarray['patient_signature']);
     $patient_signed_date =strtoupper($myarray['patient_signed_date']);
@@ -675,13 +669,13 @@ $fdf .= "
         << /T(".$field_path.".other_insured_name_fill[0]) /V(".escapeFdf($other_insured_lastname." ".$other_insured_firstname." ".$other_insured_middle).") >>
         << /T(".$field_path.".insured_policy_group_fill[0]) /V(".escapeFdf($insured_policy_group_feca).") >>
         << /T(".$field_path.".other_insured_policy_fill[0]) /V(".escapeFdf($other_insured_policy_group_feca).") >>
-        << /T(".$field_path.".pt_condition_employment_yes_chkbox[0]) /V(".escapeFdf(((!empty($employment) && $employment == "YES")?1:'')).") >>
-        << /T(".$field_path.".pt_condition_employment_no_chkbox[0]) /V(".escapeFdf(((!empty($employment) && $employment == "NO")?1:'')).") >>
-        << /T(".$field_path.".pt_condition_auto_yes_chkbox[0]) /V(".escapeFdf(((!empty($auto_accident) && $auto_accident == "YES")?1:'')).") >>
-        << /T(".$field_path.".pt_condition_auto_no_chkbox[0]) /V(".escapeFdf(((!empty($auto_accident) && $auto_accident == "NO")?1:'')).") >>
+        << /T(".$field_path.".pt_condition_employment_yes_chkbox[0]) /V(".escapeFdf(isOptionSelected($employment) ? 1 : '').") >>
+        << /T(".$field_path.".pt_condition_employment_no_chkbox[0]) /V(".escapeFdf(!isoptionselected($employment) ? 1 : '').") >>
+        << /T(".$field_path.".pt_condition_auto_yes_chkbox[0]) /V(".escapeFdf(isOptionSelected($auto_accident) ? 1 : '').") >>
+        << /T(".$field_path.".pt_condition_auto_no_chkbox[0]) /V(".escapeFdf(!isOptionSelected($auto_accident) ? 1 : '').") >>
         << /T(".$field_path.".pt_condition_place_fill[0]) /V(".escapeFdf((!empty($auto_accident_place) ? $auto_accident_place : '')).") >>
-        << /T(".$field_path.".pt_condition_otheracc_yes_chkbox[0]) /V(".escapeFdf(((!empty($other_accident) && $other_accident == "YES")?1:'')).") >>
-        << /T(".$field_path.".pt_condition_otheracc_no_chkbox[0]) /V(".escapeFdf(((!empty($other_accident) && $other_accident == "NO")?1:'')).") >>
+        << /T(".$field_path.".pt_condition_otheracc_yes_chkbox[0]) /V(".escapeFdf(isOptionSelected($other_accident) ? 1 : '').") >>
+        << /T(".$field_path.".pt_condition_otheracc_no_chkbox[0]) /V(".escapeFdf(!isOptionSelected($other_accident) ? 1 : '').") >>
         ";
 
 if(!empty($insured_dob)){
@@ -716,14 +710,14 @@ $fdf .= "
         << /T(".$field_path.".box9c_nucc[0]) /V(".escapeFdf($nucc_9c).") >>
         << /T(".$field_path.".ins_plan_name_fill[0]) /V(".escapeFdf($other_insured_insurance_plan).") >>
         << /T(".$field_path.".reserved_local_use_fill[0]) /V(".escapeFdf((!empty($claim_codes) ? $claim_codes : '')).") >>
-        << /T(".$field_path.".another_health_benefit_yes_chkbox[0]) /V(".escapeFdf((($another_plan == "YES")?1:'')).") >>
-        << /T(".$field_path.".another_health_benefit_no_chkbox[0]) /V(".escapeFdf((($another_plan == "NO")?1:'')).") >>
-        << /T(".$field_path.".pt_signature_fill[0]) /V(".escapeFdf(((!empty($patient_signature))?'SIGNATURE ON FILE':'')).") >>
+        << /T(".$field_path.".another_health_benefit_yes_chkbox[0]) /V(".escapeFdf(isOptionSelected($another_plan) ? 1 : '').") >>
+        << /T(".$field_path.".another_health_benefit_no_chkbox[0]) /V(".escapeFdf(!isOptionSelected($another_plan) ? 1 : '').") >>
+        << /T(".$field_path.".pt_signature_fill[0]) /V(".escapeFdf(isOptionSelected($patient_signature) ? 'SIGNATURE ON FILE' : '').") >>
         ";
 if(!empty($patient_signature)){
     $fdf .= "<< /T(".$field_path.".pt_signature_date_fill[0]) /V(".escapeFdf($patient_signed_date).") >>";
 }
-$fdf .= "<< /T(".$field_path.".insured_signature_fill[0]) /V(".escapeFdf(((!empty($insured_signature))?'SIGNATURE ON FILE':'')).") >>";
+$fdf .= "<< /T(".$field_path.".insured_signature_fill[0]) /V(".escapeFdf(isOptionSelected($insured_signature) ? 'SIGNATURE ON FILE' : '').") >>";
 if(!empty($date_current)){
     $fdf .= "
           << /T(".$field_path.".date_of_current_mm_fill[0]) /V(".escapeFdf(date('m', $date_current)).") >>
@@ -772,8 +766,8 @@ if(!empty($hospitalization_date_to)){
         ";
 }
 $fdf .= "<< /T(".$field_path.".reserved_for_local_fill[0]) /V(".escapeFdf((!empty($reserved_local_use1) ? $reserved_local_use1 : '')).") >>
-            << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".escapeFdf(((!empty($outside_lab) && $outside_lab == "YES")?1:'')).") >>
-            << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".escapeFdf(((!empty($outside_lab) && $outside_lab == "NO")?1:'')).") >>
+            << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".escapeFdf(isOptionSelected($outside_lab) ? 1 : '').") >>
+            << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".escapeFdf(!isOptionSelected($outside_lab) ? 1 : '').") >>
             << /T(".$field_path.".charges_fill[0]) /V(".escapeFdf((!empty($s_charges) ? $s_charges : '')).") >>
             << /T(".$field_path.".icd_ind[0]) /V(".escapeFdf((isset($icd_ind) ?$icd_ind: '')).") >>
             << /T(".$field_path.".diagnosis_a[0]) /V(".escapeFdf((!empty($diagnosis_a) ? $diagnosis_a : '')).") >>
@@ -903,11 +897,11 @@ if (!isset($balance_due)) {
 
 $fdf .= "
       << /T(".$field_path.".fed_tax_id_number_fill[0]) /V(".escapeFdf($tax_id_or_ssn).") >>
-      << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".escapeFdf((($ssn == "1")?1:'')).") >>
-      << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".escapeFdf((($ein == "1")?1:'')).") >>
+      << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".escapeFdf(isOptionSelected($ssn == "1") ? 1 : '').") >>
+      << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".escapeFdf(isOptionSelected($ein == "1") ? 1 : '').") >>
       << /T(".$field_path.".pt_account_number_fill[0]) /V(".escapeFdf((!empty($patient_account_no) ? $patient_account_no : '')).") >>
-      << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "yes" || $accept_assignment == "A")?1:'')).") >>
-  << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "no" || $accept_assignment == "C")?1:'')).") >>
+      << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".escapeFdf(isOptionSelected($accept_assignment) || $accept_assignment == "A" ? 1 : '').") >>
+  << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".escapeFdf(!isOptionSelected($accept_assignment) || $accept_assignment == "C" ? 1 : '').") >>
       
       << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".escapeFdf(number_format(floor($total_charge),0,'.','')).") >>
       << /T(".$field_path.".total_charge_cents_fill[0]) /V(".escapeFdf(fill_cents(roundToCents($total_charge))).") >>
@@ -955,8 +949,8 @@ $fdf .= "
   << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".escapeFdf((($ssn == "1")?1:'')).") >>
   << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".escapeFdf((($ein == "1")?1:'')).") >>
   << /T(".$field_path.".pt_account_number_fill[0]) /V(".escapeFdf($patient_account_no).") >>
-  << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "yes" || $accept_assignment == "A")?1:'')).") >>
-  << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".escapeFdf(((strtolower($accept_assignment) == "no" || $accept_assignment == "C")?1:'')).") >>
+  << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".escapeFdf(isOptionSelected($accept_assignment) || $accept_assignment == "A" ? 1 : '').") >>
+  << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".escapeFdf(!isOptionSelected($accept_assignment) || $accept_assignment == "C" ? 1 : '').") >>
   
   << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".escapeFdf(number_format(floor($total_charge),0,'.','')).") >>
   << /T(".$field_path.".total_charge_cents_fill[0]) /V(".escapeFdf(fill_cents(roundToCents($total_charge))).") >>

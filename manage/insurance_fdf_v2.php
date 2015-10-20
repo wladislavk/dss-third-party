@@ -6,6 +6,12 @@ include_once('includes/constants.inc');
 include_once('admin/includes/main_include.php');
 include_once('admin/includes/invoice_functions.php');
 
+$secondaryIdTypes = [
+    '0B' => 'State License Number',
+    '1G' => 'Provider UPIN Number',
+    'G2' => 'Provider Commercial Number'
+];
+
 $field_path = "form1[0].#subform[0]";
 
 $fdf_file = time().'.fdf';
@@ -748,7 +754,7 @@ if(!empty($unable_date_to)){
 }
 $fdf .= "
         << /T(".$field_path.".name_referring_provider_fill[0]) /V(".escapeFdf((!empty($referring_provider) ? $referring_provider : '')).") >>
-        << /T(".$field_path.".seventeenA_fill[0]) /V(".escapeFdf((!empty($field_17a) ? $field_17a : '')).") >>
+        << /T(".$field_path.".seventeenA_fill[0]) /V(".escapeFdf(isset($secondaryIdTypes[$field_17a]) ? $secondaryIdTypes[$field_17a] : '').") >>
         << /T(".$field_path.".seventeenb_NPI_fill[0]) /V(".escapeFdf((!empty($field_17b) ? $field_17b : '')).") >>
         ";
 if(!empty($hospitalization_date_from)){

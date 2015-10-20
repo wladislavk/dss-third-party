@@ -39,7 +39,7 @@ class AdminRepository extends BaseRepository implements AdminInterface
         $relations = null;
         $model = $this->getModelName();
         $this->instance = $model::find($adminId);
-        return $this->instance();
+        return $this->instance;
     }
 
     /**

@@ -10,7 +10,13 @@ class Admin extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'name', 'username', 'password',
+        'status', 'adddate', 'ip_address',
+        'salt', 'recover_hash', 'recover_time',
+        'admin_access', 'last_accessed_date', 'claim_margin_top',
+        'claim_margin_left', 'email', 'first_name', 'last_name'
+    ];
 
     /**
      * The table associated with the model.

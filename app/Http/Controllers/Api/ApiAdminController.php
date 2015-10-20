@@ -5,13 +5,27 @@ use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 
-use \DentalSleepSolutions\Interfaces\AdminInterface;
+use DentalSleepSolutions\Interfaces\AdminInterface;
 
 class ApiAdminController extends ApiBaseController
 {
+    /**
+     * References the admin interface
+     * 
+     * @var $admin
+     */
     protected $admin;
 
     private $rules = [
+        'name'               => 'max:250',
+        'username'           => 'required|max:250',
+        'password'           => 'required|max:250',
+        'adddate'            => 'required|date_format:Y-m-d H:i:s',
+        'salt'               => 'required|max:100',
+        'last_accessed_date' => 'required|date_format:Y-m-d H:i:s',
+        'email'              => 'max:100',
+        'first_name'         => 'max:50',
+        'last_name'          => 'max:50'
     ];
 
     /**
@@ -33,12 +47,18 @@ class ApiAdminController extends ApiBaseController
         $status = null;
         $response = [
             'status'  => null,
-            'message' => 'Admins list',
+            'message' => 'Admins list.',
             'data'    => []
         ];
 
         try {
-            $response['data']   = $this->admin->all();
+            $retrievedAdmins = $this->admin->all();
+
+            if (!count($retrievedAdmins)) {
+                throw new Exception('The table is empty.');
+            }
+
+            $response['data']   = $retrievedAdmins;
             $response['status'] = true;
             $status             = 200;
         } catch (Exception $ex) {
@@ -86,6 +106,7 @@ class ApiAdminController extends ApiBaseController
 
     /**
      * 
+     * 
      * @param integer $adminId 
      * @return \Illuminate\Http\JsonResponse
      */
@@ -94,7 +115,7 @@ class ApiAdminController extends ApiBaseController
         $status = null;
         $response = [
             'status'  => null,
-            'message' => 'Admin was updated succesfully',
+            'message' => 'Admin was updated succesfully.',
             'data'    => []
         ];
 
@@ -120,6 +141,7 @@ class ApiAdminController extends ApiBaseController
 
     /**
      * 
+     * 
      * @param integer $adminId 
      * @return \Illuminate\Http\JsonResponse
      */
@@ -128,12 +150,18 @@ class ApiAdminController extends ApiBaseController
         $status = null;
         $response = [
             'status'  => null,
-            'message' => '',
+            'message' => 'Retrieved admin by id.',
             'data'    => []
         ];
 
         try {
-            $response['data']   = $this->admin->find($adminId);
+            $retrievedAdmin = $this->admin->find($adminId);
+
+            if (empty($retrievedAdmin)) {
+                throw new Exception('Admin not found.');
+            }
+
+            $response['data']   = $retrievedAdmin;
             $response['status'] = true;
             $status             = 200;
         } catch (Exception $ex) {
@@ -147,6 +175,7 @@ class ApiAdminController extends ApiBaseController
 
     /**
      * 
+     * 
      * @param integer $adminId 
      * @return \Illuminate\Http\JsonResponse
      */
@@ -155,7 +184,7 @@ class ApiAdminController extends ApiBaseController
         $status = null;
         $response = [
             'status'  => null,
-            'message' => 'Admin was edited successfully',
+            'message' => 'Admin was edited successfully.',
             'data'    => []
         ];
 
@@ -169,6 +198,7 @@ class ApiAdminController extends ApiBaseController
     }
 
     /**
+     * 
      * 
      * @param integer $adminId 
      * @return \Illuminate\Http\JsonResponse
@@ -183,8 +213,13 @@ class ApiAdminController extends ApiBaseController
         ];
 
         try {
-            $this->admin->destroy($adminId);
-            $response['data']   = $this->admin->all();
+            $deletedAdmin = $this->admin->destroy($adminId);
+            $response['data'] = $this->admin->all();
+
+            if (empty($deletedAdmin)) {
+                throw new Exception('Admin not found.');
+            }
+
             $response['status'] = true;
             $status             = 200;
         } catch (Exception $ex) {

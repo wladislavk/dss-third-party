@@ -769,7 +769,7 @@ $fdf .= "<< /T(".$field_path.".reserved_for_local_fill[0]) /V(".escapeFdf((!empt
             << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".escapeFdf(isOptionSelected($outside_lab) ? 1 : '').") >>
             << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".escapeFdf(!isOptionSelected($outside_lab) ? 1 : '').") >>
             << /T(".$field_path.".charges_fill[0]) /V(".escapeFdf((!empty($s_charges) ? $s_charges : '')).") >>
-            << /T(".$field_path.".icd_ind[0]) /V(".escapeFdf((isset($icd_ind) ?$icd_ind: '')).") >>
+            << /T(".$field_path.".icd_ind[0]) /V(".escapeFdf((isset($icd_ind) && $icd_ind != 0 ? $icd_ind : '')).") >>
             << /T(".$field_path.".diagnosis_a[0]) /V(".escapeFdf((!empty($diagnosis_a) ? $diagnosis_a : '')).") >>
             << /T(".$field_path.".diagnosis_b[0]) /V(".escapeFdf((!empty($diagnosis_b) ? $diagnosis_b : '')).") >>
             << /T(".$field_path.".diagnosis_c[0]) /V(".escapeFdf((!empty($diagnosis_c) ? $diagnosis_c : '')).") >>

@@ -91,6 +91,7 @@
   $s_m_eligible_payer_id = (!empty($myarray['s_m_eligible_payer_id']) ? $myarray['s_m_eligible_payer_id'] : '');
   $s_m_eligible_payer_name = (!empty($myarray['s_m_eligible_payer_name']) ? $myarray['s_m_eligible_payer_name'] : '');
   $responsibility_sequence = st($myarray['responsibility_sequence']);
+  $other_insured_insurance_type = $myarray['other_insured_insurance_type'];
   $icd_indicator = st($myarray['icd_ind']);
 
 $payer = [
@@ -779,6 +780,7 @@ function stateDropdown (fieldName) {
     $('input[name="other_payers[0][subscriber][middle_name]"]').val("<?= $other_insured_middle;?>");
     $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
     $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $responsibility_sequence ?>");
+    $('select[name="other_payers[0][subscriber][insurance_type_code]"]').val(<?= json_encode($other_insured_insurance_type) ?>);
 
     <?php
 

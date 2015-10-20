@@ -223,6 +223,8 @@ $payer = [
     $other_insured_insurance_plan = (!empty($_POST['other_payers'][0]['name']) ? $_POST['other_payers'][0]['name'] : '');
     $other_payer = (!empty($_POST['other_payer']) ? $_POST['other_payer'] : '');
     $responsibility_sequence = (!empty($_POST['other_payers'][0]['responsibility_sequence']) ? $_POST['other_payers'][0]['responsibility_sequence'] : '');
+    $other_insured_insurance_type = !empty($_POST['other_payers'][0]['subscriber']['insurance_type_code']) ?
+        $_POST['other_payers'][0]['subscriber']['insurance_type_code'] : '';
     $icd_indicator = isset($_POST['claim']['icd_indicator']) ? $_POST['claim']['icd_indicator'] : '';
     $reserved_local_use1 = isset($_POST['claim']['note']) ? $_POST['claim']['note'] : '';
     if ($other_payer == "true") {
@@ -722,7 +724,8 @@ $payer = [
                 rendering_provider_last_name_6  = '" . mysql_real_escape_string($rendering_provider_last_name_6) . "',
                 rendering_provider_org_6  = '" . mysql_real_escape_string($rendering_provider_org_6) . "',
                 rendering_provider_npi_6  = '" . mysql_real_escape_string($rendering_provider_npi_6) . "',
-                responsibility_sequence = '" . mysql_real_escape_string($responsibility_sequence) . "'";
+                responsibility_sequence = '" . mysql_real_escape_string($responsibility_sequence) . "',
+                other_insured_insurance_type = '" . mysql_real_escape_string($other_insured_insurance_type) . "'";
 
         if (isset($_POST['reject_but'])) {
             $ed_sql .= ", status = '" . s_for(DSS_CLAIM_REJECTED) . "'";

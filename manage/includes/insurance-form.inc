@@ -617,6 +617,7 @@ $efileToDb = [
     'other_insured_policy_group_feca'   => 'other_payers.0.subscriber.group_id',
     'other_insured_insurance_plan'      => 'other_payers.0.name',
     'responsibility_sequence'           => 'other_payers.0.responsibility_sequence',
+    'other_insured_insurance_type'      => 'other_payers.0.subscriber.insurance_type_code',
 
     'referring_provider'     => 'referring_provider.first_name',
     'field_17a_dd'           => 'referring_provider.secondary_id_type',

@@ -1,24 +1,25 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
-  $status_sql = "SELECT status FROM dental_insurance
-                 WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
-                 AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$status_sql = "SELECT status FROM dental_insurance
+             WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
+             AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
 
-  $status_r = $db->getRow($status_sql);
-  $status = $status_r['status'];
-  $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
-  $is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
-  $is_pri_pending = ($status == DSS_CLAIM_PENDING) ? true : false;
-  $is_sec_pending = ($status == DSS_CLAIM_SEC_PENDING) ? true : false;
-  $is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
-  $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
-  $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED) || ($_GET['instype'] == 2);
+$status_r = $db->getRow($status_sql);
+$status = $status_r['status'];
+$is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
+$is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
+$is_pri_pending = ($status == DSS_CLAIM_PENDING) ? true : false;
+$is_sec_pending = ($status == DSS_CLAIM_SEC_PENDING) ? true : false;
+$is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
+$is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
+$is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED) || ($_GET['instype'] == 2);
 
-  $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
-  
-  $pat_myarray = $db->getRow($pat_sql);
-  $docid = $pat_myarray['docid'];
-  if($is_pri_pending){
+$pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+
+$pat_myarray = $db->getRow($pat_sql);
+$docid = $pat_myarray['docid'];
+
+if (false && $is_pri_pending) {
     // Load patient info from dental_patients table using pid on query string
     $pat_sql = "select * from dental_patients where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
     
@@ -31,31 +32,35 @@
     $insured_firstname = st($pat_myarray['p_m_partyfname']);
     $insured_lastname = st($pat_myarray['p_m_partylname']);
     $insured_middle = st($pat_myarray['p_m_partymname']);
-      if ($pat_myarray['p_m_same_address'] == 1){
-          $insured_address = st($pat_myarray['add1']);
-          $insured_city = st($pat_myarray['city']);
-          $insured_state = st($pat_myarray['state']);
-          $insured_zip = st($pat_myarray['zip']);
-      } else {
-          $insured_address = st($pat_myarray['p_m_address']);
-          $insured_city = st($pat_myarray['p_m_city']);
-          $insured_state = st($pat_myarray['p_m_state']);
-          $insured_zip = st($pat_myarray['p_m_zip']);
-      }
+
+    if ($pat_myarray['p_m_same_address'] == 1){
+        $insured_address = st($pat_myarray['add1']);
+        $insured_city = st($pat_myarray['city']);
+        $insured_state = st($pat_myarray['state']);
+        $insured_zip = st($pat_myarray['zip']);
+    } else {
+        $insured_address = st($pat_myarray['p_m_address']);
+        $insured_city = st($pat_myarray['p_m_city']);
+        $insured_state = st($pat_myarray['p_m_state']);
+        $insured_zip = st($pat_myarray['p_m_zip']);
+    }
+
     $other_insured_firstname = st($pat_myarray['s_m_partyfname']);
     $other_insured_lastname = st($pat_myarray['s_m_partylname']);
     $other_insured_middle = st($pat_myarray['s_m_partymname']);
-      if ($pat_myarray['s_m_same_address'] == 1){
-          $other_insured_address = st($pat_myarray['add1']);
-          $other_insured_city = st($pat_myarray['city']);
-          $other_insured_state = st($pat_myarray['state']);
-          $other_insured_zip = st($pat_myarray['zip']);
-      } else {
-          $other_insured_address = st($pat_myarray['s_m_address']);
-          $other_insured_city = st($pat_myarray['s_m_city']);
-          $other_insured_state = st($pat_myarray['s_m_state']);
-          $other_insured_zip = st($pat_myarray['s_m_zip']);
-      }
+
+    if ($pat_myarray['s_m_same_address'] == 1){
+        $other_insured_address = st($pat_myarray['add1']);
+        $other_insured_city = st($pat_myarray['city']);
+        $other_insured_state = st($pat_myarray['state']);
+        $other_insured_zip = st($pat_myarray['zip']);
+    } else {
+        $other_insured_address = st($pat_myarray['s_m_address']);
+        $other_insured_city = st($pat_myarray['s_m_city']);
+        $other_insured_state = st($pat_myarray['s_m_state']);
+        $other_insured_zip = st($pat_myarray['s_m_zip']);
+    }
+
     $insured_id_number = st($pat_myarray['p_m_ins_id']);
     $insured_dob = st($pat_myarray['ins_dob']);
     $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
@@ -67,32 +72,32 @@
     $referredby = st($pat_myarray['referred_by']); 
     $referred_source = st($pat_myarray['referred_source']);
     $docid = $pat_myarray['docid'];
+
     // if patient does not have an id, redirect to manage_patient.php to address the issue
     if ($pat_myarray['patientid'] == '') {
-      print '<script type="text/javascript">';
-      print '  window.location="manage_patient.php";';
-      print '</script>';
-    	trigger_error("Die called", E_USER_ERROR); // already did a javascript redirect...just die
-
+        print '<script type="text/javascript">';
+        print '  window.location="manage_patient.php";';
+        print '</script>';
+        trigger_error("Die called", E_USER_ERROR); // already did a javascript redirect...just die
     }
-  }
+}
 
-  // In the case where we have first come to this page, load the claim form
-  // info from dental_insurance and place them into variables.
-  $sql = "select * from dental_insurance where insuranceid='".(!empty($_GET['insid']) ? $_GET['insid'] : '')."' and patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+// In the case where we have first come to this page, load the claim form
+// info from dental_insurance and place them into variables.
+$sql = "select * from dental_insurance where insuranceid='".(!empty($_GET['insid']) ? $_GET['insid'] : '')."' and patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 
-  $my = $db->getResults($sql);
-  $myarray = (!empty($my[0]) ? $my[0] : '');
-  $dent_rows = count($my);
-  $insuranceid = st(!empty($myarray['insuranceid']) ? $myarray['insuranceid'] : '');
-  $orig_claim_id = st(!empty($myarray['primary_claim_id']) ? $myarray['primary_claim_id'] : '');
-  $p_m_eligible_payer_id = (!empty($myarray['p_m_eligible_payer_id']) ? $myarray['p_m_eligible_payer_id'] : '');
-  $p_m_eligible_payer_name = (!empty($myarray['p_m_eligible_payer_name']) ? $myarray['p_m_eligible_payer_name'] : '');
-  $s_m_eligible_payer_id = (!empty($myarray['s_m_eligible_payer_id']) ? $myarray['s_m_eligible_payer_id'] : '');
-  $s_m_eligible_payer_name = (!empty($myarray['s_m_eligible_payer_name']) ? $myarray['s_m_eligible_payer_name'] : '');
-  $responsibility_sequence = st($myarray['responsibility_sequence']);
-  $other_insured_insurance_type = $myarray['other_insured_insurance_type'];
-  $icd_indicator = st($myarray['icd_ind']);
+$my = $db->getResults($sql);
+$myarray = (!empty($my[0]) ? $my[0] : '');
+$dent_rows = count($my);
+$insuranceid = st(!empty($myarray['insuranceid']) ? $myarray['insuranceid'] : '');
+$orig_claim_id = st(!empty($myarray['primary_claim_id']) ? $myarray['primary_claim_id'] : '');
+$p_m_eligible_payer_id = (!empty($myarray['p_m_eligible_payer_id']) ? $myarray['p_m_eligible_payer_id'] : '');
+$p_m_eligible_payer_name = (!empty($myarray['p_m_eligible_payer_name']) ? $myarray['p_m_eligible_payer_name'] : '');
+$s_m_eligible_payer_id = (!empty($myarray['s_m_eligible_payer_id']) ? $myarray['s_m_eligible_payer_id'] : '');
+$s_m_eligible_payer_name = (!empty($myarray['s_m_eligible_payer_name']) ? $myarray['s_m_eligible_payer_name'] : '');
+$responsibility_sequence = st($myarray['responsibility_sequence']);
+$other_insured_insurance_type = $myarray['other_insured_insurance_type'];
+$icd_indicator = st($myarray['icd_ind']);
 
 $payer = [
     'id' => $myarray['payer_id'],
@@ -107,7 +112,7 @@ $payer = [
 
 $billing_provider_taxonomy_code = $myarray['billing_provider_taxonomy_code'];
 
-  if(!$is_pri_pending){
+if (true || !$is_pri_pending) {
     $p_m_dss_file = $pat_myarray['p_m_dss_file'];
     $s_m_dss_file = $pat_myarray['s_m_dss_file'];
     $patient_lastname = st($myarray['patient_lastname']);
@@ -116,34 +121,34 @@ $billing_provider_taxonomy_code = $myarray['billing_provider_taxonomy_code'];
     $patient_dob = st($myarray['patient_dob']);
     $patient_sex = st($myarray['patient_sex']);
 
-    if($is_secondary){
-      $insurancetype = st($myarray['other_insurance_type']);
-      $other_insurancetype = $myarray['insurance_type'];
-      $other_insured_firstname = st($myarray['insured_firstname']);
-      $other_insured_lastname = st($myarray['insured_lastname']);
-      $other_insured_middle = st($myarray['insured_middle']);
-      $other_insured_dob = st($pat_myarray['ins_dob']);
-      $other_insured_sex = st($pat_myarray['s_m_gender']);
+    if (false && $is_secondary) {
+        $insurancetype = st($myarray['other_insurance_type']);
+        $other_insurancetype = $myarray['insurance_type'];
+        $other_insured_firstname = st($myarray['insured_firstname']);
+        $other_insured_lastname = st($myarray['insured_lastname']);
+        $other_insured_middle = st($myarray['insured_middle']);
+        $other_insured_dob = st($pat_myarray['ins_dob']);
+        $other_insured_sex = st($pat_myarray['s_m_gender']);
 
-      if (empty($other_insured_insurance_plan)) {
-        $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
-      }
+        if (empty($other_insured_insurance_plan)) {
+            $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+        }
       
-      $other_insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
-      $other_insured_address = st($myarray['insured_address']);
-      $other_insured_city = st($myarray['insured_city']);
-      $other_insured_state = st($myarray['insured_state']);
-      $other_insured_zip = st($myarray['insured_zip']);
+        $other_insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
+        $other_insured_address = st($myarray['insured_address']);
+        $other_insured_city = st($myarray['insured_city']);
+        $other_insured_state = st($myarray['insured_state']);
+        $other_insured_zip = st($myarray['insured_zip']);
 
-      $insured_id_number = $pat_myarray['s_m_ins_id'];
-      $insured_firstname = st($myarray['other_insured_firstname']);
-      $insured_middle = st($myarray['other_insured_middle']);
-      $insured_lastname = st($myarray['other_insured_lastname']);
-      $insured_dob = st($pat_myarray['ins2_dob']);
+        $insured_id_number = $pat_myarray['s_m_ins_id'];
+        $insured_firstname = st($myarray['other_insured_firstname']);
+        $insured_middle = st($myarray['other_insured_middle']);
+        $insured_lastname = st($myarray['other_insured_lastname']);
+        $insured_dob = st($pat_myarray['ins2_dob']);
 
-      $insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
-      $insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
-      $other_insured_id_number = st($myarray['insured_id_number']);
+        $insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+        $insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
+        $other_insured_id_number = st($myarray['insured_id_number']);
 
         if ($pat_myarray['s_m_same_address'] == 1) {
             $insured_address = st($pat_myarray['add1']);
@@ -156,45 +161,46 @@ $billing_provider_taxonomy_code = $myarray['billing_provider_taxonomy_code'];
             $insured_state = st($pat_myarray['s_m_state']);
             $insured_zip = st($pat_myarray['s_m_zip']);
         }
-      $insured_phone_code = st($myarray['insured_phone_code']);
-      $insured_phone = st($myarray['insured_phone']);
-      $insured_sex = st($pat_myarray['s_m_gender']);
-      $patient_relation_insured = st($myarray['patient_relation_insured']);
+
+        $insured_phone_code = st($myarray['insured_phone_code']);
+        $insured_phone = st($myarray['insured_phone']);
+        $insured_sex = st($pat_myarray['s_m_gender']);
+        $patient_relation_insured = st($myarray['patient_relation_insured']);
     } else {
-      $insurancetype = st($myarray['insurance_type']);
-      $other_insurancetype = $myarray['other_insurance_type'];
-      $other_insured_firstname = st($myarray['other_insured_firstname']);
-      $other_insured_lastname = st($myarray['other_insured_lastname']);
-      $other_insured_middle = st($myarray['other_insured_middle']);
-      $other_insured_dob = st($myarray['other_insured_dob']);
-      $other_insured_sex = st($myarray['other_insured_sex']);
+        $insurancetype = st($myarray['insurance_type']);
+        $other_insurancetype = $myarray['other_insurance_type'];
+        $other_insured_firstname = st($myarray['other_insured_firstname']);
+        $other_insured_lastname = st($myarray['other_insured_lastname']);
+        $other_insured_middle = st($myarray['other_insured_middle']);
+        $other_insured_dob = st($myarray['other_insured_dob']);
+        $other_insured_sex = st($myarray['other_insured_sex']);
 
-      if (empty($other_insured_insurance_plan)) {
-        $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
-      }
+        if (empty($other_insured_insurance_plan)) {
+            $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+        }
 
-      $other_insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
-      $other_insured_address = st($myarray['other_insured_address']);
-      $other_insured_city = st($myarray['other_insured_city']);
-      $other_insured_state = st($myarray['other_insured_state']);
-      $other_insured_zip = st($myarray['other_insured_zip']);
-      $insured_id_number = st($myarray['insured_id_number']);
-      $insured_firstname = st($myarray['insured_firstname']);
-      $insured_middle = st($myarray['insured_middle']);
-      $insured_lastname = st($myarray['insured_lastname']);
-      $insured_dob = st($myarray['insured_dob']);
-      $insured_insurance_plan = st($myarray['insured_insurance_plan']);
-      $insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
-      $other_insured_id_number = st($myarray['other_insured_id_number']);
-      $insured_address = st($myarray['insured_address']);
-      $insured_city = st($myarray['insured_city']);
-      $insured_state = st($myarray['insured_state']);
-      $insured_zip = st($myarray['insured_zip']);
-      $insured_phone_code = st($myarray['insured_phone_code']);
-      $insured_phone = st($myarray['insured_phone']);
-      $insured_sex = st($myarray['insured_sex']);
-      $patient_relation_insured = st($myarray['patient_relation_insured']);
-      $patient_relation_other_insured = st($myarray['patient_relation_other_insured']);  
+        $other_insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
+        $other_insured_address = st($myarray['other_insured_address']);
+        $other_insured_city = st($myarray['other_insured_city']);
+        $other_insured_state = st($myarray['other_insured_state']);
+        $other_insured_zip = st($myarray['other_insured_zip']);
+        $insured_id_number = st($myarray['insured_id_number']);
+        $insured_firstname = st($myarray['insured_firstname']);
+        $insured_middle = st($myarray['insured_middle']);
+        $insured_lastname = st($myarray['insured_lastname']);
+        $insured_dob = st($myarray['insured_dob']);
+        $insured_insurance_plan = st($myarray['insured_insurance_plan']);
+        $insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
+        $other_insured_id_number = st($myarray['other_insured_id_number']);
+        $insured_address = st($myarray['insured_address']);
+        $insured_city = st($myarray['insured_city']);
+        $insured_state = st($myarray['insured_state']);
+        $insured_zip = st($myarray['insured_zip']);
+        $insured_phone_code = st($myarray['insured_phone_code']);
+        $insured_phone = st($myarray['insured_phone']);
+        $insured_sex = st($myarray['insured_sex']);
+        $patient_relation_insured = st($myarray['patient_relation_insured']);
+        $patient_relation_other_insured = st($myarray['patient_relation_other_insured']);
     }
 
     $patient_address = st($myarray['patient_address']);
@@ -349,36 +355,36 @@ $billing_provider_taxonomy_code = $myarray['billing_provider_taxonomy_code'];
     $epsdt_family_plan6 = st($myarray['epsdt_family_plan6']);
     $id_qua6 = st($myarray['id_qua6']);
     $rendering_provider_id6 = st($myarray['rendering_provider_id6']);
-      $rendering_provider_entity_1  = st($myarray['rendering_provider_entity_1']);
-      $rendering_provider_first_name_1  = st($myarray['rendering_provider_first_name_1']);
-      $rendering_provider_last_name_1  = st($myarray['rendering_provider_last_name_1']);
-      $rendering_provider_org_1  = st($myarray['rendering_provider_org_1']);
-      $rendering_provider_npi_1  = st($myarray['rendering_provider_npi_1']);
-      $rendering_provider_entity_2  = st($myarray['rendering_provider_entity_2']);
-      $rendering_provider_first_name_2 = st($myarray['rendering_provider_first_name_2']);
-      $rendering_provider_last_name_2  = st($myarray['rendering_provider_last_name_2']);
-      $rendering_provider_org_2  = st($myarray['rendering_provider_org_2']);
-      $rendering_provider_npi_2  = st($myarray['rendering_provider_npi_2']);
-      $rendering_provider_entity_3  = st($myarray['rendering_provider_entity_3']);
-      $rendering_provider_first_name_3  = st($myarray['rendering_provider_first_name_3']);
-      $rendering_provider_last_name_3  = st($myarray['rendering_provider_last_name_3']);
-      $rendering_provider_org_3  = st($myarray['rendering_provider_org_3']);
-      $rendering_provider_npi_3  = st($myarray['rendering_provider_npi_3']);
-      $rendering_provider_entity_4  = st($myarray['rendering_provider_entity_4']);
-      $rendering_provider_first_name_4  = st($myarray['rendering_provider_first_name_4']);
-      $rendering_provider_last_name_4  = st($myarray['rendering_provider_last_name_4']);
-      $rendering_provider_org_4  = st($myarray['rendering_provider_org_4']);
-      $rendering_provider_npi_4  = st($myarray['rendering_provider_npi_4']);
-      $rendering_provider_entity_5  = st($myarray['rendering_provider_entity_5']);
-      $rendering_provider_first_name_5  = st($myarray['rendering_provider_first_name_5']);
-      $rendering_provider_last_name_5  = st($myarray['rendering_provider_last_name_5']);
-      $rendering_provider_org_5  = st($myarray['rendering_provider_org_5']);
-      $rendering_provider_npi_5  = st($myarray['rendering_provider_npi_5']);
-      $rendering_provider_entity_6  = st($myarray['rendering_provider_entity_6']);
-      $rendering_provider_first_name_6  = st($myarray['rendering_provider_first_name_6']);
-      $rendering_provider_last_name_6  = st($myarray['rendering_provider_last_name_6']);
-      $rendering_provider_org_6  = st($myarray['rendering_provider_org_6']);
-      $rendering_provider_npi_6  = st($myarray['rendering_provider_npi_6']);
+    $rendering_provider_entity_1  = st($myarray['rendering_provider_entity_1']);
+    $rendering_provider_first_name_1  = st($myarray['rendering_provider_first_name_1']);
+    $rendering_provider_last_name_1  = st($myarray['rendering_provider_last_name_1']);
+    $rendering_provider_org_1  = st($myarray['rendering_provider_org_1']);
+    $rendering_provider_npi_1  = st($myarray['rendering_provider_npi_1']);
+    $rendering_provider_entity_2  = st($myarray['rendering_provider_entity_2']);
+    $rendering_provider_first_name_2 = st($myarray['rendering_provider_first_name_2']);
+    $rendering_provider_last_name_2  = st($myarray['rendering_provider_last_name_2']);
+    $rendering_provider_org_2  = st($myarray['rendering_provider_org_2']);
+    $rendering_provider_npi_2  = st($myarray['rendering_provider_npi_2']);
+    $rendering_provider_entity_3  = st($myarray['rendering_provider_entity_3']);
+    $rendering_provider_first_name_3  = st($myarray['rendering_provider_first_name_3']);
+    $rendering_provider_last_name_3  = st($myarray['rendering_provider_last_name_3']);
+    $rendering_provider_org_3  = st($myarray['rendering_provider_org_3']);
+    $rendering_provider_npi_3  = st($myarray['rendering_provider_npi_3']);
+    $rendering_provider_entity_4  = st($myarray['rendering_provider_entity_4']);
+    $rendering_provider_first_name_4  = st($myarray['rendering_provider_first_name_4']);
+    $rendering_provider_last_name_4  = st($myarray['rendering_provider_last_name_4']);
+    $rendering_provider_org_4  = st($myarray['rendering_provider_org_4']);
+    $rendering_provider_npi_4  = st($myarray['rendering_provider_npi_4']);
+    $rendering_provider_entity_5  = st($myarray['rendering_provider_entity_5']);
+    $rendering_provider_first_name_5  = st($myarray['rendering_provider_first_name_5']);
+    $rendering_provider_last_name_5  = st($myarray['rendering_provider_last_name_5']);
+    $rendering_provider_org_5  = st($myarray['rendering_provider_org_5']);
+    $rendering_provider_npi_5  = st($myarray['rendering_provider_npi_5']);
+    $rendering_provider_entity_6  = st($myarray['rendering_provider_entity_6']);
+    $rendering_provider_first_name_6  = st($myarray['rendering_provider_first_name_6']);
+    $rendering_provider_last_name_6  = st($myarray['rendering_provider_last_name_6']);
+    $rendering_provider_org_6  = st($myarray['rendering_provider_org_6']);
+    $rendering_provider_npi_6  = st($myarray['rendering_provider_npi_6']);
     $federal_tax_id_number = st($myarray['federal_tax_id_number']);
     $ssn = st($myarray['ssn']);
     $ein = st($myarray['ein']);
@@ -410,9 +416,8 @@ $billing_provider_taxonomy_code = $myarray['billing_provider_taxonomy_code'];
 
     $billing_provider_sql = "select * from dental_qualifier where qualifierid='".(isset($billing_provider_dd) ? $billing_provider_dd : '') . "'";
     $billing_array = $db->getRow($billing_provider_sql);
-
     $billing_info = (!empty($billing_array['qualifier']) ? substr($billing_array['qualifier'], 0, 2) : '');
-  }
+}
 
 /**
  * Logic:
@@ -431,53 +436,54 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     }
 }
 
-  if($is_pri_pending){
+if (false && $is_pri_pending) {
     $insured_sex = $pat_myarray['p_m_gender'];
     $other_insured_sex = $pat_myarray['s_m_gender'];
     $patient_sex = $pat_myarray['gender'];
     $patient_firstname = $pat_myarray['firstname'];
-  	$patient_lastname = $pat_myarray['lastname'];
-  	$patient_middle = $pat_myarray['middlename'];
-  	$patient_firstname = $pat_myarray['firstname'];
-  	$patient_address = $pat_myarray['add1'];
-  	$patient_city = $pat_myarray['city'];
-  	$patient_state = $pat_myarray['state'];
-  	$patient_zip = $pat_myarray['zip'];
-  	$patient_dob = $pat_myarray['dob'];
+    $patient_lastname = $pat_myarray['lastname'];
+    $patient_middle = $pat_myarray['middlename'];
+    $patient_firstname = $pat_myarray['firstname'];
+    $patient_address = $pat_myarray['add1'];
+    $patient_city = $pat_myarray['city'];
+    $patient_state = $pat_myarray['state'];
+    $patient_zip = $pat_myarray['zip'];
+    $patient_dob = $pat_myarray['dob'];
 
-    if (strtolower($pat_myarray['p_m_ins_ass']) == 'yes'){
-      $insured_signature = 1;
-    }else{
-      $insured_signature = 0;
+    if (strtolower($pat_myarray['p_m_ins_ass']) == 'yes') {
+        $insured_signature = 1;
+    } else {
+        $insured_signature = 0;
     }
-  	$patient_signature = 1;
-  	//$signature_physician = "Signature on File";
-  	$patient_signed_date = date('Y-m-d', strtotime($pat_myarray['adddate']));
-    $physician_signed_date = date('Y-m-d');	
-  	$patient_phone_code = split_phone($pat_myarray['home_phone'], true);
-  	$patient_phone = split_phone($pat_myarray['home_phone'], false);
-  	$insured_phone_code = split_phone($pat_myarray['home_phone'], true);
-  	$insured_phone = split_phone($pat_myarray['home_phone'], false);
-  	$patient_status = $pat_myarray['marital_status'];	
-  	$insured_id_number = $pat_myarray['p_m_ins_id'];
-    $other_insured_id_number = $pat_myarray['s_m_ins_id'];
-  	$insured_address = (!empty($myarray['insured_address']) ? $myarray['insured_address'] : '');
-  	$insured_city = (!empty($myarray['insured_city']) ? $myarray['insured_city'] : '');
-  	$insured_state = (!empty($myarray['insured_state']) ? $myarray['insured_state'] : '');
-  	$insured_zip = (!empty($myarray['insured_zip']) ? $myarray['insured_zip'] : '');
-  	$insured_dob = $pat_myarray['ins_dob'];	
-  	// $patient_relation_insured = $pat_myarray['p_m_relation'];
-    $patient_relation_other_insured = $pat_myarray['s_m_relation'];
-  	$insured_employer_school_name = $pat_myarray['employer'];
 
-  	if($pat_myarray['p_m_ins_type']==1){
-  	  $insured_policy_group_feca = "NONE";
-            $insured_insurance_plan = '';
-  	  $insured_employer_school_name = '';
-  	} else {
-  	  $insured_policy_group_feca = $pat_myarray['p_m_ins_grp'];
-  	  $insured_insurance_plan = $pat_myarray['p_m_ins_plan'];	
-  	}
+    $patient_signature = 1;
+    //$signature_physician = "Signature on File";
+    $patient_signed_date = date('Y-m-d', strtotime($pat_myarray['adddate']));
+    $physician_signed_date = date('Y-m-d');	
+    $patient_phone_code = split_phone($pat_myarray['home_phone'], true);
+    $patient_phone = split_phone($pat_myarray['home_phone'], false);
+    $insured_phone_code = split_phone($pat_myarray['home_phone'], true);
+    $insured_phone = split_phone($pat_myarray['home_phone'], false);
+    $patient_status = $pat_myarray['marital_status'];
+    $insured_id_number = $pat_myarray['p_m_ins_id'];
+    $other_insured_id_number = $pat_myarray['s_m_ins_id'];
+    $insured_address = (!empty($myarray['insured_address']) ? $myarray['insured_address'] : '');
+    $insured_city = (!empty($myarray['insured_city']) ? $myarray['insured_city'] : '');
+    $insured_state = (!empty($myarray['insured_state']) ? $myarray['insured_state'] : '');
+    $insured_zip = (!empty($myarray['insured_zip']) ? $myarray['insured_zip'] : '');
+    $insured_dob = $pat_myarray['ins_dob'];
+    // $patient_relation_insured = $pat_myarray['p_m_relation'];
+    $patient_relation_other_insured = $pat_myarray['s_m_relation'];
+    $insured_employer_school_name = $pat_myarray['employer'];
+
+    if($pat_myarray['p_m_ins_type']==1){
+        $insured_policy_group_feca = "NONE";
+        $insured_insurance_plan = '';
+        $insured_employer_school_name = '';
+    } else {
+        $insured_policy_group_feca = $pat_myarray['p_m_ins_grp'];
+        $insured_insurance_plan = $pat_myarray['p_m_ins_plan'];
+    }
 
     $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss                                 
                      JOIN dental_patients p on ss.patiendid=p.patientid
@@ -507,12 +513,12 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
 
     $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
     $accept_assignment = $accept_assignmentnew;
-  }
+}
 
-  // If claim doesn't yet have a preauth number, try to load it
-  // from the patient's most recently completed preauth.
-  if (empty($prior_authorization_number)) {
-      $sql = "SELECT "
+// If claim doesn't yet have a preauth number, try to load it
+// from the patient's most recently completed preauth.
+if (empty($prior_authorization_number)) {
+    $sql = "SELECT "
            . "  * "
            . "FROM "
            . "  dental_insurance_preauth "
@@ -523,21 +529,22 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
            . "  date_completed desc "
            . "LIMIT 1";
 
-      $my = $db->getResults($sql);
-      $num_rows = count($my);
-      if ($num_rows > 0) {
-          $myarray = $my[0];
-          $prior_authorization_number = $myarray['pre_auth_num'];
-      }
-  }
+    $my = $db->getResults($sql);
+    $num_rows = count($my);
 
-  $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
+    if ($num_rows > 0) {
+        $myarray = $my[0];
+        $prior_authorization_number = $myarray['pre_auth_num'];
+    }
+}
 
-  $prod_r = $db->getRow($prod_s);
-  $claim_producer = $prod_r['producer'];
-  $getuserinfo = "SELECT * FROM dental_users WHERE producer_files = 1 AND userid = '".$claim_producer."'";
+$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
 
-  if($userinfo = $db->getRow($getuserinfo)){
+$prod_r = $db->getRow($prod_s);
+$claim_producer = $prod_r['producer'];
+$getuserinfo = "SELECT * FROM dental_users WHERE producer_files = 1 AND userid = '".$claim_producer."'";
+
+if ($userinfo = $db->getRow($getuserinfo)) {
     $phone = $userinfo['phone'];
     $practice = $userinfo['practice'];
     $address = $userinfo['address'];
@@ -546,20 +553,21 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     $zip = $userinfo['zip'];
     $npi = $userinfo['npi'];
     $medicare_npi = $userinfo['medicare_npi'];
-  }
+}
 
-  $getdocinfo = "SELECT * FROM dental_users WHERE userid = '".$docid."'";
+$getdocinfo = "SELECT * FROM dental_users WHERE userid = '".$docid."'";
 
-  $docinfo = $db->getRow($getdocinfo);
-  if(empty($phone)){ $phone = $docinfo['phone']; }
-  if(empty($practice)){ $practice = $docinfo['practice']; }
-  if(empty($address)){ $address = $docinfo['address']; }
-  if(empty($city)){ $city = $docinfo['city']; }
-  if(empty($state)){ $state = $docinfo['state']; }
-  if(empty($zip)){ $zip = $docinfo['zip']; }
-  if(empty($npi)){ $npi = $docinfo['npi']; }
-  if(empty($medicare_npi)){ $medicare_npi = $docinfo['medicare_npi']; }
-  if($docinfo['use_service_npi']==1){
+$docinfo = $db->getRow($getdocinfo);
+if(empty($phone)){ $phone = $docinfo['phone']; }
+if(empty($practice)){ $practice = $docinfo['practice']; }
+if(empty($address)){ $address = $docinfo['address']; }
+if(empty($city)){ $city = $docinfo['city']; }
+if(empty($state)){ $state = $docinfo['state']; }
+if(empty($zip)){ $zip = $docinfo['zip']; }
+if(empty($npi)){ $npi = $docinfo['npi']; }
+if(empty($medicare_npi)){ $medicare_npi = $docinfo['medicare_npi']; }
+
+if ($docinfo['use_service_npi'] == 1) {
     $service_npi = $docinfo['service_npi'];
     $service_practice = $docinfo['service_name'];
     $service_address = $docinfo['service_address'];
@@ -567,7 +575,7 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     $service_state = $docinfo['service_state'];
     $service_zip = $docinfo['service_zip'];
     $service_medicare_npi = $docinfo['service_medicare_npi'];
-  } else {
+} else {
     $service_npi = (!empty($npi) ? $npi : '');
     $service_practice = (!empty($practice) ? $practice : '');
     $service_address = (!empty($address) ? $address : '');
@@ -575,13 +583,13 @@ if ($another_plan != 'yes' && $another_plan != 'no') {
     $service_state = (!empty($state) ? $state : '');
     $service_zip = (!empty($zip) ? $zip : '');
     $service_medicare_npi = (!empty($medicare_npi) ? $medicare_npi : '');
-  }
+}
 
-  if ($service_info_a != "") {
+if ($service_info_a != "") {
     $service_npi = $service_info_a;
-  }
-?>
+}
 
+?>
 <html>
 <head>
     <title>Health Insurance E-File Claim Form</title>

@@ -99,6 +99,33 @@ class ClaimFormHelper
     }
 
     /**
+     * @param string $location
+     * @return string
+     */
+    public static function getCityFromLocation ($location) {
+        list($city, $state, $stateCode, $zip) = parseCityStateZip($location);
+        return $city;
+    }
+
+    /**
+     * @param string $location
+     * @return string
+     */
+    public static function getStateFromLocation ($location) {
+        list($city, $state, $stateCode, $zip) = parseCityStateZip($location);
+        return $stateCode;
+    }
+
+    /**
+     * @param string $location
+     * @return string
+     */
+    public static function getZipFromLocation ($location) {
+        list($city, $state, $stateCode, $zip) = parseCityStateZip($location);
+        return $zip;
+    }
+
+    /**
      * Determine if the field indicates the federal tax id number (field 25) is SSN
      *
      * @param string $value
@@ -107,6 +134,17 @@ class ClaimFormHelper
     public static function isSsn ($value) {
         $value = strtolower($value);
         return $value === 'ssn' || $value === 'sy';
+    }
+
+    /**
+     * Decouple ssn and ein
+     *
+     * @param int|bool $ssn
+     * @param int|bool $ein
+     * @return string
+     */
+    public static function ssnOrEin ($ssn, $ein) {
+        return $ssn || !$ein ? 'ssn' : 'ein';
     }
 
     /**
@@ -849,44 +887,197 @@ $paperToDb = [
     'service_info_b_other'          => 'service_info_b_other',
 ];
 
+$dbToPaper = [
+    // PICA fields will disappear
+    'pica1' => 'pica1',
+    'pica2' => 'pica2',
+    'pica3' => 'pica3',
+
+    'insurance_type'            => 'insurance_type',
+    'other_insurance_type'      => 'other_insurance_type',
+
+    'insured_id_number'         => 'insured_id_number',
+    'insured_lastname'          => 'insured_lastname',
+    'insured_firstname'         => 'insured_firstname',
+    'insured_middle'            => 'insured_middle',
+    'insured_address'           => 'insured_address',
+    'insured_city'              => 'insured_city',
+    'insured_state'             => 'insured_state',
+    'insured_zip'               => 'insured_zip',
+    'insured_phone_code'        => ['insured_phone_code', 'insured_phone', '::getCodeFromPhone'],
+    'insured_phone'             => ['insured_phone_code', 'insured_phone', '::getNumberFromPhone'],
+    'insured_policy_group_feca' => 'insured_policy_group_feca',
+    'insured_dob'               => 'insured_dob',
+    'insured_sex'               => 'insured_sex',
+    'insured_insurance_plan'    => 'insured_insurance_plan',
+    'other_insured_id_number'   => 'other_insured_id_number',
+    'other_claim_id'            => 'other_claim_id',
+
+    'patient_lastname'          => 'patient_lastname',
+    'patient_firstname'         => 'patient_firstname',
+    'patient_middle'            => 'patient_middle',
+    'patient_address'           => 'patient_address',
+    'patient_city'              => 'patient_city',
+    'patient_state'             => 'patient_state',
+    'patient_zip'               => 'patient_zip',
+    'patient_phone_code'        => ['patient_phone_code', 'patient_phone', '::getCodeFromPhone'],
+    'patient_phone'             => ['patient_phone_code', 'patient_phone', '::getNumberFromPhone'],
+    'patient_dob'               => 'patient_dob',
+    'patient_sex'               => 'patient_sex',
+    'patient_relation_insured'  => ['patient_relation_insured', '::getRelationshipFromCode'],
+    'patient_signed_date'       => 'patient_signed_date',
+
+    'another_plan'                      => ['another_plan', '::isChecked'],
+    'other_insured_lastname'            => 'other_insured_lastname',
+    'other_insured_firstname'           => 'other_insured_firstname',
+    'other_insured_middle'              => 'other_insured_middle',
+    'other_insured_policy_group_feca'   => 'other_insured_policy_group_feca',
+    'other_insured_insurance_plan'      => 'other_insured_insurance_plan',
+    'responsibility_sequence'           => 'responsibility_sequence',
+    'nucc_8a'                           => 'nucc_8a',
+    'nucc_8b'                           => 'nucc_8b',
+    'nucc_9b'                           => 'nucc_9b',
+    'nucc_9c'                           => 'nucc_9c',
+
+    'name_referring_provider_qualifier' => 'name_referring_provider_qualifier',
+    'referring_provider'                => 'referring_provider',
+    'field_17a_dd'                      => 'field_17a_dd',
+    'field_17a'                         => 'field_17a',
+    'field_17b'                         => 'field_17b',
+
+    'claim_codes'               => 'claim_codes',
+
+    'employment'                => ['employment', '::isChecked'],
+    'auto_accident'             => ['auto_accident', '::isChecked'],
+    'auto_accident_place'       => 'auto_accident_place',
+    'other_accident'            => ['other_accident', '::isChecked'],
+    'patient_signature'         => 'patient_signature',
+    'insured_signature'         => 'insured_signature',
+    'date_current'              => 'date_current',
+    'current_qual'              => 'current_qual',
+    'same_illness_qual'         => 'same_illness_qual',
+    'date_same_illness'         => 'date_same_illness',
+    'unable_date_from'          => 'unable_date_from',
+    'unable_date_to'            => 'unable_date_to',
+    'hospitalization_date_from' => 'hospitalization_date_from',
+    'hospitalization_date_to'   => 'hospitalization_date_to',
+    'reserved_local_use1'       => 'reserved_local_use1',
+    'outside_lab'               => ['outside_lab', '::isChecked'],
+    's_charges'                 => 's_charges',
+    'resubmission_code_fill'    => 'resubmission_code_fill',
+
+    'original_ref_no'           => 'original_ref_no',
+    'prior_authorization_number' => 'prior_authorization_number',
+    'icd_ind'                   => 'icd_ind',
+
+    // diagnosis_a - diagnosis_l
+    'diagnosis_{%dp+"a"}'    => 'diagnosis_{%dp+"a"}',
+
+    /**
+     * %sl - service lines:     0-5
+     * %dp - diagnosis pointer: 0-11
+     */
+    'placeofservice{%sl}'         => 'place_of_service{%sl+1}',
+    'emg{%sl}'                    => ['emg{%sl+1}', '::isChecked'],
+    'modifiercode{%sl}'           => 'modifier{%sl+1}_1',
+    'modifiercode2_{%sl}'         => 'modifier{%sl+1}_2',
+    'modifiercode3_{%sl}'         => 'modifier{%sl+1}_3',
+    'modifiercode4_{%sl}'         => 'modifier{%sl+1}_4',
+
+    'service_lines.{%sl}.diagnosis_code_pointers.0' => 'diagnosis_pointer{%sl+1}',
+    'daysorunits{%sl}'            => 'days_or_units{%sl+1}',
+    'epsdt{%sl}'                  => 'epsdt_family_plan{%sl+1}',
+    'idqual{%sl}'                 => 'id_qua{%sl+1}',
+
+    'signature_physician'    => ['signature_physician', '::isChecked'],
+    'physician_signed_date'  => 'physician_signed_date',
+
+    'accept_assignment'      => ['accept_assignment', '::getAssignmentFromCode'],
+    'total_charge'           => 'total_charge',
+    'amount_paid'            => 'amount_paid',
+    'nucc_30'                => 'nucc_30',
+
+    'federal_tax_id_number'         => 'federal_tax_id_number',
+    'patient_account_no'            => 'patient_account_no',
+    'ssnein'                        => ['ssn', 'ein', '::ssnOrEin'],
+    'billing_provider_phone_code'   => [
+        'billing_provider_phone_code',
+        'billing_provider_phone',
+        '::getCodeFromPhone'
+    ],
+    'billing_provider_phone'        => [
+        'billing_provider_phone_code',
+        'billing_provider_phone',
+        '::getNumberFromPhone'
+    ],
+    'billing_provider_name'         => 'billing_provider_name',
+    'billing_provider_address'      => 'billing_provider_address',
+    'billing_provider_info.city'    => ['billing_provider_city', '::getCityFromLocation'],
+    'billing_provider_info.state'   => ['billing_provider_city', '::getStateFromLocation'],
+    'billing_provider_info.zip'     => ['billing_provider_city', '::getZipFromLocation'],
+    'billing_provider_a'            => 'billing_provider_a',
+    'billing_provider_dd'           => 'billing_provider_dd',
+    'billing_provider_b_other'      => 'billing_provider_b_other',
+
+    'service_facility_info_name'    => 'service_facility_info_name',
+    'service_facility_info_address' => 'service_facility_info_address',
+    'service_facility_info.city'    => ['service_facility_info_city', '::getCityFromLocation'],
+    'service_facility_info.state'   => ['service_facility_info_city', '::getSateFromLocation'],
+    'service_facility_info.zip'     => ['service_facility_info_city', '::getZipFromLocation'],
+    'service_info_a'                => 'service_info_a',
+    'service_info_dd'               => 'service_info_dd',
+    'service_info_b_other'          => 'service_info_b_other',
+];
+
 $db = isset($db) ? $db : new Db();
 ini_set('xdebug.var_display_max_children', 300);
 
-if (!empty($_GET['insid']) && count($_POST)) {
+// Claim id set, either save or retrieve claim
+if (!empty($_GET['insid'])) {
     $insuranceId = intval($_GET['insid']);
 
-    if (isset($_POST['insurancesub'])) {
-        $correspondingMap = $paperToDb;
-    } elseif (isset($_POST['cms_client'])) {
-        $correspondingMap = $efileToDb;
-    }
-
-    if (isset($correspondingMap)) {
-        $dbFields = ClaimFormDataMapperHelper::map($_POST, $correspondingMap);
-
-        // total_charge and amount_paid must not be saved if they are empty
-        if (!strlen($dbFields['total_charge'])) {
-            unset($dbFields['total_charge']);
+    if (count($_POST)) {
+        if (isset($_POST['insurancesub'])) {
+            $correspondingMap = $paperToDb;
+        } elseif (isset($_POST['cms_client'])) {
+            $correspondingMap = $efileToDb;
         }
 
-        if (!strlen($dbFields['amount_paid'])) {
-            unset($dbFields['amount_paid']);
+        if (isset($correspondingMap)) {
+            $dbFields = ClaimFormDataMapperHelper::map($_POST, $correspondingMap);
+
+            // total_charge and amount_paid must not be saved if they are empty
+            if (!strlen($dbFields['total_charge'])) {
+                unset($dbFields['total_charge']);
+            }
+
+            if (!strlen($dbFields['amount_paid'])) {
+                unset($dbFields['amount_paid']);
+            }
+
+            /**
+             * @ToDo Add user data here!
+             */
+
+            // Prepare statements
+            array_walk($dbFields, function (&$value, $column) use ($db) {
+                $value = $db->escape($value);
+                $value = "$column = '$value'";
+            });
+
+            $dbFields = join(', ', $dbFields);
+
+            $sql = "UPDATE dental_insurance SET $dbFields WHERE insuranceid=$insuranceId";
+            $db->query($sql);
         }
+    } else {
+        $correspondingMap = $dbToPaper;
 
-        /**
-         * @ToDo Add user data here!
-         */
+        $claimData = $db->getRow("SELECT * FROM dental_insurance WHERE insuranceid = '$insuranceId'");
+        $paperFields = ClaimFormDataMapperHelper::map($claimData ? $claimData : [], $correspondingMap);
 
-        // Prepare statements
-        array_walk($dbFields, function (&$value, $column) use ($db) {
-            $value = $db->escape($value);
-            $value = "$column = '$value'";
-        });
-
-        $dbFields = join(', ', $dbFields);
-
-        $sql = "UPDATE dental_insurance SET $dbFields WHERE insuranceid=$insuranceId";
-        $db->query($sql);
+        header('Content-Type: text/json');
+        echo json_encode($paperFields);
     }
 } else if (isset($_GET['map'])) {
     $mapName = $_GET['map'];

@@ -2,6 +2,7 @@
 	include_once('admin/includes/main_include.php');
 	include_once('includes/constants.inc');
 	include_once('includes/claim_functions.php');
+    include_once('admin/includes/claim_functions.php'); // To use cratePrimaryClaim function
 	include("includes/sescheck.php");
 ?>
 	<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
@@ -147,7 +148,7 @@
 				    $r = $q[0];
 				    $claim_id = $r['insuranceid'];
 				} else {
-				    $claim_id = create_claim($_GET['pid'], $claim_producer);
+				    $claim_id = createPrimaryClaim($_GET['pid'], $claim_producer);
 				}
 			} else {
   				$claim_id = $claim_r['primary_claim_id'];

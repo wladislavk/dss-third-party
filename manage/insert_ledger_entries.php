@@ -92,7 +92,7 @@
                         $claim_id = $r['insuranceid'];
                     } else
                     {
-                        $claim_id = create_claim($_POST['patientid'], $claim_producer);
+                        $claim_id = createPrimaryClaim($_POST['patientid'], $claim_producer);
                     }
                 } else
                 {
@@ -238,7 +238,7 @@
 <?php
     }
 ?>
-<?php 
+<?php
     function create_claim($pid, $prod)
     {
         $db = new Db();
@@ -271,15 +271,6 @@
         $referred_source = st($pat_myarray['referred_source']);
         $docid = $pat_myarray['docid'];
         $insured_sex = $pat_myarray['p_m_gender'];
-        $other_insured_sex = $pat_myarray['s_m_gender'];
-        $patient_firstname = $pat_myarray['firstname'];
-        $patient_lastname = $pat_myarray['lastname'];
-        $patient_middle = $pat_myarray['middlename'];
-        $patient_address = $pat_myarray['add1'];
-        $patient_city = $pat_myarray['city'];
-        $patient_state = $pat_myarray['state'];
-        $patient_zip = $pat_myarray['zip'];
-        $patient_dob = $pat_myarray['dob'];
 
         if($pat_myarray['p_m_ins_ass']=='Yes'){
             $insured_signature = 1;

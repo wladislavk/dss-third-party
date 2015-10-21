@@ -430,4 +430,459 @@ if (empty($prior_authorization_number)) {
 	return $secondary_claim_id;
 }
 
-?>
+function preparePrimaryClaimFields ($claimData) {
+    $db = new Db();
+
+    $dbFields = [
+        'pica1',
+        'pica2',
+        'pica3',
+        'insurance_type',
+        'other_insurance_type',
+        'insured_id_number',
+        'patient_lastname',
+        'patient_firstname',
+        'patient_middle',
+        'patient_dob',
+        'patient_sex',
+        'insured_firstname',
+        'insured_lastname',
+        'insured_middle',
+        'patient_address',
+        'patient_relation_insured',
+        'patient_relation_other_insured',
+        'patient_city',
+        'patient_state',
+        'patient_status',
+        'responsibility_sequence',
+        'another_plan',
+        'icd_ind',
+        'insured_address',
+        'insured_city',
+        'insured_state',
+        'insured_zip',
+        'other_insured_address',
+        'other_insured_city',
+        'other_insured_state',
+        'other_insured_zip',
+        'patient_zip',
+        'patient_phone_code',
+        'patient_phone',
+        'insured_phone_code',
+        'insured_phone',
+        'other_insured_firstname',
+        'other_insured_lastname',
+        'other_insured_middle',
+        'employment',
+        'auto_accident',
+        'auto_accident_place',
+        'other_accident',
+        'insured_policy_group_feca',
+        'other_insured_policy_group_feca',
+        'insured_dob',
+        'insured_sex',
+        'other_insured_dob',
+        'other_insured_sex',
+        'insured_employer_school_name',
+        'other_insured_employer_school_name',
+        'insured_insurance_plan',
+        'other_insured_insurance_plan',
+        'reserved_local_use',
+        'patient_signature',
+        'patient_signed_date',
+        'insured_signature',
+        'date_current',
+        'date_same_illness',
+        'unable_date_from',
+        'unable_date_to',
+        'referring_provider',
+        'field_17a_dd',
+        'field_17a',
+        'field_17b',
+        'hospitalization_date_from',
+        'hospitalization_date_to',
+        'reserved_local_use1',
+        'outside_lab',
+        's_charges',
+        'diagnosis_1',
+        'diagnosis_2',
+        'diagnosis_3',
+        'diagnosis_4',
+        'diagnosis_a',
+        'diagnosis_b',
+        'diagnosis_c',
+        'diagnosis_d',
+        'diagnosis_e',
+        'diagnosis_f',
+        'diagnosis_g',
+        'diagnosis_h',
+        'diagnosis_i',
+        'diagnosis_j',
+        'diagnosis_k',
+        'diagnosis_l',
+        'medicaid_resubmission_code',
+        'original_ref_no',
+        'prior_authorization_number',
+        'service_date1_from',
+        'service_date1_to',
+        'place_of_service1',
+        'emg1',
+        'cpt_hcpcs1',
+        'modifier1_1',
+        'modifier1_2',
+        'modifier1_3',
+        'modifier1_4',
+        'diagnosis_pointer1',
+        's_charges1_1',
+        's_charges1_2',
+        'days_or_units1',
+        'epsdt_family_plan1',
+        'id_qua1',
+        'rendering_provider_id1',
+        'service_date2_from',
+        'service_date2_to',
+        'place_of_service2',
+        'emg2',
+        'cpt_hcpcs2',
+        'modifier2_1',
+        'modifier2_2',
+        'modifier2_3',
+        'modifier2_4',
+        'diagnosis_pointer2',
+        's_charges2_1',
+        's_charges2_2',
+        'days_or_units2',
+        'epsdt_family_plan2',
+        'id_qua2',
+        'rendering_provider_id2',
+        'service_date3_from',
+        'service_date3_to',
+        'place_of_service3',
+        'emg3',
+        'cpt_hcpcs3',
+        'modifier3_1',
+        'modifier3_2',
+        'modifier3_3',
+        'modifier3_4',
+        'diagnosis_pointer3',
+        's_charges3_1',
+        's_charges3_2',
+        'days_or_units3',
+        'epsdt_family_plan3',
+        'id_qua3',
+        'rendering_provider_id3',
+        'service_date4_from',
+        'service_date4_to',
+        'place_of_service4',
+        'emg4',
+        'cpt_hcpcs4',
+        'modifier4_1',
+        'modifier4_2',
+        'modifier4_3',
+        'modifier4_4',
+        'diagnosis_pointer4',
+        's_charges4_1',
+        's_charges4_2',
+        'days_or_units4',
+        'epsdt_family_plan4',
+        'id_qua4',
+        'rendering_provider_id4',
+        'service_date5_from',
+        'service_date5_to',
+        'place_of_service5',
+        'emg5',
+        'cpt_hcpcs5',
+        'modifier5_1',
+        'modifier5_2',
+        'modifier5_3',
+        'modifier5_4',
+        'diagnosis_pointer5',
+        's_charges5_1',
+        's_charges5_2',
+        'days_or_units5',
+        'epsdt_family_plan5',
+        'id_qua5',
+        'rendering_provider_id5',
+        'service_date6_from',
+        'service_date6_to',
+        'place_of_service6',
+        'emg6',
+        'cpt_hcpcs6',
+        'modifier6_1',
+        'modifier6_2',
+        'modifier6_3',
+        'modifier6_4',
+        'diagnosis_pointer6',
+        's_charges6_1',
+        's_charges6_2',
+        'days_or_units6',
+        'epsdt_family_plan6',
+        'id_qua6',
+        'rendering_provider_id6',
+        'federal_tax_id_number',
+        'ssn',
+        'ein',
+        'patient_account_no',
+        'accept_assignment',
+        'total_charge',
+        'amount_paid',
+        'balance_due',
+        'signature_physician',
+        'physician_signed_date',
+        'service_facility_info_name',
+        'service_facility_info_address',
+        'service_facility_info_city',
+        'service_info_a',
+        'service_info_dd',
+        'service_info_b_other',
+        'billing_provider_phone_code',
+        'billing_provider_phone',
+        'billing_provider_name',
+        'billing_provider_address',
+        'billing_provider_city',
+        'billing_provider_a',
+        'billing_provider_dd',
+        'billing_provider_b_other',
+        'p_m_eligible_payer_id',
+        'p_m_eligible_payer_name',
+        'p_m_billing_id',
+        'p_m_dss_file',
+        'billing_provider_taxonomy_code',
+        'status',
+        'ip_address'
+    ];
+
+    $escapedFields = [];
+
+    foreach ($dbFields as $field) {
+        $value = isset($claimData[$field]) ? $db->escape($claimData[$field]) : '';
+        $escapedFields []= "$field = '$value'";
+    }
+
+    return implode(', ', $escapedFields);
+}
+
+function createPrimaryClaim ($patientId, $producerId) {
+    $db = new Db();
+
+    $patientId = intval($patientId);
+    $docId = intval($_SESSION['docid']); // Overriden by patient's docid
+    $producerId = intval($producerId);
+    $userId = intval($_SESSION['userid']);
+
+    $patientData = $db->getRow("SELECT p.*, u.billing_company_id
+        FROM dental_patients p
+            JOIN dental_users u ON u.userid=p.docid
+        WHERE p.patientid = '$patientId'");
+
+    $insuranceCompanyId = intval($patientData['p_m_ins_co']);
+    $insuranceCompanyData = $db->getRow("SELECT * FROM dental_contact WHERE contactid ='$insuranceCompanyId'");
+
+    $claimData['p_m_dss_file'] = $patientData['p_m_dss_file'];
+    $claimData['p_m_billing_id'] = $patientData['billing_company_id'];
+    $claimData['insurance_type'] = $patientData['p_m_ins_type'];
+    $claimData['other_insurance_type'] = $patientData['s_m_ins_type'];
+    $claimData['insured_firstname'] = $patientData['p_m_partyfname'];
+    $claimData['insured_lastname'] = $patientData['p_m_partylname'];
+    $claimData['insured_middle'] = $patientData['p_m_partymname'];
+    $claimData['other_insured_firstname'] = $patientData['s_m_partyfname'];
+    $claimData['other_insured_lastname'] = $patientData['s_m_partylname'];
+    $claimData['other_insured_middle'] = $patientData['s_m_partymname'];
+    $claimData['insured_id_number'] = $patientData['p_m_ins_id'];
+    $claimData['insured_dob'] = $patientData['ins_dob'];
+    $claimData['other_insured_dob'] = $patientData['ins2_dob'];
+    $claimData['insured_insurance_plan'] = $patientData['p_m_ins_plan'];
+    $claimData['other_insured_insurance_plan'] = $patientData['s_m_ins_plan'];
+    $claimData['insured_policy_group_feca'] = $patientData['p_m_ins_grp'];
+    $claimData['other_insured_policy_group_feca'] = $patientData['s_m_ins_grp'];
+    $claimData['insured_sex'] = $patientData['p_m_gender'];
+    $claimData['icd_ind'] = 10; // Default value since 10-oct-2015
+
+    $referredby = $patientData['referred_by'];
+    $referred_source = $patientData['referred_source'];
+    $patientDocId = intval($patientData['docid']);
+
+    if ($patientData['has_s_m_ins']) {
+        $claimData['other_insured_sex'] = $patientData['s_m_gender'];
+        $claimData['patient_firstname'] = $patientData['firstname'];
+        $claimData['patient_lastname'] = $patientData['lastname'];
+        $claimData['patient_middle'] = $patientData['middlename'];
+        $claimData['patient_address'] = $patientData['add1'];
+        $claimData['patient_city'] = $patientData['city'];
+        $claimData['patient_state'] = $patientData['state'];
+        $claimData['patient_zip'] = $patientData['zip'];
+        $claimData['patient_dob'] = $patientData['dob'];
+        $claimData['responsibility_sequence'] = 'S';
+        $claimData['another_plan'] = 1;
+    }
+
+    if($patientData['p_m_ins_ass'] == 'Yes'){
+        $claimData['insured_signature'] = 1;
+    }
+
+    $claimData['patient_signature'] = 1;
+    $claimData['signature_physician'] = 1;
+    $claimData['patient_signed_date'] = date('Y-m-d', strtotime($patientData['adddate']));
+    $claimData['physician_signed_date'] = date('Y-m-d');
+    $claimData['patient_phone_code'] = split_phone($patientData['home_phone'], true);
+    $claimData['patient_phone'] = split_phone($patientData['home_phone'], false);
+    $claimData['insured_phone_code'] = split_phone($patientData['home_phone'], true);
+    $claimData['insured_phone'] = split_phone($patientData['home_phone'], false);
+    $claimData['patient_status'] = $patientData['marital_status'];
+    $claimData['insured_id_number'] = $patientData['p_m_ins_id'];
+
+    if ($patientData['p_m_same_address'] == '1') {
+        $claimData['insured_address'] = $patientData['add1'];
+        $claimData['insured_city'] = $patientData['city'];
+        $claimData['insured_state'] = $patientData['state'];
+        $claimData['insured_zip'] = $patientData['zip'];
+    } else {
+        $claimData['insured_address'] = $patientData['p_m_address'];
+        $claimData['insured_city'] = $patientData['p_m_city'];
+        $claimData['insured_state'] = $patientData['p_m_state'];
+        $claimData['insured_zip'] = $patientData['p_m_zip'];
+    }
+
+    if ($patientData['s_m_same_address'] == '1') {
+        $claimData['other_insured_address'] = $patientData['add1'];
+        $claimData['other_insured_city'] = $patientData['city'];
+        $claimData['other_insured_state'] = $patientData['state'];
+        $claimData['other_insured_zip'] = $patientData['zip'];
+    } else {
+        $claimData['other_insured_address'] = $patientData['s_m_address'];
+        $claimData['other_insured_city'] = $patientData['s_m_city'];
+        $claimData['other_insured_state'] = $patientData['s_m_state'];
+        $claimData['other_insured_zip'] = $patientData['s_m_zip'];
+    }
+
+    $claimData['insured_dob'] = $patientData['ins_dob'];
+    $claimData['patient_relation_insured'] = $patientData['p_m_relation'];
+    $claimData['patient_relation_other_insured'] = $patientData['s_m_relation'];
+    $claimData['insured_employer_school_name'] = $patientData['employer'];
+    $claimData['p_m_eligible_payer_id'] = $patientData['p_m_eligible_payer_id'];
+    $claimData['p_m_eligible_payer_name'] = $patientData['p_m_eligible_payer_name'];
+
+    $producerData = $db->getRow("SELECT * FROM dental_users WHERE producer_files = 1 AND userid = '$producerId'");
+    $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '$patientDocId'");
+
+    if($producerData['tax_id_or_ssn'] != '') {
+        $claimData['federal_tax_id_number'] = $producerData['tax_id_or_ssn'];
+    } else {
+        $claimData['federal_tax_id_number'] = $doctorData['tax_id_or_ssn'];
+    }
+
+    if ($producerData['ssn'] != '' && $producerData['producer_files'] == 1) {
+        $claimData['ssn'] = $producerData['ssn'];
+    } else {
+        $claimData['ssn'] = $doctorData['ssn'];
+    }
+
+    if ($producerData['ein'] != '' && $producerData['producer_files'] == 1) {
+        $claimData['ein'] = $producerData['ein'];
+    } else {
+        $claimData['ein'] = $doctorData['ein'];
+    }
+
+    if ($claimData['insurance_type'] != 1) {
+        $claimData['service_facility_info_phone'] = $producerData['phone'] ?: $doctorData['phone'];
+
+        if ($doctorData['use_service_npi'] == 1) {
+            $claimData['service_facility_info_name'] = $doctorData['service_name'];
+            $claimData['service_facility_info_address'] = $doctorData['service_address'];
+            $claimData['service_facility_info_npi'] = $doctorData['service_npi'];
+            $claimData['service_facility_info_medicare_npi'] = $doctorData['service_medicare_npi'];
+
+            $serviceAddress = [
+                'city' => $doctorData['service_city'],
+                'state' => $doctorData['service_state'],
+                'zip' => $doctorData['service_zip']
+            ];
+        } else {
+            $claimData['service_facility_info_name'] = $producerData['practice'] ?: $doctorData['practice'];
+            $claimData['service_facility_info_address'] = $producerData['address'] ?: $doctorData['address'];
+            $claimData['service_facility_info_npi'] = $producerData['npi'] ?: $doctorData['npi'];
+            $claimData['service_facility_info_medicare_npi'] =
+                $producerData['medicare_npi'] ?: $doctorData['medicare_npi'];
+
+            $serviceAddress = [
+                'city' => $producerData['city'] ?: $doctorData['city'],
+                'state' => $producerData['state'] ?: $doctorData['state'],
+                'zip' => $producerData['zip'] ?: $doctorData['zip']
+            ];
+        }
+
+        $claimData['service_facility_info_city'] = trim(preg_replace('/ +/', ' ', implode(' ', $serviceAddress)));
+        $claimData['billing_provider_a'] = $claimData['insurance_type'] == '1' ? $medicare_npi : $npi;
+    }
+
+    $sleepStudies = $db->getRow("SELECT ss.diagnosis
+        FROM dental_summ_sleeplab ss
+            JOIN dental_patients p ON ss.patiendid = p.patientid
+        WHERE (
+                p.p_m_ins_type != '1'
+                OR (
+                    COALESCE(ss.diagnosising_doc, '') != ''
+                    AND COALESCE(ss.diagnosising_npi, '') != ''
+                )
+            )
+            AND COALESCE(ss.diagnosis, '') != ''
+            AND ss.filename IS NOT NULL
+            AND ss.patiendid = '$patientId'");
+    $claimData['diagnosis_1'] = $sleepStudies['diagnosis'];
+    $diagnosisId = intval($claimData['diagnosis_1']);
+
+    $ins_diag = $db->getRow("SELECT * FROM dental_ins_diagnosis WHERE ins_diagnosisid = '$diagnosisId'");
+    $claimData['diagnosis_a'] = $ins_diag['ins_diagnosis'];
+
+    $sleepStudies = $db->getRow("SELECT ss.diagnosising_doc, diagnosising_npi
+        FROM dental_summ_sleeplab ss
+            JOIN dental_patients p ON ss.patiendid = p.patientid
+        WHERE (
+                p.p_m_ins_type != '1'
+                OR (
+                    COALESCE(ss.diagnosising_doc, '') != ''
+                    AND COALESCE(ss.diagnosising_npi, '') != ''
+                )
+            )
+            AND COALESCE(ss.diagnosis, '') != ''
+            AND ss.completed = 'Yes'
+            AND ss.filename IS NOT NULL
+            AND ss.patiendid = '$patientId'");
+    $diagnosising_doc = $sleepStudies['diagnosising_doc'];
+    $diagnosising_npi = $sleepStudies['diagnosising_npi'];
+
+    $claimData['accept_assignment'] = $patientData['p_m_ins_ass'];
+
+    // If claim doesn't yet have a preauth number, try to load it
+    // from the patient's most recently completed preauth.
+    if (empty($claimData['prior_authorization_number'])) {
+        $preAuthStatus = DSS_PREAUTH_COMPLETE;
+        $preAuth = $db->getRow("SELECT *
+            FROM dental_insurance_preauth
+            WHERE patient_id = '$patientId'
+                AND status = $preAuthStatus
+            ORDER BY date_completed DESC LIMIT 1");
+
+        if ($preAuth) {
+            $claimData['prior_authorization_number'] = $preAuth['pre_auth_num'];
+        }
+    }
+
+    $claimData['status'] = DSS_CLAIM_PENDING;
+    $claimData['ip_address'] = $_SERVER['REMOTE_ADDR'];
+    $claimData['billing_provider_taxonomy_code'] = '332B00000X';
+
+    $preparedFields = preparePrimaryClaimFields($claimData);
+
+    $newClaimQuery = "INSERT INTO dental_insurance SET
+        patientid = '$patientId',
+        userid = '$userId',
+        docid = '$patientDocId',
+        producer = '$producerId',
+        adddate = now(),
+        $preparedFields";
+
+    $primaryClaimId = $db->getInsertId($newClaimQuery);
+
+    return $primaryClaimId;
+}

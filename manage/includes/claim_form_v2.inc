@@ -1007,106 +1007,26 @@ $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])
 $pat_myarray = $db->getRow($pat_sql);
 $docid = $pat_myarray['docid'];
 
-if (false || $is_pri_pending) {
-    // Load patient info from dental_patients table using pid on query string
-    $pat_sql = "select p.*, c.exclusive from dental_patients p
-        LEFT JOIN dental_users u ON u.userid=p.docid
-        LEFT JOIN companies c ON c.id=u.billing_company_id
-        where p.patientid='".s_for($_GET['pid'])."'";
-
-    $pat_myarray = $db->getRow($pat_sql);
-    $p_m_dss_file = $pat_myarray['p_m_dss_file'];
-
-    if ($pat_myarray['exclusive']) { $p_m_dss_file = 1; }
-
-    $s_m_dss_file = $pat_myarray['s_m_dss_file'];
-    $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-    $insurancetype = st($pat_myarray['p_m_ins_type']);
-    $other_insurancetype = $pat_myarray['s_m_ins_type'];
-    $insured_firstname = st($pat_myarray['p_m_partyfname']);
-    $insured_lastname = st($pat_myarray['p_m_partylname']);
-    $insured_middle = st($pat_myarray['p_m_partymname']);
-
-    if ($pat_myarray['p_m_same_address'] == 1) {
-        $insured_address = st($pat_myarray['add1']);
-        $insured_city = st($pat_myarray['city']);
-        $insured_state = st($pat_myarray['state']);
-        $insured_zip = st($pat_myarray['zip']);
-    } else {
-        $insured_address = st($pat_myarray['p_m_address']);
-        $insured_city = st($pat_myarray['p_m_city']);
-        $insured_state = st($pat_myarray['p_m_state']);
-        $insured_zip = st($pat_myarray['p_m_zip']);
-    }
-
-    $other_insured_firstname = st($pat_myarray['s_m_partyfname']);
-    $other_insured_lastname = st($pat_myarray['s_m_partylname']);
-    $other_insured_middle = st($pat_myarray['s_m_partymname']);
-
-    if ($pat_myarray['s_m_same_address'] == 1){
-        $insured_address = st($pat_myarray['add1']);
-        $insured_city = st($pat_myarray['city']);
-        $insured_state = st($pat_myarray['state']);
-        $insured_zip = st($pat_myarray['zip']);
-    } else {
-        $insured_address = st($pat_myarray['s_m_address']);
-        $insured_city = st($pat_myarray['s_m_city']);
-        $insured_state = st($pat_myarray['s_m_state']);
-        $insured_zip = st($pat_myarray['s_m_zip']);
-    }
-
-    $insured_id_number = st($pat_myarray['p_m_ins_id']);
-    $other_insured_id_number = st($pat_myarray['s_m_ins_id']);
-    $insured_dob = st($pat_myarray['ins_dob']);
-    $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
-    $other_insured_dob = st($pat_myarray['ins2_dob']);
-    $insured_insurance_plan = st($pat_myarray['p_m_ins_plan']);
-    $other_insured_insurance_plan = st($pat_myarray['s_m_ins_plan']);
-    $insured_policy_group_feca = st($pat_myarray['p_m_ins_grp']);
-    $other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
-    $referredby = st($pat_myarray['referred_by']);
-    $referred_source = st($pat_myarray['referred_source']);
-    $docid = $pat_myarray['docid'];
-
-    // if patient does not have an id, redirect to manage_patient.php to address the issue
-    if ($pat_myarray['patientid'] == '') {
-        print '<script type="text/javascript">';
-        print '  window.location="manage_patient.php";';
-        print '</script>';
-
-        trigger_error("Die called", E_USER_ERROR); // already did a javascript redirect...just die
-    }
-}
-
-$ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
-
 /**
  * If claim is pending, regenerate claim data.
  * Otherwise, allow to load already saved data.
  *
  * Only pending states are primary pending, and secondary pending
  */
+$claimId = intval($_GET['insid']);
+$patientId = intval($_GET['pid']);
+
 if ($is_pending) {
-    $claimId = intval($_GET['insid']);
-
-    $claimDetails = $db->getRow("SELECT patientid, producer FROM dental_insurance WHERE insuranceid = '$claimId'");
-    $claimDetails = $claimDetails ?: [];
-
-    $patientId = array_get($claimDetails, 'patientid');
-    $producerId = array_get($claimDetails, 'producer');
-
-    $myarray = dynamicPrimaryClaimData($patientId, $producerId);
+    $myarray = dynamicClaimDataForClaim($claimId);
 } else {
-    $claimId = intval($_GET['insid']);
-    $patientId = intval($_GET['pid']);
-
-    $my = $db->getRow("SELECT *
+    $myarray = $db->getRow("SELECT *
         FROM dental_insurance
         WHERE insuranceid = '$claimId'
             AND patientid = '$patientId'");
-    $myarray = $my ?: [];
+    $myarray = $myarray ?: [];
 }
-$dent_rows = count($my);
+
+$dent_rows = count($myarray);
 $insuranceid = st((!empty($myarray['insuranceid'])) ? $myarray['insuranceid'] : '');
 $orig_claim_id = (!empty($myarray['primary_claim_id']) ? $myarray['primary_claim_id'] : '');
 $fdf_file = (!empty($myarray['primary_fdf']) ? $myarray['primary_fdf'] : '');

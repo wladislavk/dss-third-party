@@ -430,7 +430,7 @@ if (empty($prior_authorization_number)) {
 	return $secondary_claim_id;
 }
 
-function preparePrimaryClaimFields ($claimData) {
+function prepareClaimDataFields ($claimData) {
     $db = new Db();
 
     $dbFields = [
@@ -663,12 +663,39 @@ function preparePrimaryClaimFields ($claimData) {
     return implode(', ', $escapedFields);
 }
 
-function dynamicPrimaryClaimData ($patientId, $producerId) {
+function dynamicClaimData ($patientId, $producerId, $sequence='primary') {
     $db = new Db();
 
     $patientId = intval($patientId);
     $producerId = intval($producerId);
     $docId = intval($_SESSION['docid']);
+
+    /**
+     * Only two possible options: primary or secondary
+     */
+    $isPrimary = strtolower($sequence) !== 'secondary';
+
+    /**
+     * If the CLAIM SEQUENCE is PRIMARY, then:
+     * - insured data comes from fields marked as "p_m_..."
+     * - other insured data comes from fields marked as "s_m_..."
+     *
+     * If the CLAIM SEQUENCE is SECONDARY, then:
+     * - insured data comes from fields marked as "p_m_..."
+     * - other insured data comes from fields marked as "s_m_..."
+     *
+     * Instead of switching each field individually, define prefixes to read from the correct fields
+     * It is also possible to parse the fields, and generate some array:
+     *
+     * $patientData['p_m_dss_file']    --->    $patientData['p_m']['dss_file']
+     * $patientData['s_m_dss_file']    --->    $patientData['s_m']['dss_file']
+     *
+     * Then read the equivalent values, from different arrays
+     *
+     * This trick does NOT work for Date of Birth fields, the names are ins_dob and ins2_dob
+     */
+    $primaryPrefix = $isPrimary ? 'p_m' : 's_m';
+    $secondaryPrefix = $isPrimary ? 's_m' : 'p_m';
 
     $patientData = $db->getRow("SELECT p.*, u.billing_company_id
         FROM dental_patients p
@@ -676,25 +703,55 @@ function dynamicPrimaryClaimData ($patientId, $producerId) {
         WHERE p.patientid = '$patientId'");
 
     $isMedicare = $patientData['insurance_type'] == 1;
+    $hasSecondaryInsurance = isOptionSelected($patientData['has_s_m_ins']);
 
-    $claimData['p_m_dss_file'] = $patientData['p_m_dss_file'];
+    /**
+     * If the claim is secondary, then has_s_m_ins MUST be true
+     */
+    if (!$isPrimary && !$hasSecondaryInsurance) {
+        // throw new \RuntimeException(
+        //     "Dynamic claim data for patientId $patientId, producerId $producerId inconsistency: " .
+        //     "the sequence is secondary but the patient does not have secondary insurance enabled."
+        // );
+        error_log(
+            "Dynamic claim data for patientId $patientId, producerId $producerId inconsistency: " .
+            "the sequence is secondary but the patient does not have secondary insurance enabled."
+        );
+    }
+
+    $claimData['p_m_dss_file'] = $patientData["{$primaryPrefix}_dss_file"];
     $claimData['p_m_billing_id'] = $patientData['billing_company_id'];
-    $claimData['insurance_type'] = $patientData['p_m_ins_type'];
-    $claimData['other_insurance_type'] = $patientData['s_m_ins_type'];
-    $claimData['insured_firstname'] = $patientData['p_m_partyfname'];
-    $claimData['insured_lastname'] = $patientData['p_m_partylname'];
-    $claimData['insured_middle'] = $patientData['p_m_partymname'];
-    $claimData['other_insured_firstname'] = $patientData['s_m_partyfname'];
-    $claimData['other_insured_lastname'] = $patientData['s_m_partylname'];
-    $claimData['other_insured_middle'] = $patientData['s_m_partymname'];
-    $claimData['insured_id_number'] = $patientData['p_m_ins_id'];
-    $claimData['insured_dob'] = $patientData['ins_dob'];
-    $claimData['other_insured_dob'] = $patientData['ins2_dob'];
-    $claimData['insured_insurance_plan'] = $patientData['p_m_ins_plan'];
-    $claimData['other_insured_insurance_plan'] = $patientData['s_m_ins_plan'];
-    $claimData['insured_policy_group_feca'] = $patientData['p_m_ins_grp'];
-    $claimData['other_insured_policy_group_feca'] = $patientData['s_m_ins_grp'];
-    $claimData['insured_sex'] = $patientData['p_m_gender'];
+    
+    $claimData['insurance_type'] = $patientData["{$primaryPrefix}_ins_type"];
+    $claimData['other_insurance_type'] = $patientData["{$secondaryPrefix}_ins_type"];
+    $claimData['insured_firstname'] = $patientData["{$primaryPrefix}_partyfname"];
+    $claimData['insured_lastname'] = $patientData["{$primaryPrefix}_partylname"];
+    $claimData['insured_middle'] = $patientData["{$primaryPrefix}_partymname"];
+    $claimData['other_insured_firstname'] = $patientData["{$secondaryPrefix}_partyfname"];
+    $claimData['other_insured_lastname'] = $patientData["{$secondaryPrefix}_partylname"];
+    $claimData['other_insured_middle'] = $patientData["{$secondaryPrefix}_partymname"];
+    $claimData['insured_id_number'] = $patientData["{$primaryPrefix}_ins_id"];
+    $claimData['insured_insurance_plan'] = $patientData["{$primaryPrefix}_ins_plan"];
+    $claimData['other_insured_insurance_plan'] = $patientData["{$secondaryPrefix}_ins_plan"];
+    $claimData['insured_policy_group_feca'] = $patientData["{$primaryPrefix}_ins_grp"];
+    $claimData['other_insured_policy_group_feca'] = $patientData["{$secondaryPrefix}_ins_grp"];
+    $claimData['insured_sex'] = $patientData["{$primaryPrefix}_gender"];
+
+    /**
+     * DOB fields are exceptions to the naming rule
+     *
+     * Sequence value represents the alternate source of insurance data.
+     * Therefore, its value is inverse to the sequence
+     */
+    if ($isPrimary) {
+        $claimData['insured_dob'] = $patientData['ins_dob'];
+        $claimData['other_insured_dob'] = $patientData['ins2_dob'];
+        $claimData['responsibility_sequence'] = $hasSecondaryInsurance ? 'S' : '';
+    } else {
+        $claimData['insured_dob'] = $patientData['ins2_dob'];
+        $claimData['other_insured_dob'] = $patientData['ins_dob'];
+        $claimData['responsibility_sequence'] = 'P';
+    }
 
     /**
      * @see CS-29
@@ -704,8 +761,11 @@ function dynamicPrimaryClaimData ($patientId, $producerId) {
      */
     $claimData['icd_ind'] = 10;
 
-    if ($patientData['has_s_m_ins']) {
-        $claimData['other_insured_sex'] = $patientData['s_m_gender'];
+    /**
+     * If the claim is secondary, then has_s_m_ins MUST be true
+     */
+    if ($hasSecondaryInsurance) {
+        $claimData['other_insured_sex'] = $patientData["{$secondaryPrefix}_gender"];
         $claimData['patient_firstname'] = $patientData['firstname'];
         $claimData['patient_lastname'] = $patientData['lastname'];
         $claimData['patient_middle'] = $patientData['middlename'];
@@ -714,13 +774,11 @@ function dynamicPrimaryClaimData ($patientId, $producerId) {
         $claimData['patient_state'] = $patientData['state'];
         $claimData['patient_zip'] = $patientData['zip'];
         $claimData['patient_dob'] = $patientData['dob'];
-        $claimData['responsibility_sequence'] = 'S';
+        $claimData['patient_sex'] = $patientData['gender'];
         $claimData['another_plan'] = 1;
     }
 
-    if($patientData['p_m_ins_ass'] == 'Yes'){
-        $claimData['insured_signature'] = 1;
-    }
+    $claimData['insured_signature'] = isOptionSelected($patientData["{$primaryPrefix}_ins_ass"]);
 
     $claimData['patient_signature'] = 1;
     $claimData['signature_physician'] = 1;
@@ -731,38 +789,38 @@ function dynamicPrimaryClaimData ($patientId, $producerId) {
     $claimData['insured_phone_code'] = split_phone($patientData['home_phone'], true);
     $claimData['insured_phone'] = split_phone($patientData['home_phone'], false);
     $claimData['patient_status'] = $patientData['marital_status'];
-    $claimData['insured_id_number'] = $patientData['p_m_ins_id'];
+    $claimData['insured_id_number'] = $patientData["{$primaryPrefix}_ins_id"];
 
-    if ($patientData['p_m_same_address'] == '1') {
+    if (isOptionSelected($patientData["{$primaryPrefix}_same_address"])) {
         $claimData['insured_address'] = $patientData['add1'];
         $claimData['insured_city'] = $patientData['city'];
         $claimData['insured_state'] = $patientData['state'];
         $claimData['insured_zip'] = $patientData['zip'];
     } else {
-        $claimData['insured_address'] = $patientData['p_m_address'];
-        $claimData['insured_city'] = $patientData['p_m_city'];
-        $claimData['insured_state'] = $patientData['p_m_state'];
-        $claimData['insured_zip'] = $patientData['p_m_zip'];
+        $claimData['insured_address'] = $patientData["{$primaryPrefix}_address"];
+        $claimData['insured_city'] = $patientData["{$primaryPrefix}_city"];
+        $claimData['insured_state'] = $patientData["{$primaryPrefix}_state"];
+        $claimData['insured_zip'] = $patientData["{$primaryPrefix}_zip"];
     }
 
-    if ($patientData['s_m_same_address'] == '1') {
+    if (isOptionSelected($patientData["{$secondaryPrefix}_same_address"])) {
         $claimData['other_insured_address'] = $patientData['add1'];
         $claimData['other_insured_city'] = $patientData['city'];
         $claimData['other_insured_state'] = $patientData['state'];
         $claimData['other_insured_zip'] = $patientData['zip'];
     } else {
-        $claimData['other_insured_address'] = $patientData['s_m_address'];
-        $claimData['other_insured_city'] = $patientData['s_m_city'];
-        $claimData['other_insured_state'] = $patientData['s_m_state'];
-        $claimData['other_insured_zip'] = $patientData['s_m_zip'];
+        $claimData['other_insured_address'] = $patientData["{$secondaryPrefix}_address"];
+        $claimData['other_insured_city'] = $patientData["{$secondaryPrefix}_city"];
+        $claimData['other_insured_state'] = $patientData["{$secondaryPrefix}_state"];
+        $claimData['other_insured_zip'] = $patientData["{$secondaryPrefix}_zip"];
     }
 
-    $claimData['insured_dob'] = $patientData['ins_dob'];
-    $claimData['patient_relation_insured'] = $patientData['p_m_relation'];
-    $claimData['patient_relation_other_insured'] = $patientData['s_m_relation'];
+    $claimData['patient_relation_insured'] = $patientData["{$primaryPrefix}_relation"];
+    $claimData['patient_relation_other_insured'] = $patientData["{$secondaryPrefix}_relation"];
     $claimData['insured_employer_school_name'] = $patientData['employer'];
-    $claimData['p_m_eligible_payer_id'] = $patientData['p_m_eligible_payer_id'];
-    $claimData['p_m_eligible_payer_name'] = $patientData['p_m_eligible_payer_name'];
+    $claimData['p_m_eligible_payer_id'] = $patientData["{$primaryPrefix}_eligible_payer_id"];
+    $claimData['p_m_eligible_payer_name'] = $patientData["{$primaryPrefix}_eligible_payer_name"];
+    $claimData['accept_assignment'] = $patientData["{$primaryPrefix}_ins_ass"];
 
     $producerData = $db->getRow("SELECT * FROM dental_users WHERE producer_files = 1 AND userid = '$producerId'");
     $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '$docId'");
@@ -838,8 +896,6 @@ function dynamicPrimaryClaimData ($patientId, $producerId) {
     $ins_diag = $db->getRow("SELECT * FROM dental_ins_diagnosis WHERE ins_diagnosisid = '$diagnosisId'");
     $claimData['diagnosis_a'] = $ins_diag['ins_diagnosis'];
 
-    $claimData['accept_assignment'] = $patientData['p_m_ins_ass'];
-
     // If claim doesn't yet have a preauth number, try to load it
     // from the patient's most recently completed preauth.
     if (empty($claimData['prior_authorization_number'])) {
@@ -861,35 +917,92 @@ function dynamicPrimaryClaimData ($patientId, $producerId) {
     return $claimData;
 }
 
-function createPrimaryClaim ($patientId, $producerId, $empty=false) {
+function createClaim ($patientId, $producerId, $sequence, $primaryClaimId, $empty=false) {
     $db = new Db();
+
+    /**
+     * Always assume primary unless explicit request of secondary
+     * Also, enforce valid values for primary claim ids, or we will have "dangling" secondary claims
+     */
+    $isPrimary = $sequence !== 'secondary';
 
     $patientId = intval($patientId);
     $producerId = intval($producerId);
     $docId = intval($_SESSION['docid']);
     $userId = intval($_SESSION['userid']);
+    $primaryClaimId = intval($primaryClaimId);
 
-    $claimData = $empty ? [] : dynamicPrimaryClaimData($patientId, $producerId);
+    if (!$isPrimary && !$primaryClaimId) {
+        // throw new \BadArgumentException(
+        //     "Cannot create secondary claim for patientId $patientId, producerId $producerId. \$primaryClaimId is empty"
+        // );
+        error_log(
+            "Cannot create secondary claim for patientId $patientId, producerId $producerId. \$primaryClaimId is empty"
+        );
+    }
 
-    // Values specific to saving the form for the first time
-    $claimData['status'] = DSS_CLAIM_PENDING;
+    $claimData = $empty ? [] : dynamicClaimData($patientId, $producerId, $sequence);
     $claimData['ip_address'] = $_SERVER['REMOTE_ADDR'];
 
-    $preparedFields = preparePrimaryClaimFields($claimData);
+    if ($isPrimary) {
+        $claimData['status'] = DSS_CLAIM_PENDING;
+    } else {
+        $claimData['status'] = DSS_CLAIM_SEC_PENDING;
+        $claimData['primary_claim_id'] = $primaryClaimId;
+    }
+
+    $preparedFields = prepareClaimDataFields($claimData);
 
     $newClaimQuery = "INSERT INTO dental_insurance SET
         patientid = '$patientId',
-        userid = '$userId',
-        docid = '$docId',
-        producer = '$producerId',
-        adddate = now(),
+        userid    = '$userId',
+        docid     = '$docId',
+        producer  = '$producerId',
+        adddate   = NOW(),
         $preparedFields";
 
-    $primaryClaimId = $db->getInsertId($newClaimQuery);
+    $newClaimId = $db->getInsertId($newClaimQuery);
 
-    return $primaryClaimId;
+    return $newClaimId;
+}
+
+function createPrimaryClaim ($patientId, $producerId) {
+    return createClaim($patientId, $producerId, 'primary', null, false);
 }
 
 function createEmptyPrimaryClaim ($patientId, $producerId) {
-    return createPrimaryClaim($patientId, $producerId, true);
+    return createClaim($patientId, $producerId, 'primary', null, true);
+}
+
+function createSecondaryClaim ($patientId, $producerId, $primaryClaimId) {
+    return createClaim($patientId, $producerId, 'secondary', $primaryClaimId, false);
+}
+
+function createEmptySecondaryClaim ($patientId, $producerId, $primaryClaimId) {
+    return createClaim($patientId, $producerId, 'secondary', $primaryClaimId, true);
+}
+
+function dynamicClaimDataForClaim ($claimId) {
+    $db = new Db();
+    $claimId = intval($claimId);
+
+    $claimDetails = $db->getRow("SELECT patientid, producer, status, primary_claim_id
+        FROM dental_insurance
+        WHERE insuranceid = '$claimId'");
+    $claimDetails = $claimDetails ?: [];
+
+    if (!count($claimDetails)) {
+        // throw new \RuntimeException("The claim $claimId does not exist");
+        error_log("The claim $claimId does not exist");
+    }
+
+    $patientId = array_get($claimDetails, 'patientid', 0);
+    $producerId = array_get($claimDetails, 'producer', 0);
+    $status = array_get($claimDetails, 'status', 0);
+    $primaryClaimId = array_get($claimDetails, 'primary_claim_id', 0);
+
+    $sequence = in_array($status, [DSS_CLAIM_SEC_PENDING, DSS_CLAIM_SEC_SENT, DSS_CLAIM_SEC_DISPUTE, DSS_CLAIM_SEC_REJECTED]) ?
+        'secondary' : 'primary';
+
+    return dynamicClaimData($patientId, $producerId, $sequence, $primaryClaimId);
 }

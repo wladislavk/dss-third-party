@@ -1,6 +1,8 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+require_once __DIR__ . '/../admin/includes/claim_functions.php';
+
 $status_sql = "SELECT status FROM dental_insurance
 		WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
 			AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
@@ -1077,11 +1079,33 @@ if (false || $is_pri_pending) {
 }
 
 $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
-// In the case where we have first come to this page, load the claim form
-// info from dental_insurance and place them into variables.
-$sql = "select * from dental_insurance where insuranceid='".(!empty($_GET['insid']) ? $_GET['insid'] : '')."' and patientid='".$_GET['pid']."'";
-$my = $db->getResults($sql);
-$myarray = (!empty($my[0]) ? $my[0] : array());
+
+/**
+ * If claim is pending, regenerate claim data.
+ * Otherwise, allow to load already saved data.
+ *
+ * Only pending states are primary pending, and secondary pending
+ */
+if ($is_pending) {
+    $claimId = intval($_GET['insid']);
+
+    $claimDetails = $db->getRow("SELECT patientid, producer FROM dental_insurance WHERE insuranceid = '$claimId'");
+    $claimDetails = $claimDetails ?: [];
+
+    $patientId = array_get($claimDetails, 'patientid');
+    $producerId = array_get($claimDetails, 'producer');
+
+    $myarray = dynamicPrimaryClaimData($patientId, $producerId);
+} else {
+    $claimId = intval($_GET['insid']);
+    $patientId = intval($_GET['pid']);
+
+    $my = $db->getRow("SELECT *
+        FROM dental_insurance
+        WHERE insuranceid = '$claimId'
+            AND patientid = '$patientId'");
+    $myarray = $my ?: [];
+}
 $dent_rows = count($my);
 $insuranceid = st((!empty($myarray['insuranceid'])) ? $myarray['insuranceid'] : '');
 $orig_claim_id = (!empty($myarray['primary_claim_id']) ? $myarray['primary_claim_id'] : '');

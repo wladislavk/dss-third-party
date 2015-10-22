@@ -663,13 +663,12 @@ function preparePrimaryClaimFields ($claimData) {
     return implode(', ', $escapedFields);
 }
 
-function createPrimaryClaim ($patientId, $producerId) {
+function dynamicPrimaryClaimData ($patientId, $producerId) {
     $db = new Db();
 
     $patientId = intval($patientId);
-    $docId = intval($_SESSION['docid']); // Overriden by patient's docid
     $producerId = intval($producerId);
-    $userId = intval($_SESSION['userid']);
+    $docId = intval($_SESSION['docid']);
 
     $patientData = $db->getRow("SELECT p.*, u.billing_company_id
         FROM dental_patients p
@@ -696,11 +695,14 @@ function createPrimaryClaim ($patientId, $producerId) {
     $claimData['insured_policy_group_feca'] = $patientData['p_m_ins_grp'];
     $claimData['other_insured_policy_group_feca'] = $patientData['s_m_ins_grp'];
     $claimData['insured_sex'] = $patientData['p_m_gender'];
-    $claimData['icd_ind'] = 10; // Default value since 10-oct-2015
 
-    $referredby = $patientData['referred_by'];
-    $referred_source = $patientData['referred_source'];
-    $patientDocId = intval($patientData['docid']);
+    /**
+     * @see CS-29
+     *
+     * Default value since 10-oct-2015
+     * We depend on ledger entries dates. We don't have them available here, we just guess
+     */
+    $claimData['icd_ind'] = 10;
 
     if ($patientData['has_s_m_ins']) {
         $claimData['other_insured_sex'] = $patientData['s_m_gender'];
@@ -763,49 +765,50 @@ function createPrimaryClaim ($patientId, $producerId) {
     $claimData['p_m_eligible_payer_name'] = $patientData['p_m_eligible_payer_name'];
 
     $producerData = $db->getRow("SELECT * FROM dental_users WHERE producer_files = 1 AND userid = '$producerId'");
-    $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '$patientDocId'");
+    $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '$docId'");
 
-    if($producerData['tax_id_or_ssn'] != '') {
-        $claimData['federal_tax_id_number'] = $producerData['tax_id_or_ssn'];
+    /**
+     * 'producer_files' signals whether the action must be marked as the original producer OR the current docid
+     *
+     * IF $producerData['producer_files'] == 1
+     * THEN use producer data
+     * ELSE use doctor data
+     */
+    if ($producerData['producer_files'] == 1) {
+        $taxSource = &$producerData;
     } else {
-        $claimData['federal_tax_id_number'] = $doctorData['tax_id_or_ssn'];
+        $taxSource = &$doctorData;
     }
 
-    if ($producerData['ssn'] != '' && $producerData['producer_files'] == 1) {
-        $claimData['ssn'] = $producerData['ssn'];
-    } else {
-        $claimData['ssn'] = $doctorData['ssn'];
-    }
-
-    if ($producerData['ein'] != '' && $producerData['producer_files'] == 1) {
-        $claimData['ein'] = $producerData['ein'];
-    } else {
-        $claimData['ein'] = $doctorData['ein'];
-    }
-
-    if ($doctorData['use_service_npi'] == 1) {
-        $claimData['service_facility_info_name'] = $doctorData['service_name'];
-        $claimData['service_facility_info_address'] = $doctorData['service_address'];
+    if ($taxSource['use_service_npi'] == 1) {
+        $claimData['service_facility_info_name'] = $taxSource['service_name'];
+        $claimData['service_facility_info_address'] = $taxSource['service_address'];
         $claimData['service_info_a'] = $isMedicare ?
-            $doctorData['service_medicare_npi'] : $doctorData['service_npi'];
+            $taxSource['service_medicare_npi'] : $taxSource['service_npi'];
 
         $serviceAddress = [
-            'city' => $doctorData['service_city'],
-            'state' => $doctorData['service_state'],
-            'zip' => $doctorData['service_zip']
+            'city' => $taxSource['service_city'],
+            'state' => $taxSource['service_state'],
+            'zip' => $taxSource['service_zip']
         ];
+
+        $claimData['federal_tax_id_number'] = $taxSource['service_tax_id_or_ssn'];
+        $claimData['ssn'] = $taxSource['service_ssn'];
+        $claimData['ein'] = !$taxSource['service_ssn'];
     } else {
-        $claimData['service_facility_info_name'] = $producerData['practice'] ?: $doctorData['practice'];
-        $claimData['service_facility_info_address'] = $producerData['address'] ?: $doctorData['address'];
-        $claimData['service_info_a'] = $isMedicare ?
-            ($producerData['medicare_npi'] ?: $doctorData['medicare_npi']) :
-            ($producerData['npi'] ?: $doctorData['npi']);
+        $claimData['service_facility_info_name'] = $taxSource['practice'];
+        $claimData['service_facility_info_address'] = $taxSource['address'];
+        $claimData['service_info_a'] = $isMedicare ? $taxSource['medicare_npi'] : $taxSource['npi'];
 
         $serviceAddress = [
-            'city' => $producerData['city'] ?: $doctorData['city'],
-            'state' => $producerData['state'] ?: $doctorData['state'],
-            'zip' => $producerData['zip'] ?: $doctorData['zip']
+            'city' => $taxSource['city'],
+            'state' => $taxSource['state'],
+            'zip' => $taxSource['zip']
         ];
+
+        $claimData['federal_tax_id_number'] = $taxSource['tax_id_or_ssn'];
+        $claimData['ssn'] = $taxSource['ssn'];
+        $claimData['ein'] = !$taxSource['ssn'];
     }
 
     $claimData['service_facility_info_city'] = trim(preg_replace('/ +/', ' ', implode(' ', $serviceAddress)));
@@ -835,23 +838,6 @@ function createPrimaryClaim ($patientId, $producerId) {
     $ins_diag = $db->getRow("SELECT * FROM dental_ins_diagnosis WHERE ins_diagnosisid = '$diagnosisId'");
     $claimData['diagnosis_a'] = $ins_diag['ins_diagnosis'];
 
-    $sleepStudies = $db->getRow("SELECT ss.diagnosising_doc, diagnosising_npi
-        FROM dental_summ_sleeplab ss
-            JOIN dental_patients p ON ss.patiendid = p.patientid
-        WHERE (
-                p.p_m_ins_type != '1'
-                OR (
-                    COALESCE(ss.diagnosising_doc, '') != ''
-                    AND COALESCE(ss.diagnosising_npi, '') != ''
-                )
-            )
-            AND COALESCE(ss.diagnosis, '') != ''
-            AND ss.completed = 'Yes'
-            AND ss.filename IS NOT NULL
-            AND ss.patiendid = '$patientId'");
-    $diagnosising_doc = $sleepStudies['diagnosising_doc'];
-    $diagnosising_npi = $sleepStudies['diagnosising_npi'];
-
     $claimData['accept_assignment'] = $patientData['p_m_ins_ass'];
 
     // If claim doesn't yet have a preauth number, try to load it
@@ -869,17 +855,32 @@ function createPrimaryClaim ($patientId, $producerId) {
         }
     }
 
-    $claimData['status'] = DSS_CLAIM_PENDING;
-    $claimData['ip_address'] = $_SERVER['REMOTE_ADDR'];
     $claimData['resubmission_code_fill'] = 1;
     $claimData['billing_provider_taxonomy_code'] = '332B00000X';
+
+    return $claimData;
+}
+
+function createPrimaryClaim ($patientId, $producerId, $empty=false) {
+    $db = new Db();
+
+    $patientId = intval($patientId);
+    $producerId = intval($producerId);
+    $docId = intval($_SESSION['docid']);
+    $userId = intval($_SESSION['userid']);
+
+    $claimData = $empty ? [] : dynamicPrimaryClaimData($patientId, $producerId);
+
+    // Values specific to saving the form for the first time
+    $claimData['status'] = DSS_CLAIM_PENDING;
+    $claimData['ip_address'] = $_SERVER['REMOTE_ADDR'];
 
     $preparedFields = preparePrimaryClaimFields($claimData);
 
     $newClaimQuery = "INSERT INTO dental_insurance SET
         patientid = '$patientId',
         userid = '$userId',
-        docid = '$patientDocId',
+        docid = '$docId',
         producer = '$producerId',
         adddate = now(),
         $preparedFields";
@@ -887,4 +888,8 @@ function createPrimaryClaim ($patientId, $producerId) {
     $primaryClaimId = $db->getInsertId($newClaimQuery);
 
     return $primaryClaimId;
+}
+
+function createEmptyPrimaryClaim ($patientId, $producerId) {
+    return createPrimaryClaim($patientId, $producerId, true);
 }

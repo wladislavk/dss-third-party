@@ -520,6 +520,7 @@ function preparePrimaryClaimFields ($claimData) {
         'diagnosis_j',
         'diagnosis_k',
         'diagnosis_l',
+        'resubmission_code_fill',
         'medicaid_resubmission_code',
         'original_ref_no',
         'prior_authorization_number',
@@ -870,6 +871,7 @@ function createPrimaryClaim ($patientId, $producerId) {
 
     $claimData['status'] = DSS_CLAIM_PENDING;
     $claimData['ip_address'] = $_SERVER['REMOTE_ADDR'];
+    $claimData['resubmission_code_fill'] = 1;
     $claimData['billing_provider_taxonomy_code'] = '332B00000X';
 
     $preparedFields = preparePrimaryClaimFields($claimData);

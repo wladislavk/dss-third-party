@@ -82,13 +82,26 @@ if (false && $is_pri_pending) {
     }
 }
 
-// In the case where we have first come to this page, load the claim form
-// info from dental_insurance and place them into variables.
-$sql = "select * from dental_insurance where insuranceid='".(!empty($_GET['insid']) ? $_GET['insid'] : '')."' and patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+/**
+ * If claim is pending, regenerate claim data.
+ * Otherwise, allow to load already saved data.
+ *
+ * Only pending states are primary pending, and secondary pending
+ */
+$claimId = intval($_GET['insid']);
+$patientId = intval($_GET['pid']);
 
-$my = $db->getResults($sql);
-$myarray = (!empty($my[0]) ? $my[0] : '');
-$dent_rows = count($my);
+if ($is_pending) {
+    $myarray = dynamicClaimDataForClaim($claimId);
+} else {
+    $myarray = $db->getRow("SELECT *
+        FROM dental_insurance
+        WHERE insuranceid = '$claimId'
+            AND patientid = '$patientId'");
+    $myarray = $myarray ?: [];
+}
+
+$dent_rows = count($myarray);
 $insuranceid = st(!empty($myarray['insuranceid']) ? $myarray['insuranceid'] : '');
 $orig_claim_id = st(!empty($myarray['primary_claim_id']) ? $myarray['primary_claim_id'] : '');
 $p_m_eligible_payer_id = (!empty($myarray['p_m_eligible_payer_id']) ? $myarray['p_m_eligible_payer_id'] : '');

@@ -51,7 +51,14 @@ class AdminRepository extends BaseRepository implements AdminInterface
     public function store(array $data = null)
     {
         $data = $data ?: \Input::all();
-        $this->instance = parent::store($data);
+        $model = $this->getModelName();
+        $this->instance = new $model;
+
+        foreach ($data as $field => $value) {
+            $this->instance->$field = $value;
+        }
+        $this->instance->save();
+
         return $this->instance;
     }
 

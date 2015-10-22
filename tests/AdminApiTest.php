@@ -17,14 +17,12 @@ class AdminApiTest extends TestCase
      */
     public function testAddAdmin()
     {
-        $date = date('Y-m-d H:i:s');
         $data = [
             'name'               => 'PHPUnit admin',
             'username'           => 'testAdmin',
             'password'           => 'testPassword',
-            'adddate'            => $date,
-            'salt'               => 'testSalt',
-            'last_accessed_date' => date('Y-m-d H:i:s', strtotime("$date +7day")),
+            'status'             => 2,
+            'admin_access'       => 4,
             'email'              => 'test@email.com',
             'first_name'         => 'testFirstName',
             'last_name'          => 'testLastName'
@@ -46,17 +44,9 @@ class AdminApiTest extends TestCase
         $adminTestRecord = \DentalSleepSolutions\Admin::where('name', 'like', 'PHPUnit%')->firstOrFail();
 
         if ($adminTestRecord) {
-            $date = date('Y-m-d H:i:s');
             $data = [
                 'name'               => 'PHPUnit updated admin',
-                'username'           => 'testAdmin',
-                'password'           => 'testPassword',
-                'adddate'            => $date,
-                'salt'               => 'testSalt',
-                'last_accessed_date' => date('Y-m-d H:i:s', strtotime("$date +7day")),
-                'email'              => 'test@email.com',
                 'first_name'         => 'testFirstNameUpdated',
-                'last_name'          => 'testLastName'
             ];
 
             $this->put('/api/v1/admin/' . $adminTestRecord->adminid, $data)

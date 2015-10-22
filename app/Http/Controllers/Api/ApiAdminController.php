@@ -4,8 +4,10 @@ namespace DentalSleepSolutions\Http\Controllers\Api;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
+use Carbon\Carbon;
 
 use DentalSleepSolutions\Interfaces\AdminInterface;
+use DentalSleepSolutions\Libraries\Password;
 
 class ApiAdminController extends ApiBaseController
 {
@@ -16,16 +18,24 @@ class ApiAdminController extends ApiBaseController
      */
     protected $admin;
 
-    private $rules = [
+    private $rulesForStore = [
         'name'               => 'max:250',
         'username'           => 'required|max:250',
         'password'           => 'required|max:250',
-        'adddate'            => 'required|date_format:Y-m-d H:i:s',
-        'salt'               => 'required|max:100',
-        'last_accessed_date' => 'required|date_format:Y-m-d H:i:s',
-        'email'              => 'max:100',
-        'first_name'         => 'max:50',
-        'last_name'          => 'max:50'
+        'status'             => 'integer',
+        'admin_access'       => 'integer',
+        'email'              => 'email|max:100',
+        'first_name'         => 'string|max:50',
+        'last_name'          => 'string|max:50'
+    ];
+
+    private $rulesForUpdate = [
+        'name'               => 'max:250',
+        'status'             => 'integer',
+        'admin_access'       => 'integer',
+        'email'              => 'email|max:100',
+        'first_name'         => 'string|max:50',
+        'last_name'          => 'string|max:50'
     ];
 
     /**
@@ -44,7 +54,7 @@ class ApiAdminController extends ApiBaseController
      */
     public function index()
     {
-        $status = null;
+        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Admins list.',
@@ -77,7 +87,7 @@ class ApiAdminController extends ApiBaseController
      */
     public function store()
     {
-        $status = null;
+        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Admin was added succesfully.',
@@ -85,13 +95,24 @@ class ApiAdminController extends ApiBaseController
         ];
 
         try {
-            $validator = \Validator::make(Input::all(), $this->rules);
+            $postValues = Input::all();
+            $validator  = \Validator::make($postValues, $this->rulesForStore);
 
             if ($validator->fails()) {
-                throw new Exception($validator->errors);
+                throw new Exception($validator->errors());
             }
 
-            $this->admin->store(Input::all());
+            $salt       = Password::createSalt();
+            $password   = Password::genPassword($postValues['password'], $salt);
+            $postValues = array_merge($postValues, [
+                'salt'               => $salt,
+                'password'           => $password,
+                'adddate'            => Carbon::now(),
+                'last_accessed_date' => Carbon::now(),
+                'ip_address'         => \Request::ip()
+            ]);
+
+            $this->admin->store($postValues);
             $response['data']   = $this->admin->all();
             $response['status'] = true;
             $status             = 200;
@@ -112,7 +133,7 @@ class ApiAdminController extends ApiBaseController
      */
     public function update($adminId)
     {
-        $status = null;
+        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Admin was updated succesfully.',
@@ -120,13 +141,18 @@ class ApiAdminController extends ApiBaseController
         ];
 
         try {
-            $validator = \Validator::make(Input::all(), $this->rules);
+            $putValues = Input::all();
+            $validator = \Validator::make($putValues, $this->rulesForUpdate);
 
             if ($validator->fails()) {
                 throw new Exception($validator->errors());
             }
 
-            $this->admin->update($adminId, Input::all());
+            $putValues = array_merge($putValues, [
+                'last_accessed_date' => Carbon::now(),
+            ]);
+
+            $this->admin->update($adminId, $putValues);
             $response['data']   = $this->admin->all();
             $response['status'] = true;
             $status             = 200;
@@ -147,7 +173,7 @@ class ApiAdminController extends ApiBaseController
      */
     public function show($adminId)
     {
-        $status = null;
+        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Retrieved admin by id.',
@@ -181,7 +207,7 @@ class ApiAdminController extends ApiBaseController
      */
     public function edit($adminId)
     {
-        $status = null;
+        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Admin was edited successfully.',
@@ -205,7 +231,7 @@ class ApiAdminController extends ApiBaseController
      */
     public function destroy($adminId)
     {
-        $status = null;
+        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Admin was deleted successfully.',
@@ -213,7 +239,7 @@ class ApiAdminController extends ApiBaseController
         ];
 
         try {
-            $deletedAdmin = $this->admin->destroy($adminId);
+            $deletedAdmin     = $this->admin->destroy($adminId);
             $response['data'] = $this->admin->all();
 
             if (empty($deletedAdmin)) {

@@ -675,8 +675,7 @@ function createPrimaryClaim ($patientId, $producerId) {
             JOIN dental_users u ON u.userid=p.docid
         WHERE p.patientid = '$patientId'");
 
-    $insuranceCompanyId = intval($patientData['p_m_ins_co']);
-    $insuranceCompanyData = $db->getRow("SELECT * FROM dental_contact WHERE contactid ='$insuranceCompanyId'");
+    $isMedicare = $patientData['insurance_type'] == 1;
 
     $claimData['p_m_dss_file'] = $patientData['p_m_dss_file'];
     $claimData['p_m_billing_id'] = $patientData['billing_company_id'];
@@ -783,37 +782,38 @@ function createPrimaryClaim ($patientId, $producerId) {
         $claimData['ein'] = $doctorData['ein'];
     }
 
-    if ($claimData['insurance_type'] != 1) {
-        $claimData['service_facility_info_phone'] = $producerData['phone'] ?: $doctorData['phone'];
+    if ($doctorData['use_service_npi'] == 1) {
+        $claimData['service_facility_info_name'] = $doctorData['service_name'];
+        $claimData['service_facility_info_address'] = $doctorData['service_address'];
+        $claimData['service_info_a'] = $isMedicare ?
+            $doctorData['service_medicare_npi'] : $doctorData['service_npi'];
 
-        if ($doctorData['use_service_npi'] == 1) {
-            $claimData['service_facility_info_name'] = $doctorData['service_name'];
-            $claimData['service_facility_info_address'] = $doctorData['service_address'];
-            $claimData['service_facility_info_npi'] = $doctorData['service_npi'];
-            $claimData['service_facility_info_medicare_npi'] = $doctorData['service_medicare_npi'];
+        $serviceAddress = [
+            'city' => $doctorData['service_city'],
+            'state' => $doctorData['service_state'],
+            'zip' => $doctorData['service_zip']
+        ];
+    } else {
+        $claimData['service_facility_info_name'] = $producerData['practice'] ?: $doctorData['practice'];
+        $claimData['service_facility_info_address'] = $producerData['address'] ?: $doctorData['address'];
+        $claimData['service_info_a'] = $isMedicare ?
+            ($producerData['medicare_npi'] ?: $doctorData['medicare_npi']) :
+            ($producerData['npi'] ?: $doctorData['npi']);
 
-            $serviceAddress = [
-                'city' => $doctorData['service_city'],
-                'state' => $doctorData['service_state'],
-                'zip' => $doctorData['service_zip']
-            ];
-        } else {
-            $claimData['service_facility_info_name'] = $producerData['practice'] ?: $doctorData['practice'];
-            $claimData['service_facility_info_address'] = $producerData['address'] ?: $doctorData['address'];
-            $claimData['service_facility_info_npi'] = $producerData['npi'] ?: $doctorData['npi'];
-            $claimData['service_facility_info_medicare_npi'] =
-                $producerData['medicare_npi'] ?: $doctorData['medicare_npi'];
-
-            $serviceAddress = [
-                'city' => $producerData['city'] ?: $doctorData['city'],
-                'state' => $producerData['state'] ?: $doctorData['state'],
-                'zip' => $producerData['zip'] ?: $doctorData['zip']
-            ];
-        }
-
-        $claimData['service_facility_info_city'] = trim(preg_replace('/ +/', ' ', implode(' ', $serviceAddress)));
-        $claimData['billing_provider_a'] = $claimData['insurance_type'] == '1' ? $medicare_npi : $npi;
+        $serviceAddress = [
+            'city' => $producerData['city'] ?: $doctorData['city'],
+            'state' => $producerData['state'] ?: $doctorData['state'],
+            'zip' => $producerData['zip'] ?: $doctorData['zip']
+        ];
     }
+
+    $claimData['service_facility_info_city'] = trim(preg_replace('/ +/', ' ', implode(' ', $serviceAddress)));
+
+    $claimData['billing_provider_phone'] = $producerData['phone'] ?: $doctorData['phone'];
+    $claimData['billing_provider_name'] = $claimData['service_facility_info_name'];
+    $claimData['billing_provider_address'] = $claimData['service_facility_info_address'];
+    $claimData['billing_provider_city'] = $claimData['service_facility_info_city'];
+    $claimData['billing_provider_a'] = $claimData['service_info_a'];
 
     $sleepStudies = $db->getRow("SELECT ss.diagnosis
         FROM dental_summ_sleeplab ss

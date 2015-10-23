@@ -10,6 +10,11 @@ $sort_by_sql .= " ". $sort_by." ".$sort_dir." ";
 $rec_disp = 20;
 
 /**
+ * Quick workaround: NEVER enable sort by last_action
+ */
+$sort_by = $sort_by === 'last_action' ? 'insuranceid' : $sort_by;
+
+/**
  * Only include this subquery if requested in ordering
  * This query returns wrong values for some reference ids
  */
@@ -102,8 +107,7 @@ if ($references) {
                         <a href="<?php echo sprintf($sort_qs, 'adddate', get_sort_dir($sort_by, 'adddate', $sort_dir))?>">
 			Added
 		</td>
-<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'last_action', $sort_dir) ?>" width="20%">
-                        <a href="<?php echo sprintf($sort_qs, 'last_action', get_sort_dir($sort_by, 'last_action', $sort_dir))?>">
+<td valign="top" class="col_head" width="20%">
 			Last Action
 		</td>
 <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'status', $sort_dir) ?>" width="20%">

@@ -498,8 +498,8 @@ $(document).ready(function(){
                     if ($efileField.is(':radio, :checkbox')) {
                         // Instead of using a comparison function, assume checkboxes and radio buttons
                         // are in the exact same order in each form
-                        valuesDiffer = $efileField.index($efileField.find(':checked')) !==
-                            $paperField.index($paperField.find(':checked'));
+                        valuesDiffer = $efileField.index($efileField.filter(':checked')) !==
+                            $paperField.index($paperField.filter(':checked'));
                     } else if ($paperField.length && $paperField.attr('name').match(/_phone/)) {
                         // Some phone fields are separated in code and phone in paper, but whole phone in e-file
                         if ($paperField.attr('name').match(/_phone_code/)) {

@@ -1033,7 +1033,7 @@ $db = isset($db) ? $db : new Db();
 ini_set('xdebug.var_display_max_children', 300);
 
 // Claim id set, either save or retrieve claim
-if (!empty($_GET['insid'])) {
+if (!empty($_GET['insid']) && (count($_POST) || isset($_GET['json']))) {
     $insuranceId = intval($_GET['insid']);
 
     if (count($_POST)) {

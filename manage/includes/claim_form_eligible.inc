@@ -434,23 +434,6 @@ if (true || !$is_pri_pending) {
     $billing_info = (!empty($billing_array['qualifier']) ? substr($billing_array['qualifier'], 0, 2) : '');
 }
 
-/**
- * Logic:
- *
- * IF dental_insurance.another_plan IS set THEN use another_plan
- * IF dental_insurance.another_plan IS not set THEN read options from dental_patients.p_m_dss_file
- */
-$another_plan = isset($another_plan) ? $another_plan : '';
-$another_plan = strtolower($another_plan);
-
-if ($another_plan != 'yes' && $another_plan != 'no') {
-    if ((isset($p_m_dss_file) && $p_m_dss_file == 1) || (isset($s_m_dss_file) && $s_m_dss_file == 1)) {
-        $another_plan = 'yes';
-    } else {
-        $another_plan = 'no';
-    }
-}
-
 if (false && $is_pri_pending) {
     $insured_sex = $pat_myarray['p_m_gender'];
     $other_insured_sex = $pat_myarray['s_m_gender'];

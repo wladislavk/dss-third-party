@@ -1,5 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
+require_once __DIR__ . '/../admin/includes/claim_functions.php';
+
 $status_sql = "SELECT status FROM dental_insurance
              WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['insid']) ? $_GET['insid'] : ''))."'
              AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";

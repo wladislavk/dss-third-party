@@ -669,6 +669,7 @@ function dynamicClaimData ($patientId, $producerId, $sequence='primary') {
     $patientId = intval($patientId);
     $producerId = intval($producerId);
     $docId = intval($_SESSION['docid']);
+    $userId = intval($_SESSION['userid']);
 
     /**
      * Only two possible options: primary or secondary
@@ -914,6 +915,12 @@ function dynamicClaimData ($patientId, $producerId, $sequence='primary') {
     $claimData['resubmission_code_fill'] = 1;
     $claimData['billing_provider_taxonomy_code'] = '332B00000X';
 
+    // Regular fields that should never miss
+    $claimData['patientid'] = $patientId;
+    $claimData['producer'] = $producerId;
+    $claimData['docid'] = $docId;
+    $claimData['userid'] = $userId;
+
     return $claimData;
 }
 
@@ -926,10 +933,9 @@ function createClaim ($patientId, $producerId, $sequence, $primaryClaimId, $empt
      */
     $isPrimary = $sequence !== 'secondary';
 
+    // $docId and $userId will be taken from the session information
     $patientId = intval($patientId);
     $producerId = intval($producerId);
-    $docId = intval($_SESSION['docid']);
-    $userId = intval($_SESSION['userid']);
     $primaryClaimId = intval($primaryClaimId);
 
     if (!$isPrimary && !$primaryClaimId) {
@@ -954,10 +960,6 @@ function createClaim ($patientId, $producerId, $sequence, $primaryClaimId, $empt
     $preparedFields = prepareClaimDataFields($claimData);
 
     $newClaimQuery = "INSERT INTO dental_insurance SET
-        patientid = '$patientId',
-        userid    = '$userId',
-        docid     = '$docId',
-        producer  = '$producerId',
         adddate   = NOW(),
         $preparedFields";
 
@@ -1004,5 +1006,10 @@ function dynamicClaimDataForClaim ($claimId) {
     $sequence = in_array($status, [DSS_CLAIM_SEC_PENDING, DSS_CLAIM_SEC_SENT, DSS_CLAIM_SEC_DISPUTE, DSS_CLAIM_SEC_REJECTED]) ?
         'secondary' : 'primary';
 
-    return dynamicClaimData($patientId, $producerId, $sequence, $primaryClaimId);
+    $claimData = dynamicClaimData($patientId, $producerId, $sequence, $primaryClaimId);
+
+    // Some scripts will rely on the insuranceid field being set
+    $claimData['insuranceid'] = $claimId;
+
+    return $claimData;
 }

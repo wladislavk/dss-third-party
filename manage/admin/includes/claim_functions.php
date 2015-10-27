@@ -1217,9 +1217,15 @@ class ClaimFormData
     }
 }
 
-// PDF/FDF related functions
-function outputPdf ($fileName, $fdfContents) {
+/**
+ * Generate PDF based on FDF field list
+ *
+ * @param string $fileName
+ * @param array $fdfData
+ */
+function outputPdf ($fileName, $fdfData) {
     $filePath = ROOT_DIR . "/../../shared/q_file/{$fileName}";
+    $fdfContents = prepareFdf($fdfData);
 
     // Create FDF file
     $handle = fopen($filePath, 'x+');
@@ -1252,6 +1258,56 @@ function outputPdf ($fileName, $fdfContents) {
     $pdf->Output('insurance_claim.pdf', 'D');
 }
 
+/**
+ * Parse fieldName => $fieldValue array into a valid FDF string
+ *
+ * @param array $fdfFields
+ * @return string
+ */
+function prepareFdf ($fdfFields) {
+    $fieldPath = 'form1[0].#subform[0]';
+    $pdfPath = ROOT_DIR . '/manage/claim_v2.pdf';
+
+    foreach ($fdfFields as $fieldName=>&$fieldValue) {
+        $fieldName = escapeFdf($fieldName);
+        $escapedValue = strtoupper(escapeFdf($fieldValue));
+
+        // All fields are children of the same form, and all are the first element of the collection: [0]
+        $fieldValue = "<< /T({$fieldPath}.{$fieldName}[0]) /V({$escapedValue}) >>";
+    }
+
+    // Join the sections, adding new lines and indentation
+    $fdfFields = implode("\n    ", $fdfFields);
+
+    /**
+     * Use an array to:
+     *
+     * - create a string from the parts
+     * - preserve the fdf indentation
+     * - preserve code indentation
+     *
+     * We could just use a simple string
+     */
+    $fdfData = [
+        '', // Empty line at start of file
+        '%FDF-1.2',
+        '1 0 obj',
+        '<< /FDF',
+        '  << /Fields [',
+        "    $fdfFields",
+        "  ] /F ({$pdfPath}) >>",
+        '>>',
+        'endobj',
+        'trailer',
+        '<< /Root 1 0 R >>',
+        '%%EOF',
+        '', // Empty line at EOF
+    ];
+    $fdfData = implode("\n", $fdfData);
+
+    return $fdfData;
+}
+
 function roundToCents ($amount) {
     $cents = floor($amount*100) - floor($amount)*100;
     $cents = intval($cents);
@@ -1267,7 +1323,8 @@ function escapeFdf ($value) {
     return addcslashes($value, '\()');
 }
 
-class PDF extends \FPDI {
+class PDF extends \FPDI
+{
     /**
      * "Remembers" the template id of the imported page
      */

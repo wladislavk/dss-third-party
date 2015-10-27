@@ -1286,10 +1286,10 @@ class PDF extends \FPDI {
 
         if (isset($_SESSION['adminuserid'])) {
             $userId = intval($_SESSION['adminuserid']);
-            $config = $db->query("SELECT claim_margin_top, claim_margin_left FROM admin where adminid = '$userId'");
+            $config = $db->getRow("SELECT claim_margin_top, claim_margin_left FROM admin where adminid = '$userId'");
         } elseif (isset($_SESSION['docid'])) {
             $userId = intval($_SESSION['docid']);
-            $config = $db->query("SELECT claim_margin_top, claim_margin_left FROM dental_users where userid = '$userId'");
+            $config = $db->getRow("SELECT claim_margin_top, claim_margin_left FROM dental_users where userid = '$userId'");
         }
 
         if ($config) {

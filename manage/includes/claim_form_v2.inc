@@ -44,8 +44,7 @@ if (!empty($_POST['ex_statusbtn'])) { ?>
 } elseif (!empty($_POST['insurancesub']) && $_POST['insurancesub'] == 1 || !empty($_POST['ex_pagebtn'])) {
     if ($isSent) { ?>
         <script type="text/javascript">
-            window.location =
-                '<?= $called_from ?>?status=0&insid=<?= $claimId ?>&showins=1&pid=<?= $patientId ?>';
+            window.location = '<?= $called_from ?>?status=0&insid=<?= $claimId ?>&showins=1&pid=<?= $patientId ?>';
         </script>
         <?php
         trigger_error("Die called", E_USER_ERROR);
@@ -53,8 +52,7 @@ if (!empty($_POST['ex_statusbtn'])) { ?>
 
     if (!confirm_ledger_trxns()) { ?>
         <script type="text/javascript">
-            window.location =
-                "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
+            window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
         </script>
         <?php
         trigger_error("Die called", E_USER_ERROR);
@@ -3313,18 +3311,15 @@ function saveClaim ($claimId, $patientId, $claimData, $context) {
 
     $msg = "Edited Successfully";
 
+    // Single lines in redirection or the parser fails
     ?>
     <script type="text/javascript">
         <?php if (isset($claimData['ex_pagebtn_elec'])) { ?>
-            window.location =
-                '<?= $called_from ?>?status=0&insid=<?= $claimData['ed'] ?>' +
-                    '&type=primary&sendins=1&pid=<?= $patientId ?>&msg=<?= $msg ?>';
+            window.location = '<?= $called_from ?>?status=0&insid=<?= $claimData['ed'] ?>&type=primary&sendins=1&pid=<?= $patientId ?>&msg=<?= $msg ?>';
         <?php } elseif (isset($claimData['elec_save'])) { ?>
             window.location = '<?= $electronic_form ?>';
         <?php } else { ?>
-            window.location =
-                '<?= $called_from ?>?status=0&insid=<?= $claimData['ed'] ?>' +
-                    '&type=primary&showins=1&pid=<?= $patientId ?>&msg=<?= $msg ?>';
+            window.location = '<?= $called_from ?>?status=0&insid=<?= $claimData['ed'] ?>&type=primary&showins=1&pid=<?= $patientId ?>&msg=<?= $msg ?>';
         <?php } ?>
     </script>
     <?php

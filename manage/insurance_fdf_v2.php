@@ -15,7 +15,6 @@ $secondaryIdTypes = [
 ];
 
 $field_path = "form1[0].#subform[0]";
-$fdf_file = time().'.fdf';
 $pdf_doc= __DIR__ . '/claim_v2.pdf';
 
 $claimId = intval($_GET['insid']);
@@ -31,79 +30,53 @@ $docId = intval($patientData['docid']);
 $pica1 = strtoupper($claimData['pica1']);
 $pica2 = strtoupper($claimData['pica2']);
 $pica3 = strtoupper($claimData['pica3']);
+
 $insurancetype = strtoupper($claimData['insurance_type']);
+
 $patient_lastname = strtoupper(st($claimData['patient_lastname']));
 $patient_firstname = strtoupper(st($claimData['patient_firstname']));
 $patient_middle = strtoupper(st($claimData['patient_middle']));
 $patient_dob = str_replace('-','/',st($claimData['patient_dob']));
 $patient_sex = strtoupper($claimData['patient_sex']);
-$other_insured_firstname = strtoupper($claimData['other_insured_firstname']);
-$other_insured_lastname = strtoupper($claimData['other_insured_lastname']);
-$other_insured_middle = strtoupper($claimData['other_insured_middle']);
-$other_insured_dob = str_replace('-','/',st($claimData['other_insured_dob']));
-$other_insured_sex = strtoupper($claimData['other_insured_sex']);
-$other_insured_insurance_plan = strtoupper($claimData['other_insured_insurance_plan']);
-$insured_id_number =preg_replace("/[^A-Za-z0-9 ]/", '', $claimData['insured_id_number']);
-$insured_lastname = strtoupper(st($claimData['insured_lastname']));
-$insured_firstname = strtoupper(st($claimData['insured_firstname']));
-$insured_middle = strtoupper(st($claimData['insured_middle']));
-$insured_dob = str_replace('-','/',st($claimData['insured_dob']));
-$current_qual = strtoupper($claimData['current_qual']);
-$same_illness_qual = strtoupper($claimData['same_illness_qual']);
-$insured_insurance_plan = strtoupper($claimData['insured_insurance_plan']);
-$insured_policy_group_feca = strtoupper($claimData['insured_policy_group_feca']);
-
-$patient_address = strtoupper(st($claimData['patient_address']));
-$patient_relation_insured = strtoupper($claimData['patient_relation_insured']);
-$insured_address = strtoupper(st($claimData['insured_address']));
-$patient_city = strtoupper(st($claimData['patient_city']));
-$patient_state = strtoupper(st($claimData['patient_state']));
-$patient_status = strtoupper($claimData['patient_status']);
-$patient_status_array = split('~', $patient_status);
-$insured_city = strtoupper(st($claimData['insured_city']));
-$insured_state = strtoupper(st($claimData['insured_state']));
-$patient_zip = strtoupper($claimData['patient_zip']);
 $patient_phone_code = strtoupper($claimData['patient_phone_code']);
 $patient_phone = strtoupper($claimData['patient_phone']);
-$insured_zip = strtoupper($claimData['insured_zip']);
-$insured_phone_code = strtoupper($claimData['insured_phone_code']);
-$insured_phone = strtoupper($claimData['insured_phone']);
-$employment = strtoupper($claimData['employment']);
-$auto_accident = strtoupper($claimData['auto_accident']);
-$auto_accident_place = strtoupper($claimData['auto_accident_place']);
-$other_accident = strtoupper($claimData['other_accident']);
-$insured_sex = strtoupper($claimData['insured_sex']);
-$other_insured_sex = strtoupper($claimData['other_insured_sex']);
-$insured_employer_school_name = strtoupper(st($claimData['insured_employer_school_name']));
-$other_insured_employer_school_name = strtoupper(st($claimData['other_insured_employer_school_name']));
+$patient_relation_insured = strtoupper($claimData['patient_relation_insured']);
+$patient_status = strtoupper($claimData['patient_status']);
+$patient_status_array = split('~', $patient_status);
 
-$insurancetype = strtoupper($claimData['insurance_type']);
-$other_insurancetype = $claimData['other_insurance_type'];
-$other_insured_firstname = strtoupper($claimData['other_insured_firstname']);
-$other_insured_lastname = strtoupper($claimData['other_insured_lastname']);
-$other_insured_middle = strtoupper($claimData['other_insured_middle']);
-$other_insured_dob =str_replace('-','/',$claimData['other_insured_dob']);
-$other_insured_sex = strtoupper($claimData['other_insured_sex']);
-$other_insured_insurance_plan = strtoupper($claimData['other_insured_insurance_plan']);
-$other_insured_policy_group_feca = strtoupper($claimData['other_insured_policy_group_feca']);
 $insured_id_number =preg_replace("/[^A-Za-z0-9 ]/", '', $claimData['insured_id_number']);
 $insured_firstname = strtoupper($claimData['insured_firstname']);
 $insured_middle = strtoupper($claimData['insured_middle']);
 $insured_lastname = strtoupper($claimData['insured_lastname']);
-$insured_dob =str_replace('-','/',$claimData['insured_dob']);
-$current_qual = strtoupper($claimData['current_qual']);
-$same_illness_qual = strtoupper($claimData['same_illness_qual']);
-$insured_insurance_plan = strtoupper($claimData['insured_insurance_plan']);
-$insured_policy_group_feca = strtoupper($claimData['insured_policy_group_feca']);
-$insured_address = strtoupper($claimData['insured_address']);
-$insured_city = strtoupper($claimData['insured_city']);
-$insured_state = strtoupper($claimData['insured_state']);
+$insured_dob =str_replace('-', '/', $claimData['insured_dob']);
+$insured_sex = strtoupper($claimData['insured_sex']);
+$insured_address = strtoupper(st($claimData['insured_address']));
+$insured_city = strtoupper(st($claimData['insured_city']));
+$insured_state = strtoupper(st($claimData['insured_state']));
 $insured_zip = strtoupper($claimData['insured_zip']);
 $insured_phone_code = strtoupper($claimData['insured_phone_code']);
 $insured_phone = strtoupper($claimData['insured_phone']);
-$insured_sex = strtoupper($claimData['insured_sex']);
+$insured_employer_school_name = strtoupper(st($claimData['insured_employer_school_name']));
+$insured_insurance_plan = strtoupper($claimData['insured_insurance_plan']);
+$insured_policy_group_feca = strtoupper($claimData['insured_policy_group_feca']);
 
-$claim_codes = strtoupper(st($claimData['claim_codes']));
+$other_insured_firstname = strtoupper($claimData['other_insured_firstname']);
+$other_insured_lastname = strtoupper($claimData['other_insured_lastname']);
+$other_insured_middle = strtoupper($claimData['other_insured_middle']);
+$other_insured_dob =str_replace('-', '/', $claimData['other_insured_dob']);
+$other_insured_sex = strtoupper($claimData['other_insured_sex']);
+$other_insured_employer_school_name = strtoupper(st($claimData['other_insured_employer_school_name']));
+$other_insured_insurance_plan = strtoupper($claimData['other_insured_insurance_plan']);
+$other_insured_policy_group_feca = strtoupper($claimData['other_insured_policy_group_feca']);
+
+$employment = strtoupper($claimData['employment']);
+$auto_accident = strtoupper($claimData['auto_accident']);
+$auto_accident_place = strtoupper($claimData['auto_accident_place']);
+$other_accident = strtoupper($claimData['other_accident']);
+
+$current_qual = strtoupper($claimData['current_qual']);
+$same_illness_qual = strtoupper($claimData['same_illness_qual']);
+
 $another_plan = strtoupper(st($claimData['another_plan']));
 
 $patient_signature = strtoupper($claimData['patient_signature']);
@@ -138,9 +111,11 @@ $diagnosis_i = strtoupper($claimData['diagnosis_i']);
 $diagnosis_j = strtoupper($claimData['diagnosis_j']);
 $diagnosis_k = strtoupper($claimData['diagnosis_k']);
 $diagnosis_l = strtoupper($claimData['diagnosis_l']);
+
 $medicaid_resubmission_code = strtoupper($claimData['medicaid_resubmission_code']);
 $original_ref_no = strtoupper($claimData['original_ref_no']);
 $prior_authorization_number = strtoupper($claimData['prior_authorization_number']);
+
 $service_date1_from = str_replace('-','/',st($claimData['service_date1_from']));
 $service_date1_to = str_replace('-','/',st($claimData['service_date1_to']));
 $place_of_service1 = strtoupper(st($claimData['place_of_service1']));
@@ -157,6 +132,7 @@ $days_or_units1 = strtoupper($claimData['days_or_units1']);
 $epsdt_family_plan1 = strtoupper(st($claimData['epsdt_family_plan1']));
 $id_qua1 = strtoupper($claimData['id_qua1']);
 $rendering_provider_id1 = strtoupper($claimData['rendering_provider_id1']);
+
 $service_date2_from = str_replace('-','/',st($claimData['service_date2_from']));
 $service_date2_to = str_replace('-','/',st($claimData['service_date2_to']));
 $place_of_service2 = strtoupper(st($claimData['place_of_service2']));
@@ -173,6 +149,7 @@ $days_or_units2 = strtoupper($claimData['days_or_units2']);
 $epsdt_family_plan2 = strtoupper($claimData['epsdt_family_plan2']);
 $id_qua2 = strtoupper($claimData['id_qua2']);
 $rendering_provider_id2 = strtoupper($claimData['rendering_provider_id2']);
+
 $service_date3_from = str_replace('-','/',st($claimData['service_date3_from']));
 $service_date3_to = str_replace('-','/',st($claimData['service_date3_to']));
 $place_of_service3 = strtoupper(st($claimData['place_of_service3']));
@@ -189,6 +166,7 @@ $days_or_units3 = strtoupper($claimData['days_or_units3']);
 $epsdt_family_plan3 = strtoupper($claimData['epsdt_family_plan3']);
 $id_qua3 = strtoupper($claimData['id_qua3']);
 $rendering_provider_id3 = strtoupper($claimData['rendering_provider_id3']);
+
 $service_date4_from = str_replace('-','/',st($claimData['service_date4_from']));
 $service_date4_to = str_replace('-','/',st($claimData['service_date4_to']));
 $place_of_service4 = strtoupper(st($claimData['place_of_service4']));
@@ -205,6 +183,7 @@ $days_or_units4 = strtoupper($claimData['days_or_units4']);
 $epsdt_family_plan4 = strtoupper($claimData['epsdt_family_plan4']);
 $id_qua4 = strtoupper($claimData['id_qua4']);
 $rendering_provider_id4 = strtoupper($claimData['rendering_provider_id4']);
+
 $service_date5_from = str_replace('-','/',st($claimData['service_date5_from']));
 $service_date5_to = str_replace('-','/',st($claimData['service_date5_to']));
 $place_of_service5 = strtoupper($claimData['place_of_service5']);
@@ -221,6 +200,7 @@ $days_or_units5 = strtoupper($claimData['days_or_units5']);
 $epsdt_family_plan5 = strtoupper($claimData['epsdt_family_plan5']);
 $id_qua5 = strtoupper($claimData['id_qua5']);
 $rendering_provider_id5 = strtoupper($claimData['rendering_provider_id5']);
+
 $service_date6_from = str_replace('-','/',st($claimData['service_date6_from']));
 $service_date6_to = str_replace('-','/',st($claimData['service_date6_to']));
 $place_of_service6 = strtoupper($claimData['place_of_service6']);
@@ -237,6 +217,7 @@ $days_or_units6 = strtoupper($claimData['days_or_units6']);
 $epsdt_family_plan6 = strtoupper($claimData['epsdt_family_plan6']);
 $id_qua6 = strtoupper($claimData['id_qua6']);
 $rendering_provider_id6 = strtoupper($claimData['rendering_provider_id6']);
+
 $federal_tax_id_number = strtoupper($claimData['federal_tax_id_number']);
 $ssn = strtoupper($claimData['ssn']);
 $ein = strtoupper($claimData['ein']);
@@ -278,37 +259,6 @@ $name_referring_provider_qualifier= strtoupper($claimData['name_referring_provid
 $insuranceCompanyId = intval($isSecondary ? $patientData['s_m_ins_co'] : $patientData['p_m_ins_co']);
 $insuranceCompanyData = $db->getRow("SELECT * FROM dental_contact WHERE contactid ='$insuranceCompanyId'");
 $insuranceCompanyData = $insuranceCompanyData ?: [];
-
-
-// Not sure of the goal of these sql queries
-$qua_sql = "select * from dental_qualifier where qualifierid='".(isset($field_17a_dd) ? $field_17a_dd : '') . "'";
-$qua_myarray = $db->getRow($qua_sql);
-$seventeenA = (!empty($qua_myarray['qualifier']) ? $qua_myarray['qualifier'] : '');
-
-$ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".(isset($diagnosis_1) ? $diagnosis_1 : '') . "'";
-$ins_diag_myarray = $db->getRow($ins_diag_sql);
-$dia = explode('.', (!empty($ins_diag_myarray['ins_diagnosis']) ? $ins_diag_myarray['ins_diagnosis'] : ''));
-$diagnosis_1_left_fill = $dia[0];
-$diagnosis_1_right_fill = (!empty($dia[1]) ? $dia[1] : '');
-
-$ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".(isset($diagnosis_2) ? $diagnosis_2 : '') . "'";
-$ins_diag_myarray = $db->getRow($ins_diag_sql);
-$dia = explode('.', (!empty($ins_diag_myarray['ins_diagnosis']) ? $ins_diag_myarray['ins_diagnosis'] : ''));
-$diagnosis_2_left_fill = $dia[0];
-$diagnosis_2_right_fill = (!empty($dia[1]) ? $dia[1] : '');
-
-$ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".(isset($diagnosis_3) ? $diagnosis_3 : '') . "'";
-$ins_diag_myarray = $db->getRow($ins_diag_sql);
-$dia = explode('.', (!empty($ins_diag_myarray['ins_diagnosis']) ? $ins_diag_myarray['ins_diagnosis'] : ''));
-$diagnosis_3_left_fill = $dia[0];
-$diagnosis_3_right_fill = (!empty($dia[1]) ? $dia[1] : '');
-
-$ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".(isset($diagnosis_4) ? $diagnosis_4 : '') . "'";
-$ins_diag_myarray = $db->getRow($ins_diag_sql);
-$dia = explode('.', (!empty($ins_diag_myarray['ins_diagnosis']) ? $ins_diag_myarray['ins_diagnosis'] : ''));
-$diagnosis_4_left_fill = $dia[0];
-$diagnosis_4_right_fill = (!empty($dia[1]) ? $dia[1] : '');
-
 
 // Standardize the dates
 $patient_dob = dateToTime($patient_dob);

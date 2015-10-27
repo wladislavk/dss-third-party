@@ -1289,7 +1289,7 @@ class PDF extends \FPDI {
             $config = $db->query("SELECT claim_margin_top, claim_margin_left FROM admin where adminid = '$userId'");
         } elseif (isset($_SESSION['docid'])) {
             $userId = intval($_SESSION['docid']);
-            $config = $db->query("SELECT claim_margin_top, claim_margin_left FROM admin where userid = '$userId'");
+            $config = $db->query("SELECT claim_margin_top, claim_margin_left FROM dental_users where userid = '$userId'");
         }
 
         if ($config) {

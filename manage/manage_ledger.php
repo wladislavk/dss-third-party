@@ -423,7 +423,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
   </button>
   &nbsp;&nbsp;
   <button onclick="Javascript: loadPopup('add_ledger_entry.php?pid=<?php echo $_GET['pid'];?>');" class="addButton">
-    Add New Transaction
+    `Add New Transaction
   </button>
   &nbsp;&nbsp;
   <button onclick="Javascript: window.location='manage_ledger.php?pid=<?php echo $_GET['pid'];?>&inspay=1'" class="addButton">

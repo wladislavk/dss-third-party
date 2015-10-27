@@ -143,7 +143,11 @@ if (!isset($_SESSION['userid'])) {
 
     $num_bounce = $db->getNumberRows($bounce_query);
 
-    $unsigned_query = "select * from (select n.*, u.name signed_name, p.adddate as parent_adddate from
+    $payment_reports_query = "SELECT * FROM dental_payment_reports WHERE viewed != 1";
+
+    $num_payment_reports = $db->getNumberRows($payment_reports_query);
+
+      $unsigned_query = "select * from (select n.*, u.name signed_name, p.adddate as parent_adddate from
         (
         select * from dental_notes where status!=0 AND docid='".$_SESSION['docid']."' order by adddate desc
         ) as n

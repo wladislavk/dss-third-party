@@ -527,7 +527,7 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 				</td>
                 <td>
                     <?php
-                    $payment_report_sql = "SELECT * FROM dental_payment_reports WHERE claimid='" . mysqli_real_escape_string($con, $myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
+                    $payment_report_sql = "SELECT * FROM   dental_payment_reports WHERE claimid='" . mysqli_real_escape_string($con, $myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
                     $payment_report_query = mysqli_query($con, $payment_report_sql);
                     $payment_report_result = mysqli_fetch_assoc($payment_report_query);
                     if ($payment_report_result) {

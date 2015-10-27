@@ -103,8 +103,8 @@ class ClaimFormHelper
      * @return string
      */
     public static function getCityFromLocation ($location) {
-        list($city, $state, $stateCode, $zip) = parseCityStateZip($location);
-        return $city;
+        $parsed = parseCityStateZip($location);
+        return $parsed['city'];
     }
 
     /**
@@ -112,8 +112,8 @@ class ClaimFormHelper
      * @return string
      */
     public static function getStateFromLocation ($location) {
-        list($city, $state, $stateCode, $zip) = parseCityStateZip($location);
-        return $stateCode;
+        $parsed = parseCityStateZip($location);
+        return $parsed['stateCode'];
     }
 
     /**
@@ -121,8 +121,8 @@ class ClaimFormHelper
      * @return string
      */
     public static function getZipFromLocation ($location) {
-        list($city, $state, $stateCode, $zip) = parseCityStateZip($location);
-        return $zip;
+        $parsed = parseCityStateZip($location);
+        return $parsed['zip'];
     }
 
     /**
@@ -1075,6 +1075,14 @@ if (!empty($_GET['insid']) && (count($_POST) || isset($_GET['json']))) {
 
         $claimData = $db->getRow("SELECT * FROM dental_insurance WHERE insuranceid = '$insuranceId'");
         $paperFields = ClaimFormDataMapperHelper::map($claimData ? $claimData : [], $correspondingMap);
+
+        if (isset($_GET['flatten'])) {
+            $paperFields = array_dot($paperFields);
+        }
+
+        if (isset($_GET['dd'])) {
+            dd($paperFields);
+        }
 
         header('Content-Type: text/json');
         echo json_encode($paperFields);

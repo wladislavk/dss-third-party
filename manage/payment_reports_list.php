@@ -4,10 +4,12 @@
     $docid = $_SESSION['docid'];
     $page_count = 30;
     $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 0;
-    $is_unviewed = isset($_REQUEST['unviewed']) ? true : false;
-
     $from = $page * $page_count;
 
+    $is_unviewed = false;
+    if (isset($_REQUEST['unviewed'])) {
+        $is_unviewed = $_REQUEST['unviewed'] == '1' ? true : false;
+    }
 
     $sql_where = '';
     $unviewed_url = '';
@@ -33,10 +35,11 @@
 ?>
 <br />
 <span class="admin_head">
-    <?=$is_unviewed ? 'Unviewed': 'All';?> Payment Reports.
-</span>
-<span>
-    <a href="payment_reports_list.php<?=$is_unviewed ? '' : '?unviewed=1';?>">Switch to <?=$is_unviewed ? 'All': 'Unviewed';?></a>
+    Payment Reports
+    <select name="show" onchange="Javascript: window.location ='<?php echo $_SERVER['PHP_SELF'];?>?unviewed=' + this.value;">
+        <option value="0" <?=!$is_unviewed ? ' selected' : '';?> >All</option>
+        <option value="1" <?=$is_unviewed ? ' selected' : '';?> >Unviewed</option>
+    </select>
 </span>
 <br />
 <br />

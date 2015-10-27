@@ -5,6 +5,7 @@
     include_once('includes/authorization_functions.php');
     include_once('includes/claim_functions.php');
     include_once('admin/includes/invoice_functions.php');
+require_once ROOT_DIR . '/manage/admin/includes/claim_functions.php';
 ?>
 
 <html>
@@ -92,7 +93,7 @@
                         $claim_id = $r['insuranceid'];
                     } else
                     {
-                        $claim_id = createPrimaryClaim($_POST['patientid'], $claim_producer);
+                        $claim_id = ClaimFormData::createPrimaryClaim($_POST['patientid'], $claim_producer);
                     }
                 } else
                 {

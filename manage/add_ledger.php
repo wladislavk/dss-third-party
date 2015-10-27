@@ -148,7 +148,7 @@
 				    $r = $q[0];
 				    $claim_id = $r['insuranceid'];
 				} else {
-				    $claim_id = createPrimaryClaim($_GET['pid'], $claim_producer);
+				    $claim_id = ClaimFormData::createPrimaryClaim($_GET['pid'], $claim_producer);
 				}
 			} else {
   				$claim_id = $claim_r['primary_claim_id'];

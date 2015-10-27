@@ -1219,7 +1219,7 @@ class ClaimFormData
 
 // PDF/FDF related functions
 function outputPdf ($fileName, $fdfContents) {
-    $filePath = __DIR__ . "/../../../shared/q_file/{$fileName}";
+    $filePath = ROOT_DIR . "/../../shared/q_file/{$fileName}";
 
     // Create FDF file
     $handle = fopen($filePath, 'x+');

@@ -10,24 +10,47 @@ use DentalSleepSolutions\Interfaces\AdminCompanyInterface;
 
 class ApiAdminCompanyController extends ApiBaseController
 {
+    /**
+     * References the admin company interface
+     * 
+     * @var $adminCompany
+     */
     protected $adminCompany;
 
+    /**
+     * Validation rules for the store method
+     * 
+     * @var $rulesForStore
+     */
     private $rulesForStore = [
         'adminid'   => 'integer|required',
         'companyid' => 'integer|required'
     ];
 
+    /**
+     * Validation rules for the update method
+     * 
+     * @var $rulesForUpdate
+     */
     private $rulesForUpdate = [
         'adminid'   => 'integer',
         'companyid' => 'integer'
     ];
 
-
+    /**
+     * 
+     * @param AdminCompanyInterface $adminCompany 
+     */
     public function __construct(AdminCompanyInterface $adminCompany)
     {
         $this->adminCompany = $adminCompany;
     }
 
+    /**
+     * 
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         $status   = null;
@@ -56,6 +79,11 @@ class ApiAdminCompanyController extends ApiBaseController
         }
     }
 
+    /**
+     * 
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store()
     {
         $status   = null;
@@ -89,6 +117,12 @@ class ApiAdminCompanyController extends ApiBaseController
         }
     }
 
+    /**
+     * 
+     * 
+     * @param integer $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update($id)
     {
         $status   = null;
@@ -118,6 +152,12 @@ class ApiAdminCompanyController extends ApiBaseController
         }
     }
 
+    /**
+     * 
+     * 
+     * @param integer $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show($id)
     {
         $status   = null;
@@ -146,6 +186,12 @@ class ApiAdminCompanyController extends ApiBaseController
         }
     }
 
+    /**
+     * 
+     * 
+     * @param integer $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function edit($id)
     {
         $status   = null;
@@ -164,6 +210,12 @@ class ApiAdminCompanyController extends ApiBaseController
         }
     }
 
+    /**
+     * 
+     * 
+     * @param integer $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($id)
     {
         $status   = null;

@@ -3,6 +3,7 @@
 <?php
     $docid = $_SESSION['docid'];
     $report_id = $_REQUEST['report_id'];
+    $errors_message = '';
 
     $report_query = "SELECT payment_id, claimid, reference_id, response, adddate, ip_address
          FROM dental_payment_reports
@@ -10,17 +11,25 @@
     $report_data = $db->getRow($report_query);
 
     if (!$report_data) {
-        print "MYSQL ERROR:" . mysqli_errno($con).": ".mysqli_errno($con)."<br/>"."Error selecting payment report from the database.";
+        $errors_message .=  'MYSQL ERROR:' . mysqli_errno($con).': '.mysqli_errno($con).'<br/>' . 'Error selecting payment report from the database.';
     } else {
-        $update_query ='UPDATE dental_payment_reports SET viewed = 1 WHERE payment_id = ' . mysqli_real_escape_string($con, $report_id);
-        $db->query($update_query);
+        $user_query = 'SELECT docid FROM dental_insurance WHERE insuranceid = ' . $report_data['claimid'];
+        $user_data = $db->getRow($user_query);
+
+        if ($user_data['docid'] != $docid) {
+            $report_data = array();
+            $errors_message .=  'You don`t have enough permissions to view this Payment Report.<br/>';
+
+        } else {
+            $update_query = 'UPDATE dental_payment_reports SET viewed = 1 WHERE payment_id = ' . mysqli_real_escape_string($con, $report_id);
+            $db->query($update_query);
+        }
     }
 
     $report = json_decode($report_data['response']);
     $details = $report->details;
 
     if (isset($report->success) && !$report->success) {
-        $errors_message = '';
         foreach ($report->errors as $error) {
             $errors_message .= $error->message . '<br/>';
         }
@@ -68,7 +77,7 @@
     <tr>
         <th rowspan="2" class="tr_bg_h col_head" valign="top"></th>
         <th class="tr_bg_h col_head" valign="top">Claim Reference ID</th>
-        <td class="tr_active" valign="top"><?=$report_data['reference_id'];;?></td>
+        <td class="tr_active" valign="top"><?=$report_data['reference_id'];?></td>
     </tr>
     <tr>
         <th class="tr_bg_h col_head" valign="top">Report generation date</th>

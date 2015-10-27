@@ -14,19 +14,25 @@
     $sql_where = '';
     $unviewed_url = '';
     if ($is_unviewed) {
-        $sql_where = ' WHERE viewed != 1';
+        $sql_where = ' AND viewed != 1';
         $unviewed_url = 'unviewed=1';
     }
-    $sql_count = 'SELECT count(*) as total FROM dental_payment_reports' . $sql_where;
+    $sql_count = 'SELECT count(*) as total
+        FROM dental_payment_reports AS pr
+        INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
+        WHERE i.docid = ' . $docid
+        . $sql_where;
     $total = $db->getRow($sql_count)['total'];
 
     $pages_quantity = $total/$page_count;
 
-    $reports_query = "SELECT payment_id, claimid, reference_id, response, adddate, ip_address
-        FROM dental_payment_reports
-        " . $sql_where . "
-        ORDER BY adddate DESC
-        LIMIT " . $from . ", ". $page_count;
+    $reports_query = 'SELECT pr.payment_id, pr.claimid, pr.reference_id, pr.response, pr.adddate, pr.ip_address
+        FROM dental_payment_reports AS pr
+        INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
+        WHERE i.docid = ' . $docid
+        . $sql_where
+        . ' ORDER BY adddate DESC
+        LIMIT ' . $from . ', '. $page_count;
     $reports_res = $db->getResults($reports_query);
 
     if (!$reports_res) {

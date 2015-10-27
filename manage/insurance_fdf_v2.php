@@ -7,8 +7,6 @@ include_once('admin/includes/main_include.php');
 include_once('admin/includes/invoice_functions.php');
 
 require_once __DIR__ . '/admin/includes/claim_functions.php';
-require_once __DIR__ . '/3rdParty/tcpdf/tcpdf.php';
-require_once __DIR__ . '/3rdParty/fpdi/fpdi.php';
 
 $secondaryIdTypes = [
     '0B' => 'State License Number',
@@ -670,52 +668,3 @@ $db->query("UPDATE dental_insurance SET $fdf_field = '$file'
     WHERE insuranceid = '$claimId'");
 
 outputPdf($file, $fdf);
-
-function outputPdf ($fileName, $fdfContents) {
-    $filePath = __DIR__ . "/../../../shared/q_file/{$fileName}";
-
-    // Create FDF file
-    $handle = fopen($filePath, 'x+');
-    fwrite($handle, $fdfContents);
-    fclose($handle);
-
-    // Create PDF from FDF + PDF claim form
-    $pdfTemplatePath = 'claim_v2.pdf';
-    $pdftk = '/usr/bin/pdftk';
-    $pdfName = substr($filePath, 0, -4) . '.pdf';
-    $command = "$pdftk $pdfTemplatePath fill_form $filePath output $pdfName flatten";
-
-    exec($command, $output, $exitStatus);
-
-    if ($exitStatus) {
-        error_log("Print claim failed. PDFtk command: $command");
-        error_log("PDFtk output:\n\t" . join("\n\t", $output));
-        error_log("PDFtk exit status: $exitStatus");
-    }
-
-    // initiate PDF
-    $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-    $pdf->_template = $pdfName;
-    $pdf->SetMargins(0, 0, 0);
-    $pdf->SetAutoPageBreak(true, 40);
-    $pdf->setFontSubsetting(false);
-
-    // add a page
-    $pdf->AddPage();
-    $pdf->Output('insurance_claim.pdf', 'D');
-}
-
-function roundToCents ($amount) {
-    $cents = floor($amount*100) - floor($amount)*100;
-    $cents = intval($cents);
-
-    return $cents;
-}
-
-function fill_cents ($v) {
-    return $v < 10 ? "0$v" : $v;
-}
-
-function escapeFdf ($value) {
-    return addcslashes($value, '\()');
-}

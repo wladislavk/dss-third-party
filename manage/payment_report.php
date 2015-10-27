@@ -1,11 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?>
 <?php include 'includes/top.htm';?>
-<br />
-<span class="admin_head">
-	Payment Report
-</span>
-<br />
-<br />
 <?php
     $docid = $_SESSION['docid'];
     $report_id = $_REQUEST['report_id'];
@@ -16,7 +10,7 @@
     $report_data = $db->getRow($report_query);
 
     if (!$report_data) {
-        print "MYSQL ERROR:" . mysqli_errno($con).": ".mysqli_errno($con)."<br/>"."Error selecting payment reports from the database.";
+        print "MYSQL ERROR:" . mysqli_errno($con).": ".mysqli_errno($con)."<br/>"."Error selecting payment report from the database.";
     } else {
         $update_query ='UPDATE dental_payment_reports SET viewed = 1 WHERE payment_id = ' . mysqli_real_escape_string($con, $report_id);
         $db->query($update_query);
@@ -24,6 +18,13 @@
 
     $report = json_decode($report_data['response']);
     $details = $report->details;
+
+    if (isset($report->success) && !$report->success) {
+        $errors_message = '';
+        foreach ($report->errors as $error) {
+            $errors_message .= $error->message . '<br/>';
+        }
+    }
 
     $payer_address = $details->payer->address->zip . ' ' . $details->payer->address->state . ' ' . $details->payer->address->street_line_1 . ' ' . $details->payer->address->street_line_2;
     $payee_address = $details->payee->address->zip . ' ' . $details->payee->address->state . ' ' . $details->payee->address->street_line_1 . ' ' . $details->payee->address->street_line_2;
@@ -43,13 +44,31 @@
         }
         $payer_contacts .= '<br/>';
     }
+
+    $financials_credit = '';
+    if (isset($details->financials->credit)) {
+        $financials_credit = $details->financials->credit ? 'Credit' : 'Debit';
+    } elseif (isset($details->financials->debit)) {
+        $financials_credit = $details->financials->debit ? 'Debit' : 'Credit';
+    }
 ?>
+<br />
+<span class="admin_head">
+	Payment Report
+</span>
+<br />
+<br />
+<? if($errors_message): ?>
+    <span class="admin_head">
+        Errors: <?=$errors_message?>
+    </span>
+<? endif; ?>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
     <tr>
         <th rowspan="2" class="tr_bg_h col_head" valign="top"></th>
         <th class="tr_bg_h col_head" valign="top">Claim Reference ID</th>
-        <td class="tr_active" valign="top"><?=$report->reference_id;?></td>
+        <td class="tr_active" valign="top"><?=$report_data['reference_id'];;?></td>
     </tr>
     <tr>
         <th class="tr_bg_h col_head" valign="top">Report generation date</th>
@@ -83,7 +102,7 @@
     </tr>
     <tr>
         <th class="tr_bg_h col_head" valign="top">Debit/ Credit</th>
-        <td class="tr_active" valign="top"><?=$details->financials->credit ? 'Credit' : 'Debit';?></td>
+        <td class="tr_active" valign="top"><?=$financials_credit?></td>
     </tr>
     <tr>
         <th class="tr_bg_h col_head" valign="top">Payment Method</th>

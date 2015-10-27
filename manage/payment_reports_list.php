@@ -68,17 +68,27 @@
         $details = $report->details;
         ?>
         <tr onclick="window.location='/manage/payment_report.php?report_id=<?=$report_data['payment_id'];?>'" class="tr_active clickable_row">
-            <td valign="top"><?=$report->reference_id;?></td>
-            <td valign="top"><?=$details->effective_date;?></td>
-            <td valign="top"><?=$details->payer->name;?></td>
-            <td valign="top"><?=$details->financials->type_code . ' ' . $details->financials->type_label;?></td>
-            <td valign="top"><?=$details->financials->total_payment_amount;?></td>
-            <td valign="top"><?=$details->financials->credit ? 'Credit' : 'Debit';?></td>
-            <td valign="top"><?=$details->financials->payment_method_code . ' ' . $details->financials->payment_method_label;?></td>
-            <td valign="top"><?=$details->financials->payment_date;?></td>
-            <td valign="top"><?=implode(' ', $details->claim->status);?></td>
-            <td valign="top"><?=$details->claim->amount->billed;?></td>
-            <td valign="top"><?=$details->claim->amount->paid;?></td>
+            <td valign="top"><?=$report_data['reference_id'];?></td>
+            <? if (isset($report->success) && !$report->success): ?>
+                <?
+                $errors_message = '';
+                foreach ($report->errors as $error) {
+                    $errors_message .= $error->message . '<br/>';
+                }
+                ?>
+                <td colspan="10">Errors: <?=$errors_message?></td>
+            <? else: ?>
+                <td valign="top"><?=$details->effective_date;?></td>
+                <td valign="top"><?=$details->payer->name;?></td>
+                <td valign="top"><?=$details->financials->type_code . ' ' . $details->financials->type_label;?></td>
+                <td valign="top"><?=$details->financials->total_payment_amount;?></td>
+                <td valign="top"><?=$details->financials->credit ? 'Credit' : 'Debit';?></td>
+                <td valign="top"><?=$details->financials->payment_method_code . ' ' . $details->financials->payment_method_label;?></td>
+                <td valign="top"><?=$details->financials->payment_date;?></td>
+                <td valign="top"><?=implode(' ', $details->claim->status);?></td>
+                <td valign="top"><?=$details->claim->amount->billed;?></td>
+                <td valign="top"><?=$details->claim->amount->paid;?></td>
+            <? endif; ?>
         </tr>
     <? endforeach; ?>
 </table>

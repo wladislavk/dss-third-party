@@ -2115,6 +2115,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                                                     value="<?= $service_facility_info['city'] ?>"
                                                     />
                                                 <select name="service_facility_info[state]">
+                                                    <option></option>
                                                     <?php foreach (stateList() as $stateCode=>$stateName) { ?>
                                                         <option value="<?= $stateCode ?>"
                                                             <?= ($service_facility_info['stateCode'] == $stateCode ? 'selected' : '') ?>>
@@ -2207,6 +2208,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                                            value="<?= $billing_provider_info['city'] ?>"
                                         />
                                     <select name="billing_provider_info[state]">
+                                        <option></option>
                                         <?php foreach (stateList() as $stateCode=>$stateName) { ?>
                                             <option value="<?= $stateCode ?>"
                                                 <?= ($billing_provider_info['stateCode'] == $stateCode ? 'selected' : '') ?>>

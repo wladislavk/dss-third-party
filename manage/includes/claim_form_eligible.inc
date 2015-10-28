@@ -456,7 +456,7 @@ function stateDropdown (fieldName) {
             .replace(/%name/g, stateList[stateCode]);
     }
 
-    return '<select name="' + fieldName + '" class="input state">' + options + '</select>';
+    return '<select name="' + fieldName + '" class="input state"><option></option>' + options + '</select>';
 }
 
   $(document).ready( function(){

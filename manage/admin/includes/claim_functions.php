@@ -1061,7 +1061,10 @@ class ClaimFormData
             }
         }
 
-        $sleepStudies = $db->getRow("SELECT ss.diagnosis
+        /**
+         * Retrieve diagnosis, but also Referrer (fields 17a. 17b.)
+         */
+        $sleepStudies = $db->getRow("SELECT ss.diagnosis, ss.diagnosising_doc, ss.diagnosising_npi
             FROM dental_summ_sleeplab ss
                 JOIN dental_patients p ON ss.patiendid = p.patientid
             WHERE (
@@ -1074,11 +1077,21 @@ class ClaimFormData
                 AND COALESCE(ss.diagnosis, '') != ''
                 AND ss.filename IS NOT NULL
                 AND ss.patiendid = '$patientId'");
-        $claimData['diagnosis_1'] = $sleepStudies['diagnosis'];
-        $diagnosisId = intval($claimData['diagnosis_1']);
 
-        $ins_diag = $db->getRow("SELECT * FROM dental_ins_diagnosis WHERE ins_diagnosisid = '$diagnosisId'");
-        $claimData['diagnosis_a'] = $ins_diag['ins_diagnosis'];
+        if ($sleepStudies) {
+            $claimData['diagnosis_1'] = $sleepStudies['diagnosis'];
+            $diagnosisId = intval($claimData['diagnosis_1']);
+
+            $ins_diag = $db->getRow("SELECT * FROM dental_ins_diagnosis WHERE ins_diagnosisid = '$diagnosisId'");
+            $claimData['diagnosis_a'] = $ins_diag['ins_diagnosis'];
+
+            // Fields 17a. 17b.
+            if (!$isMedicare) {
+                $claimData['referring_provider'] = $sleepStudies['diagnosising_doc'];
+                $claimData['field_17b'] = $sleepStudies['diagnosising_npi'];
+                $claimData['name_referring_provider_qualifier'] = 'DN';
+            }
+        }
 
         // If claim doesn't yet have a preauth number, try to load it
         // from the patient's most recently completed preauth.
@@ -1100,6 +1113,7 @@ class ClaimFormData
 
         return $claimData;
     }
+
 
     /**
      * Create new claim item, including patient, doctor, and insurance data. Does not process ledger transactions.

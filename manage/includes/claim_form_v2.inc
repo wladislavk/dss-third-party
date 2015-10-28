@@ -2402,6 +2402,15 @@ $('input, select').bind('change', function(){
             .addClass('eligibleapi claim')
             .find('td')
             .addClass('label');
+
+        $('\
+            [name="field_17a"],\
+            [name="field_17a_dd"]\
+        ')
+            .attr('readonly', true)
+            .addClass('grayout')
+            .closest('td')
+            .addClass('grayout');
     });
 </script>
 <?php

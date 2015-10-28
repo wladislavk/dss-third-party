@@ -1000,7 +1000,7 @@ function stateDropdown (fieldName) {
           [name="referring_provider[middle_name]"],\
           [name="service_facility[address][street_line_2]"],\
           [name="billing_provider[address][street_line_2]"],\
-          [name="referring_provider[secondary_id_type"],\
+          [name="referring_provider[secondary_id_type]"],\
           [name="referring_provider[secondary_id]"]\
       ')
           .attr('readonly', true)

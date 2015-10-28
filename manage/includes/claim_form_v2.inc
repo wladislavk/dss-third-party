@@ -2094,7 +2094,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 											</td>
 
 											<td valign="top" width="90%" colspan="2">
-                                                <input type="text" value="<?php echo ($service_facility_info_name && $service_facility_info_name != "")?$service_facility_info_name:$service_practice;?>" name="service_facility_info_name" class="inbox_line3" size="40" />
+                                                <input type="text" value="<?= $service_facility_info_name ?>" name="service_facility_info_name" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
@@ -2102,7 +2102,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 												<span class="small_cap">Address:</span>
 											</td>
 											<td valign="top" width="90%" colspan="2">
-                                                <input type="text" value="<?php echo ($service_facility_info_address && $service_facility_info_address != '')?$service_facility_info_address:$service_address;?>" name="service_facility_info_address" class="inbox_line3" size="40" />
+                                                <input type="text" value="<?= $service_facility_info_address ?>" name="service_facility_info_address" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>

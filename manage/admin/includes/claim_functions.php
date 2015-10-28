@@ -870,7 +870,6 @@ class ClaimFormData
             WHERE p.patientid = '$patientId'");
 
         $docId = intval($patientData['docid']);
-        $isMedicare = $patientData['insurance_type'] == 1;
         $hasSecondaryInsurance = isOptionSelected($patientData['has_s_m_ins']);
 
         /**
@@ -899,7 +898,10 @@ class ClaimFormData
         $claimData['p_m_dss_file'] = $patientData["{$primaryPrefix}_dss_file"];
         $claimData['p_m_billing_id'] = $patientData['billing_company_id'];
 
-        $claimData['insurance_type']                  = $patientData["{$primaryPrefix}_ins_type"];
+        $insuranceType = $patientData["{$primaryPrefix}_ins_type"];
+        $isMedicare = $insuranceType == 1;
+
+        $claimData['insurance_type']                  = $insuranceType;
         $claimData['insured_firstname']               = $patientData["{$primaryPrefix}_partyfname"];
         $claimData['insured_lastname']                = $patientData["{$primaryPrefix}_partylname"];
         $claimData['insured_middle']                  = $patientData["{$primaryPrefix}_partymname"];
@@ -1003,48 +1005,61 @@ class ClaimFormData
         }
 
         /**
-         * Medicate does not require service facility info
+         * Billing info always comes from the same place. Service info has the following restrictions:
+         *
+         * IF $isMedicare THEN empty
+         * IF use_service_npi THEN service info
+         * ELSE same as billing info
+         */
+        $billingAddress = [
+            'city' => $taxSource['city'],
+            'state' => $taxSource['state'],
+            'zip' => $taxSource['zip']
+        ];
+
+        $claimData['billing_provider_phone'] = $taxSource['phone'];
+        $claimData['billing_provider_name'] = $taxSource['practice'];
+        $claimData['billing_provider_address'] = $taxSource['address'];
+        $claimData['billing_provider_city'] = trim(preg_replace('/ +/', ' ', implode(' ', $billingAddress)));
+        $claimData['billing_provider_a'] = $isMedicare ? $taxSource['medicare_npi'] : $taxSource['npi'];
+
+        $claimData['federal_tax_id_number'] = $taxSource['tax_id_or_ssn'];
+        $claimData['ssn'] = $taxSource['ssn'];
+        $claimData['ein'] = !$taxSource['ssn'];
+
+        /**
+         * Only include service facility info IF NOT Medicare
          */
         if (!$isMedicare) {
+            /**
+             * IF user_service_npi
+             * THEN populate from service facility info
+             * ELSE copy from billing info
+             */
             if ($taxSource['use_service_npi'] == 1) {
-                $claimData['service_facility_info_name'] = $taxSource['service_name'];
-                $claimData['service_facility_info_address'] = $taxSource['service_address'];
-                $claimData['service_info_a'] = $isMedicare ?
-                    $taxSource['service_medicare_npi'] : $taxSource['service_npi'];
-
                 $serviceAddress = [
                     'city' => $taxSource['service_city'],
                     'state' => $taxSource['service_state'],
                     'zip' => $taxSource['service_zip']
                 ];
 
+                $claimData['service_facility_info_name'] = $taxSource['service_name'];
+                $claimData['service_facility_info_address'] = $taxSource['service_address'];
+                $claimData['service_facility_info_city'] =
+                    trim(preg_replace('/ +/', ' ', implode(' ', $serviceAddress)));
+                $claimData['service_info_a'] = $isMedicare ?
+                    $taxSource['service_medicare_npi'] : $taxSource['service_npi'];
+
                 $claimData['federal_tax_id_number'] = $taxSource['service_tax_id_or_ssn'];
                 $claimData['ssn'] = $taxSource['service_ssn'];
                 $claimData['ein'] = !$taxSource['service_ssn'];
             } else {
-                $claimData['service_facility_info_name'] = $taxSource['practice'];
-                $claimData['service_facility_info_address'] = $taxSource['address'];
-                $claimData['service_info_a'] = $isMedicare ? $taxSource['medicare_npi'] : $taxSource['npi'];
-
-                $serviceAddress = [
-                    'city' => $taxSource['city'],
-                    'state' => $taxSource['state'],
-                    'zip' => $taxSource['zip']
-                ];
-
-                $claimData['federal_tax_id_number'] = $taxSource['tax_id_or_ssn'];
-                $claimData['ssn'] = $taxSource['ssn'];
-                $claimData['ein'] = !$taxSource['ssn'];
+                $claimData['service_facility_info_name'] = $claimData['billing_provider_name'];
+                $claimData['service_facility_info_address'] = $claimData['billing_provider_address'];
+                $claimData['service_facility_info_city'] = $claimData['billing_provider_city'];
+                $claimData['service_info_a'] = $claimData['billing_provider_a'];
             }
-
-            $claimData['service_facility_info_city'] = trim(preg_replace('/ +/', ' ', implode(' ', $serviceAddress)));
         }
-
-        $claimData['billing_provider_phone'] = $producerData['phone'] ?: $doctorData['phone'];
-        $claimData['billing_provider_name'] = $claimData['service_facility_info_name'];
-        $claimData['billing_provider_address'] = $claimData['service_facility_info_address'];
-        $claimData['billing_provider_city'] = $claimData['service_facility_info_city'];
-        $claimData['billing_provider_a'] = $claimData['service_info_a'];
 
         $sleepStudies = $db->getRow("SELECT ss.diagnosis
             FROM dental_summ_sleeplab ss

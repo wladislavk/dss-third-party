@@ -128,6 +128,7 @@ $diagnosising_npi = st($claimData['field_17b']);
 $hospitalization_date_from = st($claimData['hospitalization_date_from']);
 $hospitalization_date_to = st($claimData['hospitalization_date_to']);
 $reserved_local_use1 = st($claimData['reserved_local_use1']);
+$claim_info_code = st($claimData['claim_info_code']);
 $outside_lab = st($claimData['outside_lab']);
 $s_charges = st($claimData['s_charges']);
 $diagnosis_1 = st($claimData['diagnosis_1']);
@@ -477,7 +478,14 @@ function stateDropdown (fieldName) {
     $('input[name="code"]').val("<?php echo $claim_codes;?>");
 
     $('input[name="subscriber[id]"]').val("<?php echo  $insured_id_number;?>");
-    $('input[name="claim[note]"]').val("<?php echo (!empty($reserved_local_use1) ? $reserved_local_use1 : '');?>");
+
+    // claim[note]: old form
+    // claim[additional_claim_info]: new form
+    $('input[name="claim[note]"], input[name="claim[additional_claim_info]"]')
+      .val("<?php echo (!empty($reserved_local_use1) ? $reserved_local_use1 : '');?>");
+    $('[name="claim[additional_claim_info_code]"]')
+      .val("<?php echo (!empty($claim_info_code) ? $claim_info_code : '');?>");
+
     $('input[name="claim[date]"]').val("<?php echo (!empty($date_current) ?  dateFormat($date_current) : '');?>");
     $('select[name="claim[date_type]"]').val("<?= $current_qual ?>");
     $('input[name="claim[outside_lab_charges]"]').val("<?php echo (!empty($s_charges) ? $s_charges : '');?>");

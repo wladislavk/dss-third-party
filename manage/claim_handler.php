@@ -13,7 +13,6 @@ $patientId = intval($_GET['pid']);
 $status = $db->getRow("SELECT status FROM dental_insurance WHERE insuranceid = '$claimId' AND patientid = '$patientId'");
 $status = $status ? $status['status'] : 0; // This means default status is zero
 
-$isSent = ClaimFormData::isStatus('sent', $status);
 $isPending = ClaimFormData::isStatus('pending', $status);
 
 if ($isPending && !confirm_ledger_trxns()) { ?>
@@ -192,7 +191,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
  * @param int   $patientId
  * @param array $claimData
  * @param int   $formerStatus
- * @return array|null Eligible response
+ * @return object Eligible response
  */
 function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
     $db = new Db();
@@ -304,7 +303,12 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
     $other_insured_insurance_type = !empty($claimData['other_payers'][0]['subscriber']['insurance_type_code']) ?
         $claimData['other_payers'][0]['subscriber']['insurance_type_code'] : '';
     $icd_indicator = isset($claimData['claim']['icd_indicator']) ? $claimData['claim']['icd_indicator'] : '';
-    $reserved_local_use1 = isset($claimData['claim']['note']) ? $claimData['claim']['note'] : '';
+
+    // New form will use the new field
+    $reserved_local_use1 = isset($claimData['claim']['note']) ? $claimData['claim']['note'] :
+        (isset($claimData['claim']['additional_claim_info']) ? $claimData['claim']['additional_claim_info'] : '');
+    $claim_info_code = isset($claimData['claim']['additional_claim_info_code']) ?
+        $claimData['claim']['additional_claim_info_code'] : '';
 
     if (isOptionSelected($other_payer)) {
         $another_plan = "YES";
@@ -755,6 +759,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
                 hospitalization_date_from = '" . $db->escape($hospitalization_date_from) . "',
                 hospitalization_date_to = '" . $db->escape($hospitalization_date_to) . "',
                 reserved_local_use1 = '" . $db->escape(!empty($reserved_local_use1) ? $reserved_local_use1 : '') . "',
+                claim_info_code = '".$db->escape($claim_info_code)."',
                 outside_lab = '" . $db->escape($outside_lab) . "',
                 s_charges = '" . $db->escape($s_charges) . "',
                 diagnosis_1 = '" . $db->escape(!empty($diagnosis_1) ? $diagnosis_1 : '') . "',

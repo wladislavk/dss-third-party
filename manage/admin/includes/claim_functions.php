@@ -1062,7 +1062,8 @@ class ClaimFormData
         }
 
         /**
-         * Retrieve diagnosis, but also Referrer (fields 17a. 17b.)
+         * Retrieve diagnosis
+         * Also referrer details, fields 17a. 17b. (only for Medicare)
          */
         $sleepStudies = $db->getRow("SELECT ss.diagnosis, ss.diagnosising_doc, ss.diagnosising_npi
             FROM dental_summ_sleeplab ss
@@ -1086,7 +1087,7 @@ class ClaimFormData
             $claimData['diagnosis_a'] = $ins_diag['ins_diagnosis'];
 
             // Fields 17a. 17b.
-            if (!$isMedicare) {
+            if ($isMedicare) {
                 $claimData['referring_provider'] = $sleepStudies['diagnosising_doc'];
                 $claimData['field_17b'] = $sleepStudies['diagnosising_npi'];
                 $claimData['name_referring_provider_qualifier'] = 'DN';

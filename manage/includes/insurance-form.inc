@@ -126,6 +126,30 @@ class ClaimFormHelper
     }
 
     /**
+     * Accepts a variable number of arguments, selects the first non empty
+     *
+     * Empty defined as: null, or empty string
+     *
+     * @return mixed
+     */
+    public static function isAny () {
+        $arguments = func_get_args();
+        $argument = '';
+
+        foreach ($arguments as $argument) {
+            // If the argument is "empty", continue the search
+            if (is_null($argument) || $argument === '') {
+                continue;
+            }
+
+            // Otherwise, stop the search
+            break;
+        }
+
+        return $argument;
+    }
+
+    /**
      * Determine if the field indicates the federal tax id number (field 25) is SSN
      *
      * @param string $value
@@ -560,7 +584,7 @@ $efileToPaper = [
     'unable_date_to'            => 'claim.work_return_date',
     'hospitalization_date_from' => 'claim.admission_date',
     'hospitalization_date_to'   => 'claim.discharge_date',
-    'reserved_local_use1'       => 'claim.note',
+    'reserved_local_use1'       => ['claim.note', 'claim.additiona_claim_info', '::isAny'],
     'outside_lab'               => ['claim.outside_lab', '::isChecked'],
     's_charges'                 => 'claim.outside_lab_charges',
     'resubmission_code_fill'    => 'claim.frequency',
@@ -676,7 +700,8 @@ $efileToDb = [
     'unable_date_to'            => 'claim.work_return_date',
     'hospitalization_date_from' => 'claim.admission_date',
     'hospitalization_date_to'   => 'claim.discharge_date',
-    'reserved_local_use1'       => 'claim.note',
+    'reserved_local_use1'       => ['claim.note', 'claim.additional_claim_info', '::isAny'],
+    'claim_info_code'           => 'claim.additional_claim_info_code',
     'outside_lab'               => ['claim.outside_lab', '::isChecked'],
     's_charges'                 => 'claim.outside_lab_charges',
     'resubmission_code_fill'    => 'claim.frequency',

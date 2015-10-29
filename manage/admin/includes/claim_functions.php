@@ -1049,10 +1049,6 @@ class ClaimFormData
                     trim(preg_replace('/ +/', ' ', implode(' ', $serviceAddress)));
                 $claimData['service_info_a'] = $isMedicare ?
                     $taxSource['service_medicare_npi'] : $taxSource['service_npi'];
-
-                $claimData['federal_tax_id_number'] = $taxSource['service_tax_id_or_ssn'];
-                $claimData['ssn'] = $taxSource['service_ssn'];
-                $claimData['ein'] = !$taxSource['service_ssn'];
             } else {
                 $claimData['service_facility_info_name'] = $claimData['billing_provider_name'];
                 $claimData['service_facility_info_address'] = $claimData['billing_provider_address'];

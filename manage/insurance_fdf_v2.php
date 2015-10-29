@@ -261,6 +261,11 @@ $insuranceCompanyData = $db->getRow("SELECT * FROM dental_contact WHERE contacti
 $insuranceCompanyData = $insuranceCompanyData ?: [];
 
 $qualifiers = $db->getResults("SELECT * FROM dental_qualifier WHERE status = 1 ORDER BY sortby");
+$qualifierCodes = [];
+
+foreach ($qualifiers as $each) {
+    $qualifierCodes[$each['qualifierid']] = substr($each['qualifier'], 0, 2);
+}
 
 // Standardize the dates
 $patient_dob = dateToTime($patient_dob);
@@ -576,10 +581,10 @@ $fdfData['signature_of_physician-supplier_date_fill'] = $physician_signed_date;
 $fdfData['service_facility_NPI_a_fill'] = !empty($service_info_a) ? $service_info_a : '';
 $fdfData['billing_provider_a'] = !empty($billing_provider_a) ? $billing_provider_a : '';
 $fdfData['service_facility_other_id_b_fill'] =
-    substr(array_get($qualifiers, "{$service_info_dd}.qualifier"), 0, 2) . $service_info_b_other;
+    array_get($qualifierCodes, $service_info_dd) . $service_info_b_other;
 $fdfData['billing_provider_NPI_a_fill'] = !empty($billing_provider_a) ? $billing_provider_a : '';
 $fdfData['billing_provider_other_id_b_fill'] =
-    substr(array_get($qualifiers, "{$billing_provider_dd}.qualifier"), 0, 2) . $billing_provider_b_other;
+    array_get($qualifierCodes, $billing_provider_dd) . $billing_provider_b_other;
 
 $fdfData['fed_tax_id_number_fill'] = $federal_tax_id_number;
 $fdfData['fed_tax_id_SSN_chkbox'] = $ssn == 1 ? 1 : '';

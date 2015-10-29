@@ -576,6 +576,8 @@ $insuranceCompanyId = intval($isSecondary ? $patientData['s_m_ins_co'] : $patien
 $insuranceCompanyData = $db->getRow("SELECT * FROM dental_contact WHERE contactid ='$insuranceCompanyId'");
 $insuranceCompanyData = $insuranceCompanyData ?: [];
 
+$qualifiers = $db->getResults("SELECT * FROM dental_qualifier WHERE status = 1 ORDER BY sortby");
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -2143,18 +2145,14 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                                                 </span>
                                                 <select name="service_info_dd" class="inbox_line3" style="width:50px;">
                                                     <option value=""></option>
-                                                    <?
-                                                    $qua_sql = "select * from dental_qualifier where status=1 order by sortby";
-                                                    $qua_my = $db->getResults($qua_sql);
-                                                    if (!empty($qua_my)) foreach ($qua_my as $qua_myarray)
-                                                    {?>
-                                                        <option value="<?php echo st(!empty($qua_myarray['qualifierid']) ? $qua_myarray['qualifierid'] : '');?>" <?php if(!empty($service_info_dd) && $service_info_dd == st($qua_myarray['qualifierid'])) echo " selected";?>>
-                                                            <?php echo st($qua_myarray['qualifier']);?>
+                                                    <?php foreach ($qualifiers as $qualifier) { ?>
+                                                        <option value="<?= $qualifier['qualifierid'] ?>"
+                                                            <?= $service_info_dd == $qualifier['qualifierid'] ? 'selected' : '' ?>>
+                                                            <?= st($qualifier['qualifier']) ?>
                                                         </option>
-                                                    <?
-                                                    }?>
+                                                    <?php } ?>
                                                 </select>
-                                                <input type="text" value="<?php echo (!empty($service_info_b_other) ? $service_info_b_other : '')?>"
+                                                <input type="text" value="<?= htmlspecialchars($service_info_b_other) ?>"
                                                     name="service_info_b_other" class="inbox_line3 inbox-half" size="15" />
                                             </td>
                                         </tr>
@@ -2236,15 +2234,10 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
                                     </span>
                                     <select name="billing_provider_dd" class="inbox_line3" style="width:50px;">
                                         <option value=""></option>
-                                        <?php
-
-                                        $qua_sql = "select * from dental_qualifier where status=1 order by sortby";
-                                        $qua_my = $db->getResults($qua_sql);
-
-                                        if (!empty($qua_my)) foreach ($qua_my as $qua_myarray) { ?>
-                                            <option value="<?php echo st($qua_myarray['qualifierid']);?>"
-                                                <?= !empty($billing_provider_dd) && $billing_provider_dd == st($qua_myarray['qualifierid'] ? 'selected' : '') ?>>
-                                                <?php echo st($qua_myarray['qualifier']);?>
+                                        <?php foreach ($qualifiers as $qualifier) { ?>
+                                            <option value="<?= $qualifier['qualifierid'] ?>"
+                                                <?= $billing_provider_dd == $qualifier['qualifierid'] ? 'selected' : '' ?>>
+                                                <?= st($qualifier['qualifier']) ?>
                                             </option>
                                         <?php } ?>
                                     </select>
@@ -2557,12 +2550,22 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
 
     $isFormerPrimary = ClaimFormData::isPrimary($formerStatus);
     $isFormerPending = ClaimFormData::isStatus('pending', $formerStatus);
+    $isFormerRejected = ClaimFormData::isStatus('rejected', $formerStatus);
 
+    /**
+     * Status changes:
+     *
+     * - IF marked for rejection THEN rejected
+     * - IF new claim THEN pending
+     * - IF pending THEN sent
+     * - IF rejected THEN sent
+     * - ELSE preserve the current status
+     */
     if (isset($claimData['reject_but'])) {
         $status = $isFormerPrimary ? DSS_CLAIM_REJECTED : DSS_CLAIM_SEC_REJECTED;
     } elseif ($isNewClaim) {
         $status = $isFormerPrimary ? DSS_CLAIM_PENDING : DSS_CLAIM_SEC_PENDING;
-    } elseif ($isFormerPending) {
+    } elseif ($isFormerPending || $isFormerRejected) {
         $status = $isFormerPrimary ? DSS_CLAIM_SENT : DSS_CLAIM_SEC_SENT;
     } else {
         $status = $formerStatus;

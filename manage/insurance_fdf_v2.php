@@ -521,8 +521,8 @@ foreach ($query as $c=>$array) {
     }
 
     $fdfData["{$p}_place_of_service_fill"] = $array['placeofservice'];
-    $fdfData["{$p}_EMG_fill"] = $array['emg'];
-    $fdfData["{$p}_CPT_fill"] = $array['transaction_code'] ;
+    $fdfData["{$p}_EMG_fill"] = isOptionSelected($array['emg']) ? 'y' : '';
+    $fdfData["{$p}_CPT_fill"] = $array['transaction_code'];
     $fdfData["{$p}_modifier_one_fill"] = $array['modcode'];
     $fdfData["{$p}_modifier_two_fill"] = $array['modcode2'];
     $fdfData["{$p}_modifier_three_fill"] = $array['modcode3'];

@@ -318,7 +318,6 @@ $fdfData['pt_sex_f_chkbox'] = $patient_sex == 'F' || $patient_sex == 'Female' ? 
 $fdfData['insured_name_ln_fn_mi_fill'] = $insured_lastname . ", " . $insured_firstname .
     (trim($insured_middle) != '' ? ", " . $insured_middle : '');
 
-$fdfData['pt_address_fill'] = $insured_address;
 $fdfData['pt_relation_self_chkbox'] = strtoupper($patient_relation_insured) == 'SELF' ? 1 : '';
 $fdfData['pt_relation_spouse_chkbox'] =
     strtoupper($patient_relation_insured) == 'SPOUSE' || $patient_relation_insured == '01' ? 1 : '';
@@ -328,6 +327,7 @@ $fdfData['pt_relation_other_chkbox'] =
     strtoupper($patient_relation_insured) == 'OTHER' || $patient_relation_insured == 'G8' ? 1 : '';
 
 $fdfData['insured_address_fill'] = $insured_address;
+$fdfData['pt_address_fill'] = $patient_address;
 $fdfData['pt_city_fill'] = $patient_city;
 $fdfData['pt_state_fill'] = $patient_state;
 
@@ -504,6 +504,10 @@ foreach ($query as $c=>$array) {
     $service_date = dateToTime($array['service_date']);
 
     if ($array['service_date']) {
+        $fdfData["{$p}_dates_of_service_from_mm_fill"] = date('m', $service_date);
+        $fdfData["{$p}_dates_of_service_from_dd_fill"] = date('d', $service_date);
+        $fdfData["{$p}_dates_of_service_from_yy_fill"] = date('y', $service_date);
+
         $fdfData["{$p}_dates_of_service_to_mm_fill"] = date('m', $service_date);
         $fdfData["{$p}_dates_of_service_to_dd_fill"] = date('d', $service_date);
         $fdfData["{$p}_dates_of_service_to_yy_fill"] = date('y', $service_date);

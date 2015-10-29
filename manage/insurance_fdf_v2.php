@@ -362,7 +362,8 @@ $fdfData['insured_zipcode_fill'] = $insured_zip;
 $fdfData['insured_phone_areacode_fill'] = $insured_phone_code;
 $fdfData['insured_phone_number_fill'] = $insured_phone;
 $fdfData['other_insured_name_fill'] =
-    $other_insured_lastname . " " . $other_insured_firstname . " " . $other_insured_middle;
+    $other_insured_lastname . ", " . $other_insured_firstname .
+    (trim($other_insured_middle) != '' ? ", " . $other_insured_middle : '');
 $fdfData['insured_policy_group_fill'] = $insured_policy_group_feca;
 $fdfData['other_insured_policy_fill'] = $other_insured_policy_group_feca;
 

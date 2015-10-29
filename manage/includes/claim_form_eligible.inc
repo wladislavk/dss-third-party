@@ -724,7 +724,7 @@ function stateDropdown (fieldName) {
              . "  AND trxn_code.docid = " . $docId . " "
              . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
              . "  ORDER BY "
-             . "  ledger.service_date ASC";
+             . "  ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
       } else {
         $sql = "SELECT "
            . "  ledger.*, ";
@@ -753,7 +753,7 @@ function stateDropdown (fieldName) {
              . "  AND trxn_code.docid = '" . $docId . "' "
              . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
              . "  ORDER BY "
-             . "  ledger.service_date ASC";
+             . "  ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
       }
 
       $query = $db->getResults($sql);

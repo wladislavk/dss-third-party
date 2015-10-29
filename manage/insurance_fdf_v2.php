@@ -502,7 +502,7 @@ $sql = "SELECT
         AND ledger.docid = '$docId'
         AND trxn_code.docid = '$docId'
         AND trxn_code.type = '$transactionType'
-    ORDER BY ledger.service_date ASC";
+    ORDER BY ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
 
 $query = $db->getResults($sql);
 $diagnosis_array = array('','A','B','C','D','E','F','H','I','J','K','L','M');

@@ -3309,16 +3309,5 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
         $db->query($pat_sql);
     }
 
-    /**
-     * Create secondary insurance right away for primary claims that go to Sent status
-     * Claim and patient data should be cached somewhere
-     */
-    if (
-        $isFormerPrimary && $isFormerPending &&
-        isset($patientData['has_s_m_ins']) && isOptionSelected($patientData['has_s_m_ins'])
-    ) {
-        ClaimFormData::createSecondaryClaim($patientId, $producer, $claimId);
-    }
-
     return $claimId;
 }

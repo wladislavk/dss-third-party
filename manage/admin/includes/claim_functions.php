@@ -781,6 +781,21 @@ class ClaimFormData
         return implode(', ', $escapedFields);
     }
 
+    public static function amountPaidForClaim ($claimId) {
+        $db = new Db();
+        $amount = 0;
+
+        $primaryClaim = $db->getRow("SELECT amount_paid
+            FROM dental_insurance
+            WHERE insuranceid = '$claimId'");
+
+        if ($primaryClaim) {
+            $amount = $primaryClaim['amount_paid'];
+        }
+
+        return $amount;
+    }
+
     /**
      * Base fields to include in a claim
      *
@@ -1105,6 +1120,10 @@ class ClaimFormData
             }
         }
 
+        if (!$isPrimary) {
+            $claimData['amount_paid'] = self::amountPaidForClaim($primaryClaimId);
+        }
+
         $claimData['resubmission_code_fill'] = 1;
         $claimData['billing_provider_taxonomy_code'] = '332B00000X';
 
@@ -1133,6 +1152,13 @@ class ClaimFormData
             self::emptyClaimData($patientId, $producerId, $sequence, $primaryClaimId) :
             self::dynamicClaimData($patientId, $producerId, $sequence, $primaryClaimId);
         $claimData['ip_address'] = $_SERVER['REMOTE_ADDR'];
+
+        /**
+         * Add amount_paid if the claim is secondary
+         */
+        if ($sequence === 'secondary') {
+            $claimData['amount_paid'] = self::amountPaidForClaim($primaryClaimId);
+        }
 
         $preparedFields = self::prepareClaimDataFields($claimData);
 

@@ -611,15 +611,18 @@ $qualifiers = $db->getResults("SELECT * FROM dental_qualifier WHERE status = 1 O
 <body>
     <div id="top-banner">
         <h2>Paper Claim Form</h2>
+        <ol>
+            <li>Verify all claim details.</li>
+            <li>Click "Print Claim".</li>
+            <li>Download the PDF output file and print on CMS1500 form.</li>
+        </ol>
         <?php if (!empty($is_front_office)) { ?>
-            <br />
             <a href="/manage/view_claim.php?claimid=<?= intval($_GET['insid']) ?>&pid=<?= intval($_GET['pid']) ?>">
-                <strong>&lt;&lt; Back to Manage Insurance Page</strong>
+                <strong>&laquo; Back to Manage Insurance Page</strong>
             </a>
         <?php } else if ($is_back_office) { ?>
-            <br />
             <a href="manage_claims.php">
-                <strong>&lt;&lt; Back to Manage Claims Page</strong>
+                <strong>&laquo; Back to Manage Claims Page</strong>
             </a>
         <?php } ?>
         <?php if ($status==DSS_CLAIM_PENDING || $status==DSS_CLAIM_REJECTED) { ?>

@@ -9,7 +9,7 @@ $patientId = intval($_GET['pid']);
 $status = $db->getRow("SELECT status FROM dental_insurance WHERE insuranceid = '$claimId' AND patientid = '$patientId'");
 $status = $status ? $status['status'] : 0; // This means default status is zero
 
-$isSecondary = ClaimFormData::isSecondary('sent', $status) || ($_GET['instype'] == 2);
+$isSecondary = ClaimFormData::isSecondary($status) || ($_GET['instype'] == 2);
 $isPending = ClaimFormData::isStatus('pending', $status);
 $isPrimaryPending = ClaimFormData::isPrimary($status) && $isPending;
 $isSecondaryPending = ClaimFormData::isSecondary($status) && $isPending;
@@ -343,6 +343,9 @@ if ($isRejected) {
     }
 }
 
+$is_front_office = false;
+$is_back_office = true;
+
 ?>
 <html>
 <head>
@@ -369,21 +372,23 @@ if ($isRejected) {
 <body>
     <div id="top-banner">
         <h2>E-File Claim Form</h2>
-        <input type="button" onclick="change_form();" value="Switch to Paper File" style="float:right;margin-right:20px;" />
-        <?php if (!empty($is_front_office)) { ?>
-            <input type="button" value="Back to Insurance Page" style="float:right;"
-                onclick="window.location='view_claim.php?claimid=<?= $claimId ?>&pid=<?= $patientId ?>'; return false;" />
-        <?php } elseif ($is_back_office) { ?>
-            <input type="button" value="Back to Insurance Page" style="float:right;"
-                onclick="window.location='manage_claims.php'; return false;" />
-            <input type="button" class="print-button" value="View Notes" style="float:right;"
-                onclick="window.location='claim_notes.php?id=<?= $claimId ?>&pid=<?= $patientId ?>'" />
-        <?php } ?>
         <ol>
             <li>Enter electronic Payer ID or Name in Box 1.</li>
             <li>Verify all claim details.</li>
             <li>Click “Submit” on bottom left of claim to e-file your claim.</li>
         </ol>
+        <?php if (!empty($is_front_office)) { ?>
+            <input type="button" value="Back to Insurance Page"
+                   onclick="window.location='view_claim.php?claimid=<?= $claimId ?>&pid=<?= $patientId ?>'; return false;" />
+        <?php } elseif ($is_back_office) { ?>
+            <input type="button" value="Back to Insurance Page"
+                   onclick="window.location='manage_claims.php'; return false;" />
+        <?php } ?>
+        <input type="button" onclick="change_form();" value="Switch to Paper File" style="float:right;" />
+        <?php if ($is_back_office) { ?>
+            <input type="button" class="print-button" value="View Notes" style="float:right;margin-right:5px;"
+                   onclick="window.location='claim_notes.php?id=<?= $claimId ?>&pid=<?= $patientId ?>'" />
+        <?php } ?>
     </div>
 
 <?php if ($isRejected) { ?>

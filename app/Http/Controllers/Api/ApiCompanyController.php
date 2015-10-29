@@ -142,10 +142,6 @@ class ApiCompanyController extends ApiBaseController
                 throw new Exception($validator->errors());
             }
 
-            $putValues = array_merge($putValues, [
-                
-            ]);
-
             $this->company->update($id, $putValues);
             $response['data']   = $this->company->all();
             $response['status'] = true;

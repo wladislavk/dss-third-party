@@ -1,12 +1,12 @@
 <?php
 
-use Illuminate\Foundation\Testing\WitoutMiddleware;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigration;
 use Illuminate\Foundation\Testing\DatabaseTransation;
 
 class Company extends TestCase
 {
-    use WitoutMiddleware;
+    use WithoutMiddleware;
 
     protected $id;
 
@@ -17,12 +17,20 @@ class Company extends TestCase
      */
     public function testAddCompany()
     {
-        $data = [];
+        $data = [
+            'name'   => 'testName',
+            'add1'   => 'testAdd1',
+            'add2'   => 'testAdd2',
+            'city'   => 'testCity',
+            'state'  => 'testState',
+            'zip'    => '12345',
+            'status' => 0
+        ];
 
         $this->post('/api/v1/company', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => true])
-            ->seeInDatabase('companies', ['' => ]);
+            ->seeInDatabase('companies', ['name' => 'testName']);
     }
 
     /**
@@ -32,15 +40,18 @@ class Company extends TestCase
      */
     public function testUpdateCompany()
     {
-        $companyTestRecord = \DentalSleepSolutions\Company::where()->firstOrFail();
+        $companyTestRecord = \DentalSleepSolutions\Company::where('name', 'like', 'testName%')->firstOrFail();
 
         if ($companyTestRecord) {
-            $data = [];
+            $data = [
+                'name'   => 'testNameUpdated',
+                'status' => 2
+            ];
 
             $this->put('/api/v1/company/' . $companyTestRecord->id, $data)
                 ->seeStatusCode(200)
                 ->seeJsonContains(['status' => true])
-                ->seeInDatabase('companies', ['' => ]);
+                ->seeInDatabase('companies', ['name' => 'testNameUpdated']);
         }
     }
 
@@ -51,13 +62,13 @@ class Company extends TestCase
      */
     public function testDeleteCompany()
     {
-        $companyTestRecord = \DentalSleepSolutions\Company::where()->firstOrFail();
+        $companyTestRecord = \DentalSleepSolutions\Company::where('name', 'like', 'testName%')->firstOrFail();
 
         if ($companyTestRecord) {
             $this->delete('/api/v1/company/' . $companyTestRecord->id)
                 ->seeStatusCode(200)
                 ->seeJsonContains(['status' => true])
-                ->notSeeInDatabase('companies', ['' => ]);
+                ->notSeeInDatabase('companies', ['name' => 'testNameUpdated']);
         }
     }
 }

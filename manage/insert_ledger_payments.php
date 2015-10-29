@@ -251,7 +251,7 @@
                                  * AND paid amount is less than the amount due
                                  */
                                 $generateSecondary =
-                                    ($pat['has_s_m_ins'] == 1) && ($payr['payment'] < $claim['amount_due']);
+                                    isOptionSelected($pat['has_s_m_ins']) && ($payr['payment'] < $claim['amount_due']);
                             }
 
                             if($_FILES["attachment"]["name"]!=''){

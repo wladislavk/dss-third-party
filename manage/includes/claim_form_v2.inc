@@ -617,13 +617,11 @@ $qualifiers = $db->getResults("SELECT * FROM dental_qualifier WHERE status = 1 O
             <li>Download the PDF output file and print on CMS1500 form.</li>
         </ol>
         <?php if (!empty($is_front_office)) { ?>
-            <a href="/manage/view_claim.php?claimid=<?= intval($_GET['insid']) ?>&pid=<?= intval($_GET['pid']) ?>">
-                <strong>&laquo; Back to Manage Insurance Page</strong>
-            </a>
+            <input type="button" value="Back to Insurance Page"
+                onclick="window.location='/manage/view_claim.php?claimid=<?= $claimId ?>&pid=<?= $patientId ?>'; return false;" />
         <?php } else if ($is_back_office) { ?>
-            <a href="manage_claims.php">
-                <strong>&laquo; Back to Manage Claims Page</strong>
-            </a>
+            <input type="button" value="Back to Insurance Page"
+                onclick="window.location='manage_claims.php'; return false;" />
         <?php } ?>
         <?php if ($status==DSS_CLAIM_PENDING || $status==DSS_CLAIM_REJECTED) { ?>
             <?php if ($_SERVER['PHP_SELF'] == "/manage/admin/insurance_claim.php") { ?>
@@ -2407,6 +2405,11 @@ $('input, select').bind('change', function(){
             .addClass('grayout')
             .closest('td')
             .addClass('grayout');
+
+        // Save time and let the "Switch to E-File" button be created, then we just move it
+        $('[name=elec][value="Switch to E-File"]')
+            .css({ float: 'right' })
+            .appendTo('#top-banner');
     });
 </script>
 <?php

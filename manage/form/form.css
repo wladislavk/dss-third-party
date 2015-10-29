@@ -94,7 +94,7 @@ body {
     margin: 0;
 }
 
-#top-banner ol{
+#top-banner ol {
     list-style-type: decimal;
     height: 1em;
 }
@@ -112,10 +112,14 @@ body {
     padding: 0 20px;
 }
 
-#top-banner, .rejected-banner {
+#top-banner, #top-banner input, #top-banner select, #top-banner button, .rejected-banner {
     font-family: arial,helvetica,sans-serif;
     font-size: 14px;
     text-transform: none;
+}
+
+#top-banner input, #top-banner select, #top-banner button {
+    font-size: 12px;
 }
 
 table#claim-form-table {

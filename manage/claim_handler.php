@@ -420,8 +420,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
         $claimData['claim']['service_lines'][1]['service_date_to'] : '';
     $place_of_service2 = !empty($claimData['claim']['service_lines'][1]['place_of_service']) ?
         $claimData['claim']['service_lines'][1]['place_of_service'] : '';
-    $emg2 = !empty($claimData['claim']['service_lines'][1]['emgergency']) ?
-        $claimData['claim']['service_lines'][1]['emgergency'] : '';
+    $emg2 = !empty($claimData['claim']['service_lines'][1]['emergency']) ?
+        $claimData['claim']['service_lines'][1]['emergency'] : '';
     $cpt_hcpcs2 = !empty($claimData['claim']['service_lines'][1]['procedure_code']) ?
         $claimData['claim']['service_lines'][1]['procedure_code'] : '';
     $modifier2_1 = !empty($claimData['claim']['service_lines'][1]['procedure_modifiers'][0]) ?
@@ -464,8 +464,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
         $claimData['claim']['service_lines'][2]['service_date_to'] : '';
     $place_of_service3 = !empty($claimData['claim']['service_lines'][2]['place_of_service']) ?
         $claimData['claim']['service_lines'][2]['place_of_service'] : '';
-    $emg3 = !empty($claimData['claim']['service_lines'][2]['emgergency']) ?
-        $claimData['claim']['service_lines'][2]['emgergency'] : '';
+    $emg3 = !empty($claimData['claim']['service_lines'][2]['emergency']) ?
+        $claimData['claim']['service_lines'][2]['emergency'] : '';
     $cpt_hcpcs3 = !empty($claimData['claim']['service_lines'][2]['procedure_code']) ?
         $claimData['claim']['service_lines'][2]['procedure_code'] : '';
     $modifier3_1 = !empty($claimData['claim']['service_lines'][2]['procedure_modifiers'][0]) ?
@@ -508,8 +508,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
         $claimData['claim']['service_lines'][3]['service_date_to'] : '';
     $place_of_service4 = !empty($claimData['claim']['service_lines'][3]['place_of_service']) ?
         $claimData['claim']['service_lines'][3]['place_of_service'] : '';
-    $emg4 = !empty($claimData['claim']['service_lines'][3]['emgergency']) ?
-        $claimData['claim']['service_lines'][3]['emgergency'] : '';
+    $emg4 = !empty($claimData['claim']['service_lines'][3]['emergency']) ?
+        $claimData['claim']['service_lines'][3]['emergency'] : '';
     $cpt_hcpcs4 = !empty($claimData['claim']['service_lines'][3]['procedure_code']) ?
         $claimData['claim']['service_lines'][3]['procedure_code'] : '';
     $modifier4_1 = !empty($claimData['claim']['service_lines'][3]['procedure_modifiers'][0]) ?
@@ -552,8 +552,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
         $claimData['claim']['service_lines'][4]['service_date_to'] : '';
     $place_of_service5 = !empty($claimData['claim']['service_lines'][4]['place_of_service']) ?
         $claimData['claim']['service_lines'][4]['place_of_service'] : '';
-    $emg5 = !empty($claimData['claim']['service_lines'][4]['emgergency']) ?
-        $claimData['claim']['service_lines'][4]['emgergency'] : '';
+    $emg5 = !empty($claimData['claim']['service_lines'][4]['emergency']) ?
+        $claimData['claim']['service_lines'][4]['emergency'] : '';
     $cpt_hcpcs5 = !empty($claimData['claim']['service_lines'][4]['procedure_code']) ?
         $claimData['claim']['service_lines'][4]['procedure_code'] : '';
     $modifier5_1 = !empty($claimData['claim']['service_lines'][4]['procedure_modifiers'][0]) ?
@@ -596,8 +596,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
         $claimData['claim']['service_lines'][5]['service_date_to'] : '';
     $place_of_service6 = !empty($claimData['claim']['service_lines'][5]['place_of_service']) ?
         $claimData['claim']['service_lines'][5]['place_of_service'] : '';
-    $emg6 = !empty($claimData['claim']['service_lines'][5]['emgergency']) ?
-        $claimData['claim']['service_lines'][5]['emgergency'] : '';
+    $emg6 = !empty($claimData['claim']['service_lines'][5]['emergency']) ?
+        $claimData['claim']['service_lines'][5]['emergency'] : '';
     $cpt_hcpcs6 = !empty($claimData['claim']['service_lines'][5]['procedure_code']) ?
         $claimData['claim']['service_lines'][5]['procedure_code'] : '';
     $modifier6_1 = !empty($claimData['claim']['service_lines'][5]['procedure_modifiers'][0]) ?

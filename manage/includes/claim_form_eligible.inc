@@ -343,9 +343,6 @@ if ($isRejected) {
     }
 }
 
-$is_front_office = false;
-$is_back_office = true;
-
 ?>
 <html>
 <head>

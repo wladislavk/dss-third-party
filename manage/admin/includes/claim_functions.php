@@ -1168,6 +1168,15 @@ class ClaimFormData
 
         $newClaimId = $db->getInsertId($newClaimQuery);
 
+        /**
+         * Now, associate current ledger items to the secondary claim
+         */
+        if ($sequence === 'secondary') {
+            $db->query("UPDATE dental_ledger
+              SET secondary_claim_id = '$newClaimId'
+              WHERE primary_claim_id = '$primaryClaimId'");
+        }
+
         return $newClaimId;
     }
 

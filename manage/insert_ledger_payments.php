@@ -216,7 +216,7 @@
                                         $new_status = DSS_CLAIM_PAID_SEC_PATIENT;
                                     }
                                 }else{
-	                                $msg = 'Payment Successfully Added\n\nPrimary Insurance claim closed. This patient has secondary insurance and an empty claim has been auto-generated for the Secondary Insurer.';
+	                                $msg = 'Payment Successfully Added\n\nPrimary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.';
                                     $new_status = DSS_CLAIM_SEC_PENDING;
 	                                $pat_sql = "select p.*, u.billing_company_id from dental_patients p 
                                         JOIN dental_users u ON u.userid=p.docid

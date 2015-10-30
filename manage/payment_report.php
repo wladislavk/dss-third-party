@@ -202,7 +202,24 @@
         <td class="tr_active" valign="top"><?=$details->patient->id;?></td>
     </tr>
     <tr>
-        <th rowspan="13" class="tr_bg_h col_head">Claim</th>
+        <th rowspan="4" class="tr_bg_h col_head">Service Provider</th>
+        <th class="tr_bg_h col_head" valign="top">First Name</th>
+        <td class="tr_active" valign="top"><?=$details->service_provider->first_name;?></td>
+    </tr>
+    <tr>
+        <th class="tr_bg_h col_head" valign="top">Last Name</th>
+        <td class="tr_active" valign="top"><?=$details->service_provider->last_name;?></td>
+    </tr>
+    <tr>
+        <th class="tr_bg_h col_head" valign="top">Middle Name</th>
+        <td class="tr_active" valign="top"><<?=$details->service_provider->middle_name;?>/td>
+    </tr>
+    <tr>
+        <th class="tr_bg_h col_head" valign="top">NPI</th>
+        <td class="tr_active" valign="top"><?=$details->service_provider->npi;?></td>
+    </tr>
+    <tr>
+        <th rowspan="14" class="tr_bg_h col_head">Claim</th>
         <th class="tr_bg_h col_head" valign="top">Control Number</th>
         <td class="tr_active" valign="top"><?=$details->claim->control_number;?></td>
     </tr>
@@ -240,6 +257,10 @@
     <tr>
         <th class="tr_bg_h col_head" valign="top">Amount Paid</th>
         <td class="tr_active" valign="top"><?=$details->claim->amount->paid;?></td>
+    </tr>
+    <tr>
+        <th class="tr_bg_h col_head" valign="top">Amount Patient Responsibility</th>
+        <td class="tr_active" valign="top"><?=$details->claim->amount->patient_responsibility;?></td>
     </tr>
     <tr>
         <th class="tr_bg_h col_head" valign="top">Rendering Provider ID</th>

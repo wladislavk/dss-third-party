@@ -1,5 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
+require_once __DIR__ . '/../../3rdParty/tcpdf/tcpdf.php';
+require_once __DIR__ . '/../../3rdParty/fpdi/fpdi.php';
 
 function claim_status_history_update($insuranceid, $new, $old, $userid, $adminid=''){
 
@@ -430,4 +432,999 @@ if (empty($prior_authorization_number)) {
 	return $secondary_claim_id;
 }
 
-?>
+class ClaimFormData
+{
+    /**
+     * @var bool
+     */
+    static $throwExceptions = false;
+
+    /**
+     * Auxiliary function to determine sequence of the claim status
+     *
+     * @param int $status
+     * @return bool
+     */
+    public static function isPrimary ($status) {
+        return !self::isSecondary($status);
+    }
+
+    /**
+     * Auxiliary function to determine sequence of the claim status
+     *
+     * @param int $status
+     * @return bool
+     */
+    public static function isSecondary ($status) {
+        return in_array(
+            $status,
+            [
+                DSS_CLAIM_SEC_PENDING,
+                DSS_CLAIM_SEC_SENT,
+                DSS_CLAIM_SEC_DISPUTE,
+                DSS_CLAIM_PAID_SEC_INSURANCE,
+                DSS_CLAIM_PAID_SEC_PATIENT,
+                DSS_CLAIM_SEC_PATIENT_DISPUTE,
+                DSS_CLAIM_SEC_REJECTED,
+                DSS_CLAIM_SEC_EFILE_ACCEPTED,
+            ]
+        );
+    }
+
+    public static function isStatus ($name, $status) {
+        switch ($name) {
+            case 'pending':
+                $statusList = [DSS_CLAIM_PENDING, DSS_CLAIM_SEC_PENDING];
+                break;
+            case 'sent':
+                $statusList = [DSS_CLAIM_SENT, DSS_CLAIM_SEC_SENT];
+                break;
+            case 'paid':
+                $statusList = [
+                    DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE,
+                    DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE
+                ];
+                break;
+            case 'paid-insurance':
+                $statusList = [DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE];
+                break;
+            case 'paid-patient':
+                $statusList = [DSS_CLAIM_PAID_PATIENT, DSS_CLAIM_PAID_SEC_PATIENT];
+                break;
+            case 'dispute':
+                $statusList = [
+                    DSS_CLAIM_DISPUTE, DSS_CLAIM_SEC_DISPUTE,
+                    DSS_CLAIM_PATIENT_DISPUTE, DSS_CLAIM_SEC_PATIENT_DISPUTE
+                ];
+                break;
+            case 'dispute-not-patient':
+                $statusList = [DSS_CLAIM_DISPUTE, DSS_CLAIM_SEC_DISPUTE];
+                break;
+            case 'dispute-patient':
+                $statusList = [DSS_CLAIM_PATIENT_DISPUTE, DSS_CLAIM_SEC_PATIENT_DISPUTE];
+                break;
+            case 'rejected':
+                $statusList = [DSS_CLAIM_REJECTED, DSS_CLAIM_SEC_REJECTED];
+                break;
+            case 'efile-accepted':
+                $statusList = [DSS_CLAIM_EFILE_ACCEPTED, DSS_CLAIM_SEC_EFILE_ACCEPTED];
+                break;
+            default:
+                $statusList = [];
+        }
+
+        return in_array($status, $statusList);
+    }
+
+    /**
+     * Auxiliary function to error logs, or throw exceptions
+     *
+     * @param string $message
+     * @throws \RuntimeException
+     */
+    private static function raiseError ($message) {
+        if (self::$throwExceptions) {
+            throw new \RuntimeException($message);
+        }
+
+        error_log($message);
+    }
+
+    /**
+     * Auxiliary method to:
+     *
+     * - whitelist db column fields
+     * - escape fields
+     * - concatenate fields: column_name = "column value", ...
+     * 
+     * Ready for DB insertion
+     *
+     * @param array $claimData
+     * @return string
+     */
+    private static function prepareClaimDataFields ($claimData) {
+        $db = new Db();
+
+        $dbFields = [
+            'pica1',
+            'pica2',
+            'pica3',
+            'insurance_type',
+            'other_insurance_type',
+            'insured_id_number',
+            'patient_lastname',
+            'patient_firstname',
+            'patient_middle',
+            'patient_dob',
+            'patient_sex',
+            'insured_firstname',
+            'insured_lastname',
+            'insured_middle',
+            'patient_address',
+            'patient_relation_insured',
+            'patient_relation_other_insured',
+            'patient_city',
+            'patient_state',
+            'patient_status',
+            'responsibility_sequence',
+            'another_plan',
+            'icd_ind',
+            'insured_address',
+            'insured_city',
+            'insured_state',
+            'insured_zip',
+            'other_insured_address',
+            'other_insured_city',
+            'other_insured_state',
+            'other_insured_zip',
+            'patient_zip',
+            'patient_phone_code',
+            'patient_phone',
+            'insured_phone_code',
+            'insured_phone',
+            'other_insured_firstname',
+            'other_insured_lastname',
+            'other_insured_middle',
+            'employment',
+            'auto_accident',
+            'auto_accident_place',
+            'other_accident',
+            'insured_policy_group_feca',
+            'other_insured_policy_group_feca',
+            'insured_dob',
+            'insured_sex',
+            'other_insured_dob',
+            'other_insured_sex',
+            'insured_employer_school_name',
+            'other_insured_employer_school_name',
+            'insured_insurance_plan',
+            'other_insured_insurance_plan',
+            'reserved_local_use',
+            'patient_signature',
+            'patient_signed_date',
+            'insured_signature',
+            'date_current',
+            'date_same_illness',
+            'unable_date_from',
+            'unable_date_to',
+            'referring_provider',
+            'field_17a_dd',
+            'field_17a',
+            'field_17b',
+            'hospitalization_date_from',
+            'hospitalization_date_to',
+            'reserved_local_use1',
+            'outside_lab',
+            's_charges',
+            'diagnosis_1',
+            'diagnosis_2',
+            'diagnosis_3',
+            'diagnosis_4',
+            'diagnosis_a',
+            'diagnosis_b',
+            'diagnosis_c',
+            'diagnosis_d',
+            'diagnosis_e',
+            'diagnosis_f',
+            'diagnosis_g',
+            'diagnosis_h',
+            'diagnosis_i',
+            'diagnosis_j',
+            'diagnosis_k',
+            'diagnosis_l',
+            'resubmission_code_fill',
+            'medicaid_resubmission_code',
+            'original_ref_no',
+            'prior_authorization_number',
+            'service_date1_from',
+            'service_date1_to',
+            'place_of_service1',
+            'emg1',
+            'cpt_hcpcs1',
+            'modifier1_1',
+            'modifier1_2',
+            'modifier1_3',
+            'modifier1_4',
+            'diagnosis_pointer1',
+            's_charges1_1',
+            's_charges1_2',
+            'days_or_units1',
+            'epsdt_family_plan1',
+            'id_qua1',
+            'rendering_provider_id1',
+            'service_date2_from',
+            'service_date2_to',
+            'place_of_service2',
+            'emg2',
+            'cpt_hcpcs2',
+            'modifier2_1',
+            'modifier2_2',
+            'modifier2_3',
+            'modifier2_4',
+            'diagnosis_pointer2',
+            's_charges2_1',
+            's_charges2_2',
+            'days_or_units2',
+            'epsdt_family_plan2',
+            'id_qua2',
+            'rendering_provider_id2',
+            'service_date3_from',
+            'service_date3_to',
+            'place_of_service3',
+            'emg3',
+            'cpt_hcpcs3',
+            'modifier3_1',
+            'modifier3_2',
+            'modifier3_3',
+            'modifier3_4',
+            'diagnosis_pointer3',
+            's_charges3_1',
+            's_charges3_2',
+            'days_or_units3',
+            'epsdt_family_plan3',
+            'id_qua3',
+            'rendering_provider_id3',
+            'service_date4_from',
+            'service_date4_to',
+            'place_of_service4',
+            'emg4',
+            'cpt_hcpcs4',
+            'modifier4_1',
+            'modifier4_2',
+            'modifier4_3',
+            'modifier4_4',
+            'diagnosis_pointer4',
+            's_charges4_1',
+            's_charges4_2',
+            'days_or_units4',
+            'epsdt_family_plan4',
+            'id_qua4',
+            'rendering_provider_id4',
+            'service_date5_from',
+            'service_date5_to',
+            'place_of_service5',
+            'emg5',
+            'cpt_hcpcs5',
+            'modifier5_1',
+            'modifier5_2',
+            'modifier5_3',
+            'modifier5_4',
+            'diagnosis_pointer5',
+            's_charges5_1',
+            's_charges5_2',
+            'days_or_units5',
+            'epsdt_family_plan5',
+            'id_qua5',
+            'rendering_provider_id5',
+            'service_date6_from',
+            'service_date6_to',
+            'place_of_service6',
+            'emg6',
+            'cpt_hcpcs6',
+            'modifier6_1',
+            'modifier6_2',
+            'modifier6_3',
+            'modifier6_4',
+            'diagnosis_pointer6',
+            's_charges6_1',
+            's_charges6_2',
+            'days_or_units6',
+            'epsdt_family_plan6',
+            'id_qua6',
+            'rendering_provider_id6',
+            'federal_tax_id_number',
+            'ssn',
+            'ein',
+            'patient_account_no',
+            'accept_assignment',
+            'total_charge',
+            'amount_paid',
+            'balance_due',
+            'signature_physician',
+            'physician_signed_date',
+            'service_facility_info_name',
+            'service_facility_info_address',
+            'service_facility_info_city',
+            'service_info_a',
+            'service_info_dd',
+            'service_info_b_other',
+            'billing_provider_phone_code',
+            'billing_provider_phone',
+            'billing_provider_name',
+            'billing_provider_address',
+            'billing_provider_city',
+            'billing_provider_a',
+            'billing_provider_dd',
+            'billing_provider_b_other',
+            'p_m_eligible_payer_id',
+            'p_m_eligible_payer_name',
+            'p_m_billing_id',
+            'p_m_dss_file',
+            'billing_provider_taxonomy_code',
+
+            'patientid',
+            'docid',
+            'userid',
+            'producer',
+            'status',
+            'primary_claim_id',
+            'ip_address'
+        ];
+
+        $escapedFields = [];
+
+        foreach ($dbFields as $field) {
+            $value = isset($claimData[$field]) ? $db->escape($claimData[$field]) : '';
+            $escapedFields []= "$field = '$value'";
+        }
+
+        return implode(', ', $escapedFields);
+    }
+
+    public static function amountPaidForClaim ($claimId) {
+        $db = new Db();
+        $amount = 0;
+
+        $primaryClaim = $db->getRow("SELECT amount_paid
+            FROM dental_insurance
+            WHERE insuranceid = '$claimId'");
+
+        if ($primaryClaim) {
+            $amount = $primaryClaim['amount_paid'];
+        }
+
+        return $amount;
+    }
+
+    /**
+     * Base fields to include in a claim
+     *
+     * @param  int    $patientId
+     * @param  int    $producerId
+     * @param  string $sequence
+     * @param  int    $primaryClaimId
+     * @throws \RuntimeException
+     * @return array
+     */
+    private static function emptyClaimData ($patientId, $producerId, $sequence, $primaryClaimId) {
+        /**
+         * Always assume primary unless explicit request of secondary
+         * Also, enforce valid values for primary claim ids, or we will have "dangling" secondary claims
+         */
+        $isPrimary = $sequence !== 'secondary';
+
+        /**
+         * If the claim is secondary, then has_s_m_ins MUST be true and $primaryClaimId must be set
+         */
+        if (!$isPrimary && !$primaryClaimId) {
+            self::raiseError(
+                "Cannot create secondary claim for patientId $patientId, producerId $producerId. " .
+                "\$primaryClaimId is empty"
+            );
+        }
+
+        $docId = intval($_SESSION['docid']);
+        $userId = intval($_SESSION['userid']);
+
+        return [
+            'patientid' => $patientId,
+            'producer' => $producerId,
+            'docid' => $docId,
+            'userid' => $userId,
+            'status' => $isPrimary ? DSS_CLAIM_PENDING : DSS_CLAIM_SEC_PENDING,
+            'primary_claim_id' => $isPrimary ? 0 : $primaryClaimId
+        ];
+    }
+
+    /**
+     * Gather patient, doctor, and insurance data for the claim. Does not process ledger transactions.
+     * 
+     * @param  int    $patientId
+     * @param  int    $producerId
+     * @param  string $sequence
+     * @param  int    $primaryClaimId
+     * @throws \RuntimeException
+     * @return array
+     */
+    public static function dynamicClaimData ($patientId, $producerId, $sequence='primary', $primaryClaimId=null) {
+        $db = new Db();
+
+        $patientId = intval($patientId);
+        $producerId = intval($producerId);
+
+        /**
+         * Only two possible options: primary or secondary
+         */
+        $isPrimary = strtolower($sequence) !== 'secondary';
+
+        /**
+         * If the CLAIM SEQUENCE is PRIMARY, then:
+         * - insured data comes from fields marked as "p_m_..."
+         * - other insured data comes from fields marked as "s_m_..."
+         *
+         * If the CLAIM SEQUENCE is SECONDARY, then:
+         * - insured data comes from fields marked as "p_m_..."
+         * - other insured data comes from fields marked as "s_m_..."
+         *
+         * Instead of switching each field individually, define prefixes to read from the correct fields
+         * It is also possible to parse the fields, and generate some array:
+         *
+         * $patientData['p_m_dss_file']    --->    $patientData['p_m']['dss_file']
+         * $patientData['s_m_dss_file']    --->    $patientData['s_m']['dss_file']
+         *
+         * Then read the equivalent values, from different arrays
+         *
+         * This trick does NOT work for Date of Birth fields, the names are ins_dob and ins2_dob
+         */
+        $primaryPrefix = $isPrimary ? 'p_m' : 's_m';
+        $secondaryPrefix = $isPrimary ? 's_m' : 'p_m';
+
+        $patientData = $db->getRow("SELECT p.*, u.billing_company_id
+            FROM dental_patients p
+                JOIN dental_users u ON u.userid=p.docid
+            WHERE p.patientid = '$patientId'");
+
+        $docId = intval($patientData['docid']);
+        $hasSecondaryInsurance = isOptionSelected($patientData['has_s_m_ins']);
+
+        /**
+         * If the claim is secondary, then has_s_m_ins MUST be true
+         */
+        if (!$isPrimary && !$hasSecondaryInsurance) {
+            self::raiseError(
+                "Dynamic claim data for patientId $patientId, producerId $producerId inconsistency: " .
+                "the sequence is secondary but the patient does not have secondary insurance enabled."
+            );
+        }
+
+        $claimData = self::emptyClaimData($patientId, $producerId, $sequence, $primaryClaimId);
+
+        $claimData['patient_firstname'] = $patientData['firstname'];
+        $claimData['patient_lastname'] = $patientData['lastname'];
+        $claimData['patient_middle'] = $patientData['middlename'];
+        $claimData['patient_address'] = $patientData['add1'];
+        $claimData['patient_city'] = $patientData['city'];
+        $claimData['patient_state'] = $patientData['state'];
+        $claimData['patient_zip'] = $patientData['zip'];
+        $claimData['patient_dob'] = $patientData['dob'];
+        $claimData['patient_sex'] = $patientData['gender'];
+
+        // Not sure what these fields do
+        $claimData['p_m_dss_file'] = $patientData["{$primaryPrefix}_dss_file"];
+        $claimData['p_m_billing_id'] = $patientData['billing_company_id'];
+
+        $insuranceType = $patientData["{$primaryPrefix}_ins_type"];
+        $isMedicare = $insuranceType == 1;
+
+        $claimData['insurance_type']                  = $insuranceType;
+        $claimData['insured_firstname']               = $patientData["{$primaryPrefix}_partyfname"];
+        $claimData['insured_lastname']                = $patientData["{$primaryPrefix}_partylname"];
+        $claimData['insured_middle']                  = $patientData["{$primaryPrefix}_partymname"];
+        $claimData['insured_id_number']               = $patientData["{$primaryPrefix}_ins_id"];
+        $claimData['insured_insurance_plan']          = $patientData["{$primaryPrefix}_ins_plan"];
+        $claimData['insured_policy_group_feca']       = $patientData["{$primaryPrefix}_ins_grp"];
+        $claimData['insured_sex']                     = $patientData["{$primaryPrefix}_gender"];
+
+        $claimData['other_insurance_type']            = $patientData["{$secondaryPrefix}_ins_type"];
+        $claimData['other_insured_firstname']         = $patientData["{$secondaryPrefix}_partyfname"];
+        $claimData['other_insured_lastname']          = $patientData["{$secondaryPrefix}_partylname"];
+        $claimData['other_insured_middle']            = $patientData["{$secondaryPrefix}_partymname"];
+        $claimData['other_insured_id_number']         = $patientData["{$secondaryPrefix}_ins_id"];
+        $claimData['other_insured_insurance_plan']    = $patientData["{$secondaryPrefix}_ins_plan"];
+        $claimData['other_insured_policy_group_feca'] = $patientData["{$secondaryPrefix}_ins_grp"];
+        $claimData['other_insured_sex']               = $patientData["{$secondaryPrefix}_gender"];
+
+        /**
+         * DOB fields are exceptions to the naming rule
+         *
+         * Sequence value represents the alternate source of insurance data.
+         * Therefore, its value is inverse to the sequence
+         */
+        if ($isPrimary) {
+            $claimData['insured_dob'] = $patientData['ins_dob'];
+            $claimData['other_insured_dob'] = $patientData['ins2_dob'];
+            $claimData['responsibility_sequence'] = $hasSecondaryInsurance ? 'S' : '';
+        } else {
+            $claimData['insured_dob'] = $patientData['ins2_dob'];
+            $claimData['other_insured_dob'] = $patientData['ins_dob'];
+            $claimData['responsibility_sequence'] = 'P';
+        }
+
+        /**
+         * @see CS-29
+         *
+         * Default value since 10-oct-2015
+         * We depend on ledger entries dates. We don't have them available here, we just guess
+         */
+        $claimData['icd_ind'] = 10;
+
+        $claimData['another_plan'] = $hasSecondaryInsurance || !$isPrimary;
+        $claimData['insured_signature'] = isOptionSelected($patientData["{$primaryPrefix}_ins_ass"]);
+
+        $claimData['patient_signature'] = 1;
+        $claimData['signature_physician'] = 1;
+        $claimData['patient_signed_date'] = dateFormat($patientData['adddate']);
+        $claimData['physician_signed_date'] = dateFormat('Y-m-d');
+        list($claimData['patient_phone_code'], $claimData['patient_phone']) =
+            parsePhoneNumber($patientData['home_phone']);
+        list($claimData['insured_phone_code'], $claimData['insured_phone']) =
+            parsePhoneNumber($patientData['home_phone']);
+        $claimData['patient_status'] = $patientData['marital_status'];
+        $claimData['insured_id_number'] = $patientData["{$primaryPrefix}_ins_id"];
+
+        if (isOptionSelected($patientData["{$primaryPrefix}_same_address"])) {
+            $claimData['insured_address'] = $patientData['add1'];
+            $claimData['insured_city'] = $patientData['city'];
+            $claimData['insured_state'] = $patientData['state'];
+            $claimData['insured_zip'] = $patientData['zip'];
+        } else {
+            $claimData['insured_address'] = $patientData["{$primaryPrefix}_address"];
+            $claimData['insured_city'] = $patientData["{$primaryPrefix}_city"];
+            $claimData['insured_state'] = $patientData["{$primaryPrefix}_state"];
+            $claimData['insured_zip'] = $patientData["{$primaryPrefix}_zip"];
+        }
+
+        if (isOptionSelected($patientData["{$secondaryPrefix}_same_address"])) {
+            $claimData['other_insured_address'] = $patientData['add1'];
+            $claimData['other_insured_city'] = $patientData['city'];
+            $claimData['other_insured_state'] = $patientData['state'];
+            $claimData['other_insured_zip'] = $patientData['zip'];
+        } else {
+            $claimData['other_insured_address'] = $patientData["{$secondaryPrefix}_address"];
+            $claimData['other_insured_city'] = $patientData["{$secondaryPrefix}_city"];
+            $claimData['other_insured_state'] = $patientData["{$secondaryPrefix}_state"];
+            $claimData['other_insured_zip'] = $patientData["{$secondaryPrefix}_zip"];
+        }
+
+        $claimData['patient_relation_insured'] = $patientData["{$primaryPrefix}_relation"];
+        $claimData['patient_relation_other_insured'] = $patientData["{$secondaryPrefix}_relation"];
+        $claimData['insured_employer_school_name'] = $patientData['employer'];
+        $claimData['p_m_eligible_payer_id'] = $patientData["{$primaryPrefix}_eligible_payer_id"];
+        $claimData['p_m_eligible_payer_name'] = $patientData["{$primaryPrefix}_eligible_payer_name"];
+        $claimData['accept_assignment'] = $patientData["{$primaryPrefix}_ins_ass"];
+
+        $producerData = $db->getRow("SELECT * FROM dental_users WHERE producer_files = 1 AND userid = '$producerId'");
+        $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '$docId'");
+
+        /**
+         * 'producer_files' signals whether the action must be marked as the original producer OR the current docid
+         *
+         * IF $producerData['producer_files'] == 1
+         * THEN use producer data
+         * ELSE use doctor data
+         */
+        if ($producerData['producer_files'] == 1) {
+            $taxSource = &$producerData;
+        } else {
+            $taxSource = &$doctorData;
+        }
+
+        /**
+         * Billing info always comes from the same place. Service info has the following restrictions:
+         *
+         * IF $isMedicare THEN empty
+         * IF use_service_npi THEN service info
+         * ELSE same as billing info
+         */
+        $billingAddress = [
+            'city' => $taxSource['city'],
+            'state' => $taxSource['state'],
+            'zip' => $taxSource['zip']
+        ];
+
+        $claimData['billing_provider_phone'] = $taxSource['phone'];
+        $claimData['billing_provider_name'] = $taxSource['practice'];
+        $claimData['billing_provider_address'] = $taxSource['address'];
+        $claimData['billing_provider_city'] = trim(preg_replace('/ +/', ' ', implode(' ', $billingAddress)));
+        $claimData['billing_provider_a'] = $isMedicare ? $taxSource['medicare_npi'] : $taxSource['npi'];
+
+        $claimData['federal_tax_id_number'] = $taxSource['tax_id_or_ssn'];
+        $claimData['ssn'] = $taxSource['ssn'];
+        $claimData['ein'] = !$taxSource['ssn'];
+
+        /**
+         * Only include service facility info IF NOT Medicare
+         */
+        if (!$isMedicare) {
+            /**
+             * IF user_service_npi
+             * THEN populate from service facility info
+             * ELSE copy from billing info
+             */
+            if ($taxSource['use_service_npi'] == 1) {
+                $serviceAddress = [
+                    'city' => $taxSource['service_city'],
+                    'state' => $taxSource['service_state'],
+                    'zip' => $taxSource['service_zip']
+                ];
+
+                $claimData['service_facility_info_name'] = $taxSource['service_name'];
+                $claimData['service_facility_info_address'] = $taxSource['service_address'];
+                $claimData['service_facility_info_city'] =
+                    trim(preg_replace('/ +/', ' ', implode(' ', $serviceAddress)));
+                $claimData['service_info_a'] = $isMedicare ?
+                    $taxSource['service_medicare_npi'] : $taxSource['service_npi'];
+            } else {
+                $claimData['service_facility_info_name'] = $claimData['billing_provider_name'];
+                $claimData['service_facility_info_address'] = $claimData['billing_provider_address'];
+                $claimData['service_facility_info_city'] = $claimData['billing_provider_city'];
+                $claimData['service_info_a'] = $claimData['billing_provider_a'];
+            }
+        }
+
+        /**
+         * Retrieve diagnosis
+         * Also referrer details, fields 17a. 17b. (only for Medicare)
+         */
+        $sleepStudies = $db->getRow("SELECT ss.diagnosis, ss.diagnosising_doc, ss.diagnosising_npi
+            FROM dental_summ_sleeplab ss
+                JOIN dental_patients p ON ss.patiendid = p.patientid
+            WHERE (
+                    p.p_m_ins_type != '1'
+                    OR (
+                        COALESCE(ss.diagnosising_doc, '') != ''
+                        AND COALESCE(ss.diagnosising_npi, '') != ''
+                    )
+                )
+                AND COALESCE(ss.diagnosis, '') != ''
+                AND ss.filename IS NOT NULL
+                AND ss.patiendid = '$patientId'");
+
+        if ($sleepStudies) {
+            $claimData['diagnosis_1'] = $sleepStudies['diagnosis'];
+            $diagnosisId = intval($claimData['diagnosis_1']);
+
+            $ins_diag = $db->getRow("SELECT * FROM dental_ins_diagnosis WHERE ins_diagnosisid = '$diagnosisId'");
+            $claimData['diagnosis_a'] = $ins_diag['ins_diagnosis'];
+
+            // Fields 17a. 17b.
+            if ($isMedicare) {
+                $claimData['referring_provider'] = $sleepStudies['diagnosising_doc'];
+                $claimData['field_17b'] = $sleepStudies['diagnosising_npi'];
+                $claimData['name_referring_provider_qualifier'] = 'DN';
+            }
+        }
+
+        // If claim doesn't yet have a preauth number, try to load it
+        // from the patient's most recently completed preauth.
+        if (empty($claimData['prior_authorization_number'])) {
+            $preAuthStatus = DSS_PREAUTH_COMPLETE;
+            $preAuth = $db->getRow("SELECT *
+                FROM dental_insurance_preauth
+                WHERE patient_id = '$patientId'
+                    AND status = $preAuthStatus
+                ORDER BY date_completed DESC LIMIT 1");
+
+            if ($preAuth) {
+                $claimData['prior_authorization_number'] = $preAuth['pre_auth_num'];
+            }
+        }
+
+        if (!$isPrimary) {
+            $claimData['amount_paid'] = self::amountPaidForClaim($primaryClaimId);
+        }
+
+        $claimData['resubmission_code_fill'] = 1;
+        $claimData['billing_provider_taxonomy_code'] = '332B00000X';
+
+        return $claimData;
+    }
+
+
+    /**
+     * Create new claim item, including patient, doctor, and insurance data. Does not process ledger transactions.
+     *
+     * @param int    $patientId
+     * @param int    $producerId
+     * @param string $sequence
+     * @param int    $primaryClaimId
+     * @param bool   $empty
+     * @return int
+     */
+    public static function createClaim ($patientId, $producerId, $sequence, $primaryClaimId, $empty=false) {
+        $db = new Db();
+
+        $patientId = intval($patientId);
+        $producerId = intval($producerId);
+        $primaryClaimId = intval($primaryClaimId);
+
+        $claimData = $empty ?
+            self::emptyClaimData($patientId, $producerId, $sequence, $primaryClaimId) :
+            self::dynamicClaimData($patientId, $producerId, $sequence, $primaryClaimId);
+        $claimData['ip_address'] = $_SERVER['REMOTE_ADDR'];
+
+        /**
+         * Add amount_paid if the claim is secondary
+         */
+        if ($sequence === 'secondary') {
+            $claimData['amount_paid'] = self::amountPaidForClaim($primaryClaimId);
+        }
+
+        $preparedFields = self::prepareClaimDataFields($claimData);
+
+        $newClaimQuery = "INSERT INTO dental_insurance SET
+            adddate = NOW(),
+            $preparedFields";
+
+        $newClaimId = $db->getInsertId($newClaimQuery);
+
+        /**
+         * Now, associate current ledger items to the secondary claim
+         */
+        if ($sequence === 'secondary') {
+            $db->query("UPDATE dental_ledger
+              SET secondary_claim_id = '$newClaimId'
+              WHERE primary_claim_id = '$primaryClaimId'");
+        }
+
+        return $newClaimId;
+    }
+
+    /**
+     * Does not process ledger transactions.
+     *
+     * @param int $patientId
+     * @param int $producerId
+     * @return int
+     */
+    public static function createPrimaryClaim ($patientId, $producerId) {
+        return self::createClaim($patientId, $producerId, 'primary', null, false);
+    }
+
+    /**
+     * Only saves patientid, docid, userid, producer and adddate.
+     *
+     * @param int $patientId
+     * @param int $producerId
+     * @return int
+     */
+    public static function createEmptyPrimaryClaim ($patientId, $producerId) {
+        return self::createClaim($patientId, $producerId, 'primary', null, true);
+    }
+
+    /**
+     * Does not process ledger transactions.
+     *
+     * @param int $patientId
+     * @param int $producerId
+     * @param int $primaryClaimId
+     * @return int
+     */
+    public static function createSecondaryClaim ($patientId, $producerId, $primaryClaimId) {
+        return self::createClaim($patientId, $producerId, 'secondary', $primaryClaimId, false);
+    }
+
+    /**
+     * Only saves
+     *
+     * @param int $patientId
+     * @param int $producerId
+     * @param int $primaryClaimId
+     * @return int
+     */
+    public static function createEmptySecondaryClaim ($patientId, $producerId, $primaryClaimId) {
+        return self::createClaim($patientId, $producerId, 'secondary', $primaryClaimId, true);
+    }
+
+    /**
+     * @param int $claimId
+     * @return array
+     */
+    public static function dynamicDataForClaim ($claimId) {
+        $db = new Db();
+        $claimId = intval($claimId);
+
+        $claimDetails = $db->getRow("SELECT patientid, producer, status, primary_claim_id
+            FROM dental_insurance
+            WHERE insuranceid = '$claimId'");
+        $claimDetails = $claimDetails ?: [];
+
+        if (!count($claimDetails)) {
+            self::raiseError("The claim $claimId does not exist");
+        }
+
+        $patientId = array_get($claimDetails, 'patientid', 0);
+        $producerId = array_get($claimDetails, 'producer', 0);
+        $status = array_get($claimDetails, 'status', 0);
+        $primaryClaimId = array_get($claimDetails, 'primary_claim_id', 0);
+
+        $sequence = in_array($status, [DSS_CLAIM_SEC_PENDING, DSS_CLAIM_SEC_SENT, DSS_CLAIM_SEC_DISPUTE, DSS_CLAIM_SEC_REJECTED]) ?
+            'secondary' : 'primary';
+
+        $claimData = self::dynamicClaimData($patientId, $producerId, $sequence, $primaryClaimId);
+
+        // Some scripts will rely on the insuranceid field being set
+        $claimData['insuranceid'] = $claimId;
+
+        return $claimData;
+    }
+
+    /**
+     * Claim model
+     *
+     * @param int      $claimId
+     * @param int|null $patientId
+     * @return array
+     */
+    public static function storedDataForClaim ($claimId, $patientId=null) {
+        $db = new Db();
+        $claimId = intval($claimId);
+
+        $sql = "SELECT * FROM dental_insurance WHERE insuranceid = '$claimId'";
+
+        if (!is_null($patientId)) {
+            $patientId = intval($patientId);
+            $sql .= " AND patientid = '$patientId'";
+        }
+
+        $claimData = $db->getRow($sql);
+
+        return $claimData ?: [];
+    }
+}
+
+/**
+ * Generate PDF based on FDF field list
+ *
+ * @param string $fileName
+ * @param array $fdfData
+ */
+function outputPdf ($fileName, $fdfData) {
+    $filePath = ROOT_DIR . "/../../shared/q_file/{$fileName}";
+    $fdfContents = prepareFdf($fdfData);
+
+    // Create FDF file
+    $handle = fopen($filePath, 'x+');
+    fwrite($handle, $fdfContents);
+    fclose($handle);
+
+    // Create PDF from FDF + PDF claim form
+    $pdfTemplatePath = 'claim_v2.pdf';
+    $pdftk = '/usr/bin/pdftk';
+    $pdfName = substr($filePath, 0, -4) . '.pdf';
+    $command = "$pdftk $pdfTemplatePath fill_form $filePath output $pdfName flatten";
+
+    exec($command, $output, $exitStatus);
+
+    if ($exitStatus) {
+        error_log("Print claim failed. PDFtk command: $command");
+        error_log("PDFtk output:\n\t" . join("\n\t", $output));
+        error_log("PDFtk exit status: $exitStatus");
+    }
+
+    // initiate PDF
+    $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    $pdf->_template = $pdfName;
+    $pdf->SetMargins(0, 0, 0);
+    $pdf->SetAutoPageBreak(true, 40);
+    $pdf->setFontSubsetting(false);
+
+    // add a page
+    $pdf->AddPage();
+    $pdf->Output('insurance_claim.pdf', 'D');
+}
+
+/**
+ * Parse fieldName => $fieldValue array into a valid FDF string
+ *
+ * @param array $fdfFields
+ * @return string
+ */
+function prepareFdf ($fdfFields) {
+    $fieldPath = 'form1[0].#subform[0]';
+    $pdfPath = ROOT_DIR . '/manage/claim_v2.pdf';
+
+    foreach ($fdfFields as $fieldName=>&$fieldValue) {
+        $fieldName = escapeFdf($fieldName);
+        $escapedValue = strtoupper(escapeFdf($fieldValue));
+
+        // All fields are children of the same form, and all are the first element of the collection: [0]
+        $fieldValue = "<< /T({$fieldPath}.{$fieldName}[0]) /V({$escapedValue}) >>";
+    }
+
+    // Join the sections, adding new lines and indentation
+    $fdfFields = implode("\n    ", $fdfFields);
+
+    /**
+     * Use an array to:
+     *
+     * - create a string from the parts
+     * - preserve the fdf indentation
+     * - preserve code indentation
+     *
+     * We could just use a simple string
+     */
+    $fdfData = [
+        '', // Empty line at start of file
+        '%FDF-1.2',
+        '1 0 obj',
+        '<< /FDF',
+        '  << /Fields [',
+        "    $fdfFields",
+        "  ] /F ({$pdfPath}) >>",
+        '>>',
+        'endobj',
+        'trailer',
+        '<< /Root 1 0 R >>',
+        '%%EOF',
+        '', // Empty line at EOF
+    ];
+    $fdfData = implode("\n", $fdfData);
+
+    return $fdfData;
+}
+
+function roundToCents ($amount) {
+    $cents = floor($amount*100) - floor($amount)*100;
+    $cents = intval($cents);
+
+    return $cents;
+}
+
+function fill_cents ($v) {
+    return $v < 10 ? "0$v" : $v;
+}
+
+function escapeFdf ($value) {
+    return addcslashes($value, '\()');
+}
+
+class PDF extends \FPDI
+{
+    /**
+     * "Remembers" the template id of the imported page
+     */
+    var $_tplIdx;
+    var $_template;
+
+    function Header()
+    {
+        $db = new Db();
+        $config = [];
+
+        if (is_null($this->_tplIdx)) {
+            $this->setSourceFile($this->_template);
+            $this->_tplIdx = $this->importPage(1);
+        }
+
+        if (isset($_SESSION['adminuserid'])) {
+            $userId = intval($_SESSION['adminuserid']);
+            $config = $db->getRow("SELECT claim_margin_top, claim_margin_left FROM admin where adminid = '$userId'");
+        } elseif (isset($_SESSION['docid'])) {
+            $userId = intval($_SESSION['docid']);
+            $config = $db->getRow("SELECT claim_margin_top, claim_margin_left FROM dental_users where userid = '$userId'");
+        }
+
+        if ($config) {
+            $claim_margin_left = $config['claim_margin_left'];
+            $claim_margin_top = $config['claim_margin_top'];
+        } else {
+            $claim_margin_left = 0;
+            $claim_margin_top = 0;
+        }
+
+        $this->useTemplate($this->_tplIdx, $claim_margin_left, $claim_margin_top);
+    }
+
+    function Footer() {}
+}

@@ -41,7 +41,7 @@ class AdminApiTest extends TestCase
      */
     public function testUpdateAdmin()
     {
-        $adminTestRecord = \DentalSleepSolutions\Admin::where('name', 'like', 'PHPUnit%')->firstOrFail();
+        $adminTestRecord = \DentalSleepSolutions\Models\Admin::where('name', 'like', 'PHPUnit%')->firstOrFail();
 
         if ($adminTestRecord) {
             $data = [
@@ -63,7 +63,7 @@ class AdminApiTest extends TestCase
      */
     public function testDeleteAdmin()
     {
-        $adminTestRecord = \DentalSleepSolutions\Admin::where('name', 'like', 'PHPUnit%')->firstOrFail();
+        $adminTestRecord = \DentalSleepSolutions\Models\Admin::where('name', 'like', 'PHPUnit%')->firstOrFail();
 
         if ($adminTestRecord) {
             $this->delete('/api/v1/admin/' . $adminTestRecord->adminid)

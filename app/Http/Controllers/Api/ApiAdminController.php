@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use Carbon\Carbon;
 
-use DentalSleepSolutions\Interfaces\AdminInterface;
+use DentalSleepSolutions\Interfaces\Repositories\AdminInterface;
 use DentalSleepSolutions\Libraries\Password;
 
 class ApiAdminController extends ApiBaseController
@@ -54,7 +54,6 @@ class ApiAdminController extends ApiBaseController
      */
     public function index()
     {
-        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Admins list.',
@@ -87,7 +86,6 @@ class ApiAdminController extends ApiBaseController
      */
     public function store()
     {
-        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Admin was added succesfully.',
@@ -133,7 +131,6 @@ class ApiAdminController extends ApiBaseController
      */
     public function update($adminId)
     {
-        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Admin was updated succesfully.',
@@ -173,7 +170,6 @@ class ApiAdminController extends ApiBaseController
      */
     public function show($adminId)
     {
-        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Retrieved admin by id.',
@@ -207,7 +203,6 @@ class ApiAdminController extends ApiBaseController
      */
     public function edit($adminId)
     {
-        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Admin was edited successfully.',
@@ -231,7 +226,6 @@ class ApiAdminController extends ApiBaseController
      */
     public function destroy($adminId)
     {
-        $status   = null;
         $response = [
             'status'  => null,
             'message' => 'Admin was deleted successfully.',

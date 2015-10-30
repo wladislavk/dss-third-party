@@ -1,7 +1,8 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Interfaces\AdminInterface;
+use DentalSleepSolutions\Models\Admin;
+use DentalSleepSolutions\Interfaces\Repositories\AdminInterface;
 
 class AdminRepository extends BaseRepository implements AdminInterface
 {
@@ -10,7 +11,7 @@ class AdminRepository extends BaseRepository implements AdminInterface
      *
      * @var string
      */
-    protected $modelName = 'DentalSleepSolutions\Admin';
+    protected $modelName = Admin::class;
 
     /**
      * Return all admins

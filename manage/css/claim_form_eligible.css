@@ -21,6 +21,10 @@ body {
     margin: 0;
 }
 
+#top-banner h2 {
+    color: #1874cd;
+}
+
 #top-banner ol{
     list-style-type: decimal;
     height: 1em;

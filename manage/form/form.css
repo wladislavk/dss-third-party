@@ -94,6 +94,10 @@ body {
     margin: 0;
 }
 
+#top-banner h2 {
+    color: #8b5a2b;
+}
+
 #top-banner ol {
     list-style-type: decimal;
     height: 1em;

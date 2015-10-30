@@ -3,6 +3,19 @@
 define('SHARED_FOLDER', __DIR__ . '/../../../../shared/');
 define('Q_FILE_FOLDER', SHARED_FOLDER . '/q_file/');
 
+function secureSessionStart() {
+    $domain = 'example.com'; // note $domain
+    $session_name = 'sec_session_id'; // Set a custom session name
+    $secure = true; // Set to true if using https.
+    $httponly = true; // This stops javascript being able to access the session id.
+    ini_set('session.use_only_cookies', 1); // Forces sessions to only use cookies.
+    $cookieParams = session_get_cookie_params(); // Gets current cookies params.
+    session_set_cookie_params($cookieParams["lifetime"], $cookieParams["path"], $domain, $secure, $httponly); // note $domain
+    session_name($session_name); // Sets the session name to the one set above.
+    session_start(); // Start the php session
+    session_regenerate_id(true); // regenerated the session, delete the old one.
+}
+
 function isSharedFile ($name) {
     return strlen($name) && is_file(Q_FILE_FOLDER . $name);
 }
@@ -307,4 +320,142 @@ function parsePhoneNumber ($areaCodeOrFullNumber, $phoneNumber='') {
         substr($fullNumber, 0, 3), // area code
         substr($fullNumber, 3) // local number
     ];
+}
+
+function stateList () {
+    $stateList = [
+        'AL' =>  'Alabama',
+        'AK' =>  'Alaska',
+        'AS' =>  'American Samoa',
+        'AZ' =>  'Arizona',
+        'AR' =>  'Arkansas',
+        'CA' =>  'California',
+        'CO' =>  'Colorado',
+        'CT' =>  'Connecticut',
+        'DE' =>  'Delaware',
+        'DC' =>  'District Of Columbia',
+        'FM' =>  'Federated States Of Micronesia',
+        'FL' =>  'Florida',
+        'GA' =>  'Georgia',
+        'GU' =>  'Guam',
+        'HI' =>  'Hawaii',
+        'ID' =>  'Idaho',
+        'IL' =>  'Illinois',
+        'IN' =>  'Indiana',
+        'IA' =>  'Iowa',
+        'KS' =>  'Kansas',
+        'KY' =>  'Kentucky',
+        'LA' =>  'Louisiana',
+        'ME' =>  'Maine',
+        'MH' =>  'Marshall Islands',
+        'MD' =>  'Maryland',
+        'MA' =>  'Massachusetts',
+        'MI' =>  'Michigan',
+        'MN' =>  'Minnesota',
+        'MS' =>  'Mississippi',
+        'MO' =>  'Missouri',
+        'MT' =>  'Montana',
+        'NE' =>  'Nebraska',
+        'NV' =>  'Nevada',
+        'NH' =>  'New Hampshire',
+        'NJ' =>  'New Jersey',
+        'NM' =>  'New Mexico',
+        'NY' =>  'New York',
+        'NC' =>  'North Carolina',
+        'ND' =>  'North Dakota',
+        'MP' =>  'Northern Mariana Islands',
+        'OH' =>  'Ohio',
+        'OK' =>  'Oklahoma',
+        'OR' =>  'Oregon',
+        'PW' =>  'Palau',
+        'PA' =>  'Pennsylvania',
+        'PR' =>  'Puerto Rico',
+        'RI' =>  'Rhode Island',
+        'SC' =>  'South Carolina',
+        'SD' =>  'South Dakota',
+        'TN' =>  'Tennessee',
+        'TX' =>  'Texas',
+        'UT' =>  'Utah',
+        'VT' =>  'Vermont',
+        'VI' =>  'Virgin Islands',
+        'VA' =>  'Virginia',
+        'WA' =>  'Washington',
+        'WV' =>  'West Virginia',
+        'WI' =>  'Wisconsin',
+        'WY' =>  'Wyoming'
+    ];
+
+    return $stateList;
+}
+
+function stateSearch ($nameOrCode) {
+    $states = stateList();
+    $nameOrCode = trim($nameOrCode);
+
+    $code = strtoupper($nameOrCode);
+    $name = ucfirst(preg_replace('/ +/', ' ', strtolower($nameOrCode)));
+
+    if (array_key_exists($code, $states)) {
+        $name = $states[$code];
+    } else if (array_search($name, $states)) {
+        $code = array_search($name, $states);
+    }
+
+    return ['code' => $code, 'name' => $name];
+}
+
+function parseCityStateZip ($location) {
+    $location = trim($location);
+    $parsed = [
+        'city' => '',
+        'state' => '',
+        'stateCode' => '',
+        'zip' => ''
+    ];
+
+    $states = stateList();
+    $stateCodes = array_keys($states);
+    $stateRegex = join('|', $stateCodes) . '|' . str_replace(' ', ' +', join('|', $states));
+
+    /**
+     * Possible combinations in the address
+     *
+     * City can match almost anything, thus we leave those matches at the end, to avoid false positives
+     */
+    $patterns = [
+        "/^(?P<zip>\d+)$/",
+        "/^(?P<state>$stateRegex)$/i",
+        "/^(?P<state>$stateRegex)[, ]+(?P<zip>\d+)$/i",
+        "/^(?P<city>.+?)[, ]+(?P<state>$stateRegex)[, ]+(?P<zip>\d+)$/i",
+        "/^(?P<city>.+?)[, ]+(?P<state>$stateRegex)$/i",
+        "/^(?P<city>.+?)[, ]+(?P<zip>\d+)$/i",
+        "/^(?P<city>.+)$/"
+    ];
+
+    foreach ($patterns as $pattern) {
+        if (!preg_match($pattern, $location, $matches)) {
+            continue;
+        }
+
+        $state = stateSearch(@$matches['state']);
+
+        $location = [
+            'city' => @$matches['city'],
+            'state' => $state['name'],
+            'stateCode' => $state['code'],
+            'zip' => @$matches['zip']
+        ];
+    }
+
+    return $location;
+}
+
+function isOptionSelected ($value) {
+    if (is_string($value)) {
+        $value = strtolower(trim($value));
+
+        return $value === 'y' || $value === 'yes' || $value === 'true' || $value === '1';
+    }
+
+    return $value === 1 || $value === true;
 }

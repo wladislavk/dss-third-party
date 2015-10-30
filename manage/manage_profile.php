@@ -62,8 +62,8 @@
       medicare_npi='".mysqli_real_escape_string($con,$_POST['medicare_npi'])."',
       medicare_ptan='".mysqli_real_escape_string($con,$_POST['medicare_ptan'])."',
       tax_id_or_ssn='".mysqli_real_escape_string($con,$_POST['tax_id_or_ssn'])."',
-      ein='".mysqli_real_escape_string($con,$_POST['ein'])."',
-      ssn='".mysqli_real_escape_string($con,$_POST['ssn'])."',
+      ein='".($_POST['ssnein'] === 'ein' ? 1 : 0)."',
+      ssn='".($_POST['ssnein'] === 'ssn' ? 1 : 0)."',
       practice='".mysqli_real_escape_string($con,$_POST['practice'])."',
       first_name='".mysqli_real_escape_string($con,$_POST['first_name'])."',
       last_name='".mysqli_real_escape_string($con,$_POST['last_name'])."',
@@ -86,8 +86,8 @@
       service_medicare_npi = '".mysqli_real_escape_string($con,$_POST['service_medicare_npi'])."',
       service_medicare_ptan = '".mysqli_real_escape_string($con,$_POST['service_medicare_ptan'])."',
       service_tax_id_or_ssn = '".mysqli_real_escape_string($con,$_POST['service_tax_id_or_ssn'])."',
-      service_ssn = '".mysqli_real_escape_string($con,$_POST['service_ssn'])."',
-      service_ein = '".mysqli_real_escape_string($con,$_POST['service_ein'])."',
+      service_ein = '".($_POST['service_ssnein'] === 'ein' ? 1 : 0)."',
+      service_ssn = '".($_POST['service_ssnein'] === 'ssn' ? 1 : 0)."',
       updated_at=now()
       WHERE userid='".$_SESSION['docid']."'";
 
@@ -379,8 +379,14 @@
       <div class="detail">
         <label>EIN or SSN:</label>
         <span class="value">
-          <input type="checkbox" name="ein" value="1" <?php echo  ($practice['ein']==1)?'checked="checked"':""; ?> /> EIN
-          <input type="checkbox" name="ssn" value="1" <?php echo  ($practice['ssn']==1)?'checked="checked"':""; ?> />SSN
+          <label style="display:inline;width:auto;">
+            <input type="radio" name="ssnein" value="ein" <?= $practice['ein'] == 1 ? 'checked' : '' ?> />
+            EIN
+          </label>
+          <label style="display:inline;width:auto;">
+            <input type="radio" name="ssnein" value="ssn" <?= $practice['ssn'] == 1 ? 'checked' : '' ?> />
+            SSN
+          </label>
         </span>
       </div>
       <div class="detail">
@@ -503,8 +509,14 @@
       <div class="detail service_info">
         <label>Service EIN or SSN:</label>
         <span class="value">
-          <input type="checkbox" name="service_ein" value="1" <?php echo  ($practice['service_ein']==1)?'checked="checked"':""; ?> /> EIN
-          <input type="checkbox" name="service_ssn" value="1" <?php echo  ($practice['service_ssn']==1)?'checked="checked"':""; ?> />SSN
+          <label style="display:inline;width:auto;">
+            <input type="radio" name="service_ssnein" value="ein" <?= $practice['service_ein'] == 1 ? 'checked' : '' ?> />
+            EIN
+          </label>
+          <label style="display:inline;width:auto;">
+            <input type="radio" name="service_ssnein" value="ssn" <?= $practice['service_ssn'] == 1 ? 'checked' : '' ?> />
+            SSN
+          </label>
         </span>
       </div>
 

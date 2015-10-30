@@ -13,6 +13,8 @@
     <body>
         <?php
             if(authorize((!empty($_POST['username']) ? $_POST['username'] : ''), (!empty($_POST['password']) ? $_POST['password'] : ''), DSS_USER_TYPE_ADMIN)){
+                $generateSecondary = false;
+
                 $csql = "SELECT *, REPLACE(i.total_charge,',','') AS amount_due FROM dental_insurance i WHERE i.insuranceid='".(!empty($_POST['claimid']) ? $_POST['claimid'] : '')."';";
                 
                 $claim = $db->getRow($csql);
@@ -223,6 +225,13 @@
                                     $pat_myarray = $db->getRow($pat_sql);
                             		$s_m_dss_file = $pat_myarray['s_m_dss_file'];
                             		$s_m_billing_id = $pat_myarray['billing_company_id'];
+
+                                    /**
+                                     * Mark the generation of the secondary claim but don't execute it now
+                                     * as we don't know the impact of creation before having the closed items
+                                     * ready
+                                     */
+                                    $generateSecondary = true;
                                 }
 
 	                            $secsql = "UPDATE dental_insurance SET 
@@ -235,6 +244,14 @@
                                     WHERE insuranceid='".$_POST['claimid']."'";
                             } else {
                                 $new_status = DSS_CLAIM_PAID_INSURANCE;
+
+                                /**
+                                 * Generate secondary claim
+                                 * IF the patient has secondary insurance
+                                 * AND paid amount is less than the amount due
+                                 */
+                                $generateSecondary =
+                                    isOptionSelected($pat['has_s_m_ins']) && ($payr['payment'] < $claim['amount_due']);
                             }
 
                             if($_FILES["attachment"]["name"]!=''){
@@ -325,7 +342,7 @@
 
                 if(isset($_POST['close']) && $_POST['close']==1 && $new_status!=DSS_CLAIM_SEC_PENDING){
                     $new_status = DSS_CLAIM_PAID_INSURANCE;
-                    $msg = 'Payment Successfully Added';
+                    $msg = $msg ?: 'Payment Successfully Added';
                     $x = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_INSURANCE."'  WHERE insuranceid='".$_POST['claimid']."';";
                     
                     $db->query($x); 
@@ -333,6 +350,11 @@
 
                 if(!empty($secsql)){
                     $db->query($secsql);
+                }
+
+                if ($generateSecondary) {
+                    $msg = 'Payment Successfully Added\n\nPrimary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.';
+                    ClaimFormData::createSecondaryClaim($_POST['patientid'], $_SESSION['userid'], $_POST['claimid']);
                 }
 
                 if (!$pid) { ?>

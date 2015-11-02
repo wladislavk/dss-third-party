@@ -2407,8 +2407,8 @@ $('input, select').bind('change', function(){
             .addClass('grayout');
 
         // Save time and let the "Switch to E-File" button be created, then we just move it
-        $('[name=elec][value="Switch to E-File"]')
-            .css({ float: 'right' })
+        $('[name=elec][value="Switch to E-File"]:first')
+            .css({ float: 'right', 'margin-right': '5px' })
             .appendTo('#top-banner');
     });
 </script>

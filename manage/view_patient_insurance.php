@@ -30,6 +30,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
     $psql = "UPDATE dental_patients SET ";
     switch($pcr['insurancetype']){
         case '1':
+        default:
             $psql .= " p_m_ins_co ";
             break;
         case '2':

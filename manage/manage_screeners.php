@@ -96,11 +96,18 @@
 		
 	$i_val = $index_val * $rec_disp;
 
-	$sql = "SELECT s.*, u.name, h.id as hst_id, h.status as hst_status
-			FROM dental_screener s 
-			INNER JOIN dental_users u ON s.userid = u.userid 
-			LEFT JOIN dental_hst h ON h.screener_id = s.id
-			WHERE s.docid='".$_SESSION['docid']."' ";
+	$sql = "SELECT
+            s.*,
+            CASE WHEN LENGTH(TRIM(u.name))
+                THEN u.name
+                ELSE CONCAT(u.first_name, ' ', u.last_name)
+            END AS name,
+            h.id AS hst_id,
+            h.status AS hst_status
+        FROM dental_screener s
+            INNER JOIN dental_users u ON s.userid = u.userid
+            LEFT JOIN dental_hst h ON h.screener_id = s.id
+        WHERE s.docid = '".$_SESSION['docid']."'";
 
 	if (isset($_GET['risk']) && $_GET['risk'] != '') {
 	  $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysqli_real_escape_string($con,$_GET['risk'])." ";

@@ -25,7 +25,17 @@ if ($isPending && !confirm_ledger_trxns()) { ?>
 
 $jsonResponse = saveEfileClaimForm($claimId, $patientId, $_POST, $status);
 
-if (isset($jsonResponse->$success) && !$jsonResponse->success) {
+if (!is_object($jsonResponse) || !isset($jsonResponse->success)) { ?>
+    <script type="text/javascript">
+        c = confirm('There was an error in Eligible API, the claim has been marked as sent.\n\nDo you want to go back to the Pending Claims page?');
+
+        if (c) {
+            window.location = "manage_claims.php?status=0";
+        } else {
+            window.history.back();
+        }
+    </script>
+<?php } elseif (!$jsonResponse->success) {
     $confirm = array('Submission failed.');
     $errors = $jsonResponse->errors;
 
@@ -46,16 +56,6 @@ if (isset($jsonResponse->$success) && !$jsonResponse->success) {
         }
         alert('E-File Response: ' + message);
         window.location = "manage_claims.php?status=0&insid=<?= $claimId ?>";
-    </script>
-<?php } elseif (!$jsonResponse || !is_object($jsonResponse) || !isset($jsonResponse)) { ?>
-    <script type="text/javascript">
-        c = confirm('There was an error in Eligible API, the claim has been marked as sent.\n\nDo you want to go back to the Pending Claims page?');
-        
-        if (c) {
-           window.location = "manage_claims.php?status=0";
-        } else {
-            window.history.back();
-        }
     </script>
 <?php } else { ?>
     <script type="text/javascript">

@@ -5,8 +5,8 @@
  *
  */
 
-//var enrollmentApiPath = 'http://apitest.ds3soft.net/api/v1/enrollments/';
-var enrollmentApiPath = 'http://api.ds3soft.local/api/v1/enrollments/';
+var enrollmentApiPath = apiRoot + 'api/v1/enrollments/';
+
 var divDocId = document.getElementById("dom-docid");
 var docId = divDocId.textContent;
 var divApiKey = document.getElementById("dom-default-api-key");

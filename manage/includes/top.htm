@@ -289,7 +289,7 @@ if (!isset($_SESSION['userid'])) {
         $medicare = ($myarray['p_m_ins_type'] == 1);
 
         // text for the alert box next to *Med
-        $alertText = $myarray['patient_notes'];
+        $alertText = $myarray['alert_text'];
 
         if ($premed) {
           $title .= "Pre-medication: " . $myarray['premed']."\n";

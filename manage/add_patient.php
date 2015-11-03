@@ -30,7 +30,6 @@ if(!isset($_GET['noheaders'])){
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/add_patient.css" type="text/css" media="screen" />
 <script src="script/autocomplete.js" type="text/javascript"></script>
 <script src="script/autocomplete_local.js" type="text/javascript"></script>
 <?php
@@ -86,6 +85,7 @@ if ($pt_referralid) {
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
 <script type="text/javascript" src="/manage/js/add_patient.js?v=<?= time() ?>"></script>
+<link rel="stylesheet" href="css/add_patient.css" type="text/css" media="screen" />
 <?php
 /*=======================================================
 TRIGGERING LETTERS
@@ -435,6 +435,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     }
     $ed_sql .=" 
       patient_notes = '".s_for($_POST["patient_notes"])."', 
+      alert_text = '".s_for(!empty($_POST["alert_text"]) ? $_POST["alert_text"] : '')."', 
       p_d_party = '".s_for(!empty($_POST["p_d_party"]) ? $_POST["p_d_party"] : '')."', 
       p_d_relation = '".s_for(!empty($_POST["p_d_relation"]) ? $_POST["p_d_relation"] : '')."', 
       p_d_other = '".s_for(!empty($_POST["p_d_other"]) ? $_POST["p_d_other"] : '')."', 
@@ -787,6 +788,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
                   best_number = '".s_for($_POST["best_number"])."',
                   email = '".s_for($_POST["email"])."', 
                   patient_notes = '".s_for($_POST["patient_notes"])."', 
+                  alert_text = '".s_for(!empty($_POST["alert_text"]) ? $_POST["alert_text"] : '')."', 
                   p_d_party = '".s_for(!empty($_POST["p_d_party"]) ? $_POST["p_d_party"] : '')."', 
                   p_d_relation = '".s_for(!empty($_POST["p_d_relation"]) ? $_POST["p_d_relation"] : '')."', 
                   p_d_other = '".s_for(!empty($_POST["p_d_other"]) ? $_POST["p_d_other"] : '')."', 
@@ -1005,6 +1007,8 @@ if(isset($msg) && $msg != ''){
   $best_number = $_POST['best_number'];
   $email = $_POST['email'];
   $patient_notes = $_POST['patient_notes'];
+  $display_alert = !empty($_POST['display_alert']) ? 1 : 0;
+  $alert_text = $_POST['alert_text'];
   $p_d_party = $_POST["p_d_party"]; 
   $p_d_relation = $_POST["p_d_relation"];
   $p_d_other = $_POST["p_d_other"];
@@ -1124,6 +1128,8 @@ if(isset($msg) && $msg != ''){
   $best_number = st($themyarray['best_number']);
   $email = st($themyarray['email']);
   $patient_notes = st($themyarray['patient_notes']);
+  $alert_text = st($themyarray['alert_text']);
+  $display_alert = !empty($alert_text) ? 1 : 0;
   $p_d_party = st($themyarray["p_d_party"]); 
   $p_d_relation = st($themyarray["p_d_relation"]);
   $p_d_other = st($themyarray["p_d_other"]);
@@ -1917,6 +1923,14 @@ for($i=80;$i<=500;$i++){?>
                 <textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?php echo $patient_notes;?></textarea>
                 <label for="patient_notes">Patient Notes</label>
               </span>
+            </div>
+            <div class="alert-text">
+              <span>
+                <label for="alert_text" style="display: inline">Patient alert (display notification at top of chart)?</label>
+                <input type="radio" name="display_alert" value="1" onclick="$('#alert_text').show()" <?php echo ($display_alert) ? 'checked="checked"' : ''; ?>>Yes
+                <input type="radio" name="display_alert" value="0" onclick="$('#alert_text').hide(); $('#alert_text').val('')" <?php echo (!$display_alert) ? 'checked="checked"' : ''; ?>>No
+              </span>
+              <textarea name="alert_text" id="alert_text" <?php echo ($display_alert) ? 'class="show-alert-text"' : 'class="hide-alert-text"'; ?>><?php echo $alert_text; ?></textarea>
             </div>
           </li>
         </ul>

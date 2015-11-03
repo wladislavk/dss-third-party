@@ -51,11 +51,12 @@ function submit_screener(){
       staying_asleep: $("input[name=staying_asleep]:checked").val(),
       rx_metabolic_syndrome: $("input[name=rx_metabolic_syndrome]").is(':checked')?2:0,
       rx_hypertension: $("input[name=rx_hypertension]").is(':checked')?1:0,
-      rx_heart_failure: $("input[name=rx_heart_failure]").is(':checked')?1:0,
+      rx_heart_disease: $("input[name=rx_heart_disease]").is(':checked')?1:0,
       rx_stroke: $("input[name=rx_stroke]").is(':checked')?3:0,
       rx_diabetes: $("input[name=rx_diabetes]").is(':checked')?1:0,
       rx_obesity: $("input[name=rx_obesity]").is(':checked')?1:0,
-      rx_heartburn: $("input[name=rx_heartburn]").is(':checked')?1:0
+      rx_heartburn: $("input[name=rx_heartburn]").is(':checked')?1:0,
+      rx_afib: $("input[name=rx_afib]").is(':checked')?1:0
 
     },
     success: function(data){
@@ -87,27 +88,31 @@ function submit_screener(){
         $('#r_headaches').text(($("input[name=headaches]:checked").val() > 0)?'Yes':'No');
         $('#r_falling_asleep').text(($("input[name=falling_asleep]:checked").val() > 0)?'Yes':'No');
         $('#r_staying_asleep').text(($("input[name=staying_asleep]:checked").val() > 0)?'Yes':'No');
-        if($("input[name=rx_metabolic_syndrome]").is(':checked')){
-	  $('#r_diagnosed').append('<li>Metabolic Syndrome</li>');
-	}
-        if($("input[name=rx_heart_failure]").is(':checked')){
-          $('#r_diagnosed').append('<li>Heart Failure</li>');
-        }
-        if($("input[name=rx_stroke]").is(':checked')){
-          $('#r_diagnosed').append('<li>Stroke</li>');
-        }
-        if($("input[name=rx_hypertension]").is(':checked')){
-          $('#r_diagnosed').append('<li>Hypertension</li>');
-        }
-        if($("input[name=rx_diabetes]").is(':checked')){
-          $('#r_diagnosed').append('<li>Diabetes</li>');
-        }
-        if($("input[name=rx_obesity]").is(':checked')){
-          $('#r_diagnosed').append('<li>Obesity</li>');
-        }
-        if($("input[name=rx_heartburn]").is(':checked')){
-          $('#r_diagnosed').append('<li>Heartburn (Gastroesophageal Reflux)</li>');
-        }
+
+          var coMorbidityQuestions = {
+              rx_blood_pressure: 'High blood pressure',
+              rx_apnea: 'Sleep Apnea',
+              rx_lung_disease: 'Lung Disease',
+              rx_insomnia: 'Insomnia',
+              rx_depression: 'Depression',
+              rx_medication: 'Sleeping medication',
+              rx_restless_leg: 'Restless leg syndrome',
+              rx_headaches: 'Morning headaches',
+              rx_heart_disease: 'Heart Failure',
+              rx_stroke: 'Stroke',
+              rx_hypertension: 'Hypertension',
+              rx_diabetes: 'Diabetes',
+              rx_metabolic_syndrome: 'Metabolic Syndrome',
+              rx_obesity: 'Obesity',
+              rx_heartburn: 'Heartburn (Gastroesophageal Reflux)',
+              rx_afib: 'Atrial Fibrillation'
+          };
+
+          for (fieldName in coMorbidityQuestions) {
+              if ($('input[name="' + fieldName + '"]').is(':checked')) {
+                  $('#r_diagnosed').append('<li>' + coMorbidityQuestions[fieldName] + '</li>');
+              }
+          }
 
 	$('#results_div div.check').each( function(){
   	  result = $(this).find('span').text();
@@ -136,11 +141,12 @@ function submit_screener(){
 	var sect3 = 0;
 	sect3 += $("input[name=rx_obesity]").is(':checked')?1:0;
 	sect3 += $("input[name=rx_hypertension]").is(':checked')?1:0;
-	sect3 += $("input[name=rx_heart_failure]").is(':checked')?1:0;
+	sect3 += $("input[name=rx_heart_disease]").is(':checked')?1:0;
 	sect3 += $("input[name=rx_stroke]").is(':checked')?3:0;
         sect3 += $("input[name=rx_metabolic_syndrome]").is(':checked')?1:0;
         sect3 += $("input[name=rx_diabetes]").is(':checked')?1:0;
         sect3 += $("input[name=rx_heartburn]").is(':checked')?1:0;
+        sect3 += $("input[name=rx_afib]").is(':checked')?1:0;
 	var survey = 0;
 	if($("input[name=breathing]:checked").val())
 		survey += parseInt($("input[name=breathing]:checked").val(), 10);

@@ -19,7 +19,7 @@ if(!isset($_SESSION['screener_doc'])){
 <script type="text/javascript" src="../manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
 			<script type="text/javascript" src="../reg/lib/fancybox/jquery.easing-1.3.pack.js"></script>
 			<script type="text/javascript" src="../reg/lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<script type="text/javascript" src="script/screener.js"></script>
+<script type="text/javascript" src="script/screener.js?v=<?= time() ?>"></script>
     <script type="text/javascript" src="../manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="script/screener_masks.js"></script>
 <link rel="stylesheet" href="css/screener.css" />
@@ -167,7 +167,7 @@ if(!isset($_SESSION['screener_doc'])){
 <br /><br />
   <p class="clear">Please check any conditions for which you have been medically diagnosed or treated.</p>
   <div class="field half">
-        <input type="checkbox" name="rx_heart_failure" value="1" />
+        <input type="checkbox" name="rx_heart_disease" value="1" />
         <label>Heart Failure</label>
   </div>
    <div class="field half">
@@ -193,6 +193,10 @@ if(!isset($_SESSION['screener_doc'])){
   <div class="field half">
         <input type="checkbox" name="rx_heartburn" value="1" />
         <label>Heartburn (Gastroesophageal Reflux)</label>
+  </div>
+  <div class="field half">
+        <input type="checkbox" name="rx_afib" value="1" />
+        <label>Atrial Fibrillation</label>
   </div>
 
                                                                                                                 <div class="cf">

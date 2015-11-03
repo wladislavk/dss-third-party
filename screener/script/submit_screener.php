@@ -37,6 +37,7 @@ $rx_stroke = $_REQUEST['rx_stroke'];
 $rx_diabetes = $_REQUEST['rx_diabetes'];
 $rx_obesity = $_REQUEST['rx_obesity'];
 $rx_heartburn = $_REQUEST['rx_heartburn'];
+$rx_afib = $_REQUEST['rx_afib'];
 $rx_cpap = $_REQUEST['rx_cpap'];
 
 /*
@@ -69,13 +70,14 @@ $s = "INSERT INTO dental_screener (
         falling_asleep,
         staying_asleep,
         rx_cpap,
-        -- rx_metabolic_syndrome,
+        rx_metabolic_syndrome,
         rx_hypertension,
         rx_heart_disease,
         rx_stroke,
         rx_diabetes,
-        -- rx_obesity,
+        rx_obesity,
         rx_heartburn,
+        rx_afib,
         adddate,
         ip_address
     ) VALUES (
@@ -102,13 +104,14 @@ $s = "INSERT INTO dental_screener (
         '".mysqli_real_escape_string($con, $falling_asleep)."',
         '".mysqli_real_escape_string($con, $staying_asleep)."',
         '".mysqli_real_escape_string($con, $rx_cpap)."',
-        -- '".mysqli_real_escape_string($con, $rx_metabolic_syndrome)."',
+        '".mysqli_real_escape_string($con, $rx_metabolic_syndrome)."',
         '".mysqli_real_escape_string($con, $rx_hypertension)."',
         '".mysqli_real_escape_string($con, $rx_heart_disease)."',
         '".mysqli_real_escape_string($con, $rx_stroke)."',
         '".mysqli_real_escape_string($con, $rx_diabetes)."',
-        -- '".mysqli_real_escape_string($con, $rx_obesity)."',
+        '".mysqli_real_escape_string($con, $rx_obesity)."',
         '".mysqli_real_escape_string($con, $rx_heartburn)."',
+        '".mysqli_real_escape_string($con, $rx_afib)."',
         now(),
         '".$_SERVER['REMOTE_ADDR']."'
     )";

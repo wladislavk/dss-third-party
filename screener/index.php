@@ -21,7 +21,7 @@ if(!isset($_SESSION['screener_doc'])){
 <script type="text/javascript" src="../manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
 			<script type="text/javascript" src="../reg/lib/fancybox/jquery.easing-1.3.pack.js"></script>
 			<script type="text/javascript" src="../reg/lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<!--<script type="text/javascript" src="script/screener.js"></script>-->
+<!--<script type="text/javascript" src="script/screener.js?v=<?= time() ?>"></script>-->
 <?php include 'script/screener.php'; ?>
     <script type="text/javascript" src="../manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="script/screener_masks.js"></script>
@@ -119,48 +119,6 @@ Please complete this short questionnaire to determine your risk of OSA. Your inf
 </div>
 
 <?php } ?>
-<!--
-<div class="sepH_b clear" id="epworth_reading_div">
-	<select class="inpt_in epworth_select" id="epworth_reading" name="epworth_reading"><?= $options; ?></select>
-        <label class="lbl_in">Sitting and reading</label>
-</div>
-
-
-<div class="sepH_b clear" id="epworth_public_div">
-        <select class="inpt_in epworth_select" id="epworth_public" name="epworth_public"><?= $options; ?></select>
-        <label class="lbl_in">Sitting inactive in a public place (e.g. a theater or meeting)</label>
-</div>
-
-
-<div class="sepH_b clear" id="epworth_passenger_div">
-        <select class="inpt_in epworth_select" id="epworth_passenger" name="epworth_passenger"><?= $options; ?></select>
-        <label class="lbl_in">As a passenger in a car for an hour without a break</label>
-</div>
-
-
-<div class="sepH_b clear" id="epworth_lying_div">
-        <select class="inpt_in epworth_select" id="epworth_lying" name="epworth_lying"><?= $options; ?></select>
-        <label class="lbl_in">Lying down to rest in the afternoon when circumstances permit</label>
-</div>
-
-
-<div class="sepH_b clear" id="epworth_talking_div">
-        <select class="inpt_in epworth_select" id="epworth_talking" name="epworth_talking"><?= $options; ?></select>
-        <label class="lbl_in">Sitting and talking to someone</label>
-</div>
-
-
-<div class="sepH_b clear" id="epworth_lunch_div">
-        <select class="inpt_in epworth_select" id="epworth_lunch" name="epworth_lunch"><?= $options; ?></select>
-        <label class="lbl_in">Sitting quietly after a lunch without alcohol</label>
-</div> 
-
-
-<div class="sepH_b clear" id="epworth_traffic_div">
-        <select class="inpt_in epworth_select" id="epworth_traffic" name="epworth_traffic"><?= $options; ?></select>
-        <label class="lbl_in">In a car, while stopped for a few minutes in traffic</label>
-</div>
--->
 </div>
         <div class="legend dp33">
                         Using the following scale, choose the most appropriate number for each situation.
@@ -302,7 +260,7 @@ Please complete this short questionnaire to determine your risk of OSA. Your inf
 <br /><br />
   <p class="clear">Please check any conditions for which you have been medically diagnosed or treated.</p>
   <div class="field half">
-        <input type="checkbox" name="rx_heart_failure" value="1" />
+        <input type="checkbox" name="rx_heart_disease" value="1" />
         <label>Heart Failure</label>
   </div>
    <div class="field half">

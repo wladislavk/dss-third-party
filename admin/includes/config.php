@@ -13,10 +13,15 @@ $config_db_user = $dbConfig['username'];
 $config_db_pass = $dbConfig['password'];
 $config_db_host = $dbConfig['host'];
 
-$con = mysqli_connect($config_db_host, $config_db_user, $config_db_pass)
-    or trigger_error('DB connection failure', E_USER_ERROR);
+$con = mysqli_connect($config_db_host, $config_db_user, $config_db_pass);
 
-mysqli_select_db($con, $config_db_name) or trigger_error('DB selection failure', E_USER_ERROR);
+if (!$con) {
+    throw new \RuntimeException('DB connection failure', E_USER_ERROR);
+}
+
+if (!mysqli_select_db($con, $config_db_name)) {
+    throw new \RuntimeException('DB selection failure', E_USER_ERROR);
+}
 
 $GLOBALS['con'] = $con;
 

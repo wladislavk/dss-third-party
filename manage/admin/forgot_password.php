@@ -88,4 +88,4 @@ $message .= DSS_EMAIL_FOOTER;
         </div>
     </form>
 </div>
-<div class="copyright">2014 &copy; dentalsleepsolutions.com</div>
+<div class="copyright"><?= date('Y') ?> &copy; dentalsleepsolutions.com</div>

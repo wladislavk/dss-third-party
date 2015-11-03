@@ -108,7 +108,9 @@ if ($references) {
 			Added
 		</td>
 <td valign="top" class="col_head" width="20%">
+    <div title="Sorting by this column is not available">
 			Last Action
+        </div>
 		</td>
 <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'status', $sort_dir) ?>" width="20%">
                         <a href="<?php echo sprintf($sort_qs, 'status', get_sort_dir($sort_by, 'status', $sort_dir))?>">

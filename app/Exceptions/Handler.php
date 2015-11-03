@@ -42,6 +42,23 @@ class Handler extends ExceptionHandler {
 		}
 		else
 		{
+            // Dependency injection?
+            if (preg_match('/^production|release|stage|staging$/', app()->environment())) {
+                /**
+                 * Assume the DB is unreachable
+                 * Show a "Maintenance mode" message
+                 */
+                if ($e instanceof \RuntimeException) {
+                    return response()->view('errors.503', [], 503);
+                }
+
+                /**
+                 * Assume some error in the code or in some SQL query
+                 * Show a generic error message
+                 */
+                return response()->view('errors.500', [], 500);
+            }
+
 			return parent::render($request, $e);
 		}
 	}

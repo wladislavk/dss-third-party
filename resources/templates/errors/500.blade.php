@@ -9,8 +9,9 @@
 <body>
 <div id="login_container">
     <form>
-        <h3>Maintenance mode</h3>
-        <p>We are experiencing technical difficulties. We will return shortly.</p>
+        <h3>Code problem detected</h3>
+        <p>The server has found a problem when trying to display this page.</p>
+        <p>Try going back and repeating your previous request.</p>
     </form>
 </div>
     <span style="clear:both;" id="siteseal">

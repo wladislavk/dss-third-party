@@ -61,8 +61,8 @@ function insert_preauth_row($patient_id) {
        . "  trxn_code_amount, diagnosis_code, doc_medicare_npi, doc_tax_id_or_ssn, "
        . "  front_office_request_date, status "
        . ") VALUES ("
-       . "  " . $my_array['patient_id'] . ", "
-       . "  " . $my_array['doc_id'] . ", "
+       . "  '" . $my_array['patient_id'] . "', "
+       . "  '" . $my_array['doc_id'] . "', "
        . "  '" . $my_array['ins_co'] . "', "
        . "  '" . $my_array['ins_rank'] . "', "
        . "  '" . $my_array['ins_phone'] . "', "
@@ -141,7 +141,7 @@ $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUES
 if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_insurance_preauth where id='".$_REQUEST["delid"]."'";
-	$db->query($con,$del_sql);
+	$db->query($del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>

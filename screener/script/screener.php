@@ -1,5 +1,25 @@
 <?php namespace Ds3\Libraries\Legacy; ?><script type="text/javascript">
 var screenerid='';
+
+var coMorbidityQuestions = {
+    rx_blood_pressure: 'High blood pressure',
+    rx_apnea: 'Sleep Apnea',
+    rx_lung_disease: 'Lung Disease',
+    rx_insomnia: 'Insomnia',
+    rx_depression: 'Depression',
+    rx_medication: 'Sleeping medication',
+    rx_restless_leg: 'Restless leg syndrome',
+    rx_headaches: 'Morning headaches',
+    rx_heart_disease: 'Heart Failure',
+    rx_stroke: 'Stroke',
+    rx_hypertension: 'Hypertension',
+    rx_diabetes: 'Diabetes',
+    rx_metabolic_syndrome: 'Metabolic Syndrome',
+    rx_obesity: 'Obesity',
+    rx_heartburn: 'Heartburn (Gastroesophageal Reflux)',
+    rx_afib: 'Atrial Fibrillation'
+};
+
 function submit_screener(e){
     e.preventDefault();
   $('#sect4_next').hide();
@@ -11,58 +31,48 @@ function submit_screener(e){
         alert('There was an error communicating with the server, please try again in a few minutes');
     }
 
+    var screenerData = {
+        docid: $('#docid').val(),
+        userid: $('#userid').val(),
+        first_name: $('#first_name').val(),
+        last_name: $('#last_name').val(),
+        phone: $('#phone').val(),
+        <?php
+          $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+          $epworth_my = mysqli_query($con, $epworth_sql);
+          $epworth_number = mysqli_num_rows($epworth_my);
+          while($ea = mysqli_fetch_array($epworth_my))
+          {
+        ?>
+        epworth_<?= $ea['epworthid']; ?>: $('#epworth_<?=$ea['epworthid'];?>').val(),
+        <?php } ?>
+        snore_1: $('#snore_1').val(),
+        snore_2: $('#snore_2').val(),
+        snore_3: $('#snore_3').val(),
+        snore_4: $('#snore_4').val(),
+        snore_5: $('#snore_5').val(),
+        breathing: $("input[name=breathing]:checked").val(),
+        driving: $("input[name=driving]:checked").val(),
+        gasping: $("input[name=gasping]:checked").val(),
+        sleepy: $("input[name=sleepy]:checked").val(),
+        snore: $("input[name=snore]:checked").val(),
+        weight_gain: $("input[name=weight_gain]:checked").val(),
+        blood_pressure: $("input[name=blood_pressure]:checked").val(),
+        jerk: $("input[name=jerk]:checked").val(),
+        burning: $("input[name=burning]:checked").val(),
+        headaches: $("input[name=headaches]:checked").val(),
+        falling_asleep: $("input[name=falling_asleep]:checked").val(),
+        staying_asleep: $("input[name=staying_asleep]:checked").val()
+    };
+
+    for (var fieldName in coMorbidityQuestions) {
+        screenerData[fieldName] = $('input[name="' + fieldName + '"]:checked').val();
+    }
+
   $.ajax({
     url: "script/submit_screener.php",
     type: "post",
-    data: {
-      docid: $('#docid').val(),
-      userid: $('#userid').val(),
-      first_name: $('#first_name').val(),
-      last_name: $('#last_name').val(), 
-      phone: $('#phone').val(),
-<?php
-  $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysqli_query($con, $epworth_sql);
-  $epworth_number = mysqli_num_rows($epworth_my);
-  while($ea = mysqli_fetch_array($epworth_my))
-  {
-?>
-      epworth_<?= $ea['epworthid']; ?>: $('#epworth_<?=$ea['epworthid'];?>').val(),
-<?php } ?>
-      snore_1: $('#snore_1').val(),
-      snore_2: $('#snore_2').val(),
-      snore_3: $('#snore_3').val(),
-      snore_4: $('#snore_4').val(),
-      snore_5: $('#snore_5').val(),
-      breathing: $("input[name=breathing]:checked").val(),
-      driving: $("input[name=driving]:checked").val(),
-      gasping: $("input[name=gasping]:checked").val(),
-      sleepy: $("input[name=sleepy]:checked").val(),
-      snore: $("input[name=snore]:checked").val(),
-      weight_gain: $("input[name=weight_gain]:checked").val(),
-      blood_pressure: $("input[name=blood_pressure]:checked").val(),
-      jerk: $("input[name=jerk]:checked").val(),
-      burning: $("input[name=burning]:checked").val(),
-      headaches: $("input[name=headaches]:checked").val(),
-      falling_asleep: $("input[name=falling_asleep]:checked").val(),
-      staying_asleep: $("input[name=staying_asleep]:checked").val(),
-      rx_cpap: $("input[name=rx_cpap]:checked").val(),
-      rx_blood_pressure: $("input[name=rx_blood_pressure]").is(':checked')?2:0,
-      rx_hypertension: $("input[name=rx_hypertension]").is(':checked')?1:0,
-      rx_heart_disease: $("input[name=rx_heart_disease]").is(':checked')?1:0,
-      rx_stroke: $("input[name=rx_stroke]").is(':checked')?3:0,
-      rx_apnea: $("input[name=rx_apnea]").is(':checked')?4:0,
-      rx_diabetes: $("input[name=rx_diabetes]").is(':checked')?1:0,
-      rx_lung_disease: $("input[name=rx_lung_disease]").is(':checked')?1:0,
-      rx_insomnia: $("input[name=rx_insomnia]").is(':checked')?1:0,
-      rx_depression: $("input[name=rx_depression]").is(':checked')?1:0,
-      rx_narcolepsy: $("input[name=rx_narcolepsy]").is(':checked')?1:0,
-      rx_medication: $("input[name=rx_medication]").is(':checked')?1:0,
-      rx_restless_leg: $("input[name=rx_restless_leg]").is(':checked')?1:0,
-      rx_headaches: $("input[name=rx_headaches]").is(':checked')?1:0,
-      rx_heartburn: $("input[name=rx_heartburn]").is(':checked')?1:0
-
-    },
+    data: screenerData,
     success: function(data){
       var r = $.parseJSON(data);
       if(r.error){
@@ -96,42 +106,12 @@ function submit_screener(e){
         $('#r_falling_asleep').text(($("input[name=falling_asleep]:checked").val() > 0)?'Yes':'No');
         $('#r_staying_asleep').text(($("input[name=staying_asleep]:checked").val() > 0)?'Yes':'No');
         $('#r_rx_cpap').text(($("input[name=rx_cpap]:checked").val() > 0)?'Yes':'No');
-        if($("input[name=rx_blood_pressure]").is(':checked')){
-	  $('#r_diagnosed').append('<li>High blood pressure</li>');
-	}
-        if($("input[name=rx_heart_disease]").is(':checked')){
-          $('#r_diagnosed').append('<li>Heart Disease</li>');
-        }
-        if($("input[name=rx_stroke]").is(':checked')){
-          $('#r_diagnosed').append('<li>Stroke</li>');
-        }
-        if($("input[name=rx_apnea]").is(':checked')){
-          $('#r_diagnosed').append('<li>Sleep Apnea</li>');
-        }
-        if($("input[name=rx_diabetes]").is(':checked')){
-          $('#r_diagnosed').append('<li>Diabetes</li>');
-        }
-        if($("input[name=rx_lung_disease]").is(':checked')){
-          $('#r_diagnosed').append('<li>Lung Disease</li>');
-        }
-        if($("input[name=rx_insomnia]").is(':checked')){
-          $('#r_diagnosed').append('<li>Insomnia</li>');
-        }
-        if($("input[name=rx_depression]").is(':checked')){
-          $('#r_diagnosed').append('<li>Depression</li>');
-        }
-        if($("input[name=rx_medication]").is(':checked')){
-          $('#r_diagnosed').append('<li>Sleeping medication</li>');
-        }
-        if($("input[name=rx_restless_leg]").is(':checked')){
-          $('#r_diagnosed').append('<li>Restless leg syndrome</li>');
-        }
-        if($("input[name=rx_headaches]").is(':checked')){
-          $('#r_diagnosed').append('<li>Morning headaches</li>');
-        }
-        if($("input[name=rx_heartburn]").is(':checked')){
-          $('#r_diagnosed').append('<li>Heartburn (Gastroesophageal Reflux)</li>');
-        }
+
+          for (var fieldName in coMorbidityQuestions) {
+              if ($('input[name="' + fieldName + '"]').is(':checked')) {
+                  $('#r_diagnosed').append('<li>' + coMorbidityQuestions[fieldName] + '</li>');
+              }
+          }
 
 	$('#results_div div.check').each( function(){
   	  result = $(this).find('span').text();
@@ -159,22 +139,13 @@ function submit_screener(e){
 	ep += parseInt($('#epworth_<?= $ea['epworthid']; ?>').val(), 10);
 <?php } ?>
         $('#r_ep_total').text(ep);
-	var sect3 = 0;
-	sect3 += parseInt($("input[name=rx_cpap]:checked").val(), 10);
-	sect3 += $("input[name=rx_blood_pressure]").is(':checked')?2:0;
-	sect3 += $("input[name=rx_hypertension]").is(':checked')?1:0;
-	sect3 += $("input[name=rx_heart_disease]").is(':checked')?1:0;
-	sect3 += $("input[name=rx_stroke]").is(':checked')?3:0;
-        sect3 += $("input[name=rx_apnea]").is(':checked')?4:0;
-        sect3 += $("input[name=rx_diabetes]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_lung_disease]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_insomnia]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_depression]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_narcolepsy]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_medication]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_restless_leg]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_headaches]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_heartburn]").is(':checked')?1:0;
+          var sect3 = 0;
+
+          for (fieldName in coMorbidityQuestions) {
+              sect3 += $('input[name="' + fieldName + '"]:checked').val() || 0;
+          }
+
+
 	var survey = 0;
 	if($("input[name=breathing]:checked").val())
 		survey += parseInt($("input[name=breathing]:checked").val(), 10);

@@ -1,5 +1,10 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/header.php'; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
 
+require_once __DIR__ . '/../admin/includes/main_include.php';
+include __DIR__ . '/includes/header.php';
+
+?>
   <link rel="stylesheet" href="css/register.css" />
   <link rel="stylesheet" href="lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" /> 
 

@@ -2,6 +2,26 @@
 	include "includes/top.htm";
 	include "includes/similar.php";
 	include_once('includes/constants.inc');
+
+$coMorbidityQuestions = [
+    'rx_blood_pressure' => 'High blood pressure',
+    'rx_apnea' => 'Sleep Apnea',
+    'rx_lung_disease' => 'Lung Disease',
+    'rx_insomnia' => 'Insomnia',
+    'rx_depression' => 'Depression',
+    'rx_medication' => 'Sleeping medication',
+    'rx_restless_leg' => 'Restless leg syndrome',
+    'rx_headaches' => 'Morning headaches',
+    'rx_heart_disease' => 'Heart Failure',
+    'rx_stroke' => 'Stroke',
+    'rx_hypertension' => 'Hypertension',
+    'rx_diabetes' => 'Diabetes',
+    'rx_metabolic_syndrome' => 'Metabolic Syndrome',
+    'rx_obesity' => 'Obesity',
+    'rx_heartburn' => 'Heartburn (Gastroesophageal Reflux)',
+    'rx_afib' => 'Atrial Fibrillation'
+];
+
 ?>
 
 <link rel="stylesheet" href="css/screener.css" />
@@ -96,11 +116,18 @@
 		
 	$i_val = $index_val * $rec_disp;
 
-	$sql = "SELECT s.*, u.name, h.id as hst_id, h.status as hst_status
-			FROM dental_screener s 
-			INNER JOIN dental_users u ON s.userid = u.userid 
-			LEFT JOIN dental_hst h ON h.screener_id = s.id
-			WHERE s.docid='".$_SESSION['docid']."' ";
+	$sql = "SELECT
+            s.*,
+            CASE WHEN LENGTH(TRIM(u.name))
+                THEN u.name
+                ELSE CONCAT(u.first_name, ' ', u.last_name)
+            END AS name,
+            h.id AS hst_id,
+            h.status AS hst_status
+        FROM dental_screener s
+            INNER JOIN dental_users u ON s.userid = u.userid
+            LEFT JOIN dental_hst h ON h.screener_id = s.id
+        WHERE s.docid = '".$_SESSION['docid']."'";
 
 	if (isset($_GET['risk']) && $_GET['risk'] != '') {
 	  $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysqli_real_escape_string($con,$_GET['risk'])." ";
@@ -243,8 +270,43 @@
 		        $epworth_labels[3] = 'High chance of dozing';
 
 				foreach ($my as $myarray) {
-					$survey_total = $myarray['breathing'] + $myarray['driving'] + $myarray['gasping'] + $myarray['sleepy'] + $myarray['snore'] + $myarray['weight_gain'] + $myarray['blood_pressure'] + $myarray['jerk'] + $myarray['burning'] + $myarray['headaches'] + $myarray['falling_asleep'] + $myarray['staying_asleep'];
-			        $sect3_total = $myarray['rx_cpap'] + $myarray['rx_blood_pressure'] + $myarray['rx_hypertension'] + $myarray['rx_heart_disease'] + $myarray['rx_stroke'] + $myarray['rx_apnea'] + $myarray['rx_diabetes'] + $myarray['rx_lung_disease'] + $myarray['rx_insomnia'] + $myarray['rx_depression'] + $myarray['rx_narcolepsy'] + $myarray['rx_medication'] + $myarray['rx_restless_leg'] + $myarray['rx_headaches'] + $myarray['rx_heartburn'];
+					$survey_total = $myarray['breathing'] +
+                        $myarray['driving'] +
+                        $myarray['gasping'] +
+                        $myarray['sleepy'] +
+                        $myarray['snore'] +
+                        $myarray['weight_gain'] +
+                        $myarray['blood_pressure'] +
+                        $myarray['jerk'] +
+                        $myarray['burning'] +
+                        $myarray['headaches'] +
+                        $myarray['falling_asleep'] +
+                        $myarray['staying_asleep'];
+
+                    // These fields seem to be the same as the co-morbidity questions
+                    $sect3_total = $myarray['rx_cpap'] +
+                        $myarray['rx_blood_pressure'] +
+                        $myarray['rx_hypertension'] +
+                        $myarray['rx_heart_disease'] +
+                        $myarray['rx_stroke'] +
+                        $myarray['rx_apnea'] +
+                        $myarray['rx_diabetes'] +
+                        $myarray['rx_lung_disease'] +
+                        $myarray['rx_insomnia'] +
+                        $myarray['rx_depression'] +
+                        $myarray['rx_narcolepsy'] +
+                        $myarray['rx_medication'] +
+                        $myarray['rx_restless_leg'] +
+                        $myarray['rx_headaches'] +
+                        $myarray['rx_heartburn'];
+
+                    $diagnosis = array();
+
+                    foreach ($coMorbidityQuestions as $fieldName=>$legend) {
+                        if ($myarray[$fieldName]) {
+                            $diagnosis []= $legend;
+                        }
+                    }
 
 		?>
 					<tr>
@@ -283,65 +345,6 @@
 	                    </td>
 
 						<td valign="top">
-							<?php
-								$diagnosis = array();
-								if ($myarray['rx_blood_pressure'] > 0) {
-									array_push($diagnosis, 'High blood pressure');
-								}
-
-		                        if ($myarray['rx_hypertension'] > 0) {
-		                            array_push($diagnosis, 'Hypertension');
-		                        }
-
-		                        if ($myarray['rx_heart_disease'] > 0) {
-		                            array_push($diagnosis, 'Heart disease');
-		                        }
-		                        
-		                        if ($myarray['rx_stroke'] > 0) {
-		                            array_push($diagnosis, 'Stroke');
-		                        }
-
-	                            if ($myarray['rx_apnea'] > 0) {
-	                                array_push($diagnosis, 'Sleep apnea');
-	                            }
-
-	                            if ($myarray['rx_diabetes'] > 0) {
-	                                array_push($diagnosis, 'Diabetes');
-	                            }
-
-	                            if ($myarray['rx_lung_disease'] > 0) {
-	                                array_push($diagnosis, 'Lung disease');
-	                            }
-
-	                            if ($myarray['rx_insomnia'] > 0) {
-	                                array_push($diagnosis, 'Insomnia');
-	                            }
-
-	                            if ($myarray['rx_depression'] > 0) {
-	                                array_push($diagnosis, 'Depression');
-	                            }
-
-	                            if ($myarray['rx_narcolepsy'] > 0) {
-	                                array_push($diagnosis, 'Narcolepsy');
-	                            }
-
-	                            if ($myarray['rx_medication'] > 0) {
-	                                array_push($diagnosis, 'Sleeping medication');
-	                            }
-
-	                            if ($myarray['rx_restless_leg'] > 0) {
-	                                array_push($diagnosis, 'Restless Leg Syndrome');
-	                            }
-
-	                            if ($myarray['rx_headaches'] > 0) {
-	                                array_push($diagnosis, 'Morning headaches');
-	                            }
-
-	                            if ($myarray['rx_heartburn'] > 0) {
-	                                array_push($diagnosis, 'Heartburn (Gastroesophageal Reflux)');
-	                            }
-							?>
-
 							<a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;" id="diagnosis_count_<?php echo $myarray['id']; ?>">View</a>
 						</td>
 
@@ -388,18 +391,22 @@
 							<strong>Epworth Sleepiness Score</strong><br />
 
 							<?php
-								$ep_sql = "SELECT se.response, e.epworth 
-										   FROM dental_screener_epworth se
-										   JOIN dental_epworth e ON se.epworth_id =e.epworthid
-										   WHERE se.response > 0 AND se.screener_id='".mysqli_real_escape_string($con,$myarray['id'])."'";
-								
-								$ep_q = $db->getResults($ep_sql);
-								if (count($ep_q)) foreach ($ep_q as $ep_r) {
-							?>
-								<?php echo  $ep_r['response']; ?> - <strong><?php echo  $ep_r['epworth']; ?></strong><br />
-							<?php } ?>
+                            $epTotal = 0;
 
-							<?php echo  (!empty($ep['ep_total']) ? $ep['ep_total'] : ''); ?> - Total
+                            $ep_sql = "SELECT se.response, e.epworth
+                                FROM dental_screener_epworth se
+                                JOIN dental_epworth e ON se.epworth_id =e.epworthid
+                                WHERE se.response > 0 AND se.screener_id='".mysqli_real_escape_string($con,$myarray['id'])."'";
+
+                            $ep_q = $db->getResults($ep_sql);
+
+                            if (count($ep_q)) foreach ($ep_q as $ep_r) {
+                                $epTotal += $ep_r['response'];
+
+                                ?>
+                                <?= $ep_r['response'] ?> - <strong><?= $ep_r['epworth']; ?></strong><br />
+                            <?php } ?>
+							<?= $epTotal ?> - Total
 						</td>
 
 						<td valign="top" colspan="6">

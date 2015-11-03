@@ -461,7 +461,7 @@ $fdfData['reserved_for_local_fill'] = !empty($reserved_local_use1) ? $reserved_l
 $fdfData['outside_lab_yes_chkbox'] = isOptionSelected($outside_lab) ? 1 : '';
 $fdfData['outside_lab_no_chkbox'] = !isOptionSelected($outside_lab) ? 1 : '';
 $fdfData['charges_fill'] = !empty($s_charges) ? $s_charges : '';
-$fdfData['icd_ind'] = isset($icd_ind) && $icd_ind != 0 ? $icd_ind : '';
+$fdfData['icd_ind'] = isset($icd_ind) && $icd_ind == 9 ? $icd_ind : '0'; // Only two options
 $fdfData['diagnosis_a'] = !empty($diagnosis_a) ? $diagnosis_a : '';
 $fdfData['diagnosis_b'] = !empty($diagnosis_b) ? $diagnosis_b : '';
 $fdfData['diagnosis_c'] = !empty($diagnosis_c) ? $diagnosis_c : '';

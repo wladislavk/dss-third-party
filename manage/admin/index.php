@@ -160,6 +160,6 @@
 	
 	<!-- END LOGIN FORM -->
 		
-	<div class="copyright">2014 &copy; dentalsleepsolutions.com</div>  
+	<div class="copyright"><?= date('Y') ?> &copy; dentalsleepsolutions.com</div>
 
 <?php //require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>

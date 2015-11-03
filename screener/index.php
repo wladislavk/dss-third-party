@@ -541,7 +541,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
     <!-- footer section -->
     <div id="footer">
         <div class="wrapper">
-            <span class="fr">Copyright Dental Sleep Solutions 2012</span>
+            <span class="fr">Copyright Dental Sleep Solutions <?= date('Y') ?></span>
         </div>
     </div>
 

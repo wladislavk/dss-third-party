@@ -267,7 +267,7 @@ if(!isset($_SESSION['screener_doc'])){
     <!-- footer section -->
     <div id="footer">
         <div class="wrapper">
-            <span class="fr">Copyright Dental Sleep Solutions 2012</span>
+            <span class="fr">Copyright Dental Sleep Solutions <?= date('Y') ?></span>
         </div>
     </div>
 <script>

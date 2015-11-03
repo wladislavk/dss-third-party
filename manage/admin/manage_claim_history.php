@@ -9,58 +9,68 @@ $sort_by_sql = '';
 $sort_by_sql .= " ". $sort_by." ".$sort_dir." ";
 $rec_disp = 20;
 
+/**
+ * Quick workaround: NEVER enable sort by last_action
+ */
+$sort_by = $sort_by === 'last_action' ? 'insuranceid' : $sort_by;
+
+/**
+ * Only include this subquery if requested in ordering
+ * This query returns wrong values for some reference ids
+ */
+$lastActionColumnWithComma = $sort_by === 'last_action' ?
+    '(SELECT MAX(r.adddate) FROM dental_eligible_response r WHERE r.reference_id = e.reference_id) AS last_action,' :
+    '';
+
 if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-if(is_super($_SESSION['admin_access'])){
-$sql = "select e.*,
- 	CONCAT(p.firstname, ' ', p.lastname) AS pat_name,
-	CONCAT(u.first_name, ' ', u.last_name) AS account_name,
-	c.name AS company_name,
-	(SELECT MAX(r.adddate) FROM dental_eligible_response r WHERE r.reference_id = e.reference_id) AS last_action,
-	i.status
-	FROM dental_claim_electronic e
-	  JOIN dental_insurance i ON i.insuranceid=e.claimid
-	  LEFT JOIN dental_users u ON u.userid=i.docid
-	  LEFT JOIN dental_patients p ON p.patientid=i.patientid
-	  LEFT JOIN dental_user_company uc ON uc.userid=i.docid
-	  LEFT JOIN companies c ON uc.companyid=c.id
-	  order by ". $sort_by_sql;
-}elseif(is_billing($_SESSION['admin_access'])){
-  $sql = "SELECT e.*
-		FROM dental_claim_electronic e
-		INNER JOIN dental_user_company uc ON uc.userid = e.userid
-		INNER JOIN companies c ON c.id=uc.companyid
-		WHERE uc.companyid='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'
-		ORDER BY ".$sort_by_sql;
-$sql = "select e.*,
-        CONCAT(p.firstname, ' ', p.lastname) AS pat_name,
-        CONCAT(u.first_name, ' ', u.last_name) AS account_name,
-        c.name AS company_name,
-        (SELECT MAX(r.adddate) FROM dental_eligible_response r WHERE r.reference_id = e.reference_id) AS last_action,
-        i.status
-        FROM dental_claim_electronic e
-          JOIN dental_insurance i ON i.insuranceid=e.claimid
-          LEFT JOIN dental_users u ON u.userid=i.docid
-          LEFT JOIN dental_patients p ON p.patientid=i.patientid
-          LEFT JOIN dental_user_company uc ON uc.userid=i.docid
-          LEFT JOIN companies c ON uc.companyid=c.id
-	  WHERE u.billing_company_id='".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])."'
-          order by ".$sort_by_sql;
+
+$sql = "SELECT e.*,
+    CONCAT(p.firstname, ' ', p.lastname) AS pat_name,
+    CONCAT(u.first_name, ' ', u.last_name) AS account_name,
+    c.name AS company_name,
+    $lastActionColumnWithComma
+    i.status
+    FROM dental_claim_electronic e
+        JOIN dental_insurance i ON i.insuranceid = e.claimid
+        LEFT JOIN dental_users u ON u.userid = i.docid
+        LEFT JOIN dental_patients p ON p.patientid = i.patientid
+        LEFT JOIN dental_user_company uc ON uc.userid = i.docid
+        LEFT JOIN companies c ON uc.companyid = c.id
+    ";
+
+if (is_billing($_SESSION['admin_access'])) {
+    $sql .= " WHERE u.billing_company_id = '" . $db->escape($_SESSION['admincompanyid']) . "'";
 }
 
-$my = mysqli_query($con,$sql);
-$total_rec = mysqli_num_rows($my);
+$total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
-$sql .= " limit ".$i_val.",".$rec_disp;
-$my = mysqli_query($con,$sql);
-$num_users = mysqli_num_rows($my);
-?>
+$sql .= " ORDER BY $sort_by_sql LIMIT $i_val, $rec_disp";
 
+$my = $db->getResults($sql);
+$num_users = count($my);
+
+$references = array_pluck($my, 'reference_id');
+$references = array_filter(array_unique($references));
+array_walk($references, function(&$each)use($db){ $each = '"' . $db->escape($each) . '"'; });
+$references = join(',', $references);
+
+$lastActions = [];
+
+if ($references) {
+    $lastActions = $db->getResults("SELECT reference_id, MAX(adddate) AS last_action
+        FROM dental_eligible_response
+        WHERE reference_id IN ($references)
+        GROUP BY reference_id");
+    $lastActions = array_combine(array_pluck($lastActions, 'reference_id'), array_pluck($lastActions, 'last_action'));
+}
+
+?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
@@ -97,9 +107,10 @@ $num_users = mysqli_num_rows($my);
                         <a href="<?php echo sprintf($sort_qs, 'adddate', get_sort_dir($sort_by, 'adddate', $sort_dir))?>">
 			Added
 		</td>
-<td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'last_action', $sort_dir) ?>" width="20%">
-                        <a href="<?php echo sprintf($sort_qs, 'last_action', get_sort_dir($sort_by, 'last_action', $sort_dir))?>">
+<td valign="top" class="col_head" width="20%">
+    <div title="Sorting by this column is not available">
 			Last Action
+        </div>
 		</td>
 <td valign="top" class="col_head <?php echo  get_sort_arrow_class($sort_by, 'status', $sort_dir) ?>" width="20%">
                         <a href="<?php echo sprintf($sort_qs, 'status', get_sort_dir($sort_by, 'status', $sort_dir))?>">
@@ -121,7 +132,7 @@ $num_users = mysqli_num_rows($my);
 			Action
 		</td>
 	</tr>
-	<?php if(mysqli_num_rows($my) == 0)
+	<?php if(!count($my))
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -132,7 +143,7 @@ $num_users = mysqli_num_rows($my);
 	}
 	else
 	{
-		while($myarray = mysqli_fetch_array($my))
+		foreach($my as $myarray)
 		{
 		?>
 			<tr>
@@ -143,7 +154,13 @@ $num_users = mysqli_num_rows($my);
 					<?php echo  $myarray['adddate']; ?>
 				</td>
 				<td valign="top">
-					<?php echo st($myarray["last_action"]);?>
+					<?= st(
+                        isset($myarray['last_action']) ?
+                            $myarray['last_action'] : (
+                                isset($lastActions[$myarray['reference_id']]) ?
+                                    $lastActions[$myarray['last_action']] : ''
+                            )
+                    ) ?>
 				</td>
 				<td valign="top">
 					<?php echo  $dss_claim_status_labels[$myarray['status']]; ?>

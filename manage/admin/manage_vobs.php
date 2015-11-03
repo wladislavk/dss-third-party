@@ -141,7 +141,7 @@ $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUES
 if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_insurance_preauth where id='".$_REQUEST["delid"]."'";
-	$db->query($con,$del_sql);
+	$db->query($del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>

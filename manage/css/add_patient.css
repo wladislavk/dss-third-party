@@ -4,11 +4,12 @@
 }
 
 #referred_source div{ 
-    float:left; 
+    float:left;
 }
 
 .alert-text {
     margin-bottom: 10px;
+    width: 420px;
 }
 
 .show-alert-text {

@@ -689,7 +689,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
     $billing_provider_a = !empty($claimData['billing_provider']['npi']) ? $claimData['billing_provider']['npi'] : '';
     $billing_provider_taxonomy_code = $claimData['billing_provider']['taxonomy_code'];
     $reject_reason = !empty($claimData['reject_reason']) ? $claimData['reject_reason'] : '';
-    $insurance_type_arr = !empty($insurance_type) ? $insurance_type : '';
     $p_m_eligible_payer_id = !empty($claimData['payer']['id']) ? $claimData['payer']['id'] : '';
     $p_m_eligible_payer_name = !empty($claimData['payer']['name']) ? $claimData['payer']['name'] : '';
 
@@ -713,7 +712,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
             patient_phone_code = '" . $db->escape(!empty($patient_phone_code) ? $patient_phone_code : '') . "',
             patient_phone = '" . $db->escape($patient_phone) . "',
             patient_relation_insured = '" . $db->escape($patient_relation_insured) . "',
-            insurance_type = '" . $db->escape(!empty($insurance_type) ? $insurance_type : '') . "',
             insured_id_number = '" . $db->escape($insured_id_number) . "',
             insured_firstname = '" . $db->escape($insured_firstname) . "',
             insured_lastname = '" . $db->escape($insured_lastname) . "',

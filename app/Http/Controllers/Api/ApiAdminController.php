@@ -18,6 +18,8 @@ class ApiAdminController extends ApiBaseController
      */
     protected $admin;
 
+    private $response;
+
     private $rulesForStore = [
         'name'               => 'max:250',
         'username'           => 'required|max:250',
@@ -45,6 +47,11 @@ class ApiAdminController extends ApiBaseController
     public function __construct(AdminInterface $admin)
     {
         $this->admin = $admin;
+        $this->response = [
+            'status'  => true,
+            'message' => '',
+            'data'    => []
+        ];
     }
 
     /**
@@ -54,29 +61,16 @@ class ApiAdminController extends ApiBaseController
      */
     public function index()
     {
-        $response = [
-            'status'  => null,
-            'message' => 'Admins list.',
-            'data'    => []
-        ];
+        $retrievedAdmins = $this->admin->all();
 
-        try {
-            $retrievedAdmins = $this->admin->all();
-
-            if (!count($retrievedAdmins)) {
-                throw new Exception('The table is empty.');
-            }
-
-            $response['data']   = $retrievedAdmins;
-            $response['status'] = true;
-            $status             = 200;
-        } catch (Exception $ex) {
-            $status              = 404;
-            $response['status']  = false;
-            $response['message'] = $ex->getMessage();
-        } finally {
-            return response()->json($response, $status);
+        if (!count($retrievedAdmins)) {
+            throw new Exception('The table is empty.');
         }
+
+        $this->response['message'] = 'Admins list.';
+        $this->response['data']    = $retrievedAdmins;
+
+        return response()->json($this->response, 200);
     }
 
     /**
@@ -86,41 +80,29 @@ class ApiAdminController extends ApiBaseController
      */
     public function store()
     {
-        $response = [
-            'status'  => null,
-            'message' => 'Admin was added succesfully.',
-            'data'    => []
-        ];
+        $postValues = Input::all();
+        $validator  = \Validator::make($postValues, $this->rulesForStore);
 
-        try {
-            $postValues = Input::all();
-            $validator  = \Validator::make($postValues, $this->rulesForStore);
-
-            if ($validator->fails()) {
-                throw new Exception($validator->errors());
-            }
-
-            $salt       = Password::createSalt();
-            $password   = Password::genPassword($postValues['password'], $salt);
-            $postValues = array_merge($postValues, [
-                'salt'               => $salt,
-                'password'           => $password,
-                'adddate'            => Carbon::now(),
-                'last_accessed_date' => Carbon::now(),
-                'ip_address'         => \Request::ip()
-            ]);
-
-            $this->admin->store($postValues);
-            $response['data']   = $this->admin->all();
-            $response['status'] = true;
-            $status             = 200;
-        } catch (Exception $ex) {
-            $status              = 404;
-            $response['status']  = false;
-            $response['message'] = $ex->getMessage();
-        } finally {
-            return response()->json($response, $status);
+        if ($validator->fails()) {
+            throw new Exception($validator->errors());
         }
+
+        $salt       = Password::createSalt();
+        $password   = Password::genPassword($postValues['password'], $salt);
+        $postValues = array_merge($postValues, [
+            'salt'               => $salt,
+            'password'           => $password,
+            'adddate'            => Carbon::now(),
+            'last_accessed_date' => Carbon::now(),
+            'ip_address'         => \Request::ip()
+        ]);
+
+        $this->admin->store($postValues);
+
+        $this->response['message'] = 'Admin was added succesfully.';
+        $this->response['data']    = $this->admin->all();
+
+        return response()->json($this->response, 200);
     }
 
     /**
@@ -131,35 +113,23 @@ class ApiAdminController extends ApiBaseController
      */
     public function update($adminId)
     {
-        $response = [
-            'status'  => null,
-            'message' => 'Admin was updated succesfully.',
-            'data'    => []
-        ];
+        $putValues = Input::all();
+        $validator = \Validator::make($putValues, $this->rulesForUpdate);
 
-        try {
-            $putValues = Input::all();
-            $validator = \Validator::make($putValues, $this->rulesForUpdate);
-
-            if ($validator->fails()) {
-                throw new Exception($validator->errors());
-            }
-
-            $putValues = array_merge($putValues, [
-                'last_accessed_date' => Carbon::now(),
-            ]);
-
-            $this->admin->update($adminId, $putValues);
-            $response['data']   = $this->admin->all();
-            $response['status'] = true;
-            $status             = 200;
-        } catch (Exception $ex) {
-            $response['message'] = $ex->getMessage();
-            $response['status']  = false;
-            $status              = 404;
-        } finally {
-            return response()->json($response, $status);
+        if ($validator->fails()) {
+            throw new Exception($validator->errors());
         }
+
+        $putValues = array_merge($putValues, [
+            'last_accessed_date' => Carbon::now(),
+        ]);
+
+        $this->admin->update($adminId, $putValues);
+
+        $this->response['message'] = 'Admin was updated succesfully.';
+        $this->response['data']    = $this->admin->all();
+
+        return response()->json($this->response, 200);
     }
 
     /**
@@ -170,29 +140,16 @@ class ApiAdminController extends ApiBaseController
      */
     public function show($adminId)
     {
-        $response = [
-            'status'  => null,
-            'message' => 'Retrieved admin by id.',
-            'data'    => []
-        ];
+        $retrievedAdmin = $this->admin->find($adminId);
 
-        try {
-            $retrievedAdmin = $this->admin->find($adminId);
-
-            if (empty($retrievedAdmin)) {
-                throw new Exception('Admin not found.');
-            }
-
-            $response['data']   = $retrievedAdmin;
-            $response['status'] = true;
-            $status             = 200;
-        } catch (Exception $ex) {
-            $response['message'] = $ex->getMessage();
-            $response['status']  = false;
-            $status              = 404;
-        } finally {
-            return response()->json($response, $status);
+        if (empty($retrievedAdmin)) {
+            throw new Exception('Admin not found.');
         }
+
+        $this->response['message'] = 'Retrieved admin by id.';
+        $this->response['data']    = $retrievedAdmin;
+
+        return response()->json($this->response, 200);
     }
 
     /**
@@ -203,19 +160,10 @@ class ApiAdminController extends ApiBaseController
      */
     public function edit($adminId)
     {
-        $response = [
-            'status'  => null,
-            'message' => 'Admin was edited successfully.',
-            'data'    => []
-        ];
+        $this->response['message'] = 'Admin was edited successfully.';
+        $this->response['data']    = [];
 
-        try {
-
-        } catch (Exception $ex) {
-
-        } finally {
-            return response()->json($response, $status);
-        }
+        return response()->json($this->response, 200);
     }
 
     /**
@@ -226,28 +174,15 @@ class ApiAdminController extends ApiBaseController
      */
     public function destroy($adminId)
     {
-        $response = [
-            'status'  => null,
-            'message' => 'Admin was deleted successfully.',
-            'data'    => []
-        ];
+        $deletedAdmin = $this->admin->destroy($adminId);
 
-        try {
-            $deletedAdmin     = $this->admin->destroy($adminId);
-            $response['data'] = $this->admin->all();
-
-            if (empty($deletedAdmin)) {
-                throw new Exception('Admin not found.');
-            }
-
-            $response['status'] = true;
-            $status             = 200;
-        } catch (Exception $ex) {
-            $response['message'] = $ex->getMessage();
-            $response['status']  = false;
-            $status              = 404;
-        } finally {
-            return response($response, $status);
+        if (empty($deletedAdmin)) {
+            throw new Exception('Admin not found.');
         }
+
+        $this->response['message'] = 'Admin was deleted successfully.';
+        $this->response['data']    = $this->admin->all();
+
+        return response($this->response, 200);
     }
 }

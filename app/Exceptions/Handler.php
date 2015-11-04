@@ -44,6 +44,16 @@ class Handler extends ExceptionHandler
             return ApiBaseController::createErrorResponse('Error occured.', 404);
         }
 
+        if ($e) {
+            $response = [
+                'message' => $e->getMessage(),
+                'status'  => false,
+                'data'    => []
+            ];
+
+            return response()->json($response, 404);
+        }
+
         return parent::render($request, $e);
     }
 }

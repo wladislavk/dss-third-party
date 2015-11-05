@@ -26,6 +26,37 @@ $(document).ready(function(){
         };
     }
 
+    function webhookEvents () {
+        return {
+            Rejected: {
+                claim_rejected: 'claim_rejected',
+                claim_denied: 'claim_denied',
+                claim_more_info_required: 'claim_more_info_required'
+            },
+            'Paid - Insurance': {
+                claim_paid: 'claim_paid'
+            },
+            Sent: {
+                claim_pended: 'claim_pended',
+                claim_created: 'claim_created',
+                claim_received: 'claim_received'
+            },
+            'E-File Accepted': {
+                claim_accepted: 'claim_accepted'
+            },
+            '<Claim acknowledgements>': [
+                'claim_rejected',
+                'claim_denied',
+                'claim_more_info_required',
+                'claim_paid',
+                'claim_pended',
+                'claim_created',
+                'claim_rejected',
+                'claim_accepted'
+            ]
+        };
+    }
+
     function mockFields () {
         function randomIndex (length) {
             index = Math.floor(Math.random()*length);
@@ -416,7 +447,7 @@ $(document).ready(function(){
             }
 
             if (debug.length) {
-                debugLog('<pre>Mismatched fields:\n' + debug + '</pre>', true);
+                debugLog('Mismatched fields:\n' + debug, true);
             } else {
                 debugLog('False alarm, all is good!');
             }
@@ -627,9 +658,75 @@ $(document).ready(function(){
         });
     }
 
-    function debugLog (message, asHtml) {
-        if (asHtml) {
-            $('#debug-notifications').html(message);
+    function eventPayload (eventType, isAcknowledgement) {
+        var dateObject = new Date(),
+            date = [
+                dateObject.getFullYear(),
+                (dateObject.getMonth() + 1).toString().replace(/^(\d)$/, '0$1'),
+                dateObject.getDate()
+            ].join('-'),
+            label = eventType + " sent via ajax from the debug tool at " + dateObject.toString(),
+            jsonEvent = {
+                event: eventType,
+                reference_id: '31WJTPESBNVA0',
+                details: {
+                    submission_status: eventType.replace('claim_', ''),
+                    payer_control_number: null,
+                    effective_date: date,
+                    codes: {
+                        category_code: "Category code: " + label,
+                        category_label: "Category label: " + label,
+                        status_code: "Status code: " + label,
+                        status_label: "Status label: " + label
+                    }
+                }
+            };
+
+        /**
+         * The main difference between the acknowledgement event and other events is:
+         *
+         * - acknowledgements contain an element named "acknowledgements", with an array of past events
+         * - regular events contain an element named "details" with codes of the current event
+         */
+        if (isAcknowledgement) {
+            delete(jsonEvent.details);
+            jsonEvent.acknowledgements = [];
+        }
+
+        return JSON.stringify(jsonEvent);
+    }
+
+    function getEventData () {
+        var $this = $('select#debug-webhook-event'),
+            value = $this.val(),
+            $option = $this.find('[value="' + value + '"'),
+            eventType = $option.text(),
+            isAcknowledgement = value.match(/^\d+$/);
+
+        return { eventType: eventType, isAcknowledgement: isAcknowledgement };
+    }
+
+    function sendWebhook (eventString) {
+        debugLog('Sending webhook event...');
+
+        $.ajax({
+            url: '/manage/eligible_webhook.php',
+            data: eventString,
+            type: 'POST',
+            processData: false,
+            contentType: 'application/json',
+            success: function(){
+                debugLog('Webhook event sent successfully.');
+            },
+            error: function(){
+                debugLog('Webhook event not completed, there was an error in the webhook script.');
+            }
+        });
+    }
+
+    function debugLog (message, asCodeBlock) {
+        if (asCodeBlock) {
+            $('#debug-notifications').empty().append($('<code>').text(message));
         } else {
             $('#debug-notifications').text(message);
         }
@@ -666,6 +763,43 @@ $(document).ready(function(){
             }
         })
         .change(function(){ changeClaimStatus($(this).val()); }).prependTo('#debug-buttons');
+
+    $('<button>', {
+        id: 'debug-ajax-webhook',
+        text: 'Send webhook event',
+        title: 'This test is ONLY valid for the claim with reference id 31WJTPESBNVA0'
+    }).click(function(){
+            var eventData = getEventData(),
+                eventString = eventPayload(eventData.eventType, eventData.isAcknowledgement);
+
+            sendWebhook(eventString);
+        }).prependTo('#debug-buttons');
+
+    $('<select>', {
+        id: 'debug-webhook-event',
+        name: 'webhook-event'
+    }).each(function(){
+            var $this = $(this),
+                eventList = webhookEvents();
+
+            for (var status in eventList) {
+                var $optGroup = $('<optgroup />', { label: status });
+
+                for (var eventType in eventList[status]) {
+                    var label = eventList[status][eventType],
+                        $option = $('<option />', { value: eventType, text: label });
+
+                    $optGroup.append($option);
+                }
+
+                $optGroup.appendTo($this);
+            }
+
+        })
+        .change(function(){
+            var eventData = getEventData();
+            debugLog(eventPayload(eventData.eventType, eventData.isAcknowledgement), true);
+        }).prependTo('#debug-buttons');
 
     $('<div>', {
         id: 'debug-notifications'

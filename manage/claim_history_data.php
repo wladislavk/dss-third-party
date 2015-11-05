@@ -67,7 +67,7 @@
 			
 			if ($success == "true"){
 		?>
-        <p><strong>Success Response:</strong><br />
+        <p><strong>Success Response</strong><br />
     <?php
 			} else {
     ?>

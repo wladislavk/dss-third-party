@@ -149,6 +149,7 @@ define('DSS_TRXN_PYMT_DEBIT', 1);
 define('DSS_TRXN_PYMT_CHECK', 2);
 define('DSS_TRXN_PYMT_CASH', 3);
 define('DSS_TRXN_PYMT_WRITEOFF', 4);
+define('DSS_TRXN_PYMT_EFT', 5);
 
 // A convenience array to get trxn payment type labels
 $dss_trxn_pymt_type_labels = array();
@@ -162,6 +163,8 @@ $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH] = "Cash";
 // $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]['short'] = "Cash";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF] = "Write Off";
 // $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]['short'] = "Write Off";
+$dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT] = "E-Fund Transfer";
+// $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT]['short'] = "EFT";
 
 //Max File size allowed for upload forms
 define('DSS_FILE_MAX_SIZE', 10000000);

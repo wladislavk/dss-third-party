@@ -435,6 +435,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     }
     $ed_sql .=" 
       patient_notes = '".s_for($_POST["patient_notes"])."', 
+      display_alert = '".s_for($_POST["display_alert"])."',
       alert_text = '".s_for(!empty($_POST["alert_text"]) ? $_POST["alert_text"] : '')."', 
       p_d_party = '".s_for(!empty($_POST["p_d_party"]) ? $_POST["p_d_party"] : '')."', 
       p_d_relation = '".s_for(!empty($_POST["p_d_relation"]) ? $_POST["p_d_relation"] : '')."', 
@@ -788,6 +789,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
                   best_number = '".s_for($_POST["best_number"])."',
                   email = '".s_for($_POST["email"])."', 
                   patient_notes = '".s_for($_POST["patient_notes"])."', 
+                  display_alert = '".s_for($_POST["display_alert"])."',
                   alert_text = '".s_for(!empty($_POST["alert_text"]) ? $_POST["alert_text"] : '')."', 
                   p_d_party = '".s_for(!empty($_POST["p_d_party"]) ? $_POST["p_d_party"] : '')."', 
                   p_d_relation = '".s_for(!empty($_POST["p_d_relation"]) ? $_POST["p_d_relation"] : '')."', 
@@ -1007,7 +1009,7 @@ if(isset($msg) && $msg != ''){
   $best_number = $_POST['best_number'];
   $email = $_POST['email'];
   $patient_notes = $_POST['patient_notes'];
-  $display_alert = !empty($_POST['display_alert']) ? 1 : 0;
+  $display_alert = $_POST['display_alert'];
   $alert_text = $_POST['alert_text'];
   $p_d_party = $_POST["p_d_party"]; 
   $p_d_relation = $_POST["p_d_relation"];
@@ -1129,7 +1131,7 @@ if(isset($msg) && $msg != ''){
   $email = st($themyarray['email']);
   $patient_notes = st($themyarray['patient_notes']);
   $alert_text = st($themyarray['alert_text']);
-  $display_alert = !empty($alert_text) ? 1 : 0;
+  $display_alert = st($themyarray['display_alert']);
   $p_d_party = st($themyarray["p_d_party"]); 
   $p_d_relation = st($themyarray["p_d_relation"]);
   $p_d_other = st($themyarray["p_d_other"]);
@@ -1928,7 +1930,7 @@ for($i=80;$i<=500;$i++){?>
               <span>
                 <label for="alert_text" style="display: inline">Patient alert (display notification at top of chart)?</label>
                 <input type="radio" name="display_alert" value="1" onclick="$('#alert_text').show()" <?php echo ($display_alert) ? 'checked="checked"' : ''; ?>>Yes
-                <input type="radio" name="display_alert" value="0" onclick="$('#alert_text').hide(); $('#alert_text').val('')" <?php echo (!$display_alert) ? 'checked="checked"' : ''; ?>>No
+                <input type="radio" name="display_alert" value="0" onclick="$('#alert_text').hide()" <?php echo (!$display_alert) ? 'checked="checked"' : ''; ?>>No
               </span>
               <textarea name="alert_text" id="alert_text" <?php echo ($display_alert) ? 'class="show-alert-text"' : 'class="hide-alert-text"'; ?>><?php echo $alert_text; ?></textarea>
             </div>

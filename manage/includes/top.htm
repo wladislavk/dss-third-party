@@ -290,6 +290,7 @@ if (!isset($_SESSION['userid'])) {
 
         // text for the alert box next to *Med
         $alertText = $myarray['alert_text'];
+        $displayAlert = $myarray['display_alert'];
 
         if ($premed) {
           $title .= "Pre-medication: " . $myarray['premed']."\n";
@@ -713,7 +714,7 @@ if (!isset($_SESSION['userid'])) {
 
                <?php echo  (!empty($thename) ? $thename : ''); ?>
 
-               <?php if (!empty($alertText)) { ?>
+               <?php if ($displayAlert && !empty($alertText)) { ?>
                 <a href="#" title="<?php echo 'Notes: ' . $alertText; ?>" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Alert</a>
                <?php } ?>
 

@@ -129,19 +129,19 @@
                     $errors_message .= $error->message . '<br/>';
                 }
                 ?>
-                <td colspan="11" class="clickable_row">Errors: <?=$errors_message?></td>
+                <td colspan="11" class="clickable_row" data-report="<?=$report_data['payment_id'];?>">Errors: <?=$errors_message?></td>
             <? else: ?>
-                <td valign="top" class="clickable_row"><?=$details->effective_date;?></td>
-                <td valign="top" class="clickable_row"><?=$details->payer->name;?></td>
-                <td valign="top" class="clickable_row"><?=$details->patient->last_name . ' ' . $details->patient->first_name . ' ' . $details->patient->middle_name;?></td>
-                <td valign="top" class="clickable_row"><?=$details->financials->type_code . ' ' . $details->financials->type_label;?></td>
-                <td valign="top" class="clickable_row"><?=$details->financials->total_payment_amount;?></td>
-                <td valign="top" class="clickable_row"><?=$details->financials->credit ? 'Credit' : 'Debit';?></td>
-                <td valign="top" class="clickable_row"><?=$details->financials->payment_method_code . ' ' . $details->financials->payment_method_label;?></td>
-                <td valign="top" class="clickable_row"><?=$details->financials->payment_date;?></td>
-                <td valign="top" class="clickable_row"><?=implode(' ', $details->claim->status);?></td>
-                <td valign="top" class="clickable_row"><?=$details->claim->amount->billed;?></td>
-                <td valign="top" class="clickable_row"><?=$details->claim->amount->paid;?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->effective_date;?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->payer->name;?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->patient->last_name . ' ' . $details->patient->first_name . ' ' . $details->patient->middle_name;?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->financials->type_code . ' ' . $details->financials->type_label;?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->financials->total_payment_amount;?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->financials->credit ? 'Credit' : 'Debit';?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->financials->payment_method_code . ' ' . $details->financials->payment_method_label;?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->financials->payment_date;?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=implode(' ', $details->claim->status);?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->claim->amount->billed;?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->claim->amount->paid;?></td>
             <? endif; ?>
         </tr>
     <? endforeach; ?>
@@ -149,7 +149,7 @@
 <script type="text/javascript">
     $( document ).ready(function() {
         $('.clickable_row').click( function() {
-            window.location = 'payment_report.php?report_id=<?=$report_data['payment_id'];?>';
+            window.location = 'payment_report.php?report_id=' + $(this).data('report');
         });
     });
 </script>

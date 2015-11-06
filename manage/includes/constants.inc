@@ -163,7 +163,7 @@ $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH] = "Cash";
 // $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]['short'] = "Cash";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF] = "Write Off";
 // $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]['short'] = "Write Off";
-$dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT] = "E-Fund Transfer";
+$dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT] = "E-Funds Transfer (EFT)";
 // $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT]['short'] = "EFT";
 
 //Max File size allowed for upload forms

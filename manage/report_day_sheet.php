@@ -259,7 +259,7 @@
             <td>$<?php echo  number_format($impact,2); ?></td>
         </tr>
         <tr>
-            <td>Electronic Fund Transfer</td>
+            <td>Electronic Funds Transfer (EFT)</td>
             <?php
             $impact = 0;
             $sql = "SELECT

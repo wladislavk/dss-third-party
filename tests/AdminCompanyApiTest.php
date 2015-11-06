@@ -18,7 +18,7 @@ class AdminCompanyApiTest extends TestCase
     public function testAddAdminCompany()
     {
         $data = [
-            'adminid' => 7,
+            'adminid'   => 7,
             'companyid' => 14
         ];
 
@@ -35,7 +35,7 @@ class AdminCompanyApiTest extends TestCase
      */
     public function testUpdateAdminCompany()
     {
-        $adminCompanyTestRecord = \DentalSleepSolutions\AdminCompany::where('companyid', '=', 14)->firstOrFail();
+        $adminCompanyTestRecord = \DentalSleepSolutions\Models\AdminCompany::where('companyid', '=', 14)->firstOrFail();
 
         if ($adminCompanyTestRecord) {
             $data = [
@@ -56,7 +56,7 @@ class AdminCompanyApiTest extends TestCase
      */
     public function testDeleteAdminCompany()
     {
-        $adminCompanyTestRecord = \DentalSleepSolutions\AdminCompany::where('companyid', '=', 15)->firstOrFail();
+        $adminCompanyTestRecord = \DentalSleepSolutions\Models\AdminCompany::where('companyid', '=', 15)->firstOrFail();
 
         if ($adminCompanyTestRecord) {
             $this->delete('/api/v1/admin-company/' . $adminCompanyTestRecord->id)

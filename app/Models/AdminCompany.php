@@ -1,5 +1,5 @@
 <?php
-namespace DentalSleepSolutions;
+namespace DentalSleepSolutions\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

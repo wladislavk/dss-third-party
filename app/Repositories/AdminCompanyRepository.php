@@ -1,7 +1,8 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Interfaces\AdminCompanyInterface;
+use DentalSleepSolutions\Models\AdminCompany;
+use DentalSleepSolutions\Interfaces\Repositories\AdminCompanyInterface;
 
 class AdminCompanyRepository extends BaseRepository implements AdminCompanyInterface
 {
@@ -10,7 +11,7 @@ class AdminCompanyRepository extends BaseRepository implements AdminCompanyInter
      *
      * @var string
      */
-    protected $modelName = 'DentalSleepSolutions\AdminCompany';
+    protected $modelName = AdminCompany::class;
 
     /**
      * Return all admin companies

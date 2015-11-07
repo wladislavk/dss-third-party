@@ -94,7 +94,7 @@
         <? endif; ?>
         <th valign="top" class="col_head">Claim ID</th>
         <th valign="top" class="col_head <?=($sort_by == 'date') ? 'arrow_' . $sort_direction : '';?>">
-            <a href="payment_reports_list.php?unviewed=<?=$is_unviewed ? '1' : '0';?>&sort=date&sortdir=<?=($sort_by == 'date' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?>">Generation Date</a>
+            <a href="payment_reports_list.php?unviewed=<?=$is_unviewed ? '1' : '0';?>&sort=date&sortdir=<?=($sort_by == 'date' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?>">Generation Date (YYYY-MM-DD)</a>
         </th>
         <th valign="top" class="col_head">Payer</th>
         <th valign="top" class="col_head">Patient</th>

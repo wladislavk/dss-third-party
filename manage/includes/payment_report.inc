@@ -67,10 +67,23 @@
     } elseif (isset($details->financials->debit)) {
         $financials_credit = $details->financials->debit ? 'Debit' : 'Credit';
     }
+
+    $patient_title = $details->patient->last_name . ' ' . $details->patient->first_name . ' ' . $details->patient->middle_name;
+    $service_provider_title = $details->service_provider->last_name . ' ' . $details->service_provider->first_name . ' ' . $details->service_provider->middle_name;
+    $payee_title = $details->payee->name;
 ?>
 <br />
 <div class="<?=$header_class?>">
-	Payment Report
+    Payment Report <br/>
+    <? if (trim($patient_title)): ?>
+        Patient: <?=$patient_title?> <br/>
+    <? endif; ?>
+    <? if (trim($service_provider_title)): ?>
+        Service Provider: <?=$service_provider_title?><br/>
+    <? endif; ?>
+    <? if (trim($payee_title)): ?>
+        Payee: <?=$payee_title?>
+    <? endif; ?>
 </div>
 <br />
 <br />
@@ -87,7 +100,7 @@
         <td class="tr_active" valign="top"><?=$report_data['reference_id'];?></td>
     </tr>
     <tr>
-        <th class="tr_bg_h col_head" valign="top">Report generation date</th>
+        <th class="tr_bg_h col_head" valign="top">Report Generation Date (YYYY-MM-DD)</th>
         <td class="tr_active" valign="top"><?=$details->effective_date;?></td>
     </tr>
     <tr>
@@ -133,7 +146,7 @@
         <td class="tr_active" valign="top"><?=$details->financials->payment_date;?></td>
     </tr>
     <tr>
-        <th class="tr_bg_h col_head" valign="top">Payment Trance Number</th>
+        <th class="tr_bg_h col_head" valign="top">Payment Trace Number</th>
         <td class="tr_active" valign="top"><?=$details->financials->payment_trace_number;?></td>
     </tr>
     <tr>

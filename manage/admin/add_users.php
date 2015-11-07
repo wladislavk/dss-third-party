@@ -72,6 +72,7 @@ if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
 				phone = '".s_for(num($_POST["phone"]))."', 
 				fax = '".s_for(num($_POST["fax"]))."',
 				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
+				use_payment_report = '".s_for($_POST['use_payment_report'])."',
 				use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
 				use_letters = '".s_for($_POST['use_letters'])."',
 				tracker_letters = '".s_for($_POST['tracker_letters'])."',
@@ -220,6 +221,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				phone = '".s_for(num($_POST["phone"]))."', 
 				fax = '".s_for(num($_POST["fax"]))."',
 				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
+				use_payment_report = '".s_for($_POST['use_payment_report'])."',
 				use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
 				use_letters = '".s_for($_POST['use_letters'])."',
                                 tracker_letters = '".s_for($_POST['tracker_letters'])."',
@@ -418,6 +420,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$status = $_POST['status'];
 		$suspended_reason = $_POST['suspended_reason'];
 		$use_patient_portal = $_POST['use_patient_portal'];
+        $use_payment_report = $_POST['use_payment_report'];
 		$use_digital_fax = $_POST['use_digital_fax'];
 		$use_letters = $_POST['use_letters'];
 		$tracker_letters = $_POST['tracker_letters'];
@@ -486,6 +489,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$status = st($themyarray['status']);
 		$suspended_reason = st($themyarray['suspended_reason']);
 		$use_patient_portal = st($themyarray['use_patient_portal']);
+		$use_payment_report = st($themyarray['use_payment_report']);
 		$use_digital_fax = st($themyarray['use_digital_fax']);
 		$use_letters = st($themyarray['use_letters']);
 		$tracker_letters = st($themyarray['tracker_letters']);
@@ -532,6 +536,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 $use_course_staff = 1;
                 $homepage = 1;
 		$use_letter_header = 1;
+        $use_payment_report = 0;
  		$companyid = 4;
 		$user_type = 2;
 		$use_digital_fax = 1;
@@ -879,6 +884,10 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     <label class="col-md-4">
                         <input type="checkbox" name="eligible_test" value="1" <?php if($eligible_test == 1) echo " checked='checked'";?>>
                         Eligible Test?
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox" name="use_payment_report" value="1" <?php if($use_payment_report == 1) echo " checked='checked'";?>>
+                        Payment Reports
                     </label>
                 </div>
             </div>

@@ -32,54 +32,56 @@
   $docId = intval($_SESSION['docid']);
   $trxnTypeAdjustment = $db->escape(DSS_TRXN_TYPE_ADJ);
 
+  // ledger_payment
   $cr_sql = "SELECT
-        COALESCE(dlp.payment_type, '') AS description,
-        SUM(dlp.amount) AS amount
+        COALESCE(dlp.payment_type, '0') AS payment_description,
+        SUM(dlp.amount) AS payment_amount
     FROM dental_ledger dl
-        JOIN dental_patients pat ON dl.patientid = pat.patientid
-        LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
-            AND tc.docid = '$docId'
-        LEFT JOIN dental_users p ON dl.producerid = p.userid
+        JOIN dental_patients as pat ON dl.patientid = pat.patientid
         LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
     WHERE dl.docid = '$docId'
-        AND COALESCE(dlp.amount, 0) NOT IN ('', 0)
-        AND COALESCE(tc.type, '') != '$trxnTypeAdjustment' ";
+        $lpsql
+        AND dlp.amount != 0
+        $p_date
+        ";
 
-  $cr_sql .= ($lpsql ?: '') . ' ' . ($p_date ?: '') . ' ';
         if(isset($_GET['pid'])){
                 $cr_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
         }
-                $cr_sql .= " GROUP BY description";
+                $cr_sql .= " GROUP BY payment_description";
 
   $cr_q = $db->getResults($cr_sql);
   if ($cr_q) foreach ($cr_q as $cr_r) {?>
-    <li><label><?php echo ($dss_trxn_pymt_type_labels[$cr_r['description']] == 'Check') ? 'Ins. Checks' : $dss_trxn_pymt_type_labels[$cr_r['description']]; ?></label> $<?php echo number_format($cr_r['amount'],2); ?></li>
+    <li><label><?php echo ($dss_trxn_pymt_type_labels[$cr_r['payment_description']] == 'Check') ? 'Ins. Checks' : $dss_trxn_pymt_type_labels[$cr_r['payment_description']]; ?></label> $<?php echo number_format($cr_r['payment_amount'],2); ?></li>
   <?php 
-      $cr_total += $cr_r['amount'];
+      $cr_total += $cr_r['payment_amount'];
   }
-  $cr2_sql = "SELECT
-        dl.description AS description,
-        SUM(dl.paid_amount) AS amount
-    FROM dental_ledger dl
-        JOIN dental_patients AS pat ON dl.patientid = pat.patientid
-        LEFT JOIN dental_users p ON dl.producerid = p.userid
-        LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
-        LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code AND tc.docid = '$docId'
-    WHERE dl.docid = '$docId'
-        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
-        AND COALESCE(tc.type, '') != '$trxnTypeAdjustment' ";
 
-  $cr2_sql .= ($lpsql ?: '') . ' ' . ($l_date ?: '') . ' ';
+  // ledger_paid
+  $cr2_sql = "SELECT
+        COALESCE(dl.description, 0) AS payment_description,
+        SUM(dl.paid_amount) AS payment_amount
+    FROM dental_ledger dl
+        JOIN dental_patients as pat ON dl.patientid = pat.patientid
+        LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+        LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
+            AND tc.docid = '$docId'
+    WHERE dl.docid = '$docId'
+        $lpsql
+        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+        AND COALESCE(tc.type, '') != '$trxnTypeAdjustment'
+        $l_date
+        ";
 
   if(isset($_GET['pid'])){
     $cr2_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
   }
-  $cr2_sql .= " GROUP BY description";
+  $cr2_sql .= " GROUP BY payment_description";
   $cr2_q = $db->getResults($cr2_sql);
   if ($cr2_q) foreach ($cr2_q as $cr2_r) {?>
-    <li><label><?php echo $cr2_r['description'] = ($cr2_r['description']=='Check')?'Pers Checks':$cr2_r['description']; ?></label> $<?php echo number_format($cr2_r['amount'],2); ?></li>
+    <li><label><?php echo $cr2_r['payment_description'] = ($cr2_r['payment_description']=='Check')?'Pers Checks':$cr2_r['payment_description']; ?></label> $<?php echo number_format($cr2_r['payment_amount'],2); ?></li>
   <?php 
-    $cr_total += $cr2_r['amount'];
+    $cr_total += $cr2_r['payment_amount'];
   } ?>
 
 

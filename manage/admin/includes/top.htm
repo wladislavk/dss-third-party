@@ -84,7 +84,7 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
 </head>
 <body class="lpage-header-fixed">
 
-        <div class="page-header navbar navbar-fixed-top"><a href="/manage/admin/home.php">
+        <div class="page-header navbar navbar-fixed-top text-center"><a href="/manage/admin/home.php">
             <h1 class="pull-left" style="color:#ffffff;font-size:17px; margin:12px;">Dental Sleep <span style="color:#187eb7;">Solutions</span></h1>
            </a>
            <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
@@ -148,6 +148,12 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
 		</ul>
 		</div>
 		<!-- END TOP NAVIGATION MENU -->
+            <form class="navbar-form" role="search" action="/manage/admin/manage_users.php" type="get">
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" name="search" placeholder="Name or username">
+                </div>
+                <button type="submit" class="btn btn-primary btn-xs">Search user</button>
+            </form>
 	</div>
 	<!-- END TOP NAVIGATION BAR -->
 </div>

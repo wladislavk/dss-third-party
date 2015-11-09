@@ -471,7 +471,18 @@ class ClaimFormData
         );
     }
 
-    public static function isStatus ($name, $status) {
+    /**
+     * Auxiliary function to get the list of statuses that belong to a status label
+     *
+     * Most statuses are pairs, being the first one the primary, and the second one the secondary.
+     *
+     * In case there are more than 2 states, odd elements represent primary statuses, even elements represent
+     * secondary statuses.
+     *
+     * @param string $name
+     * @return array
+     */
+    public static function statusListByName ($name) {
         switch ($name) {
             case 'pending':
                 $statusList = [DSS_CLAIM_PENDING, DSS_CLAIM_SEC_PENDING];
@@ -512,6 +523,19 @@ class ClaimFormData
             default:
                 $statusList = [];
         }
+
+        return $statusList;
+    }
+
+    /**
+     * Auxiliary function to determine if some status matches its label/name
+     *
+     * @param string $name
+     * @param int    $status
+     * @return bool
+     */
+    public static function isStatus ($name, $status) {
+        $statusList = self::statusListByName($name);
 
         return in_array($status, $statusList);
     }

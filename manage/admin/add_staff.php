@@ -102,7 +102,7 @@ if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
                                 salt='".$salt."',
                                 first_name = '".s_for($_POST["first_name"])."', 
                                 last_name = '".s_for($_POST["last_name"])."',
-                                name = '".s_for(trim($_POST["first_name"] . ' ' . $_POST["last_name"]))."'
+                                name = '".s_for(trim($_POST["first_name"] . ' ' . $_POST["last_name"]))."',
                                 email = '".s_for($_POST["email"])."',
                                 phone = '".s_for(num($_POST["phone"]))."',
                                 status = '".s_for($_POST["status"])."',

@@ -1412,7 +1412,7 @@ if(!$r['reference_id'] || !$w_r['response']){
                         $d = json_decode($r['response']);
                         $success = $d->{"success"};
                         if($success=="true"){
-                                ?><p><strong>Success Response:</strong><br /><?php
+                                ?><p><strong>Success Response</strong><br /><?php
                         }else{
                                 ?><p><strong>Error Response:</strong><br /><?php
                                         $errors = $d->{"errors"}->{"messages"};

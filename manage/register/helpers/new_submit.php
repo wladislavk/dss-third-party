@@ -15,7 +15,7 @@
                 $sql = "INSERT INTO dental_users set
                         first_name = '".mysqli_real_escape_string($con, $_POST['first_name'])."',
                         last_name = '".mysqli_real_escape_string($con, $_POST['last_name'])."',
-                        name = '".s_for(trim($_POST["first_name"] . ' ' . $_POST["last_name"]))."'
+                        name = '".s_for(trim($_POST["first_name"] . ' ' . $_POST["last_name"]))."',
                         email= '".mysqli_real_escape_string($con, $_POST['email'])."',
                         phone = '".mysqli_real_escape_string($con, num($_POST['cell_phone']))."',
         		access_code_id = '".mysqli_real_escape_string($con, $access_code_id)."',

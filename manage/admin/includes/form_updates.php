@@ -5685,6 +5685,7 @@ Date: _________________</p>
 
 
 function update_proof_of_delivery_form($id, $locid = null, $backoffice=false){
+    $con = $GLOBALS['con'];
 
 $logo = get_logo($id, $backoffice);
   $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysqli_real_escape_string($con,$id);

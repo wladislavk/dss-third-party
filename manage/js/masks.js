@@ -9,7 +9,7 @@ $(document).ready(function(){
         $('.cvcmask').mask('999?9');
 	$('.mmmask').mask('#9');
 	$('.yyyymask').mask('2099');
-        $('.zipmask').mask('99999');
+        $('.zipmask').mask('99999?-9999');
 	$('.dollarmask').mask('%%%%%%%');
   $('.numbermask').mask('?9999999999');
   $.mask.definitions['%']='[A-Za-z\.]';

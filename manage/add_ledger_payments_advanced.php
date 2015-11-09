@@ -263,6 +263,7 @@ function updateType(payer){
   <option selected="selected" value="<?= DSS_TRXN_PYMT_CHECK; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]; ?></option>
   <option value="<?= DSS_TRXN_PYMT_CASH; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]; ?></option>
   <option value="<?= DSS_TRXN_PYMT_WRITEOFF; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]; ?></option>
+  <option value="<?= DSS_TRXN_PYMT_EFT; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT]; ?></option>
 </select>
 </div>
 

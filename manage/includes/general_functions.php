@@ -423,12 +423,12 @@ function parseCityStateZip ($location) {
      * City can match almost anything, thus we leave those matches at the end, to avoid false positives
      */
     $patterns = [
-        "/^(?P<zip>\d+)$/",
+        "/^(?P<zip>\d+|\d+-\d+)$/",
         "/^(?P<state>$stateRegex)$/i",
-        "/^(?P<state>$stateRegex)[, ]+(?P<zip>\d+)$/i",
-        "/^(?P<city>.+?)[, ]+(?P<state>$stateRegex)[, ]+(?P<zip>\d+)$/i",
+        "/^(?P<state>$stateRegex)[, ]+(?P<zip>\d+|\d+-\d+)$/i",
+        "/^(?P<city>.+?)[, ]+(?P<state>$stateRegex)[, ]+(?P<zip>\d+|\d+-\d+)$/i",
         "/^(?P<city>.+?)[, ]+(?P<state>$stateRegex)$/i",
-        "/^(?P<city>.+?)[, ]+(?P<zip>\d+)$/i",
+        "/^(?P<city>.+?)[, ]+(?P<zip>\d+|\d+-\d+)$/i",
         "/^(?P<city>.+)$/"
     ];
 

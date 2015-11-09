@@ -21,16 +21,36 @@
 		  if($r['reference_id']!='') {
         $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysqli_real_escape_string($con,$r['reference_id'])."' ORDER BY adddate DESC";
         $w_q = $db->getResults($w_sql);
+
+        /**
+         * Some Eligible responses are not status notifications, we need to filter out the ones that are not useful
+         */
         foreach ($w_q as $w_r) {
-    ?>
+            $p = json_decode($w_r['response']);
+
+            if (!isset($p->details)) {
+                continue;
+            }
+
+            ?>
           <h3>
-            <?php echo $w_r['event_type']; ?> on
-                <?php echo $w_r['adddate']; ?>
+            <?= ucwords(str_replace('_', ' ', $w_r['event_type'])) ?> on
+            <?= $w_r['adddate'] ?>
           </h3>
-          <?php $p = json_decode($w_r['response']); ?>
-          <p>Category: <?php echo  $p->{"details"}->{"codes"}->{"category_code"}; ?> - <?php echo  $p->{"details"}->{"codes"}->{"category_label"}; ?><br />
-          Status: <?php echo  $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?php echo  $p->{"details"}->{"codes"}->{"status_label"}; ?>
-          </p>
+
+          <?php if ($w_r['event_type'] !== 'claim_created') { ?>
+            <p>
+              Category:
+                <?= $p->details->codes->category_code ?>
+                -
+                <?= $p->details->codes->category_label ?>
+                <br />
+              Status:
+                <?= $p->details->codes->status_code ?>
+                -
+                <?= $p->details->codes->status_label ?>
+            </p>
+          <?php } ?>
     <?php
         }
 		  }
@@ -47,7 +67,7 @@
 			
 			if ($success == "true"){
 		?>
-        <p><strong>Success Response:</strong><br />
+        <p><strong>Success Response</strong><br />
     <?php
 			} else {
     ?>

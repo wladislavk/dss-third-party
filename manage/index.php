@@ -220,13 +220,7 @@
           <span class="label">Unsent HSTs</span>
         </a>
 
-        <?php if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE): ?>
           <a href="manage_claims.php" class="notification  count_<?php echo $num_pending_nodss_claims; ?> <?php echo ($num_pending_nodss_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?php echo $num_pending_nodss_claims;?></span><span class="label">Pending Claims</span></a>
-        <?php endif ?>
-
-        <?php if ($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE): ?>
-          <a href="manage_claims.php" class=" count_<?php echo $num_pending_claims; ?> notification <?php echo ($num_pending_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?php echo $num_pending_claims;?></span><span class="label">Pending Claims</span></a>
-        <?php endif ?>
 
         <?php if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE): ?>
           <a href="manage_claims.php?unmailed=1" class=" count_<?php echo $num_unmailed_claims; ?> notification <?php echo ($num_unmailed_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?php echo $num_unmailed_claims;?></span><span class="label">Unmailed Claims</span></a>

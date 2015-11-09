@@ -1,26 +1,37 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include_once 'admin/includes/main_include.php';
-      include_once 'includes/constants.inc' ?>
+<?php
+namespace Ds3\Libraries\Legacy;
 
+include_once 'admin/includes/main_include.php';
+include_once 'includes/constants.inc';
+
+$docId = intval($_SESSION['docid']);
+$trxnTypeAdjustment = $db->escape(DSS_TRXN_TYPE_ADJ);
+
+?>
 <div class="fullwidth">
   <h3>Charges</h3>
   <ul>
 <?php
   $ch_total = 0;
-  $ch_sql = "SELECT dl.description, sum(dl.amount) amount FROM dental_ledger dl
-                JOIN dental_patients p ON p.patientid=dl.patientid
-                WHERE amount != '' 
-                AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' 
-            		".(!empty($lpsql) ? $lpsql : '')." ".(!empty($l_date) ? $l_date : '')."
-                ";
+  $ch_sql = "SELECT
+        COALESCE(dl.description, '') AS payment_description,
+        SUM(dl.amount) AS payment_amount
+    FROM dental_ledger dl
+        JOIN dental_patients p ON p.patientid = dl.patientid
+    WHERE dl.docid = '$docId'
+        $lpsql
+        AND (dl.paid_amount IS NULL OR dl.paid_amount = 0)
+        $l_date";
+
 	if(isset($_GET['pid'])){
 		$ch_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
 	}
-	$ch_sql .= " GROUP BY dl.description";
+	$ch_sql .= " GROUP BY payment_description";
   $ch_q = $db->getResults($ch_sql);
   if ($ch_q) foreach ($ch_q as $ch_r) {?>
-    <li><label><?php echo $ch_r['description']; ?></label> $<?php echo number_format($ch_r['amount'],2); ?></li>
+    <li><label><?php echo $ch_r['payment_description']; ?></label> $<?php echo number_format($ch_r['payment_amount'],2); ?></li>
 	<?php 
-    $ch_total += $ch_r['amount']; 
+    $ch_total += $ch_r['payment_amount'];
   } ?>
     <li><label>Charges Total</label> $<?php echo number_format($ch_total,2); ?></li>
   </ul>
@@ -29,8 +40,6 @@
   <ul>
 <?php
   $cr_total = 0;
-  $docId = intval($_SESSION['docid']);
-  $trxnTypeAdjustment = $db->escape(DSS_TRXN_TYPE_ADJ);
 
   // ledger_payment
   $cr_sql = "SELECT
@@ -92,14 +101,21 @@
   <ul>
 <?php            
   $adj_total = 0;
-  $adj_sql = "SELECT dl.description, sum(dl.paid_amount) amount FROM dental_ledger dl
-                JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
-                JOIN dental_patients p ON p.patientid=dl.patientid
-                WHERE paid_amount != '' 
-                AND p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' 
-                AND tc.type = '".DSS_TRXN_TYPE_ADJ."'
-            		".(!empty($lpsql) ? $lpsql : '')." ".(!empty($l_date) ? $l_date : '')."
-                ";
+  $adj_sql = "SELECT
+        COALESCE(dl.description, 0) AS payment_description,
+        SUM(dl.paid_amount) AS payment_amount
+    FROM dental_ledger dl
+        JOIN dental_patients as pat ON dl.patientid = pat.patientid
+        LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+        LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
+            AND tc.docid = '$docId'
+    WHERE dl.docid = '$docId'
+        $lpsql
+        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+        AND COALESCE(tc.type, '') = '$trxnTypeAdjustment'
+        $l_date
+        ";
+
   if(isset($_GET['pid'])){
     $adj_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
   }

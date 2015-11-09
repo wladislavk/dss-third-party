@@ -540,8 +540,8 @@ if ($isPending) {
     $balance_due = number_format($balance_due, 2, '.','');
 }
 
-$eResponse = null;
-$eligibleResponse = null;
+$eResponse = [];
+$eligibleResponse = [];
 
 if ($isRejected) {
     $eResponse = $db->getRow("SELECT *
@@ -552,23 +552,31 @@ if ($isRejected) {
 
     $eResponse = $eResponse ?: [];
 
-    if ($eResponse['reference_id']) {
-        $referenceId = intval($eResponse['reference_id']);
-        $eligibleResponse = $db->getRow("SELECT *
-            FROM dental_eligible_response
-            WHERE reference_id = '$referenceId'
-            ORDER BY adddate DESC
-            LIMIT 1");
-    }
-
-    $eligibleResponse = $eligibleResponse ?: [];
-
     if ($eResponse) {
         $eResponse['response'] = json_decode($eResponse['response']);
-    }
 
-    if ($eligibleResponse) {
-        $eligibleResponse['response'] = json_decode($eligibleResponse['response']);
+        /**
+         * Some eligible responses don't report status changes, we need to exclude those
+         */
+        if ($eResponse['reference_id']) {
+            $referenceId = $db->escape($eResponse['reference_id']);
+            $eligibleResponses = $db->getResults("SELECT *
+                FROM dental_eligible_response
+                WHERE reference_id = '$referenceId'
+                ORDER BY adddate DESC, id DESC");
+
+            /**
+             * Walk the collection of responses, select the first one with details set
+             */
+            foreach ($eligibleResponses as $each) {
+                $each['response'] = json_decode($each['response']);
+
+                if (isset($each['response']->details)) {
+                    $eligibleResponse = $each;
+                    break;
+                }
+            }
+        }
     }
 }
 

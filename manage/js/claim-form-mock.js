@@ -37,6 +37,7 @@ $(document).ready(function(){
                 claim_paid: 'claim_paid'
             },
             Sent: {
+                claim_submitted: 'claim_submitted',
                 claim_pended: 'claim_pended',
                 claim_created: 'claim_created',
                 claim_received: 'claim_received'
@@ -49,6 +50,7 @@ $(document).ready(function(){
                 'claim_denied',
                 'claim_more_info_required',
                 'claim_paid',
+                'claim_submitted',
                 'claim_pended',
                 'claim_created',
                 'claim_rejected',

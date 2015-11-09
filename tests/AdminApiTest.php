@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AdminApiTest extends TestCase
 {
     use WithoutMiddleware;
+    use DatabaseTransactions;
 
     protected $adminid;
 
@@ -41,19 +41,17 @@ class AdminApiTest extends TestCase
      */
     public function testUpdateAdmin()
     {
-        $adminTestRecord = \DentalSleepSolutions\Models\Admin::where('name', 'like', 'PHPUnit%')->firstOrFail();
+        $adminTestRecord = factory(DentalSleepSolutions\Models\Admin::class)->create();
 
-        if ($adminTestRecord) {
-            $data = [
-                'name'               => 'PHPUnit updated admin',
-                'first_name'         => 'testFirstNameUpdated',
-            ];
+        $data = [
+            'name'       => 'PHPUnit updated admin',
+            'first_name' => 'testFirstNameUpdated',
+        ];
 
-            $this->put('/api/v1/admin/' . $adminTestRecord->adminid, $data)
-                ->seeStatusCode(200)
-                ->seeJsonContains(['status' => true])
-                ->seeInDatabase('admin', ['name' => 'PHPUnit updated admin']);
-        }
+        $this->put('/api/v1/admin/' . $adminTestRecord->adminid, $data) 
+            ->seeStatusCode(200)
+            ->seeJsonContains(['status' => true])
+            ->seeInDatabase('admin', ['name' => 'PHPUnit updated admin']);
     }
 
     /**
@@ -63,13 +61,11 @@ class AdminApiTest extends TestCase
      */
     public function testDeleteAdmin()
     {
-        $adminTestRecord = \DentalSleepSolutions\Models\Admin::where('name', 'like', 'PHPUnit%')->firstOrFail();
+        $adminTestRecord = factory(DentalSleepSolutions\Models\Admin::class)->create();
 
-        if ($adminTestRecord) {
-            $this->delete('/api/v1/admin/' . $adminTestRecord->adminid)
-                ->seeStatusCode(200)
-                ->seeJsonContains(['status' => true])
-                ->notSeeInDatabase('admin', ['name' => 'PHPUnit updated admin']);
-        }
+        $this->delete('/api/v1/admin/' . $adminTestRecord->adminid)
+            ->seeStatusCode(200)
+            ->seeJsonContains(['status' => true])
+            ->notSeeInDatabase('admin', ['adminid' => $adminTestRecord->adminid]);
     }
 }

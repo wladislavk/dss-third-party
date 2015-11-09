@@ -19,3 +19,18 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(DentalSleepSolutions\Models\Admin::class, function ($faker) {
+    return [
+        'name'         => 'PHPUnit admin',
+        'username'     => $faker->userName,
+        'password'     => bcrypt($faker->password),
+        'status'       => $faker->randomDigit,
+        'adddate'      => $faker->dateTime(),
+        'ip_address'   => $faker->ipv4,
+        'admin_access' => $faker->randomDigit,
+        'email'        => $faker->email,
+        'first_name'   => $faker->firstName,
+        'last_name'    => $faker->lastName
+    ];
+});

@@ -883,7 +883,7 @@ if($_GET['sortdir']=='DESC'){ ?>
   </table>
 </form> 
 
-<?php include 'ledger_summary.php'; ?>
+<?php include 'ledger_summary_report.php'; ?>
 
 <div id="popupContact" style="width:750px;">
   <a id="popupContactClose"><button>X</button></a>

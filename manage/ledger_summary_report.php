@@ -28,7 +28,8 @@ $chargesQuery = "SELECT
 // ledger_payment - from UNION
 $creditsTypeQuery = "SELECT
         COALESCE(dlp.payment_type, '0') AS payment_description,
-        SUM(dlp.amount) AS payment_amount
+        SUM(dlp.amount) AS payment_amount,
+        COALESCE(dlp.payer, '') AS payment_payer
     FROM dental_ledger dl
         JOIN dental_patients p ON p.patientid = dl.patientid
         LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
@@ -36,13 +37,12 @@ $creditsTypeQuery = "SELECT
         $patientConditional
         AND dlp.amount != 0
         $paymentDateConditional
-        GROUP BY payment_description";
+        GROUP BY payment_description, payment_payer";
 
 // ledger_paid - from UNION
 $creditsNamedQuery = "SELECT
         COALESCE(dl.description, '') AS payment_description,
         SUM(dl.paid_amount) AS payment_amount
-        , dl.ledgerid
     FROM dental_ledger dl
         JOIN dental_patients p ON p.patientid = dl.patientid
         LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
@@ -82,16 +82,30 @@ $totalCredits = array_sum(array_pluck($creditTypeItems, 'payment_amount')) +
 $totalAdjustments = array_sum(array_pluck($adjustmentItems, 'payment_amount'));
 
 // Set proper values of labels in credit items
-array_walk($creditTypeItems, function (&$item) use ($dss_trxn_pymt_type_labels) {
+array_walk($creditTypeItems, function (&$item) use ($dss_trxn_payer_labels, $dss_trxn_pymt_type_labels) {
+    $payer = $dss_trxn_payer_labels[$item['payment_payer']];
     $description = $dss_trxn_pymt_type_labels[$item['payment_description']];
-    $item['payment_description'] = $description === 'Check' ? 'Ins. Checks' : $description;
+
+    $description = strtolower(trim($description)) === 'check' ? 'Checks' : $description;
+
+    switch ($payer) {
+        case 'Primary Insurance':
+        case 'Secondary Insurance':
+            $description = "Ins. $description";
+            break;
+        case 'Patient':
+            $description = "Pt. $description";
+            break;
+    }
+
+    $item['payment_description'] = $description;
 });
 
 array_walk($creditNamedItems, function (&$item) {
     $description = $item['payment_description'];
 
     if (strlen($description)) {
-        $item['payment_description'] = $description === 'Check' ? 'Pers Checks' : $description;
+        $item['payment_description'] = strtolower(trim($description)) === 'check' ? 'Ins. Checks' : $description;
     } else {
         $item['payment_description'] = 'Unlabelled transaction type';
     }

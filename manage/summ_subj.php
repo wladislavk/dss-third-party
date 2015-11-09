@@ -32,7 +32,8 @@ echo $ep['ep_total']; ?> - Total
       echo ($myarray['burning']>0)?'Yes - <strong>Do you feel burning, tingling or crawling sensations in your legs when you wake up?</strong><br />':'';
       echo ($myarray['headaches']>0)?'Yes - <strong>Do you wake up with headaches during the night or in the morning?</strong><br />':'';
       echo ($myarray['falling_asleep']>0)?'Yes - <strong>Do you have trouble falling asleep?</strong><br />':'';
-      echo ($myarray['staying_asleep']>0)?'Yes - <strong>Do you have trouble staying asleep once you fall asleep?</strong><br />':''; ?>
+      echo ($myarray['staying_asleep']>0)?'Yes - <strong>Do you have trouble staying asleep once you fall asleep?</strong><br />':'';
+      echo ($myarray['rx_cpap']>0)?'<br /> Yes - <strong>Have you ever used CPAP before?</strong><br />':''; ?>
 
 <br />
 <strong>Co-morbidity</strong><br />

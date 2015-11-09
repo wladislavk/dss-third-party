@@ -30,6 +30,7 @@ if (isset($jsonResponse->details) && !isset($jsonResponse->acknowledgements)) {
         case 'claim_paid':
             updateClaimStatusFromReferenceId($referenceId, 'paid-insurance');
             break;
+        case 'claim_submitted':
         case 'claim_pended':
         case 'claim_created':
         case 'claim_received':

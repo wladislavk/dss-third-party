@@ -258,6 +258,42 @@
             <td>$<?php echo  number_format($r['amount'],2); ?></td>
             <td>$<?php echo  number_format($impact,2); ?></td>
         </tr>
+        <tr>
+            <td>Electronic Funds Transfer (EFT)</td>
+            <?php
+            $impact = 0;
+            $sql = "SELECT
+                        sum(dlp.amount) amount
+                        from dental_ledger dl
+                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                        AND dlp.amount != 0
+                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PRIMARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_SECONDARY).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_PATIENT).")
+                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_EFT)."'
+                        ".$p_date."";
+
+            $r = $db->getRow($sql);
+            $impact += $r['amount'];
+            ?>
+            <td></td>
+            <td>$<?php echo  number_format($r['amount'],2); ?></td>
+            <?php
+            $sql = "SELECT
+                        sum(dlp.amount) amount
+                        from dental_ledger dl
+                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                        AND dlp.amount != 0
+                        AND dlp.payer IN (".mysqli_real_escape_string($con, DSS_TRXN_PAYER_WRITEOFF).",".mysqli_real_escape_string($con, DSS_TRXN_PAYER_DISCOUNT).")
+                        AND dlp.payment_type='".mysqli_real_escape_string($con, DSS_TRXN_PYMT_EFT)."'
+                        ".$p_date."";
+
+            $r = $db->getRow($sql);
+            $impact += $r['amount'];
+            ?>
+            <td>$<?php echo  number_format($r['amount'],2); ?></td>
+            <td>$<?php echo  number_format($impact,2); ?></td>
+        </tr>
     </table>
 
     <div id="popupContact" style="width:750px;">

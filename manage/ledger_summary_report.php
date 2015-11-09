@@ -45,7 +45,6 @@ $creditsNamedQuery = "SELECT
         , dl.ledgerid
     FROM dental_ledger dl
         JOIN dental_patients p ON p.patientid = dl.patientid
-        LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
         LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
             AND tc.docid = '$docId'
     WHERE dl.docid = '$docId'
@@ -62,7 +61,6 @@ $adjustmentsQuery = "SELECT
         SUM(dl.paid_amount) AS payment_amount
     FROM dental_ledger dl
         JOIN dental_patients p ON p.patientid = dl.patientid
-        LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
         LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
             AND tc.docid = '$docId'
     WHERE dl.docid = '$docId'

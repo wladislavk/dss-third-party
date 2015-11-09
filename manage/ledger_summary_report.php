@@ -5,126 +5,147 @@ include_once 'admin/includes/main_include.php';
 include_once 'includes/constants.inc';
 
 $docId = intval($_SESSION['docid']);
+$patientId = intval($_GET['pid']);
 $trxnTypeAdjustment = $db->escape(DSS_TRXN_TYPE_ADJ);
 
-?>
-<div class="fullwidth">
-  <h3>Charges</h3>
-  <ul>
-<?php
-  $ch_total = 0;
-  $ch_sql = "SELECT
+$patientConditional = $patientId ? " AND dl.patientid = '$patientId' " : '';
+$ledgerDateConditional = isset($l_date) && $l_date ? $l_date : '';
+$paymentDateConditional = isset($p_date) && $p_date ? $p_date : '';
+
+// ledger - from UNION
+$chargesQuery = "SELECT
         COALESCE(dl.description, '') AS payment_description,
         SUM(dl.amount) AS payment_amount
     FROM dental_ledger dl
         JOIN dental_patients p ON p.patientid = dl.patientid
     WHERE dl.docid = '$docId'
-        $lpsql
-        AND (dl.paid_amount IS NULL OR dl.paid_amount = 0)
-        $l_date";
+        $patientConditional
+        $ledgerDateConditional
+        AND COALESCE(dl.paid_amount, 0) = 0
+        AND dl.amount != 0
+        GROUP BY payment_description";
 
-	if(isset($_GET['pid'])){
-		$ch_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
-	}
-	$ch_sql .= " GROUP BY payment_description";
-  $ch_q = $db->getResults($ch_sql);
-  if ($ch_q) foreach ($ch_q as $ch_r) {?>
-    <li><label><?php echo $ch_r['payment_description']; ?></label> $<?php echo number_format($ch_r['payment_amount'],2); ?></li>
-	<?php 
-    $ch_total += $ch_r['payment_amount'];
-  } ?>
-    <li><label>Charges Total</label> $<?php echo number_format($ch_total,2); ?></li>
-  </ul>
-
-  <h3>Credit</h3>
-  <ul>
-<?php
-  $cr_total = 0;
-
-  // ledger_payment
-  $cr_sql = "SELECT
+// ledger_payment - from UNION
+$creditsTypeQuery = "SELECT
         COALESCE(dlp.payment_type, '0') AS payment_description,
         SUM(dlp.amount) AS payment_amount
     FROM dental_ledger dl
-        JOIN dental_patients as pat ON dl.patientid = pat.patientid
+        JOIN dental_patients p ON p.patientid = dl.patientid
         LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
     WHERE dl.docid = '$docId'
-        $lpsql
+        $patientConditional
         AND dlp.amount != 0
-        $p_date
-        ";
+        $paymentDateConditional
+        GROUP BY payment_description";
 
-        if(isset($_GET['pid'])){
-                $cr_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
-        }
-                $cr_sql .= " GROUP BY payment_description";
-
-  $cr_q = $db->getResults($cr_sql);
-  if ($cr_q) foreach ($cr_q as $cr_r) {?>
-    <li><label><?php echo ($dss_trxn_pymt_type_labels[$cr_r['payment_description']] == 'Check') ? 'Ins. Checks' : $dss_trxn_pymt_type_labels[$cr_r['payment_description']]; ?></label> $<?php echo number_format($cr_r['payment_amount'],2); ?></li>
-  <?php 
-      $cr_total += $cr_r['payment_amount'];
-  }
-
-  // ledger_paid
-  $cr2_sql = "SELECT
-        COALESCE(dl.description, 0) AS payment_description,
+// ledger_paid - from UNION
+$creditsNamedQuery = "SELECT
+        COALESCE(dl.description, '') AS payment_description,
         SUM(dl.paid_amount) AS payment_amount
+        , dl.ledgerid
     FROM dental_ledger dl
-        JOIN dental_patients as pat ON dl.patientid = pat.patientid
+        JOIN dental_patients p ON p.patientid = dl.patientid
         LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
         LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
             AND tc.docid = '$docId'
     WHERE dl.docid = '$docId'
-        $lpsql
+        $patientConditional
         AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
         AND COALESCE(tc.type, '') != '$trxnTypeAdjustment'
-        $l_date
-        ";
+        $ledgerDateConditional
+        GROUP BY payment_description";
 
-  if(isset($_GET['pid'])){
-    $cr2_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
-  }
-  $cr2_sql .= " GROUP BY payment_description";
-  $cr2_q = $db->getResults($cr2_sql);
-  if ($cr2_q) foreach ($cr2_q as $cr2_r) {?>
-    <li><label><?php echo $cr2_r['payment_description'] = ($cr2_r['payment_description']=='Check')?'Pers Checks':$cr2_r['payment_description']; ?></label> $<?php echo number_format($cr2_r['payment_amount'],2); ?></li>
-  <?php 
-    $cr_total += $cr2_r['payment_amount'];
-  } ?>
-
-
-    <li><label>Credits Total</label> $<?php echo number_format($cr_total,2); ?></li>
-  </ul>
-
-  <h3>Adjustments</h3>
-  <ul>
-<?php            
-  $adj_total = 0;
-  $adj_sql = "SELECT
-        COALESCE(dl.description, 0) AS payment_description,
+// ledger_paid - from UNION -- but, tx.type conditional INVERTED
+// No need to use COALESCE(tc.type, '') because we WANT TO IGNORE null values
+$adjustmentsQuery = "SELECT
+        COALESCE(dl.description, '') AS payment_description,
         SUM(dl.paid_amount) AS payment_amount
     FROM dental_ledger dl
-        JOIN dental_patients as pat ON dl.patientid = pat.patientid
+        JOIN dental_patients p ON p.patientid = dl.patientid
         LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
         LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
             AND tc.docid = '$docId'
     WHERE dl.docid = '$docId'
-        $lpsql
+        $patientConditional
         AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
-        AND COALESCE(tc.type, '') = '$trxnTypeAdjustment'
-        $l_date
-        ";
+        AND tc.type = '$trxnTypeAdjustment'
+        $ledgerDateConditional
+        GROUP BY payment_description";
 
-  if(isset($_GET['pid'])){
-    $adj_sql .= " AND dl.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."' ";
-  }
-  $adj_sql .= " GROUP BY dl.description";
-  $adj_q = $db->getResults($adj_sql);
-  if ($adj_q) foreach ($adj_q as $adj_r) {?>
-    <li><label><?php echo $adj_r['description']; ?></label> $<?php echo number_format($adj_r['amount'],2); ?></li>
-  <?php 
-      $adj_total += $adj_r['amount'];
-  }?>
-    <li><label>Adjust. Total</label> $<?php echo number_format($adj_total,2); ?></li>
-  </ul>
+$chargeItems = $db->getResults($chargesQuery);
+$creditTypeItems = $db->getResults($creditsTypeQuery);
+$creditNamedItems = $db->getResults($creditsNamedQuery);
+$adjustmentItems = $db->getResults($adjustmentsQuery);
+
+// Calculate totals
+$totalCharges = array_sum(array_pluck($chargeItems, 'payment_amount'));
+$totalCredits = array_sum(array_pluck($creditTypeItems, 'payment_amount')) +
+    array_sum(array_pluck($creditNamedItems, 'payment_amount'));
+$totalAdjustments = array_sum(array_pluck($adjustmentItems, 'payment_amount'));
+
+// Set proper values of labels in credit items
+array_walk($creditTypeItems, function (&$item) use ($dss_trxn_pymt_type_labels) {
+    $description = $dss_trxn_pymt_type_labels[$item['payment_description']];
+    $item['payment_description'] = $description === 'Check' ? 'Ins. Checks' : $description;
+});
+
+array_walk($creditNamedItems, function (&$item) {
+    $description = $item['payment_description'];
+
+    if (strlen($description)) {
+        $item['payment_description'] = $description === 'Check' ? 'Pers Checks' : $description;
+    } else {
+        $item['payment_description'] = 'Unlabelled transaction type';
+    }
+});
+
+?>
+<div class="fullwidth">
+    <h3>Charges</h3>
+    <ul>
+        <?php foreach ($chargeItems as $item) {?>
+            <li>
+                <label><?= e($item['payment_description']) ?></label>
+                $<?= number_format($item['payment_amount'], 2) ?>
+            </li>
+        <?php } ?>
+        <li>
+            <label>Charges Total</label>
+            $<?= number_format($totalCharges, 2) ?>
+        </li>
+    </ul>
+
+    <h3>Credit</h3>
+    <ul>
+        <?php foreach ($creditTypeItems as $item) {?>
+            <li>
+                <label><?= e($item['payment_description']) ?></label>
+                $<?= number_format($item['payment_amount'], 2) ?>
+            </li>
+        <?php } ?>
+        <?php foreach ($creditNamedItems as $item) {?>
+            <li>
+                <label><?= e($item['payment_description']) ?></label>
+                $<?= number_format($item['payment_amount'], 2) ?>
+            </li>
+        <?php } ?>
+        <li>
+            <label>Credits Total</label>
+            $<?= number_format($totalCredits, 2) ?>
+        </li>
+    </ul>
+
+    <h3>Adjustments</h3>
+    <ul>
+        <?php foreach ($adjustmentItems as $item) {?>
+            <li>
+                <label><?= e($item['payment_description']) ?></label>
+                $<?= number_format($item['payment_amount'], 2) ?>
+            </li>
+        <?php } ?>
+        <li>
+            <label>Adjust. Total</label>
+            $<?= number_format($totalAdjustments, 2) ?>
+        </li>
+    </ul>
+</div>

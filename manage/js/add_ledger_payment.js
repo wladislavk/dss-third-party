@@ -25,6 +25,7 @@ var template = '<div>' +
         '<option value="' + DSS_TRXN_PYMT_CHECK + '">' + dss_trxn_pymt_type_labels_check + '</option>' +
         '<option value="' + DSS_TRXN_PYMT_CASH + '">' + dss_trxn_pymt_type_labels_cash + '</option>' +
         '<option value="' + DSS_TRXN_PYMT_WRITEOFF + '">' + dss_trxn_pymt_type_labels_writeoff + '</option>' +
+        '<option value="' + DSS_TRXN_PYMT_EFT + '">' + dss_trxn_pymt_type_labels_eft + '</option>' +
     '</select>' +
     '<div style="float:right;color:#FFF; font-weight:bold;font-size:18px;">' +
         '<input type="text" id="amount_field_%uniqueId%"' +

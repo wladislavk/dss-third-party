@@ -43,6 +43,9 @@ $payments = $db->getResults($sql);
 
         var DSS_TRXN_PYMT_WRITEOFF = <?php echo DSS_TRXN_PYMT_WRITEOFF; ?>;
         var dss_trxn_pymt_type_labels_writeoff = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]; ?>";
+
+        var DSS_TRXN_PYMT_EFT = <?php echo DSS_TRXN_PYMT_EFT; ?>;
+        var dss_trxn_pymt_type_labels_eft = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT]; ?>";
     </script>
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>

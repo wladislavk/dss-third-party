@@ -66,6 +66,7 @@
 								<option value="<?php echo  DSS_TRXN_PYMT_CHECK; ?>" <?php echo  ($p['payment_type']==DSS_TRXN_PYMT_CHECK)?'selected="selected"':''; ?>><?php echo  $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]; ?></option>
 								<option value="<?php echo  DSS_TRXN_PYMT_CASH; ?>" <?php echo  ($p['payment_type']==DSS_TRXN_PYMT_CASH)?'selected="selected"':''; ?>><?php echo  $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]; ?></option>
 								<option value="<?php echo  DSS_TRXN_PYMT_WRITEOFF; ?>" <?php echo  ($p['payment_type']==DSS_TRXN_PYMT_WRITEOFF)?'selected="selected"':''; ?>><?php echo  $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]; ?></option>
+                                <option value="<?php echo  DSS_TRXN_PYMT_EFT; ?>" <?php echo  ($p['payment_type']==DSS_TRXN_PYMT_EFT)?'selected="selected"':''; ?>><?php echo  $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT]; ?></option>
 							</select>
 						</span>
 						<span style="margin: 0 10px 0 0; float:left;">

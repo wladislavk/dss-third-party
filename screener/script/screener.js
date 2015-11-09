@@ -49,14 +49,15 @@ function submit_screener(){
       headaches: $("input[name=headaches]:checked").val(),
       falling_asleep: $("input[name=falling_asleep]:checked").val(),
       staying_asleep: $("input[name=staying_asleep]:checked").val(),
-      rx_metabolic_syndrome: $("input[name=rx_metabolic_syndrome]").is(':checked')?2:0,
-      rx_hypertension: $("input[name=rx_hypertension]").is(':checked')?1:0,
-      rx_heart_disease: $("input[name=rx_heart_disease]").is(':checked')?1:0,
-      rx_stroke: $("input[name=rx_stroke]").is(':checked')?3:0,
-      rx_diabetes: $("input[name=rx_diabetes]").is(':checked')?1:0,
-      rx_obesity: $("input[name=rx_obesity]").is(':checked')?1:0,
-      rx_heartburn: $("input[name=rx_heartburn]").is(':checked')?1:0,
-      rx_afib: $("input[name=rx_afib]").is(':checked')?1:0
+      rx_cpap: $("input[name=rx_cpap]:checked").val() || 0,
+      rx_metabolic_syndrome: $("input[name=rx_metabolic_syndrome]:checked").val() || 0,
+      rx_hypertension: $("input[name=rx_hypertension]:checked").val() || 0,
+      rx_heart_disease: $("input[name=rx_heart_disease]:checked").val() || 0,
+      rx_stroke: $("input[name=rx_stroke]:checked").val() || 0,
+      rx_diabetes: $("input[name=rx_diabetes]:checked").val() || 0,
+      rx_obesity: $("input[name=rx_obesity]:checked").val() || 0,
+      rx_heartburn: $("input[name=rx_heartburn]:checked").val() || 0,
+      rx_afib: $("input[name=rx_afib]:checked").val() || 0
 
     },
     success: function(data){
@@ -109,7 +110,7 @@ function submit_screener(){
           };
 
           for (fieldName in coMorbidityQuestions) {
-              if ($('input[name="' + fieldName + '"]').is(':checked')) {
+              if ($('input[name="' + fieldName + '"]:checked').val()) {
                   $('#r_diagnosed').append('<li>' + coMorbidityQuestions[fieldName] + '</li>');
               }
           }
@@ -138,15 +139,15 @@ function submit_screener(){
         ep += parseInt($('#epworth_lunch').val(), 10);
         ep += parseInt($('#epworth_traffic').val(), 10);
         $('#r_ep_total').text(ep);
-	var sect3 = 0;
-	sect3 += $("input[name=rx_obesity]").is(':checked')?1:0;
-	sect3 += $("input[name=rx_hypertension]").is(':checked')?1:0;
-	sect3 += $("input[name=rx_heart_disease]").is(':checked')?1:0;
-	sect3 += $("input[name=rx_stroke]").is(':checked')?3:0;
-        sect3 += $("input[name=rx_metabolic_syndrome]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_diabetes]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_heartburn]").is(':checked')?1:0;
-        sect3 += $("input[name=rx_afib]").is(':checked')?1:0;
+	var sect3 = +$('input[name="rx_cpap"]:checked').val() || 0;
+	sect3 += +$("input[name=rx_obesity]:checked").val() || 0;
+	sect3 += +$("input[name=rx_hypertension]:checked").val() || 0;
+	sect3 += +$("input[name=rx_heart_disease]:checked").val() || 0;
+	sect3 += +$("input[name=rx_stroke]:checked").val() || 0;
+        sect3 += +$("input[name=rx_metabolic_syndrome]:checked").val() || 0;
+        sect3 += +$("input[name=rx_diabetes]:checked").val() || 0;
+        sect3 += +$("input[name=rx_heartburn]:checked").val() || 0;
+        sect3 += +$("input[name=rx_afib]:checked").val() || 0;
 	var survey = 0;
 	if($("input[name=breathing]:checked").val())
 		survey += parseInt($("input[name=breathing]:checked").val(), 10);

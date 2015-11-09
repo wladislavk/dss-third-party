@@ -425,6 +425,8 @@ $coMorbidityQuestions = [
 	                        <?php echo  ($myarray['falling_asleep']>0)?'Yes - <strong>Do you have trouble falling asleep?</strong><br />':''; ?>
 	                        <?php echo  ($myarray['staying_asleep']>0)?'Yes - <strong>Do you have trouble staying asleep once you fall asleep?</strong><br />':''; ?>
 
+                            <?php echo  ($myarray['rx_cpap']>0)?'<br /> Yes - <strong>Have you ever used CPAP before?</strong><br />':''; ?>
+
 							<br />
 
 							<strong>Co-morbidity</strong><br />

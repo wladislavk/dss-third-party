@@ -62,7 +62,8 @@ function submit_screener(e){
         burning: $("input[name=burning]:checked").val(),
         headaches: $("input[name=headaches]:checked").val(),
         falling_asleep: $("input[name=falling_asleep]:checked").val(),
-        staying_asleep: $("input[name=staying_asleep]:checked").val()
+        staying_asleep: $("input[name=staying_asleep]:checked").val(),
+        rx_cpap: $('input[name="rx_cpap"]:checked').val()
     };
 
     for (var fieldName in coMorbidityQuestions) {
@@ -139,7 +140,7 @@ function submit_screener(e){
 	ep += parseInt($('#epworth_<?= $ea['epworthid']; ?>').val(), 10);
 <?php } ?>
         $('#r_ep_total').text(ep);
-          var sect3 = 0;
+          var sect3 = $('input[name="rx_cpap"]:checked').val() || 0;
 
           for (fieldName in coMorbidityQuestions) {
               sect3 += $('input[name="' + fieldName + '"]:checked').val() || 0;

@@ -112,7 +112,7 @@
         $report = json_decode($report_data['response']);
         $details = $report->details;
         if ($back_office) {
-            $claim_url = 'patient_claims.php?pid' . $report_data['patientid'];
+            $claim_url = 'patient_claims.php?pid=' . $report_data['patientid'];
         } else {
             $claim_url = 'view_claim.php?claimid=' . $report_data['claimid'] . '&pid=' . $report_data['patientid'];
         }

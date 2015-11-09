@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigration;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AdminCompanyApiTest extends TestCase
 {
     use WithoutMiddleware;
+    use DatabaseTransactions;
 
     protected $id;
 
@@ -35,18 +35,16 @@ class AdminCompanyApiTest extends TestCase
      */
     public function testUpdateAdminCompany()
     {
-        $adminCompanyTestRecord = \DentalSleepSolutions\Models\AdminCompany::where('companyid', '=', 14)->firstOrFail();
+        $adminCompanyTestRecord = factory(DentalSleepSolutions\Models\AdminCompany::class)->create();
 
-        if ($adminCompanyTestRecord) {
-            $data = [
-                'companyid' => 15
-            ];
+        $data = [
+            'companyid' => 15
+        ];
 
-            $this->put('/api/v1/admin-company/' . $adminCompanyTestRecord->id, $data)
-                ->seeStatusCode(200)
-                ->seeJsonContains(['status' => true])
-                ->seeInDatabase('admin_company', ['companyid' => 15]);
-        }
+        $this->put('/api/v1/admin-company/' . $adminCompanyTestRecord->id, $data)
+            ->seeStatusCode(200)
+            ->seeJsonContains(['status' => true])
+            ->seeInDatabase('admin_company', ['companyid' => 15]);
     }
 
     /**
@@ -56,13 +54,11 @@ class AdminCompanyApiTest extends TestCase
      */
     public function testDeleteAdminCompany()
     {
-        $adminCompanyTestRecord = \DentalSleepSolutions\Models\AdminCompany::where('companyid', '=', 15)->firstOrFail();
+        $adminCompanyTestRecord = factory(DentalSleepSolutions\Models\AdminCompany::class)->create();
 
-        if ($adminCompanyTestRecord) {
-            $this->delete('/api/v1/admin-company/' . $adminCompanyTestRecord->id)
-                ->seeStatusCode(200)
-                ->seeJsonContains(['status' => true])
-                ->notSeeInDatabase('admin_company', ['companyid' => 15]);
-        }
+        $this->delete('/api/v1/admin-company/' . $adminCompanyTestRecord->id)
+            ->seeStatusCode(200)
+            ->seeJsonContains(['status' => true])
+            ->notSeeInDatabase('admin_company', ['id' => $adminCompanyTestRecord->id]);
     }
 }

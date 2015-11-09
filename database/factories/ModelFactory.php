@@ -19,3 +19,12 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(DentalSleepSolutions\Models\AdminCompany::class, function ($faker) {
+    return [
+        'adminid'    => $faker->randomDigit,
+        'companyid'  => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
+});

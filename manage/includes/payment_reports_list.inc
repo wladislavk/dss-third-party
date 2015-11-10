@@ -65,8 +65,9 @@
         LIMIT ' . $from . ', '. $page_count;
     $reports_res = $db->getResults($reports_query);
 
+    $errors_message = '';
     if (!$reports_res) {
-        print "MYSQL ERROR:" . mysqli_errno($con).": ".mysqli_errno($con)."<br/>"."Error selecting payment reports from the database.";
+        $errors_message = 'No Payment Reports found';
     }
 ?>
 <br />
@@ -79,6 +80,11 @@
 </div>
 <br />
 <br />
+<? if($errors_message): ?>
+    <div class="<?=$header_class?>">
+        Errors: <?=$errors_message?>
+    </div>
+<? endif; ?>
 <table <?=$table_style?>>
     <? if($total > $page_count): ?>
         <tr bgColor="#ffffff">

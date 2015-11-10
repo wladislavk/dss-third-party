@@ -18,7 +18,7 @@
     $report_data = $db->getRow($report_query);
 
     if (!$report_data) {
-        $errors_message .=  'MYSQL ERROR:' . mysqli_errno($con).': '.mysqli_errno($con).'<br/>' . 'Error selecting payment report from the database.';
+        $errors_message .=  'No Payment Report with provided ID is found';
     } else {
         $user_query = 'SELECT docid FROM dental_insurance WHERE insuranceid = ' . $report_data['claimid'];
         $user_data = $db->getRow($user_query);

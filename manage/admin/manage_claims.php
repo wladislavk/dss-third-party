@@ -410,11 +410,11 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
     <input type="submit" value="Filter List" class="btn btn-primary">
     <input type="button" value="Reset" onclick="window.location='<?php echo $_SERVER['PHP_SELF']?>'" class="btn btn-primary">
   </form>
-<?php   if(is_billing($_SESSION['admin_access']) || is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])){ 
+    <a style="float:right;"  href="payment_reports_list.php?unviewed=1" class="btn btn-primary">Payment Reports</a>
+    <?php   if(is_billing($_SESSION['admin_access']) || is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])){
 ?>
-<a style="float:right;"  href="report_claim_aging.php" class="btn btn-primary"> Claim Aging </a>
+    <a style="float:right;margin-right:3px;"  href="report_claim_aging.php" class="btn btn-primary"> Claim Aging </a>
 <?php } ?>
-
 <?php if(isset($_GET['closedby']) && $_GET['closedby']==1){ ?>
 <a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?php echo (isset($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (isset($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary"> Show All Claims </a>
 <?php }else{ ?>
@@ -426,6 +426,7 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 <?php }else{ ?>
 <a style="float:right;margin-right:3px;"  href="manage_claims.php?notes=1&status=<?php echo (isset($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (isset($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary" title="Show only claims that have notes"> Show Claim w Notes </a>
 <?php } ?>
+
 <div style="clear:both;"></div>
 </div>
 

@@ -23,6 +23,8 @@ if (!mysqli_select_db($con, $config_db_name)) {
     throw new \RuntimeException('DB selection failure', E_USER_ERROR);
 }
 
+mysqli_set_charset($con, 'utf8');
+
 $GLOBALS['con'] = $con;
 
 include ROOT_DIR . '/manage/admin/classes/Db.php';

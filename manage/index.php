@@ -258,6 +258,13 @@
           <span class="label">Email Bounces</span>
         </a>
 
+        <? if($use_payment_report): ?>
+            <a href="payment_reports_list.php?unviewed=1" class="notification count_<?php echo $num_payment_reports; ?> <?php echo ($num_payment_reports==0)?"good_count":"bad_count"; ?>">
+              <span class="count"><?php echo $num_payment_reports;?></span>
+              <span class="label">Payment Reports</span>
+            </a>
+        <? endif; ?>
+
         <a href="#" onclick="$('.notification.count_0').css('display', 'block');$(this).hide();$('#not_show_active').show();return false;" id="not_show_all">Show All</a>
         <a href="#" onclick="$('.notification.count_0').hide();$(this).hide();$('#not_show_all').show();return false;" style="display:none;" id="not_show_active">Show Active</a>
       </div>

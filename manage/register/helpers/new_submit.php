@@ -22,6 +22,7 @@
         		plan_id = '".mysqli_real_escape_string($con, $plan_id)."',
         		user_access=".DSS_USER_ACCESS_DOCTOR.",
         		use_patient_portal = '1',
+        		use_payment_report = '0',
                         use_digital_fax = '1',
                         use_letters = '1',
                         use_eligible_api = '0',

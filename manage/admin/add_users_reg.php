@@ -36,7 +36,7 @@ if($_POST["usersub"] == 1)
 				email = '".s_for($_POST["email"])."', 
 				phone = '".s_for($_POST["phone"])."',
                                 use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
-                                use_payment_report = '".s_for($_POST['use_payment_report'])."',
+                                use_payment_reports = '".s_for($_POST['use_payment_reports'])."',
                                 use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
                                 use_letters = '".s_for($_POST['use_letters'])."',
                                 use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
@@ -110,7 +110,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$phone = $_POST['phone'];
 		$companyid = $_POST['companyid'];
                 $use_patient_portal = $_POST['use_patient_portal'];
-                $use_payment_report = $_POST['use_payment_report'];
+                $use_payment_reports = $_POST['use_payment_reports'];
                 $use_digital_fax = $_POST['use_digital_fax'];
                 $use_letters = $_POST['use_letters'];
                 $use_eligible_api = $_POST['use_eligible_api'];
@@ -225,7 +225,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 Payment Reports
             </td>
             <td valign="top" class="frmdata">
-                        <input type="checkbox" name="use_payment_report" value="0" <? if($use_payment_report == 1) echo " checked='checked'";?> />
+                        <input type="checkbox" name="use_payment_reports" value="0" <? if($use_payment_reports == 1) echo " checked='checked'";?> />
             </td>
         </tr>
 

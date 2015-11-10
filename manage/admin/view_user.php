@@ -40,7 +40,7 @@
 		$status = st($themyarray['status']);
 		$suspended_reason = st($themyarray['suspended_reason']);
 		$use_patient_portal = st($themyarray['use_patient_portal']);
-		$use_payment_report = st($themyarray['use_payment_report']);
+		$use_payment_reports = st($themyarray['use_payment_reports']);
 		$use_digital_fax = st($themyarray['use_digital_fax']);
 		$use_letters = st($themyarray['use_letters']);
 		$tracker_letters = st($themyarray['tracker_letters']);
@@ -418,7 +418,7 @@
                         Eligible Test?
                     </label>
                     <label class="col-md-4">
-                        <input type="checkbox" name="use_payment_report" value="1" <?php if($use_payment_report == 1) echo " checked='checked'";?>>
+                        <input type="checkbox" name="use_payment_reports" value="1" <?php if($use_payment_reports == 1) echo " checked='checked'";?>>
                         Payment Reports
                     </label>
                 </div>

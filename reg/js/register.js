@@ -32,13 +32,11 @@ var lga_wizard = {
 
         // adjust height after items have been scrolled
         api.onSeek(function(event, index){
-            debugger
             var page = root.find('.page').eq(index);
             $('#register').animate({ height : page.height() }, 300);
         });
 
         api.onBeforeSeek(function(event, index) {
-            debugger
             var currentIndex = api.getIndex(),
                 page = root.find('.page').eq(currentIndex),
                 notValid = false,

@@ -2,6 +2,7 @@
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
 use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use Carbon\Carbon;
@@ -17,8 +18,6 @@ class ApiAdminController extends ApiBaseController
      * @var $admin
      */
     protected $admin;
-
-    private $response;
 
     private $rulesForStore = [
         'name'               => 'max:250',
@@ -47,11 +46,6 @@ class ApiAdminController extends ApiBaseController
     public function __construct(AdminInterface $admin)
     {
         $this->admin = $admin;
-        $this->response = [
-            'status'  => true,
-            'message' => '',
-            'data'    => []
-        ];
     }
 
     /**
@@ -64,13 +58,10 @@ class ApiAdminController extends ApiBaseController
         $retrievedAdmins = $this->admin->all();
 
         if (!count($retrievedAdmins)) {
-            throw new Exception('The table is empty.');
+            return ApiResponse::responseError('The table is empty.', 422);
         }
 
-        $this->response['message'] = 'Admins list.';
-        $this->response['data']    = $retrievedAdmins;
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Admins list.', $retrievedAdmins);
     }
 
     /**
@@ -84,7 +75,7 @@ class ApiAdminController extends ApiBaseController
         $validator  = \Validator::make($postValues, $this->rulesForStore);
 
         if ($validator->fails()) {
-            throw new Exception($validator->errors());
+            return ApiResponse::responseError($validator->errors(), 422);
         }
 
         $salt       = Password::createSalt();
@@ -99,10 +90,7 @@ class ApiAdminController extends ApiBaseController
 
         $this->admin->store($postValues);
 
-        $this->response['message'] = 'Admin was added succesfully.';
-        $this->response['data']    = $this->admin->all();
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Admin was added succesfully.', $this->admin->all());
     }
 
     /**
@@ -117,7 +105,7 @@ class ApiAdminController extends ApiBaseController
         $validator = \Validator::make($putValues, $this->rulesForUpdate);
 
         if ($validator->fails()) {
-            throw new Exception($validator->errors());
+            return ApiResponse::responseError($validator->errors(), 422);
         }
 
         $putValues = array_merge($putValues, [
@@ -126,10 +114,7 @@ class ApiAdminController extends ApiBaseController
 
         $this->admin->update($adminId, $putValues);
 
-        $this->response['message'] = 'Admin was updated succesfully.';
-        $this->response['data']    = $this->admin->all();
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Admin was updated succesfully.', $this->admin->all());
     }
 
     /**
@@ -143,13 +128,10 @@ class ApiAdminController extends ApiBaseController
         $retrievedAdmin = $this->admin->find($adminId);
 
         if (empty($retrievedAdmin)) {
-            throw new Exception('Admin not found.');
+            return ApiResponse::responseError('Admin not found.', 422);
         }
 
-        $this->response['message'] = 'Retrieved admin by id.';
-        $this->response['data']    = $retrievedAdmin;
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Retrieved admin by id.', $retrievedAdmin);
     }
 
     /**
@@ -160,10 +142,7 @@ class ApiAdminController extends ApiBaseController
      */
     public function edit($adminId)
     {
-        $this->response['message'] = 'Admin was edited successfully.';
-        $this->response['data']    = [];
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Admin was edited successfully.', []);
     }
 
     /**
@@ -177,12 +156,9 @@ class ApiAdminController extends ApiBaseController
         $deletedAdmin = $this->admin->destroy($adminId);
 
         if (empty($deletedAdmin)) {
-            throw new Exception('Admin not found.');
+            return ApiResponse::responseError('Admin not found.', 422);
         }
 
-        $this->response['message'] = 'Admin was deleted successfully.';
-        $this->response['data']    = $this->admin->all();
-
-        return response($this->response, 200);
+        return ApiResponse::responseOk('Admin was deleted successfully.', $this->admin->all());
     }
 }

@@ -440,6 +440,31 @@ class ClaimFormData
     static $throwExceptions = false;
 
     /**
+     *
+     */
+    private static $taxDataFields = [
+        'city',
+        'state',
+        'zip',
+        'phone',
+        'practice',
+        'address',
+        'medicare_npi',
+        'npi',
+        'tax_id_or_ssn',
+        'ssn',
+        'ein',
+        'use_service_npi',
+        'service_city',
+        'service_state',
+        'service_zip',
+        'service_name',
+        'service_address',
+        'service_medicare_npi',
+        'service_npi'
+    ];
+
+    /**
      * Auxiliary function to determine sequence of the claim status
      *
      * @param int $status
@@ -1034,13 +1059,22 @@ class ClaimFormData
          * 'producer_files' signals whether the action must be marked as the original producer OR the current docid
          *
          * IF $producerData['producer_files'] == 1
-         * THEN use producer data
+         * THEN use producer data, fallback to doctor data
          * ELSE use doctor data
+         *
+         * Set the doctor data first. Overwrite values where appropiate IF producer_files = 1
          */
+        $taxSource = array_only($doctorData, self::$taxDataFields);
+
         if ($producerData['producer_files'] == 1) {
-            $taxSource = &$producerData;
-        } else {
-            $taxSource = &$doctorData;
+            array_walk($taxSource, function (&$taxField, $index) use ($producerData) {
+                $producerField = trim($producerData[$index]);
+
+                // If the corresponding producer value is set, use that value instead
+                if (strlen($producerField)) {
+                    $taxField = $producerField;
+                }
+            });
         }
 
         /**

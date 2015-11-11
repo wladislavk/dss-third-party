@@ -310,6 +310,7 @@ $reject_reason = st($claimData['reject_reason']);
 $status = st($claimData['status']);
 
 $isMedicare = $insurancetype == 1;
+$acceptAssignment = isOptionSelected($accept_assignment) || $accept_assignment == 'A';
 
 $eResponse = [];
 $eligibleResponse = [];
@@ -888,9 +889,9 @@ function stateDropdown (fieldName) {
       <?php
 }
 
-  if(isOptionSelected($accept_assignment) || $accept_assignment == "A"){ ?>
+  if($acceptAssignment){ ?>
         $('input[name="claim[accept_assignment_code]"][value="A"]').prop('checked', true);
-      <?php }elseif(!isOptionSelected($accept_assignment) || $accept_assignment == "C"){ ?>
+      <?php }else{ ?>
         $('input[name="claim[accept_assignment_code]"][value="C"]').prop('checked', true);
       <?php } ?>
 

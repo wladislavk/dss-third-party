@@ -362,6 +362,8 @@ list($billing_provider_phone_code, $billing_provider_phone) = parsePhoneNumber(
     $billing_provider_phone_code, $billing_provider_phone
 );
 
+$acceptAssignment = isOptionSelected($accept_assignment) || $accept_assignment == 'A';
+
 $placeServices = $db->getResults('SELECT * FROM dental_place_service ps WHERE status = 1');
 $modifierCodes = $db->getResults('SELECT * FROM dental_modifier_code');
 
@@ -2030,10 +2032,10 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 									<br />
 									<span class="small_cap">(For govt. claims, see back)</span>
 									<br />
-									<input type="radio" name="accept_assignment" value="Yes" <?php if (isOptionSelected($accept_assignment) || $accept_assignment == "A") echo " checked";?> />
+									<input type="radio" name="accept_assignment" value="Yes" <?= $acceptAssignment ? 'checked' : '' ?> />
 									YES
 									&nbsp;&nbsp;&nbsp;
-									<input type="radio" name="accept_assignment" value="No" <?php if (!isOptionSelected($accept_assignment) || $accept_assignment == "C") echo " checked";?> />
+									<input type="radio" name="accept_assignment" value="No" <?= !$acceptAssignment ? 'checked' : '' ?> />
 									NO
 								</td>
 							</tr>

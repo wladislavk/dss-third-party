@@ -1,7 +1,8 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Interfaces\CompanyInterface;
+use DentalSleepSolutions\Models\Company;
+use DentalSleepSolutions\Interfaces\Repositories\CompanyInterface;
 
 class CompanyRepository extends BaseRepository implements CompanyInterface
 {
@@ -10,7 +11,7 @@ class CompanyRepository extends BaseRepository implements CompanyInterface
      *
      * @var string
      */
-    protected $modelName = 'DentalSleepSolutions\Company';
+    protected $modelName = Company::class;
 
     /**
      * Return all companies

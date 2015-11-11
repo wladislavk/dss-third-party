@@ -1,9 +1,9 @@
 <?php
-
 namespace DentalSleepSolutions\Exceptions;
 
 use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use DentalSleepSolutions\Http\Controllers\Api\ApiBaseController;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -35,10 +35,24 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $e
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
     public function render($request, Exception $e)
     {
+        if ($request->wantsJson()) {
+            return ApiBaseController::createErrorResponse('Error occured.', 404);
+        }
+
+        if ($e) {
+            $response = [
+                'message' => $e->getMessage(),
+                'status'  => false,
+                'data'    => []
+            ];
+
+            return response()->json($response, 404);
+        }
+
         return parent::render($request, $e);
     }
 }

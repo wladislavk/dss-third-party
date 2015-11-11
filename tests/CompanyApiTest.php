@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigration;
-use Illuminate\Foundation\Testing\DatabaseTransation;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class Company extends TestCase
 {
     use WithoutMiddleware;
+    use DatabaseTransactions;
 
     protected $id;
 
@@ -40,19 +40,17 @@ class Company extends TestCase
      */
     public function testUpdateCompany()
     {
-        $companyTestRecord = \DentalSleepSolutions\Company::where('name', 'like', 'testName%')->firstOrFail();
+        $companyTestRecord = factory(DentalSleepSolutions\Models\Company::class)->create();
 
-        if ($companyTestRecord) {
-            $data = [
-                'name'   => 'testNameUpdated',
-                'status' => 2
-            ];
+        $data = [
+            'name'   => 'testNameUpdated',
+            'status' => 2
+        ];
 
-            $this->put('/api/v1/company/' . $companyTestRecord->id, $data)
-                ->seeStatusCode(200)
-                ->seeJsonContains(['status' => true])
-                ->seeInDatabase('companies', ['name' => 'testNameUpdated']);
-        }
+        $this->put('/api/v1/company/' . $companyTestRecord->id, $data)
+            ->seeStatusCode(200)
+            ->seeJsonContains(['status' => true])
+            ->seeInDatabase('companies', ['name' => 'testNameUpdated']);
     }
 
     /**
@@ -62,13 +60,11 @@ class Company extends TestCase
      */
     public function testDeleteCompany()
     {
-        $companyTestRecord = \DentalSleepSolutions\Company::where('name', 'like', 'testName%')->firstOrFail();
+        $companyTestRecord = factory(DentalSleepSolutions\Models\Company::class)->create();
 
-        if ($companyTestRecord) {
-            $this->delete('/api/v1/company/' . $companyTestRecord->id)
-                ->seeStatusCode(200)
-                ->seeJsonContains(['status' => true])
-                ->notSeeInDatabase('companies', ['name' => 'testNameUpdated']);
-        }
+        $this->delete('/api/v1/company/' . $companyTestRecord->id)
+            ->seeStatusCode(200)
+            ->seeJsonContains(['status' => true])
+            ->notSeeInDatabase('companies', ['id' => $companyTestRecord->id]);
     }
 }

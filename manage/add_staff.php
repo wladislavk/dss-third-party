@@ -57,8 +57,8 @@
                 $n = ($_POST['sign_notes'] == 1) ? 1 : 0;
     			$c = ($_POST['use_course'] == 1) ? 1 : 0;
     			$s = ($_POST['manage_staff'] == 1) ? 1 : 0;
-    			$ein = ($_POST['ein'] == 1) ? 1 : 0;
-    			$ssn = ($_POST['ssn'] == 1) ? 1 : 0;
+                $ein = $_POST['ssnein'] === 'ein' ? 1 : 0;
+                $ssn = $_POST['ssnein'] === 'ssn' ? 1 : 0;
     			$ed_sql = "update dental_users set user_access=1, 
     				        first_name = '".s_for($_POST["first_name"])."', 
                             last_name = '".s_for($_POST["last_name"])."',
@@ -106,8 +106,8 @@
                 $n = (!empty($_POST['sign_notes']) && $_POST['sign_notes'] == 1) ? 1 : 0;
 			    $c = (!empty($_POST['use_course']) && $_POST['use_course'] == 1) ? 1 : 0;
                 $s = (!empty($_POST['manage_staff']) && $_POST['manage_staff'] == 1) ? 1 : 0;
-                $ein = (!empty($_POST['ein']) && $_POST['ein'] == 1) ? 1 : 0;
-                $ssn = (!empty($_POST['ssn']) && $_POST['ssn'] == 1) ? 1 : 0;
+                $ein = $_POST['ssnein'] === 'ein' ? 1 : 0;
+                $ssn = $_POST['ssnein'] === 'ssn' ? 1 : 0;
 			    $ins_sql = "insert into dental_users set user_access=1, docid='".$_SESSION['docid']."', username = '".s_for($_POST["username"])."', password = '".mysqli_real_escape_string($con,$password)."', salt='".$salt."',
                             first_name = '".s_for($_POST["first_name"])."',
                             last_name = '".s_for($_POST["last_name"])."',
@@ -384,8 +384,8 @@
                         EIN or SSN
                     </td>
                     <td valign="top" class="frmdata">
-                		<input type="checkbox" <?php echo  ($ein==1)?'checked="checked"':''; ?> value="1" name="ein" /> EIN 
-                		<input type="checkbox" <?php echo  ($ssn==1)?'checked="checked"':''; ?> value="1" name="ssn" /> SSN
+                		<input type="radio" <?php echo  ($ein==1)?'checked="checked"':''; ?> value="ein" name="ssnein" /> EIN
+                		<input type="radio" <?php echo  ($ssn==1)?'checked="checked"':''; ?> value="ssn" name="ssnein" /> SSN
                     </td>
                 </tr>
                 <tr class="files_field" bgcolor="#FFFFFF">

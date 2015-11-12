@@ -892,7 +892,7 @@ class ClaimFormData
                 AND LENGTH(COALESCE(producer.last_name, '')) > 0
                 THEN producer.last_name
                 ELSE doctor.last_name
-            END AS 'provider_last_name',
+            END AS 'provider_last_name'
         FROM dental_ledger ledger
             JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
             JOIN dental_users doctor ON doctor.userid = ledger.docid

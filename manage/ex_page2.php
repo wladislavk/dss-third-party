@@ -167,7 +167,9 @@
                                     </table>
                                 </span>
                     			<span>
-                    				Additional Notes<br />
+                    				Additional Notes
+                                    <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page2frm&tx=additional_notes'); return false;">Use Custom Text</button>
+                                    <br />
                     				<textarea name="additional_notes" style="width:350px; height:187px"><?php echo  $additional_notes; ?></textarea>
                                 </span>
                             </div>
@@ -259,14 +261,21 @@
     <br />
         <?php include("includes/form_bottom.htm"); ?>
     <br />
-    <div id="popupContact" style="width:750px;">
+    <div id="popupRefer" style="width:750px;">
+        <a id="popupReferClose">
+            <button>X</button>
+        </a>
+        <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+    </div>
+    <div id="backgroundPopupRef"></div>
+    <div id="popupContact" style="width:750px; height: 500px;">
         <a id="popupContactClose">
             <button>X</button>
         </a>
         <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
     </div>
     <div id="backgroundPopup"></div>
-    <br /><br />	
+    <br /><br />
 
 <?php
     } else {  // end pt info check

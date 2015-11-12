@@ -1070,9 +1070,9 @@ class ClaimFormData
             array_walk($taxSource, function (&$taxField, $index) use ($producerData) {
                 $producerField = trim($producerData[$index]);
 
-                // Never override use_service_npi
+                // IF producer_files = 1 THEN use the option from the producer
                 if ($index === 'use_service_npi') {
-                    return;
+                    $taxField = $producerField;
                 }
 
                 // If the corresponding producer value is set, use that value instead

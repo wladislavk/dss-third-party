@@ -871,6 +871,20 @@ class ClaimFormData
         $pendingOrLinkedConditional = $isNewClaim ? "ledger.status = '$trxnStatusPending'" :
             "(ledger.primary_claim_id = '$claimId' OR ledger.secondary_claim_id = '$claimId')";
 
+        /**
+         * Control the source of the producer / doctor.
+         *
+         * The LEFT JOIN on producerid will ste the proper values for the producer. If the producerid is not valid then
+         * the joined values will be null, evaluating to FALSE by default.
+         *
+         * Thus, the producer is the source of data if:
+         *
+         * - ledger.producerid is valid (given by the LEFT JOIN)
+         * - producer.producer_files is set to "1"
+         * - the given field is not empty
+         *
+         * Otherwise, retrieve data from the doctor.
+         */
         $transactionsQuery = "SELECT
             ledger.*,
             trxn_code.modifier_code_1 AS modcode,
@@ -878,18 +892,15 @@ class ClaimFormData
             trxn_code.days_units AS daysorunits,
             name_source.place_service AS 'place',
             description_source.description AS place_description,
-            CASE WHEN COALESCE(producer.producer_files)
-                AND LENGTH(COALESCE(producer.$insuranceSource, '')) > 0
+            CASE WHEN producer.producer_files AND LENGTH(TRIM(producer.$insuranceSource))
                 THEN producer.$insuranceSource
                 ELSE doctor.$insuranceSource
             END AS 'provider_id',
-            CASE WHEN COALESCE(producer.producer_files)
-                AND LENGTH(COALESCE(producer.first_name, '')) > 0
+            CASE WHEN producer.producer_files AND LENGTH(TRIM(producer.first_name))
                 THEN producer.first_name
                 ELSE doctor.first_name
             END AS 'provider_first_name',
-            CASE WHEN COALESCE(producer.producer_files)
-                AND LENGTH(COALESCE(producer.last_name, '')) > 0
+            CASE WHEN producer.producer_files AND LENGTH(TRIM(producer.last_name))
                 THEN producer.last_name
                 ELSE doctor.last_name
             END AS 'provider_last_name'

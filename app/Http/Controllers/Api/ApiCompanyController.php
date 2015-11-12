@@ -2,6 +2,7 @@
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
 use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use Carbon\Carbon;
@@ -16,8 +17,6 @@ class ApiCompanyController extends ApiBaseController
      * @var $company
      */
     protected $company;
-
-    private $response;
 
     /**
      * Validation rules for the store and update methods
@@ -46,11 +45,6 @@ class ApiCompanyController extends ApiBaseController
     public function __construct(CompanyInterface $company)
     {
         $this->company = $company;
-        $this->response = [
-            'status'  => true,
-            'message' => '',
-            'data'    => []
-        ];
     }
 
     /**
@@ -63,13 +57,10 @@ class ApiCompanyController extends ApiBaseController
         $retrievedCompanies = $this->company->all();
 
         if (!count($retrievedCompanies)) {
-            throw new Exception('The table is empty.');
+            return ApiResponse::responseError('The table is empty.', 422);
         }
 
-        $this->response['message'] = 'Companies list.';
-        $this->response['data']    = $retrievedCompanies;
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Companies list.', $retrievedCompanies);
     }
 
     /**
@@ -83,7 +74,7 @@ class ApiCompanyController extends ApiBaseController
         $validator  = \Validator::make($postValues, $this->rules);
 
         if ($validator->fails()) {
-            throw new Exception($validator->errors());
+            return ApiResponse::responseError($validator->errors(), 422);
         }
 
         $postValues = array_merge($postValues, [
@@ -93,10 +84,7 @@ class ApiCompanyController extends ApiBaseController
 
         $this->company->store($postValues);
 
-        $this->response['message'] = 'Company was added successfully.';
-        $this->response['data']    = $this->company->all();
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Company was added successfully.', $this->company->all());
     }
 
     /**
@@ -111,15 +99,12 @@ class ApiCompanyController extends ApiBaseController
         $validator = \Validator::make($putValues, $this->rules);
 
         if ($validator->fails()) {
-            throw new Exception($validator->errors());
+            return ApiResponse::responseError($validator->errors(), 422);
         }
 
         $this->company->update($id, $putValues);
 
-        $this->response['message'] = 'Company was updated successfully.';
-        $this->response['data']    = $this->company->all();
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Company was updated successfully.', $this->company->all());
     }
 
     /**
@@ -133,13 +118,10 @@ class ApiCompanyController extends ApiBaseController
         $retrievedCompany = $this->company->find($id);
 
         if (empty($retrievedCompany)) {
-            throw new Exception('Company not found.');
+            return ApiResponse::responseError('Company not found.', 422);
         }
 
-        $this->response['message'] = 'Retrieved company by id.';
-        $this->response['data']    = $retrievedCompany;
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Retrieved company by id.', $retrievedCompany);
     }
 
     /**
@@ -150,10 +132,7 @@ class ApiCompanyController extends ApiBaseController
      */
     public function edit($id)
     {
-        $this->response['message'] = 'Company was edited successfully.';
-        $this->response['data']    = [];
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Company was edited successfully.', []);
     }
 
     /**
@@ -167,12 +146,9 @@ class ApiCompanyController extends ApiBaseController
         $deletedCompany   = $this->company->destroy($id);
 
         if (empty($deletedCompany)) {
-            throw new Exception('Company not found.');
+            return ApiResponse::responseError('Company not found.', 422);
         }
 
-        $this->response['message'] = 'Company was deleted successfully.';
-        $this->response['data']    = $this->company->all();
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Company was deleted successfully.', $this->company->all());
     }
 }

@@ -440,7 +440,9 @@ class ClaimFormData
     static $throwExceptions = false;
 
     /**
+     * List of fields that need to be taken into consideration when populating boxes 32. and 33.
      *
+     * @var array
      */
     private static $taxDataFields = [
         'city',
@@ -874,7 +876,7 @@ class ClaimFormData
         /**
          * Control the source of the producer / doctor.
          *
-         * The LEFT JOIN on producerid will ste the proper values for the producer. If the producerid is not valid then
+         * The LEFT JOIN on producerid will set the proper values for the producer. If the producerid is not valid then
          * the joined values will be null, evaluating to FALSE by default.
          *
          * Thus, the producer is the source of data if:

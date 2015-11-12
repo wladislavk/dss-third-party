@@ -367,63 +367,7 @@ $acceptAssignment = isOptionSelected($accept_assignment) || $accept_assignment =
 $placeServices = $db->getResults('SELECT * FROM dental_place_service ps WHERE status = 1');
 $modifierCodes = $db->getResults('SELECT * FROM dental_modifier_code');
 
-if ($isNewClaim) {
-    $sql = "SELECT "
-        . "  ledger.*, trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_1 as modcode2, trxn_code.days_units as daysorunits, ";
-
-    if ($insurancetype == '1') {
-        $sql .= " user.medicare_npi ";
-    } else {
-        $sql .= " user.npi ";
-    }
-
-    $sql .= " as 'provider_id', ps.place_service as 'place' "
-        . "FROM "
-        . "  dental_ledger ledger "
-        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-        . "  JOIN dental_users user ON user.userid = ledger.docid "
-        . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
-        . "WHERE "
-        . "  ledger.status = " . DSS_TRXN_PENDING . " "
-        . "  AND ledger.patientid = '$patientId'"
-        . "  AND ledger.docid = '$docId'"
-        . "  AND trxn_code.docid = '$docId'"
-        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
-        . "ORDER BY "
-        . "  ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
-} else {
-    $sql = "SELECT "
-        . "  ledger.*, ";
-
-    if ($isPending || $isRejected) {
-        $sql .= "trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_2 as modcode2, trxn_code.days_units as daysorunits, ";
-    }
-
-    if ($insurancetype == '1') {
-        $sql .= " user.medicare_npi ";
-    } else {
-        $sql .= " user.npi ";
-    }
-
-    $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS place_description "
-        . "FROM "
-        . "  dental_ledger ledger "
-        . "  JOIN dental_users user ON user.userid = ledger.docid "
-        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-        . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
-        . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
-        . "WHERE "
-        . "  (ledger.primary_claim_id = '$claimId'"
-        . "  OR ledger.secondary_claim_id = '$claimId')"
-        . "  AND ledger.patientid = '$patientId'"
-        . "  AND ledger.docid = '$docId'"
-        . "  AND trxn_code.docid = '$docId'"
-        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
-        . "ORDER BY "
-        . "  ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
-}
-
-$transactions = $db->getResults($sql);
+$transactions = ClaimFormData::ledgerItems($claimId, $docId, $patientId, $insurancetype);
 
 $realTotalAmount = 0;
 $oldestServiceDate = null;

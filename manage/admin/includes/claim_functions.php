@@ -846,6 +846,72 @@ class ClaimFormData
     }
 
     /**
+     * Retrieve ledger items for either the given claim, or a new claim
+     *
+     * @param int $claimId
+     * @param int $docId
+     * @param int $patientId
+     * @param int $insuranceType
+     * @return array
+     */
+    public static function ledgerItems ($claimId, $docId, $patientId, $insuranceType) {
+        $db = new Db();
+
+        $claimId = intval($claimId);
+        $docId = intval($docId);
+        $patientId = intval($patientId);
+
+        $isNewClaim = !$claimId;
+
+        $trxnStatusPending = DSS_TRXN_PENDING;
+        $trxnTypeMed = DSS_TRXN_TYPE_MED;
+
+        // Non-strict comparison
+        $insuranceSource = $insuranceType == 1 ? 'medicare_npi' : 'npi';
+        $pendingOrLinkedConditional = $isNewClaim ? "ledger.status = '$trxnStatusPending'" :
+            "(ledger.primary_claim_id = '$claimId' OR ledger.secondary_claim_id = '$claimId')";
+
+        $transactionsQuery = "SELECT
+            ledger.*,
+            trxn_code.modifier_code_1 AS modcode,
+            trxn_code.modifier_code_1 AS modcode2,
+            trxn_code.days_units AS daysorunits,
+            name_source.place_service AS 'place',
+            description_source.description AS place_description,
+            CASE WHEN COALESCE(producer.producer_files)
+                AND LENGTH(COALESCE(producer.$insuranceSource, '')) > 0
+                THEN producer.$insuranceSource
+                ELSE doctor.$insuranceSource
+            END AS 'provider_id',
+            CASE WHEN COALESCE(producer.producer_files)
+                AND LENGTH(COALESCE(producer.first_name, '')) > 0
+                THEN producer.first_name
+                ELSE doctor.first_name
+            END AS 'provider_first_name',
+            CASE WHEN COALESCE(producer.producer_files)
+                AND LENGTH(COALESCE(producer.last_name, '')) > 0
+                THEN producer.last_name
+                ELSE doctor.last_name
+            END AS 'provider_last_name',
+        FROM dental_ledger ledger
+            JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
+            JOIN dental_users doctor ON doctor.userid = ledger.docid
+            LEFT JOIN dental_users producer ON producer.userid = ledger.producerid
+            LEFT JOIN dental_place_service name_source ON name_source.place_serviceid = trxn_code.place
+            LEFT JOIN dental_place_service description_source
+                ON description_source.place_service = ledger.placeofservice
+        WHERE $pendingOrLinkedConditional
+            AND ledger.patientid = '$patientId'
+            AND ledger.docid = '$docId'
+            AND trxn_code.docid = '$docId'
+            AND trxn_code.type = '$trxnTypeMed'
+        ORDER BY ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
+
+        $transactions = $db->getResults($transactionsQuery);
+        return $transactions;
+    }
+
+    /**
      * Base fields to include in a claim
      *
      * @param  int    $patientId

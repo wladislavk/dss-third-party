@@ -2,6 +2,7 @@
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
 use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use Carbon\Carbon;
@@ -16,8 +17,6 @@ class ApiAdminCompanyController extends ApiBaseController
      * @var $adminCompany
      */
     protected $adminCompany;
-
-    private $response;
 
     /**
      * Validation rules for the store method
@@ -46,11 +45,6 @@ class ApiAdminCompanyController extends ApiBaseController
     public function __construct(AdminCompanyInterface $adminCompany)
     {
         $this->adminCompany = $adminCompany;
-        $this->response = [
-            'status'  => true,
-            'message' => '',
-            'data'    => []
-        ];
     }
 
     /**
@@ -63,13 +57,10 @@ class ApiAdminCompanyController extends ApiBaseController
         $retrievedAdminCompanies = $this->adminCompany->all();
 
         if (!count($retrievedAdminCompanies)) {
-            throw new Exception('The table is empty.');
+            return ApiResponse::responseError('The table is empty.', 422);
         }
 
-        $this->response['message'] = 'Admin companies list.';
-        $this->response['data']    = $retrievedAdminCompanies;
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Admin companies list.', $retrievedAdminCompanies);
     }
 
     /**
@@ -83,7 +74,7 @@ class ApiAdminCompanyController extends ApiBaseController
         $validator  = \Validator::make($postValues, $this->rulesForStore);
 
         if ($validator->fails()) {
-            throw new Exception($validator->errors());
+            return ApiResponse::responseError($validator->errors(), 422);
         }
 
         $postValues['adddate']    = Carbon::now();
@@ -91,10 +82,7 @@ class ApiAdminCompanyController extends ApiBaseController
 
         $this->adminCompany->store($postValues);
 
-        $this->response['message'] = 'Admin company was added successfully.';
-        $this->response['data']    = $this->adminCompany->all();
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Admin company was added successfully.', $this->adminCompany->all());
     }
 
     /**
@@ -108,15 +96,12 @@ class ApiAdminCompanyController extends ApiBaseController
         $validator = \Validator::make(Input::all(), $this->rulesForUpdate);
 
         if ($validator->fails()) {
-            throw new Exception($validator->errors());
+            return ApiResponse::responseError($validator->errors(), 422);
         }
 
         $this->adminCompany->update($id, Input::all());
 
-        $this->response['message'] = 'Admin company was updated successfully.';
-        $this->response['data']    = $this->adminCompany->all();
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Admin company was updated successfully.', $this->adminCompany->all());
     }
 
     /**
@@ -130,13 +115,10 @@ class ApiAdminCompanyController extends ApiBaseController
         $retrievedAdminCompany = $this->adminCompany->find($id);
 
         if (empty($retrievedAdminCompany)) {
-            throw new Exception('Admin company not found.');
+            return ApiResponse::responseError('Admin company not found.', 422);
         }
 
-        $this->response['message'] = 'Retrieved admin company by id.';
-        $this->response['data']    = $retrievedAdminCompany;
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Retrieved admin company by id.', $retrievedAdminCompany);
     }
 
     /**
@@ -147,10 +129,7 @@ class ApiAdminCompanyController extends ApiBaseController
      */
     public function edit($id)
     {
-        $this->response['message'] = 'Admin company was edited successfully.';
-        $this->response['data']    = [];
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Admin company was edited successfully.', []);
     }
 
     /**
@@ -164,12 +143,9 @@ class ApiAdminCompanyController extends ApiBaseController
         $deletedAdminCompany = $this->adminCompany->destroy($id);
 
         if (empty($deletedAdminCompany)) {
-            throw new Exception('Admin company not found.');
+            return ApiResponse::responseError('Admin company not found.', 422);
         }
 
-        $this->response['message'] = 'Admin company was deleted successfully.';
-        $this->response['data']    = $this->adminCompany->all();
-
-        return response()->json($this->response, 200);
+        return ApiResponse::responseOk('Admin company was deleted successfully.', $this->adminCompany->all());
     }
 }

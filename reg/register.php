@@ -11,19 +11,17 @@ include 'includes/completed.php';
 <!--[if IE]>
         <link rel="stylesheet" type="text/css" href="css/register_ie.css" />
 <![endif]-->
-<script type="text/javascript" src="js/register.js"></script>
+<script type="text/javascript" src="js/register.js?v=<?= time() ?>"></script>
 <script type="text/javascript" src="js/patient_dob.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
 <script type="text/javascript" src="js/register_masks.js"></script>
-        <script type="text/javascript">
-                $(document).ready(function(){
-                                //lga_fusionCharts.chart_k();
-                                lga_wizard.init();
-
-                        });
-        </script>
-
+<script type="text/javascript">
+    $(document).ready(function(){
+        lga_wizard.init();
+    });
+</script>
 <?php
+
   $sql = "SELECT * from dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
   $q = mysqli_query($con, $sql);
   if(mysqli_num_rows($q) > 0){
@@ -39,13 +37,14 @@ $c_sql = "SELECT c.id, c.name, c.stripe_publishable_key from companies c
     WHERE uc.userid='".mysqli_real_escape_string($con, $p['patientid'])."'";
 
 $c_r = $db->getRow($c_sql);
+
 ?>
 				<div id="content_wrapper">
 					<div id="main_content" class="cf">
 
 						<h2 class="sepH_c">Step-by-Step Patient Registration </h2>
 	<form action="register.php" name="register_form" id="register_form" method="post">
-		<input type="hidden" id="last_reg_sect" name="last_reg_sect" value="<?= $p['last_reg_sect']; ?>" />
+		<input type="hidden" id="last_reg_sect" name="last_reg_sect" value="<?= $p['last_reg_sect'] ?>" />
         <input type="hidden" name="companyid" value="<?php echo   $c_r['id']; ?>" />
         <input type="hidden" name="companyname" value="<?php echo   $c_r['name']; ?>" />
 		<input type="hidden" id="patientid" name="patientid" value="<?= $_SESSION['pid']; ?>" />
@@ -61,7 +60,7 @@ $c_r = $db->getRow($c_sql);
 								<li><span class="large"><?= $pagenum++; ?>. Employer</span></li>
 								<li><span class="large"><?= $pagenum++; ?>. Contacts</span></li>
 							</ul>
-							<div id="register" class="wizard" style="height:1400px;">
+							<div id="register" class="wizard">
 								<div class="items formEl_a">
                                                         <?php if(!$p['registered']){ ?>
                                                                         <div class="page">
@@ -926,6 +925,7 @@ $(document).ready(function(){
 											</div>
 										</div>
 									</div>
+                                    <div style="clear:both;"></div>
 								</div>
 			</div></div>
 	</form>  

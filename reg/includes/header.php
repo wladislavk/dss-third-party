@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Dental Sleep Solutions :: Registration</title>
     <link rel="stylesheet" href="css/lagu.css" />
     <link rel="stylesheet" href="lib/datatables/css/table_jui.css" type="text/css" />

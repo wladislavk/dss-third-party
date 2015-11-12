@@ -143,7 +143,25 @@ if (!isset($_SESSION['userid'])) {
 
     $num_bounce = $db->getNumberRows($bounce_query);
 
-    $unsigned_query = "select * from (select n.*, u.name signed_name, p.adddate as parent_adddate from
+    $use_payment_reports = 0;
+    $use_payment_reports_query = 'SELECT use_payment_reports FROM dental_users WHERE userid = '. $docid;
+    $use_payment_reports_result = $db->getRow($use_payment_reports_query);
+    if ($use_payment_reports_result) {
+        $use_payment_reports = $use_payment_reports_result['use_payment_reports'];
+    }
+
+    $num_payment_reports = 0;
+    if ($use_payment_reports) {
+        $payment_reports_query = 'SELECT count(*) as total
+                               FROM dental_payment_reports AS pr
+                               INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
+                               WHERE i.docid = '. $docid. ' AND pr.viewed != 1';
+        $payment_reports_result = $db->getRow($payment_reports_query);
+        if ($payment_reports_result) {
+            $num_payment_reports = $payment_reports_result['total'];
+        }
+    }
+      $unsigned_query = "select * from (select n.*, u.name signed_name, p.adddate as parent_adddate from
         (
         select * from dental_notes where status!=0 AND docid='".$_SESSION['docid']."' order by adddate desc
         ) as n

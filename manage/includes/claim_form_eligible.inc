@@ -15,8 +15,6 @@ $isPrimaryPending = ClaimFormData::isPrimary($status) && $isPending;
 $isSecondaryPending = ClaimFormData::isSecondary($status) && $isPending;
 $isRejected = ClaimFormData::isStatus('rejected', $status);
 
-$isNewClaim = !$claimId;
-
 $patientData = $db->getRow("SELECT * FROM dental_patients WHERE patientid = '$patientId'");
 $docId = intval($patientData['docid']);
 
@@ -310,6 +308,7 @@ $reject_reason = st($claimData['reject_reason']);
 $status = st($claimData['status']);
 
 $isMedicare = $insurancetype == 1;
+$acceptAssignment = isOptionSelected($accept_assignment) || $accept_assignment == 'A';
 
 $eResponse = [];
 $eligibleResponse = [];
@@ -709,67 +708,7 @@ function stateDropdown (fieldName) {
       }
 
   // Load pending medical trxns if new claim form. Otherwise, load associated trxns.
-
-      $sql = "";
-      if ($isNewClaim) {
-        $sql = "SELECT "
-             . "  ledger.*, trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_1 as modcode2, trxn_code.days_units as daysorunits, ";
-
-        if($isMedicare) {
-          $sql .= " user.medicare_npi ";
-        } else {
-          $sql .= " user.npi ";
-        }
-
-        $sql .= " as 'provider_id', ps.place_service as 'place' "
-             . "FROM "
-             . "  dental_ledger ledger "
-             . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-             . "  JOIN dental_users user ON user.userid = ledger.docid "
-             . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
-             . "  WHERE "
-             . "  ledger.status = " . DSS_TRXN_PENDING . " "
-             . "  AND ledger.patientid = " . (!empty($_GET['pid']) ? $_GET['pid'] : '') . " "
-             . "  AND ledger.docid = " . $docId . " "
-             . "  AND trxn_code.docid = " . $docId . " "
-             . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
-             . "  ORDER BY "
-             . "  ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
-      } else {
-        $sql = "SELECT "
-           . "  ledger.*, ";
-        if($isPending || $isRejected){
-          $sql .= "trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_2 as modcode2, trxn_code.days_units as daysorunits, ";
-        }
-
-        if($isMedicare){
-          $sql .= " user.medicare_npi ";
-        }else{
-          $sql .= " user.npi ";
-        }
-
-        $pri_claim_id = ($isSecondary ? $referencedClaimId : $claimId);
-        $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS place_description, user.first_name as provider_first_name, user.last_name as provider_last_name "
-             . "FROM "
-             . "  dental_ledger ledger "
-             . "  JOIN dental_users user ON user.userid = ledger.docid "
-             . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
-             . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
-             . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
-             . "  WHERE "
-             . "  ledger.primary_claim_id = '" . $pri_claim_id . "' "
-             . "  AND ledger.patientid = '" . (!empty($_GET['pid']) ? $_GET['pid'] : '') . "' "
-             . "  AND ledger.docid = '" . $docId . "' "
-             . "  AND trxn_code.docid = '" . $docId . "' "
-             . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
-             . "  ORDER BY "
-             . "  ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
-      }
-
-      $query = $db->getResults($sql);
-      // Display ledger trxns
-  ?>
-  <?php
+$transactions = ClaimFormData::ledgerItems($claimId, $docId, $patientId, $insurancetype);
 
       /**
        * @see CS-29
@@ -780,7 +719,7 @@ function stateDropdown (fieldName) {
       $li = 0;
       $oldestServiceDate = null;
 
-      if ($query) foreach ($query as $array) {
+      if ($transactions) foreach ($transactions as $array) {
         if (is_null($oldestServiceDate)) {
           $oldestServiceDate = dateToTime($array['service_date']);
         } else {
@@ -888,9 +827,9 @@ function stateDropdown (fieldName) {
       <?php
 }
 
-  if(isOptionSelected($accept_assignment) || $accept_assignment == "A"){ ?>
+  if($acceptAssignment){ ?>
         $('input[name="claim[accept_assignment_code]"][value="A"]').prop('checked', true);
-      <?php }elseif(!isOptionSelected($accept_assignment) || $accept_assignment == "C"){ ?>
+      <?php }else{ ?>
         $('input[name="claim[accept_assignment_code]"][value="C"]').prop('checked', true);
       <?php } ?>
 

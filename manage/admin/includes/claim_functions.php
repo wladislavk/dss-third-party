@@ -440,6 +440,33 @@ class ClaimFormData
     static $throwExceptions = false;
 
     /**
+     * List of fields that need to be taken into consideration when populating boxes 32. and 33.
+     *
+     * @var array
+     */
+    private static $taxDataFields = [
+        'city',
+        'state',
+        'zip',
+        'phone',
+        'practice',
+        'address',
+        'medicare_npi',
+        'npi',
+        'tax_id_or_ssn',
+        'ssn',
+        'ein',
+        'use_service_npi',
+        'service_city',
+        'service_state',
+        'service_zip',
+        'service_name',
+        'service_address',
+        'service_medicare_npi',
+        'service_npi'
+    ];
+
+    /**
      * Auxiliary function to determine sequence of the claim status
      *
      * @param int $status
@@ -821,6 +848,83 @@ class ClaimFormData
     }
 
     /**
+     * Retrieve ledger items for either the given claim, or a new claim
+     *
+     * @param int $claimId
+     * @param int $docId
+     * @param int $patientId
+     * @param int $insuranceType
+     * @return array
+     */
+    public static function ledgerItems ($claimId, $docId, $patientId, $insuranceType) {
+        $db = new Db();
+
+        $claimId = intval($claimId);
+        $docId = intval($docId);
+        $patientId = intval($patientId);
+
+        $isNewClaim = !$claimId;
+
+        $trxnStatusPending = DSS_TRXN_PENDING;
+        $trxnTypeMed = DSS_TRXN_TYPE_MED;
+
+        // Non-strict comparison
+        $insuranceSource = $insuranceType == 1 ? 'medicare_npi' : 'npi';
+        $pendingOrLinkedConditional = $isNewClaim ? "ledger.status = '$trxnStatusPending'" :
+            "(ledger.primary_claim_id = '$claimId' OR ledger.secondary_claim_id = '$claimId')";
+
+        /**
+         * Control the source of the producer / doctor.
+         *
+         * The LEFT JOIN on producerid will set the proper values for the producer. If the producerid is not valid then
+         * the joined values will be null, evaluating to FALSE by default.
+         *
+         * Thus, the producer is the source of data if:
+         *
+         * - ledger.producerid is valid (given by the LEFT JOIN)
+         * - producer.producer_files is set to "1"
+         * - the given field is not empty
+         *
+         * Otherwise, retrieve data from the doctor.
+         */
+        $transactionsQuery = "SELECT
+            ledger.*,
+            trxn_code.modifier_code_1 AS modcode,
+            trxn_code.modifier_code_1 AS modcode2,
+            trxn_code.days_units AS daysorunits,
+            name_source.place_service AS 'place',
+            description_source.description AS place_description,
+            CASE WHEN producer.producer_files AND LENGTH(TRIM(producer.$insuranceSource))
+                THEN producer.$insuranceSource
+                ELSE doctor.$insuranceSource
+            END AS 'provider_id',
+            CASE WHEN producer.producer_files AND LENGTH(TRIM(producer.first_name))
+                THEN producer.first_name
+                ELSE doctor.first_name
+            END AS 'provider_first_name',
+            CASE WHEN producer.producer_files AND LENGTH(TRIM(producer.last_name))
+                THEN producer.last_name
+                ELSE doctor.last_name
+            END AS 'provider_last_name'
+        FROM dental_ledger ledger
+            JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
+            JOIN dental_users doctor ON doctor.userid = ledger.docid
+            LEFT JOIN dental_users producer ON producer.userid = ledger.producerid
+            LEFT JOIN dental_place_service name_source ON name_source.place_serviceid = trxn_code.place
+            LEFT JOIN dental_place_service description_source
+                ON description_source.place_service = ledger.placeofservice
+        WHERE $pendingOrLinkedConditional
+            AND ledger.patientid = '$patientId'
+            AND ledger.docid = '$docId'
+            AND trxn_code.docid = '$docId'
+            AND trxn_code.type = '$trxnTypeMed'
+        ORDER BY ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
+
+        $transactions = $db->getResults($transactionsQuery);
+        return $transactions;
+    }
+
+    /**
      * Base fields to include in a claim
      *
      * @param  int    $patientId
@@ -1034,13 +1138,27 @@ class ClaimFormData
          * 'producer_files' signals whether the action must be marked as the original producer OR the current docid
          *
          * IF $producerData['producer_files'] == 1
-         * THEN use producer data
+         * THEN use producer data, fallback to doctor data
          * ELSE use doctor data
+         *
+         * Set the doctor data first. Overwrite values where appropiate IF producer_files = 1
          */
+        $taxSource = array_only($doctorData, self::$taxDataFields);
+
         if ($producerData['producer_files'] == 1) {
-            $taxSource = &$producerData;
-        } else {
-            $taxSource = &$doctorData;
+            array_walk($taxSource, function (&$taxField, $index) use ($producerData) {
+                $producerField = trim($producerData[$index]);
+
+                // IF producer_files = 1 THEN use the option from the producer
+                if ($index === 'use_service_npi') {
+                    $taxField = $producerField;
+                }
+
+                // If the corresponding producer value is set, use that value instead
+                if (strlen($producerField)) {
+                    $taxField = $producerField;
+                }
+            });
         }
 
         /**

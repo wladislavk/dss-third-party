@@ -1,38 +1,21 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
+require_once __DIR__ . '/questionnaire_sections.php';
+
 	if (!empty($_SESSION['pid'])) {
 		$pid = $_SESSION['pid'];
 	} else {
 		$pid = '';
 	}
 
-	$s = "SELECT last_reg_sect FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con,$pid)."' OR patientid='".mysqli_real_escape_string($con,$pid)."' ORDER BY last_reg_sect DESC";
-	
-	$r = $db->getRow($s);
-	if($r['last_reg_sect'] >= 5) {
-		$qp = 1;
-	}else{
-		$qp = 0;
-	}
+$comp = questionnaireCompletedSections($pid);
 
-	$s = "SELECT * FROM dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,$pid)."' OR parent_patientid='".mysqli_real_escape_string($con,$pid)."'";
-	
-	$q1 = ($db->getNumberRows($s) > 0)?1:0;
-	$s = "SELECT * FROM dental_q_sleep WHERE patientid='".mysqli_real_escape_string($con,$pid)."' OR parent_patientid='".mysqli_real_escape_string($con,$pid)."'";
-	
-	$qs = ($db->getNumberRows($s) > 0)?1:0;
-	$s = "SELECT * FROM dental_q_page2 WHERE patientid='".mysqli_real_escape_string($con,$pid)."' OR parent_patientid='".mysqli_real_escape_string($con,$pid)."'";
-
-	$q2 = ($db->getNumberRows($s) > 0)?1:0;
-	$s = "SELECT * FROM dental_q_page3 WHERE patientid='".mysqli_real_escape_string($con,$pid)."' OR parent_patientid='".mysqli_real_escape_string($con,$pid)."'";
-
-	$q3 = ($db->getNumberRows($s) > 0)?1:0;
-
-	$comp = array();
-	$comp['symptoms'] = $q1;
-	$comp['epworth'] = $qs;
-	$comp['treatments'] = $q2;
-	$comp['history'] = $q3;
-	$comp['registered'] = $qp;
+$q1 = $comp['symptoms'];
+$qs = $comp['epworth'];
+$q2 = $comp['treatments'];
+$q3 = $comp['history'];
+$qp = $comp['registered'];
 
 	$tot_sect = 5;
 	$comp_sect = $qp + $q1 + $qs + $q2 + $q3;

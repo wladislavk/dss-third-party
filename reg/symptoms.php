@@ -152,12 +152,10 @@ if($_POST['q_page1sub'] == 1)
 
   }
 }
-?>
-<?php
-        $exist_sql = "SELECT symptoms_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_SESSION['pid'])."'";
-        $exist_q = mysqli_query($con, $exist_sql);
-	$exist_row = mysqli_fetch_assoc($exist_q);
-        if($exist_row['symptoms_status'] == 0)
+
+$comp = questionnaireCompletedSections($_SESSION['pid']);
+
+        if($comp['symptoms'] == 0)
         {
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."'";

@@ -260,10 +260,12 @@
 		                   	</div>
 		                    <div class="ta_half">
 		                        <span>
-		                        	<span style="color:#000000; padding-top:0px;">
+		                        	<span style="color:#000000; padding-top:4px;">
 		                            	Other Items<br />
 		                            </span>
-		                            (Enter Each on Different Line)<br />
+		                            (Enter Each on Different Line)
+		                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_maxilla'); return false;">Use Custom Text</button>
+		                            <br />
 		                            <textarea name="other_maxilla" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_maxilla;?></textarea>
 		                        </span>
 		                    </div>
@@ -297,10 +299,12 @@
 		                   	</div>
 		                    <div class="ta_half">
 		                        <span>
-		                        	<span style="color:#000000; padding-top:0px;">
+		                        	<span style="color:#000000; padding-top:4px;">
 		                            	Other Items<br />
 		                            </span>
-		                            (Enter Each on Different Line)<br />
+		                            (Enter Each on Different Line)
+		                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_mandible'); return false;">Use Custom Text</button>
+		                            <br />
 		                            <textarea name="other_mandible" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_mandible;?></textarea>
 		                        </span>
 		                    </div>
@@ -334,10 +338,12 @@
 		                   	</div>
 		                    <div class="ta_half"> 
 		                        <span>
-		                        	<span style="color:#000000; padding-top:0px;">
+		                        	<span style="color:#000000; padding-top:4px;">
 		                            	Other Items<br />
 		                            </span>
-		                            (Enter Each on Different Line)<br />
+		                            (Enter Each on Different Line)
+		                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_soft_palate'); return false;">Use Custom Text</button>
+		                            <br />
 		                            <textarea name="other_soft_palate" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_soft_palate;?></textarea>
 		                        </span>
 		                    </div>
@@ -371,10 +377,12 @@
 		                   	</div>
 		                    <div class="ta_half">
 		                        <span>
-		                        	<span style="color:#000000; padding-top:0px;">
+		                        	<span style="color:#000000; padding-top:4px;">
 		                            	Other Items<br />
 		                            </span>
-		                            (Enter Each on Different Line)<br />
+		                            (Enter Each on Different Line)
+			                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_uvula'); return false;">Use Custom Text</button>
+		                            <br />
 		                            <textarea name="other_uvula" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_uvula;?></textarea>
 		                        </span>
 		                    </div>
@@ -408,10 +416,12 @@
 		                   	</div>
 		                    <div class="ta_half">
 		                        <span>
-		                        	<span style="color:#000000; padding-top:0px;">
+		                        	<span style="color:#000000; padding-top:4px;">
 		                            	Other Items<br />
 		                            </span>
-		                            (Enter Each on Different Line)<br />
+		                            (Enter Each on Different Line)
+		                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_gag_reflex'); return false;">Use Custom Text</button>
+		                            <br />
 		                            <textarea name="other_gag_reflex" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_gag_reflex;?></textarea>
                         		</span>
 		                    </div>
@@ -445,10 +455,12 @@
 		                   	</div>
 		                    <div class="ta_half">
 		                        <span>
-		                        	<span style="color:#000000; padding-top:0px;">
+		                        	<span style="color:#000000; padding-top:4px;">
 		                            	Other Items<br />
 		                            </span>
-		                            (Enter Each on Different Line)<br />
+		                            (Enter Each on Different Line)
+		                            <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page3frm&tx=other_nasal_passages'); return false;">Use Custom Text</button>
+		                            <br />
 		                            <textarea name="other_nasal_passages" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_nasal_passages;?></textarea>
 		                        </span>
 		                    </div>
@@ -473,15 +485,21 @@
 		<?php include("includes/form_bottom.htm");?>
 	<br />
 
-	<div id="popupContact" style="width:750px;">
-	    <a id="popupContactClose">
-	    	<button>X</button>
-	    </a>
-	    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-	</div>
-	<div id="backgroundPopup"></div>
-
-	<br /><br />	
+	<div id="popupRefer" style="width:750px;">
+        <a id="popupReferClose">
+            <button>X</button>
+        </a>
+        <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+    </div>
+    <div id="backgroundPopupRef"></div>
+    <div id="popupContact" style="width:750px; height: 500px;">
+        <a id="popupContactClose">
+            <button>X</button>
+        </a>
+        <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+    </div>
+    <div id="backgroundPopup"></div>
+    <br /><br />
 
 <?php
 	} else {  // end pt info check

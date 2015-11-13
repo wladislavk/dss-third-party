@@ -233,8 +233,10 @@
                             </div>
                             <div>
                                 <span>
-                                    <span style="color:#000000; padding-top:0px;">Other Items<br /></span>
-                                    (Enter Each on Different Line)<br />
+                                    <span style="color:#000000; padding-top:4px;">Other Items<br /></span>
+                                    (Enter Each on Different Line)
+                                    <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page4frm&tx=other_exam_teeth'); return false;">Use Custom Text</button>
+                                    <br />
                                     <textarea name="other_exam_teeth" class="field text addr tbox" style="width:650px; height:100px;"><?php echo $other_exam_teeth;?></textarea>
                                 </span>
                             </div>

@@ -21,7 +21,6 @@ if(!isset($_SESSION['screener_doc'])){
 <script type="text/javascript" src="../manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
 			<script type="text/javascript" src="../reg/lib/fancybox/jquery.easing-1.3.pack.js"></script>
 			<script type="text/javascript" src="../reg/lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<!--<script type="text/javascript" src="script/screener.js?v=<?= time() ?>"></script>-->
 <?php include 'script/screener.php'; ?>
     <script type="text/javascript" src="../manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="script/screener_masks.js"></script>
@@ -84,7 +83,7 @@ Please complete this short questionnaire to determine your risk of OSA. Your inf
 <br />
                                                                                                                 <div class="cf">
 <a href="#"  id="sect1_next" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
-<span id="sect1_next_dis" class="fr next btn btn_large btn_d disabled">Proceed &raquo;</a>
+<a id="sect1_next_dis" class="fr next btn btn_large btn_d disabled">Proceed &raquo;</a>
                                                                                                                 </div>
 </div>
 <div class="clear"></div>
@@ -294,7 +293,7 @@ Please complete this short questionnaire to determine your risk of OSA. Your inf
 
 
 <a href="#" id="sect4_next" class="fr next btn btn_medium btn_d">Next</a>
-<span id="sect4_next_dis" class="fr next btn btn_medium btn_d disabled">Next</a>
+<a id="sect4_next_dis" class="fr next btn btn_medium btn_d disabled">Next</a>
 </div>
 
 <div class="sect" id="sectresults">

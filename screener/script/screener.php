@@ -1,29 +1,17 @@
-<?php namespace Ds3\Libraries\Legacy; ?><script type="text/javascript">
-var screenerid='';
+<?php
+namespace Ds3\Libraries\Legacy;
 
-var coMorbidityQuestions = {
-    rx_blood_pressure: 'High blood pressure',
-    rx_apnea: 'Sleep Apnea',
-    rx_lung_disease: 'Lung Disease',
-    rx_insomnia: 'Insomnia',
-    rx_depression: 'Depression',
-    rx_medication: 'Sleeping medication',
-    rx_restless_leg: 'Restless leg syndrome',
-    rx_headaches: 'Morning headaches',
-    rx_heart_disease: 'Heart Failure',
-    rx_stroke: 'Stroke',
-    rx_hypertension: 'Hypertension',
-    rx_diabetes: 'Diabetes',
-    rx_metabolic_syndrome: 'Metabolic Syndrome',
-    rx_obesity: 'Obesity',
-    rx_heartburn: 'Heartburn (Gastroesophageal Reflux)',
-    rx_afib: 'Atrial Fibrillation'
-};
+require_once __DIR__ . '/../../manage/includes/screener-functions.php';
+
+?><script type="text/javascript">
+var screenerid='';
+var coMorbidityLabels = <?= json_encode(coMorbidityLabels()) ?>;
+var coMorbidityWeights = <?= json_encode(coMorbidityWeights()) ?>;
 
 function submit_screener(e){
     e.preventDefault();
-  $('#sect4_next').hide();
-  $('#sect4_next_dis').show();
+    $('#sect4_next').hide();
+    $('#sect4_next_dis').show();
 
     function onFailure () {
         $('#sect4_next').show();
@@ -66,173 +54,204 @@ function submit_screener(e){
         rx_cpap: $('input[name="rx_cpap"]:checked').val()
     };
 
-    for (var fieldName in coMorbidityQuestions) {
-        screenerData[fieldName] = $('input[name="' + fieldName + '"]:checked').val();
+    /**
+     * Include the co-morbidity fields, based on the weight list.
+     *
+     * All these fields are checkboxes
+     */
+    for (var fieldName in coMorbidityWeights) {
+        screenerData[fieldName] = $('input[name="' + fieldName + '"]').is(':checked') ?
+            coMorbidityWeights[fieldName] : 0;
     }
 
-  $.ajax({
-    url: "script/submit_screener.php",
-    type: "post",
-    data: screenerData,
-    success: function(data){
-      var r = $.parseJSON(data);
-      if(r.error){
-          onFailure();
-      }else{
- 	screenerid=r.screenerid;
-	//update view results div
-	$('#r_first_name').text($('#first_name').val());
-        $('#r_last_name').text($('#last_name').val());
-        $('#r_phone').text($('#phone').val());
-<?php
-  $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysqli_query($con, $epworth_sql);
-  $epworth_number = mysqli_num_rows($epworth_my);
-  while($ea = mysqli_fetch_array($epworth_my))
-  {
-?>
+    $.ajax({
+        url: "script/submit_screener.php",
+        type: "post",
+        data: screenerData,
+        success: function(data){
+            var r = $.parseJSON(data);
 
-        $('#r_epworth_<?= $ea['epworthid'];?>').text($('#epworth_<?=$ea['epworthid'];?>').val());
-<?php } ?>
-        $('#r_breathing').text(($("input[name=breathing]:checked").val() > 0)?'Yes':'No');
-        $('#r_driving').text(($("input[name=driving]:checked").val() > 0)?'Yes':'No');
-        $('#r_gasping').text(($("input[name=gasping]:checked").val() > 0)?'Yes':'No');
-        $('#r_sleepy').text(($("input[name=sleepy]:checked").val() > 0)?'Yes':'No');
-        $('#r_snore').text(($("input[name=snore]:checked").val() > 0)?'Yes':'No');
-        $('#r_weight_gain').text(($("input[name=weight_gain]:checked").val() > 0)?'Yes':'No');
-        $('#r_blood_pressure').text(($("input[name=blood_pressure]:checked").val() > 0)?'Yes':'No');
-        $('#r_jerk').text(($("input[name=jerk]:checked").val() > 0)?'Yes':'No');
-        $('#r_burning').text(($("input[name=burning]:checked").val() > 0)?'Yes':'No');
-        $('#r_headaches').text(($("input[name=headaches]:checked").val() > 0)?'Yes':'No');
-        $('#r_falling_asleep').text(($("input[name=falling_asleep]:checked").val() > 0)?'Yes':'No');
-        $('#r_staying_asleep').text(($("input[name=staying_asleep]:checked").val() > 0)?'Yes':'No');
-        $('#r_rx_cpap').text(($("input[name=rx_cpap]:checked").val() > 0)?'Yes':'No');
+            if(r.error){
+                onFailure();
+                return
+            }
 
-          for (var fieldName in coMorbidityQuestions) {
-              if ($('input[name="' + fieldName + '"]').is(':checked')) {
-                  $('#r_diagnosed').append('<li>' + coMorbidityQuestions[fieldName] + '</li>');
-              }
-          }
+            screenerid = r.screenerid;
 
-	$('#results_div div.check').each( function(){
-  	  result = $(this).find('span').text();
-	  if(result == 0 || result =='' || result== 'No'){
-		$(this).hide();
-	  }else if(result == 1){
-                $(this).find('span').text('1 - Slight chance of dozing');
-          }else if(result == 2){
-                $(this).find('span').text('2 - Moderate chance of dozing');
-          }else if(result == 3){
-                $(this).find('span').text('3 - High chance of dozing');
-          }
-	});
+            //update view results div
+            $('#r_first_name').text($('#first_name').val());
+            $('#r_last_name').text($('#last_name').val());
+            $('#r_phone').text($('#phone').val());
 
+            <?php
 
-	//get scores
-	var ep = 0;
-<?php
-  $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
-  $epworth_my = mysqli_query($con, $epworth_sql);
-  $epworth_number = mysqli_num_rows($epworth_my);
-  while($ea = mysqli_fetch_array($epworth_my))
-  {
-?>
-	ep += parseInt($('#epworth_<?= $ea['epworthid']; ?>').val(), 10);
-<?php } ?>
-        $('#r_ep_total').text(ep);
-          var sect3 = $('input[name="rx_cpap"]:checked').val() || 0;
+            $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+            $epworth_my = mysqli_query($con, $epworth_sql);
+            $epworth_number = mysqli_num_rows($epworth_my);
 
-          for (fieldName in coMorbidityQuestions) {
-              sect3 += $('input[name="' + fieldName + '"]:checked').val() || 0;
-          }
+            while ($ea = mysqli_fetch_array($epworth_my)) { ?>
+                $('#r_epworth_<?= $ea['epworthid'];?>').text($('#epworth_<?=$ea['epworthid'];?>').val());
+            <?php } ?>
 
+            $('#r_breathing').text(($("input[name=breathing]:checked").val() > 0)?'Yes':'No');
+            $('#r_driving').text(($("input[name=driving]:checked").val() > 0)?'Yes':'No');
+            $('#r_gasping').text(($("input[name=gasping]:checked").val() > 0)?'Yes':'No');
+            $('#r_sleepy').text(($("input[name=sleepy]:checked").val() > 0)?'Yes':'No');
+            $('#r_snore').text(($("input[name=snore]:checked").val() > 0)?'Yes':'No');
+            $('#r_weight_gain').text(($("input[name=weight_gain]:checked").val() > 0)?'Yes':'No');
+            $('#r_blood_pressure').text(($("input[name=blood_pressure]:checked").val() > 0)?'Yes':'No');
+            $('#r_jerk').text(($("input[name=jerk]:checked").val() > 0)?'Yes':'No');
+            $('#r_burning').text(($("input[name=burning]:checked").val() > 0)?'Yes':'No');
+            $('#r_headaches').text(($("input[name=headaches]:checked").val() > 0)?'Yes':'No');
+            $('#r_falling_asleep').text(($("input[name=falling_asleep]:checked").val() > 0)?'Yes':'No');
+            $('#r_staying_asleep').text(($("input[name=staying_asleep]:checked").val() > 0)?'Yes':'No');
+            $('#r_rx_cpap').text(($("input[name=rx_cpap]:checked").val() > 0)?'Yes':'No');
 
-	var survey = 0;
-	if($("input[name=breathing]:checked").val())
-		survey += parseInt($("input[name=breathing]:checked").val(), 10);
-	if($("input[name=driving]:checked").val())
-        	survey += parseInt($("input[name=driving]:checked").val(), 10);
-        if($("input[name=gasping]:checked").val())                
-		survey += parseInt($("input[name=gasping]:checked").val(), 10);
-        if($("input[name=sleepy]:checked").val())                
+            for (var fieldName in coMorbidityLabels) {
+                if ($('input[name="' + fieldName + '"]').is(':checked')) {
+                    $('#r_diagnosed').append('<li>' + coMorbidityLabels[fieldName] + '</li>');
+                }
+            }
+
+            $('#results_div div.check').each(function(){
+                var result = $(this).find('span').text();
+
+                if (result == 0 || result =='' || result== 'No') {
+                    $(this).hide();
+                } else if (result == 1) {
+                    $(this).find('span').text('1 - Slight chance of dozing');
+                } else if (result == 2) {
+                    $(this).find('span').text('2 - Moderate chance of dozing');
+                } else if (result == 3) {
+                    $(this).find('span').text('3 - High chance of dozing');
+                }
+            });
+
+            //get scores
+            var ep = 0;
+
+            <?php
+
+            $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+            $epworth_my = mysqli_query($con, $epworth_sql);
+            $epworth_number = mysqli_num_rows($epworth_my);
+
+            while ($ea = mysqli_fetch_array($epworth_my)) { ?>
+                ep += parseInt($('#epworth_<?= $ea['epworthid']; ?>').val(), 10);
+            <?php } ?>
+
+            $('#r_ep_total').text(ep);
+
+            /**
+             * Sum the co-morbidity fields, based on the weight list.
+             *
+             * All these fields are checkboxes
+             */
+            var sect3 = 0;
+
+            for (var fieldName in coMorbidityWeights) {
+                sect3 += $('input[name="' + fieldName + '"]').is(':checked') ?
+                    coMorbidityWeights[fieldName] : 0;
+            }
+
+            var survey = 0;
+
+            if ($("input[name=breathing]:checked").val())
+                survey += parseInt($("input[name=breathing]:checked").val(), 10);
+
+            if ($("input[name=driving]:checked").val())
+                survey += parseInt($("input[name=driving]:checked").val(), 10);
+
+            if ($("input[name=gasping]:checked").val())
+                survey += parseInt($("input[name=gasping]:checked").val(), 10);
+
+            if ($("input[name=sleepy]:checked").val())
                 survey += parseInt($("input[name=sleepy]:checked").val(), 10);
-        if($("input[name=snore]:checked").val())                
+
+            if ($("input[name=snore]:checked").val())
                 survey += parseInt($("input[name=snore]:checked").val(), 10);
-        if($("input[name=weight_gain]:checked").val()) 
+
+            if ($("input[name=weight_gain]:checked").val())
                 survey += parseInt($("input[name=weight_gain]:checked").val(), 10);
-        if($("input[name=blood_pressure]:checked").val())                
+
+            if ($("input[name=blood_pressure]:checked").val())
                 survey += parseInt($("input[name=blood_pressure]:checked").val(), 10);
-        if($("input[name=jerk]:checked").val())                
+
+            if ($("input[name=jerk]:checked").val())
                 survey += parseInt($("input[name=jerk]:checked").val(), 10);
-        if($("input[name=burning]:checked").val())                
+
+            if ($("input[name=burning]:checked").val())
                 survey += parseInt($("input[name=burning]:checked").val(), 10);
-        if($("input[name=headaches]:checked").val())                
+
+            if ($("input[name=headaches]:checked").val())
                 survey += parseInt($("input[name=headaches]:checked").val(), 10);
-        if($("input[name=falling_asleep]:checked").val())                
+
+            if ($("input[name=falling_asleep]:checked").val())
                 survey += parseInt($("input[name=falling_asleep]:checked").val(), 10);
-        if($("input[name=staying_asleep]:checked").val())                
+
+            if ($("input[name=staying_asleep]:checked").val())
                 survey += parseInt($("input[name=staying_asleep]:checked").val(), 10);
-	an_tot = ep;
-	$('.risk_desc').hide();
-	                                                                        if(an_tot < 8)
-                                                                        {
-                                                                                an_text = 'The Epworth Sleepiness Scale score was '+an_tot+',  which indicates a normal amount of sleepiness.';
-										img = 'images/screener-low_risk.png';
-                                                                        }
-                                                                        
-                                                                        if (an_tot >= 8 && an_tot < 10)
-                                                                        {
-                                                                                an_text = 'The Epworth Sleepiness Scale score was '+an_tot+',  which indicates a average amount of sleepiness.';
-                                                                                img = 'images/screener-moderate_risk.png';
-                                                                        }
-                                                                        
-                                                                        if (an_tot >= 10 && an_tot < 16)
-                                                                        {
-                                                                                an_text = 'The Epworth Sleepiness Scale score was '+an_tot+', which may indicate excessive sleepiness depending on the situation. The patient may want to seek medical attention.';
-                                                                                img = 'images/screener-high_risk.png';
-                                                                        }
-                                                                        
-                                                                        if (an_tot >= 16 )
-                                                                        {
-                                                                                an_text = 'The Epworth Sleepiness Scale score was '+an_tot+', which indicates excessive sleepiness and medical attention should be sought.';
-                                                                                img = 'images/screener-severe_risk.png';
-                                                                        }
-	var img = '';
 
+            an_tot = ep;
+            $('.risk_desc').hide();
 
-        if(survey > 15 || ep > 18 || sect3 > 3){
+            if (an_tot < 8) {
+                an_text = 'The Epworth Sleepiness Scale score was ' + an_tot +
+                    ',  which indicates a normal amount of sleepiness.';
+                img = 'images/screener-low_risk.png';
+            }
+
+            if (an_tot >= 8 && an_tot < 10) {
+                an_text = 'The Epworth Sleepiness Scale score was ' + an_tot +
+                    ',  which indicates a average amount of sleepiness.';
+                img = 'images/screener-moderate_risk.png';
+            }
+
+            if (an_tot >= 10 && an_tot < 16) {
+                an_text = 'The Epworth Sleepiness Scale score was ' + an_tot +
+                    ', which may indicate excessive sleepiness depending on the situation. ' +
+                    'The patient may want to seek medical attention.';
+                img = 'images/screener-high_risk.png';
+            }
+
+            if (an_tot >= 16) {
+                an_text = 'The Epworth Sleepiness Scale score was ' + an_tot +
+                    ', which indicates excessive sleepiness and medical attention should be sought.';
+                img = 'images/screener-severe_risk.png';
+            }
+
+            var img = '';
+
+            if (survey > 15 || ep > 18 || sect3 > 3) {
                 img = 'images/screener-severe_risk.png';
                 $('#risk_severe').show();
-	}else if(survey > 11 || ep > 14 || sect3 > 2){
+            } else if (survey > 11 || ep > 14 || sect3 > 2) {
                 img = 'images/screener-high_risk.png';
                 $('#risk_high').show();
-	}else if(survey > 7 || ep > 9 || sect3 > 1){
+            } else if (survey > 7 || ep > 9 || sect3 > 1) {
                 img = 'images/screener-moderate_risk.png';
                 $('#risk_moderate').show();
-	}else{
+            } else {
                 img = 'images/screener-low_risk.png';
                 $('#risk_low').show();
-	}
+            }
 
-	$('.pat_name').text($('#first_name').val());
-	$('#risk_image').html('<img src="'+img+'" />');
-        $('#risk_image_doc').html('<img src="'+img+'" />');
-	//$('#ep_score').text(an_text);
-	//$('#snore_score').text(snore);
-	//$('#survey_score').text(survey);
+            $('.pat_name').text($('#first_name').val());
+            $('#risk_image').html('<img src="'+img+'" />');
+            $('#risk_image_doc').html('<img src="'+img+'" />');
+            //$('#ep_score').text(an_text);
+            //$('#snore_score').text(snore);
+            //$('#survey_score').text(survey);
 
-	//update hst div
-	$('#hst_first_name').val($('#first_name').val());
-        $('#hst_last_name').val($('#last_name').val());
-        $('#hst_phone').val($('#phone').val());
+            //update hst div
+            $('#hst_first_name').val($('#first_name').val());
+            $('#hst_last_name').val($('#last_name').val());
+            $('#hst_phone').val($('#phone').val());
 
-	next_sect('results');
-
-      }
-    },
-    error: onFailure
-  });	
-
+            next_sect('results');
+        },
+        error: onFailure
+    });
 }
 
 

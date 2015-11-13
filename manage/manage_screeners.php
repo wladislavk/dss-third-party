@@ -2,25 +2,10 @@
 	include "includes/top.htm";
 	include "includes/similar.php";
 	include_once('includes/constants.inc');
+require_once __DIR__ . '/includes/screener-functions.php';
 
-$coMorbidityQuestions = [
-    'rx_blood_pressure' => 'High blood pressure',
-    'rx_apnea' => 'Sleep Apnea',
-    'rx_lung_disease' => 'Lung Disease',
-    'rx_insomnia' => 'Insomnia',
-    'rx_depression' => 'Depression',
-    'rx_medication' => 'Sleeping medication',
-    'rx_restless_leg' => 'Restless leg syndrome',
-    'rx_headaches' => 'Morning headaches',
-    'rx_heart_disease' => 'Heart Failure',
-    'rx_stroke' => 'Stroke',
-    'rx_hypertension' => 'Hypertension',
-    'rx_diabetes' => 'Diabetes',
-    'rx_metabolic_syndrome' => 'Metabolic Syndrome',
-    'rx_obesity' => 'Obesity',
-    'rx_heartburn' => 'Heartburn (Gastroesophageal Reflux)',
-    'rx_afib' => 'Atrial Fibrillation'
-];
+$coMorbidityLabels = coMorbidityLabels();
+$coMorbidityWeights = coMorbidityWeights();
 
 ?>
 
@@ -283,26 +268,16 @@ $coMorbidityQuestions = [
                         $myarray['falling_asleep'] +
                         $myarray['staying_asleep'];
 
-                    // These fields seem to be the same as the co-morbidity questions
-                    $sect3_total = $myarray['rx_cpap'] +
-                        $myarray['rx_blood_pressure'] +
-                        $myarray['rx_hypertension'] +
-                        $myarray['rx_heart_disease'] +
-                        $myarray['rx_stroke'] +
-                        $myarray['rx_apnea'] +
-                        $myarray['rx_diabetes'] +
-                        $myarray['rx_lung_disease'] +
-                        $myarray['rx_insomnia'] +
-                        $myarray['rx_depression'] +
-                        $myarray['rx_narcolepsy'] +
-                        $myarray['rx_medication'] +
-                        $myarray['rx_restless_leg'] +
-                        $myarray['rx_headaches'] +
-                        $myarray['rx_heartburn'];
+                    /**
+                     * Instead of relying on the field values, sum based on a lookup list.
+                     *
+                     * Due a mistake on a previous task, the DB values during certain period might be wrong.
+                     */
+                    $sect3_total = coMorbiditySum($myarray);
 
                     $diagnosis = array();
 
-                    foreach ($coMorbidityQuestions as $fieldName=>$legend) {
+                    foreach ($coMorbidityLabels as $fieldName=>$legend) {
                         if ($myarray[$fieldName]) {
                             $diagnosis []= $legend;
                         }

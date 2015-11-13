@@ -85,7 +85,7 @@ if (count($my) > 0) { ?>
         <tr class="tr_bg">
           <td>Amount left to meet?</td>
           <td class=<?php echo  $out_table_class?>>$<?php echo  $preauth['patient_amount_left_to_meet'] ?></td>
-          <td class=<?php echo  $in_table_class?>>$<?php echo  (!empty($preauth['in_patient_amount_left_tmeet']) ? $preauth['in_patient_amount_left_to_meet'] : '') ?></td>
+          <td class=<?php echo  $in_table_class?>>$<?php echo  (!empty($preauth['in_patient_amount_left_to_meet']) ? $preauth['in_patient_amount_left_to_meet'] : '') ?></td>
         </tr>
         <tr class="tr_bg">
           <td>What is the family deductible?</td>

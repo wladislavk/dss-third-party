@@ -205,6 +205,13 @@
           <span class="label">VOBs</span>
         </a>
 
+      <?php if ($numRejectedPreAuth) { ?>
+        <a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED ?>&viewed=0" class=" count_<?= $numRejectedPreAuth ?> notification bad_count">
+            <span class="count"><?= $numRejectedPreAuth ?></span>
+            <span class="label">Rejected VOBs</span>
+        </a>
+      <?php } ?>
+
         <a href="manage_hst.php?status=<?php echo DSS_HST_COMPLETE; ?>&viewed=0" class=" count_<?php echo $num_hst; ?> notification <?php echo ($num_hst==0)?"good_count":"great_count"; ?>">
           <span class="count"><?php echo $num_hst;?></span>
           <span class="label">HSTs</span>

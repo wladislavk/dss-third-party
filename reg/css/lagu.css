@@ -57,7 +57,7 @@
 	.fixed .wrapper {width:960px;margin:0 auto}
 	.fluid .wrapper {padding:0 20px;min-width:736px}
 	#main_section {border:1px solid #ccc;background:#fff;padding:16px 16px 40px;min-height:500px}
-	#content_wrapper {width:100%;float:left}
+	#content_wrapper {width:100%}
 
 	/* top bar */
 		#top_bar {height:26px;line-height:26px;font-size:11px;background:#e6e6e6;border-bottom:1px solid #ccc}
@@ -476,7 +476,7 @@
 
 	/* wizard */
 		#wizard, .wizard {background:#fff;height:650px;width:100%;overflow:hidden;position:relative}
-		#wizard .items, .wizard .items {width:20000em;clear:both;position:absolute}
+		#wizard .items, .wizard .items {width:20000em;clear:both;position:relative}
 		#wizard .page, .wizard .page {width:710px;float:left}
 		#wizard .page .pageInside, .wizard .pageInside {padding:10px}
 		#wizard .w_main_col, .wizard .w_main_col {padding:8px 0 8px 14px;border-left:1px solid #eee;width:398px}

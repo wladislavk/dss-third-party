@@ -23,6 +23,8 @@ if (!mysqli_select_db($con, $config_db_name)) {
     throw new \RuntimeException('DB selection failure', E_USER_ERROR);
 }
 
+mysqli_set_charset($con, 'utf8');
+
 $GLOBALS['con'] = $con;
 
 $base_path = config('app.url');

@@ -1,12 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 
-/*$db->SHOW_QUERY = true;
-$db->SHOW_TIMESTAMP = true;
-$db->SHOW_TOTAL_TIME = true;
-$db->resetTotalTime();*/
-if(!empty($_REQUEST["delid"]))
-{
+if(!empty($_REQUEST["delid"])) {
 	$del_sql = "delete from dental_referredby where referredbyid='".$_REQUEST["delid"]."'";
 	$db->query($del_sql);
 	
@@ -20,8 +16,6 @@ if(!empty($_REQUEST["delid"]))
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-
-//$sql = "select * from dental_referredby where docid='".$_SESSION['docid']."' order by firstname";
 $sql = "select 
 		dc.contactid as pid,
 		dc.salutation,
@@ -32,11 +26,6 @@ $sql = "select
 		dc.referredby_notes,
 		count(p.patientid) as num_ref, 
 		GROUP_CONCAT(CONCAT(p.firstname,' ',p.lastname)) as patients_list,
-/*		(SELECT count(patientid) FROM dental_patients p30 WHERE p30.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()) as num_ref30,
-                (SELECT count(patientid) FROM dental_patients p60 WHERE p60.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND DATE_SUB(CURDATE(), INTERVAL 30 DAY)) as num_ref60,
-                (SELECT count(patientid) FROM dental_patients p90 WHERE p90.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p90.referred_by AND STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND DATE_SUB(CURDATE(), INTERVAL 60 DAY)) as num_ref90,
-                (SELECT count(patientid) FROM dental_patients p90plus WHERE p90plus.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p90plus.referred_by AND STR_TO_DATE(p90plus.copyreqdate, '%m/%d/%Y') < DATE_SUB(CURDATE(), INTERVAL 90 DAY)) as num_ref90plus, */
-
 		'".DSS_REFERRED_PHYSICIAN."' as referral_type,
 		ct.contacttype
 	from dental_contact dc 
@@ -56,10 +45,6 @@ $sql = "select
 		'',
 		count(p.patientid),
 		GROUP_CONCAT(CONCAT(p.firstname,' ',p.lastname)) as patients_list,
-/*                (SELECT count(patientid) FROM dental_patients p30 WHERE p30.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()) as num_ref30,
-                (SELECT count(patientid) FROM dental_patients p60 WHERE p60.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND DATE_SUB(CURDATE(), INTERVAL 30 DAY)) as num_ref60,
-                (SELECT count(patientid) FROM dental_patients p90 WHERE p90.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p90.referred_by AND STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND DATE_SUB(CURDATE(), INTERVAL 60 DAY)) as num_ref90,
-                (SELECT count(patientid) FROM dental_patients p90plus WHERE p90plus.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p90plus.referred_by AND STR_TO_DATE(p90plus.copyreqdate, '%m/%d/%Y') < DATE_SUB(CURDATE(), INTERVAL 90 DAY)) as num_ref90plus, */
 		'".DSS_REFERRED_PATIENT."',
 		'Patient'
 	from dental_patients dp
@@ -68,33 +53,98 @@ $sql = "select
                 AND p.referred_source=".DSS_REFERRED_PATIENT."
 		GROUP BY dp.patientid
 ";
-if (!empty($_GET['sort'])) switch($_GET['sort']){
-  case 'type':
-    $sql .= " ORDER BY referral_type ".$_GET['sortdir'];
-    break;
-  case 'total':
-    $sql .= " ORDER BY num_ref ".$_GET['sortdir'];
-    break;
-  case 'thirty':
-    $sql .= " ORDER BY num_ref30 ".$_GET['sortdir'];
-    break;
-  case 'sixty':
-    $sql .= " ORDER BY num_ref60 ".$_GET['sortdir'];
-    break;
-  case 'ninty':
-    $sql .= " ORDER BY num_ref90 ".$_GET['sortdir'];
-    break;
-  case 'nintyplus':
-    $sql .= " ORDER BY num_ref90plus ".$_GET['sortdir'];
-    break;
-  default:
-    $sql .= " ORDER BY lastname ".$_GET['sortdir'].", firstname ".$_GET['sortdir'];
-    break;
+
+if (!empty($_GET['sort'])) {
+	switch ($_GET['sort']) {
+		case 'type':
+			$sql .= " ORDER BY referral_type " . $_GET['sortdir'];
+			break;
+		case 'total':
+			$sql .= " ORDER BY num_ref " . $_GET['sortdir'];
+			break;
+		case 'thirty':
+		case 'sixty':
+		case 'ninty':
+		case 'nintyplus':
+			break;
+		default:
+			$sql .= " ORDER BY lastname " . $_GET['sortdir'] . ", firstname " . $_GET['sortdir'];
+			break;
+	}
 }
 
 $my = $db->getResults($sql);
 $num_referredby = count($my);
 
+// get the counters
+for($index = 0; $index < count($my); ++$index) {
+
+	$patientId = $my[$index]['pid'];
+	$query = "SELECT count(patientid)
+							  FROM dental_patients p30
+							  WHERE p30.referred_source=" . $my[$index]['referral_type'] . " AND
+									" . $patientId . "=p30.referred_by AND
+									STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()";
+	$data = $db->getResults($query);
+	$my[$index]['num_ref30'] = isset($data['p30']) ? $data['p30'] : 0;
+
+	$query = "SELECT count(patientid)
+							  FROM dental_patients p60
+							  WHERE p60.referred_source=" . $my[$index]['referral_type'] . " AND
+									" . $patientId . "=p60.referred_by AND
+									STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND
+									DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
+	$data = $db->getResults($query);
+	$my[$index]['num_ref60'] = isset($data['p60']) ? $data['p60'] : 0;
+
+	$query = "SELECT count(patientid)
+							  FROM dental_patients p90
+							  WHERE p90.referred_source=" . $my[$index]['referral_type'] . " AND
+									" . $patientId . "=p90.referred_by AND
+									STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND
+									DATE_SUB(CURDATE(), INTERVAL 60 DAY)";
+	$data = $db->getResults($query);
+	$my[$index]['num_ref90'] = isset($data['p90']) ? $data['p90'] : 0;
+
+	$query = "SELECT count(patientid)
+							  FROM dental_patients p90plus
+							  WHERE p90plus.referred_source=" . $my[$index]['referral_type'] . " AND
+									" . $patientId . "=p90plus.referred_by AND
+									STR_TO_DATE(p90plus.copyreqdate, '%m/%d/%Y') < DATE_SUB(CURDATE(), INTERVAL 90 DAY)";
+	$data = $db->getResults($query);
+	$my[$index]['num_ref90plus'] = isset($data['p90plus']) ? $data['p90plus'] : 0;
+}
+
+if (!empty($_GET['sort'])) {
+	$sort_direction_desc = !empty($_GET['sortdir']) && $_GET['sortdir'] == 'DESC' ? true : false;
+	switch ($_GET['sort']) {
+		case 'thirty':
+			$sort_column = 'num_ref30';
+			break;
+		case 'sixty':
+			$sort_column = 'num_ref60';
+			break;
+		case 'ninty':
+			$sort_column = 'num_ref90';
+			break;
+		case 'nintyplus':
+			$sort_column = 'num_ref90plus';
+			break;
+	}
+
+	if(isset($sort_column)) {
+        function comparator($first, $second) {
+            if( $first[$sort_column] == $second[$sort_column] ) {
+                return 0;
+            }
+            if($sort_direction_desc) {
+                return ($first < $second) ? -1 : 1;
+            }
+            return ($first > $second) ? -1 : 1;
+        }
+		usort($my, comparator);
+	}
+}
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -167,58 +217,19 @@ $num_referredby = count($my);
 		</tr>
 		</thead>
 		<tbody>
-		<?php if($num_referredby == 0)
-		{ ?>
+		<?php if($num_referredby == 0) { ?>
 			<tr class="tr_bg">
 				<td valign="top" class="col_head" colspan="10" align="center">
 					No Records
 				</td>
 			</tr>
 		<?php 
-		}
-		else
-		{
+		} else {
 			foreach ($my as $myarray) {
 
-                // query optimization
-                $patientId = $myarray['pid'];
-                $query = "SELECT count(patientid)
-                          FROM dental_patients p30
-                          WHERE p30.referred_source=".$myarray['referral_type']." AND
-                                ".$patientId."=p30.referred_by AND
-                                STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()";
-                $myarray['num_ref30'] = $db->getResults($query);
-
-                $query = "SELECT count(patientid)
-                          FROM dental_patients p60
-                          WHERE p60.referred_source=".$myarray['referral_type']." AND
-                                ".$patientId."=p60.referred_by AND
-                                STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND
-                                DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
-                $myarray['num_ref60'] = $db->getResults($query);
-
-                $query = "SELECT count(patientid)
-                          FROM dental_patients p90
-                          WHERE p90.referred_source=".$myarray['referral_type']." AND
-                                ".$patientId."=p90.referred_by AND
-                                STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND
-                                DATE_SUB(CURDATE(), INTERVAL 60 DAY)";
-                $myarray['num_ref90'] = $db->getResults($query);
-
-                $query = "SELECT count(patientid)
-                          FROM dental_patients p90plus
-                          WHERE p90plus.referred_source=".$myarray['referral_type']." AND
-                                ".$patientId."=p90plus.referred_by AND
-                                STR_TO_DATE(p90plus.copyreqdate, '%m/%d/%Y') < DATE_SUB(CURDATE(), INTERVAL 90 DAY)";
-                $myarray['num_ref90plus'] = $db->getResults($query);
-
-
-				if(!empty($myarray["status"]) && $myarray["status"] == 1)
-				{
+				if( !empty($myarray["status"]) && $myarray["status"] == 1 ) {
 					$tr_class = "tr_active";
-				}
-				else
-				{
+				} else {
 					$tr_class = "tr_inactive";
 				}
 				

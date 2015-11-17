@@ -1928,7 +1928,7 @@ for($i=80;$i<=500;$i++){?>
             </div>
             <div class="alert-text">
               <span>
-                <label for="alert_text" style="display: inline">Patient alert (display notification at top of chart)?</label>
+                <label for="alert_text" style="display: inline">Patient alert (display custom text notification at top of chart)?</label>
                 <input type="radio" name="display_alert" value="1" onclick="$('#alert_text').show()" <?php echo ($display_alert) ? 'checked="checked"' : ''; ?>>Yes
                 <input type="radio" name="display_alert" value="0" onclick="$('#alert_text').hide()" <?php echo (!$display_alert) ? 'checked="checked"' : ''; ?>>No
               </span>

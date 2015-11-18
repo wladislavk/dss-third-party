@@ -85,7 +85,7 @@ if ($pt_referralid) {
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
 <script type="text/javascript" src="/manage/js/add_patient.js?v=<?= time() ?>"></script>
-<link rel="stylesheet" href="css/add_patient.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/add_patient.css?v=<?= time() ?>" type="text/css" media="screen" />
 <?php
 /*=======================================================
 TRIGGERING LETTERS

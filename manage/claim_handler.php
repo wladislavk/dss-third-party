@@ -107,35 +107,18 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     $con = $GLOBALS['con'];
     $db = new Db();
 
-    $num = 0;
     $added_ledger_ids = array();
 
-    $ledgercount = (!empty($_POST['ledgercount']) ? $_POST['ledgercount'] : '');
-
-    while ($num <= ($ledgercount - 1)) {
-        $placeofservicenum =  'placeofservice'.$num;
-        $emgnum = 'emg'.$num;
-        $diagnosispointernum = 'diagnosispointer'.$num;
-        $daysorunitsnum = 'daysorunits'.$num;
-        $epsdtnum = 'epsdt'.$num;
-        $idqualnum = 'idqual'.$num;
-        $ledgeridnum = 'ledgerid'.$num;
-        $modifiercodenum = 'modifiercode'.$num;
-        $modifiercode2_num = 'modifiercode2_'.$num;
-        $modifiercode3_num = 'modifiercode3_'.$num;
-        $modifiercode4_num = 'modifiercode4_'.$num;
-
-        $placeofservice = $_POST[$placeofservicenum];
-        $emg = $_POST[$emgnum];
-        $diagnosispointer = $_POST[$diagnosispointernum];
-        $daysorunits = $_POST[$daysorunitsnum];
-        $epsdt = $_POST[$epsdtnum];
-        $idqual = $_POST[$idqualnum];
-        $modifiercode = $_POST[$modifiercodenum];
-        $modifiercode2 = $_POST[$modifiercode2_num];
-        $modifiercode3 = $_POST[$modifiercode3_num];
-        $modifiercode4 = $_POST[$modifiercode4_num];
-        $ledgerid = $_POST[$ledgeridnum];
+    foreach ($_POST['claim']['service_lines'] as $serviceLine) {
+        $placeofservice = $db->escape($serviceLine['place_of_service']);
+        $emg = $db->escape($serviceLine['emergency']);
+        $diagnosispointer = $db->escape($serviceLine['diagnosis_code_pointers'][0]);
+        $daysorunits = $db->escape($serviceLine['units']);
+        $modifiercode = $db->escape($serviceLine['procedure_modifiers'][0]);
+        $modifiercode2 = $db->escape($serviceLine['procedure_modifiers'][1]);
+        $modifiercode3 = $db->escape($serviceLine['procedure_modifiers'][2]);
+        $modifiercode4 = $db->escape($serviceLine['procedure_modifiers'][3]);
+        $ledgerid = $db->escape($serviceLine['ledger_id']);
         array_push($added_ledger_ids, $ledgerid);
 
         $sql = "UPDATE "
@@ -145,8 +128,6 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
             . "  `emg` = '$emg', "
             . "  `diagnosispointer` = '$diagnosispointer', "
             . "  `daysorunits` = '$daysorunits', "
-            . "  `epsdt` = '$epsdt', "
-            . "  `idqual` = '$idqual', "
             . "  `modcode` = '$modifiercode', "
             . "  `modcode2` = '$modifiercode2', "
             . "  `modcode3` = '$modifiercode3', "
@@ -157,7 +138,6 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
             . "  `ledgerid` = $ledgerid";
 
         $query = $db->query($sql);
-        $num++;
     }
 
     $ledger_ids = implode(',', $added_ledger_ids);
@@ -1011,6 +991,11 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
     // Remove extra fiels or Eligible API will fail
     unset($eligibleData['code']);
     unset($eligibleData['eligibleToken']);
+
+    // We added extra variables to the form, to track ledger ids
+    foreach ($eligibleData['claim']['service_lines'] as &$eligibleServiceLine) {
+        unset($eligibleServiceLine['ledger_id']);
+    }
 
     //Curl post call to claim end point
     $ch = curl_init();

@@ -20,29 +20,15 @@ require_once ROOT_DIR . '/manage/admin/includes/claim_functions.php';
     $d = 1;
     if( authorize((!empty($_POST['username']) ? $_POST['username'] : ''), (!empty($_POST['password']) ? $_POST['password'] : ''), DSS_USER_TYPE_ADMIN))
     {
-        $sqlinsertqry = "INSERT INTO `dental_ledger` (  `ledgerid` ,
-                                                        `patientid` ,
-                                                        `service_date` ,
-                                                        `entry_date` ,
-                                                        `description` ,
-                                                        `producer` ,
-                                                        `amount` ,
-                                                        `transaction_type` ,
-                                                        `paid_amount` ,
-                                                        `userid` ,
-                                                        `docid` ,
-                                                        `status` ,
-                                                        `adddate` ,
-                                                        `ip_address` ,
-                                                        `transaction_code`,
-                                                        `producerid`,
-                                                        `primary_claim_id`
-                                                        ) VALUES ";
-
         if ( !empty($_POST['form']) )
         {
             foreach($_POST['form'] as $form)
             {
+                $insertMedicalCode = $form['procedure_code'] == '1' &&
+                    $form['service_date'] != '' && $form['amount'] != '';
+
+                $medicalCodeColumnsWithComma = $insertMedicalCode ? ', `modcode`, `modcode2`, `placeofservice`' : '';
+
                 $sqlinsertqry = "INSERT INTO `dental_ledger` (  `ledgerid` ,
                                                                 `patientid` ,
                                                                 `service_date` ,
@@ -60,6 +46,7 @@ require_once ROOT_DIR . '/manage/admin/includes/claim_functions.php';
                                                                 `transaction_code`,
                                                                 `producerid`,
                                                                 `primary_claim_id`
+                                                                $medicalCodeColumnsWithComma
                                                                 ) VALUES ";
 
                 if ($form['status']==DSS_TRXN_PENDING) 
@@ -100,7 +87,17 @@ require_once ROOT_DIR . '/manage/admin/includes/claim_functions.php';
                     $claim_id = '';
                 }
 
-                $descsql = "SELECT description, transaction_code, amount_adjust FROM dental_transaction_code WHERE transaction_codeid='".$form['proccode']."' LIMIT 1;";
+                // Prepare to insert transaction code modifiers
+                $descsql = "SELECT
+                        code.description,
+                        code.transaction_code,
+                        code.amount_adjust,
+                        code.modifier_code_1,
+                        code.modifier_code_2,
+                        place.place_service
+                    FROM dental_transaction_code code
+                        LEFT JOIN dental_place_service place ON place.place_serviceid = code.place
+                    WHERE code.transaction_codeid = '{$form['proccode']}' LIMIT 1;";
                 
                 $txcode = $db->getRow($descsql);
                 if( $txcode['amount_adjust'] == DSS_AMOUNT_ADJUST_NEGATIVE )
@@ -132,10 +129,9 @@ require_once ROOT_DIR . '/manage/admin/includes/claim_functions.php';
                     }
 
 
-
-                    if( $form['procedure_code'] == '1' && $form['service_date'] != '' && $form['amount'] != '' )
-                    {
-                        $query_ins = "( NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, '".str_replace(',','', $amount)."', 'Charge', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."')";
+                    // This particular insertion requires extra column values
+                    if ($insertMedicalCode) {
+                        $query_ins = "( NULL , '".$_POST['patientid']."', '".date('Y-m-d', strtotime($form['service_date']))."', '".date('Y-m-d', strtotime($form['entry_date']))."', '".$txcode['description']."', NULL, '".str_replace(',','', $amount)."', 'Charge', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$new_status."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form['producer']."', '".$form_claim_id."', '{$txcode['modifier_code_1']}', '{$txcode['modifier_code_2']}', '{$txcode['place_service']}')";
                     } elseif( $form['procedure_code'] == '2' && $form['service_date'] != '' && $form['amount'] != '' || $form['procedure_code'] == '3' && $form['service_date'] != '' && $form['amount'] != '' )
                     {
                         $query_ins = "(

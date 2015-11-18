@@ -889,8 +889,6 @@ class ClaimFormData
          */
         $transactionsQuery = "SELECT
             ledger.*,
-            trxn_code.modifier_code_1 AS modcode,
-            trxn_code.modifier_code_1 AS modcode2,
             trxn_code.days_units AS daysorunits,
             name_source.place_service AS 'place',
             description_source.description AS place_description,

@@ -745,6 +745,13 @@ $transactions = ClaimFormData::ledgerItems($claimId, $docId, $patientId, $insura
         $('input[name="claim[service_lines][<?php echo $li;?>][rendering_provider][first_name]"]').val("<?php echo  $array['provider_first_name']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][rendering_provider][last_name]"]').val("<?php echo  $array['provider_last_name']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][rendering_provider][npi]"]').val("<?php echo  $array['provider_id']; ?>");
+
+      if (!$('input[name="claim[service_lines][<?= $li ?>][ledger_id]"]').length) {
+          $('<input>', { type: 'hidden', name: 'claim[service_lines][<?= $li ?>][ledger_id]' })
+              .insertAfter('input[name="claim[service_lines][<?= $li ?>][rendering_provider][npi]"]');
+      }
+
+      $('input[name="claim[service_lines][<?= $li ?>][ledger_id]"]').val('<?= $array['ledgerid'] ?>');
 <?php
         $li++;
       }

@@ -1867,28 +1867,28 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
         </td>
         <td width="222"><?php echo $array['transaction_code'] . " - " .$array['description'] ; ?></td>
         <td width="191">
-          <select name="modifiercode<?php echo $li;?>" style="width:171px;">
+          <select name="modifier<?= $li + 1 ?>_1" style="width:171px;">
             <option value=''>Select One</option>
             <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
               <?php $selected = ($array['modcode'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
               <option value="<?php echo $modifierCodes[$i]['modifier_code']?>" <?php echo $selected;?>><?php echo $modifierCodes[$i]['modifier_code']." ".$modifierCodes[$i]['description']?></option>
             <?php } ?>
           </select>
-          <select name="modifiercode2_<?php echo $li;?>" style="width:171px;">
+          <select name="modifier<?= $li + 1 ?>_2" style="width:171px;">
             <option value=''>Select One</option>
             <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
               <?php $selected = ($array['modcode2'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
               <option value="<?php echo $modifierCodes[$i]['modifier_code']?>" <?php echo $selected;?>><?php echo $modifierCodes[$i]['modifier_code']." ".$modifierCodes[$i]['description']?></option>
             <?php } ?>
           </select>
-          <select name="modifiercode3_<?php echo $li;?>" style="width:171px;">
+          <select name="modifier<?= $li + 1 ?>_3" style="width:171px;">
             <option value=''>Select One</option>
             <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
               <?php $selected = ($array['modcode3'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
               <option value="<?php echo $modifierCodes[$i]['modifier_code']?>" <?php echo $selected;?>><?php echo $modifierCodes[$i]['modifier_code']." ".$modifierCodes[$i]['description']?></option>
             <?php } ?>
           </select>
-          <select name="modifiercode4_<?php echo $li;?>" style="width:171px;">
+          <select name="modifier<?= $li + 1 ?>_4" style="width:171px;">
             <option value=''>Select One</option>
             <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
               <?php $selected = ($array['modcode4'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
@@ -2414,6 +2414,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     $added_ledger_ids = array();
 
     while ($num <= ($_POST['ledgercount']-1)) {
+        $numPlusOne = $num + 1;
         $placeofservicenum =  'placeofservice'.$num;
         $emgnum = 'emg'.$num;
         $diagnosispointernum = '[service_lines]['.$num.'][diagnosis_code_pointers][0]';
@@ -2422,10 +2423,10 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $epsdtnum = 'epsdt'.$num;
         $idqualnum = 'idqual'.$num;
         $ledgeridnum = 'ledgerid'.$num;
-        $modifiercodenum = 'modifiercode'.$num;
-        $modifiercode2_num = 'modifiercode2_'.$num;
-        $modifiercode3_num = 'modifiercode3_'.$num;
-        $modifiercode4_num = 'modifiercode4_'.$num;
+        $modifiercodenum = "modifier{$numPlusOne}_1";
+        $modifiercode2_num = "modifier{$numPlusOne}_2";
+        $modifiercode3_num = "modifier{$numPlusOne}_3";
+        $modifiercode4_num = "modifier{$numPlusOne}_4";
 
         $placeofservice = $db->escape($_POST[$placeofservicenum]);
         $emg = $db->escape($_POST[$emgnum]);

@@ -1,17 +1,13 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include_once('../includes/constants.inc');
 include_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('../includes/dental_patient_summary.php');
 include_once('../includes/general_functions.php');
 include_once('includes/invoice_functions.php');
-?>
-<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-<script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
-<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/popup.js" type="text/javascript"></script>
 
-<?php
 // Get patient id for updating patient summary table
 $sql = "SELECT "
 		 . "  preauth.patient_id "
@@ -200,10 +196,18 @@ $is_complete = ($preauth['status'] == DSS_PREAUTH_COMPLETE) ? true : false;
 $is_rejected = ($preauth['status'] == DSS_PREAUTH_REJECTED) ? true : false;
 $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
 
+require_once dirname(__FILE__) . '/includes/top.htm';
+
 ?>
-
-<?php require_once dirname(__FILE__) . '/includes/top.htm'; ?>
-
+<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+<?php if ($disabled) { ?>
+    <script type="text/javascript">
+        var disableAutomaticCalculations = true;
+    </script>
+<?php } ?>
+<script language="javascript" type="text/javascript" src="script/preauth_form_logic.js?v=<?= time() ?>"></script>
+<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
+<script src="popup/popup.js" type="text/javascript"></script>
 <style>
 .readonly {
   background-color: #cccccc;
@@ -223,7 +227,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
 }
 </style>
 <script language="javascript" type="text/javascript" src="script/preauth_validation.js"></script>
-<script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
+<script language="javascript" type="text/javascript" src="script/preauth_form_logic.js?v=<?= time() ?>"></script>
 	<br /><br />
 	
 	<? if(!empty($msg)) {?>

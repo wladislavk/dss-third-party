@@ -50,8 +50,7 @@ function submit_screener(e){
         burning: $("input[name=burning]:checked").val(),
         headaches: $("input[name=headaches]:checked").val(),
         falling_asleep: $("input[name=falling_asleep]:checked").val(),
-        staying_asleep: $("input[name=staying_asleep]:checked").val(),
-        rx_cpap: $('input[name="rx_cpap"]:checked').val()
+        staying_asleep: $("input[name=staying_asleep]:checked").val()
     };
 
     /**
@@ -60,7 +59,7 @@ function submit_screener(e){
      * All these fields are checkboxes
      */
     for (var fieldName in coMorbidityWeights) {
-        screenerData[fieldName] = $('input[name="' + fieldName + '"]').is(':checked') ?
+        screenerData[fieldName] = +$('input[name="' + fieldName + '"]:checked').val() ?
             coMorbidityWeights[fieldName] : 0;
     }
 
@@ -108,7 +107,7 @@ function submit_screener(e){
             $('#r_rx_cpap').text(($("input[name=rx_cpap]:checked").val() > 0)?'Yes':'No');
 
             for (var fieldName in coMorbidityLabels) {
-                if ($('input[name="' + fieldName + '"]').is(':checked')) {
+                if (+$('input[name="' + fieldName + '"]:checked').val()) {
                     $('#r_diagnosed').append('<li>' + coMorbidityLabels[fieldName] + '</li>');
                 }
             }
@@ -150,7 +149,7 @@ function submit_screener(e){
             var sect3 = 0;
 
             for (var fieldName in coMorbidityWeights) {
-                sect3 += $('input[name="' + fieldName + '"]').is(':checked') ?
+                sect3 += +$('input[name="' + fieldName + '"]:checked').val() ?
                     coMorbidityWeights[fieldName] : 0;
             }
 

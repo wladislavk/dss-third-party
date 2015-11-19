@@ -57,7 +57,7 @@ function submit_screener(){
      * All these fields are checkboxes
      */
     for (var fieldName in coMorbidityWeights) {
-        screenerData[fieldName] = $('input[name="' + fieldName + '"]').is(':checked') ?
+        screenerData[fieldName] = +$('input[name="' + fieldName + '"]:checked').val() ?
             coMorbidityWeights[fieldName] : 0;
     }
 
@@ -101,7 +101,7 @@ function submit_screener(){
 
             // coMorbidityLabels must be defined inside the script that includes this file
             for (var fieldName in coMorbidityLabels) {
-                if ($('input[name="' + fieldName + '"]:checked').val()) {
+                if (+$('input[name="' + fieldName + '"]:checked').val()) {
                     $('#r_diagnosed').append('<li>' + coMorbidityLabels[fieldName] + '</li>');
                 }
             }
@@ -140,7 +140,7 @@ function submit_screener(){
             var sect3 = 0;
 
             for (var fieldName in coMorbidityWeights) {
-                sect3 += $('input[name="' + fieldName + '"]').is(':checked') ?
+                sect3 += +$('input[name="' + fieldName + '"]:checked').val() ?
                     coMorbidityWeights[fieldName] : 0;
             }
 

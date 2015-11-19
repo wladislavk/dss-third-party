@@ -170,9 +170,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
 
 require_once dirname(__FILE__) . '/includes/popup_top.htm';
 
-?>
-<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-<?php if ($disabled) { ?>
+if ($disabled) { ?>
     <script type="text/javascript">
         var disableAutomaticCalculations = true;
     </script>

@@ -107,9 +107,15 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     $con = $GLOBALS['con'];
     $db = new Db();
 
-    $added_ledger_ids = array();
+    // Add a placeholder to avoid problems with WHERE ... IN (...) clause
+    $added_ledger_ids = [-1];
 
     foreach ($_POST['claim']['service_lines'] as $serviceLine) {
+        // Only process lines that include ledger_id, otherwise that line was empty
+        if (empty($serviceLine['ledger_id'])) {
+            continue;
+        }
+
         $placeofservice = $db->escape($serviceLine['place_of_service']);
         $emg = $db->escape($serviceLine['emergency']);
         $diagnosispointer = $db->escape($serviceLine['diagnosis_code_pointers'][0]);
@@ -135,7 +141,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
             . "  `status` = '$trxn_status', "
             . "  `primary_claim_id` = '$primary_claim_id' "
             . "WHERE "
-            . "  `ledgerid` = $ledgerid";
+            . "  `ledgerid` = '$ledgerid'";
 
         $query = $db->query($sql);
     }

@@ -2,17 +2,44 @@
 
 class Db
 {
+	public $SHOW_QUERY = false;
+	public $SHOW_TIMESTAMP = false;
+	public $SHOW_TOTAL_TIME = false;
+	private $totalTime;
 	public $con;
 	// Perfom query
 	public function __construct()
 	{
+		$this->totalTime = 0;
 		$this->con = $GLOBALS['con'];
 	}
+
+	public function resetTotalTime()
+	{
+		$this->totalTime = 0;
+	}
+
 	public function query($query_string)
 	{
-		if($query_string)
-		{
+		if($query_string) {
+			$time = microtime(TRUE);
+
 			$result = mysqli_query($this->con, $query_string) or trigger_error($query_string . ' ' . mysqli_error($this->con), E_USER_ERROR);
+
+			$time = microtime(TRUE) - $time;
+			$this->totalTime += $time;
+
+			if( $this->SHOW_TIMESTAMP ) {
+				echo 'Query Time: ' . $time .  '<br>';
+			}
+
+			if( $this->SHOW_TOTAL_TIME ) {
+				echo 'Total Query Time: ' . $this->totalTime .  '<br>';
+			}
+			if( $this->SHOW_QUERY ) {
+				echo '<pre>' . $query_string . '</pre><br><hr>';
+			}
+
 			return $result;
 		}
 		return;

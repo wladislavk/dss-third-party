@@ -1,6 +1,176 @@
-
 $(function() {
-  //$('input, select, textarea').each(function() { console.log($(this).attr('name')); });
+    function calc_amount_left_to_meet() {
+        var deductible = $('#patient_deductible').val();
+        var amountMet  = $('#patient_amount_met').val();
+        if (isNaN(deductible)) { deductible = 0; }
+        if (isNaN(amountMet))  { amountMet = 0; }
+        var leftToMeet = deductible - amountMet;
+        if (leftToMeet < 0) { leftToMeet = 0; }
+        $('#patient_amount_left_to_meet').val(leftToMeet.toFixed(2));
+        var deductible = $('#in_patient_deductible').val();
+        var amountMet  = $('#in_patient_amount_met').val();
+        if (isNaN(deductible)) { deductible = 0; }
+        if (isNaN(amountMet))  { amountMet = 0; }
+        var leftToMeet = deductible - amountMet;
+        if (leftToMeet < 0) { leftToMeet = 0; }
+        $('#in_patient_amount_left_to_meet').val(leftToMeet.toFixed(2));
+    }
+
+    function calc_amount_left_to_meet_family() {
+        var deductible = $('#family_deductible').val();
+        var amountMet  = $('#family_amount_met').val();
+        if (isNaN(deductible)) { deductible = 0; }
+        if (isNaN(amountMet))  { amountMet = 0; }
+        var leftToMeet = deductible - amountMet;
+        if (leftToMeet < 0) { leftToMeet = 0; }
+        $('#family_amount_left_to_meet').val(leftToMeet.toFixed(2));
+        var deductible = $('#in_family_deductible').val();
+        var amountMet  = $('#in_family_amount_met').val();
+        if (isNaN(deductible)) { deductible = 0; }
+        if (isNaN(amountMet))  { amountMet = 0; }
+        var leftToMeet = deductible - amountMet;
+        if (leftToMeet < 0) { leftToMeet = 0; }
+        $('#in_family_amount_left_to_meet').val(leftToMeet.toFixed(2));
+    }
+
+    function calc_expected_payments() {
+        // OUT OF NETWORK BENEFITS
+        var debug = true;
+        if (debug) { console.log('calc_expected_payments'); }
+        var deductibleFrom = $("input[name='deductible_from']:checked").val();
+        var deviceAmount = $('#trxn_code_amount2').val();
+        if(deductibleFrom == '1'){
+            var amountLeftToMeet = $('#patient_amount_left_to_meet').val();
+        }else{
+            var amountLeftToMeet = $('#family_amount_left_to_meet').val();
+        }
+        var hasOutOfNetwork = $("input[name='has_out_of_network_benefits']:checked").val();
+        var isHmo = $("input[name='is_hmo']:checked").val();
+        var outOfPocketMet = $("input[name='out_of_pocket_met']:checked").val();
+        var benefits = $("input[name='network_benefits']:checked").val();
+        var percentagePaid = 0;
+
+        if (debug) {
+            console.log('amountLeftToMeet: ' + amountLeftToMeet);
+            console.log('hasOutOfNetwork: ' + hasOutOfNetwork);
+            console.log('isHmo: ' + isHmo);
+            console.log('outOfPocketMet: ' + outOfPocketMet);
+        }
+        //if (benefits == 1){ //out of network
+        if (hasOutOfNetwork == 1) {
+            // percentage from out_of_network_percentage
+            percentagePaid = $('#out_of_network_percentage').val();
+            //} else if (isHmo == 0) {
+            // percentage from in_network_percentage
+            //percentagePaid = $('#in_network_percentage').val();
+        } else {
+            // no percentage, set to 0
+            percentagePaid = 0;
+        }
+        /*}else{ //in-network
+         if(hasOutOfNetwork == 1){
+         percentagePaid = 0;
+         }else{
+         percentagePaid = $('#in_network_percentage').val();
+         }
+         }*/
+        if (debug) { console.log('percentagePaid: ' + percentagePaid); }
+
+        if (isNaN(deviceAmount))     { deviceAmount = 0; }
+        if (isNaN(percentagePaid))   { percentagePaid = 0; }
+        if (isNaN(amountLeftToMeet)) { amountLeftToMeet = 0; }
+
+        if (outOfPocketMet == 1) {
+            $('#expected_insurance_payment').val(deviceAmount);
+            $('#expected_patient_payment').val('0.00');
+            if (debug) {
+                console.log('expected_insurance_payment: ' + deviceAmount);
+                console.log('expected_patient_payment: ' + 0.00);
+            }
+        } else {
+            var expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid/100);
+            if (expectedInsurancePayment < 0) { expectedInsurancePayment = 0; }
+
+            var expectedPatientPayment = deviceAmount - expectedInsurancePayment;
+            if (expectedPatientPayment < 0) { expectedPatientPayment = 0; }
+
+            if (debug) {
+                console.log('expectedInsurancePayment: ' + expectedInsurancePayment.toFixed(2));
+                console.log('expectedPatientPayment: ' + expectedPatientPayment.toFixed(2));
+            }
+            $('#expected_insurance_payment').val(expectedInsurancePayment.toFixed(2));
+            $('#expected_patient_payment').val(expectedPatientPayment.toFixed(2));
+        }
+
+        if (debug) { console.log('-----------------------'); }
+
+
+        //IN NETWORK BENEFITS
+        if (debug) { console.log('calc_expected_payments'); }
+        var deductibleFrom = $("input[name='in_deductible_from']:checked").val();
+        var deviceAmount = $('#in_trxn_code_amount2').val();
+        if(deductibleFrom == '1'){
+            var amountLeftToMeet = $('#in_patient_amount_left_to_meet').val();
+        }else{
+            var amountLeftToMeet = $('#in_family_amount_left_to_meet').val();
+        }
+        var hasInNetwork = $("input[name='has_in_network_benefits']:checked").val();
+        var isHmo = $("input[name='is_hmo']:checked").val();
+        var outOfPocketMet = $("input[name='in_out_of_pocket_met']:checked").val();
+        var benefits = $("input[name='network_benefits']:checked").val();
+        var percentagePaid = 0;
+
+        if (debug) {
+            console.log('amountLeftToMeet: ' + amountLeftToMeet);
+            console.log('hasOutOfNetwork: ' + hasOutOfNetwork);
+            console.log('isHmo: ' + isHmo);
+            console.log('outOfPocketMet: ' + outOfPocketMet);
+        }
+        if (hasInNetwork == 1) {
+            // percentage from out_of_network_percentage
+            percentagePaid = $('#in_network_percentage').val();
+        } else {
+            // no percentage, set to 0
+            percentagePaid = 0;
+        }
+        if (debug) { console.log('percentagePaid: ' + percentagePaid); }
+
+        if (isNaN(deviceAmount))     { deviceAmount = 0; }
+        if (isNaN(percentagePaid))   { percentagePaid = 0; }
+        if (isNaN(amountLeftToMeet)) { amountLeftToMeet = 0; }
+
+        if (outOfPocketMet == 1) {
+            $('#in_expected_insurance_payment').val(deviceAmount);
+            $('#in_expected_patient_payment').val('0.00');
+            if (debug) {
+                console.log('in_expected_insurance_payment: ' + deviceAmount);
+                console.log('in_expected_patient_payment: ' + 0.00);
+            }
+        } else {
+            var expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid/100);
+            if (expectedInsurancePayment < 0) { expectedInsurancePayment = 0; }
+
+            var expectedPatientPayment = deviceAmount - expectedInsurancePayment;
+            if (expectedPatientPayment < 0) { expectedPatientPayment = 0; }
+
+            if (debug) {
+                console.log('expectedInsurancePayment: ' + expectedInsurancePayment.toFixed(2));
+                console.log('expectedPatientPayment: ' + expectedPatientPayment.toFixed(2));
+            }
+            $('#in_expected_insurance_payment').val(expectedInsurancePayment.toFixed(2));
+            $('#in_expected_patient_payment').val(expectedPatientPayment.toFixed(2));
+        }
+
+        if (debug) { console.log('-----------------------'); }
+    }
+
+
+    if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
+        function calc_amount_left_to_meet () {}
+        function calc_amount_left_to_meet_family () {}
+        function calc_expected_payments () {}
+    }
+
   $("input[name='has_out_of_network_benefits']").bind('click', function() {
     if ($(this).val() == 1) {
       $('#has_out_of_network_benefits_yes').css('display', 'block');
@@ -85,43 +255,6 @@ $(function() {
         }
 
   });
-
-
- 
-  function calc_amount_left_to_meet() {
-    var deductible = $('#patient_deductible').val();
-    var amountMet  = $('#patient_amount_met').val();
-    if (isNaN(deductible)) { deductible = 0; }
-    if (isNaN(amountMet))  { amountMet = 0; }
-    var leftToMeet = deductible - amountMet;
-    if (leftToMeet < 0) { leftToMeet = 0; }
-    $('#patient_amount_left_to_meet').val(leftToMeet.toFixed(2));
-    var deductible = $('#in_patient_deductible').val();
-    var amountMet  = $('#in_patient_amount_met').val();
-    if (isNaN(deductible)) { deductible = 0; }
-    if (isNaN(amountMet))  { amountMet = 0; }
-    var leftToMeet = deductible - amountMet;
-    if (leftToMeet < 0) { leftToMeet = 0; }
-    $('#in_patient_amount_left_to_meet').val(leftToMeet.toFixed(2));
-  }
-
-  function calc_amount_left_to_meet_family() {
-    var deductible = $('#family_deductible').val();
-    var amountMet  = $('#family_amount_met').val();
-    if (isNaN(deductible)) { deductible = 0; }
-    if (isNaN(amountMet))  { amountMet = 0; }
-    var leftToMeet = deductible - amountMet;
-    if (leftToMeet < 0) { leftToMeet = 0; }
-    $('#family_amount_left_to_meet').val(leftToMeet.toFixed(2));
-    var deductible = $('#in_family_deductible').val();
-    var amountMet  = $('#in_family_amount_met').val();
-    if (isNaN(deductible)) { deductible = 0; }
-    if (isNaN(amountMet))  { amountMet = 0; }
-    var leftToMeet = deductible - amountMet;
-    if (leftToMeet < 0) { leftToMeet = 0; }
-    $('#in_family_amount_left_to_meet').val(leftToMeet.toFixed(2));
-  }
-
   
   $("#patient_deductible, #patient_amount_met, #in_patient_deductible, #in_patient_amount_met").bind("focus blur click", function() {
     calc_amount_left_to_meet();
@@ -137,142 +270,6 @@ $(function() {
     calc_expected_payments();
   });
 
-
-  function calc_expected_payments() {
-
-
-    // OUT OF NETWORK BENEFITS
-    var debug = true;
-    if (debug) { console.log('calc_expected_payments'); }
-    var deductibleFrom = $("input[name='deductible_from']:checked").val(); 
-    var deviceAmount = $('#trxn_code_amount2').val();
-    if(deductibleFrom == '1'){
-      var amountLeftToMeet = $('#patient_amount_left_to_meet').val();
-    }else{
-      var amountLeftToMeet = $('#family_amount_left_to_meet').val();
-    }
-    var hasOutOfNetwork = $("input[name='has_out_of_network_benefits']:checked").val();
-    var isHmo = $("input[name='is_hmo']:checked").val();
-    var outOfPocketMet = $("input[name='out_of_pocket_met']:checked").val();
-    var benefits = $("input[name='network_benefits']:checked").val();
-    var percentagePaid = 0;
-
-    if (debug) { 
-      console.log('amountLeftToMeet: ' + amountLeftToMeet);
-      console.log('hasOutOfNetwork: ' + hasOutOfNetwork);
-      console.log('isHmo: ' + isHmo);
-      console.log('outOfPocketMet: ' + outOfPocketMet);
-    }
-    //if (benefits == 1){ //out of network    
-      if (hasOutOfNetwork == 1) {
-        // percentage from out_of_network_percentage
-        percentagePaid = $('#out_of_network_percentage').val();
-      //} else if (isHmo == 0) {
-        // percentage from in_network_percentage
-        //percentagePaid = $('#in_network_percentage').val();
-      } else {
-        // no percentage, set to 0
-        percentagePaid = 0;
-      }
-    /*}else{ //in-network
-      if(hasOutOfNetwork == 1){
-        percentagePaid = 0;
-      }else{
-        percentagePaid = $('#in_network_percentage').val();
-      }
-    }*/
-    if (debug) { console.log('percentagePaid: ' + percentagePaid); }
-
-    if (isNaN(deviceAmount))     { deviceAmount = 0; }
-    if (isNaN(percentagePaid))   { percentagePaid = 0; }
-    if (isNaN(amountLeftToMeet)) { amountLeftToMeet = 0; }
-    
-    if (outOfPocketMet == 1) {
-      $('#expected_insurance_payment').val(deviceAmount);
-      $('#expected_patient_payment').val('0.00');
-      if (debug) { 
-        console.log('expected_insurance_payment: ' + deviceAmount);
-        console.log('expected_patient_payment: ' + 0.00);
-      }
-    } else {
-      var expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid/100);
-      if (expectedInsurancePayment < 0) { expectedInsurancePayment = 0; }
-
-      var expectedPatientPayment = deviceAmount - expectedInsurancePayment;
-      if (expectedPatientPayment < 0) { expectedPatientPayment = 0; }
-
-      if (debug) { 
-        console.log('expectedInsurancePayment: ' + expectedInsurancePayment.toFixed(2));
-        console.log('expectedPatientPayment: ' + expectedPatientPayment.toFixed(2));
-      }
-      $('#expected_insurance_payment').val(expectedInsurancePayment.toFixed(2));
-      $('#expected_patient_payment').val(expectedPatientPayment.toFixed(2));
-    }
-    
-    if (debug) { console.log('-----------------------'); }
-
-
-    //IN NETWORK BENEFITS
-    if (debug) { console.log('calc_expected_payments'); }
-    var deductibleFrom = $("input[name='in_deductible_from']:checked").val(); 
-    var deviceAmount = $('#in_trxn_code_amount2').val();
-    if(deductibleFrom == '1'){
-      var amountLeftToMeet = $('#in_patient_amount_left_to_meet').val();
-    }else{
-      var amountLeftToMeet = $('#in_family_amount_left_to_meet').val();
-    }
-    var hasInNetwork = $("input[name='has_in_network_benefits']:checked").val();
-    var isHmo = $("input[name='is_hmo']:checked").val();
-    var outOfPocketMet = $("input[name='in_out_of_pocket_met']:checked").val();
-    var benefits = $("input[name='network_benefits']:checked").val();
-    var percentagePaid = 0;
-
-    if (debug) { 
-      console.log('amountLeftToMeet: ' + amountLeftToMeet);
-      console.log('hasOutOfNetwork: ' + hasOutOfNetwork);
-      console.log('isHmo: ' + isHmo);
-      console.log('outOfPocketMet: ' + outOfPocketMet);
-    }
-      if (hasInNetwork == 1) {
-        // percentage from out_of_network_percentage
-        percentagePaid = $('#in_network_percentage').val();
-      } else {
-        // no percentage, set to 0
-        percentagePaid = 0;
-      }
-    if (debug) { console.log('percentagePaid: ' + percentagePaid); }
-
-    if (isNaN(deviceAmount))     { deviceAmount = 0; }
-    if (isNaN(percentagePaid))   { percentagePaid = 0; }
-    if (isNaN(amountLeftToMeet)) { amountLeftToMeet = 0; }
-    
-    if (outOfPocketMet == 1) {
-      $('#in_expected_insurance_payment').val(deviceAmount);
-      $('#in_expected_patient_payment').val('0.00');
-      if (debug) { 
-        console.log('in_expected_insurance_payment: ' + deviceAmount);
-        console.log('in_expected_patient_payment: ' + 0.00);
-      }
-    } else {
-      var expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid/100);
-      if (expectedInsurancePayment < 0) { expectedInsurancePayment = 0; }
-
-      var expectedPatientPayment = deviceAmount - expectedInsurancePayment;
-      if (expectedPatientPayment < 0) { expectedPatientPayment = 0; }
-
-      if (debug) { 
-        console.log('expectedInsurancePayment: ' + expectedInsurancePayment.toFixed(2));
-        console.log('expectedPatientPayment: ' + expectedPatientPayment.toFixed(2));
-      }
-      $('#in_expected_insurance_payment').val(expectedInsurancePayment.toFixed(2));
-      $('#in_expected_patient_payment').val(expectedPatientPayment.toFixed(2));
-    }
-    
-    if (debug) { console.log('-----------------------'); }
-	
-
-  }
-  
   // Fields that should be clear on focus if value is 0
   $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met, #in_patient_deductible, #in_patient_amount_met, #in_family_deductible, #in_family_amount_met').bind('focus', function() {
     var value = $(this).val();

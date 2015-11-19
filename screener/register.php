@@ -1,6 +1,11 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
-require_once('../manage/admin/includes/config.php');
+
+require_once __DIR__ . '/../manage/admin/includes/config.php';
+require_once __DIR__ . '/../manage/includes/screener-functions.php';
+
 if(!isset($_SESSION['screener_doc'])){
   ?>
 	<script type="text/javascript">
@@ -15,21 +20,25 @@ if(!isset($_SESSION['screener_doc'])){
   <head>
     <title>Dental Sleep Solutions :: Screener</title>
     <link rel="stylesheet" href="css/lagu.css" />
-<script type="text/javascript" src="../manage/admin/script/jquery-1.6.2.min.js"></script>
-<script type="text/javascript" src="../manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
-			<script type="text/javascript" src="../reg/lib/fancybox/jquery.easing-1.3.pack.js"></script>
-			<script type="text/javascript" src="../reg/lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<script type="text/javascript" src="script/screener.js?v=<?= time() ?>"></script>
+    <link rel="stylesheet" href="css/screener.css" />
+    <link rel="stylesheet" href="../manage/admin/css/jquery-ui-1.8.22.custom.css" />
+    <link rel="stylesheet" href="../reg/lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" />
+    <!--[if IE]>
+      <link rel="stylesheet" type="text/css" href="css/style_ie.css" />
+    <![endif]-->
+    <script type="text/javascript">
+      var coMorbidityLabels = <?= json_encode(coMorbidityLabels()) ?>;
+      var coMorbidityWeights = <?= json_encode(coMorbidityWeights()) ?>;
+    </script>
+    <script type="text/javascript" src="../manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="../manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
+    <script type="text/javascript" src="../reg/lib/fancybox/jquery.easing-1.3.pack.js"></script>
+    <script type="text/javascript" src="../reg/lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+    <script type="text/javascript" src="script/screener.js?v=<?= time() ?>"></script>
     <script type="text/javascript" src="../manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="script/screener_masks.js"></script>
-<link rel="stylesheet" href="css/screener.css" />
-<link rel="stylesheet" href="../manage/admin/css/jquery-ui-1.8.22.custom.css" />
-<link rel="stylesheet" href="../reg/lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" />
-<!--[if IE]>
-        <link rel="stylesheet" type="text/css" href="css/style_ie.css" />
-<![endif]-->
-</head>
-<body class="fixed">
+  </head>
+  <body class="fixed">
     <div id="header" >
         <div class="wrapper cf">
             <div class="logo fl">
@@ -278,4 +287,3 @@ if(!isset($_SESSION['screener_doc'])){
 
   </body>
 </html>
-

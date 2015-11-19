@@ -828,7 +828,7 @@ if ($disabled) { ?>
                 Expected insurance payment
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="expected_insurance_payment" name="expected_insurance_payment" value="<?=$preauth['in_expected_insurance_payment']?>" class="tbox readonly" <?=$disabled?>/> 
+                $<input type="text" id="expected_insurance_payment" name="expected_insurance_payment" value="<?=$preauth['expected_insurance_payment']?>" class="tbox readonly" <?=$disabled?>/>
                 <span class="red">*</span>				
             </td>
             <td valign="top" class="frmdata">

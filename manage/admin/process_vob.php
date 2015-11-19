@@ -441,7 +441,8 @@ if ($disabled) { ?>
             </td>
             <td valign="top" class="frmdata">
                 <input id="ins_effective_date" type="text" name="ins_effective_date" value="<?=$preauth['ins_effective_date']?>" onchange="validateDate('ins_effective_date');" class="tbox calendar" <?=$disabled?>/> 
-                <span class="red">*</span>				
+                <span class="red">*</span>
+                <span><a href="#" id="ins_effective_year" onclick="$('#ins_effective_date').val('1/1/'+(new Date).getFullYear());return false;">Jan1</a></span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

@@ -101,12 +101,12 @@ if (!isset($_SESSION['userid'])) {
 
     $num_preauth = $db->getNumberRows($preauth_query);
 
-    $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status='".DSS_PREAUTH_PENDING."'";
+    $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status='".DSS_PREAUTH_PENDING."' AND COALESCE(viewed, 0) != 1";
 
     $num_pending_preauth = $db->getNumberRows($preauth_query);
     $numRejectedPreAuth = $db->getNumberRows("SELECT *
         FROM dental_insurance_preauth
-        WHERE doc_id = '$docid' AND status = '".DSS_PREAUTH_REJECTED."'");
+        WHERE doc_id = '$docid' AND status = '".DSS_PREAUTH_REJECTED."' AND COALESCE(viewed, 0) != 1");
 
     $hst_query = "SELECT * FROM dental_hst WHERE doc_id = '".$docid."' AND status='".DSS_HST_COMPLETE."' AND (viewed IS NULL OR viewed != 1);";
 

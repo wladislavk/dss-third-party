@@ -72,6 +72,8 @@ if (isset($jsonResponse->details) && !isset($jsonResponse->acknowledgements)) {
                 adddate = now(),
                 ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'");
 
+            updateClaimStatusFromReferenceId($referenceId, 'paid-insurance');
+
             break;
     }
 } else {

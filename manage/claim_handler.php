@@ -10,6 +10,15 @@ include_once __DIR__ . '/admin/includes/invoice_functions.php';
 $claimId = intval($_GET['insid']);
 $patientId = intval($_GET['pid']);
 
+// Reject processing the claim if there is no POST data
+if (!isset($_POST['claim']) || !is_array($_POST['claim'])) { ?>
+    <script type="text/javascript">
+        window.location = "manage_claims.php";
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+}
+
 $status = $db->getRow("SELECT status FROM dental_insurance WHERE insuranceid = '$claimId' AND patientid = '$patientId'");
 $status = $status ? $status['status'] : 0; // This means default status is zero
 
@@ -107,9 +116,15 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     $con = $GLOBALS['con'];
     $db = new Db();
 
-    $added_ledger_ids = array();
+    // Add a placeholder to avoid problems with WHERE ... IN (...) clause
+    $added_ledger_ids = [-1];
 
     foreach ($_POST['claim']['service_lines'] as $serviceLine) {
+        // Only process lines that include ledger_id, otherwise that line was empty
+        if (empty($serviceLine['ledger_id'])) {
+            continue;
+        }
+
         $placeofservice = $db->escape($serviceLine['place_of_service']);
         $emg = $db->escape($serviceLine['emergency']);
         $diagnosispointer = $db->escape($serviceLine['diagnosis_code_pointers'][0]);
@@ -135,7 +150,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
             . "  `status` = '$trxn_status', "
             . "  `primary_claim_id` = '$primary_claim_id' "
             . "WHERE "
-            . "  `ledgerid` = $ledgerid";
+            . "  `ledgerid` = '$ledgerid'";
 
         $query = $db->query($sql);
     }

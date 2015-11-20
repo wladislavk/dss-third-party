@@ -286,9 +286,21 @@ if ((isset($_GET['status']) && ($_GET['status'] != '')) || !empty($_GET['fid']))
 	if($_GET['status'] == '0' ){
 		//echo DSS_CLAIM_PENDING;
 	   	$sql .= " AND (
-			(claim.mailed_date IS NULL AND (claim.status=".DSS_CLAIM_SENT." OR claim.status=".DSS_CLAIM_PAID_INSURANCE." OR claim.status=".DSS_CLAIM_PAID_PATIENT." ))
-			OR (claim.sec_mailed_date IS NULL AND (claim.status=".DSS_CLAIM_SEC_SENT." OR claim.status=".DSS_CLAIM_PAID_SEC_INSURANCE." OR claim.status=".DSS_CLAIM_PAID_SEC_PATIENT." ))
-			 OR claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_REJECTED.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.")) ";
+			(
+			    claim.mailed_date IS NULL
+			    AND claim.status IN ('".DSS_CLAIM_SENT."', '".DSS_CLAIM_PAID_INSURANCE."', '".DSS_CLAIM_PAID_PATIENT."')
+			)
+			OR (
+			    claim.sec_mailed_date IS NULL
+			    AND claim.status IN ('".DSS_CLAIM_SEC_SENT."', '".DSS_CLAIM_PAID_SEC_INSURANCE."', '".DSS_CLAIM_PAID_SEC_PATIENT."')
+			)
+			OR claim.status IN (
+			    '".DSS_CLAIM_PENDING."', '".DSS_CLAIM_SEC_PENDING."',
+			    '".DSS_CLAIM_REJECTED."', '".DSS_CLAIM_SEC_REJECTED."',
+			    '".DSS_CLAIM_DISPUTE."', '".DSS_CLAIM_SEC_DISPUTE."',
+			    '".DSS_CLAIM_PATIENT_DISPUTE."', '".DSS_CLAIM_SEC_PATIENT_DISPUTE."'
+			)
+		) ";
 	}elseif($_GET['status'] == '1'){
 		$sql .= " AND ((claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")) OR
 				(claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SEC_SENT.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_SEC_PATIENT.")))";
@@ -301,8 +313,20 @@ if ((isset($_GET['status']) && ($_GET['status'] != '')) || !empty($_GET['fid']))
         }elseif($_GET['status'] == 'unpaid45'){
                 $sql .= " AND claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 45 day)";
         }else{
-        	$sql .= " AND claim.status = " . $_GET['status'] . " ";
-	}
+            // Filtering by status requires the full list of statuses associated to that status
+            $statusList = ClaimFormData::statusListByStatus($_GET['status']);
+            $statusList = array_flatten($statusList);
+            $statusList []= $_GET['status'];
+            $statusList = array_unique($statusList);
+
+            array_walk($statusList, function (&$each) use ($db) {
+                $each = "'" . $db->escape($each) . "'";
+            });
+
+            $statusList = join(',', $statusList);
+
+            $sql .= " AND claim.status IN ($statusList) ";
+        }
     }
     
     if (!empty($_GET['fid'])) {
@@ -528,26 +552,16 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 				</td>
                 <td>
                     <?php
-                    $payment_report_sql = "SELECT * FROM dental_payment_reports WHERE claimid='" . mysqli_real_escape_string($con, $myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
-                    $payment_report_query = mysqli_query($con, $payment_report_sql);
-                    $payment_report_result = mysqli_fetch_assoc($payment_report_query);
-                    if ($payment_report_result) {
-                        echo '<a href="view_payment_reports.php?insid=' . $payment_report_result['claimid'] . '"> Paid - ' . $payment_report_result['adddate'] . " (View)</a>";
-                    } else {
-                        $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='" . mysqli_real_escape_string($con, $myarray['insuranceid']) . "' ORDER BY adddate DESC LIMIT 1";
-                        $reference_id_query = mysqli_query($con, $reference_id_sql);
-                        $reference_id_result = mysqli_fetch_assoc($reference_id_query);
-                        if ($reference_id_result) {
-                            $reference_id = $reference_id_result['reference_id'];
-                            if ($reference_id != "") {
-                                $eligible_response_sql = "SELECT event_type, adddate FROM dental_eligible_response WHERE reference_id='" . $reference_id . "' ORDER BY adddate DESC";
-                                $eligible_response_query = mysqli_query($con, $eligible_response_sql);
-                                $eligible_response_result = mysqli_fetch_assoc($eligible_response_query);
-                                echo $eligible_response_result['event_type'] . " - " . $eligible_response_result['adddate'];
-                            }
-                        }
-                    }
-                    ?>
+
+                    $eResponse = retrieveEClaimResponse($myarray['insuranceid']);
+
+                    if ($eResponse['type'] === 'payment') { ?>
+                        <a href="view_payment_reports.php?insid=<?= $myarray['insuranceid'] ?>">
+                            Paid - <?= $eResponse['data']['adddate'] ?> (View)
+                        </a>
+                    <?php } elseif ($eResponse['type'] === 'webhook' || $eResponse['type'] === 'response') { ?>
+                        <?= $eResponse['data']['event_type'] ?> - <?= $eResponse['data']['adddate'] ?>
+                    <?php } ?>
                 </td>
 				<td valign="top">
 					<a href="view_patient.php?pid=<?php echo $myarray['patientid'];?>"><?php echo st($myarray["lastname"]);?>, <?php echo st($myarray["firstname"]);?> (View Chart)</a>

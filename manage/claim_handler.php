@@ -10,6 +10,15 @@ include_once __DIR__ . '/admin/includes/invoice_functions.php';
 $claimId = intval($_GET['insid']);
 $patientId = intval($_GET['pid']);
 
+// Reject processing the claim if there is no POST data
+if (!isset($_POST['claim']) || !is_array($_POST['claim'])) { ?>
+    <script type="text/javascript">
+        window.location = "manage_claims.php";
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+}
+
 $status = $db->getRow("SELECT status FROM dental_insurance WHERE insuranceid = '$claimId' AND patientid = '$patientId'");
 $status = $status ? $status['status'] : 0; // This means default status is zero
 

@@ -432,6 +432,98 @@ if (empty($prior_authorization_number)) {
 	return $secondary_claim_id;
 }
 
+/**
+ * Auxiliary function to retrieve the Eligible responses related to it. The response can be in one of three tables.
+ *
+ * @param int $claimId
+ * @return array
+ */
+function retrieveEClaimResponse ($claimId) {
+    $db = new Db();
+
+    $claimId = intval($claimId);
+
+    $paymentData = $db->getRow("SELECT payment_id, reference_id, adddate
+        FROM dental_payment_reports
+        WHERE claimid = '$claimId'
+        ORDER BY adddate DESC
+        LIMIT 1");
+
+    if ($paymentData) {
+        $response = [
+            'type' => 'payment',
+            'data' => $paymentData
+        ];
+
+        return $response;
+    }
+
+    // No payment, therefore search for eligible webhooks, or initial response
+    $eResponse = $db->getRow("SELECT reference_id, response, adddate
+        FROM dental_claim_electronic
+        WHERE claimid = '$claimId'
+        ORDER BY adddate DESC
+        LIMIT 1");
+
+    // If there are no e-responses of any kind, return the default, empty response
+    if (!$eResponse) {
+        $response = [
+            'type' => 'none',
+            'data' => []
+        ];
+
+        return $response;
+    }
+
+    // If there is an eligible reference, search for data in webhooks
+    if ($eResponse['reference_id']) {
+        $referenceId = $db->escape($eResponse['reference_id']);
+
+        $eWebHook = $db->getRow("SELECT reference_id, event_type, adddate
+            FROM dental_eligible_response
+            WHERE (reference_id != '' AND reference_id = '$referenceId')
+                OR claimid = '$claimId'
+            ORDER BY adddate DESC
+            LIMIT 1");
+
+        // If there is data in the webhooks, overwrite the response array with this data
+        if ($eWebHook) {
+            $response = [
+                'type' => 'webhook',
+                'data' => $eWebHook
+            ];
+
+            return $response;
+        }
+    }
+
+    /**
+     * If the only response we got is the Eligible reply with the original submission, we need to parse the response
+     * to determine if we have a rejection or something else.
+     */
+    $responseJson = @json_decode($eResponse['response']);
+
+    if (is_array($responseJson) && !empty($responseJson['success'])) {
+        $response = [
+            'type' => 'response',
+            'data' => [
+                'event_type' => 'claim_submitted',
+                'adddate' => $eResponse['adddate']
+            ]
+        ];
+    } else {
+        $response = [
+            'type' => 'response',
+            'data' => [
+                'event_type' => 'claim_rejected',
+                'adddate' => $eResponse['adddate']
+            ]
+        ];
+    }
+
+    return $response;
+}
+
 class ClaimFormData
 {
     /**
@@ -464,6 +556,24 @@ class ClaimFormData
         'service_address',
         'service_medicare_npi',
         'service_npi'
+    ];
+
+    /**
+     * @var array
+     */
+    private static $claimStatuses = [
+        'pending'             => [DSS_CLAIM_PENDING, DSS_CLAIM_SEC_PENDING],
+        'sent'                => [DSS_CLAIM_SENT, DSS_CLAIM_SEC_SENT],
+        'paid'                => [DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE,
+                                    DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE],
+        'paid-insurance'      => [DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE],
+        'paid-patient'        => [DSS_CLAIM_PAID_PATIENT, DSS_CLAIM_PAID_SEC_PATIENT],
+        'dispute'             => [DSS_CLAIM_DISPUTE, DSS_CLAIM_SEC_DISPUTE,
+                                    DSS_CLAIM_PATIENT_DISPUTE, DSS_CLAIM_SEC_PATIENT_DISPUTE],
+        'dispute-not-patient' => [DSS_CLAIM_DISPUTE, DSS_CLAIM_SEC_DISPUTE],
+        'dispute-patient'     => [DSS_CLAIM_PATIENT_DISPUTE, DSS_CLAIM_SEC_PATIENT_DISPUTE],
+        'rejected'            => [DSS_CLAIM_REJECTED, DSS_CLAIM_SEC_REJECTED],
+        'efile-accepted'      => [DSS_CLAIM_EFILE_ACCEPTED, DSS_CLAIM_SEC_EFILE_ACCEPTED],
     ];
 
     /**
@@ -510,48 +620,34 @@ class ClaimFormData
      * @return array
      */
     public static function statusListByName ($name) {
-        switch ($name) {
-            case 'pending':
-                $statusList = [DSS_CLAIM_PENDING, DSS_CLAIM_SEC_PENDING];
-                break;
-            case 'sent':
-                $statusList = [DSS_CLAIM_SENT, DSS_CLAIM_SEC_SENT];
-                break;
-            case 'paid':
-                $statusList = [
-                    DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE,
-                    DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE
-                ];
-                break;
-            case 'paid-insurance':
-                $statusList = [DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE];
-                break;
-            case 'paid-patient':
-                $statusList = [DSS_CLAIM_PAID_PATIENT, DSS_CLAIM_PAID_SEC_PATIENT];
-                break;
-            case 'dispute':
-                $statusList = [
-                    DSS_CLAIM_DISPUTE, DSS_CLAIM_SEC_DISPUTE,
-                    DSS_CLAIM_PATIENT_DISPUTE, DSS_CLAIM_SEC_PATIENT_DISPUTE
-                ];
-                break;
-            case 'dispute-not-patient':
-                $statusList = [DSS_CLAIM_DISPUTE, DSS_CLAIM_SEC_DISPUTE];
-                break;
-            case 'dispute-patient':
-                $statusList = [DSS_CLAIM_PATIENT_DISPUTE, DSS_CLAIM_SEC_PATIENT_DISPUTE];
-                break;
-            case 'rejected':
-                $statusList = [DSS_CLAIM_REJECTED, DSS_CLAIM_SEC_REJECTED];
-                break;
-            case 'efile-accepted':
-                $statusList = [DSS_CLAIM_EFILE_ACCEPTED, DSS_CLAIM_SEC_EFILE_ACCEPTED];
-                break;
-            default:
-                $statusList = [];
+        $statusList = self::$claimStatuses;
+
+        if (array_key_exists($name, $statusList)) {
+                return $statusList[$name];
         }
 
-        return $statusList;
+        return [];
+    }
+
+    /**
+     * Auxiliary method to identify associated statuses. Useful for filtering functionality where the legacy code
+     * only implements a single status (almost always primary).
+     *
+     * The function can return an empty array, or an array with one or two items.
+     * There are statuses that appear in more than one named status.
+     *
+     * @param int $status
+     * @return array
+     */
+    public static function statusListByStatus ($status) {
+        $statusList = self::$claimStatuses;
+
+        // Only return sections of the statuses where the status appear
+        $filteredList = array_filter($statusList, function ($statuses) use ($status) {
+            return in_array($status, $statuses);
+        });
+
+        return $filteredList;
     }
 
     /**

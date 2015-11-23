@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use DentalSleepSolutions\Console\Commands\Api\Controller;
+use DentalSleepSolutions\Console\Commands\Api\Model;
 
 class CommandServiceProvider extends ServiceProvider
 {
@@ -23,9 +24,11 @@ class CommandServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerControllerGenerator();
+        $this->registerModelGenerator();
 
         $this->commands(
-            'command.api:controller'
+            'command.api.controller',
+            'command.api.model'
         );
     }
 
@@ -36,11 +39,23 @@ class CommandServiceProvider extends ServiceProvider
      */
     protected function registerControllerGenerator()
     {
-        $this->app->singleton('command.api:controller', function ($app) {
+        $this->app->singleton('command.api.controller', function ($app) {
             return new Controller($app['files']);
         });
     }
 
+
+    /**
+     * Register the controller generator command.
+     *
+     * @return void
+     */
+    protected function registerModelGenerator()
+    {
+        $this->app->singleton('command.api.model', function ($app) {
+            return new Model($app['files']);
+        });
+    }
     /**
      * Get the services provided by the provider.
      *
@@ -49,7 +64,8 @@ class CommandServiceProvider extends ServiceProvider
     public function provides()
     {
         return array(
-            'command.api:controller',
+            'command.api.controller',
+            'command.api.model'
         );
     }
 }

@@ -1,0 +1,12 @@
+<?php
+
+namespace DentalSleepSolutions;
+
+use Illuminate\Database\Eloquent\Model;
+
+class DummyClass extends Model
+{
+    protected $table = '';
+    protected $primaryKey = 'id';
+    public $timestamps = false;
+}

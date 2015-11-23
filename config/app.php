@@ -145,6 +145,7 @@ return [
         DentalSleepSolutions\Providers\EventServiceProvider::class,
         DentalSleepSolutions\Providers\RouteServiceProvider::class,
         DentalSleepSolutions\Providers\ApiServiceProvider::class,
+        DentalSleepSolutions\Providers\CommandServiceProvider::class,
 
     ],
 

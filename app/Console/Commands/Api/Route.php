@@ -66,6 +66,7 @@ class Route extends Command
             try {
                 file_put_contents($dir.'apiroutes.php', $str);
             } catch (\Exception $e) {
+                unlink($dir.'apiroutes.php');
                 copy($dir.'apiroutes-temp.php', $dir.'apiroutes.php');
             } finally {
                 unlink($dir.'apiroutes-temp.php');

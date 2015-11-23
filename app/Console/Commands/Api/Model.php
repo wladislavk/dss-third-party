@@ -48,16 +48,4 @@ class Model extends GeneratorCommand
     {
         return $rootNamespace.'\Eloquent';
     }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['migration', 'm', InputOption::VALUE_NONE, 'Create a new migration file for the model.'],
-        ];
-    }
 }

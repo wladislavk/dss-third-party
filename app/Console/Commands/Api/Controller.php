@@ -48,17 +48,5 @@ class Controller extends GeneratorCommand
     {
         return $rootNamespace.'\Http\Controllers\Api';
     }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['plain', null, InputOption::VALUE_NONE, 'Generate an empty controller class.'],
-        ];
-    }
 }
 

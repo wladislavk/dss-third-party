@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use DummyRootNamespaceHttp\Requests;
 use DummyRootNamespaceHttp\Controllers\Controller;
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DummyRootNamespaceHelpers\ApiResponse;
 
 class DummyClass extends Controller
 {

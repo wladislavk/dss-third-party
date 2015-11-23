@@ -24,7 +24,9 @@ class CommandServiceProvider extends ServiceProvider
     {
         $this->registerControllerGenerator();
 
-        $this->commands('command.api:controller');
+        $this->commands(
+            'command.api:controller'
+        );
     }
 
     /**

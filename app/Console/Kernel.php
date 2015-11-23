@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \DentalSleepSolutions\Console\Commands\Inspire::class,
+        \DentalSleepSolutions\Console\Commands\Api\Route::class,
     ];
 
     /**

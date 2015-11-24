@@ -28,7 +28,7 @@ include_once "../includes/constants.inc";
                     Last Updated
                 </th>
                 <th valign="top" class="col_head header1" width="10%">
-                    End Date
+                    Display Start
                 </th>
                 <th valign="top" class="col_head header1" width="15%">
                     Action
@@ -78,7 +78,7 @@ include_once "../includes/constants.inc";
 											</li>
 										</ul>
 									</div>
-                                    <label for="offdate" class="col-md-3 control-label">End Date</label>
+                                    <label for="offdate" class="col-md-3 control-label">Display Start</label>
                                     <div class="input-group date">
                                         <input type="text" class="form-control" id="offdate" name="offdate" value="{{ fields.off_date }}" v-model="fields.off_date"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                                     </div>

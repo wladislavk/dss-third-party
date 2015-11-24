@@ -1,0 +1,15 @@
+<?php
+namespace DummyNamespace;
+
+use DentalSleepSolutions\DummyName;
+use League\Fractal;
+
+class DummyClass extends Fractal\TransformerAbstract
+{
+	public function transform(DummyName DummyParamName)
+	{
+	    return [
+
+	    ];
+	}
+}

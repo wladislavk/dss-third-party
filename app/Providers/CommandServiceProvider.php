@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use DentalSleepSolutions\Console\Commands\Api\Controller;
 use DentalSleepSolutions\Console\Commands\Api\Model;
 use DentalSleepSolutions\Console\Commands\Api\Request;
+use DentalSleepSolutions\Console\Commands\Api\Transformer;
 
 class CommandServiceProvider extends ServiceProvider
 {
@@ -27,11 +28,13 @@ class CommandServiceProvider extends ServiceProvider
         $this->registerControllerGenerator();
         $this->registerModelGenerator();
         $this->registerRequestGenerator();
+        $this->registerTransformerGenerator();
 
         $this->commands(
             'command.api.controller',
             'command.api.model',
-            'command.api.request'
+            'command.api.request',
+            'command.api.transformer'
         );
     }
 
@@ -71,6 +74,19 @@ class CommandServiceProvider extends ServiceProvider
         });
     }
 
+
+    /**
+     * Register the request generator command.
+     *
+     * @return void
+     */
+    protected function registerTransformerGenerator()
+    {
+        $this->app->singleton('command.api.transformer', function ($app) {
+            return new Transformer($app['files']);
+        });
+    }
+
     /**
      * Get the services provided by the provider.
      *
@@ -81,7 +97,8 @@ class CommandServiceProvider extends ServiceProvider
         return array(
             'command.api.controller',
             'command.api.model',
-            'command.api.request'
+            'command.api.request',
+            'command.api.transformer'
         );
     }
 }

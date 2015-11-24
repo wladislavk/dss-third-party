@@ -23,16 +23,19 @@ class ApiServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('DentalSleepSolutions\\Interfaces\\MemoAdminInterface',
+        $this->app->bind('DentalSleepSolutions\\Interfaces\\Repositories\\MemoAdminInterface',
                         'DentalSleepSolutions\\Repositories\\MemoAdminRepository');
 
-        $this->app->bind('DentalSleepSolutions\\Interfaces\\EnrollmentPayersInterface',
+        $this->app->bind('DentalSleepSolutions\\Interfaces\\Repositories\\EnrollmentPayersInterface',
                         'DentalSleepSolutions\\Repositories\\EnrollmentPayersApiRepository');
 
-        $this->app->bind('DentalSleepSolutions\\Interfaces\\EnrollmentInterface',
+        $this->app->bind('DentalSleepSolutions\\Interfaces\\Repositories\\EnrollmentInterface',
                         'DentalSleepSolutions\\Repositories\\EnrollmentRepository');
 
-        $this->app->bind('DentalSleepSolutions\\Interfaces\\UserSignaturesInterface',
+        $this->app->bind('DentalSleepSolutions\\Interfaces\\Repositories\\UserSignaturesInterface',
                         'DentalSleepSolutions\\Repositories\\UserSignaturesRepository');
+
+        $this->app->bind('DentalSleepSolutions\\Interfaces\\Repositories\\AppointmentTypeInterface',
+                        'DentalSleepSolutions\\Repositories\\AppointmentTypeRepository');
     }
 }

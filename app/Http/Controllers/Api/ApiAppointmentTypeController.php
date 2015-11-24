@@ -69,9 +69,6 @@ class ApiAppointmentTypeController extends ApiBaseController
             return ApiResponse::responseError($validator->errors(), 422);
         }
 
-        $postValues = array_merge($postValues, [
-        ]);
-
         $this->apptType->store($postValues);
 
         return ApiResponse::responseOk('Appointment type was added successfully.', $this->apptType->all());

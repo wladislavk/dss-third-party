@@ -11,28 +11,7 @@ class ApiResponse
      */
     private static function getStatusesName($status)
     {
-        switch ($status) {
-            case 200:
-            case 201:
-            case 204:
-                return "OK";
-            case 304:
-                return "Not Modified";
-            case 400:
-                return "Bad Request";
-            case 401:
-                return "Unauthorized";
-            case 403:
-                return "Forbidden";
-            case 404:
-                return "Not found";
-            case 422:
-                return "Unprocessable Entity";
-            case 500:
-                return "Internal Server Error";
-        }
-
-        return '';
+        return array_get(\Symfony\Component\HttpFoundation\Response::$statusTexts, $status, '');
     }
 
     /**

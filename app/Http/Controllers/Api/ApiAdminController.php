@@ -19,19 +19,10 @@ class ApiAdminController extends ApiBaseController
      */
     protected $admin;
 
-    private $rulesForStore = [
+    private $rules = [
         'name'               => 'max:250',
-        'username'           => 'required|max:250',
+        'username'           => 'required|max:250|unique:admin',
         'password'           => 'required|max:250',
-        'status'             => 'integer',
-        'admin_access'       => 'integer',
-        'email'              => 'email|max:100',
-        'first_name'         => 'string|max:50',
-        'last_name'          => 'string|max:50'
-    ];
-
-    private $rulesForUpdate = [
-        'name'               => 'max:250',
         'status'             => 'integer',
         'admin_access'       => 'integer',
         'email'              => 'email|max:100',
@@ -72,7 +63,7 @@ class ApiAdminController extends ApiBaseController
     public function store()
     {
         $postValues = Input::all();
-        $validator  = \Validator::make($postValues, $this->rulesForStore);
+        $validator  = \Validator::make($postValues, $this->rules);
 
         if ($validator->fails()) {
             return ApiResponse::responseError($validator->errors(), 422);
@@ -102,7 +93,12 @@ class ApiAdminController extends ApiBaseController
     public function update($adminId)
     {
         $putValues = Input::all();
-        $validator = \Validator::make($putValues, $this->rulesForUpdate);
+
+        // if input data has a username and a password then these will be validated
+        $this->rules['username'] = 'sometimes|' . $this->rules['username'];
+        $this->rules['password'] = 'sometimes|' . $this->rules['password'];
+
+        $validator = \Validator::make($putValues, $this->rules);
 
         if ($validator->fails()) {
             return ApiResponse::responseError($validator->errors(), 422);

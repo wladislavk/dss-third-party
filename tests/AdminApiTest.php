@@ -19,7 +19,7 @@ class AdminApiTest extends TestCase
     {
         $data = [
             'name'               => 'PHPUnit admin',
-            'username'           => 'testAdmin',
+            'username'           => 'testUsername',
             'password'           => 'testPassword',
             'status'             => 2,
             'admin_access'       => 4,

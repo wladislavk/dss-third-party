@@ -2,115 +2,87 @@
 
 namespace DummyNamespace;
 
-use Illuminate\Http\Request;
-
-use DummyRootNamespaceHttp\Requests;
-use DummyRootNamespaceHttp\Controllers\Controller;
 use DummyRootNamespaceHelpers\ApiResponse;
+use DummyRootNamespaceHttp\Requests\StoreDummyResource;
+use DummyRootNamespaceHttp\Requests\UpdateDummyResource;
+use DummyRootNamespaceHttp\Requests\DestroyDummyResource;
+use DummyRootNamespaceHttp\Controllers\Controller;
+use DummyRootNamespaceContracts\Resources\DummyResource;
+use DummyRootNamespaceContracts\Repositories\DummyRepository;
 
+/**
+ * API controller that handles single resource endpoints. It depends heavily
+ * on the IoC dependency injection and routes model binding in that each
+ * method gets resource instance injected, rather than its identifier.
+ *
+ * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
+ * @link http://laravel.com/docs/5.1/routing#route-model-binding
+ */
 class DummyClass extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \DummyRootNamespaceContracts\Repositories\DummyRepository $resources
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(DummyRepository $resources)
     {
-        if (/* OK */) {
-          return ApiResponse::responseOk('');
-        }
+        $data = $resources->all();
 
-        return ApiResponse::responseError('');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        if (/* OK */) {
-            return ApiResponse::responseOk('');
-        }
-
-        return ApiResponse::responseError('');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        if (/* OK */) {
-            return ApiResponse::responseOk('');
-        }
-
-        return ApiResponse::responseError('', 422, []);
+        return ApiResponse::responseOk('', $data);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \DummyRootNamespaceContracts\Resources\DummyResource $resource
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(DummyResource $resource)
     {
-        if (/* OK */) {
-            return ApiResponse::responseOk('');
-        }
-
-        return ApiResponse::responseError('');
+        return ApiResponse::responseOk('', $resource);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Store a newly created resource in storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \DummyRootNamespaceContracts\Repositories\DummyRepository $resources
+     * @param  \DummyRootNamespaceHttp\Requests\StoreDummyResource $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function edit($id)
+    public function store(DummyRepository $resources, StoreDummyResource $request)
     {
-        if (/* OK */) {
-            return ApiResponse::responseOk('');
-        }
+        $resource = $resources->create($request->all());
 
-        return ApiResponse::responseError('');
+        return ApiResponse::responseOk('Resource created', $resource);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \DummyRootNamespaceContracts\Resources\DummyResource $resource
+     * @param  \DummyRootNamespaceHttp\Requests\UpdateDummyResource $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(DummyResource $resource, UpdateDummyResource $request)
     {
-        if (/* OK */) {
-            return ApiResponse::responseOk('');
-        }
+        $resource->update($request->all());
 
-        return ApiResponse::responseError('', 422, []);
+        return ApiResponse::responseOk('Resource updated');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \DummyRootNamespaceContracts\Resources\DummyResource $resource
+     * @param  \DummyRootNamespaceHttp\Requests\DestroyDummyResource $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(DummyResource $resource, DestroyDummyResource $request)
     {
-        if (/* OK */) {
-            return ApiResponse::responseOk('');
-        }
+        $resource->delete();
 
-        return ApiResponse::responseError('', 422, []);
+        return ApiResponse::responseOk('Resource deleted');
     }
 }

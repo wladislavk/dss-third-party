@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Exceptions;
 
 use Exception;
 use DentalSleepSolutions\Helpers\ApiResponse;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use DentalSleepSolutions\Exceptions\ResourceNotFound;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -17,7 +17,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         HttpException::class,
-        ModelNotFoundException::class,
+        ResourceNotFound::class,
     ];
 
     /**
@@ -42,7 +42,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        if ($e instanceof ModelNotFoundException) {
+        if ($e instanceof ResourceNotFound) {
             $e = new HttpException(404, 'Resource not found');
         }
 
@@ -65,6 +65,8 @@ class Handler extends ExceptionHandler
             return ApiResponse::responseError($e->getMessage());
         }
 
-        return ApiResponse::responseError('Internal error occured. We are investigating the issue.', 500);
+        $message = 'Internal error occured. We are investigating the issue.';
+
+        return ApiResponse::responseError($message, 500);
     }
 }

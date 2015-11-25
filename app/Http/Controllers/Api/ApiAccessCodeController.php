@@ -24,7 +24,7 @@ class ApiAccessCodeController extends ApiBaseController
      * @var array
      */
     private $rules = [
-        'access_code' => 'string',
+        'access_code' => 'required|string|unique:dental_access_codes',
         'notes'       => 'string',
         'status'      => 'integer',
         'plan_id'     => 'integer'
@@ -88,6 +88,10 @@ class ApiAccessCodeController extends ApiBaseController
     public function update($id)
     {
         $putValues = Input::all();
+
+        // if input data has an access_code then it will be validated
+        $this->rules['access_code'] = 'sometimes|' . $this->rules['access_code'];
+
         $validator = \Validator::make($putValues, $this->rules);
 
         if ($validator->fails()) {

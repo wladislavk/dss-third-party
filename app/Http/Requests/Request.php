@@ -8,6 +8,16 @@ use DentalSleepSolutions\Helpers\ApiResponse;
 abstract class Request extends FormRequest
 {
     /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return boolean
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
      * Get the proper failed validation response for the request.
      *
      * @param  array  $errors

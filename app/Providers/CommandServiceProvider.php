@@ -3,14 +3,13 @@
 namespace DentalSleepSolutions\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use DentalSleepSolutions\Console\Commands\Api\Controller;
 use DentalSleepSolutions\Console\Commands\Api\Model;
-use DentalSleepSolutions\Console\Commands\Api\Request;
+use DentalSleepSolutions\Console\Commands\Api\Requests;
+use DentalSleepSolutions\Console\Commands\Api\Controller;
 use DentalSleepSolutions\Console\Commands\Api\Transformer;
 
 class CommandServiceProvider extends ServiceProvider
 {
-
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -25,15 +24,15 @@ class CommandServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerControllerGenerator();
         $this->registerModelGenerator();
-        $this->registerRequestGenerator();
+        $this->registerRequestsGenerator();
+        $this->registerControllerGenerator();
         $this->registerTransformerGenerator();
 
         $this->commands(
-            'command.api.controller',
             'command.api.model',
-            'command.api.request',
+            'command.api.requests',
+            'command.api.controller',
             'command.api.transformer'
         );
     }
@@ -63,20 +62,20 @@ class CommandServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the request generator command.
+     * Register the requests generator command.
      *
      * @return void
      */
-    protected function registerRequestGenerator()
+    protected function registerRequestsGenerator()
     {
-        $this->app->singleton('command.api.request', function ($app) {
-            return new Request($app['files']);
+        $this->app->singleton('command.api.requests', function ($app) {
+            return new Requests($app['files'], $app['db']->connection()->getSchemaBuilder());
         });
     }
 
 
     /**
-     * Register the request generator command.
+     * Register the transformer generator command.
      *
      * @return void
      */
@@ -94,11 +93,11 @@ class CommandServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return array(
-            'command.api.controller',
+        return [
             'command.api.model',
-            'command.api.request',
-            'command.api.transformer'
-        );
+            'command.api.requests',
+            'command.api.controller',
+            'command.api.transformer',
+        ];
     }
 }

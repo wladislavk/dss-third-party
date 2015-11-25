@@ -20,7 +20,7 @@ class Route extends Command
      *
      * @var string
      */
-    protected $description = 'Add routing for controller';
+    protected $description = 'Create REST routing entry for a controller.';
 
     /**
      * Create a new controller creator command instance.

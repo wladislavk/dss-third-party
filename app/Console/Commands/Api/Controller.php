@@ -88,7 +88,6 @@ class Controller extends GeneratorCommand
      * Replace the table name for the given stub.
      *
      * @param  string  $stub
-     * @param  string  $controller
      * @return string
      */
     protected function replaceResource($stub)

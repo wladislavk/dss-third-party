@@ -1,68 +1,87 @@
 <?php
+
 namespace DentalSleepSolutions\Helpers;
+
+use Illuminate\Support\Arr;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiResponse
 {
     /**
-     * returned name of status http code
+     * Human-friendly representation of http response code.
      *
-     * @param $status
+     * @param  integer $code
      * @return string
      */
-    private static function getStatusesName($status)
+    private static function getStatusesName($code)
     {
-        return array_get(\Symfony\Component\HttpFoundation\Response::$statusTexts, $status, '');
+        return Arr::get(Response::$statusTexts, $code, '');
     }
 
     /**
-     * Create response for success
+     * Json response to valid request.
      *
-     * @param string $message
-     * @param array $data
-     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * @param  string $message
+     * @param  array $data
+     * @param  integer $code
+     * @param  array $headers
+     * @param  integer $options
+     * @return \Illuminate\Http\JsonResponse
      */
-    public static function responseOk($message = '', $data = null)
+    public static function responseOk($message = '', $data = null, $code = 200, $headers = [], $options = 0)
     {
-        return response()->json(['status' => self::getStatusesName(200), 'message' => $message, 'data' => $data]);
+        return new JsonResponse([
+            'status'  => self::getStatusesName($code),
+            'message' => $message,
+            'data'    => $data,
+        ], $code, $headers, $options);
     }
 
     /**
-     * Create response for error
+     * Json response to invalid request.
      *
-     * @param string $message
-     * @param int $status
-     * @param array $data
-     * @param bool|true $create_errors_array
-     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * @param  string $message
+     * @param  integer $code
+     * @param  array $data
+     * @param  boolean $create_errors_array
+     * @return \Illuminate\Http\JsonResponse
      */
-    public static function responseError($message = '', $status = 404, $data = null, $create_errors_array = true)
-    {
+    public static function responseError(
+        $message = '',
+        $code = 404,
+        $data = null,
+        $create_errors_array = true,
+        $headers = [],
+        $options = 0
+    ) {
         if (!is_array($data) && $create_errors_array) {
             $data = [
                 'errors' => [$data ? $data : $message]
             ];
         }
-        return response()->json([
-            'status' => self::getStatusesName($status),
+
+        return new JsonResponse([
+            'status'  => self::getStatusesName($code),
             'message' => $message,
-            'data' => $data
-        ], $status);
+            'data'    => $data
+        ], $code, $headers, $options);
     }
 
     /**
-     * create response with selected type of message
+     * Json response depending on provided data. Used after processing Eligible API responses.
      *
-     * @param array $data
-     * @param string $message_success
-     * @param string $message_error
-     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * @param  array $data
+     * @param  string $message_success
+     * @param  string $message_error
+     * @return \Illuminate\Http\JsonResponse
      */
-    public static function response($data, $message_success, $message_error)
+    public static function response($data, $message_success, $message_error, $headers = [], $options = 0)
     {
         if ($data['success']) {
-            return self::responseOk($message_success, $data['data']);
+            return self::responseOk($message_success, $data['data'], 200, $headers, $options);
         }
 
-        return self::responseError($message_error, $data['status'], $data['data']);
+        return self::responseError($message_error, $data['status'], $data['data'], true, $headers, $options);
     }
 }

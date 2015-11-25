@@ -7,7 +7,6 @@ use DentalSleepSolutions\Helpers\ApiResponse;
 
 abstract class Request extends FormRequest
 {
-
     /**
      * Get the proper failed validation response for the request.
      *
@@ -17,15 +16,9 @@ abstract class Request extends FormRequest
     public function response(array $errors)
     {
         if ($this->ajax() || $this->wantsJson()) {
-            $data = [
-                'errors' => $errors
-            ];
-
-            return ApiResponse::responseError("Error data", 422, $data);
+            return ApiResponse::responseError('Provided data is invalid.', 422, ['errors' => $errors]);
         }
 
-        return $this->redirector->to($this->getRedirectUrl())
-            ->withInput($this->except($this->dontFlash))
-            ->withErrors($errors, $this->errorBag);
+        return parent::response($errors);
     }
 }

@@ -19,23 +19,13 @@ class ApiAdminCompanyController extends ApiBaseController
     protected $adminCompany;
 
     /**
-     * Validation rules for the store method
+     * Validation rules
      * 
-     * @var $rulesForStore
+     * @var $rules
      */
-    private $rulesForStore = [
+    private $rules = [
         'adminid'   => 'integer|required',
         'companyid' => 'integer|required'
-    ];
-
-    /**
-     * Validation rules for the update method
-     * 
-     * @var $rulesForUpdate
-     */
-    private $rulesForUpdate = [
-        'adminid'   => 'integer',
-        'companyid' => 'integer'
     ];
 
     /**
@@ -71,7 +61,7 @@ class ApiAdminCompanyController extends ApiBaseController
     public function store()
     {
         $postValues = Input::all();
-        $validator  = \Validator::make($postValues, $this->rulesForStore);
+        $validator  = \Validator::make($postValues, $this->rules);
 
         if ($validator->fails()) {
             return ApiResponse::responseError($validator->errors(), 422);
@@ -93,7 +83,11 @@ class ApiAdminCompanyController extends ApiBaseController
      */
     public function update($id)
     {
-        $validator = \Validator::make(Input::all(), $this->rulesForUpdate);
+        // if input data has an adminid and a companyid then these will be validated
+        $this->rules['adminid']   = 'sometimes|' . $this->rules['adminid'];
+        $this->rules['companyid'] = 'sometimes|' . $this->rules['companyid'];
+
+        $validator = \Validator::make(Input::all(), $this->rules);
 
         if ($validator->fails()) {
             return ApiResponse::responseError($validator->errors(), 422);

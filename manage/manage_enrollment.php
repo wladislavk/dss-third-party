@@ -352,9 +352,9 @@ require_once('includes/constants.inc');
 </div>
 
 
-<scrpt type="text/javacsript">
-    var apiRoot = <?= json_encode(config('apiUrl')) ?>;
-</scrpt>
+<script>
+    var apiRoot = <?= json_encode(config('app.apiUrl')) ?>;
+</script>
 <script src="/assets/app/enrollments.js" type="text/javascript"></script>
 
 <?php include "includes/bottom.htm"; ?>

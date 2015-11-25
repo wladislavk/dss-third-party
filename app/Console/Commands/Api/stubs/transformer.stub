@@ -1,15 +1,16 @@
 <?php
+
 namespace DummyNamespace;
 
-use DentalSleepSolutions\DummyName;
-use League\Fractal;
+use DummyRootNamespaceEloquent\DummyClass as Resource;
+use League\Fractal\TransformerAbstract;
 
-class DummyClass extends Fractal\TransformerAbstract
+class DummyClass extends TransformerAbstract
 {
-	public function transform(DummyName DummyParamName)
+	public function transform(Resource $dummy_param)
 	{
 	    return [
-
+            //
 	    ];
 	}
 }

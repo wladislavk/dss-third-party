@@ -24,7 +24,7 @@ class ApiAllergenController extends ApiBaseController
      * @var $rules
      */
     private $rules = [
-        'allergens'   => 'string',
+        'allergens'   => 'required|string|unique:dental_allergens',
         'description' => 'string',
         'sortby'      => 'integer',
         'status'      => 'integer'
@@ -87,6 +87,9 @@ class ApiAllergenController extends ApiBaseController
      */
     public function update($allergensId)
     {
+        // if input data has an allergen title then it will be validated
+        $this->rules['allergens'] = 'sometimes|' . $this->rules['allergens'];
+
         $validator = \Validator::make(Input::all(), $this->rules);
 
         if ($validator->fails()) {

@@ -25,9 +25,9 @@ class ApiAppointmentTypeController extends ApiBaseController
      */
     private $rules = [
         'name'      => 'string',
-        'color'     => 'string',
-        'classname' => 'string',
-        'docid'     => 'integer'
+        'color'     => 'required|string',
+        'classname' => 'required|string',
+        'docid'     => 'required|integer'
     ];
 
     /**
@@ -82,6 +82,11 @@ class ApiAppointmentTypeController extends ApiBaseController
      */
     public function update($id)
     {
+        // if input data has a color, a classname, a docid then these values will be validated
+        $this->rules['color']     = 'sometimes|' . $this->rules['color'];
+        $this->rules['classname'] = 'sometimes|' . $this->rules['classname'];
+        $this->rules['docid']     = 'sometimes|' . $this->rules['docid'];
+
         $validator = \Validator::make(Input::all(), $this->rules);
 
         if ($validator->fails()) {

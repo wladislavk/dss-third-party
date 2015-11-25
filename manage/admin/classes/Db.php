@@ -42,52 +42,55 @@ class Db
 
 			return $result;
 		}
-		return;
-		
 	}
 
 	// Get the first result row
 	public function getRow($query_string)
 	{
-		$result = $this->query($query_string);
-		if ($result) {
-
-			$return = mysqli_fetch_assoc($result);
-
+		if( $query_string ) {
+			$result = $this->query($query_string);
+			if ($result) {
+				$return = mysqli_fetch_assoc($result);
+			}
+			return $return;
 		}
-		return $return;		
 	}
 
 	public function getResults($query_string)
 	{
-		$return = array();
-
-		$result = $this->query($query_string);
-		if ($result) {
-			while($row = mysqli_fetch_assoc($result)){
-				$return[] = $row;
+		if( $query_string ) {
+			$return = array();
+			$result = $this->query($query_string);
+			if ($result) {
+				while ($row = mysqli_fetch_assoc($result)) {
+					$return[] = $row;
+				}
 			}
+			return $return;
 		}
-		
-		return $return;
 	}
 
 	// Get count of result rows
 	public function getNumberRows($query_string)
 	{
-		$result = $this->query($query_string);
-		if ($result) {
-			$return = mysqli_num_rows($result);
-		} else {
-			$return = 0;
+		if( $query_string ) {
+			$result = $this->query($query_string);
+			if ($result) {
+				$return = mysqli_num_rows($result);
+			} else {
+				$return = 0;
+			}
+			return $return;
 		}
-		return $return;
 	}
 
 	public function getInsertId($query_string)
 	{
-		$result = $this->query($query_string);
-		return mysqli_insert_id($this->con);
+		if( $query_string ) {
+			$result = $this->query($query_string);
+			$indert_id = mysqli_insert_id($this->con);
+			return $indert_id;
+		}
 	}
 
 	public function escape($string)

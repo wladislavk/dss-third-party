@@ -189,8 +189,8 @@ function update_referredby_local(in_field, name, id_field, id, source, t, hint, 
   }
 
 
-  $('#'+in_field).val(name);
-  $('#'+id_field).val(id);
+  $('#'+in_field).val(name).trigger('change');
+  $('#'+id_field).val(id).trigger('change');
 
   if(source != ''){
     $('#'+source).val(t);

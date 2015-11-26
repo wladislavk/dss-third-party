@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Requests extends GeneratorCommand
 {
+    protected $rules = '';
     protected $actions = ['Store', 'Update', 'Destroy'];
 
     /**
@@ -88,13 +89,15 @@ class Requests extends GeneratorCommand
      */
     protected function replaceRules($stub)
     {
-        $rules = '';
+        if ($this->rules) {
+            return str_replace('rules_placeholder', $this->rules, $stub);
+        }
 
         try {
             if ($table = $this->resourceTable()) {
                 $columns = $this->laravel['db']->connection()->getSchemaBuilder()->getColumnListing($table);
 
-                $rules = trim(array_reduce($columns, function ($rules, $column) {
+                $this->rules = trim(array_reduce($columns, function ($rules, $column) {
                     return $rules .= "            '{$column}' => '',\n";
                 }, ''), "\n");
             }
@@ -102,9 +105,9 @@ class Requests extends GeneratorCommand
             //
         }
 
-        $rules = $rules ?: '            // @todo Provide validation rules';
+        $this->rules = $this->rules ?: '            // @todo Provide validation rules';
 
-        return str_replace('rules_placeholder', $rules, $stub);
+        return str_replace('rules_placeholder', $this->rules, $stub);
     }
 
     protected function resourceTable()

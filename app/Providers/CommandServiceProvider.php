@@ -4,7 +4,9 @@ namespace DentalSleepSolutions\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use DentalSleepSolutions\Console\Commands\Api\Model;
+use DentalSleepSolutions\Console\Commands\Api\Route;
 use DentalSleepSolutions\Console\Commands\Api\Requests;
+use DentalSleepSolutions\Console\Commands\Api\Resource;
 use DentalSleepSolutions\Console\Commands\Api\Controller;
 use DentalSleepSolutions\Console\Commands\Api\Transformer;
 
@@ -25,28 +27,20 @@ class CommandServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerModelGenerator();
+        $this->registerRouteGenerator();
         $this->registerRequestsGenerator();
+        $this->registerResourceGenerator();
         $this->registerControllerGenerator();
         $this->registerTransformerGenerator();
 
         $this->commands(
             'command.api.model',
+            'command.api.route',
             'command.api.requests',
+            'command.api.resource',
             'command.api.controller',
             'command.api.transformer'
         );
-    }
-
-    /**
-     * Register the controller generator command.
-     *
-     * @return void
-     */
-    protected function registerControllerGenerator()
-    {
-        $this->app->singleton('command.api.controller', function ($app) {
-            return new Controller($app['files']);
-        });
     }
 
     /**
@@ -62,6 +56,18 @@ class CommandServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the route generator command.
+     *
+     * @return void
+     */
+    protected function registerRouteGenerator()
+    {
+        $this->app->singleton('command.api.route', function ($app) {
+            return new Route($app['files']);
+        });
+    }
+
+    /**
      * Register the requests generator command.
      *
      * @return void
@@ -69,7 +75,31 @@ class CommandServiceProvider extends ServiceProvider
     protected function registerRequestsGenerator()
     {
         $this->app->singleton('command.api.requests', function ($app) {
-            return new Requests($app['files'], $app['db']->connection()->getSchemaBuilder());
+            return new Requests($app['files']);
+        });
+    }
+
+    /**
+     * Register the complete REST resource generator command.
+     *
+     * @return void
+     */
+    protected function registerResourceGenerator()
+    {
+        $this->app->singleton('command.api.resource', function ($app) {
+            return new Resource;
+        });
+    }
+
+    /**
+     * Register the controller generator command.
+     *
+     * @return void
+     */
+    protected function registerControllerGenerator()
+    {
+        $this->app->singleton('command.api.controller', function ($app) {
+            return new Controller($app['files']);
         });
     }
 
@@ -95,9 +125,11 @@ class CommandServiceProvider extends ServiceProvider
     {
         return [
             'command.api.model',
+            'command.api.route',
             'command.api.requests',
+            'command.api.resource',
             'command.api.controller',
-            'command.api.transformer',
+            'command.api.transformer'
         ];
     }
 }

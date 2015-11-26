@@ -5,14 +5,13 @@ namespace DentalSleepSolutions\Console\Commands\Api;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Database\Schema\Builder;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Requests extends GeneratorCommand
 {
-    protected $types = ['Store', 'Update', 'Destroy'];
+    protected $actions = ['Store', 'Update', 'Destroy'];
 
     /**
      * The console command name.
@@ -35,13 +34,6 @@ class Requests extends GeneratorCommand
      */
     protected $type = 'Api Requests';
 
-    public function __construct(Filesystem $files, Builder $schema)
-    {
-        parent::__construct($files);
-
-        $this->schema = $schema;
-    }
-
     /**
      * Execute the console command.
      *
@@ -51,8 +43,8 @@ class Requests extends GeneratorCommand
     {
         $resource = Str::studly(Str::singular($this->argument('resource')));
 
-        foreach ($this->types as $type) {
-            $this->create($type.$resource);
+        foreach ($this->actions as $action) {
+            $this->create($resource.$action);
         }
     }
 
@@ -100,7 +92,7 @@ class Requests extends GeneratorCommand
 
         try {
             if ($table = $this->resourceTable()) {
-                $columns = $this->schema->getColumnListing($table);
+                $columns = $this->laravel['db']->connection()->getSchemaBuilder()->getColumnListing($table);
 
                 $rules = trim(array_reduce($columns, function ($rules, $column) {
                     return $rules .= "            '{$column}' => '',\n";
@@ -117,8 +109,6 @@ class Requests extends GeneratorCommand
 
     protected function resourceTable()
     {
-        return 'migrations';
-
         $resource = $this->laravel->getNamespace().'\Eloquent\\'.Str::singular($this->argument('resource'));
 
         if (class_exists($resource) && $resource instanceof Eloquent) {

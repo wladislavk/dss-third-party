@@ -34,7 +34,7 @@ class ApiResponse
      * @param  integer $code
      * @return string
      */
-    private static function getStatusesName($code)
+    private static function getStatusName($code)
     {
         return Arr::get(Response::$statusTexts, $code, '');
     }

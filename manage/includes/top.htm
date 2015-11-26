@@ -1006,7 +1006,7 @@ if (!isset($_SESSION['userid'])) {
 
         <div style="float:right;width:300px;"> 
           <?php
-            $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid=".$_GET['pid'];
+            $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid='".$_GET['pid']."'";
           
             $my = $db->getResults($sql);
 

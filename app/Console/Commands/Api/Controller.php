@@ -124,6 +124,16 @@ class Controller extends GeneratorCommand
     }
 
     /**
+     * Get the desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getNameInput()
+    {
+        return Str::studly($this->argument('name'));
+    }
+
+    /**
      * Get the default namespace for the class.
      *
      * @param  string  $rootNamespace
@@ -131,6 +141,6 @@ class Controller extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Http\Controllers\Api';
+        return $rootNamespace.'\Http\Controllers';
     }
 }

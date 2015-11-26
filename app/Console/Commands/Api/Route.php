@@ -54,7 +54,7 @@ class Route extends Command
 
         $updated = preg_replace(
             "#^(\h*).+'prefix' => 'api/v.+$#m",
-            "$0\n\n$1    Route::resource('{$resource}', '{$controller}');",
+            "$0\n\n$1    Route::resource('{$resource}', '{$controller}', ['except' => ['create', 'edit']]);",
             $current,
             1
         );

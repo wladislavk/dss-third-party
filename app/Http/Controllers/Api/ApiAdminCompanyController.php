@@ -1,7 +1,8 @@
 <?php
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
-use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Http\Requests\StoreAdminCompanyRequest;
+use DentalSleepSolutions\Http\Requests\UpdateAdminCompanyRequest;
 use DentalSleepSolutions\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
@@ -17,16 +18,6 @@ class ApiAdminCompanyController extends ApiBaseController
      * @var $adminCompany
      */
     protected $adminCompany;
-
-    /**
-     * Validation rules
-     * 
-     * @var $rules
-     */
-    private $rules = [
-        'adminid'   => 'integer|required',
-        'companyid' => 'integer|required'
-    ];
 
     /**
      * 
@@ -58,17 +49,12 @@ class ApiAdminCompanyController extends ApiBaseController
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store()
+    public function store(StoreAdminCompanyRequest $request)
     {
-        $postValues = Input::all();
-        $validator  = \Validator::make($postValues, $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
-        $postValues['adddate']    = Carbon::now();
-        $postValues['ip_address'] = \Request::ip();
+        $postValues = array_merge($request->all(), [
+            'adddate'    => Carbon::now(),
+            'ip_address' => $request->ip()
+        ]);
 
         $this->adminCompany->store($postValues);
 
@@ -81,19 +67,9 @@ class ApiAdminCompanyController extends ApiBaseController
      * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update($id)
+    public function update(UpdateAdminCompanyRequest $request, $id)
     {
-        // if input data has an adminid and a companyid then these will be validated
-        $this->rules['adminid']   = 'sometimes|' . $this->rules['adminid'];
-        $this->rules['companyid'] = 'sometimes|' . $this->rules['companyid'];
-
-        $validator = \Validator::make(Input::all(), $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
-        $this->adminCompany->update($id, Input::all());
+        $this->adminCompany->update($id, $request->all());
 
         return ApiResponse::responseOk('Admin company was updated successfully.', $this->adminCompany->all());
     }

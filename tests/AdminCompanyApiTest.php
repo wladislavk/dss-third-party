@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdminCompanyApiTest extends TestCase
 {
@@ -17,6 +19,8 @@ class AdminCompanyApiTest extends TestCase
      */
     public function testAddAdminCompany()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $data = [
             'adminid'   => 7,
             'companyid' => 14
@@ -24,7 +28,7 @@ class AdminCompanyApiTest extends TestCase
 
         $this->post('/api/v1/admin-company', $data)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('admin_company', ['companyid' => 14]);
     }
 
@@ -35,6 +39,8 @@ class AdminCompanyApiTest extends TestCase
      */
     public function testUpdateAdminCompany()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $adminCompanyTestRecord = factory(DentalSleepSolutions\Models\AdminCompany::class)->create();
 
         $data = [
@@ -43,7 +49,7 @@ class AdminCompanyApiTest extends TestCase
 
         $this->put('/api/v1/admin-company/' . $adminCompanyTestRecord->id, $data)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('admin_company', ['companyid' => 15]);
     }
 
@@ -54,11 +60,13 @@ class AdminCompanyApiTest extends TestCase
      */
     public function testDeleteAdminCompany()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $adminCompanyTestRecord = factory(DentalSleepSolutions\Models\AdminCompany::class)->create();
 
         $this->delete('/api/v1/admin-company/' . $adminCompanyTestRecord->id)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('admin_company', ['id' => $adminCompanyTestRecord->id]);
     }
 }

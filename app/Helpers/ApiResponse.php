@@ -93,7 +93,7 @@ class ApiResponse
     private static function createResponse($message, $data, $code, $headers, $options)
     {
         $json = [
-            'status'  => self::getStatusesName($code),
+            'status'  => self::getStatusName($code),
             'message' => $message,
             'data'    => self::transform($data),
         ];

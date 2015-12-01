@@ -1,5 +1,5 @@
 <?php
-namespace DentalSleepSolutions\Requests;
+namespace DentalSleepSolutions\Http\Requests;
 
 use DentalSleepSolutions\Http\Requests\Request;
 

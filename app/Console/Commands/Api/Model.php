@@ -54,19 +54,36 @@ class Model extends GeneratorCommand
     {
         $stub = parent::buildClass($name);
 
-        return $this->replaceOptions($stub, $name);
+        $class = class_basename($name);
+        $repo = Str::plural($class);
+
+        $stub = $this->replaceRepo($stub, $repo);
+
+        return $this->replaceOptions($stub, $class);
+    }
+
+    /**
+     * Replace repository name for the given stub.
+     *
+     * @param  string $stub
+     * @param  string $repo
+     * @return string
+     */
+    protected function replaceRepo($stub, $repo)
+    {
+        return str_replace('DummyRepo', $repo, $stub);
     }
 
     /**
      * Replace the table name for the given stub.
      *
      * @param  string  $stub
-     * @param  string  $name
+     * @param  string  $class
      * @return string
      */
-    protected function replaceOptions($stub, $name)
+    protected function replaceOptions($stub, $class)
     {
-        $table = $this->option('table') ?: str_replace('\\', '', Str::snake(Str::plural(class_basename($name))));
+        $table = $this->option('table') ?: Str::snake(Str::plural($class));
 
         $id = $this->option('pk');
 

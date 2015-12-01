@@ -2,6 +2,8 @@
 
 namespace DentalSleepSolutions\Console\Commands\Api;
 
+use ReflectionClass;
+use ReflectionException;
 use Illuminate\Support\Str;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
@@ -48,27 +50,33 @@ class Controller extends GeneratorCommand
      */
     protected function bindResourceToRoute()
     {
-        $path = $this->laravel['path'].'/Providers/RouteServiceProvider.php';
-
-        if (!$this->files->exists($path)) {
-            $this->warn("Couldn't bind resource to route - file not found: {$path}");
-
+        try {
+            $provider = new ReflectionClass($this->laravel->getNamespace().'Providers\RouteServiceProvider');
+        } catch (ReflectionException $e) {
+            $this->warn("Couldn't bind resource to route - class not found: [{$provider}]");
             return;
         }
 
+        $key = Str::camel(Str::plural($this->getResourceName()));
+        $bindings = array_get($provider->getDefaultProperties(), 'resourceBindings', []);
+
+        if (array_key_exists($key, $bindings)) {
+            $this->warn("Route model binding already exists for resource [{$key}], skipping");
+            return;
+        }
+
+        $path = $provider->getFileName();
         $class = '\\'.$this->laravel->getNamespace().'Eloquent\\'.$this->getResourceName();
 
-        $key = Str::camel(Str::plural($this->getResourceName()));
-
-        $provider = str_replace(
+        $content = str_replace(
             ['protected $resourceBindings = [', ',]'],
             ["protected \$resourceBindings = [\n        '{$key}' => {$class}::class,", ",\n    ]"],
             $this->files->get($path)
         );
 
-        $this->files->put($path, $provider);
+        $this->files->put($path, $content);
 
-        $this->info('Resource bound to route.');
+        $this->info('Resource [{$key}] bound to route.');
     }
 
     /**

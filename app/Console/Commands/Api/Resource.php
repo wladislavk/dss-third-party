@@ -32,6 +32,7 @@ class Resource extends Command
         $controller = Str::plural($resource).'Controller';
 
         $this->call('api:controller', ['name' => $controller]);
+        $this->call('api:contracts', ['resource' => $resource]);
         $this->call('api:route', ['controller' => $controller]);
         $this->call('api:model', ['name' => $resource]);
         $this->call('api:requests', ['resource' => $resource]);

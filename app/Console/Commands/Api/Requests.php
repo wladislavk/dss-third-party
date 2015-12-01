@@ -65,7 +65,7 @@ class Requests extends GeneratorCommand
 
         $this->files->put($path, $this->buildClass($name));
 
-        $this->info($request.' created successfully.');
+        $this->info($request.' request created successfully.');
     }
 
     /**

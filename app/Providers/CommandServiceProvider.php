@@ -7,6 +7,7 @@ use DentalSleepSolutions\Console\Commands\Api\Model;
 use DentalSleepSolutions\Console\Commands\Api\Route;
 use DentalSleepSolutions\Console\Commands\Api\Requests;
 use DentalSleepSolutions\Console\Commands\Api\Resource;
+use DentalSleepSolutions\Console\Commands\Api\Contracts;
 use DentalSleepSolutions\Console\Commands\Api\Controller;
 use DentalSleepSolutions\Console\Commands\Api\Transformer;
 
@@ -30,17 +31,29 @@ class CommandServiceProvider extends ServiceProvider
         $this->registerRouteGenerator();
         $this->registerRequestsGenerator();
         $this->registerResourceGenerator();
+        $this->registerContractsGenerators();
         $this->registerControllerGenerator();
         $this->registerTransformerGenerator();
 
-        $this->commands(
+        $this->commands($this->provides());
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [
             'command.api.model',
             'command.api.route',
             'command.api.requests',
             'command.api.resource',
+            'command.api.contracts',
             'command.api.controller',
-            'command.api.transformer'
-        );
+            'command.api.transformer',
+        ];
     }
 
     /**
@@ -92,6 +105,18 @@ class CommandServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the contracts generators.
+     *
+     * @return void
+     */
+    protected function registerContractsGenerators()
+    {
+        $this->app->singleton('command.api.contracts', function ($app) {
+            return new Contracts($app['files']);
+        });
+    }
+
+    /**
      * Register the controller generator command.
      *
      * @return void
@@ -114,22 +139,5 @@ class CommandServiceProvider extends ServiceProvider
         $this->app->singleton('command.api.transformer', function ($app) {
             return new Transformer($app['files']);
         });
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [
-            'command.api.model',
-            'command.api.route',
-            'command.api.requests',
-            'command.api.resource',
-            'command.api.controller',
-            'command.api.transformer'
-        ];
     }
 }

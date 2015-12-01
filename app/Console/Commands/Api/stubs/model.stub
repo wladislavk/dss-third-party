@@ -3,8 +3,10 @@
 namespace DummyNamespace;
 
 use Illuminate\Database\Eloquent\Model;
+use DummyRootNamespaceContracts\Resources\DummyClass as Resource;
+use DummyRootNamespaceContracts\Repositories\DummyRepo as Repository;
 
-class DummyClass extends Model
+class DummyClass extends Model implements Resource, Repository
 {
     /**
      * The database table used by the model.

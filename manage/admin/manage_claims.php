@@ -338,16 +338,25 @@ if ((isset($_GET['status']) && ($_GET['status'] != '')) || !empty($_GET['fid']))
     if (!empty($_GET['pid'])) {
         $sql .= " AND claim.patientid = " . $_GET['pid'] . " ";
     }
-    $sql .= "  
-AND
-(
- CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_EFILE_ACCEPTED.")
-    THEN p.p_m_dss_file
-    ELSE p.s_m_dss_file
-   END = '1' 
-
-	OR c.exclusive=1)
-	";
+    $sql .= " AND (
+        IF (
+            claim.status IN (
+                ".DSS_CLAIM_PENDING.",
+                ".DSS_CLAIM_DISPUTE.",
+                ".DSS_CLAIM_REJECTED.",
+                ".DSS_CLAIM_PATIENT_DISPUTE.",
+                ".DSS_CLAIM_SENT.",
+                ".DSS_CLAIM_PAID_INSURANCE.",
+                ".DSS_CLAIM_PAID_PATIENT.",
+                ".DSS_CLAIM_EFILE_ACCEPTED."
+            )
+            AND COALESCE(claim.primary_claim_id, 0) = 0,
+            IF (1 IN (claim.p_m_dss_file, p.p_m_dss_file), 1, 0),
+            IF (1 IN (claim.s_m_dss_file, p.s_m_dss_file), 1, 0)
+        ) = 1
+        OR c.exclusive = 1
+    )
+    ";
 
         if(isset($_GET['notes']) && $_GET['notes']==1){
           $sql .= " AND num_notes > 0 ";
@@ -556,7 +565,7 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
                     $eResponse = retrieveEClaimResponse($myarray['insuranceid']);
 
                     if ($eResponse['type'] === 'payment') { ?>
-                        <a href="view_payment_reports.php?insid=<?= $myarray['insuranceid'] ?>">
+                        <a href="payment_report.php?report_id=<?= $eResponse['data']['payment_id'] ?>">
                             Paid - <?= $eResponse['data']['adddate'] ?> (View)
                         </a>
                     <?php } elseif ($eResponse['type'] === 'webhook' || $eResponse['type'] === 'response') { ?>

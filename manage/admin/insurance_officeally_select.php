@@ -97,13 +97,24 @@ $sql = "SELECT "
     
 
 $sql .= " AND (
-  CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.")
-    THEN p.p_m_dss_file
-    ELSE p.s_m_dss_file
-   END = '1'
-	
-	 OR c.exclusive=1)
-";
+        IF (
+            claim.status IN (
+            ".DSS_CLAIM_PENDING.",
+            ".DSS_CLAIM_DISPUTE.",
+            ".DSS_CLAIM_REJECTED.",
+            ".DSS_CLAIM_PATIENT_DISPUTE.",
+            ".DSS_CLAIM_SENT.",
+            ".DSS_CLAIM_PAID_INSURANCE.",
+            ".DSS_CLAIM_PAID_PATIENT.",
+            ".DSS_CLAIM_EFILE_ACCEPTED."
+        )
+        AND COALESCE(claim.primary_claim_id, 0) = 0,
+            IF (1 IN (claim.p_m_dss_file, p.p_m_dss_file), 1, 0),
+            IF (1 IN (claim.s_m_dss_file, p.s_m_dss_file), 1, 0)
+        ) = 1
+        OR c.exclusive = 1
+    )
+    ";
 //print $sql;
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;

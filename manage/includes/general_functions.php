@@ -49,6 +49,18 @@ function uploadImage($image, $file_path, $type = 'general'){
     {
       $src = imagecreatefromgif($uploadedfile);
     }
+
+      if (!$src) {
+          // What if we cannot read the tmp file?
+          error_log('Image upload: invalid image extension, attempting to read from string');
+          $src = imagecreatefromstring(file_get_contents($uploadedfile));
+      }
+
+      if (!$src) {
+          error_log('Image upload: invalid image type, or unable to read the uploaded file');
+          return false;
+      }
+
     if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) 
 		|| ($type == 'profile' && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT))
 		|| ($type == 'device' && ($width >DSS_IMAGE_DEVICE_WIDTH || $height>DSS_IMAGE_DEVICE_HEIGHT))

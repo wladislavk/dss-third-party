@@ -9,8 +9,10 @@ $uploaded = false;
 
 $patientId = intval($_GET['pid']);
 
-$maxFileSizeExceeded = 'There was an error with the file upload. Please verify that the file does not exceed 10MB and try again.';
-$noFileName = 'There was an error with the file upload. Please ensure the filename does not contain strange characters and try again.';
+$maxFileSizeExceeded = 'There was an error with the file upload(s). Please verify that the file does not exceed 10MB and try again.';
+$noFileName = 'There was an error with the file upload(s). Please ensure the filename does not contain strange characters and try again.';
+$invalidFileType = 'There was an error with the file upload(s). Please ensure the filename has the correct extension and try again.';
+$multipleImages = 'Image processing has stopped as one image contained an error: ';
 $errorMessage = '';
 
 if (isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && !$_FILES) {
@@ -204,7 +206,9 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                 // Load
                 $thumb = imagecreatetruecolor($newwidth, $newheight);
 
-                for ($i=1; $i<=9; $i++) {
+                $troublesomeImages = 0;
+
+                for ($i=1; $i<=9 && !$troublesomeImages; $i++) {
                     $fname = $_FILES["image_file_".$i]["name"];
                     $lastdot = strrpos($fname,".");
                     $name = substr($fname,0,$lastdot);
@@ -221,6 +225,19 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                         case 'png':
                             $source = imagecreatefrompng($_FILES["image_file_".$i]["tmp_name"]);
                             break;
+                    }
+
+                    if (empty($source)) {
+                        // What if we cannot read the tmp file?
+                        error_log('Image upload: invalid image extension, attempting to read from string');
+                        $source = imagecreatefromstring(file_get_contents($_FILES["image_file_".$i]["tmp_name"]));
+                    }
+
+                    // If we cannot read at least once image, stop processing ALL images
+                    if (empty($source)) {
+                        error_log('Image upload: invalid image type, or unable to read the uploaded file');
+                        $troublesomeImages++;
+                        break;
                     }
 
                     list($width, $height) = getimagesize($_FILES["image_file_".$i]["tmp_name"]);
@@ -245,22 +262,27 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                     imagecopyresized($thumb, $source, $x, $y, 0, 0, $newWidth, $newHeight, $width, $height);
                 }
 
-                // Output
-                switch (strtolower($extension)) {
-                    case 'jpg':
-                    case 'jpeg':
-                        imagejpeg($thumb, "../../../shared/q_file/".$banner1);
-                        break;
-                    case 'gif':
-                        imagegif($thumb, "../../../shared/q_file/".$banner1);
-                        break;
-                    case 'png':
-                        imagepng($thumb, "../../../shared/q_file/".$banner1);
-                        break;
-                }
+                if ($troublesomeImages) {
+                    error_log('Image upload: errors uploading multiple images, maybe iamge types');
+                    $errorMessage = "{$multipleImages}{$invalidFileType}";
+                } else {
+                    // Output
+                    switch (strtolower($extension)) {
+                        case 'jpg':
+                        case 'jpeg':
+                            imagejpeg($thumb, "../../../shared/q_file/".$banner1);
+                            break;
+                        case 'gif':
+                            imagegif($thumb, "../../../shared/q_file/".$banner1);
+                            break;
+                        case 'png':
+                            imagepng($thumb, "../../../shared/q_file/".$banner1);
+                            break;
+                    }
 
-                @chmod("../../../shared/q_file/".$banner1,0777);
-                $uploaded = file_exists("../../../shared/q_file/$banner1");
+                    @chmod("../../../shared/q_file/".$banner1,0777);
+                    $uploaded = file_exists("../../../shared/q_file/$banner1");
+                }
 
                 if (!$uploaded) {
                     $banner1 = '';

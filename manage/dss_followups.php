@@ -496,7 +496,7 @@ $r = $db->getRow($s);?>
 $device_sql = "select * from dental_device where status=1 order by sortby";
 $device_my = $db->getResults($device_sql);
 foreach ($device_my as $device_myarray) {?>
-          <option <?php echo (!empty($device) && $device==$device_myarray['device'])?'selected="selected"':''; ?>value="<?php echo st($device_myarray['deviceid'])?>"><?php echo st($device_myarray['device']);?></option>
+          <option value="<?php echo st($device_myarray['deviceid'])?>"><?php echo st($device_myarray['device']);?></option>
 <?php }?>
         </select>
       </td>
@@ -508,9 +508,9 @@ foreach ($device_my as $device_myarray) {?>
     <tr>
       <td style="background: #E4FFCF;">
         <select name="nightsperweek" class="no_questionnaire" style="width:150px;">
-<?php for ($i = 0; $i <= 7; $i++){
-  print (!empty($fuquery['nightsperweek']) && $i == $fuquery['nightsperweek']) ? "<option selected value=\"$i\">$i</option>" : "<option value=\"$i\">$i</option>";
-}?>
+<?php for ($i = 0; $i <= 7; $i++) { ?>
+    <option value="<?= $i ?>"><?= $i ?></option>
+<?php } ?>
         </select>
       </td>
     </tr>

@@ -263,7 +263,7 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                 }
 
                 if ($troublesomeImages) {
-                    error_log('Image upload: errors uploading multiple images, maybe iamge types');
+                    error_log('Image upload: errors uploading multiple images, maybe image types');
                     $errorMessage = "{$multipleImages}{$invalidFileType}";
                 } else {
                     // Output

@@ -39,21 +39,21 @@ function uploadImage($image, $file_path, $type = 'general'){
 
     if(strtolower($extension)=="jpg" || strtolower($extension)=="jpeg" )
     {
-      $src = imagecreatefromjpeg($uploadedfile);
+      $src = @imagecreatefromjpeg($uploadedfile);
     }
     elseif(strtolower($extension)=="png")
     {
-      $src = imagecreatefrompng($uploadedfile);
+      $src = @imagecreatefrompng($uploadedfile);
     }
     else
     {
-      $src = imagecreatefromgif($uploadedfile);
+      $src = @imagecreatefromgif($uploadedfile);
     }
 
       if (!$src) {
           // What if we cannot read the tmp file?
           error_log('Image upload: invalid image extension, attempting to read from string');
-          $src = imagecreatefromstring(file_get_contents($uploadedfile));
+          $src = @imagecreatefromstring(file_get_contents($uploadedfile));
       }
 
       if (!$src) {

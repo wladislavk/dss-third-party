@@ -217,20 +217,20 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
                     switch (strtolower($extension2)) {
                         case 'jpg':
                         case 'jpeg':
-                            $source = imagecreatefromjpeg($_FILES["image_file_".$i]["tmp_name"]);
+                            $source = @imagecreatefromjpeg($_FILES["image_file_".$i]["tmp_name"]);
                             break;
                         case 'gif':
-                            $source = imagecreatefromgif($_FILES["image_file_".$i]["tmp_name"]);
+                            $source = @imagecreatefromgif($_FILES["image_file_".$i]["tmp_name"]);
                             break;
                         case 'png':
-                            $source = imagecreatefrompng($_FILES["image_file_".$i]["tmp_name"]);
+                            $source = @imagecreatefrompng($_FILES["image_file_".$i]["tmp_name"]);
                             break;
                     }
 
                     if (empty($source)) {
                         // What if we cannot read the tmp file?
                         error_log('Image upload: invalid image extension, attempting to read from string');
-                        $source = imagecreatefromstring(file_get_contents($_FILES["image_file_".$i]["tmp_name"]));
+                        $source = @imagecreatefromstring(file_get_contents($_FILES["image_file_".$i]["tmp_name"]));
                     }
 
                     // If we cannot read at least once image, stop processing ALL images

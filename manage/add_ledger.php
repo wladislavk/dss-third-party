@@ -455,9 +455,11 @@
           		</tr>		
 		        <tr>
 		            <td>
+		            	<?php if (!($themyarray['status'] == DSS_CLAIM_SENT || $themyarray['status'] == DSS_CLAIM_PAID_INSURANCE)) { ?>
 		              	<a href="/manage/manage_ledger.php?delid=<?php echo  $_GET['ed']; ?>&amp;pid=<?php echo  $_GET['pid']; ?>" target="_parent" style="font-weight:bold;" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 		                    Delete 
 		                </a>
+		                <?php } ?>
 		            </td>
 		            <td >
 		                <span class="red">

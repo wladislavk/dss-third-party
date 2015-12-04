@@ -1,34 +1,27 @@
 <?php
 
-namespace DentalSleepSolutions;
+namespace DentalSleepSolutions\Eloquent\Enrollments;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserSignatures extends Model
+class PayersList extends Model
 {
-
     /**
      * Mass assignable attributes
      *
      * @var array
      */
-    protected $fillable =
-        ['user_id',
-        'signature_json',
-        'adddate',
-        'ip_address',];
+    protected $fillable = ['payer_id', 'names', 'supported_endpoints'];
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'dental_user_signatures';
+    protected $table = 'enrollment_payers_list';
 
     /**
      * @var bool
      */
     public $timestamps = false;
-
-
 }

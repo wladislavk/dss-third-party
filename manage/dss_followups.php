@@ -482,7 +482,7 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
       <td colspan="4" style="background: #444;"><span style="color: #ccc;">Baseline</span></td>
     </tr>
 <?php
-$s = "SELECT * FROM dental_q_page1 WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$s = "SELECT initial_device_titration_1 FROM dental_summary WHERE patientid='".$db->escape(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
 $r = $db->getRow($s);?>
     <tr>
       <td style="background: #F9FFDF;">
@@ -496,32 +496,32 @@ $r = $db->getRow($s);?>
 $device_sql = "select * from dental_device where status=1 order by sortby";
 $device_my = $db->getResults($device_sql);
 foreach ($device_my as $device_myarray) {?>
-          <option <?php echo (!empty($device) && $device==$device_myarray['device'])?'selected="selected"':''; ?>value="<?php echo st($device_myarray['deviceid'])?>"><?php echo st($device_myarray['device']);?></option>
+          <option value="<?php echo st($device_myarray['deviceid'])?>"><?php echo st($device_myarray['device']);?></option>
 <?php }?>
         </select>
       </td>
     </tr>
     <tr>
       <td style="background: #F9FFDF;">
-        <input type="text" size="12" name="dsetadd" class="no_questionnaire" value="<?php echo (!empty($fuquery['dsetadd']) ? $fuquery['dsetadd'] : '');?>" />
+        <input type="text" size="12" name="dsetadd" class="no_questionnaire" value="<?= $r['initial_device_titration_1'] ?>" />
       </td>
     <tr>
       <td style="background: #E4FFCF;">
         <select name="nightsperweek" class="no_questionnaire" style="width:150px;">
-<?php for ($i = 0; $i <= 7; $i++){
-  print (!empty($fuquery['nightsperweek']) && $i == $fuquery['nightsperweek']) ? "<option selected value=\"$i\">$i</option>" : "<option value=\"$i\">$i</option>";
-}?>
+<?php for ($i = 0; $i <= 7; $i++) { ?>
+    <option value="<?= $i ?>"><?= $i ?></option>
+<?php } ?>
         </select>
       </td>
     </tr>
     <tr>
       <td style="background: #E4FFCF;">      
-        <input type="text" size="12" name="ep_eadd" value="<?php echo $r['ess'];?>" />
+        <input type="text" size="12" name="ep_eadd" value="<?php echo $q_row['ess'];?>" />
       </td>
     </tr>
     <tr>
       <td style="background: #F9FFDF;">
-        <input type="text" size="12" name="tot_score" value="<?php echo $r['tss'];?>" />
+        <input type="text" size="12" name="tot_score" value="<?php echo $q_row['tss'];?>" />
       </td>
     </tr>
     <tr>
@@ -572,7 +572,7 @@ foreach ($device_my as $device_myarray) {?>
     </tr>
     <tr>
       <td style="background: #E4FFCF;">
-        <input type="text" size="12" style="width:90px;" name="wapnadd" value="<?php echo $r['quit_breathing'];?>" />
+        <input type="text" size="12" style="width:90px;" name="wapnadd" value="<?php echo $q_row['quit_breathing'];?>" />
       </td>
     </tr>
     <tr>

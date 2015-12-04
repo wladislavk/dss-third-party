@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Eloquent\Enrollments;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TransactionTypes extends Model
+class TransactionType extends Model
 {
     /**
      * Mass assignable attributes

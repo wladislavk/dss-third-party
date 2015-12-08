@@ -1,4 +1,8 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
+
+use Illuminate\Support\Facades\App;
+
+$dentalexpage2 = App::make('Ds3\Contracts\DentalExPage2Interface');
     include "includes/top.htm";
     include_once('includes/patient_info.php');
     if ($patient_info) {
@@ -23,18 +27,30 @@
         	if($tonsils_arr != '') $tonsils_arr = '~'.$tonsils_arr;
 	
         	if($_POST['ed'] == '') {
-        		$ins_sql = " insert into dental_ex_page2 set 
-        		patientid = '".s_for($_GET['pid'])."',
-        		mallampati = '".s_for($mallampati)."',
-        		additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
-        		tonsils = '".s_for($tonsils_arr)."',
-        		tonsils_grade = '".s_for($tonsils_grade)."',
-        		userid = '".s_for($_SESSION['userid'])."',
-        		docid = '".s_for($_SESSION['docid'])."',
-        		adddate = now(),
-        		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-        		
-        		$db->query($ins_sql);
+        		// $ins_sql = " insert into dental_ex_page2 set 
+        		// patientid = '".s_for($_GET['pid'])."',
+        		// mallampati = '".s_for($mallampati)."',
+        		// additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
+        		// tonsils = '".s_for($tonsils_arr)."',
+        		// tonsils_grade = '".s_for($tonsils_grade)."',
+        		// userid = '".s_for($_SESSION['userid'])."',
+        		// docid = '".s_for($_SESSION['docid'])."',
+        		// adddate = now(),
+        		// ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+        		$ins_sql = array(
+                'patientid'         => s_for($_GET['pid']),
+                'mallampati'        => s_for($mallampati),
+                'additional_notes'  => mysqli_real_escape_string($con, $_POST['additional_notes']),
+                'tonsils'           => s_for($tonsils_arr),
+                'tonsils_grade'     => s_for($tonsils_grade),
+                'userid'            => s_for($_SESSION['userid']),
+                'docid'             => s_for($_SESSION['docid']),
+                'adddate'           => date("Y-m-d H:i:s"),
+                'ip_address'        => s_for($_SERVER['REMOTE_ADDR'])
+                );
+
+                $dentalexpage2->save($ins_sql);
+        		// $db->query($ins_sql);
                 $msg = "Added Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
 ?>
@@ -51,14 +67,22 @@
                 }
                 trigger_error("Die called", E_USER_ERROR);
 	        } else {
-        		$ed_sql = " update dental_ex_page2 set 
-        		mallampati = '".s_for($mallampati)."',
-                        additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
-        		tonsils = '".s_for($tonsils_arr)."',
-        		tonsils_grade = '".s_for($tonsils_grade)."'
-        		where ex_page2id = '".s_for($_POST['ed'])."'";
-        		
-        		$db->query($ed_sql);
+        		// $ed_sql = " update dental_ex_page2 set 
+        		// mallampati = '".s_for($mallampati)."',
+                // additional_notes = '".mysqli_real_escape_string($con, $_POST['additional_notes'])."',
+        		// tonsils = '".s_for($tonsils_arr)."',
+        		// tonsils_grade = '".s_for($tonsils_grade)."'
+        		// where ex_page2id = '".s_for($_POST['ed'])."'";
+        		$ed_sql = array(
+                    'mallampati'        => s_for($mallampati),
+                    'additional_notes'  => mysqli_real_escape_string($con, $_POST['additional_notes']),
+                    'tonsils'           => s_for($tonsils_arr),
+                    'tonsils_grade'     => s_for($tonsils_grade)
+                );
+
+                $dentalexpage2->update($ed_sql,s_for($_POST['ed']));
+
+        		// $db->query($ed_sql);
         		
         		$msg = "Edited Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
@@ -78,9 +102,10 @@
 	        }
         }
 
-        $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+        // $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 
-        $pat_myarray = $db->getRow($pat_sql);
+        // $pat_myarray = $db->getRow($pat_sql);
+        $pat_myarray = $dentalexpage2->findFromDentalPatients(s_for($_GET['pid']));
         $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
         if($pat_myarray['patientid'] == '') {
 ?>
@@ -91,9 +116,11 @@
         	trigger_error("Die called", E_USER_ERROR);
         }
 
-        $sql = "select * from dental_ex_page2 where patientid='".$_GET['pid']."'";
+        // $sql = "select * from dental_ex_page2 where patientid='".$_GET['pid']."'";
 
-        $myarray = $db->getRow($sql);
+        // $myarray = $db->getRow($sql);
+        $myarray = $dentalexpage2->where('patientid',$_GET['pid']);
+        
         $ex_page2id = st($myarray['ex_page2id']);
         $mallampati = st($myarray['mallampati']);
         $additional_notes = $myarray['additional_notes'];

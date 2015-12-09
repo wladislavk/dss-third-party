@@ -159,7 +159,8 @@ $statusFilter = '';
 /**
  * @see DSS-142
  *
- * Filter claims for BO based on who filed the claim, and the dss filing option
+ * Filter claims for BO based on who filed the claim, and the dss filing option.
+ * This query might appear at some other places, please search this "@see DSS-142" tag.
  */
 $sql = "SELECT
         claim.insuranceid,
@@ -282,7 +283,8 @@ if (is_super($_SESSION['admin_access'])) {
 /**
  * @see DSS-142
  *
- * Filter BO claims by actionable claims
+ * Filter BO claims by actionable claims.
+ * This query might appear at some other places, please search this "@see DSS-142" tag.
  */
 $sql .= "WHERE (
             -- Filed by back office

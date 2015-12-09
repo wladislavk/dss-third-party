@@ -76,7 +76,7 @@
 							CLAIMS
 						</div>
 					</div>
-					<a class="more" href="/manage/admin/manage_claims.php?status=0">
+					<a class="more" href="/manage/admin/manage_claims.php?status=action">
 						View more <i class="m-icon-swapright m-icon-white"></i>
 					</a>
 				</div>

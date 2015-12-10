@@ -1,5 +1,4 @@
 <?php
-
 namespace DentalSleepSolutions\Http\Controllers;
 
 use \Illuminate\Support\MessageBag as MessageBag;
@@ -17,5 +16,4 @@ class BaseController extends Controller {
     {
         return new MessageBag([$key => $message]);
     }
-
 }

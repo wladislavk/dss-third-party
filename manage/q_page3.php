@@ -694,7 +694,7 @@
 										<div>
 					                        <span>
 												<label>Have you ever had teeth extracted?</label>
-												<input type="radio" class="extra wisdom_extraction_radio" name="wisdom_extraction" value="Yes" <?php if($wisdom_extraction == 'Yes') echo " checked";?> />Yes
+												<input type="radio" class="extra wisdom_extraction_radio" id="wisdom_extraction" name="wisdom_extraction" value="Yes" <?php if($wisdom_extraction == 'Yes') echo " checked";?> />Yes
 												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 												<input type="radio" class="extra wisdom_extraction_radio" name="wisdom_extraction" value="No" <?php if($wisdom_extraction == 'No') echo " checked";?> />No
 					                            <?php
@@ -762,7 +762,7 @@
 										<div>
                         					<span>
                                                 <label>Does your TMJ (jaw joint) click or pop?</label>
-                                                <input type="radio" class="extra tmj_cp_radio" name="tmj_cp" value="Yes" <?php if($tmj_cp == 'Yes') echo " checked";?> />Yes
+                                                <input type="radio" class="extra tmj_cp_radio" id="tmj_cp" name="tmj_cp" value="Yes" <?php if($tmj_cp == 'Yes') echo " checked";?> />Yes
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 												<input type="radio" class="extra tmj_cp_radio" name="tmj_cp" value="No" <?php if($tmj_cp == 'No') echo " checked";?> />No
 					                            <?php
@@ -974,7 +974,7 @@
 					                        <span class="full">
 					                            Alcohol consumption: How often do you consume alcohol within 2-3 hours of bedtime?<br />
 												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					                            <input type="radio" name="alcohol" value="Daily" class="tbox" style="width:10px;" <?php if($alcohol == 'Daily')  echo " checked";?> />
+					                            <input type="radio" id="alcohol_id" name="alcohol" value="Daily" class="tbox" style="width:10px;" <?php if($alcohol == 'Daily')  echo " checked";?> />
 					                            Daily
 					                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 												<input type="radio" name="alcohol" value="occasionally" class="tbox" style="width:10px;" <?php if($alcohol == 'occasionally')  echo " checked";?> />
@@ -991,7 +991,7 @@
 												Sedative Consumption: How often do you take sedatives within 2-3 hours of bedtime?
                             					<br />
 												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					                            <input type="radio" name="sedative" value="Daily" class="tbox" style="width:10px;" <?php if($sedative == 'Daily')  echo " checked";?> />
+					                            <input type="radio" id="sedative" name="sedative" value="Daily" class="tbox" style="width:10px;" <?php if($sedative == 'Daily')  echo " checked";?> />
 					                            Daily
 					                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 												<input type="radio" name="sedative" value="occasionally" class="tbox" style="width:10px;" <?php if($sedative == 'occasionally')  echo " checked";?> />
@@ -1007,7 +1007,7 @@
 												<br /><br />
 												Caffeine consumption: How often do you consume caffeine within 2-3 hours of bedtime?<br />
 												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					                            <input type="radio" name="caffeine" value="Daily" class="tbox" style="width:10px;" <?php if($caffeine == 'Daily')  echo " checked";?> />
+					                            <input type="radio" id="caffeine" name="caffeine" value="Daily" class="tbox" style="width:10px;" <?php if($caffeine == 'Daily')  echo " checked";?> />
 					                            Daily
 					                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 												<input type="radio" name="caffeine" value="occasionally" class="tbox" style="width:10px;" <?php if($caffeine == 'occasionally')  echo " checked";?> />
@@ -1023,7 +1023,7 @@
 					                            <br /><br />
 					                            Do you Smoke?
 												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					                            <input type="radio" name="smoke" value="Yes" class="tbox smoke_radio" style="width:10px;" <?php if($smoke == 'Yes')  echo " checked";?>  onclick="displaysmoke();" />
+					                            <input type="radio" id="id_smoke" name="smoke" value="Yes" class="tbox smoke_radio" style="width:10px;" <?php if($smoke == 'Yes')  echo " checked";?>  onclick="displaysmoke();" />
 					                            Yes
 					                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 												<input type="radio" name="smoke" value="No" class="tbox smoke_radio" style="width:10px;" <?php if($smoke == 'No')  echo " checked";?> onclick="hidesmoke();" />
@@ -1049,7 +1049,7 @@
                             					<input type="radio" name="tobacco" value="Yes" class="tbox tobacco_radio" style="width:10px;" <?php if($tobacco == 'Yes')  echo " checked";?> />
                             					Yes
                             					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-												<input type="radio" name="tobacco" value="No" class="tbox tobacco_radio" style="width:10px;" <?php if($tobacco == 'No')  echo " checked";?> />
+												<input type="radio" id="id_tobacco" name="tobacco" value="No" class="tbox tobacco_radio" style="width:10px;" <?php if($tobacco == 'No')  echo " checked";?> />
 					                            No
 					                            <?php
 					                                showPatientValue('dental_q_page3', $_GET['pid'], 'tobacco', $pat_row['tobacco'], $tobacco, true, $showEdits, 'radio');

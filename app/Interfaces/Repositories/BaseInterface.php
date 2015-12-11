@@ -1,5 +1,4 @@
-<?php 
-namespace DentalSleepSolutions\Interfaces\Repositories;
+<?php namespace DentalSleepSolutions\Interfaces\Repositories;
 
 interface BaseInterface
 {

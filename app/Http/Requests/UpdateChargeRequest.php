@@ -6,16 +6,6 @@ use DentalSleepSolutions\Http\Requests\Request;
 class UpdateChargeRequest extends Request
 {
     /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -23,10 +13,10 @@ class UpdateChargeRequest extends Request
     public function rules()
     {
         return [
-            'amount'                  => 'regex:/[\d]{11},[\d]{2}/',
-            'userid'                  => 'integer',
-            'adminid'                 => 'integer',
-            'charge_date'             => 'date',
+            'amount'                  => 'sometimes|required|regex:/^\d*(\.\d{2})?$/',
+            'userid'                  => 'sometimes|required|integer',
+            'adminid'                 => 'sometimes|required|integer',
+            'charge_date'             => 'sometimes|required|date',
             'stripe_customer'         => 'string',
             'stripe_charge'           => 'string',
             'stripe_card_fingerprint' => 'string',

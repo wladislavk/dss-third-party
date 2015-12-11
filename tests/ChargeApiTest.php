@@ -23,26 +23,21 @@ class ChargeApiTest extends TestCase
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
         $data = [
+            'amount'                  => 12.21,
             'userid'                  => 7,
-            'adminid'                 => 10,
-            'stripe_customer'         => 'testStripeCustomer',
-            'amount'                  => 11.2,
+            'adminid'                 => 7,
             'charge_date'             => Carbon::now(),
-            'stripe_customer'         => 'cus_1234567890123',
+            'stripe_customer'         => 'testStripeCustomer',
             'stripe_charge'           => 'ch_12345678901234567890',
             'stripe_card_fingerprint' => '123456789012345678901234567890',
-            'adddate'                 => Carbon::now(),
-            'ip_address'              => 127.0,
-            'invoice_id'              => 44,
-            'status'                  => 3
+            'invoice_id'              => 7,
+            'status'                  => 7
         ];
-
-        dd($this->call("POST", '/api/v1/charge', $data));
 
         $this->post('/api/v1/charge', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_charge', ['adminid' => 10]);
+            ->seeInDatabase('dental_charge', ['stripe_customer' => 'testStripeCustomer']);
     }
 
     /**
@@ -57,13 +52,14 @@ class ChargeApiTest extends TestCase
         $chargeTestRecord = factory(DentalSleepSolutions\Models\Charge::class)->create();
 
         $data = [
-            'adminid' => 20
+            'stripe_customer' => 'updatedTestStripeCustomer',
+            'adminid'         => 10
         ];
 
         $this->put('/api/v1/charge/' . $chargeTestRecord->id, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_charge', ['adminid' => 20]);
+            ->seeInDatabase('dental_charge', ['stripe_customer' => 'updatedTestStripeCustomer']);
     }
 
     /**

@@ -22,7 +22,7 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
 
 $factory->define(DentalSleepSolutions\Models\Charge::class, function ($faker) {
     return [
-        'amount'                  => $faker->regexify('[\d]{11},[\d]{2}'),
+        'amount'                  => $faker->regexify('^\d*(\.\d{2})?$'),
         'userid'                  => $faker->randomDigit,
         'adminid'                 => $faker->randomDigit,
         'charge_date'             => $faker->dateTime(),

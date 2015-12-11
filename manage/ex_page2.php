@@ -178,7 +178,7 @@ $dentalexpage2 = App::make('Ds3\Contracts\DentalExPage2Interface');
                                         	<td valign="top" width="25%" align="center">
                                             	<img src="images/class2.jpg" height="201" width="131" border="0" />
                                                 <br />
-                                                <input type="radio" name="mallampati" value="Class II" <?php if($mallampati == 'Class II') echo " checked";?> /> Class II
+                                                <input type="radio" id="mallampati_class2" name="mallampati" name="mallampati" value="Class II" <?php if($mallampati == 'Class II') echo " checked";?> /> Class II
                                             </td>
                                         	<td valign="top" width="25%" align="center">
                                             	<img src="images/class3.jpg" height="201" width="131" border="0" />
@@ -214,13 +214,13 @@ $dentalexpage2 = App::make('Ds3\Contracts\DentalExPage2Interface');
                             </label>
                             <div>
                                 <span>
-                                	<input type="checkbox" id="tonsils" name="tonsils[]" value="Present" <?php if(strpos($tonsils,'~Present~') === false) {} else { echo " checked";}?> />
+                                	<input type="checkbox" id="tonsils_present" name="tonsils[]" value="Present" <?php if(strpos($tonsils,'~Present~') === false) {} else { echo " checked";}?> />
                                     Present
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input type="checkbox" id="tonsils" name="tonsils[]" value="Obstructive" <?php if(strpos($tonsils,'~Obstructive~') === false) {} else { echo " checked";}?> />
+                                    <input type="checkbox" id="tonsils_obstructive" name="tonsils[]" value="Obstructive" <?php if(strpos($tonsils,'~Obstructive~') === false) {} else { echo " checked";}?> />
                                     Obstructive
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input type="checkbox" id="tonsils" name="tonsils[]" value="Purulent" <?php if(strpos($tonsils,'~Purulent~') === false) {} else { echo " checked";}?> />
+                                    <input type="checkbox" id="tonsils_purulent" name="tonsils[]" value="Purulent" <?php if(strpos($tonsils,'~Purulent~') === false) {} else { echo " checked";}?> />
                                     Purulent
                                 </span>
                            </div>   
@@ -232,7 +232,7 @@ $dentalexpage2 = App::make('Ds3\Contracts\DentalExPage2Interface');
                                         	<td valign="top" width="20%" align="center">
                                             	<img src="images/grade0.png" height="188" width="131" border="0" />
                                                 <br />
-                                                <input type="radio" name="tonsils_grade" value="Grade 0" <?php if($tonsils_grade == 'Grade 0') echo " checked";?> /> Grade 0
+                                                <input type="radio" id="tonsils_grade0" name="tonsils_grade" value="Grade 0" <?php if($tonsils_grade == 'Grade 0') echo " checked";?> /> Grade 0
                                                 <br /><br />
                                                 Absent
                                             </td>

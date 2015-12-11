@@ -320,7 +320,7 @@ $dentalexpage1 = App::make('Ds3\Contracts\DentalExPage1Interface');
                                     // $tongue_my = $db->getResults($tongue_sql);
         							if ($tongue_my) foreach ($tongue_my as $tongue_myarray) {
     							?>
-        								<input type="checkbox" id="tongue" name="tongue[]" value="<?php echo st($tongue_myarray['tongueid'])?>" tabindex="9" <?php if(strpos($tongue,'~'.st($tongue_myarray['tongueid']).'~') === false) {} else { echo " checked";}?> />
+        								<input type="checkbox" id="tongue<?php echo st($tongue_myarray['tongueid'])?>" name="tongue[]" value="<?php echo st($tongue_myarray['tongueid'])?>" tabindex="9" <?php if(strpos($tongue,'~'.st($tongue_myarray['tongueid']).'~') === false) {} else { echo " checked";}?> />
                                         &nbsp;&nbsp;
                                         <?php echo st($tongue_myarray['tongue']);?><br />
 							    <?php

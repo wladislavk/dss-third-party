@@ -603,7 +603,7 @@ $dentalexpage5 = App::make('Ds3\Contracts\DentalExPage5Interface');
 														$joint_exam_my = $db->getResults($joint_exam_sql);
 														if ($joint_exam_my) foreach ($joint_exam_my as $joint_exam_myarray) {
 													?>
-															<input type="checkbox" id="joint_exam" name="joint_exam[]" value="<?php echo st($joint_exam_myarray['joint_examid'])?>" <?php if(strpos($joint_exam,'~'.st($joint_exam_myarray['joint_examid']).'~') === false) {} else { echo " checked";}?> style="width:10px;" />
+															<input type="checkbox" id="joint_exam<?php echo st($joint_exam_myarray['joint_examid'])?>" name="joint_exam[]" value="<?php echo st($joint_exam_myarray['joint_examid'])?>" <?php if(strpos($joint_exam,'~'.st($joint_exam_myarray['joint_examid']).'~') === false) {} else { echo " checked";}?> style="width:10px;" />
 															&nbsp;&nbsp;
 															<?php echo st($joint_exam_myarray['joint_exam']);?><br />
 													<?php

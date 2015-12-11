@@ -77,11 +77,11 @@
 										?>
 								                    <tr>	
 								                        <td valign="top" width="50%" height="10">
-								                        	<input type="checkbox" name="per_teeth[]" value="<?php echo $i?>" <?php if(in_array($i,$mt_arr)) { echo " checked";}?> />
+								                        	<input type="checkbox" id="per_teeth<?php echo $i?>" name="per_teeth[]" value="<?php echo $i?>" <?php if(in_array($i,$mt_arr)) { echo " checked";}?> />
 								                            <?php echo $i;?>
 								                        </td>
 								                        <td valign="top" width="50%">
-								                        	<input type="checkbox" name="per_teeth[]" value="<?php echo $j?>" <?php if(in_array($j,$mt_arr)) { echo " checked";}?> />
+								                        	<input type="checkbox" id="per_teeth<?php echo $j?>" name="per_teeth[]" value="<?php echo $j?>" <?php if(in_array($j,$mt_arr)) { echo " checked";}?> />
 								                            <?php echo $j;?>
 								                        </td>
 								                    </tr>
@@ -104,11 +104,11 @@
 										?>
 							                    <tr bgcolor="#FFFFFF">	
 							                        <td valign="top" width="50%">
-							                        	<input type="checkbox" name="pri_teeth[]" value="<?php echo $i?>" <?php if(strpos((!empty($_GET['fval']) ? $_GET['fval'] : ''),$i) === false) {} else { echo " checked";}?> />
+							                        	<input type="checkbox" id="pri_teeth<?php echo $i?>" name="pri_teeth[]" value="<?php echo $i?>" <?php if(strpos((!empty($_GET['fval']) ? $_GET['fval'] : ''),$i) === false) {} else { echo " checked";}?> />
 							                            <?php echo $i;?>
 							                        </td>
 							                        <td valign="top" width="50%">
-							                        	<input type="checkbox" name="pri_teeth[]" value="<?php echo $j?>"  <?php if(strpos((!empty($_GET['fval']) ? $_GET['fval'] : ''),$j) === false) {} else { echo " checked";}?> />
+							                        	<input type="checkbox" id="pri_teeth<?php echo $j?>" name="pri_teeth[]" value="<?php echo $j?>"  <?php if(strpos((!empty($_GET['fval']) ? $_GET['fval'] : ''),$j) === false) {} else { echo " checked";}?> />
 							                            <?php echo $j;?>
 							                        </td>
 							                    </tr>

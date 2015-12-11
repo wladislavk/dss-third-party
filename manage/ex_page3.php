@@ -292,7 +292,7 @@ $dentalexpage3 = App::make('Ds3\Contracts\DentalExPage3Interface');
 										$maxilla_my = $db->getResults($maxilla_sql);
 										foreach ($maxilla_my as $maxilla_myarray) {
 									?>
-										<input type="checkbox" id="maxilla" name="maxilla[]" value="<?php echo st($maxilla_myarray['maxillaid'])?>" <?php  if(strpos($maxilla,'~'.st($maxilla_myarray['maxillaid']).'~') === false) {} else { echo " checked";}?> />
+										<input type="checkbox" id="maxilla<?php echo st($maxilla_myarray['maxillaid'])?>" name="maxilla[]" value="<?php echo st($maxilla_myarray['maxillaid'])?>" <?php  if(strpos($maxilla,'~'.st($maxilla_myarray['maxillaid']).'~') === false) {} else { echo " checked";}?> />
 		                                &nbsp;&nbsp;
 		                                <?php echo st($maxilla_myarray['maxilla']);?><br />
 									<?php
@@ -331,7 +331,7 @@ $dentalexpage3 = App::make('Ds3\Contracts\DentalExPage3Interface');
 										$mandible_my = $db->getResults($mandible_sql);
 										foreach ($mandible_my as $mandible_myarray) {
 									?>
-										<input type="checkbox" id="mandible" name="mandible[]" value="<?php echo st($mandible_myarray['mandibleid'])?>" <?php  if(strpos($mandible,'~'.st($mandible_myarray['mandibleid']).'~') === false) {} else { echo " checked";}?> />
+										<input type="checkbox" id="mandible<?php echo st($mandible_myarray['mandibleid'])?>" name="mandible[]" value="<?php echo st($mandible_myarray['mandibleid'])?>" <?php  if(strpos($mandible,'~'.st($mandible_myarray['mandibleid']).'~') === false) {} else { echo " checked";}?> />
 		                                &nbsp;&nbsp;
 		                                <?php echo st($mandible_myarray['mandible']);?><br />
 									<?php
@@ -370,7 +370,7 @@ $dentalexpage3 = App::make('Ds3\Contracts\DentalExPage3Interface');
 										$soft_palate_my = $db->getResults($soft_palate_sql);
 										foreach ($soft_palate_my as $soft_palate_myarray) {
 									?>
-										<input type="checkbox" id="soft_palate" name="soft_palate[]" value="<?php echo st($soft_palate_myarray['soft_palateid'])?>" <?php  if(strpos($soft_palate,'~'.st($soft_palate_myarray['soft_palateid']).'~') === false) {} else { echo " checked";}?> />
+										<input type="checkbox" id="soft_palate<?php echo st($soft_palate_myarray['soft_palateid'])?>" name="soft_palate[]" value="<?php echo st($soft_palate_myarray['soft_palateid'])?>" <?php  if(strpos($soft_palate,'~'.st($soft_palate_myarray['soft_palateid']).'~') === false) {} else { echo " checked";}?> />
 		                                &nbsp;&nbsp;
                                 		<?php echo st($soft_palate_myarray['soft_palate']);?><br />
 									<?php
@@ -409,7 +409,7 @@ $dentalexpage3 = App::make('Ds3\Contracts\DentalExPage3Interface');
 										$uvula_my = $db->getResults($uvula_sql);									
 						  				foreach ($uvula_my as $uvula_myarray) {
 									?>
-										<input type="checkbox" id="uvula" name="uvula[]" value="<?php echo st($uvula_myarray['uvulaid'])?>" <?php  if(strpos($uvula,'~'.st($uvula_myarray['uvulaid']).'~') === false) {} else { echo " checked";}?> />
+										<input type="checkbox" id="uvula<?php echo st($uvula_myarray['uvulaid'])?>" name="uvula[]" value="<?php echo st($uvula_myarray['uvulaid'])?>" <?php  if(strpos($uvula,'~'.st($uvula_myarray['uvulaid']).'~') === false) {} else { echo " checked";}?> />
 		                                &nbsp;&nbsp;
 		                                <?php echo st($uvula_myarray['uvula']);?><br />
 									<?php
@@ -448,7 +448,7 @@ $dentalexpage3 = App::make('Ds3\Contracts\DentalExPage3Interface');
 										$gag_reflex_my = $db->getResults($gag_reflex_sql);
 										foreach ($gag_reflex_my as $gag_reflex_myarray) {
 									?>
-										<input type="checkbox" id="gag_reflex" name="gag_reflex[]" value="<?php echo st($gag_reflex_myarray['gag_reflexid'])?>" <?php  if(strpos($gag_reflex,'~'.st($gag_reflex_myarray['gag_reflexid']).'~') === false) {} else { echo " checked";}?> />
+										<input type="checkbox" id="gag_reflex<?php echo st($gag_reflex_myarray['gag_reflexid'])?>" name="gag_reflex[]" value="<?php echo st($gag_reflex_myarray['gag_reflexid'])?>" <?php  if(strpos($gag_reflex,'~'.st($gag_reflex_myarray['gag_reflexid']).'~') === false) {} else { echo " checked";}?> />
 		                                &nbsp;&nbsp;
 		                                <?php echo st($gag_reflex_myarray['gag_reflex']);?><br />
 									<?php
@@ -487,7 +487,7 @@ $dentalexpage3 = App::make('Ds3\Contracts\DentalExPage3Interface');
 										$nasal_passages_my = $db->getResults($nasal_passages_sql);
 										foreach ($nasal_passages_my as $nasal_passages_myarray) {
 									?>
-										<input type="checkbox" id="nasal_passages" name="nasal_passages[]" value="<?php echo st($nasal_passages_myarray['nasal_passagesid'])?>" <?php  if(strpos($nasal_passages,'~'.st($nasal_passages_myarray['nasal_passagesid']).'~') === false) {} else { echo " checked";}?> />
+										<input type="checkbox" id="nasal_passages<?php echo st($nasal_passages_myarray['nasal_passagesid'])?>" name="nasal_passages[]" value="<?php echo st($nasal_passages_myarray['nasal_passagesid'])?>" <?php  if(strpos($nasal_passages,'~'.st($nasal_passages_myarray['nasal_passagesid']).'~') === false) {} else { echo " checked";}?> />
 		                                &nbsp;&nbsp;
 		                                <?php echo st($nasal_passages_myarray['nasal_passages']);?><br />
 									<?php

@@ -29,61 +29,162 @@ if(isset($_REQUEST["delid"]))
     trigger_error("Die called", E_USER_ERROR);
 }
 
-$pend_sql = "select i.*, p.firstname, p.lastname,
-	p.p_m_dss_file, p.docid,
-	COALESCE(notes.num_notes, 0) num_notes,
-        (SELECT e.adddate FROM dental_claim_electronic e WHERE e.claimid=i.insuranceid ORDER by e.adddate DESC LIMIT 1) electronic_adddate
- from dental_insurance i left join dental_patients p on i.patientid=p.patientid 
-	LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=i.insuranceid 
-	where p.docid='".$_SESSION['docid']."' ";
-$pend_sql .= " AND (i.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_SEC_REJECTED."))" ;
+$pend_sql = "SELECT
+        i.*,
+        p.firstname,
+        p.lastname,
+        p.p_m_dss_file,
+        p.docid,
+        COALESCE(notes.num_notes, 0) num_notes,
+        (
+            SELECT e.adddate
+            FROM dental_claim_electronic e
+            WHERE e.claimid = i.insuranceid
+            ORDER by e.adddate DESC
+            LIMIT 1
+        ) AS electronic_adddate
+    FROM dental_insurance i
+        LEFT JOIN dental_patients p ON i.patientid=p.patientid
+        LEFT JOIN (
+            SELECT claim_id, COUNT(id) num_notes
+            FROM dental_claim_notes
+            GROUP BY claim_id
+        ) notes ON notes.claim_id = i.insuranceid
+    WHERE p.docid = '{$_SESSION['docid']}'
+        AND (
+            -- Filed by back office
+            IF (COALESCE(claim.primary_claim_id, 0), claim.s_m_dss_file, claim.p_m_dss_file) != 1
+            AND NOT (
+                claim.status IN (
+                    '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
+                    '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
+                    '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
+                    '" . DSS_CLAIM_PATIENT_DISPUTE . "', '" . DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
+                )
+                AND (
+                    c.exclusive
+                    -- Back office can file
+                    OR IF (COALESCE(claim.primary_claim_id, 0), p.s_m_dss_file, p.p_m_dss_file) = 1
+                )
+            )
+        )
+        ";
 
-if(isset($_GET['sort2'])){
-    if($_GET['sort2']=='patient'){
+$pend_sql .= "
+        AND (
+            i.status IN (
+                '" . DSS_CLAIM_PENDING . "',
+                '" . DSS_CLAIM_SEC_PENDING . "',
+                '" . DSS_CLAIM_DISPUTE . "',
+                '" . DSS_CLAIM_SEC_DISPUTE . "',
+                '" . DSS_CLAIM_REJECTED . "',
+                '" . DSS_CLAIM_SEC_REJECTED . "'
+            )
+        )
+        ";
+
+if (isset($_GET['sort2'])) {
+    if ($_GET['sort2'] == 'patient') {
         $sort = "p.lastname ".$_GET['dir2'].", p.firstname ".$_GET['dir2'];
-    }else{
+    } else {
         $sort = $_GET['sort2']." ".$_GET['dir2'];
     }
 }
 
-if(isset($_GET['notes']) && $_GET['notes']==1){
+if (isset($_GET['notes']) && $_GET['notes'] == 1) {
     $pend_sql .= " AND num_notes > 0 ";
 }
-$pend_sql .= " ORDER BY " . mysqli_real_escape_string($con,$sort);
+
+$pend_sql .= " ORDER BY " . $db->escape($sort);
 $pend_my = $db->getResults($pend_sql);
 
-$sql = "select i.*, p.firstname, p.lastname,
-	COALESCE(notes.num_notes, 0) num_notes,
-	(SELECT e.adddate FROM dental_claim_electronic e WHERE e.claimid=i.insuranceid ORDER by e.adddate DESC LIMIT 1) electronic_adddate
-	from dental_insurance i left join dental_patients p on i.patientid=p.patientid 
-	LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=i.insuranceid 
-	where p.docid='".$_SESSION['docid']."' ";
+$sql = "SELECT
+        i.*,
+        p.firstname,
+        p.lastname,
+        COALESCE(notes.num_notes, 0) AS num_notes,
+        (
+            SELECT e.adddate
+            FROM dental_claim_electronic e
+            WHERE e.claimid = i.insuranceid
+            ORDER by e.adddate DESC
+            LIMIT 1
+        ) AS electronic_adddate
+    FROM dental_insurance i
+        LEFT JOIN dental_patients p ON i.patientid = p.patientid
+        LEFT JOIN (
+            SELECT claim_id, COUNT(id) AS num_notes
+            FROM dental_claim_notes
+            GROUP BY claim_id
+        ) notes ON notes.claim_id = i.insuranceid
+    WHERE p.docid = '{$_SESSION['docid']}'
+        AND (
+            -- Filed by back office
+            IF (COALESCE(claim.primary_claim_id, 0), claim.s_m_dss_file, claim.p_m_dss_file) != 1
+            AND NOT (
+                claim.status IN (
+                    '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
+                    '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
+                    '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
+                    '" . DSS_CLAIM_PATIENT_DISPUTE . "', '" . DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
+                )
+                AND (
+                    c.exclusive
+                    -- Back office can file
+                    OR IF (COALESCE(claim.primary_claim_id, 0), p.s_m_dss_file, p.p_m_dss_file) = 1
+                )
+            )
+        )
+        ";
 
-if($_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE){
-    $sql .= " AND i.status NOT  IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_SEC_REJECTED.")";
+if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
+    $sql .= "
+        AND i.status NOT IN (
+            '" . DSS_CLAIM_PENDING . "',
+            '" . DSS_CLAIM_SEC_PENDING . "',
+            '" . DSS_CLAIM_DISPUTE . "',
+            '" . DSS_CLAIM_SEC_DISPUTE . "',
+            '" . DSS_CLAIM_REJECTED . "',
+            '" . DSS_CLAIM_SEC_REJECTED . "'
+        )
+        ";
 }
-if(isset($_GET['unpaid'])){
-    $sql .= " AND i.status NOT IN  (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_SEC_PATIENT.") AND i.adddate < DATE_SUB(NOW(), INTERVAL ".mysqli_real_escape_string($con,$_GET['unpaid'])." day) ";
+
+if (isset($_GET['unpaid'])) {
+    $sql .= "
+        AND i.status NOT IN  (
+            '" . DSS_CLAIM_PENDING . "',
+            '" . DSS_CLAIM_SEC_PENDING . "',
+            '" . DSS_CLAIM_REJECTED . "',
+            '" . DSS_CLAIM_PAID_INSURANCE . "',
+            '" . DSS_CLAIM_PAID_PATIENT . "',
+            '" . DSS_CLAIM_PAID_SEC_INSURANCE . "',
+            '" . DSS_CLAIM_PAID_SEC_PATIENT . "'
+        )
+        AND i.adddate < DATE_SUB(NOW(), INTERVAL " . intval($_GET['unpaid']) . " day)
+        ";
 }
-if(isset($_GET['notes']) && $_GET['notes']==1){
+
+if (isset($_GET['notes']) && $_GET['notes'] == 1) {
     $sql .= " AND num_notes > 0 ";
 }
-if(isset($_GET['unmailed'])){
+
+if (isset($_GET['unmailed'])) {
     $sql .= " AND i.mailed_date IS NULL AND i.sec_mailed_date is NULL ";
 }
-if(isset($_GET['sort2'])){
-    if($_GET['sort2']=='patient'){
+
+if (isset($_GET['sort2'])) {
+    if ($_GET['sort2'] == 'patient') {
         $sort = "p.lastname ".$_GET['dir2'].", p.firstname ".$_GET['dir2'];
-    }else{
+    } else {
         $sort = $_GET['sort2']." ".$_GET['dir2'];
     }
 }
-$sql .= " ORDER BY " . mysqli_real_escape_string($con,$sort);
- 
+
+$sql .= " ORDER BY " . $db->escape($sort);
 $my = $db->getResults($sql);
 
 ?>
-
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 

@@ -108,7 +108,7 @@ class ApiChangeListController extends ApiBaseController
      * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destory($id)
+    public function destroy($id)
     {
         $deletedChangeList = $this->changeList->destroy($id);
 

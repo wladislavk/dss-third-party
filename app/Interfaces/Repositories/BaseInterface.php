@@ -1,4 +1,5 @@
-<?php namespace DentalSleepSolutions\Interfaces;
+<?php
+namespace DentalSleepSolutions\Interfaces\Repositories;
 
 interface BaseInterface
 {
@@ -107,4 +108,5 @@ interface BaseInterface
      * @return array
      */
     public function getErrors();
+
 }

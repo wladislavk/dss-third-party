@@ -1,6 +1,7 @@
-<?php namespace DentalSleepSolutions\Repositories;
+<?php
+namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Interfaces\BaseInterface;
+use DentalSleepSolutions\Interfaces\Repositories\BaseInterface;
 
 class BaseRepository implements BaseInterface
 {
@@ -112,7 +113,6 @@ class BaseRepository implements BaseInterface
     public function find($id, array $relations = [])
     {
         $model = $this->getModelName();
-
         $this->instance = $model::with($relations)->findOrFail($id);
 
         return $this->instance;
@@ -363,4 +363,3 @@ class BaseRepository implements BaseInterface
         return $this->orderDirection;
     }
 }
-

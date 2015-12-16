@@ -40,4 +40,6 @@ Route::group(['prefix' => 'api/v1', 'before' => '', 'after' => 'allowOrigin'], f
             'uses' => 'Api\ApiEnrollmentsController@syncEnrollmentPayers']);
 
     });
+
+    Route::resource('claim-note', 'Api\ApiClaimNoteController');
 });

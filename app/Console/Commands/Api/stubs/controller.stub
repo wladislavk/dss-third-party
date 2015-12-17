@@ -3,9 +3,9 @@
 namespace DummyNamespace;
 
 use DummyRootNamespaceHelpers\ApiResponse;
-use DummyRootNamespaceHttp\Requests\StoreDummyResource;
-use DummyRootNamespaceHttp\Requests\UpdateDummyResource;
-use DummyRootNamespaceHttp\Requests\DestroyDummyResource;
+use DummyRootNamespaceHttp\Requests\DummyResourceStore;
+use DummyRootNamespaceHttp\Requests\DummyResourceUpdate;
+use DummyRootNamespaceHttp\Requests\DummyResourceDestroy;
 use DummyRootNamespaceHttp\Controllers\Controller;
 use DummyRootNamespaceContracts\Resources\DummyResource;
 use DummyRootNamespaceContracts\Repositories\DummyRepository;
@@ -48,10 +48,10 @@ class DummyClass extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \DummyRootNamespaceContracts\Repositories\DummyRepository $resources
-     * @param  \DummyRootNamespaceHttp\Requests\StoreDummyResource $request
+     * @param  \DummyRootNamespaceHttp\Requests\DummyResourceStore $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(DummyRepository $resources, StoreDummyResource $request)
+    public function store(DummyRepository $resources, DummyResourceStore $request)
     {
         $resource = $resources->create($request->all());
 
@@ -62,10 +62,10 @@ class DummyClass extends Controller
      * Update the specified resource in storage.
      *
      * @param  \DummyRootNamespaceContracts\Resources\DummyResource $resource
-     * @param  \DummyRootNamespaceHttp\Requests\UpdateDummyResource $request
+     * @param  \DummyRootNamespaceHttp\Requests\DummyResourceUpdate $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(DummyResource $resource, UpdateDummyResource $request)
+    public function update(DummyResource $resource, DummyResourceUpdate $request)
     {
         $resource->update($request->all());
 
@@ -76,10 +76,10 @@ class DummyClass extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \DummyRootNamespaceContracts\Resources\DummyResource $resource
-     * @param  \DummyRootNamespaceHttp\Requests\DestroyDummyResource $request
+     * @param  \DummyRootNamespaceHttp\Requests\DummyResourceDestroy $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(DummyResource $resource, DestroyDummyResource $request)
+    public function destroy(DummyResource $resource, DummyResourceDestroy $request)
     {
         $resource->delete();
 

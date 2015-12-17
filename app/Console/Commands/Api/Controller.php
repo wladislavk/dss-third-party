@@ -76,7 +76,7 @@ class Controller extends GeneratorCommand
 
         $this->files->put($path, $content);
 
-        $this->info('Resource [{$key}] bound to route.');
+        $this->info("Resource [{$key}] bound to routes.");
     }
 
     /**

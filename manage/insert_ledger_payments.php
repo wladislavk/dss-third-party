@@ -233,15 +233,6 @@
                                      */
                                     $generateSecondary = true;
                                 }
-
-	                            $secsql = "UPDATE dental_insurance SET 
-                                    amount_paid=(SELECT SUM(lp.amount) 
-                                    FROM dental_ledger_payment lp 
-                                    JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid 
-                                    WHERE dl.primary_claim_id='".$_POST['claimid']."' 
-                                    AND lp.payer='".DSS_TRXN_PAYER_PRIMARY."'),
-                                    balance_due = CAST((REPLACE(total_charge,',','')-amount_paid) AS DECIMAL(6,2))
-                                    WHERE insuranceid='".$_POST['claimid']."'";
                             } else {
                                 $new_status = DSS_CLAIM_PAID_INSURANCE;
 
@@ -338,18 +329,6 @@
 
                     $db->query($x);
                     claim_status_history_update($_POST['claimid'], $new_status, $claim['status'], $_SESSION['userid']);
-                }
-
-                if(isset($_POST['close']) && $_POST['close']==1 && $new_status!=DSS_CLAIM_SEC_PENDING){
-                    $new_status = DSS_CLAIM_PAID_INSURANCE;
-                    $msg = $msg ?: 'Payment Successfully Added';
-                    $x = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_INSURANCE."'  WHERE insuranceid='".$_POST['claimid']."';";
-                    
-                    $db->query($x); 
-                }
-
-                if(!empty($secsql)){
-                    $db->query($secsql);
                 }
 
                 if ($generateSecondary) {

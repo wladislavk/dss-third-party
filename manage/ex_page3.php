@@ -1,9 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
-
-use Illuminate\Support\Facades\App;
-
-$dentalexpage3 = App::make('Ds3\Contracts\DentalExPage3Interface');
-
 	include "includes/top.htm";
 	include_once('includes/patient_info.php');
 	if ($patient_info) {
@@ -95,46 +90,26 @@ $dentalexpage3 = App::make('Ds3\Contracts\DentalExPage3Interface');
 	
 			if($_POST['ed'] == '')
 			{
-				// $ins_sql = " insert into dental_ex_page3 set 
-				// patientid = '".s_for($_GET['pid'])."',
-				// maxilla = '".s_for($maxilla_arr)."',
-				// other_maxilla = '".s_for($other_maxilla)."',
-				// mandible = '".s_for($mandible_arr)."',
-				// other_mandible = '".s_for($other_mandible)."',
-				// soft_palate = '".s_for($soft_palate_arr)."',
-				// other_soft_palate = '".s_for($other_soft_palate)."',
-				// uvula = '".s_for($uvula_arr)."',
-				// other_uvula = '".s_for($other_uvula)."',
-				// gag_reflex = '".s_for($gag_reflex_arr)."',
-				// other_gag_reflex = '".s_for($other_gag_reflex)."',
-				// nasal_passages = '".s_for($nasal_passages_arr)."',
-				// other_nasal_passages = '".s_for($other_nasal_passages)."',
-				// userid = '".s_for($_SESSION['userid'])."',
-				// docid = '".s_for($_SESSION['docid'])."',
-				// adddate = now(),
-				// ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-				$ins_sql = array(
-					'patientid' => s_for($_GET['pid']),
-					'maxilla' => s_for($maxilla_arr),
-					'other_maxilla' => s_for($other_maxilla),
-					'mandible' => s_for($mandible_arr),
-					'other_mandible' => s_for($other_mandible),
-					'soft_palate' => s_for($soft_palate_arr),
-					'other_soft_palate' => s_for($other_soft_palate),
-					'uvula' => s_for($uvula_arr),
-					'other_uvula' => s_for($other_uvula),
-					'gag_reflex' => s_for($gag_reflex_arr),
-					'other_gag_reflex' => s_for($other_gag_reflex),
-					'nasal_passages' => s_for($nasal_passages_arr),
-					'other_nasal_passages' => s_for($other_nasal_passages),
-					'userid' => s_for($_SESSION['userid']),
-					'docid' => s_for($_SESSION['docid']),
-					'adddate' => date("Y-m-d H:i:s"),
-					'ip_address' => s_for($_SERVER['REMOTE_ADDR'])
-			);
-
-				// $db->query($ins_sql);
-				$dentalexpage3->save($ins_sql);
+				$ins_sql = " insert into dental_ex_page3 set 
+				patientid = '".s_for($_GET['pid'])."',
+				maxilla = '".s_for($maxilla_arr)."',
+				other_maxilla = '".s_for($other_maxilla)."',
+				mandible = '".s_for($mandible_arr)."',
+				other_mandible = '".s_for($other_mandible)."',
+				soft_palate = '".s_for($soft_palate_arr)."',
+				other_soft_palate = '".s_for($other_soft_palate)."',
+				uvula = '".s_for($uvula_arr)."',
+				other_uvula = '".s_for($other_uvula)."',
+				gag_reflex = '".s_for($gag_reflex_arr)."',
+				other_gag_reflex = '".s_for($other_gag_reflex)."',
+				nasal_passages = '".s_for($nasal_passages_arr)."',
+				other_nasal_passages = '".s_for($other_nasal_passages)."',
+				userid = '".s_for($_SESSION['userid'])."',
+				docid = '".s_for($_SESSION['docid'])."',
+				adddate = now(),
+				ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+		
+				$db->query($ins_sql);
 				$msg = "Added Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
 ?>
@@ -151,38 +126,23 @@ $dentalexpage3 = App::make('Ds3\Contracts\DentalExPage3Interface');
 				}
 				trigger_error("Die called", E_USER_ERROR);
 			} else {
-				// $ed_sql = " update dental_ex_page3 set 
-				// maxilla = '".s_for($maxilla_arr)."',
-				// other_maxilla = '".s_for($other_maxilla)."',
-				// mandible = '".s_for($mandible_arr)."',
-				// other_mandible = '".s_for($other_mandible)."',
-				// soft_palate = '".s_for($soft_palate_arr)."',
-				// other_soft_palate = '".s_for($other_soft_palate)."',
-				// uvula = '".s_for($uvula_arr)."',
-				// other_uvula = '".s_for($other_uvula)."',
-				// gag_reflex = '".s_for($gag_reflex_arr)."',
-				// other_gag_reflex = '".s_for($other_gag_reflex)."',
-				// nasal_passages = '".s_for($nasal_passages_arr)."',
-				// other_nasal_passages = '".s_for($other_nasal_passages)."'
-				// where ex_page3id = '".s_for($_POST['ed'])."'";
-				$ed_sql = array(
-					'maxilla' => s_for($maxilla_arr),
-					'other_maxilla' => s_for($other_maxilla),
-					'mandible' => s_for($mandible_arr),
-					'other_mandible' => s_for($other_mandible),
-					'soft_palate' => s_for($soft_palate_arr),
-					'other_soft_palate' => s_for($other_soft_palate),
-					'uvula' => s_for($uvula_arr),
-					'other_uvula' => s_for($other_uvula),
-					'gag_reflex' => s_for($gag_reflex_arr),
-					'other_gag_reflex' => s_for($other_gag_reflex),
-					'nasal_passages' => s_for($nasal_passages_arr),
-					'other_nasal_passages' => s_for($other_nasal_passages)
-				);
-
-				// $db->query($ed_sql);
-				$dentalexpage3->update($ed_sql, s_for($_POST['ed']));
-
+				$ed_sql = " update dental_ex_page3 set 
+				maxilla = '".s_for($maxilla_arr)."',
+				other_maxilla = '".s_for($other_maxilla)."',
+				mandible = '".s_for($mandible_arr)."',
+				other_mandible = '".s_for($other_mandible)."',
+				soft_palate = '".s_for($soft_palate_arr)."',
+				other_soft_palate = '".s_for($other_soft_palate)."',
+				uvula = '".s_for($uvula_arr)."',
+				other_uvula = '".s_for($other_uvula)."',
+				gag_reflex = '".s_for($gag_reflex_arr)."',
+				other_gag_reflex = '".s_for($other_gag_reflex)."',
+				nasal_passages = '".s_for($nasal_passages_arr)."',
+				other_nasal_passages = '".s_for($other_nasal_passages)."'
+				where ex_page3id = '".s_for($_POST['ed'])."'";
+				
+				$db->query($ed_sql);
+				
 				$msg = "Edited Successfully";
                 if(isset($_POST['ex_pagebtn_proceed'])){
 ?>
@@ -201,10 +161,9 @@ $dentalexpage3 = App::make('Ds3\Contracts\DentalExPage3Interface');
 			}
 		}		
 
-		// $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+		$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 
-		// $pat_myarray = $db->getRow($pat_sql);
-		$pat_myarray = $dentalexpage3->findFromDentalPatients(s_for($_GET['pid']));
+		$pat_myarray = $db->getRow($pat_sql);
 		$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 		if($pat_myarray['patientid'] == '')
 		{
@@ -216,10 +175,9 @@ $dentalexpage3 = App::make('Ds3\Contracts\DentalExPage3Interface');
 			trigger_error("Die called", E_USER_ERROR);
 		}
 
-		// $sql = "select * from dental_ex_page3 where patientid='".$_GET['pid']."'";
+		$sql = "select * from dental_ex_page3 where patientid='".$_GET['pid']."'";
 
-		// $myarray = $db->getRow($sql);
-		$myarray = $dentalexpage3->where('patientid',$_GET['pid']);
+		$myarray = $db->getRow($sql);
 		$ex_page3id = st($myarray['ex_page3id']);
 		$maxilla = st($myarray['maxilla']);
 		$other_maxilla = st($myarray['other_maxilla']);

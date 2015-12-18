@@ -1,9 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
-
-use Illuminate\Support\Facades\App;
-
-$dentalexpage5 = App::make('Ds3\Contracts\DentalExPage5Interface');
-
 	include "includes/top.htm";
 	include_once('includes/patient_info.php');
 	if ($patient_info) {
@@ -47,10 +42,9 @@ $dentalexpage5 = App::make('Ds3\Contracts\DentalExPage5Interface');
 			$deviation_r_l = $_POST['deviation_r_l'];
 			$deflection_r_l = $_POST['deflection_r_l'];
 			
-			// $palpation_sql = "select * from dental_palpation where status=1 order by sortby";
+			$palpation_sql = "select * from dental_palpation where status=1 order by sortby";
 			
-			// $palpation_my = $db->getResults($palpation_sql);
-			$palpation_my = $dentalexpage5->getDentalPalpation(1);
+			$palpation_my = $db->getResults($palpation_sql);
 			$pal_arr = '';
 			$palR_arr = '';
 			if ($palpation_my) foreach ($palpation_my as $palpation_myarray)
@@ -66,10 +60,9 @@ $dentalexpage5 = App::make('Ds3\Contracts\DentalExPage5Interface');
 				}
 			}
 			
-			// $joint_sql = "select * from dental_joint where status=1 order by sortby";
+			$joint_sql = "select * from dental_joint where status=1 order by sortby";
 			
-			// $joint_my = $db->getResults($joint_sql);
-			$joint_my = $dentalexpage5->getDentalJoint(1);
+			$joint_my = $db->getResults($joint_sql);
 			$joi_arr = '';
 			if ($joint_my) foreach ($joint_my as $joint_myarray)
 			{
@@ -95,137 +88,77 @@ $dentalexpage5 = App::make('Ds3\Contracts\DentalExPage5Interface');
 			if($joint_exam_arr != '')
 				$joint_exam_arr = '~'.$joint_exam_arr;
 
-			// $sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
-			$sql = $dentalexpage5->getDentalSummary($_GET['pid']);
+			$sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
+			
+			$row = $db->getRow($sql);
+			$num = $db->getNumberRows($sql);
 
-			// $row = $db->getRow($sql);
-			$row = $sql->get();
-			// $num = $db->getNumberRows($sql);
-			$num = $sql->count();
 	        if($num==0)
 	        {
-                // $ins_sql = " insert into dental_summary set 
-                // patientid = '".s_for($_GET['pid'])."',
-                // initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
-                // initial_device_titration_equal_h = '".s_for($_POST['initial_device_titration_equal_h'])."',
-                // initial_device_titration_equal_v = '".s_for($_POST['initial_device_titration_equal_v'])."',
-                // optimum_echovision_ver = '".s_for($_POST['optimum_echovision_ver'])."',
-                // optimum_echovision_hor = '".s_for($_POST['optimum_echovision_hor'])."',
-                // userid = '".s_for($_SESSION['userid'])."',
-                // docid = '".s_for($_SESSION['docid'])."',
-                // adddate = now(),
-                // ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-
-	        	$data = array(
-	                'patientid' => $_GET['pid'],
-	                'initial_device_titration_1' => $_POST['initial_device_titration_1'],
-	                'initial_device_titration_equal_h' => $_POST['initial_device_titration_equal_h'],
-	                'initial_device_titration_equal_v' => $_POST['initial_device_titration_equal_v'],
-	                'optimum_echovision_ver' => $_POST['optimum_echovision_ver'],
-	                'optimum_echovision_hor' => $_POST['optimum_echovision_hor'],
-	                'userid' => $_SESSION['userid'],
-	                'docid' => $_SESSION['docid'],
-	                'adddate' => date("Y-m-d H:i:s"),
-	                'ip_address' => $_SERVER['REMOTE_ADDR']
-                );
-                // $db->query($ins_sql);
-	        		$dentalexpage5->saveDentalSummary($data);
-
+                $ins_sql = " insert into dental_summary set 
+                patientid = '".s_for($_GET['pid'])."',
+                initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
+                initial_device_titration_equal_h = '".s_for($_POST['initial_device_titration_equal_h'])."',
+                initial_device_titration_equal_v = '".s_for($_POST['initial_device_titration_equal_v'])."',
+                optimum_echovision_ver = '".s_for($_POST['optimum_echovision_ver'])."',
+                optimum_echovision_hor = '".s_for($_POST['optimum_echovision_hor'])."',
+                userid = '".s_for($_SESSION['userid'])."',
+                docid = '".s_for($_SESSION['docid'])."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+                
+                $db->query($ins_sql);
 	        }else{
-                // $ed_sql = "update dental_summary set 
-                // initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
-                // initial_device_titration_equal_h = '".s_for(!empty($_POST['initial_device_titration_equal_h']) ? $_POST['initial_device_titration_equal_h'] : '')."',
-                // initial_device_titration_equal_v = '".s_for($_POST['initial_device_titration_equal_v'])."',
-                // optimum_echovision_ver = '".s_for($_POST['optimum_echovision_ver'])."',
-                // optimum_echovision_hor = '".s_for($_POST['optimum_echovision_hor'])."'
-                //  where patientid = '".s_for($_GET['pid'])."'";
-
-                $ed_sql = array(
-                'initial_device_titration_1' => $_POST['initial_device_titration_1'],
-                'initial_device_titration_equal_h' => !empty($_POST['initial_device_titration_equal_h']) ? $_POST['initial_device_titration_equal_h'] : '',
-                'initial_device_titration_equal_v' => $_POST['initial_device_titration_equal_v'],
-                'optimum_echovision_ver' => $_POST['optimum_echovision_ver'],
-                'optimum_echovision_hor' => $_POST['optimum_echovision_hor']
-                );
-                // $db->query($ed_sql);
-                $dentalexpage5->updateDentalSummary($ed_sql,$_GET['pid']);
+                $ed_sql = "update dental_summary set 
+                initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
+                initial_device_titration_equal_h = '".s_for(!empty($_POST['initial_device_titration_equal_h']) ? $_POST['initial_device_titration_equal_h'] : '')."',
+                initial_device_titration_equal_v = '".s_for($_POST['initial_device_titration_equal_v'])."',
+                optimum_echovision_ver = '".s_for($_POST['optimum_echovision_ver'])."',
+                optimum_echovision_hor = '".s_for($_POST['optimum_echovision_hor'])."'
+                 where patientid = '".s_for($_GET['pid'])."'";
+                
+                $db->query($ed_sql);
 	        }
 
 			if($_POST['ed'] == '') {
-				// $ins_sql = " insert into dental_ex_page5 set 
-				// patientid = '".s_for($_GET['pid'])."',
-				// palpationid = '".s_for($pal_arr)."',
-				// palpationRid = '".s_for($palR_arr)."',
-				// additional_paragraph_pal = '".s_for($additional_paragraph_pal)."',
-				// joint_exam = '".s_for($joint_exam_arr)."',
-				// jointid = '".s_for($joi_arr)."',
-				// i_opening_from = '".s_for($i_opening_from)."',
-				// i_opening_to = '".s_for($i_opening_to)."',
-				// i_opening_equal = '".s_for($i_opening_equal)."',
-				// protrusion_from = '".s_for($protrusion_from)."',
-				// protrusion_to = '".s_for($protrusion_to)."',
-				// protrusion_equal = '".s_for($protrusion_equal)."',
-				// l_lateral_from = '".s_for($l_lateral_from)."',
-				// l_lateral_to = '".s_for($l_lateral_to)."',
-				// l_lateral_equal = '".s_for($l_lateral_equal)."',
-				// r_lateral_from = '".s_for($r_lateral_from)."',
-				// r_lateral_to = '".s_for($r_lateral_to)."',
-				// r_lateral_equal = '".s_for($r_lateral_equal)."',
-				// deviation_from = '".s_for($deviation_from)."',
-				// deviation_to = '".s_for($deviation_to)."',
-				// deviation_equal = '".s_for($deviation_equal)."',
-				// deflection_from = '".s_for($deflection_from)."',
-				// deflection_to = '".s_for($deflection_to)."',
-				// deflection_equal = '".s_for($deflection_equal)."',
-				// range_normal = '".s_for($range_normal)."',
-				// normal = '".s_for($normal)."',
-				// other_range_motion = '".s_for($other_range_motion)."',
-				// additional_paragraph_rm = '".s_for($additional_paragraph_rm)."',
-				// deviation_r_l = '".s_for($deviation_r_l)."',
-				// deflection_r_l = '".s_for($deflection_r_l)."',
-				// userid = '".s_for($_SESSION['userid'])."',
-				// docid = '".s_for($_SESSION['docid'])."',
-				// adddate = now(),
-				// ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-			$ins_sql = array(
-				'patientid' => $_GET['pid'],
-				'palpationid' => $pal_arr,
-				'palpationRid' => $palR_arr,
-				'additional_paragraph_pal' => $additional_paragraph_pal,
-				'joint_exam' => $joint_exam_arr,
-				'jointid' => $joi_arr,
-				'i_opening_from' => $i_opening_from,
-				'i_opening_to' => $i_opening_to,
-				'i_opening_equal' => $i_opening_equal,
-				'protrusion_from' => $protrusion_from,
-				'protrusion_to' => $protrusion_to,
-				'protrusion_equal' => $protrusion_equal,
-				'l_lateral_from' => $l_lateral_from,
-				'l_lateral_to' => $l_lateral_to,
-				'l_lateral_equal' => $l_lateral_equal,
-				'r_lateral_from' => $r_lateral_from,
-				'r_lateral_to' => $r_lateral_to,
-				'r_lateral_equal' => $r_lateral_equal,
-				'deviation_from' => $deviation_from,
-				'deviation_to' => $deviation_to,
-				'deviation_equal' => $deviation_equal,
-				'deflection_from' => $deflection_from,
-				'deflection_to' => $deflection_to,
-				'deflection_equal' => $deflection_equal,
-				'range_normal' => $range_normal,
-				'normal' => $normal,
-				'other_range_motion' => $other_range_motion,
-				'additional_paragraph_rm' => $additional_paragraph_rm,
-				'deviation_r_l' => $deviation_r_l,
-				'deflection_r_l' => $deflection_r_l,
-				'userid' => $_SESSION['userid'],
-				'docid' => $_SESSION['docid'],
-				'adddate' => date("Y-m-d H:i:s"),
-				'ip_address' => $_SERVER['REMOTE_ADDR']
-				);
+				$ins_sql = " insert into dental_ex_page5 set 
+				patientid = '".s_for($_GET['pid'])."',
+				palpationid = '".s_for($pal_arr)."',
+				palpationRid = '".s_for($palR_arr)."',
+				additional_paragraph_pal = '".s_for($additional_paragraph_pal)."',
+				joint_exam = '".s_for($joint_exam_arr)."',
+				jointid = '".s_for($joi_arr)."',
+				i_opening_from = '".s_for($i_opening_from)."',
+				i_opening_to = '".s_for($i_opening_to)."',
+				i_opening_equal = '".s_for($i_opening_equal)."',
+				protrusion_from = '".s_for($protrusion_from)."',
+				protrusion_to = '".s_for($protrusion_to)."',
+				protrusion_equal = '".s_for($protrusion_equal)."',
+				l_lateral_from = '".s_for($l_lateral_from)."',
+				l_lateral_to = '".s_for($l_lateral_to)."',
+				l_lateral_equal = '".s_for($l_lateral_equal)."',
+				r_lateral_from = '".s_for($r_lateral_from)."',
+				r_lateral_to = '".s_for($r_lateral_to)."',
+				r_lateral_equal = '".s_for($r_lateral_equal)."',
+				deviation_from = '".s_for($deviation_from)."',
+				deviation_to = '".s_for($deviation_to)."',
+				deviation_equal = '".s_for($deviation_equal)."',
+				deflection_from = '".s_for($deflection_from)."',
+				deflection_to = '".s_for($deflection_to)."',
+				deflection_equal = '".s_for($deflection_equal)."',
+				range_normal = '".s_for($range_normal)."',
+				normal = '".s_for($normal)."',
+				other_range_motion = '".s_for($other_range_motion)."',
+				additional_paragraph_rm = '".s_for($additional_paragraph_rm)."',
+				deviation_r_l = '".s_for($deviation_r_l)."',
+				deflection_r_l = '".s_for($deflection_r_l)."',
+				userid = '".s_for($_SESSION['userid'])."',
+				docid = '".s_for($_SESSION['docid'])."',
+				adddate = now(),
+				ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 				
-				// $db->query($ins_sql);
-				$dentalexpage5->save($ins_sql);
+				$db->query($ins_sql);
+				
 				$msg = "Added Successfully";
 		        if(isset($_POST['ex_pagebtn_proceed'])){
 ?>
@@ -242,72 +175,40 @@ $dentalexpage5 = App::make('Ds3\Contracts\DentalExPage5Interface');
 				}
 				trigger_error("Die called", E_USER_ERROR);
 			} else {
-				// $ed_sql = " update dental_ex_page5 set 
-				// palpationid = '".s_for($pal_arr)."',
-				// palpationRid = '".s_for($palR_arr)."',
-				// additional_paragraph_pal = '".s_for($additional_paragraph_pal)."',
-				// joint_exam = '".s_for($joint_exam_arr)."',
-				// jointid = '".s_for($joi_arr)."',
-				// i_opening_from = '".s_for($i_opening_from)."',
-				// i_opening_to = '".s_for($i_opening_to)."',
-				// i_opening_equal = '".s_for($i_opening_equal)."',
-				// protrusion_from = '".s_for($protrusion_from)."',
-				// protrusion_to = '".s_for($protrusion_to)."',
-				// protrusion_equal = '".s_for($protrusion_equal)."',
-				// l_lateral_from = '".s_for($l_lateral_from)."',
-				// l_lateral_to = '".s_for($l_lateral_to)."',
-				// l_lateral_equal = '".s_for($l_lateral_equal)."',
-				// r_lateral_from = '".s_for($r_lateral_from)."',
-				// r_lateral_to = '".s_for($r_lateral_to)."',
-				// r_lateral_equal = '".s_for($r_lateral_equal)."',
-				// deviation_from = '".s_for($deviation_from)."',
-				// deviation_to = '".s_for($deviation_to)."',
-				// deviation_equal = '".s_for($deviation_equal)."',
-				// deflection_from = '".s_for($deflection_from)."',
-				// deflection_to = '".s_for($deflection_to)."',
-				// deflection_equal = '".s_for($deflection_equal)."',
-				// range_normal = '".s_for($range_normal)."',
-				// normal = '".s_for($normal)."',
-				// other_range_motion = '".s_for($other_range_motion)."',
-				// additional_paragraph_rm = '".s_for($additional_paragraph_rm)."',
-				// deviation_r_l = '".s_for($deviation_r_l)."',
-				// deflection_r_l = '".s_for($deflection_r_l)."'
-				// where ex_page5id = '".s_for($_POST['ed'])."'";
-				$ed_sql = array(
-				'palpationid' => $pal_arr,
-				'palpationRid' => $palR_arr,
-				'additional_paragraph_pal' => $additional_paragraph_pal,
-				'joint_exam' => $joint_exam_arr,
-				'jointid' => $joi_arr,
-				'i_opening_from' => $i_opening_from,
-				'i_opening_to' => $i_opening_to,
-				'i_opening_equal' => $i_opening_equal,
-				'protrusion_from' => $protrusion_from,
-				'protrusion_to' => $protrusion_to,
-				'protrusion_equal' => $protrusion_equal,
-				'l_lateral_from' => $l_lateral_from,
-				'l_lateral_to' => $l_lateral_to,
-				'l_lateral_equal' => $l_lateral_equal,
-				'r_lateral_from' => $r_lateral_from,
-				'r_lateral_to' => $r_lateral_to,
-				'r_lateral_equal' => $r_lateral_equal,
-				'deviation_from' => $deviation_from,
-				'deviation_to' => $deviation_to,
-				'deviation_equal' => $deviation_equal,
-				'deflection_from' => $deflection_from,
-				'deflection_to' => $deflection_to,
-				'deflection_equal' => $deflection_equal,
-				'range_normal' => $range_normal,
-				'normal' => $normal,
-				'other_range_motion' => $other_range_motion,
-				'additional_paragraph_rm' => $additional_paragraph_rm,
-				'deviation_r_l' => $deviation_r_l,
-				'deflection_r_l' => $deflection_r_l,
-				);
-				// $db->query($ed_sql);
-
-				$dentalexpage5->update($ed_sql, $_POST['ed']);
-
+				$ed_sql = " update dental_ex_page5 set 
+				palpationid = '".s_for($pal_arr)."',
+				palpationRid = '".s_for($palR_arr)."',
+				additional_paragraph_pal = '".s_for($additional_paragraph_pal)."',
+				joint_exam = '".s_for($joint_exam_arr)."',
+				jointid = '".s_for($joi_arr)."',
+				i_opening_from = '".s_for($i_opening_from)."',
+				i_opening_to = '".s_for($i_opening_to)."',
+				i_opening_equal = '".s_for($i_opening_equal)."',
+				protrusion_from = '".s_for($protrusion_from)."',
+				protrusion_to = '".s_for($protrusion_to)."',
+				protrusion_equal = '".s_for($protrusion_equal)."',
+				l_lateral_from = '".s_for($l_lateral_from)."',
+				l_lateral_to = '".s_for($l_lateral_to)."',
+				l_lateral_equal = '".s_for($l_lateral_equal)."',
+				r_lateral_from = '".s_for($r_lateral_from)."',
+				r_lateral_to = '".s_for($r_lateral_to)."',
+				r_lateral_equal = '".s_for($r_lateral_equal)."',
+				deviation_from = '".s_for($deviation_from)."',
+				deviation_to = '".s_for($deviation_to)."',
+				deviation_equal = '".s_for($deviation_equal)."',
+				deflection_from = '".s_for($deflection_from)."',
+				deflection_to = '".s_for($deflection_to)."',
+				deflection_equal = '".s_for($deflection_equal)."',
+				range_normal = '".s_for($range_normal)."',
+				normal = '".s_for($normal)."',
+				other_range_motion = '".s_for($other_range_motion)."',
+				additional_paragraph_rm = '".s_for($additional_paragraph_rm)."',
+				deviation_r_l = '".s_for($deviation_r_l)."',
+				deflection_r_l = '".s_for($deflection_r_l)."'
+				where ex_page5id = '".s_for($_POST['ed'])."'";
+		
+				$db->query($ed_sql);
+				
 				$msg = "Edited Successfully";
 		        if(isset($_POST['ex_pagebtn_proceed'])){
 ?>
@@ -326,21 +227,18 @@ $dentalexpage5 = App::make('Ds3\Contracts\DentalExPage5Interface');
 			}
 		}
 
-		// $sqls = "select * from dental_summary where patientid='".$_GET['pid']."'";
-		$sqls = $dentalexpage5->getDentalSummary($_GET['pid']);
-		// $myarrays = $db->getRow($sqls);
-		$myarrays = $sqls->get()->toArray();
+		$sqls = "select * from dental_summary where patientid='".$_GET['pid']."'";
 
+		$myarrays = $db->getRow($sqls);
 		$initial_device_titration_1 = $myarrays['initial_device_titration_1'];
 		$initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
 		$initial_device_titration_equal_v = $myarrays['initial_device_titration_equal_v'];
 		$optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
 		$optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
 
-		// $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-		$pat_myarray = $dentalexpage5->getDentalPatients($_GET['pid']);
-		// $pat_myarray = $db->getRow($pat_sql);
-
+		$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+		
+		$pat_myarray = $db->getRow($pat_sql);
 		$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 		if($pat_myarray['patientid'] == '')
@@ -353,10 +251,9 @@ $dentalexpage5 = App::make('Ds3\Contracts\DentalExPage5Interface');
 			trigger_error("Die called", E_USER_ERROR);
 		}
 
-		// $sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
-		$myarray = $dentalexpage5->getDentalExPage5($_GET['pid']);
+		$sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
 		
-		// $myarray = $db->getRow($sql);
+		$myarray = $db->getRow($sql);
 		$ex_page5id = st($myarray['ex_page5id']);
 		$palpationid = st($myarray['palpationid']);
 		$palpationRid = st($myarray['palpationRid']);

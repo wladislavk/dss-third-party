@@ -19,3 +19,14 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(DentalSleepSolutions\Models\ClaimText::class, function ($faker) {
+    return [
+        'title'        => $faker->regexify('[A-Za-z]{80}'),
+        'description'  => $faker->regexify('[A-Za-z]{200}'),
+        'adddate'      => $faker->dateTime(),
+        'ip_address'   => $faker->ipv4,
+        'default_text' => $faker->regexify('[0-9]{1}'),
+        'companyid'    => $faker->regexify('[0-9]{1}')
+    ];
+});

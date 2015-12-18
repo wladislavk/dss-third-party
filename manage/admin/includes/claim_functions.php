@@ -1520,6 +1520,315 @@ class ClaimFormData
 }
 
 /**
+ * Auxiliary function for webhooks / Eligible events
+ *
+ * @param int $referenceId
+ * @return string
+ */
+function referenceIdFromClaimId ($claimId) {
+    $db = new Db();
+    $claimId = intval($claimId);
+
+    $eClaim = $db->getRow("SELECT reference_id
+        FROM dental_claim_electronic
+        WHERE COALESCE(claimid, '') != '' AND claimid = '$claimId'");
+
+    return $eClaim ? $eClaim['reference_id'] : '';
+}
+
+/**
+ * Auxiliary function for webhooks / Eligible events
+ *
+ * @param string $referenceId
+ * @return int
+ */
+function claimIdFromReferenceId ($referenceId) {
+    $db = new Db();
+    $referenceId = $db->escape($referenceId);
+
+    $eClaim = $db->getRow("SELECT claimid
+        FROM dental_claim_electronic
+        WHERE COALESCE(reference_id, '') != '' AND reference_id = '$referenceId'");
+
+    return $eClaim ? intval($eClaim['claimid']) : 0;
+}
+
+/**
+ * Auxiliary function for webhooks / Eligible events
+ *
+ * @param string $referenceId
+ * @return array
+ */
+function minimalClaimDataFromReferenceId ($referenceId) {
+    $db = new Db();
+
+    $claimId = claimIdFromReferenceId($referenceId);
+
+    $claim = $db->getRow("SELECT insuranceid, status
+        FROM dental_insurance
+        WHERE insuranceid = '$claimId'");
+
+    return $claim ?: [];
+}
+
+/**
+ * Encapsulate update status logic
+ *
+ * @param string $referenceId
+ * @param string $statusName
+ */
+function updateClaimStatusFromReferenceId ($referenceId, $statusName) {
+    $db = new Db();
+
+    $claimData = minimalClaimDataFromReferenceId($referenceId);
+
+    echo "Claim ID {$claimData['insuranceid']} with reference '$referenceId' needs to change to status '$statusName'";
+
+    /**
+     * Update claim only if the statuses differ
+     */
+    if ($claimData && !ClaimFormData::isStatus($statusName, $claimData['status'])) {
+        // This status list returns a pair: [primary status, secondary status]
+        $possibleStatuses = ClaimFormData::statusListByName($statusName);
+        $newStatus = ClaimFormData::isPrimary($claimData['status']) ? $possibleStatuses[0] : $possibleStatuses[1];
+
+        $db->query("UPDATE dental_insurance
+            SET status = '".$db->escape($newStatus)."'
+            WHERE insuranceid = '".$db->escape($claimData['insuranceid'])."'");
+
+        claim_status_history_update($claimData['insuranceid'], $newStatus, $claimData['status'], 0, 0);
+    }
+}
+
+/**
+ * Encapsulates the logic that sets the claim status (and other values) based on Eligible events
+ *
+ * @param string $plainTextResponse
+ * @param bool   $saveResponse
+ * @return object
+ */
+function processEligibleResponse ($plainTextResponse, $saveResponse = true) {
+    $db = new Db();
+    $jsonResponse = json_decode($plainTextResponse);
+
+    /**
+     * JSON.event = claim event
+     * JSON.status = acknowledgement event
+     */
+    $eventType = !empty($jsonResponse->event) ? $jsonResponse->event : $jsonResponse->status;
+    $referenceId = isset($jsonResponse->reference_id) ? $jsonResponse->reference_id : '';
+
+    switch ($eventType) {
+        case 'claim_rejected':
+        case 'claim_denied':
+        case 'claim_more_info_required':
+        case 'rejected':
+        case 'denied':
+        case 'more_info_required':
+            updateClaimStatusFromReferenceId($referenceId, 'rejected');
+            break;
+        case 'claim_paid':
+        case 'paid':
+            updateClaimStatusFromReferenceId($referenceId, 'paid-insurance');
+            break;
+        case 'claim_submitted':
+        case 'claim_pended':
+        case 'claim_created':
+        case 'claim_received':
+        case 'submitted':
+        case 'pended':
+        case 'created':
+        case 'received':
+            updateClaimStatusFromReferenceId($referenceId, 'sent');
+            break;
+        case 'claim_accepted':
+        case 'accepted':
+            updateClaimStatusFromReferenceId($referenceId, 'efile-accepted');
+            break;
+        case 'enrollment_status':
+            $referenceId = $jsonResponse->details->id;
+            $status = $jsonResponse->details->status;
+
+            if ($status == 'accepted') {
+                $db->query("UPDATE dental_eligible_enrollment SET
+                    status = '1'
+                    WHERE reference_id = '".$db->escape($referenceId)."'");
+            }
+
+            break;
+        case 'received_pdf':
+            $referenceId = $jsonResponse->details->id;
+            $downloadUrl = $jsonResponse->details->received_pdf->download_url;
+
+            if ($downloadUrl) {
+                $db->query("UPDATE dental_eligible_enrollment SET
+                    status = '".DSS_ENROLLMENT_PDF_RECEIVED."',
+                    download_url = '".$db->escape($downloadUrl)."'
+                    WHERE reference_id = '".$db->escape($referenceId)."'");
+            }
+
+            break;
+        case 'payment_report':
+            $claimId = claimIdFromReferenceId($referenceId);
+
+            $db->query("INSERT INTO dental_payment_reports SET
+                claimid = '$claimId',
+                reference_id = '".$db->escape($referenceId)."',
+                response = '".$db->escape($plainTextResponse)."',
+                adddate = now(),
+                ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'");
+
+            updateClaimStatusFromReferenceId($referenceId, 'paid-insurance');
+
+            break;
+    }
+
+    /**
+     * Save webhook payload
+     */
+    if ($saveResponse) {
+        $db->query("INSERT INTO dental_eligible_response SET
+            response = '".$db->escape($plainTextResponse)."',
+            reference_id = '".$db->escape($referenceId)."',
+            event_type = '".$db->escape($eventType)."',
+            adddate = now(),
+            ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'");
+    }
+
+    return $jsonResponse;
+}
+
+/**
+ * Retrieve a description from the different kinds of Eligible responses
+ *
+ * @param object $jsonResponse
+ * @return string
+ */
+function detailsFromEligibleResponse ($jsonResponse) {
+    if (isset($jsonResponse->details)) {
+        return $jsonResponse->details;
+    }
+
+    $message = [];
+
+    /**
+     * Eligible responses have its own status.
+     *
+     * Acknowledgements don't hold the latest value of the claim. Example:
+     *
+     * {
+     *     status: claim_denied,
+     *     acknowledgements: [{
+     *         status: claim_received ...
+     *     }],
+     *     payment_reports: [{
+     *         ...
+     *         paid: 0.0,
+     *         ...
+     *     }],
+     *     ...
+     * }
+     */
+    $responseStatus = isset($jsonResponse->event) ? $jsonResponse->event : $jsonResponse->status;
+    $latestAcknowledgement = !empty($jsonResponse->acknowledgements) ? head($jsonResponse->acknowledgements) : null;
+    $serviceLines = !empty($jsonResponse->payment_reports[0]->details->claim->service_lines) ?
+        $jsonResponse->payment_reports[0]->details->claim->service_lines : null;
+
+    if ($latestAcknowledgement) {
+        $acknowledgementStatus = $latestAcknowledgement->status;
+
+        if ($responseStatus == $acknowledgementStatus) {
+            $message []= 'Status: ' . $responseStatus;
+            $message []= 'Message: ' . $latestAcknowledgement->message;
+
+            if (!empty($latestAcknowledgement->errors)) {
+                foreach ($latestAcknowledgement->errors as $error) {
+                    $message []= 'ERROR: ' . $error->message;
+                }
+            }
+        }
+    }
+
+    if ($responseStatus === 'claim_denied') {
+        $message []= 'Status: ' . $responseStatus;
+
+        // payment_reports[].details.claim.service_lines[].adjustments[].reason_label
+        if ($serviceLines) {
+            foreach ($serviceLines as $serviceLine) {
+                if (empty($serviceLine->adjustments)) {
+                    continue;
+                }
+
+                foreach ($serviceLine->adjustments as $adjustment) {
+                    if (empty($adjustment->reason_label)) {
+                        continue;
+                    }
+
+                    $message []= 'ERROR: ' . $adjustment->reason_label;
+                }
+            }
+        }
+    }
+
+    return $message;
+}
+
+/**
+ * Retrieve a description from the last Eligible response / webhook
+ *
+ * @param int $claimId
+ * @return array
+ */
+function eligibleDetailsFromClaimId ($claimId) {
+    $db = new Db();
+    $claimId = intval($claimId);
+
+    $eResponse = $db->getRow("SELECT *
+        FROM dental_claim_electronic
+        WHERE claimid = '$claimId'
+        ORDER BY adddate DESC
+        LIMIT 1");
+
+    $eResponse = $eResponse ?: [];
+    $eligibleResponse = [];
+
+    if ($eResponse) {
+        $eResponse['response'] = json_decode($eResponse['response']);
+
+        /**
+         * Some eligible responses don't report status changes, we need to exclude those
+         */
+        if ($eResponse['reference_id']) {
+            $referenceId = $db->escape($eResponse['reference_id']);
+            $eligibleResponses = $db->getResults("SELECT *
+                FROM dental_eligible_response
+                WHERE reference_id = '$referenceId'
+                ORDER BY adddate DESC, id DESC");
+
+            /**
+             * Walk the collection of responses, select the first one with details set
+             */
+            foreach ($eligibleResponses as $each) {
+                $each['response'] = json_decode($each['response']);
+                $eDetails = detailsFromEligibleResponse($each['response']);
+
+                if ($eDetails) {
+                    $each['response']->details = $eDetails;
+                    $eligibleResponse = $each;
+
+                    break;
+                }
+            }
+        }
+    }
+
+    return [
+        'e_response' => $eResponse,
+        'eligible_response' => $eligibleResponse
+    ];
+}
+
+/**
  * Generate PDF based on FDF field list
  *
  * @param string $fileName

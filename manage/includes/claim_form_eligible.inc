@@ -314,40 +314,9 @@ $eResponse = [];
 $eligibleResponse = [];
 
 if ($isRejected) {
-    $eResponse = $db->getRow("SELECT *
-        FROM dental_claim_electronic
-        WHERE claimid = '$claimId'
-        ORDER BY adddate DESC
-        LIMIT 1");
-
-    $eResponse = $eResponse ?: [];
-
-    if ($eResponse) {
-        $eResponse['response'] = json_decode($eResponse['response']);
-
-        /**
-         * Some eligible responses don't report status changes, we need to exclude those
-         */
-        if ($eResponse['reference_id']) {
-            $referenceId = $db->escape($eResponse['reference_id']);
-            $eligibleResponses = $db->getResults("SELECT *
-                FROM dental_eligible_response
-                WHERE reference_id = '$referenceId'
-                ORDER BY adddate DESC, id DESC");
-
-            /**
-             * Walk the collection of responses, select the first one with details set
-             */
-            foreach ($eligibleResponses as $each) {
-                $each['response'] = json_decode($each['response']);
-
-                if (isset($each['response']->details)) {
-                    $eligibleResponse = $each;
-                    break;
-                }
-            }
-        }
-    }
+    $eDescriptions = eligibleDetailsFromClaimId($claimId);
+    $eResponse = $eDescriptions['e_response'];
+    $eligibleResponse = $eDescriptions['eligible_response'];
 }
 
 ?>
@@ -372,7 +341,6 @@ if ($isRejected) {
         var claimData = <?= json_encode($claimData) ?>;
     </script>
 </head>
-
 <body>
     <div id="top-banner">
         <h2>E-File Claim Form</h2>
@@ -397,24 +365,32 @@ if ($isRejected) {
 
 <?php if ($isRejected) { ?>
     <div class="rejected-banner">
-        <?php if ($eligibleResponse['response']) { ?>
+        <?php if (isset($eligibleResponse['response'])) { ?>
             <h3>
                 <?= $eligibleResponse['event_type'] ?>
                 on
                 <?= $eligibleResponse['adddate'] ?>
             </h3>
-            <p>
-                Category:
-                <?= $eligibleResponse['response']->details->codes->category_code ?>
-                -
-                <?= $eligibleResponse['response']->details->codes->category_label ?>
-                <br />
-                Status:
-                <?= $eligibleResponse['response']->details->codes->status_code ?>
-                -
-                <?= $eligibleResponse['response']->details->codes->status_label ?>
-            </p>
-        <?php } elseif ($eResponse['response']) { ?>
+            <?php if (is_object($eligibleResponse['response']->details)) { ?>
+                <p>
+                    Category:
+                    <?= $eligibleResponse['response']->details->codes->category_code ?>
+                    -
+                    <?= $eligibleResponse['response']->details->codes->category_label ?>
+                    <br />
+                    Status:
+                    <?= $eligibleResponse['response']->details->codes->status_code ?>
+                    -
+                    <?= $eligibleResponse['response']->details->codes->status_label ?>
+                </p>
+            <?php } elseif (is_array($eligibleResponse['response']->details) && $eligibleResponse['response']->details) { ?>
+                <ul>
+                    <?php foreach ($eligibleResponse['response']->details as $each) { ?>
+                        <li><?= e($each) ?></li>
+                    <?php } ?>
+                </ul>
+            <?php } ?>
+        <?php } elseif (isset($eResponse['response'])) { ?>
             <h3>
                 Claim Electronically filed on
                 <?= $eResponse['adddate'] ?>

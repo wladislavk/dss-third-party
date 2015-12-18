@@ -112,7 +112,7 @@ if(!empty($_GET['msg']))
 
 
 <div id="login_container">
-	<FORM NAME="loginfrm" id="loginForm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
+	<FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
 		<table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
 		    <tr bgcolor="#FFFFFF">
 		        <td colspan="2" class="t_head">

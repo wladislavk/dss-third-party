@@ -42,7 +42,8 @@ $creditsTypeQuery = "SELECT
 // ledger_paid - from UNION
 $creditsNamedQuery = "SELECT
         COALESCE(dl.description, '') AS payment_description,
-        SUM(dl.paid_amount) AS payment_amount
+        SUM(dl.paid_amount) AS payment_amount,
+        tc.type AS payment_type
     FROM dental_ledger dl
         JOIN dental_patients p ON p.patientid = dl.patientid
         LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
@@ -52,7 +53,7 @@ $creditsNamedQuery = "SELECT
         AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
         AND COALESCE(tc.type, '') != '$trxnTypeAdjustment'
         $ledgerDateConditional
-        GROUP BY payment_description";
+        GROUP BY payment_type, payment_description";
 
 // ledger_paid - from UNION -- but, tx.type conditional INVERTED
 // No need to use COALESCE(tc.type, '') because we WANT TO IGNORE null values
@@ -102,13 +103,21 @@ array_walk($creditTypeItems, function (&$item) use ($dss_trxn_payer_labels, $dss
 });
 
 array_walk($creditNamedItems, function (&$item) {
-    $description = $item['payment_description'];
+    $payer = $item['payment_type'];
+    $description = strlen(trim($item['payment_description'])) ? $item['payment_description'] : 'Unlabelled transaction type';
 
-    if (strlen($description)) {
-        $item['payment_description'] = strtolower(trim($description)) === 'check' ? 'Ins. Checks' : $description;
-    } else {
-        $item['payment_description'] = 'Unlabelled transaction type';
+    $description = strtolower(trim($description)) === 'check' ? 'Checks' : $description;
+
+    switch ($payer) {
+        case DSS_TRXN_TYPE_INS:
+            $description = "Ins. $description";
+            break;
+        case DSS_TRXN_TYPE_PATIENT:
+            $description = "Pt. $description";
+            break;
     }
+
+    $item['payment_description'] = $description;
 });
 
 ?>

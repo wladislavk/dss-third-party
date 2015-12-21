@@ -96,7 +96,7 @@ $patientId = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
         INNER JOIN dental_insurance di ON dl.primary_claim_id = di.insuranceid
         LEFT JOIN dental_users p ON dl.producerid = p.userid
         LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
-    WHERE (dl.primary_claim_id = $claimId OR dl.secondary_claim_id = $claimId)
+    WHERE dl.primary_claim_id = $claimId
         AND dl.docid = $docId
         AND dl.patientid = $patientId
     GROUP BY dl.ledgerid

@@ -928,12 +928,6 @@ class ClaimFormData
         return implode(', ', $escapedFields);
     }
 
-    /**
-     * Auxiliary function to retrieve amount paid, from the primary claim
-     *
-     * @param int $claimId
-     * @return int|float
-     */
     public static function amountPaidForClaim ($claimId) {
         $db = new Db();
         $amount = 0;

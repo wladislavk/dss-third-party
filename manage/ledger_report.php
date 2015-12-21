@@ -346,20 +346,13 @@ if(!empty($_GET['pid'])){
             <?php echo st($myarray["name"]);?>
         </td>
         <td valign="top" width="30%">
-            <?php
-
-            if ($myarray['ledger'] == 'ledger_payment') {
-                if ($myarray['payer'] == DSS_TRXN_PAYER_WRITEOFF) {
-                    echo e("{$dss_trxn_payer_labels[$myarray['payer']]} Payment");
-                } else {
-                    echo e("{$dss_trxn_payer_labels[$myarray['payer']]} Payment - {$dss_trxn_pymt_type_labels[$myarray['payment_type']]}");
-                }
-            } else {
+<?php
+            if($myarray['ledger']=='ledger_payment'){
+                echo $dss_trxn_payer_labels[$myarray['payer']]; ?> Payment - <?php echo $dss_trxn_pymt_type_labels[$myarray['payment_type']];
+            }else{
                 echo st($myarray["description"]);
                 echo ($myarray['primary_claim_id'])?" (".$myarray['primary_claim_id'].")":'';
-            }
-
-            ?>
+            } ?>
         </td>
         <td valign="top" align="right" width="10%">
             <?php

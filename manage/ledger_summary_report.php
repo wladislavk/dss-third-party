@@ -76,26 +76,23 @@ $creditTypeItems = $db->getResults($creditsTypeQuery);
 $creditNamedItems = $db->getResults($creditsNamedQuery);
 $adjustmentItems = $db->getResults($adjustmentsQuery);
 
-// Calculate totals
-$totalCharges = array_sum(array_pluck($chargeItems, 'payment_amount'));
-$totalCredits = array_sum(array_pluck($creditTypeItems, 'payment_amount')) +
-    array_sum(array_pluck($creditNamedItems, 'payment_amount'));
-$totalAdjustments = array_sum(array_pluck($adjustmentItems, 'payment_amount'));
-
 // Set proper values of labels in credit items
 array_walk($creditTypeItems, function (&$item) use ($dss_trxn_payer_labels, $dss_trxn_pymt_type_labels) {
-    $payer = $dss_trxn_payer_labels[$item['payment_payer']];
-    $description = $dss_trxn_pymt_type_labels[$item['payment_description']];
+    $payer = $item['payment_payer'];
+    $description = trim($dss_trxn_pymt_type_labels[$item['payment_description']]);
 
-    $description = strtolower(trim($description)) === 'check' ? 'Checks' : $description;
+    $description = preg_match('/^checks?$/i', $description) ? 'Checks' : $description;
 
     switch ($payer) {
-        case 'Primary Insurance':
-        case 'Secondary Insurance':
+        case DSS_TRXN_PAYER_PRIMARY:
+        case DSS_TRXN_PAYER_SECONDARY:
             $description = "Ins. $description";
             break;
-        case 'Patient':
+        case DSS_TRXN_PAYER_PATIENT:
             $description = "Pt. $description";
+            break;
+        case DSS_TRXN_PAYER_WRITEOFF:
+            $description = $dss_trxn_payer_labels[DSS_TRXN_PAYER_WRITEOFF];
             break;
     }
 
@@ -104,9 +101,10 @@ array_walk($creditTypeItems, function (&$item) use ($dss_trxn_payer_labels, $dss
 
 array_walk($creditNamedItems, function (&$item) {
     $payer = $item['payment_type'];
-    $description = strlen(trim($item['payment_description'])) ? $item['payment_description'] : 'Unlabelled transaction type';
+    $description = strlen(trim($item['payment_description'])) ?
+        trim($item['payment_description']) : 'Unlabelled transaction type';
 
-    $description = strtolower(trim($description)) === 'check' ? 'Checks' : $description;
+    $description = preg_match('/^checks?$/i', $description) ? 'Checks' : $description;
 
     switch ($payer) {
         case DSS_TRXN_TYPE_INS:
@@ -119,6 +117,34 @@ array_walk($creditNamedItems, function (&$item) {
 
     $item['payment_description'] = $description;
 });
+
+/**
+ * @see DSS-246
+ *
+ * Merge credit arrays, "type" items precede named items
+ */
+$creditItems = [];
+
+array_map(function ($each) use (&$creditItems) {
+    $amount = $each['payment_amount'];
+    $description = $each['payment_description'];
+
+    $description = preg_replace('/^(Ins\. |Pt\. ){2}/', '$1', $description);
+
+    if (!isset($creditItems[$description])) {
+        $creditItems[$description] = [
+            'payment_description' => $description,
+            'payment_amount' => 0
+        ];
+    }
+
+    $creditItems[$description]['payment_amount'] += $amount;
+}, array_merge($creditTypeItems, $creditNamedItems));
+
+// Calculate totals
+$totalCharges = array_sum(array_pluck($chargeItems, 'payment_amount'));
+$totalCredits = array_sum(array_pluck($creditItems, 'payment_amount'));
+$totalAdjustments = array_sum(array_pluck($adjustmentItems, 'payment_amount'));
 
 ?>
 <div class="fullwidth">
@@ -138,13 +164,7 @@ array_walk($creditNamedItems, function (&$item) {
 
     <h3>Credit</h3>
     <ul>
-        <?php foreach ($creditTypeItems as $item) {?>
-            <li>
-                <label><?= e($item['payment_description']) ?></label>
-                $<?= number_format($item['payment_amount'], 2) ?>
-            </li>
-        <?php } ?>
-        <?php foreach ($creditNamedItems as $item) {?>
+        <?php foreach ($creditItems as $item) {?>
             <li>
                 <label><?= e($item['payment_description']) ?></label>
                 $<?= number_format($item['payment_amount'], 2) ?>

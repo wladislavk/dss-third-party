@@ -56,20 +56,6 @@ class Db
 		}
 	}
 
-    /**
-     * Return column from the first row of the result
-     *
-     * @param string $queryString
-     * @param string $columnName
-     * @param mixed  $defaultValue
-     * @return mixed
-     */
-    public function getColumn ($queryString, $columnName, $defaultValue=null) {
-        $row = $this->getRow($queryString);
-
-        return $row ? array_get($row, $columnName, $defaultValue) : $defaultValue;
-    }
-
 	public function getResults($query_string)
 	{
 		if( $query_string ) {

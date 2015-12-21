@@ -1,8 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-$is_front_office = empty($is_back_office);
-
 include_once __DIR__ . '/includes/constants.inc';
 include_once __DIR__ . '/admin/includes/main_include.php';
 include_once __DIR__ . '/includes/claim_functions.php';
@@ -206,22 +204,12 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
 
     $isFormerPrimary = ClaimFormData::isPrimary($formerStatus);
     $isFormerPending = ClaimFormData::isStatus('pending', $formerStatus);
-    $isFormerRejected = ClaimFormData::isStatus('rejected', $formerStatus);
 
-    /**
-     * Status changes:
-     *
-     * - IF marked for rejection THEN rejected
-     * - IF new claim THEN pending
-     * - IF pending THEN sent
-     * - IF rejected THEN sent
-     * - ELSE preserve the current status
-     */
     if (isset($claimData['reject_but'])) {
         $status = $isFormerPrimary ? DSS_CLAIM_REJECTED : DSS_CLAIM_SEC_REJECTED;
     } elseif ($isNewClaim) {
         $status = $isFormerPrimary ? DSS_CLAIM_PENDING : DSS_CLAIM_SEC_PENDING;
-    } elseif ($isFormerPending || $isFormerRejected) {
+    } elseif ($isFormerPending) {
         $status = $isFormerPrimary ? DSS_CLAIM_SENT : DSS_CLAIM_SEC_SENT;
     } else {
         $status = $formerStatus;

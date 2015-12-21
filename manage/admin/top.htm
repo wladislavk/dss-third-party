@@ -314,24 +314,11 @@ $num_pending_hst = mysqli_num_rows($my);
      . "  JOIN dental_users users ON claim.docid = users.userid "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid "
      . " WHERE (claim.mailed_date IS NULL OR claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_REJECTED.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE."))";
-$sql .= " AND (
-        IF (
-            claim.status IN (
-                ".DSS_CLAIM_PENDING.",
-                ".DSS_CLAIM_DISPUTE.",
-                ".DSS_CLAIM_REJECTED.",
-                ".DSS_CLAIM_PATIENT_DISPUTE.",
-                ".DSS_CLAIM_SENT.",
-                ".DSS_CLAIM_PAID_INSURANCE.",
-                ".DSS_CLAIM_PAID_PATIENT.",
-                ".DSS_CLAIM_EFILE_ACCEPTED."
-            )
-            AND COALESCE(claim.primary_claim_id, 0) = 0,
-            IF (1 IN (claim.p_m_dss_file, p.p_m_dss_file), 1, 0),
-            IF (1 IN (claim.s_m_dss_file, p.s_m_dss_file), 1, 0)
-        ) = 1
-    )
-    ";
+$sql .= " AND 
+  CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.")
+    THEN p.p_m_dss_file
+    ELSE p.s_m_dss_file
+   END = '1'";
 if(is_billing($_SESSION['admin_access'])){
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
     $c_q = mysqli_query($con, $c_sql);
@@ -398,24 +385,11 @@ $sql = "SELECT "
     $sql .= "WHERE ";
                 $sql .= " (claim.mailed_date IS NULL OR claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_REJECTED.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.")) ";
 
-$sql .= " AND (
-        IF (
-            claim.status IN (
-                ".DSS_CLAIM_PENDING.",
-                ".DSS_CLAIM_DISPUTE.",
-                ".DSS_CLAIM_REJECTED.",
-                ".DSS_CLAIM_PATIENT_DISPUTE.",
-                ".DSS_CLAIM_SENT.",
-                ".DSS_CLAIM_PAID_INSURANCE.",
-                ".DSS_CLAIM_PAID_PATIENT.",
-                ".DSS_CLAIM_EFILE_ACCEPTED."
-            )
-            AND COALESCE(claim.primary_claim_id, 0) = 0,
-            IF (1 IN (claim.p_m_dss_file, p.p_m_dss_file), 1, 0),
-            IF (1 IN (claim.s_m_dss_file, p.s_m_dss_file), 1, 0)
-        ) = 1
-    )
-    ";
+$sql .= " AND 
+  CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.")
+    THEN p.p_m_dss_file
+    ELSE p.s_m_dss_file
+   END = '1'";
 //echo $sql;
 if(is_billing($_SESSION['admin_access'])){
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
@@ -493,7 +467,7 @@ $num_pending_claims = mysqli_num_rows($pending_q);
 				 <?php if (!is_hst($_SESSION['admin_access'])) { ?>
 				
 				<li id="nn" >
-					<a href="/manage/admin/manage_claims.php?status=action">
+					<a href="/manage/admin/manage_claims.php?status=0">
 						<i class="fa fa-medkit"></i>
 						<span class="title">
 							CLAIMS </span>

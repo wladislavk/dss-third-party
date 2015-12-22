@@ -12,187 +12,343 @@ include 'edx_functions.php';
 include 'help_functions.php';
 include 'admin/includes/claim_functions.php';
 
-if (!isset($_SESSION['userid'])) {  
+if (!isset($_SESSION['userid'])) {
+    echo '<script type="text/javascript">';
+    echo   'alert("Members Area, Please Login");';
+    echo  'window.location = "login.php";';
+    echo '</script>';
+}
 
-  echo '<script type="text/javascript">';
-  echo   'alert("Members Area, Please Login");';
-  echo  'window.location = "login.php";';
-  echo '</script>';
+$sql = "SELECT homepage from dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+$r = $db->getRow($sql);
 
- }
-
-  $sql = "SELECT homepage from dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
-
-  $r = $db->getRow($sql);
-
-  if( $r['homepage'] != '1') {
+if( $r['homepage'] != '1') {
     include_once 'includes/top2.htm';
-  } else {
-    if(!empty($_SESSION['loginid'])) {
-      $cur_page_full = $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
-      $cur_ins_sql = "insert into dental_login_detail (loginid,userid,cur_page,adddate,ip_address) values('".mysqli_real_escape_string($con,$_SESSION['loginid'])."','".mysqli_real_escape_string($con,$_SESSION['userid'])."','".mysqli_real_escape_string($con,$cur_page_full)."',now(),'".mysqli_real_escape_string($con,$_SERVER['REMOTE_ADDR'])."')";
-      $db->query($cur_ins_sql);
+} else {
+    if (!empty($_SESSION['loginid'])) {
+        $cur_page_full = $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
+
+        $cur_ins_sql = "INSERT INTO dental_login_detail (
+                loginid,
+                userid,
+                cur_page,
+                adddate,
+                ip_address
+            ) VALUES (
+                '".$db->escape($_SESSION['loginid'])."',
+                '".$db->escape($_SESSION['userid'])."',
+                '".$db->escape($cur_page_full)."',
+                now(),
+                '".$db->escape($_SERVER['REMOTE_ADDR'])."'
+            )";
+        $db->query($cur_ins_sql);
     }
 
-    if(strpos($_SERVER['PHP_SELF'],'q_page') === false && strpos($_SERVER['PHP_SELF'],'ex_page') === false && strpos($_SERVER['PHP_SELF'],'q_sleep') === false && strpos($_SERVER['PHP_SELF'],'q_image') === false)
-    {
-      $unload = 0 ;
+    if (
+        strpos($_SERVER['PHP_SELF'], 'q_page') === false &&
+        strpos($_SERVER['PHP_SELF'], 'ex_page') === false &&
+        strpos($_SERVER['PHP_SELF'], 'q_sleep') === false &&
+        strpos($_SERVER['PHP_SELF'], 'q_image') === false
+    ) {
+        $unload = 0 ;
     } else {
-      $unload = 1 ;
+        $unload = 1 ;
     }
 
-    $docid = $_SESSION['docid'];
-    $dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_letters.delivered = '0'  AND dental_letters.deleted = '0' AND dental_letters.docid = '".$docid."' AND (dental_letters.parentid IS NULL OR dental_letters.parentid = 0) ORDER BY generated_date ASC;";
+    $docid = intval($_SESSION['docid']);
+
+    $dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) AS generated_date
+        FROM dental_letters
+            LEFT JOIN dental_patients ON dental_letters.patientid = dental_patients.patientid
+        WHERE dental_letters.status = '0'
+            AND dental_letters.delivered = '0'
+            AND dental_letters.deleted = '0'
+            AND dental_letters.docid = '$docid'
+            AND (
+                dental_letters.parentid IS NULL
+                OR dental_letters.parentid = 0
+            )
+        ORDER BY generated_date ASC;";
 
     $generated_date = $db->getRow($dental_letters_query);
     $pending_letters = $db->getNumberRows($dental_letters_query);
     $seconds_per_day = 86400;
 
     if ($generated_date == 0) {
-      $oldest_letter = 0;
+        $oldest_letter = 0;
     } else {
-      $oldest_letter = floor((time() - $generated_date['generated_date']) / $seconds_per_day);
+        $oldest_letter = floor((time() - $generated_date['generated_date']) / $seconds_per_day);
     }
 
-    $dental_letters_query = "SELECT letterid FROM dental_letters 
-                             LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid 
-                             WHERE (dental_letters.status = '1' OR dental_letters.delivered=1) AND mailed_date IS NULL AND dental_letters.deleted = '0' AND dental_letters.docid = '".$docid."' 
-                            ";
+    $dental_letters_query = "SELECT COUNT(letterid) AS total
+        FROM dental_letters
+            LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid
+        WHERE (
+                dental_letters.status = '1'
+                OR dental_letters.delivered = 1
+            )
+            AND mailed_date IS NULL
+            AND dental_letters.deleted = '0'
+            AND dental_letters.docid = '$docid'";
 
-    $unmailed_letters = $db->getNumberRows($dental_letters_query);
+    $unmailed_letters = $db->getColumn($dental_letters_query, 'total', 0);
 
-    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status='".DSS_CLAIM_PENDING."' OR status='".DSS_CLAIM_SEC_PENDING."')";
+    /**
+     * @ToDo: Determine if these are actionable claims for admins
+     * @ToDo: Determine if this status list needs the REJECTED status
+     */
+    $claim_query = "SELECT COUNT(claim.insuranceid) AS total
+        FROM dental_insurance claim
+        WHERE claim.docid = '$docid'
+            AND status IN (
+                '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
+                '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
+                '" . DSS_CLAIM_PATIENT_DISPUTE . "', '" . DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
+            )";
 
-    $num_pending_claims = $db->getNumberRows($claim_query);
+    $num_pending_claims = $db->getColumn($claim_query, 'total', 0);
 
-    $claim_query = "SELECT DISTINCT p.patientid FROM dental_ledger ledger
-                         JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
-                         JOIN dental_users user ON user.userid = ledger.docid
-                         JOIN dental_patients p ON p.patientid = ledger.patientid
-                    WHERE 
-                         ledger.status = '" . DSS_TRXN_PENDING ."'
-                         AND ledger.docid = '" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'
-                         AND trxn_code.docid = '" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'
-                         AND trxn_code.type = '" . DSS_TRXN_TYPE_MED . "'";
+    /**
+     * @see DSS-142
+     * Actionable claims for FO users
+     *
+     * IF (COALESCE(claim.primary_claim_id, 0), claim.s_m_dss_file, claim.p_m_dss_file) = 1 AS filed_by_back_office
+     * IF (COALESCE(claim.primary_claim_id, 0), patient.s_m_dss_file, patient.p_m_dss_file) = 1 AS back_office_can_file
+     */
+    $claim_query = "SELECT COUNT(claim.insuranceid) AS total
+        FROM dental_insurance claim
+            JOIN dental_patients patient ON patient.patientid = claim.patientid
+            JOIN dental_users users ON claim.docid = users.userid
+            LEFT JOIN companies company ON company.id = users.billing_company_id
+        WHERE (
+                ( -- NOT filed_by_back_office
+                    IF (COALESCE(claim.primary_claim_id, 0), claim.s_m_dss_file, claim.p_m_dss_file) != 1
+                )
+                AND NOT ( -- Actionable AND (DSS filing OR dispute)
+                    claim.status IN (
+                        '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
+                        '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
+                        '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
+                        '" . DSS_CLAIM_PATIENT_DISPUTE . "', '".DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
+                    )
+                    AND (
+                        company.exclusive
+                        OR ( -- back_office_can_file
+                            IF (COALESCE(claim.primary_claim_id, 0), patient.s_m_dss_file, patient.p_m_dss_file) = 1
+                        )
+                    )
+                )
+            )
+            AND claim.docid = '$docid'
+            -- Actionable items
+            AND claim.status IN (
+                '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
+                '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
+                '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
+                '" . DSS_CLAIM_PATIENT_DISPUTE . "', '".DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
+            )";
+    $num_pending_nodss_claims = $db->getColumn($claim_query, 'total', 0);
 
-    $num_pending_claims = $db->getNumberRows($claim_query);
+    $claim_query = "SELECT COUNT(claim.insuranceid) AS total
+        FROM dental_insurance claim
+        WHERE claim.docid = '$docid'
+            AND claim.mailed_date IS NULL
+            AND claim.sec_mailed_date IS NULL
+            AND claim.status NOT IN ('" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "')";
 
-    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status IN ('".DSS_CLAIM_PENDING."', '".DSS_CLAIM_SEC_PENDING."', '".DSS_CLAIM_DISPUTE."', '".DSS_CLAIM_SEC_DISPUTE."'))";
+    $num_unmailed_claims = $db->getColumn($claim_query, 'total', 0);
 
-    $num_pending_claims = $db->getNumberRows($claim_query);
+    $claim_query = "SELECT COUNT(claim.insuranceid) AS total
+        FROM dental_insurance claim
+        WHERE claim.docid = '$docid'
+            AND claim.status IN ('" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "')";
 
-    $claim_query = "SELECT i.* FROM dental_insurance i 
-                    JOIN dental_patients p ON p.patientid=i.patientid
-                    WHERE
-                        ((p.p_m_dss_file='2' AND (i.status IN ('".DSS_CLAIM_PENDING."', '".DSS_CLAIM_DISPUTE."'))) OR
-                        (p.s_m_dss_file='2' AND (i.status IN ('".DSS_CLAIM_SEC_PENDING."', '".DSS_CLAIM_SEC_DISPUTE."'))))
-                        AND i.docid = '".$docid."'";
-    $num_pending_nodss_claims = $db->getNumberRows($claim_query);
+    $num_rejected_claims = $db->getColumn($claim_query, 'total', 0);
 
-    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND mailed_date IS NULL AND sec_mailed_date IS NULL AND status !=  '".DSS_CLAIM_PENDING."' AND status != '".DSS_CLAIM_SEC_PENDING."'";
-
-    $num_unmailed_claims = $db->getNumberRows($claim_query);
-
-    $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status IN ('".DSS_CLAIM_REJECTED."', '".DSS_CLAIM_SEC_REJECTED."'))";
-
-    $num_rejected_claims = $db->getNumberRows($claim_query);
-
-    $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status='".DSS_PREAUTH_COMPLETE."' AND (viewed IS NULL OR viewed != 1);";
-
-    $num_preauth = $db->getNumberRows($preauth_query);
-
-    $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status='".DSS_PREAUTH_PENDING."' AND COALESCE(viewed, 0) != 1";
-
-    $num_pending_preauth = $db->getNumberRows($preauth_query);
-    $numRejectedPreAuth = $db->getNumberRows("SELECT *
+    $preauth_query = "SELECT COUNT(id) AS total
         FROM dental_insurance_preauth
-        WHERE doc_id = '$docid' AND status = '".DSS_PREAUTH_REJECTED."' AND COALESCE(viewed, 0) != 1");
+        WHERE doc_id = '$docid'
+            AND status = '" . DSS_PREAUTH_COMPLETE . "'
+            AND COALESCE(viewed, 0) != 1;";
 
-    $hst_query = "SELECT * FROM dental_hst WHERE doc_id = '".$docid."' AND status='".DSS_HST_COMPLETE."' AND (viewed IS NULL OR viewed != 1);";
+    $num_preauth = $db->getColumn($preauth_query, 'total', 0);
 
-    $num_hst = $db->getNumberRows($hst_query);
+    $preauth_query = "SELECT COUNT(id) AS total
+        FROM dental_insurance_preauth
+        WHERE doc_id = '$docid'
+            AND status = '" . DSS_PREAUTH_PENDING . "'
+            AND COALESCE(viewed, 0) != 1";
 
-    $hst_query = "SELECT * FROM dental_hst WHERE doc_id = '".$docid."' AND status='".DSS_HST_REQUESTED."' AND (viewed IS NULL OR viewed != 1);";
+    $num_pending_preauth = $db->getColumn($preauth_query, 'total', 0);
 
-    $num_requested_hst = $db->getNumberRows($hst_query);
+    $numRejectedPreAuth = $db->getColumn("SELECT COUNT(id) AS total
+        FROM dental_insurance_preauth
+        WHERE doc_id = '$docid'
+            AND status = '" . DSS_PREAUTH_REJECTED . "'
+            AND COALESCE(viewed, 0) != 1", 'total', 0);
 
-    $hst_query = "SELECT * FROM dental_hst WHERE doc_id = '".$docid."' AND status='".DSS_HST_REJECTED."' AND (viewed IS NULL OR viewed != 1);";
+    $hst_query = "SELECT COUNT(id) AS total
+        FROM dental_hst
+        WHERE doc_id = '$docid'
+            AND status = '" . DSS_HST_COMPLETE . "'
+            AND COALESCE(viewed, 0) != 1";
 
-    $num_rejected_hst = $db->getNumberRows($hst_query);
+    $num_hst = $db->getColumn($hst_query, 'total', 0);
 
-    $pc_query = "SELECT * FROM dental_patient_contacts pc inner join dental_patients p on p.patientid=pc.patientid WHERE p.docid = '".$docid."'";
+    $hst_query = "SELECT COUNT(id) AS total
+        FROM dental_hst
+        WHERE doc_id = '$docid'
+            AND status = '" . DSS_HST_REQUESTED . "'
+            AND COALESCE(viewed, 0) != 1";
 
-    $num_pc = $db->getNumberRows($pc_query);
+    $num_requested_hst = $db->getColumn($hst_query, 'total', 0);
 
-    $pi_query = "SELECT * FROM dental_patient_insurance pi inner join dental_patients p on p.patientid=pi.patientid WHERE p.docid = '".$docid."'";
+    $hst_query = "SELECT COUNT(id) AS total
+        FROM dental_hst
+        WHERE doc_id = '$docid'
+            AND status = '" . DSS_HST_REJECTED . "'
+            AND COALESCE(viewed, 0) != 1";
 
-    $num_pi = $db->getNumberRows($pi_query);
+    $num_rejected_hst = $db->getColumn($hst_query, 'total', 0);
 
-    $c_query = "SELECT * FROM dental_patients p2 inner join dental_patients p on p.patientid=p2.parent_patientid WHERE p.docid = '".$docid."'";
+    $pc_query = "SELECT COUNT(id) AS total
+        FROM dental_patient_contacts pc
+            INNER JOIN dental_patients p ON p.patientid = pc.patientid
+        WHERE p.docid = '$docid'";
 
-    $num_c = $db->getNumberRows($c_query);
+    $num_pc = $db->getColumn($pc_query, 'total', 0);
 
+    $pi_query = "SELECT COUNT(id) AS total
+        FROM dental_patient_insurance pi
+            INNER JOIN dental_patients p ON p.patientid = pi.patientid
+        WHERE p.docid = '$docid'";
 
-    $simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND
-                 ((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
-                (dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
-                )";
+    $num_pi = $db->getColumn($pi_query, 'total', 0);
 
-    $d_sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND ".$simsql."!=0 "; 
+    $c_query = "SELECT COUNT(p2.patientid) AS total
+        FROM dental_patients p2
+            INNER JOIN dental_patients p ON p.patientid = p2.parent_patientid
+        WHERE p.docid = '$docid'";
 
-    $num_pending_duplicates = $db->getNumberRows($d_sql);
+    $num_c = $db->getColumn($c_query, 'total', 0);
 
-    $bounce_query = "SELECT * FROM dental_patients p WHERE p.email_bounce=1 AND p.docid = '".$docid."'";
+    $simsql = "(SELECT COUNT(dp.patientid)
+        FROM dental_patients dp
+        WHERE dp.status = 1
+            AND dp.docid = '$docid'
+            AND (
+                (
+                    dp.firstname = p.firstname
+                    AND dp.lastname = p.lastname
+                )
+                OR (
+                    dp.add1 = p.add1
+                    AND dp.city = p.city
+                    AND dp.state = p.state
+                    AND dp.zip = p.zip
+                )
+            )
+        )";
 
-    $num_bounce = $db->getNumberRows($bounce_query);
+    /**
+     * @ToDo: Use named statuses for the patient
+     */
+    $d_sql = "SELECT COUNT(p.patientid) AS total
+        FROM dental_patients p
+        WHERE p.status IN (3, 4)
+            AND p.docid = '$docid'
+            AND $simsql !=0";
 
-    $use_payment_reports = 0;
-    $use_payment_reports_query = 'SELECT use_payment_reports FROM dental_users WHERE userid = '. $docid;
-    $use_payment_reports_result = $db->getRow($use_payment_reports_query);
-    if ($use_payment_reports_result) {
-        $use_payment_reports = $use_payment_reports_result['use_payment_reports'];
-    }
+    $num_pending_duplicates = $db->getColumn($d_sql, 'total', 0);
+
+    $bounce_query = "SELECT COUNT(p.patientid) AS total
+        FROM dental_patients p
+        WHERE p.email_bounce = 1
+            AND p.docid = '$docid'";
+
+    $num_bounce = $db->getColumn($bounce_query, 'total', 0);
+
+    $use_payment_reports = $db->getColumn("SELECT use_payment_reports
+        FROM dental_users
+        WHERE userid = '$docid'", 'use_payment_reports', false);
 
     $num_payment_reports = 0;
+
     if ($use_payment_reports) {
-        $payment_reports_query = 'SELECT count(*) as total
-                               FROM dental_payment_reports AS pr
-                               INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
-                               WHERE i.docid = '. $docid. ' AND pr.viewed != 1';
-        $payment_reports_result = $db->getRow($payment_reports_query);
-        if ($payment_reports_result) {
-            $num_payment_reports = $payment_reports_result['total'];
-        }
+        $payment_reports_query = "SELECT COUNT(payment_id) AS total
+            FROM dental_payment_reports AS pr
+            INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
+            WHERE i.docid = '$docid'
+                AND COALESCE(pr.viewed, 0) != 1";
+
+        $num_payment_reports = $db->getColumn($payment_reports_query, 'total', 0);
     }
-      $unsigned_query = "select * from (select n.*, u.name signed_name, p.adddate as parent_adddate from
-        (
-        select * from dental_notes where status!=0 AND docid='".$_SESSION['docid']."' order by adddate desc
-        ) as n
-        LEFT JOIN dental_users u on u.userid=n.signed_id
-        LEFT JOIN dental_notes p ON p.notesid = n.parentid
-        group by n.parentid
-        order by n.procedure_date DESC, n.adddate desc) as m
-        where m.signed_on IS NULL OR m.signed_on = ''
-        ";
 
-    $num_unsigned = $db->getNumberRows($unsigned_query);
+    $unsigned_query = "SELECT COUNT(m.notesid) AS total
+        FROM (
+            SELECT n.*
+            FROM (
+                SELECT
+                    notesid,
+                    signed_on,
+                    signed_id,
+                    parentid,
+                    procedure_date
+                FROM dental_notes
+                WHERE status != 0
+                    AND docid = '$docid'
+                ORDER BY adddate DESC
+            ) AS n
+                LEFT JOIN dental_users u ON u.userid = n.signed_id
+                LEFT JOIN dental_notes p ON p.notesid = n.parentid
+            GROUP BY n.parentid
+        ) AS m
+        WHERE COALESCE(m.signed_on, '') = ''";
 
-    $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status='".DSS_PREAUTH_REJECTED."' AND (viewed IS NULL OR viewed != 1);";
+    $num_unsigned = $db->getColumn($unsigned_query, 'total', 0);
 
-    $num_rejected_preauth = $db->getNumberRows($preauth_query);
+    $preauth_query = "SELECT COUNT(id) AS total
+        FROM dental_insurance_preauth
+        WHERE doc_id = '$docid'
+            AND status = '" . DSS_PREAUTH_REJECTED . "'
+            AND COALESCE(viewed, 0) != 1";
 
-    $fax_query = "SELECT * FROM dental_faxes where docid='".$docid."' AND viewed = 0 AND sfax_status=2";
+    $num_rejected_preauth = $db->getColumn($preauth_query, 'total', 0);
 
-    $num_fax_alerts = $db->getNumberRows($fax_query);
+    $fax_query = "SELECT COUNT(id) AS total
+        FROM dental_faxes
+        WHERE docid = '$docid'
+          AND COALESCE(viewed, 0) = 0
+          AND sfax_status = 2";
 
-    $support_query = "SELECT * FROM dental_support_tickets t
-          LEFT JOIN dental_support_responses r ON r.ticket_id = t.id
-         WHERE t.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND ((r.viewed=0 AND r.response_type=0) OR (t.viewed=0 AND t.create_type=0)
-      OR (t.status='".DSS_TICKET_STATUS_CLOSED."' AND r.viewed=0 AND r.response_type=0 AND r.body != '')
+    $num_fax_alerts = $db->getColumn($fax_query, 'total', 0);
 
-    )  group by t.id";
+    $support_query = "SELECT COUNT(id) AS total
+        FROM (
+            SELECT t.id
+            FROM dental_support_tickets t
+                LEFT JOIN dental_support_responses r ON r.ticket_id = t.id
+            WHERE t.docid = '$docid'
+                AND (
+                    (
+                        COALESCE(r.viewed, 0) = 0
+                        AND COALESCE(r.response_type, 0) = 0
+                    )
+                    OR (
+                        COALESCE(t.viewed, 0) = 0
+                        AND COALESCE(t.create_type, 0) = 0
+                    )
+                    OR (
+                        t.status = '" . DSS_TICKET_STATUS_CLOSED . "'
+                        AND COALESCE(r.viewed, 0) = 0
+                        AND COALESCE(r.response_type, 0) = 0
+                        AND r.body != ''
+                    )
+                )
+            GROUP BY t.id
+        ) AS derived_table";
 
-    $num_support = $db->getNumberRows($support_query);
+    $num_support = $db->getColumn($support_query, 'total', 0);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -1161,6 +1317,3 @@ if (!isset($_SESSION['userid'])) {
 } //CLOSE HOME PAGE CHECK
 
 $office_type = DSS_OFFICE_TYPE_FRONT;
-
-?>
-

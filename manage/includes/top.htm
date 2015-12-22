@@ -181,7 +181,7 @@ if( $r['homepage'] != '1') {
 
     $num_pending_preauth = $db->getColumn($preauth_query, 'total', 0);
 
-    $numRejectedPreAuth = $db->getNumberRows("SELECT COUNT(id) AS total
+    $numRejectedPreAuth = $db->getColumn("SELECT COUNT(id) AS total
         FROM dental_insurance_preauth
         WHERE doc_id = '$docid'
             AND status = '" . DSS_PREAUTH_REJECTED . "'
@@ -297,6 +297,7 @@ if( $r['homepage'] != '1') {
                 FROM dental_notes
                 WHERE status != 0
                     AND docid = '$docid'
+                ORDER BY adddate DESC
             ) AS n
                 LEFT JOIN dental_users u ON u.userid = n.signed_id
                 LEFT JOIN dental_notes p ON p.notesid = n.parentid
@@ -322,27 +323,30 @@ if( $r['homepage'] != '1') {
 
     $num_fax_alerts = $db->getColumn($fax_query, 'total', 0);
 
-    $support_query = "SELECT COUNT(t.id) AS total
-        FROM dental_support_tickets t
-            LEFT JOIN dental_support_responses r ON r.ticket_id = t.id
-        WHERE t.docid = '$docid'
-            AND (
-                (
-                    COALESCE(r.viewed, 0) = 0
-                    AND COALESCE(r.response_type, 0) = 0
+    $support_query = "SELECT COUNT(id) AS total
+        FROM (
+            SELECT t.id
+            FROM dental_support_tickets t
+                LEFT JOIN dental_support_responses r ON r.ticket_id = t.id
+            WHERE t.docid = '$docid'
+                AND (
+                    (
+                        COALESCE(r.viewed, 0) = 0
+                        AND COALESCE(r.response_type, 0) = 0
+                    )
+                    OR (
+                        COALESCE(t.viewed, 0) = 0
+                        AND COALESCE(t.create_type, 0) = 0
+                    )
+                    OR (
+                        t.status = '" . DSS_TICKET_STATUS_CLOSED . "'
+                        AND COALESCE(r.viewed, 0) = 0
+                        AND COALESCE(r.response_type, 0) = 0
+                        AND r.body != ''
+                    )
                 )
-                OR (
-                    COALESCE(t.viewed, 0) = 0
-                    AND COALESCE(t.create_type, 0) = 0
-                )
-                OR (
-                    t.status = '" . DSS_TICKET_STATUS_CLOSED . "'
-                    AND COALESCE(r.viewed, 0) = 0
-                    AND COALESCE(r.response_type, 0) = 0
-                    AND r.body != ''
-                )
-            )
-        GROUP BY t.id";
+            GROUP BY t.id
+        ) AS derived_table";
 
     $num_support = $db->getColumn($support_query, 'total', 0);
 ?>

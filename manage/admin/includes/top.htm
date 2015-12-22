@@ -271,7 +271,7 @@ if (is_super($_SESSION['admin_access'])) {
             LEFT JOIN companies c ON c.id = users.billing_company_id
         ";
 } else {
-    $sql = "JOIN dental_patients p ON p.patientid = claim.patientid
+    $sql .= "JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
             LEFT JOIN companies c ON c.id = users.billing_company_id
         ";

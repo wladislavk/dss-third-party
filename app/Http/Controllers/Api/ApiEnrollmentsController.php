@@ -8,6 +8,7 @@ use DentalSleepSolutions\Eligible\Client;
 use DentalSleepSolutions\Helpers\Invoice;
 use DentalSleepSolutions\Helpers\ApiResponse;
 use DentalSleepSolutions\Http\Requests\Enrollments\Create;
+use DentalSleepSolutions\Http\Requests\ApiEligibleEnrollmentRequest;
 use DentalSleepSolutions\Http\Requests\Enrollments\OriginalSignature;
 
 use DentalSleepSolutions\Eloquent\Dental\User;

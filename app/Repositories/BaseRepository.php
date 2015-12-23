@@ -1,6 +1,6 @@
 <?php namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Interfaces\BaseInterface;
+use DentalSleepSolutions\Interfaces\Repositories\BaseInterface;
 
 class BaseRepository implements BaseInterface
 {
@@ -363,4 +363,3 @@ class BaseRepository implements BaseInterface
         return $this->orderDirection;
     }
 }
-

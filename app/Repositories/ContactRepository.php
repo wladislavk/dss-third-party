@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\Contact;
+use DentalSleepSolutions\Eloquent\Dental\Contact;
 use DentalSleepSolutions\Interfaces\Repositories\ContactInterface;
 
 class ContactRepository extends BaseRepository implements ContactInterface

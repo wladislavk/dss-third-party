@@ -20,7 +20,7 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
     ];
 });
 
-$factory->define(DentalSleepSolutions\Models\Contact::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Contact::class, function ($faker) {
     return [
         'docid'                => $faker->randomDigit,
         'salutation'           => $faker->title($gender = 'male'|'female'),

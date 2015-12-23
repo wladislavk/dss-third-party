@@ -50,7 +50,7 @@ class ContactApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $contactTestRecord = factory(DentalSleepSolutions\Models\Contact::class)->create();
+        $contactTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Contact::class)->create();
 
         $data = [
             'docid'         => 5,
@@ -74,7 +74,7 @@ class ContactApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $contactTestRecord = factory(DentalSleepSolutions\Models\Contact::class)->create();
+        $contactTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Contact::class)->create();
 
         $this->delete('/api/v1/contact/' . $contactTestRecord->contactid)
             ->seeStatusCode(200)

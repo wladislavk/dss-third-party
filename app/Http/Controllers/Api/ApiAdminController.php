@@ -79,6 +79,16 @@ class ApiAdminController extends ApiBaseController
             'last_accessed_date' => Carbon::now(),
         ]);
 
+        if ($request->has('password')) {
+            $salt       = Password::createSalt();
+            $password   = Password::genPassword($request->input('password'), $salt);
+
+            $putValues = array_merge($putValues, [
+                'salt'     => $salt,
+                'password' => $password,
+            ]);
+        }
+
         $this->admin->update($adminId, $putValues);
 
         return ApiResponse::responseOk('Admin was updated succesfully.', $this->admin->all());

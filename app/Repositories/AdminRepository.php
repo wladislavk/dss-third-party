@@ -73,7 +73,15 @@ class AdminRepository extends BaseRepository implements AdminInterface
     public function update($id, array $data = null)
     {
         $data = $data ?: \Input::all();
-        $this->instance = parent::update($id, $data);
+        $model = $this->getModelName();
+        $this->instance = $model::find($id);
+
+        foreach ($data as $field => $value) {
+            $this->instance->$field = $value;
+        }
+
+        $this->instance->save();
+
         return $this->instance;
     }
 }

@@ -52,9 +52,10 @@ class AdminApiTest extends TestCase
         $data = [
             'name'       => 'PHPUnit updated admin',
             'first_name' => 'testFirstNameUpdated',
+            'password'   => 'test'
         ];
 
-        $this->put('/api/v1/admin/' . $adminTestRecord->adminid, $data) 
+        $this->put('/api/v1/admin/' . $adminTestRecord->adminid, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('admin', ['name' => 'PHPUnit updated admin']);

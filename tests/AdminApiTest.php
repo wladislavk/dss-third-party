@@ -41,7 +41,7 @@ class AdminApiTest extends TestCase
      */
     public function testUpdateAdmin()
     {
-        $adminTestRecord = factory(DentalSleepSolutions\Models\Admin::class)->create();
+        $adminTestRecord = factory(DentalSleepSolutions\Eloquent\Admin::class)->create();
 
         $data = [
             'name'       => 'PHPUnit updated admin',
@@ -61,7 +61,7 @@ class AdminApiTest extends TestCase
      */
     public function testDeleteAdmin()
     {
-        $adminTestRecord = factory(DentalSleepSolutions\Models\Admin::class)->create();
+        $adminTestRecord = factory(DentalSleepSolutions\Eloquent\Admin::class)->create();
 
         $this->delete('/api/v1/admin/' . $adminTestRecord->adminid)
             ->seeStatusCode(200)

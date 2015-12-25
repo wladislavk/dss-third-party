@@ -20,7 +20,7 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
     ];
 });
 
-$factory->define(DentalSleepSolutions\Models\Admin::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Admin::class, function ($faker) {
     return [
         'name'         => 'PHPUnit admin',
         'username'     => $faker->userName,

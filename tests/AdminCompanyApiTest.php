@@ -41,7 +41,7 @@ class AdminCompanyApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $adminCompanyTestRecord = factory(DentalSleepSolutions\Models\AdminCompany::class)->create();
+        $adminCompanyTestRecord = factory(DentalSleepSolutions\Eloquent\AdminCompany::class)->create();
 
         $data = [
             'companyid' => 15
@@ -62,7 +62,7 @@ class AdminCompanyApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $adminCompanyTestRecord = factory(DentalSleepSolutions\Models\AdminCompany::class)->create();
+        $adminCompanyTestRecord = factory(DentalSleepSolutions\Eloquent\AdminCompany::class)->create();
 
         $this->delete('/api/v1/admin-company/' . $adminCompanyTestRecord->id)
             ->seeStatusCode(200)

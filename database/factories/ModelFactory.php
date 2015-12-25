@@ -20,7 +20,7 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
     ];
 });
 
-$factory->define(DentalSleepSolutions\Models\AdminCompany::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\AdminCompany::class, function ($faker) {
     return [
         'adminid'    => $faker->randomDigit,
         'companyid'  => $faker->randomDigit,

@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\AdminCompany;
+use DentalSleepSolutions\Eloquent\AdminCompany;
 use DentalSleepSolutions\Interfaces\Repositories\AdminCompanyInterface;
 
 class AdminCompanyRepository extends BaseRepository implements AdminCompanyInterface

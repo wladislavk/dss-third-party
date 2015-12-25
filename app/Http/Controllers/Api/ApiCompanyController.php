@@ -1,7 +1,8 @@
 <?php
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
-use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Http\Requests\StoreCompanyRequest;
+use DentalSleepSolutions\Http\Requests\UpdateCompanyRequest;
 use DentalSleepSolutions\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
@@ -17,26 +18,6 @@ class ApiCompanyController extends ApiBaseController
      * @var $company
      */
     protected $company;
-
-    /**
-     * Validation rules for the store and update methods
-     * 
-     * @var array
-     */
-    private $rules = [
-        'name'             => 'string',
-        'city'             => 'string',
-        'state'            => 'string',
-        'zip'              => 'integer',
-        'status'           => 'integer',
-        'default_new'      => 'integer',
-        'free_fax'         => 'integer',
-        'company_type'     => 'integer',
-        'plan_id'          => 'integer',
-        'use_support'      => 'integer',
-        'exclusive'        => 'integer',
-        'vob_require_test' => 'integer'
-    ];
 
     /**
      * 
@@ -68,18 +49,11 @@ class ApiCompanyController extends ApiBaseController
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store()
+    public function store(StoreCompanyRequest $request)
     {
-        $postValues = Input::all();
-        $validator  = \Validator::make($postValues, $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
-        $postValues = array_merge($postValues, [
+        $postValues = array_merge($request->all(), [
             'adddate'    => Carbon::now(),
-            'ip_address' => \Request::ip()
+            'ip_address' => $request->ip()
         ]);
 
         $this->company->store($postValues);
@@ -93,16 +67,9 @@ class ApiCompanyController extends ApiBaseController
      * @param integer $id 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update($id)
+    public function update(UpdateCompanyRequest $request, $id)
     {
-        $putValues = Input::all();
-        $validator = \Validator::make($putValues, $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
-        $this->company->update($id, $putValues);
+        $this->company->update($id, $request->all());
 
         return ApiResponse::responseOk('Company was updated successfully.', $this->company->all());
     }
@@ -143,7 +110,7 @@ class ApiCompanyController extends ApiBaseController
      */
     public function destroy($id)
     {
-        $deletedCompany   = $this->company->destroy($id);
+        $deletedCompany = $this->company->destroy($id);
 
         if (empty($deletedCompany)) {
             return ApiResponse::responseError('Company not found.', 422);

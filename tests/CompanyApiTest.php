@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Response;
 
 class Company extends TestCase
 {
@@ -17,6 +19,8 @@ class Company extends TestCase
      */
     public function testAddCompany()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $data = [
             'name'   => 'testName',
             'add1'   => 'testAdd1',
@@ -29,7 +33,7 @@ class Company extends TestCase
 
         $this->post('/api/v1/company', $data)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('companies', ['name' => 'testName']);
     }
 
@@ -40,6 +44,8 @@ class Company extends TestCase
      */
     public function testUpdateCompany()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $companyTestRecord = factory(DentalSleepSolutions\Eloquent\Company::class)->create();
 
         $data = [
@@ -49,7 +55,7 @@ class Company extends TestCase
 
         $this->put('/api/v1/company/' . $companyTestRecord->id, $data)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('companies', ['name' => 'testNameUpdated']);
     }
 
@@ -60,11 +66,13 @@ class Company extends TestCase
      */
     public function testDeleteCompany()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $companyTestRecord = factory(DentalSleepSolutions\Eloquent\Company::class)->create();
 
         $this->delete('/api/v1/company/' . $companyTestRecord->id)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('companies', ['id' => $companyTestRecord->id]);
     }
 }

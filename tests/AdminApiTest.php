@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdminApiTest extends TestCase
 {
@@ -17,6 +19,8 @@ class AdminApiTest extends TestCase
      */
     public function testAddAdmin()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $data = [
             'name'               => 'PHPUnit admin',
             'username'           => 'testUsername',
@@ -30,7 +34,7 @@ class AdminApiTest extends TestCase
 
         $this->post('/api/v1/admin', $data)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('admin', ['name' => 'PHPUnit admin']);
     }
 
@@ -41,6 +45,8 @@ class AdminApiTest extends TestCase
      */
     public function testUpdateAdmin()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $adminTestRecord = factory(DentalSleepSolutions\Eloquent\Admin::class)->create();
 
         $data = [
@@ -50,7 +56,7 @@ class AdminApiTest extends TestCase
 
         $this->put('/api/v1/admin/' . $adminTestRecord->adminid, $data) 
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('admin', ['name' => 'PHPUnit updated admin']);
     }
 
@@ -61,11 +67,13 @@ class AdminApiTest extends TestCase
      */
     public function testDeleteAdmin()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $adminTestRecord = factory(DentalSleepSolutions\Eloquent\Admin::class)->create();
 
         $this->delete('/api/v1/admin/' . $adminTestRecord->adminid)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('admin', ['adminid' => $adminTestRecord->adminid]);
     }
 }

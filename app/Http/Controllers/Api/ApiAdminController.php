@@ -1,7 +1,8 @@
 <?php
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
-use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Http\Requests\StoreAdminRequest;
+use DentalSleepSolutions\Http\Requests\UpdateAdminRequest;
 use DentalSleepSolutions\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
@@ -18,17 +19,6 @@ class ApiAdminController extends ApiBaseController
      * @var $admin
      */
     protected $admin;
-
-    private $rules = [
-        'name'               => 'max:250',
-        'username'           => 'required|max:250|unique:admin',
-        'password'           => 'required|max:250',
-        'status'             => 'integer',
-        'admin_access'       => 'integer',
-        'email'              => 'email|max:100',
-        'first_name'         => 'string|max:50',
-        'last_name'          => 'string|max:50'
-    ];
 
     /**
      * 
@@ -60,23 +50,16 @@ class ApiAdminController extends ApiBaseController
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store()
+    public function store(StoreAdminRequest $request)
     {
-        $postValues = Input::all();
-        $validator  = \Validator::make($postValues, $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
         $salt       = Password::createSalt();
-        $password   = Password::genPassword($postValues['password'], $salt);
-        $postValues = array_merge($postValues, [
+        $password   = Password::genPassword($request->input('password'), $salt);
+        $postValues = array_merge($request->all(), [
             'salt'               => $salt,
             'password'           => $password,
             'adddate'            => Carbon::now(),
             'last_accessed_date' => Carbon::now(),
-            'ip_address'         => \Request::ip()
+            'ip_address'         => $request->ip()
         ]);
 
         $this->admin->store($postValues);
@@ -90,21 +73,9 @@ class ApiAdminController extends ApiBaseController
      * @param integer $adminId 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update($adminId)
+    public function update(UpdateAdminRequest $request, $adminId)
     {
-        $putValues = Input::all();
-
-        // if input data has a username and a password then these will be validated
-        $this->rules['username'] = 'sometimes|' . $this->rules['username'];
-        $this->rules['password'] = 'sometimes|' . $this->rules['password'];
-
-        $validator = \Validator::make($putValues, $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
-        $putValues = array_merge($putValues, [
+        $putValues = array_merge($request->all(), [
             'last_accessed_date' => Carbon::now(),
         ]);
 

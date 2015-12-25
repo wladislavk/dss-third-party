@@ -1,10 +1,10 @@
 <?php
-
 namespace DentalSleepSolutions\Exceptions;
 
 use Exception;
+use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\Exceptions\ResourceNotFound;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use DentalSleepSolutions\Http\Controllers\Api\ApiBaseController;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -16,6 +16,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         HttpException::class,
+        ResourceNotFound::class,
     ];
 
     /**
@@ -36,14 +37,35 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $e
-     * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $e)
     {
+        if ($e instanceof ResourceNotFound) {
+            $e = new HttpException(404, 'Resource not found');
+        }
+
         if ($request->wantsJson()) {
-            return ApiBaseController::createErrorResponse('Error occured.', 404);
+            return $this->renderJsonException($e);
         }
 
         return parent::render($request, $e);
+    }
+
+    /**
+     * Render json error response.
+     *
+     * @param  \Exception $e
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function renderJsonException(Exception $e)
+    {
+        if ($this->isHttpException($e)) {
+            return ApiResponse::responseError($e->getMessage());
+        }
+
+        $message = 'Internal error occured. We are investigating the issue.';
+
+        return ApiResponse::responseError($message, 500);
     }
 }

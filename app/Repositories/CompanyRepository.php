@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\Company;
+use DentalSleepSolutions\Eloquent\Company;
 use DentalSleepSolutions\Interfaces\Repositories\CompanyInterface;
 
 class CompanyRepository extends BaseRepository implements CompanyInterface

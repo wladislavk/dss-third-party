@@ -40,7 +40,7 @@ class Company extends TestCase
      */
     public function testUpdateCompany()
     {
-        $companyTestRecord = factory(DentalSleepSolutions\Models\Company::class)->create();
+        $companyTestRecord = factory(DentalSleepSolutions\Eloquent\Company::class)->create();
 
         $data = [
             'name'   => 'testNameUpdated',
@@ -60,7 +60,7 @@ class Company extends TestCase
      */
     public function testDeleteCompany()
     {
-        $companyTestRecord = factory(DentalSleepSolutions\Models\Company::class)->create();
+        $companyTestRecord = factory(DentalSleepSolutions\Eloquent\Company::class)->create();
 
         $this->delete('/api/v1/company/' . $companyTestRecord->id)
             ->seeStatusCode(200)

@@ -20,7 +20,7 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
     ];
 });
 
-$factory->define(DentalSleepSolutions\Models\Company::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Company::class, function ($faker) {
     return [
         'name'       => $faker->name,
         'add1'       => $faker->address,

@@ -2,8 +2,10 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Response;
 
-class AllergenAipTest extends TestCase
+class AllergenApiTest extends TestCase
 {
     use WithoutMiddleware;
     use DatabaseTransactions;
@@ -17,6 +19,8 @@ class AllergenAipTest extends TestCase
      */
     public function testAddAllergen()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $data = [
             'allergens'   => 'testAllergen',
             'description' => 'This is test description',
@@ -26,7 +30,7 @@ class AllergenAipTest extends TestCase
 
         $this->post('/api/v1/allergen', $data)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_allergens', ['allergens' => 'testAllergen']);
     }
 
@@ -37,6 +41,8 @@ class AllergenAipTest extends TestCase
      */
     public function testUpdateAllergen()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $allergenTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Allergen::class)->create();
 
         $data = [
@@ -46,7 +52,7 @@ class AllergenAipTest extends TestCase
 
         $this->put('/api/v1/allergen/' . $allergenTestRecord->allergensid, $data)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_allergens', ['allergens' => 'testUpdatedAllergen']);
     }
 
@@ -57,11 +63,13 @@ class AllergenAipTest extends TestCase
      */
     public function testDeleteAllergen()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $allergenTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Allergen::class)->create();
 
         $this->delete('/api/v1/allergen/' . $allergenTestRecord->allergensid)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('dental_allergens', ['allergensid' => $allergenTestRecord->allergensid]);
     }
 }

@@ -1,7 +1,8 @@
 <?php
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
-use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Http\Requests\StoreAllergenRequest;
+use DentalSleepSolutions\Http\Requests\UpdateAllergenRequest;
 use DentalSleepSolutions\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
@@ -17,18 +18,6 @@ class ApiAllergenController extends ApiBaseController
      * @var $allergens
      */
     protected $allergen;
-
-    /**
-     * Validation rules
-     * 
-     * @var $rules
-     */
-    private $rules = [
-        'allergens'   => 'required|string|unique:dental_allergens',
-        'description' => 'string',
-        'sortby'      => 'integer',
-        'status'      => 'integer'
-    ];
 
     /**
      * 
@@ -60,18 +49,11 @@ class ApiAllergenController extends ApiBaseController
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store()
+    public function store(StoreAllergenRequest $request)
     {
-        $postValues = Input::all();
-        $validator  = \Validator::make($postValues, $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
-        $postValues = array_merge($postValues, [
+        $postValues = array_merge($request->all(), [
             'adddate'    => Carbon::now(),
-            'ip_address' => \Request::ip()
+            'ip_address' => $request->ip()
         ]);
 
         $this->allergen->store($postValues);
@@ -85,18 +67,9 @@ class ApiAllergenController extends ApiBaseController
      * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update($allergensId)
+    public function update(UpdateAllergenRequest $request, $allergensId)
     {
-        // if input data has an allergen title then it will be validated
-        $this->rules['allergens'] = 'sometimes|' . $this->rules['allergens'];
-
-        $validator = \Validator::make(Input::all(), $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
-        $this->allergen->update($allergensId, Input::all());
+        $this->allergen->update($allergensId, $request->all());
 
         return ApiResponse::responseOk('Allergen was updated successfully.', $this->allergen->all());
     }

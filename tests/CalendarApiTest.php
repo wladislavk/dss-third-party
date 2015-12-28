@@ -53,7 +53,7 @@ class CalendarApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $calendarTestRecord = factory(DentalSleepSolutions\Models\Calendar::class)->create();
+        $calendarTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Calendar::class)->create();
 
         $data = [
             'description' => 'updated test description',
@@ -76,7 +76,7 @@ class CalendarApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $calendarTestRecord = factory(DentalSleepSolutions\Models\Calendar::class)->create();
+        $calendarTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Calendar::class)->create();
 
         $this->delete('/api/v1/calendar/' . $calendarTestRecord->id)
             ->seeStatusCode(200)

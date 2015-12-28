@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\Calendar;
+use DentalSleepSolutions\Eloquent\Dental\Calendar;
 use DentalSleepSolutions\Interfaces\Repositories\CalendarInterface;
 
 class CalendarRepository extends BaseRepository implements CalendarInterface

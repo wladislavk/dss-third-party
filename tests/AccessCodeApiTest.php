@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Response;
 
 class AccessCodeApiTest extends TestCase
 {
@@ -17,6 +19,8 @@ class AccessCodeApiTest extends TestCase
      */
     public function testAddAccessCode()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $data = [
             'access_code' => 'testAccessCode',
             'notes'       => 'additional test notes',
@@ -26,7 +30,7 @@ class AccessCodeApiTest extends TestCase
 
         $this->post('/api/v1/access-code', $data)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_access_codes', ['access_code' => 'testAccessCode']);
     }
 
@@ -37,7 +41,9 @@ class AccessCodeApiTest extends TestCase
      */
     public function testUpdateAccessCode()
     {
-        $accessCodeTestRecord = factory(DentalSleepSolutions\Models\AccessCode::class)->create();
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
+        $accessCodeTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\AccessCode::class)->create();
 
         $data = [
             'access_code' => 'updatedTestAccessCode',
@@ -46,7 +52,7 @@ class AccessCodeApiTest extends TestCase
 
         $this->put('api/v1/access-code/' . $accessCodeTestRecord->id, $data)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_access_codes', ['access_code' => 'updatedTestAccessCode']);
     }
 
@@ -57,11 +63,13 @@ class AccessCodeApiTest extends TestCase
      */
     public function testDeleteAccessCode()
     {
-        $accessCodeTestRecord = factory(DentalSleepSolutions\Models\AccessCode::class)->create();
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
+        $accessCodeTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\AccessCode::class)->create();
 
         $this->delete('/api/v1/access-code/' . $accessCodeTestRecord->id)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('dental_access_codes', ['id' => $accessCodeTestRecord->id]);
     }
 }

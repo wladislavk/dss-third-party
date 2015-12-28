@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\AccessCode;
+use DentalSleepSolutions\Eloquent\Dental\AccessCode;
 use DentalSleepSolutions\Interfaces\Repositories\AccessCodeInterface;
 
 class AccessCodeRepository extends BaseRepository implements AccessCodeInterface

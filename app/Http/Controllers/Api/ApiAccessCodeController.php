@@ -1,7 +1,8 @@
 <?php
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
-use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Http\Requests\StoreAccessCodeRequest;
+use DentalSleepSolutions\Http\Requests\UpdateAccessCodeRequest;
 use DentalSleepSolutions\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
@@ -17,18 +18,6 @@ class ApiAccessCodeController extends ApiBaseController
      * @var $accessCode
      */
     protected $accessCode;
-
-    /**
-     * Validation rules for the store and update methods
-     * 
-     * @var array
-     */
-    private $rules = [
-        'access_code' => 'required|string|unique:dental_access_codes',
-        'notes'       => 'string',
-        'status'      => 'integer',
-        'plan_id'     => 'integer'
-    ];
 
     /**
      * 
@@ -60,18 +49,11 @@ class ApiAccessCodeController extends ApiBaseController
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store()
+    public function store(StoreAccessCodeRequest $request)
     {
-        $postValues = Input::all();
-        $validator  = \Validator::make($postValues, $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
-        $postValues = array_merge($postValues, [
-            'adddate' => Carbon::now(),
-            'ip_address' => \Request::ip()
+        $postValues = array_merge($request->all(), [
+            'adddate'    => Carbon::now(),
+            'ip_address' => $request->ip()
         ]);
 
         $this->accessCode->store($postValues);
@@ -85,20 +67,9 @@ class ApiAccessCodeController extends ApiBaseController
      * @param integer $id 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update($id)
+    public function update(UpdateAccessCodeRequest $request, $id)
     {
-        $putValues = Input::all();
-
-        // if input data has an access_code then it will be validated
-        $this->rules['access_code'] = 'sometimes|' . $this->rules['access_code'];
-
-        $validator = \Validator::make($putValues, $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
-        $this->accessCode->update($id, $putValues);
+        $this->accessCode->update($id, $request->all());
 
         return ApiResponse::responseOk('Access code was updated successfully.', $this->accessCode->all());
     }

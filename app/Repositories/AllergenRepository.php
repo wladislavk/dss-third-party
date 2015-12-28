@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\Allergen;
+use DentalSleepSolutions\Eloquent\Dental\Allergen;
 use DentalSleepSolutions\Interfaces\Repositories\AllergenInterface;
 
 class AllergenRepository extends BaseRepository implements AllergenInterface

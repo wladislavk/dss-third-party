@@ -19,14 +19,3 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
         'remember_token' => str_random(10),
     ];
 });
-
-$factory->define(DentalSleepSolutions\Models\Allergen::class, function ($faker) {
-    return [
-        'allergens'   => $faker->word,
-        'description' => $faker->sentence($nbWords = 6),
-        'sortby'      => $faker->randomDigit,
-        'status'      => $faker->randomDigit,
-        'adddate'     => $faker->dateTime(),
-        'ip_address'  => $faker->ipv4
-    ];
-});

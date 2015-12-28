@@ -37,7 +37,7 @@ class AllergenAipTest extends TestCase
      */
     public function testUpdateAllergen()
     {
-        $allergenTestRecord = factory(DentalSleepSolutions\Models\Allergen::class)->create();
+        $allergenTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Allergen::class)->create();
 
         $data = [
             'allergens'   => 'testUpdatedAllergen',
@@ -57,7 +57,7 @@ class AllergenAipTest extends TestCase
      */
     public function testDeleteAllergen()
     {
-        $allergenTestRecord = factory(DentalSleepSolutions\Models\Allergen::class)->create();
+        $allergenTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Allergen::class)->create();
 
         $this->delete('/api/v1/allergen/' . $allergenTestRecord->allergensid)
             ->seeStatusCode(200)

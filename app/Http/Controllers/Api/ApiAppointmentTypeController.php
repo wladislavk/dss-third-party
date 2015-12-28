@@ -1,7 +1,8 @@
 <?php
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
-use DentalSleepSolutions\Http\Request\Request;
+use DentalSleepSolutions\Http\Requests\StoreAppointmentTypeRequest;
+use DentalSleepSolutions\Http\Requests\UpdateAppointmentTypeRequest;
 use DentalSleepSolutions\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
@@ -17,18 +18,6 @@ class ApiAppointmentTypeController extends ApiBaseController
      * @var $apptType
      */
     protected $apptType;
-
-    /**
-     * Validation rules
-     * 
-     * @var $rules
-     */
-    private $rules = [
-        'name'      => 'string',
-        'color'     => 'required|string',
-        'classname' => 'required|string',
-        'docid'     => 'required|integer'
-    ];
 
     /**
      * 
@@ -60,16 +49,9 @@ class ApiAppointmentTypeController extends ApiBaseController
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store()
+    public function store(StoreAppointmentTypeRequest $request)
     {
-        $postValues = Input::all();
-        $validator  = \Validator::make($postValues, $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
-        $this->apptType->store($postValues);
+        $this->apptType->store($request->all());
 
         return ApiResponse::responseOk('Appointment type was added successfully.', $this->apptType->all());
     }
@@ -80,20 +62,9 @@ class ApiAppointmentTypeController extends ApiBaseController
      * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update($id)
+    public function update(UpdateAppointmentTypeRequest $request, $id)
     {
-        // if input data has a color, a classname, a docid then these values will be validated
-        $this->rules['color']     = 'sometimes|' . $this->rules['color'];
-        $this->rules['classname'] = 'sometimes|' . $this->rules['classname'];
-        $this->rules['docid']     = 'sometimes|' . $this->rules['docid'];
-
-        $validator = \Validator::make(Input::all(), $this->rules);
-
-        if ($validator->fails()) {
-            return ApiResponse::responseError($validator->errors(), 422);
-        }
-
-        $this->apptType->update($id, Input::all());
+        $this->apptType->update($id, $request->all());
 
         return ApiResponse::responseOk('Appointment type was updated successfully.', $this->apptType->all());
     }

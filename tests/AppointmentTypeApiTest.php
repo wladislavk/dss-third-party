@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Response;
 
 class AppointmentTypeApiTest extends TestCase
 {
@@ -17,6 +19,8 @@ class AppointmentTypeApiTest extends TestCase
      */
     public function testAddAppointmentType()
     {
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $data = [
             'name'      => 'testName',
             'color'     => 'FFFFFF',
@@ -26,7 +30,7 @@ class AppointmentTypeApiTest extends TestCase
 
         $this->post('/api/v1/appt-type', $data)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_appt_types', ['name' => 'testName']);
     }
 
@@ -37,7 +41,9 @@ class AppointmentTypeApiTest extends TestCase
      */
     public function testUpdateAppointmentType()
     {
-        $apptTypeRecord = factory(DentalSleepSolutions\Models\AppointmentType::class)->create();
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
+        $apptTypeRecord = factory(DentalSleepSolutions\Eloquent\Dental\AppointmentType::class)->create();
 
         $data = [
             'name'  => 'testUpdatedName',
@@ -46,7 +52,7 @@ class AppointmentTypeApiTest extends TestCase
 
         $this->put('/api/v1/appt-type/' . $apptTypeRecord->id, $data)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_appt_types', ['name' => 'testUpdatedName']);
     }
 
@@ -57,11 +63,13 @@ class AppointmentTypeApiTest extends TestCase
      */
     public function testDeleteAppointmentType()
     {
-        $apptTypeRecord = factory(DentalSleepSolutions\Models\AppointmentType::class)->create();
+        $statusOk = Arr::get(Response::$statusTexts, 200);
+
+        $apptTypeRecord = factory(DentalSleepSolutions\Eloquent\Dental\AppointmentType::class)->create();
 
         $this->delete('/api/v1/appt-type/' . $apptTypeRecord->id)
             ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
+            ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('dental_appt_types', ['id' => $apptTypeRecord->id]);
     }
 }

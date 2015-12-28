@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\AppointmentType;
+use DentalSleepSolutions\Eloquent\Dental\AppointmentType;
 use DentalSleepSolutions\Interfaces\Repositories\AppointmentTypeInterface;
 
 class AppointmentTypeRepository extends BaseRepository implements AppointmentTypeInterface

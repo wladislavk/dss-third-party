@@ -19,12 +19,3 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
         'remember_token' => str_random(10),
     ];
 });
-
-$factory->define(DentalSleepSolutions\Models\AppointmentType::class, function ($faker) {
-    return [
-        'name'      => $faker->word,
-        'color'     => $faker->hexcolor,
-        'classname' => $faker->word,
-        'docid'     => $faker->randomDigit()
-    ];
-});

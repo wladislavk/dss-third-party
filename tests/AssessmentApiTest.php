@@ -43,7 +43,7 @@ class AssessmentApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $assessmentTestRecord = factory(DentalSleepSolutions\Models\Assessment::class)->create();
+        $assessmentTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Assessment::class)->create();
 
         $data = [
             'assessment' => 'testUpdatedAssessment',
@@ -65,7 +65,7 @@ class AssessmentApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $assessmentTestRecord = factory(DentalSleepSolutions\Models\Assessment::class)->create();
+        $assessmentTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Assessment::class)->create();
 
         $this->delete('/api/v1/assessment/' . $assessmentTestRecord->assessmentid)
             ->seeStatusCode(200)

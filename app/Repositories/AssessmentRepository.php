@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\Assessment;
+use DentalSleepSolutions\Eloquent\Dental\Assessment;
 use DentalSleepSolutions\Interfaces\Repositories\AssessmentInterface;
 
 class AssessmentRepository extends BaseRepository implements AssessmentInterface

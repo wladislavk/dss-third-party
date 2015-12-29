@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\ClaimText;
+use DentalSleepSolutions\Eloquent\Dental\ClaimText;
 use DentalSleepSolutions\Interfaces\Repositories\ClaimTextInterface;
 
 class ClaimTextRepository extends BaseRepository implements ClaimTextInterface

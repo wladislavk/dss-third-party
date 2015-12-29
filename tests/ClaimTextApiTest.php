@@ -42,7 +42,7 @@ class ClaimTextApiTest extends TestCase
     public function testUpdateClaimText()
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
-        $claimTextTestRecord = factory(DentalSleepSolutions\Models\ClaimText::class)->create();
+        $claimTextTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimText::class)->create();
 
         $data = [
             'description' => 'Update test description'
@@ -63,7 +63,7 @@ class ClaimTextApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $claimTextTestRecord = factory(DentalSleepSolutions\Models\ClaimText::class)->create();
+        $claimTextTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimText::class)->create();
 
         $this->delete('/api/v1/claim-text/' . $claimTextTestRecord->id)
             ->seeStatusCode(200)

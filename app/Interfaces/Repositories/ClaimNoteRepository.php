@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\ClaimNote;
+use DentalSleepSolutions\Eloquent\Dental\ClaimNote;
 use DentalSleepSolutions\Interfaces\Repositories\ClaimNoteInterface;
 
 class ClaimNoteRepository extends BaseRepository implements ClaimNoteInterface

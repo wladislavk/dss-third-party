@@ -43,7 +43,7 @@ class ClaimNoteApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $claimNoteTestRecord = factory(DentalSleepSolutions\Models\ClaimNote::class)->create();
+        $claimNoteTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimNote::class)->create();
 
         $data = [
             'note' => 'updatedTestNote'
@@ -64,7 +64,7 @@ class ClaimNoteApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $claimNoteTestRecord = factory(DentalSleepSolutions\Models\ClaimNote::class)->create();
+        $claimNoteTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimNote::class)->create();
 
         $this->delete('/api/v1/claim-note/' . $claimNoteTestRecord->id)
             ->seeStatusCode(200)

@@ -38,7 +38,7 @@ class ChangeListApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $changeListTestRecord = factory(DentalSleepSolutions\Models\ChangeList::class)->create();
+        $changeListTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ChangeList::class)->create();
 
         $data = ['content' => 'updatedTestContent'];
 
@@ -57,7 +57,7 @@ class ChangeListApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $changeListTestRecord = factory(DentalSleepSolutions\Models\ChangeList::class)->create();
+        $changeListTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ChangeList::class)->create();
 
         $this->delete('/api/v1/change-list/' . $changeListTestRecord->id)
             ->seeStatusCode(200)

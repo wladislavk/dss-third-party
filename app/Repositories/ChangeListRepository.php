@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\ChangeList;
+use DentalSleepSolutions\Eloquent\Dental\ChangeList;
 use DentalSleepSolutions\Interfaces\Repositories\ChangeListInterface;
 
 class ChangeListRepository extends BaseRepository implements ChangeListInterface

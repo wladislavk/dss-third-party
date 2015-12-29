@@ -1,5 +1,8 @@
-<?php namespace DentalSleepSolutions\Repositories;
+<?php
 
+namespace DentalSleepSolutions\Repositories;
+
+use DentalSleepSolutions\Eloquent\Enrollments\PayersList;
 use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
 
 class EnrollmentPayersApiRepository extends BaseRepository implements EnrollmentPayersInterface
@@ -11,7 +14,7 @@ class EnrollmentPayersApiRepository extends BaseRepository implements Enrollment
      *
      * Main model name for the Enrollment  Payers Model
      */
-    protected $modelName = 'DentalSleepSolutions\EnrollmentPayersList';
+    protected $modelName = PayersList::class;
 
     /**
      * @var null

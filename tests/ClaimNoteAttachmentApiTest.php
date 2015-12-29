@@ -41,7 +41,7 @@ class ClaimNoteAttachmentApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $claimNoteAttachmentTestRecord = factory(DentalSleepSolutions\Models\ClaimNoteAttachment::class)->create();
+        $claimNoteAttachmentTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment::class)->create();
 
         $data = [
             'filename' => 'updatedTestFilename'
@@ -62,7 +62,7 @@ class ClaimNoteAttachmentApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $claimNoteAttachmentTestRecord = factory(DentalSleepSolutions\Models\ClaimNoteAttachment::class)->create();
+        $claimNoteAttachmentTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment::class)->create();
 
         $this->delete('/api/v1/claim-note-attachment/' . $claimNoteAttachmentTestRecord->id)
             ->seeStatusCode(200)

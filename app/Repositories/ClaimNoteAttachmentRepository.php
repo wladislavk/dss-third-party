@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\ClaimNoteAttachment;
+use DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment;
 use DentalSleepSolutions\Interfaces\Repositories\ClaimNoteAttachmentInterface;
 
 class ClaimNoteAttachmentRepository extends BaseRepository implements ClaimNoteAttachmentInterface

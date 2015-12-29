@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\ClaimElectronic;
+use DentalSleepSolutions\Eloquent\Dental\ClaimElectronic;
 use DentalSleepSolutions\Interfaces\Repositories\ClaimElectronicInterface;
 
 class ClaimElectronicRepository extends BaseRepository implements ClaimElectronicInterface

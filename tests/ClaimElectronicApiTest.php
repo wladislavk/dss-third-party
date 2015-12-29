@@ -50,7 +50,7 @@ class ClaimElectronicApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $claimElectronicTestRecord = factory(DentalSleepSolutions\Models\ClaimElectronic::class)->create();
+        $claimElectronicTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimElectronic::class)->create();
 
         $data = [
             'claimid'      => 15,
@@ -71,7 +71,7 @@ class ClaimElectronicApiTest extends TestCase
     public function testDeleteClaimElectronic()
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
-        $claimElectronicTestRecord = factory(DentalSleepSolutions\Models\ClaimElectronic::class)->create();
+        $claimElectronicTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimElectronic::class)->create();
 
         $this->delete('/api/v1/claim-electronic/' . $claimElectronicTestRecord->id)
             ->seeStatusCode(200)

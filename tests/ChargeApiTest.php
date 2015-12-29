@@ -49,7 +49,7 @@ class ChargeApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $chargeTestRecord = factory(DentalSleepSolutions\Models\Charge::class)->create();
+        $chargeTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Charge::class)->create();
 
         $data = [
             'stripe_customer' => 'updatedTestStripeCustomer',
@@ -71,7 +71,7 @@ class ChargeApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $chargeTestRecord = factory(DentalSleepSolutions\Models\Charge::class)->create();
+        $chargeTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Charge::class)->create();
 
         $this->delete('/api/v1/charge/' . $chargeTestRecord->id)
             ->seeStatusCode(200)

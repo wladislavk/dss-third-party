@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\Charge;
+use DentalSleepSolutions\Eloquent\Dental\Charge;
 use DentalSleepSolutions\Interfaces\Repositories\ChargeInterface;
 
 class ChargeRepository extends BaseRepository implements ChargeInterface

@@ -42,7 +42,7 @@ class ComplaintApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $complaintTestRecord = factory(DentalSleepSolutions\Models\Complaint::class)->create();
+        $complaintTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Complaint::class)->create();
 
         $data = [
             'complaint' => 'Updated test complaint',
@@ -64,7 +64,7 @@ class ComplaintApiTest extends TestCase
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
-        $complaintTestRecord = factory(DentalSleepSolutions\Models\Complaint::class)->create();
+        $complaintTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Complaint::class)->create();
 
         $this->delete('/api/v1/complaint/' . $complaintTestRecord->complaintid)
             ->seeStatusCode(200)

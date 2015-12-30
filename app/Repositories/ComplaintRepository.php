@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Models\Complaint;
+use DentalSleepSolutions\Eloquent\Dental\Complaint;
 use DentalSleepSolutions\Interfaces\Repositories\ComplaintInterface;
 
 class ComplaintRepository extends BaseRepository implements ComplaintInterface

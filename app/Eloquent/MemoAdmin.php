@@ -1,11 +1,24 @@
 <?php
 
-namespace DentalSleepSolutions;
+namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
 class MemoAdmin extends Model
 {
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'memo_admin';
+
+    /**
+     * Primary key for the table
+     *
+     * @var string
+     */
+    protected $primaryKey = 'memo_id';
 
     /**
      * Mass assignable attributes
@@ -15,24 +28,9 @@ class MemoAdmin extends Model
     protected $fillable = ['memo', 'last_update', 'off_date'];
 
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'memo_admin';
-
-    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
     public $timestamps = false;
-
-
-    /**
-     * Primary key for the table
-     * @var string
-     */
-    protected $primaryKey = 'memo_id';
-
 }

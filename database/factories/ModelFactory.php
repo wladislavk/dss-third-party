@@ -19,16 +19,3 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
         'remember_token' => str_random(10),
     ];
 });
-
-$factory->define(DentalSleepSolutions\Eloquent\Dental\ContactType::class, function ($faker) {
-    return [
-        'contacttype' => $faker->regexify('[A-Za-z]{200}'),
-        'description' => $faker->regexify('[A-Za-z]'),
-        'sortby'      => $faker->randomDigit,
-        'status'      => $faker->regexify('[0-9]{1}'),
-        'adddate'     => $faker->dateTime(),
-        'ip_address'  => $faker->ipv4,
-        'physician'   => $faker->regexify('[0-9]{1}'),
-        'corporate'   => $faker->regexify('[0-9]{1}')
-    ];
-});

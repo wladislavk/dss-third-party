@@ -27,7 +27,6 @@ class ContactTypeApiTest extends TestCase
             'description' => 'test_description_added',
             'sortby'      => 77,
             'status'      => 1,
-            'adddate'     => Carbon::now(),
             'physician'   => 2,
             'corporate'   => 3
         ];
@@ -50,7 +49,7 @@ class ContactTypeApiTest extends TestCase
         $contactTypeTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ContactType::class)->create();
 
         $data = [
-            'sortby'       => 78,
+            'sortby'      => 78,
             'contacttype' => 'update_test_contacttype_added'
         ];
 
@@ -68,6 +67,7 @@ class ContactTypeApiTest extends TestCase
     public function testDeleteContactType()
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $contactTypeTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ContactType::class)->create();
 
         $this->delete('/api/v1/contact-type/' . $contactTypeTestRecord->contacttypeid)

@@ -1,8 +1,13 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
+
 require_once('admin/includes/main_include.php');
+require_once __DIR__ . '/admin/includes/claim_functions.php';
 include("includes/sescheck.php");
 include("includes/constants.inc");
+
 ?>
 <html>
 <head>
@@ -34,7 +39,7 @@ if(($claim_r['primary_claim_id']=='' || $claim_r['primary_claim_id']==0) && $sta
         $r = mysqli_fetch_assoc($q);
         $claim_id = $r['insuranceid'];
   }else{
-        $claim_id = create_claim($_GET['pid'], $claim_producer);
+        $claim_id = ClaimFormData::createPrimaryClaim($_GET['pid'], $claim_producer);
   }
 }else{
   $claim_id = $claim_r['primary_claim_id'];

@@ -147,142 +147,120 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
+$patientId = intval($_REQUEST['pid']);
 
-if(is_super($_SESSION['admin_access'])){
-$sql = "SELECT "
-     . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
-     . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
-     . "  claim.primary_fdf, claim.secondary_fdf, "
-     . "  claim.mailed_date, claim.sec_mailed_date, "
-     . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
-     . "  c.name as billing_name, "
-     . "  CASE WHEN
-    claim.status IN (".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_SEC_SENT.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_PAID_SEC_INSURANCE.") THEN co2.company
-    ELSE co.company 
-  END as ins_name, "
-     //. "  dif.filename as eob, " 
-     . "  CASE claim.status 
-		WHEN ".DSS_CLAIM_PENDING." THEN 1
-                WHEN ".DSS_CLAIM_SEC_PENDING." THEN 2
-                WHEN ".DSS_CLAIM_DISPUTE." THEN 3
-                WHEN ".DSS_CLAIM_SEC_DISPUTE." THEN 4
-                WHEN ".DSS_CLAIM_SENT." THEN 5
-                WHEN ".DSS_CLAIM_SEC_SENT." THEN 6
-                WHEN ".DSS_CLAIM_REJECTED." THEN 7
-                WHEN ".DSS_CLAIM_PAID_INSURANCE." THEN 8
-                WHEN ".DSS_CLAIM_PAID_SEC_INSURANCE." THEN 9
-                WHEN ".DSS_CLAIM_PAID_PATIENT." THEN 10
-       END AS status_order, "
-     . " (SELECT count(*) FROM dental_claim_notes where claim_id=claim.insuranceid) num_notes, "
-     . " (SELECT count(*) FROM dental_claim_notes where claim_id=claim.insuranceid AND create_type='1') num_fo_notes "
-     . "FROM "
-     . "  dental_insurance claim "
-     . "  JOIN dental_patients p ON p.patientid = claim.patientid "
-     . "  JOIN dental_users users ON claim.docid = users.userid "
-     . "  JOIN dental_users users2 ON claim.userid = users2.userid "
-     . "  LEFT JOIN companies c ON c.id = users.billing_company_id "
-     . "  LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co "
-     . "  LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co ";
-}elseif(is_billing($_SESSION['admin_access'])){
-$sql = "SELECT "
-     . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
-     . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
-     . "  claim.primary_fdf, claim.secondary_fdf, "
-     . "  claim.mailed_date, claim.sec_mailed_date, "
-     . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
-     . "  CASE WHEN
-    claim.status IN (".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_SEC_SENT.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_PAID_SEC_INSURANCE.") THEN co2.company
-    ELSE co.company 
-  END as ins_name, "
-     //. "  dif.filename as eob, " 
-     . "  CASE claim.status 
-                WHEN ".DSS_CLAIM_PENDING." THEN 1
-                WHEN ".DSS_CLAIM_SEC_PENDING." THEN 2
-                WHEN ".DSS_CLAIM_DISPUTE." THEN 3
-                WHEN ".DSS_CLAIM_SEC_DISPUTE." THEN 4
-                WHEN ".DSS_CLAIM_SENT." THEN 5
-                WHEN ".DSS_CLAIM_SEC_SENT." THEN 6
-                WHEN ".DSS_CLAIM_REJECTED." THEN 7
-                WHEN ".DSS_CLAIM_PAID_INSURANCE." THEN 8
-                WHEN ".DSS_CLAIM_PAID_SEC_INSURANCE." THEN 9
-                WHEN ".DSS_CLAIM_PAID_PATIENT." THEN 10
-       END AS status_order "
-     . "FROM "
-     . "  dental_insurance claim "
-     . "  JOIN dental_patients p ON p.patientid = claim.patientid "
-     . "  JOIN dental_users users ON claim.docid = users.userid AND users.billing_company_id='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."'"
-     . "  JOIN dental_user_company uc ON uc.userid = claim.docid "
-     . "  LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co "
-     . "  LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co " 
-     . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
+$backOfficeClaimsConditional = backOfficeClaimsConditional();
+
+$sql = "SELECT
+    claim.insuranceid,
+    claim.patientid,
+    p.firstname,
+    p.lastname,
+    claim.adddate,
+    claim.status,
+    CONCAT(users.first_name, ' ', users.last_name) AS doc_name,
+    CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
+    claim.primary_fdf,
+    claim.secondary_fdf,
+    claim.mailed_date,
+    claim.sec_mailed_date,
+    DATEDIFF(NOW(), claim.adddate) AS days_pending,
+    IF (
+        COALESCE(claim.primary_claim_id, 0),
+        COALESCE(co2.company, ''),
+        COALESCE(co.company, '')
+    ) AS ins_name,
+    CASE claim.status
+        WHEN '" . DSS_CLAIM_PENDING . "' THEN 1
+        WHEN '" . DSS_CLAIM_SEC_PENDING . "' THEN 2
+        WHEN '" . DSS_CLAIM_DISPUTE . "' THEN 3
+        WHEN '" . DSS_CLAIM_SEC_DISPUTE . "' THEN 4
+        WHEN '" . DSS_CLAIM_SENT . "' THEN 5
+        WHEN '" . DSS_CLAIM_SEC_SENT . "' THEN 6
+        WHEN '" . DSS_CLAIM_REJECTED . "' THEN 7
+        WHEN '" . DSS_CLAIM_PAID_INSURANCE . "' THEN 8
+        WHEN '" . DSS_CLAIM_PAID_SEC_INSURANCE . "' THEN 9
+        WHEN '" . DSS_CLAIM_PAID_PATIENT . "' THEN 10
+        WHEN '" . DSS_CLAIM_PAID_SEC_PATIENT . "' THEN 11
+    END AS status_order
+    ";
+
+if (is_super($_SESSION['admin_access'])) {
+    $sql .= ",
+            c.name AS billing_name,
+            (
+                SELECT COUNT(id)
+                FROM dental_claim_notes
+                WHERE claim_id = claim.insuranceid
+            ) AS num_notes,
+            (
+                SELECT COUNT(id)
+                FROM dental_claim_notes
+                WHERE claim_id = claim.insuranceid
+                    AND create_type = '1'
+            ) AS num_fo_notes
+        FROM dental_insurance claim
+            JOIN dental_patients p ON p.patientid = claim.patientid
+            JOIN dental_users users ON claim.docid = users.userid
+            JOIN dental_users users2 ON claim.userid = users2.userid
+            LEFT JOIN companies c ON c.id = users.billing_company_id
+            LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
+            LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
+        ";
+} elseif (is_billing($_SESSION['admin_access'])) {
+    $sql .= "
+        FROM dental_insurance claim
+            JOIN dental_patients p ON p.patientid = claim.patientid
+            JOIN dental_users users ON claim.docid = users.userid
+                AND users.billing_company_id = '" . $db->escape($_SESSION['admincompanyid']) . "'
+            LEFT JOIN companies c ON c.id = users.billing_company_id
+            JOIN dental_user_company uc ON uc.userid = claim.docid
+            LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
+            LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
+            JOIN dental_users users2 ON claim.userid = users2.userid
+        ";
+} else {
+    $sql .= "
+        FROM dental_insurance claim
+            JOIN dental_patients p ON p.patientid = claim.patientid
+            JOIN dental_users users ON claim.docid = users.userid
+            LEFT JOIN companies c ON c.id = users.billing_company_id
+            JOIN dental_user_company uc ON uc.userid = claim.docid
+                AND uc.companyid = '" . $db->escape($_SESSION['admincompanyid']) . "'
+            LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
+            LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
+            JOIN dental_users users2 ON claim.userid = users2.userid
+        ";
 }
-else{
-$sql = "SELECT "
-     . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
-     . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
-     . "  claim.primary_fdf, claim.secondary_fdf, "
-     . "  claim.mailed_date, claim.mailed_date, "
-     . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
-     . "  CASE WHEN
-    claim.status IN (".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_SEC_SENT.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_PAID_SEC_INSURANCE.") THEN co2.company
-    ELSE co.company 
-  END as ins_name, "
-     //. "  dif.filename as eob, " 
-     . "  CASE claim.status 
-                WHEN ".DSS_CLAIM_PENDING." THEN 1
-                WHEN ".DSS_CLAIM_SEC_PENDING." THEN 2
-                WHEN ".DSS_CLAIM_DISPUTE." THEN 3
-                WHEN ".DSS_CLAIM_SEC_DISPUTE." THEN 4
-                WHEN ".DSS_CLAIM_SENT." THEN 5
-                WHEN ".DSS_CLAIM_SEC_SENT." THEN 6
-                WHEN ".DSS_CLAIM_REJECTED." THEN 7
-                WHEN ".DSS_CLAIM_PAID_INSURANCE." THEN 8
-                WHEN ".DSS_CLAIM_PAID_SEC_INSURANCE." THEN 9
-                WHEN ".DSS_CLAIM_PAID_PATIENT." THEN 10
-       END AS status_order "
-     . "FROM "
-     . "  dental_insurance claim "
-     . "  JOIN dental_patients p ON p.patientid = claim.patientid "
-     . "  JOIN dental_users users ON claim.docid = users.userid "
-     . "  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."'"
-     . "  LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co "
-     . "  LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co "
-     . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
-}
-// . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
 
-// filter based on select lists above table
+/**
+ * @see DSS-142
+ * @see CS-73
+ *
+ * Filter BO claims by actionable claims.
+ * This query might appear at some other places, please search this "@see DSS-142" tag.
+ *
+ * The old logic checks the p_m_dss_file and s_m_dss_file columns, which are copies of the options set from the
+ * patient's table. This logic does not really set if the claim is filed in the BO.
+ *
+ * The legacy values are: YES = 1, NO = 2. Thus, if the option is NOT 1 THEN the value is NOT YES.
+ *
+ * The new indicator will only be the p_m_dss_file column. To avoid conflicts with the previous set of values, the
+ * YES indicator will be 3.
+ */
+$sql .= "
+    WHERE claim.patientid = '$patientId'
+        AND $backOfficeClaimsConditional
+    ORDER BY $sort_by_sql";
 
-    $sql .= "WHERE "; 
-        $sql .= " claim.patientid = " . $_REQUEST['pid'] . " ";
-
-$sql .= " AND (
-        IF (
-            claim.status IN (
-            ".DSS_CLAIM_PENDING.",
-            ".DSS_CLAIM_DISPUTE.",
-            ".DSS_CLAIM_REJECTED.",
-            ".DSS_CLAIM_PATIENT_DISPUTE.",
-            ".DSS_CLAIM_SENT.",
-            ".DSS_CLAIM_PAID_INSURANCE.",
-            ".DSS_CLAIM_PAID_PATIENT.",
-            ".DSS_CLAIM_EFILE_ACCEPTED."
-        )
-        AND COALESCE(claim.primary_claim_id, 0) = 0,
-            IF (1 IN (claim.p_m_dss_file, p.p_m_dss_file), 1, 0),
-            IF (1 IN (claim.s_m_dss_file, p.s_m_dss_file), 1, 0)
-        ) = 1
-    )
-ORDER BY " . $sort_by_sql;
-//print $sql;
-$my = mysqli_query($con, $sql);
-$total_rec = mysqli_num_rows($my);
+$countSql = preg_replace('/^SELECT/', 'SELECT COUNT(claim.insuranceid) AS total, ', $sql);
+$total_rec = $db->getColumn($countSql, 'total');
 $no_pages = $total_rec/$rec_disp;
 
-$sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysqli_query($con, $sql);
-?>
+$sql .= " LIMIT $i_val, $rec_disp";
+$my = $db->getResults($sql);
 
+?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
@@ -348,20 +326,14 @@ if(isset($_GET['msg'])){
       Mailed
     </td>
   </tr>
-  <?php if(mysqli_num_rows($my) == 0){
-   ?>
+  <?php if (!count($my)) { ?>
     <tr class="tr_bg">
       <td valign="top" class="col_head" colspan="7" align="center">
         No Records
       </td>
     </tr>
-  <?php 
-  }
-  else
-  {
-    while($myarray = mysqli_fetch_array($my))
-    {
-    ?>
+  <?php } else {
+    foreach ($my as $myarray) { ?>
       <tr class="<?= (isset($tr_class))?$tr_class:'';?>">
         <td valign="top">
           <?=st($myarray["adddate"]);?>&nbsp;
@@ -582,10 +554,7 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
   <script type="text/javascript">
     window.location = "../insurance_fdf.php?insid=<?= $_GET['insid']; ?>&type=<?=$_GET['type'];?>&pid=<?= $_GET['pid'];?>&bo=1";
   </script>
-  <?php
-}
-?>
-
+<?php } ?>
 <script type="text/javascript">
   $('.mailed_chk').click( function(){
     lid = $(this).val();
@@ -607,7 +576,6 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
                                   });
 
   });
-
   $('.sec_mailed_chk').click( function(){
     lid = $(this).val();
     c = $(this).is(':checked');
@@ -628,15 +596,7 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
                                   });
 
   });
-
 </script>
+<?php
 
-
-
-
-
-
-
-
-
-<?php include "includes/bottom.htm"; ?>
+include "includes/bottom.htm";

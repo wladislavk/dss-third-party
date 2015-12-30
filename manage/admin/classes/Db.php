@@ -112,4 +112,13 @@ class Db
 		return mysqli_real_escape_string($this->con, $string);
 	}
 
+    public static function escapeList (Array $values) {
+        $db = new Db();
+
+        array_walk($values, function (&$each) use ($db) {
+            $each = "'" . $db->escape($each) . "'";
+        });
+
+        return join(', ', $values);
+    }
 }

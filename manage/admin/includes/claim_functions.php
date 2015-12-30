@@ -574,6 +574,10 @@ class ClaimFormData
         'dispute-patient'     => [DSS_CLAIM_PATIENT_DISPUTE, DSS_CLAIM_SEC_PATIENT_DISPUTE],
         'rejected'            => [DSS_CLAIM_REJECTED, DSS_CLAIM_SEC_REJECTED],
         'efile-accepted'      => [DSS_CLAIM_EFILE_ACCEPTED, DSS_CLAIM_SEC_EFILE_ACCEPTED],
+        'actionable'          => [DSS_CLAIM_PENDING, DSS_CLAIM_SEC_PENDING,
+                                    DSS_CLAIM_REJECTED, DSS_CLAIM_SEC_REJECTED,
+                                    DSS_CLAIM_DISPUTE, DSS_CLAIM_SEC_DISPUTE,
+                                    DSS_CLAIM_PATIENT_DISPUTE, DSS_CLAIM_SEC_PATIENT_DISPUTE],
     ];
 
     /**
@@ -1523,6 +1527,47 @@ class ClaimFormData
 
         return $claimData ?: [];
     }
+}
+
+/**
+ * Auxiliary function to centralize the query that filters FO claims
+ *
+ * @see DSS-142
+ * @see DSS-258
+ * @see CS-73
+ * @return string
+ */
+function frontOfficeClaimsConditional () {
+    return '(NOT ' . backOfficeClaimsConditional() . ')';
+}
+
+/**
+ * Auxiliary function to centralize the query that filters BO claims
+ *
+ * @see DSS-142
+ * @see DSS-258
+ * @see CS-73
+ * @return string
+ */
+function backOfficeClaimsConditional () {
+    $db = new Db();
+    $actionableStatusList = $db->escapeList(ClaimFormData::statusListByName('actionable'));
+
+    return "(
+            -- Filed by back office, legacy logic
+            COALESCE(IF(claim.primary_claim_id, claim.s_m_dss_file, claim.p_m_dss_file), 0) = 1
+            -- Filed by back office, new logic
+            OR COALESCE(claim.p_m_dss_file, 0) = 3
+            OR (
+                claim.status IN ($actionableStatusList)
+                AND (
+                    -- Doctor BO exclusivity
+                    COALESCE(c.exclusive, 0)
+                    -- Patient's BO filing permission
+                    OR COALESCE(IF(claim.primary_claim_id, p.s_m_dss_file, p.p_m_dss_file), 0) = 1
+                )
+            )
+        )";
 }
 
 /**

@@ -9,6 +9,8 @@ include_once "includes/general.htm";
  * Filter claims for BO based on who filed the claim, and the dss filing option.
  * This query might appear at some other places, please search this "@see DSS-142" tag.
  */
+$backOfficeClaimsConditional = backOfficeClaimsConditional();
+
 $sql = "SELECT
         claim.insuranceid,
         claim.patientid,
@@ -129,27 +131,20 @@ if (is_super($_SESSION['admin_access'])) {
 
 /**
  * @see DSS-142
+ * @see CS-73
  *
  * Filter BO claims by actionable claims.
  * This query might appear at some other places, please search this "@see DSS-142" tag.
+ *
+ * The old logic checks the p_m_dss_file and s_m_dss_file columns, which are copies of the options set from the
+ * patient's table. This logic does not really set if the claim is filed in the BO.
+ *
+ * The legacy values are: YES = 1, NO = 2. Thus, if the option is NOT 1 THEN the value is NOT YES.
+ *
+ * The new indicator will only be the p_m_dss_file column. To avoid conflicts with the previous set of values, the
+ * YES indicator will be 3.
  */
-$sql .= "WHERE (
-                -- Filed by back office
-                IF (COALESCE(claim.primary_claim_id, 0), claim.s_m_dss_file, claim.p_m_dss_file) = 1
-                OR (
-                    claim.status IN (
-                        '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
-                        '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
-                        '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
-                        '" . DSS_CLAIM_PATIENT_DISPUTE . "', '" . DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
-                    )
-                    AND (
-                        c.exclusive
-                        -- Back office can file
-                        OR IF (COALESCE(claim.primary_claim_id, 0), p.s_m_dss_file, p.p_m_dss_file) = 1
-                    )
-                )
-            )
+$sql .= "WHERE $backOfficeClaimsConditional
             AND claim.status IN (
                 '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
                 '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',

@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'model' => DentalSleepSolutions\User::class,
+    'model' => DentalSleepSolutions\Eloquent\User::class,
 
     /*
     |--------------------------------------------------------------------------

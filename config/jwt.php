@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'secret' => env('JWT_SECRET', 'A48GYK9AU6JUbj33Ljf4J0g5WmylMy3s'),
+    'secret' => env('JWT_SECRET', 'J4lr026OoypWdvzCPUnDmUK3Y6pUcI79'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'user' => 'App\User',
+    'user' => DentalSleepSolutions\Eloquent\User::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -146,9 +146,7 @@ return [
         |
         */
 
-        'auth' => function ($app) {
-            return new Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter($app['auth']);
-        },
+        'auth' => DentalSleepSolutions\Auth\Legacy::class,
 
         /*
         |--------------------------------------------------------------------------

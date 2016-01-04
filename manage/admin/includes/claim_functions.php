@@ -1535,10 +1535,11 @@ class ClaimFormData
  * @see DSS-142
  * @see DSS-258
  * @see CS-73
+ * @param array $aliases List of table names for each related table in the conditional
  * @return string
  */
-function frontOfficeClaimsConditional () {
-    return '(NOT ' . backOfficeClaimsConditional() . ')';
+function frontOfficeClaimsConditional ($aliases=[]) {
+    return '(NOT ' . backOfficeClaimsConditional($aliases) . ')';
 }
 
 /**
@@ -1547,24 +1548,29 @@ function frontOfficeClaimsConditional () {
  * @see DSS-142
  * @see DSS-258
  * @see CS-73
+ * @param array $aliases List of table names for each related table in the conditional
  * @return string
  */
-function backOfficeClaimsConditional () {
+function backOfficeClaimsConditional ($aliases=[]) {
     $db = new Db();
     $actionableStatusList = $db->escapeList(ClaimFormData::statusListByName('actionable'));
 
+    $claimAlias = $db->escape(array_get($aliases, 'claim', 'claim'));
+    $patientAlias = $db->escape(array_get($aliases, 'patient', 'p'));
+    $companyAlias = $db->escape(array_get($aliases, 'company', 'c'));
+
     return "(
             -- Filed by back office, legacy logic
-            COALESCE(IF(claim.primary_claim_id, claim.s_m_dss_file, claim.p_m_dss_file), 0) = 1
+            COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1
             -- Filed by back office, new logic
-            OR COALESCE(claim.p_m_dss_file, 0) = 3
+            OR COALESCE($claimAlias.p_m_dss_file, 0) = 3
             OR (
-                claim.status IN ($actionableStatusList)
+                $claimAlias.status IN ($actionableStatusList)
                 AND (
                     -- Doctor BO exclusivity
-                    COALESCE(c.exclusive, 0)
+                    COALESCE($companyAlias.exclusive, 0)
                     -- Patient's BO filing permission
-                    OR COALESCE(IF(claim.primary_claim_id, p.s_m_dss_file, p.p_m_dss_file), 0) = 1
+                    OR COALESCE(IF($claimAlias.primary_claim_id, $patientAlias.s_m_dss_file, $patientAlias.p_m_dss_file), 0) = 1
                 )
             )
         )";

@@ -115,7 +115,7 @@ if( $r['homepage'] != '1') {
      * IF (COALESCE(claim.primary_claim_id, 0), claim.s_m_dss_file, claim.p_m_dss_file) = 1 AS filed_by_back_office
      * IF (COALESCE(claim.primary_claim_id, 0), patient.s_m_dss_file, patient.p_m_dss_file) = 1 AS back_office_can_file
      */
-    $frontOfficeClaimsConditional = frontOfficeClaimsConditional();
+    $frontOfficeClaimsConditional = frontOfficeClaimsConditional(['company' => 'company', 'patient' => 'patient']);
 
     $claim_query = "SELECT COUNT(claim.insuranceid) AS total
         FROM dental_insurance claim

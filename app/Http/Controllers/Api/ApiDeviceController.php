@@ -1,14 +1,14 @@
 <?php
-namespace DentaSleepSolutions\Http\Controllers\Api;
+namespace DentalSleepSolutions\Http\Controllers\Api;
 
-use DentaSleepSolutions\Http\Requests\StoreDeviceRequest;
-use DentaSleepSolutions\Http\Requests\UpdateDeviceRequest;
-use DentaSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\Http\Requests\StoreDeviceRequest;
+use DentalSleepSolutions\Http\Requests\UpdateDeviceRequest;
+use DentalSleepSolutions\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use Carbon\Carbon;
 
-use DentaSleepSolutions\Interfaces\Repositories\DeviceInterface;
+use DentalSleepSolutions\Interfaces\Repositories\DeviceInterface;
 
 class ApiDeviceController extends ApiBaseController
 {

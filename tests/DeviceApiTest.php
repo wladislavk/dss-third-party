@@ -40,7 +40,7 @@ class DeviceApiTest extends TestCase
      */
     public function testUpdateDevice()
     {
-        $statusOk = Arr::get(Response::$statusOk, 200);
+        $statusOk = Arr::get(Response::$statusTexts, 200);
 
         $deviceTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Device::class)->create();
 
@@ -66,7 +66,7 @@ class DeviceApiTest extends TestCase
 
         $deviceTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Device::class)->create();
 
-        $this->delete('/api/v1/device' . $deviceTestRecord->deviceid)
+        $this->delete('/api/v1/device/' . $deviceTestRecord->deviceid)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('dental_device', ['deviceid' => $deviceTestRecord->deviceid]);

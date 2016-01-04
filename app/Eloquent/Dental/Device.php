@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Dental;
+use Illuminate\Database\Eloquent\Model;
 
 class Device extends Model
 {

@@ -35,13 +35,13 @@ class ApiDeviceController extends ApiBaseController
      */
     public function index()
     {
-        $retrievedDevices = $this->device->all();
+        $devices = $this->device->all();
 
-        if (!count($retrievedDevices)) {
-            return ApiResponse::responseError('The table is empty.', 422);
+        if (!count($devices)) {
+            return ApiResponse::responseOk('The list is empty', $devices);
         }
 
-        return ApiResponse::responseOk('Devices list.', $retrievedDevices);
+        return ApiResponse::responseOk('Devices list', $devices);
     }
 
     /**
@@ -85,7 +85,7 @@ class ApiDeviceController extends ApiBaseController
         $retrievedDevice = $this->device->find($id);
 
         if (empty($retrievedDevice)) {
-            return ApiResponse::responseError('Device not found.', 422);
+            return ApiResponse::responseError('Device not found.', 404);
         }
 
         return ApiResponse::responseOk('Retrieved device by id.', $retrievedDevice);
@@ -113,7 +113,7 @@ class ApiDeviceController extends ApiBaseController
         $deletedDevice = $this->device->destroy($id);
 
         if (empty($deletedDevice)) {
-            return ApiResponse::responseError('Device not found.', 422);
+            return ApiResponse::responseError('Device not found.', 404);
         }
 
         return ApiResponse::responseOk('Device was deleted successfully.', $this->device->all());

@@ -191,6 +191,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Device::class, function ($
         'status'      => $faker->randomDigit,
         'adddate'     => $faker->dateTime(),
         'ip_address'  => $faker->ipv4,
-        'image_path'  => $faker->regexify('dental_device_[0-9]{2}.(gif|jpg|jpeg|png)')
+        'image_path'  => $faker->regexify('dental_device_[0-9]{2}\.(gif|jpg|jpeg|png)')
     ];
 });

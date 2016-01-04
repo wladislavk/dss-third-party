@@ -34,7 +34,7 @@ if ($isPending && !confirm_ledger_trxns()) { ?>
     trigger_error("Die called", E_USER_ERROR);
 }
 
-$jsonResponse = saveEfileClaimForm($claimId, $patientId, $_POST, $status);
+$jsonResponse = saveEfileClaimForm($claimId, $patientId, $_POST, $status, !$is_front_office);
 
 if (!is_object($jsonResponse) || !isset($jsonResponse->success)) { ?>
     <script type="text/javascript">
@@ -195,9 +195,10 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
  * @param int   $patientId
  * @param array $claimData
  * @param int   $formerStatus
+ * @param bool  $filedByBackOffice
  * @return object Eligible response
  */
-function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
+function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $filedByBackOffice = false) {
     $db = new Db();
 
     $claimId = intval($claimId);
@@ -207,6 +208,12 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
     $isFormerPrimary = ClaimFormData::isPrimary($formerStatus);
     $isFormerPending = ClaimFormData::isStatus('pending', $formerStatus);
     $isFormerRejected = ClaimFormData::isStatus('rejected', $formerStatus);
+
+    /**
+     * @see CS-73
+     * @see DSS-258
+     */
+    $filedByBackOfficeMarker = $filedByBackOffice && $isFormerPending ? 3 : 0;
 
     /**
      * Status changes:
@@ -963,6 +970,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
             other_insured_insurance_type = '" . $db->escape($other_insured_insurance_type) . "',
 
             status = '$status',
+            p_m_dss_file = '" . $db->escape($filedByBackOfficeMarker) . "',
             reject_reason = '" . $db->escape($reject_reason) . "'
         WHERE insuranceid = '$claimId'";
 

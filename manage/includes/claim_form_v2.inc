@@ -1,6 +1,8 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+$is_front_office = empty($is_back_office);
+
 require_once __DIR__ . '/../admin/includes/claim_functions.php';
 
 $claimId = intval($_GET['insid']);
@@ -52,7 +54,7 @@ if (!empty($_POST['ex_statusbtn'])) { ?>
     }
 
     // Save claim
-    $claimId = savePaperClaimForm($claimId, $patientId, $_POST, $status, compact('called_from', 'electronic_form'));
+    $claimId = savePaperClaimForm($claimId, $patientId, $_POST, $status, !$is_front_office);
 
     if ($isNewClaim) {
         $msg = "Claim Created Successfully";
@@ -2459,7 +2461,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
             $r = $q;
             $claim_id = $r['insuranceid'];
         } else {
-            $claim_id = create_claim($_GET['pid'], $claim_producer);
+            $claim_id = ClaimFormData::createPrimaryClaim($_GET['pid'], $claim_producer);
         }
 
         $update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
@@ -2477,9 +2479,10 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
  * @param int   $patientId
  * @param array $claimData
  * @param int   $formerStatus
+ * @param bool  $filedByBackOffice
  * @return int
  */
-function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
+function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $filedByBackOffice = false) {
     $db = new Db();
 
     $claimId = intval($claimId);
@@ -2489,6 +2492,12 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
     $isFormerPrimary = ClaimFormData::isPrimary($formerStatus);
     $isFormerPending = ClaimFormData::isStatus('pending', $formerStatus);
     $isFormerRejected = ClaimFormData::isStatus('rejected', $formerStatus);
+
+    /**
+     * @see CS-73
+     * @see DSS-258
+     */
+    $filedByBackOfficeMarker = $filedByBackOffice && $isFormerPending ? 3 : 0;
 
     /**
      * Status changes:
@@ -2984,6 +2993,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
             s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
             s_m_eligible_payer_name = '".$db->escape($s_m_eligible_payer_name)."',
             status = '$status',
+            p_m_dss_file = '" . $db->escape($filedByBackOfficeMarker) . "',
             userid = '".$db->escape($_SESSION['userid'])."',
             docid = '$docId',
             adddate = NOW(),
@@ -3222,6 +3232,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus) {
         s_m_eligible_payer_name = '".$db->escape($s_m_eligible_payer_name)."',
 
         status = '$status',
+        p_m_dss_file = '" . $db->escape($filedByBackOfficeMarker) . "',
         reject_reason = '".$db->escape($reject_reason)."'
 
         WHERE insuranceid = '$claimId'";

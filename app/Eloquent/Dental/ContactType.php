@@ -10,14 +10,10 @@ class ContactType extends Model
      *
      * @var array
      */
-    protected $fillable = ['contacttype', 'description', 'sortby', 'status', 'adddate', 'ip_address', 'physician', 'corporate'];
-
-    /**
-     * Defining guarded attributes
-     * 
-     * @var array
-     */
-    protected $guarded = [];
+    protected $fillable = [
+        'contacttype', 'description', 'sortby', 'status',
+        'adddate', 'ip_address', 'physician', 'corporate'
+    ];
 
     /**
      * Mass of nondisplayed attributes

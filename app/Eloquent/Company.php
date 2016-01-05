@@ -31,7 +31,7 @@ class Company extends Model
      */
     public $timestamps = false;
 
-    public function Users()
+    public function users()
     {
         $this->hasMany('DentalSleepSolutions\DentalUserCompany', 'companyid', 'id');
     }

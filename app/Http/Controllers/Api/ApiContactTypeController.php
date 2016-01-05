@@ -35,13 +35,13 @@ class ApiContactTypeController extends ApiBaseController
      */
     public function index()
     {
-        $retrievedContactTypes = $this->contactType->all();
+        $contactTypes = $this->contactType->all();
 
-        if (!count($retrievedContactTypes)) {
-            return ApiResponse::responseError('The table is empty.', 422);
+        if (!count($contactTypes)) {
+            return ApiResponse::responseOk('The table is empty.', $contactTypes);
         }
 
-        return ApiResponse::responseOk('Contact types list.', $retrievedContactTypes);
+        return ApiResponse::responseOk('Contact types list.', $contactTypes);
     }
 
     /**
@@ -58,7 +58,7 @@ class ApiContactTypeController extends ApiBaseController
 
         $this->contactType->store($postValues);
 
-        return ApiResponse::responseOk('Contact type was added successfully.', $this->contactType->all());
+        return ApiResponse::responseOk('Contact type was added successfully.');
     }
 
     /**
@@ -71,7 +71,7 @@ class ApiContactTypeController extends ApiBaseController
     {
         $this->contactType->update($id, $request->all());
 
-        return ApiResponse::responseOk('Contact type was updated successfully.', $this->contactType->all());
+        return ApiResponse::responseOk('Contact type was updated successfully.');
     }
 
     /**
@@ -85,21 +85,10 @@ class ApiContactTypeController extends ApiBaseController
         $retrievedContactType = $this->contactType->find($id);
 
         if (empty($retrievedContactType)) {
-            return ApiResponse::responseError('Contact type not found.', 422);
+            return ApiResponse::responseError('Contact type not found.', 404);
         }
 
         return ApiResponse::responseOk('Retrieved contact type by id.', $retrievedContactType);
-    }
-
-    /**
-     * 
-     * 
-     * @param integer $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function edit($id)
-    {
-        return ApiResponse::responseOk('Contact type was edited successfully.', []);
     }
 
     /**
@@ -113,9 +102,9 @@ class ApiContactTypeController extends ApiBaseController
         $deletedContactType = $this->contactType->destroy($id);
 
         if (empty($deletedContactType)) {
-            return ApiResponse::responseError('Contact type not found.', 422);
+            return ApiResponse::responseError('Contact type not found.', 404);
         }
 
-        return ApiResponse::responseOk('Contact type was deleted successfully.', $this->contactType->all());
+        return ApiResponse::responseOk('Contact type was deleted successfully.');
     }
 }

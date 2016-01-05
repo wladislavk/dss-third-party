@@ -183,4 +183,15 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, functi
     return [];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Custom::class, function ($faker) {
+    return [
+        'title'        => 'test title custom',
+        'description'  => 'test description custom',
+        'docid'        => 1111111111,
+        'status'       => 1,
+        'ip_address'   => $faker->ipv4,
+        'default_text' => 1
+    ];
+});
+
 

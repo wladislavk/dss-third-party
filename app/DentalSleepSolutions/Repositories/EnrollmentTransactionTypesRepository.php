@@ -1,6 +1,7 @@
 <?php namespace DentalSleepSolutions\Repositories;
 
 
+use DentalSleepSolutions\Eloquent\Enrollments\TransactionTypes;
 use DentalSleepSolutions\Interfaces\EnrollmentTransactionTypesInterface;
 
 class EnrollmentTransactionTypesRepository extends BaseRepository implements EnrollmentTransactionTypesInterface
@@ -12,7 +13,7 @@ class EnrollmentTransactionTypesRepository extends BaseRepository implements Enr
      *
      * Main model name for the Enrollment  Payers Model
      */
-    protected $modelName = 'DentalSleepSolutions\EnrollmentTransactionTypes';
+    protected $modelName = TransactionTypes::class;
 
     /**
      *

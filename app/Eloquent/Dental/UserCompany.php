@@ -1,12 +1,11 @@
 <?php
 
-namespace DentalSleepSolutions;
+namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DentalUserCompany extends Model
+class UserCompany extends Model
 {
-
     /**
      * Mass assignable attributes
      *
@@ -26,9 +25,9 @@ class DentalUserCompany extends Model
      */
     public $timestamps = false;
 
-    public function Company()
+    public function company()
     {
-        $this->belongsTo('DentalSleepSolutions\Company', 'id', 'companyid');
+        $this->belongsTo('DentalSleepSolutions\Company', 'companyid');
     }
 
 }

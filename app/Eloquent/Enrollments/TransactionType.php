@@ -1,24 +1,20 @@
 <?php
 
-namespace DentalSleepSolutions;
+namespace DentalSleepSolutions\Eloquent\Enrollments;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EnrollmentTransactionTypes extends Model
+class TransactionType extends Model
 {
-
     /**
      * Mass assignable attributes
      *
      * @var array
      */
-    protected $fillable =
-        ['transaction_type',
-            'description',
-            'addddate',
-            'ip_address',
-            'status',
-            'endpoint',];
+    protected $fillable = [
+        'transaction_type', 'description', 'addddate',
+        'ip_address', 'status', 'endpoint',
+    ];
 
     /**
      * The table associated with the model.
@@ -31,5 +27,4 @@ class EnrollmentTransactionTypes extends Model
      * @var bool
      */
     public $timestamps = false;
-
 }

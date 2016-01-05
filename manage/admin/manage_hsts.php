@@ -110,7 +110,8 @@ $sql = "SELECT "
      . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
      . "  LEFT JOIN dental_users users3 ON hst.authorized_id = users3.userid "
      . "  JOIN dental_user_hst_company uhc ON uhc.userid=users.userid "
-     . "  	AND uhc.companyid='".$_SESSION['admincompanyid']."'"
+     . "      AND uhc.companyid = hst.company_id
+              AND hst.company_id = '".$_SESSION['admincompanyid']."'"
      . "  JOIN companies hst_company ON uhc.companyid=hst_company.id ";
 
 }else{

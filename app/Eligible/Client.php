@@ -1,9 +1,10 @@
 <?php
+
 namespace DentalSleepSolutions\Eligible;
 
-use GuzzleHttp\Exception\ClientException;
-use DentalSleepSolutions\DentalUserCompany;
 use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Exception\ClientException;
+use DentalSleepSolutions\Eloquent\Dental\UserCompany;
 
 /**
  * This class encapsulates easy api for interacting with
@@ -98,7 +99,7 @@ class Client
      */
     public function setApiKeyFromUser($id)
     {
-        $new_key = DentalUserCompany::getApiKey($id);
+        $new_key = UserCompany::getApiKey($id);
 
         if ($new_key) {
             $this->api_key = $new_key;
@@ -110,7 +111,7 @@ class Client
      *
      * @param MockHandler $handler
      */
-    public function setHandler(MockHandler  $handler)
+    public function setHandler(MockHandler $handler)
     {
         $this->handler = $handler;
     }

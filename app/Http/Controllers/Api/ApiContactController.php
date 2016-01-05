@@ -35,13 +35,13 @@ class ApiContactController extends ApiBaseController
      */
     public function index()
     {
-        $retrievedContacts = $this->contact->all();
+        $contacts = $this->contact->all();
 
-        if (!count($retrievedContacts)) {
-            return ApiResponse::responseError('The table is empty.', 422);
+        if (!count($contacts)) {
+            return ApiResponse::responseOk('The table is empty.', $contacts);
         }
 
-        return ApiResponse::responseOk('Contacts list.', $retrievedContacts);
+        return ApiResponse::responseOk('Contacts list.', $contacts);
     }
 
     /**
@@ -85,21 +85,10 @@ class ApiContactController extends ApiBaseController
         $retrievedContact = $this->contact->find($id);
 
         if (empty($retrievedContact)) {
-            return ApiResponse::responseError('Contact not found.', 422);
+            return ApiResponse::responseError('Contact not found.', 404);
         }
 
         return ApiResponse::responseOk('Retrieved contact by id.', $retrievedContact);
-    }
-
-    /**
-     * 
-     * 
-     * @param integer $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function edit($id)
-    {
-        return ApiResponse::responseOk('Contact was edited successfully.', []);
     }
 
     /**
@@ -113,9 +102,9 @@ class ApiContactController extends ApiBaseController
         $deletedContact = $this->contact->destroy($id);
 
         if (empty($deletedContact)) {
-            return ApiResponse::responseError('Contact not found.', 422);
+            return ApiResponse::responseError('Contact not found.', 404);
         }
 
-        return ApiResponse::responseOk('Contact was deleted successfully.', $this->contact->all());
+        return ApiResponse::responseOk('Contact was deleted successfully.');
     }
 }

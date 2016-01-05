@@ -22,13 +22,6 @@ class Contact extends Model
     ];
 
     /**
-     * Defining guarded attributes
-     * 
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
      * Mass of nondisplayed attributes
      * 
      * @var array

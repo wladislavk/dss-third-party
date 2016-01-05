@@ -1,6 +1,6 @@
 <?php
 
-namespace DentalSleepSolutions;
+namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,9 +31,9 @@ class Company extends Model
      */
     public $timestamps = false;
 
-    public function Users()
+    public function users()
     {
-        $this->hasMany('DentalSleepSolutions\DentalUserCompany', 'companyid', 'id');
+        return $this->hasMany(Dental\UserCompany::class, 'companyid');
     }
 
     //SELECT eligible_api_key FROM dental_user_company LEFT JOIN companies ON dental_user_company.companyid = companies.id WHERE dental_user_company.userid =

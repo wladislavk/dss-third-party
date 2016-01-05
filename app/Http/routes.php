@@ -7,7 +7,7 @@
 */
 Route::post('auth', function () {
     if (!$token = JWTAuth::attempt(Request::all())) {
-        return new Illuminate\Http\JsonResponse(['status' => 'Invalid credentials'], 422);
+        return Response::json(['status' => 'Invalid credentials'], 422);
     }
 
     return ['status' => 'Authenticated', 'token' => $token];
@@ -32,7 +32,7 @@ Route::group(['prefix' => 'webhooks'], function () {
 | API routes
 |--------------------------------------------------------------------------
 */
-Route::group(['prefix' => 'api/v1', 'after' => 'allowOrigin', 'middleware' => 'jwt.auth'], function () {
+Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('memo', 'Api\ApiAdminMemoController');
 
     Route::group(['prefix' => 'enrollments'], function () {

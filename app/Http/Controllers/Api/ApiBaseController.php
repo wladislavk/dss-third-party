@@ -5,7 +5,6 @@ use DentalSleepSolutions\Http\Controllers\BaseController;
 
 class ApiBaseController extends BaseController
 {
-
     /**
      * Create an error response
      *
@@ -18,5 +17,4 @@ class ApiBaseController extends BaseController
         $errors = is_string($message) ? [$message] : $message;
         return response()->json(['status' => false,'errors' => $errors], $responseCode);
     }
-
 }

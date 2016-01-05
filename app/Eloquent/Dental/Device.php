@@ -6,6 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 class Device extends Model
 {
     /**
+     * Mass assignable attributes
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'device', 'description', 'sortby',
+        'status', 'adddate', 'ip_address',
+        'image_path'
+    ];
+
+    /**
      * Mass of nondisplayed attributes
      * 
      * @var array

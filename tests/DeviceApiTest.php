@@ -10,8 +10,6 @@ class DeviceApiTest extends TestCase
     use WithoutMiddleware;
     use DatabaseMigrations;
 
-    protected $deviceid;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
      * Post to /api/v1/device -> Api/ApiDeviceController@store method

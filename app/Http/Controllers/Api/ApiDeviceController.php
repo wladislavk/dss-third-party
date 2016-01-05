@@ -58,7 +58,7 @@ class ApiDeviceController extends ApiBaseController
 
         $this->device->store($postValues);
 
-        return ApiResponse::responseOk('Device was added successfully.', $this->device->all());
+        return ApiResponse::responseOk('Device was added successfully.');
     }
 
     /**
@@ -71,7 +71,7 @@ class ApiDeviceController extends ApiBaseController
     {
         $this->device->update($id, $request->all());
 
-        return ApiResponse::responseOk('Device was updated successfully.', $this->device->all());
+        return ApiResponse::responseOk('Device was updated successfully.');
     }
 
     /**
@@ -97,17 +97,6 @@ class ApiDeviceController extends ApiBaseController
      * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit($id)
-    {
-        return ApiResponse::responseOk('Device was edited successfully.', []);
-    }
-
-    /**
-     * 
-     * 
-     * @param integer $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function destroy($id)
     {
         $deletedDevice = $this->device->destroy($id);
@@ -116,6 +105,6 @@ class ApiDeviceController extends ApiBaseController
             return ApiResponse::responseError('Device not found.', 404);
         }
 
-        return ApiResponse::responseOk('Device was deleted successfully.', $this->device->all());
+        return ApiResponse::responseOk('Device was deleted successfully.');
     }
 }

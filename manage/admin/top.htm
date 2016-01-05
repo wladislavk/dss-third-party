@@ -283,7 +283,8 @@ if(is_super($_SESSION['admin_access'])){
      . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
      . "  JOIN dental_user_hst_company uhc ON uhc.userid = users.userid "
      . " WHERE hst.status = " . DSS_HST_PENDING
-     . "   AND uhc.companyid='".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."'";
+     . "   AND uhc.companyid = hst.company_id
+           AND hst.company_id = '".mysqli_real_escape_string($con, $_SESSION['admincompanyid'])."'";
 }else{
   $sql = "SELECT "
      . "  hst.id "

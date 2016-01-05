@@ -10,7 +10,7 @@ abstract class Request extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
-     * @return bool
+     * @return boolean
      */
     public function authorize()
     {
@@ -26,9 +26,7 @@ abstract class Request extends FormRequest
     public function response(array $errors)
     {
         if ($this->ajax() || $this->wantsJson()) {
-            $json = ['errors' => $errors];
-
-            return ApiResponse::responseError('Provided data is invalid.', 422, $json);
+            return ApiResponse::responseError('Provided data is invalid.', 422, ['errors' => $errors]);
         }
 
         return parent::response($errors);

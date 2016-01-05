@@ -4,10 +4,11 @@ namespace DentalSleepSolutions\Http\Controllers\Eligible;
 
 use Exception;
 use Illuminate\Http\Request;
-use DentalSleepSolutions\Eligible\Webhooks\PayersHandler;
 use DentalSleepSolutions\Eligible\Webhooks\ClaimsHandler;
+use DentalSleepSolutions\Eligible\Webhooks\PayersHandler;
 use DentalSleepSolutions\Eligible\Webhooks\PaymentsHandler;
 use DentalSleepSolutions\Eligible\Webhooks\EnrollmentsHandler;
+use DentalSleepSolutions\Http\Controllers\Api\ApiBaseController;
 
 class WebhooksController extends ApiBaseController
 {

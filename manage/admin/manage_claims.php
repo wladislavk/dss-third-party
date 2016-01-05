@@ -162,6 +162,8 @@ $statusFilter = '';
  * Filter claims for BO based on who filed the claim, and the dss filing option.
  * This query might appear at some other places, please search this "@see DSS-142" tag.
  */
+$backOfficeClaimsConditional = backOfficeClaimsConditional();
+
 $sql = "SELECT
         claim.insuranceid,
         claim.patientid,
@@ -191,9 +193,7 @@ $sql = "SELECT
             WHEN '" . DSS_CLAIM_PAID_INSURANCE . "' THEN 8
             WHEN '" . DSS_CLAIM_PAID_SEC_INSURANCE . "' THEN 9
             WHEN '" . DSS_CLAIM_PAID_PATIENT . "' THEN 10
-        END AS status_order,
-        IF (claim.primary_claim_id, claim.s_m_dss_file, claim.p_m_dss_file) = 1 AS filed_by_back_office,
-        IF (claim.primary_claim_id, p.s_m_dss_file, p.p_m_dss_file) = 1 AS back_office_can_file
+        END AS status_order
     ";
 
 if (is_super($_SESSION['admin_access'])) {
@@ -282,44 +282,33 @@ if (is_super($_SESSION['admin_access'])) {
 
 /**
  * @see DSS-142
+ * @see CS-73
  *
  * Filter BO claims by actionable claims.
  * This query might appear at some other places, please search this "@see DSS-142" tag.
+ *
+ * The old logic checks the p_m_dss_file and s_m_dss_file columns, which are copies of the options set from the
+ * patient's table. This logic does not really set if the claim is filed in the BO.
+ *
+ * The legacy values are: YES = 1, NO = 2. Thus, if the option is NOT 1 THEN the value is NOT YES.
+ *
+ * The new indicator will only be the p_m_dss_file column. To avoid conflicts with the previous set of values, the
+ * YES indicator will be 3.
  */
-$sql .= "WHERE (
-            -- Filed by back office
-            IF (COALESCE(claim.primary_claim_id, 0), claim.s_m_dss_file, claim.p_m_dss_file) = 1
-            OR (
-                claim.status IN (
-                    '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
-                    '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
-                    '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
-                    '" . DSS_CLAIM_PATIENT_DISPUTE . "', '" . DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
-                )
-                AND (
-                    c.exclusive
-                    -- Back office can file
-                    OR IF (COALESCE(claim.primary_claim_id, 0), p.s_m_dss_file, p.p_m_dss_file) = 1
-                )
-            )
-        )";
+$sql .= "WHERE $backOfficeClaimsConditional ";
 
 if (isset($_GET['status']) && ($_GET['status'] != '')) {
     $statusFilter = $_GET['status'];
 
     switch ($statusFilter) {
         case 'action': // Actionable claims
-            $sql .= " AND claim.status IN (
-                    '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
-                    '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
-                    '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
-                    '" . DSS_CLAIM_PATIENT_DISPUTE . "', '" . DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
-                )
+            $statusList = $db->escapeList(ClaimFormData::statusListByName('actionable'));
+            $sql .= " AND claim.status IN ($statusList)
                 ";
 
             break;
         case 'no-action':
-            $sql .= " AND claim.status IN (
+            $sql .= " AND claim.status NOT IN (
                     '" . DSS_CLAIM_SENT . "', '" . DSS_CLAIM_SEC_SENT . "',
                     '" . DSS_CLAIM_PAID_INSURANCE . "', '" . DSS_CLAIM_PAID_SEC_INSURANCE . "',
                     '" . DSS_CLAIM_PAID_PATIENT . "', '" . DSS_CLAIM_PAID_SEC_PATIENT . "'
@@ -344,16 +333,11 @@ if (isset($_GET['status']) && ($_GET['status'] != '')) {
             break;
         default:
             $statusList = ClaimFormData::statusListByName($statusFilter);
-            $statusList = array_flatten($statusList);
-            $statusList = array_unique($statusList);
 
-            array_walk($statusList, function (&$each) use ($db) {
-                $each = "'" . $db->escape($each) . "'";
-            });
-
-            $statusList = join(',', $statusList);
-
-            $sql .= " AND claim.status IN ($statusList) ";
+            if (count($statusList)) {
+                $statusList = $db->escapeList($statusList);
+                $sql .= " AND claim.status IN ($statusList) ";
+            }
     }
 }
 

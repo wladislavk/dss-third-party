@@ -574,6 +574,10 @@ class ClaimFormData
         'dispute-patient'     => [DSS_CLAIM_PATIENT_DISPUTE, DSS_CLAIM_SEC_PATIENT_DISPUTE],
         'rejected'            => [DSS_CLAIM_REJECTED, DSS_CLAIM_SEC_REJECTED],
         'efile-accepted'      => [DSS_CLAIM_EFILE_ACCEPTED, DSS_CLAIM_SEC_EFILE_ACCEPTED],
+        'actionable'          => [DSS_CLAIM_PENDING, DSS_CLAIM_SEC_PENDING,
+                                    DSS_CLAIM_REJECTED, DSS_CLAIM_SEC_REJECTED,
+                                    DSS_CLAIM_DISPUTE, DSS_CLAIM_SEC_DISPUTE,
+                                    DSS_CLAIM_PATIENT_DISPUTE, DSS_CLAIM_SEC_PATIENT_DISPUTE],
     ];
 
     /**
@@ -1523,6 +1527,53 @@ class ClaimFormData
 
         return $claimData ?: [];
     }
+}
+
+/**
+ * Auxiliary function to centralize the query that filters FO claims
+ *
+ * @see DSS-142
+ * @see DSS-258
+ * @see CS-73
+ * @param array $aliases List of table names for each related table in the conditional
+ * @return string
+ */
+function frontOfficeClaimsConditional ($aliases=[]) {
+    return '(NOT ' . backOfficeClaimsConditional($aliases) . ')';
+}
+
+/**
+ * Auxiliary function to centralize the query that filters BO claims
+ *
+ * @see DSS-142
+ * @see DSS-258
+ * @see CS-73
+ * @param array $aliases List of table names for each related table in the conditional
+ * @return string
+ */
+function backOfficeClaimsConditional ($aliases=[]) {
+    $db = new Db();
+    $actionableStatusList = $db->escapeList(ClaimFormData::statusListByName('actionable'));
+
+    $claimAlias = $db->escape(array_get($aliases, 'claim', 'claim'));
+    $patientAlias = $db->escape(array_get($aliases, 'patient', 'p'));
+    $companyAlias = $db->escape(array_get($aliases, 'company', 'c'));
+
+    return "(
+            -- Filed by back office, legacy logic
+            COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1
+            -- Filed by back office, new logic
+            OR COALESCE($claimAlias.p_m_dss_file, 0) = 3
+            OR (
+                $claimAlias.status IN ($actionableStatusList)
+                AND (
+                    -- Doctor BO exclusivity
+                    COALESCE($companyAlias.exclusive, 0)
+                    -- Patient's BO filing permission
+                    OR COALESCE(IF($claimAlias.primary_claim_id, $patientAlias.s_m_dss_file, $patientAlias.p_m_dss_file), 0) = 1
+                )
+            )
+        )";
 }
 
 /**

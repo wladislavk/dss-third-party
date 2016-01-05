@@ -2,7 +2,10 @@
 include_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/main_include.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . "/manage/includes/constants.inc");
 include($_SERVER['DOCUMENT_ROOT'] . "/manage/admin/includes/sescheck.php"); 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php'); 
+include_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
+
+require_once __DIR__ . '/claim_functions.php';
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -261,6 +264,8 @@ if (is_super($_SESSION['admin_access'])) {
 
 $num_pending_hst = $db->getColumn($sql, 'total', 0);
 
+$backOfficeClaimsConditional = backOfficeClaimsConditional();
+
 $sql = "SELECT COUNT(claim.insuranceid) AS total
     FROM dental_insurance claim
     ";
@@ -288,28 +293,20 @@ if (is_super($_SESSION['admin_access'])) {
 
 /**
  * @see DSS-142
- * Actionable claims for BO users
+ * @see CS-73
  *
- * IF (COALESCE(claim.primary_claim_id, 0), claim.s_m_dss_file, claim.p_m_dss_file) = 1 AS filed_by_back_office
- * IF (COALESCE(claim.primary_claim_id, 0), patient.s_m_dss_file, patient.p_m_dss_file) = 1 AS back_office_can_file
+ * Filter BO claims by actionable claims.
+ * This query might appear at some other places, please search this "@see DSS-142" tag.
+ *
+ * The old logic checks the p_m_dss_file and s_m_dss_file columns, which are copies of the options set from the
+ * patient's table. This logic does not really set if the claim is filed in the BO.
+ *
+ * The legacy values are: YES = 1, NO = 2. Thus, if the option is NOT 1 THEN the value is NOT YES.
+ *
+ * The new indicator will only be the p_m_dss_file column. To avoid conflicts with the previous set of values, the
+ * YES indicator will be 3.
  */
-$sql .= "WHERE (
-            ( -- filed_by_back_office
-                IF (COALESCE(claim.primary_claim_id, 0), claim.s_m_dss_file, claim.p_m_dss_file) = 1
-            )
-            OR (
-                claim.status IN (
-                    '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
-                    '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
-                    '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
-                    '" . DSS_CLAIM_PATIENT_DISPUTE . "', '" . DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
-                )
-                AND ( -- exclusive OR back_office_can_file
-                    c.exclusive
-                    OR IF (COALESCE(claim.primary_claim_id, 0), p.s_m_dss_file, p.p_m_dss_file) = 1
-                )
-            )
-        )
+$sql .= "WHERE $backOfficeClaimsConditional
         -- Actionable items
         AND claim.status IN (
             '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',

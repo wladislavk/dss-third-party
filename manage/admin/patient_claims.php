@@ -60,7 +60,8 @@ switch ($sort_by) {
     $sort_by_sql = "billing_name $sort_dir";
     break;
   case SORT_BY_FILED:
-    $sort_by_sql = "filed_by_bo $sort_dir, p.last_name ASC, p.firstname ASC, claim.adddate DESC";
+    $sort_by_sql = "filed_by_bo $sort_dir, p.lastname ASC, p.firstname ASC, status_order ASC, claim.adddate DESC";
+    break;
   default:
     // default is SORT_BY_STATUS
     $sort_by_sql = "status_order $sort_dir, claim.adddate $sort_dir";

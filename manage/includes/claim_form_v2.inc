@@ -2993,7 +2993,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
             s_m_eligible_payer_name = '".$db->escape($s_m_eligible_payer_name)."',
             status = '$status',
-            p_m_dss_file = '" . $db->escape($filedByBackOfficeMarker) . "',
+            " . ($filedByBackOfficeMarker ? "p_m_dss_file = '$filedByBackOfficeMarker'," : '' ) . "
             userid = '".$db->escape($_SESSION['userid'])."',
             docid = '$docId',
             adddate = NOW(),

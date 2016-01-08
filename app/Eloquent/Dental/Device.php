@@ -9,6 +9,17 @@ use DentalSleepSolutions\Contracts\Repositories\Devices as Repository;
 class Device extends Model implements Resource, Repository
 {
     /**
+     * Mass assignable attributes
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'device', 'description', 'sortby',
+        'status', 'adddate', 'ip_address',
+        'image_path'
+    ];
+
+    /**
      * The database table used by the model.
      *
      * @var string

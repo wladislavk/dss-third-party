@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 
-class DeviceApiTest extends TestCase
+class DevicesApiTest extends TestCase
 {
     use WithoutMiddleware;
     use DatabaseMigrations;
@@ -25,7 +25,7 @@ class DeviceApiTest extends TestCase
             'image_path' => 'dental_device_555.gif'
         ];
 
-        $this->post('/api/v1/device/', $data)
+        $this->post('/api/v1/devices/', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_device', ['image_path' => 'dental_device_555.gif']);
@@ -47,7 +47,7 @@ class DeviceApiTest extends TestCase
             'status' => 10
         ];
 
-        $this->put('/api/v1/device/' . $deviceTestRecord->deviceid, $data)
+        $this->put('/api/v1/devices/' . $deviceTestRecord->deviceid, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_device', ['device' => 'some updated test device']);
@@ -64,7 +64,7 @@ class DeviceApiTest extends TestCase
 
         $deviceTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Device::class)->create();
 
-        $this->delete('/api/v1/device/' . $deviceTestRecord->deviceid)
+        $this->delete('/api/v1/devices/' . $deviceTestRecord->deviceid)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('dental_device', ['deviceid' => $deviceTestRecord->deviceid]);

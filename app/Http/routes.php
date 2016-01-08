@@ -6,6 +6,8 @@
 |--------------------------------------------------------------------------
 */
 Route::group(['prefix' => 'api/v1', 'after' => 'allowOrigin'], function () {
+
+    Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
 
     Route::group(['prefix' => 'enrollments'], function () {
@@ -61,8 +63,6 @@ Route::group(['prefix' => 'api/v1', 'after' => 'allowOrigin'], function () {
             'uses' => 'Api\ApiEnrollmentsController@syncEnrollmentPayers'
         ]);
     });
-
-    Route::resource('device', 'Api\ApiDeviceController');
 });
 
 

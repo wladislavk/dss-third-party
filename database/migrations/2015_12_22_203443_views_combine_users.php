@@ -18,10 +18,10 @@ class ViewsCombineUsers extends Migration
         DB::unprepared(
             "create view v_users as ".
             // dental_users table
-            "select concat('u_', userid) as id, email, if(name is null, concat(first_name,' ', last_name), name) as name, first_name, last_name, username, password, salt, status, ip_address, user_access as access, adddate from dental_users ".
+            "select concat('u_', userid) COLLATE utf8_unicode_ci as id, email, if(name is null, concat(first_name,' ', last_name), name) as name, first_name, last_name, username, password, salt, status, ip_address, user_access as access, adddate from dental_users ".
             "union ".
             // admin table
-            "select concat('a_', adminid) as id, email, if(name is null, concat(first_name,' ', last_name), name) as name, first_name, last_name, username, password, salt, status, ip_address, admin_access access, adddate from admin"
+            "select concat('a_', adminid) COLLATE utf8_unicode_ci as id, email, if(name is null, concat(first_name,' ', last_name), name) as name, first_name, last_name, username, password, salt, status, ip_address, admin_access access, adddate from admin"
         );
     }
 

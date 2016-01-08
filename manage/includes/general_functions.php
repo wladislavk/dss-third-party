@@ -3,6 +3,19 @@
 define('SHARED_FOLDER', __DIR__ . '/../../../../shared/');
 define('Q_FILE_FOLDER', SHARED_FOLDER . '/q_file/');
 
+function generateApiToken($idOrEmail) {
+    if ($path = escapeshellarg(env('API_PATH'))) {
+      $idOrEmail = escapeshellarg($idOrEmail);
+      return exec("/usr/bin/php {$path}/artisan jwt:token {$idOrEmail}");
+    }
+
+    return '';
+}
+
+function apiToken() {
+  return isset($_SESSION['api_token']) ? $_SESSION['api_token'] : '';
+}
+
 function secureSessionStart() {
     $domain = 'example.com'; // note $domain
     $session_name = 'sec_session_id'; // Set a custom session name
@@ -32,9 +45,9 @@ function uploadImage($image, $file_path, $type = 'general'){
   $filesize = $image["size"];
   $extension = substr($fname,$lastdot+1);
   list($width,$height)=getimagesize($uploadedfile);
-  if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) || $filesize > DSS_IMAGE_MAX_SIZE 
+  if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) || $filesize > DSS_IMAGE_MAX_SIZE
 		|| ($type == 'profile' && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT))
-                || ($type == 'device' && ($width >DSS_IMAGE_DEVICE_WIDTH || $height>DSS_IMAGE_DEVICE_HEIGHT)) 
+                || ($type == 'device' && ($width >DSS_IMAGE_DEVICE_WIDTH || $height>DSS_IMAGE_DEVICE_HEIGHT))
 		 ){
 
     if(strtolower($extension)=="jpg" || strtolower($extension)=="jpeg" )
@@ -61,7 +74,7 @@ function uploadImage($image, $file_path, $type = 'general'){
           return false;
       }
 
-    if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) 
+    if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT)
 		|| ($type == 'profile' && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT))
 		|| ($type == 'device' && ($width >DSS_IMAGE_DEVICE_WIDTH || $height>DSS_IMAGE_DEVICE_HEIGHT))
 		 ){
@@ -147,7 +160,7 @@ $db = new Db();
 $con = $GLOBALS['con'];
 
 if(trim($new) != trim($old)){
-  $sql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
+  $sql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid
                 LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
 	where p.patientid='".mysqli_real_escape_string($con,$id)."'";
 

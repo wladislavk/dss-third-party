@@ -3,7 +3,7 @@ include "includes/top.htm";
 require_once('includes/constants.inc');
 
 ?>
-
+v
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen"/>
 <link href="css/add_enrollment.css" rel="stylesheet" type="text/css"/>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
@@ -27,6 +27,8 @@ require_once('includes/constants.inc');
 <div id="enrollmentManager">
 
     <div id="enrollments">
+
+        <input type="hidden" id="dom-api-token" value="<?= apiToken() ?>">
 
         <div id="dom-docid" style="display: none;">
             <?php
@@ -89,15 +91,15 @@ require_once('includes/constants.inc');
                         {{ enrollmentStatusLabel(e.status); }}
                     </td>
                     <td valign="top">
-                        <a href="#response_{{e.id}}"   v-on="click: showHideResponse('response_' + e.id);"  style="display:block;">View</a> 
+                        <a href="#response_{{e.id}}"  v-on="click: showHideResponse('response_' + e.id);"  style="display:block;">View</a> 
                         <span style="display: none;">
                         <div id="response_{{e.id}}" style='padding:10px; background:#fff;'> 
-                            {{ e.response }}  
+                            {{ e.response }} 
                         </div> </span>
                     </td>
                     <td valign="top">
                         <a href="https://gds.eligibleapi.com/v1.5/payers/{{ e.payer_id }}/enrollment_form?api_key={{ apikey }}&transaction_type={{ e.transaction_type.split('-')[0] }}"
-                             target="_blank">PDF</a>
+  target="_blank">PDF</a>
                         <span v-if="e.download_url"><a class="btn btn-success" href="{{ e.download_url }}">Sign 
                                 Form</a> 
                             <br/> 

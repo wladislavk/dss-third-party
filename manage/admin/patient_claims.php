@@ -3,7 +3,8 @@ include "includes/top.htm";
 
 include 'includes/patient_nav.php';
 
-
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$requestFrontOfficeClaims = $isSuperAdmin && isset($_GET['front']);
 
 if(isset($_GET['upstatus'])){
   $old_sql = "SELECT status FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";
@@ -149,11 +150,14 @@ else
 $i_val = $index_val * $rec_disp;
 $patientId = intval($_REQUEST['pid']);
 
-$backOfficeClaimsConditional = backOfficeClaimsConditional();
+$whichOfficeConditional = $requestFrontOfficeClaims ? frontOfficeClaimsConditional() : backOfficeClaimsConditional();
 
 $sql = "SELECT
     claim.insuranceid,
     claim.patientid,
+    claim.primary_claim_id,
+    claim.p_m_dss_file,
+    claim.s_m_dss_file,
     p.firstname,
     p.lastname,
     claim.adddate,
@@ -250,7 +254,7 @@ if (is_super($_SESSION['admin_access'])) {
  */
 $sql .= "
     WHERE claim.patientid = '$patientId'
-        AND $backOfficeClaimsConditional
+        AND $whichOfficeConditional
     ORDER BY $sort_by_sql";
 
 $countSql = preg_replace('/^SELECT/', 'SELECT COUNT(claim.insuranceid) AS total, ', $sql);
@@ -265,7 +269,13 @@ $my = $db->getResults($sql);
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <div class="page-header">
-	Manage Claims
+    Manage Claims
+    <?php if ($isSuperAdmin) { ?>
+        <a class="btn btn-xs <?= $requestFrontOfficeClaims ? 'btn-info active' : 'btn-default' ?>"
+           href="/manage/admin/patient_claims.php?pid=<?= $patientId ?>&front=true">FO Claims</a>
+        <a class="btn btn-xs <?= !$requestFrontOfficeClaims ? 'btn-info active' : 'btn-default' ?>"
+           href="/manage/admin/patient_claims.php?pid=<?= $patientId ?>">BO Claims</a>
+    <?php } ?>
 </div>
 <?php
 if(isset($_GET['msg'])){
@@ -282,14 +292,15 @@ if(isset($_GET['msg'])){
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
+				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir'] . ($requestFrontOfficeClaims ? '&front=true' : ''));
 			?>
 		</TD>
 	</TR>
 	<? }?>
 	<?php
     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
-             . "&status=" . ((isset($_REQUEST['status']))?$_REQUEST['status']:'') . "&sort_by=%s&sort_dir=%s";
+             . "&status=" . ((isset($_REQUEST['status']))?$_REQUEST['status']:'') . "&sort_by=%s&sort_dir=%s" .
+        ($requestFrontOfficeClaims ? '&front=true' : '');
     ?>
   <tr class="tr_bg_h">
     <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
@@ -405,6 +416,25 @@ if(isset($_GET['msg'])){
                                         <?=st($myarray["billing_name"]);?>&nbsp;
                                 </td>
         <td valign="top">
+            <?php if ($isSuperAdmin) {
+                $filedByBackOffice = ($myarray['p_m_dss_file'] == 3) ||
+                    (!$myarray['primary_claim_id'] && ($myarray['p_m_dss_file'] == 1)) ||
+                    ($myarray['primary_claim_id'] && ($myarray['s_m_dss_file'] == 1));
+                ?>
+                <p class="input-group text-center">
+                    Filed&nbsp;by:&nbsp;
+                    <span class="input-group-btn bo-status-switch">
+                        <button
+                            class="filed-by-fo btn btn-xs <?= !$filedByBackOffice ? 'btn-info active' : 'btn-default' ?>"
+                            type="button" data-claim-id="<?= $myarray['insuranceid'] ?>"
+                            <?= $filedByBackOffice ? 'title="Mark the claim as filed by the FO"' : '' ?>>FO</button>
+                        <button
+                            class="filed-by-bo btn btn-xs <?= $filedByBackOffice ? 'btn-info active' : 'btn-default' ?>"
+                            type="button" data-claim-id="<?= $myarray['insuranceid'] ?>"
+                            <?= !$filedByBackOffice ? 'title="Mark the claim as filed by the BO"' : '' ?>>BO</button>
+                    </span>
+                </p>
+            <?php } ?>
             <?php
           //$primary_link = ($myarray['primary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['primary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=primary&pid='.$myarray['patientid'];
           //$secondary_link = ($myarray['secondary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['secondary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=secondary&pid='.$myarray['patientid'];
@@ -596,6 +626,41 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
                                   });
 
   });
+    $(document).ready(function(){
+        $('.bo-status-switch button').click(function(){
+            var $this = $(this),
+                claimId = $this.data('claim-id'),
+                switchToBackOffice = $this.is('.filed-by-bo'),
+                message = 'This action will mark this claim as "filed by ' +
+                    (switchToBackOffice ? 'Back' : 'Front') +
+                    ' Office"\n\nAre you sure you want to continue?';
+
+            if (confirm(message)) {
+                $('.bo-status-switch button').prop('disabled');
+
+                $.ajax({
+                    url: '/manage/admin/claim-switch.php',
+                    data: { claim_id: claimId, filed_by_back_office: switchToBackOffice ? 1 : 0 },
+                    type: 'post',
+                    complete: function(){
+                        $('.bo-status-switch button').removeProp('disabled');
+                    },
+                    success: function(response){
+                        if (response.success) {
+                            window.location = window.location;
+                        } else if (response.message) {
+                            alert('The following error was found while trying to change the flag:\n\n' + message);
+                        } else {
+                            alert('There was an error changing the flag. Please try again later.');
+                        }
+                    },
+                    error: function(){
+                        alert('There was an error changing the flag. Please try again later.');
+                    }
+                });
+            }
+        });
+    });
 </script>
 <?php
 

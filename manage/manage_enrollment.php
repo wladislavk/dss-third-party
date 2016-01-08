@@ -3,7 +3,7 @@ include "includes/top.htm";
 require_once('includes/constants.inc');
 
 ?>
-v
+
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen"/>
 <link href="css/add_enrollment.css" rel="stylesheet" type="text/css"/>
 <script src="admin/popup/popup.js" type="text/javascript"></script>

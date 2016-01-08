@@ -39,7 +39,10 @@ $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
 $sort_by = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
-$sort_by = $sort_by == SORT_BY_FILED && $isSuperAdmin ? $sort_by : SORT_BY_STATUS;
+
+if ($sort_by == SORT_BY_FILED && !$isSuperAdmin) {
+    $sort_by = SORT_BY_STATUS;
+}
 
 $sort_by_sql = '';
 

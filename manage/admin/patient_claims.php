@@ -457,15 +457,18 @@ if(isset($_GET['msg'])){
                                 <td valign="top">
                                         <?=st($myarray["billing_name"]);?>&nbsp;
                                 </td>
-        <?php if ($isSuperAdmin) { ?>
+        <?php if ($isSuperAdmin) {
+            $isPending = ClaimFormData::isStatus('pending', $myarray['status']);
+            ?>
             <td valign="top">
-                <p class="input-group text-center">
+                <p class="input-group text-center"
+                    <?= $isPending ? 'title="This flag cannot be modified while the claim is pending"' : '' ?>>
                     <span class="input-group-btn bo-status-switch">
-                        <button
+                        <button <?= $isPending ? 'disabled' : '' ?>
                             class="filed-by-fo btn btn-xs <?= !$myarray['filed_by_bo'] ? 'btn-info active' : 'btn-default' ?>"
                             type="button" data-claim-id="<?= $myarray['insuranceid'] ?>"
                             <?= $myarray['filed_by_bo'] ? 'title="Mark the claim as filed by the FO"' : '' ?>>FO</button>
-                        <button
+                        <button <?= $isPending ? 'disabled' : '' ?>
                             class="filed-by-bo btn btn-xs <?= $myarray['filed_by_bo'] ? 'btn-info active' : 'btn-default' ?>"
                             type="button" data-claim-id="<?= $myarray['insuranceid'] ?>"
                             <?= !$myarray['filed_by_bo'] ? 'title="Mark the claim as filed by the BO"' : '' ?>>BO</button>

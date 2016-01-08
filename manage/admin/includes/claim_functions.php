@@ -1561,16 +1561,13 @@ function backOfficeClaimsConditional ($aliases=[]) {
     $patientAlias = $db->escape(array_get($aliases, 'patient', 'p'));
     $companyAlias = $db->escape(array_get($aliases, 'company', 'c'));
 
+    $filedByBackOfficeConditional = filedByBackOfficeConditional($claimAlias);
+
     return "(
             -- Apply claim options only if the status is NOT pending
             (
                 $claimAlias.status NOT IN ($pendingStatusList)
-                AND (
-                    -- Filed by back office, legacy logic
-                    COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1
-                    -- Filed by back office, new logic
-                    OR COALESCE($claimAlias.p_m_dss_file, 0) = 3
-                )
+                AND $filedByBackOfficeConditional
             )
             OR (
                 $claimAlias.status IN ($actionableStatusList)
@@ -1582,6 +1579,15 @@ function backOfficeClaimsConditional ($aliases=[]) {
                 )
             )
         )";
+}
+
+function filedByBackOfficeConditional ($claimAlias='claim') {
+    return "(
+                -- Filed by back office, legacy logic
+                COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1
+                -- Filed by back office, new logic
+                OR COALESCE($claimAlias.p_m_dss_file, 0) = 3
+            )";
 }
 
 /**

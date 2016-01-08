@@ -4,7 +4,16 @@ include "includes/top.htm";
 include 'includes/patient_nav.php';
 
 $isSuperAdmin = is_super($_SESSION['admin_access']);
-$requestFrontOfficeClaims = $isSuperAdmin && isset($_GET['front']);
+$specialFilter = '';
+
+if ($isSuperAdmin && isset($_GET['filed_by'])) {
+    switch ($_GET['filed_by']) {
+        case 'front':
+        case 'both':
+            $specialFilter = $_GET['filed_by'];
+            break;
+    }
+}
 
 if(isset($_GET['upstatus'])){
   $old_sql = "SELECT status FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";
@@ -15,20 +24,25 @@ if(isset($_GET['upstatus'])){
   claim_status_history_update($_GET['ins_id'], $old['status'], $_GET['upstatus'], '', $_SESSION['adminuserid']);
 }
 
-
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 $pid = (isset($_REQUEST['pid']))?$_REQUEST['pid']:'';
+
 define('SORT_BY_DATE', '0');
 define('SORT_BY_STATUS', '1');
 define('SORT_BY_PATIENT', '2');
 define('SORT_BY_FRANCHISEE', '3');
 define('SORT_BY_USER', '4');
 define('SORT_BY_BC', '5');
+define('SORT_BY_FILED', '6');
+
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
-$sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
+$sort_by = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
+$sort_by = $sort_by == SORT_BY_FILED && $isSuperAdmin ? $sort_by : SORT_BY_STATUS;
+
 $sort_by_sql = '';
+
 switch ($sort_by) {
   case SORT_BY_DATE:
     $sort_by_sql = "claim.adddate $sort_dir";
@@ -45,6 +59,8 @@ switch ($sort_by) {
   case SORT_BY_BC:
     $sort_by_sql = "billing_name $sort_dir";
     break;
+  case SORT_BY_FILED:
+    $sort_by_sql = "filed_by_bo $sort_dir, p.last_name ASC, p.firstname ASC, claim.adddate DESC";
   default:
     // default is SORT_BY_STATUS
     $sort_by_sql = "status_order $sort_dir, claim.adddate $sort_dir";
@@ -150,7 +166,21 @@ else
 $i_val = $index_val * $rec_disp;
 $patientId = intval($_REQUEST['pid']);
 
-$whichOfficeConditional = $requestFrontOfficeClaims ? frontOfficeClaimsConditional() : backOfficeClaimsConditional();
+$frontOfficeClaimsConditional = frontOfficeClaimsConditional();
+$backOfficeClaimsConditional = backOfficeClaimsConditional();
+
+switch ($specialFilter) {
+    case 'both':
+        $whichOfficeConditional = '(TRUE)';
+        break;
+    case 'front':
+        $whichOfficeConditional = $frontOfficeClaimsConditional;
+        break;
+    default:
+        $whichOfficeConditional = $backOfficeClaimsConditional;
+}
+
+$filedByBackOfficeConditional = filedByBackOfficeConditional();
 
 $sql = "SELECT
     claim.insuranceid,
@@ -191,6 +221,7 @@ $sql = "SELECT
 
 if (is_super($_SESSION['admin_access'])) {
     $sql .= ",
+            $filedByBackOfficeConditional AS filed_by_bo,
             c.name AS billing_name,
             (
                 SELECT COUNT(id)
@@ -271,10 +302,12 @@ $my = $db->getResults($sql);
 <div class="page-header">
     Manage Claims
     <?php if ($isSuperAdmin) { ?>
-        <a class="btn btn-xs <?= $requestFrontOfficeClaims ? 'btn-info active' : 'btn-default' ?>"
-           href="/manage/admin/patient_claims.php?pid=<?= $patientId ?>&front=true">FO Claims</a>
-        <a class="btn btn-xs <?= !$requestFrontOfficeClaims ? 'btn-info active' : 'btn-default' ?>"
+        <a class="btn btn-xs <?= $specialFilter == 'front' ? 'btn-info active' : 'btn-default' ?>"
+           href="/manage/admin/patient_claims.php?pid=<?= $patientId ?>&amp;filed_by=front">FO Claims</a>
+        <a class="btn btn-xs <?= !$specialFilter ? 'btn-info active' : 'btn-default' ?>"
            href="/manage/admin/patient_claims.php?pid=<?= $patientId ?>">BO Claims</a>
+        <a class="btn btn-xs <?= $specialFilter == 'both' ? 'btn-info active' : 'btn-default' ?>"
+           href="/manage/admin/patient_claims.php?pid=<?= $patientId ?>&amp;filed_by=both">Both</a>
     <?php } ?>
 </div>
 <?php
@@ -292,7 +325,7 @@ if(isset($_GET['msg'])){
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir'] . ($requestFrontOfficeClaims ? '&front=true' : ''));
+				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir'] . ($specialFilter ? "&filed_by=$specialFilter" : ''));
 			?>
 		</TD>
 	</TR>
@@ -300,7 +333,7 @@ if(isset($_GET['msg'])){
 	<?php
     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
              . "&status=" . ((isset($_REQUEST['status']))?$_REQUEST['status']:'') . "&sort_by=%s&sort_dir=%s" .
-        ($requestFrontOfficeClaims ? '&front=true' : '');
+        ($specialFilter ? "&filed_by=$specialFilter" : '');
     ?>
   <tr class="tr_bg_h">
     <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
@@ -327,6 +360,11 @@ if(isset($_GET['msg'])){
     <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
                         <a href="<?=sprintf($sort_qs, SORT_BY_BC, get_sort_dir($sort_by, SORT_BY_BC, $sort_dir))?>">Billing Company</a>
                 </td>
+    <?php if ($isSuperAdmin) { ?>
+      <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FILED, $sort_dir) ?>" width="10%">
+          <a href="<?= sprintf($sort_qs, SORT_BY_FILED, get_sort_dir($sort_by, SORT_BY_FILED, $sort_dir))?>">Filed By</a>
+      </td>
+    <?php } ?>
     <td valign="top" class="col_head" width="15%">
       Action
     </td>
@@ -415,26 +453,23 @@ if(isset($_GET['msg'])){
                                 <td valign="top">
                                         <?=st($myarray["billing_name"]);?>&nbsp;
                                 </td>
-        <td valign="top">
-            <?php if ($isSuperAdmin) {
-                $filedByBackOffice = ($myarray['p_m_dss_file'] == 3) ||
-                    (!$myarray['primary_claim_id'] && ($myarray['p_m_dss_file'] == 1)) ||
-                    ($myarray['primary_claim_id'] && ($myarray['s_m_dss_file'] == 1));
-                ?>
+        <?php if ($isSuperAdmin) { ?>
+            <td valign="top">
                 <p class="input-group text-center">
-                    Filed&nbsp;by:&nbsp;
                     <span class="input-group-btn bo-status-switch">
                         <button
-                            class="filed-by-fo btn btn-xs <?= !$filedByBackOffice ? 'btn-info active' : 'btn-default' ?>"
+                            class="filed-by-fo btn btn-xs <?= !$myarray['filed_by_bo'] ? 'btn-info active' : 'btn-default' ?>"
                             type="button" data-claim-id="<?= $myarray['insuranceid'] ?>"
-                            <?= $filedByBackOffice ? 'title="Mark the claim as filed by the FO"' : '' ?>>FO</button>
+                            <?= $myarray['filed_by_bo'] ? 'title="Mark the claim as filed by the FO"' : '' ?>>FO</button>
                         <button
-                            class="filed-by-bo btn btn-xs <?= $filedByBackOffice ? 'btn-info active' : 'btn-default' ?>"
+                            class="filed-by-bo btn btn-xs <?= $myarray['filed_by_bo'] ? 'btn-info active' : 'btn-default' ?>"
                             type="button" data-claim-id="<?= $myarray['insuranceid'] ?>"
-                            <?= !$filedByBackOffice ? 'title="Mark the claim as filed by the BO"' : '' ?>>BO</button>
+                            <?= !$myarray['filed_by_bo'] ? 'title="Mark the claim as filed by the BO"' : '' ?>>BO</button>
                     </span>
                 </p>
-            <?php } ?>
+            </td>
+        <?php } ?>
+        <td valign="top">
             <?php
           //$primary_link = ($myarray['primary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['primary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=primary&pid='.$myarray['patientid'];
           //$secondary_link = ($myarray['secondary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['secondary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=secondary&pid='.$myarray['patientid'];

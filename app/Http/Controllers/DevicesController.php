@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\DeviceDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Device;
 use DentalSleepSolutions\Contracts\Repositories\Devices;
+use Carbon\Carbon;
 
 class DevicesController extends Controller
 {
@@ -45,7 +46,12 @@ class DevicesController extends Controller
      */
     public function store(Devices $resources, DeviceStore $request)
     {
-        $resource = $resources->create($request->all());
+        $data = array_merge($request->all(), [
+            'adddate'    => Carbon::now(),
+            'ip_address' => $request->ip()
+        ]);
+
+        $resource = $resources->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }

@@ -4,8 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Device as Resource;
-use DentalSleepSolutions\Contracts\Repositories\Devices as Repository;
+use DentalSleepSolutions\Contracts\Resources\Custom as Resource;
+use DentalSleepSolutions\Contracts\Repositories\Customs as Repository;
 
 class Custom extends Model implements Resource, Repository
 {

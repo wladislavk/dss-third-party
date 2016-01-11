@@ -3,11 +3,14 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Device as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Devices as Repository;
 
 class Device extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
     /**
      * Mass assignable attributes
      *
@@ -34,9 +37,9 @@ class Device extends Model implements Resource, Repository
     protected $primaryKey = 'deviceid';
 
     /**
-     * Indicates if the model should be timestamped.
+     * The name of the "created at" column.
      *
-     * @var bool
+     * @var string
      */
-    public $timestamps = false;
+    const CREATED_AT = 'adddate';
 }

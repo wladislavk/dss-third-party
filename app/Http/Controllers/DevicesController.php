@@ -47,7 +47,6 @@ class DevicesController extends Controller
     public function store(Devices $resources, DeviceStore $request)
     {
         $data = array_merge($request->all(), [
-            'adddate'    => Carbon::now(),
             'ip_address' => $request->ip()
         ]);
 

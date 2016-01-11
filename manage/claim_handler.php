@@ -970,7 +970,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             other_insured_insurance_type = '" . $db->escape($other_insured_insurance_type) . "',
 
             status = '$status',
-            p_m_dss_file = '" . $db->escape($filedByBackOfficeMarker) . "',
+            " . ($isFormerPending ? "p_m_dss_file = '$filedByBackOfficeMarker'," : '') . "
             reject_reason = '" . $db->escape($reject_reason) . "'
         WHERE insuranceid = '$claimId'";
 

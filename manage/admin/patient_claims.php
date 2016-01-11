@@ -3,7 +3,17 @@ include "includes/top.htm";
 
 include 'includes/patient_nav.php';
 
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$specialFilter = '';
 
+if ($isSuperAdmin && isset($_GET['filed_by'])) {
+    switch ($_GET['filed_by']) {
+        case 'front':
+        case 'both':
+            $specialFilter = $_GET['filed_by'];
+            break;
+    }
+}
 
 if(isset($_GET['upstatus'])){
   $old_sql = "SELECT status FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";
@@ -14,20 +24,28 @@ if(isset($_GET['upstatus'])){
   claim_status_history_update($_GET['ins_id'], $old['status'], $_GET['upstatus'], '', $_SESSION['adminuserid']);
 }
 
-
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 $pid = (isset($_REQUEST['pid']))?$_REQUEST['pid']:'';
+
 define('SORT_BY_DATE', '0');
 define('SORT_BY_STATUS', '1');
 define('SORT_BY_PATIENT', '2');
 define('SORT_BY_FRANCHISEE', '3');
 define('SORT_BY_USER', '4');
 define('SORT_BY_BC', '5');
+define('SORT_BY_FILED', '6');
+
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
-$sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
+$sort_by = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
+
+if ($sort_by == SORT_BY_FILED && !$isSuperAdmin) {
+    $sort_by = SORT_BY_STATUS;
+}
+
 $sort_by_sql = '';
+
 switch ($sort_by) {
   case SORT_BY_DATE:
     $sort_by_sql = "claim.adddate $sort_dir";
@@ -43,6 +61,9 @@ switch ($sort_by) {
     break;
   case SORT_BY_BC:
     $sort_by_sql = "billing_name $sort_dir";
+    break;
+  case SORT_BY_FILED:
+    $sort_by_sql = "filed_by_bo $sort_dir, p.lastname ASC, p.firstname ASC, status_order ASC, claim.adddate DESC";
     break;
   default:
     // default is SORT_BY_STATUS
@@ -149,11 +170,28 @@ else
 $i_val = $index_val * $rec_disp;
 $patientId = intval($_REQUEST['pid']);
 
+$frontOfficeClaimsConditional = frontOfficeClaimsConditional();
 $backOfficeClaimsConditional = backOfficeClaimsConditional();
+
+switch ($specialFilter) {
+    case 'both':
+        $whichOfficeConditional = '(TRUE)';
+        break;
+    case 'front':
+        $whichOfficeConditional = $frontOfficeClaimsConditional;
+        break;
+    default:
+        $whichOfficeConditional = $backOfficeClaimsConditional;
+}
+
+$filedByBackOfficeConditional = filedByBackOfficeConditional();
 
 $sql = "SELECT
     claim.insuranceid,
     claim.patientid,
+    claim.primary_claim_id,
+    claim.p_m_dss_file,
+    claim.s_m_dss_file,
     p.firstname,
     p.lastname,
     claim.adddate,
@@ -187,6 +225,7 @@ $sql = "SELECT
 
 if (is_super($_SESSION['admin_access'])) {
     $sql .= ",
+            $filedByBackOfficeConditional AS filed_by_bo,
             c.name AS billing_name,
             (
                 SELECT COUNT(id)
@@ -250,7 +289,7 @@ if (is_super($_SESSION['admin_access'])) {
  */
 $sql .= "
     WHERE claim.patientid = '$patientId'
-        AND $backOfficeClaimsConditional
+        AND $whichOfficeConditional
     ORDER BY $sort_by_sql";
 
 $countSql = preg_replace('/^SELECT/', 'SELECT COUNT(claim.insuranceid) AS total, ', $sql);
@@ -265,7 +304,15 @@ $my = $db->getResults($sql);
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <div class="page-header">
-	Manage Claims
+    Manage Claims
+    <?php if ($isSuperAdmin) { ?>
+        <a class="btn btn-xs <?= $specialFilter == 'front' ? 'btn-info active' : 'btn-default' ?>"
+           href="/manage/admin/patient_claims.php?pid=<?= $patientId ?>&amp;filed_by=front">FO Claims</a>
+        <a class="btn btn-xs <?= !$specialFilter ? 'btn-info active' : 'btn-default' ?>"
+           href="/manage/admin/patient_claims.php?pid=<?= $patientId ?>">BO Claims</a>
+        <a class="btn btn-xs <?= $specialFilter == 'both' ? 'btn-info active' : 'btn-default' ?>"
+           href="/manage/admin/patient_claims.php?pid=<?= $patientId ?>&amp;filed_by=both">Both</a>
+    <?php } ?>
 </div>
 <?php
 if(isset($_GET['msg'])){
@@ -282,14 +329,15 @@ if(isset($_GET['msg'])){
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
+				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir'] . ($specialFilter ? "&filed_by=$specialFilter" : ''));
 			?>
 		</TD>
 	</TR>
 	<? }?>
 	<?php
     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
-             . "&status=" . ((isset($_REQUEST['status']))?$_REQUEST['status']:'') . "&sort_by=%s&sort_dir=%s";
+             . "&status=" . ((isset($_REQUEST['status']))?$_REQUEST['status']:'') . "&sort_by=%s&sort_dir=%s" .
+        ($specialFilter ? "&filed_by=$specialFilter" : '');
     ?>
   <tr class="tr_bg_h">
     <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
@@ -316,6 +364,11 @@ if(isset($_GET['msg'])){
     <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
                         <a href="<?=sprintf($sort_qs, SORT_BY_BC, get_sort_dir($sort_by, SORT_BY_BC, $sort_dir))?>">Billing Company</a>
                 </td>
+    <?php if ($isSuperAdmin) { ?>
+      <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FILED, $sort_dir) ?>" width="10%">
+          <a href="<?= sprintf($sort_qs, SORT_BY_FILED, get_sort_dir($sort_by, SORT_BY_FILED, $sort_dir))?>">Filed By</a>
+      </td>
+    <?php } ?>
     <td valign="top" class="col_head" width="15%">
       Action
     </td>
@@ -404,6 +457,25 @@ if(isset($_GET['msg'])){
                                 <td valign="top">
                                         <?=st($myarray["billing_name"]);?>&nbsp;
                                 </td>
+        <?php if ($isSuperAdmin) {
+            $isPending = ClaimFormData::isStatus('pending', $myarray['status']);
+            ?>
+            <td valign="top">
+                <p class="input-group text-center"
+                    <?= $isPending ? 'title="This flag cannot be modified while the claim is pending"' : '' ?>>
+                    <span class="input-group-btn bo-status-switch">
+                        <button <?= $isPending ? 'disabled' : '' ?>
+                            class="filed-by-fo btn btn-xs <?= !$myarray['filed_by_bo'] ? 'btn-info active' : 'btn-default' ?>"
+                            type="button" data-claim-id="<?= $myarray['insuranceid'] ?>"
+                            <?= $myarray['filed_by_bo'] ? 'title="Mark the claim as filed by the FO"' : '' ?>>FO</button>
+                        <button <?= $isPending ? 'disabled' : '' ?>
+                            class="filed-by-bo btn btn-xs <?= $myarray['filed_by_bo'] ? 'btn-info active' : 'btn-default' ?>"
+                            type="button" data-claim-id="<?= $myarray['insuranceid'] ?>"
+                            <?= !$myarray['filed_by_bo'] ? 'title="Mark the claim as filed by the BO"' : '' ?>>BO</button>
+                    </span>
+                </p>
+            </td>
+        <?php } ?>
         <td valign="top">
             <?php
           //$primary_link = ($myarray['primary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['primary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=primary&pid='.$myarray['patientid'];
@@ -596,6 +668,41 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
                                   });
 
   });
+    $(document).ready(function(){
+        $('.bo-status-switch button').click(function(){
+            var $this = $(this),
+                claimId = $this.data('claim-id'),
+                switchToBackOffice = $this.is('.filed-by-bo'),
+                message = 'This action will mark this claim as "filed by ' +
+                    (switchToBackOffice ? 'Back' : 'Front') +
+                    ' Office"\n\nAre you sure you want to continue?';
+
+            if (confirm(message)) {
+                $('.bo-status-switch button').prop('disabled');
+
+                $.ajax({
+                    url: '/manage/admin/claim-switch.php',
+                    data: { claim_id: claimId, filed_by_back_office: switchToBackOffice ? 1 : 0 },
+                    type: 'post',
+                    complete: function(){
+                        $('.bo-status-switch button').removeProp('disabled');
+                    },
+                    success: function(response){
+                        if (response.success) {
+                            window.location = window.location;
+                        } else if (response.message) {
+                            alert('The following error was found while trying to change the flag:\n\n' + message);
+                        } else {
+                            alert('There was an error changing the flag. Please try again later.');
+                        }
+                    },
+                    error: function(){
+                        alert('There was an error changing the flag. Please try again later.');
+                    }
+                });
+            }
+        });
+    });
 </script>
 <?php
 

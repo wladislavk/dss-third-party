@@ -7,7 +7,7 @@
 
 // In case of issues with header not being interpreted on Apache
 // use GET param instead:
-// Vue.http.options.params = {'token' : document.getElementById('dom-api-token').value};
+Vue.http.options.params = {'token' : document.getElementById('dom-api-token').value};
 Vue.http.headers.common['Authorization'] = 'Bearer ' + document.getElementById('dom-api-token').value;
 
 var enrollmentApiPath = apiRoot + 'api/v1/enrollments/';

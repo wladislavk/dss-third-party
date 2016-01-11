@@ -1,9 +1,8 @@
 <?php
+
 namespace DentalSleepSolutions\Http\Requests;
 
-use DentalSleepSolutions\Http\Requests\Request;
-
-class StoreCustomRequest extends Request
+class CustomStore extends Request
 {
     /**
      * Get the validation rules that apply to the request.

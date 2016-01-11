@@ -185,13 +185,12 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, functi
 
 $factory->define(DentalSleepSolutions\Eloquent\Dental\Custom::class, function ($faker) {
     return [
-        'title'        => 'test title custom',
-        'description'  => 'test description custom',
-        'docid'        => 1111111111,
-        'status'       => 1,
+        'title'        => $faker->sentence($nbWords = 3),
+        'description'  => $faker->sentence($nbWords = 6),
+        'docid'        => $faker->randomDigit,
+        'status'       => $faker->randomDigit,
+        'adddate'      => $faker->dateTime(),
         'ip_address'   => $faker->ipv4,
-        'default_text' => 1
+        'default_text' => $faker->randomDigit
     ];
 });
-
-

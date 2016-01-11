@@ -31,5 +31,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->register('Tymon\JWTAuth\Providers\JWTAuthServiceProvider');
 
+        $this->app->bind(
+            'DentalSleepSolutions\\Contracts\\Repositories\\Customs',
+            'DentalSleepSolutions\\Eloquent\\Dental\\Custom'
+        );
     }
 }

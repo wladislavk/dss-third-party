@@ -7,7 +7,7 @@
 */
 Route::group(['prefix' => 'api/v1', 'after' => 'allowOrigin'], function () {
 
-    Route::resource('custom', 'Api\ApiCustomController');
+    Route::resource('customs', 'CustomsController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
 
     Route::group(['prefix' => 'enrollments'], function () {

@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\Dental\UserCompany;
 
 class Company extends Model
 {
@@ -48,6 +49,6 @@ class Company extends Model
      */
     public function users()
     {
-        return $this->hasMany(DentalUserCompany::class, 'companyid');
+        return $this->hasMany(UserCompany::class, 'companyid');
     }
 }

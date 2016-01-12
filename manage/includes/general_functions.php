@@ -4,9 +4,12 @@ define('SHARED_FOLDER', __DIR__ . '/../../../../shared/');
 define('Q_FILE_FOLDER', SHARED_FOLDER . '/q_file/');
 
 function generateApiToken($idOrEmail) {
-    if ($path = escapeshellarg(env('API_PATH'))) {
-      $idOrEmail = escapeshellarg($idOrEmail);
-      return exec("/usr/bin/php {$path}/artisan jwt:token {$idOrEmail}");
+    $apiPath = env('API_PATH');
+    $phpPath = env('PHP_PATH');
+
+    if ($apiPath && $phpPath) {
+        $idOrEmail = escapeshellarg($idOrEmail);
+        return exec("$phpPath {$apiPath}/artisan jwt:token {$idOrEmail}");
     }
 
     return '';

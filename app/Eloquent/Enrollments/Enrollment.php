@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Eloquent\Enrollments;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Enrollment extends Model

@@ -1,10 +1,16 @@
 <?php
+
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\ContactType as Resource;
+use DentalSleepSolutions\Contracts\Repositories\ContactTypes as Repository;
 
-class ContactType extends Model
+class ContactType extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
     /**
      * Mass assignable attributes
      *
@@ -16,13 +22,6 @@ class ContactType extends Model
     ];
 
     /**
-     * Mass of nondisplayed attributes
-     * 
-     * @var array
-     */
-    protected $hidden = ['ip_address'];
-
-    /**
      * The table associated with the model.
      *
      * @var string
@@ -30,16 +29,16 @@ class ContactType extends Model
     protected $table = 'dental_contacttype';
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * Primary key for the table
      *
      * @var string
      */
     protected $primaryKey = 'contacttypeid';
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'adddate';
 }

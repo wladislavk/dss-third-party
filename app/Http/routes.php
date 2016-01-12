@@ -7,7 +7,7 @@
 */
 Route::group(['prefix' => 'api/v1', 'after' => 'allowOrigin'], function () {
 
-    Route::resource('contact-type', 'Api\ApiContactTypeController');
+    Route::resource('contact-types', 'ContactTypesController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
 
     Route::group(['prefix' => 'enrollments'], function () {

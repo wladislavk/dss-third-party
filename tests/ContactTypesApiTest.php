@@ -4,18 +4,15 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
-use Carbon\Carbon;
 
-class ContactTypeApiTest extends TestCase
+class ContactTypesApiTest extends TestCase
 {
     use WithoutMiddleware;
     use DatabaseTransactions;
 
-    protected $contacttypeid;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/contact-type -> Api/ApiContactTypeController@store method
+     * Post to /api/v1/contact-types -> Api/ApiContactTypesController@store method
      * 
      */
     public function testAddContactType()
@@ -31,7 +28,7 @@ class ContactTypeApiTest extends TestCase
             'corporate'   => 3
         ];
 
-        $this->post('/api/v1/contact-type', $data)
+        $this->post('/api/v1/contact-types', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_contacttype', ['status' => 1]);
@@ -39,7 +36,7 @@ class ContactTypeApiTest extends TestCase
 
     /**
      * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/contact-type/{contacttypeid} -> Api/ApiContactTypeController@update method
+     * Put to /api/v1/contact-types/{contacttypeid} -> Api/ApiContactTypesController@update method
      * 
      */
     public function testUpdateContactType()
@@ -53,7 +50,7 @@ class ContactTypeApiTest extends TestCase
             'contacttype' => 'update_test_contacttype_added'
         ];
 
-        $this->put('/api/v1/contact-type/' . $contactTypeTestRecord->contacttypeid, $data)
+        $this->put('/api/v1/contact-types/' . $contactTypeTestRecord->contacttypeid, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_contacttype', ['contacttype' => 'update_test_contacttype_added']);
@@ -61,7 +58,7 @@ class ContactTypeApiTest extends TestCase
 
     /**
      * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/contact-type/{contacttypeid} -> Api/ApiContactTypeController@destroy method
+     * Delete to /api/v1/contact-types/{contacttypeid} -> Api/ApiContactTypesController@destroy method
      * 
      */
     public function testDeleteContactType()
@@ -70,7 +67,7 @@ class ContactTypeApiTest extends TestCase
 
         $contactTypeTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ContactType::class)->create();
 
-        $this->delete('/api/v1/contact-type/' . $contactTypeTestRecord->contacttypeid)
+        $this->delete('/api/v1/contact-types/' . $contactTypeTestRecord->contacttypeid)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('dental_contacttype', ['contacttypeid' => $contactTypeTestRecord->contacttypeid]);

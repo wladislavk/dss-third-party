@@ -185,13 +185,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, functi
 
 $factory->define(DentalSleepSolutions\Eloquent\Dental\ContactType::class, function ($faker) {
     return [
-        'contacttype' => $faker->regexify('[A-Za-z]{200}'),
-        'description' => $faker->regexify('[A-Za-z]'),
+        'contacttype' => $faker->sentence($nbWords = 3),
+        'description' => $faker->sentence($nbWords = 6),
         'sortby'      => $faker->randomDigit,
-        'status'      => $faker->regexify('[0-9]{1}'),
+        'status'      => $faker->randomDigit,
         'adddate'     => $faker->dateTime(),
         'ip_address'  => $faker->ipv4,
-        'physician'   => $faker->regexify('[0-9]{1}'),
-        'corporate'   => $faker->regexify('[0-9]{1}')
+        'physician'   => $faker->randomDigit,
+        'corporate'   => $faker->randomDigit
     ];
 });

@@ -12,10 +12,10 @@ class ContactTypeStore extends Request
     public function rules()
     {
         return [
-            'contacttype' => 'string|required',
+            'contacttype' => 'required|string',
             'description' => 'string',
-            'sortby'      => 'integer|required',
-            'status'      => 'integer|required',
+            'sortby'      => 'integer',
+            'status'      => 'integer',
             'physician'   => 'integer',
             'corporate'   => 'integer'
         ];

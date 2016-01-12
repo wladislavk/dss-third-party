@@ -20,18 +20,18 @@ class ContactTypesApiTest extends TestCase
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
         $data = [
-            'contacttype' => 'test_contacttype_added',
-            'description' => 'test_description_added',
-            'sortby'      => 77,
-            'status'      => 1,
-            'physician'   => 2,
-            'corporate'   => 3
+            'contacttype' => 'test',
+            'description' => 'test description',
+            'sortby'      => 10,
+            'status'      => 10,
+            'physician'   => 0,
+            'corporate'   => 0
         ];
 
         $this->post('/api/v1/contact-types', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_contacttype', ['status' => 1]);
+            ->seeInDatabase('dental_contacttype', ['status' => 10]);
     }
 
     /**
@@ -46,14 +46,14 @@ class ContactTypesApiTest extends TestCase
         $contactTypeTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ContactType::class)->create();
 
         $data = [
-            'sortby'      => 78,
-            'contacttype' => 'update_test_contacttype_added'
+            'sortby'      => 10,
+            'contacttype' => 'updated contact type'
         ];
 
         $this->put('/api/v1/contact-types/' . $contactTypeTestRecord->contacttypeid, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_contacttype', ['contacttype' => 'update_test_contacttype_added']);
+            ->seeInDatabase('dental_contacttype', ['contacttype' => 'updated contact type']);
     }
 
     /**

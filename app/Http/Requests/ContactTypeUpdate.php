@@ -12,10 +12,10 @@ class ContactTypeUpdate extends Request
     public function rules()
     {
         return [
-            'contacttype' => 'sometimes|string|required',
+            'contacttype' => 'sometimes|required|string',
             'description' => 'string',
-            'sortby'      => 'sometimes|integer|required',
-            'status'      => 'sometimes|integer|required',
+            'sortby'      => 'integer',
+            'status'      => 'integer',
             'physician'   => 'integer',
             'corporate'   => 'integer'
         ];

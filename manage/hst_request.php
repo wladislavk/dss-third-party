@@ -178,7 +178,6 @@ $sql = "SELECT "
 $pat = $db->getRow($sql);
 
 ?>
-<link type="text/css" rel="stylesheet" href="/manage/css/form.css" />
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#" onsubmit="return check_fields(this);">
 <?php
 $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 

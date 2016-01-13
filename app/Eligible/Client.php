@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Eligible;
 
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Exception\ClientException;
 use DentalSleepSolutions\Eloquent\Dental\UserCompany;
@@ -71,6 +72,7 @@ class Client
         if ($this->handler) {
             $arg['handler'] = $this->handler;
         }
+        $arg['headers'] = ['User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0'];
         return $arg;
     }
 
@@ -142,8 +144,10 @@ class Client
 
         try {
             $client = new \GuzzleHttp\Client($this->getConstructArguments());
-            $response = $client->request('GET', $address);
+            $response = $client->get($address);
         } catch (ClientException $e) {
+            $response = $e->getResponse();
+        } catch (ConnectException $e) {
             $response = $e->getResponse();
         }
 

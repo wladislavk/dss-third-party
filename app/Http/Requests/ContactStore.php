@@ -1,9 +1,8 @@
 <?php
+
 namespace DentalSleepSolutions\Http\Requests;
 
-use DentalSleepSolutions\Http\Requests\Request;
-
-class UpdateContactRequest extends Request
+class ContactStore extends Request
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,27 +12,27 @@ class UpdateContactRequest extends Request
     public function rules()
     {
         return [
-            'docid'                => 'sometimes|required|integer',
+            'docid'                => 'required|integer',
             'salutation'           => 'string',
-            'lastname'             => 'sometimes|required|string',
-            'firstname'            => 'sometimes|required|string',
+            'lastname'             => 'required|string',
+            'firstname'            => 'required|string',
             'middlename'           => 'string',
-            'company'              => 'sometimes|required|string',
-            'add1'                 => 'sometimes|required|string',
+            'company'              => 'required|string',
+            'add1'                 => 'required|string',
             'add2'                 => 'string',
-            'city'                 => 'sometimes|required|string',
-            'state'                => 'sometimes|required|string',
-            'zip'                  => 'sometimes|required|string',
-            'phone1'               => 'sometimes|required|string',
+            'city'                 => 'required|string',
+            'state'                => 'required|string',
+            'zip'                  => 'required|string',
+            'phone1'               => 'required|string',
             'phone2'               => 'string',
             'fax'                  => 'string',
-            'email'                => 'sometimes|required|email',
+            'email'                => 'required|email',
             'national_provider_id' => 'string',
             'qualifier'            => 'string',
             'qualifierid'          => 'string',
             'greeting'             => 'string',
             'sincerely'            => 'string',
-            'contacttypeid'        => 'sometimes|required|integer',
+            'contacttypeid'        => 'required|integer',
             'notes'                => 'string',
             'preferredcontact'     => 'string',
             'status'               => 'integer',

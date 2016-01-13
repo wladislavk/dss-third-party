@@ -14,7 +14,7 @@ class ContactApiTest extends TestCase
 
     /**
      * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/contact -> Api/ApiContactController@store method
+     * Post to /api/v1/contacts -> Api/ApiContactsController@store method
      * 
      */
     public function testAddContact()
@@ -35,7 +35,7 @@ class ContactApiTest extends TestCase
             'contacttypeid' => 5
         ];
 
-        $this->post('/api/v1/contact', $data)
+        $this->post('/api/v1/contacts', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_contact', ['company' => 'Test company']);
@@ -43,7 +43,7 @@ class ContactApiTest extends TestCase
 
     /**
      * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/contact/{id} -> Api/ApiContactController@update method
+     * Put to /api/v1/contacts/{id} -> Api/ApiContactsController@update method
      * 
      */
     public function testUpdateContact()
@@ -59,7 +59,7 @@ class ContactApiTest extends TestCase
             'company'       => 'Updated test company'
         ];
 
-        $this->put('/api/v1/contact/' . $contactTestRecord->contactid, $data)
+        $this->put('/api/v1/contacts/' . $contactTestRecord->contactid, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_contact', ['company' => 'Updated test company']);
@@ -67,7 +67,7 @@ class ContactApiTest extends TestCase
 
     /**
      * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/contact/{id} -> Api/ApiContactController@destroy method
+     * Delete to /api/v1/contacts/{id} -> Api/ApiContactsController@destroy method
      * 
      */
     public function testDeleteContact()
@@ -76,7 +76,7 @@ class ContactApiTest extends TestCase
 
         $contactTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Contact::class)->create();
 
-        $this->delete('/api/v1/contact/' . $contactTestRecord->contactid)
+        $this->delete('/api/v1/contacts/' . $contactTestRecord->contactid)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('dental_contact', ['contactid' => $contactTestRecord->contactid]);

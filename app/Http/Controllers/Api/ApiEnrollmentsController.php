@@ -86,6 +86,24 @@ class ApiEnrollmentsController extends ApiBaseController
     }
 
     /**
+     * @param int $transaction_type
+     * @return object|string
+     */
+    public function getPayersList($transaction_type = 1)
+    {
+        $transaction_type = TransactionType::where('id', $transaction_type)->where('status', 1)->first();
+
+        $client = new Client;
+        $response = $client->getPayers($transaction_type->endpoint_type);
+
+        if ($response->isSuccess()) {
+            return \Response::json($response->getObject());
+        }
+
+        return \Response::json([]);
+    }
+
+    /**
      * @param  \DentalSleepSolutions\Http\Requests\Enrollments\OriginalSignature $request
      * @return \Illuminate\Http\JsonResponse
      */

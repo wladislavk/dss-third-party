@@ -14,6 +14,11 @@ Route::group(['prefix' => 'api/v1', 'after' => 'allowOrigin'], function () {
             'uses' => 'Api\ApiEnrollmentsController@store'
         ]);
 
+        Route::get('payers/{transaction_type}', [
+            'as' => 'enrollments.get_payers',
+            'uses' => 'Api\ApiEnrollmentsController@getPayersList'
+        ]);
+
         Route::group(['prefix' => 'original-signature'], function () {
             Route::post('send', [
                 'as' => 'enrollments.original_signature.send',

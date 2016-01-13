@@ -5,12 +5,10 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 
-class ContactApiTest extends TestCase
+class ContactsApiTest extends TestCase
 {
     use WithoutMiddleware;
     use DatabaseTransactions;
-
-    protected $contactid;
 
     /**
      * Test the post method of the Dental Sleep Solutions API

@@ -7,7 +7,7 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Contact as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Contacts as Repository;
 
-class Contact extends Model
+class Contact extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

@@ -116,6 +116,45 @@ class Client
         $this->handler = $handler;
     }
 
+
+    /**
+     * create get request
+     *
+     * @param string $address
+     * @param array $data
+     * @return mixed
+     * @throws \Exception
+     */
+    public function requestGet($address, $data)
+    {
+        $data['api_key'] = $this->api_key;
+
+        if (config('elligibleapi.test')) {
+            $data['test'] = 'true';
+        }
+
+        $args = '';
+        foreach ($data as $key => $value) {
+            $args .= $key.'='.$value.'&';
+        }
+
+        $address = '/' . $this->version . '/' . $address . ($args != '' ? '?' : '').$args;
+
+        try {
+            $client = new \GuzzleHttp\Client($this->getConstructArguments());
+            $response = $client->request('GET', $address);
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+        }
+
+        if ($response->getStatusCode() >= 500) {
+            throw new \Exception("Server error:" + $response->getStatusCode());
+        }
+
+        return new Response($response);
+    }
+
+
     /**
      * create post/put request
      *
@@ -210,6 +249,19 @@ class Client
     public function createEnrollment($data)
     {
         return $this->requestPost('enrollment_npis', $data);
+    }
+
+    /**
+     * get payers list
+     *
+     * @param int $endpoint
+     * @return Response
+     */
+    public function getPayers($endpoint)
+    {
+        $data['endpoint'] = $endpoint;
+        $data['enrollment_required'] = 'true';
+        return $this->requestGet('payers.json', $data);
     }
 
     /**

@@ -1,0 +1,70 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: Webhooks enrollments
+produces:
+  - application/json
+consumes:
+  - application/json
+
+paths:
+  '/webhooks/enrollment':
+    post:
+      description: Request from Eligible with informations about enrollment
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            required:
+              - event
+              - details
+            properties:
+              event:
+                type: string
+                default: enrollment_status
+                description: value = "enrollment_status"
+              details:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  status:
+                    type: string
+                    enum:
+                    - submitted
+                    - accepted
+                    - rejected
+      responses:
+        200:
+          description: Successful response
+  '/webhooks/enrollment':
+    post:
+      description: Request from Eligible with informations about enrollment
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            required:
+              - event
+              - details
+            properties:
+              event:
+                type: string
+                default: received_pdf
+                description: value = "received_pdf"
+              details:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  received_pdf:
+                    type: object
+                    properties:
+                      download_url:
+                        type: string
+
+      responses:
+        200:
+          description: Successful response

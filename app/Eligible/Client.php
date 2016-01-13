@@ -127,7 +127,7 @@ class Client
      * @return mixed
      * @throws \Exception
      */
-    public function requestGet($address, $data)
+    public function requestGet($address, array $data)
     {
         $data['api_key'] = $this->api_key;
 
@@ -135,19 +135,13 @@ class Client
             $data['test'] = 'true';
         }
 
-        $args = '';
-        foreach ($data as $key => $value) {
-            $args .= $key.'='.$value.'&';
-        }
-
+        $args = http_build_query($data);
         $address = '/' . $this->version . '/' . $address . ($args != '' ? '?' : '').$args;
 
         try {
             $client = new \GuzzleHttp\Client($this->getConstructArguments());
             $response = $client->get($address);
         } catch (ClientException $e) {
-            $response = $e->getResponse();
-        } catch (ConnectException $e) {
             $response = $e->getResponse();
         }
 

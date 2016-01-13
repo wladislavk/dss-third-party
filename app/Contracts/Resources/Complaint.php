@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Contracts\Resources;
 
-interface Contact extends Resource
+interface Complaint extends Resource
 {
 
 }

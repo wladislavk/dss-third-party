@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Contracts\Repositories;
 
-interface Contacts extends Repository
+interface Complaints extends Repository
 {
 
 }

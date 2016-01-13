@@ -305,10 +305,12 @@ $oatNightsLimit = 3;
             <label class="desc">Home Sleep Diagnostic Testing</label>
             <hr />
             <input type="radio" name="hst_type" id="hst_order1" value="1" />
-            <label for="hst_order1">In-Home Diagnostic Sleep Test</label>
-            &mdash;
-            <label for="hst_order1-nights">number of nights:</label>
-            <select name="hst_1_nights" id="hst_order1-nights">
+            <label for="hst_order1">
+                In-Home Diagnostic Sleep Test
+                &mdash;
+                number of nights:
+            </label>
+            <select name="hst_1_nights">
                 <?php for ($n=1;$n<=$diagnosticNightsLimit;$n++) { ?>
                     <option <?= $n == 2 ? 'selected' : '' ?>><?= $n ?></option>
                 <?php } ?>
@@ -320,14 +322,23 @@ $oatNightsLimit = 3;
         </li>
         <li>
             <input type="radio" name="hst_type" id="hst_order3" value="3" />
-            <label for="hst_order3">In-Home Sleep Test with OAT (titration)</label>
-            &mdash;
-            <label for="hst_order3-nights">number of nights:</label>
-            <select name="hst_3_nights" id="hst_order3-nights">
+            <label for="hst_order3">
+                In-Home Sleep Test with OAT (titration)
+                &mdash;
+                number of nights:
+            </label>
+            <select name="hst_3_nights">
                 <?php for ($n=1;$n<=$oatNightsLimit;$n++) { ?>
                     <option <?= $n == 1 ? 'selected' : '' ?>><?= $n ?></option>
                 <?php } ?>
             </select>
+            <p class="container" style="display:none;">
+                <span>Device position:</span>
+                <span class="field-position">
+                    <input type="text" id="device-position-0" name="hst_device_position[0]" />
+                    <label for="device-position-0">For night 1</label>
+                </span>
+            </p>
         </li>
     </ul>
     <p></p>
@@ -401,6 +412,35 @@ $oatNightsLimit = 3;
 <br />
 
 <script src="js/hst_request.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function(){
+        var $hstRadioButtons = $('[name=hst_type]:radio'),
+            $hstContainers = $hstRadioButtons.closest('li');
+
+        $hstRadioButtons.change(function(){
+            $hstContainers.find('.container').hide();
+            $(this).closest('li').find('.container').show();
+        });
+
+        $('[name=hst_3_nights]').change(function(){
+            var $this = $(this),
+                $container = $hstContainers.last().find('.container'),
+                $fields = $container.find('span.field-position'),
+                $first = $fields.first(),
+                $rest = $fields.not(':eq(0)'),
+                $clone;
+
+            $rest.remove();
+
+            for (var n=1;n<$this.val();n++) {
+                $clone = $first.clone();
+                $clone.find('input').attr('id', 'device-position-' + n).attr('name', 'hst_device_position[' + n + ']');
+                $clone.find('label').attr('for', 'device-position-' + n).text('For night ' + (n + 1));
+                $clone.appendTo($container);
+            }
+        });
+    });
+</script>
 
 <?php include "includes/bottom.htm";?>
 

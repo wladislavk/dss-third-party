@@ -185,8 +185,12 @@ $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h
             WHERE h.id='".mysqli_real_escape_string($con,(!empty($_GET['hst_co']) ? $_GET['hst_co'] : ''))."' AND h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
 $bu_r = $db->getRow($bu_sql);
 
+$diagnosticNightsLimit = 2;
+$oatNightsLimit = 3;
+
 ?>
-    <input type="hidden" name="company_id" value="<?php echo $bu_r['id']; ?>"  />
+    <input type="hidden" name="company_id" value="<?php echo $bu_r['id']; ?>" />
+    <input type="hidden" name="provider_signature" id="provider_signature" value="1" />
     <h2 align="center"><strong><?php echo $bu_r['name']; ?></strong></h2>
     <h3 align="center">Home Sleep Test Order Form For
         <?php echo $pat['patient_firstname']." ".$pat['patient_lastname']; ?>
@@ -301,13 +305,29 @@ $bu_r = $db->getRow($bu_sql);
             <label class="desc">Home Sleep Diagnostic Testing</label>
             <hr />
             <input type="radio" name="hst_type" id="hst_order1" value="1" />
-            <label for="hst_order1">In-Home Sleep Test (2 nights)</label>
-            <br />
+            <label for="hst_order1">In-Home Diagnostic Sleep Test</label>
+            &mdash;
+            <label for="hst_order1-nights">number of nights:</label>
+            <select name="hst_1_nights" id="hst_order1-nights">
+                <?php for ($n=1;$n<=$diagnosticNightsLimit;$n++) { ?>
+                    <option <?= $n == 2 ? 'selected' : '' ?>><?= $n ?></option>
+                <?php } ?>
+            </select>
+        </li>
+        <li>
             <input type="radio" name="hst_type" id="hst_order2" value="2" />
             <label for="hst_order2">In-Home Sleep Test with PAP</label>
-            <br />
+        </li>
+        <li>
             <input type="radio" name="hst_type" id="hst_order3" value="3" />
             <label for="hst_order3">In-Home Sleep Test with OAT (titration)</label>
+            &mdash;
+            <label for="hst_order3-nights">number of nights:</label>
+            <select name="hst_3_nights" id="hst_order3-nights">
+                <?php for ($n=1;$n<=$oatNightsLimit;$n++) { ?>
+                    <option <?= $n == 1 ? 'selected' : '' ?>><?= $n ?></option>
+                <?php } ?>
+            </select>
         </li>
     </ul>
     <p></p>
@@ -351,10 +371,6 @@ $bu_r = $db->getRow($bu_sql);
         </li>
         <li>
             <span>
-                <input type="text" name="provider_signature" id="provider_signature" />
-                <label for="provider_signature">Provider Signature</label>
-            </span>
-            <span>
                 <input type="text" name="provider_date" id="provider_date" value="<?php echo date('m/d/Y'); ?>" />
                 <label for="provider_date">Date</label>
             </span>
@@ -372,12 +388,15 @@ $bu_r = $db->getRow($bu_sql);
             -
             Email: <?= e($bu_r['email']) ?>
         </li>
-        <li>
-            <input type="submit" name="submit" value="Request HST" />
-            <a style="float:right;" href="add_patient.php?ed=<?php echo $_GET['ed']; ?>&pid=<?php echo $_GET['ed'];?>"
-               onclick="return confirm('Are you sure you want to cancel?');">Cancel</a>
-        </li>
     </ul>
+    <p>
+        <strong>By the below order HST button you are providing a digital signature ordering the HST</strong>
+    </p>
+    <p>
+        <input class="button" type="submit" name="submit" value="Request HST" />
+        <a class="red" style="float:right;" href="add_patient.php?ed=<?php echo $_GET['ed']; ?>&pid=<?php echo $_GET['ed'];?>"
+            onclick="return confirm('Are you sure you want to cancel?');">Cancel</a>
+    </p>
 </form>
 <br />
 

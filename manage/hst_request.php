@@ -175,131 +175,210 @@ $sql = "SELECT "
      . "WHERE "
      . "  p.patientid = ".(!empty($_GET['ed']) ? $_GET['ed'] : '');
 
-$pat = $db->getRow($sql);?>
+$pat = $db->getRow($sql);
 
+?>
+<link type="text/css" rel="stylesheet" href="/manage/css/form.css" />
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#" onsubmit="return check_fields(this);">
 <?php
 $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
             JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'
             WHERE h.id='".mysqli_real_escape_string($con,(!empty($_GET['hst_co']) ? $_GET['hst_co'] : ''))."' AND h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
-$bu_r = $db->getRow($bu_sql); ?>
+$bu_r = $db->getRow($bu_sql);
 
-  <input type="hidden" name="company_id" value="<?php echo $bu_r['id']; ?>"  />
-  <h2 align="center"><strong><?php echo $bu_r['name']; ?></strong></h2>
-  <h3 align="center">Home Sleep Test Order Form For
-  	<?php echo $pat['patient_firstname']." ".$pat['patient_lastname']; ?>
-  </h3>
+?>
+    <input type="hidden" name="company_id" value="<?php echo $bu_r['id']; ?>"  />
+    <h2 align="center"><strong><?php echo $bu_r['name']; ?></strong></h2>
+    <h3 align="center">Home Sleep Test Order Form For
+        <?php echo $pat['patient_firstname']." ".$pat['patient_lastname']; ?>
+    </h3>
+    <ul class="frmhead">
+        <li>
+            <label class="desc">Patient Information</label>
+            <hr />
+            <span>
+                <input type="text" name="patient_firstname" id="patient_firstname" value="<?php echo $pat['patient_firstname']; ?>"/>
+                <label for="patient_firstname">Patient First Name</label>
+            </span>
+            <span>
+                <input type="text" name="patient_lastname" id="patient_lastname" value="<?php echo $pat['patient_lastname'];?>" />
+                <label for="patient_lastname">Patient Last Name</label>
+            </span>
+            <span>
+                <input type="text" name="patient_dob" id="patient_dob" value="<?php echo $pat['patient_dob'];?>" />
+                <label for="patient_dob">DOB</label>
+            </span>
+        </li>
+        <li>
+            <span>
+                <input type="text" name="patient_add1" id="patient_add1" value="<?php echo $pat['patient_add1'];?>" />
+                <label for="patient_add1"> Address 1</label>
+            </span>
+            <span>
+                <input type="text" name="patient_add2" id="patient_add2" value="<?php echo $pat['patient_add2'];?>" />
+                <label for="patient_add2"> Address 2</label>
+            </span>
+            <span>
+                <input type="text" name="patient_city" id="patient_city" value="<?php echo $pat['patient_city'];?>" />
+                <label for="patient_city">City</label>
+            </span>
+            <span>
+                <input type="text" name="patient_state" id="patient_state" value="<?php echo $pat['patient_state'];?>" />
+                <label for="patient_state">State</label>
+            </span>
+            <span>
+                <input type="text" name="patient_zip" id="patient_zip" value="<?php echo $pat['patient_zip'];?>" />
+                <label for="patient_zip">Zip</label>
+            </span>
+        </li>
+        <li>
+            <span>
+                <input type="text" name="patient_cell_phone" id="patient_cell_phone" value="<?php echo $pat['patient_cell_phone'];?>"/>
+                <label for="patient_cell_phone">Mobile phone</label>
+            </span>
+            <span>
+                <input type="text" name="patient_home_phone" id="patient_home_phone" value="<?php echo $pat['patient_home_phone'];?>" />
+                <label for="patient_home_phone">Home Phone</label>
+            </span>
+            <span>
+                <input type="text" name="patient_email" id="patient_email" value="<?php echo $pat['patient_email']; ?>" />
+                <label for="patient_email">Email</label>
+            </span>
+        </li>
+        <li>
+            <span>
+                <select name="ins_co_id" id="ins_co_id">
+                    <?php
 
-  <p align="left">
-    <label for="patient_name">Patient First Name</label>
-    <input type="text" name="patient_firstname" id="patient_firstname" value="<?php echo $pat['patient_firstname']; ?>"/>
-    <label for="patient_name">Patient Last Name</label>
-    <input type="text" name="patient_lastname" id="patient_lastname" value="<?php echo $pat['patient_lastname'];?>" />
-    <label for="patient_dob">DOB</label>
-    <input type="text" name="patient_dob" id="patient_dob" value="<?php echo $pat['patient_dob'];?>" />
-  </p>
-  <p align="left">
-    <label for="patient_address"> Address 1</label>
-    <input type="text" name="patient_add1" id="patient_add1" value="<?php echo $pat['patient_add1'];?>" />
-    <label for="patient_address"> Address 2</label>
-    <input type="text" name="patient_add2" id="patient_add2" value="<?php echo $pat['patient_add2'];?>" />
-    <label for="patient_city">City</label>
-    <input type="text" name="patient_city" id="patient_city" value="<?php echo $pat['patient_city'];?>" />
-    <label for="patient_state">State</label>
-    <input type="text" name="patient_state" id="patient_state" value="<?php echo $pat['patient_state'];?>" />
-    <label for="patient_zip">Zip</label>
-    <input type="text" name="patient_zip" id="patient_zip" value="<?php echo $pat['patient_zip'];?>" />
-  </p>
-  <p align="left">
-    <label for="patient_mobile_phone">Mobile phone</label>
-    <input type="text" name="patient_cell_phone" id="patient_cell_phone" value="<?php echo $pat['patient_cell_phone'];?>"/>
-    <label for="patient_home_phone">Home Phone</label>
-    <input type="text" name="patient_home_phone" id="patient_home_phone" value="<?php echo $pat['patient_home_phone'];?>" />
-    <label for="patient_email">Email</label>
-    <input type="text" name="patient_email" id="patient_email" value="<?php echo $pat['patient_email']; ?>" />
-  </p>
-  <p align="left">
-    <label for="patient_ins_name">Insurance Company</label>
-    <select name="ins_co_id">
-<?php
-$ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
-$ins_contact_qry_run = $db->getResults($ins_contact_qry);
-foreach ($ins_contact_qry_run as $kins_contact_res) {?>
-      <option value="<?php echo (!empty($ins_contact_res['contactid']) ? $ins_contact_res['contactid'] : ''); ?>" <?php if(!empty($ins_contact_res['contactid']) && $pat['p_m_ins_co'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes(!empty($ins_contact_res['company']) ? $ins_contact_res['company'] : ''); ?></option>
-<?php 
-} ?>
-    </select>
-    <label for="ins_phone">Ins. Phone Number</label>
-    <input type="text" name="ins_phone" id="ins_phone"  value="<?php echo $pat['ins_phone']; ?>" />
-    <br />
-    <label for="patient_ins_id">ID Number</label>
-    <input type="text" name="patient_ins_id" id="patient_ins_id" value="<?php echo $pat['patient_ins_id']; ?>" />
-    <label for="patient_ins_group_id">Group Number</label>
-    <input type="text" name="patient_ins_group_id" id="patient_ins_group_id" value="<?php echo $pat['patient_ins_group_id']; ?>" />
-  </p>
-  <p>&nbsp;</p>
-  <p align="left">Diganosis / Reason for Study  </p>
-  <hr />
-  <p align="left">
-<?php
-$ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
-$ins_diag_my = $db->getResults($ins_diag_sql);
-foreach ($ins_diag_my as $ins_diag_myarray) {?>
-    <input type="radio" name="diagnosis_id" value="<?php echo st($ins_diag_myarray['ins_diagnosisid'])?>" >
-    <label> <?php echo st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?></label>
-<?php
-}?>
-  </p>
-  <p>&nbsp;</p>
-  <p align="left">Home Sleep Diagnostic Testing</p>
-  <hr />
-  <p align="left">
-    <input type="radio" name="hst_type" id="hst_order1" value="1" />
-    <label for="hst_order">In-Home Sleep Test (2 nights)</label>
-    <input type="radio" name="hst_type" id="hst_order2" value="2" />
-    <label for="hst_order2">In-Home Sleep Test with PAP</label>
-    <input type="radio" name="hst_type" id="hst_order3" value="3" />
-    <label for="hst_order3">In-Home Sleep Test with OAT (titration)</label>
-  </p>
-  <p>&nbsp;</p>
-  <p align="left">Provider Information</p>
-  <hr />
-  <p align="left">
-    Deliver HST Results/Report via my <strong>DS3 Software</strong>
-  </p>
-  <p align="left">
-    <label for="provider_name">Provider First Name</label>
-    <input type="text" name="provider_firstname" id="provider_firstname" value="<?php echo $user_info['first_name']; ?>" />
-    <label for="provider_name">Provider Last Name</label>
-    <input type="text" name="provider_lastname" id="provider_lastname" value="<?php echo $user_info['last_name']; ?>" />
-    <label for="provider_phone">Phone</label>
-    <input type="text" name="provider_phone" id="provider_phone" value="<?php echo $user_info['phone']; ?>" />
-  </p>
-  <p align="left">
-    <label for="provider_address"> Address</label>
-    <input type="text" name="provider_address" id="provider_address" value="<?php echo $user_info['address']; ?>" />
-    <label for="provider_city">City</label>
-    <input type="text" name="provider_city" id="provider_city" value="<?php echo $user_info['city']; ?>" />
-    <br />
-    <label for="provider_state">State</label>
-    <input type="text" name="provider_state" id="provider_state" value="<?php echo $user_info['state']; ?>" />
-    <label for="provider_zip">Zip</label>
-    <input type="text" name="provider_zip" id="provider_zip" value="<?php echo $user_info['zip']; ?>" />
-  </p>
-  <p align="left">Please provider electronic communications via DS3 Software ONLY.</p>
-  <p align="left">
-    <label for="provider_signature">Provider Signature</label>
-    <input type="text" name="provider_signature" id="provider_signature" />
-    <label for="provider_date">Date</label>
-    <input type="text" name="provider_date" id="provider_date" value="<?php echo date('m/d/Y'); ?>" />
-  </p>
-  <p align="left">Transmitted Electronically Via DS3 Software.</p>
-  <p align="left">&nbsp;</p>
-  <p align="left"><?php echo $bu_r['name']; ?></p>
-  <p align="left">Office: <?php echo format_phone($bu_r['phone']); ?> - Fax: <?php echo format_phone($bu_r['fax']); ?> - Email: <?php echo $bu_r['email']; ?></p>
-  <p><input type="submit" name="submit" value="Request HST" />
-  	<a style="float:right;" href="add_patient.php?ed=<?php echo $_GET['ed']; ?>&pid=<?php echo $_GET['ed'];?>" onclick="return confirm('Are you sure you want to cancel?');">Cancel</a>
-  </p>
+                    $ins_contact_qry = "SELECT * FROM dental_contact WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
+                    $ins_contact_qry_run = $db->getResults($ins_contact_qry);
+
+                    foreach ($ins_contact_qry_run as $ins_contact_res) { ?>
+                        <option value="<?php echo (!empty($ins_contact_res['contactid']) ? $ins_contact_res['contactid'] : ''); ?>"
+                            <?= !empty($ins_contact_res['contactid']) && $pat['p_m_ins_co'] == $ins_contact_res['contactid'] ? "selected=\"selected\"" : '' ?>>
+                            <?php echo addslashes(!empty($ins_contact_res['company']) ? $ins_contact_res['company'] : ''); ?>
+                        </option>
+                    <?php } ?>
+                </select>
+                <label for="ins_co_id">Insurance Company</label>
+            </span>
+            <span>
+                <input type="text" name="ins_phone" id="ins_phone"  value="<?= $pat['ins_phone']; ?>" />
+                <label for="ins_phone">Ins. Phone Number</label>
+            </span>
+            <span>
+                <input type="text" name="patient_ins_id" id="patient_ins_id" value="<?= $pat['patient_ins_id']; ?>" />
+                <label for="patient_ins_id">ID Number</label>
+            </span>
+            <span>
+                <input type="text" name="patient_ins_group_id" id="patient_ins_group_id" value="<?= $pat['patient_ins_group_id']; ?>" />
+                <label for="patient_ins_group_id">Group Number</label>
+            </span>
+        </li>
+    </ul>
+    <p></p>
+    <ul class="frmhead">
+        <li>
+            <label class="desc">Diganosis / Reason for Study</label>
+            <hr />
+            <?php
+
+            $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
+            $ins_diag_my = $db->getResults($ins_diag_sql);
+
+            foreach ($ins_diag_my as $ins_diag_myarray) { ?>
+                <input type="radio" name="diagnosis_id" value="<?php echo st($ins_diag_myarray['ins_diagnosisid'])?>"
+                    id="diagnosis-<?php echo st($ins_diag_myarray['ins_diagnosisid'])?>">
+                <label for="diagnosis-<?php echo st($ins_diag_myarray['ins_diagnosisid'])?>">
+                    <?php echo st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
+                </label>
+                <br />
+            <?php } ?>
+        </li>
+    </ul>
+    <p></p>
+    <ul class="frmhead">
+        <li>
+            <label class="desc">Home Sleep Diagnostic Testing</label>
+            <hr />
+            <input type="radio" name="hst_type" id="hst_order1" value="1" />
+            <label for="hst_order1">In-Home Sleep Test (2 nights)</label>
+            <br />
+            <input type="radio" name="hst_type" id="hst_order2" value="2" />
+            <label for="hst_order2">In-Home Sleep Test with PAP</label>
+            <br />
+            <input type="radio" name="hst_type" id="hst_order3" value="3" />
+            <label for="hst_order3">In-Home Sleep Test with OAT (titration)</label>
+        </li>
+    </ul>
+    <p></p>
+    <ul class="frmhead">
+        <li>
+            <label class="desc">Provider Information</label>
+            <hr />
+            <label>Deliver HST Results/Report via my <strong>DS3 Software</strong></label>
+        </li>
+        <li>
+            <span>
+                <input type="text" name="provider_firstname" id="provider_firstname" value="<?php echo $user_info['first_name']; ?>" />
+                <label for="provider_firstname">Provider First Name</label>
+            </span>
+            <span>
+                <input type="text" name="provider_lastname" id="provider_lastname" value="<?php echo $user_info['last_name']; ?>" />
+                <label for="provider_lastname">Provider Last Name</label>
+            </span>
+            <span>
+                <input type="text" name="provider_phone" id="provider_phone" value="<?php echo $user_info['phone']; ?>" />
+                <label for="provider_phone">Phone</label>
+            </span>
+        </li>
+        <li>
+            <span>
+                <input type="text" name="provider_address" id="provider_address" value="<?php echo $user_info['address']; ?>" />
+                <label for="provider_address"> Address</label>
+            </span>
+            <span>
+                <input type="text" name="provider_city" id="provider_city" value="<?php echo $user_info['city']; ?>" />
+                <label for="provider_city">City</label>
+            </span>
+            <span>
+                <input type="text" name="provider_state" id="provider_state" value="<?php echo $user_info['state']; ?>" />
+                <label for="provider_state">State</label>
+            </span>
+            <span>
+                <input type="text" name="provider_zip" id="provider_zip" value="<?php echo $user_info['zip']; ?>" />
+                <label for="provider_zip">Zip</label>
+            </span>
+        </li>
+        <li>
+            <span>
+                <input type="text" name="provider_signature" id="provider_signature" />
+                <label for="provider_signature">Provider Signature</label>
+            </span>
+            <span>
+                <input type="text" name="provider_date" id="provider_date" value="<?php echo date('m/d/Y'); ?>" />
+                <label for="provider_date">Date</label>
+            </span>
+        </li>
+        <li>
+            <p>
+                <label class="desc">Transmitted Electronically Via DS3 Software.</label>
+            </p>
+            <label class="desc"><?= e($bu_r['name']) ?></label>
+        </li>
+        <li>
+            Office: <?= format_phone($bu_r['phone']) ?>
+            -
+            Fax: <?= format_phone($bu_r['fax']) ?>
+            -
+            Email: <?= e($bu_r['email']) ?>
+        </li>
+        <li>
+            <input type="submit" name="submit" value="Request HST" />
+            <a style="float:right;" href="add_patient.php?ed=<?php echo $_GET['ed']; ?>&pid=<?php echo $_GET['ed'];?>"
+               onclick="return confirm('Are you sure you want to cancel?');">Cancel</a>
+        </li>
+    </ul>
 </form>
 <br />
 

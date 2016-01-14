@@ -90,7 +90,8 @@ class ApiEnrollmentsController extends ApiBaseController
                 $img = $signature->sigJsonToImage($request->input('signature', ''));
 
                 $file = "signature_" . $user_id . "_" . $signature_id . ".png";
-                imagepng($img, env('LEGACY_PATH').'/../shared/q_file/'.$file);
+                $path = env('LEGACY_PATH').'/../../shared/q_file/'.$file;
+                imagepng($img, $path);
                 imagedestroy($img);
             }
         }

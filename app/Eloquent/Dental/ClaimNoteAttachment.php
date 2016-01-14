@@ -7,7 +7,7 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ClaimNoteAttachment as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ClaimNoteAttachments as Repository;
 
-class ClaimNoteAttachment extends Model
+class ClaimNoteAttachment extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

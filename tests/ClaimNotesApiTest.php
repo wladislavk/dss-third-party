@@ -5,16 +5,14 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 
-class ClaimNoteApiTest extends TestCase
+class ClaimNotesApiTest extends TestCase
 {
     use WithoutMiddleware;
     use DatabaseTransactions;
 
-    protected $id;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/claim-note -> Api/ApiClaimNoteController@store method
+     * Post to /api/v1/claim-notes -> Api/ApiClaimNotesController@store method
      * 
      */
     public function testAddClaimNote()
@@ -28,7 +26,7 @@ class ClaimNoteApiTest extends TestCase
             'note'        => 'testNote'
         ];
 
-        $this->post('/api/v1/claim-note', $data)
+        $this->post('/api/v1/claim-notes', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_claim_notes', ['note' => 'testNote']);
@@ -36,7 +34,7 @@ class ClaimNoteApiTest extends TestCase
 
     /**
      * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/claim-note/{id} -> Api/ApiClaimNoteController@update method
+     * Put to /api/v1/claim-notes/{id} -> Api/ApiClaimNotesController@update method
      * 
      */
     public function testUpdateClaimNote()
@@ -49,7 +47,7 @@ class ClaimNoteApiTest extends TestCase
             'note' => 'updatedTestNote'
         ];
 
-        $this->put('/api/v1/claim-note/' . $claimNoteTestRecord->id, $data)
+        $this->put('/api/v1/claim-notes/' . $claimNoteTestRecord->id, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_claim_notes', ['note' => 'updatedTestNote']);
@@ -57,7 +55,7 @@ class ClaimNoteApiTest extends TestCase
 
     /**
      * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/claim-note/{id} -> Api/ApiClaimNoteController@destroy method
+     * Delete to /api/v1/claim-notes/{id} -> Api/ApiClaimNotesController@destroy method
      * 
      */
     public function testDeleteClaimNote()
@@ -66,7 +64,7 @@ class ClaimNoteApiTest extends TestCase
 
         $claimNoteTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimNote::class)->create();
 
-        $this->delete('/api/v1/claim-note/' . $claimNoteTestRecord->id)
+        $this->delete('/api/v1/claim-notes/' . $claimNoteTestRecord->id)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('dental_claim_notes', ['id' => $claimNoteTestRecord->id]);

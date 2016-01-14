@@ -72,7 +72,7 @@ class Payer extends Model implements Resource, Repository
      */
     public function getSupportedEndpointsAttribute()
     {
-        return json_decode($this->attributes['supported_endpoints'], true);
+        return json_decode($this->getAttributeFromArray('supported_endpoints'), true);
     }
 
     /**

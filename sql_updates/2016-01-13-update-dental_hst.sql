@@ -1,0 +1,2 @@
+ALTER TABLE dental_hst ADD COLUMN hst_nights INT(11) DEFAULT 2;
+ALTER TABLE dental_hst ADD COLUMN hst_positions TEXT NOT NULL DEFAULT '';

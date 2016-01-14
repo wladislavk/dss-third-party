@@ -202,9 +202,12 @@ $my = $db->getResults($sql);
           Status
         </a>	
   		</td>
-  		<td valign="top" class="col_head" width="15%">
-  			Action
-  		</td>
+        <td valign="top" class="col_head" width="15%">
+            HST Form
+        </td>
+        <td valign="top" class="col_head" width="15%">
+            Action
+        </td>
 	  	<td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'authorize')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
         <a href="manage_hst.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=authorize&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='authorize'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
           Authorize
@@ -244,15 +247,18 @@ $my = $db->getResults($sql);
           <?php echo ($myarray['status'] == DSS_HST_REJECTED)?$myarray['rejected_reason']:'';?>
         </td>
         <td valign="top">
+          <a class="editLink" target="_blank" href="/manage/hst_request.php?pid=<?= $myarray['patient_id'] ?>&amp;hst_id=<?= $myarray['id'] ?>">View form</a>
+        </td>
+        <td valign="top">
         <?php if($myarray['status']==DSS_HST_COMPLETE){ ?>
           <a href="dss_summ.php?pid=<?php echo $myarray['patient_id']; ?>&addtopat=1&sect=sleep" class="editlink" title="EDIT"  onclick="alert('After you view the test results, please return to this page and click “Mark Read” to clear the item from your pending queue.');">
-            View
+            View results
           </a>
         <?php }else{ ?>
           <a href="hst_view.php?pid=<?php echo $myarray['patient_id']; ?>&hst_id=<?php echo $myarray["id"]; ?>" style="float:left;" class="editlink" title="EDIT" onclick="alert('After you view the test results, please return to this page and click “Mark Read” to clear the item from your pending queue.');">
-            View
+            View results
           </a>
-        <?php } 
+        <?php }
         if($myarray['status'] == DSS_HST_COMPLETE || $myarray['status'] == DSS_HST_REJECTED){
           if(!$myarray['viewed']){ ?>
           <a href="manage_hst.php?rid=<?php echo $myarray["id"]; ?>&status=<?php echo $_GET['status'];?>&viewed=<?php echo $_GET['viewed'];?>" style="float:right;" class="editlink" title="EDIT">
@@ -262,7 +268,7 @@ $my = $db->getResults($sql);
           <a href="manage_hst.php?urid=<?php echo $myarray["id"]; ?>&status=<?php echo $_GET['status'];?>" style="float:right;" class="editlink" title="EDIT">
             Mark Unread
           </a>
-        <?php } 
+        <?php }
         } ?>
         </td>
         <td valign="top">

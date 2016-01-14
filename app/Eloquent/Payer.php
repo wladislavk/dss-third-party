@@ -13,6 +13,23 @@ use DentalSleepSolutions\Contracts\Repositories\Payers as Repository;
  */
 class Payer extends Model implements Resource, Repository
 {
+    const ELIGIBLE_ENDPOINT_ELIGIBILITY = 'coverage';
+    const ELIGIBLE_ENDPOINT_MEDICAL_CLAIMS = 'professional claims';
+    const ELIGIBLE_ENDPOINT_DENTAL_CLAIMS = 'dental claims';
+    const ELIGIBLE_ENDPOINT_INSTITUTIONAL_CLAIMS = 'institutional claims';
+    const ELIGIBLE_ENDPOINT_ERA_REPORTS = 'payment reports';
+
+    public static function eligibleEndpoints()
+    {
+        return [
+            self::ELIGIBLE_ENDPOINT_ELIGIBILITY,
+            self::ELIGIBLE_ENDPOINT_MEDICAL_CLAIMS,
+            self::ELIGIBLE_ENDPOINT_DENTAL_CLAIMS,
+            self::ELIGIBLE_ENDPOINT_INSTITUTIONAL_CLAIMS,
+            self::ELIGIBLE_ENDPOINT_ERA_REPORTS,
+        ];
+    }
+
     /**
      * The database table used by the model.
      *
@@ -32,13 +49,21 @@ class Payer extends Model implements Resource, Repository
      *
      * @return string[]
      */
-    public function requiredFields()
+    public function requiredFields($endpoint = null)
     {
-        return collect((array)$this->supported_endpoints)
-            ->fetch('enrollment_mandatory_fields')
+        $endpoints = collect((array)$this->supported_endpoints);
+
+        if ($endpoint && in_array($endpoint, static::eligibleEndpoints())) {
+            $endpoints = $endpoints->filter(function ($supported) use ($endpoint) {
+                return $supported['endpoint'] === $endpoint;
+            });
+        }
+
+        return $endpoints
+            ->pluck('enrollment_mandatory_fields')
             ->collapse()
             ->unique()
-            ->values();
+            ->all();
     }
 
     /**

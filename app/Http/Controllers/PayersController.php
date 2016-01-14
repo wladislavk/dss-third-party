@@ -2,12 +2,13 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use Illuminate\Http\Request;
 use DentalSleepSolutions\Helpers\ApiResponse;
 use DentalSleepSolutions\Http\Requests\PayerStore;
+use DentalSleepSolutions\Contracts\Resources\Payer;
 use DentalSleepSolutions\Http\Requests\PayerUpdate;
 use DentalSleepSolutions\Http\Requests\PayerDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\Payer;
 use DentalSleepSolutions\Contracts\Repositories\Payers;
 
 /**
@@ -50,9 +51,9 @@ class PayersController extends Controller
      * @param  \DentalSleepSolutions\Contracts\Resources\Payer  $payer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function requiredFields(Payer $payer)
+    public function requiredFields(Payer $payer, Request $request)
     {
-        $fields = $payer->requiredFields();
+        $fields = $payer->requiredFields($request->get('endpoint'));
 
         return ApiResponse::responseOk('', $fields);
     }

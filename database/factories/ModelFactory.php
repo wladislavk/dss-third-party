@@ -19,3 +19,16 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Company::class, function ($faker) {
+    return [];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\MemoAdmin::class, function ($faker) {
+    return [
+        'memo' => 'PHPUnit updated memo',
+        'last_update' => $faker->date('Y-m-d'),
+        'off_date' => $faker->date('Y-m-d'),
+    ];
+});
+

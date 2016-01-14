@@ -5,7 +5,6 @@ use DentalSleepSolutions\Http\Controllers\Controller;
 
 class ApiBaseController extends Controller
 {
-
     /**
      * Create an error response
      *

@@ -1237,7 +1237,7 @@ if( $r['homepage'] != '1') {
               foreach($rc_q as $hst){          
             ?>
 
-              HST was requested <?php echo  date('m/d/Y', strtotime($hst['adddate'])); ?>
+            <a href="/manage/hst_view.php?pid=<?= $hst['patient_id'] ?>&amp;hst_id=<?= $hst['id'] ?>">HST was requested <?php echo  date('m/d/Y', strtotime($hst['adddate'])); ?></a>
               and is currently 
 
             <?php if($hst['status'] == DSS_HST_REJECTED) { ?>

@@ -7,7 +7,7 @@
 */
 Route::group(['prefix' => 'api/v1', 'after' => 'allowOrigin'], function () {
 
-    Route::resource('claim-note-attachment', 'Api\ApiClaimNoteAttachmentController');
+    Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
 
     Route::group(['prefix' => 'enrollments'], function () {

@@ -5,16 +5,14 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 
-class ClaimNoteAttachmentApiTest extends TestCase
+class ClaimNoteAttachmentsApiTest extends TestCase
 {
     use WithoutMiddleware;
     use DatabaseTransactions;
 
-    protected $id;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/claim-note-attachment -> Api/ApiClaimNoteAttachmentController@store method
+     * Post to /api/v1/claim-note-attachments -> Api/ApiClaimNoteAttachmentsController@store method
      * 
      */
     public function testAddClaimNoteAttachment()
@@ -26,7 +24,7 @@ class ClaimNoteAttachmentApiTest extends TestCase
             'filename' => 'testFilename'
         ];
 
-        $this->post('/api/v1/claim-note-attachment', $data)
+        $this->post('/api/v1/claim-note-attachments', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_claim_note_attachment', ['note_id' => 5]);
@@ -34,7 +32,7 @@ class ClaimNoteAttachmentApiTest extends TestCase
 
     /**
      * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/claim-note-attachment/{id} -> Api/ApiClaimNoteAttachmentController@update method
+     * Put to /api/v1/claim-note-attachments/{id} -> Api/ApiClaimNoteAttachmentsController@update method
      * 
      */
     public function testUpdateClaimNoteAttachment()
@@ -47,7 +45,7 @@ class ClaimNoteAttachmentApiTest extends TestCase
             'filename' => 'updatedTestFilename'
         ];
 
-        $this->put('/api/v1/claim-note-attachment/' . $claimNoteAttachmentTestRecord->id, $data)
+        $this->put('/api/v1/claim-note-attachments/' . $claimNoteAttachmentTestRecord->id, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_claim_note_attachment', ['filename' => 'updatedTestFilename']);
@@ -55,7 +53,7 @@ class ClaimNoteAttachmentApiTest extends TestCase
 
     /**
      * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/claim-note-attachment/{id} -> Api/ApiClaimNoteAttachmentController@destroy method
+     * Delete to /api/v1/claim-note-attachments/{id} -> Api/ApiClaimNoteAttachmentsController@destroy method
      * 
      */
     public function testDeleteClaimNoteAttachment()
@@ -64,7 +62,7 @@ class ClaimNoteAttachmentApiTest extends TestCase
 
         $claimNoteAttachmentTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment::class)->create();
 
-        $this->delete('/api/v1/claim-note-attachment/' . $claimNoteAttachmentTestRecord->id)
+        $this->delete('/api/v1/claim-note-attachments/' . $claimNoteAttachmentTestRecord->id)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('dental_claim_note_attachment', ['id' => $claimNoteAttachmentTestRecord->id]);

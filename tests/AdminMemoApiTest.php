@@ -1,5 +1,6 @@
 <?php
 
+use DentalSleepSolutions\Eloquent\MemoAdmin;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -27,7 +28,7 @@ class AdminMemoApiTest extends TestCase
 
     public function testUpdateMemo()
     {
-        $memoTestRecord = \DentalSleepSolutions\MemoAdmin::where('memo','like','PHPUnit%')->firstOrFail();
+        $memoTestRecord = MemoAdmin::where('memo','like','PHPUnit%')->firstOrFail();
         if($memoTestRecord)
         {
             $date = date("Y-m-d");
@@ -42,7 +43,7 @@ class AdminMemoApiTest extends TestCase
 
     public function testDeleteMemo()
     {
-        $memoTestRecord = \DentalSleepSolutions\MemoAdmin::where('memo','like','PHPUnit%')->firstOrFail();
+        $memoTestRecord = MemoAdmin::where('memo','like','PHPUnit%')->firstOrFail();
         if($memoTestRecord)
         {
             $this->delete('/api/v1/memo/'.$memoTestRecord->memo_id)

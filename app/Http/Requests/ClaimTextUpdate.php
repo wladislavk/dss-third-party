@@ -13,7 +13,7 @@ class ClaimTextUpdate extends Request
     {
         return [
             'title'       => 'sometimes|required|string',
-            'description' => 'sometimes|required|string'
+            'description' => 'string'
         ];
     }
 }

@@ -20,7 +20,7 @@ class ClaimTextsApiTest extends TestCase
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
         $data = [
-            'title'        => 'test_test_title',
+            'title'        => 'test',
             'description'  => 'test description',
             'default_text' => 1,
             'companyid'    => 1
@@ -40,16 +40,17 @@ class ClaimTextsApiTest extends TestCase
     public function testUpdateClaimText()
     {
         $statusOk = Arr::get(Response::$statusTexts, 200);
+
         $claimTextTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimText::class)->create();
 
         $data = [
-            'description' => 'Update test description'
+            'description' => 'updated test description'
         ];
 
         $this->put('/api/v1/claim-texts/' . $claimTextTestRecord->id, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_claim_text', ['description' => 'Update test description']);
+            ->seeInDatabase('dental_claim_text', ['description' => 'updated test description']);
     }
 
     /**

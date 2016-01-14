@@ -13,7 +13,7 @@ class ClaimTextStore extends Request
     {
         return [
             'title'       => 'required|string',
-            'description' => 'required|string'
+            'description' => 'string'
         ];
     }
 }

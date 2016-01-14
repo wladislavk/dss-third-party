@@ -247,7 +247,7 @@ $my = $db->getResults($sql);
           <?php echo ($myarray['status'] == DSS_HST_REJECTED)?$myarray['rejected_reason']:'';?>
         </td>
         <td valign="top">
-          <a class="editLink" target="_blank" href="/manage/hst_request.php?pid=<?= $myarray['patient_id'] ?>&amp;hst_id=<?= $myarray['id'] ?>">View form</a>
+          <a class="editlink" target="_blank" href="/manage/hst_request.php?pid=<?= $myarray['patient_id'] ?>&amp;hst_id=<?= $myarray['id'] ?>">View form</a>
         </td>
         <td valign="top">
         <?php if($myarray['status']==DSS_HST_COMPLETE){ ?>

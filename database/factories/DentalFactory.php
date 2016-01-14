@@ -185,11 +185,11 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, functi
 
 $factory->define(DentalSleepSolutions\Eloquent\Dental\ClaimText::class, function ($faker) {
     return [
-        'title'        => $faker->regexify('[A-Za-z]{80}'),
-        'description'  => $faker->regexify('[A-Za-z]{200}'),
+        'title'        => $faker->word,
+        'description'  => $faker->sentence($nbWords = 6),
         'adddate'      => $faker->dateTime(),
         'ip_address'   => $faker->ipv4,
-        'default_text' => $faker->regexify('[0-9]{1}'),
-        'companyid'    => $faker->regexify('[0-9]{1}')
+        'default_text' => $faker->randomDigit,
+        'companyid'    => $faker->randomDigit
     ];
 });

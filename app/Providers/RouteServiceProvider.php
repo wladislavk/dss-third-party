@@ -23,7 +23,9 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $resourceBindings = [];
+    protected $resourceBindings = [
+        'claim-texts' => \DentalSleepSolutions\Eloquent\Dental\ClaimText::class,
+    ];
 
     /**
      * Define your route model bindings, pattern filters, etc.

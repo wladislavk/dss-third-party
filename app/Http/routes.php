@@ -7,7 +7,7 @@
 */
 Route::group(['prefix' => 'api/v1', 'after' => 'allowOrigin'], function () {
 
-    Route::resource('claim-text', 'Api\ApiClaimTextController');
+    Route::resource('claim-texts', 'ClaimTextsController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
 
     Route::group(['prefix' => 'enrollments'], function () {

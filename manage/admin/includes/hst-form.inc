@@ -337,6 +337,7 @@ $oatNightsLimit = 3;
 $nightsDefault = $hstData['hst_nights'] ?: 2;
 
 ?>
+<link type="text/css" rel="stylesheet" href="/manage/css/form.css" />
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#" onsubmit="return check_fields(this);">
     <input type="hidden" name="provider_signature" id="provider_signature" value="1" />
 
@@ -374,85 +375,85 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
         <li>
             <label class="desc">Patient Information</label>
             <hr />
-                <span>
-                    <input type="text" name="patient_firstname" id="patient_firstname" value="<?= e($hstData['patient_firstname']) ?>"/>
-                    <label for="patient_firstname">Patient First Name</label>
-                </span>
-                <span>
-                    <input type="text" name="patient_lastname" id="patient_lastname" value="<?= e($hstData['patient_lastname']) ?>" />
-                    <label for="patient_lastname">Patient Last Name</label>
-                </span>
-                <span>
-                    <input type="text" name="patient_dob" id="patient_dob" value="<?= e($hstData['patient_dob']) ?>" />
-                    <label for="patient_dob">DOB</label>
-                </span>
+            <span>
+                <input type="text" name="patient_firstname" id="patient_firstname" value="<?= e($hstData['patient_firstname']) ?>"/>
+                <label for="patient_firstname">Patient First Name</label>
+            </span>
+            <span>
+                <input type="text" name="patient_lastname" id="patient_lastname" value="<?= e($hstData['patient_lastname']) ?>" />
+                <label for="patient_lastname">Patient Last Name</label>
+            </span>
+            <span>
+                <input type="text" name="patient_dob" id="patient_dob" value="<?= e($hstData['patient_dob']) ?>" />
+                <label for="patient_dob">DOB</label>
+            </span>
         </li>
         <li>
-                <span>
-                    <input type="text" name="patient_add1" id="patient_add1" value="<?= e($hstData['patient_add1']) ?>" />
-                    <label for="patient_add1"> Address 1</label>
-                </span>
-                <span>
-                    <input type="text" name="patient_add2" id="patient_add2" value="<?= e($hstData['patient_add2']) ?>" />
-                    <label for="patient_add2"> Address 2</label>
-                </span>
-                <span>
-                    <input type="text" name="patient_city" id="patient_city" value="<?= e($hstData['patient_city']) ?>" />
-                    <label for="patient_city">City</label>
-                </span>
-                <span>
-                    <input type="text" name="patient_state" id="patient_state" value="<?= e($hstData['patient_state']) ?>" />
-                    <label for="patient_state">State</label>
-                </span>
-                <span>
-                    <input type="text" name="patient_zip" id="patient_zip" value="<?= e($hstData['patient_zip']) ?>" />
-                    <label for="patient_zip">Zip</label>
-                </span>
+            <span>
+                <input type="text" name="patient_add1" id="patient_add1" value="<?= e($hstData['patient_add1']) ?>" />
+                <label for="patient_add1"> Address 1</label>
+            </span>
+            <span>
+                <input type="text" name="patient_add2" id="patient_add2" value="<?= e($hstData['patient_add2']) ?>" />
+                <label for="patient_add2"> Address 2</label>
+            </span>
+            <span>
+                <input type="text" name="patient_city" id="patient_city" value="<?= e($hstData['patient_city']) ?>" />
+                <label for="patient_city">City</label>
+            </span>
+            <span>
+                <input type="text" name="patient_state" id="patient_state" value="<?= e($hstData['patient_state']) ?>" />
+                <label for="patient_state">State</label>
+            </span>
+            <span>
+                <input type="text" name="patient_zip" id="patient_zip" value="<?= e($hstData['patient_zip']) ?>" />
+                <label for="patient_zip">Zip</label>
+            </span>
         </li>
         <li>
-                <span>
-                    <input type="text" name="patient_cell_phone" id="patient_cell_phone" value="<?= e($hstData['patient_cell_phone']) ?>"/>
-                    <label for="patient_cell_phone">Mobile phone</label>
-                </span>
-                <span>
-                    <input type="text" name="patient_home_phone" id="patient_home_phone" value="<?= e($hstData['patient_home_phone']) ?>" />
-                    <label for="patient_home_phone">Home Phone</label>
-                </span>
-                <span>
-                    <input type="text" name="patient_email" id="patient_email" value="<?= e($hstData['patient_email']) ?>" />
-                    <label for="patient_email">Email</label>
-                </span>
+            <span>
+                <input type="text" name="patient_cell_phone" id="patient_cell_phone" value="<?= e($hstData['patient_cell_phone']) ?>"/>
+                <label for="patient_cell_phone">Mobile phone</label>
+            </span>
+            <span>
+                <input type="text" name="patient_home_phone" id="patient_home_phone" value="<?= e($hstData['patient_home_phone']) ?>" />
+                <label for="patient_home_phone">Home Phone</label>
+            </span>
+            <span>
+                <input type="text" name="patient_email" id="patient_email" value="<?= e($hstData['patient_email']) ?>" />
+                <label for="patient_email">Email</label>
+            </span>
         </li>
         <li>
-                <span>
-                    <select name="ins_co_id" id="ins_co_id">
-                        <?php
+            <span>
+                <select name="ins_co_id" id="ins_co_id">
+                    <?php
 
-                        $ins_contact_qry = "SELECT * FROM dental_contact WHERE contacttypeid = '11' AND docid = '$docId'";
-                        $ins_contact_qry_run = $db->getResults($ins_contact_qry);
+                    $ins_contact_qry = "SELECT * FROM dental_contact WHERE contacttypeid = '11' AND docid = '$docId'";
+                    $ins_contact_qry_run = $db->getResults($ins_contact_qry);
 
-                        foreach ($ins_contact_qry_run as $ins_contact_res) { ?>
-                            <option value="<?php echo $ins_contact_res['contactid'] ?>"
-                                <?= $hstData['p_m_ins_co'] == $ins_contact_res['contactid'] ? 'selected' : '' ?>>
-                                <?php echo addslashes(!empty($ins_contact_res['company']) ? $ins_contact_res['company'] : ''); ?>
-                            </option>
-                        <?php } ?>
-                    </select>
-                    <label for="ins_co_id">Insurance Company</label>
-                </span>
-                <span>
-                    <input type="text" name="ins_phone" id="ins_phone" value="<?= e($hstData['ins_phone']) ?>" />
-                    <label for="ins_phone">Ins. Phone Number</label>
-                </span>
-                <span>
-                    <input type="text" name="patient_ins_id" id="patient_ins_id" value="<?= e($hstData['patient_ins_id']) ?>" />
-                    <label for="patient_ins_id">ID Number</label>
-                </span>
-                <span>
-                    <input type="text" name="patient_ins_group_id" id="patient_ins_group_id"
-                        value="<?= e($hstData['patient_ins_group_id']) ?>" />
-                    <label for="patient_ins_group_id">Group Number</label>
-                </span>
+                    foreach ($ins_contact_qry_run as $ins_contact_res) { ?>
+                        <option value="<?php echo $ins_contact_res['contactid'] ?>"
+                            <?= $hstData['p_m_ins_co'] == $ins_contact_res['contactid'] ? 'selected' : '' ?>>
+                            <?php echo addslashes(!empty($ins_contact_res['company']) ? $ins_contact_res['company'] : ''); ?>
+                        </option>
+                    <?php } ?>
+                </select>
+                <label for="ins_co_id">Insurance Company</label>
+            </span>
+            <span>
+                <input type="text" name="ins_phone" id="ins_phone" value="<?= e($hstData['ins_phone']) ?>" />
+                <label for="ins_phone">Ins. Phone Number</label>
+            </span>
+            <span>
+                <input type="text" name="patient_ins_id" id="patient_ins_id" value="<?= e($hstData['patient_ins_id']) ?>" />
+                <label for="patient_ins_id">ID Number</label>
+            </span>
+            <span>
+                <input type="text" name="patient_ins_group_id" id="patient_ins_group_id"
+                    value="<?= e($hstData['patient_ins_group_id']) ?>" />
+                <label for="patient_ins_group_id">Group Number</label>
+            </span>
         </li>
     </ul>
     <p></p>
@@ -530,42 +531,42 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
             <label>Deliver HST Results/Report via my <strong>DS3 Software</strong></label>
         </li>
         <li>
-                <span>
-                    <input type="text" name="provider_firstname" id="provider_firstname" value="<?= e($hstData['provider_firstname']) ?>" />
-                    <label for="provider_firstname">Provider First Name</label>
-                </span>
-                <span>
-                    <input type="text" name="provider_lastname" id="provider_lastname" value="<?= e($hstData['provider_lastname']) ?>" />
-                    <label for="provider_lastname">Provider Last Name</label>
-                </span>
-                <span>
-                    <input type="text" name="provider_phone" id="provider_phone" value="<?= e($hstData['provider_phone']) ?>" />
-                    <label for="provider_phone">Phone</label>
-                </span>
+            <span>
+                <input type="text" name="provider_firstname" id="provider_firstname" value="<?= e($hstData['provider_firstname']) ?>" />
+                <label for="provider_firstname">Provider First Name</label>
+            </span>
+            <span>
+                <input type="text" name="provider_lastname" id="provider_lastname" value="<?= e($hstData['provider_lastname']) ?>" />
+                <label for="provider_lastname">Provider Last Name</label>
+            </span>
+            <span>
+                <input type="text" name="provider_phone" id="provider_phone" value="<?= e($hstData['provider_phone']) ?>" />
+                <label for="provider_phone">Phone</label>
+            </span>
         </li>
         <li>
-                <span>
-                    <input type="text" name="provider_address" id="provider_address" value="<?= e($hstData['provider_address']) ?>" />
-                    <label for="provider_address"> Address</label>
-                </span>
-                <span>
-                    <input type="text" name="provider_city" id="provider_city" value="<?= e($hstData['provider_city']) ?>" />
-                    <label for="provider_city">City</label>
-                </span>
-                <span>
-                    <input type="text" name="provider_state" id="provider_state" value="<?= e($hstData['provider_state']) ?>" />
-                    <label for="provider_state">State</label>
-                </span>
-                <span>
-                    <input type="text" name="provider_zip" id="provider_zip" value="<?= e($hstData['provider_zip']) ?>" />
-                    <label for="provider_zip">Zip</label>
-                </span>
+            <span>
+                <input type="text" name="provider_address" id="provider_address" value="<?= e($hstData['provider_address']) ?>" />
+                <label for="provider_address"> Address</label>
+            </span>
+            <span>
+                <input type="text" name="provider_city" id="provider_city" value="<?= e($hstData['provider_city']) ?>" />
+                <label for="provider_city">City</label>
+            </span>
+            <span>
+                <input type="text" name="provider_state" id="provider_state" value="<?= e($hstData['provider_state']) ?>" />
+                <label for="provider_state">State</label>
+            </span>
+            <span>
+                <input type="text" name="provider_zip" id="provider_zip" value="<?= e($hstData['provider_zip']) ?>" />
+                <label for="provider_zip">Zip</label>
+            </span>
         </li>
         <li>
-                <span>
-                    <input type="text" name="provider_date" id="provider_date" value="<?= e($hstData['provider_date']) ?>" />
-                    <label for="provider_date">Date</label>
-                </span>
+            <span>
+                <input type="text" name="provider_date" id="provider_date" value="<?= e($hstData['provider_date']) ?>" />
+                <label for="provider_date">Date</label>
+            </span>
         </li>
         <li>
             <p>
@@ -595,7 +596,7 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
 <br />
 <script src="/manage/js/hst_request.js" type="text/javascript"></script>
 <script>
-    $(document).ready(function(){
+    jQuery(function($){
         var $hstRadioButtons = $('[name=hst_type]:radio'),
             $hstContainers = $hstRadioButtons.closest('li');
 
@@ -628,10 +629,10 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
         if ($('[name=company_id]:radio').length) {
             $('#hst_order_sleep_services')
                 .find('input, select')
-                .not('[name=company_id], :radio:checked')
+                .not(':radio:checked')
                 .prop('disabled', true);
 
             $('#hst_order_sleep_services').find('[type=submit], .submit-action').hide();
         }
-    });
+    }(jQuery));
 </script>

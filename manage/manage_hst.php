@@ -202,7 +202,7 @@ $my = $db->getResults($sql);
           Status
         </a>	
   		</td>
-        <td valign="top" class="col_head" width="15%">
+        <td valign="top" class="col_head" width="7%">
             HST Form
         </td>
         <td valign="top" class="col_head" width="15%">

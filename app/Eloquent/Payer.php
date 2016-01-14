@@ -13,20 +13,19 @@ use DentalSleepSolutions\Contracts\Repositories\Payers as Repository;
  */
 class Payer extends Model implements Resource, Repository
 {
-    const ELIGIBLE_ENDPOINT_ELIGIBILITY = 'coverage';
-    const ELIGIBLE_ENDPOINT_MEDICAL_CLAIMS = 'professional claims';
-    const ELIGIBLE_ENDPOINT_DENTAL_CLAIMS = 'dental claims';
-    const ELIGIBLE_ENDPOINT_INSTITUTIONAL_CLAIMS = 'institutional claims';
-    const ELIGIBLE_ENDPOINT_ERA_REPORTS = 'payment reports';
+    const ELIGIBILITY_CODE = '270';
+    const ELIGIBILITY_ENDPOINT = 'coverage';
+    const MEDICAL_CLAIMS_CODE = '837P';
+    const MEDICAL_CLAIMS_ENDPOINT = 'professional claims';
+    const ERA_CODE = '835';
+    const ERA_ENDPOINT = 'payment reports';
 
     public static function eligibleEndpoints()
     {
         return [
-            self::ELIGIBLE_ENDPOINT_ELIGIBILITY,
-            self::ELIGIBLE_ENDPOINT_MEDICAL_CLAIMS,
-            self::ELIGIBLE_ENDPOINT_DENTAL_CLAIMS,
-            self::ELIGIBLE_ENDPOINT_INSTITUTIONAL_CLAIMS,
-            self::ELIGIBLE_ENDPOINT_ERA_REPORTS,
+            self::ELIGIBILITY_CODE => self::ELIGIBILITY_ENDPOINT,
+            self::MEDICAL_CLAIMS_CODE => self::MEDICAL_CLAIMS_ENDPOINT,
+            self::ERA_CODE => self::ERA_ENDPOINT,
         ];
     }
 

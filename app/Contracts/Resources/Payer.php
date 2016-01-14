@@ -9,5 +9,5 @@ interface Payer extends Resource
      *
      * @return string[]
      */
-    public function requiredFields();
+    public function requiredFields($endpoint = null);
 }

@@ -363,3 +363,4 @@ class BaseRepository implements BaseInterface
         return $this->orderDirection;
     }
 }
+

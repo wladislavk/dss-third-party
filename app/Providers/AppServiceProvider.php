@@ -13,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->app->bind(
+            \DentalSleepSolutions\Contracts\Repositories\Payers::class,
+            \DentalSleepSolutions\Eloquent\Payer::class
+        );
     }
 
     /**

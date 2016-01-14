@@ -33,7 +33,12 @@ Route::group(['prefix' => 'webhooks'], function () {
 |--------------------------------------------------------------------------
 */
 Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
+
+    Route::get('payers/{payer_id}/required-fields', 'PayersController@requiredFields');
+    Route::resource('payers', 'PayersController', ['except' => ['create', 'edit']]);
+
     Route::resource('memo', 'Api\ApiAdminMemoController');
+
 
     Route::group(['prefix' => 'enrollments'], function () {
         Route::post('create', [

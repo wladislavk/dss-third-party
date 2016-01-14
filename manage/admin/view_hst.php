@@ -219,6 +219,12 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 <script language="javascript" type="text/javascript" src="script/preauth_validation.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
 
+<a href="Javascript:;" onclick="Javascript: loadPopup('/manage/admin/hst_view.php?hst_id=<?= $hst['id'] ?>');"
+   title="View HST Form" class="btn btn-primary btn-sm">
+    HST Form
+    <span class="glyphicon glyphicon-eye-open"></span>
+</a>
+
 	<br /><br />
 	
 	<? if(!empty($msg)) {?>

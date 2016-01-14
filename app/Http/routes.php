@@ -35,6 +35,8 @@ Route::group(['prefix' => 'webhooks'], function () {
 Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::get('payers/{payer_id}/required-fields', 'PayersController@requiredFields');
+    // temporary, alias for the above to satisfy current JS
+    Route::get('enrollments/requiredfields/{payer_id}', 'PayersController@requiredFields');
     Route::resource('payers', 'PayersController', ['except' => ['create', 'edit']]);
 
     Route::resource('memo', 'Api\ApiAdminMemoController');

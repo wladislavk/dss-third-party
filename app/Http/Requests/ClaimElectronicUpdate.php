@@ -17,7 +17,7 @@ class ClaimElectronicUpdate extends Request
             'reference_id'    => 'string',
             'percase_date'    => 'date',
             'percase_name'    => 'string',
-            'percase_amount'  => 'integer',
+            'percase_amount'  => 'regex:/^\d*(\.\d{2})?$/',
             'percase_status'  => 'integer',
             'percase_invoice' => 'integer',
             'percase_free'    => 'integer',

@@ -40,11 +40,11 @@ class ClaimsElectronicController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ClaimElectronic $resources
+     * @param  \DentalSleepSolutions\Contracts\Repositories\ClaimsElectronic $resources
      * @param  \DentalSleepSolutions\Http\Requests\ClaimElectronicStore $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(ClaimElectronic $resources, ClaimElectronicStore $request)
+    public function store(ClaimsElectronic $resources, ClaimElectronicStore $request)
     {
         $data = array_merge($request->all(), [
             'ip_address' => $request->ip()

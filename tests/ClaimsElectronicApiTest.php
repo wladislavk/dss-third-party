@@ -54,7 +54,7 @@ class ClaimsElectronicApiTest extends TestCase
         $this->put('/api/v1/claims-electronic/' . $claimElectronicTestRecord->id, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_claim_electronic', ['claimid' => 10]);
+            ->seeInDatabase('dental_claim_electronic', ['percase_name' => 'updated percase name']);
     }
 
     /**

@@ -186,15 +186,15 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, functi
 $factory->define(DentalSleepSolutions\Eloquent\Dental\ClaimElectronic::class, function ($faker) {
     return [
         'claimid'         => $faker->randomDigit,
-        'response'        => $faker->randomDigit,
+        'response'        => $faker->sentence($nbWords = 6),
         'adddate'         => $faker->dateTime(),
         'ip_address'      => $faker->ipv4,
-        'reference_id'    => $faker->regexify('[0-9]{8}'),
+        'reference_id'    => $faker->word,
         'percase_date'    => $faker->dateTime(),
-        'percase_name'    => $faker->regexify('[A-Za-z]'),
-        'percase_amount'  => $faker->regexify('^\d*(\.\d{2})?$'),
-        'percase_status'  => $faker->regexify('[0-9]{1}'),
+        'percase_name'    => $faker->sentence($nbWords = 3),
+        'percase_amount'  => $faker->randomFloat($nbMaxDecimals = NULL, $min = 0, $max = NULL),
+        'percase_status'  => $faker->randomDigit,
         'percase_invoice' => $faker->randomDigit,
-        'percase_free'    => $faker->regexify('[0-9]{1}')
+        'percase_free'    => $faker->randomDigit
     ];
 });

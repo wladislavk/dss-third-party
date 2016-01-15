@@ -21,22 +21,18 @@ class ClaimsElectronicApiTest extends TestCase
         $statusOk = Arr::get(Response::$statusTexts, 200);
 
         $data = [
-            'claimid'         => 7,
-            'response'        => 'test_response',
-            'adddate'         => Carbon::now(),
-            'reference_id'    => 'test_reference_id',
+            'claimid'         => 10,
+            'response'        => '{"success":true}',
+            'reference_id'    => 'testId',
             'percase_date'    => Carbon::now(),
-            'percase_name'    => 'test_percase_name',
-            'percase_amount'  => 11.22,
-            'percase_status'  => 9,
-            'percase_invoice' => 6,
-            'percase_free'    => 5
+            'percase_name'    => 'test name',
+            'percase_amount'  => 123.45
         ];
 
         $this->post('/api/v1/claims-electronic', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_claim_electronic', ['claimid' => 7]);
+            ->seeInDatabase('dental_claim_electronic', ['claimid' => 10]);
     }
 
     /**
@@ -51,14 +47,14 @@ class ClaimsElectronicApiTest extends TestCase
         $claimElectronicTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ClaimElectronic::class)->create();
 
         $data = [
-            'claimid'      => 15,
-            'percase_name' => 'UpdateTest_percase_name'
+            'claimid'      => 10,
+            'percase_name' => 'updated percase name'
         ];
 
         $this->put('/api/v1/claims-electronic/' . $claimElectronicTestRecord->id, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_claim_electronic', ['percase_name' => 'UpdateTest_percase_name']);
+            ->seeInDatabase('dental_claim_electronic', ['claimid' => 10]);
     }
 
     /**

@@ -12,13 +12,13 @@ class ClaimElectronicUpdate extends Request
     public function rules()
     {
         return [
-            'claimid'         => 'integer|required',
+            'claimid'         => 'sometimes|required|integer',
             'response'        => 'sometimes|required|string',
-            'reference_id'    => 'sometimes|required|string',
+            'reference_id'    => 'string',
             'percase_date'    => 'date',
-            'percase_name'    => 'sometimes|required|string',
-            'percase_amount'  => 'sometimes|required|regex:/^\d*(\.\d{2})?$/',
-            'percase_status'  => 'sometimes|required|integer',
+            'percase_name'    => 'string',
+            'percase_amount'  => 'integer',
+            'percase_status'  => 'integer',
             'percase_invoice' => 'integer',
             'percase_free'    => 'integer',
         ];

@@ -12,12 +12,12 @@ class ClaimElectronicStore extends Request
     public function rules()
     {
         return [
-            'claimid'         => 'integer|required',
-            'response'        => 'string',
+            'claimid'         => 'required|integer',
+            'response'        => 'required|string',
             'reference_id'    => 'string',
             'percase_date'    => 'date',
             'percase_name'    => 'string',
-            'percase_amount'  => 'regex:/^\d*(\.\d{2})?$/',
+            'percase_amount'  => 'integer',
             'percase_status'  => 'integer',
             'percase_invoice' => 'integer',
             'percase_free'    => 'integer',

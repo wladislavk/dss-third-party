@@ -107,5 +107,4 @@ interface BaseInterface
      * @return array
      */
     public function getErrors();
-
 }

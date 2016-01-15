@@ -112,6 +112,7 @@ class BaseRepository implements BaseInterface
     public function find($id, array $relations = [])
     {
         $model = $this->getModelName();
+
         $this->instance = $model::with($relations)->findOrFail($id);
 
         return $this->instance;
@@ -362,3 +363,4 @@ class BaseRepository implements BaseInterface
         return $this->orderDirection;
     }
 }
+

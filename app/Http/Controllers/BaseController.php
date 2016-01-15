@@ -1,4 +1,5 @@
 <?php
+
 namespace DentalSleepSolutions\Http\Controllers;
 
 use \Illuminate\Support\MessageBag as MessageBag;

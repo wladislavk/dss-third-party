@@ -1,30 +1,27 @@
 <?php
+
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\ClaimElectronic as Resource;
+use DentalSleepSolutions\Contracts\Repositories\ClaimsElectronic as Repository;
 
-class ClaimElectronic extends Model
+class ClaimElectronic extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
     /**
      * Mass assignable attributes
      *
      * @var array
      */
-    protected $fillable = ['claimid', 'response', 'adddate', 'ip_address', 'reference_id', 'percase_date', 'percase_name', 'percase_amount', 'percase_status', 'percase_invoice', 'percase_free'];
-
-    /**
-     * Defining guarded attributes
-     * 
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * Mass of nondisplayed attributes
-     * 
-     * @var array
-     */
-    protected $hidden = ['ip_address'];
+    protected $fillable = [
+        'claimid', 'response', 'adddate',
+        'ip_address', 'reference_id', 'percase_date',
+        'percase_name', 'percase_amount', 'percase_status',
+        'percase_invoice', 'percase_free'
+    ];
 
     /**
      * The table associated with the model.
@@ -34,16 +31,16 @@ class ClaimElectronic extends Model
     protected $table = 'dental_claim_electronic';
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * Primary key for the table
      *
      * @var string
      */
     protected $primaryKey = 'id';
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'adddate';
 }

@@ -1,19 +1,9 @@
 <?php
+
 namespace DentalSleepSolutions\Http\Requests;
 
-use DentalSleepSolutions\Http\Requests\Request;
-
-class UpdateClaimElectronicRequest extends Request
+class ClaimElectronicUpdate extends Request
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
     /**
      * Get the validation rules that apply to the request.
      *

@@ -338,6 +338,14 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
 
 ?>
 <link type="text/css" rel="stylesheet" href="/manage/css/form.css" />
+<?php if (!empty($is_back_office)) { ?>
+    <a href="/manage/admin/view_hst.php?ed=<?= $hstData['id'] ?><?=
+        isset($_GET['status']) ? '&amp;ret_status=' . e($_GET['status']) : ''
+    ?>" title="Back to HST Results" class="btn btn-primary btn-sm">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        HST Details
+    </a>
+<?php } ?>
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#" onsubmit="return check_fields(this);">
     <input type="hidden" name="provider_signature" id="provider_signature" value="1" />
 

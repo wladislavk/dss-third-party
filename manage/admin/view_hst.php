@@ -219,8 +219,9 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 <script language="javascript" type="text/javascript" src="script/preauth_validation.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
 
-<a href="Javascript:;" onclick="Javascript: loadPopup('/manage/admin/hst_view.php?hst_id=<?= $hst['id'] ?>');"
-   title="View HST Form" class="btn btn-primary btn-sm">
+<a href="/manage/admin/hst_request.php?hst_id=<?= $hst['id'] ?><?=
+        isset($_REQUEST['ret_status']) ? '&amp;status=' . e($_REQUEST['ret_status']) : ''
+    ?>" title="View HST Form" class="btn btn-primary btn-sm">
     HST Form
     <span class="glyphicon glyphicon-eye-open"></span>
 </a>
@@ -502,7 +503,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
-                    * Required Fields					
+                    * Required Fields
                 </span><br />
 		<?php
 		if(isset($_REQUEST['ret_status']) && $_REQUEST['ret_status'] != ''){

@@ -7,9 +7,6 @@ require_once __DIR__ . '/../includes/constants.inc';
 
 $is_back_office = true;
 
-require_once __DIR__ . '/includes/popup_top.htm';
+require_once __DIR__ . '/includes/top.htm';
 require_once __DIR__ . '/includes/hst-form.inc';
-
-?>
-    </body>
-</html>
+require_once __DIR__ . '/includes/bottom.htm';

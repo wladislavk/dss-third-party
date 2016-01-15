@@ -1,0 +1,16 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyRootNamespaceEloquent\DummyClass as Resource;
+use League\Fractal\TransformerAbstract;
+
+class DummyClass extends TransformerAbstract
+{
+	public function transform(Resource $dummy_param)
+	{
+	    return [
+            //
+	    ];
+	}
+}

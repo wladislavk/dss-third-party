@@ -145,6 +145,7 @@ return [
         DentalSleepSolutions\Providers\EventServiceProvider::class,
         DentalSleepSolutions\Providers\RouteServiceProvider::class,
         DentalSleepSolutions\Providers\ApiServiceProvider::class,
+        DentalSleepSolutions\Providers\CommandServiceProvider::class,
 
     ],
 
@@ -197,6 +198,8 @@ return [
         //JWT Facades
         'JWTAuth'       => \Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory'    => \Tymon\JWTAuth\Facades\JWTFactory::class,
+
+        'ApiResponse' => \DentalSleepSolutions\Helpers\ApiResponse::class,
 
     ],
 

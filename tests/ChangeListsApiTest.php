@@ -5,16 +5,14 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 
-class ChangeListApiTest extends TestCase
+class ChangeListsApiTest extends TestCase
 {
     use WithoutMiddleware;
     use DatabaseTransactions;
 
-    protected $id;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/change-list-> Api/ApiChangeListController@store method
+     * Post to /api/v1/change-lists-> Api/ApiChangeListsController@store method
      * 
      */
     public function testAddChangeList()
@@ -23,7 +21,7 @@ class ChangeListApiTest extends TestCase
 
         $data = ['content' => 'testContent'];
 
-        $this->post('/api/v1/change-list', $data)
+        $this->post('/api/v1/change-lists', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_change_list', ['content' => 'testContent']);
@@ -31,7 +29,7 @@ class ChangeListApiTest extends TestCase
 
     /**
      * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/change-list/{id} -> Api/ApiChangeListController@update method
+     * Put to /api/v1/change-lists/{id} -> Api/ApiChangeListsController@update method
      * 
      */
     public function testUpdateChangeList()
@@ -42,7 +40,7 @@ class ChangeListApiTest extends TestCase
 
         $data = ['content' => 'updatedTestContent'];
 
-        $this->put('/api/v1/change-list/' . $changeListTestRecord->id, $data)
+        $this->put('/api/v1/change-lists/' . $changeListTestRecord->id, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_change_list', ['content' => 'updatedTestContent']);
@@ -50,7 +48,7 @@ class ChangeListApiTest extends TestCase
 
     /**
      * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/change-list/{id} -> Api/ApiChangeListController@destroy method
+     * Delete to /api/v1/change-lists/{id} -> Api/ApiChangeListsController@destroy method
      * 
      */
     public function testDeleteChangeList()
@@ -59,7 +57,7 @@ class ChangeListApiTest extends TestCase
 
         $changeListTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\ChangeList::class)->create();
 
-        $this->delete('/api/v1/change-list/' . $changeListTestRecord->id)
+        $this->delete('/api/v1/change-lists/' . $changeListTestRecord->id)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('dental_change_list', ['id' => $changeListTestRecord->id]);

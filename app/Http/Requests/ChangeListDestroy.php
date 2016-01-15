@@ -1,9 +1,8 @@
 <?php
+
 namespace DentalSleepSolutions\Http\Requests;
 
-use DentalSleepSolutions\Http\Requests\Request;
-
-class StoreChangeListRequest extends Request
+class ChangeListDestroy extends Request
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,7 +12,7 @@ class StoreChangeListRequest extends Request
     public function rules()
     {
         return [
-            'content' => 'required|string'
+            // @todo Provide validation rules
         ];
     }
 }

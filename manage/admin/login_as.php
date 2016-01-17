@@ -21,6 +21,8 @@
                 $_SESSION['companyid']=$check_myarray['companyid'];
                 $_SESSION['user_type']=$check_myarray['user_type'];
 
+                $_SESSION['api_token'] = generateApiToken('u_'.$check_myarray['userid']);
+
                 if($check_myarray['docid'] != 0)
                 {
                         $_SESSION['docid']=$check_myarray['docid'];

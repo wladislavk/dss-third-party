@@ -28,34 +28,39 @@ if(isset($_POST["loginsub"]))
 
 	$pass = gen_password($_POST['password'], $salt_row['salt']);
 
-	$check_sql = "SELECT dental_users.userid, username, name, first_name, last_name, user_access, status, 
+	$check_sql = "SELECT dental_users.userid, username, name, first_name, last_name, user_access, status,
 				CASE docid
 					WHEN 0 THEN dental_users.userid
 					ELSE docid
 				END as docid,
-			user_type, uc.companyid FROM dental_users 
+			user_type, uc.companyid FROM dental_users
 			LEFT JOIN dental_user_company uc ON uc.userid=(
 				CASE docid
                                         WHEN 0 THEN dental_users.userid
                                         ELSE docid
                                 END)
 			where username='".mysqli_real_escape_string($con, $_POST['username'])."' and password='".$pass."' and status in (1, 3)";
-	
+
 	$check_myarray = $db->getRow($check_sql);
 
-	if(!empty($check_myarray)) 
+	if(!empty($check_myarray))
 	{
 		if($check_myarray['status']=='3'){
 			$msg='This account has been suspended.';
 		}else{
 			/*$ins_sql = "insert into dental_log (userid,adddate,ip_address) values('".$check_myarray['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
 			mysqli_query($con, $ins_sql);*/
-			
+
 			$_SESSION['userid']=$check_myarray['userid'];
 			$_SESSION['username']=$check_myarray['username'];
 			$_SESSION['name']=$check_myarray['first_name']." ".$check_myarray['last_name'];
 			$_SESSION['user_access']=$check_myarray['user_access'];
 			$_SESSION['companyid']=$check_myarray['companyid'];
+
+			// Get token for current user by calling API artisan command
+			// empty token set as fallback for consistency in javascript.
+			$_SESSION['api_token'] = generateApiToken('u_'.$check_myarray['userid']);
+
 
 			if($check_myarray['docid'] != 0)
 			{
@@ -74,9 +79,9 @@ if(isset($_POST["loginsub"]))
 			$ins_sql = "insert into dental_login (docid,userid,login_date,ip_address) values('".$_SESSION['docid']."','".$_SESSION['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
 
 			$ins_id = $db->getInsertId($ins_sql);
-			
+
 			$_SESSION['loginid']=$ins_id;
-		
+
 			header('Location: index.php');
 			trigger_error("Die called", E_USER_ERROR);
 		}
@@ -88,7 +93,7 @@ if(isset($_POST["loginsub"]))
 }
 
 if(!empty($_GET['msg']))
-{ 
+{
 	$msg = $_GET['msg'];
 }
 
@@ -102,7 +107,7 @@ if(!empty($_GET['msg']))
 <link href="css/login.css" rel="stylesheet" type="text/css" />
 
 </head>
-<body> 
+<body>
 
 <!--[if lte IE 7]>
 <div id="alert_container">
@@ -116,12 +121,12 @@ if(!empty($_GET['msg']))
 		<table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
 		    <tr bgcolor="#FFFFFF">
 		        <td colspan="2" class="t_head">
-			       Please Enter Your Login Information 
+			       Please Enter Your Login Information
 		        </td>
 		    </tr>
 			<?php
 			if(!empty($msg)){
-		    ?> 
+		    ?>
 		        <tr bgcolor="#FFFFFF">
 		            <td colspan="2" >
 		                <span class="red">

@@ -33,7 +33,7 @@ class ApiEnrollmentsController extends ApiBaseController
      */
     public function listEnrollments(Request $request, $userId = false)
     {
-        $result = Enrollment::getList($userId, $request->get('enable_paginate', false));
+        $result = Enrollment::getList($userId, $request->get('num_rows', false));
 
         return ApiResponse::responseOk('List of Enrollments', $result);
     }
@@ -230,80 +230,6 @@ class ApiEnrollmentsController extends ApiBaseController
         }
     }
 
-    /**
-     *
-     * @SWG\Post(
-     *     path="/api/v1/enrollments.json",
-     *     @SWG\Parameter(name="endpoint",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="payer_id",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="transaction_type",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="facility_name",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="provider_name",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="tax_id",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="address",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="city",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="state",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="zip",
-     *                    description="",
-     *                    required=true,type="string"),
-     *
-     *    @SWG\Response(response="200", description="Action completed successfully.")
-     * )
-     *
-     * @param ApiEligibleEnrollmentRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    /*public function createEnrollment(ApiEligibleEnrollmentRequest $request)
-    {
-        $enrollmentParams = [];
-        try {
-            if (null !== $request->get('payer_id') || !empty($request->get('payer_id'))) {
-                //What fields are required for this enrollment
-                $enrollmentRequiredFields = $this->checkEnrollmentFields($request->get('payer_id'));
-                $this->signatureRequired = $this->payers->payerRequiresSignature($request->get('payer_id'));
-                $this->blueInkSignatureRequired = $this->payers
-                    ->payerRequiresBlueInkSignature($request->get('payer_id'));
-                foreach ($enrollmentRequiredFields as $field) {
-                    if (!$request->has($field)) {
-                        $message = 'You have not supplied the required enrolment fields. - '
-                            . implode(",", $enrollmentRequiredFields);
-                        $this->createErrorResponse($message, 300);
-                    }
-                }
-                //setup the eligible enrollment array
-                $enrollmentParams = $this->setupEnrollmentArrayFromFormInput($request);
-            }
-            //create a new eligible enrollment
-            $enrollment = $this->enrollments->createEnrollment($enrollmentParams);
-            //dd($enrollment);
-            //grab the request values submited from the form so we can persist it to the DB
-            //setup the returned values from Eligible to be saved to db.
-            $this->setEnrollmentValuesForSavingToDb($request, $enrollment);
-            $this->enrollments->saveEnrollmentDetailsToDatabase($this->enrollmentValues);
-            return response()->json($enrollment, 200);
-        } catch (Exception $ex) {
-            $this->createErrorResponse('An error occured creating the Enrollment.', 404);
-        }
-    }*/
-    //Todo - add the json signature to the swagegr items
     /**
      *
      * @SWG\Put(

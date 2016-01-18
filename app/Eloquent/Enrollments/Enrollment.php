@@ -88,7 +88,7 @@ class Enrollment extends Model
 
     /**
      * @param mixed $userId
-     * @param bool $pagination
+     * @param mixed $pagination
      * @return mixed
      */
     public static function getList($userId = false, $pagination = false)
@@ -106,7 +106,7 @@ class Enrollment extends Model
         }
 
         if ($pagination) {
-            return $query->paginate(15);
+            return $query->paginate($pagination);
         }
 
         return $query->get();

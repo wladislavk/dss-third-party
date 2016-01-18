@@ -1,10 +1,16 @@
 <?php
+
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\Charge as Resource;
+use DentalSleepSolutions\Contracts\Repositories\Charges as Repository;
 
-class Charge extends Model
+class Charge extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
     /**
      * Mass assignable attributes
      *
@@ -18,20 +24,6 @@ class Charge extends Model
     ];
 
     /**
-     * Defining guarded attributes
-     * 
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * Mass of nondisplayed attributes
-     * 
-     * @var array
-     */
-    protected $hidden = ['ip_address'];
-
-    /**
      * The table associated with the model.
      *
      * @var string
@@ -39,16 +31,16 @@ class Charge extends Model
     protected $table = 'dental_charge';
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * Primary key for the table
      *
      * @var string
      */
     protected $primaryKey = 'id';
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'adddate';
 }

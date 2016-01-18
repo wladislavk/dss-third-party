@@ -6,7 +6,7 @@ use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 use Carbon\Carbon;
 
-class ChargeApiTest extends TestCase
+class ChargesApiTest extends TestCase
 {
     use WithoutMiddleware;
     use DatabaseTransactions;
@@ -15,7 +15,7 @@ class ChargeApiTest extends TestCase
 
     /**
      * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/charge -> Api\ApiChargeController@store method
+     * Post to /api/v1/charges -> ChargesController@store method
      * 
      */
     public function testAddCharge()
@@ -34,7 +34,7 @@ class ChargeApiTest extends TestCase
             'status'                  => 7
         ];
 
-        $this->post('/api/v1/charge', $data)
+        $this->post('/api/v1/charges', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_charge', ['stripe_customer' => 'testStripeCustomer']);
@@ -42,7 +42,7 @@ class ChargeApiTest extends TestCase
 
     /**
      * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/charge/{id} -> Api\ApiChargeController@update method
+     * Put to /api/v1/charges/{id} -> ChargesController@update method
      * 
      */
     public function testUpdateCharge()
@@ -56,7 +56,7 @@ class ChargeApiTest extends TestCase
             'adminid'         => 10
         ];
 
-        $this->put('/api/v1/charge/' . $chargeTestRecord->id, $data)
+        $this->put('/api/v1/charges/' . $chargeTestRecord->id, $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->seeInDatabase('dental_charge', ['stripe_customer' => 'updatedTestStripeCustomer']);
@@ -64,7 +64,7 @@ class ChargeApiTest extends TestCase
 
     /**
      * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/charge/{id} -> Api\ApiChargeController@destroy method
+     * Delete to /api/v1/charges/{id} -> ChargesController@destroy method
      * 
      */
     public function testDeleteCharge()
@@ -73,7 +73,7 @@ class ChargeApiTest extends TestCase
 
         $chargeTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Charge::class)->create();
 
-        $this->delete('/api/v1/charge/' . $chargeTestRecord->id)
+        $this->delete('/api/v1/charges/' . $chargeTestRecord->id)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
             ->notSeeInDatabase('dental_charge', ['id' => $chargeTestRecord->id]);

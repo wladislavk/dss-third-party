@@ -39,7 +39,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::get('enrollments/requiredfields/{payer_id}', 'PayersController@requiredFields');
     Route::resource('payers', 'PayersController', ['except' => ['create', 'edit']]);
 
-    Route::resource('charge', 'Api\ApiChargeController');
+    Route::resource('charges', 'ChargesController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
 
 

@@ -2,16 +2,13 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Arr;
-use Symfony\Component\HttpFoundation\Response;
 use Carbon\Carbon;
+
+use DentalSleepSolutions\Eloquent\Dental\Charge;
 
 class ChargesApiTest extends TestCase
 {
-    use WithoutMiddleware;
-    use DatabaseTransactions;
-
-    protected $id;
+    use WithoutMiddleware, DatabaseTransactions;
 
     /**
      * Test the post method of the Dental Sleep Solutions API
@@ -20,8 +17,6 @@ class ChargesApiTest extends TestCase
      */
     public function testAddCharge()
     {
-        $statusOk = Arr::get(Response::$statusTexts, 200);
-
         $data = [
             'amount'                  => 12.21,
             'userid'                  => 7,
@@ -35,9 +30,8 @@ class ChargesApiTest extends TestCase
         ];
 
         $this->post('/api/v1/charges', $data)
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_charge', ['stripe_customer' => 'testStripeCustomer']);
+            ->seeInDatabase('dental_charge', ['stripe_customer' => 'testStripeCustomer'])
+            ->assertResponseOk();
     }
 
     /**
@@ -47,9 +41,7 @@ class ChargesApiTest extends TestCase
      */
     public function testUpdateCharge()
     {
-        $statusOk = Arr::get(Response::$statusTexts, 200);
-
-        $chargeTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Charge::class)->create();
+        $chargeTestRecord = factory(Charge::class)->create();
 
         $data = [
             'stripe_customer' => 'updatedTestStripeCustomer',
@@ -57,9 +49,8 @@ class ChargesApiTest extends TestCase
         ];
 
         $this->put('/api/v1/charges/' . $chargeTestRecord->id, $data)
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_charge', ['stripe_customer' => 'updatedTestStripeCustomer']);
+            ->seeInDatabase('dental_charge', ['stripe_customer' => 'updatedTestStripeCustomer'])
+            ->assertResponseOk();
     }
 
     /**
@@ -69,13 +60,10 @@ class ChargesApiTest extends TestCase
      */
     public function testDeleteCharge()
     {
-        $statusOk = Arr::get(Response::$statusTexts, 200);
-
-        $chargeTestRecord = factory(DentalSleepSolutions\Eloquent\Dental\Charge::class)->create();
+        $chargeTestRecord = factory(Charge::class)->create();
 
         $this->delete('/api/v1/charges/' . $chargeTestRecord->id)
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => $statusOk])
-            ->notSeeInDatabase('dental_charge', ['id' => $chargeTestRecord->id]);
+            ->notSeeInDatabase('dental_charge', ['id' => $chargeTestRecord->id])
+            ->assertResponseOk();
     }
 }

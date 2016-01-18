@@ -24,11 +24,11 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(
             \DentalSleepSolutions\Contracts\Repositories\Charges::class,
-            \DentalSleepSolutions\Eloquent\Charge::class
+            \DentalSleepSolutions\Eloquent\Dental\Charge::class
         );
         $this->app->bind(
             \DentalSleepSolutions\Contracts\Resources\Charge::class,
-            \DentalSleepSolutions\Eloquent\Charge::class
+            \DentalSleepSolutions\Eloquent\Dental\Charge::class
         );
     }
 

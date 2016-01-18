@@ -1,0 +1,199 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Create enrollment
+consumes:
+  - x-www-form-urlencoded
+paths:
+  /api/v1/enrollments/create:
+    post:
+      description: |
+        Create enrollment from valuest sending from legacy code
+      parameters:
+        - name: user_id
+          in: formData
+          description: user id
+          required: true
+          type: number
+          format: integer
+        - name: payer_id
+          in: formData
+          description: payer_id-payer_name
+          required: true
+          type: string
+        - name: transaction_type_id
+          in: formData
+          description: transaction type id
+          required: true
+          type: number
+          format: integer
+        - name: facility_name
+          in: formData
+          description: facility name
+          required: true
+          type: string
+        - name: provider_name
+          in: formData
+          description: provider name
+          required: true
+          type: string
+        - name: npi
+          in: formData
+          description: npi
+          required: true
+          type: string
+        - name: tax_id
+          in: formData
+          description: tax id
+          required: true
+          type: string
+        - name: address
+          in: formData
+          description: address
+          required: true
+          type: string
+        - name: city
+          in: formData
+          description: city
+          required: true
+          type: string
+        - name: state
+          in: formData
+          description: state
+          required: true
+          type: string
+        - name: zip
+          in: formData
+          description: zip
+          required: true
+          type: string
+        - name: ptan
+          in: formData
+          description: ptan
+          required: true
+          type: string
+        - name: first_name
+          in: formData
+          description: first name
+          required: true
+          type: string
+        - name: last_name
+          in: formData
+          description: last name
+          required: true
+          type: string
+        - name: contact_number
+          in: formData
+          description: contact number
+          required: true
+          type: string
+        - name: email
+          in: formData
+          description: email
+          required: true
+          type: string
+
+
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "OK"
+                message:
+                  type: string
+        '400':
+          description: Bad request, invalid or missing parameters.
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "Bad Request"
+                message:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items:
+                        type: string
+        '401':
+          description: Authentication or authorization error. Mostly due to invalid api_key or provider need enrollment with payer.
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "Unauthorized"
+                message:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items:
+                        type: string
+        '408':
+          description: Connection time out or payer is unable to respond to the request.
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "Request Timeout"
+                message:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items:
+                        type: string
+        '422':
+          description: Unprocessable Entity
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "Unprocessable Entity"
+                message:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      description: key can by name of input
+                      items:
+                        type: string
+        '500':
+          description:  Internal Server error
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "Internal Server Error"
+                message:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items:
+                        type: string

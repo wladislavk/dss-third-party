@@ -18,6 +18,7 @@ class ApiBaseController extends Controller
     {
         $errors = is_string($message) ? [$message] : $message;
 
-        return response()->json(['status' => false,'errors' => $errors], $responseCode, $headers, $options);
+        return response()->json(['status' => false,'errors' => $errors], $responseCode);
+
     }
 }

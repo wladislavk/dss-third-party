@@ -23,6 +23,21 @@ use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
 
 class ApiEnrollmentsController extends ApiBaseController
 {
+
+    /**
+     * Enrollments list
+     *
+     * @param Request $request
+     * @param bool $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function listEnrollments(Request $request, $userId = false)
+    {
+        $result = Enrollment::getList($userId, $request->get('enable_paginate', false));
+
+        return ApiResponse::responseOk('List of Enrollments', $result);
+    }
+
     /**
      * create enrollment
      *
@@ -209,36 +224,6 @@ class ApiEnrollmentsController extends ApiBaseController
         try {
             $results = $this->payers->syncEnrollmentPayersFromProvider(null);
             $response = ['data' => $results, 'status' => true, 'message' => ''];
-            return response()->json($response, 200);
-        } catch (Exception $ex) {
-            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
-        }
-    }
-
-    /**
-     * @param integer $page
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function listEligibleEnrollments($page = 1)
-    {
-        try {
-            $results = $this->enrollments->listEnrollments($page);
-            $response = ['data' => $results, 'status' => true, 'message' => ''];
-            return response()->json($response, 200);
-        } catch (Exception $ex) {
-            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
-        }
-    }
-
-    /**
-     * @param integer $page
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function listEnrollments($userId = 0)
-    {
-        try {
-            $results = $this->enrollments->listEnrollments($userId);
-            $response = ['data' => $results, 'status' => true, 'message' => 'List of Enrollments'];
             return response()->json($response, 200);
         } catch (Exception $ex) {
             $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);

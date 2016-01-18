@@ -87,6 +87,33 @@ class Enrollment extends Model
     }
 
     /**
+     * @param mixed $userId
+     * @param bool $pagination
+     * @return mixed
+     */
+    public static function getList($userId = false, $pagination = false)
+    {
+        $query = self::select([
+            "dental_eligible_enrollment.*",
+            \DB::raw("CONCAT(types.transaction_type,' - ',types.description) as transaction_type")
+        ])
+        ->join('dental_enrollment_transaction_type as types', function ($q) {
+            $q->on('dental_eligible_enrollment.transaction_type_id', '=', 'types.id');
+        });
+
+        if ($userId !== false) {
+            $query->where(\DB::raw('dental_eligible_enrollment.user_id'), '=', $userId);
+        }
+
+        if ($pagination) {
+            return $query->paginate(15);
+        }
+
+        return $query->get();
+    }
+
+
+    /**
      * @param  integer $reference_id
      * @param  integer $status
      * @return boolean

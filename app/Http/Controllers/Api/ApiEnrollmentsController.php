@@ -33,7 +33,12 @@ class ApiEnrollmentsController extends ApiBaseController
      */
     public function listEnrollments(Request $request, $userId = false)
     {
-        $result = Enrollment::getList($userId, $request->get('num_rows', false));
+        $result = Enrollment::getList(
+            $userId,
+            $request->get('num_rows', false),
+            $request->get('search', false),
+            $request->get('sort', false)
+        );
 
         if ($request->get('num_rows', false)) {
             $result = ApiResponse::getPaginateStructure($result);

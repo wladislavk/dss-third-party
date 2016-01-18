@@ -91,18 +91,31 @@ class Enrollment extends Model
      * @param mixed $pagination
      * @return mixed
      */
-    public static function getList($userId = false, $pagination = false)
+    public static function getList($userId = false, $pagination = false, $search = false, $sort = 'asc')
     {
         $query = self::select([
             "dental_eligible_enrollment.*",
             \DB::raw("CONCAT(types.transaction_type,' - ',types.description) as transaction_type")
-        ])
-        ->join('dental_enrollment_transaction_type as types', function ($q) {
-            $q->on('dental_eligible_enrollment.transaction_type_id', '=', 'types.id');
-        });
+            ])
+            ->join('dental_enrollment_transaction_type as types', function ($q) {
+                $q->on('dental_eligible_enrollment.transaction_type_id', '=', 'types.id');
+            })
+            ->orderBy('types.transaction_type', $sort);
 
         if ($userId !== false) {
             $query->where(\DB::raw('dental_eligible_enrollment.user_id'), '=', $userId);
+        }
+
+        if ($search && $search != '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('dental_eligible_enrollment.provider_name', 'like', "%$search%")
+                ->orWhere('types.transaction_type', 'like', "%$search%")
+                ->orWhere('types.description', 'like', "%$search%")
+                ->orWhere('dental_eligible_enrollment.npi', 'like', "%$search%")
+                ->orWhere('dental_eligible_enrollment.payer_id', 'like', "%$search%")
+                ->orWhere('dental_eligible_enrollment.payer_name', 'like', "%$search%")
+                ->orWhere('dental_eligible_enrollment.adddate', 'adddate', "%$search%");
+            });
         }
 
         if ($pagination) {

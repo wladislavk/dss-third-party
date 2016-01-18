@@ -1,9 +1,8 @@
 <?php
+
 namespace DentalSleepSolutions\Http\Requests;
 
-use DentalSleepSolutions\Http\Requests\Request;
-
-class StoreCalendarRequest extends Request
+class CalendarUpdate extends Request
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,10 +12,10 @@ class StoreCalendarRequest extends Request
     public function rules()
     {
         return [
-            'start_date'   => 'required|date_format:Y-m-d H:i:s',
-            'end_date'     => 'required|date_format:Y-m-d H:i:s|after:start_date',
-            'description'  => 'required|string',
-            'event_id'     => 'required|regex:/^[0-9]{13}$/',
+            'start_date'   => 'sometimes|required|date_format:Y-m-d H:i:s',
+            'end_date'     => 'sometimes|required|date_format:Y-m-d H:i:s|after:start_date',
+            'description'  => 'sometimes|required|string',
+            'event_id'     => 'sometimes|required|regex:/^[0-9]{13}$/',
             'docid'        => 'integer',
             'category'     => 'string',
             'producer_id'  => 'integer',

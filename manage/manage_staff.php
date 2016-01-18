@@ -136,7 +136,7 @@ if ($isMainAccount || $isStaff) { ?>
 		<td valign="top">
 		<?php
 
-		if ($isMainAccount || $isStaff) { ?>
+		if ($isMainAccount || $isStaff || ($_SESSION['userid'] == $myarray['userid'])) { ?>
 			<a href="Javascript:;"  onclick="Javascript: loadPopup('add_staff.php?ed=<?php echo $myarray["userid"];?>');" class="editlink" title="EDIT">
 				Edit 
 			</a>

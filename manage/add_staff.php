@@ -8,9 +8,9 @@
 $userId = intval($_SESSION['userid']);
 $isMainAccount = $_SESSION['docid'] == $_SESSION['userid'];
 $isStaff = $db->getColumn("SELECT manage_staff FROM dental_users WHERE userid = '$userId'", 'manage_staff') == 1;
-$isSelfManaged = $isStaff && ($_SESSION['userid'] == $_GET['ed']);
+$isSelfManaged = $_SESSION['userid'] == (isset($_POST['ed']) ? $_POST['ed'] : $_GET['ed']);
 
-if (!$isMainAccount && !$isStaff) { ?>
+if (!$isMainAccount && !$isStaff && !$isSelfManaged) { ?>
     <br />You do not have permissions to edit staff.
     <?php
     trigger_error("Die called", E_USER_ERROR);
@@ -27,7 +27,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
     $postUserId = intval($_POST['ed']);
     $postUsername = trim($_POST['username']);
     $postEmail = trim($_POST['email']);
-    $isSelfManaged = $isStaff && ($_SESSION['userid'] == $postUserId);
+    $isSelfManaged = $_SESSION['userid'] == $postUserId;
 
     $errorMessage = '';
 

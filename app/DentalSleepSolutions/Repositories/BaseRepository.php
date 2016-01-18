@@ -1,7 +1,7 @@
 <?php
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Interfaces\Repositories\BaseInterface;
+use DentalSleepSolutions\Interfaces\BaseInterface;
 
 class BaseRepository implements BaseInterface
 {

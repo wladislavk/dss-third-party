@@ -34,8 +34,5 @@ class ApiServiceProvider extends ServiceProvider
 
         $this->app->bind('DentalSleepSolutions\\Interfaces\\UserSignaturesInterface',
                         'DentalSleepSolutions\\Repositories\\UserSignaturesRepository');
-
-        $this->app->bind('DentalSleepSolutions\\Interfaces\\Repositories\\ChargeInterface',
-                        'DentalSleepSolutions\\Repositories\\ChargeRepository');
     }
 }

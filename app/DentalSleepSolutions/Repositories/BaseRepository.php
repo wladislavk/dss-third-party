@@ -1,10 +1,10 @@
-<?php
-namespace DentalSleepSolutions\Repositories;
+<?php namespace DentalSleepSolutions\Repositories;
 
 use DentalSleepSolutions\Interfaces\BaseInterface;
 
 class BaseRepository implements BaseInterface
 {
+
     /**
      * Model name
      *
@@ -43,6 +43,7 @@ class BaseRepository implements BaseInterface
     public function all($orderBy = 'id', array $relations = [])
     {
         $instance = $this->getQueryBuilder();
+
         $this->parseOrder($orderBy);
 
         return $instance->with($relations)
@@ -111,6 +112,7 @@ class BaseRepository implements BaseInterface
     public function find($id, array $relations = [])
     {
         $model = $this->getModelName();
+
         $this->instance = $model::with($relations)->findOrFail($id);
 
         return $this->instance;
@@ -126,6 +128,7 @@ class BaseRepository implements BaseInterface
     public function findBy($field, $value, array $relations = [])
     {
         $model = $this->getModelName();
+
         $this->instance = $model::with($relations)->where($field, $value)->first();
 
         return $this->instance;
@@ -141,6 +144,7 @@ class BaseRepository implements BaseInterface
     public function findByMany(array $data, array $relations = [])
     {
         $modelName = $this->getModelName();
+
         $model = $modelName::with($relations);
 
         foreach ($data as $key => $value)
@@ -359,3 +363,4 @@ class BaseRepository implements BaseInterface
         return $this->orderDirection;
     }
 }
+

@@ -1,21 +1,20 @@
 <?php
 
-namespace DentalSleepSolutions\Http\Controllers;
+namespace DentalSleepSolutions\Http\Controllers\Api;
+use DentalSleepSolutions\Http\Controllers\BaseController;
 
-use \Illuminate\Support\MessageBag as MessageBag;
-
-class BaseController extends Controller {
-
+class ApiBaseController extends BaseController
+{
     /**
-     * Create a new message
+     * Create an error response
      *
-     * @param $key
-     * @param $message
-     * @return MessageBag
+     * @param string $message
+     * @param string $responseCode
+     * @return array
      */
-    public function addMessage($key, $message)
+    public function createErrorResponse($message, $responseCode = '400')
     {
-        return new MessageBag([$key => $message]);
+        $errors = is_string($message) ? [$message] : $message;
+        return response()->json(['status' => false,'errors' => $errors], $responseCode);
     }
-
 }

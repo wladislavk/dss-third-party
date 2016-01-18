@@ -67,9 +67,7 @@ class EnrollmentApiTest extends TestCase
 
     public function testSendEmptyData()
     {
-
-        $data = [
-        ];
+        $data = [];
 
         $this->post('/api/v1/enrollments/create', $data)
             ->seeJson(['status' => "Unprocessable Entity"]);
@@ -78,6 +76,8 @@ class EnrollmentApiTest extends TestCase
 
     public function testOriginalSignatureCorrectly()
     {
+        Enrollment::where('reference_id', 51)->delete();
+        factory(Enrollment::class)->create(['reference_id' => 51]);
 
         $file = new UploadedFile(
             base_path().'/tests/file/received_pdf_example.pdf',
@@ -91,8 +91,7 @@ class EnrollmentApiTest extends TestCase
         $reference_id = '51';
         $data = [
             'user_id' => 1,
-            //'npi' => '1154324101',
-            'npi' => '1811024458',
+            'npi' => '1154324101',
             'reference_id' => $reference_id,
         ];
 
@@ -100,7 +99,10 @@ class EnrollmentApiTest extends TestCase
         $this->seeJson(['status' => "OK"]);
         $this->seeInDatabase(
             'dental_eligible_enrollment',
-            ['reference_id' => $reference_id, 'status' => Enrollment::DSS_ENROLLMENT_PDF_SENT]
+            [
+                'reference_id' => $reference_id,
+                'status' => Enrollment::DSS_ENROLLMENT_ACCEPTED
+            ]
         );
     }
 }

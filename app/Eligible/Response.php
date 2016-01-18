@@ -12,6 +12,7 @@ class Response
     private $response = null;
     private $json;
     private $response_success_attributes = null;
+    private $content;
 
     /*********const****/
 
@@ -21,7 +22,8 @@ class Response
     public function __construct(\GuzzleHttp\Psr7\Response $response)
     {
         $this->response = $response;
-        $this->json = json_decode($this->response->getBody()->getContents());
+        $this->content = $this->response->getBody()->getContents();
+        $this->json = json_decode($this->content);
     }
 
     /**
@@ -93,7 +95,7 @@ class Response
      */
     public function getContent()
     {
-        return $this->response->getBody()->getContents();
+        return $this->content;
     }
 
     /**

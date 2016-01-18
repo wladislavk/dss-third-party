@@ -7,11 +7,12 @@ use Illuminate\Http\Request;
 use DentalSleepSolutions\Eligible\Client;
 use DentalSleepSolutions\Helpers\Invoice;
 use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\Helpers\SignatureToImage;
+use DentalSleepSolutions\Eloquent\UserSignature;
 use DentalSleepSolutions\Http\Requests\Enrollments\Create;
 use DentalSleepSolutions\Http\Requests\ApiEligibleEnrollmentRequest;
 use DentalSleepSolutions\Http\Requests\Enrollments\OriginalSignature;
 
-use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
 use DentalSleepSolutions\Eloquent\Enrollments\TransactionType;
 use DentalSleepSolutions\Eligible\Webhooks\EnrollmentsHandler;
@@ -34,7 +35,8 @@ class ApiEnrollmentsController extends ApiBaseController
 
         $payer_id = explode('-', $request->input('payer_id'));
 
-        $user = User::find($user_id);
+        $user_signature = UserSignature::formUser($user_id);
+        $signature = $user_signature ? $user_signature->signature_json : $request->input('signature', '');
 
         $transaction_type = TransactionType::where('id', $request->input('transaction_type_id'))
             ->where('status', 1)->first();
@@ -63,7 +65,7 @@ class ApiEnrollmentsController extends ApiBaseController
                 "last_name" => $request->input('last_name'),
                 "contact_number" => $request->input('contact_number'),
                 "email" => $request->input('email'),
-                "signature" => ["coordinates" => json_decode($user->signature_json)]
+                "signature" => ["coordinates" => json_decode($signature)]
             ]
         ];
 
@@ -80,9 +82,39 @@ class ApiEnrollmentsController extends ApiBaseController
 
             $enrollment_id = Enrollment::add($inputs, $user_id, $payer_id, $payer_name, $ref_id, $result, $ip);
             Invoice::addEnrollment('1', $user_id, $enrollment_id);
+
+            if ($request->input('signature', '') != '') {
+                $signature_id = UserSignature::add($user_id, $signature, $ip);
+
+                $signature = new SignatureToImage();
+                $img = $signature->sigJsonToImage($request->input('signature', ''));
+
+                $file = "signature_" . $user_id . "_" . $signature_id . ".png";
+                $path = env('LEGACY_PATH').'/../../shared/q_file/'.$file;
+                imagepng($img, $path);
+                imagedestroy($img);
+            }
         }
 
         return ApiResponse::response($response->getResponse(), "Enrollments is created.", "Error creating enrollment.");
+    }
+
+    /**
+     * @param int $transaction_type
+     * @return object|string
+     */
+    public function getPayersList($transaction_type = 1)
+    {
+        $transaction_type = TransactionType::where('id', $transaction_type)->where('status', 1)->first();
+
+        $client = new Client;
+        $response = $client->getPayers($transaction_type->endpoint_type);
+
+        if ($response->isSuccess()) {
+            return \Response::json($response->getObject());
+        }
+
+        return \Response::json([]);
     }
 
     /**

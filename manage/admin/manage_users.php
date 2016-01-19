@@ -103,6 +103,8 @@ if ($showAll || $search) {
                 INNER JOIN companies c ON c.id=uc.companyid
                 LEFT JOIN dental_plans p ON p.id=u.plan_id
             WHERE u.user_access=2 AND u.billing_company_id='$companyId'";
+    } else {
+        $sql = '';
     }
 
     if (!empty($sql)) {

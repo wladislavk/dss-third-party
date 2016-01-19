@@ -30,9 +30,13 @@ $userCompanyId = $db->getColumn("SELECT billing_company_id FROM dental_users WHE
  */
 $isSuperAdmin = is_super($_SESSION['admin_access']);
 $isSoftwareAdmin = is_software($_SESSION['admin_access']);
-$isSameScope = $_SESSION['admincompanyid'] == $userCompanyId;
+$isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
 
-if (!$isSuperAdmin && !($isSoftwareAdmin && $isSameScope)) { ?>
+if (!(
+    $isSuperAdmin || // Super admin can do anything
+    ($userId && $isSameCompany) || // View users, anyone within scope
+    (!$userId && $isSoftwareAdmin) // Create users, only regular admins
+)) { ?>
     <script>
         alert('You are not authorized to access this page.');
     </script>
@@ -44,9 +48,13 @@ if (!$isSuperAdmin && !($isSoftwareAdmin && $isSameScope)) { ?>
 if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
     $userId = intval($_POST['ed']);
     $userCompanyId = $db->getColumn("SELECT billing_company_id FROM dental_users WHERE userid = '$userId'", 'billing_company_id');
-    $isSameScope = $_SESSION['admincompanyid'] == $userCompanyId;
+    $isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
 
-    if (!$isSuperAdmin && !($isSoftwareAdmin && $isSameScope)) { ?>
+    if (!(
+        $isSuperAdmin || // Super admin can do anything
+        ($userId && $isSameCompany) || // View users, anyone within scope
+        (!$userId && $isSoftwareAdmin) // Create users, only regular admins
+    )) { ?>
         <script>
             alert('You are not authorized to edit this user.');
         </script>

@@ -8,7 +8,7 @@ require_once __DIR__ . '/../includes/constants.inc';
 require_once __DIR__ . '/../includes/general_functions.php';
 require_once __DIR__ . '/includes/access.php';
 
-$userId = intval($_GET['ed']);
+$userId = intval(isset($_POST['ed']) ? $_POST['ed'] : $_GET['ed']);
 $userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
     LEFT JOIN admin_company USING(adminid) WHERE admin.adminid = '$userId'", 'companyid');
 
@@ -25,12 +25,22 @@ $userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
  */
 $isSuperAdmin = is_super($_SESSION['admin_access']);
 $isSoftwareAdmin = is_software($_SESSION['admin_access']);
-$isBasicAdmin = is_basic_admin($_SESSION['admin_access']);
+$isCompanyAdmin = is_billing_admin($_SESSION['admin_access']) || is_hst_admin($_SESSION['admin_access']);
 
 $isSameScope = $_SESSION['admincompanyid'] == $userCompanyId;
-$isSelfManaged = $_SESSION['adminuserid'] == $userCompanyId;
+$isSelfManaged = $_SESSION['adminuserid'] == $userId;
 
-if (!$isSuperAdmin && !(($isSoftwareAdmin || $isBasicAdmin) && $isSameScope) && !$isSelfManaged) { ?>
+/**
+ * @see DSS-272
+ *
+ * View FO users: super admin, or within company scope.
+ * Add logic to allow authorized users to see the "new user" form
+ */
+if (!(
+    $isSuperAdmin || // Super admin can do anything
+    ($userId && $isSameScope) || // View users, anyone within scope
+    (!$userId && $isCompanyAdmin) // Create users, only company admins
+)) { ?>
     <script>
         alert('You are not authorized to access this page.');
     </script>
@@ -43,14 +53,18 @@ if (!$isSuperAdmin && !(($isSoftwareAdmin || $isBasicAdmin) && $isSameScope) && 
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script><?php
 
 if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
-    $userId = intval($_GET['ed']);
+    $userId = intval($_POST['ed']);
     $userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
       LEFT JOIN admin_company USING(adminid) WHERE admin.adminid = '$userId'", 'companyid');
 
     $isSameScope = $_SESSION['admincompanyid'] == $userCompanyId;
-    $isSelfManaged = $_SESSION['adminuserid'] == $userCompanyId;
+    $isSelfManaged = $_SESSION['adminuserid'] == $userId;
 
-    if (!$isSuperAdmin && !(($isSoftwareAdmin || $isBasicAdmin) && $isSameScope) && !$isSelfManaged) { ?>
+    if (!(
+        $isSuperAdmin || // Super admin can do anything
+        ($userId && $isSameScope) || // View users, anyone within scope
+        (!$userId && $isCompanyAdmin) // Create users, only company admins
+    )) { ?>
         <script>
             alert('You are not authorized to edit this user.');
         </script>

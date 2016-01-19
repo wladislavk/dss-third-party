@@ -360,7 +360,7 @@ if ($showPerPage != $countDefault) {
                                                 <?php echo  $user["plan_name"]; ?>
                                 </td>
 				<td valign="top">
-				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
+				<?php if(is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])) { ?>
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?php echo $user["userid"];?>');" title="Edit Profile" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>

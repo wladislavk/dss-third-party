@@ -1,4 +1,5 @@
 <?php
+
 namespace DentalSleepSolutions\Exceptions;
 
 use RuntimeException;

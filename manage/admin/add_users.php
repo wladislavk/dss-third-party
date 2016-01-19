@@ -1146,8 +1146,12 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 	$('.expanded').hide();
     </script>
     <?php } ?>
-    <script>
-    $(document).ready(function(){
+<script>
+    jQuery(function($){
+        <?php if (!$canEdit) { ?>
+            $('form[name=userfrm]').find('input, select, button').prop('disabled', true);
+        <?php } ?>
+
         $('[name=status]').on('change keydown',function(){
             var $this = $(this);
             
@@ -1180,8 +1184,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
         if (hide_expanded) {
             $('.expanded').hide();
         }
-    });
-    </script>
+    }(jQuery));
+</script>
 <script type="text/javascript">
   $('#use_service_npi').click(function(){
     check_service_npi();

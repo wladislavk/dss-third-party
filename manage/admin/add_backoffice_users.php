@@ -402,11 +402,13 @@ function update_access(){
                                   });
 
 }
-$(document).ready(function(){
+jQuery(function($){
+    <?php if (!$canEdit) { ?>
+        $('form[name=userfrm]').find('input, select, button').prop('disabled', true);
+    <?php } ?>
 update_access();
 selected_company = '<?php echo  $companyid; ?>';
-});
-
+}(jQuery));
 
 function check_add(){
   $('.validate').each( function(){

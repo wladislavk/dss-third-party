@@ -1,30 +1,22 @@
 <?php
+
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\AppointmentType as Resource;
+use DentalSleepSolutions\Contracts\Repositories\AppointmentTypes as Repository;
 
-class AppointmentType extends Model
+class AppointmentType extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
     /**
      * Mass assignable attributes
      *
      * @var array
      */
     protected $fillable = ['name', 'color', 'classname', 'docid'];
-
-    /**
-     * Defining guarded attributes
-     * 
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * Mass of nondisplayed attributes
-     * 
-     * @var array
-     */
-    protected $hidden = [];
 
     /**
      * The table associated with the model.
@@ -34,16 +26,16 @@ class AppointmentType extends Model
     protected $table = 'dental_appt_types';
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * Primary key for the table
      *
      * @var string
      */
     protected $primaryKey = 'id';
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'adddate';
 }

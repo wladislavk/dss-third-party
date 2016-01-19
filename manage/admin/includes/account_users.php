@@ -1,15 +1,36 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
 require_once 'main_include.php';
 require_once '../../includes/constants.inc';
 require 'access.php';
-$docid = $_REQUEST['account'];
-$n_sql = "SELECT * from dental_users where (userid='".$docid."' OR docid='".$docid."') AND status=1 order by docid ASC, first_name ASC, last_name ASC";
-$n_q = mysqli_query($con, $n_sql);
- $c = '';
- while($u = mysqli_fetch_assoc($n_q)){ 
-    $c .= "<option value='".$u['userid']."'>".$u['first_name']." ".$u['last_name']."</option>";
- }
-  echo '{"options":"'.$c.'"}';
-?>
 
+$docId = intval($_REQUEST['account']);
+$users = [];
+
+if (is_super($_SESSION['admin_access'])) {
+    $authorized = true;
+} else {
+    $companyId = intval($_SESSION['admincompanyid']);
+    $matches = $db->getResults("SELECT userid
+        FROM dental_users
+        WHERE userid = '$docId' AND billing_company_id = '$companyId'");
+    $authorized = count($matches) > 0;
+}
+
+if ($authorized) {
+    $users = $db->getResults("SELECT *
+        FROM dental_users
+        WHERE (userid = '$docId' OR docid = '$docId')
+            AND status = 1
+        ORDER BY docid ASC, first_name ASC, last_name ASC");
+}
+
+$c = '';
+
+foreach ($users as $user){
+    $c .= "<option value='" . e($user['userid']) . "'>" . e($user['first_name'] . " " . $u['last_name']) . "</option>";
+}
+
+echo @json_encode(['options' => $c]);

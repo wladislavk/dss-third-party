@@ -328,23 +328,35 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
             </td>
             <td valign="top" class="frmdata">
                 <select id="admin_access" name="admin_access" class="form-control validate">
-			<option value="">Select Access</option>
-			<?php if(is_super($_SESSION['admin_access'])){ ?>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_SUPER; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_SUPER) echo " selected";?>>Super</option>
-			<?php } ?>
-			<?php if(is_admin($_SESSION['admin_access'])){ ?>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_ADMIN) echo " selected";?>>Admin</option>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BASIC) echo " selected";?>>Basic</option>
-                        <?php } ?>
-
-			<?php if(is_super($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])){ ?>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_BILLING_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_ADMIN) echo " selected";?>>Billing Admin</option>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_BILLING_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_BASIC) echo " selected";?>>Billing Basic</option>
-			<?php } ?>
-			<?php if(is_super($_SESSION['admin_access']) || is_hst($_SESSION['admin_access'])){ ?>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_HST_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_ADMIN) echo " selected";?>>HST Admin</option>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_HST_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_BASIC) echo " selected";?>>HST Basic</option>
-			<?php } ?>
+                    <option value="">Select Access</option>
+                    <?php if (is_super($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_SUPER ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_SUPER ? 'selected' : '' ?>>Super</option>
+                    <?php } ?>
+                    <?php if (is_admin($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_ADMIN ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_ADMIN ? 'selected' : '' ?>>Admin</option>
+                    <?php } ?>
+                    <?php if (is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_BASIC ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_BASIC ? 'selected' : '' ?>>Basic</option>
+                    <?php } ?>
+                    <?php if (is_super($_SESSION['admin_access']) || is_billing_admin($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_BILLING_ADMIN ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_BILLING_ADMIN ? 'selected' : '' ?>>Billing Admin</option>
+                    <?php } ?>
+                    <?php if (is_super($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_BILLING_BASIC ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_BILLING_BASIC ? 'selected' : '' ?>>Billing Basic</option>
+                    <?php } ?>
+                    <?php if (is_super($_SESSION['admin_access']) || is_hst_admin($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_HST_ADMIN ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_HST_ADMIN ? 'selected' : '' ?>>HST Admin</option>
+                    <?php } ?>
+                    <?php if (is_super($_SESSION['admin_access']) || is_hst($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_HST_BASIC ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_HST_BASIC ? 'selected' : '' ?>>HST Basic</option>
+                    <?php } ?>
                 </select>
             </td>
         </tr>
@@ -355,9 +367,11 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="form-control">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                <select name="status" class="form-control">
+                    <option value="1" <? if($status == 1) echo " selected";?>>Active</option>
+                    <?php if (!is_basic($_SESSION['admin_access'])) { ?>
+                        <option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                    <?php } ?>
                 </select>
             </td>
         </tr>

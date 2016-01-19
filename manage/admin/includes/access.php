@@ -25,4 +25,8 @@ function is_hst($admin_access){
   return ($admin_access==DSS_ADMIN_ACCESS_HST_ADMIN || $admin_access==DSS_ADMIN_ACCESS_HST_BASIC);
 }
 
+function is_basic ($adminAccess) {
+    return in_array($adminAccess, [DSS_ADMIN_ACCESS_BASIC, DSS_ADMIN_ACCESS_BILLING_BASIC, DSS_ADMIN_ACCESS_HST_BASIC]);
+}
+
 ?>

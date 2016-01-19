@@ -14,7 +14,7 @@ require_once __DIR__ . '/includes/edx_functions.php';
 require_once __DIR__ . '/../includes/help_functions.php';
 require_once __DIR__ . '/includes/javascript_includes.php';
 
-$userId = intval($_GET['ed']);
+$userId = intval(isset($_POST['ed']) ? $_POST['ed'] : $_GET['ed']);
 $userCompanyId = $db->getColumn("SELECT billing_company_id FROM dental_users WHERE userid = '$userId'", 'billing_company_id');
 
 /**
@@ -32,11 +32,11 @@ $isSuperAdmin = is_super($_SESSION['admin_access']);
 $isSoftwareAdmin = is_software($_SESSION['admin_access']);
 $isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
 
-if (!(
-    $isSuperAdmin || // Super admin can do anything
-    ($userId && $isSameCompany) || // View users, anyone within scope
-    (!$userId && $isSoftwareAdmin) // Create users, only regular admins
-)) { ?>
+$canView = $isSuperAdmin || $isSameCompany;
+$canEdit = $isSuperAdmin || $isSoftwareAdmin;
+$canCreate = $isSuperAdmin || $isSoftwareAdmin;
+
+if (!$canView) { ?>
     <script>
         alert('You are not authorized to access this page.');
     </script>
@@ -47,16 +47,19 @@ if (!(
 
 if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
     $userId = intval($_POST['ed']);
-    $userCompanyId = $db->getColumn("SELECT billing_company_id FROM dental_users WHERE userid = '$userId'", 'billing_company_id');
-    $isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
 
-    if (!(
-        $isSuperAdmin || // Super admin can do anything
-        ($userId && $isSameCompany) || // View users, anyone within scope
-        (!$userId && $isSoftwareAdmin) // Create users, only regular admins
-    )) { ?>
+    if ($userId && !$canEdit) { ?>
         <script>
             alert('You are not authorized to edit this user.');
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
+    if (!$userId && !$canCreate) { ?>
+        <script>
+            alert('You are not authorized to create new users.');
         </script>
         <?php
 

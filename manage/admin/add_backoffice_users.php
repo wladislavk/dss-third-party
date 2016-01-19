@@ -24,11 +24,20 @@ $userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
  * is_super() || (is_software() && WITHIN COMPANY SCOPE)
  */
 $isSuperAdmin = is_super($_SESSION['admin_access']);
+$isAdmin = is_admin($_SESSION['admin_access']);
 $isSoftwareAdmin = is_software($_SESSION['admin_access']);
 $isCompanyAdmin = is_billing_admin($_SESSION['admin_access']) || is_hst_admin($_SESSION['admin_access']);
 
-$isSameScope = $_SESSION['admincompanyid'] == $userCompanyId;
+$isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
 $isSelfManaged = $_SESSION['adminuserid'] == $userId;
+
+$canView = $isSuperAdmin || $isSameCompany;
+$canEdit = $isSuperAdmin ||
+    ($isAdmin && $isSameCompany) ||
+    ($isSoftwareAdmin && $isSelfManaged) ||
+    ($isCompanyAdmin && $isSameCompany) ||
+    (/* $isCompanyBasic && */ $isSelfManaged);
+$canCreate = $isSuperAdmin || $isAdmin || $isCompanyAdmin;
 
 /**
  * @see DSS-272
@@ -36,11 +45,7 @@ $isSelfManaged = $_SESSION['adminuserid'] == $userId;
  * View FO users: super admin, or within company scope.
  * Add logic to allow authorized users to see the "new user" form
  */
-if (!(
-    $isSuperAdmin || // Super admin can do anything
-    ($userId && $isSameScope) || // View users, anyone within scope
-    (!$userId && $isCompanyAdmin) // Create users, only company admins
-)) { ?>
+if (!$canView) { ?>
     <script>
         alert('You are not authorized to access this page.');
     </script>
@@ -57,16 +62,27 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
     $userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
       LEFT JOIN admin_company USING(adminid) WHERE admin.adminid = '$userId'", 'companyid');
 
-    $isSameScope = $_SESSION['admincompanyid'] == $userCompanyId;
+    $isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
     $isSelfManaged = $_SESSION['adminuserid'] == $userId;
 
-    if (!(
-        $isSuperAdmin || // Super admin can do anything
-        ($userId && $isSameScope) || // View users, anyone within scope
-        (!$userId && $isCompanyAdmin) // Create users, only company admins
-    )) { ?>
+    $canEdit = $isSuperAdmin ||
+        ($isAdmin && $isSameCompany) ||
+        ($isSoftwareAdmin && $isSelfManaged) ||
+        ($isCompanyAdmin && $isSameCompany) ||
+        (/* $isCompanyBasic && */ $isSelfManaged);
+
+    if ($userId && !$canEdit) { ?>
         <script>
             alert('You are not authorized to edit this user.');
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
+    if (!$userId && !$canCreate) { ?>
+        <script>
+            alert('You are not authorized to create new users.');
         </script>
         <?php
 

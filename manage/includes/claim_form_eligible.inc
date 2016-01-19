@@ -118,6 +118,7 @@ $date_current = st($claimData['date_current']);
 $date_same_illness = st($claimData['date_same_illness']);
 $unable_date_from = st($claimData['unable_date_from']);
 $unable_date_to = st($claimData['unable_date_to']);
+$name_referring_provider_qualifier = st($claimData['name_referring_provider_qualifier']);
 $referring_provider = st($claimData['referring_provider']);
 $field_17a_dd = st($claimData['field_17a_dd']);
 $field_17a = st($claimData['field_17a']);
@@ -545,11 +546,13 @@ function stateDropdown (fieldName) {
     }
 
     ?>
-    $('input[name="referring_provider[first_name]"]').val("<?= $referring_provider_first ?>");
-    $('input[name="referring_provider[last_name]"]').val("<?= $referring_provider_last ?>");
-    $('select[name="referring_provider[secondary_id_type]"]').val("<?php echo  $field_17a_dd; ?>");
-    $('input[name="referring_provider[secondary_id]"]').val("<?php echo  $field_17a; ?>");
-    $('input[name="referring_provider[npi]"]').val("<?php echo  $diagnosising_npi; ?>");
+    $('select[name="referring_provider[option], select[name="box17_provider_option"]').val("<?= $name_referring_provider_qualifier ?>");
+    $('input[name="referring_provider[first_name], input[name="box17_provider[first_name]"]').val("<?= $referring_provider_first ?>");
+    $('input[name="referring_provider[last_name]"], input[name="box17_provider[last_name]"]').val("<?= $referring_provider_last ?>");
+    $('select[name="referring_provider[secondary_id_type]"], select[name="box17_provider[secondary_id_type]"]').val("<?php echo  $field_17a_dd; ?>");
+    $('input[name="referring_provider[secondary_id]"], input[name="box17_provider[secondary_id]"]').val("<?php echo  $field_17a; ?>");
+    $('input[name="referring_provider[npi]"], input[name="box17_provider[npi]').val("<?php echo  $diagnosising_npi; ?>");
+
     $('input[name="claim[outside_lab]"][value="<?= json_encode(!!$outside_lab) ?>"]').prop('checked', true);
 
     $('input[name="claim[payer_control_number]"]').val("<?php echo $original_ref_no; ?>");
@@ -930,10 +933,13 @@ $transactions = ClaimFormData::ledgerItems($claimId, $docId, $patientId, $insura
           [name="dependent[address][street_line_2]"],\
           [name="subscriber[address][street_line_2]"],\
           [name="referring_provider[middle_name]"],\
+          [name="box17_provider[middle_name]"],\
           [name="service_facility[address][street_line_2]"],\
           [name="billing_provider[address][street_line_2]"],\
           [name="referring_provider[secondary_id_type]"],\
+          [name="box17_provider[secondary_id_type]"],\
           [name="referring_provider[secondary_id]"]\
+          [name="box17_provider[secondary_id]"]\
       ')
           .attr('readonly', true)
           .addClass('grayout')

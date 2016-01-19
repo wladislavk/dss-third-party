@@ -1,9 +1,8 @@
 <?php
+
 namespace DentalSleepSolutions\Http\Requests;
 
-use DentalSleepSolutions\Http\Requests\Request;
-
-class UpdateAssessmentRequest extends Request
+class AssessmentUpdate extends Request
 {
     /**
      * Get the validation rules that apply to the request.

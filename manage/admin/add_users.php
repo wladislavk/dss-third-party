@@ -1,18 +1,59 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-session_start();
-require_once('includes/main_include.php');
-include("includes/sescheck.php");
-include_once('includes/password.php');
-include_once '../includes/general_functions.php';
-require_once '../includes/constants.inc';
-require_once 'includes/access.php';
-require_once 'includes/form_updates.php';
-require_once 'includes/edx_functions.php';
-include_once '../includes/help_functions.php';
-include_once 'includes/javascript_includes.php';
+<?php
+namespace Ds3\Libraries\Legacy;
 
-if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
-{
+session_start();
+
+require_once __DIR__ . '/includes/main_include.php';
+require_once __DIR__ . '/includes/sescheck.php';
+require_once __DIR__ . '/includes/password.php';
+require_once __DIR__ . '/../includes/general_functions.php';
+require_once __DIR__ . '/../includes/constants.inc';
+require_once __DIR__ . '/includes/access.php';
+require_once __DIR__ . '/includes/form_updates.php';
+require_once __DIR__ . '/includes/edx_functions.php';
+require_once __DIR__ . '/../includes/help_functions.php';
+require_once __DIR__ . '/includes/javascript_includes.php';
+
+$userId = intval($_GET['ed']);
+$userCompanyId = $db->getColumn("SELECT billing_company_id FROM dental_users WHERE userid = '$userId'", 'billing_company_id');
+
+/**
+ * @see DSS-272
+ *
+ * FO users can be edited by:
+ *
+ * 1: Super admin - No restrictions
+ * 2: Admin - Company scope
+ * 3: Basic admin - Company scope
+ *
+ * is_super() || (is_software() && WITHIN COMPANY SCOPE)
+ */
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$isSoftwareAdmin = is_software($_SESSION['admin_access']);
+$isSameScope = $_SESSION['admincompanyid'] == $userCompanyId;
+
+if (!$isSuperAdmin && !($isSoftwareAdmin && $isSameScope)) { ?>
+    <script>
+        alert('You are not authorized to access this page.');
+    </script>
+    <?php
+
+    trigger_error('Die called', E_USER_ERROR);
+}
+
+if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
+    $userId = intval($_POST['ed']);
+    $userCompanyId = $db->getColumn("SELECT billing_company_id FROM dental_users WHERE userid = '$userId'", 'billing_company_id');
+    $isSameScope = $_SESSION['admincompanyid'] == $userCompanyId;
+
+    if (!$isSuperAdmin && !($isSoftwareAdmin && $isSameScope)) { ?>
+        <script>
+            alert('You are not authorized to access this page.');
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
 
 	if(isset($_POST['save_but']) || $_POST['username']!=''){
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";

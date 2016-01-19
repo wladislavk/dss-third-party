@@ -1,16 +1,64 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-    include_once('includes/main_include.php');
-    include("includes/sescheck.php");
-    include_once('includes/password.php');
-    include_once('../includes/constants.inc');
-    include_once '../includes/general_functions.php';
-    include_once 'includes/access.php';
-?>
+<?php
+namespace Ds3\Libraries\Legacy;
 
+require_once __DIR__ . '/includes/main_include.php';
+require_once __DIR__ . '/includes/sescheck.php';
+require_once __DIR__ . '/includes/password.php';
+require_once __DIR__ . '/../includes/constants.inc';
+require_once __DIR__ . '/../includes/general_functions.php';
+require_once __DIR__ . '/includes/access.php';
+
+$userId = intval($_GET['ed']);
+$userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
+    LEFT JOIN admin_company USING(adminid) WHERE admin.adminid = '$userId'", 'companyid');
+
+/**
+ * @see DSS-272
+ *
+ * BO users can be edited by:
+ *
+ * 1: Super admin - No restrictions
+ * 2: Admin - Company scope
+ * 3, 4, 6: Basic admin - Company scope
+ * 5, 7: Base user - Self
+ * is_super() || (is_software() && WITHIN COMPANY SCOPE)
+ */
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$isSoftwareAdmin = is_software($_SESSION['admin_access']);
+$isBasicAdmin = is_basic_admin($_SESSION['admin_access']);
+
+$isSameScope = $_SESSION['admincompanyid'] == $userCompanyId;
+$isSelfManaged = $_SESSION['adminuserid'] == $userCompanyId;
+
+if (!$isSuperAdmin && !(($isSoftwareAdmin || $isBasicAdmin) && $isSameScope) && !$isSelfManaged) { ?>
+    <script>
+        alert('You are not authorized to access this page.');
+    </script>
+    <?php
+
+    trigger_error('Die called', E_USER_ERROR);
+}
+
+?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script><?php
 
-if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
-{
+if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
+    $userId = intval($_GET['ed']);
+    $userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
+      LEFT JOIN admin_company USING(adminid) WHERE admin.adminid = '$userId'", 'companyid');
+
+    $isSameScope = $_SESSION['admincompanyid'] == $userCompanyId;
+    $isSelfManaged = $_SESSION['adminuserid'] == $userCompanyId;
+
+    if (!$isSuperAdmin && !(($isSoftwareAdmin || $isBasicAdmin) && $isSameScope) && !$isSelfManaged) { ?>
+        <script>
+            alert('You are not authorized to access this page.');
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
 	$sel_check = "select * from admin where username = '".s_for($_POST["username"])."' and adminid <> '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
         $sel_check2 = "select * from admin where email = '".s_for($_POST["email"])."' and adminid <> '".s_for($_POST['ed'])."'";

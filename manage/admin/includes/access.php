@@ -10,6 +10,10 @@ function is_admin($admin_access){
   return ($admin_access==DSS_ADMIN_ACCESS_SUPER || $admin_access==DSS_ADMIN_ACCESS_ADMIN);
 }
 
+function is_basic_admin ($admin_access) {
+    return in_array($admin_access, [DSS_ADMIN_ACCESS_BASIC, DSS_ADMIN_ACCESS_BILLING_BASIC, DSS_ADMIN_ACCESS_HST_BASIC]);
+}
+
 function is_billing_admin($admin_access){
   return ($admin_access==DSS_ADMIN_ACCESS_BILLING_ADMIN);
 }

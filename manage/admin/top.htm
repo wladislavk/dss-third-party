@@ -549,7 +549,13 @@ $num_pending_claims = mysqli_num_rows($pending_q);
 										<i class="fa fa-user"></i> Backoffice Accounts
 									</a>
 								</li>
-								<?php } ?>
+								<?php } else { /* @see DSS-272, all BO users can see themselves */ ?>
+                                 <li>
+                                     <a href="/manage/admin/manage_backoffice.php">
+                                         <i class="fa fa-user"></i> Backoffice Accounts
+                                     </a>
+                                 </li>
+                                <?php } ?>
 								<li>
 									<a href="/manage/admin/manage_users.php">
 										<i class="fa fa-external-link"></i> User Accounts

@@ -100,42 +100,44 @@ if ($showAll || $search) {
             WHERE u.user_access=2 AND u.billing_company_id='$companyId'";
     }
 
-    if (!$showAll && $search) {
-        $searchString = $search;
-        $quotedTerms = [];
-    
-        if (preg_match_all('/"(?P<quoted>.*?)"/', $searchString, $matches)) {
-            $quotedTerms = $matches['quoted'];
-            $searchString = preg_replace('/".*?"/', '', $searchString);
-        }
-    
-        $singleTerms = preg_split('/[\s\r\t\n]+/', $searchString);
-    
-        $searchTerms = array_merge($quotedTerms, $singleTerms);
-        $searchTerms = array_unique($searchTerms);
-        $searchTerms = array_filter($searchTerms, function($term){
-            return strlen($term);
-        });
-    
-        if ($searchTerms) {
-            $hasSearch = true;
-    
-            array_walk($searchTerms, function(&$term)use($db){
-                $term = $db->escape($term);
-                $term = "u.username LIKE '%$term%' OR u.first_name LIKE '%$term%' OR u.last_name LIKE '%$term%'";
+    if (!empty($sql)) {
+        if (!$showAll && $search) {
+            $searchString = $search;
+            $quotedTerms = [];
+
+            if (preg_match_all('/"(?P<quoted>.*?)"/', $searchString, $matches)) {
+                $quotedTerms = $matches['quoted'];
+                $searchString = preg_replace('/".*?"/', '', $searchString);
+            }
+
+            $singleTerms = preg_split('/[\s\r\t\n]+/', $searchString);
+
+            $searchTerms = array_merge($quotedTerms, $singleTerms);
+            $searchTerms = array_unique($searchTerms);
+            $searchTerms = array_filter($searchTerms, function($term){
+                return strlen($term);
             });
-    
-            $sql .= ' AND (' . join(' OR ', $searchTerms) . ') ';
+
+            if ($searchTerms) {
+                $hasSearch = true;
+
+                array_walk($searchTerms, function(&$term)use($db){
+                    $term = $db->escape($term);
+                    $term = "u.username LIKE '%$term%' OR u.first_name LIKE '%$term%' OR u.last_name LIKE '%$term%'";
+                });
+
+                $sql .= ' AND (' . join(' OR ', $searchTerms) . ') ';
+            }
         }
+
+        $totalUsers = $db->getNumberRows($sql);
+        $totalPages = $totalUsers/$showPerPage;
+
+        $sql .= " ORDER BY u.last_name, u.first_name";
+        $sql .= " LIMIT $currentOffset, $showPerPage";
+
+        $userList = $db->getResults($sql);
     }
-    
-    $totalUsers = $db->getNumberRows($sql);
-    $totalPages = $totalUsers/$showPerPage;
-    
-    $sql .= " ORDER BY u.last_name, u.first_name";
-    $sql .= " LIMIT $currentOffset, $showPerPage";
-    
-    $userList = $db->getResults($sql);
 }
 
 $queryString = [];

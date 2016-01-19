@@ -54,7 +54,14 @@ if(is_super($_SESSION['admin_access'])){
         LEFT JOIN companies c ON ac.companyid=c.id";
     $sql .= " WHERE c.id=".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])." ";
 
+} else {
+    $sql = "select a.*, c.id as company_id, c.name as company_name
+         from admin a
+        LEFT join admin_company ac ON a.adminid=ac.adminid
+        LEFT JOIN companies c ON ac.companyid=c.id";
+    $sql .= " WHERE a.adminid=".mysqli_real_escape_string($con,$_SESSION['adminuserid'])." ";
 }
+
 $sql .= " order by admin_access ASC, username ASC";
 $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);

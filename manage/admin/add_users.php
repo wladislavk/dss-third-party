@@ -48,7 +48,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 
     if (!$isSuperAdmin && !($isSoftwareAdmin && $isSameScope)) { ?>
         <script>
-            alert('You are not authorized to access this page.');
+            alert('You are not authorized to edit this user.');
         </script>
         <?php
 

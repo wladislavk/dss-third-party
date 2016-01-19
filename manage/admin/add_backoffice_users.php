@@ -403,7 +403,7 @@ function update_access(){
 
 }
 jQuery(function($){
-    <?php if (!$canEdit) { ?>
+    <?php if (($userId && !$canEdit) || (!$userId && !$canCreate)) { ?>
         $('form[name=userfrm]').find('input, select, button').prop('disabled', true);
     <?php } ?>
 update_access();

@@ -1148,7 +1148,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
     <?php } ?>
 <script>
     jQuery(function($){
-        <?php if (!$canEdit) { ?>
+        <?php if (($userId && !$canEdit) || (!$userId && !$canCreate)) { ?>
             $('form[name=userfrm]').find('input, select, button').prop('disabled', true);
         <?php } ?>
 

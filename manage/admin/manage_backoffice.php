@@ -1,6 +1,12 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$isAdmin = is_admin($_SESSION['admin_access']);
+$isCompanyAdmin = is_billing_admin($_SESSION['admin_access']) || is_hst_admin($_SESSION['admin_access']);
+
+$canCreate = $isSuperAdmin || $isAdmin || $isCompanyAdmin;
+
 if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access']))
 {
 	$del_sql = "delete from admin where adminid='".$_REQUEST["delid"]."'";
@@ -93,6 +99,7 @@ $num_users = mysqli_num_rows($my);
   }
 ?>
 
+<?php if ($canCreate) { ?>
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_backoffice_users.php');" class="btn btn-success">
 		Add New Backoffice User
@@ -100,6 +107,7 @@ $num_users = mysqli_num_rows($my);
 	</button>
 	&nbsp;&nbsp;
 </div>
+<?php } ?>
 
 <br />
 <div align="center" class="red">

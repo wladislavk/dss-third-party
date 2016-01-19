@@ -2,6 +2,11 @@
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
 
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$isSoftwareAdmin = is_software($_SESSION['admin_access']);
+
+$canCreate = $isSuperAdmin || $isSoftwareAdmin;
+
 $showAll = !empty($_GET['all']);
 $search = !empty($_GET['search']) ? $_GET['search'] : '';
 $hasSearch = false;
@@ -183,7 +188,7 @@ if ($showPerPage != $countDefault) {
     &nbsp;&nbsp;
 </div>
 
-<?php if (is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
+<?php if ($canCreate) { ?>
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_users.php');" class="btn btn-success">
 		Add New User

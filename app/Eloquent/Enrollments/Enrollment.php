@@ -87,12 +87,20 @@ class Enrollment extends Model
     }
 
     /**
-     * @param mixed $userId
-     * @param mixed $pagination
+     * @param bool $userId
+     * @param bool $pagination
+     * @param bool $search
+     * @param string $sort
+     * @param string $sort_type
      * @return mixed
      */
-    public static function getList($userId = false, $pagination = false, $search = false, $sort = 'asc')
-    {
+    public static function getList(
+        $userId = false,
+        $pagination = false,
+        $search = false,
+        $sort = 'transaction_type',
+        $sort_type = 'asc'
+    ) {
         $query = self::select([
             "dental_eligible_enrollment.*",
             \DB::raw("CONCAT(types.transaction_type,' - ',types.description) as transaction_type")
@@ -100,7 +108,7 @@ class Enrollment extends Model
             ->join('dental_enrollment_transaction_type as types', function ($q) {
                 $q->on('dental_eligible_enrollment.transaction_type_id', '=', 'types.id');
             })
-            ->orderBy('types.transaction_type', $sort);
+            ->orderBy($sort, $sort_type);
 
         if ($userId !== false) {
             $query->where(\DB::raw('dental_eligible_enrollment.user_id'), '=', $userId);

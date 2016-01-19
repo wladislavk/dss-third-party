@@ -37,7 +37,8 @@ class ApiEnrollmentsController extends ApiBaseController
             $userId,
             $request->get('num_rows', false),
             $request->get('search', false),
-            $request->get('sort', false)
+            $request->get('sort', 'transaction_type'),
+            $request->get('sort_type', 'asc')
         );
 
         if ($request->get('num_rows', false)) {

@@ -1,4 +1,5 @@
 <?php
+
 namespace DentalSleepSolutions\Helpers;
 
 use Traversable;

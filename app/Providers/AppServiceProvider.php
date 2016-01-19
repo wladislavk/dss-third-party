@@ -13,7 +13,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->app->bind(
+            \DentalSleepSolutions\Contracts\Repositories\Payers::class,
+            \DentalSleepSolutions\Eloquent\Payer::class
+        );
+        $this->app->bind(
+            \DentalSleepSolutions\Contracts\Resources\Payer::class,
+            \DentalSleepSolutions\Eloquent\Payer::class
+        );
     }
 
     /**
@@ -24,12 +31,5 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
-        if ($this->app->environment() == 'local')
-        {
-            //$this->app->register('Laracasts\Generators\GeneratorsServiceProvider');
-        }
-
-        $this->app->register('Tymon\JWTAuth\Providers\JWTAuthServiceProvider');
-
     }
 }

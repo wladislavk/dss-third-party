@@ -1,8 +1,11 @@
-<?php namespace DentalSleepSolutions\Repositories;
+<?php
 
-use DentalSleepSolutions\Interfaces\EnrollmentInterface;
-use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
+namespace DentalSleepSolutions\Repositories;
+
 use Carbon\Carbon;
+use DentalSleepSolutions\Interfaces\EnrollmentInterface;
+use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
+use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
 
 class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
 {
@@ -13,7 +16,7 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
      *
      * Main model name for the Enrollment  Payers Model
      */
-    protected $modelName = 'DentalSleepSolutions\Enrollment';
+    protected $modelName = Enrollment::class;
 
     /**
      * @var mixed|string
@@ -343,14 +346,14 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
 
     /**
      * [getEnrollmentTransactionType description]
-     * @param  integer $id 
-     * @return mixed     
+     * @param  integer $id
+     * @return mixed
      */
     public function getEnrollmentTransactionType($id)
     {
         $query = \DB::table('dental_enrollment_transaction_type')
             ->where('id','=',$id)->where('status','=',1)->first();
-            
+
         return $query;
     }
 

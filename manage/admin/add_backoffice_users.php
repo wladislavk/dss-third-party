@@ -31,13 +31,13 @@ $isCompanyAdmin = is_billing_admin($_SESSION['admin_access']) || is_hst_admin($_
 $isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
 $isSelfManaged = $_SESSION['adminuserid'] == $userId;
 
-$canView = $isSuperAdmin || $isSameCompany;
 $canEdit = $isSuperAdmin ||
     ($isAdmin && $isSameCompany) ||
     ($isSoftwareAdmin && $isSelfManaged) ||
     ($isCompanyAdmin && $isSameCompany) ||
     (/* $isCompanyBasic && */ $isSelfManaged);
 $canCreate = $isSuperAdmin || $isAdmin || $isCompanyAdmin;
+$canView = $isSuperAdmin || $isSameCompany || (!$userId && $canCreate);
 
 /**
  * @see DSS-272

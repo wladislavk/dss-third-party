@@ -495,6 +495,32 @@ $num_pending_claims = mysqli_num_rows($pending_q);
 						</span>
 					</a>
 				</li>
+                <?php if (is_hst($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])) { ?>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="fa fa-user"></i>
+                            <span class="title">
+                                Users
+                            </span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="fa fa-cogs"></i> Accounts
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="/manage/admin/manage_backoffice.php">
+                                            <i class="fa fa-user"></i> Backoffice Accounts
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                <?php } ?>
 				 <?php if (!is_hst($_SESSION['admin_access'])) { ?>
 				
 				<li id="nn" >
@@ -549,13 +575,7 @@ $num_pending_claims = mysqli_num_rows($pending_q);
 										<i class="fa fa-user"></i> Backoffice Accounts
 									</a>
 								</li>
-								<?php } else { /* @see DSS-272, all BO users can see themselves */ ?>
-                                 <li>
-                                     <a href="/manage/admin/manage_backoffice.php">
-                                         <i class="fa fa-user"></i> Backoffice Accounts
-                                     </a>
-                                 </li>
-                                <?php } ?>
+								<?php } ?>
 								<li>
 									<a href="/manage/admin/manage_users.php">
 										<i class="fa fa-external-link"></i> User Accounts

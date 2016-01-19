@@ -466,7 +466,13 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 										<i class="fa fa-user"></i> Backoffice Accounts
 									</a>
 								</li>
-								<?php } ?>
+								<?php } else { /* @see DSS-272, allow all BO users to see themselves */ ?>
+                                     <li>
+                                         <a href="/manage/admin/manage_backoffice.php">
+                                             <i class="fa fa-user"></i> Backoffice Accounts
+                                         </a>
+                                     </li>
+                                 <?php } ?>
 				<?php if (!is_hst($_SESSION['admin_access'])) { ?>
 								<li>
 									<a href="/manage/admin/manage_users.php">

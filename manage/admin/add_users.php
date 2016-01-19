@@ -32,9 +32,9 @@ $isSuperAdmin = is_super($_SESSION['admin_access']);
 $isSoftwareAdmin = is_software($_SESSION['admin_access']);
 $isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
 
-$canView = $isSuperAdmin || $isSameCompany;
 $canEdit = $isSuperAdmin || $isSoftwareAdmin;
 $canCreate = $isSuperAdmin || $isSoftwareAdmin;
+$canView = $isSuperAdmin || $isSameCompany || (!$userId && $canCreate);
 
 if (!$canView) { ?>
     <script>

@@ -1,18 +1,78 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-session_start();
-require_once('includes/main_include.php');
-include("includes/sescheck.php");
-include_once('includes/password.php');
-include_once '../includes/general_functions.php';
-require_once '../includes/constants.inc';
-require_once 'includes/access.php';
-require_once 'includes/form_updates.php';
-require_once 'includes/edx_functions.php';
-include_once '../includes/help_functions.php';
-include_once 'includes/javascript_includes.php';
+<?php
+namespace Ds3\Libraries\Legacy;
 
-if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
-{
+session_start();
+
+require_once __DIR__ . '/includes/main_include.php';
+require_once __DIR__ . '/includes/sescheck.php';
+require_once __DIR__ . '/includes/password.php';
+require_once __DIR__ . '/../includes/general_functions.php';
+require_once __DIR__ . '/../includes/constants.inc';
+require_once __DIR__ . '/includes/access.php';
+require_once __DIR__ . '/includes/form_updates.php';
+require_once __DIR__ . '/includes/edx_functions.php';
+require_once __DIR__ . '/../includes/help_functions.php';
+require_once __DIR__ . '/includes/javascript_includes.php';
+
+$userId = intval(isset($_POST['ed']) ? $_POST['ed'] : $_GET['ed']);
+$companyIds = $db->getRow("SELECT u.billing_company_id, uc.companyid
+    FROM dental_users u
+        LEFT JOIN dental_user_company uc ON u.userid = uc.userid
+    WHERE u.userid = '$userId'");
+
+$softwareCompanyId = array_get($companyIds, 'companyid');
+$billingCompanyId = array_get($companyIds, 'billing_company_id');
+
+/**
+ * @see DSS-272
+ *
+ * FO users can be edited by:
+ *
+ * 1: Super admin - No restrictions
+ * 2: Admin - Company scope
+ * 3: Basic admin - Company scope
+ *
+ * is_super() || (is_software() && WITHIN COMPANY SCOPE)
+ */
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$isSoftwareAdmin = is_software($_SESSION['admin_access']);
+
+$userCompanyId = $isSoftwareAdmin ? $softwareCompanyId : $billingCompanyId;
+$isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
+
+$canEdit = $isSuperAdmin || $isSoftwareAdmin;
+$canCreate = $isSuperAdmin || $isSoftwareAdmin;
+$canView = $isSuperAdmin || $isSameCompany || (!$userId && $canCreate);
+
+if (!$canView) { ?>
+    <script>
+        alert('You are not authorized to access this page.');
+    </script>
+    <?php
+
+    trigger_error('Die called', E_USER_ERROR);
+}
+
+if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
+    $userId = intval($_POST['ed']);
+
+    if ($userId && !$canEdit) { ?>
+        <script>
+            alert('You are not authorized to edit this user.');
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
+    if (!$userId && !$canCreate) { ?>
+        <script>
+            alert('You are not authorized to create new users.');
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
 
 	if(isset($_POST['save_but']) || $_POST['username']!=''){
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
@@ -1094,8 +1154,12 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 	$('.expanded').hide();
     </script>
     <?php } ?>
-    <script>
-    $(document).ready(function(){
+<script>
+    jQuery(function($){
+        <?php if (($userId && !$canEdit) || (!$userId && !$canCreate)) { ?>
+            $('form[name=userfrm]').find('input, select, button').prop('disabled', true);
+        <?php } ?>
+
         $('[name=status]').on('change keydown',function(){
             var $this = $(this);
             
@@ -1128,8 +1192,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
         if (hide_expanded) {
             $('.expanded').hide();
         }
-    });
-    </script>
+    }(jQuery));
+</script>
 <script type="text/javascript">
   $('#use_service_npi').click(function(){
     check_service_npi();

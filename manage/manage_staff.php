@@ -3,6 +3,10 @@ include "includes/top.htm";
 include_once 'includes/edx_functions.php';
 include_once 'includes/help_functions.php';
 
+$userId = intval($_SESSION['userid']);
+$isMainAccount = $_SESSION['docid'] == $_SESSION['userid'];
+$isStaff = $db->getColumn("SELECT manage_staff FROM dental_users WHERE userid = '$userId'", 'manage_staff') == 1;
+
 if(!empty($_REQUEST["delid"]))
 {
 	$l_sql = "SELECT * from dental_login WHERE userid='".mysqli_real_escape_string($con,$_REQUEST['delid'])."'";
@@ -57,9 +61,8 @@ $num_users = count($my);
 <br />
 &nbsp;
 <?php
-$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
-$r = $db->getRow($sql);
-if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
+
+if ($isMainAccount || $isStaff) { ?>
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_staff.php');" class="addButton">
 		Add New Staff
@@ -132,13 +135,12 @@ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 		</td>
 		<td valign="top">
 		<?php
-		$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
-		$r = $db->getRow($sql);
-		if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
+
+		if ($isMainAccount || $isStaff || ($_SESSION['userid'] == $myarray['userid'])) { ?>
 			<a href="Javascript:;"  onclick="Javascript: loadPopup('add_staff.php?ed=<?php echo $myarray["userid"];?>');" class="editlink" title="EDIT">
 				Edit 
 			</a>
-		<?php } ?>                    
+		<?php } ?>
 		</td>
 	</tr>
 	<?php 	}
@@ -153,5 +155,5 @@ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){ ?>
 </div>
 <div id="backgroundPopup"></div>
 
-<br /><br />	
+<br /><br />
 <?php include "includes/bottom.htm";?>

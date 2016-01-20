@@ -5,17 +5,16 @@
     include('includes/edx_functions.php');
     include_once 'includes/help_functions.php';
 
-    $sql = "SELECT manage_staff FROM dental_users WHERE userid = '".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
-    
-    $r = $db->getRow($sql);
-    if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1) {
-?>
-        <br />You do not have permissions to edit staff.
-<?php
-        trigger_error("Die called", E_USER_ERROR);
-    }
-?>
+$userId = intval($_SESSION['userid']);
+$isMainAccount = $_SESSION['docid'] == $_SESSION['userid'];
+$isStaff = $db->getColumn("SELECT manage_staff FROM dental_users WHERE userid = '$userId'", 'manage_staff') == 1;
+$isSelfManaged = $_SESSION['userid'] == (isset($_POST['ed']) ? $_POST['ed'] : $_GET['ed']);
 
+if (!$isMainAccount && !$isStaff && !$isSelfManaged) { ?>
+    <br />You do not have permissions to edit staff.
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+} ?>
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
     <script type="text/javascript" src="/manage/includes/modal.js"></script>
@@ -23,146 +22,133 @@
     <link rel="stylesheet" href="css/modal.css" />
 
 <?php
-    if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
-    	$sel_check = "select * from dental_users where username = '" . s_for($_POST["username"]) . "' and userid <> '" . s_for($_POST['ed']) . "'";
-        $sel_check2 = "select * from dental_users where email = '" . s_for($_POST["email"]) . "' and userid <> '" . s_for($_POST['ed']) . "'";
-    	
-    	if($db->getNumberRows($sel_check) > 0) {
-    		$msg = "Username already exist. So please give another Username.";
-?>
-    		<script type="text/javascript">
-    			alert("<?php echo $msg;?>");
-    			window.location = "#add";
-    		</script>
-<?php
-    	} elseif($db->getNumberRows($sel_check2) > 0) {
-            $msg = "Email already exist. So please give another Email.";
-?>
-            <script type="text/javascript">
-                alert("<?php echo $msg;?>");
-                window.location = "#add";
-            </script>
-<?php
-        } else {
-    		if(!empty($_POST["ed"])) {
-                $old_sql = "SELECT username FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_POST["ed"])."'";
-                
-                $old_r = $db->getRow($old_sql);
-                $old_username = $old_r['username'];
 
-                $p = ($_POST['producer'] == 1) ? 1 : 0;
-                $pla = ($_POST['post_ledger_adjustments'] == 1) ? 1  : 0;
-                $ele = ($_POST['edit_ledger_entries'] == 1) ? 1 : 0;
-    			$pf = ($_POST['producer_files'] == 1) ? 1 : 0;
-                $n = ($_POST['sign_notes'] == 1) ? 1 : 0;
-    			$c = ($_POST['use_course'] == 1) ? 1 : 0;
-    			$s = ($_POST['manage_staff'] == 1) ? 1 : 0;
-                $ein = $_POST['ssnein'] === 'ein' ? 1 : 0;
-                $ssn = $_POST['ssnein'] === 'ssn' ? 1 : 0;
-    			$ed_sql = "update dental_users set user_access=1, 
-    				        first_name = '".s_for($_POST["first_name"])."', 
-                            last_name = '".s_for($_POST["last_name"])."',
-    				        email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.", 
-                            producer_files = ".$pf.",
-    				        npi = '".s_for($_POST["npi"])."',
-                            medicare_npi = '".s_for($_POST["medicare_npi"])."',
-    				        medicare_ptan = '".s_for($_POST["medicare_ptan"])."',
-                            tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."',
-                            ein = '".s_for($ein)."',
-                            ssn = '".s_for($ssn)."',
-                            practice = '".s_for($_POST["practice"])."',
-                            city = '".s_for($_POST["city"])."',
-                            state = '".s_for($_POST["state"])."',
-                            zip = '".s_for($_POST["zip"])."',
-            				post_ledger_adjustments = ".$pla.", 
-            				edit_ledger_entries = ".$ele.", 
-            				use_course = ".$c.", ";
+if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
+    $postUserId = intval($_POST['ed']);
+    $postUsername = trim($_POST['username']);
+    $postEmail = trim($_POST['email']);
+    $isSelfManaged = $_SESSION['userid'] == $postUserId;
 
-                $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
- 
-                $r = $db->getRow($sql);
-                if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff']==1) {
-				  $ed_sql .= " manage_staff = ".$s.", ";
-				}
-				$ed_sql .= " sign_notes=".$n."  where userid='".$_POST["ed"]."'";
-                $db->query($ed_sql);
-    			edx_user_update($_POST['ed']);
-                //help_user_update will fail in dev environments since help site is not setup. Only in production
-    			help_user_update($_POST['ed'] ,$help_con);	
-    			$msg = "Edited Successfully";
-?>
-    			<script type="text/javascript">
-    				parent.window.location = 'manage_staff.php?msg=<?php echo $msg;?>';
-    			</script>
-<?php
-                trigger_error("Die called", E_USER_ERROR);
-		    } else {
-                $salt = create_salt();
-                $password = gen_password($_POST['password'], $salt);
-                $p = (!empty($_POST['producer']) && $_POST['producer'] == 1) ? 1 : 0;
-                $pla = (!empty($_POST['post_ledger_adjustments']) && $_POST['post_ledger_adjustments'] == 1) ? 1 : 0;
-                $ele = (!empty($_POST['edit_ledger_entries']) && $_POST['edit_ledger_entries'] == 1) ? 1 : 0;
-			    $pf = (!empty($_POST['producer_files']) && $_POST['producer_files'] == 1) ? 1 : 0;
-                $n = (!empty($_POST['sign_notes']) && $_POST['sign_notes'] == 1) ? 1 : 0;
-			    $c = (!empty($_POST['use_course']) && $_POST['use_course'] == 1) ? 1 : 0;
-                $s = (!empty($_POST['manage_staff']) && $_POST['manage_staff'] == 1) ? 1 : 0;
-                $ein = $_POST['ssnein'] === 'ein' ? 1 : 0;
-                $ssn = $_POST['ssnein'] === 'ssn' ? 1 : 0;
-			    $ins_sql = "insert into dental_users set user_access=1, docid='".$_SESSION['docid']."', username = '".s_for($_POST["username"])."', password = '".mysqli_real_escape_string($con,$password)."', salt='".$salt."',
-                            first_name = '".s_for($_POST["first_name"])."',
-                            last_name = '".s_for($_POST["last_name"])."',
-                            name = '".s_for(trim($_POST["first_name"] . ' ' . $_POST["last_name"]))."',
-            				email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.",
-                            producer_files = ".$pf.",
-                            npi = '".s_for($_POST["npi"])."',
-                            medicare_npi = '".s_for($_POST["medicare_npi"])."',
-				            medicare_ptan = '".s_for($_POST["medicare_ptan"])."',
-                            tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."',
-                            ein = '".s_for($ein)."',
-                            ssn = '".s_for($ssn)."',
-                            practice = '".s_for($_POST["practice"])."',
-                            city = '".s_for($_POST["city"])."',
-                            state = '".s_for($_POST["state"])."',
-                            zip = '".s_for($_POST["zip"])."',
-            				post_ledger_adjustments = ".$pla.", 
-            				edit_ledger_entries = ".$ele.", 
-            				use_course = ".$c.", ";
-                $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
-                $r = $db->getRow($sql);
-                if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff']==1) {
-                    $ins_sql .= " manage_staff = ".$s.", ";
-                }
-                
-                $ins_sql .= " sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-                $userid = $db->getInsertId($ins_sql);
-                $docname_sql = "SELECT name from dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+    $errorMessage = '';
 
-                $docname_r = $db->getRow($docname_sql);
-                $docname = $docname_r['name'];
-                $co_sql = "SELECT c.id, c.name from companies c
-                            JOIN dental_user_company uc ON c.id = uc.companyid
-                            JOIN dental_users u ON u.userid = uc.userid
-                            WHERE u.userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+    $usernameCheck = "SELECT userid
+        FROM dental_users
+        WHERE username = '" . $db->escape($postUsername) . "'
+            AND userid != '$postUserId'";
+    $emailCheck = "SELECT userid
+        FROM dental_users
+        WHERE email = '" . $db->escape($postEmail) . "'
+            AND userid != '$postUserId'";
 
-                $co_r = $db->getRow($co_sql);
-                $cid = $co_r['id'];
-                $cname = $co_r['name'];
-
-    			edx_user_update($userid);
-    			help_user_update($userid, (!empty($help_con) ? $help_con : ''));
-		
-			    $msg = "Added Successfully";
-?>
-    			<script type="text/javascript">
-    				parent.window.location = 'manage_staff.php?msg=<?php echo $msg;?>';
-    			</script>
-<?php
-			    trigger_error("Die called", E_USER_ERROR);
-		    }
-	    }
+    if (!strlen($postUsername)) {
+        $errorMessage = 'Username cannot be empty';
+    } elseif (!strlen($postEmail)) {
+        $errorMessage = 'Email cannot be empty';
+    } elseif ($db->getNumberRows($usernameCheck)) {
+        $errorMessage = 'Username already exist. Please choose another username.';
+    } elseif ($db->getNumberRows($emailCheck)) {
+        $errorMessage = 'Email already exists. Please use a different one.';
     }
-?>
 
+    if ($errorMessage) { ?>
+        <script type="text/javascript">
+            alert("<?= e($errorMessage) ?>");
+            window.location = "#add";
+        </script>
+    <?php } else {
+        $userData = [
+            'first_name' => $_POST['first_name'],
+            'last_name' => $_POST['last_name'],
+            'email' => $_POST['email'],
+        ];
+
+        if ($isMainAccount) {
+            $userPermissions = [
+                'producer' => $_POST['producer'] == 1 ? 1 : 0,
+                'producer_files' => $_POST['producer'] == 1 && $_POST['producer_files'] == 1 ? 1 : 0,
+                'post_ledger_adjustments' => $_POST['post_ledger_adjustments'] == 1 ? 1 : 0,
+                'edit_ledger_entries' => $_POST['edit_ledger_entries'] == 1 ? 1 : 0,
+                'sign_notes' => $_POST['sign_notes'] == 1 ? 1 : 0,
+                'use_course' => $_POST['use_course'] == 1 ? 1 : 0,
+                'manage_staff' => $_POST['manage_staff'] == 1 ? 1 : 0,
+                'status' => $_POST['status']
+            ];
+
+            $userData += $userPermissions;
+
+            if ($userPermissions['producer_files']) {
+                $userBillingInfo = [
+                    'npi' => $_POST['npi'],
+                    'medicare_npi' => $_POST['medicare_npi'],
+                    'medicare_ptan' => $_POST['medicare_ptan'],
+                    'tax_id_or_ssn' => $_POST['tax_id_or_ssn'],
+                    'practice' => $_POST['practice'],
+                    'address' => $_POST['address'],
+                    'city' => $_POST['city'],
+                    'state' => $_POST['state'],
+                    'zip' => $_POST['zip'],
+                    'phone' => $_POST['phone'],
+                    'ssn' => $_POST['ssnein'] == 'ssn' ? 1 : 0,
+                    'ein' => $_POST['ssnein'] == 'ein' ? 1 : 0,
+                ];
+
+                $userData += $userBillingInfo;
+            }
+        }
+
+        /**
+         * Edit users: main account and staff. Staff can edit their own personal details
+         */
+        if ($postUserId) {
+            $oldUsername = $db->getColumn("SELECT username FROM dental_users WHERE userid = '$postUserId'", 'username');
+
+            if (($isMainAccount || $isSelfManaged) && ($oldUsername != $postUsername)) {
+                $userData['username'] = $postUsername;
+            }
+
+            $userData = $db->escapeAssignmentList($userData);
+            $db->query("UPDATE dental_users SET $userData WHERE userid = '$postUserId'");
+
+            edx_user_update($postUserId);
+            help_user_update($postUserId, NULL);
+
+            ?>
+            <script type="text/javascript">
+                parent.window.location = 'manage_staff.php?msg=Edited+successfully';
+            </script>
+            <?php
+
+            trigger_error("Die called", E_USER_ERROR);
+        } elseif ($isMainAccount) {
+            $salt = create_salt();
+            $password = gen_password($_POST['password'], $salt);
+
+            $userData += [
+                'username' => $postUsername,
+                'salt' => $salt,
+                'password' => $password,
+                'user_access' => 1,
+                'docid' => $_SESSION['docid'],
+                'ip_address' => $_SERVER['REMOTE_ADDR'],
+            ];
+
+            $userId = $db->getInsertId("INSERT INTO dental_users SET $userData, adddate = NOW()");
+
+            edx_user_update($userId);
+            help_user_update($userId, NULL);
+
+            ?>
+            <script type="text/javascript">
+                parent.window.location = 'manage_staff.php?msg=Added+successfully';
+            </script>
+            <?php
+
+            trigger_error("Die called", E_USER_ERROR);
+        }
+    }
+}
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -519,7 +505,7 @@
                         <input type="hidden" name="staffsub" value="1" />
                         <input type="hidden" name="ed" value="<?php echo $themyarray["userid"]?>" />
                         <input type="submit" value=" <?php echo $but_text?> Staff" class="button" />
-                        <?php if($themyarray["userid"] != '') { ?>
+                        <?php if ($isMainAccount && $themyarray["userid"] != '') { ?>
                             <?php
                                 $l_sql = "SELECT * from dental_login WHERE userid='".mysqli_real_escape_string($con,$themyarray['userid'])."'";
                                 
@@ -535,5 +521,13 @@
         </form>
 
         <script type="text/javascript" src="js/add_staff.js"></script>
+        <?php if (!$isMainAccount) { ?>
+            <script>
+                $('input, select')
+                    .not('[type=hidden], [type=submit], [name=first_name], [name=last_name], [name=email]')
+                    <?php if (!empty($isSelfManaged)) { ?>.not('[name=username]')<?php } ?>
+                    .prop('disabled', true);
+            </script>
+        <?php } ?>
     </body>
 </html>

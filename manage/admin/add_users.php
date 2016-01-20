@@ -15,7 +15,10 @@ require_once __DIR__ . '/../includes/help_functions.php';
 require_once __DIR__ . '/includes/javascript_includes.php';
 
 $userId = intval(isset($_POST['ed']) ? $_POST['ed'] : $_GET['ed']);
-$userCompanyId = $db->getColumn("SELECT billing_company_id FROM dental_users WHERE userid = '$userId'", 'billing_company_id');
+$userCompanyId = $db->getColumn("SELECT uc.companyid
+    FROM dental_users u
+        LEFT JOIN dental_user_company uc ON u.userid = uc.userid
+    WHERE u.userid = '$userId'", 'companyid');
 
 /**
  * @see DSS-272

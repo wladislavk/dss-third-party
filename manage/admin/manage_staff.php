@@ -1,4 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
+require_once __DIR__ . '/includes/main_include.php';
+require_once __DIR__ . '/includes/access.php';
+
 include "includes/top.htm";
 
 $isBillingAdmin = is_billing($_SESSION['admin_access']);

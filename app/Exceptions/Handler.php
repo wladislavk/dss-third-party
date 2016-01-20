@@ -69,5 +69,4 @@ class Handler extends ExceptionHandler
 
         return ApiResponse::responseError($message, 500);
     }
-
 }

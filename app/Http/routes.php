@@ -2,18 +2,57 @@
 
 /*
 |--------------------------------------------------------------------------
+| Authenticate user and get a token for subsequent requests
+|--------------------------------------------------------------------------
+*/
+Route::post('auth', function () {
+    if (!$token = JWTAuth::attempt(Request::all())) {
+        return Response::json(['status' => 'Invalid credentials'], 422);
+    }
+
+    return ['status' => 'Authenticated', 'token' => $token];
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Eligible webhooks
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'webhooks'], function () {
+    Route::any('enrollment', ['as' => 'webhooks.enrollment', 'uses' => 'Eligible\WebhooksController@enrollment']);
+    Route::any('claims', ['as' => 'webhooks.claims', 'uses' => 'Eligible\WebhooksController@claims']);
+    Route::any('payment', ['as' => 'webhooks.payment', 'uses' => 'Eligible\WebhooksController@payment']);
+    Route::any('payers', ['as' => 'webhooks.payers', 'uses' => 'Eligible\WebhooksController@payers']);
+});
+
+
+/*
+|--------------------------------------------------------------------------
 | API routes
 |--------------------------------------------------------------------------
 */
-Route::group(['prefix' => 'api/v1', 'after' => 'allowOrigin'], function () {
+Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
+
+    Route::get('payers/{payer_id}/required-fields', 'PayersController@requiredFields');
+    // temporary, alias for the above to satisfy current JS
+    Route::get('enrollments/requiredfields/{payer_id}', 'PayersController@requiredFields');
+    Route::resource('payers', 'PayersController', ['except' => ['create', 'edit']]);
+
     Route::resource('memo', 'Api\ApiAdminMemoController');
+
 
     Route::group(['prefix' => 'enrollments'], function () {
         Route::post('create', [
             'as' => 'enrollments.create',
             'uses' => 'Api\ApiEnrollmentsController@store'
+        ]);
+
+        Route::get('payers/{transaction_type}', [
+            'as' => 'enrollments.get_payers',
+            'uses' => 'Api\ApiEnrollmentsController@getPayersList'
         ]);
 
         Route::group(['prefix' => 'original-signature'], function () {
@@ -63,17 +102,4 @@ Route::group(['prefix' => 'api/v1', 'after' => 'allowOrigin'], function () {
             'uses' => 'Api\ApiEnrollmentsController@syncEnrollmentPayers'
         ]);
     });
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| Eligible webhooks
-|--------------------------------------------------------------------------
-*/
-Route::group(['prefix' => 'webhooks'], function () {
-    Route::any('enrollment', ['as' => 'webhooks.enrollment', 'uses' => 'Eligible\WebhooksController@enrollment']);
-    Route::any('claims', ['as' => 'webhooks.claims', 'uses' => 'Eligible\WebhooksController@claims']);
-    Route::any('payment', ['as' => 'webhooks.payment', 'uses' => 'Eligible\WebhooksController@payment']);
-    Route::any('payers', ['as' => 'webhooks.payers', 'uses' => 'Eligible\WebhooksController@payers']);
 });

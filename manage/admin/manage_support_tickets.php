@@ -45,7 +45,7 @@ $sql = "select t.*,
    	WHERE t.status IN (".DSS_TICKET_STATUS_OPEN.", ".DSS_TICKET_STATUS_REOPENED.") ";
 
 if (!is_super($_SESSION['admin_access'])) {
-    $sql .= " AND t.company_id = '" . intval($_SESSION['admincompanyid']) . "' ";
+    $sql .= " AND t.company_id = '" . intval($_SESSION['admincompanyid']) . "' AND u.billing_company_id != '' ";
 }
 
 if(isset($_REQUEST['catid'])){

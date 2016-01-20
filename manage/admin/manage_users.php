@@ -80,23 +80,8 @@ if ($showAll || $search) {
         if (isset($_GET['cid'])) {
             $sql .= " AND c.id='".mysqli_real_escape_string($con,$_GET['cid'])."' ";
         }
-    } elseif (is_software($_SESSION['admin_access'])) {
+    } elseif (is_software($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])) {
         $companyId = $db->escape($_SESSION['admincompanyid']);
-        $sql = "SELECT u.*, c.id AS company_id, c.name AS company_name, p.name AS plan_name
-            FROM dental_users u
-                INNER JOIN dental_user_company uc ON uc.userid = u.userid
-                INNER JOIN companies c ON c.id=uc.companyid
-                LEFT JOIN dental_plans p ON p.id=u.plan_id
-            WHERE u.user_access=2 AND uc.companyid='$companyId'";
-    } elseif (is_billing($_SESSION['admin_access'])) {
-        $adminId = $db->escape($_SESSION['adminuserid']);
-        $a_sql = "SELECT ac.companyid
-            FROM admin_company ac
-                JOIN admin a ON a.adminid = ac.adminid
-            WHERE a.adminid='$adminId'";
-        $admin = $db->getRow($a_sql);
-
-        $companyId = $db->escape($admin['companyid']);
         $sql = "SELECT u.*, c.id AS company_id, c.name AS company_name, p.name AS plan_name
             FROM dental_users u
                 INNER JOIN dental_user_company uc ON uc.userid = u.userid

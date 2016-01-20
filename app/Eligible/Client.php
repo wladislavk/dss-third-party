@@ -147,9 +147,6 @@ class Client
 
         if ($response->getStatusCode() >= 500) {
             throw new \Exception("Server error:" . $response->getStatusCode());
-
-        } elseif ($response->getStatusCode() == 404) {
-            throw new \Exception("Not found:" . $address);
         }
 
         return new Response($response);
@@ -184,9 +181,6 @@ class Client
 
         if ($response->getStatusCode() >= 500) {
             throw new \Exception("Server error:" . $response->getStatusCode());
-
-        } elseif ($response->getStatusCode() == 404) {
-            throw new \Exception("Not found:" . $address);
         }
 
         return new Response($response);

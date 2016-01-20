@@ -118,8 +118,6 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 	{
         if (
             empty($_POST['username']) ||
-            !strlen($_POST['password']) ||
-            !strlen($_POST['password2']) ||
             empty($_POST['first_name']) ||
             empty($_POST['last_name']) ||
             empty($_POST['email']) ||
@@ -129,7 +127,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
         ) { ?>
             <script>
                 alert('Some required fields are missing');
-                window.location = window.location;
+                window.history.back();
             </script>
             <?php
 
@@ -139,8 +137,6 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
         // The smaller the admin_access, the greater the permission
         $admin_access = $_POST['admin_access'] < $_SESSION['admin_access'] ?
             $_SESSION['admin_access'] : $_POST['admin_access'];
-
-
 
 		if($_POST["ed"] != "")
 		{
@@ -175,10 +171,14 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 		}
 		else
 		{
-            if ($_POST['password'] !== $_POST['password2']) { ?>
+            if (
+                !strlen($_POST['password']) ||
+                !strlen($_POST['password2']) ||
+                $_POST['password'] !== $_POST['password2']
+            ) { ?>
                 <script>
-                    alert('The password mismatches with its verification.');
-                    window.location = window.location;
+                    alert('The password differs from its verification.');
+                    window.history.back();
                 </script>
                 <?php
 

@@ -88,37 +88,6 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
     }
 
     /**
-     * Submits an enrollment to Eliigible
-     *
-     * @param array  $enrollmentParams
-     * @param string $apiKey
-     * @return mixed
-     */
-    public function createEnrollment(array $enrollmentParams, $apiKey = '')
-    {
-        $enrollmentParams['endpoint'] = 'coverage';
-
-        $this->elligibleParams['enrollment_npi'] = $enrollmentParams;
-        $requestUri = $this->providerUri.$this->enrollmentsRoute;
-        $this->checkAndSetProviderApiKey($apiKey);
-
-        $data_string = $this->convertEnrollmentParamsToJson();
-
-        $headers = $this->setupApiRequestHeaders($data_string);
-        $response = \Requests::post($requestUri, $headers, $data_string);
-        $enrollmentResponse = json_decode($response->body);
-
-        if (isset($enrollmentResponse->error))
-        {
-            return $enrollmentResponse->error;
-        }
-
-        $this->setupEnrollmentResponseForCreateUpdate($enrollmentParams, $enrollmentResponse, $response);
-
-        return $enrollmentResponse;
-    }
-
-    /**
      * Updates a enrollment on Elligible
      *
      * @param array   $enrollmentParams
@@ -307,25 +276,6 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
     }
 
     /************************* Local DB Functions ***********************/
-
-    /**
-     *
-     *
-     * @param int $userId
-     * @return mixed
-     */
-    public function listEnrollments($userId)
-    {
-
-        $query = \DB::table('dental_eligible_enrollment as enrollments');
-        $query->join('dental_enrollment_transaction_type as types', function($joinClause){
-            $joinClause->on('enrollments.transaction_type_id', '=', 'types.id');
-        });
-        $query->select(array("enrollments.*", \DB::raw("CONCAT(types.transaction_type,' - ',types.description) as transaction_type")));
-        $query->where(\DB::raw('enrollments.user_id'),'=',$userId);
-
-        return $query->get();
-    }
 
     /**
      *

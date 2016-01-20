@@ -79,11 +79,6 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
             'uses' => 'Api\ApiEnrollmentsController@destroyEnrollment'
         ]);
 
-        Route::get('eligiblelist/{page?}', [
-            'as' => 'eligible.enrollments.list',
-            'uses' => 'Api\ApiEnrollmentsController@listEligibleEnrollments'
-        ]);
-
         Route::get('list/{userid?}', [
             'as' => 'enrollments.list',
             'uses' => 'Api\ApiEnrollmentsController@listEnrollments'

@@ -42,7 +42,7 @@ class AccessCodesApiTest extends TestCase
             'status'      => 2
         ];
 
-        $this->put('api/v1/access-code/' . $accessCodeTestRecord->id, $data)
+        $this->put('api/v1/access-codes/' . $accessCodeTestRecord->id, $data)
             ->seeInDatabase('dental_access_codes', ['access_code' => 'updatedTestAccessCode'])
             ->assertResponseOk();
     }

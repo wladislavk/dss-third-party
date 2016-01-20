@@ -175,6 +175,15 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 		}
 		else
 		{
+            if ($_POST['password'] !== $_POST['password2']) { ?>
+                <script>
+                    alert('The password mismatches with its verification.');
+                    window.location = window.location;
+                </script>
+                <?php
+
+                trigger_error('Die called', E_USER_ERROR);
+            }
 
 			$salt = create_salt();
 			$password = gen_password($_POST['password'], $salt);
@@ -451,6 +460,11 @@ function check_add () {
             return false;
         }
     });
+
+    if ($('[name=password]').length && ($('[name=password]').val() !== $('[name=password2]').val())) {
+        alert('The password must match its verification.');
+        return false;
+    }
 
     return true;
 }

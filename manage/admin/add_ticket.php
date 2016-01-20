@@ -1,13 +1,14 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
 
 include_once 'includes/main_include.php';
 include_once 'includes/sescheck.php';
 include_once '../includes/general_functions.php';
 include_once 'includes/general.htm';
-//include "includes/top.htm";
-?>
 
-<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+require_once __DIR__ . '/includes/access.php';
+require_once dirname(__FILE__) . '/includes/popup_top.htm';
+?>
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
@@ -100,8 +101,31 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1)
                     <select name="docid" id="docid" class="form-control">
                         <option value="">Select an account</option>
                         <?php
-                        
-                        $c_sql = "SELECT * FROM dental_users WHERE status=1 AND docid=0 ORDER BY last_name ASC, first_name ASC;";
+
+                        $userCompanyId = intval($_SESSION['admincompanyid']);
+
+                        if (is_super($_SESSION['admin_access'])) {
+                            $c_sql = "SELECT *
+                                FROM dental_users
+                                WHERE status = 1
+                                    AND docid = 0
+                                ORDER BY last_name ASC, first_name ASC";
+                        } else {
+                            if (is_software($_SESSION['admin_access'])) {
+                                $andCompanyConditional = " AND uc.companyid = '$userCompanyId' ";
+                            } else { // Assume billing admin
+                                $andCompanyConditional = " AND u.billing_company_id = '$userCompanyId' ";
+                            }
+
+                            $c_sql = "SELECT u.*
+                                FROM dental_users u
+                                    LEFT JOIN dental_user_company uc ON u.userid = uc.userid
+                                WHERE u.status = 1
+                                    AND u.docid = 0
+                                    $andCompanyConditional
+                                ORDER BY u.last_name ASC, u.first_name ASC";
+                        }
+
                         $c_q = mysqli_query($con,$c_sql);
                         
                         while ($c_r = mysqli_fetch_array($c_q)) { ?>

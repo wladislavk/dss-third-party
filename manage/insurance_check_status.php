@@ -60,6 +60,7 @@
     curl_close ($ch);
     //var_dump($data);
 
+if (!function_exists('\Ds3\Libraries\Legacy\fill_cents')) {
     function fill_cents($v)
     {
         if($v<10){
@@ -68,4 +69,5 @@
     	   return $v;
         }
     }
+}
 ?>

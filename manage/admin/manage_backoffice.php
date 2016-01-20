@@ -1,6 +1,12 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php 
 include "includes/top.htm";
 
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$isAdmin = is_admin($_SESSION['admin_access']);
+$isCompanyAdmin = is_billing_admin($_SESSION['admin_access']) || is_hst_admin($_SESSION['admin_access']);
+
+$canCreate = $isSuperAdmin || $isAdmin || $isCompanyAdmin;
+
 if(!empty($_REQUEST["delid"]) && is_admin($_SESSION['admin_access']))
 {
 	$del_sql = "delete from admin where adminid='".$_REQUEST["delid"]."'";
@@ -54,7 +60,14 @@ if(is_super($_SESSION['admin_access'])){
         LEFT JOIN companies c ON ac.companyid=c.id";
     $sql .= " WHERE c.id=".mysqli_real_escape_string($con,$_SESSION['admincompanyid'])." ";
 
+} else {
+    $sql = "select a.*, c.id as company_id, c.name as company_name
+         from admin a
+        LEFT join admin_company ac ON a.adminid=ac.adminid
+        LEFT JOIN companies c ON ac.companyid=c.id";
+    $sql .= " WHERE a.adminid=".mysqli_real_escape_string($con,$_SESSION['adminuserid'])." ";
 }
+
 $sql .= " order by admin_access ASC, username ASC";
 $my = mysqli_query($con,$sql);
 $total_rec = mysqli_num_rows($my);
@@ -86,6 +99,7 @@ $num_users = mysqli_num_rows($my);
   }
 ?>
 
+<?php if ($canCreate) { ?>
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_backoffice_users.php');" class="btn btn-success">
 		Add New Backoffice User
@@ -93,6 +107,7 @@ $num_users = mysqli_num_rows($my);
 	</button>
 	&nbsp;&nbsp;
 </div>
+<?php } ?>
 
 <br />
 <div align="center" class="red">

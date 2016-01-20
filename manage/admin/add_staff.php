@@ -5,10 +5,23 @@ include_once 'includes/password.php';
 include_once '../includes/general_functions.php';
 include_once 'includes/edx_functions.php';
 include_once '../includes/help_functions.php';
+
 //<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+
+$isBillingAdmin = is_billing($_SESSION['admin_access']);
+$canEdit = !$isBillingAdmin;
 
 if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
 {
+    if (!$canEdit) { ?>
+        <script>
+            alert('You are not authorized to edit or create users.');
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
         $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_POST['ed'])."'";
@@ -482,6 +495,11 @@ Fields left blank below will default to the standard billing settings for your o
       $('.files_field').hide();
     }
 
+    <?php if (!$canEdit) { ?>
+        jQuery(function($){
+            $('form[name=stafffrm]').find('input, select, button').prop('disabled', true);
+        }(jQuery));
+    <?php } ?>
 </script>
 
 </body>

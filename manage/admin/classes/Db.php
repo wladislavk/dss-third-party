@@ -121,4 +121,14 @@ class Db
 
         return join(', ', $values);
     }
+
+    public static function escapeAssignmentList (Array $values) {
+        $db = new Db();
+
+        array_walk($values, function (&$each, $key) use ($db) {
+            $each = $db->escape($key) . " = '" . $db->escape($each) . "'";
+        });
+
+        return join(', ', $values);
+    }
 }

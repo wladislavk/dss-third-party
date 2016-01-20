@@ -1,16 +1,94 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-    include_once('includes/main_include.php');
-    include("includes/sescheck.php");
-    include_once('includes/password.php');
-    include_once('../includes/constants.inc');
-    include_once '../includes/general_functions.php';
-    include_once 'includes/access.php';
-?>
+<?php
+namespace Ds3\Libraries\Legacy;
 
+require_once __DIR__ . '/includes/main_include.php';
+require_once __DIR__ . '/includes/sescheck.php';
+require_once __DIR__ . '/includes/password.php';
+require_once __DIR__ . '/../includes/constants.inc';
+require_once __DIR__ . '/../includes/general_functions.php';
+require_once __DIR__ . '/includes/access.php';
+
+$userId = intval(isset($_POST['ed']) ? $_POST['ed'] : $_GET['ed']);
+$userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
+    LEFT JOIN admin_company USING(adminid) WHERE admin.adminid = '$userId'", 'companyid');
+
+/**
+ * @see DSS-272
+ *
+ * BO users can be edited by:
+ *
+ * 1: Super admin - No restrictions
+ * 2: Admin - Company scope
+ * 3, 4, 6: Basic admin - Company scope
+ * 5, 7: Base user - Self
+ * is_super() || (is_software() && WITHIN COMPANY SCOPE)
+ */
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$isAdmin = is_admin($_SESSION['admin_access']);
+$isSoftwareAdmin = is_software($_SESSION['admin_access']);
+$isCompanyAdmin = is_billing_admin($_SESSION['admin_access']) || is_hst_admin($_SESSION['admin_access']);
+
+$isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
+$isSelfManaged = $_SESSION['adminuserid'] == $userId;
+
+$canEdit = $isSuperAdmin ||
+    ($isAdmin && $isSameCompany) ||
+    ($isSoftwareAdmin && $isSelfManaged) ||
+    ($isCompanyAdmin && $isSameCompany) ||
+    (/* $isCompanyBasic && */ $isSelfManaged);
+$canCreate = $isSuperAdmin || $isAdmin || $isCompanyAdmin;
+$canView = $isSuperAdmin || $isSameCompany || (!$userId && $canCreate);
+
+/**
+ * @see DSS-272
+ *
+ * View FO users: super admin, or within company scope.
+ * Add logic to allow authorized users to see the "new user" form
+ */
+if (!$canView) { ?>
+    <script>
+        alert('You are not authorized to access this page.');
+    </script>
+    <?php
+
+    trigger_error('Die called', E_USER_ERROR);
+}
+
+?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script><?php
 
-if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
-{
+if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
+    $userId = intval($_POST['ed']);
+    $userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
+      LEFT JOIN admin_company USING(adminid) WHERE admin.adminid = '$userId'", 'companyid');
+
+    $isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
+    $isSelfManaged = $_SESSION['adminuserid'] == $userId;
+
+    $canEdit = $isSuperAdmin ||
+        ($isAdmin && $isSameCompany) ||
+        ($isSoftwareAdmin && $isSelfManaged) ||
+        ($isCompanyAdmin && $isSameCompany) ||
+        (/* $isCompanyBasic && */ $isSelfManaged);
+
+    if ($userId && !$canEdit) { ?>
+        <script>
+            alert('You are not authorized to edit this user.');
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
+    if (!$userId && !$canCreate) { ?>
+        <script>
+            alert('You are not authorized to create new users.');
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
 	$sel_check = "select * from admin where username = '".s_for($_POST["username"])."' and adminid <> '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
         $sel_check2 = "select * from admin where email = '".s_for($_POST["email"])."' and adminid <> '".s_for($_POST['ed'])."'";
@@ -250,23 +328,35 @@ if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <select id="admin_access" name="admin_access" class="form-control validate">
-			<option value="">Select Access</option>
-			<?php if(is_super($_SESSION['admin_access'])){ ?>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_SUPER; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_SUPER) echo " selected";?>>Super</option>
-			<?php } ?>
-			<?php if(is_admin($_SESSION['admin_access'])){ ?>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_ADMIN) echo " selected";?>>Admin</option>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BASIC) echo " selected";?>>Basic</option>
-                        <?php } ?>
-
-			<?php if(is_super($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])){ ?>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_BILLING_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_ADMIN) echo " selected";?>>Billing Admin</option>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_BILLING_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_BASIC) echo " selected";?>>Billing Basic</option>
-			<?php } ?>
-			<?php if(is_super($_SESSION['admin_access']) || is_hst($_SESSION['admin_access'])){ ?>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_HST_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_ADMIN) echo " selected";?>>HST Admin</option>
-                        <option value="<?php echo  DSS_ADMIN_ACCESS_HST_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_BASIC) echo " selected";?>>HST Basic</option>
-			<?php } ?>
+                    <option value="">Select Access</option>
+                    <?php if (is_super($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_SUPER ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_SUPER ? 'selected' : '' ?>>Super</option>
+                    <?php } ?>
+                    <?php if (is_admin($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_ADMIN ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_ADMIN ? 'selected' : '' ?>>Admin</option>
+                    <?php } ?>
+                    <?php if (is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_BASIC ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_BASIC ? 'selected' : '' ?>>Basic</option>
+                    <?php } ?>
+                    <?php if (is_super($_SESSION['admin_access']) || is_billing_admin($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_BILLING_ADMIN ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_BILLING_ADMIN ? 'selected' : '' ?>>Billing Admin</option>
+                    <?php } ?>
+                    <?php if (is_super($_SESSION['admin_access']) || is_billing($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_BILLING_BASIC ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_BILLING_BASIC ? 'selected' : '' ?>>Billing Basic</option>
+                    <?php } ?>
+                    <?php if (is_super($_SESSION['admin_access']) || is_hst_admin($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_HST_ADMIN ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_HST_ADMIN ? 'selected' : '' ?>>HST Admin</option>
+                    <?php } ?>
+                    <?php if (is_super($_SESSION['admin_access']) || is_hst($_SESSION['admin_access'])) { ?>
+                        <option value="<?= DSS_ADMIN_ACCESS_HST_BASIC ?>"
+                            <?= $admin_access == DSS_ADMIN_ACCESS_HST_BASIC ? 'selected' : '' ?>>HST Basic</option>
+                    <?php } ?>
                 </select>
             </td>
         </tr>
@@ -277,9 +367,11 @@ if(!empty($_POST["usersub"]) && $_POST["usersub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="form-control">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                <select name="status" class="form-control">
+                    <option value="1" <? if($status == 1) echo " selected";?>>Active</option>
+                    <?php if (!is_basic($_SESSION['admin_access'])) { ?>
+                        <option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                    <?php } ?>
                 </select>
             </td>
         </tr>
@@ -324,11 +416,13 @@ function update_access(){
                                   });
 
 }
-$(document).ready(function(){
+jQuery(function($){
+    <?php if (($userId && !$canEdit) || (!$userId && !$canCreate)) { ?>
+        $('form[name=userfrm]').find('input, select, button').prop('disabled', true);
+    <?php } ?>
 update_access();
 selected_company = '<?php echo  $companyid; ?>';
-});
-
+}(jQuery));
 
 function check_add(){
   $('.validate').each( function(){

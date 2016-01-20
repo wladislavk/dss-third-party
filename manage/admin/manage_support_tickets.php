@@ -43,12 +43,11 @@ $sql = "select t.*,
 		LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
 		LEFT JOIN (SELECT MAX(r2.adddate) as last_response, r2.ticket_id FROM dental_support_responses r2 GROUP BY r2.ticket_id ) response ON response.ticket_id=t.id
    	WHERE t.status IN (".DSS_TICKET_STATUS_OPEN.", ".DSS_TICKET_STATUS_REOPENED.") ";
-if(is_billing($_SESSION['admin_access'])){
-    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
-    $c_q = mysqli_query($con,$c_sql);
-    $c = mysqli_fetch_assoc($c_q);
-  $sql .= " AND t.company_id='".$c['companyid']."' ";
+
+if (!is_super($_SESSION['admin_access'])) {
+    $sql .= " AND t.company_id = '" . intval($_SESSION['admincompanyid']) . "' ";
 }
+
 if(isset($_REQUEST['catid'])){
   $sql .= " AND t.category_id = ".mysqli_real_escape_string($con,$_REQUEST['catid']);
 }

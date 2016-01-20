@@ -2,6 +2,11 @@
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
 
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$isSoftwareAdmin = is_software($_SESSION['admin_access']);
+
+$canCreate = $isSuperAdmin || $isSoftwareAdmin;
+
 $showAll = !empty($_GET['all']);
 $search = !empty($_GET['search']) ? $_GET['search'] : '';
 $hasSearch = false;
@@ -64,78 +69,66 @@ if (!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access'])) {
 }
 
 if ($showAll || $search) {
-    if (is_super($_SESSION['admin_access'])) {
-        $sql = "SELECT u.*, c.id AS company_id, c.name AS company_name, p.name AS plan_name
-            FROM dental_users u
-                LEFT JOIN dental_user_company uc ON uc.userid = u.userid
-                LEFT JOIN companies c ON c.id=uc.companyid
-                LEFT JOIN dental_plans p ON p.id=u.plan_id
-            WHERE u.user_access=2 ";
+    $companyId = intval($_SESSION['admincompanyid']);
 
-        if (isset($_GET['cid'])) {
-            $sql .= " AND c.id='".mysqli_real_escape_string($con,$_GET['cid'])."' ";
-        }
-    } elseif (is_admin($_SESSION['admin_access'])) {
-        $companyId = $db->escape($_SESSION['admincompanyid']);
-        $sql = "SELECT u.*, c.id AS company_id, c.name AS company_name, p.name AS plan_name
-            FROM dental_users u
-                INNER JOIN dental_user_company uc ON uc.userid = u.userid
-                INNER JOIN companies c ON c.id=uc.companyid
-                LEFT JOIN dental_plans p ON p.id=u.plan_id
-            WHERE u.user_access=2 AND uc.companyid='$companyId'";
+    $sql = "SELECT u.*, c.id AS company_id, c.name AS company_name, p.name AS plan_name
+        FROM dental_users u
+            LEFT JOIN dental_user_company uc ON uc.userid = u.userid
+            LEFT JOIN companies c ON c.id = uc.companyid
+            LEFT JOIN dental_plans p ON p.id = u.plan_id
+        WHERE u.user_access = 2
+        ";
+
+    if ($isSuperAdmin && isset($_GET['cid'])) {
+        $sql .= " AND c.id = '" . intval($_GET['cid']) . "' ";
+    }
+
+    if ($isSoftwareAdmin) {
+        $sql .= " AND uc.companyid = '$companyId' ";
     } elseif (is_billing($_SESSION['admin_access'])) {
-        $adminId = $db->escape($_SESSION['adminuserid']);
-        $a_sql = "SELECT ac.companyid
-            FROM admin_company ac
-                JOIN admin a ON a.adminid = ac.adminid
-            WHERE a.adminid='$adminId'";
-        $admin = $db->getRow($a_sql);
-
-        $companyId = $db->escape($admin['companyid']);
-        $sql = "SELECT u.*, c.id AS company_id, c.name AS company_name, p.name AS plan_name
-            FROM dental_users u
-                INNER JOIN dental_user_company uc ON uc.userid = u.userid
-                INNER JOIN companies c ON c.id=uc.companyid
-                LEFT JOIN dental_plans p ON p.id=u.plan_id
-            WHERE u.user_access=2 AND u.billing_company_id='$companyId'";
+        $sql .= " AND u.billing_company_id = '$companyId' ";
+    } else {
+        $sql = '';
     }
 
-    if (!$showAll && $search) {
-        $searchString = $search;
-        $quotedTerms = [];
-    
-        if (preg_match_all('/"(?P<quoted>.*?)"/', $searchString, $matches)) {
-            $quotedTerms = $matches['quoted'];
-            $searchString = preg_replace('/".*?"/', '', $searchString);
-        }
-    
-        $singleTerms = preg_split('/[\s\r\t\n]+/', $searchString);
-    
-        $searchTerms = array_merge($quotedTerms, $singleTerms);
-        $searchTerms = array_unique($searchTerms);
-        $searchTerms = array_filter($searchTerms, function($term){
-            return strlen($term);
-        });
-    
-        if ($searchTerms) {
-            $hasSearch = true;
-    
-            array_walk($searchTerms, function(&$term)use($db){
-                $term = $db->escape($term);
-                $term = "u.username LIKE '%$term%' OR u.first_name LIKE '%$term%' OR u.last_name LIKE '%$term%'";
+    if (!empty($sql)) {
+        if (!$showAll && $search) {
+            $searchString = $search;
+            $quotedTerms = [];
+
+            if (preg_match_all('/"(?P<quoted>.*?)"/', $searchString, $matches)) {
+                $quotedTerms = $matches['quoted'];
+                $searchString = preg_replace('/".*?"/', '', $searchString);
+            }
+
+            $singleTerms = preg_split('/[\s\r\t\n]+/', $searchString);
+
+            $searchTerms = array_merge($quotedTerms, $singleTerms);
+            $searchTerms = array_unique($searchTerms);
+            $searchTerms = array_filter($searchTerms, function($term){
+                return strlen($term);
             });
-    
-            $sql .= ' AND (' . join(' OR ', $searchTerms) . ') ';
+
+            if ($searchTerms) {
+                $hasSearch = true;
+
+                array_walk($searchTerms, function(&$term)use($db){
+                    $term = $db->escape($term);
+                    $term = "u.username LIKE '%$term%' OR u.first_name LIKE '%$term%' OR u.last_name LIKE '%$term%'";
+                });
+
+                $sql .= ' AND (' . join(' OR ', $searchTerms) . ') ';
+            }
         }
+
+        $totalUsers = $db->getNumberRows($sql);
+        $totalPages = $totalUsers/$showPerPage;
+
+        $sql .= " ORDER BY u.last_name, u.first_name";
+        $sql .= " LIMIT $currentOffset, $showPerPage";
+
+        $userList = $db->getResults($sql);
     }
-    
-    $totalUsers = $db->getNumberRows($sql);
-    $totalPages = $totalUsers/$showPerPage;
-    
-    $sql .= " ORDER BY u.last_name, u.first_name";
-    $sql .= " LIMIT $currentOffset, $showPerPage";
-    
-    $userList = $db->getResults($sql);
 }
 
 $queryString = [];
@@ -181,7 +174,7 @@ if ($showPerPage != $countDefault) {
     &nbsp;&nbsp;
 </div>
 
-<?php if (is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
+<?php if ($canCreate) { ?>
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_users.php');" class="btn btn-success">
 		Add New User
@@ -360,7 +353,7 @@ if ($showPerPage != $countDefault) {
                                                 <?php echo  $user["plan_name"]; ?>
                                 </td>
 				<td valign="top">
-				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
+				<?php if(is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])) { ?>
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?php echo $user["userid"];?>');" title="Edit Profile" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>

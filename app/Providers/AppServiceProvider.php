@@ -2,7 +2,10 @@
 
 namespace DentalSleepSolutions\Providers;
 
+use DentalSleepSolutions\Eloquent;
 use Illuminate\Support\ServiceProvider;
+use DentalSleepSolutions\Contracts\Resources;
+use DentalSleepSolutions\Contracts\Repositories;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,17 +26,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
-        if ($this->app->environment() == 'local')
-        {
-            //$this->app->register('Laracasts\Generators\GeneratorsServiceProvider');
+        $bindings = [
+            Eloquent\Payer::class => [Repositories\Payers::class, Resources\Device::class],
+            Eloquent\Dental\Device::class => [Repositories\Devices::class, Resources\Device::class],
+            Eloquent\Dental\Contact::class => [Repositories\Contacts::class, Resources\Contact::class],
+            Eloquent\Dental\ContactType::class => [Repositories\ContactTypes::class, Resources\ContactType::class],
+        ];
+
+        foreach ($bindings as $concrete => $contracts) {
+            foreach ((array)$contracts as $contract) {
+                $this->app->bind($contract, $concrete);
+            }
         }
-
-        $this->app->register('Tymon\JWTAuth\Providers\JWTAuthServiceProvider');
-
-        $this->app->bind(
-            'DentalSleepSolutions\\Contracts\\Repositories\\ContactTypes',
-            'DentalSleepSolutions\\Eloquent\\Dental\\ContactType'
-        );
     }
 }

@@ -8,6 +8,7 @@
 
 namespace DentalSleepSolutions\Repositories;
 
+use DentalSleepSolutions\Eloquent\MemoAdmin;
 use DentalSleepSolutions\Interfaces\MemoAdminInterface;
 
 class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
@@ -19,7 +20,7 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
      *
      * Main model name for the Memos Model
      */
-    protected $modelName = 'DentalSleepSolutions\MemoAdmin';
+    protected $modelName = MemoAdmin::class;
 
 
     /**

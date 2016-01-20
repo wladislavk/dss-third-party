@@ -30,7 +30,6 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Payer::class => [Repositories\Payers::class, Resources\Device::class],
             Eloquent\Dental\Device::class => [Repositories\Devices::class, Resources\Device::class],
             Eloquent\Dental\Contact::class => [Repositories\Contacts::class, Resources\Contact::class],
-            Eloquent\Dental\Assessment::class => [Repositories\Assessments::class, Resources\Assessment::class],
             Eloquent\Dental\ContactType::class => [Repositories\ContactTypes::class, Resources\ContactType::class],
         ];
 

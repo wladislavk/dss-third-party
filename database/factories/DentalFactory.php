@@ -173,17 +173,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, functi
     return [];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Assessment::class, function ($faker) {
-    return [
-        'assessment'  => $faker->sentence($nbWords = 7),
-        'description' => $faker->sentence($nbWords = 7),
-        'sortby'      => $faker->randomDigit,
-        'status'      => $faker->randomDigit,
-        'adddate'     => $faker->dateTime(),
-        'ip_address'  => $faker->ipv4,
-    ];
-});
-
 $factory->define(DentalSleepSolutions\Eloquent\Dental\Contact::class, function ($faker) {
     return [
         'docid'                => $faker->randomDigit,

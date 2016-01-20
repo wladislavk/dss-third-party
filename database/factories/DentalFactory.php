@@ -34,16 +34,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SummSleeplab::class, funct
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Contact::class, function ($faker) {
-    return [
-        'preferredcontact' => $faker->word,
-        'add1' => '435 Sugar Lane',//$faker->streetAddress,
-        'city' => $faker->word,
-        'state' => 'CA',
-        'zip' => '941233476'//$faker->postcode,
-    ];
-});
-
 $factory->define(DentalSleepSolutions\Eloquent\Dental\Qualifier::class, function ($faker) {
     return [
         'ip_address' => $faker->ipv4,
@@ -216,6 +206,18 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Contact::class, function (
         'corporate'            => $faker->randomDigit,
         'dea_number'           => $faker->word,
         'adddate'              => $faker->dateTime(),
-        'ip_address'           => $faker->ipv4
+        'ip_address'           => $faker->ipv4,
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Device::class, function ($faker) {
+    return [
+        'device'      => $faker->sentence($nbWords = 3),
+        'description' => $faker->sentence($nbWords = 6),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4,
+        'image_path'  => $faker->regexify('dental_device_[0-9]{2}\.(gif|jpg|jpeg|png)')
     ];
 });

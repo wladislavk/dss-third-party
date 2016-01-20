@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Eligible;
 
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Exception\ClientException;
 use DentalSleepSolutions\Eloquent\Dental\UserCompany;
@@ -71,6 +72,7 @@ class Client
         if ($this->handler) {
             $arg['handler'] = $this->handler;
         }
+        $arg['headers'] = ['User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0'];
         return $arg;
     }
 
@@ -115,6 +117,41 @@ class Client
     {
         $this->handler = $handler;
     }
+
+
+    /**
+     * create get request
+     *
+     * @param string $address
+     * @param array $data
+     * @return mixed
+     * @throws \Exception
+     */
+    public function requestGet($address, array $data)
+    {
+        $data['api_key'] = $this->api_key;
+
+        if (config('elligibleapi.test')) {
+            $data['test'] = 'true';
+        }
+
+        $args = http_build_query($data);
+        $address = '/' . $this->version . '/' . $address . ($args != '' ? '?' : '').$args;
+
+        try {
+            $client = new \GuzzleHttp\Client($this->getConstructArguments());
+            $response = $client->get($address);
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+        }
+
+        if ($response->getStatusCode() >= 500) {
+            throw new \Exception("Server error:" + $response->getStatusCode());
+        }
+
+        return new Response($response);
+    }
+
 
     /**
      * create post/put request
@@ -210,6 +247,19 @@ class Client
     public function createEnrollment($data)
     {
         return $this->requestPost('enrollment_npis', $data);
+    }
+
+    /**
+     * get payers list
+     *
+     * @param int $endpoint
+     * @return Response
+     */
+    public function getPayers($endpoint)
+    {
+        $data['endpoint'] = $endpoint;
+        $data['enrollment_required'] = 'true';
+        return $this->requestGet('payers.json', $data);
     }
 
     /**

@@ -21,6 +21,15 @@ class AppServiceProvider extends ServiceProvider
             \DentalSleepSolutions\Contracts\Resources\Payer::class,
             \DentalSleepSolutions\Eloquent\Payer::class
         );
+
+        $this->app->bind(
+            \DentalSleepSolutions\Contracts\Repositories\Allergens::class,
+            \DentalSleepSolutions\Eloquent\Dental\Allergen::class
+        );
+        $this->app->bind(
+            \DentalSleepSolutions\Contracts\Resources\Allergen::class,
+            \DentalSleepSolutions\Eloquent\Dental\Allergen::class
+        );
     }
 
     /**

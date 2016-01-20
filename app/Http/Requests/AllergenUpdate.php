@@ -1,9 +1,8 @@
 <?php
+
 namespace DentalSleepSolutions\Http\Requests;
 
-use DentalSleepSolutions\Http\Requests\Request;
-
-class StoreAllergenRequest extends Request
+class AllergenUpdate extends Request
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,7 +12,7 @@ class StoreAllergenRequest extends Request
     public function rules()
     {
         return [
-            'allergens'   => 'required|string|unique:dental_allergens',
+            'allergens'   => 'sometimes|required|string|unique:dental_allergens',
             'description' => 'string',
             'sortby'      => 'integer',
             'status'      => 'integer'

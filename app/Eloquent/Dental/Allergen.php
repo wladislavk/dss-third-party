@@ -1,10 +1,16 @@
 <?php
+
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\Allergen as Resource;
+use DentalSleepSolutions\Contracts\Repositories\Allergens as Repository;
 
-class Allergen extends Model
+class Allergen extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
     /**
      * Mass assignable attributes
      *
@@ -16,20 +22,6 @@ class Allergen extends Model
     ];
 
     /**
-     * Defining guarded attributes
-     * 
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * Mass of nondisplayed attributes
-     * 
-     * @var array
-     */
-    protected $hidden = ['ip_address'];
-
-    /**
      * The table associated with the model.
      *
      * @var string
@@ -37,16 +29,16 @@ class Allergen extends Model
     protected $table = 'dental_allergens';
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * Primary key for the table
      *
      * @var string
      */
     protected $primaryKey = 'allergensid';
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'adddate';
 }

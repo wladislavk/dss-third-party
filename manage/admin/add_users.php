@@ -15,10 +15,13 @@ require_once __DIR__ . '/../includes/help_functions.php';
 require_once __DIR__ . '/includes/javascript_includes.php';
 
 $userId = intval(isset($_POST['ed']) ? $_POST['ed'] : $_GET['ed']);
-$userCompanyId = $db->getColumn("SELECT uc.companyid
+$companyIds = $db->getRow("SELECT u.billing_company_id, uc.companyid
     FROM dental_users u
         LEFT JOIN dental_user_company uc ON u.userid = uc.userid
-    WHERE u.userid = '$userId'", 'companyid');
+    WHERE u.userid = '$userId'");
+
+$softwareCompanyId = array_get($companyIds, 'companyid');
+$billingCompanyId = array_get($companyIds, 'billing_company_id');
 
 /**
  * @see DSS-272
@@ -33,6 +36,8 @@ $userCompanyId = $db->getColumn("SELECT uc.companyid
  */
 $isSuperAdmin = is_super($_SESSION['admin_access']);
 $isSoftwareAdmin = is_software($_SESSION['admin_access']);
+
+$userCompanyId = $isSoftwareAdmin ? $softwareCompanyId : $billingCompanyId;
 $isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
 
 $canEdit = $isSuperAdmin || $isSoftwareAdmin;

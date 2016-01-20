@@ -111,12 +111,18 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1)
                                     AND docid = 0
                                 ORDER BY last_name ASC, first_name ASC";
                         } else {
+                            if (is_software($_SESSION['admin_access'])) {
+                                $andCompanyConditional = " AND uc.companyid = '$userCompanyId' ";
+                            } else { // Assume billing admin
+                                $andCompanyConditional = " AND u.billing_company_id = '$userCompanyId' ";
+                            }
+
                             $c_sql = "SELECT u.*
                                 FROM dental_users u
                                     LEFT JOIN dental_user_company uc ON u.userid = uc.userid
                                 WHERE u.status = 1
                                     AND u.docid = 0
-                                    AND uc.companyid = $userCompanyId
+                                    $andCompanyConditional
                                 ORDER BY u.last_name ASC, u.first_name ASC";
                         }
 

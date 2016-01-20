@@ -13,9 +13,11 @@ if (is_super($_SESSION['admin_access'])) {
     $authorized = true;
 } else {
     $companyId = intval($_SESSION['admincompanyid']);
-    $matches = $db->getResults("SELECT userid
-        FROM dental_users
-        WHERE userid = '$docId' AND billing_company_id = '$companyId'");
+    $matches = $db->getResults("SELECT u.userid
+        FROM dental_users u
+            LEFT JOIN dental_user_company uc ON u.userid = uc.userid
+        WHERE u.userid = '$docId'
+            AND uc.companyid = '$companyId'");
     $authorized = count($matches) > 0;
 }
 

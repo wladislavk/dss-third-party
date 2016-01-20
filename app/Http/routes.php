@@ -34,6 +34,10 @@ Route::group(['prefix' => 'webhooks'], function () {
 */
 Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
+    Route::resource('contact-types', 'ContactTypesController', ['except' => ['create', 'edit']]);
+    Route::resource('contacts', 'ContactsController', ['except' => ['create', 'edit']]);
+    Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
+
     Route::get('payers/{payer_id}/required-fields', 'PayersController@requiredFields');
     // temporary, alias for the above to satisfy current JS
     Route::get('enrollments/requiredfields/{payer_id}', 'PayersController@requiredFields');
@@ -74,11 +78,6 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
         Route::delete('delete', [
             'as' => 'enrollments.delete',
             'uses' => 'Api\ApiEnrollmentsController@destroyEnrollment'
-        ]);
-
-        Route::get('eligiblelist/{page?}', [
-            'as' => 'eligible.enrollments.list',
-            'uses' => 'Api\ApiEnrollmentsController@listEligibleEnrollments'
         ]);
 
         Route::get('list/{userid?}', [

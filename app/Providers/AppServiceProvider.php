@@ -2,7 +2,10 @@
 
 namespace DentalSleepSolutions\Providers;
 
+use DentalSleepSolutions\Eloquent;
 use Illuminate\Support\ServiceProvider;
+use DentalSleepSolutions\Contracts\Resources;
+use DentalSleepSolutions\Contracts\Repositories;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,23 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind(
-            \DentalSleepSolutions\Contracts\Repositories\Payers::class,
-            \DentalSleepSolutions\Eloquent\Payer::class
-        );
-        $this->app->bind(
-            \DentalSleepSolutions\Contracts\Resources\Payer::class,
-            \DentalSleepSolutions\Eloquent\Payer::class
-        );
-
-        $this->app->bind(
-            \DentalSleepSolutions\Contracts\Repositories\Assessments::class,
-            \DentalSleepSolutions\Eloquent\Dental\Assessment::class
-        );
-        $this->app->bind(
-            \DentalSleepSolutions\Contracts\Resources\Assessment::class,
-            \DentalSleepSolutions\Eloquent\Dental\Assessment::class
-        );
+        //
     }
 
     /**
@@ -39,6 +26,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $bindings = [
+            Eloquent\Payer::class => [Repositories\Payers::class, Resources\Device::class],
+            Eloquent\Dental\Device::class => [Repositories\Devices::class, Resources\Device::class],
+            Eloquent\Dental\Contact::class => [Repositories\Contacts::class, Resources\Contact::class],
+            Eloquent\Dental\Assessment::class => [Repositories\Assessments::class, Resources\Assessment::class],
+            Eloquent\Dental\ContactType::class => [Repositories\ContactTypes::class, Resources\ContactType::class],
+        ];
+
+        foreach ($bindings as $concrete => $contracts) {
+            foreach ((array)$contracts as $contract) {
+                $this->app->bind($contract, $concrete);
+            }
+        }
     }
 }

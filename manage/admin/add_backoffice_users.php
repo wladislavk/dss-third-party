@@ -60,7 +60,7 @@ if (!$canView) { ?>
 if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
     $userId = intval($_POST['ed']);
     $userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
-      LEFT JOIN admin_company USING(adminid) WHERE admin.adminid = '$userId'", 'companyid');
+        LEFT JOIN admin_company USING(adminid) WHERE admin.adminid = '$userId'", 'companyid');
 
     $isSameCompany = $_SESSION['admincompanyid'] == $userCompanyId;
     $isSelfManaged = $_SESSION['adminuserid'] == $userId;
@@ -116,13 +116,40 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
         }
         else
 	{
+        if (
+            empty($_POST['username']) ||
+            !strlen($_POST['password']) ||
+            !strlen($_POST['password2']) ||
+            empty($_POST['first_name']) ||
+            empty($_POST['last_name']) ||
+            empty($_POST['email']) ||
+            empty($_POST['companyid']) ||
+            empty($_POST['admin_access']) ||
+            empty($_POST['status'])
+        ) { ?>
+            <script>
+                alert('Some required fields are missing');
+                window.location = window.location;
+            </script>
+            <?php
+
+            trigger_error('Die called', E_USER_ERROR);
+        }
+
+        // The smaller the admin_access, the greater the permission
+        $admin_access = $_POST['admin_access'] < $_SESSION['admin_access'] ?
+            $_SESSION['admin_access'] : $_POST['admin_access'];
+
+
+
 		if($_POST["ed"] != "")
 		{
+
 			$ed_sql = "update admin set 
 				first_name = '".mysqli_real_escape_string($con,$_POST["first_name"])."',
 				last_name = '".mysqli_real_escape_string($con,$_POST["last_name"])."',
 				username = '".mysqli_real_escape_string($con,$_POST["username"])."',
-				admin_access='".mysqli_real_escape_string($con,$_POST["admin_access"])."',
+				admin_access = '".mysqli_real_escape_string($con, $admin_access)."',
 				email = '".mysqli_real_escape_string($con,$_POST["email"])."', 
 				status = '".mysqli_real_escape_string($con,$_POST["status"])."' 
 			where adminid='".$_POST["ed"]."'";
@@ -154,7 +181,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 
 			$ins_sql = "insert into admin set 
                                 username = '".mysqli_real_escape_string($con,$_POST["username"])."',
-                                admin_access='".mysqli_real_escape_string($con,$_POST["admin_access"])."',
+                                admin_access='".mysqli_real_escape_string($con,$admin_access)."',
                                 email = '".mysqli_real_escape_string($con,$_POST["email"])."', 
                                 status = '".mysqli_real_escape_string($con,$_POST["status"])."', 
 				password = '".mysqli_real_escape_string($con,$password)."', 
@@ -237,7 +264,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
+    <form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -395,45 +422,52 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 
 <script type="text/javascript">
 var selected_company = '';
-function update_access(){
-  var new_company = $('#companyid').val();
-  var admin_access = $('#admin_access').val();
-                                  $.ajax({
-                                        url: "includes/update_access.php",
-                                        type: "post",
-                                        data: {oid: selected_company, nid:new_company, cur:admin_access},
-                                        success: function(data){
-                                                var r = $.parseJSON(data);
-						selected_company = new_company;
-                                                if(r.change){
-							$('#admin_access').html(r.change);	
-                                                }else{
-                                                }
-                                        },
-                                        failure: function(data){
-                                                //alert('fail');
-                                        }
-                                  });
 
+function update_access () {
+    var new_company = $('#companyid').val(),
+        admin_access = $('#admin_access').val();
+
+    $.ajax({
+        url: "includes/update_access.php",
+        type: "post",
+        data: { oid: selected_company, nid:new_company, cur:admin_access },
+        success: function(data){
+            var r = $.parseJSON(data);
+
+            selected_company = new_company;
+
+            if (r.change) {
+                $('#admin_access').html(r.change);
+            } else {}
+        },
+        failure: function(data){}
+    });
 }
+
+function check_add () {
+    $('.validate').each(function(){
+        if ($(this).val() == '') {
+            alert('All fields are required.');
+            return false;
+        }
+    });
+
+    return true;
+}
+
 jQuery(function($){
     <?php if (($userId && !$canEdit) || (!$userId && !$canCreate)) { ?>
         $('form[name=userfrm]').find('input, select, button').prop('disabled', true);
     <?php } ?>
-update_access();
-selected_company = '<?php echo  $companyid; ?>';
+    update_access();
+    selected_company = '<?php echo  $companyid; ?>';
+
+    $('form[name=userfrm]').submit(function(event){
+        event.preventDefault();
+
+        return check_add();
+    });
 }(jQuery));
-
-function check_add(){
-  $('.validate').each( function(){
-    if($(this).val()==''){
-      alert('All fields are required.');
-      return false;
-    }
-  });
-  return true;
-}
-
 </script>
 
 </body>

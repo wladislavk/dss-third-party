@@ -25,6 +25,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected $resourceBindings = [
         'customs' => \DentalSleepSolutions\Eloquent\Dental\Custom::class,
+        'devices' => \DentalSleepSolutions\Eloquent\Dental\Device::class,
+        'payers' => \DentalSleepSolutions\Eloquent\Payer::class,
     ];
 
     /**
@@ -38,6 +40,14 @@ class RouteServiceProvider extends ServiceProvider
         foreach ($this->resourceBindings as $key => $resource) {
             $this->bindResource($key, $resource);
         }
+
+        $router->bind('payer_id', function ($uid) {
+            try {
+                return $this->app[\DentalSleepSolutions\Contracts\Repositories\Payers::class]->findByUid($uid);
+            } catch (ModelNotFoundException $e) {
+                throw new ResourceNotFound('Requested resource does not exist.');
+            }
+        });
 
         parent::boot($router);
     }

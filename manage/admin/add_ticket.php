@@ -111,12 +111,13 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1)
                                     AND docid = 0
                                 ORDER BY last_name ASC, first_name ASC";
                         } else {
-                            $c_sql = "SELECT *
-                                FROM dental_users
-                                WHERE status = 1
-                                    AND docid = 0
-                                    AND billing_company_id = $userCompanyId
-                                ORDER BY last_name ASC, first_name ASC";
+                            $c_sql = "SELECT u.*
+                                FROM dental_users u
+                                    LEFT JOIN dental_user_company uc ON u.userid = uc.userid
+                                WHERE u.status = 1
+                                    AND u.docid = 0
+                                    AND uc.company_id = $userCompanyId
+                                ORDER BY u.last_name ASC, u.first_name ASC";
                         }
 
                         $c_q = mysqli_query($con,$c_sql);

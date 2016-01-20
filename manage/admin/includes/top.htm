@@ -1138,7 +1138,7 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
                         JOIN companies c ON c.id = ac.companyid
                     WHERE ac.adminid = '$userId'", 'use_support');
 
-                $t_sql .= " AND t.company_id = '$companyId' AND u.billing_company_id != ''";
+                $t_sql .= " AND t.company_id = '$companyId' ";
             }
 
             $num_open_tickets = $db->getNumberRows($t_sql);

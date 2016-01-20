@@ -24,6 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var array
      */
     protected $resourceBindings = [
+        'contact-types' => \DentalSleepSolutions\Eloquent\Dental\ContactType::class,
         'contacts' => \DentalSleepSolutions\Eloquent\Dental\Contact::class,
         'devices' => \DentalSleepSolutions\Eloquent\Dental\Device::class,
         'payers' => \DentalSleepSolutions\Eloquent\Payer::class,

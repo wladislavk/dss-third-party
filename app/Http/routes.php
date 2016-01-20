@@ -34,6 +34,7 @@ Route::group(['prefix' => 'webhooks'], function () {
 */
 Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
+    Route::resource('contact-types', 'ContactTypesController', ['except' => ['create', 'edit']]);
     Route::resource('contacts', 'ContactsController', ['except' => ['create', 'edit']]);
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
 

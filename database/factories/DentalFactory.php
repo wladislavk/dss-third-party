@@ -221,3 +221,16 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Device::class, function ($
         'image_path'  => $faker->regexify('dental_device_[0-9]{2}\.(gif|jpg|jpeg|png)')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\ContactType::class, function ($faker) {
+    return [
+        'contacttype' => $faker->sentence($nbWords = 3),
+        'description' => $faker->sentence($nbWords = 6),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4,
+        'physician'   => $faker->randomDigit,
+        'corporate'   => $faker->randomDigit,
+    ];
+});

@@ -116,7 +116,7 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1)
                                     LEFT JOIN dental_user_company uc ON u.userid = uc.userid
                                 WHERE u.status = 1
                                     AND u.docid = 0
-                                    AND uc.company_id = $userCompanyId
+                                    AND uc.companyid = $userCompanyId
                                 ORDER BY u.last_name ASC, u.first_name ASC";
                         }
 

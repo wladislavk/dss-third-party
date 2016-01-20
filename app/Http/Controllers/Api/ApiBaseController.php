@@ -1,21 +1,20 @@
 <?php
-namespace DentalSleepSolutions\Http\Controllers\Api;
-use DentalSleepSolutions\Http\Controllers\Controller;
 
-class ApiBaseController extends Controller
+namespace DentalSleepSolutions\Http\Controllers\Api;
+use DentalSleepSolutions\Http\Controllers\BaseController;
+
+class ApiBaseController extends BaseController
 {
     /**
      * Create an error response
      *
-     * @param string  $message
-     * @param string  $responseCode
-     * @param array   $headers
-     * @param integer $options
-     * @return \Illuminate\Http\JsonResponse
+     * @param string $message
+     * @param string $responseCode
+     * @return array
      */
-    public function createErrorResponse($message, $responseCode = '400', array $headers = [], $options = 0)
+    public function createErrorResponse($message, $responseCode = '400')
     {
         $errors = is_string($message) ? [$message] : $message;
-        return response()->json(['status' => false,'errors' => $errors], $responseCode, $headers, $options);
+        return response()->json(['status' => false,'errors' => $errors], $responseCode);
     }
 }

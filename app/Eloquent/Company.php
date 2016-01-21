@@ -10,6 +10,8 @@ use DentalSleepSolutions\Contracts\Repositories\Companies as Repository;
 
 class Company extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
     /**
      * The table associated with the model.
      *

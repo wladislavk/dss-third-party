@@ -929,17 +929,17 @@ $transactions = ClaimFormData::ledgerItems($claimId, $docId, $patientId, $insura
 
       // No DB columns for these fields, or no data goes here
       $('\
-          [name="payer[address][street_line_2]"]\
-          [name="dependent[address][street_line_2]"],\
-          [name="subscriber[address][street_line_2]"],\
-          [name="referring_provider[middle_name]"],\
-          [name="box17_provider[middle_name]"],\
-          [name="service_facility[address][street_line_2]"],\
-          [name="billing_provider[address][street_line_2]"],\
-          [name="referring_provider[secondary_id_type]"],\
-          [name="box17_provider[secondary_id_type]"],\
-          [name="referring_provider[secondary_id]"]\
-          [name="box17_provider[secondary_id]"]\
+          [name="payer[address][street_line_2]"], \
+          [name="dependent[address][street_line_2]"], \
+          [name="subscriber[address][street_line_2]"], \
+          [name="referring_provider[middle_name]"], \
+          [name="box17_provider[middle_name]"], \
+          [name="service_facility[address][street_line_2]"], \
+          [name="billing_provider[address][street_line_2]"], \
+          [name="referring_provider[secondary_id_type]"], \
+          [name="box17_provider[secondary_id_type]"], \
+          [name="referring_provider[secondary_id]"], \
+          [name="box17_provider[secondary_id]"] \
       ')
           .attr('readonly', true)
           .addClass('grayout')

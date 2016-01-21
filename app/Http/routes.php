@@ -34,7 +34,7 @@ Route::group(['prefix' => 'webhooks'], function () {
 */
 Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
-    Route::resource('customs', 'CustomsController', ['except' => ['create', 'edit']]);
+    Route::resource('custom-texts', 'CustomTextsController', ['except' => ['create', 'edit']]);
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
 
     Route::get('payers/{payer_id}/required-fields', 'PayersController@requiredFields');

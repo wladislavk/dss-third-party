@@ -183,7 +183,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, functi
     return [];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Custom::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Dental\CustomText::class, function ($faker) {
     return [
         'title'        => $faker->sentence($nbWords = 3),
         'description'  => $faker->sentence($nbWords = 6),

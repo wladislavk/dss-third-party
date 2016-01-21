@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class CustomUpdate extends Request
+class CustomTextUpdate extends Request
 {
     /**
      * Get the validation rules that apply to the request.

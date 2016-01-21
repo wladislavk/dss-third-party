@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         $bindings = [
             Eloquent\Device::class => [Repositories\Devices::class, Resources\Device::class],
             Eloquent\Payer::class => [Repositories\Payers::class, Resources\Device::class],
-            Eloquent\Custom::class => [Repositories\Customs::class, Resources\Custom::class],
+            Eloquent\Dental\CustomText::class => [Repositories\CustomTexts::class, Resources\CustomText::class],
         ];
 
         foreach ($bindings as $concrete => $contracts) {

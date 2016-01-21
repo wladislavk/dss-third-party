@@ -4,10 +4,10 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Custom as Resource;
-use DentalSleepSolutions\Contracts\Repositories\Customs as Repository;
+use DentalSleepSolutions\Contracts\Resources\CustomText as Resource;
+use DentalSleepSolutions\Contracts\Repositories\CustomTexts as Repository;
 
-class Custom extends Model implements Resource, Repository
+class CustomText extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

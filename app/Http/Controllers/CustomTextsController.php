@@ -3,23 +3,23 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\CustomStore;
-use DentalSleepSolutions\Http\Requests\CustomUpdate;
-use DentalSleepSolutions\Http\Requests\CustomDestroy;
+use DentalSleepSolutions\Http\Requests\CustomTextStore;
+use DentalSleepSolutions\Http\Requests\CustomTextUpdate;
+use DentalSleepSolutions\Http\Requests\CustomTextDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\Custom;
-use DentalSleepSolutions\Contracts\Repositories\Customs;
+use DentalSleepSolutions\Contracts\Resources\CustomText;
+use DentalSleepSolutions\Contracts\Repositories\CustomTexts;
 use Carbon\Carbon;
 
-class CustomsController extends Controller
+class CustomTextsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Customs $resources
+     * @param  \DentalSleepSolutions\Contracts\Repositories\CustomTexts $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Customs $resources)
+    public function index(CustomTexts $resources)
     {
         $data = $resources->all();
 
@@ -29,10 +29,10 @@ class CustomsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Custom $resource
+     * @param  \DentalSleepSolutions\Contracts\Resources\CustomText $resource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Custom $resource)
+    public function show(CustomText $resource)
     {
         return ApiResponse::responseOk('', $resource);
     }
@@ -40,11 +40,11 @@ class CustomsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Customs $resources
-     * @param  \DentalSleepSolutions\Http\Requests\CustomStore $request
+     * @param  \DentalSleepSolutions\Contracts\Repositories\CustomTexts $resources
+     * @param  \DentalSleepSolutions\Http\Requests\CustomTextStore $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Customs $resources, CustomStore $request)
+    public function store(CustomTexts $resources, CustomTextStore $request)
     {
         $data = array_merge($request->all(), [
             'ip_address' => $request->ip()
@@ -58,11 +58,11 @@ class CustomsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Custom $resource
-     * @param  \DentalSleepSolutions\Http\Requests\CustomUpdate $request
+     * @param  \DentalSleepSolutions\Contracts\Resources\CustomText $resource
+     * @param  \DentalSleepSolutions\Http\Requests\CustomTextUpdate $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Custom $resource, CustomUpdate $request)
+    public function update(CustomText $resource, CustomTextUpdate $request)
     {
         $resource->update($request->all());
 
@@ -72,11 +72,11 @@ class CustomsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Custom $resource
-     * @param  \DentalSleepSolutions\Http\Requests\CustomDestroy $request
+     * @param  \DentalSleepSolutions\Contracts\Resources\CustomText $resource
+     * @param  \DentalSleepSolutions\Http\Requests\CustomTextDestroy $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Custom $resource, CustomDestroy $request) {
+    public function destroy(CustomText $resource, CustomTextDestroy $request) {
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');

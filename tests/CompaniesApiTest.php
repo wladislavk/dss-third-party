@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use DentalSleepSolutions\Eloquent\Company;
 
-class Company extends TestCase
+class CompaniesApiTest extends TestCase
 {
     use WithoutMiddleware, DatabaseTransactions;
 
@@ -59,7 +59,7 @@ class Company extends TestCase
     {
         $companyTestRecord = factory(Company::class)->create();
 
-        $this->delete('/api/v1/company/' . $companyTestRecord->id)
+        $this->delete('/api/v1/companies/' . $companyTestRecord->id)
             ->notSeeInDatabase('companies', ['id' => $companyTestRecord->id])
             ->assertResponseOk();
     }

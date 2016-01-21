@@ -70,3 +70,4 @@ $factory->define(DentalSleepSolutions\Eloquent\MemoAdmin::class, function ($fake
         'off_date' => $faker->date('Y-m-d'),
     ];
 });
+

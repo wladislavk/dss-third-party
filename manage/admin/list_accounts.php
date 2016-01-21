@@ -24,7 +24,7 @@ $pivotTable = 'dental_user_company';
 if (is_software($_SESSION['admin_access'])) {
     $andCompanyConditional = "AND uc.companyid = '$companyId'";
 } elseif (is_billing($_SESSION['admin_access'])) {
-    $andCompanyConditional = "AND u.billing_software_id = '$companyId'";
+    $andCompanyConditional = "AND u.billing_company_id = '$companyId'";
 } elseif (is_hst($_SESSION['admin_access'])) {
     $pivotTable = 'dental_user_hst_company';
     $andCompanyConditional = "AND uc.companyid = '$companyId'";
@@ -47,8 +47,8 @@ $sql = "SELECT u.userid, u.last_name, u.first_name
                 )
             )
             OR (
-                first_name LIKE '{$names[0]}%' AND
-                last_name LIKE '{$names[1]}%'
+                first_name LIKE '{$names[0]}%'
+                AND last_name LIKE '{$names[1]}%'
             )
         )
         AND u.docid = 0

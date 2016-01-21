@@ -135,20 +135,24 @@ if (is_super($_SESSION['admin_access'])) {
             hst.patient_firstname,
             hst.patient_lastname,
             hst.patient_id,
-            hst.front_office_request_date AS adddate,
-            users.name AS doc_name,
+            hst.adddate,
+            CONCAT(users.first_name, ' ', users.last_name) AS doc_name,
             hst.status,
             hst.doc_id,
-            DATEDIFF(NOW(), hst.front_office_request_date) AS days_pending,
-            users2.name AS user_name,
-            hst.front_office_request_date AS order_date
-        FROM dental_insurance_preauth hst
+            DATEDIFF(NOW(), hst.adddate) AS days_pending,
+            CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
+            CONCAT(users3.first_name, ' ', users3.last_name) AS authorized_name,
+            hst_company.name AS hst_company_name,
+            hst.adddate AS order_date
+        FROM dental_hst hst
             LEFT JOIN dental_patients p ON hst.patient_id = p.patientid
             LEFT JOIN dental_user_company uc ON uc.userid = p.docid
                 AND uc.companyid = '$adminCompanyId'
-            JOIN dental_contact i ON p.p_m_ins_co = i.contactid
+            JOIN dental_contact i ON hst.ins_co_id = i.contactid
             JOIN dental_users users ON hst.doc_id = users.userid
-            JOIN dental_users users2 ON hst.userid = users2.userid
+            JOIN dental_users users2 ON hst.user_id = users2.userid
+            LEFT JOIN dental_users users3 ON hst.authorized_id = users3.userid
+            LEFT JOIN companies hst_company ON hst.company_id = hst_company.id
         ";
 }
 

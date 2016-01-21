@@ -31,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Device::class => [Repositories\Devices::class, Resources\Device::class],
             Eloquent\Dental\Contact::class => [Repositories\Contacts::class, Resources\Contact::class],
             Eloquent\Dental\ContactType::class => [Repositories\ContactTypes::class, Resources\ContactType::class],
+            Eloquent\Company::class => [Repositories\Companies::class, Resources\Company::class],
         ];
 
         foreach ($bindings as $concrete => $contracts) {

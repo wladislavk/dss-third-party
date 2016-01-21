@@ -19,18 +19,22 @@ if (isset($_POST['partial_name'])) {
 $names = explode(" ", $partial);
 
 $companyId = intval($_SESSION['admincompanyid']);
+$pivotTable = 'dental_user_company';
 
 if (is_software($_SESSION['admin_access'])) {
     $andCompanyConditional = "AND uc.companyid = '$companyId'";
 } elseif (is_billing($_SESSION['admin_access'])) {
     $andCompanyConditional = "AND u.billing_software_id = '$companyId'";
+} elseif (is_hst($_SESSION['admin_access'])) {
+    $pivotTable = 'dental_user_hst_company';
+    $andCompanyConditional = "AND uc.companyid = '$companyId'";
 } elseif (!is_super($_SESSION['admin_access'])) {
     $andCompanyConditional = "AND FALSE";
 }
 
 $sql = "SELECT u.userid, u.last_name, u.first_name
     FROM dental_users u
-        LEFT JOIN dental_user_company uc ON uc.userid = u.userid
+        LEFT JOIN $pivotTable uc ON uc.userid = u.userid
     WHERE (
             (
                 (

@@ -211,6 +211,8 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
           $franchisees = get_software_franchisees();
       } elseif (is_billing($_SESSION['admin_access'])) {
           $franchisees = get_billing_franchisees();
+      } elseif (is_hst($_SESSION['admin_access'])) {
+          $franchisees = get_hst_franchisees();
       } else {
           $franchisees = [];
       }

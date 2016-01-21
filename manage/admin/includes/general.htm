@@ -1661,6 +1661,18 @@ function get_billing_franchisees () {
         ORDER BY last_name ASC, first_name ASC");
 }
 
+function get_hst_franchisees () {
+    $db = new Db();
+    $companyId = intval($_SESSION['admincompanyid']);
+
+    return $db->getResults("SELECT u.*
+        FROM dental_users u
+            LEFT JOIN dental_user_hst_company uc ON uc.userid = u.userid
+        WHERE uc.companyid = '$companyId'
+            AND u.docid = 0
+        ORDER BY u.last_name ASC, u.first_name ASC");
+}
+
 /**
  * Returns a mysql resultset resource for dental_patients table on success,
  * false otherwise.

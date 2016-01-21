@@ -5,10 +5,25 @@ include_once 'includes/password.php';
 include_once '../includes/general_functions.php';
 include_once 'includes/edx_functions.php';
 include_once '../includes/help_functions.php';
+
+require_once __DIR__ . '/includes/access.php';
+
 //<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+
+$isBillingAdmin = is_billing($_SESSION['admin_access']);
+$canEdit = !$isBillingAdmin;
 
 if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
 {
+    if (!$canEdit) { ?>
+        <script>
+            alert('You are not authorized to edit or create users.');
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
 	$query_check=mysqli_query($con,$sel_check);
         $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_POST['ed'])."'";
@@ -36,6 +51,22 @@ if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
         }
 	else
 	{
+        if (
+            empty($_POST['username']) ||
+            empty($_POST['first_name']) ||
+            empty($_POST['last_name']) ||
+            empty($_POST['email']) ||
+            empty($_POST['status'])
+        ) { ?>
+            <script>
+                alert('Some required fields are missing');
+                window.history.back();
+            </script>
+            <?php
+
+            trigger_error('Die called', E_USER_ERROR);
+        }
+
 		if($_POST["ed"] != "")
 		{
 
@@ -85,6 +116,20 @@ if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
 		}
 		else
 		{
+            if (
+                !strlen($_POST['password']) ||
+                !strlen($_POST['password2']) ||
+                $_POST['password'] !== $_POST['password2']
+            ) { ?>
+                <script>
+                    alert('The password differs from its verification.');
+                    window.history.back();
+                </script>
+                <?php
+
+                trigger_error('Die called', E_USER_ERROR);
+            }
+
 			$salt = create_salt();
                         $password = gen_password($_POST['password'], $salt);
 
@@ -167,7 +212,8 @@ if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
 	{
 		$username = $_POST['username'];
 		$password = $_POST['password'];
-		$first_name = $_POST['first_name'];
+		$password2 = $_POST['password2'];
+        $first_name = $_POST['first_name'];
                 $last_name = $_POST['last_name'];
 		$email = $_POST['email'];
 		$address = $_POST['address'];
@@ -255,16 +301,25 @@ if(!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1)
                 <span class="red">*</span>				
             </td>
         </tr>
-        <?php if($themyarray["userid"] == ''){ ?> 
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Password
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="password" value="<?=$password;?>" class="form-control" /> 
-                <span class="red">*</span>				
-            </td>
-        </tr>
+        <?php if($themyarray["userid"] == ''){ ?>
+            <tr bgcolor="#FFFFFF">
+                <td valign="top" class="frmhead">
+                    Password
+                </td>
+                <td valign="top" class="frmdata">
+                    <input type="text" name="password" value="<?=$password;?>" class="form-control" />
+                    <span class="red">*</span>
+                </td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+                <td valign="top" class="frmhead">
+                    Verify Password
+                </td>
+                <td valign="top" class="frmdata">
+                    <input type="text" name="password2" value="<?=$password2;?>" class="form-control" />
+                    <span class="red">*</span>
+                </td>
+            </tr>
 	<?php } ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
@@ -482,6 +537,33 @@ Fields left blank below will default to the standard billing settings for your o
       $('.files_field').hide();
     }
 
+  function check_add () {
+      $('form[name=stafffrm]').find('input:not(:checkbox), select').each(function(){
+          if ($(this).val() == '') {
+              alert('All fields are required.');
+              return false;
+          }
+      });
+
+      if ($('[name=password]').length && ($('[name=password]').val() !== $('[name=password2]').val())) {
+          alert('The password must match its verification.');
+          return false;
+      }
+
+      return true;
+  }
+
+  jQuery(function($){
+      <?php if (!$canEdit) { ?>
+          $('form[name=stafffrm]').find('input, select, button').prop('disabled', true);
+      <?php } ?>
+
+      $('form[name=stafffrm]').submit(function(event){
+          event.preventDefault();
+
+          return check_add();
+      });
+  }(jQuery));
 </script>
 
 </body>

@@ -1,4 +1,10 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
+if (!defined('DSS_ADMIN_ACCESS_SUPER')) {
+    require_once __DIR__ . '/../../includes/constants.inc';
+}
+
 //access functions
 function is_super($admin_access){
   return ($admin_access==DSS_ADMIN_ACCESS_SUPER);

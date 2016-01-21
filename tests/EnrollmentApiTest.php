@@ -13,6 +13,7 @@ class EnrollmentApiTest extends TestCase
     {
         $data = [
             'user_id' => 1,
+            'provider_id' => 1,
             'payer_id' => '00901-test',
             'transaction_type_id' => 1,
             'facility_name' => 'Quality',

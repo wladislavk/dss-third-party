@@ -57,11 +57,15 @@ class ApiEnrollmentsController extends ApiBaseController
     public function store(Create $request)
     {
         $user_id = $request->input('user_id');
+        $provider_id = $request->input('provider_id');
 
         $payer_id = explode('-', $request->input('payer_id'));
 
-        $user_signature = UserSignature::formUser($user_id);
-        $signature = $user_signature ? $user_signature->signature_json : $request->input('signature', '');
+        $signature = $request->input('signature', '');
+        if ($signature == '') {
+            $user_signature = UserSignature::formUser($provider_id);
+            $signature = $user_signature->signature_json;
+        }
 
         $transaction_type = TransactionType::where('id', $request->input('transaction_type_id'))
             ->where('status', 1)->first();
@@ -109,13 +113,18 @@ class ApiEnrollmentsController extends ApiBaseController
             Invoice::addEnrollment('1', $user_id, $enrollment_id);
 
             if ($request->input('signature', '') != '') {
-                $signature_id = UserSignature::add($user_id, $signature, $ip);
+                $signature_id = UserSignature::addUpdate($provider_id, $signature, $ip);
 
                 $signature = new SignatureToImage();
                 $img = $signature->sigJsonToImage($request->input('signature', ''));
 
-                $file = "signature_" . $user_id . "_" . $signature_id . ".png";
-                $path = env('LEGACY_PATH').'/../../shared/q_file/'.$file;
+                $file = "signature_" . $provider_id . "_" . $signature_id . ".png";
+                $path = env('SHARED_PATH', '').'/q_file/'.$file;
+
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+
                 imagepng($img, $path);
                 imagedestroy($img);
             }

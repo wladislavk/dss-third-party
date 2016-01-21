@@ -19,7 +19,8 @@ class Create extends Request
             'transaction_type_id' => 'required|exists:dental_enrollment_transaction_type,id',
             'facility_name' => 'required',
             'provider_name' => 'required',
-            'npi' => 'required|integer',
+            'provider_id' => 'required|exists:dental_users,userid',
+            'npi' => 'required',
             'state' => 'size:2',
         ];
     }

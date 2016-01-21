@@ -493,9 +493,19 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
     Account:
     <select name="fid">
       <option value="">Any</option>
-      <?php 
-        $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees();
-        if ($franchisees) foreach ($franchisees as $row) {
+      <?php
+
+      if (is_super($_SESSION['admin_access'])) {
+          $franchisees = get_franchisees();
+      } elseif (is_software($_SESSION['admin_access'])) {
+          $franchisees = get_software_franchisees();
+      } elseif (is_billing($_SESSION['admin_access'])) {
+          $franchisees = get_billing_franchisees();
+      } else {
+          $franchisees = [];
+      }
+
+      if ($franchisees) foreach ($franchisees as $row) {
           $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
         <option value="<?php echo  $row['userid'] ?>" <?php echo  $selected ?>>[<?php echo  $row['userid'] ?>] <?php echo  $row['first_name'] ?> <?php echo  $row['last_name'] ?></option>
       <?php } ?>

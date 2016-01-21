@@ -41,6 +41,7 @@ switch ($sort_by) {
     break;
   case SORT_BY_COMPANY:
     $sort_by_sql = "hst_company_name $sort_dir";
+    break;
   default:
     // default is SORT_BY_STATUS
     $sort_by_sql = "hst.status $sort_dir, hst.adddate $sort_dir";
@@ -202,9 +203,19 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
     Account:
     <select name="fid">
       <option value="">Any</option>
-      <?php 
-        $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees();
-        if ($franchisees) foreach ($franchisees as $row) {
+      <?php
+
+      if (is_super($_SESSION['admin_access'])) {
+          $franchisees = get_franchisees();
+      } elseif (is_software($_SESSION['admin_access'])) {
+          $franchisees = get_software_franchisees();
+      } elseif (is_billing($_SESSION['admin_access'])) {
+          $franchisees = get_billing_franchisees();
+      } else {
+          $franchisees = [];
+      }
+
+      if ($franchisees) foreach ($franchisees as $row) {
           $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
         <option value="<?php echo  $row['userid'] ?>" <?php echo  $selected ?>>[<?php echo  $row['userid'] ?>] <?php echo  $row['first_name']." ".$row['last_name']; ?></option>
       <?php } ?>

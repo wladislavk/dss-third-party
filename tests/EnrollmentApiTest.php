@@ -13,6 +13,7 @@ class EnrollmentApiTest extends TestCase
     {
         $data = [
             'user_id' => 1,
+            'provider_id' => 1,
             'payer_id' => '00901-test',
             'transaction_type_id' => 1,
             'facility_name' => 'Quality',
@@ -102,5 +103,20 @@ class EnrollmentApiTest extends TestCase
             'dental_eligible_enrollment',
             ['reference_id' => $reference_id, 'status' => Enrollment::DSS_ENROLLMENT_PDF_SENT]
         );
+    }
+
+    public function testList()
+    {
+        $enrl =  factory(DentalSleepSolutions\Eloquent\Enrollments\Enrollment::class)->create([
+            'user_id' => 0,
+        ]);
+
+        $content = $this->call('GET', '/api/v1/enrollments/list/0')->getContent();
+        $content = json_decode($content);
+
+        $this->assertTrue(isset($content->data));
+        $this->assertTrue(count($content->data) == 1);
+
+        DB::table('dental_eligible_enrollment')->where('id', $enrl->id)->delete();
     }
 }

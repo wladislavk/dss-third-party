@@ -41,8 +41,18 @@ class UserSignature extends Model
      * @param $ip_address
      * @return mixed
      */
-    public static function add($user_id, $signature_json, $ip_address)
+    public static function addUpdate($user_id, $signature_json, $ip_address)
     {
+        if ($updated = self::where('user_id', $user_id)->first()) {
+            self::where('user_id', $user_id)
+                ->update([
+                    'signature_json'=>$signature_json,
+                    'ip_address' =>  $ip_address,
+                ]);
+
+            return $updated->id;
+        }
+
         $new = new UserSignature();
         $new->user_id = $user_id;
         $new->signature_json = $signature_json;

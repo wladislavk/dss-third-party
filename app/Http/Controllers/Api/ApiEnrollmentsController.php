@@ -23,6 +23,31 @@ use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
 
 class ApiEnrollmentsController extends ApiBaseController
 {
+
+    /**
+     * Enrollments list
+     *
+     * @param Request $request
+     * @param bool $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function listEnrollments(Request $request, $userId = false)
+    {
+        $result = Enrollment::getList(
+            $userId,
+            $request->get('num_rows', false),
+            $request->get('search', false),
+            $request->get('sort', 'transaction_type'),
+            $request->get('sort_type', 'asc')
+        );
+
+        if ($request->get('num_rows', false)) {
+            $result = ApiResponse::getPaginateStructure($result);
+        }
+
+        return ApiResponse::responseOk('List of Enrollments', $result);
+    }
+
     /**
      * create enrollment
      *
@@ -32,11 +57,15 @@ class ApiEnrollmentsController extends ApiBaseController
     public function store(Create $request)
     {
         $user_id = $request->input('user_id');
+        $provider_id = $request->input('provider_id');
 
         $payer_id = explode('-', $request->input('payer_id'));
 
-        $user_signature = UserSignature::formUser($user_id);
-        $signature = $user_signature ? $user_signature->signature_json : $request->input('signature', '');
+        $signature = $request->input('signature', '');
+        if ($signature == '') {
+            $user_signature = UserSignature::formUser($provider_id);
+            $signature = $user_signature->signature_json;
+        }
 
         $transaction_type = TransactionType::where('id', $request->input('transaction_type_id'))
             ->where('status', 1)->first();
@@ -84,13 +113,18 @@ class ApiEnrollmentsController extends ApiBaseController
             Invoice::addEnrollment('1', $user_id, $enrollment_id);
 
             if ($request->input('signature', '') != '') {
-                $signature_id = UserSignature::add($user_id, $signature, $ip);
+                $signature_id = UserSignature::addUpdate($provider_id, $signature, $ip);
 
                 $signature = new SignatureToImage();
                 $img = $signature->sigJsonToImage($request->input('signature', ''));
 
-                $file = "signature_" . $user_id . "_" . $signature_id . ".png";
-                $path = env('LEGACY_PATH').'/../../shared/q_file/'.$file;
+                $file = "signature_" . $provider_id . "_" . $signature_id . ".png";
+                $path = env('SHARED_PATH', '').'/q_file/'.$file;
+
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+
                 imagepng($img, $path);
                 imagedestroy($img);
             }
@@ -215,110 +249,6 @@ class ApiEnrollmentsController extends ApiBaseController
         }
     }
 
-    /**
-     * @param integer $page
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function listEligibleEnrollments($page = 1)
-    {
-        try {
-            $results = $this->enrollments->listEnrollments($page);
-            $response = ['data' => $results, 'status' => true, 'message' => ''];
-            return response()->json($response, 200);
-        } catch (Exception $ex) {
-            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
-        }
-    }
-
-    /**
-     * @param integer $page
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function listEnrollments($userId = 0)
-    {
-        try {
-            $results = $this->enrollments->listEnrollments($userId);
-            $response = ['data' => $results, 'status' => true, 'message' => 'List of Enrollments'];
-            return response()->json($response, 200);
-        } catch (Exception $ex) {
-            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
-        }
-    }
-
-    /**
-     *
-     * @SWG\Post(
-     *     path="/api/v1/enrollments.json",
-     *     @SWG\Parameter(name="endpoint",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="payer_id",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="transaction_type",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="facility_name",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="provider_name",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="tax_id",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="address",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="city",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="state",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="zip",
-     *                    description="",
-     *                    required=true,type="string"),
-     *
-     *    @SWG\Response(response="200", description="Action completed successfully.")
-     * )
-     *
-     * @param ApiEligibleEnrollmentRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    /*public function createEnrollment(ApiEligibleEnrollmentRequest $request)
-    {
-        $enrollmentParams = [];
-        try {
-            if (null !== $request->get('payer_id') || !empty($request->get('payer_id'))) {
-                //What fields are required for this enrollment
-                $enrollmentRequiredFields = $this->checkEnrollmentFields($request->get('payer_id'));
-                $this->signatureRequired = $this->payers->payerRequiresSignature($request->get('payer_id'));
-                $this->blueInkSignatureRequired = $this->payers
-                    ->payerRequiresBlueInkSignature($request->get('payer_id'));
-                foreach ($enrollmentRequiredFields as $field) {
-                    if (!$request->has($field)) {
-                        $message = 'You have not supplied the required enrolment fields. - '
-                            . implode(",", $enrollmentRequiredFields);
-                        $this->createErrorResponse($message, 300);
-                    }
-                }
-                //setup the eligible enrollment array
-                $enrollmentParams = $this->setupEnrollmentArrayFromFormInput($request);
-            }
-            //create a new eligible enrollment
-            $enrollment = $this->enrollments->createEnrollment($enrollmentParams);
-            //dd($enrollment);
-            //grab the request values submited from the form so we can persist it to the DB
-            //setup the returned values from Eligible to be saved to db.
-            $this->setEnrollmentValuesForSavingToDb($request, $enrollment);
-            $this->enrollments->saveEnrollmentDetailsToDatabase($this->enrollmentValues);
-            return response()->json($enrollment, 200);
-        } catch (Exception $ex) {
-            $this->createErrorResponse('An error occured creating the Enrollment.', 404);
-        }
-    }*/
-    //Todo - add the json signature to the swagegr items
     /**
      *
      * @SWG\Put(

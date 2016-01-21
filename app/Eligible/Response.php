@@ -113,6 +113,10 @@ class Response
             return false;
         }
 
+        if ($this->getStatusCode() < 200 || $this->getStatusCode() >= 300) {
+            return false;
+        }
+
         return true;
     }
 

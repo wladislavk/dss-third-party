@@ -1,4 +1,5 @@
 <?php
+
 namespace DentalSleepSolutions\Helpers;
 
 use Traversable;
@@ -10,6 +11,8 @@ use League\Fractal\Resource\Collection;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Contracts\Resource;
 use Symfony\Component\HttpFoundation\Response;
+
+use Illuminate\Contracts\Support\JsonableInterface;
 
 /**
  * Response helper class providing consistent structure of the json content

@@ -28,6 +28,7 @@ class RouteServiceProvider extends ServiceProvider
         'contacts' => \DentalSleepSolutions\Eloquent\Dental\Contact::class,
         'devices' => \DentalSleepSolutions\Eloquent\Dental\Device::class,
         'payers' => \DentalSleepSolutions\Eloquent\Payer::class,
+        'companies' => \DentalSleepSolutions\Eloquent\Company::class,
     ];
 
     /**

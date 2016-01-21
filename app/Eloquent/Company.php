@@ -3,16 +3,13 @@
 namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Eloquent\Dental\UserCompany;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\Company as Resource;
+use DentalSleepSolutions\Contracts\Repositories\Companies as Repository;
 
-class Company extends Model
+class Company extends Model implements Resource, Repository
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'companies';
+    use WithoutUpdatedTimestamp;
 
     /**
      * Mass assignable attributes
@@ -29,26 +26,23 @@ class Company extends Model
     ];
 
     /**
-     * @var bool
+     * The table associated with the model.
+     *
+     * @var string
      */
-    public $timestamps = false;
-
-    /*
-    |--------------------------------------------------------------------------
-    | Relations
-    |--------------------------------------------------------------------------
-    */
+    protected $table = 'companies';
 
     /**
-     * Company has many related users.
+     * Primary key for the table
      *
-     * @dynamicProperty Might be used as property $this->users then
-     * returns \Illuminate\Database\Eloquent\Collection
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @var string
      */
-    public function users()
-    {
-        return $this->hasMany(UserCompany::class, 'companyid');
-    }
+    protected $primaryKey = 'id';
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'adddate';
 }

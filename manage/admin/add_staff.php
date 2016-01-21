@@ -553,7 +553,6 @@ Fields left blank below will default to the standard billing settings for your o
       return true;
   }
 
-  /*
   jQuery(function($){
       <?php if (!$canEdit) { ?>
           $('form[name=stafffrm]').find('input, select, button').prop('disabled', true);
@@ -565,7 +564,6 @@ Fields left blank below will default to the standard billing settings for your o
           return check_add();
       });
   }(jQuery));
-  */
 </script>
 
 </body>

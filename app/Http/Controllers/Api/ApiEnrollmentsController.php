@@ -119,7 +119,7 @@ class ApiEnrollmentsController extends ApiBaseController
                 $img = $signature->sigJsonToImage($request->input('signature', ''));
 
                 $file = "signature_" . $provider_id . "_" . $signature_id . ".png";
-                $path = env('LEGACY_PATH', '').'/../../shared/q_file/'.$file;
+                $path = env('SHARED_PATH', '').'/q_file/'.$file;
 
                 if (file_exists($path)) {
                     unlink($path);

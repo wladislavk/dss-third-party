@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -218,7 +220,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Device::class, function ($
         'status'      => $faker->randomDigit,
         'adddate'     => $faker->dateTime(),
         'ip_address'  => $faker->ipv4,
-        'image_path'  => $faker->regexify('dental_device_[0-9]{2}\.(gif|jpg|jpeg|png)')
+        'image_path'  => $faker->regexify('dental_device_[0-9]{2}\.(gif|jpg|jpeg|png)'),
     ];
 });
 
@@ -232,5 +234,25 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\ContactType::class, functi
         'ip_address'  => $faker->ipv4,
         'physician'   => $faker->randomDigit,
         'corporate'   => $faker->randomDigit,
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function ($faker) {
+    return [
+        'start_date'   => Carbon::now()->addDays(1),
+        'end_date'     => Carbon::now()->addDays(2),
+        'description'  => $faker->sentence($nbWords = 6),
+        'event_id'     => $faker->regexify('[0-9]{13}'),
+        'docid'        => $faker->randomDigit,
+        'adddate'      => $faker->dateTime(),
+        'ip_address'   => $faker->ipv4,
+        'category'     => $faker->word,
+        'producer_id'  => $faker->randomDigit,
+        'patientid'    => $faker->randomDigit,
+        'rec_type'     => $faker->word,
+        'event_length' => $faker->regexify('[0-9]{4}'),
+        'event_pid'    => $faker->regexify('[0-9]{4}'),
+        'res_id'       => $faker->randomDigit,
+        'rec_pattern'  => $faker->word,
     ];
 });

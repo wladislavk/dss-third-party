@@ -22,7 +22,7 @@ $sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATU
 $sort_by_sql = '';
 switch ($sort_by) {
   case SORT_BY_DATE:
-    $sort_by_sql = "hst.adddate $sort_dir";
+    $sort_by_sql = "order_date $sort_dir";
     break;
   case SORT_BY_PATIENT:
     $sort_by_sql = "p.lastname $sort_dir, p.firstname $sort_dir";
@@ -41,9 +41,10 @@ switch ($sort_by) {
     break;
   case SORT_BY_COMPANY:
     $sort_by_sql = "hst_company_name $sort_dir";
+    break;
   default:
     // default is SORT_BY_STATUS
-    $sort_by_sql = "hst.status $sort_dir, hst.adddate $sort_dir";
+    $sort_by_sql = "hst.status $sort_dir, order_date $sort_dir";
     break;
 }
 
@@ -73,64 +74,88 @@ else
 	
 $i_val = $index_val * $rec_disp;
 
-if(is_super($_SESSION['admin_access'])){
-$sql = "SELECT "
-     . "  hst.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
-     . "  hst.patient_id, "
-     . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
-     . "  hst.doc_id, "
-     . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
-     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
-     . "  CONCAT(users3.first_name, ' ',users3.last_name) as authorized_name, "
-     . "  hst_company.name AS hst_company_name "
-     . "FROM "
-     . "  dental_hst hst "
-     . "  LEFT JOIN dental_patients p ON hst.patient_id = p.patientid "
-     . "  LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid "
-     . "  JOIN dental_users users ON hst.doc_id = users.userid "
-     . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
-     . "  LEFT JOIN dental_users users3 ON hst.authorized_id = users3.userid "
-     . "  LEFT JOIN companies hst_company ON hst.company_id=hst_company.id ";
-}elseif(is_hst($_SESSION['admin_access'])){
-$sql = "SELECT "
-     . "  hst.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
-     . "  hst.patient_id, "
-     . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
-     . "  hst.doc_id, "
-     . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
-     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
-     . "  CONCAT(users3.first_name, ' ',users3.last_name) as authorized_name, "
-     . "  hst_company.name AS hst_company_name "
-     . "FROM "
-     . "  dental_hst hst "
-     . "  LEFT JOIN dental_patients p ON hst.patient_id = p.patientid "
-     . "  LEFT JOIN dental_user_company uc ON uc.userid = p.docid "
-     . "  LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid "
-     . "  JOIN dental_users users ON hst.doc_id = users.userid "
-     . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
-     . "  LEFT JOIN dental_users users3 ON hst.authorized_id = users3.userid "
-     . "  JOIN dental_user_hst_company uhc ON uhc.userid=users.userid "
-     . "      AND uhc.companyid = hst.company_id
-              AND hst.company_id = '".$_SESSION['admincompanyid']."'"
-     . "  JOIN companies hst_company ON uhc.companyid=hst_company.id ";
+$adminCompanyId = intval($_SESSION['admincompanyid']);
 
-}else{
-$sql = "SELECT "
-     . "  preauth.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
-     . "  hst.patient_id, "
-     . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
-     . "  hst.doc_id, "
-     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
-     . "  users2.name as user_name "
-     . "FROM "
-     . "  dental_insurance_preauth preauth "
-     . "  LEFT JOIN dental_patients p ON preauth.patient_id = p.patientid "
-     . "  LEFT JOIN dental_user_company uc ON uc.userid = p.docid AND uc.companyid = '".$_SESSION['admincompanyid']."'"
-     . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
-     . "  JOIN dental_users users ON preauth.doc_id = users.userid "
-     . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";
-
+if (is_super($_SESSION['admin_access'])) {
+    $sql = "SELECT
+            hst.id,
+            i.company AS ins_co,
+            hst.patient_firstname,
+            hst.patient_lastname,
+            hst.patient_id,
+            hst.adddate,
+            CONCAT(users.first_name, ' ', users.last_name) AS doc_name,
+            hst.status,
+            hst.doc_id,
+            DATEDIFF(NOW(), hst.adddate) AS days_pending,
+            CONCAT(users2.first_name, ' ',users2.last_name) AS user_name,
+            CONCAT(users3.first_name, ' ',users3.last_name) AS authorized_name,
+            hst_company.name AS hst_company_name,
+            hst.adddate AS order_date
+        FROM dental_hst hst
+            LEFT JOIN dental_patients p ON hst.patient_id = p.patientid
+            LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid
+            JOIN dental_users users ON hst.doc_id = users.userid
+            JOIN dental_users users2 ON hst.user_id = users2.userid
+            LEFT JOIN dental_users users3 ON hst.authorized_id = users3.userid
+            LEFT JOIN companies hst_company ON hst.company_id = hst_company.id
+        ";
+} elseif (is_hst($_SESSION['admin_access'])) {
+    $sql = "SELECT
+            hst.id,
+            i.company AS ins_co,
+            hst.patient_firstname,
+            hst.patient_lastname,
+            hst.patient_id,
+            hst.adddate,
+            CONCAT(users.first_name, ' ', users.last_name) AS doc_name,
+            hst.status,
+            hst.doc_id,
+            DATEDIFF(NOW(), hst.adddate) AS days_pending,
+            CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
+            CONCAT(users3.first_name, ' ', users3.last_name) AS authorized_name,
+            hst_company.name AS hst_company_name,
+            hst.adddate AS order_date
+        FROM dental_hst hst
+            LEFT JOIN dental_patients p ON hst.patient_id = p.patientid
+            LEFT JOIN dental_user_company uc ON uc.userid = p.docid
+            LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid
+            JOIN dental_users users ON hst.doc_id = users.userid
+            JOIN dental_users users2 ON hst.user_id = users2.userid
+            LEFT JOIN dental_users users3 ON hst.authorized_id = users3.userid
+            JOIN dental_user_hst_company uhc ON uhc.userid = users.userid
+                AND uhc.companyid = hst.company_id
+                AND hst.company_id = '$adminCompanyId'
+            JOIN companies hst_company ON uhc.companyid = hst_company.id
+        ";
+} else {
+    $sql = "SELECT
+            hst.id,
+            i.company AS ins_co,
+            hst.patient_firstname,
+            hst.patient_lastname,
+            hst.patient_id,
+            hst.adddate,
+            CONCAT(users.first_name, ' ', users.last_name) AS doc_name,
+            hst.status,
+            hst.doc_id,
+            DATEDIFF(NOW(), hst.adddate) AS days_pending,
+            CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
+            CONCAT(users3.first_name, ' ', users3.last_name) AS authorized_name,
+            hst_company.name AS hst_company_name,
+            hst.adddate AS order_date
+        FROM dental_hst hst
+            LEFT JOIN dental_patients p ON hst.patient_id = p.patientid
+            LEFT JOIN dental_user_company uc ON uc.userid = p.docid
+                AND uc.companyid = '$adminCompanyId'
+            JOIN dental_contact i ON hst.ins_co_id = i.contactid
+            JOIN dental_users users ON hst.doc_id = users.userid
+            JOIN dental_users users2 ON hst.user_id = users2.userid
+            LEFT JOIN dental_users users3 ON hst.authorized_id = users3.userid
+            LEFT JOIN companies hst_company ON hst.company_id = hst_company.id
+        ";
 }
+
 // filter based on select lists above table
 if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid)) {
     $sql .= "WHERE ";
@@ -202,9 +227,21 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
     Account:
     <select name="fid">
       <option value="">Any</option>
-      <?php 
-        $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees();
-        if ($franchisees) foreach ($franchisees as $row) {
+      <?php
+
+      if (is_super($_SESSION['admin_access'])) {
+          $franchisees = get_franchisees();
+      } elseif (is_software($_SESSION['admin_access'])) {
+          $franchisees = get_software_franchisees();
+      } elseif (is_billing($_SESSION['admin_access'])) {
+          $franchisees = get_billing_franchisees();
+      } elseif (is_hst($_SESSION['admin_access'])) {
+          $franchisees = get_hst_franchisees();
+      } else {
+          $franchisees = [];
+      }
+
+      if ($franchisees) foreach ($franchisees as $row) {
           $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
         <option value="<?php echo  $row['userid'] ?>" <?php echo  $selected ?>>[<?php echo  $row['userid'] ?>] <?php echo  $row['first_name']." ".$row['last_name']; ?></option>
       <?php } ?>

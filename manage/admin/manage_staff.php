@@ -1,5 +1,13 @@
-<?php namespace Ds3\Libraries\Legacy; ?><? 
+<?php
+namespace Ds3\Libraries\Legacy;
+
+require_once __DIR__ . '/includes/main_include.php';
+require_once __DIR__ . '/includes/access.php';
+
 include "includes/top.htm";
+
+$isBillingAdmin = is_billing($_SESSION['admin_access']);
+$canEdit = !$isBillingAdmin;
 
 if(!empty($_REQUEST["delid"]))
 {
@@ -60,10 +68,12 @@ $num_users = mysqli_num_rows($my);
 <a href="manage_users.php" class="btn btn-info pull-left" title="Back" >
 	<b>&lt;&lt; Back</b></a>
 
-	<button onclick="Javascript: loadPopup('add_staff.php?docid=<?=$_GET['docid'];?>');" class="btn btn-success pull-right">
-		Add New Staff
-		<span class="glyphicon glyphicon-plus">
-	</button>
+    <?php if ($canEdit) { ?>
+        <button onclick="Javascript: loadPopup('add_staff.php?docid=<?=$_GET['docid'];?>');" class="btn btn-success pull-right">
+            Add New Staff
+            <span class="glyphicon glyphicon-plus">
+        </button>
+    <?php } ?>
 <div class="clearfix"></div>
 
 <br />
@@ -132,9 +142,12 @@ $num_users = mysqli_num_rows($my);
   				</td>		
 						
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_staff.php?ed=<?=$myarray["userid"];?>&docid=<?=$_GET['docid'];?>');" title="Edit" class="btn btn-primary btn-sm">
-						Edit
-					 <span class="glyphicon glyphicon-pencil"></span></a>
+                    <?php if ($canEdit) { ?>
+                        <a href="Javascript:;"  onclick="Javascript: loadPopup('add_staff.php?ed=<?=$myarray["userid"];?>&docid=<?=$_GET['docid'];?>');" title="Edit" class="btn btn-primary btn-sm">
+                            Edit
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    <?php } ?>
 				</td>
 			</tr>
 	<? 	}

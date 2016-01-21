@@ -87,7 +87,7 @@ if ($showAll || $search) {
         $sql .= " AND uc.companyid = '$companyId' ";
     } elseif (is_billing($_SESSION['admin_access'])) {
         $sql .= " AND u.billing_company_id = '$companyId' ";
-    } else {
+    } elseif (!$isSuperAdmin) {
         $sql = '';
     }
 

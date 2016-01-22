@@ -57,7 +57,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
         Route::get('payers/{transaction_type}', [
             'as' => 'enrollments.get_payers',
-            'uses' => 'Api\ @getPayersList'
+            'uses' => 'Api\ApiEnrollmentsController@getPayersList'
         ]);
 
         Route::group(['prefix' => 'original-signature'], function () {

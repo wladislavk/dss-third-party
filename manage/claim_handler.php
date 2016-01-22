@@ -349,24 +349,53 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $unable_date_from = !empty($claimData['claim']['last_worked_date']) ? $claimData['claim']['last_worked_date'] : '';
     $unable_date_to = !empty($claimData['claim']['work_return_date']) ? $claimData['claim']['work_return_date'] : '';
 
-    // SPLIT APART? $referring_provider = $claimData['referring_provider'];
-    if (
-        !empty($claimData['referring_provider']['first_name']) &&
-        !empty($claimData['referring_provider']['last_name'])
-    ) {
-        $referring_provider = trim($claimData['referring_provider']['last_name']) . ', ' .
-            trim($claimData['referring_provider']['first_name']);
+    /**
+     * @see DSS-272
+     *
+     * Eligible fields for box 17 were renamed by Eligible
+     */
+    if (!empty($claimData['box17_provider'])) {
+        $name_referring_provider_qualifier = array_get($claimData, 'box17_provider_option', '');
+
+        if (
+            !empty($claimData['box17_provider']['first_name']) &&
+            !empty($claimData['box17_provider']['last_name'])
+        ) {
+            $referring_provider = trim($claimData['box17_provider']['last_name']) . ', ' .
+                trim($claimData['box17_provider']['first_name']);
+        } else {
+            // This concatenation will cause to lose the "last_name" field IF the first_name field is empty
+            $referring_provider =
+                trim($claimData['box17_provider']['first_name'] . $claimData['box17_provider']['last_name']);
+        }
+
+        $field_17a_dd = !empty($claimData['box17_provider']['secondary_id_type']) ?
+            $claimData['box17_provider']['secondary_id_type'] : '';
+        $field_17a = !empty($claimData['box17_provider']['secondary_id']) ?
+            $claimData['box17_provider']['secondary_id'] : '';
+        $field_17b = !empty($claimData['box17_provider']['npi']) ? $claimData['box17_provider']['npi'] : '';
     } else {
-        // This concatenation will cause to lose the "last_name" field IF the first_name field is empty
-        $referring_provider =
-            trim($claimData['referring_provider']['first_name'] . $claimData['referring_provider']['last_name']);
+        $name_referring_provider_qualifier = array_get($claimData, 'referring_provider.option', '');
+
+        if (
+            !empty($claimData['referring_provider']['first_name']) &&
+            !empty($claimData['referring_provider']['last_name'])
+        ) {
+            $referring_provider = trim($claimData['referring_provider']['last_name']) . ', ' .
+                trim($claimData['referring_provider']['first_name']);
+        } else {
+            // This concatenation will cause to lose the "last_name" field IF the first_name field is empty
+            $referring_provider =
+                trim($claimData['referring_provider']['first_name'] . $claimData['referring_provider']['last_name']);
+        }
+
+        $field_17a_dd = !empty($claimData['referring_provider']['secondary_id_type']) ?
+            $claimData['referring_provider']['secondary_id_type'] : '';
+        $field_17a = !empty($claimData['referring_provider']['secondary_id']) ?
+            $claimData['referring_provider']['secondary_id'] : '';
+        $field_17b = !empty($claimData['referring_provider']['npi']) ? $claimData['referring_provider']['npi'] : '';
     }
 
-    $field_17a_dd = !empty($claimData['referring_provider']['secondary_id_type']) ?
-        $claimData['referring_provider']['secondary_id_type'] : '';
-    $field_17a = !empty($claimData['referring_provider']['secondary_id']) ?
-        $claimData['referring_provider']['secondary_id'] : '';
-    $field_17b = !empty($claimData['referring_provider']['npi']) ? $claimData['referring_provider']['npi'] : '';
     $hospitalization_date_from = !empty($claimData['claim']['admission_date']) ?
         $claimData['claim']['admission_date'] : '';
     $hospitalization_date_to = !empty($claimData['claim']['discharge_date']) ?

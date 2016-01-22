@@ -48,14 +48,8 @@ class AdminsController extends Controller
      */
     public function store(Admins $resources, AdminStore $request)
     {
-        $salt       = Password::createSalt();
-        $password   = Password::genPassword($request->input('password'), $salt);
-
         $data = array_merge($request->all(), [
-            'salt'               => $salt,
-            'password'           => $password,
-            'last_accessed_date' => Carbon::now(),
-            'ip_address'         => $request->ip()
+            'ip_address' => $request->ip()
         ]);
 
         $resource = $resources->create($data);
@@ -72,21 +66,7 @@ class AdminsController extends Controller
      */
     public function update(Admin $resource, AdminUpdate $request)
     {
-        $data = array_merge($request->all(), [
-            'last_accessed_date' => Carbon::now(),
-        ]);
-
-        if ($request->has('password')) {
-            $salt       = Password::createSalt();
-            $password   = Password::genPassword($request->input('password'), $salt);
-
-            $data = array_merge($data, [
-                'salt'     => $salt,
-                'password' => $password,
-            ]);
-        }
-
-        $resource->update($data);
+        $resource->update($request->all());
 
         return ApiResponse::responseOk('Resource updated');
     }

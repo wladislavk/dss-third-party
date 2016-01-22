@@ -42,7 +42,7 @@ class Admin extends Model implements Resource, Repository
      *
      * @var array
      */
-    protected $dates = ['adddate', 'last_accessed_date', 'recover_time'];
+    protected $dates = ['last_accessed_date', 'recover_time'];
 
     /**
      * The table associated with the model.

@@ -11,9 +11,12 @@ class AdminUpdate extends Request
      */
     public function rules()
     {
+        $admin = $this->admins;
+        $ignore = $admin->getKeyName() . ',' . $admin->getKey();
+
         return [
             'name'         => 'max:250',
-            'username'     => 'sometimes|required|max:250|unique:admin',
+            'username'     => 'sometimes|required|max:250|unique:admin,username,' . $ignore,
             'password'     => 'sometimes|required|max:250',
             'status'       => 'integer',
             'admin_access' => 'integer',

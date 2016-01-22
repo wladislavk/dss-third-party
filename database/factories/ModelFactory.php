@@ -63,7 +63,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Admin::class, function ($faker) {
     return [
         'name'         => 'PHPUnit admin',
         'username'     => $faker->userName,
-        'password'     => bcrypt($faker->password),
+        'password'     => $faker->password,
         'status'       => $faker->randomDigit,
         'adddate'      => $faker->dateTime(),
         'ip_address'   => $faker->ipv4,

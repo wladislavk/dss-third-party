@@ -17,7 +17,8 @@
         "tymon/jwt-auth": "^0.5.4",
         "zircote/swagger-php": "*",
         "rmccue/requests": ">=1.0",
-        "jlapp/swaggervel": "master-dev"
+        "jlapp/swaggervel": "master-dev",
+        "guzzlehttp/guzzle": "~6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

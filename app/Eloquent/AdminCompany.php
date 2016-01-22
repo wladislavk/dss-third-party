@@ -1,30 +1,16 @@
 <?php
+
 namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\Dental\UserCompany;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\AdminCompany as Resource;
+use DentalSleepSolutions\Contracts\Repositories\AdminCompanies as Repository;
 
-class AdminCompany extends Model
+class AdminCompany extends Model implements Resource, Repository
 {
-    /**
-     * Mass assignable attributes
-     *
-     * @var array
-     */
-    protected $fillable = ['adminid', 'companyid', 'adddate', 'ip_address'];
-
-    /**
-     * Defining guarded attributes
-     * 
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * Mass of nondisplayed attributes
-     * 
-     * @var array
-     */
-    protected $hidden = ['ip_address'];
+    use WithoutUpdatedTimestamp;
 
     /**
      * The table associated with the model.
@@ -34,16 +20,36 @@ class AdminCompany extends Model
     protected $table = 'admin_company';
 
     /**
-     * Indicates if the model should be timestamped.
+     * Mass assignable attributes
      *
-     * @var bool
+     * @var array
      */
-    public $timestamps = false;
+    protected $fillable = [
+        'adminid', 'companyid', 'adddate', 'ip_address'
+    ];
 
     /**
-     * Primary key for the table
+     * The name of the "created at" column.
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    const CREATED_AT = 'adddate';
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relations
+    |--------------------------------------------------------------------------
+    */
+    /**
+     * Company has many related users.
+     *
+     * @dynamicProperty Might be used as property $this->users then
+     * returns \Illuminate\Database\Eloquent\Collection
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function users()
+    {
+        return $this->hasMany(UserCompany::class, 'companyid');
+    }
 }

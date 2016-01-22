@@ -2,7 +2,6 @@
 
 use DentalSleepSolutions\Eloquent\Payer;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PayersTest extends TestCase

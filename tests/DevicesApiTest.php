@@ -1,19 +1,18 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class DevicesApiTest extends TestCase
 {
-    use WithoutMiddleware;
-    use DatabaseMigrations;
+    use WithoutMiddleware, DatabaseTransactions;
 
     /**
      * Test the post method of the Dental Sleep Solutions API
      * Post to /api/v1/device -> Api/ApiDeviceController@store method
-     * 
+     *
      */
     public function testAddDevice()
     {
@@ -34,7 +33,7 @@ class DevicesApiTest extends TestCase
     /**
      * Test the put method of the Dental Sleep Solutions API
      * Put to /api/v1/device/{id} -> Api/ApiDeviceController@update method
-     * 
+     *
      */
     public function testUpdateDevice()
     {
@@ -56,7 +55,7 @@ class DevicesApiTest extends TestCase
     /**
      * Test the delete method of the Dental Sleep Solutions API
      * Delete to /api/v1/device/{id} -> Api/ApiDeviceController@destroy method
-     * 
+     *
      */
     public function testDeleteDevice()
     {

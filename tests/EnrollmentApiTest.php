@@ -62,7 +62,8 @@ class EnrollmentApiTest extends TestCase
         ];
 
         $this->post('/api/v1/enrollments/create', $data)
-            ->seeJson(['status' => "Bad Request"]);
+            ->seeJson(['status' => "Unprocessable Entity"])
+            ->assertResponseStatus(422);
     }
 
 

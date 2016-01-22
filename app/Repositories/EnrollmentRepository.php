@@ -1,8 +1,11 @@
-<?php namespace DentalSleepSolutions\Repositories;
+<?php
 
-use DentalSleepSolutions\Interfaces\EnrollmentInterface;
-use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
+namespace DentalSleepSolutions\Repositories;
+
 use Carbon\Carbon;
+use DentalSleepSolutions\Interfaces\EnrollmentInterface;
+use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
+use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
 
 class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
 {
@@ -13,7 +16,7 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
      *
      * Main model name for the Enrollment  Payers Model
      */
-    protected $modelName = 'DentalSleepSolutions\Enrollment';
+    protected $modelName = Enrollment::class;
 
     /**
      * @var mixed|string
@@ -82,37 +85,6 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
         }
 
         return ($mandatoryEnrollmentFields);
-    }
-
-    /**
-     * Submits an enrollment to Eliigible
-     *
-     * @param array  $enrollmentParams
-     * @param string $apiKey
-     * @return mixed
-     */
-    public function createEnrollment(array $enrollmentParams, $apiKey = '')
-    {
-        $enrollmentParams['endpoint'] = 'coverage';
-
-        $this->elligibleParams['enrollment_npi'] = $enrollmentParams;
-        $requestUri = $this->providerUri.$this->enrollmentsRoute;
-        $this->checkAndSetProviderApiKey($apiKey);
-
-        $data_string = $this->convertEnrollmentParamsToJson();
-
-        $headers = $this->setupApiRequestHeaders($data_string);
-        $response = \Requests::post($requestUri, $headers, $data_string);
-        $enrollmentResponse = json_decode($response->body);
-
-        if (isset($enrollmentResponse->error))
-        {
-            return $enrollmentResponse->error;
-        }
-
-        $this->setupEnrollmentResponseForCreateUpdate($enrollmentParams, $enrollmentResponse, $response);
-
-        return $enrollmentResponse;
     }
 
     /**
@@ -311,25 +283,6 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
      * @param int $userId
      * @return mixed
      */
-    public function listEnrollments($userId)
-    {
-
-        $query = \DB::table('dental_eligible_enrollment as enrollments');
-        $query->join('dental_enrollment_transaction_type as types', function($joinClause){
-            $joinClause->on('enrollments.transaction_type_id', '=', 'types.id');
-        });
-        $query->select(array("enrollments.*", \DB::raw("CONCAT(types.transaction_type,' - ',types.description) as transaction_type")));
-        $query->where(\DB::raw('enrollments.user_id'),'=',$userId);
-
-        return $query->get();
-    }
-
-    /**
-     *
-     *
-     * @param int $userId
-     * @return mixed
-     */
     public function getUserCompanyEligibleApiKey($userId)
     {
         $query = \DB::table('dental_user_company')
@@ -343,14 +296,14 @@ class EnrollmentRepository extends BaseRepository implements EnrollmentInterface
 
     /**
      * [getEnrollmentTransactionType description]
-     * @param  integer $id 
-     * @return mixed     
+     * @param  integer $id
+     * @return mixed
      */
     public function getEnrollmentTransactionType($id)
     {
         $query = \DB::table('dental_enrollment_transaction_type')
             ->where('id','=',$id)->where('status','=',1)->first();
-            
+
         return $query;
     }
 

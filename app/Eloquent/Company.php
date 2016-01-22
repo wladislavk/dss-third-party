@@ -3,9 +3,15 @@
 namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\Dental\UserCompany;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\Company as Resource;
+use DentalSleepSolutions\Contracts\Repositories\Companies as Repository;
 
-class Company extends Model
+class Company extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
     /**
      * The table associated with the model.
      *
@@ -28,9 +34,11 @@ class Company extends Model
     ];
 
     /**
-     * @var bool
+     * The name of the "created at" column.
+     *
+     * @var string
      */
-    public $timestamps = false;
+    const CREATED_AT = 'adddate';
 
     /*
     |--------------------------------------------------------------------------
@@ -48,6 +56,6 @@ class Company extends Model
      */
     public function users()
     {
-        return $this->hasMany(DentalUserCompany::class, 'companyid');
+        return $this->hasMany(UserCompany::class, 'companyid');
     }
 }

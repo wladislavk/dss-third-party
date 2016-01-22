@@ -70,52 +70,44 @@ if (!empty($_GET['sort'])) {
   }
 }
 
-if(isset($_REQUEST['authorize'])){
+if (isset($_REQUEST['authorize'])) {
+    $hstId = intval($_REQUEST['authorize']);
+    $h = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
 
-  $sql = "SELECT s.* FROM dental_screener s JOIN dental_hst h ON h.screener_id = s.id WHERE h.id='".mysqli_real_escape_string($con,$_REQUEST['authorize'])."'";
-  $r = $db->getRow($sql);
-  $sql = "SELECT * FROM dental_hst WHERE screener_id='".mysqli_real_escape_string($con,$r['id'])."'";
-  $h = $db->getRow($sql);
+    $screenerId = intval($h['screener_id']);
+    $r = $db->getRow("SELECT * FROM dental_screener WHERE id = '$screenerId'");
 
-  $dob = ($h['patient_dob']!='')?date('m/d/Y', strtotime($h['patient_dob'])):'';
-  $pat_sql = "INSERT INTO dental_patients SET
-                docid='".mysqli_real_escape_string($con,$r['docid'])."',
-                firstname = '".mysqli_real_escape_string($con,$r['first_name'])."',
-                lastname = '".mysqli_real_escape_string($con,$r['last_name'])."',
-                cell_phone = '".mysqli_real_escape_string($con,$r['phone'])."',
-                email = '".mysqli_real_escape_string($con,$h['patient_email'])."',
-                dob = '".mysqli_real_escape_string($con,$dob)."',
-                status='1',
-                adddate = now(),
-                ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+    $dob = ($h['patient_dob']!='')?date('m/d/Y', strtotime($h['patient_dob'])):'';
+    $pat_sql = "INSERT INTO dental_patients SET
+        docid = '".mysqli_real_escape_string($con,$r['docid'])."',
+        firstname = '".mysqli_real_escape_string($con,$r['first_name'])."',
+        lastname = '".mysqli_real_escape_string($con,$r['last_name'])."',
+        cell_phone = '".mysqli_real_escape_string($con,$r['phone'])."',
+        email = '".mysqli_real_escape_string($con,$h['patient_email'])."',
+        dob = '".mysqli_real_escape_string($con,$dob)."',
+        status = '1',
+        adddate = now(),
+        ip_address = '".$_SERVER['REMOTE_ADDR']."'";
 
-  $pat_id = $db->getInsertId($pat_sql);
+    $pat_id = $db->getInsertId($pat_sql);
   
-  $hst_sql = "UPDATE dental_hst SET
-                patient_id = '".$pat_id."',
-                status='".DSS_HST_PENDING."',
-                authorized_id='".mysqli_real_escape_string($con,$_SESSION['userid'])."',
-		authorizeddate=now(),
-                updatedate=now()
-                WHERE id=".mysqli_real_escape_string($con,$_REQUEST['authorize']);
-  $db->query($hst_sql);
+    $hst_sql = "UPDATE dental_hst SET
+            patient_id = '".$pat_id."',
+            status = '".DSS_HST_PENDING."',
+            authorized_id = '".mysqli_real_escape_string($con,$_SESSION['userid'])."',
+            authorizeddate = now(),
+            updatedate = now()
+        WHERE id = ".mysqli_real_escape_string($con,$_REQUEST['authorize']);
+    $db->query($hst_sql);
 
-  $unsent_sql = "SELECT count(*) num_unsent FROM dental_hst WHERE doc_id = ".$_SESSION['docid']." AND status='".DSS_HST_REQUESTED."'";
-  $unsent_q = mysqli_query($con, $unsent_sql);
-  if(mysqli_num_rows($unsent_q) > 0){
-  ?>
-  <script type="text/javascript">
-    window.location = 'manage_hst.php?status=0';
-  </script>
-  <?php
-  }else{
-  ?>
-  <script type="text/javascript">
-    window.location = 'manage_hst.php';
-  </script>
-  <?php
-  }
-}  
+    ?>
+    <script>
+        window.location = '/manage/hst_request.php?ed=<?= $pat_id ?>&hst_co=<?= $h['company_id'] ?>';
+    </script>
+    <?php
+
+    trigger_error('Die called', E_USER_ERROR);
+}
 
 $total_rec = $db->getNumberRows($sql);
 /* $rec_disp is null that's why */ $rec_disp = $total_rec;

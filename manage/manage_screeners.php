@@ -52,13 +52,16 @@ $coMorbidityWeights = coMorbidityWeights();
 					   contacted = '1'
 					   WHERE id=".mysqli_real_escape_string($con,$r['id']);
 
-	  $db->query($screener_sql);
-?>
-	  <script type="text/javascript">
-	    window.location = 'manage_screeners.php';
-	  </script>
-<?php
-	}		
+        $db->query($screener_sql);
+
+        ?>
+        <script>
+            window.location = '/manage/hst_request.php?ed=<?= $pat_id ?>&hst_co=<?= $h['company_id'] ?>';
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
 ?>
 
 <link rel="stylesheet" type="text/css" href="css/manage_display_similar.css">

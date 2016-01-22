@@ -256,9 +256,10 @@ $coMorbidityWeights = coMorbidityWeights();
 
                 foreach ($my as $myarray) {
                     $ep_sql = "SELECT se.response, e.epworth
-                                FROM dental_screener_epworth se
-                                JOIN dental_epworth e ON se.epworth_id =e.epworthid
-                                WHERE se.response > 0 AND se.screener_id='".mysqli_real_escape_string($con,$myarray['id'])."'";
+                        FROM dental_screener_epworth se
+                            JOIN dental_epworth e ON se.epworth_id = e.epworthid
+                        WHERE se.response > 0
+                            AND se.screener_id = '" . intval($myarray['id']) . "'";
                     $ep_q = $db->getResults($ep_sql);
 
                     $epTotal = 0;

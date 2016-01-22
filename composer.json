@@ -29,8 +29,7 @@
     },
     "autoload": {
         "classmap": [
-            "database",
-            "app/DentalSleepSolutions"
+            "database"
         ],
         "psr-4": {
             "DentalSleepSolutions\\": "app/"

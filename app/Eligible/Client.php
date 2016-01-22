@@ -146,7 +146,7 @@ class Client
         }
 
         if ($response->getStatusCode() >= 500) {
-            throw new \Exception("Server error:" + $response->getStatusCode());
+            throw new \Exception("Server error:" . $response->getStatusCode());
         }
 
         return new Response($response);
@@ -180,7 +180,7 @@ class Client
         }
 
         if ($response->getStatusCode() >= 500) {
-            throw new \Exception("Server error:" + $response->getStatusCode());
+            throw new \Exception("Server error:" . $response->getStatusCode());
         }
 
         return new Response($response);

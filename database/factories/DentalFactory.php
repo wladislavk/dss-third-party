@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -31,16 +33,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SummSleeplab::class, funct
         'diagnosis' => $faker->word,
         'notes' => $faker->word,
         'patiendid' => $faker->word,
-    ];
-});
-
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Contact::class, function ($faker) {
-    return [
-        'preferredcontact' => $faker->word,
-        'add1' => '435 Sugar Lane',//$faker->streetAddress,
-        'city' => $faker->word,
-        'state' => 'CA',
-        'zip' => '941233476'//$faker->postcode,
     ];
 });
 
@@ -183,4 +175,84 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, functi
     return [];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Contact::class, function ($faker) {
+    return [
+        'docid'                => $faker->randomDigit,
+        'salutation'           => $faker->title($gender = 'male'|'female'),
+        'lastname'             => $faker->lastName,
+        'firstname'            => $faker->firstName($gender = 'male'|'female'),
+        'middlename'           => $faker->word,
+        'company'              => $faker->company,
+        'add1'                 => $faker->address,
+        'add2'                 => $faker->address,
+        'city'                 => $faker->city,
+        'state'                => $faker->state,
+        'zip'                  => $faker->postcode,
+        'phone1'               => $faker->regexify('^1[0-9]{9}$'),
+        'phone2'               => $faker->regexify('^1[0-9]{9}$'),
+        'fax'                  => $faker->regexify('^1[0-9]{9}$'),
+        'email'                => $faker->email,
+        'national_provider_id' => $faker->regexify('^[0-9]{9}$'),
+        'qualifier'            => $faker->word,
+        'qualifierid'          => $faker->word,
+        'greeting'             => $faker->title($gender = 'male'|'female'),
+        'sincerely'            => $faker->title($gender = 'male'|'female'),
+        'contacttypeid'        => $faker->randomDigit,
+        'notes'                => $faker->sentence($nbWords = 6),
+        'preferredcontact'     => $faker->word,
+        'status'               => $faker->randomDigit,
+        'referredby_info'      => $faker->randomDigit,
+        'referredby_notes'     => $faker->sentence($nbWords = 6),
+        'merge_id'             => $faker->randomDigit,
+        'merge_date'           => $faker->dateTime(),
+        'corporate'            => $faker->randomDigit,
+        'dea_number'           => $faker->word,
+        'adddate'              => $faker->dateTime(),
+        'ip_address'           => $faker->ipv4,
+    ];
+});
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Device::class, function ($faker) {
+    return [
+        'device'      => $faker->sentence($nbWords = 3),
+        'description' => $faker->sentence($nbWords = 6),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4,
+        'image_path'  => $faker->regexify('dental_device_[0-9]{2}\.(gif|jpg|jpeg|png)'),
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\ContactType::class, function ($faker) {
+    return [
+        'contacttype' => $faker->sentence($nbWords = 3),
+        'description' => $faker->sentence($nbWords = 6),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4,
+        'physician'   => $faker->randomDigit,
+        'corporate'   => $faker->randomDigit,
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function ($faker) {
+    return [
+        'start_date'   => Carbon::now()->addDays(1),
+        'end_date'     => Carbon::now()->addDays(2),
+        'description'  => $faker->sentence($nbWords = 6),
+        'event_id'     => $faker->regexify('[0-9]{13}'),
+        'docid'        => $faker->randomDigit,
+        'adddate'      => $faker->dateTime(),
+        'ip_address'   => $faker->ipv4,
+        'category'     => $faker->word,
+        'producer_id'  => $faker->randomDigit,
+        'patientid'    => $faker->randomDigit,
+        'rec_type'     => $faker->word,
+        'event_length' => $faker->regexify('[0-9]{4}'),
+        'event_pid'    => $faker->regexify('[0-9]{4}'),
+        'res_id'       => $faker->randomDigit,
+        'rec_pattern'  => $faker->word,
+    ];
+});

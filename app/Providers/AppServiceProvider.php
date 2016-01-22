@@ -27,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $bindings = [
+            Eloquent\Admin::class => [Repositories\Admins::class, Resources\Admin::class],
             Eloquent\Payer::class => [Repositories\Payers::class, Resources\Device::class],
             Eloquent\Company::class => [Repositories\Companies::class, Resources\Company::class],
             Eloquent\Dental\Device::class => [Repositories\Devices::class, Resources\Device::class],

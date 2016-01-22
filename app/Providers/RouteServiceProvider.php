@@ -24,12 +24,13 @@ class RouteServiceProvider extends ServiceProvider
      * @var array
      */
     protected $resourceBindings = [
-        'payers'    => \DentalSleepSolutions\Eloquent\Payer::class,
-        'devices' => \DentalSleepSolutions\Eloquent\Dental\Device::class,
-        'contacts' => \DentalSleepSolutions\Eloquent\Dental\Contact::class,
+        'payers'        => \DentalSleepSolutions\Eloquent\Payer::class,
+        'devices'       => \DentalSleepSolutions\Eloquent\Dental\Device::class,
+        'contacts'      => \DentalSleepSolutions\Eloquent\Dental\Contact::class,
         'contact-types' => \DentalSleepSolutions\Eloquent\Dental\ContactType::class,
-        'companies' => \DentalSleepSolutions\Eloquent\Company::class,
-        'calendars' => \DentalSleepSolutions\Eloquent\Dental\Calendar::class,
+        'companies'     => \DentalSleepSolutions\Eloquent\Company::class,
+        'calendars'     => \DentalSleepSolutions\Eloquent\Dental\Calendar::class,
+        'admins'        => \DentalSleepSolutions\Eloquent\Admin::class
     ];
 
     /**

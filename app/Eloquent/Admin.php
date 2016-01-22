@@ -1,10 +1,16 @@
 <?php
+
 namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\Admin as Resource;
+use DentalSleepSolutions\Contracts\Repositories\Admins as Repository;
 
-class Admin extends Model
+class Admin extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
     /**
      * Mass assignable attributes
      *
@@ -12,8 +18,8 @@ class Admin extends Model
      */
     protected $fillable = [
         'name', 'username', 'status',
-        'adddate', 'ip_address', 'admin_access',
-        'last_accessed_date', 'claim_margin_top', 'claim_margin_left',
+        'adddate', 'ip_address', 'recover_hash',
+        'admin_access', 'claim_margin_top', 'claim_margin_left',
         'email', 'first_name', 'last_name'
     ];
 
@@ -22,7 +28,7 @@ class Admin extends Model
      * 
      * @var array
      */
-    protected $guarded = ['password', 'salt', 'recover_hash', 'recover_time'];
+    protected $guarded = ['password', 'salt'];
 
     /**
      * Mass of nondisplayed attributes
@@ -32,6 +38,13 @@ class Admin extends Model
     protected $hidden = ['password', 'ip_address', 'salt'];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['adddate', 'last_accessed_date', 'recover_time'];
+
+    /**
      * The table associated with the model.
      *
      * @var string
@@ -39,16 +52,16 @@ class Admin extends Model
     protected $table = 'admin';
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * Primary key for the table
      *
      * @var string
      */
     protected $primaryKey = 'adminid';
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'adddate';
 }

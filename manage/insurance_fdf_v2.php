@@ -475,6 +475,10 @@ $fdfData['diagnosis_j'] = !empty($diagnosis_j) ? $diagnosis_j : '';
 $fdfData['diagnosis_k'] = !empty($diagnosis_k) ? $diagnosis_k : '';
 $fdfData['diagnosis_l'] = !empty($diagnosis_l) ? $diagnosis_l : '';
 
+if (!empty($name_referring_provider_qualifier) && $name_referring_provider_qualifier === 'DN_CLAIM') {
+    $name_referring_provider_qualifier = 'DN';
+}
+
 $fdfData['medicaid_resubmission_code_fill'] =
     !empty($resubmission_code_fill) && $resubmission_code_fill != 1 ? $resubmission_code_fill : '';
 $fdfData['original_ref_no_fill'] = !empty($original_ref_no) ? $original_ref_no : '';

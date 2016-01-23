@@ -1347,7 +1347,13 @@ class ClaimFormData
             if ($isMedicare) {
                 $claimData['referring_provider'] = $sleepStudies['diagnosising_doc'];
                 $claimData['field_17b'] = $sleepStudies['diagnosising_npi'];
-                $claimData['name_referring_provider_qualifier'] = 'DN';
+
+                /**
+                 * @see DSS-274
+                 *
+                 * New default value: DN - Referring Provider (Claim level)
+                 */
+                $claimData['name_referring_provider_qualifier'] = 'DN_CLAIM';
             }
         }
 

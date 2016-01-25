@@ -46,7 +46,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     // temporary, alias for the above to satisfy current JS
     Route::get('enrollments/requiredfields/{payer_id}', 'PayersController@requiredFields');
     Route::resource('payers', 'PayersController', ['except' => ['create', 'edit']]);
-
+    Route::resource('access-codes', 'AccessCodesController', ['except' => ['create', 'edit']]);
     Route::resource('calendars', 'CalendarsController', ['except' => ['create', 'edit']]);
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');

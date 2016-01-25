@@ -72,41 +72,23 @@ if (!empty($_GET['sort'])) {
 
 if (isset($_REQUEST['authorize'])) {
     $hstId = intval($_REQUEST['authorize']);
-    $h = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
+    $authorized = authorizeHST($hstId);
 
-    $screenerId = intval($h['screener_id']);
-    $r = $db->getRow("SELECT * FROM dental_screener WHERE id = '$screenerId'");
+    if ($authorized) {
+        $hstData = $db->getRow("SELECT patient_id, company_id FROM dental_hst WHERE id = '$hstId'");
 
-    $dob = ($h['patient_dob']!='')?date('m/d/Y', strtotime($h['patient_dob'])):'';
-    $pat_sql = "INSERT INTO dental_patients SET
-        docid = '".mysqli_real_escape_string($con,$r['docid'])."',
-        firstname = '".mysqli_real_escape_string($con,$r['first_name'])."',
-        lastname = '".mysqli_real_escape_string($con,$r['last_name'])."',
-        cell_phone = '".mysqli_real_escape_string($con,$r['phone'])."',
-        email = '".mysqli_real_escape_string($con,$h['patient_email'])."',
-        dob = '".mysqli_real_escape_string($con,$dob)."',
-        status = '1',
-        adddate = now(),
-        ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+        ?>
+        <script>
+            window.location = '/manage/hst_request.php?ed=<?= $hstData['patient_id'] ?>&hst_co=<?= $hstData['company_id'] ?>';
+        </script>
+        <?php
 
-    $pat_id = $db->getInsertId($pat_sql);
-  
-    $hst_sql = "UPDATE dental_hst SET
-            patient_id = '".$pat_id."',
-            status = '".DSS_HST_PENDING."',
-            authorized_id = '".mysqli_real_escape_string($con,$_SESSION['userid'])."',
-            authorizeddate = now(),
-            updatedate = now()
-        WHERE id = ".mysqli_real_escape_string($con,$_REQUEST['authorize']);
-    $db->query($hst_sql);
-
-    ?>
-    <script>
-        window.location = '/manage/hst_request.php?ed=<?= $pat_id ?>&hst_co=<?= $h['company_id'] ?>';
-    </script>
-    <?php
-
-    trigger_error('Die called', E_USER_ERROR);
+        trigger_error('Die called', E_USER_ERROR);
+    } else { ?>
+        <script>
+            alert('There was an error trying to authorize the given HST. Please try again later.');
+        </script>
+    <?php }
 }
 
 $total_rec = $db->getNumberRows($sql);

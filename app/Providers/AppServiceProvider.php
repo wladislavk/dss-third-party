@@ -24,7 +24,14 @@ class AppServiceProvider extends ServiceProvider
             \DentalSleepSolutions\Contracts\Resources\Payer::class,
             \DentalSleepSolutions\Eloquent\Payer::class
         );
-
+        $this->app->bind(
+            \DentalSleepSolutions\Contracts\Repositories\AppointmentTypes::class,
+            \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class
+        );
+        $this->app->bind(
+            \DentalSleepSolutions\Contracts\Resources\AppointmentType::class,
+            \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class
+        );
         $this->app->bind(
             \DentalSleepSolutions\Contracts\Repositories\AccessCodes::class,
             \DentalSleepSolutions\Eloquent\Dental\AccessCode::class
@@ -32,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \DentalSleepSolutions\Contracts\Resources\AccessCode::class,
             \DentalSleepSolutions\Eloquent\Dental\AccessCode::class
+
         );
     }
 

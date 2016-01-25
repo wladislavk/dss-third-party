@@ -175,6 +175,16 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, functi
     return [];
 });
 
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\AppointmentType::class, function ($faker) {
+    return [
+        'name'      => $faker->word,
+        'color'     => $faker->hexcolor,
+        'classname' => $faker->word,
+        'docid'     => $faker->randomDigit()
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\AccessCode::class, function ($faker) {
     return [
         'access_code' => $faker->word,

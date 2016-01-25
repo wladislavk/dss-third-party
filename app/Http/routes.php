@@ -32,9 +32,13 @@ Route::group(['prefix' => 'webhooks'], function () {
 | API routes
 |--------------------------------------------------------------------------
 */
+
 Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('admins', 'AdminsController', ['except' => ['create', 'edit']]);
+    Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);
+    Route::resource('complaints', 'ComplaintsController', ['except' => ['create', 'edit']]);
+    Route::resource('custom-texts', 'CustomTextsController', ['except' => ['create', 'edit']]);
     Route::resource('contact-types', 'ContactTypesController', ['except' => ['create', 'edit']]);
     Route::resource('contacts', 'ContactsController', ['except' => ['create', 'edit']]);
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
@@ -43,7 +47,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     // temporary, alias for the above to satisfy current JS
     Route::get('enrollments/requiredfields/{payer_id}', 'PayersController@requiredFields');
     Route::resource('payers', 'PayersController', ['except' => ['create', 'edit']]);
-
+    Route::resource('appt-types', 'AppointmentTypesController', ['except' => ['create', 'edit']]);
+    Route::resource('access-codes', 'AccessCodesController', ['except' => ['create', 'edit']]);
     Route::resource('calendars', 'CalendarsController', ['except' => ['create', 'edit']]);
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');

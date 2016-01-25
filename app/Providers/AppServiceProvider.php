@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $bindings = [
             Eloquent\Payer::class => [Repositories\Payers::class, Resources\Device::class],
+            Eloquent\Dental\CustomText::class => [Repositories\CustomTexts::class, Resources\CustomText::class],
             Eloquent\Company::class => [Repositories\Companies::class, Resources\Company::class],
             Eloquent\Dental\Device::class => [Repositories\Devices::class, Resources\Device::class],
             Eloquent\Dental\Contact::class => [Repositories\Contacts::class, Resources\Contact::class],

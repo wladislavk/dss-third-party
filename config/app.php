@@ -139,6 +139,11 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
+         * 3rd party providers...
+         */
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+
+        /*
          * Application Service Providers...
          */
         DentalSleepSolutions\Providers\AppServiceProvider::class,
@@ -196,8 +201,8 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
 
         //JWT Facades
-        'JWTAuth'       => \Tymon\JWTAuth\Facades\JWTAuth::class,
-        'JWTFactory'    => \Tymon\JWTAuth\Facades\JWTFactory::class,
+        'JWTAuth'    => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
 
         'ApiResponse' => \DentalSleepSolutions\Helpers\ApiResponse::class,
 

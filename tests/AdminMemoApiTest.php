@@ -2,12 +2,11 @@
 
 use DentalSleepSolutions\Eloquent\MemoAdmin;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AdminMemoApiTest extends TestCase
 {
-    use WithoutMiddleware;
+    use WithoutMiddleware, DatabaseTransactions;
 
     protected $memo_id;
 

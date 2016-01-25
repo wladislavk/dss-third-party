@@ -25,10 +25,6 @@ abstract class Request extends FormRequest
      */
     public function response(array $errors)
     {
-        if ($this->ajax() || $this->wantsJson()) {
-            return ApiResponse::responseError('Provided data is invalid.', 422, ['errors' => $errors]);
-        }
-
-        return parent::response($errors);
+        return ApiResponse::responseError('Provided data is invalid.', 422, ['errors' => $errors]);
     }
 }

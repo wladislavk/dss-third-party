@@ -60,7 +60,14 @@ $factory->define(DentalSleepSolutions\User::class, function ($faker) {
 });
 
 $factory->define(DentalSleepSolutions\Eloquent\Company::class, function ($faker) {
-    return [];
+    return [
+        'name'       => $faker->word,
+        'add1'       => $faker->address,
+        'state'      => $faker->state,
+        'status'     => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
 });
 
 $factory->define(DentalSleepSolutions\Eloquent\MemoAdmin::class, function ($faker) {

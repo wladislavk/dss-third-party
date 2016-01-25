@@ -26,6 +26,14 @@ class RouteServiceProvider extends ServiceProvider
     protected $resourceBindings = [
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,
+        'claim-note-attachments' => \DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment::class,
+        'complaints' => \DentalSleepSolutions\Eloquent\Dental\Complaint::class,
+        'custom-texts' => \DentalSleepSolutions\Eloquent\Dental\CustomText::class,
+        'devices' => \DentalSleepSolutions\Eloquent\Dental\Device::class,
+        'contacts' => \DentalSleepSolutions\Eloquent\Dental\Contact::class,
+        'contact-types' => \DentalSleepSolutions\Eloquent\Dental\ContactType::class,
+        'companies' => \DentalSleepSolutions\Eloquent\Company::class,
+        'calendars' => \DentalSleepSolutions\Eloquent\Dental\Calendar::class,
     ];
 
     /**

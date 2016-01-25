@@ -27,9 +27,13 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $bindings = [
-            Eloquent\Device::class => [Repositories\Devices::class, Resources\Device::class],
             Eloquent\Payer::class => [Repositories\Payers::class, Resources\Device::class],
             Eloquent\Dental\CustomText::class => [Repositories\CustomTexts::class, Resources\CustomText::class],
+            Eloquent\Company::class => [Repositories\Companies::class, Resources\Company::class],
+            Eloquent\Dental\Device::class => [Repositories\Devices::class, Resources\Device::class],
+            Eloquent\Dental\Contact::class => [Repositories\Contacts::class, Resources\Contact::class],
+            Eloquent\Dental\ContactType::class => [Repositories\ContactTypes::class, Resources\ContactType::class],
+            Eloquent\Dental\Calendar::class => [Repositories\Calendars::class, Resources\Calendar::class],
         ];
 
         foreach ($bindings as $concrete => $contracts) {

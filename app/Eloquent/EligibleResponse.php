@@ -47,4 +47,14 @@ class EligibleResponse extends Model
 
         return $query->where('event_type', $event_type)->first();
     }
+
+    /**
+     * Accessor for response property
+     *
+     * @return StdObject
+     */
+    public function getResponseAttribute()
+    {
+        return json_decode($this->attributes['response']);
+    }
 }

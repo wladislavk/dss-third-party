@@ -11,6 +11,7 @@ use League\Fractal\Resource\Collection;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Contracts\Resource;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Contracts\Support\JsonableInterface;
 
 /**
  * Response helper class providing consistent structure of the json content
@@ -78,6 +79,21 @@ class ApiResponse
         }
 
         return self::createResponse($message, $data, $code, $headers, $options);
+    }
+
+    /**
+     * Convert paginate data do response data
+     *
+     * @param $result
+     * @return array
+     */
+    public static function getPaginateStructure($result)
+    {
+        $result = json_decode($result->toJson(), true);
+        $result['items'] = $result['data'];
+        unset($result['data']);
+
+        return $result;
     }
 
     /**

@@ -146,7 +146,7 @@ class Client
         }
 
         if ($response->getStatusCode() >= 500) {
-            throw new \Exception("Server error:" + $response->getStatusCode());
+            throw new \Exception("Server error:" . $response->getStatusCode());
         }
 
         return new Response($response);
@@ -162,7 +162,7 @@ class Client
      * @return mixed
      * @throws \Exception
      */
-    public function request($type, $address, $data)
+    public function request($type, $address, $data, $as = 'json')
     {
         $data['api_key'] = $this->api_key;
 
@@ -173,14 +173,14 @@ class Client
         try {
             $client = new \GuzzleHttp\Client($this->getConstructArguments());
             $response = $client->request($type, '/' . $this->version . '/' . $address, [
-                'json' => $data
+                $as => $data
             ]);
         } catch (ClientException $e) {
             $response = $e->getResponse();
         }
 
         if ($response->getStatusCode() >= 500) {
-            throw new \Exception("Server error:" + $response->getStatusCode());
+            throw new \Exception("Server error:" . $response->getStatusCode());
         }
 
         return new Response($response);
@@ -191,12 +191,13 @@ class Client
      *
      * @param string $address
      * @param array $data
+     * $param string $as
      * @return mixed
      * @throws \Exception
      */
-    public function requestPost($address, $data)
+    public function requestPost($address, $data, $as = 'json')
     {
-        return $this->request('POST', $address, $data);
+        return $this->request('POST', $address, $data, $as);
     }
 
     /**
@@ -204,12 +205,13 @@ class Client
      *
      * @param string $address
      * @param array $data
+     * $param string $as
      * @return mixed
      * @throws \Exception
      */
-    public function requestPut($address, $data)
+    public function requestPut($address, $data, $as = 'json')
     {
-        return $this->request('PUT', $address, $data);
+        return $this->request('PUT', $address, $data, $as);
     }
 
     /**
@@ -217,12 +219,13 @@ class Client
      *
      * @param string $address
      * @param array $data
+     * $param string $as
      * @return mixed
      * @throws \Exception
      */
-    public function requestDelete($address, $data)
+    public function requestDelete($address, $data, $as = 'json')
     {
-        return $this->request('DELETE', $address, $data);
+        return $this->request('DELETE', $address, $data, $as);
     }
 
     /**
@@ -271,7 +274,7 @@ class Client
      */
     public function createOriginalSignaturePdf($data, $npi)
     {
-        return $this->requestPost('enrollment_npis/' . $npi . '/original_signature_pdf', $data);
+        return $this->requestPost('enrollment_npis/' . $npi . '/original_signature_pdf', $data, 'form_params');
     }
 
     /**
@@ -283,7 +286,7 @@ class Client
      */
     public function updateOriginalSignaturePdf($data, $npi)
     {
-        return $this->requestPut('enrollment_npis/' . $npi . '/original_signature_pdf', $data);
+        return $this->requestPut('enrollment_npis/' . $npi . '/original_signature_pdf', $data, 'form_params');
     }
 
     /**
@@ -295,6 +298,6 @@ class Client
      */
     public function deleteOriginalSignaturePdf($data, $npi)
     {
-        return $this->requestDelete('enrollment_npis/' . $npi . '/original_signature_pdf', $data);
+        return $this->requestDelete('enrollment_npis/' . $npi . '/original_signature_pdf', $data, 'form_params');
     }
 }

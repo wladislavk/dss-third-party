@@ -175,6 +175,16 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, functi
     return [];
 });
 
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment::class, function ($faker) {
+    return [
+        'note_id'    => $faker->randomDigit,
+        'filename'   => $faker->sentence($nbWords = 6),
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\Complaint::class, function ($faker) {
     return [
         'complaint'   => $faker->sentence($nbWords = 6),

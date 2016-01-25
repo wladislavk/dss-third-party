@@ -48,5 +48,9 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
+        $this->app->bind(
+            'DentalSleepSolutions\\Contracts\\Repositories\\ClaimNoteAttachments',
+            'DentalSleepSolutions\\Eloquent\\Dental\\ClaimNoteAttachment'
+        );
     }
 }

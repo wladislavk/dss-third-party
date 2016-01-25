@@ -175,6 +175,17 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, functi
     return [];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Complaint::class, function ($faker) {
+    return [
+        'complaint'   => $faker->sentence($nbWords = 6),
+        'description' => $faker->sentence($nbWords = 6),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\CustomText::class, function ($faker) {
     return [
         'title'        => $faker->sentence($nbWords = 3),
@@ -239,10 +250,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Device::class, function ($
 $factory->define(DentalSleepSolutions\Eloquent\Dental\ContactType::class, function ($faker) {
     return [
         'contacttype' => $faker->sentence($nbWords = 3),
-        'description' => $faker->sentence($nbWords = 6),
-        'sortby'      => $faker->randomDigit,
-        'status'      => $faker->randomDigit,
-        'adddate'     => $faker->dateTime(),
         'ip_address'  => $faker->ipv4,
         'physician'   => $faker->randomDigit,
         'corporate'   => $faker->randomDigit,

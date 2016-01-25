@@ -36,10 +36,17 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Calendar::class => [Repositories\Calendars::class, Resources\Calendar::class],
         ];
 
+
+        $this->app->bind(
+            'DentalSleepSolutions\\Contracts\\Repositories\\Complaints',
+            'DentalSleepSolutions\\Eloquent\\Dental\\Complaint'
+        );
+
         foreach ($bindings as $concrete => $contracts) {
             foreach ((array)$contracts as $contract) {
                 $this->app->bind($contract, $concrete);
             }
         }
+
     }
 }

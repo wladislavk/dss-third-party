@@ -252,6 +252,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
             </td>
             <td valign="top" class="frmdata">
 	  <select name="ins_co_id" class="readonly" onclick="return false;" readonly="readonly">
+          <option value="">Select Insurance Company</option>
 <?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hst['doc_id']."'";
                             $ins_contact_qry_run = mysqli_query($con,$ins_contact_qry);

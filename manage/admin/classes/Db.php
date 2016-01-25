@@ -102,8 +102,8 @@ class Db
 	{
 		if( $query_string ) {
 			$result = $this->query($query_string);
-			$indert_id = mysqli_insert_id($this->con);
-			return $indert_id;
+			$insert_id = $result ? mysqli_insert_id($this->con) : 0;
+			return $insert_id;
 		}
 	}
 

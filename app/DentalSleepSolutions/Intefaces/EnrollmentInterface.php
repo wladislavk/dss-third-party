@@ -15,15 +15,6 @@ interface EnrollmentInterface
      *
      *
      * @param array $enrollmentParams
-     * @param null $apiKey
-     * @return mixed
-     */
-    public function createEnrollment(array $enrollmentParams, $apiKey=null);
-
-    /**
-     *
-     *
-     * @param array $enrollmentParams
      * @param int $enrollmentId
      * @param string $apiKey
      * @return mixed
@@ -57,14 +48,6 @@ interface EnrollmentInterface
      */
     public function saveEnrollmentDetailsToDatabase(array $data = []);
 
-
-    /**
-     *
-     *
-     * @param int $userId
-     * @return mixed
-     */
-    public function listEnrollments($userId);
 
     /**
      *

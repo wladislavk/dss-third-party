@@ -1,23 +1,13 @@
 # ds3-private03
+
 Laravel 5.1 Installation for DS3 API
 
-NOTE* - Every function or line of code added this repo must have a test package or it will not be accepted for merging, any pull request that does not also include a test package
-will be deleted. The new testing API rolled into Laravel 5.1 makes testing pretty easy, so writing tests are no longer a nightmare.
+Thorough info about the project can be found in the [wiki](https://github.com/dentalsleepsolutions/ds3-private03/wiki).
 
-See: http://laravel.com/docs/5.1/testing
+## Contributing
 
-Writing tests have become pretty easy.
+All the code commited to the repo must be tested. Each single API endpoint must be covered with functional tests using [Laravel test tools](https://laravel.com/docs/5.1/testing).
 
-Initial Steps for getting this setup. Post GIT Pull of course.
+Additionally unit tests should cover all of the domain logic classes. **PHPUNIT** is the framework used for testing.
 
-1. ssh into the vagrant box
-2. composer install if you've not already done so.
-3. running vendor/bin/phpunit does not work out of the box for some reason.
-   Fix* - sudo apt-get install phpunit - this will throw an error, ignore the error and run sudo apt-get update --fix-missing
-        - then run sudo apt-get install phpunit a 2nd time, also ignore the fact that it will try to start apache...
-        Now just run phpunit without vendor/bin/phpunit and all works fine.
-
-Note* - Laracasts integrated package is no longer required, its all backed into 5.1
-
-That's pretty much it to get started. All tests will reside in the default tests folder. There are a few examples pre-loaded in the folder.
-
+The code must follow [PSR-1 & 2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) code-style standards as well as [PSR-4](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) autoloading standard.

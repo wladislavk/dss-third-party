@@ -547,14 +547,14 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
             <p>
                 <label class="desc">Transmitted Electronically Via DS3 Software.</label>
             </p>
-            <label class="desc"><?= e($bu_r['name']) ?></label>
+            <label class="desc"><?= e($hstData['name']) ?></label>
         </li>
         <li>
-            Office: <?= format_phone($bu_r['phone']) ?>
+            Office: <?= format_phone($hstData['phone']) ?>
             -
-            Fax: <?= format_phone($bu_r['fax']) ?>
+            Fax: <?= format_phone($hstData['fax']) ?>
             -
-            Email: <?= e($bu_r['email']) ?>
+            Email: <?= e($hstData['email']) ?>
         </li>
     </ul>
     <?php if ($showSubmitAction) { ?>

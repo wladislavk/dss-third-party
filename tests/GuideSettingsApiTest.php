@@ -14,7 +14,7 @@ class GuideSettingsApiTest extends TestCase
      * Post to /api/v1/guide-settings -> GuideSettingsController@store method
      * 
      */
-    public function testAddCharge()
+    public function testAddGuideSetting()
     {
         $data = [
             'name'         => 'John Doe',
@@ -34,7 +34,7 @@ class GuideSettingsApiTest extends TestCase
      * Put to /api/v1/guide-settings/{id} -> GuideSettingsController@update method
      * 
      */
-    public function testUpdateCharge()
+    public function testUpdateGuideSetting()
     {
         $guideSettingTestRecord = factory(GuideSetting::class)->create();
 
@@ -53,7 +53,7 @@ class GuideSettingsApiTest extends TestCase
      * Delete to /api/v1/guide-settings/{id} -> GuideSettingsController@destroy method
      * 
      */
-    public function testDeleteCharge()
+    public function testDeleteGuideSetting()
     {
         $guideSettingTestRecord = factory(GuideSetting::class)->create();
 

@@ -14,7 +14,7 @@ class GuideDevicesApiTest extends TestCase
      * Post to /api/v1/guide-devices -> GuideDevicesController@store method
      * 
      */
-    public function testAddCharge()
+    public function testAddGuideDevice()
     {
         $data = [
             'name' => 'John Doe'
@@ -30,7 +30,7 @@ class GuideDevicesApiTest extends TestCase
      * Put to /api/v1/guide-devices/{id} -> GuideDevicesController@update method
      * 
      */
-    public function testUpdateCharge()
+    public function testUpdateGuideDevice()
     {
         $guideDeviceTestRecord = factory(GuideDevice::class)->create();
 
@@ -48,7 +48,7 @@ class GuideDevicesApiTest extends TestCase
      * Delete to /api/v1/guide-devices/{id} -> GuideDevicesController@destroy method
      * 
      */
-    public function testDeleteCharge()
+    public function testDeleteGuideDevice()
     {
         $guideDeviceTestRecord = factory(GuideDevice::class)->create();
 

@@ -14,7 +14,7 @@ class GuideDeviceSettingsApiTest extends TestCase
      * Post to /api/v1/guide-device-settings -> GuideDeviceSettingsController@store method
      * 
      */
-    public function testAddCharge()
+    public function testAddGuideDeviceSetting()
     {
         $data = [
             'device_id'  => 10,
@@ -32,7 +32,7 @@ class GuideDeviceSettingsApiTest extends TestCase
      * Put to /api/v1/guide-device-settings/{id} -> GuideDeviceSettingsController@update method
      * 
      */
-    public function testUpdateCharge()
+    public function testUpdateGuideDeviceSetting()
     {
         $guideDeviceSettingTestRecord = factory(GuideDeviceSetting::class)->create();
 
@@ -50,7 +50,7 @@ class GuideDeviceSettingsApiTest extends TestCase
      * Delete to /api/v1/guide-device-settings/{id} -> GuideDeviceSettingsController@destroy method
      * 
      */
-    public function testDeleteCharge()
+    public function testDeleteGuideDeviceSetting()
     {
         $guideDeviceSettingTestRecord = factory(GuideDeviceSetting::class)->create();
 

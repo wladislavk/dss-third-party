@@ -3,6 +3,7 @@ include "includes/top.htm";
 include_once "includes/constants.inc";
 
 $specialFilter = '';
+$isDefaultFilter = false;
 
 if (isset($_GET['filed_by'])) {
     switch ($_GET['filed_by']) {
@@ -14,6 +15,7 @@ if (isset($_GET['filed_by'])) {
 }
 
 if(!isset($_GET['sort1'])){
+    $isDefaultFilter = true;
     $_GET['sort1']='oldest';
     $_GET['dir1']='ASC';
 }
@@ -57,7 +59,6 @@ if(isset($_REQUEST["delid"]))
  */
 $frontOfficeClaimsConditional = frontOfficeClaimsConditional();
 $backOfficeClaimsConditional = backOfficeClaimsConditional();
-$filedByBackOfficeConditional = filedByBackOfficeConditional();
 
 switch ($specialFilter) {
     case 'both':
@@ -189,7 +190,9 @@ if (isset($_GET['unmailed'])) {
     $sql .= " AND claim.mailed_date IS NULL AND claim.sec_mailed_date is NULL ";
 }
 
-if (isset($_GET['sort2'])) {
+if ($isDefaultFilter) {
+    $sort = " claim.adddate DESC, p.lastname ASC, p.firstname ASC";
+} elseif (isset($_GET['sort2'])) {
     if ($_GET['sort2'] == 'patient') {
         $sort = "p.lastname ".$_GET['dir2'].", p.firstname ".$_GET['dir2'];
     } else {
@@ -209,8 +212,15 @@ $my = $db->getResults($sql);
     #patient_nav {
         width: 98.6%;
         margin: auto;
-        padding-top: 10px;
-        margin-bottom: 10px;
+        padding-top: 15px;
+        margin-bottom: 15px;
+    }
+    #patient_nav > ul > li:last-child {
+        padding-right: 15px;
+        float: right;
+    }
+    #patient_nav > ul > li:last-child mark {
+        background-color: #b7b7b7;
     }
 </style>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
@@ -218,14 +228,21 @@ $my = $db->getResults($sql);
 <div id="patient_nav">
     <ul>
         <li>
-            <a class="<?= !$specialFilter ? 'nav_active' : '' ?>" href="/manage/manage_claims.php">FO Claims</a>
+            <a class="<?= !$specialFilter ? 'nav_active' : '' ?>" href="/manage/manage_claims.php">
+                My Claims
+            </a>
         </li>
         <li>
-            <a class="<?= $specialFilter == 'back' ? 'nav_active' : '' ?>" href="/manage/manage_claims.php?filed_by=back">BO Claims</a>
+            <a class="<?= $specialFilter == 'back' ? 'nav_active' : '' ?>" href="/manage/manage_claims.php?filed_by=back">
+                External Billing Claims
+            </a>
         </li>
         <li>
-            <a class="<?= $specialFilter == 'both' ? 'nav_active' : '' ?>" href="/manage/manage_claims.php?filed_by=both">Both</a>
+            <a class="<?= $specialFilter == 'both' ? 'nav_active' : '' ?>" href="/manage/manage_claims.php?filed_by=both">
+                All Claims
+            </a>
         </li>
+        <li>Note: Claims sent via <mark>3rd party billing service</mark> are visible in "External Billing Claims"</li>
     </ul>
 </div>
 
@@ -256,19 +273,19 @@ if(isset($_GET['msg'])){
 ?>
 <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
     <tr class="tr_bg_h">
-        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="15%">
             <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=electronic_adddate&dir2=<?php echo ($_GET['sort2']=='electronic_adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
         </td>
-        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="35%">
            <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=patient&dir2=<?php echo ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
         </td>
-        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="30%">
+        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
            <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=status&dir2=<?php echo ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
         </td>
-        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="30%">
+        <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="10%">
             <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=notes&dir2=<?php echo ($_GET['sort2']=='notes' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Notes</a>
         </td>
-        <td valign="top" class="col_head" width="15%">
+        <td valign="top" class="col_head" width="20%">
             Action
         </td>
     </tr>
@@ -397,10 +414,10 @@ if(v == '100'){
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
   <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
       <tr class="tr_bg_h">
-      	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="40%">
+      	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="15%">
       		<a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=electronic_adddate&dir2=<?php echo ($_GET['sort2']=='electronic_adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
       	</td>
-      	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+      	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="35%">
       		<a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=patient&dir2=<?php echo ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
       	</td>
       	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
@@ -409,7 +426,7 @@ if(v == '100'){
       	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="10%">
       		<a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=notes&dir2=<?php echo ($_GET['sort2']=='notes' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Notes</a>
       	</td>
-      	<td valign="top" class="col_head" width="20%">
+      	<td valign="top" class="col_head" width="10%">
       		Action
       	</td>
       	<td valign="top" class="col_head" width="10%">

@@ -1,6 +1,6 @@
 <?php
 
-namespace DentalSleepSolutions\Eloquent;
+namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
@@ -17,7 +17,7 @@ class Document extends Model implements Resource, Repository
      * @var array
      */
     protected $fillable = [
-
+        'categoryid', 'name', 'filename'
     ];
 
     /**

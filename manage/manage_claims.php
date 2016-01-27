@@ -398,16 +398,16 @@ if(v == '100'){
   <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
       <tr class="tr_bg_h">
       	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="40%">
-      		<a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=electronic_adddate&dir2=<?php echo ($_GET['sort2']=='electronic_adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
+      		<a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=electronic_adddate&dir2=<?php echo ($_GET['sort2']=='electronic_adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
       	</td>
       	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
-      		<a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=patient&dir2=<?php echo ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
+      		<a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=patient&dir2=<?php echo ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
       	</td>
       	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
-      		<a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=status&dir2=<?php echo ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
+      		<a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=status&dir2=<?php echo ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
       	</td>
       	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="10%">
-      		<a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=notes&dir2=<?php echo ($_GET['sort2']=='notes' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Notes</a>
+      		<a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=notes&dir2=<?php echo ($_GET['sort2']=='notes' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Notes</a>
       	</td>
       	<td valign="top" class="col_head" width="20%">
       		Action

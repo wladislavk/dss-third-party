@@ -2,6 +2,17 @@
 include "includes/top.htm";
 include_once "includes/constants.inc";
 
+$specialFilter = '';
+
+if (isset($_GET['filed_by'])) {
+    switch ($_GET['filed_by']) {
+        case 'back':
+        case 'both':
+            $specialFilter = $_GET['filed_by'];
+            break;
+    }
+}
+
 if(!isset($_GET['sort1'])){
     $_GET['sort1']='oldest';
     $_GET['dir1']='ASC';
@@ -45,6 +56,19 @@ if(isset($_REQUEST["delid"]))
  * YES indicator will be 3.
  */
 $frontOfficeClaimsConditional = frontOfficeClaimsConditional();
+$backOfficeClaimsConditional = backOfficeClaimsConditional();
+$filedByBackOfficeConditional = filedByBackOfficeConditional();
+
+switch ($specialFilter) {
+    case 'both':
+        $whichOfficeConditional = '(TRUE)';
+        break;
+    case 'back':
+        $whichOfficeConditional = $backOfficeClaimsConditional;
+        break;
+    default:
+        $whichOfficeConditional = $frontOfficeClaimsConditional;
+}
 
 $pend_sql = "SELECT
         claim.*,
@@ -59,28 +83,24 @@ $pend_sql = "SELECT
             WHERE e.claimid = claim.insuranceid
             ORDER by e.adddate DESC
             LIMIT 1
-        ) AS electronic_adddate
+        ) AS electronic_adddate,
+        $backOfficeClaimsConditional AS belongs_to_bo
     FROM dental_insurance claim
+        LEFT JOIN dental_patients p ON claim.patientid = p.patientid
         JOIN dental_users users ON claim.docid = users.userid
         LEFT JOIN companies c ON c.id = users.billing_company_id
-        LEFT JOIN dental_patients p ON claim.patientid = p.patientid
         LEFT JOIN (
             SELECT claim_id, COUNT(id) num_notes
             FROM dental_claim_notes
             GROUP BY claim_id
         ) notes ON notes.claim_id = claim.insuranceid
-    WHERE p.docid = '{$_SESSION['docid']}'
-        AND $frontOfficeClaimsConditional
+    WHERE claim.docid = '{$_SESSION['docid']}'
+        AND $whichOfficeConditional
         ";
 
 $pend_sql .= "
         AND (
-            claim.status IN (
-                '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
-                '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
-                '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
-                '" . DSS_CLAIM_PATIENT_DISPUTE . "', '" . DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
-            )
+            claim.status IN (" . $db->escapeList(ClaimFormData::statusListByName('actionable')) . ")
         )
         ";
 
@@ -125,30 +145,24 @@ $sql = "SELECT
             WHERE e.claimid = claim.insuranceid
             ORDER by e.adddate DESC
             LIMIT 1
-        ) AS electronic_adddate
+        ) AS electronic_adddate,
+        $backOfficeClaimsConditional AS belongs_to_bo
     FROM dental_insurance claim
+        LEFT JOIN dental_patients p ON claim.patientid = p.patientid
         JOIN dental_users users ON claim.docid = users.userid
         LEFT JOIN companies c ON c.id = users.billing_company_id
-        LEFT JOIN dental_patients p ON claim.patientid = p.patientid
         LEFT JOIN (
             SELECT claim_id, COUNT(id) AS num_notes
             FROM dental_claim_notes
             GROUP BY claim_id
         ) notes ON notes.claim_id = claim.insuranceid
-    WHERE p.docid = '{$_SESSION['docid']}'
-        AND $frontOfficeClaimsConditional
+    WHERE claim.docid = '{$_SESSION['docid']}'
+        AND $whichOfficeConditional
         ";
 
 if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
     $sql .= "
-        AND claim.status NOT IN (
-            '" . DSS_CLAIM_PENDING . "',
-            '" . DSS_CLAIM_SEC_PENDING . "',
-            '" . DSS_CLAIM_DISPUTE . "',
-            '" . DSS_CLAIM_SEC_DISPUTE . "',
-            '" . DSS_CLAIM_REJECTED . "',
-            '" . DSS_CLAIM_SEC_REJECTED . "'
-        )
+        AND claim.status NOT IN (" . $db->escapeList(ClaimFormData::statusListByName('actionable')) . ")
         ";
 }
 
@@ -188,18 +202,43 @@ $my = $db->getResults($sql);
 
 ?>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<style type="text/css">
+    #contentMain > br:first-of-type {
+        display: none;
+    }
+    #patient_nav {
+        width: 98.6%;
+        margin: auto;
+        padding-top: 10px;
+        margin-bottom: 10px;
+    }
+</style>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
+
+<div id="patient_nav">
+    <ul>
+        <li>
+            <a class="<?= !$specialFilter ? 'nav_active' : '' ?>" href="/manage/manage_claims.php">FO Claims</a>
+        </li>
+        <li>
+            <a class="<?= $specialFilter == 'back' ? 'nav_active' : '' ?>" href="/manage/manage_claims.php?filed_by=back">BO Claims</a>
+        </li>
+        <li>
+            <a class="<?= $specialFilter == 'both' ? 'nav_active' : '' ?>" href="/manage/manage_claims.php?filed_by=both">Both</a>
+        </li>
+    </ul>
+</div>
 
 <span class="admin_head">
   Pending Claims 
 </span>
 <div style="float: right; margin-right: 20px;">
   <?php if(!isset($_GET['notes'])){ ?>
-    <a href="manage_claims.php?notes=1" class="addButton">Show Claims w Notes</a>
+    <a href="manage_claims.php?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>notes=1" class="addButton">Show Claims w Notes</a>
   <?php }
 
   if(isset($_GET['notes'])){ ?>
-    <a href="manage_claims.php" class="addButton">Show All</a>
+    <a href="manage_claims.php<?= $specialFilter ? "?filed_by=$specialFilter" : '' ?>" class="addButton">Show All</a>
   <?php } ?>
 </div>
 
@@ -218,16 +257,16 @@ if(isset($_GET['msg'])){
 <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
     <tr class="tr_bg_h">
         <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
-            <a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=electronic_adddate&dir2=<?php echo ($_GET['sort2']=='electronic_adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
+            <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=electronic_adddate&dir2=<?php echo ($_GET['sort2']=='electronic_adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
         </td>
         <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
-           <a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=patient&dir2=<?php echo ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
+           <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=patient&dir2=<?php echo ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
         </td>
         <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="30%">
-           <a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=status&dir2=<?php echo ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
+           <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=status&dir2=<?php echo ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
         </td>
         <td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="30%">
-            <a href="?filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=notes&dir2=<?php echo ($_GET['sort2']=='notes' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Notes</a>
+            <a href="?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>filter=<?php echo $_GET['filter']; ?>&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=notes&dir2=<?php echo ($_GET['sort2']=='notes' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Notes</a>
         </td>
         <td valign="top" class="col_head" width="15%">
             Action
@@ -245,18 +284,10 @@ if(isset($_GET['msg'])){
     else
     {
         foreach ($pend_my as $pend_myarray) {
-
-            if($pend_myarray["status"] == 1)
-            {
-                    $tr_class = "tr_active";
-            }
-            else
-            {
-                    $tr_class = "tr_inactive";
-            }
-            $tr_class = "tr_active";
+            $tr_class = $pend_myarray['belongs_to_bo'] ? 'tr_inactive' : 'tr_active';
         ?>
-    <tr class="<?php echo $tr_class;?> status_<?php echo $pend_myarray['status']; ?> claim">
+    <tr class="<?php echo $tr_class;?> status_<?php echo $pend_myarray['status']; ?> claim"
+        <?= $pend_myarray['belongs_to_bo'] ? 'title="This claim is handled by BO"' : '' ?>>
         <td valign="top">
             <?php echo date('m-d-Y H:i',strtotime((($pend_myarray["electronic_adddate"]!='')?$pend_myarray["electronic_adddate"]:$pend_myarray["adddate"])));?>
         </td>
@@ -315,23 +346,23 @@ if(isset($_GET['unpaid'])){ ?>
 </select>
 <div style="float: right; margin-right: 20px;">
 <?php if(!isset($_GET['notes'])){ ?>
-    <a href="manage_claims.php?notes=1" class="addButton">Show Claims w Notes</a>
+    <a href="manage_claims.php?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>notes=1" class="addButton">Show Claims w Notes</a>
 <?php }
 if(!isset($_GET['unpaid'])){ ?>
-    <a href="manage_claims.php?unpaid=30" class="addButton">Show Unpaid Claims 30 day+</a>
+    <a href="manage_claims.php?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>unpaid=30" class="addButton">Show Unpaid Claims 30 day+</a>
 <?php }
 if(!isset($_GET['unmailed'])){ ?>
-    <a href="manage_claims.php?unmailed=1" class="addButton">Show Unmailed Claims</a>
+    <a href="manage_claims.php?<?= $specialFilter ? "filed_by=$specialFilter&amp;" : '' ?>unmailed=1" class="addButton">Show Unmailed Claims</a>
 <?php }
 if(isset($_GET['notes']) || isset($_GET['unmailed']) || isset($_GET['unpaid'])){ ?>
-    <a href="manage_claims.php" class="addButton">Show All</a>
+    <a href="manage_claims.php<?= $specialFilter ? "?filed_by=$specialFilter" : '' ?>" class="addButton">Show All</a>
 <?php } ?>
 </div>
 
 <script type="text/javascript">
 
 function updateClaims(v){
-  window.location="?filter="+v+"&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=<?php echo $_GET['sort2']; ?>&dir2=<?php echo $_GET['dir2']; ?>";
+  window.location="?<?= $specialFilter ? "filed_by=$specialFilter&" : '' ?>filter="+v+"&sort1=<?php echo $_GET['sort1']; ?>&dir1=<?php echo $_GET['dir1']; ?>&sort2=<?php echo $_GET['sort2']; ?>&dir2=<?php echo $_GET['dir2']; ?>";
 }
 
 $('document').ready( function(){
@@ -363,7 +394,7 @@ if(v == '100'){
 });
 </script>
 
-<insurance name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+<form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
   <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
       <tr class="tr_bg_h">
       	<td valign="top" class="col_head <?php echo ($_GET['sort2'] == 'electronic_adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="40%">
@@ -404,17 +435,10 @@ if(v == '100'){
               	  $is_secondary = false;
              	}
 
-        			if($myarray["status"] == 1)
-        			{
-        				$tr_class = "tr_active";
-        			}
-        			else
-        			{
-        				$tr_class = "tr_inactive";
-        			}
-        			$tr_class = "tr_active";
+                $tr_class = $myarray['belongs_to_bo'] ? 'tr_inactive' : 'tr_active';
       ?>
-      <tr class="<?php echo $tr_class;?> status_<?php echo $myarray['status']; ?> claim">
+      <tr class="<?php echo $tr_class;?> status_<?php echo $myarray['status']; ?> claim"
+          <?= $myarray['belongs_to_bo'] ? 'title="This claim is handled by BO"' : '' ?>>
           <td valign="top">
               <?php echo date('m-d-Y H:i',strtotime((($myarray["electronic_adddate"]!='')?$myarray["electronic_adddate"]:$myarray["adddate"])));?>
           </td>
@@ -439,11 +463,15 @@ if(v == '100'){
           <?php if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { 
               if($is_secondary){ ?>
           <td>
-              <input type="checkbox" class="sec_mailed_chk" value="<?php echo $myarray['insuranceid']; ?>" <?php echo ($myarray['sec_mailed_date'] !='')?'checked="checked"':''; ?> />
+              <input type="checkbox" <?= $myarray['belongs_to_bo'] ? 'disabled' : '' ?>
+                  class="sec_mailed_chk <?= $myarray['belongs_to_bo'] ? 'filed-by-bo' : '' ?>"
+                  value="<?php echo $myarray['insuranceid']; ?>" <?php echo ($myarray['sec_mailed_date'] !='')?'checked="checked"':''; ?> />
           </td>
           <?php }else{ ?>
           <td>
-              <input type="checkbox" class="mailed_chk" value="<?php echo $myarray['insuranceid']; ?>" <?php echo ($myarray['mailed_date'] !='')?'checked="checked"':''; ?> />
+              <input type="checkbox" <?= $myarray['belongs_to_bo'] ? 'disabled' : '' ?>
+                  class="mailed_chk <?= $myarray['belongs_to_bo'] ? 'filed-by-bo' : '' ?>"
+                  value="<?php echo $myarray['insuranceid']; ?>" <?php echo ($myarray['mailed_date'] !='')?'checked="checked"':''; ?> />
           </td>
           <?php } 
           } ?>
@@ -456,7 +484,7 @@ if(v == '100'){
       <?php 	}
       }?>
   </table>
-</insurance>
+</form>
 
 <br/><br/>
 
@@ -471,7 +499,7 @@ if(v == '100'){
 <? include "includes/bottom.htm";?>
 
 <script type="text/javascript">
-  $('.mailed_chk').click( function(){
+  $('.mailed_chk:not(.filed-by-bo)').click( function(){
     lid = $(this).val();
     c = $(this).is(':checked');
     type = 'pri';
@@ -492,7 +520,7 @@ if(v == '100'){
                                   });
 
   });
-  $('.sec_mailed_chk').click( function(){
+  $('.sec_mailed_chk:not(.filed-by-bo)').click( function(){
     lid = $(this).val();
     c = $(this).is(':checked');
     type = 'sec';

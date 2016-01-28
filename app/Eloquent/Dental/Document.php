@@ -17,7 +17,8 @@ class Document extends Model implements Resource, Repository
      * @var array
      */
     protected $fillable = [
-        'categoryid', 'name', 'filename'
+        'categoryid', 'name', 'filename',
+        'adddate', 'ip_address'
     ];
 
     /**

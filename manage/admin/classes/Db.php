@@ -112,8 +112,8 @@ class Db
 		return mysqli_real_escape_string($this->con, $string);
 	}
 
-    public static function escapeList (Array $values) {
-        $db = new Db();
+    public function escapeList (Array $values) {
+        $db = $this;
 
         array_walk($values, function (&$each) use ($db) {
             $each = "'" . $db->escape($each) . "'";
@@ -124,6 +124,16 @@ class Db
 
     public static function escapeAssignmentList (Array $values) {
         $db = new Db();
+
+        array_walk($values, function (&$each, $key) use ($db) {
+            $each = $db->escape($key) . " = '" . $db->escape($each) . "'";
+        });
+
+        return join(', ', $values);
+    }
+
+    public function escapeAssignmentList (Array $values) {
+        $db = $this;
 
         array_walk($values, function (&$each, $key) use ($db) {
             $each = $db->escape($key) . " = '" . $db->escape($each) . "'";

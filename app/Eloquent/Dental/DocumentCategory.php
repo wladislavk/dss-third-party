@@ -17,7 +17,7 @@ class DocumentCategory extends Model implements Resource, Repository
      * @var array
      */
     protected $fillable = [
-        'name', 'status'
+        'name', 'status', 'adddate', 'ip_address'
     ];
 
     /**

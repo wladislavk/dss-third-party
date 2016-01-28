@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php namespace Ds3\Libraries\Legacy; ?><?php
     include_once('admin/includes/main_include.php');
     include("includes/sescheck.php");
     include_once('admin/includes/password.php');
@@ -10,7 +10,11 @@ $isMainAccount = $_SESSION['docid'] == $_SESSION['userid'];
 $isStaff = $db->getColumn("SELECT manage_staff FROM dental_users WHERE userid = '$userId'", 'manage_staff') == 1;
 $isSelfManaged = $_SESSION['userid'] == (isset($_POST['ed']) ? $_POST['ed'] : $_GET['ed']);
 
-if (!$isMainAccount && !$isStaff && !$isSelfManaged) { ?>
+$canCreate = $isMainAccount || $isStaff;
+$canEdit = $isMainAccount || $isStaff || $isSelfManaged;
+$canEditUsername = $isMainAccount || $isSelfManaged;
+
+if (!$canEdit) { ?>
     <br />You do not have permissions to edit staff.
     <?php
     trigger_error("Die called", E_USER_ERROR);
@@ -27,7 +31,10 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
     $postUserId = intval($_POST['ed']);
     $postUsername = trim($_POST['username']);
     $postEmail = trim($_POST['email']);
+
     $isSelfManaged = $_SESSION['userid'] == $postUserId;
+    $canEdit = $isMainAccount || $isStaff || $isSelfManaged;
+    $canEditUsername = $isMainAccount || $isSelfManaged;
 
     $errorMessage = '';
 
@@ -62,7 +69,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
             'email' => $_POST['email'],
         ];
 
-        if ($isMainAccount) {
+        if ($canCreate) {
             $userPermissions = [
                 'producer' => $_POST['producer'] == 1 ? 1 : 0,
                 'producer_files' => $_POST['producer'] == 1 && $_POST['producer_files'] == 1 ? 1 : 0,
@@ -102,7 +109,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
         if ($postUserId) {
             $oldUsername = $db->getColumn("SELECT username FROM dental_users WHERE userid = '$postUserId'", 'username');
 
-            if (($isMainAccount || $isSelfManaged) && ($oldUsername != $postUsername)) {
+            if ($canEditUsername && ($oldUsername != $postUsername)) {
                 $userData['username'] = $postUsername;
             }
 
@@ -119,7 +126,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
             <?php
 
             trigger_error("Die called", E_USER_ERROR);
-        } elseif ($isMainAccount) {
+        } elseif ($canCreate) {
             $salt = create_salt();
             $password = gen_password($_POST['password'], $salt);
 
@@ -521,11 +528,11 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
         </form>
 
         <script type="text/javascript" src="js/add_staff.js"></script>
-        <?php if (!$isMainAccount) { ?>
+        <?php if (!$canCreate) { ?>
             <script>
                 $('input, select')
                     .not('[type=hidden], [type=submit], [name=first_name], [name=last_name], [name=email]')
-                    <?php if (!empty($isSelfManaged)) { ?>.not('[name=username]')<?php } ?>
+                    <?php if ($canEditUsername) { ?>.not('[name=username]')<?php } ?>
                     .prop('disabled', true);
             </script>
         <?php } ?>

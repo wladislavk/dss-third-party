@@ -1396,7 +1396,7 @@ Medicare
 							<tr>
 								<td width="58%" align="left" valign="top">
 									<span class="num">14.</span>
-DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
+DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 									<br />
 									&nbsp;&nbsp;
                                     <input id="date_current" name="date_current" type="text" class="field text addr tbox calendar"

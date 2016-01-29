@@ -98,7 +98,7 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
             'ip_address' => $_SERVER['REMOTE_ADDR']
         ];
 
-        $insertData = $db->escapeList($insertData);
+        $insertData = $db->escapeAssignmentList($insertData);
 
         $hstId = $db->getInsertId("INSERT INTO dental_hst
             SET $insertData, authorized_id = NULL, authorizeddate = NULL, adddate = NOW()");

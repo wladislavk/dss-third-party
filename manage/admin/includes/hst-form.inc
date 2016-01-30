@@ -8,40 +8,94 @@ $is_front_office = empty($is_back_office);
 $userId = intval($_SESSION['userid']);
 $docId = intval($_SESSION['docid']);
 
+$hstCompanyType = DSS_COMPANY_TYPE_HST;
+$hstStatusRequested = DSS_HST_REQUESTED;
+
 if (isset($_GET['hst_id'])) {
     $hstId = intval($_GET['hst_id']);
 
     $hstData = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
     $patientId = $hstData ? $hstData['patientid'] : 0;
     $hstCompanyId = $hstData ? $hstData['company_id'] : 0;
-
-    $bu_sql = "SELECT h.*, uhc.id as uhc_id
-        FROM companies h
-            JOIN dental_user_hst_company uhc ON uhc.companyid = h.id
-                AND uhc.userid = '$docId'
-        WHERE h.company_type = '" . DSS_COMPANY_TYPE_HST . "'
-        ORDER BY name ASC";
-
-    $hstCompanyList = $db->getResults($bu_sql);
 } else {
-    $hstId = 0;
     $patientId = intval($_GET['ed']);
     $hstCompanyId = intval($_GET['hst_co']);
+
+    $hstData = $db->getRow("SELECT * FROM dental_hst
+        WHERE patient_id = '$patientId' AND company_id = '$hstCompanyId' AND status = '$hstStatusRequested'");
+    $hstId = $hstData ? $hstData['id'] : 0;
 }
 
-$bu_sql = "SELECT h.*, uhc.id as uhc_id
+$hstCompanyList = $db->getResults("SELECT h.*, uhc.id as uhc_id
     FROM companies h
         JOIN dental_user_hst_company uhc ON uhc.companyid = h.id
             AND uhc.userid = '$docId'
-    WHERE h.company_type = '" . DSS_COMPANY_TYPE_HST . "'
+    WHERE h.company_type = '$hstCompanyType'
+    ORDER BY name ASC");
+
+$hstCompany = $db->getRow("SELECT h.*, uhc.id as uhc_id
+    FROM companies h
+        JOIN dental_user_hst_company uhc ON uhc.companyid = h.id
+            AND uhc.userid = '$docId'
+    WHERE h.company_type = '$hstCompanyType'
         AND h.id = '$hstCompanyId'
-    ORDER BY name ASC";
+    ORDER BY name ASC");
 
-$hstCompany = $db->getRow($bu_sql);
-$showSubmitAction = $is_front_office && (!isset($hstCompanyList) || $hstCompany['status'] == DSS_HST_PENDING);
+$patientData = $db->getRow("SELECT
+        p.firstname AS 'patient_firstname',
+        p.lastname AS 'patient_lastname',
+        p.dob AS 'patient_dob',
+        p.add1 AS 'patient_add1',
+        p.add2 AS 'patient_add2',
+        p.city AS 'patient_city',
+        p.state AS 'patient_state',
+        p.zip AS 'patient_zip',
+        p.cell_phone AS 'patient_cell_phone',
+        p.home_phone AS 'patient_home_phone',
+        p.email AS 'patient_email',
+        p.p_m_ins_id AS 'patient_ins_id',
+        p.p_m_ins_grp AS 'patient_ins_group_id',
+        p.p_m_ins_co AS 'ins_co_id',
+        i.phone1 AS 'ins_phone',
+        u.first_name AS 'provider_firstname',
+        u.last_name AS 'provider_lastname',
+        u.email AS 'provider_email',
+        u.address AS 'provider_address',
+        u.city AS 'provider_city',
+        u.state AS 'provider_state',
+        u.zip AS 'provider_zip'
+    FROM dental_patients p
+        LEFT JOIN dental_contact i ON i.contactid = p.p_m_ins_co
+        LEFT JOIN dental_users u ON u.userid = p.docid
+    WHERE p.patientid = '$patientId'");
 
-$canAuthorize = ($docId == $userId) ||
-    $db->getColumn("SELECT sign_notes FROM dental_users where userid = '$userId'", 'sign_notes');
+$hstData = !empty($hstData) ? $hstData : [];
+
+if (!$hstData && $patientData) {
+    $hstData = $patientData + [
+            'company_id' => 0,
+            'diagnosis_id' => 0,
+            'hst_type' => 0,
+            'hst_nights' => 2,
+            'hst_positions' => '',
+            'provider_signature' => 1,
+            'provider_date' => date('m/d/Y'),
+        ];
+}
+
+$hstData['hst_positions'] = @json_decode($hstData['hst_positions']);
+$hstData['hst_positions'] = $hstData['hst_positions'] ?: [];
+
+$diagnosticNightsLimit = 2;
+$oatNightsLimit = 3;
+
+$nightsDefault = $hstData['hst_nights'] ?: 2;
+
+$canAuthorize = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED && (
+        ($docId == $userId) ||
+        $db->getColumn("SELECT sign_notes FROM dental_users where userid = '$userId'", 'sign_notes')
+    );
+$canFinishLater = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED;
 
 if (isset($_POST['authorize']) || isset($_POST['save'])) {
     $hstId = intval($_POST['hst_id']);
@@ -102,9 +156,6 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
 
         $hstId = $db->getInsertId("INSERT INTO dental_hst
             SET $insertData, authorized_id = NULL, authorizeddate = NULL, adddate = NOW()");
-
-        // Redefine this legacy variable, to avoid breaking old behavior
-        $hst_id = $hstId;
     }
 
     if (!$authorize) { ?>
@@ -155,7 +206,7 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
 
             if ($chk != '') {
                 $hst_sql = "INSERT INTO dental_hst_epworth SET
-                    hst_id = '" . $db->escape($hst_id) . "',
+                    hst_id = '" . $db->escape($hstId) . "',
                     epworth_id = '" . $db->escape($epworth_myarray['epworthid']) . "',
                     response = '" . $db->escape($chk) . "',
                     adddate = now(),
@@ -213,8 +264,8 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
                     "</table>" .
                 "</center>" .
                 "<span style='font-size:12px;'>" .
-                "This email was sent by Dental Sleep Solutions&reg; on behalf of " .
-                $user['mailing_practice'] . ". " . DSS_EMAIL_FOOTER .
+                    "This email was sent by Dental Sleep Solutions&reg; on behalf of " .
+                    $user['mailing_practice'] . ". " . DSS_EMAIL_FOOTER .
                 "</span>" . "</body></html>";
 
             mail($c['email'], $subject, $m, $headers);
@@ -230,79 +281,6 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
     }
 }
 
-$sql = "SELECT u.*
-    FROM dental_patients p
-        JOIN dental_users u ON p.docid = u.userid
-    WHERE p.patientid = '$patientId'";
-
-$user_info = $db->getRow($sql);
-
-$sql = "SELECT
-        i.company AS 'ins_co', 'primary' AS 'ins_rank', i.phone1 AS 'ins_phone',
-        p.p_m_ins_co, p.p_m_ins_grp AS 'patient_ins_group_id', p.p_m_ins_id AS 'patient_ins_id',
-        p.firstname AS 'patient_firstname', p.lastname AS 'patient_lastname',
-        p.add1 AS 'patient_add1', p.add2 AS 'patient_add2', p.city AS 'patient_city',
-        p.state AS 'patient_state', p.zip AS 'patient_zip', p.dob AS 'patient_dob',
-        p.cell_phone AS 'patient_cell_phone', p.home_phone AS 'patient_home_phone',
-        p.email AS 'patient_email',
-        p.p_m_partyfname AS 'insured_first_name', p.p_m_partylname AS 'insured_last_name',
-        p.ins_dob AS 'insured_dob', d.npi AS 'doc_npi', r.national_provider_id AS 'referring_doc_npi',
-        d.medicare_npi AS 'doc_medicare_npi', d.tax_id_or_ssn AS 'doc_tax_id_or_ssn',
-        tc.amount AS 'trxn_code_amount', q2.confirmed_diagnosis AS 'diagnosis_code',
-        d.userid AS 'doc_id', p.home_phone AS 'patient_phone'
-    FROM dental_patients p
-        LEFT JOIN dental_contact r ON p.referred_by = r.contactid
-        LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-        JOIN dental_users d ON p.docid = d.userid
-        LEFT JOIN dental_transaction_code tc ON p.docid = tc.docid
-            AND tc.transaction_code = 'E0486'
-        LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid
-    WHERE p.patientid = '$patientId'";
-
-$pat = $db->getRow($sql);
-
-$hstData = !empty($hstData) ? $hstData : [];
-
-if (!$hstData && $pat) {
-    $hstData = [
-        'patient_firstname' => $pat['patient_firstname'],
-        'patient_lastname' => $pat['patient_lastname'],
-        'patient_dob' => $pat['patient_dob'],
-        'patient_add1' => $pat['patient_add1'],
-        'patient_add2' => $pat['patient_add2'],
-        'patient_city' => $pat['patient_city'],
-        'patient_state' => $pat['patient_state'],
-        'patient_zip' => $pat['patient_zip'],
-        'patient_cell_phone' => $pat['patient_cell_phone'],
-        'patient_home_phone' => $pat['patient_home_phone'],
-        'patient_email' => $pat['patient_email'],
-        'patient_ins_id' => $pat['patient_ins_id'],
-        'patient_ins_group_id' => $pat['patient_ins_group_id'],
-        'ins_phone' => $pat['ins_phone'],
-        'diagnosis_id' => 0,
-        'ins_co_id' => 0,
-        'hst_type' => 0,
-        'hst_nights' => 2,
-        'hst_positions' => '',
-        'provider_firstname' => $user_info['fisrt_name'],
-        'provider_lastname' => $user_info['last_name'],
-        'provider_address' => $user_info['address'],
-        'provider_city' => $user_info['city'],
-        'provider_state' => $user_info['state'],
-        'provider_zip' => $user_info['zip'],
-        'provider_signature' => 1,
-        'provider_date' => date('m/d/Y'),
-    ];
-}
-
-$hstData['hst_positions'] = @json_decode($hstData['hst_positions']);
-$hstData['hst_positions'] = $hstData['hst_positions'] ?: [];
-
-$diagnosticNightsLimit = 2;
-$oatNightsLimit = 3;
-
-$nightsDefault = $hstData['hst_nights'] ?: 2;
-
 ?>
 <link type="text/css" rel="stylesheet" href="/manage/css/form.css" />
 <?php if (!empty($is_back_office)) { ?>
@@ -314,6 +292,7 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
     </a>
 <?php } ?>
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#" onsubmit="return check_fields(this);">
+    <input type="hidden" name="hst_id" value="<?= $hstId ?>" />
     <input type="hidden" name="provider_signature" id="provider_signature" value="1" />
 
     <?php if (!isset($hstCompanyList)) { ?>
@@ -366,11 +345,11 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
         <li>
             <span>
                 <input type="text" name="patient_add1" id="patient_add1" value="<?= e($hstData['patient_add1']) ?>" />
-                <label for="patient_add1"> Address 1</label>
+                <label for="patient_add1">Address 1</label>
             </span>
             <span>
                 <input type="text" name="patient_add2" id="patient_add2" value="<?= e($hstData['patient_add2']) ?>" />
-                <label for="patient_add2"> Address 2</label>
+                <label for="patient_add2">Address 2</label>
             </span>
             <span>
                 <input type="text" name="patient_city" id="patient_city" value="<?= e($hstData['patient_city']) ?>" />
@@ -515,8 +494,8 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
                 <label for="provider_lastname">Provider Last Name</label>
             </span>
             <span>
-                <input type="text" name="provider_phone" id="provider_phone" value="<?= e($hstData['provider_phone']) ?>" />
-                <label for="provider_phone">Phone</label>
+                <input type="text" name="ins_phone" id="ins_phone" value="<?= e($hstData['ins_phone']) ?>" />
+                <label for="ins_phone">Phone</label>
             </span>
         </li>
         <li>
@@ -547,17 +526,17 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
             <p>
                 <label class="desc">Transmitted Electronically Via DS3 Software.</label>
             </p>
-            <label class="desc"><?= e($hstData['name']) ?></label>
+            <label class="desc"><?= e($hstCompany['name']) ?></label>
         </li>
         <li>
-            Office: <?= format_phone($hstData['phone']) ?>
+            Office: <?= format_phone($hstCompany['phone']) ?>
             -
-            Fax: <?= format_phone($hstData['fax']) ?>
+            Fax: <?= format_phone($hstCompany['fax']) ?>
             -
-            Email: <?= e($hstData['email']) ?>
+            Email: <?= e($hstCompany['email']) ?>
         </li>
     </ul>
-    <?php if ($showSubmitAction) { ?>
+    <?php if ($canAuthorize || $canFinishLater) { ?>
         <p class="submit-action">
             <strong>By the below order HST button you are providing a digital signature ordering the HST</strong>
         </p>
@@ -565,7 +544,9 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
             <?php if ($canAuthorize) { ?>
                 <input class="button" type="submit" name="authorize" value="Request HST" />
             <?php } ?>
-            <input class="button" type="submit" name="save" value="Finish Later" />
+            <?php if ($canFinishLater) { ?>
+                <input class="button" type="submit" name="save" value="Finish Later" />
+            <?php } ?>
             <?php if ($canAuthorize) { ?>
                 <a class="red" style="float:right;" href="/manage/add_patient.php?ed=<?= $patientId ?>&pid=<?= $patientId ?>"
                    onclick="return confirm('Are you sure you want to cancel?');">Cancel</a>
@@ -606,13 +587,13 @@ $nightsDefault = $hstData['hst_nights'] ?: 2;
         /**
          * If data view mode, hide submit buttons
          */
-        if ($('[name=company_id]:radio').length) {
+        if (!$('[type=submit]').length) {
             $('#hst_order_sleep_services')
                 .find('input, select')
                 .not(':radio:checked')
                 .prop('disabled', true);
 
-            $('#hst_order_sleep_services').find('[type=submit], .submit-action').hide();
+            $('#hst_order_sleep_services').find('.submit-action').hide();
         }
     }(jQuery));
 </script>

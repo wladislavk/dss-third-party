@@ -9,7 +9,6 @@ $userId = intval($_SESSION['userid']);
 $docId = intval($_SESSION['docid']);
 
 $hstCompanyType = DSS_COMPANY_TYPE_HST;
-$hstStatusRequested = DSS_HST_REQUESTED;
 
 if (isset($_GET['hst_id'])) {
     $hstId = intval($_GET['hst_id']);
@@ -22,7 +21,7 @@ if (isset($_GET['hst_id'])) {
     $hstCompanyId = intval($_GET['hst_co']);
 
     $hstData = $db->getRow("SELECT * FROM dental_hst
-        WHERE patient_id = '$patientId' AND company_id = '$hstCompanyId' AND status = '$hstStatusRequested'");
+        WHERE patient_id = '$patientId' AND company_id = '$hstCompanyId'");
     $hstId = $hstData ? $hstData['id'] : 0;
 }
 

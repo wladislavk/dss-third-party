@@ -10,11 +10,14 @@ $docId = intval($_SESSION['docid']);
 
 $hstCompanyType = DSS_COMPANY_TYPE_HST;
 
+$isStaff = $userId == $docId ||
+    $db->getColumn("SELECT sign_notes FROM dental_users WHERE userid = '$userId'", 'sign_notes');
+
 if (isset($_REQUEST['hst_id'])) {
     $hstId = intval($_REQUEST['hst_id']);
 
     $hstData = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
-    $patientId = $hstData ? $hstData['patientid'] : 0;
+    $patientId = $hstData ? $hstData['patient_id'] : 0;
     $hstCompanyId = $hstData ? $hstData['company_id'] : 0;
 } else {
     $patientId = intval($_GET['ed']);
@@ -90,10 +93,7 @@ $oatNightsLimit = 3;
 
 $nightsDefault = $hstId ? $hstData['hst_nights'] : 2;
 
-$canAuthorize = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED && (
-        ($docId == $userId) ||
-        $db->getColumn("SELECT sign_notes FROM dental_users where userid = '$userId'", 'sign_notes')
-    );
+$canAuthorize = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED && $isStaff;
 $canFinishLater = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED;
 
 if (isset($_POST['authorize']) || isset($_POST['save'])) {
@@ -280,6 +280,28 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
     }
 }
 
+$providerList = [];
+$unorderedProviderList = $db->getResults("SELECT
+        u.userid,
+        u.first_name AS 'provider_firstname',
+        u.last_name AS 'provider_lastname',
+        IF(u.service_phone, u.service_phone, d.service_phone) AS 'provider_phone',
+        IF(u.service_address, u.service_address, d.service_address) AS 'provider_address',
+        IF(u.service_city, u.service_city, d.service_city) AS 'provider_city',
+        IF(u.service_state, u.service_state, d.service_state) AS 'provider_state',
+        IF(u.service_zip, u.service_zip, d.service_zip) AS 'provider_zip'
+    FROM dental_users u
+        LEFT JOIN dental_users d ON d.userid = IF(u.docid, u.docid, u.userid)
+    WHERE u.userid = '$docId'
+        OR (u.docid = '$docId' AND u.sign_notes = 1)
+    ORDER BY u.last_name, u.first_name, u.userid");
+
+foreach ($unorderedProviderList as $provider) {
+    $providerList[$provider['userid']] = $provider;
+}
+
+$defaultProvider = $isStaff ? $userId : $docId;
+
 ?>
 <link type="text/css" rel="stylesheet" href="/manage/css/form.css" />
 <?php if (!empty($is_back_office)) { ?>
@@ -294,35 +316,26 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
     <input type="hidden" name="hst_id" value="<?= $hstId ?>" />
     <input type="hidden" name="provider_signature" id="provider_signature" value="1" />
 
-    <?php if (!isset($hstCompanyList)) { ?>
-        <input type="hidden" name="company_id" value="<?= e($hstCompany['id']) ?>" />
-        <h2 align="center">
-            <strong><?= e($hstCompany['name']) ?></strong>
-        </h2>
-    <?php } else { ?>
-        <h2>
-            <strong>Sleep Services</strong>
-        </h2>
-    <?php } ?>
+    <h2>
+        <strong>Sleep Services</strong>
+    </h2>
 
     <h3 align="center">Home Sleep Test Order Form For
         <?= e($hstData['patient_firstname'] . ' ' . $hstData['patient_lastname']) ?>
     </h3>
 
-    <?php if (isset($hstCompanyList)) { ?>
-        <ul class="frmhead">
-            <li>
-                <label class="desc">Company</label>
-                <hr />
-                <?php foreach ($hstCompanyList as $company) { ?>
-                    <input type="radio" name="company_id" id="company-id-<?= $company['id'] ?>"
-                           value="<?= $company['id'] ?>" <?= $hstData['company_id'] == $company['id'] ? 'checked' : '' ?> />
-                    <label for="company-id-<?= $company['id'] ?>"><?= e($company['name']) ?></label>
-                    <br />
-                <?php } ?>
-            </li>
-        </ul>
-    <?php } ?>
+    <ul class="frmhead">
+        <li>
+            <label class="desc">Company</label>
+            <hr />
+            <?php foreach ($hstCompanyList as $company) { ?>
+                <input type="radio" name="company_id" id="company-id-<?= $company['id'] ?>"
+                       value="<?= $company['id'] ?>" <?= $company['id'] == $hstCompanyId ? 'checked' : '' ?> />
+                <label for="company-id-<?= $company['id'] ?>"><?= e($company['name']) ?></label>
+                <br />
+            <?php } ?>
+        </li>
+    </ul>
     <p></p>
     <ul class="frmhead">
         <li>
@@ -486,6 +499,19 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
             <hr />
             <label>Deliver HST Results/Report via my <strong>DS3 Software</strong></label>
         </li>
+        <li class="submit-action">
+            <span>
+                Select a provider to auto-populate the details:
+                <select id="provider_selector">
+                    <option></option>
+                    <?php foreach ($providerList as $id=>$provider) { ?>
+                        <option value="<?= $id ?>" <?= $id == $defaultProvider ? 'selected' : '' ?>>
+                            <?= e($provider['provider_lastname'] . ', ' . $provider['provider_firstname']) ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </span>
+        </li>
         <li>
             <span>
                 <input type="text" name="provider_firstname" id="provider_firstname" value="<?= e($hstData['provider_firstname']) ?>" />
@@ -557,4 +583,7 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
     <?php } ?>
 </form>
 <br />
+<script>
+    var providerList = <?= json_encode($providerList) ?>;
+</script>
 <script src="/manage/js/hst_request.js?v=20160131" type="text/javascript"></script>

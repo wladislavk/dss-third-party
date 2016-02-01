@@ -74,27 +74,6 @@ if (!empty($_GET['sort'])) {
   }
 }
 
-if (isset($_REQUEST['authorize'])) {
-    $hstId = intval($_REQUEST['authorize']);
-    $authorized = authorizeHST($hstId);
-
-    if ($authorized) {
-        $hstData = $db->getRow("SELECT patient_id, company_id FROM dental_hst WHERE id = '$hstId'");
-
-        ?>
-        <script>
-            window.location = '/manage/hst_request.php?ed=<?= $hstData['patient_id'] ?>&hst_co=<?= $hstData['company_id'] ?>';
-        </script>
-        <?php
-
-        trigger_error('Die called', E_USER_ERROR);
-    } else { ?>
-        <script>
-            alert('There was an error trying to authorize the given HST. Please try again later.');
-        </script>
-    <?php }
-}
-
 $total_rec = $db->getNumberRows($sql);
 /* $rec_disp is null that's why */ $rec_disp = $total_rec;
 
@@ -249,7 +228,7 @@ $my = $db->getResults($sql);
 
           if($myarray['status']==DSS_HST_REQUESTED){
             if($user_sign || $_SESSION['docid']==$_SESSION['userid']){ ?>
-            <a href="manage_hst.php?authorize=<?php echo $myarray["id"]; ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" class="button" title="Authorize HST">
+            <a href="/manage/hst_request.php?hst_id=<?= $myarray['id'] ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" class="button" title="Authorize HST">
               Authorize
             </a>
             <?php }else{ ?>

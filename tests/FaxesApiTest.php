@@ -2,7 +2,6 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Carbon\Carbon;
 
 use DentalSleepSolutions\Eloquent\Dental\Fax;
 

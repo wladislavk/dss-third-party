@@ -8,7 +8,7 @@ use DentalSleepSolutions\Http\Requests\EpworthSleepinessScaleUpdate;
 use DentalSleepSolutions\Http\Requests\EpworthSleepinessScaleDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\EpworthSleepinessScale;
-use DentalSleepSolutions\Contracts\Repositories\EpworthSleepinessScale;
+use DentalSleepSolutions\Contracts\Repositories\EpworthSleepinessScale as Epworth;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -23,10 +23,10 @@ class EpworthSleepinessScaleController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\EpworthSleepinessScale $resources
+     * @param  \DentalSleepSolutions\Contracts\Repositories\Epworth $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(EpworthSleepinessScale $resources)
+    public function index(Epworth $resources)
     {
         $data = $resources->all();
 
@@ -47,11 +47,11 @@ class EpworthSleepinessScaleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\EpworthSleepinessScale $resources
+     * @param  \DentalSleepSolutions\Contracts\Repositories\Epworth $resources
      * @param  \DentalSleepSolutions\Http\Requests\EpworthSleepinessScaleStore $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(EpworthSleepinessScale $resources, EpworthSleepinessScaleStore $request)
+    public function store(Epworth $resources, EpworthSleepinessScaleStore $request)
     {
         $data = array_merge($request->all(), [
             'ip_address' => $request->ip()

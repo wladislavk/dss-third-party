@@ -38,6 +38,13 @@ class Fax extends Model implements Resource, Repository
     protected $primaryKey = 'id';
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['sent_date'];
+
+    /**
      * The name of the "created at" column.
      *
      * @var string

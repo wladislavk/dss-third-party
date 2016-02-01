@@ -10,6 +10,8 @@ use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Fax;
 use DentalSleepSolutions\Contracts\Repositories\Faxes;
 
+use Carbon\Carbon;
+
 /**
  * API controller that handles single resource endpoints. It depends heavily
  * on the IoC dependency injection and routes model binding in that each
@@ -54,6 +56,7 @@ class FaxesController extends Controller
     public function store(Faxes $resources, FaxStore $request)
     {
         $data = array_merge($request->all(), [
+            'sent_date'  => Carbon::now(),
             'ip_address' => $request->ip()
         ]);
 

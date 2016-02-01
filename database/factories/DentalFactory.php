@@ -305,3 +305,29 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Fax::class, function ($faker) {
+    $sentDate = $faker->dateTimeBetween($startDate = '-5 days', $endDate = 'now');
+    $partOfFilename = $sentDate->format('Y-m-d_H-i-s');
+
+    return [
+        'patientid'            => $faker->randomDigit,
+        'userid'               => $faker->randomDigit,
+        'docid'                => $faker->randomDigit,
+        'sent_date'            => $sentDate,
+        'pages'                => $faker->randomDigit,
+        'contactid'            => $faker->randomDigit,
+        'to_number'            => $faker->numerify('##########'),
+        'to_name'              => $faker->name,
+        'letterid'             => $faker->randomDigit,
+        'filename'             => $faker->regexify('f[0-9]_p[0-9]{2}_u[0-9]_' . $partOfFilename . '\.pdf'),
+        'status'               => $faker->randomDigit,
+        'adddate'              => $sentDate,
+        'ip_address'           => $faker->ipv4,
+        'fax_invoice_id'       => $faker->randomDigit,
+        'sfax_transmission_id' => $faker->numerify('###################'),
+        'sfax_completed'       => $faker->boolean($chanceOfGettingTrue = 50),
+        'sfax_status'          => $faker->randomDigit,
+        'viewed'               => $faker->boolean($chanceOfGettingTrue = 50)
+    ];
+});

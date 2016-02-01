@@ -22,9 +22,13 @@ if (isset($_REQUEST['hst_id'])) {
 } else {
     $patientId = intval($_GET['ed']);
     $hstCompanyId = intval($_GET['hst_co']);
+    $hstCompanyCompleteStatuses = $db->escapeList([DSS_HST_COMPLETE, DSS_HST_REJECTED]);
 
-    $hstData = $db->getRow("SELECT * FROM dental_hst
-        WHERE patient_id = '$patientId' AND company_id = '$hstCompanyId'");
+    $hstData = $db->getRow("SELECT *
+        FROM dental_hst
+        WHERE patient_id = '$patientId'
+            AND company_id = '$hstCompanyId'
+            AND status NOT IN ($hstCompanyCompleteStatuses)");
     $hstId = $hstData ? $hstData['id'] : 0;
 }
 

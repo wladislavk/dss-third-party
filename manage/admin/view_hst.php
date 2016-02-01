@@ -185,8 +185,7 @@ if (isset($_REQUEST['ed'])) {
     }
 
     $sql .= "WHERE id = '" . $_POST["hst_id"] . "'";
-
-    mysqli_query($con,$sql) or trigger_error($sql." | ".mysqli_error($con), E_USER_ERROR);
+    $db->query($sql);
 
     //echo $ed_sql.mysqli_error($con);
     $msg = "HST Updated Successfully";
@@ -196,6 +195,8 @@ if (isset($_REQUEST['ed'])) {
         parent.window.location = 'manage_hsts.php?msg=<?= $msg; ?><?= (isset($_POST['ret_status']) && $_POST['ret_status'] != '')?"&status=".$_POST['ret_status']."&from=view":'';?>';
     </script>
     <?php
+
+    trigger_error('Die called', E_USER_ERROR);
 }
 
 $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = {$pat['docid']}");

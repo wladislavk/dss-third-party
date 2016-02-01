@@ -1,6 +1,10 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once "includes/constants.inc";
+
+require_once __DIR__ . '/includes/hst_functions.php';
 
 if(isset($_GET['rid'])){
   $s = sprintf("UPDATE dental_hst SET viewed=1 WHERE id=%s AND doc_id=%s",$_REQUEST['rid'], $_SESSION['docid']);

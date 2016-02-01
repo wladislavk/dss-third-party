@@ -10,8 +10,8 @@ $docId = intval($_SESSION['docid']);
 
 $hstCompanyType = DSS_COMPANY_TYPE_HST;
 
-if (isset($_GET['hst_id'])) {
-    $hstId = intval($_GET['hst_id']);
+if (isset($_REQUEST['hst_id'])) {
+    $hstId = intval($_REQUEST['hst_id']);
 
     $hstData = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
     $patientId = $hstData ? $hstData['patientid'] : 0;
@@ -88,7 +88,7 @@ $hstData['hst_positions'] = $hstData['hst_positions'] ?: [];
 $diagnosticNightsLimit = 2;
 $oatNightsLimit = 3;
 
-$nightsDefault = $hstData['hst_nights'] ?: 2;
+$nightsDefault = $hstId ? $hstData['hst_nights'] : 2;
 
 $canAuthorize = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED && (
         ($docId == $userId) ||
@@ -119,8 +119,8 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
         'patient_email' => $_POST['patient_email'],
         'diagnosis_id' => $_POST['diagnosis_id'],
         'hst_type' => $_POST['hst_type'],
-        'hst_nights' => $_POST['hst_nights'],
-        'hst_positions' => @serialize($_POST['hst_device_position']),
+        'hst_nights' => $_POST['hst_type'] == 3 ? $_POST['hst_3_nights'] : $_POST['hst_1_nights'],
+        'hst_positions' => @json_encode($_POST['hst_device_position']),
         'provider_firstname' => $_POST['provider_firstname'],
         'provider_lastname' => $_POST['provider_lastname'],
         'provider_address' => $_POST['provider_address'],
@@ -290,7 +290,7 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
         HST Details
     </a>
 <?php } ?>
-<form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#" onsubmit="return check_fields(this);">
+<form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#">
     <input type="hidden" name="hst_id" value="<?= $hstId ?>" />
     <input type="hidden" name="provider_signature" id="provider_signature" value="1" />
 
@@ -380,6 +380,7 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
         <li>
             <span>
                 <select name="ins_co_id" id="ins_co_id">
+                    <option value="" <?= !$hstData['p_m_ins_co'] ? 'selected' : '' ?>>Select Insurance Company</option>option>
                     <?php
 
                     $ins_contact_qry = "SELECT * FROM dental_contact WHERE contacttypeid = '11' AND docid = '$docId'";
@@ -387,7 +388,7 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
 
                     foreach ($ins_contact_qry_run as $ins_contact_res) { ?>
                         <option value="<?php echo $ins_contact_res['contactid'] ?>"
-                            <?= $hstData['p_m_ins_co'] == $ins_contact_res['contactid'] ? 'selected' : '' ?>>
+                            <?= $hstData['ins_co_id'] == $ins_contact_res['contactid'] ? 'selected' : '' ?>>
                             <?php echo addslashes(!empty($ins_contact_res['company']) ? $ins_contact_res['company'] : ''); ?>
                         </option>
                     <?php } ?>
@@ -443,6 +444,7 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
                 number of nights:
             </label>
             <select name="hst_1_nights">
+                <option <?= !$nightsDefault ? 'selected' : '' ?>></option>
                 <?php for ($n=1;$n<=$diagnosticNightsLimit;$n++) { ?>
                     <option <?= $n == $nightsDefault ? 'selected' : '' ?>><?= $n ?></option>
                 <?php } ?>
@@ -460,13 +462,14 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
                 number of nights:
             </label>
             <select name="hst_3_nights">
+                <option <?= !$nightsDefault ? 'selected' : '' ?>></option>
                 <?php for ($n=1;$n<=$oatNightsLimit;$n++) { ?>
                     <option <?= $n == $nightsDefault ? 'selected' : '' ?>><?= $n ?></option>
                 <?php } ?>
             </select>
-            <p class="container" <?= $hstData['hst_order'] != 3 ? 'style="display:none;"' : '' ?>>
+            <p class="container" <?= $hstData['hst_type'] == 3 ? '' : 'style="display:none;"' ?>>
                 <span>Device position:</span>
-                <?php for ($n=0;$n<$nightsDefault;$n++) { ?>
+                <?php for ($n=0;!$n || $n<$nightsDefault;$n++) { ?>
                     <span class="field-position">
                             <input type="text" id="device-position-<?= $n ?>" name="hst_device_position[<?= $n ?>]"
                                    value="<?= e($hstData['hst_positions'][$n]) ?>" />
@@ -554,45 +557,4 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
     <?php } ?>
 </form>
 <br />
-<script src="/manage/js/hst_request.js" type="text/javascript"></script>
-<script>
-    jQuery(function($){
-        var $hstRadioButtons = $('[name=hst_type]:radio'),
-            $hstContainers = $hstRadioButtons.closest('li');
-
-        $hstRadioButtons.change(function(){
-            $hstContainers.find('.container').hide();
-            $(this).closest('li').find('.container').show();
-        });
-
-        $('[name=hst_3_nights]').change(function(){
-            var $this = $(this),
-                $container = $hstContainers.last().find('.container'),
-                $fields = $container.find('span.field-position'),
-                $first = $fields.first(),
-                $rest = $fields.not(':eq(0)'),
-                $clone;
-
-            $rest.remove();
-
-            for (var n=1;n<$this.val();n++) {
-                $clone = $first.clone();
-                $clone.find('input').attr('id', 'device-position-' + n).attr('name', 'hst_device_position[' + n + ']');
-                $clone.find('label').attr('for', 'device-position-' + n).text('For night ' + (n + 1));
-                $clone.appendTo($container);
-            }
-        });
-
-        /**
-         * If data view mode, hide submit buttons
-         */
-        if (!$('[type=submit]').length) {
-            $('#hst_order_sleep_services')
-                .find('input, select')
-                .not(':radio:checked')
-                .prop('disabled', true);
-
-            $('#hst_order_sleep_services').find('.submit-action').hide();
-        }
-    }(jQuery));
-</script>
+<script src="/manage/js/hst_request.js?v=20160131" type="text/javascript"></script>

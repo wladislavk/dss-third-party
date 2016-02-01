@@ -223,7 +223,7 @@ $my = $db->getResults($sql);
             View results
           </a>
         <?php }else{ ?>
-          <a class="editlink" target="_blank" href="/manage/hst_request.php?pid=<?= $myarray['patient_id'] ?>&amp;hst_id=<?= $myarray['id'] ?>">View form</a>
+          <a class="editlink" href="/manage/hst_request.php?pid=<?= $myarray['patient_id'] ?>&amp;hst_id=<?= $myarray['id'] ?>">View form</a>
         <?php }
         if($myarray['status'] == DSS_HST_COMPLETE || $myarray['status'] == DSS_HST_REJECTED){
           if(!$myarray['viewed']){ ?>

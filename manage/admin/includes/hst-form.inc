@@ -178,7 +178,8 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
         $hstPendingStatus = DSS_HST_PENDING;
 
         $db->query("UPDATE dental_hst
-            SET status = '$hstPendingStatus', authorized_id = '$userId', authorizeddate = NOW()");
+            SET status = '$hstPendingStatus', authorized_id = '$userId', authorizeddate = NOW()
+            WHERE id = '$hstId'");
 
         $sql = "SELECT * FROM dental_q_sleep WHERE patientid = '$patientId'";
         $myarray = $db->getRow($sql);

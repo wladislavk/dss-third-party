@@ -52,13 +52,16 @@ $coMorbidityWeights = coMorbidityWeights();
 					   contacted = '1'
 					   WHERE id=".mysqli_real_escape_string($con,$r['id']);
 
-	  $db->query($screener_sql);
-?>
-	  <script type="text/javascript">
-	    window.location = 'manage_screeners.php';
-	  </script>
-<?php
-	}		
+        $db->query($screener_sql);
+
+        ?>
+        <script>
+            window.location = '/manage/hst_request.php?ed=<?= $pat_id ?>&hst_co=<?= $h['company_id'] ?>';
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
 ?>
 
 <link rel="stylesheet" type="text/css" href="css/manage_display_similar.css">
@@ -254,8 +257,21 @@ $coMorbidityWeights = coMorbidityWeights();
 		        $epworth_labels[2] = 'Moderate chance of dozing';
 		        $epworth_labels[3] = 'High chance of dozing';
 
-				foreach ($my as $myarray) {
-					$survey_total = $myarray['breathing'] +
+                foreach ($my as $myarray) {
+                    $ep_sql = "SELECT se.response, e.epworth
+                        FROM dental_screener_epworth se
+                            JOIN dental_epworth e ON se.epworth_id = e.epworthid
+                        WHERE se.response > 0
+                            AND se.screener_id = '" . intval($myarray['id']) . "'";
+                    $ep_q = $db->getResults($ep_sql);
+
+                    $epTotal = 0;
+
+                    if (count($ep_q)) foreach ($ep_q as $ep_r) {
+                        $epTotal += $ep_r['response'];
+                    }
+
+                    $survey_total = $myarray['breathing'] +
                         $myarray['driving'] +
                         $myarray['gasping'] +
                         $myarray['sleepy'] +
@@ -301,11 +317,11 @@ $coMorbidityWeights = coMorbidityWeights();
 	                        <?php echo  st($myarray["phone"]); ?> 
 	                    </td>
 
-				        <?php if ($survey_total > 15 || !empty($ep) && $ep['ep_total'] > 18 || $sect3_total > 3) {	?>
+				        <?php if ($survey_total > 15 || $epTotal > 18 || $sect3_total > 3) {	?>
 				        	<td valign="top" class="risk_severe"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">Severe</a></td>
-				        <?php } elseif ($survey_total > 11 || !empty($ep) && $ep['ep_total'] > 14 || $sect3_total > 2) { ?>
+				        <?php } elseif ($survey_total > 11 || $epTotal > 14 || $sect3_total > 2) { ?>
 							<td valign="top" class="risk_high"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">High</a></td>
-						<?php } else if($survey_total > 7 || !empty($ep) && $ep['ep_total'] > 9 || $sect3_total > 1) { ?>
+						<?php } else if($survey_total > 7 || $epTotal > 9 || $sect3_total > 1) { ?>
 							<td valign="top" class="risk_moderate"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">Moderate</a></td>
 						<?php } else { ?>
 							<td valign="top" class="risk_low"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">Low</a></td>
@@ -316,7 +332,7 @@ $coMorbidityWeights = coMorbidityWeights();
 						</td>
 
 	                    <td valign="top">
-							<?php echo  st((!empty($ep['ep_total']) ? $ep['ep_total'] : '')); ?>
+							<?= $epTotal ?>
 	                    </td>
 
 						<td valign="top">
@@ -365,20 +381,7 @@ $coMorbidityWeights = coMorbidityWeights();
 						<td colspan="4" valign="top">
 							<strong>Epworth Sleepiness Score</strong><br />
 
-							<?php
-                            $epTotal = 0;
-
-                            $ep_sql = "SELECT se.response, e.epworth
-                                FROM dental_screener_epworth se
-                                JOIN dental_epworth e ON se.epworth_id =e.epworthid
-                                WHERE se.response > 0 AND se.screener_id='".mysqli_real_escape_string($con,$myarray['id'])."'";
-
-                            $ep_q = $db->getResults($ep_sql);
-
-                            if (count($ep_q)) foreach ($ep_q as $ep_r) {
-                                $epTotal += $ep_r['response'];
-
-                                ?>
+							<?php if (count($ep_q)) foreach ($ep_q as $ep_r) { ?>
                                 <?= $ep_r['response'] ?> - <strong><?= $ep_r['epworth']; ?></strong><br />
                             <?php } ?>
 							<?= $epTotal ?> - Total

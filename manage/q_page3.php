@@ -633,7 +633,7 @@
                                                 foreach ($history_my as $history_myarray) {
                                             ?>
 			                                        <span style="width:32%; float:left; display:block;height:20px;">
-			                                            <a class="addButton" onclick="$(this).addClass('grayButton');$('#other_history').append('<?php echo st($history_myarray['history']);?>, '); return false;">
+			                                            <a class="addButton" onclick="$(this).addClass('grayButton');$('#other_history').append(<?= htmlspecialchars(json_encode($history_myarray['history']), ENT_QUOTES) ?> + ', '); return false;">
 			                                            	<?php echo st($history_myarray['history']);?>
 														</a>
 			                                        </span>

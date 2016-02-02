@@ -45,7 +45,11 @@ function chk_allergens()
 {
 	fa = document.q_page3frm;
 	chk_l = document.getElementsByName('allergens[]').length;
-	
+
+    if (!fa.no_allergens) {
+        return;
+    }
+
 	if(fa.no_allergens.checked)
 	{
 		for(var i=0; i<chk_l; i++)
@@ -68,7 +72,11 @@ function chk_medications()
 {
 	fa = document.q_page3frm;
 	chk_l = document.getElementsByName('medications[]').length;
-	
+
+    if (!fa.no_medications) {
+        return;
+    }
+
 	if(fa.no_medications.checked)
 	{
 		for(var i=0; i<chk_l; i++)
@@ -91,7 +99,11 @@ function chk_history()
 {
 	fa = document.q_page3frm;
 	chk_l = document.getElementsByName('history[]').length;
-	
+
+    if (!fa.no_history) {
+        return;
+    }
+
 	if(fa.no_history.checked)
 	{
 		for(var i=0; i<chk_l; i++)
@@ -113,6 +125,10 @@ function chk_history()
 function chk_ortho()
 {
 	fa = document.q_page3frm;
+
+    if (!fa.orthodontics || !fa.year_completed) {
+        return;
+    }
 
 	if(fa.orthodontics[1].checked)
 	{

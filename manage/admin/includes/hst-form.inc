@@ -67,11 +67,11 @@ $patientData = $db->getRow("SELECT
         i.phone1 AS 'ins_phone',
         u.first_name AS 'provider_firstname',
         u.last_name AS 'provider_lastname',
-        IF(u.producer_files AND u.phone, u.phone, d.phone) AS 'provider_phone',
-        IF(u.producer_files AND u.address, u.address, d.address) AS 'provider_address',
-        IF(u.producer_files AND u.city, u.city, d.city) AS 'provider_city',
-        IF(u.producer_files AND u.state, u.state, d.state) AS 'provider_state',
-        IF(u.producer_files AND u.zip, u.zip, d.zip) AS 'provider_zip'
+        IF(u.producer_files AND LENGTH(TRIM(u.phone)), u.phone, d.phone) AS 'provider_phone',
+        IF(u.producer_files AND LENGTH(TRIM(u.address)), u.address, d.address) AS 'provider_address',
+        IF(u.producer_files AND LENGTH(TRIM(u.city)), u.city, d.city) AS 'provider_city',
+        IF(u.producer_files AND LENGTH(TRIM(u.state)), u.state, d.state) AS 'provider_state',
+        IF(u.producer_files AND LENGTH(TRIM(u.zip)), u.zip, d.zip) AS 'provider_zip'
     FROM dental_patients p
         LEFT JOIN dental_contact i ON i.contactid = p.p_m_ins_co
         LEFT JOIN dental_users u ON u.userid = '$authorizedProviderId'
@@ -293,11 +293,11 @@ $unorderedProviderList = $db->getResults("SELECT
         u.userid,
         u.first_name AS 'provider_firstname',
         u.last_name AS 'provider_lastname',
-        IF(u.producer_files AND u.phone, u.phone, d.phone) AS 'provider_phone',
-        IF(u.producer_files AND u.address, u.address, d.address) AS 'provider_address',
-        IF(u.producer_files AND u.city, u.city, d.city) AS 'provider_city',
-        IF(u.producer_files AND u.state, u.state, d.state) AS 'provider_state',
-        IF(u.producer_files AND u.zip, u.zip, d.zip) AS 'provider_zip'
+        IF(u.producer_files AND LENGTH(TRIM(u.phone)), u.phone, d.phone) AS 'provider_phone',
+        IF(u.producer_files AND LENGTH(TRIM(u.address)), u.address, d.address) AS 'provider_address',
+        IF(u.producer_files AND LENGTH(TRIM(u.city)), u.city, d.city) AS 'provider_city',
+        IF(u.producer_files AND LENGTH(TRIM(u.state)), u.state, d.state) AS 'provider_state',
+        IF(u.producer_files AND LENGTH(TRIM(u.zip)), u.zip, d.zip) AS 'provider_zip'
     FROM dental_users u
         LEFT JOIN dental_users d ON d.userid = IF(u.docid, u.docid, u.userid)
     WHERE u.userid = '$docId'
@@ -386,11 +386,13 @@ $defaultProvider = $isStaff ? $userId : $docId;
         </li>
         <li>
             <span>
-                <input type="text" name="patient_cell_phone" id="patient_cell_phone" value="<?= e($hstData['patient_cell_phone']) ?>"/>
+                <input type="text" name="patient_cell_phone" id="patient_cell_phone" class="phonemask"
+                    value="<?= e($hstData['patient_cell_phone']) ?>"/>
                 <label for="patient_cell_phone">Mobile phone</label>
             </span>
             <span>
-                <input type="text" name="patient_home_phone" id="patient_home_phone" value="<?= e($hstData['patient_home_phone']) ?>" />
+                <input type="text" name="patient_home_phone" id="patient_home_phone" class="phonemask"
+                    value="<?= e($hstData['patient_home_phone']) ?>" />
                 <label for="patient_home_phone">Home Phone</label>
             </span>
             <span>
@@ -530,7 +532,8 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <label for="provider_lastname">Provider Last Name</label>
             </span>
             <span>
-                <input type="text" name="provider_phone" id="provider_phone" value="<?= e($hstData['provider_phone']) ?>" />
+                <input type="text" name="provider_phone" id="provider_phone" class="phonemask"
+                    value="<?= e($hstData['provider_phone']) ?>" />
                 <label for="provider_phone">Phone</label>
             </span>
         </li>
@@ -594,4 +597,6 @@ $defaultProvider = $isStaff ? $userId : $docId;
 <script>
     var providerList = <?= json_encode($providerList) ?>;
 </script>
-<script src="/manage/js/hst_request.js?v=20160131" type="text/javascript"></script>
+<script type="text/javascript" src="/manage/js/hst_request.js?v=20160131"></script>
+<script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="/manage/script/masks.js"></script>

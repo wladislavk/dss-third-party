@@ -305,3 +305,22 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\TonsilsClinicalExam::class, function ($faker) {
+    return [
+        'formid'           => $faker->randomDigit,
+        'patientid'        => $faker->randomDigit,
+        'mallampati'       => $faker->regexify('^Class (I{1,3}|IV)$'),
+        'tonsils'          => $faker->randomElement([
+            '~Present~',
+            '~Obstructive~'
+        ]),
+        'tonsils_grade'    => $faker->regexify('^Grade [0-3]$'),
+        'userid'           => $faker->randomDigit,
+        'docid'            => $faker->randomDigit,
+        'status'           => $faker->randomDigit,
+        'adddate'          => $faker->dateTime(),
+        'ip_address'       => $faker->ipv4,
+        'additional_notes' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true)
+    ];
+});

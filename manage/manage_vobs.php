@@ -113,7 +113,18 @@ if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']!=''){
 }
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select preauth.id, p.firstname, p.lastname, preauth.viewed, preauth.front_office_request_date, preauth.patient_id, preauth.status, preauth.reject_reason from dental_insurance_preauth preauth JOIN dental_patients p ON p.patientid=preauth.patient_id WHERE preauth.doc_id = ".$_SESSION['docid']." ";
+$sql = "SELECT
+        preauth.id,
+        p.firstname,
+        p.lastname,
+        preauth.viewed,
+        preauth.front_office_request_date,
+        preauth.patient_id,
+        preauth.status,
+        preauth.reject_reason
+    FROM dental_insurance_preauth preauth
+        JOIN dental_patients p ON p.patientid = preauth.patient_id
+    WHERE preauth.doc_id = {$_SESSION['docid']}";
 if(isset($_GET['status'])){
   $sql .= " AND preauth.status = '".mysqli_real_escape_string($con, $_GET['status'])."' ";
 }

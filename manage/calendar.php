@@ -496,12 +496,45 @@ function show_minical(){
 }
 
 $(document).ready( function(){
-  initCal();
-  eid = getParameterByName('eid');
-  if(eid){ 
-    scheduler.showEvent(eid,"day");
-    scheduler.select(eid);
-  } 
+    var eventId = getParameterByName('eid'),
+        intervalId = 0,
+        retryCount = 0,
+        retryLimit = 100;
+
+    initCal();
+
+    if (eventId) {
+        var event = scheduler.getEvent(eventId);
+
+        if (!event) {
+            $.get('/manage/calendar-events.php?eid=' + eventId, function(eventData){
+                if (!$.isArray(eventData) || !eventData.length || !eventData[0].start_date) {
+                    return;
+                }
+
+                var eventDate = eventData[0].start_date.match(/^(\d{4})-(\d{2})-(\d{2}) /),
+                    eventWatchDog = function () {
+                        var event = scheduler.getEvent(eventId);
+
+                        if (event) {
+                            clearInterval(intervalId);
+
+                            scheduler.showEvent(eventId, 'day');
+                            scheduler.select(eventId);
+                        }
+
+                        retryCount++;
+
+                        if (retryCount >= retryLimit) {
+                            clearInterval(intervalId);
+                        }
+                    };
+
+                scheduler.setCurrentView(new Date(eventDate[1], +eventDate[2] - 1, eventDate[3]), 'day');
+                intervalId = setInterval(eventWatchDog, 1000);
+            });
+        }
+    }
 });
 
 </script>

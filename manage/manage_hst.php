@@ -196,6 +196,9 @@ $my = $db->getResults($sql);
         <td valign="top" class="status_<?php echo $myarray['status']; ?>">
           <?php echo $dss_hst_status_labels[$myarray["status"]] . '&nbsp;';?>
           <?php echo ($myarray['status'] != DSS_HST_PENDING && $myarray['status'] != DSS_HST_REJECTED && $myarray['updatedate'])? date('m/d/Y H:i a', strtotime($myarray['updatedate'])):''; ?>
+          <?php if ($myarray['status'] == DSS_HST_REQUESTED) { ?>
+              <?= date('m/d/Y h:i a', strtotime($myarray['updatedate'] ?: $myarray['adddate'])) ?>
+          <?php } ?>
           <?php echo $myarray['office_notes'];?>
           <?php echo ($myarray['status'] == DSS_HST_REJECTED && $myarray['rejecteddate'])? date('m/d/Y h:i a', strtotime($myarray['rejecteddate'])):''; ?>
           <?php echo ($myarray['status'] == DSS_HST_REJECTED)?$myarray['rejected_reason']:'';?>
@@ -206,7 +209,9 @@ $my = $db->getResults($sql);
             View results
           </a>
         <?php }else{ ?>
-          <a class="editlink" href="/manage/hst_request.php?pid=<?= $myarray['patient_id'] ?>&amp;hst_id=<?= $myarray['id'] ?>">View form</a>
+          <a class="editlink" href="/manage/hst_request.php?<?= $myarray['patient_id'] ? e("pid=$myarray[patient_id]&") : '' ?>hst_id=<?= $myarray['id'] ?>">
+              View form
+          </a>
         <?php }
         if($myarray['status'] == DSS_HST_COMPLETE || $myarray['status'] == DSS_HST_REJECTED){
           if(!$myarray['viewed']){ ?>
@@ -228,7 +233,7 @@ $my = $db->getResults($sql);
 
           if($myarray['status']==DSS_HST_REQUESTED){
             if($user_sign || $_SESSION['docid']==$_SESSION['userid']){ ?>
-            <a href="/manage/hst_request.php?hst_id=<?= $myarray['id'] ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" class="button" title="Authorize HST">
+            <a href="/manage/hst_request.php?<?= $myarray['patient_id'] ? e("pid=$myarray[patient_id]&") : '' ?>hst_id=<?= $myarray['id'] ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" class="button" title="Authorize HST">
               Authorize
             </a>
             <?php }else{ ?>

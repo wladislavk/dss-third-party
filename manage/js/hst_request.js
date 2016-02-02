@@ -61,7 +61,7 @@ jQuery(function($){
             return true;
         }
 
-        $hstForm.find(':text:visible').each(function(){
+        $hstForm.find(':text:visible:not([name=patient_add2])').each(function(){
             var $this = $(this);
             $this.toggleClass('required', !$this.val().trim().length);
         });

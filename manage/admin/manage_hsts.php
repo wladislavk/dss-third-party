@@ -339,10 +339,14 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
                                         <?php echo st($myarray["hst_company_name"]);?>
                                 </td>
 				<td valign="top">
-                                        <a href="view_patient.php?pid=<?php echo  $myarray['patient_id']; ?>" title="View Chart">
-					<?php echo st($myarray["patient_lastname"]);?>, <?php echo st($myarray["patient_firstname"]);?>
-					(View Chart)
-					</a>
+                    <?php if ($myarray['patient_id']) { ?>
+                        <a href="view_patient.php?pid=<?php echo  $myarray['patient_id']; ?>" title="View Chart">
+                            <?php echo st($myarray["patient_lastname"]);?>, <?php echo st($myarray["patient_firstname"]);?>
+                            (View Chart)
+                        </a>
+                    <?php } else { ?>
+                        <?= e($myarray['patient_lastname'] . ', ' . $myarray['patient_firstname']) ?>
+                    <?php } ?>
 				</td>
 				<td valign="top">
 					<?php echo st($myarray["ins_co"]);?>&nbsp;

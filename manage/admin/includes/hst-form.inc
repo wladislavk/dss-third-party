@@ -13,7 +13,9 @@ $hstCompanyType = DSS_COMPANY_TYPE_HST;
 $isStaff = $userId == $docId ||
     $db->getColumn("SELECT sign_notes FROM dental_users WHERE userid = '$userId'", 'sign_notes');
 
-if (isset($_REQUEST['hst_id'])) {
+$authorizedProviderId = $isStaff ? $userId : $docId;
+
+if (!empty($_REQUEST['hst_id'])) {
     $hstId = intval($_REQUEST['hst_id']);
 
     $hstData = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
@@ -65,14 +67,15 @@ $patientData = $db->getRow("SELECT
         i.phone1 AS 'ins_phone',
         u.first_name AS 'provider_firstname',
         u.last_name AS 'provider_lastname',
-        u.email AS 'provider_email',
-        u.address AS 'provider_address',
-        u.city AS 'provider_city',
-        u.state AS 'provider_state',
-        u.zip AS 'provider_zip'
+        IF(u.service_phone, u.service_phone, d.service_phone) AS 'provider_phone',
+        IF(u.service_address, u.service_address, d.service_address) AS 'provider_address',
+        IF(u.service_city, u.service_city, d.service_city) AS 'provider_city',
+        IF(u.service_state, u.service_state, d.service_state) AS 'provider_state',
+        IF(u.service_zip, u.service_zip, d.service_zip) AS 'provider_zip'
     FROM dental_patients p
         LEFT JOIN dental_contact i ON i.contactid = p.p_m_ins_co
-        LEFT JOIN dental_users u ON u.userid = p.docid
+        LEFT JOIN dental_users u ON u.userid = '$authorizedProviderId'
+        LEFT JOIN dental_users d ON d.userid = IF(u.docid, u.docid, u.userid)
     WHERE p.patientid = '$patientId'");
 
 $hstData = !empty($hstData) ? $hstData : [];
@@ -127,6 +130,7 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
         'hst_positions' => @json_encode($_POST['hst_device_position']),
         'provider_firstname' => $_POST['provider_firstname'],
         'provider_lastname' => $_POST['provider_lastname'],
+        'provider_phone' => $_POST['provider_phone'],
         'provider_address' => $_POST['provider_address'],
         'provider_city' => $_POST['provider_city'],
         'provider_state' => $_POST['provider_state'],
@@ -526,14 +530,14 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <label for="provider_lastname">Provider Last Name</label>
             </span>
             <span>
-                <input type="text" name="ins_phone" id="ins_phone" value="<?= e($hstData['ins_phone']) ?>" />
-                <label for="ins_phone">Phone</label>
+                <input type="text" name="provider_phone" id="provider_phone" value="<?= e($hstData['provider_phone']) ?>" />
+                <label for="provider_phone">Phone</label>
             </span>
         </li>
         <li>
             <span>
                 <input type="text" name="provider_address" id="provider_address" value="<?= e($hstData['provider_address']) ?>" />
-                <label for="provider_address"> Address</label>
+                <label for="provider_address">Address</label>
             </span>
             <span>
                 <input type="text" name="provider_city" id="provider_city" value="<?= e($hstData['provider_city']) ?>" />

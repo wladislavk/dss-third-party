@@ -1129,7 +1129,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
       				if ($delay['description'] == '') {
       					$replace[] = "<strong>(warning: other was selected, but no info provided)</strong>";
       				} else {
-      					$replace[] = "<strong>" . $delay['description'] . "</strong>";
+      					$replace[] = "<strong>/*TODO: 1*/" . $delay['description'] . "</strong>";
       				}
       				break;
       			default:
@@ -1152,7 +1152,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
       				if ($noncomp['description'] == '') {
       					$replace[] = "<strong>(warning: other was selected, but no info provided)</strong>";
       				} else {
-      					$replace[] = "<strong>" . $noncomp['description'] . "</strong>";
+      					$replace[] = "<strong>/*TODO: 2*/" . $noncomp['description'] . "</strong>";
       				}
       				break;
       			default:

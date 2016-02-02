@@ -305,3 +305,19 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam::class, function ($faker) {
+    return [
+        'formid'               => $faker->randomDigit,
+        'patientid'            => $faker->randomDigit,
+        'blood_pressure'       => $faker->regexify('[1-2][0-9]{2}\/([5-9][0-9]|1[0-9]{2})'),
+        'pulse'                => $faker->randomDigit,
+        'neck_measurement'     => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 60),
+        'bmi'                  => $faker->regexify('[1-9]{1,3}\.[0-9]{2}'),
+        'additional_paragraph' => $faker->sentence($nbWords = 3),
+        'tongue'               => $faker->regexify('~([0-9]~)+'),
+        'userid'               => $faker->randomDigit,
+        'docid'                => $faker->randomDigit,
+        'status'               => $faker->randomDigit
+    ];
+});

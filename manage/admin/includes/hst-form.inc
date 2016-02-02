@@ -314,7 +314,6 @@ $defaultProvider = $isStaff ? $userId : $docId;
 <script>
     var providerList = <?= json_encode($providerList) ?>;
 </script>
-<script type="text/javascript" src="/manage/js/hst_request.js?v=20160131"></script>
 <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
 <script type="text/javascript" src="/manage/js/masks.js"></script>
 <?php require_once __DIR__ . '/../../includes/calendarinc.php' ?>
@@ -385,7 +384,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <label for="patient_city">City</label>
             </span>
             <span>
-                <input type="text" name="patient_state" id="patient_state" class="statemask" size="3"
+                <input type="text" name="patient_state" id="patient_state"
                     value="<?= e($hstData['patient_state']) ?>" />
                 <label for="patient_state">State</label>
             </span>
@@ -559,7 +558,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <label for="provider_city">City</label>
             </span>
             <span>
-                <input type="text" name="provider_state" id="provider_state" class="statemask" size="3"
+                <input type="text" name="provider_state" id="provider_state"
                     value="<?= e($hstData['provider_state']) ?>" />
                 <label for="provider_state">State</label>
             </span>
@@ -610,3 +609,4 @@ $defaultProvider = $isStaff ? $userId : $docId;
     <?php } ?>
 </form>
 <br />
+<script type="text/javascript" src="/manage/js/hst_request.js?v=20160131"></script>

@@ -94,21 +94,6 @@ if( $r['homepage'] != '1') {
     $unmailed_letters = $db->getColumn($dental_letters_query, 'total', 0);
 
     /**
-     * @ToDo: Determine if these are actionable claims for admins
-     * @ToDo: Determine if this status list needs the REJECTED status
-     */
-    $claim_query = "SELECT COUNT(claim.insuranceid) AS total
-        FROM dental_insurance claim
-        WHERE claim.docid = '$docid'
-            AND status IN (
-                '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
-                '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
-                '" . DSS_CLAIM_PATIENT_DISPUTE . "', '" . DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
-            )";
-
-    $num_pending_claims = $db->getColumn($claim_query, 'total', 0);
-
-    /**
      * @see DSS-142
      * Actionable claims for FO users
      *
@@ -116,36 +101,34 @@ if( $r['homepage'] != '1') {
      * IF (COALESCE(claim.primary_claim_id, 0), patient.s_m_dss_file, patient.p_m_dss_file) = 1 AS back_office_can_file
      */
     $frontOfficeClaimsConditional = frontOfficeClaimsConditional(['company' => 'company', 'patient' => 'patient']);
-
-    $claim_query = "SELECT COUNT(claim.insuranceid) AS total
+    $countFrontOfficeClaimsQuery = "SELECT COUNT(claim.insuranceid) AS total
         FROM dental_insurance claim
-            JOIN dental_patients patient ON patient.patientid = claim.patientid
+            LEFT JOIN dental_patients patient ON patient.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
             LEFT JOIN companies company ON company.id = users.billing_company_id
         WHERE $frontOfficeClaimsConditional
             AND claim.docid = '$docid'
-            -- Actionable items
-            AND claim.status IN (
-                '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
-                '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
-                '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
-                '" . DSS_CLAIM_PATIENT_DISPUTE . "', '".DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
-            )";
-    $num_pending_nodss_claims = $db->getColumn($claim_query, 'total', 0);
+            ";
 
-    $claim_query = "SELECT COUNT(claim.insuranceid) AS total
-        FROM dental_insurance claim
-        WHERE claim.docid = '$docid'
+    /**
+     * @ToDo: Determine if these are actionable claims for admins
+     * @ToDo: Determine if this status list needs the REJECTED status
+     */
+    $claim_query = "$countFrontOfficeClaimsQuery
+            AND claim.status IN (" . $db->escapeList(ClaimFormData::statusListByName('actionable')) . ")";
+
+    $num_pending_claims = $db->getColumn($claim_query, 'total', 0);
+    $num_pending_nodss_claims = $num_pending_claims;
+
+    $claim_query = "$countFrontOfficeClaimsQuery
             AND claim.mailed_date IS NULL
             AND claim.sec_mailed_date IS NULL
-            AND claim.status NOT IN ('" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "')";
+            AND claim.status NOT IN (" . $db->escapeList(ClaimFormData::statusListByName('pending')) . ")";
 
     $num_unmailed_claims = $db->getColumn($claim_query, 'total', 0);
 
-    $claim_query = "SELECT COUNT(claim.insuranceid) AS total
-        FROM dental_insurance claim
-        WHERE claim.docid = '$docid'
-            AND claim.status IN ('" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "')";
+    $claim_query = "$countFrontOfficeClaimsQuery
+            AND claim.status IN (" . $db->escapeList(ClaimFormData::statusListByName('rejected')) . ")";
 
     $num_rejected_claims = $db->getColumn($claim_query, 'total', 0);
 

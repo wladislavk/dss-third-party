@@ -144,6 +144,9 @@ else
   $index_val = 0;
   
 $i_val = $index_val * $rec_disp;
+
+$filedByBackOfficeConditional = filedByBackOfficeConditional('i');
+
 if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
   $sql = "SELECT
             'claim',
@@ -157,7 +160,8 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
                                     where i2.insuranceid=i.insuranceid) as amount,
             sum(pay.amount) as paid_amount,
             i.status,
-            i.insuranceid as primary_claim_id
+            i.insuranceid as primary_claim_id,
+            $filedByBackOfficeConditional AS filed_by_bo
             from dental_insurance i
             LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
             LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
@@ -182,7 +186,8 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
       di.status as claim_status,
       '' as filename,
                   '' as num_notes,
-                  '' as num_fo_notes
+                  '' as num_fo_notes,
+                  0 AS filed_by_bo
     from dental_ledger dl 
       LEFT JOIN dental_users p ON dl.producerid=p.userid 
       LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
@@ -207,7 +212,8 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
       '',
       '',
                   '',
-                  ''
+                  '',
+                  0 AS filed_by_bo
           from dental_ledger dl 
                   LEFT JOIN dental_users p ON dl.producerid=p.userid 
                   LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
@@ -230,7 +236,8 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
       '',
                   '',
                   '',
-                  ''  
+                  '',
+                  0 AS filed_by_bo
           from dental_ledger dl 
                   LEFT JOIN dental_users p ON dl.producerid=p.userid 
                   LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
@@ -254,7 +261,8 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
       '',
                   '',
                   '',
-                  ''  
+                  '',
+                  0 AS filed_by_bo
     from dental_ledger_note n
       JOIN dental_users p on n.producerid=p.userid
         where n.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'       
@@ -275,7 +283,8 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
                   '',
       s.filename,
                   '',
-                  ''
+                  '',
+                  0 AS filed_by_bo
           from dental_ledger_statement s
                   JOIN dental_users p on s.producerid=p.userid
                           where s.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
@@ -296,7 +305,8 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
                   '',
                   '',
       '',
-      ''      
+      '',
+      0 AS filed_by_bo
           from dental_ledger_note n
                   JOIN admin p on n.admin_producerid=p.adminid
                           where n.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'       
@@ -320,7 +330,8 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
       '',
                   '',
           (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid), 
-          (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid AND create_type='1') 
+          (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid AND create_type='1'),
+          $filedByBackOfficeConditional AS filed_by_bo
     from dental_insurance i
       LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
       LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
@@ -553,6 +564,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       if(!empty($myarray['filename'])){ 
         echo 'onclick="window.location=\''.$myarray['filename'].'\'"'; 
       } ?>
+        <?= $myarray['filed_by_bo'] ? 'title="3rd party Billing is responsible for this claim"' : '' ?>
         class="<?php echo $tr_class;?> <?php echo (!empty($myarray['ledger']) ? $myarray['ledger'] : ''); ?>">
       <td valign="top"
 <?php 
@@ -587,19 +599,21 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       <?php echo st($myarray["name"]);?>
       </td>
       <td valign="top"
-<?php 
-      if(!empty($myarray['ledger']) && $myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ 
-        echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; 
-      } ?>
-                                  >
+          <?php if ($myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING) { ?>
+              onclick="window.location='manage_insurance.php?pid=<?= $_GET['pid'] ?>&addtopat=1"
+          <?php } ?>
+          >
 <?php echo (!empty($myarray['ledger']) && $myarray['ledger'] == 'note' && $myarray['status']==1)?"(P) ":'';
       echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid') && !empty($myarray['payer']))?$dss_trxn_type_labels[$myarray['payer']]." - ":'';
       echo $myarray["description"];
       echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":'';
+
       echo ((!empty($myarray['ledger']) && $myarray['ledger'] =='claim') && $myarray['ledgerid'])?"(".$myarray['ledgerid'].") ":'';
       echo ((!empty($myarray['ledger']) && $myarray['ledger'] =='claim') && $myarray['primary_claim_id'])?"Secondary to (".$myarray['primary_claim_id'].") ":'';
+      echo ($myarray['filed_by_bo'] ? '*' : '');
 
       echo ((!empty($myarray['ledger']) && $myarray['ledger'] =='claim') && $myarray['num_notes'] > 0)?" - Notes (".$myarray['num_notes'].") ":'';
+
       echo (!empty($myarray['ledger']) && $myarray['ledger']=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING)?' (Click to file)':'';
       echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":'';
       echo ((!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":'';

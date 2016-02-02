@@ -30,62 +30,60 @@ if($iid!=''){
 function insert_preauth_row($patient_id) {
   if (empty($patient_id)) { return; }
   
-  $sql = "SELECT "
-       . "  p.patientid as 'patient_id', i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
-       . "  p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', "
-       . "  p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', "
-       . "  p.add1 as 'patient_add1', p.add2 as 'patient_add2', p.city as 'patient_city', "
-       . "  p.state as 'patient_state', p.zip as 'patient_zip', p.dob as 'patient_dob', "
-       . "  p.p_m_partyfname as 'insured_first_name', p.p_m_partylname as 'insured_last_name', "
-       . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
-       . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
-       . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
-       . "  d.userid as 'doc_id' "
-       . "FROM " 
-       . "  dental_patients p "
-       . "  JOIN dental_contact r ON p.referred_by = r.contactid  "
-       . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
-       . "  JOIN dental_users d ON p.docid = d.userid "
-       . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
-       . "  JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
-       . "WHERE " 
-       . "  p.patientid = $patient_id";
+  $sql = "SELECT 
+        p.patientid as 'patient_id', i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', 
+        p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', 
+        p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', 
+        p.add1 as 'patient_add1', p.add2 as 'patient_add2', p.city as 'patient_city', 
+        p.state as 'patient_state', p.zip as 'patient_zip', p.dob as 'patient_dob', 
+        p.p_m_partyfname as 'insured_first_name', p.p_m_partylname as 'insured_last_name', 
+        p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', 
+        d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', 
+        tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', 
+        d.userid as 'doc_id'
+    FROM dental_patients p
+        JOIN dental_contact r ON p.referred_by = r.contactid  
+        JOIN dental_contact i ON p.p_m_ins_co = i.contactid 
+        JOIN dental_users d ON p.docid = d.userid 
+        JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' 
+        JOIN dental_q_page2 q2 ON p.patientid = q2.patientid
+    WHERE p.patientid = '$patient_id'";
   
   $my_array = $db->getRow($sql);
   
-  $sql = "INSERT INTO dental_insurance_preauth ("
-       . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
-       . "  patient_ins_id, patient_firstname, patient_lastname, patient_add1, "
-       . "  patient_add2, patient_city, patient_state, patient_zip, patient_dob, "
-       . "  insured_first_name, insured_last_name, insured_dob, doc_npi, referring_doc_npi, "
-       . "  trxn_code_amount, diagnosis_code, doc_medicare_npi, doc_tax_id_or_ssn, "
-       . "  front_office_request_date, status "
-       . ") VALUES ("
-       . "  '" . $my_array['patient_id'] . "', "
-       . "  '" . $my_array['doc_id'] . "', "
-       . "  '" . $my_array['ins_co'] . "', "
-       . "  '" . $my_array['ins_rank'] . "', "
-       . "  '" . $my_array['ins_phone'] . "', "
-       . "  '" . $my_array['patient_ins_group_id'] . "', "
-       . "  '" . $my_array['patient_ins_id'] . "', "
-       . "  '" . $my_array['patient_firstname'] . "', "
-       . "  '" . $my_array['patient_lastname'] . "', "
-       . "  '" . $my_array['patient_add1'] . "', "
-       . "  '" . $my_array['patient_add2'] . "', "
-       . "  '" . $my_array['patient_city'] . "', "
-       . "  '" . $my_array['patient_state'] . "', "
-       . "  '" . $my_array['patient_zip'] . "', "
-       . "  '" . $my_array['patient_dob'] . "', "
-       . "  '" . $my_array['insured_first_name'] . "', "
-       . "  '" . $my_array['insured_last_name'] . "', "
-       . "  '" . $my_array['insured_dob'] . "', "
-       . "  '" . $my_array['doc_npi'] . "', "
-       . "  '" . $my_array['referring_doc_npi'] . "', "
-       . "  " . $my_array['trxn_code_amount'] . ", "
-       . "  '" . $my_array['diagnosis_code'] . "', "
-       . "  '" . $my_array['doc_medicare_npi'] . "', "
-       . "  '" . $my_array['doc_tax_id_or_ssn'] . "', "
-       . "  '" . date('Y-m-d H:i:s') . "', "
+  $sql = "INSERT INTO dental_insurance_preauth (
+        patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, 
+        patient_ins_id, patient_firstname, patient_lastname, patient_add1, 
+        patient_add2, patient_city, patient_state, patient_zip, patient_dob, 
+        insured_first_name, insured_last_name, insured_dob, doc_npi, referring_doc_npi, 
+        trxn_code_amount, diagnosis_code, doc_medicare_npi, doc_tax_id_or_ssn, 
+        front_office_request_date, status "
+       . ") VALUES (
+        '" . $my_array['patient_id'] . "', 
+        '" . $my_array['doc_id'] . "', 
+        '" . $my_array['ins_co'] . "', 
+        '" . $my_array['ins_rank'] . "', 
+        '" . $my_array['ins_phone'] . "', 
+        '" . $my_array['patient_ins_group_id'] . "', 
+        '" . $my_array['patient_ins_id'] . "', 
+        '" . $my_array['patient_firstname'] . "', 
+        '" . $my_array['patient_lastname'] . "', 
+        '" . $my_array['patient_add1'] . "', 
+        '" . $my_array['patient_add2'] . "', 
+        '" . $my_array['patient_city'] . "', 
+        '" . $my_array['patient_state'] . "', 
+        '" . $my_array['patient_zip'] . "', 
+        '" . $my_array['patient_dob'] . "', 
+        '" . $my_array['insured_first_name'] . "', 
+        '" . $my_array['insured_last_name'] . "', 
+        '" . $my_array['insured_dob'] . "', 
+        '" . $my_array['doc_npi'] . "', 
+        '" . $my_array['referring_doc_npi'] . "', 
+        " . $my_array['trxn_code_amount'] . ", 
+        '" . $my_array['diagnosis_code'] . "', 
+        '" . $my_array['doc_medicare_npi'] . "', 
+        '" . $my_array['doc_tax_id_or_ssn'] . "', 
+        '" . date('Y-m-d H:i:s') . "', "
        . DSS_PREAUTH_PENDING
        . ")";
   $my = $db->query($sql);
@@ -162,55 +160,81 @@ else
 	
 $i_val = $index_val * $rec_disp;
 
-if(is_super($_SESSION['admin_access'])){
-$sql = "SELECT "
-     . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
-     . "  preauth.doc_id, preauth.updated_at, "
-     . "  preauth.front_office_request_date, CONCAT(users.first_name, ' ',users.last_name) as doc_name, preauth.status, "
-     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
-     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
-     . "  c.name as billing_name, "
-     . "  (SELECT COUNT(*) FROM dental_insurance_preauth dip where dip.patient_id=p.patientid) as total_vob "
-     . "FROM "
-     . "  dental_insurance_preauth preauth "
-     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
-     . "  LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
-     . "  JOIN dental_users users ON preauth.doc_id = users.userid "
-     . "  JOIN dental_users users2 ON preauth.userid = users2.userid "
-     . "  LEFT JOIN companies c ON c.id = users.billing_company_id ";
-}elseif(is_billing($_SESSION['admin_access'])){
-$sql = "SELECT "
-     . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
-     . "  preauth.doc_id, preauth.updated_at, "
-     . "  preauth.front_office_request_date, CONCAT(users.first_name, ' ',users.last_name) as doc_name, preauth.status, "
-     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
-     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
-     . "  c.name as billing_name "
-     . "FROM "
-     . "  dental_insurance_preauth preauth "
-     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
-     . "  JOIN dental_user_company uc ON uc.userid = p.docid "
-     . "  LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
-     . "  JOIN dental_users users ON preauth.doc_id = users.userid AND users.billing_company_id = '".$_SESSION['admincompanyid']."'"
-     . "  LEFT JOIN companies c on users.billing_company_id = c.id "
-     . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";
-
-}else{
-$sql = "SELECT "
-     . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
-     . "  preauth.doc_id, preauth.updated_at, "
-     . "  preauth.front_office_request_date, CONCAT(users.first_name, ' ',users.last_name) as doc_name, preauth.status, "
-     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
-     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name "
-     . "FROM "
-     . "  dental_insurance_preauth preauth "
-     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
-     . "  JOIN dental_user_company uc ON uc.userid = p.docid AND uc.companyid = '".$_SESSION['admincompanyid']."'"
-     . "  LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
-     . "  JOIN dental_users users ON preauth.doc_id = users.userid "
-     . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";
-
+if (is_super($_SESSION['admin_access'])) {
+    $sql = "SELECT 
+            preauth.id,
+            preauth.patient_id,
+            i.company AS ins_co,
+            p.firstname AS patient_firstname,
+            p.lastname AS patient_lastname,
+            preauth.doc_id,
+            preauth.updated_at,
+            preauth.front_office_request_date,
+            CONCAT(users.first_name, ' ', users.last_name) AS doc_name,
+            preauth.status,
+            DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
+            CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
+            c.name AS billing_name,
+            (
+                SELECT COUNT(*)
+                FROM dental_insurance_preauth dip
+                WHERE dip.patient_id = p.patientid
+            ) AS total_vob
+        FROM dental_insurance_preauth preauth
+            JOIN dental_patients p ON preauth.patient_id = p.patientid
+            JOIN dental_users users ON preauth.doc_id = users.userid
+            JOIN dental_users users2 ON preauth.userid = users2.userid
+            LEFT JOIN companies c ON c.id = users.billing_company_id
+            LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
+        ";
+} elseif (is_billing($_SESSION['admin_access'])) {
+    $sql = "SELECT
+            preauth.id,
+            preauth.patient_id,
+            i.company AS ins_co,
+            p.firstname AS patient_firstname,
+            p.lastname AS patient_lastname,
+            preauth.doc_id,
+            preauth.updated_at,
+            preauth.front_office_request_date,
+            CONCAT(users.first_name, ' ', users.last_name) AS doc_name,
+            preauth.status,
+            DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
+            CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
+            c.name AS billing_name
+        FROM dental_insurance_preauth preauth
+            JOIN dental_patients p ON preauth.patient_id = p.patientid
+            JOIN dental_user_company uc ON uc.userid = p.docid
+            JOIN dental_users users ON preauth.doc_id = users.userid
+                AND users.billing_company_id = '{$_SESSION['admincompanyid']}'
+            JOIN dental_users users2 ON preauth.userid = users2.userid
+            LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
+            LEFT JOIN companies c on users.billing_company_id = c.id
+        ";
+} else {
+    $sql = "SELECT
+            preauth.id,
+            preauth.patient_id,
+            i.company AS ins_co,
+            p.firstname AS patient_firstname,
+            p.lastname AS patient_lastname,
+            preauth.doc_id,
+            preauth.updated_at,
+            preauth.front_office_request_date,
+            CONCAT(users.first_name, ' ', users.last_name) AS doc_name,
+            preauth.status,
+            DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
+            CONCAT(users2.first_name, ' ', users2.last_name) AS user_name
+        FROM dental_insurance_preauth preauth
+            JOIN dental_patients p ON preauth.patient_id = p.patientid
+            JOIN dental_user_company uc ON uc.userid = p.docid
+                AND uc.companyid = '{$_SESSION['admincompanyid']}'
+            JOIN dental_users users ON preauth.doc_id = users.userid
+            JOIN dental_users users2 ON preauth.userid = users2.userid
+            LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
+        ";
 }
+
 // filter based on select lists above table
 if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid)) {
     $sql .= "WHERE ";

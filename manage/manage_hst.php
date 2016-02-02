@@ -1,6 +1,10 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
 include "includes/top.htm";
 include_once "includes/constants.inc";
+
+require_once __DIR__ . '/includes/hst_functions.php';
 
 if(isset($_GET['rid'])){
   $s = sprintf("UPDATE dental_hst SET viewed=1 WHERE id=%s AND doc_id=%s",$_REQUEST['rid'], $_SESSION['docid']);
@@ -69,53 +73,6 @@ if (!empty($_GET['sort'])) {
       break;
   }
 }
-
-if(isset($_REQUEST['authorize'])){
-
-  $sql = "SELECT s.* FROM dental_screener s JOIN dental_hst h ON h.screener_id = s.id WHERE h.id='".mysqli_real_escape_string($con,$_REQUEST['authorize'])."'";
-  $r = $db->getRow($sql);
-  $sql = "SELECT * FROM dental_hst WHERE screener_id='".mysqli_real_escape_string($con,$r['id'])."'";
-  $h = $db->getRow($sql);
-
-  $dob = ($h['patient_dob']!='')?date('m/d/Y', strtotime($h['patient_dob'])):'';
-  $pat_sql = "INSERT INTO dental_patients SET
-                docid='".mysqli_real_escape_string($con,$r['docid'])."',
-                firstname = '".mysqli_real_escape_string($con,$r['first_name'])."',
-                lastname = '".mysqli_real_escape_string($con,$r['last_name'])."',
-                cell_phone = '".mysqli_real_escape_string($con,$r['phone'])."',
-                email = '".mysqli_real_escape_string($con,$h['patient_email'])."',
-                dob = '".mysqli_real_escape_string($con,$dob)."',
-                status='1',
-                adddate = now(),
-                ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-
-  $pat_id = $db->getInsertId($pat_sql);
-  
-  $hst_sql = "UPDATE dental_hst SET
-                patient_id = '".$pat_id."',
-                status='".DSS_HST_PENDING."',
-                authorized_id='".mysqli_real_escape_string($con,$_SESSION['userid'])."',
-		authorizeddate=now(),
-                updatedate=now()
-                WHERE id=".mysqli_real_escape_string($con,$_REQUEST['authorize']);
-  $db->query($hst_sql);
-
-  $unsent_sql = "SELECT count(*) num_unsent FROM dental_hst WHERE doc_id = ".$_SESSION['docid']." AND status='".DSS_HST_REQUESTED."'";
-  $unsent_q = mysqli_query($con, $unsent_sql);
-  if(mysqli_num_rows($unsent_q) > 0){
-  ?>
-  <script type="text/javascript">
-    window.location = 'manage_hst.php?status=0';
-  </script>
-  <?php
-  }else{
-  ?>
-  <script type="text/javascript">
-    window.location = 'manage_hst.php';
-  </script>
-  <?php
-  }
-}  
 
 $total_rec = $db->getNumberRows($sql);
 /* $rec_disp is null that's why */ $rec_disp = $total_rec;
@@ -202,9 +159,9 @@ $my = $db->getResults($sql);
           Status
         </a>	
   		</td>
-  		<td valign="top" class="col_head" width="15%">
-  			Action
-  		</td>
+        <td valign="top" class="col_head" width="15%">
+            Action
+        </td>
 	  	<td valign="top" class="col_head  <?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort'] == 'authorize')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
         <a href="manage_hst.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '') ?>&sort=authorize&sortdir=<?php echo (!empty($_REQUEST['sort']) && $_REQUEST['sort']=='authorize'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
           Authorize
@@ -239,6 +196,9 @@ $my = $db->getResults($sql);
         <td valign="top" class="status_<?php echo $myarray['status']; ?>">
           <?php echo $dss_hst_status_labels[$myarray["status"]] . '&nbsp;';?>
           <?php echo ($myarray['status'] != DSS_HST_PENDING && $myarray['status'] != DSS_HST_REJECTED && $myarray['updatedate'])? date('m/d/Y H:i a', strtotime($myarray['updatedate'])):''; ?>
+          <?php if ($myarray['status'] == DSS_HST_REQUESTED) { ?>
+              <?= date('m/d/Y h:i a', strtotime($myarray['updatedate'] ?: $myarray['adddate'])) ?>
+          <?php } ?>
           <?php echo $myarray['office_notes'];?>
           <?php echo ($myarray['status'] == DSS_HST_REJECTED && $myarray['rejecteddate'])? date('m/d/Y h:i a', strtotime($myarray['rejecteddate'])):''; ?>
           <?php echo ($myarray['status'] == DSS_HST_REJECTED)?$myarray['rejected_reason']:'';?>
@@ -246,13 +206,13 @@ $my = $db->getResults($sql);
         <td valign="top">
         <?php if($myarray['status']==DSS_HST_COMPLETE){ ?>
           <a href="dss_summ.php?pid=<?php echo $myarray['patient_id']; ?>&addtopat=1&sect=sleep" class="editlink" title="EDIT"  onclick="alert('After you view the test results, please return to this page and click “Mark Read” to clear the item from your pending queue.');">
-            View
+            View results
           </a>
         <?php }else{ ?>
-          <a href="hst_view.php?pid=<?php echo $myarray['patient_id']; ?>&hst_id=<?php echo $myarray["id"]; ?>" style="float:left;" class="editlink" title="EDIT" onclick="alert('After you view the test results, please return to this page and click “Mark Read” to clear the item from your pending queue.');">
-            View
+          <a class="editlink" href="/manage/hst_request.php?<?= $myarray['patient_id'] ? e("pid=$myarray[patient_id]&") : '' ?>hst_id=<?= $myarray['id'] ?>">
+              View form
           </a>
-        <?php } 
+        <?php }
         if($myarray['status'] == DSS_HST_COMPLETE || $myarray['status'] == DSS_HST_REJECTED){
           if(!$myarray['viewed']){ ?>
           <a href="manage_hst.php?rid=<?php echo $myarray["id"]; ?>&status=<?php echo $_GET['status'];?>&viewed=<?php echo $_GET['viewed'];?>" style="float:right;" class="editlink" title="EDIT">
@@ -262,7 +222,7 @@ $my = $db->getResults($sql);
           <a href="manage_hst.php?urid=<?php echo $myarray["id"]; ?>&status=<?php echo $_GET['status'];?>" style="float:right;" class="editlink" title="EDIT">
             Mark Unread
           </a>
-        <?php } 
+        <?php }
         } ?>
         </td>
         <td valign="top">
@@ -273,7 +233,7 @@ $my = $db->getResults($sql);
 
           if($myarray['status']==DSS_HST_REQUESTED){
             if($user_sign || $_SESSION['docid']==$_SESSION['userid']){ ?>
-            <a href="manage_hst.php?authorize=<?php echo $myarray["id"]; ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" class="button" title="Authorize HST">
+            <a href="/manage/hst_request.php?<?= $myarray['patient_id'] ? e("pid=$myarray[patient_id]&") : '' ?>hst_id=<?= $myarray['id'] ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" class="button" title="Authorize HST">
               Authorize
             </a>
             <?php }else{ ?>

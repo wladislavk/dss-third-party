@@ -1225,9 +1225,18 @@ if( $r['homepage'] != '1') {
 
           </span>
         <?php }
-          $rc_sql = "SELECT * FROM dental_hst WHERE 
-                     (status='".(defined('DSS_HST_REQUSTED') ? DSS_HST_REQUSTED : '')."' OR status='".(defined('DSS_HST_PENDING') ? DSS_HST_PENDING : '')."' OR status='".(defined('DSS_HST_SCHEDULED') ? DSS_HST_SCHEDULED : '')."' OR (status='".(defined('DSS_HST_REJECTED') ? DSS_HST_REJECTED : '')."' AND (viewed IS NULL or viewed = 0)))
-                        AND patient_id='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+          $rc_sql = "SELECT *
+              FROM dental_hst
+              WHERE (
+                      status = '".(defined('DSS_HST_REQUSTED') ? DSS_HST_REQUSTED : '')."'
+                      OR status = '".(defined('DSS_HST_PENDING') ? DSS_HST_PENDING : '')."'
+                      OR status = '".(defined('DSS_HST_SCHEDULED') ? DSS_HST_SCHEDULED : '')."'
+                      OR (
+                          status = '".(defined('DSS_HST_REJECTED') ? DSS_HST_REJECTED : '')."'
+                          AND (viewed IS NULL OR viewed = 0)
+                      )
+                  )
+                  AND patient_id = '".mysqli_real_escape_string($con,$_GET['pid'])."'";
 
           $rc_q = $db->getResults($rc_sql);
           $pat_hst_num_uncompleted = count($rc_q);
@@ -1243,7 +1252,7 @@ if( $r['homepage'] != '1') {
               foreach($rc_q as $hst){          
             ?>
 
-              HST was requested <?php echo  date('m/d/Y', strtotime($hst['adddate'])); ?>
+            <a href="/manage/hst_request.php?pid=<?= $hst['patient_id'] ?>&amp;hst_id=<?= $hst['id'] ?>">HST was requested <?php echo  date('m/d/Y', strtotime($hst['adddate'])); ?></a>
               and is currently 
 
             <?php if($hst['status'] == DSS_HST_REJECTED) { ?>

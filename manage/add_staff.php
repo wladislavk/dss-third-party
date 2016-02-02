@@ -139,6 +139,7 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
                 'ip_address' => $_SERVER['REMOTE_ADDR'],
             ];
 
+            $userData = $db->escapeAssignmentList($userData);
             $userId = $db->getInsertId("INSERT INTO dental_users SET $userData, adddate = NOW()");
 
             edx_user_update($userId);

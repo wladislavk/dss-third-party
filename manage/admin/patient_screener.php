@@ -1,27 +1,68 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-include "includes/top.htm";
-include "includes/patient_nav.php";
-?>
-
 <?php
-  $s_sql = "SELECT * FROM dental_screener WHERE patient_id='".mysqli_real_escape_string($con,$_GET['pid'])."'";
-  $s_q = mysqli_query($con,$s_sql);
-  if(mysqli_num_rows($s_q)==0){
-	?>No screener<?php
-  }else{
-  $myarray = mysqli_fetch_assoc($s_q); ?>
+namespace Ds3\Libraries\Legacy;
 
+require_once __DIR__ . '/includes/top.htm';
+require_once __DIR__ . '/includes/patient_nav.php';
+require_once __DIR__ . '/../includes/screener-functions.php';
+
+$coMorbidityLabels = coMorbidityLabels();
+$coMorbidityWeights = coMorbidityWeights();
+
+$myarray = $db->getRow("SELECT s.*
+    FROM dental_screener s
+        JOIN dental_hst h ON h.screener_id = s.id
+    WHERE h.patient_id = '" . intval($_GET['pid']) . "'");
+
+if (!$myarray) { ?>
+    No screener
+<?php } else {
+    $ep_sql = "SELECT se.response, e.epworth
+        FROM dental_screener_epworth se
+            JOIN dental_epworth e ON se.epworth_id = e.epworthid
+        WHERE se.response > 0
+            AND se.screener_id = '" . intval($myarray['id']) . "'";
+    $ep_q = $db->getResults($ep_sql);
+
+    $epTotal = 0;
+
+    if (count($ep_q)) foreach ($ep_q as $ep_r) {
+        $epTotal += $ep_r['response'];
+    }
+
+    $survey_total = $myarray['breathing'] +
+        $myarray['driving'] +
+        $myarray['gasping'] +
+        $myarray['sleepy'] +
+        $myarray['snore'] +
+        $myarray['weight_gain'] +
+        $myarray['blood_pressure'] +
+        $myarray['jerk'] +
+        $myarray['burning'] +
+        $myarray['headaches'] +
+        $myarray['falling_asleep'] +
+        $myarray['staying_asleep'];
+
+    /**
+     * Instead of relying on the field values, sum based on a lookup list.
+     *
+     * Due a mistake on a previous task, the DB values during certain period might be wrong.
+     */
+    $sect3_total = coMorbiditySum($myarray);
+
+    $diagnosis = array();
+
+    foreach ($coMorbidityLabels as $fieldName=>$legend) {
+        if ($myarray[$fieldName]) {
+            $diagnosis []= $legend;
+        }
+    }
+
+    ?>
 				<strong>Epworth Sleepiness Score</strong><br />
-	<?php $ep_sql = "SELECT se.response, e.epworth 
-				FROM dental_screener_epworth se
-				JOIN dental_epworth e ON se.epworth_id =e.epworthid
-				WHERE se.response > 0 AND se.screener_id='".mysqli_real_escape_string($con,$myarray['id'])."'";
-		$ep_q = mysqli_query($con,$ep_sql);
-		while($ep_r = mysqli_fetch_assoc($ep_q)){
-		?>
+	<?php foreach ($ep_q as $ep_r) { ?>
 		<?php echo  $ep_r['response']; ?> - <strong><?php echo  $ep_r['epworth']; ?></strong><br />
 		<?php } ?>
-		<?php echo  (!empty($ep['ep_total']) ? $ep['ep_total'] : ''); ?> - Total
+		<?= $epTotal ?> - Total
 
 	<br /><br />
 

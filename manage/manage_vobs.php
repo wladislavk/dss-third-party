@@ -135,7 +135,7 @@ if(isset($_GET['viewed'])){
 	$sql .= " AND (preauth.viewed = '0' OR preauth.viewed IS NULL) ";
   }
 }
-  $sql .= "ORDER BY ".$sort." ".$dir;
+  $sql .= " ORDER BY ".$sort." ".$dir;
 
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;

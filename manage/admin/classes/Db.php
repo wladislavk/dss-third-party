@@ -102,8 +102,8 @@ class Db
 	{
 		if( $query_string ) {
 			$result = $this->query($query_string);
-			$indert_id = mysqli_insert_id($this->con);
-			return $indert_id;
+			$insert_id = $result ? mysqli_insert_id($this->con) : 0;
+			return $insert_id;
 		}
 	}
 
@@ -112,8 +112,8 @@ class Db
 		return mysqli_real_escape_string($this->con, $string);
 	}
 
-    public static function escapeList (Array $values) {
-        $db = new Db();
+    public function escapeList (Array $values) {
+        $db = $this;
 
         array_walk($values, function (&$each) use ($db) {
             $each = "'" . $db->escape($each) . "'";
@@ -122,8 +122,8 @@ class Db
         return join(', ', $values);
     }
 
-    public static function escapeAssignmentList (Array $values) {
-        $db = new Db();
+    public function escapeAssignmentList (Array $values) {
+        $db = $this;
 
         array_walk($values, function (&$each, $key) use ($db) {
             $each = $db->escape($key) . " = '" . $db->escape($each) . "'";

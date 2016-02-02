@@ -311,6 +311,13 @@ foreach ($unorderedProviderList as $provider) {
 $defaultProvider = $isStaff ? $userId : $docId;
 
 ?>
+<script>
+    var providerList = <?= json_encode($providerList) ?>;
+</script>
+<script type="text/javascript" src="/manage/js/hst_request.js?v=20160131"></script>
+<script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="/manage/js/masks.js"></script>
+<?php require_once __DIR__ . '/../../includes/calendarinc.php' ?>
 <link type="text/css" rel="stylesheet" href="/manage/css/form.css" />
 <?php if (!empty($is_back_office)) { ?>
     <a href="/manage/admin/view_hst.php?ed=<?= $hstData['id'] ?><?=
@@ -358,7 +365,9 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <label for="patient_lastname">Patient Last Name</label>
             </span>
             <span>
-                <input type="text" name="patient_dob" id="patient_dob" value="<?= e($hstData['patient_dob']) ?>" />
+                <input type="text" name="patient_dob" id="patient_dob" class="calendar"
+                    onChange="validateDate('patient_dob');" placeholder="YYYY-MM-DD" data-date-format="Y-m-d"
+                    value="<?= e($hstData['patient_dob']) ?>" />
                 <label for="patient_dob">DOB</label>
             </span>
         </li>
@@ -376,11 +385,13 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <label for="patient_city">City</label>
             </span>
             <span>
-                <input type="text" name="patient_state" id="patient_state" value="<?= e($hstData['patient_state']) ?>" />
+                <input type="text" name="patient_state" id="patient_state" class="statemask" size="3"
+                    value="<?= e($hstData['patient_state']) ?>" />
                 <label for="patient_state">State</label>
             </span>
             <span>
-                <input type="text" name="patient_zip" id="patient_zip" value="<?= e($hstData['patient_zip']) ?>" />
+                <input type="text" name="patient_zip" id="patient_zip" class="zipmask" size="10"
+                    value="<?= e($hstData['patient_zip']) ?>" />
                 <label for="patient_zip">Zip</label>
             </span>
         </li>
@@ -419,7 +430,8 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <label for="ins_co_id">Insurance Company</label>
             </span>
             <span>
-                <input type="text" name="ins_phone" id="ins_phone" value="<?= e($hstData['ins_phone']) ?>" />
+                <input type="text" name="ins_phone" id="ins_phone" class="phonemask"
+                    value="<?= e($hstData['ins_phone']) ?>" />
                 <label for="ins_phone">Ins. Phone Number</label>
             </span>
             <span>
@@ -547,17 +559,21 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <label for="provider_city">City</label>
             </span>
             <span>
-                <input type="text" name="provider_state" id="provider_state" value="<?= e($hstData['provider_state']) ?>" />
+                <input type="text" name="provider_state" id="provider_state" class="statemask" size="3"
+                    value="<?= e($hstData['provider_state']) ?>" />
                 <label for="provider_state">State</label>
             </span>
             <span>
-                <input type="text" name="provider_zip" id="provider_zip" value="<?= e($hstData['provider_zip']) ?>" />
+                <input type="text" name="provider_zip" id="provider_zip" class="zipmask" size="10"
+                    value="<?= e($hstData['provider_zip']) ?>" />
                 <label for="provider_zip">Zip</label>
             </span>
         </li>
         <li>
             <span>
-                <input type="text" name="provider_date" id="provider_date" value="<?= e($hstData['provider_date']) ?>" />
+                <input type="text" name="provider_date" id="provider_date" class="calendar"
+                    onChange="validateDate('provider_date');" placeholder="YYYY-MM-DD" data-date-format="Y-m-d"
+                    value="<?= e($hstData['provider_date']) ?>" />
                 <label for="provider_date">Date</label>
             </span>
         </li>
@@ -594,9 +610,3 @@ $defaultProvider = $isStaff ? $userId : $docId;
     <?php } ?>
 </form>
 <br />
-<script>
-    var providerList = <?= json_encode($providerList) ?>;
-</script>
-<script type="text/javascript" src="/manage/js/hst_request.js?v=20160131"></script>
-<script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-<script type="text/javascript" src="/manage/script/masks.js"></script>

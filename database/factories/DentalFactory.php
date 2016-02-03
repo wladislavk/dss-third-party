@@ -305,3 +305,27 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation::class, function ($faker) {
+    return [
+        'formid'               => $faker->randomDigit,
+        'patientid'            => $faker->randomDigit,
+        'maxilla'              => $faker->regexify('~([0-9]~)+'),
+        'other_maxilla'        => $faker->sentence($nbWords = 3),
+        'mandible'             => $faker->regexify('~([0-9]~)+'),
+        'other_mandible'       => $faker->sentence($nbWords = 3),
+        'soft_palate'          => $faker->regexify('~([0-9]~)+'),
+        'other_soft_palate'    => $faker->sentence($nbWords = 3),
+        'uvula'                => $faker->regexify('~([0-9]~)+'),
+        'other_uvula'          => $faker->sentence($nbWords = 3),
+        'gag_reflex'           => $faker->regexify('~([0-9]~)+'),
+        'other_gag_reflex'     => $faker->sentence($nbWords = 3),
+        'nasal_passages'       => $faker->regexify('~([0-9]~)+'),
+        'other_nasal_passages' => $faker->sentence($nbWords = 3),
+        'userid'               => $faker->randomDigit,
+        'docid'                => $faker->randomDigit,
+        'status'               => $faker->randomDigit,
+        'adddate'              => $faker->dateTime(),
+        'ip_address'           => $faker->ipv4
+    ];
+});

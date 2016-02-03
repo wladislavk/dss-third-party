@@ -17,7 +17,7 @@ if(!empty($_REQUEST["delid"])) {
 }
 
 $sql = "select 
-		dc.contactid as pid,
+		dc.contactid,
 		dc.salutation,
 		dc.firstname,
 		dc.middlename,
@@ -79,7 +79,7 @@ $num_referredby = count($my);
 // get the counters
 for($index = 0; $index < count($my); ++$index) {
 
-	$patientId = $my[$index]['pid'];
+	$patientId = $my[$index]['contactid'];
 	$query = "SELECT count(patientid)
 							  FROM dental_patients p30
 							  WHERE p30.referred_source=" . $my[$index]['referral_type'] . " AND

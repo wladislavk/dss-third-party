@@ -12,7 +12,7 @@ class AirwayEvaluationStore extends Request
     public function rules()
     {
         return [
-            'formid'               => 'required|integer',
+            'formid'               => 'integer',
             'patientid'            => 'required|integer',
             'maxilla'              => 'regex:/^~([0-9]~)+$/',
             'other_maxilla'        => 'string',
@@ -26,8 +26,8 @@ class AirwayEvaluationStore extends Request
             'other_gag_reflex'     => 'string',
             'nasal_passages'       => 'regex:/^~([0-9]~)+$/',
             'other_nasal_passages' => 'string',
-            'userid'               => 'integer',
-            'docid'                => 'integer',
+            'userid'               => 'required|integer',
+            'docid'                => 'required|integer',
             'status'               => 'integer'
         ];
     }

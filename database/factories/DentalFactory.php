@@ -305,3 +305,48 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\TmjClinicalExam::class, function ($faker) {
+    return [
+        'formid'                   => $faker->randomDigit,
+        'patientid'                => $faker->randomDigit,
+        'palpationid'              => $faker->regexify('(\d{1,2}\|\d{1}~)+'),
+        'palpationRid'             => $faker->regexify('(\d{1,2}\|\d{1}~)+'),
+        'additional_paragraph_pal' => $faker->sentence($nbWords = 5),
+        'joint_exam'               => $faker->regexify('~([1-9]~)+'),
+        'jointid'                  => $faker->regexify('([1-9]\|([A-Z]+)~)+'),
+        'i_opening_from'           => $faker->randomDigit,
+        'i_opening_to'             => $faker->randomDigit,
+        'i_opening_equal'          => $faker->randomDigit,
+        'protrusion_from'          => $faker->randomDigit,
+        'protrusion_to'            => $faker->randomDigit,
+        'protrusion_equal'         => $faker->randomDigit,
+        'l_lateral_from'           => $faker->randomDigit,
+        'l_lateral_to'             => $faker->randomDigit,
+        'l_lateral_equal'          => $faker->randomDigit,
+        'r_lateral_from'           => $faker->randomDigit,
+        'r_lateral_to'             => $faker->randomDigit,
+        'r_lateral_equal'          => $faker->randomDigit,
+        'deviation_from'           => $faker->randomDigit,
+        'deviation_to'             => $faker->randomDigit,
+        'deviation_equal'          => $faker->randomDigit,
+        'deflection_from'          => $faker->randomDigit,
+        'deflection_to'            => $faker->randomDigit,
+        'deflection_equal'         => $faker->randomDigit,
+        'range_normal'             => $faker->randomDigit,
+        'normal'                   => $faker->randomDigit,
+        'other_range_motion'       => $faker->randomDigit,
+        'additional_paragraph_rm'  => $faker->sentence($nbWords = 4),
+        'screening_aware'          => $faker->randomDigit,
+        'screening_normal'         => $faker->randomDigit,
+        'userid'                   => $faker->randomDigit,
+        'docid'                    => $faker->randomDigit,
+        'status'                   => $faker->randomDigit,
+        'adddate'                  => $faker->dateTime(),
+        'ip_address'               => $faker->ipv4,
+        'deviation_r_l'            => $faker->word,
+        'deflection_r_l'           => $faker->word,
+        'dentaldevice'             => $faker->randomDigit,
+        'dentaldevice_date'        => $faker->dateTime()
+    ];
+});

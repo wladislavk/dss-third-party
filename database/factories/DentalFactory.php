@@ -318,6 +318,8 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam::class,
         'tongue'               => $faker->regexify('~([0-9]~)+'),
         'userid'               => $faker->randomDigit,
         'docid'                => $faker->randomDigit,
-        'status'               => $faker->randomDigit
+        'status'               => $faker->randomDigit,
+        'adddate'              => $faker->dateTime(),
+        'ip_address'           => $faker->ipv4
     ];
 });

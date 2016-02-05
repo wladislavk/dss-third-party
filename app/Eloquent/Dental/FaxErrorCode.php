@@ -16,7 +16,10 @@ class FaxErrorCode extends Model implements Resource, Repository
      *
      * @var array
      */
-    protected $fillable = ['error_code', 'description', 'resolution'];
+    protected $fillable = [
+        'error_code', 'description', 'resolution',
+        'adddate', 'ip_address'
+    ];
 
     /**
      * The database table used by the model.

@@ -305,3 +305,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\FaxErrorCode::class, function ($faker) {
+    return [
+        'error_code'  => $faker->numerify('2####'),
+        'description' => $faker->sentence($nbWords = 6),
+        'resolution'  => $faker->sentence($nbWords = 8),
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

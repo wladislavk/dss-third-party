@@ -36,6 +36,13 @@ class FaxInvoice extends Model implements Resource, Repository
     protected $primaryKey = 'id';
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['start_date', 'end_date'];
+
+    /**
      * The name of the "created at" column.
      *
      * @var string

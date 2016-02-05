@@ -305,3 +305,15 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\FaxInvoice::class, function ($faker) {
+    return [
+        'invoice_id'  => $faker->randomDigit,
+        'description' => $faker->sentence($nbWords = 5),
+        'start_date'  => Carbon::now()->addDays(1),, 
+        'end_date'    => Carbon::now()->addDays(10),
+        'amount'      => $faker->numerify('5.##'),
+        'adddate'     => Carbon::now(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

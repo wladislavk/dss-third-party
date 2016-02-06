@@ -1,14 +1,57 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include "includes/top.htm";
+<?php
+namespace Ds3\Libraries\Legacy;
 
-	if($_GET['rsource'] == DSS_REFERRED_PHYSICIAN) {
-		$ref_sql = "select * from dental_contact where docid='".$_SESSION['docid']."' and contactid='".s_for($_GET['rid'])."'";
-	}elseif($_GET['rsource']==DSS_REFERRED_PATIENT){
-		$ref_sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['rid'])."'";
-	}
+require_once __DIR__ .  '/includes/top.htm';
 
-	$ref_myarray = $db->getRow($ref_sql);
-	$name = st($ref_myarray['salutation'])." ".st($ref_myarray['firstname'])." ".st($ref_myarray['middlename'])." ".st($ref_myarray['lastname']);
+$docId = intval($_SESSION['docid']);
+$referralId = intval($_GET['rid']);
+$referralType = intval($_GET['rsource']);
+
+$referralTypePhysician = DSS_REFERRED_PHYSICIAN;
+$referralTypePatient = DSS_REFERRED_PATIENT;
+
+if ($referralType == $referralTypePhysician) {
+    $referralQuery = "SELECT
+            dc.contactid,
+            dc.salutation,
+            dc.firstname,
+            dc.middlename,
+            dc.lastname,
+            p.referred_source,
+            dc.referredby_notes,
+            COUNT(p.patientid) AS num_ref,
+            GROUP_CONCAT(CONCAT(p.firstname, ' ', p.lastname)) AS patients_list,
+            '$referralTypePhysician' AS referral_type,
+            ct.contacttype
+        FROM dental_contact dc
+            INNER JOIN dental_contacttype ct ON ct.contacttypeid = dc.contacttypeid
+            INNER JOIN dental_patients p ON dc.contactid = p.referred_by
+        WHERE dc.docid = '$docId'
+            AND p.referred_source = '$referralTypePhysician'
+            AND dc.contactid = '$referralId'";
+} else {
+    $referralQuery = "SELECT
+            dp.patientid AS contactid,
+            dp.salutation,
+            dp.firstname,
+            dp.middlename,
+            dp.lastname,
+            p.referred_source,
+            '' AS referred_notes,
+            COUNT(p.patientid) AS num_ref,
+            GROUP_CONCAT(CONCAT(p.firstname, ' ', p.lastname)) AS patients_list,
+            '$referralTypePatient' AS referral_type,
+            'Patient' AS contacttype
+        FROM dental_patients dp
+            INNER JOIN dental_patients p ON dp.patientid = p.referred_by
+        WHERE p.docid = '$docId'
+            AND p.referred_source = '$referralTypePatient'
+            AND dp.patientid = '$referralId'";
+}
+
+$referralData = $db->getRow($referralQuery);
+
+	$name = st($referralData['salutation'])." ".st($referralData['firstname'])." ".st($referralData['middlename'])." ".st($referralData['lastname']);
 	$rec_disp = 20;
 
 	if(isset($_REQUEST["page"]) && $_REQUEST["page"] != "") {
@@ -18,7 +61,12 @@
 	}
 	
 	$i_val = $index_val * $rec_disp;
-	$sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and referred_by='".s_for($_GET['rid'])."' AND referred_source='".s_for($_GET['rsource'])."' order by adddate desc";
+	$sql = "SELECT *
+        FROM dental_patients
+        WHERE docid = '$docId'
+            AND referred_by = '$referralId'
+            AND referred_source = '$referralType'
+        ORDER BY adddate DESC";
 	
 	$total_rec = $db->getNumberRows($sql);
 	$no_pages = $total_rec/$rec_disp;
@@ -31,15 +79,7 @@
 		Referral List for:
 	    <i><?php echo $name;?></i>
 		-
-		<?php if($_GET['rsource'] == DSS_REFERRED_PATIENT) { ?>
-			Patient
-		<?php } elseif($_GET['rsource'] == DSS_REFERRED_PHYSICIAN) {
-			$c_sql = "SELECT contacttype FROM dental_contacttype
-					  WHERE contacttypeid='".mysqli_real_escape_string($con, $ref_myarray['contacttypeid'])."'";
-			
-			$c_r = $db->getRow($c_sql);
-			echo $c_r['contacttype'];
-		} ?>
+		<?= $referralData['contacttype'] ?>
 	</span>
 	<br>
 	&nbsp;&nbsp;
@@ -56,10 +96,8 @@
 			<tr bgColor="#ffffff">
 				<td  align="right" colspan="15" class="bp">
 					Pages:
-					<?php
-						paging($no_pages,$index_val,"");
-					?>
-				</td>        
+					<?php paging($no_pages, $index_val, "rid=$referralId&amp;rsource=$referralType") ?>
+				</td>
 			</tr>
 		<?php } ?>
 		<tr class="tr_bg_h">

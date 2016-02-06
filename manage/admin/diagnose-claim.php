@@ -147,6 +147,43 @@ function retrieveClaimData ($claimId, Array $fieldList=[], Array $specialList=[]
 }
 
 /**
+ * Auxiliary function to query the Eligible references associated to a claim
+ *
+ * @param int $claimId
+ * @return array
+ */
+function retrieveEligibleReferences ($claimId) {
+    $db = new Db();
+    $claimId = intval($claimId);
+
+    $references = $db->getResults("SELECT reference_id
+        FROM dental_claim_electronic
+        WHERE claimid
+            AND claimid = '$claimId'");
+
+    $references = array_flatten($references);
+
+    return $references;
+}
+
+/**
+ * Retrieve Eligible events associated to a claim, through the reference_id
+ *
+ * @param array $eligibleReferences
+ * @return array
+ */
+function retrieveEligibleEvents (Array $eligibleReferences) {
+    $db = new Db();
+    $eligibleReferences = $db->escapeList($eligibleReferences);
+
+    return $db->getResults("SELECT *
+        FROM dental_eligible_response
+        WHERE reference_id
+            AND reference_id IN ($eligibleReferences)
+        ORDER BY id ASC");
+}
+
+/**
  * @param array  $rows
  * @param string $title
  */
@@ -193,6 +230,9 @@ $claimData = retrieveClaimData($claimId);
 $claimHistory = retrieveClaimHistory($claimId);
 $claimStatusHistory = retrieveClaimStatusHistory($claimId);
 
+$eligibleReferences = retrieveEligibleReferences($claimId);
+$eligibleEvents = retrieveEligibleEvents($eligibleReferences);
+
 if (isset($_GET['dirty'])) {
     dd([
         '$claimId' => $claimId,
@@ -205,9 +245,58 @@ if (isset($_GET['dirty'])) {
 require_once __DIR__ . '/includes/top.htm';
 
 ?>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+<script>
+    jQuery(function($){
+        $('#eligible-events > table > tbody > tr > td:nth-child(3)').each(function(){
+            var $this = $(this),
+                text = $this.text().trim(),
+                json = text,
+                $code;
+
+            if (!text) {
+                return;
+            }
+
+            $code = $('<code>', { class: 'json' });
+
+            try {
+                var parsedJson = JSON.parse(text);
+                json = JSON.stringify(parsedJson, null, 2);
+            } catch (e) { /* empty */}
+
+            $code.text(json);
+            $this.empty().append($code);
+
+            hljs.highlightBlock($code[0]);
+
+            if ($code.find('span').length) {
+                $code.attr('title', 'click to expand/toggle').click(function(){
+                    if ($code.closest('pre').length) {
+                        $code.unwrap();
+                    } else {
+                        $code.wrap('<pre>', {});
+                    }
+                });
+            } else {
+                $this.text(text);
+            }
+        });
+    });
+</script>
 <h1>
     Claim id: <code><?= $claimId ?></code>
+    &mdash;
+    Eligible ids:
+    <?= $eligibleReferences ? '<code>' . join(' ', array_flatten($eligibleReferences)) . '</code>' : 'none found' ?>
 </h1>
+<a class="btn btn-primary" role="button" data-toggle="collapse" href="#eligible-events">
+    Toggle Eligible events
+</a>
+<div class="collapse" id="eligible-events">
+    <?php renderTableFromArray($eligibleEvents, 'Eligible events') ?>
+</div>
 <?php
 
 renderTableFromArray($claimData, 'Current data');

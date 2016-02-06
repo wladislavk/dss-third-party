@@ -96,10 +96,8 @@ $referralData = $db->getRow($referralQuery);
 			<tr bgColor="#ffffff">
 				<td  align="right" colspan="15" class="bp">
 					Pages:
-					<?php
-						paging($no_pages,$index_val,"");
-					?>
-				</td>        
+					<?php paging($no_pages, $index_val, "rid=$referralId&amp;rsource=$referralType") ?>
+				</td>
 			</tr>
 		<?php } ?>
 		<tr class="tr_bg_h">

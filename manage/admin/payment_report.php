@@ -9,5 +9,5 @@ $header_class = 'page-header';
 $table_style = 'class="table -table-bordered table-hover"';
 
 require_once __DIR__ . '/includes/top.htm';
-require_once __DIR__ . '/../includes/payment_report.inc';
+require_once __DIR__ . '/includes/payment-report.inc';
 require_once __DIR__ . '/includes/bottom.htm';

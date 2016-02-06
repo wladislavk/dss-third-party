@@ -1,14 +1,17 @@
-<?php namespace Ds3\Libraries\Legacy; ?><table class="sort_table" width="98%" align="center">
+<?php
+namespace Ds3\Libraries\Legacy;
+
+?><table class="<?= $isBackOffice ? 'table table-hover table-condensed' : 'sort_table' ?>" width="98%" align="center">
   <thead>
     <tr>
       <th width="10%">Days</th>
       <th width="10%">Since</th>
       <th width="10%">DOS</th>
       <th width="10%">Service</th>
-<?php if(defined('DSS_OFFICE_BACK') && $office_type==DSS_OFFICE_BACK){ ?>
+<?php if ($isBackOffice) { ?>
       <th width="10%">Patient</th>
       <th width="10%">Account</th>
-<?php }else{ ?>
+<?php } else { ?>
       <th width="10%">Client</th>
 <?php } ?>
       <th width="10%">Charge</th>
@@ -31,20 +34,20 @@
         <?php echo  ($r['service_date'])?date('m/d/Y', strtotime($r['service_date'])):''; ?>
       </td>
       <td>
-         <?php if($office_type == DSS_OFFICE_TYPE_FRONT){ ?>
+         <?php if(!$isBackOffice){ ?>
 		<a href="view_claim.php?claimid=<?php echo  $r['insuranceid']; ?>&pid=<?php echo  $r['patientid']; ?>"><?php echo  $r['transaction_code']; ?></a>
 	<?php }else{ ?>
 		<?php echo  $r['transaction_code']; ?>
 	<?php } ?>
       </td>
       <td>
-	<?php if($office_type == DSS_OFFICE_TYPE_FRONT){ ?>
+	<?php if(!$isBackOffice){ ?>
           <a href="manage_ledger.php?pid=<?php echo  $r['patientid']; ?>&addtopat=1"><?php echo  $r['firstname']." ".$r['lastname']; ?></a>
 	<?php }else{ ?>
           <a href="view_patient.php?pid=<?php echo  $r['patientid']; ?>"><?php echo  $r['firstname']." ".$r['lastname']; ?></a>
 	<?php } ?>
       </td>
-<?php if(defined('DSS_OFFICE_BACK') && $office_type==DSS_OFFICE_BACK){ ?>
+<?php if($isBackOffice){ ?>
       <td>
 	<?php echo  $r['doc_name']; ?>
       </td>

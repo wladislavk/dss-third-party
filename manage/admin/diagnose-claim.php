@@ -172,7 +172,7 @@ function renderTableFromArray (Array $rows, $title='Unnamed data') {
     $headerRow = ob_get_clean();
 
     ?>
-    <table class="table table-bordered table-hover">
+    <table class="table table-striped table-hover">
         <thead>
             <?= $headerRow ?>
         </thead>

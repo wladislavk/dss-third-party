@@ -16,43 +16,47 @@ if(!empty($_REQUEST["delid"])) {
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-$sql = "select 
-		dc.contactid as pid,
-		dc.salutation,
-		dc.firstname,
-		dc.middlename,
-		dc.lastname, 
-		p.referred_source,
-		dc.referredby_notes,
-		count(p.patientid) as num_ref, 
-		GROUP_CONCAT(CONCAT(p.firstname,' ',p.lastname)) as patients_list,
-		'".DSS_REFERRED_PHYSICIAN."' as referral_type,
-		ct.contacttype
-	from dental_contact dc 
-		INNER JOIN dental_contacttype ct ON ct.contacttypeid = dc.contacttypeid
-		INNER JOIN dental_patients p on dc.contactid=p.referred_by
-	where dc.docid='".$_SESSION['docid']."'
-		AND p.referred_source=".DSS_REFERRED_PHYSICIAN."
-		GROUP BY dc.contactid
-  UNION
-	select
-		dp.patientid,
-		dp.salutation,
-		dp.firstname,
-		dp.middlename,
-		dp.lastname,
-		p.referred_source,
-		'',
-		count(p.patientid),
-		GROUP_CONCAT(CONCAT(p.firstname,' ',p.lastname)) as patients_list,
-		'".DSS_REFERRED_PATIENT."',
-		'Patient'
-	from dental_patients dp
-		INNER JOIN dental_patients p ON dp.patientid=p.referred_by
-	where p.docid='".$_SESSION['docid']."'
-                AND p.referred_source=".DSS_REFERRED_PATIENT."
-		GROUP BY dp.patientid
-";
+$docId = intval($_SESSION['docid']);
+$referralTypePhysician = DSS_REFERRED_PHYSICIAN;
+$referralTypePatient = DSS_REFERRED_PATIENT;
+
+$sql = "SELECT
+            dc.contactid,
+            dc.salutation,
+            dc.firstname,
+            dc.middlename,
+            dc.lastname,
+            p.referred_source,
+            dc.referredby_notes,
+            COUNT(p.patientid) AS num_ref,
+            GROUP_CONCAT(CONCAT(p.firstname, ' ', p.lastname)) AS patients_list,
+            '$referralTypePhysician' AS referral_type,
+            ct.contacttype
+        FROM dental_contact dc
+            INNER JOIN dental_contacttype ct ON ct.contacttypeid = dc.contacttypeid
+            INNER JOIN dental_patients p ON dc.contactid = p.referred_by
+        WHERE dc.docid = '$docId'
+            AND p.referred_source = '$referralTypePhysician'
+        GROUP BY dc.contactid
+    UNION
+        SELECT
+            dp.patientid,
+            dp.salutation,
+            dp.firstname,
+            dp.middlename,
+            dp.lastname,
+            p.referred_source,
+            '',
+            COUNT(p.patientid),
+            GROUP_CONCAT(CONCAT(p.firstname, ' ', p.lastname)) AS patients_list,
+            '$referralTypePatient',
+            'Patient'
+        FROM dental_patients dp
+            INNER JOIN dental_patients p ON dp.patientid = p.referred_by
+        WHERE p.docid = '$docId'
+            AND p.referred_source = '$referralTypePatient'
+        GROUP BY dp.patientid
+        ";
 
 if (!empty($_GET['sort'])) {
 	switch ($_GET['sort']) {
@@ -79,7 +83,7 @@ $num_referredby = count($my);
 // get the counters
 for($index = 0; $index < count($my); ++$index) {
 
-	$patientId = $my[$index]['pid'];
+	$patientId = $my[$index]['contactid'];
 	$query = "SELECT count(patientid)
 							  FROM dental_patients p30
 							  WHERE p30.referred_source=" . $my[$index]['referral_type'] . " AND

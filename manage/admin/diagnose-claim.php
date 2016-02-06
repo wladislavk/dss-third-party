@@ -173,6 +173,10 @@ function retrieveEligibleReferences ($claimId) {
  * @return array
  */
 function retrieveEligibleEvents (Array $eligibleReferences) {
+    if (!$eligibleReferences) {
+        return [];
+    }
+
     $db = new Db();
     $eligibleReferences = $db->escapeList($eligibleReferences);
 

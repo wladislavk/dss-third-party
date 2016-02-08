@@ -331,10 +331,6 @@ $defaultProvider = $isStaff ? $userId : $docId;
     <input type="hidden" name="hst_id" value="<?= $hstId ?>" />
     <input type="hidden" name="provider_signature" id="provider_signature" value="1" />
 
-    <h2>
-        <strong>Sleep Services</strong>
-    </h2>
-
     <h3 align="center">Home Sleep Test Order Form For
         <?= e($hstData['patient_firstname'] . ' ' . $hstData['patient_lastname']) ?>
     </h3>
@@ -610,4 +606,4 @@ $defaultProvider = $isStaff ? $userId : $docId;
     <?php } ?>
 </form>
 <br />
-<script type="text/javascript" src="/manage/js/hst_request.js?v=20160131"></script>
+<script type="text/javascript" src="/manage/js/hst_request.js?v=20160208"></script>

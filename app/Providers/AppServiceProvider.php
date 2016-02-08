@@ -58,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Contact::class => [Repositories\Contacts::class, Resources\Contact::class],
             Eloquent\Dental\ContactType::class => [Repositories\ContactTypes::class, Resources\ContactType::class],
             Eloquent\Dental\Calendar::class => [Repositories\Calendars::class, Resources\Calendar::class],
+            Eloquent\Dental\GagReflex::class => [Repositories\GagReflexes::class, Resources\GagReflex::class],
         ];
 
 

@@ -80,16 +80,28 @@ $patientData = $db->getRow("SELECT
 
 $hstData = !empty($hstData) ? $hstData : [];
 
-if (!$hstData && $patientData) {
-    $hstData = $patientData + [
-            'company_id' => 0,
-            'diagnosis_id' => 0,
-            'hst_type' => 0,
-            'hst_nights' => 2,
-            'hst_positions' => '',
-            'provider_signature' => 1,
-            'provider_date' => date('m/d/Y'),
-        ];
+if ($patientData) {
+    /**
+     * @see DSS-166
+     *
+     * If the HST request has not been found, create a new set to be displayed
+     * Otherwise, complete blank fields for HST not requested (status = DSS_HST_REQUESTED)
+     */
+    if (!$hstData) {
+        $hstData = $patientData + [
+                'company_id' => 0,
+                'diagnosis_id' => 0,
+                'hst_type' => 0,
+                'hst_nights' => 2,
+                'hst_positions' => '',
+                'provider_signature' => 1,
+                'provider_date' => date('m/d/Y'),
+            ];
+    } elseif ($hstData['status'] == DSS_HST_REQUESTED) {
+        foreach ($patientData as $field=>$value) {
+            $hstData[$field] = $hstData[$field] ?: $value;
+        }
+    }
 }
 
 $hstData['hst_positions'] = @json_decode($hstData['hst_positions']);

@@ -271,7 +271,7 @@ $my = $db->getResults($sql);
             <a href="/manage/hst_request.php?<?= $myarray['patient_id'] ? e("pid=$myarray[patient_id]&") : '' ?>hst_id=<?= $myarray['id'] ?>" onclick="return confirm('Click OK to initiate a Home Sleep Test request. The HST request must be electronically signed by an authorized provider before it can be transmitted. You can view and save/update the request on the next screen.');" class="button" title="Authorize HST">
               Authorize
             </a>
-                <a class="red" style="" href="/manage/manage_hst.php?delid=<?= $myarray['id'] ?>"
+                <a class="red" style="float:right;" href="/manage/manage_hst.php?delid=<?= $myarray['id'] ?>"
                    title="Cancel HST and delete from queue"
                    onclick="return confirm('Are you sure you want to delete this HST?')">
                     Delete

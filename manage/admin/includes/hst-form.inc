@@ -126,7 +126,9 @@ if (isset($_POST['delete'])) {
     <?php
 
     trigger_error('Die called', E_USER_ERROR);
-} elseif (isset($_POST['authorize']) || isset($_POST['save'])) {
+}
+
+if (isset($_POST['authorize']) || isset($_POST['save'])) {
     $hstId = intval($_POST['hst_id']);
     $authorize = !empty($_POST['authorize']);
 

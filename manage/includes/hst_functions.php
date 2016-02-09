@@ -52,6 +52,14 @@ function createPatientFromHSTRequest ($hstId) {
     return $patientId;
 }
 
+/**
+ * Mark a  HST Request as authorized, create proper EP worth entry and email patient
+ *
+ * @param int $hstId
+ * @param int $hstCompanyId
+ * @param int $docId
+ * @return bool|int
+ */
 function authorizeHSTRequest ($hstId, $hstCompanyId, $docId) {
     $db = new Db();
 
@@ -181,7 +189,8 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $docId) {
                         </tr>
                         <tr>
                             <td colspan='2'>
-                                <img alt='A message from your healthcare provider' src='$host/reg/images/email/email_footer_fo.png' />
+                                <img alt='A message from your healthcare provider'
+                                    src='$host/reg/images/email/email_footer_fo.png' />
                             </td>
                         </tr>
                     </table>
@@ -201,6 +210,11 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $docId) {
     return true;
 }
 
+/**
+ * Mark a HST Request as soft deleted
+ *
+ * @param int $hstId
+ */
 function deleteHSTRequest ($hstId) {
     $db = new Db();
     $hstId = intval($hstId);

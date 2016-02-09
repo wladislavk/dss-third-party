@@ -3,31 +3,39 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
-if (isset($_REQUEST['ed'])) {
-    // load hst
-    $sql = "SELECT "
-        . "  hst.* "
-        . "FROM "
-        . "  dental_hst hst "
-        . "  JOIN dental_patients p ON p.patientid = hst.patient_id "
-        . "WHERE "
-        . "  hst.id = " . $_REQUEST['ed'];
-    $my = mysqli_query($con, $sql);
-    $hst = mysqli_fetch_array($my);
-    $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$hst['patient_id'])."'";
-    $pat_q = mysqli_query($con,$pat_sql);
-    $pat = mysqli_fetch_assoc($pat_q);
+require_once __DIR__ . '/includes/access.php';
 
+$isAdmin = is_super($_SESSION['admin_access']);
+
+if (isset($_REQUEST['ed'])) {
+    $hstId = intval($_REQUEST['ed']);
+    $hst = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'" . ($isAdmin ? '' : ' AND status >= 0'));
+
+    if (!$hst || (!$isAdmin && $hst['status'] < 0)) {
+        ?>
+        <script type="text/javascript">
+            window.location = '/manage/admin/manage_hsts.php?msg=<?= rawurlencode('The requested HST does not exist or has been deleted.') ?>';
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
+    $pat = $db->getRow("SELECT * FROM dental_patients WHERE patientid = '{$hst['patient_id']}'");
+    $pat = $pat ?: [];
 } else {
-    $sql = "SELECT "
-        . "  hst.* "
-        . "FROM "
-        . "  dental_hst hst "
-        . "  JOIN dental_patients p ON p.patientid = hst.patient_id "
-        . "WHERE "
-        . "  hst.id = '" . $_POST['hst_id'] . "'";
-    $my = mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
-    $hst = mysqli_fetch_array($my);
+    $hstId = intval($_POST['hst_id']);
+    $hst = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'" . ($isAdmin ? '' : ' AND status >= 0'));
+
+    if (!$hst || (!$isAdmin && $hst['status'] < 0)) {
+        ?>
+        <script type="text/javascript">
+            window.location = '/manage/admin/manage_hsts.php?msg=<?= rawurlencode('The requested HST does not exist or has been deleted.') ?>';
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
 
     //SAVE SLEEP TEST
     if ($_POST['status'] == DSS_HST_COMPLETE) {
@@ -199,7 +207,7 @@ if (isset($_REQUEST['ed'])) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
-$doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = {$pat['docid']}");
+$doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['docid']}'");
 
 ?>
 <style>
@@ -523,7 +531,9 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = {$pat['doci
 		}
 		?>
                 <input type="hidden" name="hst_id" value="<?= $_REQUEST['ed'] ?>"/>
+                <?php if ($hst['status'] >= 0) { ?>
                   <input type="submit" value="Save HST" <?= ($hst['status']==DSS_HST_REQUESTED)?'onclick="alert(\'HST must be authorized by user before edits are permitted.\');return false;"':''; ?> class="btn btn-primary">
+                <?php } ?>
 	  </td><td align="right">
             </td>
         </tr>

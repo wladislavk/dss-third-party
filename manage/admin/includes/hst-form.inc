@@ -18,7 +18,7 @@ $authorizedProviderId = $isStaff ? $userId : $docId;
 if (!empty($_REQUEST['hst_id'])) {
     $hstId = intval($_REQUEST['hst_id']);
 
-    $hstData = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
+    $hstData = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId' AND status >= 0");
     $patientId = $hstData ? $hstData['patient_id'] : 0;
     $hstCompanyId = $hstData ? $hstData['company_id'] : 0;
 } else {
@@ -30,6 +30,7 @@ if (!empty($_REQUEST['hst_id'])) {
         FROM dental_hst
         WHERE patient_id = '$patientId'
             AND company_id = '$hstCompanyId'
+            AND status >= 0 -- Deleted
             AND status NOT IN ($hstCompanyCompleteStatuses)");
     $hstId = $hstData ? $hstData['id'] : 0;
 }
@@ -115,7 +116,17 @@ $nightsDefault = $hstId ? $hstData['hst_nights'] : 2;
 $canAuthorize = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED && $isStaff;
 $canFinishLater = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED;
 
-if (isset($_POST['authorize']) || isset($_POST['save'])) {
+if (isset($_POST['delete'])) {
+    deleteHSTRequest($hstId);
+
+    ?>
+    <script type="text/javascript">
+        window.location = '/manage/manage_hst.php?msg=<?= rawurlencode('HST Request deleted successfully.') ?>';
+    </script>
+    <?php
+
+    trigger_error('Die called', E_USER_ERROR);
+} elseif (isset($_POST['authorize']) || isset($_POST['save'])) {
     $hstId = intval($_POST['hst_id']);
     $authorize = !empty($_POST['authorize']);
 
@@ -187,109 +198,7 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
     }
 
     if ($canAuthorize) {
-        $hstPendingStatus = DSS_HST_PENDING;
-
-        $db->query("UPDATE dental_hst
-            SET status = '$hstPendingStatus', authorized_id = '$userId', authorizeddate = NOW()
-            WHERE id = '$hstId'");
-
-        $sql = "SELECT * FROM dental_q_sleep WHERE patientid = '$patientId'";
-        $myarray = $db->getRow($sql);
-
-        $q_sleepid = st($myarray['q_sleepid']);
-        $epworthid = st($myarray['epworthid']);
-        $analysis = st($myarray['analysis']);
-
-        $epid = [];
-        $epseq = [];
-
-        if ($epworthid != '') {
-            $epworth_arr1 = split('~', $epworthid);
-
-            foreach ($epworth_arr1 as $i=>$val) {
-                $epworth_arr2 = explode('|', $val);
-                $epid[$i] = $epworth_arr2[0];
-                $epseq[$i] = $epworth_arr2[1];
-            }
-        }
-
-        $epworth_sql = "SELECT * FROM dental_epworth WHERE status = 1 ORDER BY sortby";
-        $epworth_my = $db->getResults($epworth_sql);
-        $epworth_number = count($epworth_my);
-
-        foreach ($epworth_my as $epworth_myarray) {
-            if (@array_search($epworth_myarray['epworthid'], $epid) === false) {
-                $chk = '';
-            } else {
-                $chk = $epseq[@array_search($epworth_myarray['epworthid'], $epid)];
-            }
-
-            if ($chk != '') {
-                $hst_sql = "INSERT INTO dental_hst_epworth SET
-                    hst_id = '" . $db->escape($hstId) . "',
-                    epworth_id = '" . $db->escape($epworth_myarray['epworthid']) . "',
-                    response = '" . $db->escape($chk) . "',
-                    adddate = now(),
-                    ip_address = '" . $db->escape($_SERVER['REMOTE_ADDR']) . "'";
-                $db->query($hst_sql);
-            }
-        }
-
-        $c_sql = "SELECT c.email from companies c WHERE c.id = '" . $db->escape($_POST['company_id']) . "'";
-        $c = $db->getRow($c_sql);
-
-        if ($c['email'] != '') {
-            $headers = join("\r\n", [
-                'From: Dental Sleep Solutions <noreply@dentalsleepsolutions.com>',
-                'Content-type: text/html',
-                'Reply-To: noreply@dentalsleepsolutions.com',
-                'X-Mailer: PHP/' . phpversion()
-            ]);
-
-            $subject = "New HST Order Created";
-            $user_sql = "SELECT * FROM dental_users where userid = '$docId'";
-            $user = $db->getRow($user_sql);
-            $m = "<html><body>" .
-                "<center>" .
-                    "<table width='600'>" .
-                        "<tr>" .
-                            "<td colspan='2'>" .
-                                "<img alt='A message from your healthcare provider' " .
-                                    "src='" . $_SERVER['HTTP_HOST'] . "/reg/images/email/email_header_fo.png' />" .
-                            "</td>" .
-                        "</tr>" .
-                        "<tr>" .
-                            "<td width='400'>" .
-                                "<h2>New HST Order Created</h2>" .
-                                "<p>A new HST order has been submitted to you by " .
-                                    $user['first_name'] . " " . $user['last_name'] . " at " .
-                                    $user['mailing_practice'] . " on " . date('m/d/Y h:i p') .
-                                ".</p>" .
-                                "<p>Please log in to your DS3 backoffice account to check the details:" .
-                                    "<a href='http://" . $_SERVER['HTTP_HOST'] . "/manage/admin'>" .
-                                    "http://" . $_SERVER['HTTP_HOST'] . "/manage/admin" .
-                                "</a>" .
-                                "</p>" .
-                            "</td>" .
-                            "<td>" .
-                                "<img alt='Logo' src='" . $_SERVER['HTTP_HOST'] . "/reg/images/email/reg_logo.gif' />" .
-                            "</td>" .
-                        "</tr>" .
-                        "<tr>" .
-                            "<td colspan='2'>" .
-                                "<img alt='A message from your healthcare provider' src='" .
-                                    $_SERVER['HTTP_HOST'] . "/reg/images/email/email_footer_fo.png' />" .
-                            "</td>" .
-                        "</tr>" .
-                    "</table>" .
-                "</center>" .
-                "<span style='font-size:12px;'>" .
-                    "This email was sent by Dental Sleep Solutions&reg; on behalf of " .
-                    $user['mailing_practice'] . ". " . DSS_EMAIL_FOOTER .
-                "</span>" . "</body></html>";
-
-            mail($c['email'], $subject, $m, $headers);
-        }
+        authorizeHSTRequest($hstId, $hstCompanyId, $docId);
 
         ?>
         <script type="text/javascript">
@@ -617,8 +526,11 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <input class="button" type="submit" name="save" value="Finish Later" />
             <?php } ?>
             <?php if ($canAuthorize) { ?>
-                <a class="red" style="float:right;" href="/manage/add_patient.php?ed=<?= $patientId ?>&pid=<?= $patientId ?>"
+                <a class="red" style="float:right;" href="/manage/manage_hst.php?delid=<?= $hstId ?>"
                    onclick="return confirm('Are you sure you want to cancel?');">Cancel</a>
+                <a class="red" href="/manage/manage_hst.php?delid=<?= $hstId ?>" title="Cancel HST and remove it from the list" onclick="return confirm('By clicking OK, you agree to cancel the current HST and remove it from listing. This action cannot be undone.')">
+                    Cancel
+                </a>
             <?php } ?>
         </p>
     <?php } ?>

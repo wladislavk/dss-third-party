@@ -42,7 +42,8 @@ $sql = "select hst.*, p.firstname, p.lastname,
 		from dental_hst hst 
 		LEFT JOIN dental_patients p ON p.patientid=hst.patient_id 
 		LEFT JOIN dental_users u ON u.userid=hst.authorized_id
-		WHERE hst.doc_id = ".$_SESSION['docid']." ";
+		WHERE hst.doc_id = ".$_SESSION['docid']."
+		    AND hst.status >= 0";
 
 if(isset($_GET['status']) && $_GET['status']!=''){
   $sql .= " AND hst.status = '".mysqli_real_escape_string($con,$_GET['status'])."' ";
@@ -236,6 +237,9 @@ $my = $db->getResults($sql);
             <a href="/manage/hst_request.php?<?= $myarray['patient_id'] ? e("pid=$myarray[patient_id]&") : '' ?>hst_id=<?= $myarray['id'] ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" class="button" title="Authorize HST">
               Authorize
             </a>
+                <a href="/manage/manage_hst.php?delid=<?= $myarray['id'] ?>" title="Cancel HST and remove it from the list" onclick="return confirm('By clicking OK, you agree to cancel the current HST and remove it from listing. This action cannot be undone.')">
+                    Cancel
+                </a>
             <?php }else{ ?>
             <a href="#" onclick="alert('You do not have sufficient permission to order a Home Sleep Test. Only a dentist may do this.');return false;" class="button" title="Authorize HST">
               Authorize

@@ -227,6 +227,6 @@ function cancelHSTRequest ($hstId, $userId) {
     ];
     $updateData = $db->escapeAssignmentList($updateData);
 
-    $db->query("UPDATE dental_hst SET $updateData, canceled_date = NOW(), updateddate = NOW()
+    $db->query("UPDATE dental_hst SET $updateData, canceled_date = NOW(), updatedate = NOW()
         WHERE id = '$hstId'");
 }

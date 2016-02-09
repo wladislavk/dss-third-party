@@ -11,7 +11,7 @@ if (!empty($_REQUEST['delid'])) {
 
     ?>
     <script type="text/javascript">
-        window.location = '/manage/manage_hst.php?msg=<?= rawurlencode('HST Request deleted successfully.') ?>';
+        window.location = '/manage/manage_hst.php?msg=<?= rawurlencode('HST Request canceled successfully.') ?>';
     </script>
     <?php
 

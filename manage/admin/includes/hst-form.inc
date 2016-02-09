@@ -128,7 +128,7 @@ if ($is_front_office && isset($_POST['delete'])) {
 
     ?>
     <script type="text/javascript">
-        window.location = '/manage/manage_hst.php?msg=<?= rawurlencode('HST Request deleted successfully.') ?>';
+        window.location = '/manage/manage_hst.php?msg=<?= rawurlencode('HST Request canceled successfully.') ?>';
     </script>
     <?php
 
@@ -544,7 +544,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
 </form>
 <?php
 
-if ($hstData['status'] == DSS_HST_COMPLETE) {
+if ($hstData['status'] != DSS_HST_REQUESTED) {
     $patientName = $hstData['patient_firstname'] . ' ' . $hstData['patient_lastname'];
     $patientDOB = $hstData['patient_dob'] ? date('m/d/Y', strtotime($hstData['patient_dob'])) : 'unknown';
     $authorizedDate = $hstData['authorizeddate'] ? date('m/d/Y', strtotime($hstData['authorizeddate'])) : 'unknown';

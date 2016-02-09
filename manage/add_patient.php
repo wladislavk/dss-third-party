@@ -1597,7 +1597,7 @@ if(count($bu_q)>0){
         <a href="#" onclick="alert('Patient has existing HST with status <?php echo $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;" class="button">Order HST</a><?php
   }else{?>
         <input type="submit" name="sendHST"
-                onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');"
+                onclick="return confirm('Click OK to initiate a Home Sleep Test request. The HST request must be electronically signed by an authorized provider before it can be transmitted. You can view and save/update the request on the next screen.');"
                 value="Order HST" class="button" />
 <?php
   }

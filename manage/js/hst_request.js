@@ -2,6 +2,7 @@ jQuery(function($){
     var $hstForm = $('#hst_order_sleep_services'),
         $hstRadioButtons = $('[name=hst_type]:radio'),
         $hstContainers = $hstRadioButtons.closest('li'),
+        $insuranceCompanySelector = $('select[name=ins_co_id]'),
         $providerSelector = $('#provider_selector');
 
     $hstRadioButtons.change(function(){
@@ -43,6 +44,25 @@ jQuery(function($){
             }
 
             $hstForm.find('[name="' + fieldName + '"]').val(provider[fieldName]);
+        }
+    });
+
+    $insuranceCompanySelector.change(function(){
+        var companyId = $(this).val(),
+            $phone = $hstForm.find('[name=ins_phone]'),
+            phoneNumber;
+
+        if (insuranceCompanyList.hasOwnProperty(companyId)) {
+            phoneNumber = insuranceCompanyList[companyId].phone;
+            $phone.val(phoneNumber)
+                .focus().blur();
+
+            /**
+             * Forcing the mask might cause the number to disappear, let's reset the value
+             */
+            if (phoneNumber.length && !$phone.val()) {
+                $phone.val(phoneNumber);
+            }
         }
     });
 

@@ -301,6 +301,16 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
     }
 }
 
+$insuranceCompanyList = [];
+$unorderedInsuranceCompanyList = $db->getResults("SELECT contactid AS id, company AS name, phone1 AS phone
+    FROM dental_contact
+    WHERE contacttypeid = '11'
+        AND docid = '$docId'");
+
+foreach ($unorderedInsuranceCompanyList as $insuranceCompany) {
+    $insuranceCompanyList[$insuranceCompany['id']] = $insuranceCompany;
+}
+
 $providerList = [];
 $unorderedProviderList = $db->getResults("SELECT
         u.userid,
@@ -325,7 +335,8 @@ $defaultProvider = $isStaff ? $userId : $docId;
 
 ?>
 <script>
-    var providerList = <?= json_encode($providerList) ?>;
+    var providerList = <?= json_encode($providerList) ?>,
+        insuranceCompanyList = <?= json_encode($insuranceCompanyList) ?>;
 </script>
 <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
 <script type="text/javascript" src="/manage/js/masks.js"></script>
@@ -422,16 +433,11 @@ $defaultProvider = $isStaff ? $userId : $docId;
         <li>
             <span>
                 <select name="ins_co_id" id="ins_co_id">
-                    <option value="" <?= !$hstData['p_m_ins_co'] ? 'selected' : '' ?>>Select Insurance Company</option>option>
-                    <?php
-
-                    $ins_contact_qry = "SELECT * FROM dental_contact WHERE contacttypeid = '11' AND docid = '$docId'";
-                    $ins_contact_qry_run = $db->getResults($ins_contact_qry);
-
-                    foreach ($ins_contact_qry_run as $ins_contact_res) { ?>
-                        <option value="<?php echo $ins_contact_res['contactid'] ?>"
-                            <?= $hstData['ins_co_id'] == $ins_contact_res['contactid'] ? 'selected' : '' ?>>
-                            <?php echo addslashes(!empty($ins_contact_res['company']) ? $ins_contact_res['company'] : ''); ?>
+                    <option value="" <?= !$hstData['p_m_ins_co'] ? 'selected' : '' ?>>Select Insurance Company</option>
+                    <?php foreach ($insuranceCompanyList as $insuranceCompany) { ?>
+                        <option value="<?= $insuranceCompany['id'] ?>"
+                            <?= $hstData['ins_co_id'] == $insuranceCompany['id'] ? 'selected' : '' ?>>
+                            <?= e(!empty($insuranceCompany['name']) ? $insuranceCompany['name'] : '') ?>
                         </option>
                     <?php } ?>
                 </select>

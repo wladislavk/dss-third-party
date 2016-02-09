@@ -9,7 +9,7 @@ $isAdmin = is_super($_SESSION['admin_access']);
 
 if (isset($_REQUEST['ed'])) {
     $hstId = intval($_REQUEST['ed']);
-    $hst = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'" . ($isAdmin ? '' : ' AND status >= 0'));
+    $hst = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
 
     if (!$hst || (!$isAdmin && $hst['status'] < 0)) {
         ?>
@@ -25,9 +25,9 @@ if (isset($_REQUEST['ed'])) {
     $pat = $pat ?: [];
 } else {
     $hstId = intval($_POST['hst_id']);
-    $hst = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'" . ($isAdmin ? '' : ' AND status >= 0'));
+    $hst = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
 
-    if (!$hst || (!$isAdmin && $hst['status'] < 0)) {
+    if (!$hst) {
         ?>
         <script type="text/javascript">
             window.location = '/manage/admin/manage_hsts.php?msg=<?= rawurlencode('The requested HST does not exist or has been deleted.') ?>';
@@ -189,6 +189,10 @@ if (isset($_REQUEST['ed'])) {
 
         if ($_POST['status']==DSS_HST_REJECTED) {
             $sql .= ", rejecteddate=now() ";
+        }
+
+        if ($_POST['status'] == DSS_HST_CANCELED) {
+            $sql .= ", canceled_id = '0', canceled_date=now() ";
         }
     }
 
@@ -500,7 +504,8 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
 			<option value="<?= DSS_HST_CONTACTED; ?>" <?= ($hst['status']==DSS_HST_CONTACTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_CONTACTED]; ?></option>
                         <option value="<?= DSS_HST_SCHEDULED; ?>" <?= ($hst['status']==DSS_HST_SCHEDULED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_SCHEDULED]; ?></option>
                         <option value="<?= DSS_HST_COMPLETE; ?>" <?= ($hst['status']==DSS_HST_COMPLETE)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_COMPLETE]; ?></option>
-                        <option value="<?= DSS_HST_REJECTED; ?>" <?= ($hst['status']==DSS_HST_REJECTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_REJECTED]; ?></option>
+                    <option value="<?= DSS_HST_REJECTED; ?>" <?= ($hst['status']==DSS_HST_REJECTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_REJECTED]; ?></option>
+                    <option value="<?= DSS_HST_CANCELED; ?>" <?= ($hst['status']==DSS_HST_CANCELED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_CANCELED]; ?></option>
                 <span class="red">*</span>
             </td>
         </tr>

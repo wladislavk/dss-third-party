@@ -58,7 +58,7 @@ switch ($sort_by) {
 $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -99;
 
 if (!empty($_REQUEST['delid']) && is_super($_SESSION['admin_access'])) {
-    deleteHSTRequest($_REQUEST['delid']);
+    cancelHSTRequest($_REQUEST['delid'], 0);
 
     ?>
     <script type="text/javascript">
@@ -97,7 +97,9 @@ if (is_super($_SESSION['admin_access'])) {
             CONCAT(users2.first_name, ' ',users2.last_name) AS user_name,
             CONCAT(users3.first_name, ' ',users3.last_name) AS authorized_name,
             hst_company.name AS hst_company_name,
-            hst.adddate AS order_date
+            hst.adddate AS order_date,
+            hst.canceled_id,
+            hst.canceled_date
         FROM dental_hst hst
             LEFT JOIN dental_patients p ON hst.patient_id = p.patientid
             LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid
@@ -123,7 +125,9 @@ if (is_super($_SESSION['admin_access'])) {
             CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
             CONCAT(users3.first_name, ' ', users3.last_name) AS authorized_name,
             hst_company.name AS hst_company_name,
-            hst.adddate AS order_date
+            hst.adddate AS order_date,
+            hst.canceled_id,
+            hst.canceled_date
         FROM dental_hst hst
             LEFT JOIN dental_patients p ON hst.patient_id = p.patientid
             LEFT JOIN dental_user_company uc ON uc.userid = p.docid
@@ -153,7 +157,9 @@ if (is_super($_SESSION['admin_access'])) {
             CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
             CONCAT(users3.first_name, ' ', users3.last_name) AS authorized_name,
             hst_company.name AS hst_company_name,
-            hst.adddate AS order_date
+            hst.adddate AS order_date,
+            hst.canceled_id,
+            hst.canceled_date
         FROM dental_hst hst
             LEFT JOIN dental_patients p ON hst.patient_id = p.patientid
             LEFT JOIN dental_user_company uc ON uc.userid = p.docid
@@ -169,11 +175,6 @@ if (is_super($_SESSION['admin_access'])) {
 // filter based on select lists above table
 if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid)) {
     $sql .= "WHERE 1 = 1 ";
-
-    // Exclude deleted elements
-    if (!is_super($_SESSION['admin_access'])) {
-        $sql .= ' AND hst.status >= 0 ';
-    }
 
     if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
           $sql .= " AND hst.status = " . $_REQUEST['status'] . " ";
@@ -226,20 +227,25 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
   <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="get">
     Status:
     <select name="status">
-      <?php $requested_selected = ($status == DSS_HST_REQUESTED) ? 'selected' : ''; ?>
-      <?php $pending_selected = ($status == DSS_HST_PENDING) ? 'selected' : ''; ?>
-      <?php $contacted_seleted = ($status == DSS_HST_CONTACTED) ? 'selected' : ''; ?>
-      <?php $scheduled_selected = ($status == DSS_HST_SCHEDULED) ? 'selected' : ''; ?>
-      <?php $complete_selected = ($status == DSS_HST_COMPLETE) ? 'selected' : ''; ?>
+      <?php
+
+      $requested_selected = ($status == DSS_HST_REQUESTED) ? 'selected' : '';
+      $pending_selected = ($status == DSS_HST_PENDING) ? 'selected' : '';
+      $contacted_selected = ($status == DSS_HST_CONTACTED) ? 'selected' : '';
+      $scheduled_selected = ($status == DSS_HST_SCHEDULED) ? 'selected' : '';
+      $complete_selected = ($status == DSS_HST_COMPLETE) ? 'selected' : '';
+      $rejected_selected = ($status == DSS_HST_REJECTED) ? 'selected' : '';
+      $canceled_selected = ($status == DSS_HST_CANCELED) ? 'selected' : '';
+
+      ?>
       <option value="" <?= $status == -99 ? 'selected' : '' ?>>Any</option>
       <option value="<?php echo DSS_HST_REQUESTED?>" <?php echo $requested_selected?>><?php echo $dss_hst_status_labels[DSS_HST_REQUESTED]?></option>
       <option value="<?php echo DSS_HST_PENDING?>" <?php echo $pending_selected?>><?php echo $dss_hst_status_labels[DSS_HST_PENDING]?></option>
       <option value="<?php echo DSS_HST_CONTACTED?>" <?php echo $contacted_selected?>><?php echo $dss_hst_status_labels[DSS_HST_CONTACTED]?></option>
       <option value="<?php echo DSS_HST_SCHEDULED?>" <?php echo $scheduled_selected?>><?php echo $dss_hst_status_labels[DSS_HST_SCHEDULED]?></option>
       <option value="<?php echo DSS_HST_COMPLETE?>" <?php echo $complete_selected?>><?php echo $dss_hst_status_labels[DSS_HST_COMPLETE]?></option>
-      <?php if ($isAdmin) { ?>
-        <option value="-1" <?= $status == -1 ? 'selected' : '' ?>>Deleted</option>
-      <?php } ?>
+      <option value="<?php echo DSS_HST_REJECTED?>" <?php echo $rejected_selected?>><?php echo $dss_hst_status_labels[DSS_HST_REJECTED]?></option>
+      <option value="<?php echo DSS_HST_CANCELED?>" <?php echo $canceled_selected?>><?php echo $dss_hst_status_labels[DSS_HST_CANCELED]?></option>
     </select>
     &nbsp;&nbsp;&nbsp;
     Account:
@@ -347,6 +353,7 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 		while($myarray = mysqli_fetch_array($my)) {
             $tr_class = '';
             $status_color = '';
+            $title = '';
 
             if ($myarray['status'] == DSS_HST_PENDING) {
                 $status_color = $myarray['days_pending'] > 7 ? 'danger' : 'warning';
@@ -356,13 +363,25 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
                 $status_color = 'success';
             }
 
+            if ($myarray['status'] == DSS_HST_CANCELED) {
+                $cancelDate = $myarray['canceled_date'] ? date('m/d/Y h:i a', strtotime($myarray['canceled_date'])) : '';
+                $cancelerName = $db->getColumn("SELECT CONCAT(first_name, ' ', last_name) AS name
+                      FROM dental_users
+                      WHERE userid = '{$myarray['canceled_id']}'", 'name');
+
+                if ($cancelDate || $cancelerName) {
+                    $title = 'HST canceled' . ($cancelDate ? " on $cancelDate" : '') .
+                        ($cancelerName ? " by $cancelerName" : '');
+                }
+            }
+
 		?>
-			<tr class="<?php echo  (isset($tr_class))?$tr_class:'';?>">
+			<tr class="<?php echo  (isset($tr_class))?$tr_class:'';?>" <?php if ($title) { ?>title="<?= e($title) ?>"<?php } ?>>
 				<td valign="top">
 					<?php echo st($myarray["adddate"]);?>&nbsp;
 				</td>
 				<td valign="top" class="<?php echo  $status_color ?>">
-					<?= $myarray['status'] >= 0 ? st($dss_hst_status_labels[$myarray["status"]]) : 'Deleted' ?>&nbsp;
+					<?= st($dss_hst_status_labels[$myarray["status"]]) ?>&nbsp;
 				</td>
                 <td>
                     <?php

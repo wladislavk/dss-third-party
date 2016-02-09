@@ -2,37 +2,44 @@
 namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/../../includes/constants.inc';
+require_once __DIR__ . '/../../includes/hst_functions.php';
 
 $is_front_office = empty($is_back_office);
-
-$userId = intval($_SESSION['userid']);
-$docId = intval($_SESSION['docid']);
-
 $hstCompanyType = DSS_COMPANY_TYPE_HST;
-
-$isStaff = $userId == $docId ||
-    $db->getColumn("SELECT sign_notes FROM dental_users WHERE userid = '$userId'", 'sign_notes');
-
-$authorizedProviderId = $isStaff ? $userId : $docId;
 
 if (!empty($_REQUEST['hst_id'])) {
     $hstId = intval($_REQUEST['hst_id']);
 
-    $hstData = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId' AND status >= 0");
+    $hstData = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
     $patientId = $hstData ? $hstData['patient_id'] : 0;
     $hstCompanyId = $hstData ? $hstData['company_id'] : 0;
 } else {
     $patientId = intval($_GET['ed']);
     $hstCompanyId = intval($_GET['hst_co']);
-    $hstCompanyCompleteStatuses = $db->escapeList([DSS_HST_COMPLETE, DSS_HST_REJECTED]);
+    $hstCompanyCompleteStatuses = $db->escapeList([DSS_HST_COMPLETE, DSS_HST_REJECTED, DSS_HST_CANCELED]);
 
     $hstData = $db->getRow("SELECT *
         FROM dental_hst
         WHERE patient_id = '$patientId'
             AND company_id = '$hstCompanyId'
-            AND status >= 0 -- Deleted
             AND status NOT IN ($hstCompanyCompleteStatuses)");
     $hstId = $hstData ? $hstData['id'] : 0;
+}
+
+if ($is_front_office) {
+    $userId = $is_front_office ? intval($_SESSION['userid']) : 0;
+    $docId = $is_front_office ? intval($_SESSION['docid']) : 0;
+
+    $isStaff = $userId == $docId ||
+        $db->getColumn("SELECT sign_notes FROM dental_users WHERE userid = '$userId'", 'sign_notes');
+
+    $authorizedProviderJoinConditional = $isStaff ? "'$userId'" : "'$docId'";
+} else {
+    $userId = 0;
+    $docId = intval($db->getColumn("SELECT docid FROM dental_patients WHERE patientid = '$patientId'"));
+
+    $isStaff = false;
+    $authorizedProviderJoinConditional = 'p.docid';
 }
 
 $hstCompanyList = $db->getResults("SELECT h.*, uhc.id as uhc_id
@@ -75,7 +82,7 @@ $patientData = $db->getRow("SELECT
         IF(u.producer_files AND LENGTH(TRIM(u.zip)), u.zip, d.zip) AS 'provider_zip'
     FROM dental_patients p
         LEFT JOIN dental_contact i ON i.contactid = p.p_m_ins_co
-        LEFT JOIN dental_users u ON u.userid = '$authorizedProviderId'
+        LEFT JOIN dental_users u ON u.userid = $authorizedProviderJoinConditional
         LEFT JOIN dental_users d ON d.userid = IF(u.docid, u.docid, u.userid)
     WHERE p.patientid = '$patientId'");
 
@@ -117,7 +124,7 @@ $canAuthorize = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED && $
 $canFinishLater = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED;
 
 if (isset($_POST['delete'])) {
-    deleteHSTRequest($hstId);
+    cancelHSTRequest($hstId, $userId);
 
     ?>
     <script type="text/javascript">
@@ -128,7 +135,7 @@ if (isset($_POST['delete'])) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
-if (isset($_POST['authorize']) || isset($_POST['save'])) {
+if ($hstData['status'] != DSS_HST_CANCELED && (isset($_POST['authorize']) || isset($_POST['save']))) {
     $hstId = intval($_POST['hst_id']);
     $authorize = !empty($_POST['authorize']);
 
@@ -200,7 +207,7 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
     }
 
     if ($canAuthorize) {
-        authorizeHSTRequest($hstId, $hstCompanyId, $docId);
+        authorizeHSTRequest($hstId, $hstCompanyId, $userId, $docId);
 
         ?>
         <script type="text/javascript">
@@ -518,7 +525,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
     </ul>
     <?php if ($canAuthorize || $canFinishLater) { ?>
         <p class="submit-action">
-            <strong>By the below order HST button you are providing a digital signature ordering the HST</strong>
+            <strong>Click "Request HST" to authorize the order of this HST with your digital signature.</strong>
         </p>
         <p class="submit-action">
             <?php if ($canAuthorize) { ?>
@@ -529,10 +536,8 @@ $defaultProvider = $isStaff ? $userId : $docId;
             <?php } ?>
             <?php if ($canAuthorize) { ?>
                 <a class="red" style="float:right;" href="/manage/manage_hst.php?delid=<?= $hstId ?>"
-                   onclick="return confirm('Are you sure you want to cancel?');">Cancel</a>
-                <a class="red" href="/manage/manage_hst.php?delid=<?= $hstId ?>" title="Cancel HST and remove it from the list" onclick="return confirm('By clicking OK, you agree to cancel the current HST and remove it from listing. This action cannot be undone.')">
-                    Cancel
-                </a>
+                   title="Cancel HST and delete from queue"
+                   onclick="return confirm('Are you sure you want to delete this HST?');">Delete</a>
             <?php } ?>
         </p>
     <?php } ?>

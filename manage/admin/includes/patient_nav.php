@@ -15,7 +15,11 @@ $docr = $db->getRow($docsql);
     });
 </script>
 <div class="page-header printable">
-    <h1 id="printable-header">Manage Patient - <?php echo  $themyarray['firstname']." ".$themyarray['lastname']; ?> - <?php echo  $docr['username']; ?> - <?php echo  $docr['practice']; ?></h1>
+    <h1 id="printable-header">
+        Manage Patient - <?= e($themyarray['firstname'] . ' ' . $themyarray['lastname']) ?>
+        -
+        <?= e($docr['first_name'] . ' ' . $docr['last_name']) ?> - <?= e($docr['practice']) ?>
+    </h1>
 </div>
 <div class="navbar navbar-default text-center">
     <a href="view_patient.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="btn btn-default navbar-btn <?php echo  ($file == 'view_patient.php' ? 'active' : '') ?>">Patient Info</a>

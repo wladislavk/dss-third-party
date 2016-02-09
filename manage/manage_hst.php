@@ -7,7 +7,7 @@ include_once "includes/constants.inc";
 require_once __DIR__ . '/includes/hst_functions.php';
 
 if (!empty($_REQUEST['delid'])) {
-    deleteHSTRequest($_REQUEST['delid']);
+    cancelHSTRequest($_REQUEST['delid'], $_SESSION['userid']);
 
     ?>
     <script type="text/javascript">
@@ -49,13 +49,15 @@ $sql = "select hst.*, p.firstname, p.lastname,
                                 THEN 5
                         WHEN ".DSS_HST_REJECTED."
                                 THEN 6
+                        WHEN ".DSS_HST_CANCELED."
+                            THEN 7
 		END as sort_status,
 		CONCAT(u.first_name,' ',u.last_name) authorized_by
 		from dental_hst hst 
 		LEFT JOIN dental_patients p ON p.patientid=hst.patient_id 
 		LEFT JOIN dental_users u ON u.userid=hst.authorized_id
 		WHERE hst.doc_id = ".$_SESSION['docid']."
-		    AND hst.status >= 0";
+		    ";
 
 if(isset($_GET['status']) && $_GET['status']!=''){
   $sql .= " AND hst.status = '".mysqli_real_escape_string($con,$_GET['status'])."' ";
@@ -122,7 +124,8 @@ $my = $db->getResults($sql);
         $contacted_selected = (!empty($_REQUEST['status']) && $_REQUEST['status'] == DSS_HST_CONTACTED) ? 'selected' : '';
         $scheduled_selected = (!empty($_REQUEST['status']) && $_REQUEST['status'] == DSS_HST_SCHEDULED) ? 'selected' : '';
         $complete_selected = (!empty($_REQUEST['status']) && $_REQUEST['status'] == DSS_HST_COMPLETE) ? 'selected' : '';
-        $rejected_selected = (!empty($_REQUEST['status']) && $_REQUEST['status'] == DSS_HST_REJECTED) ? 'selected' : ''; 
+        $rejected_selected = (!empty($_REQUEST['status']) && $_REQUEST['status'] == DSS_HST_REJECTED) ? 'selected' : '';
+        $canceled_selected = (!empty($_REQUEST['status']) && $_REQUEST['status'] == DSS_HST_CANCELED) ? 'selected' : '';
       ?>
       <option value="">Any</option>
       <option value="<?php echo DSS_HST_REQUESTED?>" <?php echo $requested_selected?>><?php echo $dss_hst_status_labels[DSS_HST_REQUESTED]?></option>
@@ -131,6 +134,7 @@ $my = $db->getResults($sql);
       <option value="<?php echo DSS_HST_SCHEDULED?>" <?php echo $scheduled_selected?>><?php echo $dss_hst_status_labels[DSS_HST_SCHEDULED]?></option>
       <option value="<?php echo DSS_HST_COMPLETE?>" <?php echo $complete_selected?>><?php echo $dss_hst_status_labels[DSS_HST_COMPLETE]?></option>
       <option value="<?php echo DSS_HST_REJECTED?>" <?php echo $rejected_selected?>><?php echo $dss_hst_status_labels[DSS_HST_REJECTED]?></option>
+      <option value="<?php echo DSS_HST_CANCELED?>" <?php echo $canceled_selected?>><?php echo $dss_hst_status_labels[DSS_HST_CANCELED]?></option>
     </select>
     <input type="hidden" name="sort_by" value="<?php echo (!empty($sort_by) ? $sort_by : ''); ?>"/>
     <input type="hidden" name="sort_dir" value="<?php echo (!empty($sort_dir) ? $sort_dir : ''); ?>"/>
@@ -212,6 +216,24 @@ $my = $db->getResults($sql);
           <?php if ($myarray['status'] == DSS_HST_REQUESTED) { ?>
               <?= date('m/d/Y h:i a', strtotime($myarray['updatedate'] ?: $myarray['adddate'])) ?>
           <?php } ?>
+          <?php
+
+          if ($myarray['status'] == DSS_HST_CANCELED) {
+              $cancelDate = $myarray['canceled_date'] ? date('m/d/Y h:i a', strtotime($myarray['canceled_date'])) : '';
+              $cancelerName = $db->getColumn("SELECT CONCAT(first_name, ' ', last_name) AS name
+                  FROM dental_users
+                  WHERE userid = '{$myarray['canceled_id']}'", 'name');
+
+              if ($cancelDate) {
+                  echo ' on ' . $cancelDate;
+              }
+
+              if ($cancelerName) {
+                  echo ' by ' . e($cancelerName);
+              }
+          }
+
+          ?>
           <?php echo $myarray['office_notes'];?>
           <?php echo ($myarray['status'] == DSS_HST_REJECTED && $myarray['rejecteddate'])? date('m/d/Y h:i a', strtotime($myarray['rejecteddate'])):''; ?>
           <?php echo ($myarray['status'] == DSS_HST_REJECTED)?$myarray['rejected_reason']:'';?>
@@ -249,8 +271,10 @@ $my = $db->getResults($sql);
             <a href="/manage/hst_request.php?<?= $myarray['patient_id'] ? e("pid=$myarray[patient_id]&") : '' ?>hst_id=<?= $myarray['id'] ?>" onclick="return confirm('Click OK to initiate a Home Sleep Test request. The HST request must be electronically signed by an authorized provider before it can be transmitted. You can view and save/update the request on the next screen.');" class="button" title="Authorize HST">
               Authorize
             </a>
-                <a href="/manage/manage_hst.php?delid=<?= $myarray['id'] ?>" title="Cancel HST and remove it from the list" onclick="return confirm('By clicking OK, you agree to cancel the current HST and remove it from listing. This action cannot be undone.')">
-                    Cancel
+                <a class="red" style="" href="/manage/manage_hst.php?delid=<?= $myarray['id'] ?>"
+                   title="Cancel HST and delete from queue"
+                   onclick="return confirm('Are you sure you want to delete this HST?')">
+                    Delete
                 </a>
             <?php }else{ ?>
             <a href="#" onclick="alert('You do not have sufficient permission to order a Home Sleep Test. Only a dentist may do this.');return false;" class="button" title="Authorize HST">

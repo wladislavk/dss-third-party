@@ -58,9 +58,10 @@ function createPatientFromHSTRequest ($hstId) {
  * @param int $hstId
  * @param int $hstCompanyId
  * @param int $docId
+ * @param int $userId
  * @return bool|int
  */
-function authorizeHSTRequest ($hstId, $hstCompanyId, $docId) {
+function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId) {
     $db = new Db();
 
     $hstId = intval($hstId);
@@ -102,7 +103,7 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $docId) {
 
     $hstUpdateData = [
         'status' => DSS_HST_PENDING,
-        'authorized_id' => $_SESSION['userid']
+        'authorized_id' => $userId
     ];
 
     $hstUpdateData = $db->escapeAssignmentList($hstUpdateData);
@@ -211,13 +212,21 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $docId) {
 }
 
 /**
- * Mark a HST Request as soft deleted
+ * Mark a HST Request as soft deleted. Use an empty $userId if called from BO
  *
  * @param int $hstId
+ * @param int $userId
  */
-function deleteHSTRequest ($hstId) {
+function cancelHSTRequest ($hstId, $userId) {
     $db = new Db();
     $hstId = intval($hstId);
 
-    $db->query("UPDATE dental_hst SET status = -1 WHERE id = '$hstId'");
+    $updateData = [
+        'status' => DSS_HST_CANCELED,
+        'canceled_id' => $userId
+    ];
+    $updateData = $db->escapeAssignmentList($updateData);
+
+    $db->query("UPDATE dental_hst SET $updateData, canceled_date = NOW(), updateddate = NOW()
+        WHERE id = '$hstId'");
 }

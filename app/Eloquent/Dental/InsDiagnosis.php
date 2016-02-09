@@ -7,7 +7,7 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\InsDiagnosis as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsDiagnoses as Repository;
 
-class InsDiagnosis extends Model
+class InsDiagnosis extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

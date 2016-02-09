@@ -123,7 +123,7 @@ $nightsDefault = $hstId ? $hstData['hst_nights'] : 2;
 $canAuthorize = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED && $isStaff;
 $canFinishLater = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED;
 
-if (isset($_POST['delete'])) {
+if ($is_front_office && isset($_POST['delete'])) {
     cancelHSTRequest($hstId, $userId);
 
     ?>

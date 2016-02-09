@@ -8,8 +8,14 @@ $docsql = "SELECT username, practice FROM dental_users WHERE userid='".mysqli_re
 $docr = $db->getRow($docsql);
 
  ?>
-<div class="page-header">
-    <h1>Manage Patient - <?php echo  $themyarray['firstname']." ".$themyarray['lastname']; ?> - <?php echo  $docr['username']; ?> - <?php echo  $docr['practice']; ?></h1>
+<script>
+    jQuery(function($){
+        document.title = '';
+        document.title = $('#printable-header').text().trim();
+    });
+</script>
+<div class="page-header printable">
+    <h1 id="printable-header">Manage Patient - <?php echo  $themyarray['firstname']." ".$themyarray['lastname']; ?> - <?php echo  $docr['username']; ?> - <?php echo  $docr['practice']; ?></h1>
 </div>
 <div class="navbar navbar-default text-center">
     <a href="view_patient.php?pid=<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="btn btn-default navbar-btn <?php echo  ($file == 'view_patient.php' ? 'active' : '') ?>">Patient Info</a>

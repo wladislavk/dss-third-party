@@ -222,7 +222,7 @@ $my = $db->getResults($sql);
             View results
           </a>
         <?php }else{ ?>
-          <a class="editlink" href="/manage/hst_request.php?<?= $myarray['patient_id'] ? e("pid=$myarray[patient_id]&") : '' ?>hst_id=<?= $myarray['id'] ?>">
+          <a href="/manage/hst_request.php?<?= $myarray['patient_id'] ? e("pid=$myarray[patient_id]&") : '' ?>hst_id=<?= $myarray['id'] ?>">
               View form
           </a>
         <?php }
@@ -246,7 +246,7 @@ $my = $db->getResults($sql);
 
           if($myarray['status']==DSS_HST_REQUESTED){
             if($user_sign || $_SESSION['docid']==$_SESSION['userid']){ ?>
-            <a href="/manage/hst_request.php?<?= $myarray['patient_id'] ? e("pid=$myarray[patient_id]&") : '' ?>hst_id=<?= $myarray['id'] ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" class="button" title="Authorize HST">
+            <a href="/manage/hst_request.php?<?= $myarray['patient_id'] ? e("pid=$myarray[patient_id]&") : '' ?>hst_id=<?= $myarray['id'] ?>" onclick="return confirm('Click OK to initiate a Home Sleep Test request. The HST request must be electronically signed by an authorized provider before it can be transmitted. You can view and save/update the request on the next screen.');" class="button" title="Authorize HST">
               Authorize
             </a>
                 <a href="/manage/manage_hst.php?delid=<?= $myarray['id'] ?>" title="Cancel HST and remove it from the list" onclick="return confirm('By clicking OK, you agree to cancel the current HST and remove it from listing. This action cannot be undone.')">

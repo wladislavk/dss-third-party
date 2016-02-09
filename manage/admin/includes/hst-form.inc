@@ -525,7 +525,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
                 <input class="button" type="submit" name="authorize" value="Request HST" />
             <?php } ?>
             <?php if ($canFinishLater) { ?>
-                <input class="button" type="submit" name="save" value="Finish Later" />
+                <input class="button" type="submit" name="save" value="Save / Finish Later" />
             <?php } ?>
             <?php if ($canAuthorize) { ?>
                 <a class="red" style="float:right;" href="/manage/manage_hst.php?delid=<?= $hstId ?>"
@@ -537,5 +537,24 @@ $defaultProvider = $isStaff ? $userId : $docId;
         </p>
     <?php } ?>
 </form>
+<?php
+
+if ($hstData['status'] == DSS_HST_COMPLETE) {
+    $patientName = $hstData['patient_firstname'] . ' ' . $hstData['patient_lastname'];
+    $patientDOB = $hstData['patient_dob'] ? date('m/d/Y', strtotime($hstData['patient_dob'])) : 'unknown';
+    $authorizedDate = $hstData['authorizeddate'] ? date('m/d/Y', strtotime($hstData['authorizeddate'])) : 'unknown';
+    $authorizedName = $db->getColumn("SELECT CONCAT(first_name, ' ', last_name) AS name
+        FROM dental_users
+        WHERE userid = '{$hstData['authorized_id']}'", 'name');
+
+    ?>
+    <h1>Home Sleep Test Request</h1>
+    <h3>Patient: <?= e($patientName) ?></h3>
+    <h3>DOB: <?= $patientDOB ?></h3>
+    <h3>Requested by: <?= e($authorizedName) ?></h3>
+    <p>&nbsp;</p>
+    <p>Dr. <?= e($authorizedName) ?> has electronically requested a Home Sleep Test for <?= e($patientName) ?> for Obstructive Sleep Apnea (OSA).</p>
+    <p>Authorized on: <?= $authorizedDate ?></p>
+<?php } ?>
 <br />
 <script type="text/javascript" src="/manage/js/hst_request.js?v=20160208"></script>

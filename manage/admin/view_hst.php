@@ -539,6 +539,27 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
         </tr>
     </table>
     </form>
+<?php
+
+$hstData = $hst;
+
+if ($hstData['status'] == DSS_HST_COMPLETE) {
+    $patientName = $hstData['patient_firstname'] . ' ' . $hstData['patient_lastname'];
+    $patientDOB = $hstData['patient_dob'] ? date('m/d/Y', strtotime($hstData['patient_dob'])) : 'unknown';
+    $authorizedDate = $hstData['authorizeddate'] ? date('m/d/Y', strtotime($hstData['authorizeddate'])) : 'unknown';
+    $authorizedName = $db->getColumn("SELECT CONCAT(first_name, ' ', last_name) AS name
+        FROM dental_users
+        WHERE userid = '{$hstData['authorized_id']}'", 'name');
+
+    ?>
+    <h1>Home Sleep Test Request</h1>
+    <h3>Patient: <?= e($patientName) ?></h3>
+    <h3>DOB: <?= $patientDOB ?></h3>
+    <h3>Requested by: <?= e($authorizedName) ?></h3>
+    <p>&nbsp;</p>
+    <p>Dr. <?= e($authorizedName) ?> has electronically requested a Home Sleep Test for <?= e($patientName) ?> for Obstructive Sleep Apnea (OSA).</p>
+    <p>Authorized on: <?= $authorizedDate ?></p>
+<?php } ?>
   <script type="text/javascript">
     $('#status').change( function() {
       s = $(this).val();

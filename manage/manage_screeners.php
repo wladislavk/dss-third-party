@@ -337,7 +337,7 @@ if ($isStaff && !empty($_GET['create_for'])) {
 						</td>
 
 						<td valign="top">
-					  		<?php if ($myarray['patient_id'] != '') { ?>
+					  		<?php if ($myarray['patient_id']) { ?>
 								<a href="add_patient.php?ed=<?php echo $myarray['patient_id']; ?>&pid=<?php echo $myarray['patient_id']; ?>"><?php echo  st($myarray["first_name"]); ?> <?php echo  $myarray['last_name']; ?></a>
 					  		<?php } else { ?>
 	                            <?php echo  st($myarray["first_name"]); ?> <?php echo  $myarray['last_name']; ?>
@@ -372,7 +372,7 @@ if ($isStaff && !empty($_GET['create_for'])) {
                             if ($myarray['hst_id']) {
                                 if ($myarray['hst_status'] == DSS_HST_REQUESTED && $canRequestHST) {
                                     if ($isStaff) { ?>
-                                        <a href="/manage/hst_request.php?hst_id=<?php echo  $myarray['id']; ?>"
+                                        <a href="/manage/hst_request.php?hst_id=<?php echo  $myarray['hst_id']; ?>"
                                            onclick="return confirm('Click OK to initiate a Home Sleep Test request. The HST request must be electronically signed by an authorized provider before it can be transmitted. You can view and save/update the request on the next screen.');" title="Authorize HST">
                                             Authorize
                                         </a>

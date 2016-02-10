@@ -76,6 +76,7 @@ jQuery(function($){
             return;
         }
 
+        $('#hst-company-name').text(hstCompanyList[companyId].name);
         $('#hst-company-phone').text(hstCompanyList[companyId].phone);
         $('#hst-company-fax').text(hstCompanyList[companyId].fax);
         $('#hst-company-email').text(hstCompanyList[companyId].email);

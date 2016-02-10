@@ -529,7 +529,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
             <p>
                 <label class="desc">Transmitted Electronically Via DS3 Software.</label>
             </p>
-            <label class="desc"><?= e($hstCompany['name']) ?></label>
+            <label class="desc" id="hst-company-name"><?= e($hstCompany['name']) ?></label>
         </li>
         <li>
             Office: <span id="hst-company-phone"><?= format_phone($hstCompany['phone']) ?></span>

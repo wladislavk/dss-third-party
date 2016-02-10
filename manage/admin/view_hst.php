@@ -3,31 +3,38 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
-if (isset($_REQUEST['ed'])) {
-    // load hst
-    $sql = "SELECT "
-        . "  hst.* "
-        . "FROM "
-        . "  dental_hst hst "
-        . "  JOIN dental_patients p ON p.patientid = hst.patient_id "
-        . "WHERE "
-        . "  hst.id = " . $_REQUEST['ed'];
-    $my = mysqli_query($con, $sql);
-    $hst = mysqli_fetch_array($my);
-    $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$hst['patient_id'])."'";
-    $pat_q = mysqli_query($con,$pat_sql);
-    $pat = mysqli_fetch_assoc($pat_q);
+require_once __DIR__ . '/includes/access.php';
 
+$isAdmin = is_super($_SESSION['admin_access']);
+
+if (isset($_REQUEST['ed'])) {
+    $hstId = intval($_REQUEST['ed']);
+    $hst = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
+
+    if (!$hst) { ?>
+        <script type="text/javascript">
+            window.location = '/manage/admin/manage_hsts.php?msg=<?= rawurlencode('The requested HST does not exist or has been deleted.') ?>';
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
+    $pat = $db->getRow("SELECT * FROM dental_patients WHERE patientid = '{$hst['patient_id']}'");
+    $pat = $pat ?: [];
 } else {
-    $sql = "SELECT "
-        . "  hst.* "
-        . "FROM "
-        . "  dental_hst hst "
-        . "  JOIN dental_patients p ON p.patientid = hst.patient_id "
-        . "WHERE "
-        . "  hst.id = '" . $_POST['hst_id'] . "'";
-    $my = mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
-    $hst = mysqli_fetch_array($my);
+    $hstId = intval($_POST['hst_id']);
+    $hst = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
+
+    if (!$hst) {
+        ?>
+        <script type="text/javascript">
+            window.location = '/manage/admin/manage_hsts.php?msg=<?= rawurlencode('The requested HST does not exist or has been deleted.') ?>';
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
 
     //SAVE SLEEP TEST
     if ($_POST['status'] == DSS_HST_COMPLETE) {
@@ -199,7 +206,7 @@ if (isset($_REQUEST['ed'])) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
-$doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = {$pat['docid']}");
+$doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['docid']}'");
 
 ?>
 <style>
@@ -523,13 +530,36 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = {$pat['doci
 		}
 		?>
                 <input type="hidden" name="hst_id" value="<?= $_REQUEST['ed'] ?>"/>
+                <?php if ($hst['status'] >= 0) { ?>
                   <input type="submit" value="Save HST" <?= ($hst['status']==DSS_HST_REQUESTED)?'onclick="alert(\'HST must be authorized by user before edits are permitted.\');return false;"':''; ?> class="btn btn-primary">
+                <?php } ?>
 	  </td><td align="right">
-		<a href="hst_print.php?hst=<?= $_REQUEST['ed'] ?>" class="btn btn-info" target="_blank">Print HST</a>
             </td>
         </tr>
     </table>
     </form>
+<?php
+
+$hstData = $hst;
+
+if ($hstData['status'] != DSS_HST_REQUESTED) {
+    $patientName = $hstData['patient_firstname'] . ' ' . $hstData['patient_lastname'];
+    $patientDOB = $hstData['patient_dob'] ? date('m/d/Y', strtotime($hstData['patient_dob'])) : 'unknown';
+    $authorizedDate = $hstData['authorizeddate'] ? date('m/d/Y', strtotime($hstData['authorizeddate'])) : 'unknown';
+    $authorizedName = $db->getColumn("SELECT CONCAT(first_name, ' ', last_name) AS name
+        FROM dental_users
+        WHERE userid = '{$hstData['authorized_id']}'", 'name');
+
+    ?>
+    <h1>Home Sleep Test Request</h1>
+    <h3>Patient: <?= e($patientName ?: 'NOT SPECIFIED') ?></h3>
+    <h3>DOB: <?= $patientDOB ?: 'NOT SPECIFIED' ?></h3>
+    <h3>Requested by: <?= e($authorizedName ?: 'NOT SPECIFIED') ?></h3>
+    <p>&nbsp;</p>
+    <p>Dr. <?= e($authorizedName ?: 'NOT SPECIFIED') ?> has electronically requested a Home Sleep Test for
+        <?= e($patientName ?: 'NOT SPECIFIED') ?> for Obstructive Sleep Apnea (OSA).</p>
+    <p>Authorized on: <?= $authorizedDate ?: 'NOT SPECIFIED' ?></p>
+<?php } ?>
   <script type="text/javascript">
     $('#status').change( function() {
       s = $(this).val();

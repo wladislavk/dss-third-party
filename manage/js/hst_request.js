@@ -2,6 +2,7 @@ jQuery(function($){
     var $hstForm = $('#hst_order_sleep_services'),
         $hstRadioButtons = $('[name=hst_type]:radio'),
         $hstContainers = $hstRadioButtons.closest('li'),
+        $hstCompanySelector = $(':radio[name=company_id]'),
         $insuranceCompanySelector = $('select[name=ins_co_id]'),
         $providerSelector = $('#provider_selector');
 
@@ -52,18 +53,32 @@ jQuery(function($){
             $phone = $hstForm.find('[name=ins_phone]'),
             phoneNumber;
 
-        if (insuranceCompanyList.hasOwnProperty(companyId)) {
-            phoneNumber = insuranceCompanyList[companyId].phone;
-            $phone.val(phoneNumber)
-                .focus().blur();
-
-            /**
-             * Forcing the mask might cause the number to disappear, let's reset the value
-             */
-            if (phoneNumber.length && !$phone.val()) {
-                $phone.val(phoneNumber);
-            }
+        if (!insuranceCompanyList.hasOwnProperty(companyId)) {
+            return;
         }
+
+        phoneNumber = insuranceCompanyList[companyId].phone;
+        $phone.val(phoneNumber)
+            .focus().blur();
+
+        /**
+         * Forcing the mask might cause the number to disappear, let's reset the value
+         */
+        if (phoneNumber.length && !$phone.val()) {
+            $phone.val(phoneNumber);
+        }
+    });
+
+    $hstCompanySelector.change(function(){
+        var companyId = $(this).val();
+
+        if (!hstCompanyList.hasOwnProperty(companyId)) {
+            return;
+        }
+
+        $('#hst-company-phone').text(hstCompanyList[companyId].phone);
+        $('#hst-company-fax').text(hstCompanyList[companyId].fax);
+        $('#hst-company-email').text(hstCompanyList[companyId].email);
     });
 
     /**

@@ -3,15 +3,35 @@
 	include "includes/similar.php";
 	include_once('includes/constants.inc');
 require_once __DIR__ . '/includes/screener-functions.php';
+require_once __DIR__ . '/includes/hst_functions.php';
 
 $coMorbidityLabels = coMorbidityLabels();
 $coMorbidityWeights = coMorbidityWeights();
+
+$docId = intval($_SESSION['docid']);
+$userId = intval($_SESSION['userid']);
+
+$isStaff = $userId == $docId ||
+    $db->getColumn("SELECT sign_notes FROM dental_users where userid = '$userId'", 'sign_notes');
 
 ?>
 
 <link rel="stylesheet" href="css/screener.css" />
 
 <?php
+
+if ($isStaff && !empty($_GET['create_for'])) {
+    createPatientFromScreener($_GET['create_for']);
+
+    ?>
+    <script>
+        window.location = '/manage/manage_screeners.php?msg=<?= rawurlencode('Patient created successfully.') ?>';
+    </script>
+    <?php
+
+    trigger_error('Die called', E_USER_ERROR);
+}
+
 	if (isset($_REQUEST['delid'])) {
 	  $sql = "DELETE FROM dental_screener where docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND id='".mysqli_real_escape_string($con,$_REQUEST['delid'])."'";
 	  $db->query($sql);
@@ -299,6 +319,17 @@ $coMorbidityWeights = coMorbidityWeights();
                         }
                     }
 
+                    if ($survey_total > 15 || $epTotal > 18 || $sect3_total > 3) {
+                        $riskLevel = 'severe';
+                    } elseif ($survey_total > 11 || $epTotal > 14 || $sect3_total > 2) {
+                        $riskLevel = 'high';
+                    } else if($survey_total > 7 || $epTotal > 9 || $sect3_total > 1) {
+                        $riskLevel = 'moderate';
+                    } else {
+                        $riskLevel = 'low';
+                    }
+
+                    $canRequestHST = in_array($riskLevel, ['severe', 'high']);
 		?>
 					<tr>
 						<td valign="top">
@@ -317,15 +348,11 @@ $coMorbidityWeights = coMorbidityWeights();
 	                        <?php echo  st($myarray["phone"]); ?> 
 	                    </td>
 
-				        <?php if ($survey_total > 15 || $epTotal > 18 || $sect3_total > 3) {	?>
-				        	<td valign="top" class="risk_severe"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">Severe</a></td>
-				        <?php } elseif ($survey_total > 11 || $epTotal > 14 || $sect3_total > 2) { ?>
-							<td valign="top" class="risk_high"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">High</a></td>
-						<?php } else if($survey_total > 7 || $epTotal > 9 || $sect3_total > 1) { ?>
-							<td valign="top" class="risk_moderate"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">Moderate</a></td>
-						<?php } else { ?>
-							<td valign="top" class="risk_low"><a href="#" onclick="$('#details_<?php echo  $myarray['id']; ?>').toggle(); return false;">Low</a></td>
-						<?php } ?>
+                        <td valign="top" class="risk_<?= $riskLevel ?>">
+                            <a href="#" onclick="$('#details_<?= $myarray['id'] ?>').toggle(); return false;">
+                                <?= ucfirst($riskLevel) ?>
+                            </a>
+                        </td>
 
 						<td valign="top">
 							<?php echo  ($myarray['rx_cpap']>0)?'Yes':'No'; ?>
@@ -340,28 +367,36 @@ $coMorbidityWeights = coMorbidityWeights();
 						</td>
 
 						<td valign="top">
-					  		<?php if ($myarray['hst_id']) { 
-								if($myarray['hst_status'] == DSS_HST_REQUESTED){
-							?>
-	                        	<?php
-									$sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
-									$sign_r = $db->getRow($sign_sql);
-									$user_sign = $sign_r['sign_notes'];
+                            <?php
 
-	                                if($user_sign || $_SESSION['docid'] == $_SESSION['userid']) {
-	                            ?>
-	                                	<a href="manage_screeners.php?hst=<?php echo  $myarray['id']; ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" title="Authorize HST">
-	                                        Authorize/Send
-	                                    </a>
-	                            <?php } else { ?>
-									<a href="#" onclick="alert('You do not have sufficient permission to order a Home Sleep Test. Only a dentist may do this.');return false;" title="Authorize HST">
-	                                    Authorize/Send
-	                                </a>
-	                            <?php } ?>
-					  		<?php } else {
-								echo $dss_hst_status_labels[$myarray['hst_status']];
-								}
-							} ?>
+                            if (!$myarray['patient_id'] && $canRequestHST) { ?>
+                                <a href="/manage/manage_screeners.php?create_for=<?= intval($myarray['id']) ?>"
+                                    title="Create patient profile">
+                                    Create patient
+                                </a>
+                            <?php }
+
+                            if ($myarray['hst_id']) {
+                                if ($myarray['hst_status'] == DSS_HST_REQUESTED && $canRequestHST) {
+                                    if ($isStaff) { ?>
+                                        <a href="/manage/hst_request.php?hst_id=<?php echo  $myarray['id']; ?>"
+                                           onclick="return confirm('Click OK to initiate a Home Sleep Test request. The HST request must be electronically signed by an authorized provider before it can be transmitted. You can view and save/update the request on the next screen.');" title="Authorize HST">
+                                            Authorize
+                                        </a>
+                                    <?php } else { ?>
+                                        <a href="#" onclick="alert('You do not have sufficient permission to order a Home Sleep Test. Only a dentist may do this.');return false;" title="Authorize HST">
+                                            Authorize
+                                        </a>
+                                    <?php }
+                                } else {
+                                    echo $dss_hst_status_labels[$myarray['hst_status']];
+                                }
+                            } elseif ($myarray['patient_id'] && $isStaff && $canRequestHST) { ?>
+                                <a href="/manage/hst_request.php?ed=<?= intval($myarray['patient_id']) ?>&amp;hst_co=0"
+                                   onclick="return confirm('Click OK to initiate a Home Sleep Test request. The HST request must be electronically signed by an authorized provider before it can be transmitted. You can view and save/update the request on the next screen.');" title="Request HST">
+                                    Request
+                                </a>
+                            <?php } ?>
 						</td>
 
 						<td valign="top">

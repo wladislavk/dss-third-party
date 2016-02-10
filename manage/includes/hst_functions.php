@@ -53,6 +53,47 @@ function createPatientFromHSTRequest ($hstId) {
 }
 
 /**
+ * Create a new patient, based on a screener request. The patient will NOT be created if the requested HST already has
+ * a patient id set.
+ *
+ * @param $screenerId
+ * @return int
+ */
+function createPatientFromScreener ($screenerId) {
+    $db = new Db();
+
+    $screenerId = intval($screenerId);
+    $screenerData = $db->getRow("SELECT docid, first_name, last_name, phone
+        FROM dental_screener
+        WHERE id = '$screenerId'
+            AND COALESCE(patient_id, 0) = 0");
+
+    if (!$screenerData) {
+        return 0;
+    }
+
+    $hstId = $db->getColumn("SELECT id FROM dental_hst WHERE screener_id = '$screenerId'", 'id');
+
+    $patientData = [
+        'docid' => $screenerData['docid'],
+        'firstname' => $screenerData['first_name'],
+        'lastname' => $screenerData['last_name'],
+        'cell_phone' => $screenerData['phone'],
+        'email' => $screenerData['email'],
+        'dob' => '',
+        'ip_address' => $_SERVER['REMOTE_ADDR']
+    ];
+
+    $patientData = $db->escapeAssignmentList($patientData);
+    $patientId = $db->getInsertId("INSERT INTO dental_patients SET $patientData, status = '1', adddate = NOW()");
+
+    $db->query("UPDATE dental_hst SET patient_id = $patientId, updatedate = NOW() WHERE id = '$hstId'");
+    $db->query("UPDATE dental_screener SET patient_id = '$patientId' WHERE id = '$screenerId'");
+
+    return $patientId;
+}
+
+/**
  * Mark a  HST Request as authorized, create proper EP worth entry and email patient
  *
  * @param int $hstId

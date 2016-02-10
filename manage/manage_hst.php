@@ -6,12 +6,30 @@ include_once "includes/constants.inc";
 
 require_once __DIR__ . '/includes/hst_functions.php';
 
+$docId = intval($_SESSION['docid']);
+$userId = intval($_SESSION['userid']);
+
+$isStaff = $userId == $docId ||
+    $db->getColumn("SELECT sign_notes FROM dental_users where userid = '$userId'", 'sign_notes');
+
 if (!empty($_REQUEST['delid'])) {
     cancelHSTRequest($_REQUEST['delid'], $_SESSION['userid']);
 
     ?>
     <script type="text/javascript">
         window.location = '/manage/manage_hst.php?msg=<?= rawurlencode('HST Request canceled successfully.') ?>';
+    </script>
+    <?php
+
+    trigger_error('Die called', E_USER_ERROR);
+}
+
+if ($isStaff && !empty($_GET['create_for'])) {
+    createPatientFromHSTRequest($_GET['create_for']);
+
+    ?>
+    <script>
+        window.location = '/manage/manage_hst.php?msg=<?= rawurlencode('Patient created successfully.') ?>';
     </script>
     <?php
 

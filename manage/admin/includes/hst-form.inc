@@ -42,12 +42,17 @@ if ($is_front_office) {
     $authorizedProviderJoinConditional = 'p.docid';
 }
 
-$hstCompanyList = $db->getResults("SELECT h.*, uhc.id as uhc_id
+$hstCompanyList = [];
+$unorderedHstCompanyList = $db->getResults("SELECT h.*, uhc.id as uhc_id
     FROM companies h
         JOIN dental_user_hst_company uhc ON uhc.companyid = h.id
             AND uhc.userid = '$docId'
     WHERE h.company_type = '$hstCompanyType'
     ORDER BY name ASC");
+
+foreach ($unorderedHstCompanyList as $hstCompany) {
+    $hstCompanyList[$hstCompany['id']] = $hstCompany;
+}
 
 $hstCompany = $db->getRow("SELECT h.*, uhc.id as uhc_id
     FROM companies h
@@ -220,7 +225,12 @@ if ($hstData['status'] != DSS_HST_CANCELED && (isset($_POST['authorize']) || iss
 }
 
 $insuranceCompanyList = [];
-$unorderedInsuranceCompanyList = $db->getResults("SELECT contactid AS id, company AS name, phone1 AS phone
+$unorderedInsuranceCompanyList = $db->getResults("SELECT
+        contactid AS id,
+        company AS name,
+        phone1 AS phone,
+        fax,
+        email
     FROM dental_contact
     WHERE contacttypeid = '11'
         AND docid = '$docId'");
@@ -254,12 +264,18 @@ $defaultProvider = $isStaff ? $userId : $docId;
 ?>
 <script>
     var providerList = <?= json_encode($providerList) ?>,
+        hstCompanyList = <?= json_encode($hstCompanyList) ?>,
         insuranceCompanyList = <?= json_encode($insuranceCompanyList) ?>;
 </script>
 <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
 <script type="text/javascript" src="/manage/js/masks.js"></script>
 <?php require_once __DIR__ . '/../../includes/calendarinc.php' ?>
 <link type="text/css" rel="stylesheet" href="/manage/css/form.css" />
+<style type="text/css">
+    span#hst-company-phone, span#hst-company-fax, span#hst-company-email {
+        float: none;
+    }
+</style>
 <?php if (!empty($is_back_office)) { ?>
     <a href="/manage/admin/view_hst.php?ed=<?= $hstData['id'] ?><?=
         isset($_GET['status']) ? '&amp;ret_status=' . e($_GET['status']) : ''
@@ -516,11 +532,11 @@ $defaultProvider = $isStaff ? $userId : $docId;
             <label class="desc"><?= e($hstCompany['name']) ?></label>
         </li>
         <li>
-            Office: <?= format_phone($hstCompany['phone']) ?>
+            Office: <span id="hst-company-phone"><?= format_phone($hstCompany['phone']) ?></span>
             -
-            Fax: <?= format_phone($hstCompany['fax']) ?>
+            Fax: <span id="hst-company-fax"><?= format_phone($hstCompany['fax']) ?></span>
             -
-            Email: <?= e($hstCompany['email']) ?>
+            Email: <span id="hst-company-email"><?= e($hstCompany['email']) ?></span>
         </li>
     </ul>
     <?php if ($canAuthorize || $canFinishLater) { ?>

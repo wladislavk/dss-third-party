@@ -11,8 +11,7 @@ if (isset($_REQUEST['ed'])) {
     $hstId = intval($_REQUEST['ed']);
     $hst = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
 
-    if (!$hst || (!$isAdmin && $hst['status'] < 0)) {
-        ?>
+    if (!$hst) { ?>
         <script type="text/javascript">
             window.location = '/manage/admin/manage_hsts.php?msg=<?= rawurlencode('The requested HST does not exist or has been deleted.') ?>';
         </script>

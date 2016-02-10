@@ -181,10 +181,7 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid))
     }
     
     if (!empty($fid)) {
-        if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
-            $sql .= "  AND ";
-        }
-        $sql .= "  users.userid = " . $fid . " ";
+        $sql .= " AND users.userid = " . $fid . " ";
     }
     
     if (!empty($pid)) {

@@ -190,6 +190,7 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId) {
         $headers = join("\r\n", [
             'From: Dental Sleep Solutions <noreply@dentalsleepsolutions.com>',
             'Content-type: text/html',
+            'Mime-Version: 1.0',
             'Reply-To: noreply@dentalsleepsolutions.com',
             'X-Mailer: PHP/' . phpversion()
         ]);

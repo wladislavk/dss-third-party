@@ -2,18 +2,10 @@
 namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/../../includes/constants.inc';
+require_once __DIR__ . '/../../includes/hst_functions.php';
 
 $is_front_office = empty($is_back_office);
-
-$userId = intval($_SESSION['userid']);
-$docId = intval($_SESSION['docid']);
-
 $hstCompanyType = DSS_COMPANY_TYPE_HST;
-
-$isStaff = $userId == $docId ||
-    $db->getColumn("SELECT sign_notes FROM dental_users WHERE userid = '$userId'", 'sign_notes');
-
-$authorizedProviderId = $isStaff ? $userId : $docId;
 
 if (!empty($_REQUEST['hst_id'])) {
     $hstId = intval($_REQUEST['hst_id']);
@@ -24,7 +16,7 @@ if (!empty($_REQUEST['hst_id'])) {
 } else {
     $patientId = intval($_GET['ed']);
     $hstCompanyId = intval($_GET['hst_co']);
-    $hstCompanyCompleteStatuses = $db->escapeList([DSS_HST_COMPLETE, DSS_HST_REJECTED]);
+    $hstCompanyCompleteStatuses = $db->escapeList([DSS_HST_COMPLETE, DSS_HST_REJECTED, DSS_HST_CANCELED]);
 
     $hstData = $db->getRow("SELECT *
         FROM dental_hst
@@ -34,12 +26,33 @@ if (!empty($_REQUEST['hst_id'])) {
     $hstId = $hstData ? $hstData['id'] : 0;
 }
 
-$hstCompanyList = $db->getResults("SELECT h.*, uhc.id as uhc_id
+if ($is_front_office) {
+    $userId = $is_front_office ? intval($_SESSION['userid']) : 0;
+    $docId = $is_front_office ? intval($_SESSION['docid']) : 0;
+
+    $isStaff = $userId == $docId ||
+        $db->getColumn("SELECT sign_notes FROM dental_users WHERE userid = '$userId'", 'sign_notes');
+
+    $authorizedProviderJoinConditional = $isStaff ? "'$userId'" : "'$docId'";
+} else {
+    $userId = 0;
+    $docId = intval($db->getColumn("SELECT docid FROM dental_patients WHERE patientid = '$patientId'"));
+
+    $isStaff = false;
+    $authorizedProviderJoinConditional = 'p.docid';
+}
+
+$hstCompanyList = [];
+$unorderedHstCompanyList = $db->getResults("SELECT h.*, uhc.id as uhc_id
     FROM companies h
         JOIN dental_user_hst_company uhc ON uhc.companyid = h.id
             AND uhc.userid = '$docId'
     WHERE h.company_type = '$hstCompanyType'
     ORDER BY name ASC");
+
+foreach ($unorderedHstCompanyList as $hstCompany) {
+    $hstCompanyList[$hstCompany['id']] = $hstCompany;
+}
 
 $hstCompany = $db->getRow("SELECT h.*, uhc.id as uhc_id
     FROM companies h
@@ -74,22 +87,34 @@ $patientData = $db->getRow("SELECT
         IF(u.producer_files AND LENGTH(TRIM(u.zip)), u.zip, d.zip) AS 'provider_zip'
     FROM dental_patients p
         LEFT JOIN dental_contact i ON i.contactid = p.p_m_ins_co
-        LEFT JOIN dental_users u ON u.userid = '$authorizedProviderId'
+        LEFT JOIN dental_users u ON u.userid = $authorizedProviderJoinConditional
         LEFT JOIN dental_users d ON d.userid = IF(u.docid, u.docid, u.userid)
     WHERE p.patientid = '$patientId'");
 
 $hstData = !empty($hstData) ? $hstData : [];
 
-if (!$hstData && $patientData) {
-    $hstData = $patientData + [
-            'company_id' => 0,
-            'diagnosis_id' => 0,
-            'hst_type' => 0,
-            'hst_nights' => 2,
-            'hst_positions' => '',
-            'provider_signature' => 1,
-            'provider_date' => date('m/d/Y'),
-        ];
+if ($patientData) {
+    /**
+     * @see DSS-166
+     *
+     * If the HST request has not been found, create a new set to be displayed
+     * Otherwise, complete blank fields for HST not requested (status = DSS_HST_REQUESTED)
+     */
+    if (!$hstData) {
+        $hstData = $patientData + [
+                'company_id' => 0,
+                'diagnosis_id' => 0,
+                'hst_type' => 0,
+                'hst_nights' => 2,
+                'hst_positions' => '',
+                'provider_signature' => 1,
+                'provider_date' => date('m/d/Y'),
+            ];
+    } elseif ($hstData['status'] == DSS_HST_REQUESTED) {
+        foreach ($patientData as $field=>$value) {
+            $hstData[$field] = $hstData[$field] ?: $value;
+        }
+    }
 }
 
 $hstData['hst_positions'] = @json_decode($hstData['hst_positions']);
@@ -103,7 +128,19 @@ $nightsDefault = $hstId ? $hstData['hst_nights'] : 2;
 $canAuthorize = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED && $isStaff;
 $canFinishLater = $is_front_office && $hstData['status'] == DSS_HST_REQUESTED;
 
-if (isset($_POST['authorize']) || isset($_POST['save'])) {
+if ($is_front_office && isset($_POST['delete'])) {
+    cancelHSTRequest($hstId, $userId);
+
+    ?>
+    <script type="text/javascript">
+        window.location = '/manage/manage_hst.php?msg=<?= rawurlencode('HST Request canceled successfully.') ?>';
+    </script>
+    <?php
+
+    trigger_error('Die called', E_USER_ERROR);
+}
+
+if ($hstData['status'] != DSS_HST_CANCELED && (isset($_POST['authorize']) || isset($_POST['save']))) {
     $hstId = intval($_POST['hst_id']);
     $authorize = !empty($_POST['authorize']);
 
@@ -175,109 +212,7 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
     }
 
     if ($canAuthorize) {
-        $hstPendingStatus = DSS_HST_PENDING;
-
-        $db->query("UPDATE dental_hst
-            SET status = '$hstPendingStatus', authorized_id = '$userId', authorizeddate = NOW()
-            WHERE id = '$hstId'");
-
-        $sql = "SELECT * FROM dental_q_sleep WHERE patientid = '$patientId'";
-        $myarray = $db->getRow($sql);
-
-        $q_sleepid = st($myarray['q_sleepid']);
-        $epworthid = st($myarray['epworthid']);
-        $analysis = st($myarray['analysis']);
-
-        $epid = [];
-        $epseq = [];
-
-        if ($epworthid != '') {
-            $epworth_arr1 = split('~', $epworthid);
-
-            foreach ($epworth_arr1 as $i=>$val) {
-                $epworth_arr2 = explode('|', $val);
-                $epid[$i] = $epworth_arr2[0];
-                $epseq[$i] = $epworth_arr2[1];
-            }
-        }
-
-        $epworth_sql = "SELECT * FROM dental_epworth WHERE status = 1 ORDER BY sortby";
-        $epworth_my = $db->getResults($epworth_sql);
-        $epworth_number = count($epworth_my);
-
-        foreach ($epworth_my as $epworth_myarray) {
-            if (@array_search($epworth_myarray['epworthid'], $epid) === false) {
-                $chk = '';
-            } else {
-                $chk = $epseq[@array_search($epworth_myarray['epworthid'], $epid)];
-            }
-
-            if ($chk != '') {
-                $hst_sql = "INSERT INTO dental_hst_epworth SET
-                    hst_id = '" . $db->escape($hstId) . "',
-                    epworth_id = '" . $db->escape($epworth_myarray['epworthid']) . "',
-                    response = '" . $db->escape($chk) . "',
-                    adddate = now(),
-                    ip_address = '" . $db->escape($_SERVER['REMOTE_ADDR']) . "'";
-                $db->query($hst_sql);
-            }
-        }
-
-        $c_sql = "SELECT c.email from companies c WHERE c.id = '" . $db->escape($_POST['company_id']) . "'";
-        $c = $db->getRow($c_sql);
-
-        if ($c['email'] != '') {
-            $headers = join("\r\n", [
-                'From: Dental Sleep Solutions <noreply@dentalsleepsolutions.com>',
-                'Content-type: text/html',
-                'Reply-To: noreply@dentalsleepsolutions.com',
-                'X-Mailer: PHP/' . phpversion()
-            ]);
-
-            $subject = "New HST Order Created";
-            $user_sql = "SELECT * FROM dental_users where userid = '$docId'";
-            $user = $db->getRow($user_sql);
-            $m = "<html><body>" .
-                "<center>" .
-                    "<table width='600'>" .
-                        "<tr>" .
-                            "<td colspan='2'>" .
-                                "<img alt='A message from your healthcare provider' " .
-                                    "src='" . $_SERVER['HTTP_HOST'] . "/reg/images/email/email_header_fo.png' />" .
-                            "</td>" .
-                        "</tr>" .
-                        "<tr>" .
-                            "<td width='400'>" .
-                                "<h2>New HST Order Created</h2>" .
-                                "<p>A new HST order has been submitted to you by " .
-                                    $user['first_name'] . " " . $user['last_name'] . " at " .
-                                    $user['mailing_practice'] . " on " . date('m/d/Y h:i p') .
-                                ".</p>" .
-                                "<p>Please log in to your DS3 backoffice account to check the details:" .
-                                    "<a href='http://" . $_SERVER['HTTP_HOST'] . "/manage/admin'>" .
-                                    "http://" . $_SERVER['HTTP_HOST'] . "/manage/admin" .
-                                "</a>" .
-                                "</p>" .
-                            "</td>" .
-                            "<td>" .
-                                "<img alt='Logo' src='" . $_SERVER['HTTP_HOST'] . "/reg/images/email/reg_logo.gif' />" .
-                            "</td>" .
-                        "</tr>" .
-                        "<tr>" .
-                            "<td colspan='2'>" .
-                                "<img alt='A message from your healthcare provider' src='" .
-                                    $_SERVER['HTTP_HOST'] . "/reg/images/email/email_footer_fo.png' />" .
-                            "</td>" .
-                        "</tr>" .
-                    "</table>" .
-                "</center>" .
-                "<span style='font-size:12px;'>" .
-                    "This email was sent by Dental Sleep Solutions&reg; on behalf of " .
-                    $user['mailing_practice'] . ". " . DSS_EMAIL_FOOTER .
-                "</span>" . "</body></html>";
-
-            mail($c['email'], $subject, $m, $headers);
-        }
+        authorizeHSTRequest($hstId, $hstCompanyId, $userId, $docId);
 
         ?>
         <script type="text/javascript">
@@ -287,6 +222,21 @@ if (isset($_POST['authorize']) || isset($_POST['save'])) {
 
         trigger_error('Die called', E_USER_ERROR);
     }
+}
+
+$insuranceCompanyList = [];
+$unorderedInsuranceCompanyList = $db->getResults("SELECT
+        contactid AS id,
+        company AS name,
+        phone1 AS phone,
+        fax,
+        email
+    FROM dental_contact
+    WHERE contacttypeid = '11'
+        AND docid = '$docId'");
+
+foreach ($unorderedInsuranceCompanyList as $insuranceCompany) {
+    $insuranceCompanyList[$insuranceCompany['id']] = $insuranceCompany;
 }
 
 $providerList = [];
@@ -313,12 +263,19 @@ $defaultProvider = $isStaff ? $userId : $docId;
 
 ?>
 <script>
-    var providerList = <?= json_encode($providerList) ?>;
+    var providerList = <?= json_encode($providerList) ?>,
+        hstCompanyList = <?= json_encode($hstCompanyList) ?>,
+        insuranceCompanyList = <?= json_encode($insuranceCompanyList) ?>;
 </script>
 <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
 <script type="text/javascript" src="/manage/js/masks.js"></script>
 <?php require_once __DIR__ . '/../../includes/calendarinc.php' ?>
 <link type="text/css" rel="stylesheet" href="/manage/css/form.css" />
+<style type="text/css">
+    span#hst-company-phone, span#hst-company-fax, span#hst-company-email {
+        float: none;
+    }
+</style>
 <?php if (!empty($is_back_office)) { ?>
     <a href="/manage/admin/view_hst.php?ed=<?= $hstData['id'] ?><?=
         isset($_GET['status']) ? '&amp;ret_status=' . e($_GET['status']) : ''
@@ -330,10 +287,6 @@ $defaultProvider = $isStaff ? $userId : $docId;
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#">
     <input type="hidden" name="hst_id" value="<?= $hstId ?>" />
     <input type="hidden" name="provider_signature" id="provider_signature" value="1" />
-
-    <h2>
-        <strong>Sleep Services</strong>
-    </h2>
 
     <h3 align="center">Home Sleep Test Order Form For
         <?= e($hstData['patient_firstname'] . ' ' . $hstData['patient_lastname']) ?>
@@ -414,16 +367,11 @@ $defaultProvider = $isStaff ? $userId : $docId;
         <li>
             <span>
                 <select name="ins_co_id" id="ins_co_id">
-                    <option value="" <?= !$hstData['p_m_ins_co'] ? 'selected' : '' ?>>Select Insurance Company</option>option>
-                    <?php
-
-                    $ins_contact_qry = "SELECT * FROM dental_contact WHERE contacttypeid = '11' AND docid = '$docId'";
-                    $ins_contact_qry_run = $db->getResults($ins_contact_qry);
-
-                    foreach ($ins_contact_qry_run as $ins_contact_res) { ?>
-                        <option value="<?php echo $ins_contact_res['contactid'] ?>"
-                            <?= $hstData['ins_co_id'] == $ins_contact_res['contactid'] ? 'selected' : '' ?>>
-                            <?php echo addslashes(!empty($ins_contact_res['company']) ? $ins_contact_res['company'] : ''); ?>
+                    <option value="" <?= !$hstData['p_m_ins_co'] ? 'selected' : '' ?>>Select Insurance Company</option>
+                    <?php foreach ($insuranceCompanyList as $insuranceCompany) { ?>
+                        <option value="<?= $insuranceCompany['id'] ?>"
+                            <?= $hstData['ins_co_id'] == $insuranceCompany['id'] ? 'selected' : '' ?>>
+                            <?= e(!empty($insuranceCompany['name']) ? $insuranceCompany['name'] : '') ?>
                         </option>
                     <?php } ?>
                 </select>
@@ -581,33 +529,56 @@ $defaultProvider = $isStaff ? $userId : $docId;
             <p>
                 <label class="desc">Transmitted Electronically Via DS3 Software.</label>
             </p>
-            <label class="desc"><?= e($hstCompany['name']) ?></label>
+            <label class="desc" id="hst-company-name"><?= e($hstCompany['name']) ?></label>
         </li>
         <li>
-            Office: <?= format_phone($hstCompany['phone']) ?>
+            Office: <span id="hst-company-phone"><?= format_phone($hstCompany['phone']) ?></span>
             -
-            Fax: <?= format_phone($hstCompany['fax']) ?>
+            Fax: <span id="hst-company-fax"><?= format_phone($hstCompany['fax']) ?></span>
             -
-            Email: <?= e($hstCompany['email']) ?>
+            Email: <span id="hst-company-email"><?= e($hstCompany['email']) ?></span>
         </li>
     </ul>
     <?php if ($canAuthorize || $canFinishLater) { ?>
         <p class="submit-action">
-            <strong>By the below order HST button you are providing a digital signature ordering the HST</strong>
+            <strong>Click "Request HST" to authorize the order of this HST with your digital signature.</strong>
         </p>
         <p class="submit-action">
             <?php if ($canAuthorize) { ?>
                 <input class="button" type="submit" name="authorize" value="Request HST" />
             <?php } ?>
             <?php if ($canFinishLater) { ?>
-                <input class="button" type="submit" name="save" value="Finish Later" />
+                <input class="button" type="submit" name="save" value="Save / Finish Later" />
             <?php } ?>
             <?php if ($canAuthorize) { ?>
-                <a class="red" style="float:right;" href="/manage/add_patient.php?ed=<?= $patientId ?>&pid=<?= $patientId ?>"
-                   onclick="return confirm('Are you sure you want to cancel?');">Cancel</a>
+                <a class="red" style="float:right;" href="/manage/manage_hst.php?delid=<?= $hstId ?>"
+                   title="Cancel HST and delete from queue"
+                   onclick="return confirm('Are you sure you want to delete this HST?');">Delete</a>
             <?php } ?>
         </p>
     <?php } ?>
 </form>
+<?php
+
+if ($hstData['status'] != DSS_HST_REQUESTED) {
+    $patientName = $hstData['patient_firstname'] . ' ' . $hstData['patient_lastname'];
+    $patientDOB = $hstData['patient_dob'] ? date('m/d/Y', strtotime($hstData['patient_dob'])) : 'unknown';
+    $authorizedDate = $hstData['authorizeddate'] ? date('m/d/Y', strtotime($hstData['authorizeddate'])) : 'unknown';
+    $authorizedName = $db->getColumn("SELECT CONCAT(first_name, ' ', last_name) AS name
+        FROM dental_users
+        WHERE userid = '{$hstData['authorized_id']}'", 'name');
+
+    ?>
+    <div class="fullwidth">
+        <h1>Home Sleep Test Request</h1>
+        <h3>Patient: <?= e($patientName ?: 'NOT SPECIFIED') ?></h3>
+        <h3>DOB: <?= $patientDOB ?: 'NOT SPECIFIED' ?></h3>
+        <h3>Requested by: <?= e($authorizedName ?: 'NOT SPECIFIED') ?></h3>
+        <p>&nbsp;</p>
+        <p>Dr. <?= e($authorizedName ?: 'NOT SPECIFIED') ?> has electronically requested a Home Sleep Test for
+            <?= e($patientName ?: 'NOT SPECIFIED') ?> for Obstructive Sleep Apnea (OSA).</p>
+        <p>Authorized on: <?= $authorizedDate ?: 'NOT SPECIFIED' ?></p>
+    </div>
+<?php } ?>
 <br />
-<script type="text/javascript" src="/manage/js/hst_request.js?v=20160131"></script>
+<script type="text/javascript" src="/manage/js/hst_request.js?v=20160208"></script>

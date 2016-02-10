@@ -187,6 +187,16 @@ function retrieveEligibleEvents (Array $eligibleReferences) {
         ORDER BY id ASC");
 }
 
+function retrieveBOFlagHistory ($claimId) {
+    $db = new Db();
+    $claimId = intval($claimId);
+
+    return $db->getResults("SELECT *
+        FROM dental_insurance_bo_status
+        WHERE insuranceid = '$claimId'
+        ORDER BY id ASC");
+}
+
 /**
  * @param array  $rows
  * @param string $title
@@ -231,6 +241,7 @@ function renderTableFromArray (Array $rows, $title='Unnamed data') {
 
 $claimId = intval($_GET['claim_id']);
 $claimData = retrieveClaimData($claimId);
+$claimBOFlagHistory = retrieveBOFlagHistory($claimId);
 $claimHistory = retrieveClaimHistory($claimId);
 $claimStatusHistory = retrieveClaimStatusHistory($claimId);
 
@@ -241,6 +252,7 @@ if (isset($_GET['dirty'])) {
     dd([
         '$claimId' => $claimId,
         '$claimData' => $claimData,
+        '$claimBOFlagHistory' => $claimBOFlagHistory,
         '$claimHistory' => $claimHistory,
         '$claimStatusHistory' => $claimStatusHistory,
     ]);
@@ -304,6 +316,7 @@ require_once __DIR__ . '/includes/top.htm';
 <?php
 
 renderTableFromArray($claimData, 'Current data');
+renderTableFromArray($claimBOFlagHistory, 'FO/BO flag changes (by admins)');
 renderTableFromArray($claimHistory, 'History');
 renderTableFromArray($claimStatusHistory, 'Status changes');
 

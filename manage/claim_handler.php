@@ -208,12 +208,13 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $isFormerPrimary = ClaimFormData::isPrimary($formerStatus);
     $isFormerPending = ClaimFormData::isStatus('pending', $formerStatus);
     $isFormerRejected = ClaimFormData::isStatus('rejected', $formerStatus);
+    $needsBackOfficeMarkerUpdate = $isFormerPending || $isFormerRejected;
 
     /**
      * @see CS-73
      * @see DSS-258
      */
-    $filedByBackOfficeMarker = $filedByBackOffice && $isFormerPending ? 3 : 0;
+    $filedByBackOfficeMarker = $filedByBackOffice && $needsBackOfficeMarkerUpdate ? 3 : 0;
 
     /**
      * Status changes:
@@ -999,7 +1000,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             other_insured_insurance_type = '" . $db->escape($other_insured_insurance_type) . "',
 
             status = '$status',
-            " . ($isFormerPending ? "p_m_dss_file = '$filedByBackOfficeMarker'," : '') . "
+            " . ($needsBackOfficeMarkerUpdate ? "p_m_dss_file = '$filedByBackOfficeMarker'," : '') . "
             reject_reason = '" . $db->escape($reject_reason) . "'
         WHERE insuranceid = '$claimId'";
 

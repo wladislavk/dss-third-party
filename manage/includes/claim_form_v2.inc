@@ -2493,12 +2493,13 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $isFormerPrimary = ClaimFormData::isPrimary($formerStatus);
     $isFormerPending = ClaimFormData::isStatus('pending', $formerStatus);
     $isFormerRejected = ClaimFormData::isStatus('rejected', $formerStatus);
+    $needsBackOfficeMarkerUpdate = $isFormerPending || $isFormerRejected;
 
     /**
      * @see CS-73
      * @see DSS-258
      */
-    $filedByBackOfficeMarker = $filedByBackOffice && $isFormerPending ? 3 : 0;
+    $filedByBackOfficeMarker = $filedByBackOffice && $needsBackOfficeMarkerUpdate ? 3 : 0;
 
     /**
      * Status changes:
@@ -2994,7 +2995,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             s_m_eligible_payer_id = '".$s_m_eligible_payer_id."',
             s_m_eligible_payer_name = '".$db->escape($s_m_eligible_payer_name)."',
             status = '$status',
-            " . ($isFormerPending ? "p_m_dss_file = '$filedByBackOfficeMarker'," : '' ) . "
+            " . ($needsBackOfficeMarkerUpdate ? "p_m_dss_file = '$filedByBackOfficeMarker'," : '' ) . "
             userid = '".$db->escape($_SESSION['userid'])."',
             docid = '$docId',
             adddate = NOW(),
@@ -3233,7 +3234,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         s_m_eligible_payer_name = '".$db->escape($s_m_eligible_payer_name)."',
 
         status = '$status',
-        " . ($isFormerPending ? "p_m_dss_file = '$filedByBackOfficeMarker'," : '' ) . "
+        " . ($needsBackOfficeMarkerUpdate ? "p_m_dss_file = '$filedByBackOfficeMarker'," : '' ) . "
         reject_reason = '".$db->escape($reject_reason)."'
 
         WHERE insuranceid = '$claimId'";

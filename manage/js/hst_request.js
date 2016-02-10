@@ -2,6 +2,8 @@ jQuery(function($){
     var $hstForm = $('#hst_order_sleep_services'),
         $hstRadioButtons = $('[name=hst_type]:radio'),
         $hstContainers = $hstRadioButtons.closest('li'),
+        $hstCompanySelector = $(':radio[name=company_id]'),
+        $insuranceCompanySelector = $('select[name=ins_co_id]'),
         $providerSelector = $('#provider_selector');
 
     $hstRadioButtons.change(function(){
@@ -46,6 +48,40 @@ jQuery(function($){
         }
     });
 
+    $insuranceCompanySelector.change(function(){
+        var companyId = $(this).val(),
+            $phone = $hstForm.find('[name=ins_phone]'),
+            phoneNumber;
+
+        if (!insuranceCompanyList.hasOwnProperty(companyId)) {
+            return;
+        }
+
+        phoneNumber = insuranceCompanyList[companyId].phone;
+        $phone.val(phoneNumber)
+            .focus().blur();
+
+        /**
+         * Forcing the mask might cause the number to disappear, let's reset the value
+         */
+        if (phoneNumber.length && !$phone.val()) {
+            $phone.val(phoneNumber);
+        }
+    });
+
+    $hstCompanySelector.change(function(){
+        var companyId = $(this).val();
+
+        if (!hstCompanyList.hasOwnProperty(companyId)) {
+            return;
+        }
+
+        $('#hst-company-name').text(hstCompanyList[companyId].name);
+        $('#hst-company-phone').text(hstCompanyList[companyId].phone);
+        $('#hst-company-fax').text(hstCompanyList[companyId].fax);
+        $('#hst-company-email').text(hstCompanyList[companyId].email);
+    });
+
     /**
      * Flag to determine which button was pressed
      */
@@ -54,6 +90,8 @@ jQuery(function($){
     });
 
     $hstForm.submit(function(){
+        var $required, confirmation;
+
         /**
          * Don't run validation on non authorization request
          */
@@ -88,9 +126,16 @@ jQuery(function($){
             $this.toggleClass('required', !$this.find('[name="' + fieldName + '"]:checked').length);
         });
 
-        if ($hstForm.find('.required').length) {
-            alert('All the form fields are required');
-            return false;
+        $required = $hstForm.find('.required');
+
+        if ($required.length) {
+            if ($required.length === 1 && $required.is('[name=patient_email]')) {
+                confirmation = confirm('Missing Patient Email. Do you still want to order the test?');
+                return confirmation;
+            } else {
+                alert('All the form fields are required');
+                return false;
+            }
         }
 
         return true;
@@ -101,7 +146,13 @@ jQuery(function($){
      * If view form mode, disable fields
      */
     if ($('[type=submit]').length) {
-        if (!$hstForm.find('[name=hst_id]').val() && $providerSelector.val()) {
+        if (
+            (
+                !$hstForm.find('[name^=provider_]:not([type=hidden], [name=provider_selector])').val() ||
+                !$hstForm.find('[name=hst_id]').val()
+            )
+            && $providerSelector.val()
+        ) {
             $providerSelector.change();
         }
     } else {

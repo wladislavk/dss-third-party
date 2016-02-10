@@ -571,12 +571,13 @@ if ($hstData['status'] != DSS_HST_REQUESTED) {
     ?>
     <div class="fullwidth">
         <h1>Home Sleep Test Request</h1>
-        <h3>Patient: <?= e($patientName) ?></h3>
-        <h3>DOB: <?= $patientDOB ?></h3>
-        <h3>Requested by: <?= e($authorizedName) ?></h3>
+        <h3>Patient: <?= e($patientName ?: 'NOT SPECIFIED') ?></h3>
+        <h3>DOB: <?= $patientDOB ?: 'NOT SPECIFIED' ?></h3>
+        <h3>Requested by: <?= e($authorizedName ?: 'NOT SPECIFIED') ?></h3>
         <p>&nbsp;</p>
-        <p>Dr. <?= e($authorizedName) ?> has electronically requested a Home Sleep Test for <?= e($patientName) ?> for Obstructive Sleep Apnea (OSA).</p>
-        <p>Authorized on: <?= $authorizedDate ?></p>
+        <p>Dr. <?= e($authorizedName ?: 'NOT SPECIFIED') ?> has electronically requested a Home Sleep Test for
+            <?= e($patientName ?: 'NOT SPECIFIED') ?> for Obstructive Sleep Apnea (OSA).</p>
+        <p>Authorized on: <?= $authorizedDate ?: 'NOT SPECIFIED' ?></p>
     </div>
 <?php } ?>
 <br />

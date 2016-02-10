@@ -569,13 +569,15 @@ if ($hstData['status'] != DSS_HST_REQUESTED) {
         WHERE userid = '{$hstData['authorized_id']}'", 'name');
 
     ?>
-    <h1>Home Sleep Test Request</h1>
-    <h3>Patient: <?= e($patientName) ?></h3>
-    <h3>DOB: <?= $patientDOB ?></h3>
-    <h3>Requested by: <?= e($authorizedName) ?></h3>
-    <p>&nbsp;</p>
-    <p>Dr. <?= e($authorizedName) ?> has electronically requested a Home Sleep Test for <?= e($patientName) ?> for Obstructive Sleep Apnea (OSA).</p>
-    <p>Authorized on: <?= $authorizedDate ?></p>
+    <div class="fullwidth">
+        <h1>Home Sleep Test Request</h1>
+        <h3>Patient: <?= e($patientName) ?></h3>
+        <h3>DOB: <?= $patientDOB ?></h3>
+        <h3>Requested by: <?= e($authorizedName) ?></h3>
+        <p>&nbsp;</p>
+        <p>Dr. <?= e($authorizedName) ?> has electronically requested a Home Sleep Test for <?= e($patientName) ?> for Obstructive Sleep Apnea (OSA).</p>
+        <p>Authorized on: <?= $authorizedDate ?></p>
+    </div>
 <?php } ?>
 <br />
 <script type="text/javascript" src="/manage/js/hst_request.js?v=20160208"></script>

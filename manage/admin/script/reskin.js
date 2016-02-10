@@ -11,7 +11,7 @@ $(function(){
     /**
      * Add breadcrumb
      */
-    var $container = $('<div class="row"><div class="col-md-12"><h3 class="page-title"></h3><ul class="page-breadcrumb breadcrumb"><li><i class="fa fa-home"></i><a href="/manage/admin/home.php">Home</a><i class="fa fa-angle-right"></i></li></ul></div></div>'),
+    var $container = $('<div class="row hidden-print"><div class="col-md-12"><h3 class="page-title"></h3><ul class="page-breadcrumb breadcrumb"><li><i class="fa fa-home"></i><a href="/manage/admin/home.php">Home</a><i class="fa fa-angle-right"></i></li></ul></div></div>'),
     $breadcrumb = $container.find('ul'),
     path = window.location.href.replace(/^.*?\/([^\/]+)$/,'$1');
     path = path.substr(0,path.indexOf('?'));

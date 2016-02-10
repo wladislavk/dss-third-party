@@ -7,6 +7,15 @@
     display: none;
   }
 
+  .page-header.printable {
+    display: block;
+  }
+
+  .page-header.printable h1 {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
   .page-sidebar-wrapper {
     display: none;
   }

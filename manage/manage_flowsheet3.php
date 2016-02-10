@@ -53,8 +53,8 @@ if(count($bu_q)>0){
     <?php
     }else{
     ?>
-    <a href="hst_request_co.php?ed=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" style="float:right; margin-right:20px;" class="button" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');">
-        Order HST
+    <a href="hst_request_co.php?ed=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" style="float:right; margin-right:20px;" class="button" onclick="return confirm('Click OK to initiate a Home Sleep Test request. The HST request must be electronically signed by an authorized provider before it can be transmitted. You can view and save/update the request on the next screen.');">
+        Request HST
     </a>
     <?php
     }

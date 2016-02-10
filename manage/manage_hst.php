@@ -25,11 +25,11 @@ if (!empty($_REQUEST['delid'])) {
 }
 
 if ($isStaff && !empty($_GET['create_for'])) {
-    createPatientFromHSTRequest($_GET['create_for']);
+    $patientId = createPatientFromHSTRequest($_GET['create_for']);
 
     ?>
     <script>
-        window.location = '/manage/manage_hst.php?msg=<?= rawurlencode('Patient created successfully.') ?>';
+        window.location = '/manage/manage_hst.php?ed=<?= $patientId ?>&pid=<?= $patientId ?>';
     </script>
     <?php
 

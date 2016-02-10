@@ -369,13 +369,6 @@ if ($isStaff && !empty($_GET['create_for'])) {
 						<td valign="top">
                             <?php
 
-                            if (!$myarray['patient_id'] && $canRequestHST) { ?>
-                                <a href="/manage/manage_screeners.php?create_for=<?= intval($myarray['id']) ?>"
-                                    title="Create patient profile">
-                                    Create patient
-                                </a>
-                            <?php }
-
                             if ($myarray['hst_id']) {
                                 if ($myarray['hst_status'] == DSS_HST_REQUESTED && $canRequestHST) {
                                     if ($isStaff) { ?>
@@ -395,6 +388,11 @@ if ($isStaff && !empty($_GET['create_for'])) {
                                 <a href="/manage/hst_request.php?ed=<?= intval($myarray['patient_id']) ?>&amp;hst_co=0"
                                    onclick="return confirm('Click OK to initiate a Home Sleep Test request. The HST request must be electronically signed by an authorized provider before it can be transmitted. You can view and save/update the request on the next screen.');" title="Request HST">
                                     Request
+                                </a>
+                            <?php } elseif (!$myarray['patient_id'] && $canRequestHST) { ?>
+                                <a href="/manage/manage_screeners.php?create_for=<?= intval($myarray['id']) ?>"
+                                   title="Create patient profile">
+                                    Create patient
                                 </a>
                             <?php } ?>
 						</td>

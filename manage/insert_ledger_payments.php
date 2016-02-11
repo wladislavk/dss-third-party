@@ -15,8 +15,6 @@ require_once __DIR__ . '/includes/claim_functions.php';
 <body>
 <?php
 
-$db = new Db();
-
 if (!authorize($_POST['username'], $_POST['password'], DSS_USER_TYPE_ADMIN)) { ?>
     <script type="text/javascript">
         alert('YOU ARE NOT AUTHORIZED TO COMPLETE THIS REQUEST');

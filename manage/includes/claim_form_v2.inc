@@ -2486,6 +2486,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
 function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $filedByBackOffice = false) {
     $db = new Db();
 
+    /**
+     * Session 'userid' is not reliable if we are not navigating a BO page
+     */
+    $userId = $filedByBackOffice ? 0 : intval($_SESSION['userid']);
+
     $claimId = intval($claimId);
     $patientId = intval($patientId);
     $isNewClaim = !$claimId;
@@ -3006,7 +3011,8 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
         // update the ledger trxns passed in with the form
         update_ledger_trxns($claimId, DSS_TRXN_PROCESSING);
-        claim_history_update($claimId, $_SESSION['userid'], $_SESSION['adminuserid']);
+        claim_status_history_update($claimId, $status, $formerStatus, $userId, $_SESSION['adminuserid']);
+        claim_history_update($claimId, $userId, $_SESSION['adminuserid']);
 
         return $claimId;
     }
@@ -3246,18 +3252,23 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
     // @ToDo: reimplement this functionality
     update_ledger_trxns($claimId, $transactionStatus);
-    claim_history_update($claimId, $_SESSION['userid'], $_SESSION['adminuserid']);
+    claim_status_history_update($claimId, $status, $formerStatus, $userId, $_SESSION['adminuserid']);
+    claim_history_update($claimId, $userId, $_SESSION['adminuserid']);
 
     if (isset($claimData['p_m_ins_payer_id'])) {
-        $pat_sql = "UPDATE dental_patients SET p_m_eligible_id = '".$db->escape($claimData['p_m_ins_payer_id'])."'
-            WHERE patientid = '$patientId'";
-        $db->query($pat_sql);
+        $payerId = intval($claimData['p_m_ins_payer_id']);
+
+        $db->query("UPDATE dental_patients
+            SET p_m_eligible_id = '$payerId'
+            WHERE patientid = '$patientId'");
     }
 
     if (isset($claimData['s_m_ins_payer_id'])) {
-        $pat_sql = "UPDATE dental_patients SET s_m_eligible_id = '".s_for($claimData['s_m_ins_payer_id'])."'
-            WHERE patientid = '$patientId'";
-        $db->query($pat_sql);
+        $payerId = intval($claimData['s_m_ins_payer_id']);
+
+        $db->query("UPDATE dental_patients
+            SET s_m_eligible_id = '$payerId'
+            WHERE patientid = '$patientId'");
     }
 
     return $claimId;

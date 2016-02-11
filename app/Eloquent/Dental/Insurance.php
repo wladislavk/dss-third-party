@@ -37,10 +37,11 @@ class Insurance extends Model implements Resource, Repository
      *
      * @var array
      */
-    protected $dates = [
+    /*protected $dates = [
         'patient_dob', 'insured_dob', 'patient_signed_date',
-        'service_date1_to', 'physician_signed_date', 'mailed_date', 'sec_mailed_date', 'percase_date'
-    ];
+        'service_date1_to', 'physician_signed_date', 'mailed_date',
+        'sec_mailed_date', 'percase_date'
+    ];*/
 
     /**
      * The name of the "created at" column.

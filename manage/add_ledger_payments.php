@@ -21,18 +21,67 @@
 
 <div class="fullwidth">
 
-<?php 
-/**
+<script>
+    var DSS_TRXN_PAYER_PRIMARY = <?php echo DSS_TRXN_PAYER_PRIMARY; ?>;
+    var dss_trxn_payer_labels_primary = "<?php echo $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]; ?>";
 
-*/
-?>
+    var DSS_TRXN_PAYER_SECONDARY = <?php echo DSS_TRXN_PAYER_SECONDARY; ?>;
+    var dss_trxn_payer_labels_secondary = "<?php echo $dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY]; ?>";
 
-<script type="text/javascript">
+    var DSS_TRXN_PAYER_PATIENT = <?php echo DSS_TRXN_PAYER_PATIENT; ?>;
+    var dss_trxn_payer_labels_patient = "<?php echo $dss_trxn_payer_labels[DSS_TRXN_PAYER_PATIENT]; ?>";
+
+    var DSS_TRXN_PAYER_WRITEOFF = <?php echo DSS_TRXN_PAYER_WRITEOFF; ?>;
+    var dss_trxn_payer_labels_writeoff = "<?php echo $dss_trxn_payer_labels[DSS_TRXN_PAYER_WRITEOFF]; ?>";
+
+    var DSS_TRXN_PAYER_DISCOUNT = <?php echo DSS_TRXN_PAYER_DISCOUNT; ?>;
+    var dss_trxn_payer_labels_discount = "<?php echo $dss_trxn_payer_labels[DSS_TRXN_PAYER_DISCOUNT]; ?>";
+
+    var DSS_TRXN_PYMT_CREDIT = <?php echo DSS_TRXN_PYMT_CREDIT; ?>;
+    var dss_trxn_pymt_type_labels_credit = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CREDIT]; ?>";
+
+    var DSS_TRXN_PYMT_DEBIT = <?php echo DSS_TRXN_PYMT_DEBIT; ?>;
+    var dss_trxn_pymt_type_labels_debit = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_DEBIT]; ?>";
+
+    var DSS_TRXN_PYMT_CHECK = <?php echo DSS_TRXN_PYMT_CHECK; ?>;
+    var dss_trxn_pymt_type_labels_check = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]; ?>";
+
+    var DSS_TRXN_PYMT_CASH = <?php echo DSS_TRXN_PYMT_CASH; ?>;
+    var dss_trxn_pymt_type_labels_cash = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]; ?>";
+
+    var DSS_TRXN_PYMT_WRITEOFF = <?php echo DSS_TRXN_PYMT_WRITEOFF; ?>;
+    var dss_trxn_pymt_type_labels_writeoff = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]; ?>";
+
+    var DSS_TRXN_PYMT_EFT = <?php echo DSS_TRXN_PYMT_EFT; ?>;
+    var dss_trxn_pymt_type_labels_eft = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT]; ?>";
+
+    jQuery(function($){
+        $('[name=empty-claim]').change(function(){
+            if (!$('#close:checkbox').is(':checked')) {
+                $('#close:checkbox').trigger('click');
+            }
+
+            $('#dispute:checkbox').prop('disabled', $(this).is(':checked'));
+        });
+
+        $('#close:checkbox').change(function(){
+            if ($(this).is(':checked')) {
+                $('#dispute').removeAttr('checked');
+                $('#ins_attach').show('slow');
+                $('#dispute_reason_div').hide('slow');
+            } else {
+                $('#ins_attach').hide('slow');
+                $('#dispute_reason_div').hide('slow');
+            }
+        });
+    });
+
 //CHECK LEDGER PAYMENT SUBMISSION
 function validSubmission(f)
 {
   returnval = true;
-  var alertMessage = '';
+  var alertMessage = '',
+      $forceClose = $('[name=empty-claim]');
 
   if (!authShown) {
   //CHECK PAYMENT IS ENTERED
@@ -55,7 +104,7 @@ function validSubmission(f)
       return false;
     }
 
-    if (hasAllowed && !hasPayment) {
+    if (hasAllowed && !hasPayment && !$forceClose.is(':checked')) {
       alertMessage = 'You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.';
       return false;
     }
@@ -65,7 +114,7 @@ function validSubmission(f)
     }
   });
 
-  if (!alertMessage.length && !$('.payment_amount.isValid').length) {
+  if (!alertMessage.length && !$('.payment_amount.isValid').length && !$forceClose.is(':checked')) {
     alertMessage = 'You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.'
   }
 
@@ -318,10 +367,20 @@ function showAuthBox()
     </div>
 
     <?php
-      $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."'";
-      $lq = $db->getResults($lsql);
-      foreach ($lq as $row) {
-    ?>
+
+    $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."'";
+    $lq = $db->getResults($lsql);
+
+    if (!$lq) { ?>
+        <p style="text-align: center;">
+            <label title="Click here if this claim is faulty and needs to be closed">
+                <input type="checkbox" name="empty-claim" value="1" />
+                This claim is empty and needs to be forcefully closed
+            </label>
+        </p>
+    <?php }
+
+    foreach ($lq as $row) { ?>
         <div style="height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;" class="claims">
         <span style="width:80px;margin: 0 10px 0 0; float:left;"><?php echo  $row['service_date']; ?></span>
         <span style="width:180px;margin: 0 10px 0 0; float:left;"><?php echo  $row['description']; ?></span>
@@ -339,11 +398,11 @@ function showAuthBox()
     <?php } ?>
 
     <br />
-    <input type="checkbox" id="close" name="close" onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1" />
-     <label>Close Claim</label>
+    <input type="checkbox" id="close" name="close" value="1" />
+     <label for="close">Close Claim</label>
     <br />
     <input type="checkbox" id="dispute" name="dispute" onclick=" if(this.checked){ $('#close').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' />
-     <label>Dispute</label>
+     <label for="dispute">Dispute</label>
     <div id="dispute_reason_div" style="display: none">
       <label>Reason for dispute:</label> <input type="text" name="dispute_reason" />
     </div>

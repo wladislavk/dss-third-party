@@ -52,6 +52,8 @@ $amountPayment = $db->getColumn("SELECT SUM(lp.amount) AS payment
     WHERE dl.primary_claim_id = '$claimId'
         AND lp.payer = '$trxnPayerPrimary'", 'payment');
 
+$amountPayment = $amountPayment ?: 0;
+
 $isPrimary = ClaimFormData::isPrimary($claimData['status']);
 $statusType = $isPrimary ? 'primary' : 'secondary';
 
@@ -98,6 +100,9 @@ if ($paymentsToAdd) {
     echo "<br />";
 
     payment_history_update($paymentId, $_SESSION['userid'], '');
+} elseif ($_POST['empty-claim']) {
+    $msg = "No payments were added, the claim will be forcefully closed.";
+    echo "<br />";
 } else {
     $msg = "No payments were added. Please verify the amounts and try again.";
     echo "<br />";
@@ -181,6 +186,8 @@ if ($newStatus !== false) {
         $updateClaimData['closed_by_office_type'] = 1;
     }
 
+    $updateClaimData = $db->escapeAssignmentList($updateClaimData);
+
     if (ClaimFormData::isStatus(['sent', 'efile-accepted', 'rejected', 'dispute'], $newStatus)) {
         $db->query("UPDATE dental_insurance
             SET $updateClaimData, mailed_date = NULL
@@ -194,33 +201,31 @@ if ($newStatus !== false) {
     claim_status_history_update($claimId, $newStatus, $claimData['status'], $_SESSION['userid']);
 }
 
-if ($secondaryStatus !== false) {
+if ($secondaryStatus !== false && empty($_POST['empty-claim'])) {
     $msg = 'Payment Successfully Added\n\nPrimary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.';
 
     ClaimFormData::createSecondaryClaim($patientId, $_SESSION['userid'], $claimId, $secondaryStatus);
 }
 
-if (empty($paymentId)) {
-    if ($paymentsToAdd) { ?>
-        <script type="text/javascript">
-            alert('Could not add ledger payments, please close this window and contact your system administrator');
-        </script>
-        <?php
-
+if (empty($paymentId) && empty($_POST['empty-claim'])) {
+    if ($paymentsToAdd) {
+        $msg = 'Could not add ledger payments, please close this window and contact your system administrator';
         error_log('Insert Ledger Payments: could not add ledger payments: ' . $paymentsToAdd);
-    } else { ?>
-        <script type="text/javascript">
-            alert('There were no payments to add. Please verify the amounts and try again.');
-            history.go(-1);
-        </script>
-    <?php }
+    } elseif ($_POST['empty-claim']) {
+        $msg = 'There were no payments to add. The claim has been forcefully closed.';
+    } else {
+        $msg = 'There were no payments to add. Please verify the amounts and try again.';
+    }
 } else {
-    claim_history_update($claimId, $_SESSION['userid'], $_SESSION['adminuserid']); ?>
-    <script type="text/javascript">
-        alert('<?= e($msg) ?>');
-        history.go(-1);
-    </script>
-<?php }
+    claim_history_update($claimId, $_SESSION['userid'], $_SESSION['adminuserid']);
+}
+
+?>
+<script type="text/javascript">
+    alert('<?= e($msg) ?>');
+    history.go(-1);
+</script>
+<?php
 
 /**
  * Auxiliary function to avoid duplicated code
@@ -256,7 +261,7 @@ function uploadInsuranceFile ($targetName, $tempName, Array $imageData) {
     ];
     $imageData = $db->escapeAssignmentList($imageData);
 
-    $db->query("INSERT INTO dental_insurance_file SET $imageData, addate = NOW");
+    $db->query("INSERT INTO dental_insurance_file SET $imageData, adddate = NOW()");
 
     return $banner1;
 }

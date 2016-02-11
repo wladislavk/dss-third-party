@@ -655,16 +655,26 @@ class ClaimFormData
     }
 
     /**
-     * Auxiliary function to determine if some status matches its label/name
+     * Auxiliary function to determine if some status matches any of the labels/names
      *
-     * @param string $name
-     * @param int    $status
+     * @param string|array $names
+     * @param int          $status
      * @return bool
      */
-    public static function isStatus ($name, $status) {
-        $statusList = self::statusListByName($name);
+    public static function isStatus ($names, $status) {
+        if (is_string($names)) {
+            $names = [$names];
+        }
 
-        return in_array($status, $statusList);
+        foreach ($names as $name) {
+            $statusList = self::statusListByName($name);
+
+            if (in_array($status, $statusList)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -1386,14 +1396,22 @@ class ClaimFormData
     /**
      * Create new claim item, including patient, doctor, and insurance data. Does not process ledger transactions.
      *
-     * @param int    $patientId
-     * @param int    $producerId
-     * @param string $sequence
-     * @param int    $primaryClaimId
-     * @param bool   $empty
+     * @param int      $patientId
+     * @param int      $producerId
+     * @param string   $sequence
+     * @param int      $primaryClaimId
+     * @param bool     $empty
+     * @param bool|int $forcedStatus
      * @return int
      */
-    public static function createClaim ($patientId, $producerId, $sequence, $primaryClaimId, $empty=false) {
+    public static function createClaim (
+        $patientId,
+        $producerId,
+        $sequence,
+        $primaryClaimId,
+        $empty=false,
+        $forcedStatus=false
+    ) {
         $db = new Db();
 
         $patientId = intval($patientId);
@@ -1412,6 +1430,16 @@ class ClaimFormData
             $claimData['amount_paid'] = self::amountPaidForClaim($primaryClaimId);
         }
 
+        if (
+            $forcedStatus !== false && self::statusListByStatus($forcedStatus) &&
+            (
+                ($sequence === 'primary' && self::isPrimary($forcedStatus)) ||
+                ($sequence === 'secondary' && self::isSecondary($forcedStatus))
+            )
+        ) {
+            $claimData['status'] = $forcedStatus;
+        }
+
         $preparedFields = self::prepareClaimDataFields($claimData);
 
         $newClaimQuery = "INSERT INTO dental_insurance SET
@@ -1425,8 +1453,8 @@ class ClaimFormData
          */
         if ($sequence === 'secondary') {
             $db->query("UPDATE dental_ledger
-              SET secondary_claim_id = '$newClaimId'
-              WHERE primary_claim_id = '$primaryClaimId'");
+                SET secondary_claim_id = '$newClaimId'
+                WHERE primary_claim_id = '$primaryClaimId'");
         }
 
         return $newClaimId;
@@ -1455,15 +1483,16 @@ class ClaimFormData
     }
 
     /**
-     * Does not process ledger transactions.
+     * Does not process ledger transactions. Allows to force an status, as some claims need it for Medicare reasons
      *
-     * @param int $patientId
-     * @param int $producerId
-     * @param int $primaryClaimId
+     * @param int      $patientId
+     * @param int      $producerId
+     * @param int      $primaryClaimId
+     * @param bool|int $forcedStatus
      * @return int
      */
-    public static function createSecondaryClaim ($patientId, $producerId, $primaryClaimId) {
-        return self::createClaim($patientId, $producerId, 'secondary', $primaryClaimId, false);
+    public static function createSecondaryClaim ($patientId, $producerId, $primaryClaimId, $forcedStatus=false) {
+        return self::createClaim($patientId, $producerId, 'secondary', $primaryClaimId, false, $forcedStatus);
     }
 
     /**

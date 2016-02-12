@@ -59,7 +59,7 @@ class InsuranceUpdate extends Request
             'insured_insurance_plan'            => 'string',
             'other_insured_insurance_plan'      => 'string',
             // 'reserved_local_use'
-            'another_plan'                      => 'regex:/^(?:NO|YES)$/',
+            'another_plan'                      => ['regex:/^(?:NO|YES)$/'],
             'patient_signature'                 => 'string',
             'patient_signed_date'               => 'string',
             'insured_signature'                 => 'string',
@@ -183,7 +183,7 @@ class InsuranceUpdate extends Request
             // 'ssn'
             'ein'                               => 'string',
             // 'patient_account_no'
-            'accept_assignment'                 => 'regex:/^(?:Yes|No|A|C)$/',
+            'accept_assignment'                 => ['regex:/^(?:Yes|No|A|C)$/'],
             'total_charge'                      => 'regex:/^(?:[1-9]+[0-9]*\,)?[0-9]+\.[0-9]{2}$/',
             'amount_paid'                       => 'regex:/^[0-9]+\.[0-9]{2}$/',
             'balance_due'                       => 'regex:/^[0-9]+\.[0-9]{2}$/',

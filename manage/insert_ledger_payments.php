@@ -144,12 +144,12 @@ if ($_POST['dispute'] == 1) { // Dispute
         /**
          * IF has secondary insurance AND there's amount due THEN create secondary claims
          */
-        if ($patientData['s_m_dss_file'] == 1 && ($amountPayment < $claimData['amount_due'])) { //secondary
-            if ($patientData['p_m_ins_type'] == 1) { //medicare
-                if ($patientData['s_m_ins_ass'] == 'Yes') {
+        if (isOptionSelected($patientData['has_s_m_ins']) && ($amountPayment < $claimData['amount_due'])) { //secondary
+            if (isOptionSelected($patientData['p_m_ins_type'])) { //medicare
+                if (isOptionSelected($patientData['s_m_ins_ass'])) { // Accept assignment of benefits
                     $msg = 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Sent".';
                     $secondaryStatus = DSS_CLAIM_SEC_SENT;
-                } else {
+                } else { // Payment to patient
                     $msg = 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Paid to Patient".';
                     $secondaryStatus = DSS_CLAIM_PAID_SEC_PATIENT;
                 }

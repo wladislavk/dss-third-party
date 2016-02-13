@@ -1469,10 +1469,21 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 						Name of Referring Provider or Other Source
 				<select name="name_referring_provider_qualifier">
                     <option value=""></option>
-                    <option value="DN_CLAIM" <?= $name_referring_provider_qualifier == 'DN_CLAIM' ? 'selected="selected"' : '' ?>>DN - Referring Provider (Claim level)</option>
-                    <option value="DN" <?= $name_referring_provider_qualifier == 'DN' ? 'selected="selected"' : '' ?>>DN - Referring Provider</option>
-                    <option value="DK" <?= $name_referring_provider_qualifier == 'DK' ? 'selected="selected"' : '' ?>>DK - Ordering Provider</option>
-					<option value="DQ" <?= $name_referring_provider_qualifier == 'DQ' ? 'selected="selected"' : '' ?>>DQ - Supervising Provider</option>
+                    <option value="DN_CLAIM" <?= $name_referring_provider_qualifier == 'DN_CLAIM' ? 'selected' : '' ?>>
+                        DN - Referring Provider (Claim level)
+                    </option>
+                    <option value="DN" <?= $name_referring_provider_qualifier == 'DN' ? 'selected' : '' ?>>
+                        DN - Referring Provider
+                    </option>
+                    <option value="DN_DME" <?= $name_referring_provider_qualifier == 'DN_DME' ? 'selected' : '' ?>>
+                        DN-DME - Referring Provider For DME Service Line 1
+                    </option>
+                    <option value="DK" <?= $name_referring_provider_qualifier == 'DK' ? 'selected' : '' ?>>
+                        DK - Ordering Provider
+                    </option>
+					<option value="DQ" <?= $name_referring_provider_qualifier == 'DQ' ? 'selected' : '' ?>>
+                        DQ - Supervising Provider
+                    </option>
 				</select>
 								<input type="text" value="<?php echo  $referring_provider; ?>" name="referring_provider" class="inbox_line3" size="20" />
 

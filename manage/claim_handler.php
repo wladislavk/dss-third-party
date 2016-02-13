@@ -121,7 +121,7 @@ function update_ledger_trxns($claim_id, $trxn_status) {
     $claim_id = intval($claim_id);
     $primary_claim_id = $db->getColumn("SELECT IF(primary_claim_id, primary_claim_id, insuranceid) AS claim_id
         FROM dental_insurance
-        WHERE insuranceid = '$claim_id'");
+        WHERE insuranceid = '$claim_id'", 'claim_id');
 
     // Add a placeholder to avoid problems with WHERE ... IN (...) clause
     $added_ledger_ids = [-1];

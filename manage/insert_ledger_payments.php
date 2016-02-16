@@ -47,7 +47,7 @@ $trxnPayerPrimary = DSS_TRXN_PAYER_PRIMARY;
 $amountPayment = $db->getColumn("SELECT SUM(lp.amount) AS payment
     FROM dental_ledger_payment lp
         JOIN dental_ledger dl ON lp.ledgerid = dl.ledgerid
-    WHERE dl.primary_claim_id = '$claimId'
+    WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')
         AND lp.payer = '$trxnPayerPrimary'", 'payment');
 
 $amountPayment = $amountPayment ?: 0;

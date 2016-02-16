@@ -78,7 +78,6 @@
 $docId = intval($_SESSION['docid']);
 $claimId = isset($_GET['claimid']) ? intval($_GET['claimid']) : 0;
 $patientId = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
-$trxnPayerTypePrimary = DSS_TRXN_PAYER_PRIMARY;
 
   $sql = "SELECT
         'ledger',
@@ -122,11 +121,6 @@ UNION
         AND dl.docid = '$docId'
         AND dl.patientid = '$patientId'
         AND dlp.amount != 0
-        AND IF(
-            dl.primary_claim_id = '$claimId',
-            dlp.payer = '$trxnPayerTypePrimary',
-            dlp.payer != '$trxnPayerTypePrimary'
-        )
 UNION
     SELECT
         'eob',

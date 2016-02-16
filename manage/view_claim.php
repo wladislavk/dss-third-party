@@ -78,6 +78,7 @@
 $docId = intval($_SESSION['docid']);
 $claimId = isset($_GET['claimid']) ? intval($_GET['claimid']) : 0;
 $patientId = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
+$trxnPayerTypePrimary = DSS_TRXN_PAYER_PRIMARY;
 
   $sql = "SELECT
         'ledger',
@@ -96,9 +97,9 @@ $patientId = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
         INNER JOIN dental_insurance di ON dl.primary_claim_id = di.insuranceid
         LEFT JOIN dental_users p ON dl.producerid = p.userid
         LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
-    WHERE (dl.primary_claim_id = $claimId OR dl.secondary_claim_id = $claimId)
-        AND dl.docid = $docId
-        AND dl.patientid = $patientId
+    WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')
+        AND dl.docid = '$docId'
+        AND dl.patientid = '$patientId'
     GROUP BY dl.ledgerid
 UNION
     SELECT
@@ -117,11 +118,15 @@ UNION
     FROM dental_ledger dl
         JOIN dental_users p ON dl.producerid = p.userid
         JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
-    WHERE (dl.primary_claim_id = $claimId OR dl.secondary_claim_id = $claimId)
-        AND dl.docid = $docId
-        AND dl.patientid = $patientId
-        AND (primary_claim_id = $claimId OR secondary_claim_id = $claimId)
+    WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')
+        AND dl.docid = '$docId'
+        AND dl.patientid = '$patientId'
         AND dlp.amount != 0
+        AND IF(
+            dl.primary_claim_id = '$claimId',
+            dlp.payer = '$trxnPayerTypePrimary',
+            dlp.payer != '$trxnPayerTypePrimary'
+        )
 UNION
     SELECT
         'eob',
@@ -138,7 +143,7 @@ UNION
         ''
     FROM dental_insurance_file dif
         JOIN dental_insurance di ON di.insuranceid = dif.claimid
-    WHERE dif.claimid = $claimId";
+    WHERE dif.claimid = '$claimId'";
 
   if (isset($_REQUEST['sort'])) {
     if ($_REQUEST['sort'] == 'producer') {

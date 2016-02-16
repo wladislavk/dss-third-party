@@ -1423,6 +1423,13 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
   $html = str_replace('display_file.php?f=', '../../../shared/q_file/' , $html);
   $html = tidyHtml($html);
 
+  /**
+   * @see CS-112
+   * Most letters don't add margin space between the patient details table and the doctor greeting paragraph
+   * These changes were done by trial and error, as the inline styles don't work as expected
+   */
+  $html = preg_replace('@(</table>[\s\r\t\n]*<p>)(Dear)@', '$1&nbsp;<br />$2', $html);
+
   // output the HTML content
   $pdf->writeHTML($html, true, false, true, false, '');
   //Close and output PDF document

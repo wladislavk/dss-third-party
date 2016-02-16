@@ -30,7 +30,7 @@ class InsuranceStatusHistoriesApiTest extends TestCase
      * Put to /api/v1/insurance-status-histories/{id} -> InsuranceStatusHistoriesController@update method
      * 
      */
-    public function testUpdateInsuranceStatusHistor()
+    public function testUpdateInsuranceStatusHistory()
     {
         $insuranceStatusHistoryTestRecord = factory(InsuranceStatusHistory::class)->create();
 
@@ -51,7 +51,7 @@ class InsuranceStatusHistoriesApiTest extends TestCase
      * Delete to /api/v1/insurance-status-histories/{id} -> InsuranceStatusHistoriesController@destroy method
      * 
      */
-    public function testDeleteInsuranceStatusHistor()
+    public function testDeleteInsuranceStatusHistory()
     {
         $insuranceStatusHistoryTestRecord = factory(InsuranceStatusHistory::class)->create();
 

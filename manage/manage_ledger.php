@@ -206,7 +206,7 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
                   '',
                   dlp.amount,
                   '',
-                  dl.primary_claim_id,
+                  IF(dl.secondary_claim_id && dlp.is_secondary, dl.secondary_claim_id, dl.primary_claim_id),
       dlp.payer,
       dlp.payment_type,
       '',

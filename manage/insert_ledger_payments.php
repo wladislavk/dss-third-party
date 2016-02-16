@@ -44,13 +44,29 @@ $ledgerItems = $db->getResults("SELECT *
     WHERE (primary_claim_id = '$claimId' OR secondary_claim_id = '$claimId')");
 
 $trxnPayerPrimary = DSS_TRXN_PAYER_PRIMARY;
-$amountPayment = $db->getColumn("SELECT SUM(lp.amount) AS payment
+$ledgerAmounts = $db->getRow("SELECT
+        SUM(lp.amount) AS payment,
+        COUNT(id) AS num_payments,
+        SUM(IF(dl.primary_claim_id = '$claimId', 1, 0)) AS num_primary,
+        SUM(IF(dl.secondary_claim_id = '$claimId', 1, 0)) AS num_secondary
     FROM dental_ledger_payment lp
         JOIN dental_ledger dl ON lp.ledgerid = dl.ledgerid
     WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')
-        AND lp.payer = '$trxnPayerPrimary'", 'payment');
+        AND lp.payer = '$trxnPayerPrimary'");
 
-$amountPayment = $amountPayment ?: 0;
+$amountPayment = $ledgerAmounts ? $ledgerAmounts['payment'] : 0;
+$isLedgerSecondary = $ledgerAmounts ? !!$ledgerAmounts['num_secondary'] : 0;
+$hasLedgerInconsistencies = $ledgerAmounts ?
+    $ledgerAmounts['num_primary'] != $ledgerAmounts['num_payments'] &&
+    $ledgerAmounts['num_secondary'] != $ledgerAmounts['num_payments']
+    : false;
+
+if ($hasLedgerInconsistencies) {
+    $ledgerIds = array_pluck($ledgerItems, 'ledgerid');
+    $ledgerIds = join(', ', $ledgerIds);
+
+    error_log("Add Ledger Payments: the following ledger ids have inconsistencies in primary/secondary claim id link - $ledgerIds");
+}
 
 $isPrimary = ClaimFormData::isPrimary($claimData['status']);
 $statusType = $isPrimary ? 'primary' : 'secondary';
@@ -75,7 +91,8 @@ foreach ($ledgerItems as $row) {
             'amount' => str_replace(',', '', $_POST['amount_' . $ledgerId]),
             'amount_allowed' => str_replace(',', '', $_POST['allowed_' . $ledgerId]),
             'payment_type' => $_POST['payment_type'],
-            'payer' => $_POST['payer']
+            'payer' => $_POST['payer'],
+            'is_secondary' => $isLedgerSecondary
         ]) . ')';
     }
 }
@@ -91,7 +108,8 @@ if ($paymentsToAdd) {
             amount,
             amount_allowed,
             payment_type,
-            payer
+            payer,
+            is_secondary
         ) VALUES $paymentsToAdd");
 
     $msg = "$totalPayments payments have been added.";

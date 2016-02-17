@@ -308,105 +308,105 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
 
 $factory->define(DentalSleepSolutions\Eloquent\Dental\InsurancePreauth::class, function ($faker) {
     return [
-        'doc_id'                            => $faker->randomDigit
-        'patient_id'                        => $faker->randomDigit
-        'ins_co'                            => $faker->sentence($nbWords = 5)
-        'ins_rank'                          => $faker->word
-        'ins_phone'                         => $faker->numerify('##########')
-        'patient_ins_group_id'              => $faker->numerify('####')
-        'patient_ins_id'                    => $faker->numerify('#####')
+        'doc_id'                            => $faker->randomDigit,
+        'patient_id'                        => $faker->randomDigit,
+        'ins_co'                            => $faker->sentence($nbWords = 5),
+        'ins_rank'                          => $faker->word,
+        'ins_phone'                         => $faker->numerify('##########'),
+        'patient_ins_group_id'              => $faker->numerify('####'),
+        'patient_ins_id'                    => $faker->numerify('#####'),
         'patient_firstname'                 => $faker->firstNameMale,
-        'patient_lastname'                  => $faker->lastname
-        'patient_add1'                      => $faker->address
-        'patient_add2'                      => $faker->address
-        'patient_city'                      => $faker->city
-        'patient_state'                     => $faker->stateAbbr
-        'patient_zip'                       => $faker->numerify('#####')
-        'patient_dob'                       => $faker->date()
-        'insured_first_name'                => $faker->firstNameMale
-        'insured_last_name'                 => $faker->lastname
-        'insured_dob'                       => $faker->date()
-        'doc_npi'                           => $faker->numerify('#########')
-        'referring_doc_npi'                 => $faker->numerify('#########')
-        'trxn_code_amount'                  => $faker->numerify('##.##')
-        'diagnosis_code'                    => $faker->numerify('##.##')
-        'date_of_call'                      => $faker->date()
-        'insurance_rep'                     => $faker->word
-        'call_reference_num'                => $faker->numerify('#####')
-        'doc_medicare_npi'                  => $faker->numerify('#########')
-        'doc_tax_id_or_ssn'                 => $faker->numerify('#####')
-        'ins_effective_date'                => $faker->date()
-        'ins_cal_year_start'                => $faker->date()
-        'ins_cal_year_end'                  => $faker->date()
-        'trxn_code_covered'                 => $faker->randomDigit
-        'code_covered_notes'                => $faker->sentence($nbWords = 5)
-        'has_out_of_network_benefits'       => $faker->randomDigit
-        'out_of_network_percentage'         => $faker->randomDigit
-        'is_hmo'                            => $faker->randomDigit
-        'hmo_date_called'                   => $faker->date()
-        'hmo_date_received'                 => $faker->date()
-        'hmo_needs_auth'                    => $faker->randomDigit
-        'hmo_auth_date_requested'           => $faker->date()
-        'hmo_auth_date_received'            => $faker->date()
-        'hmo_auth_notes'                    => $faker->sentence($nbWords = 5)
-        'in_network_percentage'             => $faker->randomDigit
-        'in_network_appeal_date_sent'       => $faker->date()
-        'in_network_appeal_date_received'   => $faker->date()
-        'is_pre_auth_required'              => $faker->randomDigit
-        'verbal_pre_auth_name'              => $faker->firstNameMale
-        'verbal_pre_auth_ref_num'           => $faker->numerify('#####')
-        'verbal_pre_auth_notes'             => $faker->sentence($nbWords = 5)
-        'written_pre_auth_notes'            => $faker->sentence($nbWords = 5)
-        'written_pre_auth_date_received'    => $faker->date()
-        'front_office_request_date'         => $faker->date()
-        'status'                            => $faker->randomDigit
-        'patient_deductible'                => $faker->numerify('##.##')
-        'patient_amount_met'                => $faker->numerify('##.##')
-        'family_deductible'                 => $faker->numerify('##.##')
-        'family_amount_met'                 => $faker->numerify('##.##')
-        'deductible_reset_date'             => $faker->date()
-        'out_of_pocket_met'                 => $faker->randomDigit
-        'patient_amount_left_to_meet'       => $faker->numerify('##.##')
-        'expected_insurance_payment'        => $faker->numerify('##.##')
-        'expected_patient_payment'          => $faker->numerify('##.##')
-        'network_benefits'                  => $faker->randomDigit
-        'viewed'                            => $faker->randomDigit
-        'date_completed'                    => $faker->date()
-        'userid'                            => $faker->randomDigit
-        'how_often'                         => $faker->numerify('#')
-        'patient_phone'                     => $faker->numerify('##########')
-        'pre_auth_num'                      => $faker->numerify('#########')
-        'family_amount_left_to_meet'        => $faker->numerify('##.##')
-        'deductible_from'                   => $faker->randomDigit
-        'reject_reason'                     => $faker->sentence($nbWords = 6)
-        'invoice_date'                      => $faker->date()
-        'invoice_amount'                    => $faker->numerify('##.##')
-        'invoice_status'                    => $faker->randomDigit
-        'invoice_id'                        => $faker->randomDigit
-        'updated_by'                        => $faker->randomDigit
-        'doc_name'                          => $faker->name
-        'doc_practice'                      => $faker->word
-        'doc_address'                       => $faker->address
-        'doc_phone'                         => $faker->numerify('##########')
-        'in_deductible_from'                => $faker->randomDigit
-        'in_patient_deductible'             => $faker->numerify('##.##')
-        'in_patient_amount_met'             => $faker->numerify('##.##')
-        'in_patient_amount_left_to_meet'    => $faker->numerify('##.##')
-        'in_family_deductible'              => $faker->numerify('##.##')
-        'in_family_amount_met'              => $faker->numerify('##.##')
-        'in_family_amount_left_to_meet'     => $faker->numerify('##.##')
-        'in_deductible_reset_date'          => $faker->date()
-        'in_out_of_pocket_met'              => $faker->randomDigit
-        'in_expected_insurance_payment'     => $faker->numerify('##.##')
-        'in_expected_patient_payment'       => $faker->numerify('##.##')
-        'in_call_reference_num'             => $faker->numerify('###')
-        'has_in_network_benefits'           => $faker->randomDigit
-        'in_is_pre_auth_required'           => $faker->randomDigit
-        'in_verbal_pre_auth_name'           => $faker->name
-        'in_verbal_pre_auth_ref_num'        => $faker->name
-        'in_verbal_pre_auth_notes'          => $faker->sentence($nbWords = 5)
-        'in_written_pre_auth_date_received' => $faker->date()
-        'in_pre_auth_num'                   => $faker->numerify('###')
+        'patient_lastname'                  => $faker->lastname,
+        'patient_add1'                      => $faker->address,
+        'patient_add2'                      => $faker->address,
+        'patient_city'                      => $faker->city,
+        'patient_state'                     => $faker->stateAbbr,
+        'patient_zip'                       => $faker->numerify('#####'),
+        'patient_dob'                       => $faker->date(),
+        'insured_first_name'                => $faker->firstNameMale,
+        'insured_last_name'                 => $faker->lastname,
+        'insured_dob'                       => $faker->date(),
+        'doc_npi'                           => $faker->numerify('#########'),
+        'referring_doc_npi'                 => $faker->numerify('#########'),
+        'trxn_code_amount'                  => $faker->numerify('##.##'),
+        'diagnosis_code'                    => $faker->numerify('##.##'),
+        'date_of_call'                      => $faker->date(),
+        'insurance_rep'                     => $faker->word,
+        'call_reference_num'                => $faker->numerify('#####'),
+        'doc_medicare_npi'                  => $faker->numerify('#########'),
+        'doc_tax_id_or_ssn'                 => $faker->numerify('#####'),
+        'ins_effective_date'                => $faker->date(),
+        'ins_cal_year_start'                => $faker->date(),
+        'ins_cal_year_end'                  => $faker->date(),
+        'trxn_code_covered'                 => $faker->randomDigit,
+        'code_covered_notes'                => $faker->sentence($nbWords = 5),
+        'has_out_of_network_benefits'       => $faker->randomDigit,
+        'out_of_network_percentage'         => $faker->randomDigit,
+        'is_hmo'                            => $faker->randomDigit,
+        'hmo_date_called'                   => $faker->date(),
+        'hmo_date_received'                 => $faker->date(),
+        'hmo_needs_auth'                    => $faker->randomDigit,
+        'hmo_auth_date_requested'           => $faker->date(),
+        'hmo_auth_date_received'            => $faker->date(),
+        'hmo_auth_notes'                    => $faker->sentence($nbWords = 5),
+        'in_network_percentage'             => $faker->randomDigit,
+        'in_network_appeal_date_sent'       => $faker->date(),
+        'in_network_appeal_date_received'   => $faker->date(),
+        'is_pre_auth_required'              => $faker->randomDigit,
+        'verbal_pre_auth_name'              => $faker->firstNameMale,
+        'verbal_pre_auth_ref_num'           => $faker->numerify('#####'),
+        'verbal_pre_auth_notes'             => $faker->sentence($nbWords = 5),
+        'written_pre_auth_notes'            => $faker->sentence($nbWords = 5),
+        'written_pre_auth_date_received'    => $faker->date(),
+        'front_office_request_date'         => $faker->date(),
+        'status'                            => $faker->randomDigit,
+        'patient_deductible'                => $faker->numerify('##.##'),
+        'patient_amount_met'                => $faker->numerify('##.##'),
+        'family_deductible'                 => $faker->numerify('##.##'),
+        'family_amount_met'                 => $faker->numerify('##.##'),
+        'deductible_reset_date'             => $faker->date(),
+        'out_of_pocket_met'                 => $faker->randomDigit,
+        'patient_amount_left_to_meet'       => $faker->numerify('##.##'),
+        'expected_insurance_payment'        => $faker->numerify('##.##'),
+        'expected_patient_payment'          => $faker->numerify('##.##'),
+        'network_benefits'                  => $faker->randomDigit,
+        'viewed'                            => $faker->randomDigit,
+        'date_completed'                    => $faker->date(),
+        'userid'                            => $faker->randomDigit,
+        'how_often'                         => $faker->numerify('#'),
+        'patient_phone'                     => $faker->numerify('##########'),
+        'pre_auth_num'                      => $faker->numerify('#########'),
+        'family_amount_left_to_meet'        => $faker->numerify('##.##'),
+        'deductible_from'                   => $faker->randomDigit,
+        'reject_reason'                     => $faker->sentence($nbWords = 6),
+        'invoice_date'                      => $faker->date(),
+        'invoice_amount'                    => $faker->numerify('##.##'),
+        'invoice_status'                    => $faker->randomDigit,
+        'invoice_id'                        => $faker->randomDigit,
+        'updated_by'                        => $faker->randomDigit,
+        'doc_name'                          => $faker->name,
+        'doc_practice'                      => $faker->word,
+        'doc_address'                       => $faker->address,
+        'doc_phone'                         => $faker->numerify('##########'),
+        'in_deductible_from'                => $faker->randomDigit,
+        'in_patient_deductible'             => $faker->numerify('##.##'),
+        'in_patient_amount_met'             => $faker->numerify('##.##'),
+        'in_patient_amount_left_to_meet'    => $faker->numerify('##.##'),
+        'in_family_deductible'              => $faker->numerify('##.##'),
+        'in_family_amount_met'              => $faker->numerify('##.##'),
+        'in_family_amount_left_to_meet'     => $faker->numerify('##.##'),
+        'in_deductible_reset_date'          => $faker->date(),
+        'in_out_of_pocket_met'              => $faker->randomDigit,
+        'in_expected_insurance_payment'     => $faker->numerify('##.##'),
+        'in_expected_patient_payment'       => $faker->numerify('##.##'),
+        'in_call_reference_num'             => $faker->numerify('###'),
+        'has_in_network_benefits'           => $faker->randomDigit,
+        'in_is_pre_auth_required'           => $faker->randomDigit,
+        'in_verbal_pre_auth_name'           => $faker->name,
+        'in_verbal_pre_auth_ref_num'        => $faker->name,
+        'in_verbal_pre_auth_notes'          => $faker->sentence($nbWords = 5),
+        'in_written_pre_auth_date_received' => $faker->date(),
+        'in_pre_auth_num'                   => $faker->numerify('###'),
         'in_written_pre_auth_notes'         => $faker->sentence($nbWords = 5)
     ];
 });

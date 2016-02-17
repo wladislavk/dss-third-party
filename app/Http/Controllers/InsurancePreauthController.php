@@ -53,11 +53,7 @@ class InsurancePreauthController extends Controller
      */
     public function store(InsPreauth $resources, InsurancePreauthStore $request)
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
+        $resource = $resources->create($request->all());
 
         return ApiResponse::responseOk('Resource created', $resource);
     }

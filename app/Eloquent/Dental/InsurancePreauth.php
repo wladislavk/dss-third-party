@@ -1,13 +1,16 @@
 <?php
 
-namespace DentalSleepSolutions\Eloquent;
+namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\WithoutCreatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as Repository;
 
 class InsurancePreauth extends Model implements Resource, Repository
 {
+    use WithoutCreatedTimestamp;
+
     /**
      * Guarded attributes
      *

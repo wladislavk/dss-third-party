@@ -15,7 +15,7 @@ function getLedgerPaymentAmount ($claimId, $payerType=false) {
     $db = new Db();
     $claimId = intval($claimId);
 
-    $andPayerTypeConditional = $payerType === false ? '' : "AND dl.payer = '$payerType'";
+    $andPayerTypeConditional = $payerType === false ? '' : "AND dlp.payer = '$payerType'";
 
     $query = "SELECT SUM(dlp.amount) AS paid_amount
         FROM dental_ledger dl

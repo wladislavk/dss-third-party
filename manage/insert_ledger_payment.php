@@ -11,25 +11,20 @@ if (!empty($_POST['payments'])) {
     $paymentIds = insertLedgerPayments (0, $_POST['payments'], 0, 0, $_SESSION['userid'], $_SESSION['adminid']);
 }
 
-if (empty($paymentIds)) { ?>
-    <script>
-        function eraseCookie (name) {
-            var date = new Date();
-            date.setTime(date.getTime() + (-24*60*60*1000));
-            document.cookie = name + "=; expires=" + date.toGMTString() + "; path=/";
-        }
-        alert('Could not add ledger payments, please close this window and contact your system administrator');
-        eraseCookie('tempforledgerentry');
-    </script>
-<?php } else { ?>
-    <script>
-        function eraseCookie (name) {
-            var date = new Date();
-            date.setTime(date.getTime() + (-24*60*60*1000));
-            document.cookie = name + "=; expires=" + date.toGMTString() + "; path=/";
-        }
-        eraseCookie('tempforledgerentry');
-        alert('Payment(s) successfully added!');
-        parent.window.location = parent.window.location;
-    </script>
-<?php }
+if (empty($paymentIds)) {
+    $alertMessage = 'It was no possible to add any payments due technical reasons. Please verify the amounts and try again.';
+} else {
+    $alertMessage = count($paymentIds) . ' payment(s) added successfully.';
+}
+
+?>
+<script>
+    function eraseCookie (name) {
+        var date = new Date();
+        date.setTime(date.getTime() + (-24*60*60*1000));
+        document.cookie = name + "=; expires=" + date.toGMTString() + "; path=/";
+    }
+    eraseCookie('tempforledgerentry');
+    alert('<?= e($alertMessage) ?>');
+    parent.window.location = parent.window.location;
+</script>

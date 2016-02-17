@@ -31,11 +31,4 @@ class InsurancePreauth extends Model implements Resource, Repository
      * @var string
      */
     protected $primaryKey = 'id';
-
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
-    const CREATED_AT = 'adddate';
 }

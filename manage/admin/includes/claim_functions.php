@@ -433,7 +433,7 @@ if (empty($prior_authorization_number)) {
 }
 
 /**
- * Auxiliary function to retrieve the Eligible responses related to it. The response can be in one of three tables.
+ * Auxiliary function to retrieve the Eligible responses related to a claim. The response can be in one of three tables.
  *
  * @param int $claimId
  * @return array

@@ -9,3 +9,4 @@ SET ledger.primary_claim_id = secondary.primary_claim_id
 WHERE ledger.primary_claim_id = ledger.secondary_claim_id;
 
 ALTER TABLE dental_ledger_payment ADD COLUMN is_secondary TINYINT NOT NULL DEFAULT 0;
+ALTER TABLE dental_ledger_payment_history ADD COLUMN is_secondary TINYINT NOT NULL DEFAULT 0;

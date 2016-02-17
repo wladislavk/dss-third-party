@@ -1,9 +1,18 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
 session_start();
-require_once('admin/includes/main_include.php');
-include("includes/sescheck.php");
-require_once('includes/constants.inc');
-$sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
+
+require_once __DIR__ . '/admin/includes/main_include.php';
+require_once __DIR__ . '/includes/sescheck.php';
+require_once __DIR__ . '/includes/constants.inc';
+
+$claimId = intval($_GET['cid']);
+
+$sql = "SELECT *
+    FROM dental_ledger_payment dlp
+        JOIN dental_ledger dl ON dlp.ledgerid = dl.ledgerid
+    WHERE dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId'";
 $p_sql = mysqli_query($con, $sql);
 $payments = mysqli_fetch_array($p_sql);
 $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['cid']."';";
@@ -202,12 +211,15 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 </div>
 
 <?php
-$sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
+$sql = "SELECT dlp.*, dl.description
+    FROM dental_ledger_payment dlp
+        JOIN dental_ledger dl ON dlp.ledgerid = dl.ledgerid
+    WHERE dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId'";
 $p_sql = mysqli_query($con, $sql);
-if(mysqli_num_rows($p_sql)==0){
-?><div style="margin-left:50px; color:#fff;">No Previous Payments</div><?php
-}else{
-?>
+
+if (mysqli_num_rows($p_sql) == 0) { ?>
+    <div style="margin-left:50px; color:#fff;">No Previous Payments</div>
+<?php } else { ?>
 <div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width:83px;">Payment Date</span>
 <span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;" >Entry Date</span>
@@ -284,7 +296,7 @@ function updateType(payer){
 </div>
 <div style="clear:both;"></div>
 <?php
-$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_GET['cid'];
+$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id = '$claimId' OR secondary_claim_id = '$claimId'";
 $lq = mysqli_query($con, $lsql);
 while($row = mysqli_fetch_assoc($lq)){
 ?>
@@ -292,16 +304,45 @@ while($row = mysqli_fetch_assoc($lq)){
 <span style="width:80px;margin: 0 10px 0 0; float:left;"><?= $row['service_date']; ?></span>
 <span style="width:180px;margin: 0 10px 0 0; float:left;"><?= $row['description']; ?></span>
 <span style="width:100px;margin: 0 10px 0 0; float:left;">$<?= $row['amount']; ?></span>
-<span style="width:100px;margin: 0 10px 0 0; float:left;"><input type="text" style="width:90px;" name="allowed" value="<?= $row['allowed']; ?>" /></span>
-<span style="width:100px;margin: 0 10px 0 0; float:left;"><input type="text" style="width:90px;" name="allowed" value="<?= $row['ins_paid']; ?>" /></span>
-<span style="width:100px;margin: 0 10px 0 0; float:left;"><input type="text" style="width:90px;" name="deductible" value="<?= $row['deductible']; ?>" /></span>
-<span style="width:100px;margin: 0 10px 0 0; float:left;"><input type="text" style="width:90px;" name="copay" value="<?= $row['copay']; ?>" /></span>
-<span style="width:100px;margin: 0 10px 0 0; float:left;"><input type="text" style="width:90px;" name="coins" value="<?= $row['coins']; ?>" /></span>
-<span style="width:100px;margin: 0 10px 0 0; float:left;"><input type="text" style="width:90px;" name="overpaid" value="<?= $row['overpaid']; ?>" /></span>
-<span style="width:100px;margin: 0 10px 0 0; float:left;"><input type="text" style="width:90px;" name="followup" value="<?= $row['followup']; ?>" /></span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></span>
-<span style="float:left;font-weight:bold;"><input class="payment_amount dollar_input" style="width:90px;" type="text" name="amount_<?= $row['ledgerid']; ?>" /></span>
-<span style="width:100px;margin: 0 10px 0 0; float:left;"><input type="text" style="width:90px;" name="note" value="<?= $row['note']; ?>" /></span>
+<span style="width:100px;margin: 0 10px 0 0; float:left;">
+    <input type="text" style="width:90px;" name="payments[<?= $row['ledgerid'] ?>][0][allowed]"
+        value="<?= $row['allowed']; ?>" />
+</span>
+<span style="width:100px;margin: 0 10px 0 0; float:left;">
+    <input type="text" style="width:90px;" name="payments[<?= $row['ledgerid'] ?>][0][ins_paid]"
+        value="<?= $row['ins_paid']; ?>" />
+</span>
+<span style="width:100px;margin: 0 10px 0 0; float:left;">
+    <input type="text" style="width:90px;" name="payments[<?= $row['ledgerid'] ?>][0][deductible]"
+        value="<?= $row['deductible']; ?>" />
+</span>
+<span style="width:100px;margin: 0 10px 0 0; float:left;">
+    <input type="text" style="width:90px;" name="payments[<?= $row['ledgerid'] ?>][0][copay]"
+        value="<?= $row['copay']; ?>" />
+</span>
+<span style="width:100px;margin: 0 10px 0 0; float:left;">
+    <input type="text" style="width:90px;" name="payments[<?= $row['ledgerid'] ?>][0][coins]"
+        value="<?= $row['coins']; ?>" />
+</span>
+<span style="width:100px;margin: 0 10px 0 0; float:left;">
+    <input type="text" style="width:90px;" name="payments[<?= $row['ledgerid'] ?>][0][overpaid]"
+        value="<?= $row['overpaid']; ?>" />
+</span>
+<span style="width:100px;margin: 0 10px 0 0; float:left;">
+    <input type="text" style="width:90px;" name="payments[<?= $row['ledgerid'] ?>][0][followup]"
+        value="<?= $row['followup']; ?>" />
+</span>
+<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">
+    <input style="width:140px" type="text" name="payments[<?= $row['ledgerid'] ?>][0][payment_date]"
+        value="<?= date('m/d/Y'); ?>" />
+</span>
+<span style="float:left;font-weight:bold;">
+    <input class="payment_amount dollar_input" style="width:90px;" type="text"
+        name="payments[<?= $row['ledgerid'] ?>][0][amount]" />
+</span>
+<span style="width:100px;margin: 0 10px 0 0; float:left;">
+    <input type="text" style="width:90px;" name="note" value="<?= $row['note']; ?>" />
+</span>
 <div style="clear:both;"></div>
 </div>
 <div style="clear:both;"></div>

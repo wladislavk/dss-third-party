@@ -608,13 +608,12 @@ if($insid!='' && $insid!=0){
   return $hid;
 }
 
-function payment_history_update($paymentid, $userid, $adminid){
+function payment_history_update ($paymentId, $userId, $adminId) {
     $db = new Db();
-    $con = $GLOBALS['con'];
 
-    $paymentid = intval($paymentid);
-    $userid = intval($userid);
-    $adminid = intval($adminid);
+    $paymentId = intval($paymentId);
+    $userId = intval($userId);
+    $adminId = intval($adminId);
 
     $sql = "INSERT INTO dental_ledger_payment_history (
             paymentid,
@@ -632,6 +631,7 @@ function payment_history_update($paymentid, $userid, $adminid){
             overpaid,
             followup,
             note,
+            is_secondary,
             updated_by_user,
             updated_by_admin,
             updated_at
@@ -652,11 +652,12 @@ function payment_history_update($paymentid, $userid, $adminid){
             overpaid,
             followup,
             note,
-            $userid,
-            $adminid,
-            now()
+            is_secondary,
+            '$userId',
+            '$adminId',
+            NOW()
         FROM dental_ledger_payment p
-        WHERE p.id = $paymentid";
+        WHERE p.id = '$paymentId'";
 
     return $db->getInsertId($sql);
 }

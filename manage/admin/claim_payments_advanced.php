@@ -1,35 +1,23 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';?>
+<?php
+namespace Ds3\Libraries\Legacy;
 
-<?
-require '../includes/constants.inc';
+require_once __DIR__ . '/includes/top.htm';
+require_once __DIR__ . '/../includes/constants.inc';
 
+$claimId = intval($_GET['id']);
 
-$c_sql = "SELECT CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_name, ' ',u.last_name) doc_name 
-                FROM dental_insurance i
-                JOIN dental_patients p ON i.patientid=p.patientid
-                JOIN dental_users u ON u.userid=p.docid
-		WHERE i.insuranceid='".mysqli_real_escape_string($con, $_GET['id'])."'";
+$c_sql = "SELECT CONCAT(p.firstname, ' ', p.lastname) AS pat_name, CONCAT(u.first_name, ' ', u.last_name) AS doc_name
+    FROM dental_insurance i
+        JOIN dental_patients p ON i.patientid = p.patientid
+        JOIN dental_users u ON u.userid = p.docid
+    WHERE i.insuranceid = '$claimId'";
 $c_q = mysqli_query($con, $c_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $c = mysqli_fetch_assoc($c_q);
 
-
-?>
-<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/popup.js" type="text/javascript"></script>
-<link rel="stylesheet" href="css/support.css" type="text/css" />
-
-<span class="admin_head">
-	Claim Payment - Pt: <?= $c['pat_name']; ?> - Claim: <?= $_GET['id']; ?> - Account: <?= $c['doc_name']; ?>
-</span>
-<br /><br />
-
-<br /><br />
-<div align="center" class="red">
-	<? echo $_GET['msg'];?>
-</div>
-<?php
-
-$sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['id']."' ;";
+$sql = "SELECT *
+    FROM dental_ledger_payment dlp
+        JOIN dental_ledger dl ON dlp.ledgerid = dl.ledgerid
+    WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')";
 $p_sql = mysqli_query($con, $sql);
 $payments = mysqli_fetch_array($p_sql);
 $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['id']."';";
@@ -41,14 +29,12 @@ $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escap
 $paq = mysqli_query($con, $pasql);
 $num_pa = mysqli_num_rows($paq);
 
-
 $sasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con, $_GET['id'])."' AND
                 (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
 $saq = mysqli_query($con, $sasql);
 $num_sa = mysqli_num_rows($saq);
 
 ?>
-
 <script type="text/javascript">
 //CHECK LEDGER PAYMENT SUBMISSION
 function validSubmission(f){
@@ -170,13 +156,29 @@ if(f.dispute.checked){
 return returnval;
 }
 </script>
+<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
+<script src="popup/popup.js" type="text/javascript"></script>
+<link rel="stylesheet" href="css/support.css" type="text/css" />
+
+<span class="admin_head">
+	Claim Payment - Pt: <?= $c['pat_name']; ?> - Claim: <?= $_GET['id']; ?> - Account: <?= $c['doc_name']; ?>
+</span>
+<br /><br />
+
+<br /><br />
+<div align="center" class="red">
+  <? echo $_GET['msg'];?>
+</div>
 <?php
-$sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['id']."' ;";
+$sql = "SELECT dlp.*, dl.description
+    FROM dental_ledger_payment dlp
+        JOIN dental_ledger dl ON dlp.ledgerid = dl.ledgerid
+    WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')";
 $p_sql = mysqli_query($con, $sql);
-if(mysqli_num_rows($p_sql)==0){
-?><div style="margin-left:50px; ">No Previous Payments</div><?php
-}else{
-?>
+
+if (mysqli_num_rows($p_sql) == 0) { ?>
+    <div style="margin-left:50px; ">No Previous Payments</div>
+<?php } else { ?>
 <div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width:83px;">Payment Date</span>
 <span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;" >Entry Date</span>
@@ -248,7 +250,7 @@ input{ width: 60px; }
 <td>Note</td>
 </tr>
 <?php
-$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_GET['id'];
+$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id = '$claimId' OR secondary_claim_id = '$claimId'";
 $lq = mysqli_query($con, $lsql);
 while($row = mysqli_fetch_assoc($lq)){
 ?>

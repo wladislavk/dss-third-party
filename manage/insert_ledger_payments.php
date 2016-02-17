@@ -7,13 +7,7 @@ require_once __DIR__ . '/includes/sescheck.php';
 require_once __DIR__ . '/includes/authorization_functions.php';
 require_once __DIR__ . '/admin/includes/claim_functions.php';
 require_once __DIR__ . '/includes/claim_functions.php';
-
-?>
-<html>
-<head>
-</head>
-<body>
-<?php
+require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
 if (!authorize($_POST['username'], $_POST['password'], DSS_USER_TYPE_ADMIN)) { ?>
     <script type="text/javascript">
@@ -39,83 +33,17 @@ $patientData = $db->getRow("SELECT *
     FROM dental_patients p
     WHERE p.patientid = '$patientId'");
 
-$ledgerItems = $db->getResults("SELECT *
-    FROM dental_ledger
-    WHERE (primary_claim_id = '$claimId' OR secondary_claim_id = '$claimId')");
-
-$trxnPayerPrimary = DSS_TRXN_PAYER_PRIMARY;
-$ledgerAmounts = $db->getRow("SELECT
-        SUM(lp.amount) AS payment,
-        COUNT(id) AS num_payments,
-        SUM(IF(dl.primary_claim_id = '$claimId', 1, 0)) AS num_primary,
-        SUM(IF(dl.secondary_claim_id = '$claimId', 1, 0)) AS num_secondary
-    FROM dental_ledger_payment lp
-        JOIN dental_ledger dl ON lp.ledgerid = dl.ledgerid
-    WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')
-        AND lp.payer = '$trxnPayerPrimary'");
-
-$amountPayment = $ledgerAmounts ? $ledgerAmounts['payment'] : 0;
-$isLedgerSecondary = $ledgerAmounts ? !!$ledgerAmounts['num_secondary'] : 0;
-$hasLedgerInconsistencies = $ledgerAmounts ?
-    $ledgerAmounts['num_primary'] != $ledgerAmounts['num_payments'] &&
-    $ledgerAmounts['num_secondary'] != $ledgerAmounts['num_payments']
-    : false;
-
-if ($hasLedgerInconsistencies) {
-    $ledgerIds = array_pluck($ledgerItems, 'ledgerid');
-    $ledgerIds = join(', ', $ledgerIds);
-
-    error_log("Add Ledger Payments: the following ledger ids have inconsistencies in primary/secondary claim id link - $ledgerIds");
-}
-
 $isPrimary = ClaimFormData::isPrimary($claimData['status']);
 $statusType = $isPrimary ? 'primary' : 'secondary';
+$amountPayment = getLedgerPaymentAmount($claimId, DSS_TRXN_PAYER_PRIMARY);
 
-$paymentsToAdd = [];
-$today = date('Y-m-d');
+$paymentsAdded = insertLedgerPayments(
+    $claimId, $_POST['payments'], $_POST['payment_type'], $_POST['payer'], $_SESSION['userid'], $_SESSION['adminid']
+);
 
-foreach ($ledgerItems as $row) {
-    $ledgerId = $row['ledgerid'];
-
-    if (!empty($_POST['payment_date_' . $ledgerId])) {
-        $paymentDate = date('Y-m-d', strtotime($_POST['payment_date_' . $ledgerId]));
-    } else {
-        $paymentDate = null;
-    }
-
-    if ($_POST['amount_' . $ledgerId] != '') {
-        $paymentsToAdd []= '(' . $db->escapeList([
-            'ledgerid' => $ledgerId,
-            'payment_date' => $paymentDate,
-            'entry_date' => $today,
-            'amount' => str_replace(',', '', $_POST['amount_' . $ledgerId]),
-            'amount_allowed' => str_replace(',', '', $_POST['allowed_' . $ledgerId]),
-            'payment_type' => $_POST['payment_type'],
-            'payer' => $_POST['payer'],
-            'is_secondary' => $isLedgerSecondary
-        ]) . ')';
-    }
-}
-
-if ($paymentsToAdd) {
-    $totalPayments = count($paymentsToAdd);
-    $paymentsToAdd = join(', ', $paymentsToAdd);
-
-    $paymentId = $db->getInsertId("INSERT INTO dental_ledger_payment (
-            ledgerid,
-            payment_date,
-            entry_date,
-            amount,
-            amount_allowed,
-            payment_type,
-            payer,
-            is_secondary
-        ) VALUES $paymentsToAdd");
-
-    $msg = "$totalPayments payments have been added.";
+if ($paymentsAdded) {
+    $msg = count($paymentsAdded) . ' payments have been added.';
     echo "<br />";
-
-    payment_history_update($paymentId, $_SESSION['userid'], '');
 } elseif ($_POST['empty-claim']) {
     $msg = "No payments were added, the claim will be forcefully closed.";
     echo "<br />";
@@ -224,9 +152,9 @@ if ($secondaryStatus !== false && empty($_POST['empty-claim'])) {
 }
 
 if (empty($paymentId) && empty($_POST['empty-claim'])) {
-    if ($paymentsToAdd) {
+    if ($paymentsAdded) {
         $msg = 'Could not add ledger payments, please close this window and contact your system administrator';
-        error_log('Insert Ledger Payments: could not add ledger payments: ' . $paymentsToAdd);
+        error_log('Insert Ledger Payments: could not add ledger payments.');
     } elseif ($_POST['empty-claim']) {
         $msg = 'There were no payments to add. The claim has been forcefully closed.';
     } else {
@@ -241,43 +169,3 @@ if (empty($paymentId) && empty($_POST['empty-claim'])) {
     alert('<?= e($msg) ?>');
     history.go(-1);
 </script>
-<?php
-
-/**
- * Auxiliary function to avoid duplicated code
- *
- * @param string $targetName
- * @param string $tempName
- * @param array  $imageData
- * @return string
- */
-function uploadInsuranceFile ($targetName, $tempName, Array $imageData) {
-    $db = new Db();
-
-    if ($targetName == '') {
-        return '';
-    }
-
-    $lastdot = strrpos($targetName, '.');
-    $name = substr($targetName, 0, $lastdot);
-    $extension = substr($targetName, $lastdot + 1);
-    $banner1 = $name . '_' . date('dmy_Hi');
-    $banner1 = str_replace(' ', '_', $banner1);
-    $banner1 = str_replace('.', '_', $banner1);
-    $banner1 .= '.' . $extension;
-
-    $fileName = '../../../shared/q_file/' . $banner1;
-
-    @move_uploaded_file($tempName, $fileName);
-    @chmod($fileName, 0777);
-
-    $imageData += [
-        'filename' => $banner1,
-        'ip_address' => $_SERVER['REMOTE_ADDR']
-    ];
-    $imageData = $db->escapeAssignmentList($imageData);
-
-    $db->query("INSERT INTO dental_insurance_file SET $imageData, adddate = NOW()");
-
-    return $banner1;
-}

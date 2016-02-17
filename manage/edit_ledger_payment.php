@@ -45,13 +45,16 @@
 			?>
 					<div style="margin-left:9px; margin-top: 10px; width:98%;color: #fff;">
 						<span style="margin: 0 10px 0 0; float:left;width:100px;">
-							<input type="text" style="width:90px" name="payment_date_<?php echo  $p['id']; ?>" value="<?php echo  date('m/d/Y', strtotime($p['payment_date'])); ?>" />
+							<input type="text" style="width:90px"
+								name="payments[<?= $p['id'] ?>][0][payment_date]" value="<?php echo  date('m/d/Y', strtotime($p['payment_date'])); ?>" />
 						</span>
 						<span style="margin: 0 10px 0 0; float:left;width:100px;">
-							<input type="text" style="width:90px" name="entry_date_<?php echo  $p['id']; ?>" value="<?php echo  date('m/d/Y', strtotime($p['entry_date'])); ?>" />
+							<input type="text" style="width:90px" name="payments[<?= $p['id'] ?>][0][entry_date]" value="<?php echo  date('m/d/Y', strtotime($p['entry_date'])); ?>" />
 						</span>
 						<span style="margin: 0 10px 0 0; float:left;width:150px;">
-							<select id="payer_<?php echo  $p['id']; ?>" name="payer_<?php echo  $p['id']; ?>" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" >
+							<select id="payer_<?php echo  $p['id']; ?>"
+								name="payments[<?= $p['id'] ?>][0][payer]"
+								style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" >
 								<option value="<?php echo  DSS_TRXN_PAYER_PRIMARY; ?>" <?php echo  ($p['payer']==DSS_TRXN_PAYER_PRIMARY)?'selected="selected"':''; ?>><?php echo  $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]; ?></option>
 								<option value="<?php echo  DSS_TRXN_PAYER_SECONDARY; ?>" <?php echo  ($p['payer']==DSS_TRXN_PAYER_SECONDARY)?'selected="selected"':''; ?>><?php echo  $dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY]; ?></option>
 								<option value="<?php echo  DSS_TRXN_PAYER_PATIENT; ?>" <?php echo  ($p['payer']==DSS_TRXN_PAYER_PATIENT)?'selected="selected"':''; ?>><?php echo  $dss_trxn_payer_labels[DSS_TRXN_PAYER_PATIENT]; ?></option>
@@ -60,7 +63,9 @@
 							</select>
 						</span>
 						<span style="margin: 0 10px 0 0; float:left;width:150px;">
-							<select id="payment_type_<?php echo  $p['id']; ?>" name="payment_type_<?php echo  $p['id']; ?>" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" >
+							<select id="payment_type_<?php echo  $p['id']; ?>"
+								name="payments[<?= $p['id'] ?>][0][payment_type]"
+								style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" >
 								<option value="<?php echo  DSS_TRXN_PYMT_CREDIT; ?>" <?php echo  ($p['payment_type']==DSS_TRXN_PYMT_CREDIT)?'selected="selected"':''; ?>><?php echo  $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CREDIT]; ?></option>
 								<option value="<?php echo  DSS_TRXN_PYMT_DEBIT; ?>" <?php echo  ($p['payment_type']==DSS_TRXN_PYMT_DEBIT)?'selected="selected"':''; ?>><?php echo  $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_DEBIT]; ?></option>
 								<option value="<?php echo  DSS_TRXN_PYMT_CHECK; ?>" <?php echo  ($p['payment_type']==DSS_TRXN_PYMT_CHECK)?'selected="selected"':''; ?>><?php echo  $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]; ?></option>
@@ -70,7 +75,8 @@
 							</select>
 						</span>
 						<span style="margin: 0 10px 0 0; float:left;">
-							<input type="text" class="dollar_input" name="amount_<?php echo  $p['id']; ?>" value="<?php echo  $p['amount']; ?>" />
+							<input type="text" class="dollar_input" name="payments[<?= $p['id'] ?>][0][amount]"
+								value="<?php echo  $p['amount']; ?>" />
 						</span>
 						<div style="clear:both"></div>
 					</div>

@@ -2,26 +2,28 @@
 namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/access.php';
+require_once __DIR__ . '/../../includes/constants.inc';
+require_once __DIR__ . '/ledger-functions.php';
 
 /**
  * Auxiliary function to set the range of dates in the mailing date conditional
  *
  * @param array  $dayLimit
- * @param string $insuranceAlias
+ * @param string $claimAlias
  * @return string
  */
-function mailingDateConditional (Array $dayLimit, $insuranceAlias='dental_insurance') {
+function mailingDateConditional (Array $dayLimit, $claimAlias='dental_insurance') {
     $lowerLimit = intval($dayLimit[0]);
     $upperLimit = intval($dayLimit[1]);
     $mailingDateConditional = [];
 
     if ($upperLimit) {
         $upperLimit++;
-        $mailingDateConditional []= "$insuranceAlias.mailed_date > DATE_SUB(CURDATE(), INTERVAL $upperLimit DAY)";
+        $mailingDateConditional []= "$claimAlias.mailed_date > DATE_SUB(CURDATE(), INTERVAL $upperLimit DAY)";
     }
 
     if ($lowerLimit) {
-        $mailingDateConditional []= "$insuranceAlias.mailed_date <= DATE_SUB(CURDATE(), INTERVAL $lowerLimit DAY)";
+        $mailingDateConditional []= "$claimAlias.mailed_date <= DATE_SUB(CURDATE(), INTERVAL $lowerLimit DAY)";
     }
 
     return join(' AND ', $mailingDateConditional);
@@ -55,24 +57,6 @@ function getClaimChargesResults (Array $dayLimit, $patientId, $andExtraCondition
           $andExtraConditionals";
 
     return $db->getResults($query);
-}
-
-/**
- * Retrieve payments from a given claim id
- *
- * @param int $insuranceId
- * @return mixed
- */
-function getLedgerPaymentAmount ($insuranceId) {
-    $db = new Db();
-    $insuranceId = intval($insuranceId);
-
-    $query = "SELECT SUM(dlp.amount) AS paid_amount
-        FROM dental_ledger dl
-            LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
-        WHERE dl.primary_claim_id = '$insuranceId'";
-
-    return $db->getColumn($query, 'paid_amount');
 }
 
 /**

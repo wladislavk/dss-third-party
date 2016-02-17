@@ -4,13 +4,13 @@ var day = currentTime.getDate();
 var year = currentTime.getFullYear();
 
 var template = '<div>' +
-    '<input type="text" name="form[%uniqueId%][service_date]" id="service_date_field_%uniqueId%" ' +
+    '<input type="text" name="payments[%ledgerId%][%uniqueId%][entry_date]" id="service_date_field_%uniqueId%" ' +
         'class="calendar" value="%todayDate%" ' +
         'style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" />' +
-    '<input type="text" name="form[%uniqueId%][entry_date]" ' +
+    '<input type="text" name="payments[%ledgerId%][%uniqueId%][entry_date]" ' +
         'value="%todayDate%" readonly="readonly" ' +
         'style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" />' +
-    '<select id="payer_field_%uniqueId%" name="form[%uniqueId%][payer]" ' +
+    '<select id="payer_field_%uniqueId%" name="payments[%ledgerId%][%uniqueId%][payer]" ' +
         'style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">' +
         '<option value="' + DSS_TRXN_PAYER_PRIMARY + '">' + dss_trxn_payer_labels_primary + '</option>' +
         '<option value="' + DSS_TRXN_PAYER_SECONDARY + '">' + dss_trxn_payer_labels_secondary + '</option>' +
@@ -18,7 +18,7 @@ var template = '<div>' +
         '<option value="' + DSS_TRXN_PAYER_WRITEOFF + '">' + dss_trxn_payer_labels_writeoff + '</option>' +
         '<option value="' + DSS_TRXN_PAYER_DISCOUNT + '">' + dss_trxn_payer_labels_discount + '</option>' +
     '</select>' +
-    '<select id="form[%uniqueId%][payment_type]" name="form[%uniqueId%][payment_type]"' +
+    '<select id="payments[%ledgerId%][%uniqueId%][payment_type]" name="payments[%ledgerId%][%uniqueId%][payment_type]"' +
         'style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">' +
         '<option value="' + DSS_TRXN_PYMT_CREDIT + '">' + dss_trxn_pymt_type_labels_credit + '</option>' +
         '<option value="' + DSS_TRXN_PYMT_DEBIT + '">' + dss_trxn_pymt_type_labels_debit + '</option>' +
@@ -29,7 +29,7 @@ var template = '<div>' +
     '</select>' +
     '<div style="float:right;color:#FFF; font-weight:bold;font-size:18px;">' +
         '<input type="text" id="amount_field_%uniqueId%"' +
-            'class="dollar_input" name="form[%uniqueId%][amount]"' +
+            'class="dollar_input" name="payments[%ledgerId%][%uniqueId%][amount]"' +
             'style="margin: 0; float: left; width:75px;margin-right:10px;">' +
         '<button class="remove" onclick="removeRow(%uniqueId%);return false;">X</button>' +
     '</div>' +
@@ -74,32 +74,38 @@ function eraseCookie(name)
 }
 
 function appendElement() {
-  if (readCookie('tempforledgerentry') == null || readCookie('tempforledgerentry') == 0) {
-    currentCount = 1;
-  } else if(readCookie('tempforledgerentry') > 0) {
-    currentCount = parseInt(readCookie('tempforledgerentry'), 10) + 1;
-    eraseCookie('tempforledgerentry');
-  }
+    if (readCookie('tempforledgerentry') == null || readCookie('tempforledgerentry') == 0) {
+        currentCount = 1;
+    } else if(readCookie('tempforledgerentry') > 0) {
+        currentCount = parseInt(readCookie('tempforledgerentry'), 10) + 1;
+        eraseCookie('tempforledgerentry');
+    }
 
-  createCookie('tempforledgerentry', currentCount, '');
+    createCookie('tempforledgerentry', currentCount, '');
 
-  var currentTime = new Date(),
-    month = currentTime.getMonth() + 1,
-    day = currentTime.getDate(),
-    year = currentTime.getFullYear(),
-    todayDate = month + "/" + day + "/" + year,
-    uniqueId = readCookie('tempforledgerentry');
+    var currentTime = new Date(),
+        month = currentTime.getMonth() + 1,
+        day = currentTime.getDate(),
+        year = currentTime.getFullYear(),
+        todayDate = month + "/" + day + "/" + year,
+        ledgerId = $('[name=ledgerid]').val(),
+        uniqueId = readCookie('tempforledgerentry');
 
-  var newDiv = $('<div />', {
-      id: 'payment_' + uniqueId
-  });
+    var newDiv = $('<div />', {
+        id: 'payment_' + uniqueId
+    });
 
-  newDiv.html(template.replace(/%uniqueId%/g, uniqueId).replace(/%todayDate%/g, todayDate));
+    newDiv.html(
+        template
+            .replace(/%ledgerId%/g, ledgerId)
+            .replace(/%uniqueId%/g, uniqueId)
+            .replace(/%todayDate%/g, todayDate)
+    );
 
-  $('#FormFields').append(newDiv);
-  afterUpdateFormFields();
+    $('#FormFields').append(newDiv);
+    afterUpdateFormFields();
 
-  setupCal(uniqueId);
+    setupCal(uniqueId);
 }
 
 function validate()

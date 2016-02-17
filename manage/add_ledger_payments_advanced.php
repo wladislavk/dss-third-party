@@ -341,7 +341,7 @@ while($row = mysqli_fetch_assoc($lq)){
         name="payments[<?= $row['ledgerid'] ?>][0][amount]" />
 </span>
 <span style="width:100px;margin: 0 10px 0 0; float:left;">
-    <input type="text" style="width:90px;" name="note" value="<?= $row['note']; ?>" />
+    <input type="text" style="width:90px;" name="payments[<?= $row['ledgerid'] ?>][0][note]" value="<?= $row['note']; ?>" />
 </span>
 <div style="clear:both;"></div>
 </div>

@@ -127,6 +127,7 @@ function insertLedgerPayments ($claimId, Array $ledgerPayments, $paymentType, $p
             $paymentData = [
                 'ledgerid' => $ledgerId,
                 'amount' => str_replace(',', '', $payment['amount']),
+                'allowed' => str_replace(',', '', $payment['allowed']),
                 'amount_allowed' => str_replace(',', '', $payment['amount_allowed']),
                 'is_secondary' => $isLedgerSecondary
             ];

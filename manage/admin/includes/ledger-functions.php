@@ -56,10 +56,14 @@ function insertLedgerPayments ($claimId, Array $ledgerPayments, $paymentType, $p
             WHERE (primary_claim_id = '$claimId' OR secondary_claim_id = '$claimId')");
 
         $ledgerAmounts = $db->getRow("SELECT
-                SUM(lp.amount) AS payment,
+                SUM(COALESCE(lp.amount)) AS payment,
                 COUNT(id) AS num_payments,
-                SUM(IF(dl.primary_claim_id = '$claimId', 1, 0)) AS num_primary,
-                SUM(IF(dl.secondary_claim_id = '$claimId', 1, 0)) AS num_secondary
+                SUM(COALESCE(
+                    IF(dl.primary_claim_id = '$claimId', 1, 0)
+                )) AS num_primary,
+                SUM(COALESCE(
+                    IF(dl.secondary_claim_id = '$claimId', 1, 0)
+                )) AS num_secondary
             FROM dental_ledger_payment lp
                 JOIN dental_ledger dl ON lp.ledgerid = dl.ledgerid
             WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')
@@ -97,6 +101,7 @@ function insertLedgerPayments ($claimId, Array $ledgerPayments, $paymentType, $p
     $setFields = [
         'payment_date' => null,
         'entry_date' => $today,
+        'followup' => null,
         'payment_type' => $paymentType,
         'payer' => $payer,
         'allowed',
@@ -105,7 +110,6 @@ function insertLedgerPayments ($claimId, Array $ledgerPayments, $paymentType, $p
         'copay',
         'coins',
         'overpaid',
-        'followup',
         'note',
     ];
 
@@ -141,16 +145,14 @@ function insertLedgerPayments ($claimId, Array $ledgerPayments, $paymentType, $p
                     continue;
                 }
 
-                if (substr($key, -5) === '_date') {
+                if (in_array($key, ['payment_date', 'entry_date', 'followup'])) {
                     $paymentData[$key] = empty($payment[$key]) ? $default :
                         date('Y-m-d', strtotime($payment[$key]));
 
                     continue;
                 }
 
-                if (isset($payment[$key])) {
-                    $paymentData[$key] = $payment[$key];
-                }
+                $paymentData[$key] = isset($payment[$key]) ? $payment[$key] : $default;
             }
 
             $paymentData = $db->escapeAssignmentList($paymentData);
@@ -201,4 +203,83 @@ function uploadInsuranceFile ($targetName, $tempName, Array $imageData) {
     $db->query("INSERT INTO dental_insurance_file SET $imageData, adddate = NOW()");
 
     return $banner1;
+}
+
+/**
+ * Encapsulates the logic to ledger payments
+ *
+ * $ledgerPayments is an array of arrays. The indexes represent the ledger payment ids:
+ *
+ * $ledgerPayments = [
+ *      'paymentId' => [ <payment fields> ]
+ * ]
+ *
+ * @param array $ledgerPayments
+ * @param int   $paymentType
+ * @param int   $payer
+ * @return array
+ */
+function updateLedgerPayments (Array $ledgerPayments, $paymentType, $payer, $userId, $adminId) {
+    $db = new Db();
+
+    $updateIds = [];
+    $today = date('Y-m-d');
+
+    $setFields = [
+        'payment_date' => null,
+        'entry_date' => $today,
+        'followup' => null,
+        'payment_type',
+        'payer',
+        'allowed',
+        'ins_paid',
+        'deductible',
+        'copay',
+        'coins',
+        'overpaid',
+        'note',
+    ];
+
+    foreach ($ledgerPayments as $paymentId=>$payment) {
+        if (empty($payment)) {
+            continue;
+        }
+
+        $paymentData = [
+            'amount' => str_replace(',', '', $payment['amount']),
+            'allowed' => str_replace(',', '', $payment['allowed']),
+            'amount_allowed' => str_replace(',', '', $payment['amount_allowed']),
+        ];
+
+        foreach ($setFields as $key=>$default) {
+            if (is_numeric($key)) {
+                if (isset($payment[$default])) {
+                    $paymentData[$default] = $payment[$default];
+                }
+
+                continue;
+            }
+
+            if (!isset($payment[$key])) {
+                continue;
+            }
+
+            if (in_array($key, ['payment_date', 'entry_date', 'followup'])) {
+                $paymentData[$key] = empty($payment[$key]) ? $default :
+                    date('Y-m-d', strtotime($payment[$key]));
+
+                continue;
+            }
+
+            $paymentData[$key] = $payment[$key];
+        }
+
+        $paymentData = $db->escapeAssignmentList($paymentData);
+        $paymentId = $db->getAffectedRows("UPDATE dental_ledger_payment SET $paymentData WHERE id = '$paymentId'");
+
+        $updateIds []= $paymentId;
+        payment_history_update($paymentId, $userId, $adminId);
+    }
+
+    return $updateIds;
 }

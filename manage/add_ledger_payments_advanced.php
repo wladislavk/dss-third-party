@@ -41,6 +41,7 @@ $num_sa = mysqli_num_rows($saq);
 <head>
 <!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
   <script type="text/javascript" src="js/masks.js"></script>
 </head>
 <body>

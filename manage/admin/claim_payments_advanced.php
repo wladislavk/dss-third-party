@@ -258,16 +258,16 @@ while($row = mysqli_fetch_assoc($lq)){
 <td><?= $row['service_date']; ?></td>
 <td><?= $row['description']; ?></td>
 <td>$<?= $row['amount']; ?></td>
-<td><input type="text" name="allowed" value="<?= $row['allowed']; ?>" /></td>
-<td><input type="text" name="ins_paid" value="<?= $row['ins_paid']; ?>" /></td>
-<td><input type="text" name="deductible" value="<?= $row['deductible']; ?>" /></td>
-<td><input type="text" name="copay" value="<?= $row['copay']; ?>" /></td>
-<td><input type="text" name="coins" value="<?= $row['coins']; ?>" /></td>
-<td><input type="text" name="overpaid" value="<?= $row['overpaid']; ?>" /></td>
-<td><input type="text" name="followup" value="<?= $row['followup']; ?>" /></td>
-<td><input type="text" id="payment_date_<?= $row['ledgerid']; ?>" class="calendar" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></td>
-<td><input class="payment_amount dollar_input" type="text" name="amount_<?= $row['ledgerid']; ?>" /></td>
-<td><input type="text" name="note" value="<?= $row['note']; ?>" /></td>
+<td><input type="text" name="payments[<?= $row['ledgerid'] ?>][0][allowed]" value="<?= $row['allowed']; ?>" /></td>
+<td><input type="text" name="payments[<?= $row['ledgerid'] ?>][0][ins_paid]" value="<?= $row['ins_paid']; ?>" /></td>
+<td><input type="text" name="payments[<?= $row['ledgerid'] ?>][0][deductible]" value="<?= $row['deductible']; ?>" /></td>
+<td><input type="text" name="payments[<?= $row['ledgerid'] ?>][0][copay]" value="<?= $row['copay']; ?>" /></td>
+<td><input type="text" name="payments[<?= $row['ledgerid'] ?>][0][coins]" value="<?= $row['coins']; ?>" /></td>
+<td><input type="text" name="payments[<?= $row['ledgerid'] ?>][0][overpaid]" value="<?= $row['overpaid']; ?>" /></td>
+<td><input type="text" name="payments[<?= $row['ledgerid'] ?>][0][followup]" value="<?= $row['followup']; ?>" /></td>
+<td><input type="text" id="payment_date_<?= $row['ledgerid']; ?>" class="calendar" name="payments[<?= $row['ledgerid'] ?>][0][payment_date]" value="<?= date('m/d/Y'); ?>" /></td>
+<td><input class="payment_amount dollar_input" type="text" name="payments[<?= $row['ledgerid'] ?>][0][amount]" /></td>
+<td><input type="text" name="payments[<?= $row['ledgerid'] ?>][0][note]" value="<?= $row['note']; ?>" /></td>
 </tr>
 <?php
 }

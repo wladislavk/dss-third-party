@@ -282,9 +282,18 @@ while($row = mysqli_fetch_assoc($lq)){
 <span style="width:150px;margin: 0 10px 0 0; float:left;"><?= date('m/d/Y', strtotime($row['service_date'])); ?></span>
 <span style="width:180px;margin: 0 10px 0 0; float:left;"><?= $row['description']; ?></span>
 <span style="width:100px;margin: 0 10px 0 0; float:left;">$<?= $row['amount']; ?></span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" id="payment_date_<?= $row['ledgerid']; ?>" class="calendar" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></span>
-<span style="float:left;font-weight:bold;width:150px;"><input class="payment_amount dollar_input" style="width:140px;" type="text" name="amount_<?= $row['ledgerid']; ?>" /></span>
-<span style="float:left;font-weight:bold;"><input class="payment_amount dollar_input" style="width:140px;" type="text" name="amount_allowed_<?= $row['ledgerid']; ?>" /></span>
+<span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">
+    <input style="width:140px" type="text" id="payment_date_<?= $row['ledgerid']; ?>" class="calendar"
+        name="payments[<?= $row['ledgerid'] ?>][0][payment_date]" value="<?= date('m/d/Y'); ?>" />
+</span>
+<span style="float:left;font-weight:bold;width:150px;">
+    <input class="payment_amount dollar_input" style="width:140px;" type="text"
+        name="payments[<?= $row['ledgerid'] ?>][0][amount]" />
+</span>
+<span style="float:left;font-weight:bold;">
+    <input class="payment_amount dollar_input" style="width:140px;" type="text"
+        name="payments[<?= $row['ledgerid'] ?>][0][amount_allowed]" />
+</span>
 </div>
 
 <?php

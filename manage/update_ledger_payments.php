@@ -7,7 +7,9 @@ require_once __DIR__ . '/includes/claim_functions.php';
 require_once __DIR__ . '/admin/includes/claim_functions.php';
 require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
-insertLedgerPayments(0, $_POST['payments'], 0, 0, $_SESSION['userid'], $_SESSION['adminid']);
+if (isset($_POST['payments']) && is_array($_POST['payments'])) {
+    updateLedgerPayments($_POST['payments'], 0, 0, $_SESSION['userid'], $_SESSION['adminid']);
+}
 
 ?>
 <script type="text/javascript">

@@ -37,6 +37,17 @@
             var num_pa = <?php echo  ($num_pa == 0) ? 1 : 0; ?>;
             var num_sa = <?php echo  ($num_sa == 0) ? 1 : 0; ?>;
             var user_access = <?php echo  ($_SESSION['user_access']==2) ? 1 : 0;?>;
+
+            function updateType(payer){
+                v = payer.value;
+                if(v==1 || v==0){
+                    document.getElementById('payment_type').selectedIndex = 2;
+                }else if(v==2){
+                    document.getElementById('payment_type').selectedIndex = 0;
+                }else if(v==3 || v==4){
+                    document.getElementById('payment_type').selectedIndex = 4;
+                }
+            }
         </script>
 
         <script type="text/javascript" src="/manage/js/ledger_payments_advanced.js?v=<?= time() ?>"></script>

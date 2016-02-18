@@ -154,7 +154,7 @@ if ($secondaryStatus !== false && empty($_POST['empty-claim'])) {
 }
 
 if ($_POST['payments'] && !$paymentsAdded) {
-    $alertMessages [] = 'It was no possible to add any payments due technical reasons. Please verify the amounts and try again.';
+    $alertMessages [] = 'It was not possible to add any payments due technical reasons. Please verify the amounts and try again.';
     error_log('Insert Ledger Payments: could not add ledger payments.');
 } elseif ($paymentsAdded) {
     $alertMessages []= count($paymentsAdded) . ' payment(s) added successfully.';
@@ -166,6 +166,6 @@ if ($_POST['payments'] && !$paymentsAdded) {
 
 ?>
 <script type="text/javascript">
-    alert('<?= e(join('\n', $alertMessages)) ?>');
+    alert(<?= json_encode(join('\n', $alertMessages)) ?>);
     history.go(-1);
 </script>

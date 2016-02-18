@@ -155,6 +155,17 @@ if(f.dispute.checked){
 }
 return returnval;
 }
+
+function updateType(payer){
+  v = payer.value;
+  if(v==1 || v==0){
+    document.getElementById('payment_type').selectedIndex = 2;
+  }else if(v==2){
+    document.getElementById('payment_type').selectedIndex = 0;
+  }else if(v==3 || v==4){
+    document.getElementById('payment_type').selectedIndex = 4;
+  }
+}
 </script>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>

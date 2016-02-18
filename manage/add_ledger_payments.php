@@ -259,6 +259,17 @@ function showAuthBox()
   document.getElementById('form_div').style.display = 'none';
   document.getElementById('auth_div').style.display = 'block';
 }
+
+function updateType(payer){
+    v = payer.value;
+    if(v==1 || v==0){
+        document.getElementById('payment_type').selectedIndex = 2;
+    }else if(v==2){
+        document.getElementById('payment_type').selectedIndex = 0;
+    }else if(v==3 || v==4){
+        document.getElementById('payment_type').selectedIndex = 4;
+    }
+}
 </script>
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script language="text/javascript" src="calendar1.js"></script>

@@ -3,11 +3,41 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\Ledger as Resource;
+use DentalSleepSolutions\Contracts\Repositories\Ledgers as Repository;
 
-class Ledger extends Model
+class Ledger extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
+        /**
+     * Guarded attributes
+     *
+     * @var array
+     */
+    protected $guarded = ['ledgerid'];
+
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
     protected $table = 'dental_ledger';
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
     protected $primaryKey = 'ledgerid';
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'adddate';
 
     public static function getForSendClaim($pid, $insid, $docid, $type)
     {

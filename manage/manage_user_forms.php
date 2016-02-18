@@ -38,12 +38,12 @@ include "includes/top.htm";
 			$num_loc = count($loc_q);
 			if($num_loc > 1){ 
 				foreach ($loc_q as $loc_r) { ?>
-            <a href="view_user_form.php?file=user_record_release&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=user_record_release&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View <?php echo $loc_r['location']; ?><br />
             </a>
 				<?php } 
                 }else{ ?>
-			<a href="view_user_form.php?file=user_record_release&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+			<a href="view_user_form.php?file=user_record_release&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
 				View
 			</a>
 			<?php } ?>
@@ -54,7 +54,7 @@ include "includes/top.htm";
                 Financial Agreement Medicare 
             </td>
             <td valign="top">
-                <a href="view_user_form.php?file=financial_agreement_medicare&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                <a href="view_user_form.php?file=financial_agreement_medicare&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                     View
                 </a>
             </td>
@@ -64,7 +64,7 @@ include "includes/top.htm";
             Release of Liability and Assumption of Risk
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=release_liability&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=release_liability&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         </td>
@@ -80,12 +80,12 @@ include "includes/top.htm";
             $num_loc = count($loc_q);
             if($num_loc > 1){
                 foreach ($loc_q as $loc_r) { ?>
-            <a href="view_user_form.php?file=home_care_instructions&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=home_care_instructions&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View <?php echo $loc_r['location']; ?><br />
             </a>
                 <?php }
             }else{ ?>
-            <a href="view_user_form.php?file=home_care_instructions&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=home_care_instructions&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
             <?php } ?>
@@ -102,12 +102,12 @@ include "includes/top.htm";
             $num_loc = count($loc_q);
             if($num_loc > 1){
                 foreach ($loc_q as $loc_r) { ?>
-            <a href="view_user_form.php?file=non_dentist_of_record_release&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=non_dentist_of_record_release&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View <?php echo $loc_r['location']; ?><br />
             </a>
                 <?php }
             }else{ ?>
-            <a href="view_user_form.php?file=non_dentist_of_record_release&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=non_dentist_of_record_release&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         <?php } ?>
@@ -124,12 +124,12 @@ include "includes/top.htm";
             $num_loc = count($loc_q);
             if($num_loc > 1){
                 foreach ($loc_q as $loc_r) { ?>
-            <a href="view_user_form.php?file=sleep_recorder_release&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=sleep_recorder_release&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View <?php echo $loc_r['location']; ?><br />
             </a>
                 <?php }
             }else{ ?>
-            <a href="view_user_form.php?file=sleep_recorder_release&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=sleep_recorder_release&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         <?php } ?>
@@ -140,7 +140,7 @@ include "includes/top.htm";
             Affidavit for CPAP Intolerance           
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=affidavit_for_cpap_intolerance&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=affidavit_for_cpap_intolerance&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         </td>
@@ -150,7 +150,7 @@ include "includes/top.htm";
             Device Titration (EMA)
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=device_titration_ema&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=device_titration_ema&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         </td>
@@ -160,7 +160,7 @@ include "includes/top.htm";
             Device Titration
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=device_titration&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=device_titration&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         </td>
@@ -170,7 +170,7 @@ include "includes/top.htm";
             ESS/TSS Form
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=ess_tss_form&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=ess_tss_form&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         </td>
@@ -180,7 +180,7 @@ include "includes/top.htm";
             Financial Agreement
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=financial_agreement&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=financial_agreement&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         </td>
@@ -190,7 +190,7 @@ include "includes/top.htm";
             Informed Consent
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=informed_consent&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=informed_consent&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         </td>
@@ -200,7 +200,7 @@ include "includes/top.htm";
             LOMN Rx           
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=lomn_rx&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=lomn_rx&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         </td>
@@ -210,7 +210,7 @@ include "includes/top.htm";
             Medical Hx Update                                        
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=medical_hx_update&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=medical_hx_update&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         </td>
@@ -221,7 +221,7 @@ include "includes/top.htm";
             The DSS Experience
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=the_dss_experience&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=the_dss_experience&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
         </td>
@@ -238,12 +238,12 @@ include "includes/top.htm";
                 $num_loc = count($loc_q);
                 if($num_loc > 1){
                     foreach ($loc_q as $loc_r) { ?>
-            <a href="view_user_form.php?file=patient_notices&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=patient_notices&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View <?php echo $loc_r['location']; ?><br />
             </a>
                     <?php }
                 }else{ ?>
-            <a href="view_user_form.php?file=patient_notices&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=patient_notices&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
             <?php } ?>
@@ -260,12 +260,12 @@ include "includes/top.htm";
                 $num_loc = count($loc_q);
                 if($num_loc > 1){
                     foreach ($loc_q as $loc_r) { ?>
-            <a href="view_user_form.php?file=new_patient&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=new_patient&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View <?php echo $loc_r['location']; ?><br />
             </a>
                     <?php }
                 }else{ ?>
-            <a href="view_user_form.php?file=new_patient&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=new_patient&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
             <?php } ?>
@@ -282,12 +282,12 @@ include "includes/top.htm";
                 $num_loc = count($loc_q);
                 if($num_loc > 1){
                     foreach ($loc_q as $loc_r) { ?>
-            <a href="view_user_form.php?file=patient_questionnaire&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=patient_questionnaire&locid=<?php echo $loc_r['id']; ?>&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View <?php echo $loc_r['location']; ?><br />
             </a>
                     <?php }
                 }else{ ?>
-            <a href="view_user_form.php?file=patient_questionnaire&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=patient_questionnaire&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
             </a>
             <?php } ?>
@@ -306,12 +306,12 @@ include "includes/top.htm";
                                                 if($num_loc > 1){
                                                 while($loc_r = mysqli_fetch_assoc($loc_q)){
                                                 ?>
-                                        <a href="view_user_form.php?file=proof_of_delivery&locid=<?= $loc_r['id']; ?>&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                                        <a href="view_user_form.php?file=proof_of_delivery&locid=<?= $loc_r['id']; ?>&did=<?= $_SESSION['docid']; ?>" class="editlink">
                                                 View <?= $loc_r['location']; ?><br />
                                         </a>
                                                         <?php } ?>
                                                 <?php }else{ ?>
-                                        <a href="view_user_form.php?file=proof_of_delivery&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                                        <a href="view_user_form.php?file=proof_of_delivery&did=<?= $_SESSION['docid']; ?>" class="editlink">
                                                 View
                                         </a>
                                                 <?php } ?>
@@ -322,8 +322,22 @@ include "includes/top.htm";
             Advanced Beneficiary Notice Medicare
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=advanced_beneficiary_notice_medicare&did=<?php echo $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+            <a href="view_user_form.php?file=advanced_beneficiary_notice_medicare&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
                 View
+            </a>
+        </td>
+    </tr>
+    <tr class="tr_active">
+        <td valign="top">
+            DST Progress Questionnaire 11-15
+        </td>
+        <td valign="top">
+            <a href="view_user_form.php?file=dst-progress-questionnaire-11-15&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
+                View pdf
+            </a>
+            <br>
+            <a href="view_user_form.php?file=dst-progress-questionnaire-11-15&did=<?php echo $_SESSION['docid']; ?>&ext=doc" class="editlink">
+                View doc
             </a>
         </td>
     </tr>

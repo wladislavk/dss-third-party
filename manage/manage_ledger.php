@@ -782,7 +782,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       </td>
     </tr>
 <?php 
-      if( !empty($myarray['ledger']) && $myarray['ledger'] == 'ledger'){ ?>
+      if( !empty($myarray['ledger']) && in_array($myarray['ledger'], ['ledger', 'ledger_payment'])){ ?>
     <tr class="history_<?php echo $myarray['ledgerid']; ?>" style="display:none;">
       <td>Updated At</td>
       <td>Service Date</td>
@@ -793,31 +793,66 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
       <td>Update By</td>
     </tr>
 <?php
-        $h_sql = "select 
-                  'ledger',
-                  dl.ledgerid,
-                  dl.service_date,
-                  dl.entry_date,
-                  CONCAT(p.first_name,' ',p.last_name) as name,
-                  dl.description,
-                  dl.amount,
-                  di.status,
-                  dl.primary_claim_id,
-                  di.status as claim_status,
-      dl.updated_at,
-      CONCAT(u.first_name,' ',u.last_name) as updated_user,
-      CONCAT(a.first_name,' ',a.last_name) as updated_admin
-          from dental_ledger_history dl 
-                  LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                  LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
-                  LEFT JOIN dental_insurance di on di.insuranceid = dl.primary_claim_id
-      LEFT JOIN dental_users u ON u.userid=dl.updated_by_user
-      LEFT JOIN admin a ON a.adminid=dl.updated_by_admin
-                          where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
-                          and (dl.paid_amount IS NULL || dl.paid_amount = 0)
-                  AND dl.ledgerid = '".mysqli_real_escape_string($con,$myarray['ledgerid'])."'
-      ORDER BY dl.updated_at ASC
-      ";
+        $ledgerId = intval($myarray['ledgerid']);
+        $patientId = intval($_GET['pid']);
+        $docId = intval($_SESSION['docid']);
+
+        if ($myarray['ledger'] === 'ledger') {
+            $h_sql = "select
+                    'ledger',
+                    dl.ledgerid,
+                    dl.service_date,
+                    dl.entry_date,
+                    CONCAT(p.first_name,' ',p.last_name) as name,
+                    dl.description,
+                    dl.amount,
+                    di.status,
+                    dl.primary_claim_id,
+                    di.status as claim_status,
+                    dl.updated_at,
+                    CONCAT(u.first_name,' ',u.last_name) as updated_user,
+                    CONCAT(a.first_name,' ',a.last_name) as updated_admin
+                from dental_ledger_history dl
+                    LEFT JOIN dental_users p ON dl.producerid=p.userid
+                    LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+                    LEFT JOIN dental_insurance di on di.insuranceid = dl.primary_claim_id
+                    LEFT JOIN dental_users u ON u.userid=dl.updated_by_user
+                    LEFT JOIN admin a ON a.adminid=dl.updated_by_admin
+                where dl.docid = '$docId' and dl.patientid = '$patientId'
+                    and coalesce(dl.paid_amount, 0) = 0
+                    AND dl.ledgerid = '$ledgerId'
+                ORDER BY dl.updated_at ASC
+            ";
+        } else {
+            $h_sql = "SELECT
+                    'ledger_payment' AS ledger,
+                    dlp.id AS ledgerid,
+                    dlp.payment_date AS service_date,
+                    dlp.entry_date,
+                    CONCAT(p.first_name, ' ', p.last_name) AS name,
+                    '' AS description,
+                    dlp.amount AS paid_amount,
+                    '' AS status,
+                    IF(
+                        dl.secondary_claim_id && dlp.is_secondary,
+                        dl.secondary_claim_id,
+                        dl.primary_claim_id
+                    ) AS primary_claim_id,
+                    '' AS claim_status,
+                    dl.updated_at,
+                    CONCAT(u.first_name,' ',u.last_name) as updated_user,
+                    CONCAT(a.first_name,' ',a.last_name) as updated_admin
+                FROM dental_ledger_history dl
+                    LEFT JOIN dental_users p ON dl.producerid = p.userid
+                    LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+                    LEFT JOIN dental_users u ON u.userid = dl.updated_by_user
+                    LEFT JOIN admin a ON a.adminid = dl.updated_by_admin
+                WHERE dl.docid = '$docId'
+                    AND dl.patientid = '$patientId'
+                    AND dlp.amount != 0
+                    AND dlp.id = '$ledgerId'";
+        }
+
         $h_q = $db->getResults($h_sql);
         //Table 'dentalsl_site_dev.dental_ledger_history' doesn't exist
         if (!empty($h_q)) {
@@ -839,17 +874,6 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 <?php 
           }
         } 
-      }elseif(!empty($myarray['ledger']) && ($myarray['ledger'] == 'ledger_payment')){ ?>
-    <tr class="history_<?php echo $myarray['ledgerid']; ?>" style="display:none;">
-      <td>Updated At</td>
-      <td>Service Date</td>
-      <td>Producer</td>
-      <td>Description</td>
-      <td>Charges</td>
-      <td>Credits</td>
-      <td>Update By</td>
-    </tr>
-<?php 
       }
     }
   }

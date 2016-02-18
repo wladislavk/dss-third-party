@@ -305,3 +305,48 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerHistory::class, function ($faker) {
+    return [
+            'ledgerid'                 => $faker->randomDigit,
+            'formid'                   => $faker->randomDigit,
+            'patientid'                => $faker->randomDigit,
+            'service_date'             => $faker->dateTime(),
+            'entry_date'               => $faker->dateTime(),
+            'description'              => $faker->sentence($nbWords = 6),
+            'producer'                 => $faker->randomDigit,
+            'amount'                   => $faker->regexify('[0-9]+\.[0-9]{2}'),
+            'transaction_type'         => $faker->word,
+            'paid_amount'              => $faker->regexify('[0-9]+\.[0-9]{2}'),
+            'userid'                   => $faker->randomDigit,
+            'docid'                    => $faker->randomDigit,
+            'status'                   => $faker->randomDigit,
+            'adddate'                  => $faker->dateTime(),
+            'ip_address'               => $faker->ipv4,
+            'transaction_code'         => $faker->regexify('[0-9]{5}|[A-Z][0-9]{4}'),
+            'placeofservice'           => $faker->randomDigit,
+            'emg'                      => $faker->randomDigit,
+            'diagnosispointer'         => $faker->randomDigit,
+            'daysorunits'              => $faker->randomDigit,
+            'epsdt'                    => $faker->randomDigit,
+            'idqual'                   => $faker->randomDigit,
+            'modcode'                  => $faker->randomDigit,
+            'producerid'               => $faker->randomDigit,
+            'primary_claim_id'         => $faker->randomDigit,
+            'primary_paper_claim_id'   => $faker->randomDigit,
+            'modcode2'                 => $faker->randomDigit,
+            'modcode3'                 => $faker->randomDigit,
+            'modcode4'                 => $faker->randomDigit,
+            'percase_date'             => $faker->dateTime(),
+            'percase_name'             => $faker->name,
+            'percase_amount'           => $faker->regexify('[0-9]+\.[0-9]{2}'),
+            'percase_status'           => $faker->randomDigit,
+            'percase_invoice'          => $faker->randomDigit,
+            'percase_free'             => $faker->randomDigit,
+            'updated_by_user'          => $faker->randomDigit,
+            'updated_by_admin'         => $faker->randomDigit,
+            'primary_claim_history_id' => $faker->randomDigit,
+            'updated_at'               => $faker->dateTime()
+        ];
+});

@@ -36,7 +36,7 @@ $saq = mysqli_query($con, $sasql);
 $num_sa = mysqli_num_rows($saq);
 
 ?>
-<p class="fullwidth">
+<div class="fullwidth">
 <script type="text/javascript">
 //CHECK LEDGER PAYMENT SUBMISSION
 function validSubmission(f){

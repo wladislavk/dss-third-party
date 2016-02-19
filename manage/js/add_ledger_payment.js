@@ -18,7 +18,7 @@ var template = '<div>' +
         '<option value="' + DSS_TRXN_PAYER_WRITEOFF + '">' + dss_trxn_payer_labels_writeoff + '</option>' +
         '<option value="' + DSS_TRXN_PAYER_DISCOUNT + '">' + dss_trxn_payer_labels_discount + '</option>' +
     '</select>' +
-    '<select id="payments[%ledgerId%][%uniqueId%][payment_type]" name="payments[%ledgerId%][%uniqueId%][payment_type]"' +
+    '<select id="payment_type_%uniqueId%" name="payments[%ledgerId%][%uniqueId%][payment_type]"' +
         'style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">' +
         '<option value="' + DSS_TRXN_PYMT_CREDIT + '">' + dss_trxn_pymt_type_labels_credit + '</option>' +
         '<option value="' + DSS_TRXN_PYMT_DEBIT + '">' + dss_trxn_pymt_type_labels_debit + '</option>' +

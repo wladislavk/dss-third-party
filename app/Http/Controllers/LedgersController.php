@@ -59,6 +59,8 @@ class LedgersController extends Controller
 
         $resource = $resources->create($data);
 
+        dd($resource->toArray());
+
         return ApiResponse::responseOk('Resource created', $resource);
     }
 

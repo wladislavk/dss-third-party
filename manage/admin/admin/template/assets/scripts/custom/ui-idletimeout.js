@@ -14,11 +14,13 @@ var UIIdleTimeout = function () {
             $.idleTimeout('#idle-timeout-dialog', '.modal-content button:last', {
                 idleAfter: 900, // 15 minutes
                 warningLength: 1800, // 30 minutes
-                pollingInterval: 20,
+                pollingInterval: 60,
+                AJAXTimeout: 10000,
+                failedRequests: 20,
                 keepAliveURL: '/manage/admin/demo/idletimeout_keepalive.php',
                 serverResponseEquals: 'OK',
                 onTimeout: function(){
-                    window.location = "extra_lock.html";
+                    window.location = "/manage/admin/logout.php";
                 },
                 onIdle: function(){
                     $('#idle-timeout-dialog').modal('show');

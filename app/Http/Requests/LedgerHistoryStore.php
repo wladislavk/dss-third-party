@@ -16,16 +16,16 @@ class LedgerHistoryStore extends Request
             'formid'                   => 'integer',
             'patientid'                => 'required|integer',
             'service_date'             => 'string',
-            'entry_date'               => 'strind',
+            'entry_date'               => 'string',
             'description'              => 'string',
             'producer'                 => 'string',
-            'amount'                   => ['regex:/^[0-9]+\.[0-9]{2}|[1-9]([0-9])+$/'],
+            'amount'                   => 'regex:/^[0-9]+\.[0-9]{2}$/',
             'transaction_type'         => 'string',
-            'paid_amount'              => 'string',
+            'paid_amount'              => 'regex:/^[0-9]+\.[0-9]{2}$/',
             'userid'                   => 'required|integer',
             'docid'                    => 'required|integer',
             'status'                   => 'integer',
-            'transaction_code'         => ['regex:/^[0-9]{5}|[A-Z][0-9]{4}$/'],
+            'transaction_code'         => 'regex:/^[A-Z][0-9]{4}$/',
             'placeofservice'           => 'string',
             'emg'                      => 'string',
             'diagnosispointer'         => 'string',
@@ -47,8 +47,7 @@ class LedgerHistoryStore extends Request
             'percase_free'             => 'integer',
             'updated_by_user'          => 'integer',
             'updated_by_admin'         => 'integer',
-            'primary_claim_history_id' => 'integer',
-            'updated_at'               => 'date'
+            'primary_claim_history_id' => 'integer'
         ];
     }
 }

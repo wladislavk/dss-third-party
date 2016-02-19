@@ -10,6 +10,8 @@ use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\LedgerHistory;
 use DentalSleepSolutions\Contracts\Repositories\LedgerHistories;
 
+use Carbon\Carbon;
+
 /**
  * API controller that handles single resource endpoints. It depends heavily
  * on the IoC dependency injection and routes model binding in that each
@@ -54,7 +56,8 @@ class LedgerHistoriesController extends Controller
     public function store(LedgerHistories $resources, LedgerHistoryStore $request)
     {
         $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
+            'ip_address' => $request->ip(),
+            'adddate'    => Carbon::now()->format('m/d/Y')
         ]);
 
         $resource = $resources->create($data);

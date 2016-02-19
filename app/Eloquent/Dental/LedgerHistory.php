@@ -3,31 +3,20 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Eloquent\WithoutCreatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\LedgerHistory as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LedgerHistories as Repository;
 
 class LedgerHistory extends Model implements Resource, Repository
 {
-    use WithoutUpdatedTimestamp;
+    use WithoutCreatedTimestamp;
 
     /**
-     * Mass assignable attributes
+     * Guarded attributes
      *
      * @var array
      */
-    protected $fillable = [
-        'ledgerid', 'formid', 'patientid', 'service_date',
-        'entry_date', 'description', 'producer', 'amount',
-        'transaction_type', 'paid_amount', 'userid', 'docid',
-        'status', 'adddate', 'ip_address', 'transaction_code',
-        'placeofservice', 'emg', 'diagnosispointer', 'daysorunits',
-        'epsdt', 'idqual', 'modcode', 'producerid', 'primary_claim_id',
-        'primary_paper_claim_id', 'modcode2', 'modcode3', 'modcode4',
-        'percase_date', 'percase_name', 'percase_amount','percase_status',
-        'percase_invoice', 'percase_free', 'updated_by_user',
-        'updated_by_admin', 'primary_claim_history_id', 'updated_at'
-    ];
+    protected $guarded = ['id'];
 
     /**
      * The database table used by the model.
@@ -48,12 +37,5 @@ class LedgerHistory extends Model implements Resource, Repository
      *
      * @var array
      */
-    protected $dates = ['percase_date', 'updated_at'];
-
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
-    const CREATED_AT = 'adddate';
+    protected $dates = ['percase_date'];
 }

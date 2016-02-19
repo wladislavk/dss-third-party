@@ -18,7 +18,7 @@ $c = mysqli_fetch_assoc($c_q);
 <script src="popup/popup.js" type="text/javascript"></script>
 <link rel="stylesheet" href="css/support.css" type="text/css" />
 
-<span class="admin_head">
+<p class="lead">
 	Claim Notes - Pt: <?php echo  $c['pat_name']; ?> - Claim: <?php echo  $_GET['id']; ?> - Account: <?php echo  $c['doc_name']; ?>
 <?php
 
@@ -39,10 +39,7 @@ $c = mysqli_fetch_assoc($c_q);
 	ORDER BY adddate ASC";
  $n_q = mysqli_query($con,$n_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 ?>
-</span>
-<br /><br />
-
-<br /><br />
+</p>
 <div align="center" class="red">
 	<?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?>
 </div>

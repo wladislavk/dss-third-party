@@ -102,7 +102,7 @@ if ($_POST['dispute'] == 1) { // Dispute
                     $secondaryStatus = DSS_CLAIM_PAID_SEC_PATIENT;
                 }
             } else {
-                $alertMessages []= 'Payment Successfully Added\n\nPrimary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.';
+                $alertMessages []= "Payment Successfully Added\n\nPrimary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.";
                 $secondaryStatus = DSS_CLAIM_SEC_PENDING;
             }
         }
@@ -166,6 +166,6 @@ if ($_POST['payments'] && !$paymentsAdded) {
 
 ?>
 <script type="text/javascript">
-    alert(<?= json_encode(join('\n', $alertMessages)) ?>);
+    alert(<?= json_encode(join("\n", $alertMessages)) ?>);
     history.go(-1);
 </script>

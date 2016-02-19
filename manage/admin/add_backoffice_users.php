@@ -54,9 +54,6 @@ if (!$canView) { ?>
     trigger_error('Die called', E_USER_ERROR);
 }
 
-?>
-<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script><?php
-
 if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
     $userId = intval($_POST['ed']);
     $userCompanyId = $db->getColumn("SELECT admin_company.companyid FROM admin
@@ -221,11 +218,8 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 	}
 }
 
-?>
+include_once dirname(__FILE__) . '/includes/popup_top.htm';
 
-<?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-
-    <?
     $thesql = "select a.*, ac.companyid from admin  a
 		LEFT JOIN admin_company ac ON a.adminid = ac.adminid
 		where a.adminid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";

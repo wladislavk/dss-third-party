@@ -2,130 +2,60 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <title>Admin popup</title>
-    <!--------------css for login --------------->
-			<!-- BEGIN GLOBAL MANDATORY STYLES -->
-		<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
-		<link href="/manage/admin/admin/template/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-		<link href="/manage/admin/admin/template/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-		<link href="/manage/admin/admin/template/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
-
-		<link href="/manage/admin/admin/template/assets/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
-		<link href="/manage/admin/admin/template/assets/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"/>
-		<!-- END GLOBAL MANDATORY STYLES -->
-		<!-- BEGIN PAGE LEVEL STYLES -->
-		<link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/select2/select2.css"/>
-		<link href="/manage/admin/admin/template/assets/css/pages/login-soft.css" rel="stylesheet" type="text/css"/>
-		<!--<link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/select2/select2-metronic.css"/>--->
-		<!-- END PAGE LEVEL SCRIPTS -->
-		<!-- BEGIN THEME STYLES -->
-		<!----<link href="/manage/admin/admin/template/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
-		<link href="/manage/admin/admin/template/assets/css/style.css" rel="stylesheet" type="text/css"/>
-		<link href="/manage/admin/admin/template/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
-		<link href="/manage/admin/admin/template/assets/css/plugins.css" rel="stylesheet" type="text/css"/>--->
-		<link href="/manage/admin/admin/template/assets/css/components.css" rel="stylesheet" type="text/css"/>
-		<link href="/manage/admin/admin/template/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
-		<link href="/manage/admin/admin/template/assets/css/layout.css?v=20160208" rel="stylesheet" type="text/css"/>
-		<link href="/manage/admin/admin/template/assets/css/custom.css" rel="stylesheet" type="text/css"/>
-    <!--------------------------css for login ------------------------------------------->
-    
-    
-    <!-----------------------------------------------------scripts for login-------------------------------->
-    
-				<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-			<!-- BEGIN CORE PLUGINS -->
-			<!--[if lt IE 9]>
-				<script src="assets/plugins/respond.min.js"></script>
-				<script src="assets/plugins/excanvas.min.js"></script> 
-				<![endif]-->
-
-
-			<script src="/manage/admin/admin/template/assets/plugins/jquery-1.11.0.min.js" type="text/javascript"></script>
-			<!---<script src="/manage/admin/admin/template/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>--->
-			<script src="/manage/admin/admin/template/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-			<!---<script src="/manage/admin/admin/template/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>--->
-			<script src="/manage/admin/admin/template/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-			<script src="/manage/admin/admin/template/assets/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-			<script src="/manage/admin/admin/template/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-			<script src="/manage/admin/admin/template/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
-			<script src="/manage/admin/admin/template/assets/plugins/jquery.cokie.min.js" type="text/javascript"></script>
-			<script src="/manage/admin/admin/template/assets/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
-			<script src="/manage/admin/admin/template/assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
-			<!-- END CORE PLUGINS -->
-			<!-- BEGIN PAGE LEVEL PLUGINS -->
-			<script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/select2/select2.min.js"></script>
-			<script src="/manage/admin/admin/template/assets/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
-		<!--	<script src="/manage/admin/admin/template/assets/scripts/custom/login-soft.js" type="text/javascript"></script>-->
-			<script src="/manage/admin/admin/template/assets/plugins/backstretch/jquery.backstretch.min.js" type="text/javascript"></script>
-			<!-- END PAGE LEVEL PLUGINS -->
-			<!-- BEGIN PAGE LEVEL SCRIPTS -->
-			<!--<script src="/manage/admin/admin/template/assets/scripts/core/app.js" type="text/javascript"></script>
-			<script src="/manage/admin/script/validation.js" type="text/javascript"></script>--->
-			<script src="/manage/admin/admin/template/assets/scripts/core/metronic.js" type="text/javascript"></script>
-			<script src="/manage/admin/admin/template/assets/scripts/custom/layout.js" type="text/javascript"></script>
-			<!--<script src="/manage/admin/admin/template/assets/scripts/customlayout.js" type="text/javascript"></script>
-			<script src="/manage/admin/admin/template/assets/scripts/custom/quick-sidebar.js" type="text/javascript"></script>--->
-			<script src="/manage/admin/admin/template/assets/scripts/custom/login-soft.js" type="text/javascript"></script>
-			<!-- END PAGE LEVEL SCRIPTS --->
-			<script>
-					jQuery(document).ready(function() {     
-						//App.init();
-						
-						Metronic.init(); // init metronic core components
-						Layout.init(); // init current layout
-						//QuickSidebar.init() // init quick sidebar
-						Login.init();
-					});
-				</script>
-			<!-- END JAVASCRIPTS -->
-		
-    <!---------------------------------------------------end--scripts for login-------------------------------->
-    
-    <link id="applied-stylesheet" href="/manage/admin/css/bootstrap-default-3.1.0.css" rel="stylesheet" type="text/css">
-    <link href="/manage/admin/css/bootstrap-datepicker.css" rel="stylesheet" type="text/css">
-   <!--- <link href="/manage/admin/admin/template/assets/css/pages/login-soft.css" rel="stylesheet" type="text/css"/>
-    <link href="/manage/admin/admin/template/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
-    <link href="/manage/admin/admin/template/assets/css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="/manage/admin/admin/template/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>--->
-    
-   <!--<link href="/manage/admin/admin/template/assets/css/pages/login.css" rel="stylesheet" type="text/css"/>-->
-    
-    <!--<script type="text/javascript" src="/manage/admin/script/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="/manage/admin/script/bootstrap-3.1.0.min.js"></script>-->
+    <title><?= e(config('app.name')) ?> - Admin Login</title>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/uniform/css/uniform.default.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/bootstrap-switch/css/bootstrap-switch.min.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/select2/select2.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/css/pages/login-soft.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/css/components.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/css/themes/default.css" id="style_color" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/css/layout.css?v=20160208" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/css/custom.css" />
+    <link rel="stylesheet" type="text/css" id="applied-stylesheet" href="/manage/admin/css/bootstrap-default-3.1.0.css" />
+    <link rel="stylesheet" type="text/css" href="/manage/admin/css/bootstrap-datepicker.css" />
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery.blockui.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery.cokie.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/uniform/jquery.uniform.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/select2/select2.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery-validation/dist/jquery.validate.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/backstretch/jquery.backstretch.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/scripts/core/metronic.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/scripts/custom/layout.js"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/scripts/custom/login-soft.js"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-filestyle.min.js"></script>
     <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
     <script type="text/javascript" src="/manage/3rdParty/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="/manage/admin/script/reskin.js?v=20160208"></script>
-   <!-- <script src="/manage/admin/admin/template/assets/plugins/backstretch/jquery.backstretch.min.js" type="text/javascript"></script>
-    <script src="/manage/admin/admin/template/assets/plugins/backstretch/jquery.backstretch.js" type="text/javascript"></script>-->
-  
-    <script src="/manage/admin/admin/template/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
     <script type="text/javascript">
-      $(document).ready( function (){
-      $('input, select, textarea').change( function(){
-        parent.modal_change = true;
-      });
-      });
-    </script>
-    <script>
-    function calendar2(){}
-    
-    $(document).ready(function(){
-        $('.date').datepicker();
-        $(':file').filestyle({
-            classButton: 'btn btn-primary',
-            classIcon: 'glyphicon glyphicon-folder-open'
+        jQuery(document).ready(function($){
+            Metronic.init(); // init metronic core components
+            Layout.init(); // init current layout
+            Login.init();
+
+            $('input, select, textarea').change( function(){
+                parent.modal_change = true;
+            });
+
+            $('.date').datepicker();
+
+            $(':file').filestyle({
+                classButton: 'btn btn-primary',
+                classIcon: 'glyphicon glyphicon-folder-open'
+            });
+
+            $('.sort_table').tablesorter();
         });
-        $('.sort_table').tablesorter();
-    });
-    
-  /*  jQuery(document).ready(function() {     
-					  App.init();
-					  Login.init();
-					});
-					
-					*/
     </script>
 </head>
 <body class="login">

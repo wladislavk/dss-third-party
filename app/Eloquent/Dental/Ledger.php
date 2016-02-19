@@ -3,17 +3,12 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
-
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Ledger as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers as Repository;
 
 class Ledger extends Model implements Resource, Repository
 {
-    use WithoutUpdatedTimestamp;
-
-        /**
+    /**
      * Guarded attributes
      *
      * @var array
@@ -42,59 +37,11 @@ class Ledger extends Model implements Resource, Repository
     protected $dates = ['service_date', 'entry_date', 'percase_date'];
 
     /**
-     * The name of the "created at" column.
+     * Indicates if the model should be timestamped.
      *
-     * @var string
+     * @var bool
      */
-    const CREATED_AT = 'adddate';
-
-    /**
-     * Get an attribute array of all arrayable attributes.
-     *
-     * @return array
-     */
-    protected function getArrayableAttributes()
-    {
-        // By default, timestamps are formatted as 'Y-m-d H:i:s'.
-        // In our case `adddate` field has `m/d/Y` format.
-        // It should be changed to default format in future.
-
-        if (isset($this->attributes[static::CREATED_AT])) {
-            $oldFormat = 'm/d/Y';
-            $newFormat = 'Y-m-d';
-
-            $this->attributes[static::CREATED_AT] = Carbon::createFromFormat(
-                $oldFormat,
-                $this->attributes[static::CREATED_AT]
-            )->format($newFormat);
-        }
-
-        return $this->getArrayableItems($this->attributes);
-    }
-
-    /**
-     * Set the value of the "created at" attribute.
-     *
-     * @param  mixed  $value
-     * @return $this
-     */
-    public function setCreatedAt($value)
-    {
-        $this->{static::CREATED_AT} = $value->format('m/d/Y');
-
-        return $this;
-    }
-
-    /**
-     * Set mutator of the "created at" attribute.
-     *
-     * @param  mixed  $value
-     * @return $this
-     */
-    public function setAdddateAttribute($value)
-    {
-        $this->attributes[static::CREATED_AT] = $value;
-    }
+    public $timestamps = false;
 
     public static function getForSendClaim($pid, $insid, $docid, $type)
     {

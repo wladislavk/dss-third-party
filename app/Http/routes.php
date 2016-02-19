@@ -33,7 +33,7 @@ Route::group(['prefix' => 'webhooks'], function () {
 |--------------------------------------------------------------------------
 */
 
-Route::group(['prefix' => 'api/v1'], function () {
+Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('ledgers', 'LedgersController', ['except' => ['create', 'edit']]);
 

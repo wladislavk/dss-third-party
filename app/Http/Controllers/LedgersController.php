@@ -10,6 +10,8 @@ use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Ledger;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers;
 
+use Carbon\Carbon;
+
 /**
  * API controller that handles single resource endpoints. It depends heavily
  * on the IoC dependency injection and routes model binding in that each
@@ -53,13 +55,16 @@ class LedgersController extends Controller
      */
     public function store(Ledgers $resources, LedgerStore $request)
     {
+        // The `adddate` field must be changed to correct date format.
+        // A certain setter should be moved to the model.
+        // Now the field has the `varchar` type and `m/d/Y` date format.
+
         $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
+            'ip_address' => $request->ip(),
+            'adddate'    => Carbon::now()->format('m/d/Y')
         ]);
 
         $resource = $resources->create($data);
-
-        dd($resource->toArray());
 
         return ApiResponse::responseOk('Resource created', $resource);
     }

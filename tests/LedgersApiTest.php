@@ -20,8 +20,6 @@ class LedgersApiTest extends TestCase
 
         $data['patientid'] = 88;
 
-        dd($this->call('POST', '/api/v1/ledgers', $data));
-
         $this->post('/api/v1/ledgers', $data)
             ->seeInDatabase('dental_ledger', ['patientid' => 88])
             ->assertResponseOk();

@@ -320,6 +320,8 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Ledger::class, function ($
         'userid'                 => $faker->randomDigit,
         'docid'                  => $faker->randomDigit,
         'status'                 => $faker->randomDigit,
+        'adddate'                => Carbon::now()->format('m/d/Y'),
+        'ip_address'             => $faker->ipv4,
         'transaction_code'       => $faker->regexify('[A-Z][0-9]{4}'),
         'placeofservice'         => $faker->word,
         'emg'                    => $faker->numerify('#'),

@@ -34,7 +34,7 @@ class LedgerPayment extends Model implements Resource, Repository
      *
      * @var array
      */
-    protected $dates = [''];
+    protected $dates = ['payment_date', 'entry_date', 'followup'];
 
     /**
      * Indicates if the model should be timestamped.

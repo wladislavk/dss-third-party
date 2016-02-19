@@ -559,8 +559,6 @@ Fields left blank below will default to the standard billing settings for your o
       <?php } ?>
 
       $('form[name=stafffrm]').submit(function(event){
-          event.preventDefault();
-
           return check_add();
       });
   }(jQuery));

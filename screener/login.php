@@ -11,7 +11,7 @@ include_once('../manage/admin/includes/password.php');
 <meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
 <title><?=$sitename;?></title>
 <link href="css/login.css" rel="stylesheet" type="text/css" />
-
+    <script type="text/javascript" src="/manage/admin/script/validation.js"></script>
 </head>
 <body> 
 
@@ -76,7 +76,7 @@ if($_POST["loginsub"] == 1)
       </span>
 
     <?php } ?>
-      <FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
+      <FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onsubmit="return loginabc(this)">
 
     <div class="field">
       <label>Username</label>

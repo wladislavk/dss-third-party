@@ -3,6 +3,7 @@
 <?php include '../manage/admin/includes/password.php';
 ?>
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/manage/admin/script/validation.js"></script>
 <link href="css/login.css" rel="stylesheet" type="text/css" />
 <!--[if IE]>
 	<link rel="stylesheet" type="text/css" href="css/login_ie.css" />
@@ -10,12 +11,12 @@
 <?php
 $e = '';
 if(isset($_POST['loginbut'])){
-        $salt_sql = "SELECT salt FROM dental_patients WHERE email='".mysqli_real_escape_string($con, $_POST['login'])."' AND (parent_patientid IS NULL OR parent_patientid=0 OR parent_patientid='')";
+        $salt_sql = "SELECT salt FROM dental_patients WHERE email='".mysqli_real_escape_string($con, $_POST['username'])."' AND (parent_patientid IS NULL OR parent_patientid=0 OR parent_patientid='')";
         $salt_q = mysqli_query($con, $salt_sql);
         $salt_row = mysqli_fetch_assoc($salt_q);
         $pass = gen_password($_POST['password'], $salt_row['salt']);
 
-        $check_sql = "SELECT dp.patientid, dp.email, dp.registered, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where dp.status='1' && du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".mysqli_real_escape_string($con, $_POST['login'])."' and dp.password='".$pass."' ";
+        $check_sql = "SELECT dp.patientid, dp.email, dp.registered, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where dp.status='1' && du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".mysqli_real_escape_string($con, $_POST['username'])."' and dp.password='".$pass."' ";
         $check_my = mysqli_query($con, $check_sql);
   if(mysqli_num_rows($check_my) > 0){
     $p = mysqli_fetch_assoc($check_my);
@@ -55,12 +56,12 @@ if(isset($_POST['loginbut'])){
       </span>
 
     <?php } ?>
-      <FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
+      <FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)">
 
     <div class="field">
       <label>Email Address</label>
       <span><a href="javascript:showSect('email');">Forgot Email</a></span>
-      <input type="text" tabindex="1" name="login" value="<?=$_GET['email'];?>">
+      <input type="text" tabindex="1" name="username" value="<?=$_GET['email'];?>">
     </div>
 
     <div class="field">

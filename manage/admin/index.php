@@ -101,7 +101,7 @@
 			</div>
 		<?php } ?>
 	
-		<form name="loginfrm" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" onsubmit="return loginabc(this)" class="login-form form-horizontal">
+		<form name="loginfrm" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" class="login-form form-horizontal">
 			<h3 class="form-title">Login to your DS3 account</h3>
 			<div class="form-group">
 				<div class="input-icon">
@@ -123,7 +123,8 @@
 			<div class="form-group">
 				<div class="input-icon">
 					<i class="fa fa-user"></i>
-					<input type="text" class="form-control" name="security_code" id="captcha"  placeholder="write the characters in the image">
+					<input type="text" class="form-control" name="security_code" id="captcha" autocomplete="off"
+						placeholder="write the characters in the image">
 				</div>
 			</div>
 			<div class="form-actions" style="margin-left:-35px;">

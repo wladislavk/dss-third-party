@@ -114,9 +114,14 @@ function confirm_ledger_trxns(){
 
 // update and changes to ledger trxns
 // (updating associated claim id and status later w/ claim form insert and update)
-function update_ledger_trxns($primary_claim_id, $trxn_status) {
+function update_ledger_trxns($claim_id, $trxn_status) {
     $con = $GLOBALS['con'];
     $db = new Db();
+
+    $claim_id = intval($claim_id);
+    $primary_claim_id = $db->getColumn("SELECT IF(primary_claim_id, primary_claim_id, insuranceid) AS claim_id
+        FROM dental_insurance
+        WHERE insuranceid = '$claim_id'", 'claim_id');
 
     // Add a placeholder to avoid problems with WHERE ... IN (...) clause
     $added_ledger_ids = [-1];
@@ -200,6 +205,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
  */
 function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $filedByBackOffice = false) {
     $db = new Db();
+
+    /**
+     * Session 'userid' is not reliable if we are not navigating a BO page
+     */
+    $userId = $filedByBackOffice ? 0 : intval($_SESSION['userid']);
 
     $claimId = intval($claimId);
     $patientId = intval($patientId);
@@ -1103,8 +1113,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
     $newSentStatus = $isFormerPrimary ? DSS_CLAIM_SENT : DSS_CLAIM_SEC_SENT;
 
-    claim_status_history_update($claimId, $newSentStatus, $formerStatus, '', $_SESSION['adminuserid']);
-    claim_history_update($claimId, '', $_SESSION['adminuserid']);
+    claim_status_history_update($claimId, $newSentStatus, $formerStatus, $userId, $_SESSION['adminuserid']);
+    claim_history_update($claimId, $userId, $_SESSION['adminuserid']);
 
     invoice_add_efile('2', $_SESSION['admincompanyid'], $eClaimId);
     invoice_add_claim('1', $docId, $claimId);
@@ -1116,8 +1126,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $db->query("UPDATE dental_insurance SET status = '$rejectedStatus'
             WHERE insuranceid = '$claimId'");
 
-        claim_status_history_update($claimId, $rejectedStatus, $newSentStatus, '', $_SESSION['adminuserid']);
-        claim_history_update($claimId, '', $_SESSION['adminuserid']);
+        claim_status_history_update($claimId, $rejectedStatus, $newSentStatus, $userId, $_SESSION['adminuserid']);
+        claim_history_update($claimId, $userId, $_SESSION['adminuserid']);
     }
 
     return $jsonResponse;

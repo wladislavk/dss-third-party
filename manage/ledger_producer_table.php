@@ -28,7 +28,7 @@
 		</td>
 	</tr>
 
-	<?php if(!empty($num_users)) { ?>
+	<?php if(empty($num_users)) { ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
 				No Records
@@ -130,7 +130,7 @@
 				$tr_class = "tr_active";
 			} else {
 				$tr_class = "tr_inactive";
-			}
+            }
 			$tr_class = "tr_active";
 	?>
 			<tr onclick="window.location = 'manage_ledger.php?pid=<?php echo  $myarray['patientid']; ?>'" class="clickable_row <?php echo $tr_class;?> <?php echo  $myarray['ledger']; ?>">

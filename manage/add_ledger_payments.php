@@ -1,38 +1,98 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  include "includes/top.htm";
-  include_once "includes/constants.inc";
-  require "includes/calendarinc.php";
+<?php
+namespace Ds3\Libraries\Legacy;
 
-  $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
-  $payments = $db->getRow($sql);
+require_once __DIR__ . '/includes/top.htm';
+require_once __DIR__ . '/includes/constants.inc';
+require_once __DIR__ . '/includes/calendarinc.php';
 
-  $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."';";
-  $claim = $db->getRow($csql);
+$claimId = intval($_GET['cid']);
 
-  $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-  		(status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE." OR status = ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
-  $num_pa = $db->getNumberRows($pasql);
+$sql = "SELECT *
+    FROM dental_ledger_payment dlp
+        JOIN dental_ledger dl ON dlp.ledgerid = dl.ledgerid
+    WHERE dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId'";
+$payments = $db->getRow($sql);
+
+$csql = "SELECT *
+    FROM dental_insurance i
+    WHERE i.insuranceid = '$claimId'";
+$claim = $db->getRow($csql);
+
+$pasql = "SELECT *
+    FROM dental_insurance_file
+    WHERE claimid = '$claimId'
+        AND status IN (".DSS_CLAIM_SENT.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
+$num_pa = $db->getNumberRows($pasql);
 
 
-  $sasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-            (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE." OR status = ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
-  $num_sa = $db->getNumberRows($sasql);
+$sasql = "SELECT *
+    FROM dental_insurance_file
+    WHERE claimid = '$claimId'
+        AND status IN (".DSS_CLAIM_SEC_SENT.", ".DSS_CLAIM_SEC_DISPUTE.", ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
+$num_sa = $db->getNumberRows($sasql);
+
 ?>
+<script>
+    var DSS_TRXN_PAYER_PRIMARY = <?php echo DSS_TRXN_PAYER_PRIMARY; ?>;
+    var dss_trxn_payer_labels_primary = "<?php echo $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]; ?>";
 
-<div class="fullwidth">
+    var DSS_TRXN_PAYER_SECONDARY = <?php echo DSS_TRXN_PAYER_SECONDARY; ?>;
+    var dss_trxn_payer_labels_secondary = "<?php echo $dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY]; ?>";
 
-<?php 
-/**
+    var DSS_TRXN_PAYER_PATIENT = <?php echo DSS_TRXN_PAYER_PATIENT; ?>;
+    var dss_trxn_payer_labels_patient = "<?php echo $dss_trxn_payer_labels[DSS_TRXN_PAYER_PATIENT]; ?>";
 
-*/
-?>
+    var DSS_TRXN_PAYER_WRITEOFF = <?php echo DSS_TRXN_PAYER_WRITEOFF; ?>;
+    var dss_trxn_payer_labels_writeoff = "<?php echo $dss_trxn_payer_labels[DSS_TRXN_PAYER_WRITEOFF]; ?>";
 
-<script type="text/javascript">
+    var DSS_TRXN_PAYER_DISCOUNT = <?php echo DSS_TRXN_PAYER_DISCOUNT; ?>;
+    var dss_trxn_payer_labels_discount = "<?php echo $dss_trxn_payer_labels[DSS_TRXN_PAYER_DISCOUNT]; ?>";
+
+    var DSS_TRXN_PYMT_CREDIT = <?php echo DSS_TRXN_PYMT_CREDIT; ?>;
+    var dss_trxn_pymt_type_labels_credit = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CREDIT]; ?>";
+
+    var DSS_TRXN_PYMT_DEBIT = <?php echo DSS_TRXN_PYMT_DEBIT; ?>;
+    var dss_trxn_pymt_type_labels_debit = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_DEBIT]; ?>";
+
+    var DSS_TRXN_PYMT_CHECK = <?php echo DSS_TRXN_PYMT_CHECK; ?>;
+    var dss_trxn_pymt_type_labels_check = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]; ?>";
+
+    var DSS_TRXN_PYMT_CASH = <?php echo DSS_TRXN_PYMT_CASH; ?>;
+    var dss_trxn_pymt_type_labels_cash = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]; ?>";
+
+    var DSS_TRXN_PYMT_WRITEOFF = <?php echo DSS_TRXN_PYMT_WRITEOFF; ?>;
+    var dss_trxn_pymt_type_labels_writeoff = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]; ?>";
+
+    var DSS_TRXN_PYMT_EFT = <?php echo DSS_TRXN_PYMT_EFT; ?>;
+    var dss_trxn_pymt_type_labels_eft = "<?php echo $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT]; ?>";
+
+    jQuery(function($){
+        $('[name=empty-claim]').change(function(){
+            if (!$('#close:checkbox').is(':checked')) {
+                $('#close:checkbox').trigger('click');
+            }
+
+            $('#dispute:checkbox').prop('disabled', $(this).is(':checked'));
+        });
+
+        $('#close:checkbox').change(function(){
+            if ($(this).is(':checked')) {
+                $('#dispute').removeAttr('checked');
+                $('#ins_attach').show('slow');
+                $('#dispute_reason_div').hide('slow');
+            } else {
+                $('#ins_attach').hide('slow');
+                $('#dispute_reason_div').hide('slow');
+            }
+        });
+    });
+
 //CHECK LEDGER PAYMENT SUBMISSION
 function validSubmission(f)
 {
   returnval = true;
-  var alertMessage = '';
+  var alertMessage = '',
+      $forceClose = $('[name=empty-claim]');
 
   if (!authShown) {
   //CHECK PAYMENT IS ENTERED
@@ -55,7 +115,7 @@ function validSubmission(f)
       return false;
     }
 
-    if (hasAllowed && !hasPayment) {
+    if (hasAllowed && !hasPayment && !$forceClose.is(':checked')) {
       alertMessage = 'You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.';
       return false;
     }
@@ -65,7 +125,7 @@ function validSubmission(f)
     }
   });
 
-  if (!alertMessage.length && !$('.payment_amount.isValid').length) {
+  if (!alertMessage.length && !$('.payment_amount.isValid').length && !$forceClose.is(':checked')) {
     alertMessage = 'You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.'
   }
 
@@ -199,33 +259,37 @@ function showAuthBox()
   document.getElementById('form_div').style.display = 'none';
   document.getElementById('auth_div').style.display = 'block';
 }
+
+function updateType(payer){
+    v = payer.value;
+    if(v==1 || v==0){
+        document.getElementById('payment_type').selectedIndex = 2;
+    }else if(v==2){
+        document.getElementById('payment_type').selectedIndex = 0;
+    }else if(v==3 || v==4){
+        document.getElementById('payment_type').selectedIndex = 4;
+    }
+}
 </script>
-
-<?php 
-/**
-
-*/
-?>
-
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script language="text/javascript" src="calendar1.js"></script>
 <script language="text/javascript" src="calendar2.js"></script>
 <script type="text/javascript" src="js/add_ledger_payment.js?v=<?= time() ?>"></script>
-
+<div class="fullwidth">
 <form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
   <div style="width:200px; margin:0 auto; text-align:center;">
     <input type="hidden" value="0" id="currval" />
   </div>
   <?php
-    $sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' ;";
-    $p_sql = $db->getResults($sql);
+  $sql = "SELECT dlp.*, dl.description
+      FROM dental_ledger_payment dlp
+          JOIN dental_ledger dl ON dlp.ledgerid = dl.ledgerid
+      WHERE dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId'";
+  $p_sql = $db->getResults($sql);
 
-    if(count($p_sql)==0) {
-  ?>
-    <div style="margin-left:50px;">No Previous Payments</div>
-  <?php
-    } else {
-  ?>
+  if (!count($p_sql)) { ?>
+      <div style="margin-left:50px;">No Previous Payments</div>
+  <?php } else { ?>
     <table style="width: 98%" border="1">
       <tr>
       <th>Payment Date</th>
@@ -259,7 +323,7 @@ function showAuthBox()
   ?>
     <tr>
       <td><?php echo  $paymentDate; ?></td>
-      <td><?php echo  date('m/d/Y', strtotime($p['entry_date'])); ?></dt>
+      <td><?php echo  date('m/d/Y', strtotime($p['entry_date'])); ?></td>
       <td><?php echo  $p['description']; ?></td>
       <td><?php echo  $dss_trxn_payer_labels[$p['payer']]; ?></td>
       <td><?php echo  $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></td>
@@ -318,32 +382,47 @@ function showAuthBox()
     </div>
 
     <?php
-      $lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."'";
-      $lq = $db->getResults($lsql);
-      foreach ($lq as $row) {
-    ?>
+
+    $lsql = "SELECT *
+        FROM dental_ledger
+        WHERE primary_claim_id = '$claimId' OR secondary_claim_id = '$claimId'";
+    $lq = $db->getResults($lsql);
+
+    if (!$lq) { ?>
+        <p style="text-align: center;">
+            <label title="Click here if this claim is faulty and needs to be closed">
+                <input type="checkbox" name="empty-claim" value="1" />
+                This claim is empty and needs to be forcefully closed
+            </label>
+        </p>
+    <?php }
+
+    foreach ($lq as $row) { ?>
         <div style="height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;" class="claims">
         <span style="width:80px;margin: 0 10px 0 0; float:left;"><?php echo  $row['service_date']; ?></span>
         <span style="width:180px;margin: 0 10px 0 0; float:left;"><?php echo  $row['description']; ?></span>
         <span style="width:100px;margin: 0 10px 0 0; float:left;">$<?php echo  $row['amount']; ?></span>
         <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">
-            <input style="width:140px" readonly class="calendar_top" id="payment_date_<?= $row['ledgerid'] ?>" type="text" name="payment_date_<?php echo  $row['ledgerid']; ?>" value="<?php echo  date('m/d/Y'); ?>" />
+            <input style="width:140px" readonly class="calendar_top" id="payment_date_<?= $row['ledgerid'] ?>"
+                type="text" name="payments[<?= $row['ledgerid'] ?>][0][payment_date]" value="<?= date('m/d/Y') ?>" />
         </span>
         <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;">
-            <input style="width:140px" type="text" class="allowed_amount dollar_input" name="allowed_<?= $row['ledgerid']; ?>" />
+            <input style="width:140px" type="text" class="allowed_amount dollar_input"
+                name="payments[<?= $row['ledgerid'] ?>][0][amount_allowed]" />
         </span>
         <span style="float:left;font-weight:bold;">
-            <input class="payment_amount dollar_input" style="width:140px;" type="text" name="amount_<?php echo  $row['ledgerid']; ?>" />
+            <input class="payment_amount dollar_input" style="width:140px;" type="text"
+                name="payments[<?= $row['ledgerid'] ?>][0][amount]" />
         </span>
     </div>
     <?php } ?>
 
     <br />
-    <input type="checkbox" id="close" name="close" onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1" />
-     <label>Close Claim</label>
+    <input type="checkbox" id="close" name="close" value="1" />
+     <label for="close">Close Claim</label>
     <br />
     <input type="checkbox" id="dispute" name="dispute" onclick=" if(this.checked){ $('#close').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' />
-     <label>Dispute</label>
+     <label for="dispute">Dispute</label>
     <div id="dispute_reason_div" style="display: none">
       <label>Reason for dispute:</label> <input type="text" name="dispute_reason" />
     </div>
@@ -371,8 +450,8 @@ function showAuthBox()
 </form>
 <br><br>
 
-<a href="view_claim.php?claimid=<?php echo (!empty($_GET['cid']) ? $_GET['cid'] : ''); ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="button" style="float:left;">Cancel</a>
-<a href="ledger_payments_advanced.php?cid=<?php echo (!empty($_GET['cid']) ? $_GET['cid'] : ''); ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="button" style="float:right;">Advanced Payment</a>
+<a href="view_claim.php?claimid=<?= $claimId ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="button" style="float:left;">Cancel</a>
+<a href="ledger_payments_advanced.php?cid=<?= $claimId ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" class="button" style="float:right;">Advanced Payment</a>
 
 <div style="clear:both;"></div>
 </div>

@@ -71,7 +71,7 @@ $message .= DSS_EMAIL_FOOTER;
         </div>
     <?php } ?>
 
-    <form name="loginfrm" method="post" action="<?=$_SERVER['PHP_SELF']?>" onsubmit="return loginabc(this)" class="form-horizontal">
+    <form name="loginfrm" method="post" action="<?=$_SERVER['PHP_SELF']?>" class="form-horizontal">
         <h3 class="form-title">Password Recovery</h3>
         <div class="form-group">
             <div class="input-icon">

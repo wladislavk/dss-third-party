@@ -61,7 +61,7 @@ http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray
 }
 ?>
 <div id="login_container">
-<FORM NAME="loginfrm" METHOD="POST" ACTION="<?php echo $_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
+<FORM NAME="loginfrm" METHOD="POST" ACTION="<?php echo $_SERVER['PHP_SELF']?>">
 	<table border="0" align="center" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
 		<tr bgcolor="#FFFFFF">
 			<td colspan="2" class="t_head">

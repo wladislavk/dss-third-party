@@ -105,7 +105,7 @@ if(!empty($_GET['msg']))
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title><?php echo $sitename;?></title>
 <link href="css/login.css" rel="stylesheet" type="text/css" />
-
+<script type="text/javascript" src="/manage/admin/script/validation.js"></script>
 </head>
 <body>
 
@@ -117,7 +117,7 @@ if(!empty($_GET['msg']))
 
 
 <div id="login_container">
-	<FORM NAME="loginfrm" id="loginForm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
+	<FORM NAME="loginfrm" id="loginForm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)">
 		<table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
 		    <tr bgcolor="#FFFFFF">
 		        <td colspan="2" class="t_head">

@@ -1,35 +1,23 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php include 'includes/top.htm';?>
+<?php
+namespace Ds3\Libraries\Legacy;
 
-<?
-require '../includes/constants.inc';
+require_once __DIR__ . '/includes/top.htm';
+require_once __DIR__ . '/../includes/constants.inc';
 
+$claimId = intval($_GET['id']);
 
-$c_sql = "SELECT CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_name, ' ',u.last_name) doc_name 
-                FROM dental_insurance i
-                JOIN dental_patients p ON i.patientid=p.patientid
-                JOIN dental_users u ON u.userid=p.docid
-		WHERE i.insuranceid='".mysqli_real_escape_string($con, $_GET['id'])."'";
+$c_sql = "SELECT CONCAT(p.firstname, ' ', p.lastname) AS pat_name, CONCAT(u.first_name, ' ', u.last_name) AS doc_name
+    FROM dental_insurance i
+        JOIN dental_patients p ON i.patientid = p.patientid
+        JOIN dental_users u ON u.userid = p.docid
+    WHERE i.insuranceid = '$claimId'";
 $c_q = mysqli_query($con, $c_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
 $c = mysqli_fetch_assoc($c_q);
 
-
-?>
-<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/popup.js" type="text/javascript"></script>
-<link rel="stylesheet" href="css/support.css" type="text/css" />
-
-<span class="admin_head">
-	Claim Payment - Pt: <?= $c['pat_name']; ?> - Claim: <?= $_GET['id']; ?> - Account: <?= $c['doc_name']; ?>
-</span>
-<br /><br />
-
-<br /><br />
-<div align="center" class="red">
-	<? echo $_GET['msg'];?>
-</div>
-<?php
-
-$sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['id']."' ;";
+$sql = "SELECT *
+    FROM dental_ledger_payment dlp
+        JOIN dental_ledger dl ON dlp.ledgerid = dl.ledgerid
+    WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')";
 $p_sql = mysqli_query($con, $sql);
 $payments = mysqli_fetch_array($p_sql);
 $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['id']."';";
@@ -41,14 +29,12 @@ $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escap
 $paq = mysqli_query($con, $pasql);
 $num_pa = mysqli_num_rows($paq);
 
-
 $sasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con, $_GET['id'])."' AND
                 (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
 $saq = mysqli_query($con, $sasql);
 $num_sa = mysqli_num_rows($saq);
 
 ?>
-
 <script type="text/javascript">
 //CHECK LEDGER PAYMENT SUBMISSION
 function validSubmission(f){
@@ -169,44 +155,86 @@ if(f.dispute.checked){
 }
 return returnval;
 }
+
+function updateType(payer){
+  v = payer.value;
+  if(v==1 || v==0){
+    document.getElementById('payment_type').selectedIndex = 2;
+  }else if(v==2){
+    document.getElementById('payment_type').selectedIndex = 0;
+  }else if(v==3 || v==4){
+    document.getElementById('payment_type').selectedIndex = 4;
+  }
+}
 </script>
+<link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
+<script src="popup/popup.js" type="text/javascript"></script>
+<link rel="stylesheet" href="css/support.css" type="text/css" />
+
+<p class="lead">
+	Claim Payment - Pt: <?= $c['pat_name']; ?> - Claim: <?= $_GET['id']; ?> - Account: <?= $c['doc_name']; ?>
+</p>
+<div class="row">
+    <div class="col-md-6">
+        <a href="/manage/admin/claim_payments.php?id=<?=$_GET['id']; ?>&pid=<?=$_GET['pid']; ?>" class="btn btn-success">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+            Simple Payment
+        </a>
+    </div>
+    <div class="col-md-6 text-right">
+        <a href="/manage/admin/claim_notes.php?id=<?=$_GET['id']; ?>&pid=<?=$_GET['pid']; ?>" class="btn btn-success">
+            View Notes
+        </a>
+        <a href="/manage/admin/insurance_claim_v2.php?insid=<?=$_GET['id']; ?>&pid=<?=$_GET['pid']; ?>" class="btn btn-success">
+            View Claim
+        </a>
+    </div>
+</div>
+<div align="center" class="red">
+  <? echo $_GET['msg'];?>
+</div>
 <?php
-$sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['id']."' ;";
+$sql = "SELECT dlp.*, dl.description
+    FROM dental_ledger_payment dlp
+        JOIN dental_ledger dl ON dlp.ledgerid = dl.ledgerid
+    WHERE (dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId')";
 $p_sql = mysqli_query($con, $sql);
-if(mysqli_num_rows($p_sql)==0){
-?><div style="margin-left:50px; ">No Previous Payments</div><?php
-}else{
-?>
-<div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width:83px;">Payment Date</span>
-<span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;" >Entry Date</span>
-<span style="width:190px;margin: 0 10px 0 0; float:left;">Description</span>
-<span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;">Paid By</span>
-<span style="margin: 0pt 10px 0pt 0pt; float: left; width: 100px;">Payment Type</span>
-<span style="float:left;font-weight:bold;width:100px;">Amount</span>
-</div>
-<?php
-while($p = mysqli_fetch_array($p_sql)){
-?>
-<div style="margin-left:9px; margin-top: 10px; width:98%; ">
-<span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:80px;"><?= date('m/d/Y', strtotime($p['entry_date'])); ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:190px;"><?= $p['description']; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:80px;"><?= $dss_trxn_payer_labels[$p['payer']]; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['amount']; ?></span>
-<div style="clear:both;"></div>
-</div>
-<?php
-}
-}
- ?>
+
+if (mysqli_num_rows($p_sql) == 0) { ?>
+    <p class="lead text-center">No Previous Payments</p>
+<?php } else { ?>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Payment Date</th>
+                <th>Entry Date</th>
+                <th>Description</th>
+                <th>Paid By</th>
+                <th>Payment Type</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while ($p = mysqli_fetch_array($p_sql)) { ?>
+                <tr>
+                    <td><?= date('m/d/Y', strtotime($p['payment_date'])); ?></td>
+                    <td><?= date('m/d/Y', strtotime($p['entry_date'])); ?></td>
+                    <td><?= $p['description']; ?></td>
+                    <td><?= $dss_trxn_payer_labels[$p['payer']]; ?></td>
+                    <td><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></td>
+                    <td><?= $p['amount']; ?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+<?php } ?>
 
 <form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments_advanced.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
 <div id="form_div">
 <div id="select_fields" style="margin: 10px;">
 <label>Paid By</label>
-<select id="payer" name="payer" onchange="updateType(this)" style="width:170px;margin: 0pt 10px 0pt 0pt;" >
+<select id="payer" name="payer" class="form-control input-sm input-inline"
+     onchange="updateType(this)" style="width:170px;margin: 0pt 10px 0pt 0pt;" >
   <option value="<?= DSS_TRXN_PAYER_PRIMARY; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]; ?></option>
   <option value="<?= DSS_TRXN_PAYER_SECONDARY; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY]; ?></option>
   <option value="<?= DSS_TRXN_PAYER_PATIENT; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_PATIENT]; ?></option>
@@ -214,7 +242,7 @@ while($p = mysqli_fetch_array($p_sql)){
   <option value="<?= DSS_TRXN_PAYER_DISCOUNT; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_DISCOUNT]; ?></option>
 </select>
 <label>Payment Type</label>
-<select id="payment_type" name="payment_type" style="width:120px;margin: 0pt 10px 0pt 0pt; " >
+<select id="payment_type" name="payment_type" style="width:120px;margin: 0pt 10px 0pt 0pt; " class="form-control input-sm input-inline">
   <option value="<?= DSS_TRXN_PYMT_CREDIT; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CREDIT]; ?></option>
   <option value="<?= DSS_TRXN_PYMT_DEBIT; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_DEBIT]; ?></option>
   <option selected="selected" value="<?= DSS_TRXN_PYMT_CHECK; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]; ?></option>
@@ -223,12 +251,6 @@ while($p = mysqli_fetch_array($p_sql)){
   <option value="<?= DSS_TRXN_PYMT_EFT; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_EFT]; ?></option>
 </select>
 </div>
-
-<style type="text/css">
-
-input{ width: 60px; }
-
-</style>
 
 
 <table style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
@@ -248,7 +270,7 @@ input{ width: 60px; }
 <td>Note</td>
 </tr>
 <?php
-$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id=".$_GET['id'];
+$lsql = "SELECT * FROM dental_ledger WHERE primary_claim_id = '$claimId' OR secondary_claim_id = '$claimId'";
 $lq = mysqli_query($con, $lsql);
 while($row = mysqli_fetch_assoc($lq)){
 ?>
@@ -256,30 +278,43 @@ while($row = mysqli_fetch_assoc($lq)){
 <td><?= $row['service_date']; ?></td>
 <td><?= $row['description']; ?></td>
 <td>$<?= $row['amount']; ?></td>
-<td><input type="text" name="allowed" value="<?= $row['allowed']; ?>" /></td>
-<td><input type="text" name="ins_paid" value="<?= $row['ins_paid']; ?>" /></td>
-<td><input type="text" name="deductible" value="<?= $row['deductible']; ?>" /></td>
-<td><input type="text" name="copay" value="<?= $row['copay']; ?>" /></td>
-<td><input type="text" name="coins" value="<?= $row['coins']; ?>" /></td>
-<td><input type="text" name="overpaid" value="<?= $row['overpaid']; ?>" /></td>
-<td><input type="text" name="followup" value="<?= $row['followup']; ?>" /></td>
-<td><input type="text" id="payment_date_<?= $row['ledgerid']; ?>" class="calendar" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></td>
-<td><input class="payment_amount dollar_input" type="text" name="amount_<?= $row['ledgerid']; ?>" /></td>
-<td><input type="text" name="note" value="<?= $row['note']; ?>" /></td>
+<td><input type="text" class="form-control input-sm"
+        name="payments[<?= $row['ledgerid'] ?>][0][allowed]" value="<?= $row['allowed']; ?>" /></td>
+<td><input type="text" class="form-control input-sm"
+        name="payments[<?= $row['ledgerid'] ?>][0][ins_paid]" value="<?= $row['ins_paid']; ?>" /></td>
+<td><input type="text" class="form-control input-sm"
+        name="payments[<?= $row['ledgerid'] ?>][0][deductible]" value="<?= $row['deductible']; ?>" /></td>
+<td><input type="text" class="form-control input-sm"
+        name="payments[<?= $row['ledgerid'] ?>][0][copay]" value="<?= $row['copay']; ?>" /></td>
+<td><input type="text" class="form-control input-sm"
+        name="payments[<?= $row['ledgerid'] ?>][0][coins]" value="<?= $row['coins']; ?>" /></td>
+<td><input type="text" class="form-control input-sm"
+        name="payments[<?= $row['ledgerid'] ?>][0][overpaid]" value="<?= $row['overpaid']; ?>" /></td>
+<td><input type="text" class="form-control input-sm"
+        name="payments[<?= $row['ledgerid'] ?>][0][followup]" value="<?= $row['followup']; ?>" /></td>
+<td><input type="text" id="payment_date_<?= $row['ledgerid']; ?>" class="calendar form-control input-sm"
+        name="payments[<?= $row['ledgerid'] ?>][0][payment_date]" value="<?= date('m/d/Y'); ?>" /></td>
+<td><input class="payment_amount dollar_input form-control input-sm" type="text"
+        name="payments[<?= $row['ledgerid'] ?>][0][amount]" /></td>
+<td><input type="text" name="payments[<?= $row['ledgerid'] ?>][0][note]" class="form-control input-sm"
+        value="<?= $row['note']; ?>" /></td>
 </tr>
 <?php
 }
 ?>
 </table>
 <br />
-<input type="checkbox" id="close" name="close" onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1" <?= (isset($_GET['close']) && $_GET['close']==1)?'checked="checked"':''; ?>/> <label >Close Claim</label>
+<input type="checkbox" id="close" name="close" class="form-control input-sm"
+    onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1" <?= (isset($_GET['close']) && $_GET['close']==1)?'checked="checked"':''; ?>/> <label >Close Claim</label>
 <br />
-<input type="checkbox" id="dispute" name="dispute" onclick=" if(this.checked){ $('#close').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' /> <label >Dispute</label>
+<input type="checkbox" id="dispute" name="dispute" class="form-control input-sm"
+    onclick=" if(this.checked){ $('#close').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' /> <label >Dispute</label>
 <div id="dispute_reason_div" style="display: none">
-<label >Reason for dispute:</label> <input type="text" name="dispute_reason" />
+<label >Reason for dispute:</label> <input type="text" name="dispute_reason" class="form-control input-sm" />
 </div>
 <div id="ins_attach" <?php if(!isset($_GET['close'])||$_GET['close']!=1){ ?>style="display: none"<?php } ?>>
-<label >Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
+<label >Explanation of Benefits:</label> <input type="file" name="attachment" class="form-control input-sm" />
+  <br />
 </div>
 <input type="hidden" name="claimid" value="<?php echo $_GET['id']; ?>">
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
@@ -288,20 +323,11 @@ while($row = mysqli_fetch_assoc($lq)){
 <input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">
 <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
 <input type="hidden" name="entrycount" value="javascript::readCookie();">
-<div style="width:200px;float:right;margin-left:10px;text-align:left;" id="submitButton"><input style="width:auto;" type="submit" value="Submit Payments" /></div>
+<div style="width:50%;float:right;margin-left:10px;text-align:right;" id="submitButton">
+    <input class="btn btn-primary" type="submit" value="Submit Payments" />
 </div>
-
-
+</div>
 </form>
-<br><br>
-<a href="claim_payments.php?id=<?=$_GET['id']; ?>&pid=<?=$_GET['pid']; ?>" class="button" style="float:right;">Simple Payment</a>
-<div style="clear:both;"></div>
-
-
-
-
-<div style="clear:both;"></div>
-
 <div id="popupContact">
     <a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>

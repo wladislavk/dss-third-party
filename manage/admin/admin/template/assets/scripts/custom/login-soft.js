@@ -12,6 +12,9 @@ var Login = function () {
 	                password: {
 	                    required: true
 	                },
+                    security_code: {
+                        required: true
+                    },
 	                remember: {
 	                    required: false
 	                }
@@ -23,7 +26,10 @@ var Login = function () {
 	                },
 	                password: {
 	                    required: "Password is required."
-	                }
+	                },
+                    security_code: {
+                        required: "Security code is required."
+                    }
 	            },
 
 	            invalidHandler: function (event, validator) { //display error alert on form submit   

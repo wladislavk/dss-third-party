@@ -20,32 +20,6 @@ jQuery(document).ready(function() {
 	var path_name = addr + queryst;
 	//alert(addr);
 	var redirUrl_path = 'extra_lock.php?id=' + userid + '&&addr=' + path_name;
-	$.idleTimeout('#idle-timeout-dialog', '.modal-content button:last', {
-        idleAfter: 900, // 15 minutes
-        warningLength: 1800, // 30 minutes
-        pollingInterval: 20,
-        keepAliveURL: '/manage/admin/demo/idletimeout_keepalive.php',
-        serverResponseEquals: 'OK',
-        onTimeout: function(){
-            window.location = logout.php;
-        },
-        onIdle: function(){
-            $('#idle-timeout-dialog').modal('show');
-            $countdown = $('#idle-timeout-counter');
-
-            $('#idle-timeout-dialog-keepalive').on('click', function () { 
-                $('#idle-timeout-dialog').modal('hide');
-            });
-
-            $('#idle-timeout-dialog-logout').on('click', function () { 
-                $('#idle-timeout-dialog').modal('hide');
-                $.idleTimeout.options.onTimeout.call(this);
-            });
-        },
-        onCountdown: function(counter){
-            $countdown.html(counter); // update the counter
-        }
-    });     
 });
 
 jQuery(document).ready(function(){    

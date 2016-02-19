@@ -107,6 +107,15 @@ class Db
 		}
 	}
 
+	public function getAffectedRows ($query) {
+		if ($query) {
+			$this->query($query);
+			return mysqli_affected_rows($this->con);
+		}
+
+		return false;
+	}
+
 	public function escape($string)
 	{
 		return mysqli_real_escape_string($this->con, $string);

@@ -11,27 +11,44 @@ $(function(){
     /**
      * Add breadcrumb
      */
-    var $container = $('<div class="row hidden-print"><div class="col-md-12"><h3 class="page-title"></h3><ul class="page-breadcrumb breadcrumb"><li><i class="fa fa-home"></i><a href="/manage/admin/home.php">Home</a><i class="fa fa-angle-right"></i></li></ul></div></div>'),
+    var $container = $('<div class="row hidden-print" style="text-transform: capitalize;">' +
+            '<div class="col-md-12">' +
+                '<h3 class="page-title"></h3>' +
+                '<ul class="page-breadcrumb breadcrumb">' +
+                    '<li>' +
+                        '<i class="fa fa-home"></i>' +
+                        '<a href="/manage/admin/home.php">Home</a>' +
+                        '<i class="fa fa-angle-right"></i>' +
+                    '</li>' +
+                '</ul>' +
+            '</div>' +
+        '</div>'),
     $breadcrumb = $container.find('ul'),
-    path = window.location.href.replace(/^.*?\/([^\/]+)$/,'$1');
-    path = path.substr(0,path.indexOf('?'));
+    path = window.location.href.replace(/^.+?\/([^\/]+)$/,'$1');
+
+    if (path.indexOf('?') >= 0) {
+        path = path.substr(0, path.indexOf('?'));
+    }
     
-    $('.page-sidebar-menu').find('li a[href$="' + path + '"]').parents('li').find('>a:nth-child(1)').each(function(){
-        var $this = $(this);
+    $('.page-sidebar-menu').find('li a[href*="' + path + '"]').parents('li').find('>a:nth-child(1)').each(function(){
+        var $this = $(this),
+            $source = $this.find('span.title'),
+            text = ($source.length ? $source : $this).text().trim().toLowerCase();
         
-        if ($this.is('[href$="#"]')) {
-            $breadcrumb.append('<li/>')
-                .find('li:last')
-                .text($this.text().trim());
+        if ($this.is('[href$="#"], [href^="javascript"]')) {
+            $breadcrumb.append('<li><span/><i class="fa fa-angle-right"></i></li>')
+                .find('span:last')
+                .text(text)
         }
         else {
             $breadcrumb.append('<li><a/><i class="fa fa-angle-right"></i></li>')
                 .find('a:last')
-                .text($this.text().trim())
-                .attr('href',this.href);
+                .text(text)
+                .attr('href', this.href);
         }
     });
-    
+
+    // Convert the last breadcrumb link into a text node, and set the title
     $breadcrumb.find('li:last').each(function(){
         var $this = $(this);
         $this.text($this.text());

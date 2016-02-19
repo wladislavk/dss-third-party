@@ -325,11 +325,11 @@ if ($isRejected) {
 <head>
     <title>Health Insurance E-File Claim Form</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
-    <link rel="stylesheet" href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css?v=20160118" />
+    <link rel="stylesheet" href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css?v=20160213" />
     <link rel="stylesheet" href="/manage/css/claim_form_eligible.css?v=<?= time() ?>" />
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-    <script type="text/javascript" src="https://eligibleapi.com/js/eligible-claim-1500-2014.min.js?v=20160118"></script>
+    <script type="text/javascript" src="https://eligibleapi.com/js/eligible-claim-1500-2014.min.js?v=20160213"></script>
     <script type="text/javascript" src="/manage/js/claim_form_eligible.js"></script>
     <?php if (config('app.debug')) { ?>
         <link rel="stylesheet" href="/manage/css/claim-form-mock.css?v=<?= time() ?>" />

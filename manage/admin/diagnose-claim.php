@@ -182,9 +182,9 @@ function retrieveEligibleEvents (Array $eligibleReferences) {
 
     return $db->getResults("SELECT *
         FROM dental_eligible_response
-        WHERE reference_id
+        WHERE LENGTH(reference_id)
             AND reference_id IN ($eligibleReferences)
-        ORDER BY id ASC");
+        ORDER BY id DESC");
 }
 
 function retrieveBOFlagHistory ($claimId) {
@@ -194,7 +194,7 @@ function retrieveBOFlagHistory ($claimId) {
     return $db->getResults("SELECT *
         FROM dental_insurance_bo_status
         WHERE insuranceid = '$claimId'
-        ORDER BY id ASC");
+        ORDER BY id DESC");
 }
 
 /**

@@ -1469,10 +1469,21 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 						Name of Referring Provider or Other Source
 				<select name="name_referring_provider_qualifier">
                     <option value=""></option>
-                    <option value="DN_CLAIM" <?= $name_referring_provider_qualifier == 'DN_CLAIM' ? 'selected="selected"' : '' ?>>DN - Referring Provider (Claim level)</option>
-                    <option value="DN" <?= $name_referring_provider_qualifier == 'DN' ? 'selected="selected"' : '' ?>>DN - Referring Provider</option>
-                    <option value="DK" <?= $name_referring_provider_qualifier == 'DK' ? 'selected="selected"' : '' ?>>DK - Ordering Provider</option>
-					<option value="DQ" <?= $name_referring_provider_qualifier == 'DQ' ? 'selected="selected"' : '' ?>>DQ - Supervising Provider</option>
+                    <option value="DN_CLAIM" <?= $name_referring_provider_qualifier == 'DN_CLAIM' ? 'selected' : '' ?>>
+                        DN - Referring Provider (Claim level)
+                    </option>
+                    <option value="DN" <?= $name_referring_provider_qualifier == 'DN' ? 'selected' : '' ?>>
+                        DN - Referring Provider
+                    </option>
+                    <option value="DN_DME" <?= $name_referring_provider_qualifier == 'DN_DME' ? 'selected' : '' ?>>
+                        DN-DME - Referring Provider For DME Service Line 1
+                    </option>
+                    <option value="DK" <?= $name_referring_provider_qualifier == 'DK' ? 'selected' : '' ?>>
+                        DK - Ordering Provider
+                    </option>
+					<option value="DQ" <?= $name_referring_provider_qualifier == 'DQ' ? 'selected' : '' ?>>
+                        DQ - Supervising Provider
+                    </option>
 				</select>
 								<input type="text" value="<?php echo  $referring_provider; ?>" name="referring_provider" class="inbox_line3" size="20" />
 
@@ -2387,8 +2398,13 @@ function confirm_ledger_trxns(){
 
 // update and changes to ledger trxns
 // (updating associated claim id and status later w/ claim form insert and update)
-function update_ledger_trxns($primary_claim_id, $trxn_status) {
+function update_ledger_trxns($claim_id, $trxn_status) {
     $db = new Db();
+
+    $claim_id = intval($claim_id);
+    $primary_claim_id = $db->getColumn("SELECT IF(primary_claim_id, primary_claim_id, insuranceid) AS claim_id
+        FROM dental_insurance
+        WHERE insuranceid = '$claim_id'", 'claim_id');
 
     $num = 0;
     $added_ledger_ids = array();
@@ -2485,6 +2501,11 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
  */
 function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $filedByBackOffice = false) {
     $db = new Db();
+
+    /**
+     * Session 'userid' is not reliable if we are not navigating a BO page
+     */
+    $userId = $filedByBackOffice ? 0 : intval($_SESSION['userid']);
 
     $claimId = intval($claimId);
     $patientId = intval($patientId);
@@ -3006,7 +3027,8 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
         // update the ledger trxns passed in with the form
         update_ledger_trxns($claimId, DSS_TRXN_PROCESSING);
-        claim_history_update($claimId, $_SESSION['userid'], $_SESSION['adminuserid']);
+        claim_status_history_update($claimId, $status, $formerStatus, $userId, $_SESSION['adminuserid']);
+        claim_history_update($claimId, $userId, $_SESSION['adminuserid']);
 
         return $claimId;
     }
@@ -3246,18 +3268,23 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
     // @ToDo: reimplement this functionality
     update_ledger_trxns($claimId, $transactionStatus);
-    claim_history_update($claimId, $_SESSION['userid'], $_SESSION['adminuserid']);
+    claim_status_history_update($claimId, $status, $formerStatus, $userId, $_SESSION['adminuserid']);
+    claim_history_update($claimId, $userId, $_SESSION['adminuserid']);
 
     if (isset($claimData['p_m_ins_payer_id'])) {
-        $pat_sql = "UPDATE dental_patients SET p_m_eligible_id = '".$db->escape($claimData['p_m_ins_payer_id'])."'
-            WHERE patientid = '$patientId'";
-        $db->query($pat_sql);
+        $payerId = intval($claimData['p_m_ins_payer_id']);
+
+        $db->query("UPDATE dental_patients
+            SET p_m_eligible_id = '$payerId'
+            WHERE patientid = '$patientId'");
     }
 
     if (isset($claimData['s_m_ins_payer_id'])) {
-        $pat_sql = "UPDATE dental_patients SET s_m_eligible_id = '".s_for($claimData['s_m_ins_payer_id'])."'
-            WHERE patientid = '$patientId'";
-        $db->query($pat_sql);
+        $payerId = intval($claimData['s_m_ins_payer_id']);
+
+        $db->query("UPDATE dental_patients
+            SET s_m_eligible_id = '$payerId'
+            WHERE patientid = '$patientId'");
     }
 
     return $claimId;

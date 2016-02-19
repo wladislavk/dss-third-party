@@ -329,15 +329,11 @@ include "includes/top.htm";
     </tr>
     <tr class="tr_active">
         <td valign="top">
-            DST Progress Questionnaire 11-15
+            DST Progress Questionnaire
         </td>
         <td valign="top">
-            <a href="view_user_form.php?file=dst-progress-questionnaire-11-15&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
-                View pdf
-            </a>
-            <br>
-            <a href="view_user_form.php?file=dst-progress-questionnaire-11-15&did=<?php echo $_SESSION['docid']; ?>&ext=doc" class="editlink">
-                View doc
+            <a href="view_user_form.php?file=dst-progress-questionnaire&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
+                View
             </a>
         </td>
     </tr>

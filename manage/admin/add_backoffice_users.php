@@ -471,8 +471,6 @@ jQuery(function($){
     selected_company = '<?php echo  $companyid; ?>';
 
     $('form[name=userfrm]').submit(function(event){
-        event.preventDefault();
-
         return check_add();
     });
 }(jQuery));

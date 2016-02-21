@@ -35,13 +35,13 @@ class LedgerPaymentHistoriesApiTest extends TestCase
         $ledgerPaymentHistoryTestRecord = factory(LedgerPaymentHistory::class)->create();
 
         $data = [
-            'note'  => 'updated note ledger payment history',
+            'note'  => 'updated ledger payment history',
             'payer' => 8
         ];
 
         $this->put('/api/v1/ledger-payment-histories/' . $ledgerPaymentHistoryTestRecord->id, $data)
             ->seeInDatabase('dental_ledger_payment_history', [
-                'note' => 'updated note ledger payment history'
+                'note' => 'updated ledger payment history'
             ])
             ->assertResponseOk();
     }

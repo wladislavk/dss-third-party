@@ -3,26 +3,20 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Eloquent\WithoutCreatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\LedgerPaymentHistory as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LedgerPaymentHistories as Repository;
 
 class LedgerPaymentHistory extends Model implements Resource, Repository
 {
-    use WithoutUpdatedTimestamp;
+    use WithoutCreatedTimestamp;
 
     /**
-     * Mass assignable attributes
+     * Guarded attributes
      *
      * @var array
      */
-    protected $fillable = [
-        'paymentid', 'payer', 'amount', 'payment_type',
-        'payment_date', 'entry_date', 'ledgerid', 'allowed',
-        'ins_paid', 'deductible', 'copay', 'coins',
-        'overpaid', 'followup', 'note', 'amount_allowed',
-        'updated_by_user', 'updated_by_admin', 'updated_at'
-    ];
+    protected $guarded = ['id'];
 
     /**
      * The database table used by the model.
@@ -44,12 +38,4 @@ class LedgerPaymentHistory extends Model implements Resource, Repository
      * @var array
      */
     protected $dates = ['payment_date', 'entry_date', 'followup'];
-
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
-    const CREATED_AT = 'updated_at';
-
 }

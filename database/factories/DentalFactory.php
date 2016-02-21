@@ -310,22 +310,21 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerPaymentHistory::clas
     return [
         'paymentid'         => $faker->randomDigit,
         'payer'             => $faker->randomDigit,
-        'amount'            => $faker->regexify('[0-9]+\.[0-9]{2}'),
+        'amount'            => $faker->numerify('###.##'),
         'payment_type'      => $faker->randomDigit,
         'payment_date'      => $faker->dateTime(),
         'entry_date'        => $faker->dateTime(),
         'ledgerid'          => $faker->randomDigit,
-        'allowed'           => $faker->regexify('[0-9]+\.[0-9]{2}'),
-        'ins_paid'          => $faker->regexify('[0-9]+\.[0-9]{2}'),
-        'deductible'        => $faker->regexify('[0-9]+\.[0-9]{2}'),
-        'copay'             => $faker->regexify('[0-9]+\.[0-9]{2}'),
-        'coins'             => $faker->regexify('[0-9]+\.[0-9]{2}'),
-        'overpaid'          => $faker->regexify('[0-9]+\.[0-9]{2}'),
+        'allowed'           => $faker->numerify('###.##'),
+        'ins_paid'          => $faker->numerify('###.##'),
+        'deductible'        => $faker->numerify('###.##'),
+        'copay'             => $faker->numerify('###.##'),
+        'coins'             => $faker->numerify('###.##'),
+        'overpaid'          => $faker->numerify('###.##'),
         'followup'          => $faker->dateTime(),
-        'note'              => $faker->sentence($nbWords = 2),
-        'amount_allowed'    => $faker->regexify('[0-9]+\.[0-9]{2}'),
-        'updated_by_user'   => $faker->randomDigit,
-        'updated_by_admin'  => $faker->randomDigit,
-        'updated_at'        => $faker->dateTime()
+        'note'              => $faker->sentence($nbWords = 5),
+        'amount_allowed'    => $faker->numerify('###.##'),
+        'updated_by_user'   => $faker->boolean($chanceOfGettingTrue = 50),
+        'updated_by_admin'  => $faker->boolean($chanceOfGettingTrue = 50)
     ];
 });

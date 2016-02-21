@@ -28,9 +28,8 @@ class LedgerPaymentHistoryStore extends Request
             'followup'          => 'date',
             'note'              => 'string',
             'amount_allowed'    => 'regex:/^[0-9]+\.[0-9]{2}$/',
-            'updated_by_user'   => 'integer',
-            'updated_by_admin'  => 'integer',
-            'updated_at'        => 'date'
+            'updated_by_user'   => 'boolean',
+            'updated_by_admin'  => 'boolean'
         ];
     }
 }

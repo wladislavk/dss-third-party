@@ -35,13 +35,13 @@ class LedgerRecordsApiTest extends TestCase
         $ledgerRecordTestRecord = factory(LedgerRecord::class)->create();
 
         $data = [
-            'description' => 'updated description ledger record',
+            'description' => 'updated ledger record',
             'status'      => 8
         ];
 
         $this->put('/api/v1/ledger-records/' . $ledgerRecordTestRecord->ledgerid, $data)
             ->seeInDatabase('dental_ledger_rec', [
-                'description' => 'updated description ledger record'
+                'description' => 'updated ledger record'
             ])
             ->assertResponseOk();
     }

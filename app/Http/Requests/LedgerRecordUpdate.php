@@ -12,7 +12,7 @@ class LedgerRecordUpdate extends Request
     public function rules()
     {
         return [
-            'formid'           => 'sometimes|required|integer',
+            'formid'           => 'integer',
             'patientid'        => 'sometimes|required|integer',
             'service_date'     => 'string',
             'entry_date'       => 'string',

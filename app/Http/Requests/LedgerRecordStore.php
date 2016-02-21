@@ -12,7 +12,7 @@ class LedgerRecordStore extends Request
     public function rules()
     {
         return [
-            'formid'           => 'required|integer',
+            'formid'           => 'integer',
             'patientid'        => 'required|integer',
             'service_date'     => 'string',
             'entry_date'       => 'string',

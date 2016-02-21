@@ -3,16 +3,11 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Eloquent\WithoutCreatedTimestamp;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\LedgerRecord as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LedgerRecords as Repository;
 
 class LedgerRecord extends Model implements Resource, Repository
 {
-    use WithoutCreatedTimestamp;
-    use WithoutUpdatedTimestamp;
-
     /**
      * Guarded attributes
      *
@@ -33,4 +28,11 @@ class LedgerRecord extends Model implements Resource, Repository
      * @var string
      */
     protected $primaryKey = 'ledgerid';
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 }

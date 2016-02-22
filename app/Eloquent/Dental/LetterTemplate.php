@@ -3,21 +3,19 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\LetterTemplate as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LetterTemplates as Repository;
 
 class LetterTemplate extends Model implements Resource, Repository
 {
-    use WithoutUpdatedTimestamp;
-
     /**
      * Mass assignable attributes
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'template', 'body', 'default_letter', 'companyid', 'triggerid'
+        'name', 'template', 'body',
+        'default_letter','companyid', 'triggerid'
     ];
 
     /**

@@ -306,26 +306,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerRecord::class, function ($faker) {
-    return [
-        'formid'           => $faker->randomDigit,
-        'patientid'        => $faker->randomDigit,
-        'service_date'     => $faker->dateTime()->format('d/m/Y'),
-        'entry_date'       => $faker->dateTime()->format('d/m/Y'),
-        'description'      => $faker->sentence($nbWords = 4),
-        'producer'         => $faker->word,
-        'amount'           => $faker->regexify('[0-9]+\.[0-9]{2}'),
-        'transaction_type' => $faker->word,
-        'paid_amount'      => $faker->regexify('[0-9]+\.[0-9]{2}'),
-        'userid'           => $faker->randomDigit,
-        'docid'            => $faker->randomDigit,
-        'status'           => $faker->randomDigit,
-        'adddate'          => Carbon::now()->format('m/d/Y'),
-        'ip_address'       => $faker->ipv4,
-        'transaction_code' => $faker->regexify('[A-Z][0-9]{4}')
-    ];
-});
-
 $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerStatement::class, function ($faker) {
     return [
         'producerid'   => $faker->randomDigit,

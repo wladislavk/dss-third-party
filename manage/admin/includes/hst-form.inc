@@ -396,7 +396,7 @@ $defaultProvider = $isStaff ? $userId : $docId;
     <p></p>
     <ul class="frmhead">
         <li>
-            <label class="desc">Diganosis / Reason for Study</label>
+            <label class="desc">Diagnosis / Reason for Study</label>
             <hr />
             <?php
 

@@ -15,8 +15,8 @@ class LedgerHistoryStore extends Request
             'ledgerid'                 => 'required|integer',
             'formid'                   => 'integer',
             'patientid'                => 'required|integer',
-            'service_date'             => 'string',
-            'entry_date'               => 'string',
+            'service_date'             => 'date',
+            'entry_date'               => 'date',
             'description'              => 'string',
             'producer'                 => 'string',
             'amount'                   => 'regex:/^[0-9]+\.[0-9]{2}$/',
@@ -33,7 +33,7 @@ class LedgerHistoryStore extends Request
             'epsdt'                    => 'string',
             'idqual'                   => 'string',
             'modcode'                  => 'string',
-            'producerid'               => 'integer',
+            'producerid'               => 'required|integer',
             'primary_claim_id'         => 'integer',
             'primary_paper_claim_id'   => 'string',
             'modcode2'                 => 'string',
@@ -47,7 +47,8 @@ class LedgerHistoryStore extends Request
             'percase_free'             => 'integer',
             'updated_by_user'          => 'integer',
             'updated_by_admin'         => 'integer',
-            'primary_claim_history_id' => 'integer'
+            'primary_claim_history_id' => 'integer',
+            'secondary_claim_id'       => 'integer'
         ];
     }
 }

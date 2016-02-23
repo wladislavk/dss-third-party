@@ -312,12 +312,12 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerHistory::class, func
             'ledgerid'                 => $faker->randomDigit,
             'formid'                   => $faker->randomDigit,
             'patientid'                => $faker->randomDigit,
-            'service_date'             => $faker->dateTime()->format('Y-m-d H:i:s'),
-            'entry_date'               => $faker->dateTime()->format('Y-m-d H:i:s'),
+            'service_date'             => $faker->dateTime(),
+            'entry_date'               => $faker->dateTime(),
             'description'              => $faker->sentence($nbWords = 6),
             'producer'                 => $faker->name,
             'amount'                   => $faker->regexify('[0-9]+\.[0-9]{2}'),
-            'transaction_type'         => $faker->word,
+            'transaction_type'         => $faker->randomElement(['Charge', 'Credit', 'None']),
             'paid_amount'              => $faker->regexify('[0-9]+\.[0-9]{2}'),
             'userid'                   => $faker->randomDigit,
             'docid'                    => $faker->randomDigit,
@@ -346,6 +346,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerHistory::class, func
             'percase_free'             => $faker->randomDigit,
             'updated_by_user'          => $faker->randomDigit,
             'updated_by_admin'         => $faker->randomDigit,
-            'primary_claim_history_id' => $faker->randomDigit
+            'primary_claim_history_id' => $faker->randomDigit,
+            'secondary_claim_id'       => $faker->randomDigit
         ];
 });

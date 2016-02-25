@@ -30,13 +30,17 @@ require_once __DIR__ . '/includes/top.htm';
 <form method="post">
     <select name="admin_access" class="form-control input-sm input-inline">
         <?php foreach ($accessLevels as $level=>$label) { ?>
-            <option value="<?= $level ?>" <?= $_SESSION['admin_access'] == $level ? 'selected' : '' ?>><?= e($label) ?></option>
+            <option value="<?= $level ?>" <?= $_SESSION['admin_access'] == $level ? 'selected' : '' ?>>
+                <?= e("[$level] $label") ?>
+            </option>
         <?php } ?>
     </select>
     <select name="admincompanyid" class="form-control input-sm input-inline">
         <option value="0" <?= $_SESSION['admincompanyid'] == 0 ? 'selected' : '' ?>>None</option>
         <?php foreach ($companies as $company) { ?>
-            <option value="<?= $company['id'] ?>" <?= $_SESSION['admincompanyid'] == $company['id'] ? 'selected' : '' ?>><?= e($company['name']) ?></option>
+            <option value="<?= $company['id'] ?>" <?= $_SESSION['admincompanyid'] == $company['id'] ? 'selected' : '' ?>>
+                <?= e("[{$company['id']}] {$company['name']}") ?>
+            </option>
         <?php } ?>
     </select>
     <input type="submit" class="btn btn-default" value="Update session values" />

@@ -24,7 +24,6 @@ require_once __DIR__ . '/includes/top.htm';
 ?>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
-<h2>Alter Session</h2>
 <p class="lead">Ater session level access and linked company, for this session only.</p>
 <p>The change will only affect queries from the site that rely on the session data. If queries rely on the user id, this change might have unexpected results.</p>
 <form method="post">

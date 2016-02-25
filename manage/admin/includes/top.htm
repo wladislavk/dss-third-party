@@ -1150,7 +1150,40 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 			</li>
 			<?php } ?>	
 			 <?php }
-			} ?>	
+			}
+
+			if (is_super($_SESSION['admin_access'])) { ?>
+				<li>
+					<a href="javascript:;">
+						<i class="fa fa-wrench"></i>
+						<span class="title">
+							Debug Tools
+						</span>
+						<span class="arrow"></span>
+					</a>
+					<ul class="sub-menu">
+						<li>
+							<a href="/manage/admin/diagnose-claim.php" title="Claim ID will be needed">
+								<i class="fa fa-search-plus"></i>
+								Diagnose Claim
+							</a>
+						</li>
+						<li>
+							<a href="/manage/admin/diagnose-payment-events.php?grouped=on"
+							   title="Only payments associated to claims will be shown">
+								<i class="fa fa-search-plus"></i>
+								Diagnose Payment Events
+							</a>
+						</li>
+						<li>
+							<a href="/manage/admin/alter-session.php" title="Spoof company id and access level">
+								<i class="fa fa-edit"></i>
+								Alter Session Data
+							</a>
+						</li>
+					</ul>
+				</li>
+			<?php } ?>
 			</ul>
 			<!-- END SIDEBAR MENU -->
 		</div>

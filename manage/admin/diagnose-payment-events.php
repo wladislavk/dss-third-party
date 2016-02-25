@@ -153,8 +153,11 @@ require_once __DIR__ . '/includes/top.htm';
         <input type="checkbox" name="grouped" <?= $getGrouped ? 'checked' : '' ?> />
         Group by Payment Trace ID
     </label>
-    <input type="submit" />
+    <input type="submit" class="btn btn-primary" />
 </form>
+<?php if (!$results) { ?>
+    <p class="lead text-center">No payment events found, system wide.</p>
+<?php } ?>
 <?php if ($getGrouped) { ?>
     <?php foreach ($results as $paymentTraceId=>$grouped) { ?>
         <hr />
@@ -237,4 +240,6 @@ require_once __DIR__ . '/includes/top.htm';
         <?php } ?>
         </tbody>
     </table>
-<?php } ?>
+<?php }
+
+require_once __DIR__ . '/includes/bottom.htm';

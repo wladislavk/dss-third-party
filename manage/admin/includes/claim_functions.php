@@ -1628,7 +1628,7 @@ function filedByBackOfficeConditional ($claimAlias='claim') {
 /**
  * Auxiliary function for webhooks / Eligible events
  *
- * @param int $referenceId
+ * @param int $claimId
  * @return string
  */
 function referenceIdFromClaimId ($claimId) {

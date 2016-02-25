@@ -13,7 +13,10 @@ class Login extends Model implements Resource, Repository
      *
      * @var array
      */
-    protected $fillable = ['docid', 'userid', 'login_date', 'logout_date'];
+    protected $fillable = [
+        'docid', 'userid', 'login_date',
+        'logout_date', 'ip_address'
+    ];
 
     /**
      * The database table used by the model.

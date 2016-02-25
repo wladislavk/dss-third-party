@@ -305,3 +305,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Login::class, function ($faker) {
+    return [
+        'docid'       => $faker->randomDigit,
+        'userid'      => $faker->randomDigit,
+        'login_date'  => $faker->dateTime(),
+        'logout_date' => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

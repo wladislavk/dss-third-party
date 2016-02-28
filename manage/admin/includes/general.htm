@@ -1771,13 +1771,27 @@ function count_pages($pdfname) {
 }
 
 function tidyHtml ($html) {
+    /**
+     * @see DSS-334
+     *
+     * Tidy does NOT use this config array. The php.ini file needs to be modified to laod the config values from a file.
+     * Enable preserve-entities, &reg; might get corrupted when turning it into text.
+     */
     $config = [
         'clean' => true,
+        'preserve-entities' => true,
         'drop-proprietary-attributes' => true,
         'output-xhtml' => true,
         'show-body-only' => true,
         'wrap' => '0'
     ];
+
+    $encoding = mb_detect_encoding($html);
+
+    // If no encoding is detected, don't risk any changes
+    if ($encoding && strtolower($encoding) !== 'utf-8') {
+        $html = mb_convert_encoding($html, 'UTF-8', $encoding);
+    }
 
     if (class_exists('\tidy')) {
         try {
@@ -1791,4 +1805,119 @@ function tidyHtml ($html) {
     }
 
     return $cleanHtml;
+}
+
+/**
+ * Mini template engine, for easy variable replacement.
+ *
+ * @param string $template
+ * @param array  $variables
+ * @param bool   $escapeHtml
+ * @return string
+ */
+function parseTemplate ($template, Array $variables=[], $escapeHtml=true) {
+    if (!isset($variables['baseUrl'])) {
+        $variables['baseUrl'] = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+    }
+
+    $escapeList = [
+        '{}' => $escapeHtml ? array_map('\htmlspecialchars', $variables) : $variables,
+        '%%' => array_map('\rawurlencode', $variables),
+    ];
+
+    foreach ($escapeList as $delimiter=>$variableList) {
+        $left = preg_quote('{' . $delimiter{0});
+        $right = preg_quote($delimiter{1} . '}');
+
+        $regex = "/(?<replacements>$left(?<keys>[a-z0-9_\-]+)$right)/i";
+
+        if (!preg_match_all($regex, $template, $matches)) {
+            continue;
+        }
+
+        $replacements = array_map(function ($key) use ($variableList) {
+            return array_get($variableList, $key, '');
+        }, $matches['keys']);
+
+        $template = str_replace($matches['replacements'], $replacements, $template);
+        $template = preg_replace($regex, '', $template);
+    }
+
+    return $template;
+}
+
+/**
+ * Centralized place to send emails.
+ *
+ * The function will create a multipart email from either an HTML template, or an array of html/text templates.
+ *
+ * @param string       $from
+ * @param string       $to
+ * @param string       $subject
+ * @param string|array $template
+ * @param array        $extraHeaders
+ * @return bool
+ */
+function sendEmail ($from, $to, $subject, $template, Array $variables=[], Array $extraHeaders=[]) {
+    $newLine = "\n";
+    $boundary = uniqid('ds3');
+    $htmlContentType = 'Content-Type: text/html; charset=UTF-8';
+
+    $headers = [
+        "From: $from",
+        "Reply-To: $from",
+        'X-Mailer: Dental Sleep Solutions Mailer',
+        'MIME-Version: 1.0',
+        "Content-Type: multipart/alternative; boundary=$boundary",
+        "X-Sender-IP: {$_SERVER['SERVER_ADDR']}",
+        'Date: '.date('n/d/Y g:i A'),
+    ] + $extraHeaders;
+    $headers = join($newLine, $headers) . $newLine;
+
+    if (is_array($template)) {
+        if (!isset($template['text']) && !isset($template['html'])) {
+            throw new \RuntimeException('sendEmail requires the html or the text version of the message.');
+        }
+
+        $textBody = (string)array_get($template, 'text');
+        $htmlBody = (string)array_get($template, 'html');
+    } else {
+        $htmlBody = (string)$template;
+    }
+
+    $htmlBody = tidyHtml($htmlBody);
+
+    if (!isset($textBody) || !strlen($textBody)) {
+        $textBody = \Html2Text\Html2Text::convert($htmlBody);
+    }
+
+    if ($variables) {
+        $htmlBody = parseTemplate($htmlBody, $variables, true);
+        $textBody = parseTemplate($textBody, $variables, true);
+    }
+
+    $body = $textBody .
+        $newLine .
+        $newLine .
+        "--$boundary" .
+        $newLine .
+        $htmlContentType .
+        $newLine .
+        $newLine .
+        $htmlBody;
+
+    if (config('app.debug') && config('app.debugEmail')) {
+        error_log("sendEmail debug information:");
+        error_log(json_encode([
+            'from' => $from,
+            'to' => $to,
+            'subject' => $subject,
+            'headers' => $headers,
+            'body' => $body
+        ]));
+
+        return true;
+    }
+
+    return mail($to, $subject, $body, $headers);
 }

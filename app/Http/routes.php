@@ -35,6 +35,8 @@ Route::group(['prefix' => 'webhooks'], function () {
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
+    Route::resource('notes', 'NotesController', ['except' => ['create', 'edit']]);
+
     Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);
     Route::resource('complaints', 'ComplaintsController', ['except' => ['create', 'edit']]);
     Route::resource('custom-texts', 'CustomTextsController', ['except' => ['create', 'edit']]);

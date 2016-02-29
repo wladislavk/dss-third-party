@@ -99,7 +99,7 @@ function insertLedgerPayments ($claimId, Array $ledgerPayments, $paymentType, $p
     $today = date('Y-m-d');
 
     $setFields = [
-        'payment_date' => null,
+        'payment_date' => $today,
         'entry_date' => $today,
         'followup' => null,
         'payment_type' => $paymentType,

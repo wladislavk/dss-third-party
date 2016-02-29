@@ -1,7 +1,10 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
 define('SHARED_FOLDER', __DIR__ . '/../../../../shared/');
 define('Q_FILE_FOLDER', SHARED_FOLDER . '/q_file/');
+
+require_once __DIR__ . '/constants.inc';
 
 function generateApiToken($idOrEmail) {
     $apiPath = env('API_PATH');
@@ -157,86 +160,309 @@ function uploadImage($image, $file_path, $type = 'general'){
   return $uploaded;
 }
 
-function sendUpdatedEmail($id, $new, $old, $by){
+/**
+ * Retrieve template from the template folder
+ *
+ * @param string $filename
+ * @return string
+ */
+function getTemplate ($filename) {
+    $templatePath = __DIR__ . '/../admin/includes/templates';
+    $filename = preg_replace('/[^a-z0-9_-]+/', '', $filename);
 
-$db = new Db();
-$con = $GLOBALS['con'];
+    if (!file_exists("$templatePath/$filename.tpl")) {
+        return '';
+    }
 
-if(trim($new) != trim($old)){
-  $sql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid
-                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-	where p.patientid='".mysqli_real_escape_string($con,$id)."'";
-
-  $r = $db->getRow($sql);
-  $n = $r['mailing_phone'];
-  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
-    $logo = "/manage/q_file/".$ur['logo'];
-  }else{
-    $logo = "/reg/images/email/reg_logo.gif";
-  }
-
-if($by=='doc'){
-  $m = "<html><body><center>
-<table width='600'>
-<tr><td colspan='2'><img alt='A message from your healthcare provider' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
-<tr><td width='400'>
-<h2>Your Updated Account</h2>
-<p>An update has been made to your account.<br />Please use the updated email address below to login:</p>
-<h3>New Email: ".$new."</h3>
-<p><b>Old Email:</b> ".$old."</p>
-</td><td><img alt='Logo' src='http://".$_SERVER['HTTP_HOST'].$logo."' /></td></tr>
-<tr><td>
-<p>Click the link below to login with your new email address:<br />
-<a href='http://".$_SERVER['HTTP_HOST']."/reg/login.php'>http://".$_SERVER['HTTP_HOST']."/reg/login.php</a></p>
-<p>".$r['mailing_practice']."<br />
-".$r['mailing_address']."<br />
-".$r['mailing_city']." ".$r['mailing_state']." ".$r['mailing_zip']."<br />
-".format_phone($r['mailing_phone'])."</p>
-<h3>Need assistance?</h3>
-<p><b>Contact us at ".$n."</b></p>
-</td></tr>
-<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
-</table>
-</center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$r['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
-";
-}else{
-  $m = "<html><body><center>
-<table width='600'>
-<tr><td colspan='2'><img alt='A message from your healthcare provider' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
-<tr><td width='400'>
-<h2>Your Updated Account</h2>
-<p>You have updated your account.<br />Please use the updated email address below to login:</p>
-<h3>New Email: ".$new."</h3>
-<p><b>Old Email:</b> ".$old."</p>
-</td><td><img alt='Logo' src='http://".$_SERVER['HTTP_HOST'].$logo."' /></td></tr>
-<tr><td>
-<p>Click the link below to login with your new email address:<br />
-<a href='http://".$_SERVER['HTTP_HOST']."/reg/login.php'>http://".$_SERVER['HTTP_HOST']."/reg/login.php</a></p>
-<p>".$r['mailing_practice']."<br />
-".$r['mailing_address']."<br />
-".$r['mailing_city']." ".$r['mailing_state']." ".$r['mailing_zip']."<br />
-".format_phone($r['mailing_phone'])."</p>
-<h3>Didn't request this change or need assistance?</h3>
-<p><b>Contact us at ".$n."</b></p>
-</td></tr>
-<tr><td colspan='2'><img alt='A message from your healthcare provider' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
-</table>
-</center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$r['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
-";
-
-
-
+    return file_get_contents("$templatePath/$filename.tpl");
 }
-$headers = 'From: Dental Sleep Solutions <patient@dentalsleepsolutions.com>' . "\r\n" .
-                    'Content-type: text/html' ."\r\n" .
-                    'Reply-To: patient@dentalsleepsolutions.com' . "\r\n" .
-                     'X-Mailer: PHP/' . phpversion();
 
-                $subject = "Online Patient Portal Email Update";
+/**
+ * Mini template engine, for easy variable replacement.
+ *
+ * @param string $template
+ * @param array  $variables
+ * @param bool   $escapeHtml
+ * @return string
+ */
+function parseTemplate ($template, Array $variables=[], $escapeHtml=true) {
+    if (!isset($variables['baseUrl'])) {
+        $variables['baseUrl'] = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+    }
 
-                mail($new, $subject, $m, $headers);
-                mail($old, $subject, $m, $headers);
+    $escapeList = [
+        '--' => $variables,
+        '{}' => $escapeHtml ? array_map('\htmlspecialchars', $variables) : $variables,
+        '%%' => array_map('\rawurlencode', $variables),
+    ];
+
+    foreach ($escapeList as $delimiter=>$variableList) {
+        $left = preg_quote('{' . $delimiter{0});
+        $right = preg_quote($delimiter{1} . '}');
+
+        $regex = "/(?<replacements>$left(?<keys>[a-z0-9_\-]+)$right)/i";
+
+        if (!preg_match_all($regex, $template, $matches)) {
+            continue;
+        }
+
+        $replacements = array_map(function ($key) use ($variableList) {
+            return array_get($variableList, $key, '');
+        }, $matches['keys']);
+
+        $template = str_replace($matches['replacements'], $replacements, $template);
+        $template = preg_replace($regex, '', $template);
+    }
+
+    return $template;
 }
+
+/**
+ * Centralized place to send emails.
+ *
+ * The function will create a multipart email from either an HTML template, or an array of html/text templates.
+ *
+ * @param string       $from
+ * @param string       $to
+ * @param string       $subject
+ * @param string|array $template
+ * @param array        $variables
+ * @param array        $extraHeaders
+ * @return bool
+ */
+function sendEmail ($from, $to, $subject, $template, Array $variables=[], Array $extraHeaders=[]) {
+    $newLine = "\n";
+    $boundary = uniqid('ds3');
+    $htmlContentType = 'Content-Type: text/html; charset=UTF-8';
+
+    $headers = [
+            "From: $from",
+            "Reply-To: $from",
+            'X-Mailer: Dental Sleep Solutions Mailer',
+            'MIME-Version: 1.0',
+            "Content-Type: multipart/alternative; boundary=$boundary",
+            "X-Sender-IP: {$_SERVER['SERVER_ADDR']}",
+            'Date: '.date('n/d/Y g:i A'),
+        ] + $extraHeaders;
+    $headers = join($newLine, $headers) . $newLine;
+
+    if (is_array($template)) {
+        if (!isset($template['text']) && !isset($template['html'])) {
+            throw new \RuntimeException('sendEmail requires the html or the text version of the message.');
+        }
+
+        $textBody = (string)array_get($template, 'text');
+        $htmlBody = (string)array_get($template, 'html');
+    } else {
+        $htmlBody = (string)$template;
+    }
+
+    $htmlBody = tidyHtml($htmlBody);
+
+    if (!isset($textBody) || !strlen($textBody)) {
+        $textBody = \Html2Text\Html2Text::convert($htmlBody);
+    }
+
+    if ($variables) {
+        $htmlBody = parseTemplate($htmlBody, $variables, true);
+        $textBody = parseTemplate($textBody, $variables, true);
+    }
+
+    $body = $textBody .
+        $newLine .
+        $newLine .
+        "--$boundary" .
+        $newLine .
+        $htmlContentType .
+        $newLine .
+        $newLine .
+        $htmlBody;
+
+    if (config('app.debug') && config('app.debugEmail')) {
+        error_log("sendEmail debug information:");
+        error_log(json_encode([
+            'from' => $from,
+            'to' => $to,
+            'subject' => $subject,
+            'headers' => $headers,
+            'body' => $body
+        ]));
+
+        return true;
+    }
+
+    return mail($to, $subject, $body, $headers);
+}
+
+/**
+ * Retrieve patient and mailing doctor details, for patient emails
+ *
+ * @param int $patientId
+ * @return array
+ */
+function retrieveMailerData ($patientId) {
+    $db = new Db();
+    $patientId = intval($patientId);
+
+    $patientData = $db->getRow("SELECT *
+        FROM dental_patients
+        WHERE patientid = '$patientId'");
+
+    $locationId = $db->getRow("SELECT location
+        FROM dental_summary
+        WHERE patientid = '$patientId'", 'location');
+
+    if ($locationId) {
+        $locationId = intval($locationId);
+        $docId = intval($patientData['docid']);
+
+        $locationConditional = "l.id = '$locationId' AND l.docid = '$docId'";
+    } else {
+        $locationConditional = "l.default_location = 1 AND p.patientid = '$patientId'";
+    }
+
+    $mailingData = $db->getRow("SELECT
+            l.phone AS mailing_phone,
+            u.user_type,
+            u.logo,
+            l.location AS mailing_practice,
+            l.address AS mailing_address,
+            l.city AS mailing_city,
+            l.state AS mailing_state,
+            l.zip AS mailing_zip
+        FROM dental_users u
+            INNER JOIN dental_patients p ON u.userid = p.docid
+            LEFT JOIN dental_locations l ON l.docid = u.userid
+        WHERE $locationConditional");
+
+    if ($mailingData['user_type'] == DSS_USER_TYPE_SOFTWARE && isSharedFile($mailingData['logo'])) {
+        $mailingData['logo'] = 'manage/q_file/' . $mailingData['logo'];
+    } else {
+        $mailingData['logo'] = 'reg/images/email/reg_logo.gif';
+    }
+
+    $mailingData['mailing_phone'] = format_phone($mailingData['mailing_phone']);
+    $mailingData['footer'] = DSS_EMAIL_FOOTER;
+
+    return [
+        'patientData' => $patientData,
+        'mailingData' => $mailingData
+    ];
+}
+
+/**
+ * @param int    $patientId
+ * @param string $patientEmail
+ * @param bool   $isPasswordReset
+ * @param string $oldEmail
+ * @return bool
+ */
+function sendRegistrationRelatedEmail ($patientId, $patientEmail, $isPasswordReset=false, $oldEmail='') {
+    $db = new Db();
+    $patientId = intval($patientId);
+
+    $contactData = retrieveMailerData($patientId);
+    $patientData = $contactData['patientData'];
+    $mailingData = $contactData['mailingData'];
+
+    if ($isPasswordReset) {
+        if ($patientData['recover_hash'] == '' || $patientEmail != $oldEmail) {
+            $accessCode = rand(100000, 999999);
+            $recoverHash = hash('sha256', $patientData['patientid'] . $patientData['email'] . rand());
+
+            $db->query("UPDATE dental_patients SET
+                    text_num = 0,
+                    access_type = 1,
+                    registration_status = 1,
+                    access_code = '$accessCode',
+                    recover_hash = '$recoverHash',
+                    text_date = NOW(),
+                    recover_time = NOW(),
+                    registration_senton = NOW()
+                WHERE patientid = '$patientId'");
+        } else {
+            $db->query("UPDATE dental_patients SET
+                    access_type = 1,
+                    registration_status = 1,
+                    registration_senton = NOW()
+                WHERE patientid = '$patientId'");
+            $recoverHash = $patientData['recover_hash'];
+        }
+
+        $mailingData['patient_id'] = $patientId;
+        $mailingData['recover_hash'] = $recoverHash;
+        $mailingData['legend'] = '<p>We hope to hear from you soon!</p>';
+        $mailingData['link'] = '{{baseUrl}}/reg/activate.php?id={%patient_id%}&amp;hash={%recover_hash%}';
+    } else {
+        $mailingData['link'] = '{{baseUrl}}/reg/login.php?email={%email%}';
+    }
+
+    $mailingData['email'] = $patientEmail;
+
+    $from = 'Dental Sleep Solutions <patient@dentalsleepsolutions.com>';
+    $to = "{$patientData['firstname']} {$patientData['lastname']} <{$patientEmail}>";
+    $subject = 'Online Patient Registration';
+    $message = getTemplate('patient-registration');
+
+    return sendEmail($from, $to, $subject, $message, $mailingData);
+}
+
+/**
+ * Send registration email
+ *
+ * @param int    $patientId
+ * @param string $patientEmail
+ * @param mixed  $unusedLogin
+ * @param string $oldEmail
+ * @return bool
+ */
+function sendRegEmail ($patientId, $patientEmail, $unusedLogin, $oldEmail) {
+    return sendRegistrationRelatedEmail($patientId, $patientEmail, true, $oldEmail);
+}
+
+/**
+ * Send "remember" email
+ *
+ * @param int    $patientId
+ * @param string $patientEmail
+ * @return bool
+ */
+function sendRemEmail ($patientId, $patientEmail) {
+    return sendRegistrationRelatedEmail($patientId, $patientEmail, false);
+}
+
+/**
+ * @param int    $patientId
+ * @param string $newEmail
+ * @param string $oldEmail
+ * @param string $sentBy
+ * @return bool
+ */
+function sendUpdatedEmail ($patientId, $newEmail, $oldEmail, $sentBy) {
+    $patientId = intval($patientId);
+
+    if (strtolower(trim($oldEmail)) === strtolower(trim($newEmail))) {
+        return false;
+    }
+
+    $contactData = retrieveMailerData($patientId);
+    $patientData = $contactData['patientData'];
+    $mailingData = $contactData['mailingData'];
+
+    $mailingData['old_email'] = $oldEmail;
+    $mailingData['new_email'] = $newEmail;
+    $mailingData['legend'] = $sentBy === 'doc' ?
+        'An update has been made to your account.' : 'You have updated your account.';
+
+    $from = 'Dental Sleep Solutions <patient@dentalsleepsolutions.com>';
+    $to = "{$patientData['firstname']} {$patientData['lastname']}";
+    $subject = 'Online Patient Portal Email Update';
+    $message = getTemplate('patient-update');
+
+    $return = sendEmail($from, "$to <$oldEmail>", $subject, $message, $mailingData);
+    $return = sendEmail($from, "$to <$newEmail>", $subject, $message, $mailingData) && $return;
+
+    return $return;
 }
 
 function showPatientValue($table, $pid, $f, $pv, $fv, $showValues = true, $show=true, $type="text"){

@@ -135,7 +135,7 @@ class Db
         $db = $this;
 
         array_walk($values, function (&$each, $key) use ($db) {
-            $each = $db->escape($key) . " = '" . $db->escape($each) . "'";
+            $each = '`' . $db->escape($key) . "` = '" . $db->escape($each) . "'";
         });
 
         return join(', ', $values);

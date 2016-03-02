@@ -17,6 +17,7 @@ function defaultClaimFields () {
     return [
         'insuranceid',
         'docid',
+        'userid',
         'patientid',
         'status',
         'status_label',

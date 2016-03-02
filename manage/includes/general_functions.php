@@ -218,6 +218,34 @@ function parseTemplate ($template, Array $variables=[], $escapeHtml=true) {
 }
 
 /**
+ * Save email activity, for debug purposes
+ *
+ * @param string $from
+ * @param string $to
+ * @param string $subject
+ * @param string $body
+ * @param string $headers
+ */
+function logEmailActivity ($from, $to, $subject, $body, $headers) {
+    $db = new Db();
+    $emailData = [
+        'from' => $from,
+        'to' => $to,
+        'subject' => $subject,
+        'body' => $body,
+        'headers' => $headers
+    ];
+
+    if (config('app.debug') && config('app.debugEmail')) {
+        error_log("sendEmail debug information:");
+        error_log(json_encode($emailData));
+    }
+
+    $emailData = $db->escapeAssignmentList($emailData);
+    $db->query("INSERT INTO dental_email_log SET $emailData, created_at = NOW()");
+}
+
+/**
  * Centralized place to send emails.
  *
  * The function will create a multipart email from either an HTML template, or an array of html/text templates.
@@ -278,18 +306,7 @@ function sendEmail ($from, $to, $subject, $template, Array $variables=[], Array 
         $newLine .
         $htmlBody;
 
-    if (config('app.debug') && config('app.debugEmail')) {
-        error_log("sendEmail debug information:");
-        error_log(json_encode([
-            'from' => $from,
-            'to' => $to,
-            'subject' => $subject,
-            'headers' => $headers,
-            'body' => $body
-        ]));
-
-        return true;
-    }
+    logEmailActivity($from, $to, $subject, $body, $headers);
 
     return mail($to, $subject, $body, $headers);
 }

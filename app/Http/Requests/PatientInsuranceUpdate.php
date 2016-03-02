@@ -22,7 +22,7 @@ class PatientInsuranceUpdate extends Request
             'zip'           => 'regex:/[0-9]{5}/',
             'phone'         => 'regex:/[0-9]{10}/',
             'fax'           => 'string',
-            'email'         => 'email
+            'email'         => 'email'
         ];
     }
 }

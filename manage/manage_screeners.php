@@ -20,14 +20,19 @@ $isStaff = $userId == $docId ||
 
 <?php
 
-if ($isStaff && !empty($_GET['create_for'])) {
+if (!empty($_GET['create_for'])) {
     $patientId = createPatientFromScreener($_GET['create_for']);
 
-    ?>
-    <script>
-        window.location = '/manage/add_patient.php?ed=<?= $patientId ?>&pid=<?= $patientId ?>';
-    </script>
-    <?php
+    if ($patientId) { ?>
+        <script>
+            window.location = '/manage/add_patient.php?ed=<?= $patientId ?>&pid=<?= $patientId ?>';
+        </script>
+    <?php } else { ?>
+        <script>
+            alert('There was a problem creating the patient profile. Please make sure the link is valid and try again.');
+            window.location = '/manage/manage_screeners.php';
+        </script>
+    <?php }
 
     trigger_error('Die called', E_USER_ERROR);
 }

@@ -21,7 +21,7 @@ class PatientSummariesApiTest extends TestCase
         $data['pid'] = 100;
 
         $this->post('/api/v1/patient-summaries', $data)
-            ->seeInDatabase('patient_summaries', ['pid' => 100])
+            ->seeInDatabase('dental_patient_summary', ['pid' => 100])
             ->assertResponseOk();
     }
 
@@ -40,7 +40,7 @@ class PatientSummariesApiTest extends TestCase
         ];
 
         $this->put('/api/v1/patient-summaries/' . $patientSummaryTestRecord->id, $data)
-            ->seeInDatabase('patient_summaries', ['last_treatment' => 'test treatment'])
+            ->seeInDatabase('dental_patient_summary', ['last_treatment' => 'test treatment'])
             ->assertResponseOk();
     }
 
@@ -54,7 +54,7 @@ class PatientSummariesApiTest extends TestCase
         $patientSummaryTestRecord = factory(PatientSummary::class)->create();
 
         $this->delete('/api/v1/patient-summaries/' . $patientSummaryTestRecord->id)
-            ->notSeeInDatabase('patient_summaries', [
+            ->notSeeInDatabase('dental_patient_summary', [
                 'id' => $patientSummaryTestRecord->id
             ])
             ->assertResponseOk();

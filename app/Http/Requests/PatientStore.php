@@ -77,14 +77,14 @@ class PatientStore extends Request
             's_m_ins_type'            => 'string',
             'p_m_ins_ass'             => 'string',
             's_m_ins_ass'             => 'string',
-            'ins_dob'                 => 'date'
-            'ins2_dob'                => 'date'
+            'ins_dob'                 => 'date',
+            'ins2_dob'                => 'date',
             'employer'                => 'string',
             'emp_add1'                => 'string',
             'emp_add2'                => 'string',
             'emp_city'                => 'string',
             'emp_state'               => 'string',
-            'emp_zip'                 => 'regex:/[0-9]{5}/'
+            'emp_zip'                 => 'regex:/[0-9]{5}/',
             'emp_phone'               => 'string',
             'emp_fax'                 => 'string',
             'plan_name'               => 'string',

@@ -6,10 +6,12 @@ require_once __DIR__ . '/../admin/includes/claim_functions.php';
 $claimId = intval($_GET['insid']);
 $patientId = intval($_GET['pid']);
 
-$status = $db->getRow("SELECT status FROM dental_insurance WHERE insuranceid = '$claimId' AND patientid = '$patientId'");
-$status = $status ? $status['status'] : 0; // This means default status is zero
+$minimalClaimData = $db->getRow("SELECT status, primary_claim_id
+    FROM dental_insurance WHERE insuranceid = '$claimId' AND patientid = '$patientId'");
+$status = array_get($minimalClaimData, 'status', 0);
+$primaryClaimId = array_get($minimalClaimData, 'primary_claim_id', 0);
 
-$isSecondary = ClaimFormData::isSecondary($status) || ($_GET['instype'] == 2);
+$isSecondary = !empty($primaryClaimId) || ($_GET['instype'] == 2);
 $isPending = ClaimFormData::isStatus('pending', $status);
 $isPrimaryPending = ClaimFormData::isPrimary($status) && $isPending;
 $isSecondaryPending = ClaimFormData::isSecondary($status) && $isPending;

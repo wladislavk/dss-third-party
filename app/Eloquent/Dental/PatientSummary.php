@@ -24,14 +24,14 @@ class PatientSummary extends Model implements Resource, Repository
      *
      * @var string
      */
-    protected $table = 'patient_summaries';
+    protected $table = 'dental_patient_summary';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    // protected $primaryKey = 'id';
+    protected $primaryKey = 'id';
 
     /**
      * Indicates if the model should be timestamped.

@@ -1,0 +1,1 @@
+ALTER TABLE dental_patient_summary ADD COLUMN id INT(10) AUTO_INCREMENT PRIMARY KEY;

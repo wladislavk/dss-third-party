@@ -1,4 +1,21 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
+$patientId = intval($_GET['pid']);
+
+/**
+ * @see DSS-348
+ *
+ * If the patient id is different, maybe the link is malformed
+ */
+if (isset($_GET['pid']) && (string)$patientId !== (string)$_GET['pid']) {
+    $_GET['pid'] = $patientId;
+    $_GET['ed'] = $patientId;
+
+    header('Location: /manage/add_patient.php?' . http_build_query($_GET));
+    trigger_error('Die called', E_USER_ERROR);
+}
+
 if(!isset($_GET['noheaders'])){
   include "includes/top.htm";
   include_once('includes/constants.inc');
@@ -18,7 +35,7 @@ if(!isset($_GET['noheaders'])){
 <link href="css/top.css" rel="stylesheet" type="text/css" />
 <script>
     var existingPatient = <?= intval($_GET['ed']) ?>,
-        patientId = <?= intval($_GET['pid']) ?>;
+        patientId = <?= $patientId ?>;
 </script>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
@@ -38,6 +55,7 @@ require_once('includes/dental_patient_summary.php');
 require_once('admin/includes/password.php');
 require_once('includes/preauth_functions.php');
 require_once 'includes/hst_functions.php';
+
 $b_sql = "SELECT c.name/*, c.exclusive*/ FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 $b_r = $db->getRow($b_sql);
 if($b_r){
@@ -72,12 +90,12 @@ function trigger_letter20($pid) {
 }
 
 // Trigger Letter 20 Thankyou
-$pt_referralid = get_ptreferralids((!empty($_GET['pid']) ? $_GET['pid'] : ''));
+$pt_referralid = get_ptreferralids($patientId);
 if ($pt_referralid) {
-  $sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND pat_referral_list = '".s_for($pt_referralid)."';";
+  $sql = "SELECT letterid FROM dental_letters WHERE patientid = '$patientId' AND templateid = '20' AND pat_referral_list = '".s_for($pt_referralid)."';";
   $numrows = $db->getNumberRows($sql);
   if ($numrows == 0) {
-    trigger_letter20($_GET['pid']);
+    trigger_letter20($patientId);
   }
 }
 ?>
@@ -192,7 +210,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
                 p_m_ins_grp, 
                 p_m_ins_plan 
               FROM dental_patients
-              WHERE patientid=".mysqli_real_escape_string($con,$_GET['pid']);
+              WHERE patientid = '$patientId'";
     $s_r = $db->getRow($s_sql);
     $old_referred_by = $s_r['referred_by'];
     $old_referred_source = $s_r['referred_source'];
@@ -340,7 +358,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       use_patient_portal = '".s_for($_POST["use_patient_portal"])."',
       preferredcontact = '".s_for($_POST["preferredcontact"])."'
       where 
-      patientid='".$_POST["ed"]."'";
+      patientid='".intval($_POST["ed"])."'";
     $db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
     $db->query("UPDATE dental_patients set email='".mysqli_real_escape_string($con,$_POST['email'])."' WHERE parent_patientid='".mysqli_real_escape_string($con,$_POST["ed"])."'"); 
 
@@ -399,12 +417,12 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     }
   
     if(isset($_POST['location'])){
-      $ds_sql = "SELECT * FROM dental_summary where patientid='".$_GET['pid']."';";
+      $ds_sql = "SELECT * FROM dental_summary where patientid='$patientId'";
       $ds_q = $db->getRow($ds_sql);
       if($ds_q){
-        $loc_query = "UPDATE dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+        $loc_query = "UPDATE dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='$patientId'";
       }else{
-        $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='".$_GET['pid']."';";
+        $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='$patientId'";
       }
       $db->query($loc_query);
     }
@@ -448,7 +466,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       $dateCompleted = date('Y-m-d');
     }
 
-    $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".$_POST['ed']."' AND stepid='1';";
+    $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".intval($_POST['ed'])."' AND stepid='1';";
     $db->query($s1);
   
     if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
@@ -496,27 +514,27 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
 
     if(isset($_POST['add_ref_but'])) {?>
       <script type="text/javascript">
-        window.location = "add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>";
+        window.location = "add_referredby.php?addtopat=<?= $patientId ?>";
       </script>
       <?php
     }
 
     if(isset($_POST['add_ins_but'])) {?>
       <script type="text/javascript">
-        window.location = "add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>";
+        window.location = "add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$patientId."&type=11&ctypeeq=1&activePat=".$patientId;} ?>";
       </script>
       <?php
     }
 
     if(isset($_POST['add_contact_but'])) {?>
       <script type="text/javascript">
-        window.location = "add_patient_to.php?ed=<?php echo $_GET['pid']; ?>";
+        window.location = "add_patient_to.php?ed=<?= $patientId ?>";
       </script>
       <?php
     }
     if(isset($_POST['sendHST'])){?>
       <script type="text/javascript">
-        window.location = "hst_request_co.php?ed=<?php echo $_GET['pid']; ?>";
+        window.location = "hst_request_co.php?ed=<?= $patientId ?>";
       </script>
       <?php
     }
@@ -530,7 +548,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     }?>
     <script type="text/javascript">
       //alert("<?php echo $msg;?>");
-      parent.window.location='add_patient.php?ed=<?php echo $_GET['pid']; ?>&addtopat=1&pid=<?php echo $_GET['pid']; ?>&msg=<?php echo $msg;?><?php echo $sendPin; ?>';
+      parent.window.location='add_patient.php?ed=<?= $patientId ?>&addtopat=1&pid=<?= $patientId ?>&msg=<?php echo $msg;?><?php echo $sendPin; ?>';
     </script>
     <?php
     trigger_error("Die called", E_USER_ERROR);
@@ -697,7 +715,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     $pid = $db->getInsertId($ins_sql);
     
     if(isset($_POST['location'])){
-      $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='".$_GET['pid']."';";
+      $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='$patientId'";
       $db->query($loc_query);
     }
 
@@ -1358,7 +1376,7 @@ function validate_add_patient(fa){
 </script>
 
 <?php
-$notifications = find_patient_notifications((!empty($_GET['pid']) ? $_GET['pid'] : ''));
+$notifications = find_patient_notifications($patientId);
 foreach($notifications AS $not){?>
 <div id="not_<?php echo $not['id']; ?>" class="warning <?php echo $not['notification_type']; ?>">
   <span><?php echo $not['notification']; ?> <?php echo ($not['notification_date'])?"- ".date('m/d/Y h:i a', strtotime($not['notification_date'])):''; ?></span>
@@ -1375,7 +1393,7 @@ if(isset($_GET['search']) && $_GET['search'] != ''){
   }
 }?>
 
-<form name="patientfrm" id="patientfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
+<form name="patientfrm" id="patientfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?= $patientId ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
   <script language="JavaScript" src="calendar1.js"></script>
   <script language="JavaScript" src="calendar2.js"></script>
   <table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -1426,7 +1444,7 @@ $num_face = count($itype_my);
               <span style="float:right">
 <?php 
 if($num_face==0){ ?>
-                <a href="#" onclick="loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
+                <a href="#" onclick="loadPopup('add_image.php?pid=<?= $patientId ?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
                   <img src="images/add_patient_photo.png" />
                 </a>
 <?php 

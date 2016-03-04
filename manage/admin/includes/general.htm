@@ -1771,13 +1771,30 @@ function count_pages($pdfname) {
 }
 
 function tidyHtml ($html) {
+    /**
+     * @see DSS-334
+     *
+     * Tidy does NOT use this config array. The php.ini file needs to be modified to laod the config values from a file.
+     * Enable preserve-entities, &reg; might get corrupted when turning it into text.
+     */
     $config = [
-        'clean' => true,
+        'char-encoding' => 'utf8',
+        'input-encoding' => 'utf8',
+        'output-encoding' => 'utf8',
+        'clean' => false,
+        'preserve-entities' => true,
         'drop-proprietary-attributes' => true,
         'output-xhtml' => true,
-        'show-body-only' => true,
-        'wrap' => '0'
+        'show-body-only' => false,
+        'wrap' => '0',
     ];
+
+    $encoding = mb_detect_encoding($html);
+
+    // If no encoding is detected, don't risk any changes
+    if ($encoding && strtolower($encoding) !== 'utf-8') {
+        $html = mb_convert_encoding($html, 'UTF-8', $encoding);
+    }
 
     if (class_exists('\tidy')) {
         try {

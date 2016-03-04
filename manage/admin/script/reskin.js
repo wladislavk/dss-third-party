@@ -91,14 +91,11 @@ $(function(){
     /**
      * Datepicker
      */
-    /*
-    $('.date, .calendar').datepicker();
-    $('.date, .calendar').keypress( function(){
-	return false;
-    });
-    */
-    $('.datepicker, .calendar').datepicker();
-    $('.datepicker, .calendar').keypress( function(){
+    if (typeof $.fn.datepicker !== 'undefined') {
+        $('.datepicker, .calendar').datepicker();
+    }
+
+    $('.datepicker, .calendar').keypress(function(){
         return false;
     });
     

@@ -50,9 +50,13 @@ $userId = $is_front_office ? intval($_SESSION['userid']) : 0;
 $adminId = intval($_SESSION['adminid']);
 $docId = $is_front_office ? intval($_SESSION['docid']) : $patientData['docid'];
 
-$paymentsAdded = insertLedgerPayments(
-    $claimId, $_POST['payments'], $_POST['payment_type'], $_POST['payer'], $userId, $adminId
-);
+if (isset($_POST['payments']) && is_array($_POST['payments'])) {
+    $paymentsAdded = insertLedgerPayments(
+        $claimId, $_POST['payments'], $_POST['payment_type'], $_POST['payer'], $userId, $adminId
+    );
+} else {
+    $paymentsAdded = [];
+}
 
 if ($_POST['dispute'] == 1) { // Dispute
     $noteData = $db->escapeAssignmentList([

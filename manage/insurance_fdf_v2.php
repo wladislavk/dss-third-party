@@ -501,7 +501,7 @@ $sql = "SELECT
         JOIN dental_users user ON user.userid = ledger.docid
         JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
         LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid
-    WHERE ledger.primary_claim_id = '$claimId'
+    WHERE (ledger.primary_claim_id = '$claimId' OR ledger.secondary_claim_id = '$claimId')
         AND ledger.patientid = '$patientId'
         AND ledger.docid = '$docId'
         AND trxn_code.docid = '$docId'

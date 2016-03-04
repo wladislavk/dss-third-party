@@ -1778,12 +1778,15 @@ function tidyHtml ($html) {
      * Enable preserve-entities, &reg; might get corrupted when turning it into text.
      */
     $config = [
-        'clean' => true,
+        'char-encoding' => 'utf8',
+        'input-encoding' => 'utf8',
+        'output-encoding' => 'utf8',
+        'clean' => false,
         'preserve-entities' => true,
         'drop-proprietary-attributes' => true,
         'output-xhtml' => true,
-        'show-body-only' => true,
-        'wrap' => '0'
+        'show-body-only' => false,
+        'wrap' => '0',
     ];
 
     $encoding = mb_detect_encoding($html);

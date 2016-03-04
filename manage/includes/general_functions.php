@@ -261,15 +261,16 @@ function logEmailActivity ($from, $to, $subject, $body, $headers) {
 function sendEmail ($from, $to, $subject, $template, Array $variables=[], Array $extraHeaders=[]) {
     $newLine = "\n";
     $boundary = uniqid('ds3');
+    $returnPath = preg_replace('/^.*?<(.+?)>$/', '$1', $from);
     $htmlContentType = 'Content-Type: text/html; charset=UTF-8';
 
     $headers = [
             "From: $from",
             "Reply-To: $from",
+            "Return-Path: $returnPath",
             'X-Mailer: Dental Sleep Solutions Mailer',
             'MIME-Version: 1.0',
             "Content-Type: multipart/alternative; boundary=$boundary",
-            "X-Sender-IP: {$_SERVER['SERVER_ADDR']}",
             'Date: '.date('n/d/Y g:i A'),
         ] + $extraHeaders;
     $headers = join($newLine, $headers) . $newLine;
@@ -308,7 +309,7 @@ function sendEmail ($from, $to, $subject, $template, Array $variables=[], Array 
 
     logEmailActivity($from, $to, $subject, $body, $headers);
 
-    return mail($to, $subject, $body, $headers);
+    return mail($to, $subject, $body, $headers, "-f$returnPath");
 }
 
 /**
@@ -353,13 +354,12 @@ function retrieveMailerData ($patientId) {
         WHERE $locationConditional");
 
     if ($mailingData['user_type'] == DSS_USER_TYPE_SOFTWARE && isSharedFile($mailingData['logo'])) {
-        $mailingData['logo'] = 'manage/q_file/' . $mailingData['logo'];
+        $mailingData['logo'] = 'manage/display_file.php?f=' . $mailingData['logo'];
     } else {
         $mailingData['logo'] = 'reg/images/email/reg_logo.gif';
     }
 
     $mailingData['mailing_phone'] = format_phone($mailingData['mailing_phone']);
-    $mailingData['footer'] = DSS_EMAIL_FOOTER;
 
     return [
         'patientData' => $patientData,

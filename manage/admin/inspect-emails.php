@@ -11,7 +11,13 @@ if (!is_super($_SESSION['admin_access'])) {
     trigger_error('Die called', E_USER_ERROR);
 }
 
-$results = $db->getResults("SELECT * FROM dental_email_log");
+if (!empty($_POST['truncate'])) {
+    $db->query("TRUNCATE dental_email_log");
+} elseif (!empty($_POST['older'])) {
+    $db->query("DELETE FROM dental_email_log WHERE created_at < (NOW() - INTERVAL 2 WEEK)");
+}
+
+$results = $db->getResults("SELECT * FROM dental_email_log ORDER BY id DESC");
 
 array_walk($results, function(&$each){
     $parts = preg_split(
@@ -31,12 +37,6 @@ require_once __DIR__ . '/includes/top.htm';
 
         table { table-layout: fixed; }
 
-        td {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
         td[rowspan] {
             position: relative;
             overflow: auto;
@@ -51,6 +51,10 @@ require_once __DIR__ . '/includes/top.htm';
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
     <script>
         jQuery(function($){
+            $('form [name=truncate]').click(function(){
+                return confirm('Are you sure you want to remove ALL the logs?');
+            });
+
             $('.table.table-condensed a').click(function() {
                 var $this = $(this),
                     $tr = $this.closest('tr').nextUntil('tr.json').last().nextUntil('tr:not(.json)');
@@ -58,8 +62,6 @@ require_once __DIR__ . '/includes/top.htm';
                 if (!$tr.length) {
                     return false;
                 }
-
-                console.log($tr);
 
                 $tr.each(function(){
                     var $this = $(this);
@@ -78,9 +80,10 @@ require_once __DIR__ . '/includes/top.htm';
         });
     </script>
     <form method="post">
-        <input type="submit" class="btn btn-primary" name="truncate" value="Delete ALL logs" />
-        <input type="submit" class="btn btn-danger" name="truncate" value="Delete ALL logs" />
+        <input type="submit" class="btn btn-primary" name="older" value="Delete logs older than 2 weeks" />
+        <input type="submit" class="btn btn-danger pull-right" name="truncate" value="Delete ALL logs" />
     </form>
+    <p>&nbsp;</p>
 <?php if (!$results) { ?>
     <p class="lead text-center">There are no email logs.</p>
 <?php } ?>

@@ -1,4 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
+set_time_limit(300);
 session_start();
 //header("Content-type:application/pdf");
 

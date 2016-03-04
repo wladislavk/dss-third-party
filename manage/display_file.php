@@ -1,9 +1,19 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-include_once dirname(__FILE__) . '/includes/sescheck.php';
+<?php
+namespace Ds3\Libraries\Legacy;
 
-$basepath = dirname(__FILE__) . '/../../../shared/q_file';
+$filename = !empty($_GET['f']) ? $_GET['f'] : '';
 
-$filename = (!empty($_GET['f']) ? $_GET['f'] : '');
+/**
+ * @see DSS-337
+ *
+ * Don't check for session info if the file is a logo
+ */
+if (!preg_match('/^user_logo_\d+\.(gif|jpg|jpeg|png)$/', $filename)) {
+    require_once __DIR__ . '/includes/sescheck.php';
+}
+
+$basepath = __DIR__ . '/../../../shared/q_file';
+
 $filetype = '';
 $exists = file_exists($basepath . '/' . $filename);
 

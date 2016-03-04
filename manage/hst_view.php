@@ -73,7 +73,7 @@
             <?php echo  $hst['patient_ins_group_id']; ?>
         </p>
         <p>&nbsp;</p>
-        <p align="left">Diganosis / Reason for Study  </p>
+        <p align="left">Diagnosis / Reason for Study  </p>
         <hr />
         <p align="left">
             <?php

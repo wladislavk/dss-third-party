@@ -27,7 +27,6 @@ if (file_exists($filename) && date('U', strtotime($r['updated_at'])) > filemtime
 }
 
 $output = "";
-$extension = 'pdf';
 
 if (!empty($_GET['file'])) {
     if($_GET['file'] == "user_record_release") {
@@ -176,20 +175,16 @@ if (!empty($_GET['file'])) {
               update_proof_of_delivery_form($_GET['did']);
             }
         }
-    } elseif ($_GET['file'] == 'advanced_beneficiary_notice_medicare') {
-        $output = 'advanced_beneficiary_notice_medicare';
-        $filename = '../../../shared/q_file/advanced_beneficiary_notice_medicare.pdf';
-    } elseif ($_GET['file'] == 'dst-progress-questionnaire-11-15') {
-        $extension = $_GET['ext'] === 'doc' ? 'docx' : 'pdf';
-        $output = 'dst-progress-questionnaire-11-15';
-        $filename = "../../../shared/q_file/$output.$extension";
+    } elseif (in_array($_GET['file'], ['advanced_beneficiary_notice_medicare', 'dst-progress-questionnaire'])) {
+        $output = $_GET['file'];
+        $filename = "../../../shared/q_file/$output.pdf";
     }
 }
 
 // Let the browser know that a PDF file is coming.
 header("Content-type: application/pdf");
 //header("Content-Length: " . filesize($filename));
-header("Content-Disposition: attachment; filename=$output.$extension");
+header("Content-Disposition: attachment; filename=$output.pdf");
 
 // Send the file to the browser.
 readfile($filename);

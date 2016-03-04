@@ -6,10 +6,12 @@ require_once __DIR__ . '/../admin/includes/claim_functions.php';
 $claimId = intval($_GET['insid']);
 $patientId = intval($_GET['pid']);
 
-$status = $db->getRow("SELECT status FROM dental_insurance WHERE insuranceid = '$claimId' AND patientid = '$patientId'");
-$status = $status ? $status['status'] : 0; // This means default status is zero
+$minimalClaimData = $db->getRow("SELECT status, primary_claim_id
+    FROM dental_insurance WHERE insuranceid = '$claimId' AND patientid = '$patientId'");
+$status = array_get($minimalClaimData, 'status', 0);
+$primaryClaimId = array_get($minimalClaimData, 'primary_claim_id', 0);
 
-$isSecondary = ClaimFormData::isSecondary($status) || ($_GET['instype'] == 2);
+$isSecondary = !empty($primaryClaimId) || ($_GET['instype'] == 2);
 $isPending = ClaimFormData::isStatus('pending', $status);
 $isPrimaryPending = ClaimFormData::isPrimary($status) && $isPending;
 $isSecondaryPending = ClaimFormData::isSecondary($status) && $isPending;
@@ -324,11 +326,12 @@ if ($isRejected) {
 <html>
 <head>
     <title>Health Insurance E-File Claim Form</title>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/css/jquery.ui.theme.min.css" />
     <link rel="stylesheet" href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css?v=20160213" />
     <link rel="stylesheet" href="/manage/css/claim_form_eligible.css?v=<?= time() ?>" />
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="https://eligibleapi.com/js/eligible-claim-1500-2014.min.js?v=20160213"></script>
     <script type="text/javascript" src="/manage/js/claim_form_eligible.js"></script>
     <?php if (config('app.debug')) { ?>
@@ -337,7 +340,7 @@ if ($isRejected) {
         <script type="text/javascript" src="/manage/js/claim-form-mock.js?v=<?= time() ?>"></script>
     <?php } ?>
     <script type="text/javascript">
-        window.eligiblePublicKey = "-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-";
+        window.eligiblePublicKey = 'E1q20FOFf0-DcsrnQdltikaQrVI4nwwfhgXZ'; // "-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-";
         var stateList = <?= json_encode(stateList()) ?>;
         var claimData = <?= json_encode($claimData) ?>;
     </script>

@@ -1,4 +1,21 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
+$patientId = intval($_GET['pid']);
+
+/**
+ * @see DSS-348
+ *
+ * If the patient id is different, maybe the link is malformed
+ */
+if (isset($_GET['pid']) && (string)$patientId !== (string)$_GET['pid']) {
+    $_GET['pid'] = $patientId;
+    $_GET['ed'] = $patientId;
+
+    header('Location: /manage/add_patient.php?' . http_build_query($_GET));
+    trigger_error('Die called', E_USER_ERROR);
+}
+
 if(!isset($_GET['noheaders'])){
   include "includes/top.htm";
   include_once('includes/constants.inc');
@@ -18,7 +35,7 @@ if(!isset($_GET['noheaders'])){
 <link href="css/top.css" rel="stylesheet" type="text/css" />
 <script>
     var existingPatient = <?= intval($_GET['ed']) ?>,
-        patientId = <?= intval($_GET['pid']) ?>;
+        patientId = <?= $patientId ?>;
 </script>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
@@ -38,6 +55,7 @@ require_once('includes/dental_patient_summary.php');
 require_once('admin/includes/password.php');
 require_once('includes/preauth_functions.php');
 require_once 'includes/hst_functions.php';
+
 $b_sql = "SELECT c.name/*, c.exclusive*/ FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 $b_r = $db->getRow($b_sql);
 if($b_r){
@@ -72,12 +90,12 @@ function trigger_letter20($pid) {
 }
 
 // Trigger Letter 20 Thankyou
-$pt_referralid = get_ptreferralids((!empty($_GET['pid']) ? $_GET['pid'] : ''));
+$pt_referralid = get_ptreferralids($patientId);
 if ($pt_referralid) {
-  $sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND pat_referral_list = '".s_for($pt_referralid)."';";
+  $sql = "SELECT letterid FROM dental_letters WHERE patientid = '$patientId' AND templateid = '20' AND pat_referral_list = '".s_for($pt_referralid)."';";
   $numrows = $db->getNumberRows($sql);
   if ($numrows == 0) {
-    trigger_letter20($_GET['pid']);
+    trigger_letter20($patientId);
   }
 }
 ?>
@@ -159,199 +177,6 @@ function trigger_letter3($pid) {
   }
 }
 
-/*///////////////////////////
-// sendRegEmail
-//
-// Sends registration email to patient
-*/
-function sendRegEmail($id, $e, $l, $old_email='', $con){
-
-  $db = new Db();
-  $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $id)."'";
-  $r = $db->getRow($s);
-  if($r['recover_hash']=='' || $e!=$old_email){
-    $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
-    $access_code = rand(100000, 999999);
-
-    $ins_sql = "UPDATE dental_patients set text_num=0, access_type=1, text_date=NOW(), access_code='" . $access_code . "', registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
-    $db->query($ins_sql);
-  }else{
-    $ins_sql = "UPDATE dental_patients set access_type=1, registration_senton=NOW(), registration_status=1 WHERE patientid='".$r['patientid']."'";
-    $db->query($ins_sql);
-    $recover_hash = $r['recover_hash'];
-  }
-  $usql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
-            LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-            where p.patientid='".mysqli_real_escape_string($con,$r['patientid'])."'";
-  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($con,$r['patientid'])."'";
-  $loc_r = $db->getRow($loc_sql);
-  if($loc_r['location'] != '' && $loc_r['location'] != '0'){
-    $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
-                        from dental_users u inner join dental_patients p on u.userid=p.docid 
-                        LEFT JOIN dental_locations l ON l.docid = u.userid
-                        WHERE l.id='".mysqli_real_escape_string($con,$loc_r['location'])."' AND l.docid='".mysqli_real_escape_string($con,$r['docid'])."'";
-  }else{
-    $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
-                        LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-                        where p.patientid='".mysqli_real_escape_string($con,$r['patientid'])."'";
-  }
-  $ur = $db->getRow($location_query);
-  $n = $ur['mailing_phone'];
-  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE && isSharedFile($ur['logo'])){
-    $logo = "/manage/q_file/".$ur['logo'];
-  }else{
-    $logo = "/reg/images/email/reg_logo.gif";
-  }
-
-  $from = "Dental Sleep Solutions <patient@dentalsleepsolutions.com>";
-  $mime_boundary = 'Multipart_Boundary_x'.md5(time()).'x';
-  $headers  = "MIME-Version: 1.0\r\n";
-  $headers .= "Content-Type: multipart/alternative; boundary=\"$mime_boundary\"\r\n";
-  $headers .= "Content-Transfer-Encoding: 7bit\r\n";
-  $body =  "";
-  $body .= "--$mime_boundary\n";
-  $body .= "Content-Type: text/plain; charset=\"iso-8859-1\"\n";
-  $body .= "Content-Transfer-Encoding: 7bit\n\n";
-  $body .= "A message from your healthcare provider 
-
-Your New Account
-A new patient account has been created for you by ".$ur['mailing_practice'].".
-Your Patient Portal login information is:
-Email: ".$e."
-
-Save Time - Complete Your Paperwork Online
-
-Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving tre
-es is good too!
-
-Click Here to Complete Your Forms Online (http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash.")
-
-Need Assistance?
-Contact us at ".format_phone($n)."
-
-
-"; 
-  $body .= DSS_EMAIL_FOOTER;
-  $body .= "\n\n";
-
-  $body .= "--$mime_boundary\n";
-  $body .= "Content-Type: text/html; charset=\"UTF-8\"\n";
-  $body .= "Content-Transfer-Encoding: 7bit\n\n";
-  $body .= "<html><body><center>
-<table width='600'>
-<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
-<tr><td width='400'>
-<h2>Your New Account</h2>
-<p>A new patient account has been created for you by ".$ur['mailing_practice'].".<br />Your Patient Portal login information is:</p>
-<p><b>Email:</b> ".$e."</p>
-</td><td><img alt='Logo' src='".$_SERVER['HTTP_HOST'].$logo."' /></td></tr>
-<tr><td colspan='2'>
-<center>
-<h2>Save Time - Complete Your Paperwork Online</h2>
-</center>
-<p>Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving trees is good too!</p>
-<center><h3><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>Click Here to Complete Your Forms Online</a></h3></center>
-</td></tr>
-<tr><td>
-<p>".$ur['mailing_practice']."<br />
-".$ur['mailing_address']."<br />
-".$ur['mailing_city']." ".$ur['mailing_state']." ".$ur['mailing_zip']."<br />
-".format_phone($ur['mailing_phone'])."</p>
-<h3>Need Assistance?</h3>
-<p><b>Contact us at ".format_phone($n)."</b></p>
-</td></tr>
-<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
-</table>
-</center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>";
-  $body .= "\n\n";
-  // End email
-  $body .= "--$mime_boundary--\n";
-
-  # Finish off headers
-  $headers .= "From: ".$from."\r\n";
-  $headers .= "X-Sender-IP: $_SERVER[SERVER_ADDR]\r\n";
-  $headers .= 'Date: '.date('n/d/Y g:i A')."\r\n";
-
-  $headers = 'From: "Dental Sleep Solutions" <Patient@dentalsleepsolutions.com>' . "\n"; 
-  $headers .= "MIME-Version: 1.0\n";
-  $headers .= "Content-Type: multipart/alternative; boundary=\"$mime_boundary\"\n";
-  $headers .= "Content-Transfer-Encoding: 7bit\n";
-  $headers .= 'X-Mailer: PHP/' . phpversion();
-
-  $subject = "Online Patient Registration";
-
-  mail($e, $subject, $body, $headers);
-}
-
-/*///////////////////////////
-// sendRemEmail
-//
-// Sends reminder email to patient
-*/
-function sendRemEmail($id, $e){
-
-  $db = new Db();
-  $s = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($GLOBALS['con'],$id)."'";
-  $r = $db->getRow($s);
-  $loc_sql = "SELECT location FROM dental_summary where patientid='".mysqli_real_escape_string($GLOBALS['con'],$r['patientid'])."'";
-  $loc_r = $db->getRow($loc_sql);
-  if($loc_r['location'] != '' && $loc_r['location'] != '0'){
-    $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
-                        from dental_users u inner join dental_patients p on u.userid=p.docid 
-                        LEFT JOIN dental_locations l ON l.docid = u.userid
-                        WHERE l.id='".mysqli_real_escape_string($con,$loc_r['location'])."' AND l.docid='".mysqli_real_escape_string($con,$r['docid'])."'";
-  }else{
-    $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
-                        LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-                        where p.patientid='".mysqli_real_escape_string($GLOBALS['con'],$r['patientid'])."'";
-  }
-  $ur = $db->getRow($location_query);
-  $n = $ur['mailing_phone'];
-  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE && isSharedFile($ur['logo'])){
-    $logo = "/manage/q_file/".$ur['logo'];
-  }else{
-    $logo = "/reg/images/email/reg_logo.gif";
-  }
-  $m = "<html><body><center>
-<table width='600'>
-<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
-<tr><td width='400'>
-<h2>Your New Account</h2>
-<p>A new patient account has been created for you by ".$ur['mailing_practice'].".<br />Your Patient Portal login information is:</p>
-<p><b>Email:</b> ".$e."</p>
-</td><td><img alt='Logo' src='".$_SERVER['HTTP_HOST'].$logo."' /></td></tr>
-<tr><td colspan='2'>
-<center>
-<h2>Save Time - Complete Your Paperwork Online</h2>
-</center>
-<p>Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving
- trees is good too!</p>
-<center><h3><a href='http://".$_SERVER['HTTP_HOST']."/reg/login.php?email=".str_replace('+', '%2B', $e)."'>Click Here to Complete Your Forms Online</a></h3></center>
-</td></tr>
-<tr><td>
-<p>We Look forward to seeing you soon!</p>
-<p>".$ur['mailing_practice']."<br />
-".$ur['mailing_address']."<br />
-".$ur['mailing_city']." ".$ur['mailing_state']." ".$ur['mailing_zip']."<br />
-".format_phone($ur['mailing_phone'])."</p>
-<h3>Need Assistance?</h3>
-<p><b>Contact us at ".format_phone($n)."
-</b></p>
-</td></tr>
-<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
-</table>
-</center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
-";
-  $headers = 'From: Dental Sleep Solutions <patient@dentalsleepsolutions.com>' . "\r\n" .
-              'Content-type: text/html' ."\r\n" .
-              'Reply-To: patient@dentalsleepsolutions.com' . "\r\n" .
-              'X-Mailer: PHP/' . phpversion();
-
-  $subject = "Online Patient Registration";
-
-  mail($e, $subject, $m, $headers);
-}
-
 /*==========================================
     FORM SUBMISSION
 ==========================================*/
@@ -385,7 +210,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
                 p_m_ins_grp, 
                 p_m_ins_plan 
               FROM dental_patients
-              WHERE patientid=".mysqli_real_escape_string($con,$_GET['pid']);
+              WHERE patientid = '$patientId'";
     $s_r = $db->getRow($s_sql);
     $old_referred_by = $s_r['referred_by'];
     $old_referred_source = $s_r['referred_source'];
@@ -533,7 +358,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       use_patient_portal = '".s_for($_POST["use_patient_portal"])."',
       preferredcontact = '".s_for($_POST["preferredcontact"])."'
       where 
-      patientid='".$_POST["ed"]."'";
+      patientid='".intval($_POST["ed"])."'";
     $db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
     $db->query("UPDATE dental_patients set email='".mysqli_real_escape_string($con,$_POST['email'])."' WHERE parent_patientid='".mysqli_real_escape_string($con,$_POST["ed"])."'"); 
 
@@ -592,12 +417,12 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     }
   
     if(isset($_POST['location'])){
-      $ds_sql = "SELECT * FROM dental_summary where patientid='".$_GET['pid']."';";
+      $ds_sql = "SELECT * FROM dental_summary where patientid='$patientId'";
       $ds_q = $db->getRow($ds_sql);
       if($ds_q){
-        $loc_query = "UPDATE dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+        $loc_query = "UPDATE dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."' WHERE patientid='$patientId'";
       }else{
-        $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='".$_GET['pid']."';";
+        $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='$patientId'";
       }
       $db->query($loc_query);
     }
@@ -641,7 +466,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       $dateCompleted = date('Y-m-d');
     }
 
-    $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".$_POST['ed']."' AND stepid='1';";
+    $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".intval($_POST['ed'])."' AND stepid='1';";
     $db->query($s1);
   
     if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
@@ -689,27 +514,27 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
 
     if(isset($_POST['add_ref_but'])) {?>
       <script type="text/javascript">
-        window.location = "add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>";
+        window.location = "add_referredby.php?addtopat=<?= $patientId ?>";
       </script>
       <?php
     }
 
     if(isset($_POST['add_ins_but'])) {?>
       <script type="text/javascript">
-        window.location = "add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>";
+        window.location = "add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$patientId."&type=11&ctypeeq=1&activePat=".$patientId;} ?>";
       </script>
       <?php
     }
 
     if(isset($_POST['add_contact_but'])) {?>
       <script type="text/javascript">
-        window.location = "add_patient_to.php?ed=<?php echo $_GET['pid']; ?>";
+        window.location = "add_patient_to.php?ed=<?= $patientId ?>";
       </script>
       <?php
     }
     if(isset($_POST['sendHST'])){?>
       <script type="text/javascript">
-        window.location = "hst_request_co.php?ed=<?php echo $_GET['pid']; ?>";
+        window.location = "hst_request_co.php?ed=<?= $patientId ?>";
       </script>
       <?php
     }
@@ -723,7 +548,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     }?>
     <script type="text/javascript">
       //alert("<?php echo $msg;?>");
-      parent.window.location='add_patient.php?ed=<?php echo $_GET['pid']; ?>&addtopat=1&pid=<?php echo $_GET['pid']; ?>&msg=<?php echo $msg;?><?php echo $sendPin; ?>';
+      parent.window.location='add_patient.php?ed=<?= $patientId ?>&addtopat=1&pid=<?= $patientId ?>&msg=<?php echo $msg;?><?php echo $sendPin; ?>';
     </script>
     <?php
     trigger_error("Die called", E_USER_ERROR);
@@ -890,7 +715,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     $pid = $db->getInsertId($ins_sql);
     
     if(isset($_POST['location'])){
-      $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='".$_GET['pid']."';";
+      $loc_query = "INSERT INTO dental_summary SET location='".mysqli_real_escape_string($con,$_POST['location'])."', patientid='$patientId'";
       $db->query($loc_query);
     }
 
@@ -1551,7 +1376,7 @@ function validate_add_patient(fa){
 </script>
 
 <?php
-$notifications = find_patient_notifications((!empty($_GET['pid']) ? $_GET['pid'] : ''));
+$notifications = find_patient_notifications($patientId);
 foreach($notifications AS $not){?>
 <div id="not_<?php echo $not['id']; ?>" class="warning <?php echo $not['notification_type']; ?>">
   <span><?php echo $not['notification']; ?> <?php echo ($not['notification_date'])?"- ".date('m/d/Y h:i a', strtotime($not['notification_date'])):''; ?></span>
@@ -1568,7 +1393,7 @@ if(isset($_GET['search']) && $_GET['search'] != ''){
   }
 }?>
 
-<form name="patientfrm" id="patientfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
+<form name="patientfrm" id="patientfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?= $patientId ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
   <script language="JavaScript" src="calendar1.js"></script>
   <script language="JavaScript" src="calendar2.js"></script>
   <table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -1619,7 +1444,7 @@ $num_face = count($itype_my);
               <span style="float:right">
 <?php 
 if($num_face==0){ ?>
-                <a href="#" onclick="loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
+                <a href="#" onclick="loadPopup('add_image.php?pid=<?= $patientId ?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
                   <img src="images/add_patient_photo.png" />
                 </a>
 <?php 

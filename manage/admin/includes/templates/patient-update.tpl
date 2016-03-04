@@ -24,7 +24,7 @@
             </td>
             <td>
                 <center>
-                    <img alt="Logo" src="{{baseUrl}}/{{logo}}" />
+                    <img alt="{{mailing_practice}} Logo" src="{{baseUrl}}/{{logo}}" />
                 </center>
             </td>
         </tr>

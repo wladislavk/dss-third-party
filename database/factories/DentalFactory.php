@@ -305,3 +305,34 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Plan::class, function ($faker) {
+    return [
+        'name'             => $faker->word,
+        'monthly_fee'      => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'trial_period'     => $faker->randomDigit,
+        'fax_fee'          => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'free_fax'         => $faker->randomDigit,
+        'status'           => $faker->randomDigit,
+        'adddate'          => $faker->dateTime(),
+        'ip_address'       => $faker->ipv4,
+        'eligibility_fee'  => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'free_eligibility' => $faker->randomDigit,
+        'enrollment_fee'   => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'free_enrollment'  => $faker->randomDigit,
+        'claim_fee'        => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'free_claim'       => $faker->randomDigit,
+        'vob_fee'          => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'free_vob'         => $faker->randomDigit,
+        'office_type'      => $faker->randomDigit,
+        'efile_fee'        => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'free_efile'       => $faker->randomDigit,
+        'duration'         => $faker->randomDigit,
+        'producer_fee'     => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'user_fee'         => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'patient_fee'      => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'e0486_bill'       => $faker->randomDigit,
+        'e0486_fee'        => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500)
+    ];
+});
+

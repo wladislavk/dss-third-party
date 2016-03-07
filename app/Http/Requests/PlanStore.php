@@ -13,28 +13,28 @@ class PlanStore extends Request
     {
         return [
             'name'             => 'required|string',
-            'monthly_fee'      => 'required|regex:/^[0-9]+\.[0-9]{2}$/',
+            'monthly_fee'      => 'required|regex:/^[0-9]+\.[0-9]{1,2}$/',
             'trial_period'     => 'integer',
-            'fax_fee'          => 'required|regex:/^[0-9]+\.[0-9]{2}$/',
+            'fax_fee'          => 'required|regex:/^[0-9]+\.[0-9]{1,2}$/',
             'free_fax'         => 'integer',
             'status'           => 'integer',
-            'eligibility_fee'  => 'regex:/^[0-9]+\.[0-9]{2}$/',
-            'free_eligibility' => 'intger',
-            'enrollment_fee'   => 'regex:/^[0-9]+\.[0-9]{2}$/',
+            'eligibility_fee'  => 'regex:/^[0-9]+\.[0-9]{1,2}$/',
+            'free_eligibility' => 'integer',
+            'enrollment_fee'   => 'regex:/^[0-9]+\.[0-9]{1,2}$/',
             'free_enrollment'  => 'integer',
-            'claim_fee'        => 'regex:/^[0-9]+\.[0-9]{2}$/',
+            'claim_fee'        => 'regex:/^[0-9]+\.[0-9]{1,2}$/',
             'free_claim'       => 'integer',
-            'vob_fee'          => 'regex:/^[0-9]+\.[0-9]{2}$/',
+            'vob_fee'          => 'regex:/^[0-9]+\.[0-9]{1,2}$/',
             'free_vob'         => 'integer',
             'office_type'      => 'integer',
-            'efile_fee'        => 'regex:/^[0-9]+\.[0-9]{2}$/',
+            'efile_fee'        => 'regex:/^[0-9]+\.[0-9]{1,2}$/',
             'free_efile'       => 'integer',
             'duration'         => 'integer',
-            'producer_fee'     => 'regex:/^[0-9]+\.[0-9]{2}$/',
-            'user_fee'         => 'regex:/^[0-9]+\.[0-9]{2}$/',
-            'patient_fee'      => 'regex:/^[0-9]+\.[0-9]{2}$/',
+            'producer_fee'     => 'regex:/^[0-9]+\.[0-9]{1,2}$/',
+            'user_fee'         => 'regex:/^[0-9]+\.[0-9]{1,2}$/',
+            'patient_fee'      => 'regex:/^[0-9]+\.[0-9]{1,2}$/',
             'e0486_bill'       => 'integer',
-            'e0486_fee'        => 'regex:/^[0-9]+\.[0-9]{2}$/'
+            'e0486_fee'        => 'regex:/^[0-9]+\.[0-9]{1,2}$/'
         ];
     }
 }

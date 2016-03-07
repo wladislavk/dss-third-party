@@ -305,3 +305,23 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\PaymentReport::class, function ($faker) {
+    $json = '{
+        "reference_id": "137073682155420112914",
+        "details": {
+            "created_at": "2013-06-17T04:24:49Z",
+            "messages": []
+        },
+        "event": "payment_report"
+    }';
+
+    return [
+        'claimid'      => $faker->randomDigit,
+        'reference_id' => $faker->regexify('[A-Z0-9]{15}'),
+        'response'     => $json,
+        'adddate'      => $faker->dateTime(),
+        'ip_address'   => $faker->ipv4,
+        'viewed'       => $faker->boolean
+    ];
+});

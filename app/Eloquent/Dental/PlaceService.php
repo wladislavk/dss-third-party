@@ -1,6 +1,6 @@
 <?php
 
-namespace DentalSleepSolutions\Eloquent;
+namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;

@@ -305,3 +305,20 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\ProfileImage::class, function ($faker) {
+    return [
+        'formid'      => $faker->randomDigit,
+        'patientid'   => $faker->randomDigit,
+        'title'       => $faker->word,
+        'image_file'  => $faker->regexify('[A-Za-z0-9]{15}\.(jpg|gif|png)'),
+        'imagetypeid' => $faker->randomDigit,
+        'userid'      => $faker->randomDigit,
+        'docid'       => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4,
+        'adminid'     => $faker->randomDigit
+    ];
+});
+

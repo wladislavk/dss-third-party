@@ -24,10 +24,13 @@ function jsonOutput ($output) {
 function retrieveClaim () {
     $db = new Db();
 
-    $docId = $db->getColumn("SELECT userid
+    $docData = $db->getRow("SELECT userid, username, password
         FROM dental_users
         WHERE username IN ('doc1f', 'doc1')
-        LIMIT 1", 'userid');
+        LIMIT 1");
+
+    $docId = $docData['userid'];
+
     $patientId = $db->getColumn("SELECT patientid
         FROM dental_patients
         WHERE docid = '$docId'
@@ -45,15 +48,23 @@ function retrieveClaim () {
         $claimId = ClaimFormData::createEmptyPrimaryClaim($patientId, $docId);
     }
 
-    $hasLedgerItems = $db->getColumn("SELECT COUNT(ledgerid) AS total
+    $ledgerItems = $db->getColumn("SELECT COUNT(ledgerid) AS total
         FROM dental_ledger
         WHERE primary_claim_id = '$claimId'", 'total', 0);
 
     jsonOutput([
-        'claimId' => $claimId,
-        'docId' => $docId,
-        'patientId' => $patientId,
-        'hasLedgerItems' => $hasLedgerItems > 0
+        'claim' => [
+            'id' => $claimId,
+            'items' => $ledgerItems,
+        ],
+        'doctor' => [
+            'id' => $docId,
+            'username' => $docData['username'],
+            'hash' => $docData['password'],
+        ],
+        'patient' => [
+            'id' => $patientId,
+        ],
     ]);
 }
 
@@ -84,10 +95,9 @@ require_once __DIR__ . '/includes/top.htm';
     });
 
     jQuery(function($){
-        var claimId = 0,
-            docId = 0,
-            patientId = 0,
-            hasLedgerItems = false,
+        var claim = { id: 0, items: 0 },
+            doctor = { id: 0, username: '', hash: '' },
+            patient = { id: 0 },
             now = new Date(),
             today = [now.getDate(), now.getMonth() + 1, now.getFullYear()].join('/'),
             ledgerItem = {
@@ -98,7 +108,8 @@ require_once __DIR__ . '/includes/top.htm';
                 proccode: 66,
                 amount: 5.55,
                 status: 1
-            };
+            },
+            queueCall = [];
 
         function setCookie (name, value, days) {
             var expires = '';
@@ -113,20 +124,58 @@ require_once __DIR__ . '/includes/top.htm';
             document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
         }
 
+        function niceTime () {
+            var now = new Date(),
+                time = [now.getHours(), now.getMinutes(), now.getSeconds()].join(':');
+
+            time = time.replace(/(^|:)(\d)(:|$)/g, '$1Z$2$3').replace('Z', 0);
+            return time + '.' + ('000' + now.getMilliseconds()).substr(-3);
+        }
+
+        function queued (callable) {
+            return function () {
+                setTimeout(callable, 300);
+            }
+        }
+
+        function debugLog (message, reset) {
+            var $log = $('#debug-log');
+
+            if (reset) {
+                $log.text('');
+            }
+
+            $log.prepend('[' + niceTime() + '] ' + message + '\n');
+        }
+
+        function onStart () {
+            debugLog('Starting...', true);
+            $('.interaction-lock').prop('disabled', true);
+        }
+
         function onError () {
-            console.info(arguments);
+            debugLog('Last step failed.');
+            $('.interaction-lock').prop('disabled', false);
+        }
+
+        function onFinish () {
+            debugLog('Finished.');
+            $('.interaction-lock').prop('disabled', false);
         }
 
         function addWebHooks () {
-            console.log('Add WebHooks');
+            debugLog('Add WebHooks');
+            onFinish();
         }
 
         function addLedgerItems () {
-            if (hasLedgerItems) {
-                setTimeout(addWebHooks, 100);
+            if (+claim.items > 0) {
+                debugLog('Claim ID ' + claim.id + ' has ' + claim.items + ' ledger transactions...');
+                queued(addWebHooks)();
                 return;
             }
 
+            debugLog('Claim ID ' + claim.id + ' has no ledger transactions, adding one...');
             setCookie('tempforledgerentry', 1, 1);
 
             $.ajax({
@@ -134,37 +183,50 @@ require_once __DIR__ . '/includes/top.htm';
                 type: 'post',
                 data: { form: [ledgerItem], patientid: patientId },
                 dataType: 'text',
-                success: function(data){
-                    setTimeout(addWebHooks, 100);
-                },
+                success: queued(addWebHooks),
                 error: onError
             });
         }
 
-        function retrieveClaim () {
+        function loginAs () {
+            debugLog('Logging in as "' + doctor.username + '"...');
+
+            $.ajax({
+                url: '/manage/admin/login_as.php',
+                type: 'post',
+                data: { username: doctor.username, password: doctor.hash, loginsub: 1 },
+                success: queued(addLedgerItems),
+                error: onError
+            })
+        }
+
+        function retrieveClaimRelatedData () {
+            debugLog('Preparing (or retrieving) a pending claim for testing...');
+
             $.ajax({
                 url: '/manage/admin/debug-webhook-handler.php',
                 type: 'post',
                 data: { 'retrieve-claim': true },
                 dataType: 'json',
                 success: function(data){
-                    claimId = data.claimId;
-                    docId = data.docId;
-                    patientId = data.patientId;
-                    hasLedgerItems = data.hasLedgerItems;
+                    claim = data.claim;
+                    doctor = data.doctor;
+                    patient = data.patient;
 
-                    ledgerItem.producer = docId;
-
-                    setTimeout(addLedgerItems, 100);
+                    queued(loginAs)();
                 },
                 error: onError
             })
         }
 
-        $('#setup').click(retrieveClaim);
+        $('#setup').click(function(){
+            onStart();
+            queued(retrieveClaimRelatedData)();
+        });
     });
 </script>
-<button id="setup" class="btn btn-primary">Setup scenario</button>
+<pre id="debug-log"></pre>
+<button id="setup" class="btn btn-primary interaction-lock">Run scenario</button>
 <div class="row">
     <div class="col-md-5">5</div>
     <div class="col-md-7">
@@ -173,3 +235,6 @@ require_once __DIR__ . '/includes/top.htm';
         </table>
     </div>
 </div>
+<?php
+
+require_once __DIR__ . '/includes/bottom.htm';

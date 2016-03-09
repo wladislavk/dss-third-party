@@ -565,7 +565,7 @@ class ClaimFormData
         'pending'             => [DSS_CLAIM_PENDING, DSS_CLAIM_SEC_PENDING],
         'sent'                => [DSS_CLAIM_SENT, DSS_CLAIM_SEC_SENT],
         'paid'                => [DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE,
-                                    DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE],
+                                    DSS_CLAIM_PAID_PATIENT, DSS_CLAIM_PAID_SEC_PATIENT],
         'paid-insurance'      => [DSS_CLAIM_PAID_INSURANCE, DSS_CLAIM_PAID_SEC_INSURANCE],
         'paid-patient'        => [DSS_CLAIM_PAID_PATIENT, DSS_CLAIM_PAID_SEC_PATIENT],
         'dispute'             => [DSS_CLAIM_DISPUTE, DSS_CLAIM_SEC_DISPUTE,
@@ -1670,7 +1670,7 @@ function minimalClaimDataFromReferenceId ($referenceId) {
 
     $claimId = claimIdFromReferenceId($referenceId);
 
-    $claim = $db->getRow("SELECT insuranceid, status
+    $claim = $db->getRow("SELECT insuranceid, status, primary_claim_id
         FROM dental_insurance
         WHERE insuranceid = '$claimId'");
 
@@ -1688,15 +1688,28 @@ function updateClaimStatusFromReferenceId ($referenceId, $statusName) {
 
     $claimData = minimalClaimDataFromReferenceId($referenceId);
 
-    echo "Claim ID {$claimData['insuranceid']} with reference '$referenceId' needs to change to status '$statusName'";
-
     /**
-     * Update claim only if the statuses differ
+     * The keys of this array are the canonical names of the statuses.
+     * 'paid' and 'actionable' are collections of statuses, we need to discard them
      */
-    if ($claimData && !ClaimFormData::isStatus($statusName, $claimData['status'])) {
-        // This status list returns a pair: [primary status, secondary status]
-        $possibleStatuses = ClaimFormData::statusListByName($statusName);
-        $newStatus = ClaimFormData::isPrimary($claimData['status']) ? $possibleStatuses[0] : $possibleStatuses[1];
+    $newStatusName = '';
+    $possibleStatuses = ClaimFormData::statusListbyStatus($claimData['status']);
+    unset($possibleStatuses['paid']);
+    unset($possibleStatuses['actionable']);
+
+    foreach ($possibleStatuses as $possibleStatusName=>$statusValues) {
+        if (isValidStatusChange($statusName, $possibleStatusName)) {
+            $newStatusName = $possibleStatusName;
+            $possibleStatuses = $statusValues;
+            break;
+        }
+    }
+
+    if ($claimData && $newStatusName) {
+        /**
+         * Odd elements are primary statuses, even elements are secondary statuses
+         */
+        $newStatus = $claimData['primary_claim_id'] ? $possibleStatuses[0] : $possibleStatuses[1];
 
         $db->query("UPDATE dental_insurance
             SET status = '".$db->escape($newStatus)."'
@@ -1704,6 +1717,40 @@ function updateClaimStatusFromReferenceId ($referenceId, $statusName) {
 
         claim_status_history_update($claimData['insuranceid'], $newStatus, $claimData['status'], 0, 0);
     }
+}
+
+/**
+ * Establish the valid order of status changes
+ *
+ * @return array
+ */
+function claimStatusChangePolicy () {
+    return [
+        'pending' => [
+            'sent',
+            'rejected'
+        ],
+        'sent' => [
+            'rejected',
+            'eclaim-accepted'
+        ],
+        'efile-accepted' => [
+            'paid-patient',
+            'paid-insurance'
+        ]
+    ];
+}
+
+/**
+ * Verify if the status change is valid
+ *
+ * @param string $currentStatusName
+ * @param string $newStatusName
+ * @return bool
+ */
+function isValidStatusChange ($currentStatusName, $newStatusName) {
+    $statusChangePolicy = array_get(claimStatusChangePolicy(), $currentStatusName, []);
+    return in_array($newStatusName, $statusChangePolicy);
 }
 
 /**
@@ -1725,32 +1772,59 @@ function processEligibleResponse ($plainTextResponse, $saveResponse = true) {
     $referenceId = isset($jsonResponse->reference_id) ? $jsonResponse->reference_id : '';
 
     switch ($eventType) {
-        case 'claim_rejected':
-        case 'claim_denied':
-        case 'claim_more_info_required':
-        case 'rejected':
-        case 'denied':
-        case 'more_info_required':
-            updateClaimStatusFromReferenceId($referenceId, 'rejected');
-            break;
-        case 'claim_paid':
-        case 'paid':
-            updateClaimStatusFromReferenceId($referenceId, 'paid-insurance');
-            break;
-        case 'claim_submitted':
-        case 'claim_pended':
-        case 'claim_created':
-        case 'claim_received':
-        case 'submitted':
-        case 'pended':
+        case 'claim_created':   // Claim passed Eligible's validator
         case 'created':
+        case 'claim_submitted': // Claim passed Payer's validator
+        case 'submitted':
+        case 'claim_received':  // Claim received by Payer
         case 'received':
             updateClaimStatusFromReferenceId($referenceId, 'sent');
             break;
-        case 'claim_accepted':
-        case 'accepted':
+
+        case 'claim_rejected':  // Claim reviewed and rejected by the Payer
+        case 'rejected':
+            updateClaimStatusFromReferenceId($referenceId, 'rejected');
+            break;
+
+        case 'claim_accepted':  // Adjudication process starts
+        case 'accepted':        // REJECTION CAN STILL HAPPEN
             updateClaimStatusFromReferenceId($referenceId, 'efile-accepted');
             break;
+
+        case 'claim_paid':      // Adjudication complete, claim paid
+        case 'paid':            // Payment Report will be received
+            updateClaimStatusFromReferenceId($referenceId, 'paid-insurance');
+            break;
+
+        case 'claim_denied':    // Adjudication complete, claim denied
+        case 'denied':          // Payment Report will be received
+            updateClaimStatusFromReferenceId($referenceId, 'rejected');
+            break;
+
+        case 'claim_pended':    // Adjudication not complete, claim requires new info
+        case 'pended':          // Adjudication process continues once new information is sent
+            updateClaimStatusFromReferenceId($referenceId, 'rejected');
+            break;
+
+        case 'claim_more_info_required':  // Not part of the regular adjucation process flow
+        case 'more_info_required':
+            updateClaimStatusFromReferenceId($referenceId, 'rejected');
+            break;
+
+        case 'payment_report':  // Payment report is the counterpart of claim_paid, claim_denied reports
+            $claimId = claimIdFromReferenceId($referenceId);
+
+            $paymentData = $db->escapeAssignmentList([
+                'claimid' => $claimId,
+                'reference_id' => $referenceId,
+                'response' => $plainTextResponse,
+                'ip_address' => $_SERVER['REMOTE_ADDR']
+            ]);
+
+            $db->query("INSERT INTO dental_payment_reports SET $paymentData, adddate = NOW()");
+
+            break;
+
         case 'enrollment_status':
             $referenceId = $jsonResponse->details->id;
             $status = $jsonResponse->details->status;
@@ -1774,31 +1848,20 @@ function processEligibleResponse ($plainTextResponse, $saveResponse = true) {
             }
 
             break;
-        case 'payment_report':
-            $claimId = claimIdFromReferenceId($referenceId);
-
-            $db->query("INSERT INTO dental_payment_reports SET
-                claimid = '$claimId',
-                reference_id = '".$db->escape($referenceId)."',
-                response = '".$db->escape($plainTextResponse)."',
-                adddate = now(),
-                ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'");
-
-            updateClaimStatusFromReferenceId($referenceId, 'paid-insurance');
-
-            break;
     }
 
     /**
      * Save webhook payload
      */
     if ($saveResponse) {
-        $db->query("INSERT INTO dental_eligible_response SET
-            response = '".$db->escape($plainTextResponse)."',
-            reference_id = '".$db->escape($referenceId)."',
-            event_type = '".$db->escape($eventType)."',
-            adddate = now(),
-            ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'");
+        $responseData = $db->escapeAssignmentList([
+            'response' => $plainTextResponse,
+            'reference_id' => $referenceId,
+            'event_type' => $eventType,
+            'ip_address' => $_SERVER['REMOTE_ADDR']
+        ]);
+
+        $db->query("INSERT INTO dental_eligible_response SET $responseData, adddate = NOW()");
     }
 
     return $jsonResponse;

@@ -55,6 +55,7 @@ function retrieveClaim () {
     jsonOutput([
         'claim' => [
             'id' => $claimId,
+            'reference' => "ECLAIM-$claimId",
             'items' => $ledgerItems,
         ],
         'doctor' => [
@@ -68,8 +69,32 @@ function retrieveClaim () {
     ]);
 }
 
+function setReference ($claimId, $referenceId) {
+    $db = new Db();
+
+    $claimId = intval($claimId);
+    $referenceId = $db->escape($referenceId);
+
+    $db->query("UPDATE dental_claim_electronic
+        SET reference_id = '$referenceId'
+        WHERE claimid = '$claimId'
+            AND (reference_id IS NULL OR reference_id = '')");
+
+    $referenceId = $db->getColumn("SELECT reference_id
+        FROM dental_claim_electronic
+        WHERE claimid = '$claimId'
+        ORDER BY id DESC
+        LIMIT 1", 'reference_id');
+
+    jsonOutput(['reference' => $referenceId]);
+}
+
 if (isset($_POST['retrieve-claim'])) {
     retrieveClaim();
+}
+
+if (isset($_POST['set-reference'])) {
+    setReference($_POST['claim-id'], $_POST['reference-id']);
 }
 
 require_once __DIR__ . '/includes/top.htm';
@@ -132,9 +157,11 @@ require_once __DIR__ . '/includes/top.htm';
             return time + '.' + ('000' + now.getMilliseconds()).substr(-3);
         }
 
-        function queued (callable) {
+        function queued (callable, timeout) {
+            timeout = timeout || 300;
+
             return function () {
-                setTimeout(callable, 300);
+                setTimeout(callable, timeout);
             }
         }
 
@@ -147,6 +174,7 @@ require_once __DIR__ . '/includes/top.htm';
 
             $log.prepend('[' + niceTime() + '] ' + message + '\n');
         }
+
 
         function onStart () {
             debugLog('Starting...', true);
@@ -163,15 +191,116 @@ require_once __DIR__ . '/includes/top.htm';
             $('.interaction-lock').prop('disabled', false);
         }
 
+        function sendWebHook (webHook, delay) {
+            setTimeout(function() {
+                debugLog('Sending ' + (webHook.event || webHook.status || 'unnamed') + ' event...');
+
+                webHook.reference_id = claim.reference;
+
+                $.ajax({
+                    url: '/manage/eligible_webhook.php',
+                    data: JSON.stringify(webHook),
+                    type: 'post',
+                    processData: false,
+                    contentType: 'application/json'
+                });
+            }, delay*1234);
+        }
+
+        function sendWebHooks (webHookList, onComplete) {
+            if (!webHookList.length) {
+                debugLog('Webhook list is empty');
+                return;
+            }
+
+            console.info(webHookList);
+
+            var lastAction = onComplete,
+                currentAction, n;
+
+            for (n = 0; n < webHookList.length; n++) {
+                sendWebHook(webHookList[n], n);
+            }
+
+            setTimeout(onFinish, n*1234);
+        }
+
         function addWebHooks () {
             debugLog('Add WebHooks');
-            onFinish();
+
+            sendWebHooks([
+                webHookList['claim_submitted'][0],
+                webHookList['claim_received'][0],
+                webHookList['claim_accepted'][0],
+                webHookList['accepted'][0],
+                webHookList['claim_denied'][0],
+                webHookList['payment_report'][0]
+            ], onFinish);
+        }
+
+        function printClaim () {
+            debugLog('Printing claim to change status to Sent...');
+
+            $.ajax({
+                url: '/manage/insurance_v2.php?insid=' + claim.id + '&pid=' + patient.id,
+                type: 'post',
+                data: { insurancesub: 1, ex_pagebtn: 1 },
+                success: queued(addWebHooks),
+                error: onError
+            });
+        }
+
+        function fakeReferenceId () {
+            debugLog('Assume Eligible rejection, set a valid Reference ID...');
+
+            $.ajax({
+                url: '/manage/admin/debug-webhook-handler.php',
+                type: 'post',
+                dataType: 'json',
+                data: { 'set-reference': 1, 'claim-id': claim.id, 'reference-id': claim.reference },
+                success: queued(printClaim),
+                error: onError
+            })
+        }
+
+        function submitClaim () {
+            debugLog('Submitting to Eligible, adding delay of 5 seconds...');
+
+            var $form = $('iframe#submission-form').contents().find('form#claim-form');
+
+            if (!$form.length) {
+                onError();
+                return;
+            }
+
+            $form.find('button.form-submit').click();
+            queued(fakeReferenceId, 5000)();
+        }
+
+        function prepareEForm () {
+            debugLog('Preparing E-Form for submission...');
+
+            var $iframe = $('iframe#submission-form'),
+                runOnce = 1;
+
+            $iframe.remove();
+
+            $iframe = $('<iframe>', {
+                id: 'submission-form',
+                style: 'width:1px;height:1px;',
+                src: '/manage/insurance_eligible.php?insid=' + claim.id + '&pid=' + patient.id + '&v=' + Math.random()
+            }).load(queued(function(){
+                if (runOnce) {
+                    runOnce--;
+                    submitClaim();
+                }
+            }, 2000)).appendTo('body');
         }
 
         function addLedgerItems () {
             if (+claim.items > 0) {
                 debugLog('Claim ID ' + claim.id + ' has ' + claim.items + ' ledger transactions...');
-                queued(addWebHooks)();
+                queued(prepareEForm)();
                 return;
             }
 
@@ -181,9 +310,9 @@ require_once __DIR__ . '/includes/top.htm';
             $.ajax({
                 url: '/manage/insert_ledger_entries.php',
                 type: 'post',
-                data: { form: [ledgerItem], patientid: patientId },
+                data: { form: [ledgerItem], patientid: patient.id },
                 dataType: 'text',
-                success: queued(addWebHooks),
+                success: queued(prepareEForm),
                 error: onError
             });
         }
@@ -212,6 +341,12 @@ require_once __DIR__ . '/includes/top.htm';
                     claim = data.claim;
                     doctor = data.doctor;
                     patient = data.patient;
+
+                    debugLog('<a href="/manage/admin/diagnose-claim.php?claim_id=' +
+                        claim.id +
+                        '&amp;timeline=on" target="_blank">Claim ID ' +
+                        claim.id +
+                        ' Timeline <i class="fa fa-external-link"></i></a>');
 
                     queued(loginAs)();
                 },

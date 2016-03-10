@@ -1698,7 +1698,7 @@ function updateClaimStatusFromReferenceId ($referenceId, $statusName) {
     unset($possibleStatuses['actionable']);
 
     foreach ($possibleStatuses as $possibleStatusName=>$statusValues) {
-        if (isValidStatusChange($statusName, $possibleStatusName)) {
+        if (isValidStatusChange($possibleStatusName, $statusName)) {
             $newStatusName = $possibleStatusName;
             $possibleStatuses = $statusValues;
             break;

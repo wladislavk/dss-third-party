@@ -2513,7 +2513,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $patientId = intval($patientId);
     $isNewClaim = !$claimId;
 
-    $isFormerPrimary = ClaimFormData::isPrimary($formerStatus);
+    $isFormerPrimary = !$db->getColumn("SELECT primary_claim_id FROM dental_insurance WHERE insuranceid = '$claimId'", 'primary_claim_id', 0);
     $isFormerPending = ClaimFormData::isStatus('pending', $formerStatus);
     $isFormerRejected = ClaimFormData::isStatus('rejected', $formerStatus);
     $needsBackOfficeMarkerUpdate = $isFormerPending || $isFormerRejected;
@@ -2946,6 +2946,8 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             s_charges4_1 = '".$db->escape($s_charges4_1)."',
             s_charges4_2 = '".$db->escape($s_charges4_2)."',
             days_or_units4 = '".$db->escape($days_or_units4)."',
+            ";
+        $ins_sql .= "
             epsdt_family_plan4 = '".$db->escape($epsdt_family_plan4)."',
             id_qua4 = '".$db->escape($id_qua4)."',
             rendering_provider_id4 = '".$db->escape($rendering_provider_id4)."',
@@ -3187,6 +3189,8 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         days_or_units4 = '".$db->escape($days_or_units4)."',
         epsdt_family_plan4 = '".$db->escape($epsdt_family_plan4)."',
         id_qua4 = '".$db->escape($id_qua4)."',
+        ";
+    $ed_sql .= "
         rendering_provider_id4 = '".$db->escape($rendering_provider_id4)."',
         service_date5_from = '".$db->escape($service_date5_from)."',
         service_date5_to = '".$db->escape($service_date5_to)."',

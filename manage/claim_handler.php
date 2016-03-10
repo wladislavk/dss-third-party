@@ -218,7 +218,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $patientId = intval($patientId);
     $isNewClaim = !$claimId;
 
-    $isFormerPrimary = ClaimFormData::isPrimary($formerStatus);
+    $isFormerPrimary = !$db->getColumn("SELECT primary_claim_id FROM dental_insurance WHERE insuranceid = '$claimId'", 'primary_claim_id', 0);
     $isFormerPending = ClaimFormData::isStatus('pending', $formerStatus);
     $isFormerRejected = ClaimFormData::isStatus('rejected', $formerStatus);
     $needsBackOfficeMarkerUpdate = $isFormerPending || $isFormerRejected;

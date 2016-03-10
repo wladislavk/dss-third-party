@@ -305,3 +305,44 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\PreviousTreatment::class, function ($faker) {
+    return [
+        'formid'                 => $faker->randomDigit,
+        'patientid'              => $faker->randomDigit,
+        'polysomnographic'       => $faker->randomDigit,
+        'sleep_center_name'      => $faker->numerify('##'),
+        'sleep_study_on'         => $faker->dateTime()->format('m/d/Y'),
+        'confirmed_diagnosis'    => $faker->numerify('###.##'),
+        'rdi'                    => $faker->numerify('##'),
+        'ahi'                    => $faker->numerify('##'),
+        'cpap'                   => $faker->randomElement(['Yes', 'No']),
+        'intolerance'            => $faker->regexify('~([0-9]+~)+'),
+        'other_intolerance'      => $faker->sentence($nbWords = 5),
+        'other_therapy'          => $faker->sentence($nbWords = 5),
+        'userid'                 => $faker->randomDigit,
+        'docid'                  => $faker->randomDigit,
+        'status'                 => $faker->randomDigit,
+        'adddate'                => $faker->dateTime(),
+        'ip_address'             => $faker->ipv4,
+        'other'                  => $faker->sentence($nbWords = 5),
+        'affidavit'              => $faker->word,
+        'type_study'             => $faker->word,
+        'nights_wear_cpap'       => $faker->numerify('##'),
+        'percent_night_cpap'     => $faker->numerify('##'),
+        'custom_diagnosis'       => $faker->word,
+        'sleep_study_by'         => $faker->word,
+        'triedquittried'         => $faker->word,
+        'timesovertime'          => $faker->word,
+        'cur_cpap'               => $faker->randomElement(['Yes', 'No']),
+        'sleep_center_name_text' => $faker->sentence($nbWords = 4),
+        'dd_wearing'             => $faker->randomElement(['Yes', 'No']),
+        'dd_prev'                => $faker->randomElement(['Yes', 'No']),
+        'dd_otc'                 => $faker->randomElement(['Yes', 'No']),
+        'dd_fab'                 => $faker->randomElement(['Yes', 'No']),
+        'dd_who'                 => $faker->word,
+        'dd_experience'          => $faker->sentence($nbWords = 3),
+        'surgery'                => $faker->randomElement(['Yes', 'No']),
+        'parent_patientid'       => $faker->randomDigit
+    ];
+});

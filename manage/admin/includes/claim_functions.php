@@ -655,6 +655,28 @@ class ClaimFormData
     }
 
     /**
+     * Auxiliary method to determine the name of the status passed
+     *
+     * @param int $status
+     * @return string
+     */
+    public static function statusName ($status) {
+        /**
+         * There are status names that represent collections of statuses, we are not interested on those.
+         * The result must be an array if zero or one element
+         */
+        $possibleStatuses = self::statusListByStatus($status);
+        $possibleStatuses = array_except($possibleStatuses, ['paid', 'dispute', 'actionable']);
+
+        if ($possibleStatuses) {
+            reset($possibleStatuses);
+            return key($possibleStatuses);
+        }
+
+        return '';
+    }
+
+    /**
      * Auxiliary function to determine if some status matches any of the labels/names
      *
      * @param string|array $names
@@ -1681,35 +1703,17 @@ function minimalClaimDataFromReferenceId ($referenceId) {
  * Encapsulate update status logic
  *
  * @param string $referenceId
- * @param string $statusName
+ * @param string $newStatusName
  */
-function updateClaimStatusFromReferenceId ($referenceId, $statusName) {
+function updateClaimStatusFromReferenceId ($referenceId, $newStatusName) {
     $db = new Db();
 
     $claimData = minimalClaimDataFromReferenceId($referenceId);
+    $currentStatusName = ClaimFormData::statusName($claimData['status']);
 
-    /**
-     * The keys of this array are the canonical names of the statuses.
-     * 'paid' and 'actionable' are collections of statuses, we need to discard them
-     */
-    $newStatusName = '';
-    $possibleStatuses = ClaimFormData::statusListbyStatus($claimData['status']);
-    unset($possibleStatuses['paid']);
-    unset($possibleStatuses['actionable']);
-
-    foreach ($possibleStatuses as $possibleStatusName=>$statusValues) {
-        if (isValidStatusChange($possibleStatusName, $statusName)) {
-            $newStatusName = $possibleStatusName;
-            $possibleStatuses = $statusValues;
-            break;
-        }
-    }
-
-    if ($claimData && $newStatusName) {
-        /**
-         * Odd elements are primary statuses, even elements are secondary statuses
-         */
-        $newStatus = $claimData['primary_claim_id'] ? $possibleStatuses[0] : $possibleStatuses[1];
+    if ($claimData && isValidStatusChange($currentStatusName, $newStatusName)) {
+        $possibleStatuses = ClaimFormData::statusListByName($newStatusName);
+        $newStatus = $claimData['primary_claim_id'] ? $possibleStatuses[1] : $possibleStatuses[0];
 
         $db->query("UPDATE dental_insurance
             SET status = '".$db->escape($newStatus)."'
@@ -1750,7 +1754,9 @@ function claimStatusChangePolicy () {
  */
 function isValidStatusChange ($currentStatusName, $newStatusName) {
     $statusChangePolicy = array_get(claimStatusChangePolicy(), $currentStatusName, []);
-    return in_array($newStatusName, $statusChangePolicy);
+    $isValid = in_array($newStatusName, $statusChangePolicy);
+
+    return $isValid;
 }
 
 /**

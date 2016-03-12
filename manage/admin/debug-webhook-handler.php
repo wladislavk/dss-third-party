@@ -116,27 +116,15 @@ require_once __DIR__ . '/includes/top.htm';
         display: none;
     }
 
-    #webhook-tabs {
-        max-height: 500px;
+    #webhook-tabs, #webhook-menu {
+        max-height: 700px;
         overflow: auto;
     }
 </style>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
 <script>
-    var webHooks = <?= webHookEvents() ?>,
-        webHookList = {};
-
-    webHooks.forEach(function(each){
-        var eventType = each.event || each.status;
-
-        if (!webHookList[eventType]) {
-            webHookList[eventType] = [];
-        }
-
-        webHookList[eventType].push(each);
-    });
-
+    var webHookList = <?= webHookEvents() ?>;
 
     var claim = { id: 0, items: 0 },
         doctor = { id: 0, username: '', hash: '' },
@@ -479,11 +467,12 @@ require_once __DIR__ . '/includes/top.htm';
 <button id="print" class="btn btn-primary interaction-lock" title="Send Print action to change the status to Sent">
     Print claim
 </button>
-<div>
-    <ul id="webhook-menu" class="nav nav-tabs" role="tablist">
+<h2 class="lead">Events</h2>
+<div class="row">
+    <ul id="webhook-menu" class="nav nav-tabs col-md-2" role="tablist">
         <li id="model-menu" role="presentation"><a href="#tab-model" role="tab" data-toggle="tab"></a></li>
     </ul>
-    <div id="webhook-tabs" class="tab-content">
+    <div id="webhook-tabs" class="tab-content col-md-10">
         <div id="model-tab" role="tabpanel" class="tab-pane">
             <table class="table table-striped table-condensed table-hover webhook-list">
                 <colgroup>

@@ -1736,7 +1736,7 @@ function claimStatusChangePolicy () {
         ],
         'sent' => [
             'rejected',
-            'eclaim-accepted'
+            'efile-accepted'
         ],
         'efile-accepted' => [
             'paid-patient',

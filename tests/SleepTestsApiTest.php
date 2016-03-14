@@ -32,14 +32,14 @@ class SleepTestsApiTest extends TestCase
      */
     public function testUpdateSleepTest()
     {
-        $insuranceTestRecord = factory(SleepTest::class)->create();
+        $sleepTestRecord = factory(SleepTest::class)->create();
 
         $data = [
             'formid'   => 100,
             'analysis' => 'updated sleep test'
         ];
 
-        $this->put('/api/v1/sleep-tests/' . $insuranceTestRecord->q_sleepid, $data)
+        $this->put('/api/v1/sleep-tests/' . $sleepTestRecord->q_sleepid, $data)
             ->seeInDatabase('dental_q_sleep', ['formid' => 100])
             ->assertResponseOk();
     }
@@ -51,11 +51,11 @@ class SleepTestsApiTest extends TestCase
      */
     public function testDeleteSleepTest()
     {
-        $insuranceTestRecord = factory(SleepTest::class)->create();
+        $sleepTestRecord = factory(SleepTest::class)->create();
 
-        $this->delete('/api/v1/sleep-tests/' . $insuranceTestRecord->q_sleepid)
+        $this->delete('/api/v1/sleep-tests/' . $sleepTestRecord->q_sleepid)
             ->notSeeInDatabase('dental_q_sleep', [
-                'q_sleepid' => $insuranceTestRecord->q_sleepid
+                'q_sleepid' => $sleepTestRecord->q_sleepid
             ])
             ->assertResponseOk();
     }

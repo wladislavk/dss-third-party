@@ -12,7 +12,8 @@ a, a:hover{
 .fullwidth{
   width:98%;
   margin: 0 1%;
-  }
+  overflow: auto;
+}
 .bp{
   font-size: 20px;
   }

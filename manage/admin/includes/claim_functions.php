@@ -1414,6 +1414,24 @@ class ClaimFormData
         return $claimData;
     }
 
+    /**
+     * Return historic snapshot for the claim
+     *
+     * @param int $claimId
+     * @param int $historyId
+     * @return array|null
+     */
+    public static function historicClaimData ($claimId, $historyId) {
+        $db = new Db();
+
+        $claimId = intval($claimId);
+        $historyId = intval($historyId);
+
+        return $db->getRow("SELECT *
+            FROM dental_insurance_history
+            WHERE insuranceid = '$claimId'
+                AND id = '$historyId'");
+    }
 
     /**
      * Create new claim item, including patient, doctor, and insurance data. Does not process ledger transactions.

@@ -305,3 +305,29 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Recipient::class, function ($faker) {
+    return [
+        'formid'              => $faker->randomDigit,
+        'patientid'           => $faker->randomDigit,
+        'referring_physician' => $faker->sentence($nbWords = 6),
+        'dentist'             => $faker->sentence($nbWords = 6),
+        'physicians_other'    => $faker->sentence($nbWords = 6),
+        'patient_info'        => $faker->sentence($nbWords = 6),
+        'q_file1'             => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)'),
+        'q_file2'             => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)'),
+        'q_file3'             => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)'),
+        'q_file4'             => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)'),
+        'q_file5'             => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)'),
+        'userid'              => $faker->randomDigit,
+        'docid'               => $faker->randomDigit,
+        'status'              => $faker->randomDigit,
+        'adddate'             => $faker->dateTime(),
+        'ip_address'          => $faker->ipv4,
+        'q_file6'             => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)'),
+        'q_file7'             => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)'),
+        'q_file8'             => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)'),
+        'q_file9'             => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)'),
+        'q_file10'            => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)')
+    ];
+});

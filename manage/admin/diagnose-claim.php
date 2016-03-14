@@ -503,9 +503,17 @@ require_once __DIR__ . '/includes/top.htm';
 <h1>
     Claim id: <code><?= $claimId ?></code>
     &mdash;
-    Eligible ids:
-    <?= $eligibleReferences ? '<code>' . join(' ', array_flatten($eligibleReferences)) . '</code>' : 'none found' ?>
+    Current status: <code><?= $claimData[0]['status_label'] ? $claimData[0]['status_label'] : 'unknown' ?></code>
 </h1>
+<p class="lead">
+    Eligible ids:
+</p>
+<ol>
+    <li><?= $eligibleReferences ?
+        '<code>' . join('</code></li><li><code>', array_flatten($eligibleReferences)) . '</code>' :
+        'none found'
+    ?></li>
+</ol>
 <a class="btn btn-primary" role="button" data-toggle="collapse" href="#eligible-events">
     Toggle Eligible events
 </a>

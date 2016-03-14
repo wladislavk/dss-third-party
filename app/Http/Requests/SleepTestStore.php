@@ -14,7 +14,7 @@ class SleepTestStore extends Request
         return [
             'formid'           => 'integer',
             'patientid'        => 'required|integer',
-            'epworthid'        => 'regex:/^([0-9]{1,2}\|[0-9]{1,2}~)+$/',
+            'epworthid'        => ['regex:/^([0-9]{1,2}\|[0-9]{1,2}~)+$/'],
             'analysis'         => 'string',
             'userid'           => 'required|integer',
             'docid'            => 'required|integer',

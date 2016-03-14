@@ -14,7 +14,7 @@ class SleepTestUpdate extends Request
         return [
             'formid'           => 'integer',
             'patientid'        => 'sometimes|required|integer',
-            'epworthid'        => 'regex:/^([0-9]{1,2}\|[0-9]{1,2}~)+$/',
+            'epworthid'        => ['regex:/^([0-9]{1,2}\|[0-9]{1,2}~)+$/'],
             'analysis'         => 'string',
             'userid'           => 'sometimes|required|integer',
             'docid'            => 'sometimes|required|integer',

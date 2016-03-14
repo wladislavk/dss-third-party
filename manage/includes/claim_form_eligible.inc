@@ -3,6 +3,12 @@ namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/../admin/includes/claim_functions.php';
 
+$isHistoricView = !empty($isHistoricView) || isset($_GET['history_id']);
+$historyId = intval($_GET['history_id']);
+$isDebug = config('app.debug');
+
+$eligiblePublicKey = $isDebug ? '-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-' : 'E1q20FOFf0-DcsrnQdltikaQrVI4nwwfhgXZ';
+
 $claimId = intval($_GET['insid']);
 $patientId = intval($_GET['pid']);
 
@@ -13,8 +19,8 @@ $primaryClaimId = array_get($minimalClaimData, 'primary_claim_id', 0);
 
 $isSecondary = !empty($primaryClaimId) || ($_GET['instype'] == 2);
 $isPending = ClaimFormData::isStatus('pending', $status);
-$isPrimaryPending = ClaimFormData::isPrimary($status) && $isPending;
-$isSecondaryPending = ClaimFormData::isSecondary($status) && $isPending;
+$isPrimaryPending = !$isSecondary && $isPending;
+$isSecondaryPending = $isSecondary && $isPending;
 $isRejected = ClaimFormData::isStatus('rejected', $status);
 
 $patientData = $db->getRow("SELECT * FROM dental_patients WHERE patientid = '$patientId'");
@@ -26,7 +32,9 @@ $docId = intval($patientData['docid']);
  *
  * Only pending states are primary pending, and secondary pending
  */
-if ($isPending) {
+if ($isHistoricView) {
+    $claimData = ClaimFormData::historicClaimData($claimId, $historyId);
+} elseif ($isPending) {
     $claimData = ClaimFormData::dynamicDataForClaim($claimId);
 } else {
     $claimData = ClaimFormData::storedDataForClaim($claimId, $patientId);
@@ -322,25 +330,36 @@ if ($isRejected) {
     $eligibleResponse = $eDescriptions['eligible_response'];
 }
 
+if ($isSecondary) {
+    $counterClaimId = $referencedClaimId;
+} else {
+    $counterClaimId = $db->getColumn("SELECT insuranceid
+        FROM dental_insurance
+        WHERE primary_claim_id = '$claimId'", 'insuranceid');
+}
+
 ?>
 <html>
 <head>
     <title>Health Insurance E-File Claim Form</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/css/jquery.ui.theme.min.css" />
+    <style type="text/css">
+        .text-center { text-align: center; }
+    </style>
     <link rel="stylesheet" href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css?v=20160213" />
     <link rel="stylesheet" href="/manage/css/claim_form_eligible.css?v=<?= time() ?>" />
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="https://eligibleapi.com/js/eligible-claim-1500-2014.min.js?v=20160213"></script>
     <script type="text/javascript" src="/manage/js/claim_form_eligible.js"></script>
-    <?php if (config('app.debug')) { ?>
+    <?php if (!$isHistoricView && $isDebug) { ?>
         <link rel="stylesheet" href="/manage/css/claim-form-mock.css?v=<?= time() ?>" />
         <script type="text/javascript" src="/manage/js/claim-form-mock-data.js?v=<?= time() ?>"></script>
         <script type="text/javascript" src="/manage/js/claim-form-mock.js?v=<?= time() ?>"></script>
     <?php } ?>
     <script type="text/javascript">
-        window.eligiblePublicKey = 'E1q20FOFf0-DcsrnQdltikaQrVI4nwwfhgXZ'; // "-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-";
+        window.eligiblePublicKey = <?= json_encode($eligiblePublicKey) ?>;
         var stateList = <?= json_encode(stateList()) ?>;
         var claimData = <?= json_encode($claimData) ?>;
     </script>
@@ -348,22 +367,29 @@ if ($isRejected) {
 <body>
     <div id="top-banner">
         <h2>E-File Claim Form</h2>
-        <ol>
-            <li>Enter electronic Payer ID or Name in Box 1.</li>
-            <li>Verify all claim details.</li>
-            <li>Click “Submit” on bottom left of claim to e-file your claim.</li>
-        </ol>
-        <?php if (!empty($is_front_office)) { ?>
-            <input type="button" value="Back to Insurance Page"
-                   onclick="window.location='view_claim.php?claimid=<?= $claimId ?>&pid=<?= $patientId ?>'; return false;" />
-        <?php } elseif ($is_back_office) { ?>
-            <input type="button" value="Back to Insurance Page"
-                   onclick="window.location='manage_claims.php'; return false;" />
-        <?php } ?>
-        <input type="button" onclick="change_form();" value="Switch to Paper File" style="float:right;" />
-        <?php if ($is_back_office) { ?>
-            <input type="button" class="print-button" value="View Notes" style="float:right;margin-right:5px;"
-                   onclick="window.location='claim_notes.php?id=<?= $claimId ?>&pid=<?= $patientId ?>'" />
+        <?php if ($isHistoricView) { ?>
+            <h3 class="text-center">
+                Historic snapshot of claim <?= $claimId ?>
+                at <?= date('m/d/Y h:i', strtotime($claimData['updated_at'])) ?>
+            </h3>
+        <?php } else { ?>
+            <ol>
+                <li>Enter electronic Payer ID or Name in Box 1.</li>
+                <li>Verify all claim details.</li>
+                <li>Click “Submit” on bottom left of claim to e-file your claim.</li>
+            </ol>
+            <?php if (!empty($is_front_office)) { ?>
+                <input type="button" value="Back to Insurance Page"
+                       onclick="window.location='view_claim.php?claimid=<?= $claimId ?>&pid=<?= $patientId ?>'; return false;" />
+            <?php } elseif ($is_back_office) { ?>
+                <input type="button" value="Back to Insurance Page"
+                       onclick="window.location='manage_claims.php'; return false;" />
+            <?php } ?>
+            <input type="button" onclick="change_form();" value="Switch to Paper File" style="float:right;" />
+            <?php if ($is_back_office) { ?>
+                <input type="button" class="print-button" value="View Notes" style="float:right;margin-right:5px;"
+                       onclick="window.location='claim_notes.php?id=<?= $claimId ?>&pid=<?= $patientId ?>'" />
+            <?php } ?>
         <?php } ?>
     </div>
 
@@ -416,25 +442,27 @@ if ($isRejected) {
     </div>
 <?php } ?>
 
-<?php if($isSecondary){ ?>
-        <h4>Secondary Claim (<a href="insurance_claim_eligible.php?insid=<?php echo $referencedClaimId; ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>">Primary is <?php echo $referencedClaimId; ?></a>)</h4>
-<?php }else{ 
-  $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id='".$db->escape((!empty($_GET['insid']) ? $_GET['insid'] : ''))."'";
-  $sec_r = $db->getRow($sec_sql);
-?>
-        <h4>Primary Claim
-        <?php if(!empty($sec_r)){ ?>
-                (<a href="insurance_claim_eligible.php?insid=<?php echo $sec_r['insuranceid']; ?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&instype=2">Secondary is <?php echo $sec_r['insuranceid']; ?></a>)
+    <h4>
+        <?= $isSecondary ? 'Secondary' : 'Primary' ?> Claim
+        <?php if (!$isHistoricView && $counterClaimId) { ?>
+            (<a href="insurance_<?= !empty($is_front_office) ? '' : 'claim_' ?>eligible.php?insid=<?= $counterClaimId ?>&pid=<?= $patientId ?>">
+                <?= $isSecondary ? 'Primary' : 'Secondary' ?> is
+                <?= $counterClaimId ?>
+            </a>)
         <?php } ?>
-        </h4>
-<?php } ?>
+    </h4>
 
     <form style="clear:both;" method="post" id="claim-form"
         action="claim_handler.php?insid=<?= intval($_REQUEST['insid']) ?>&pid=<?= intval($_REQUEST['pid']) ?>">
         <div id="eligibleapi-claim-1500-form"></div>
     </form>
 
-<script type="text/javascript">
+<script>
+<?php if ($isHistoricView) { ?>
+jQuery(function($){
+    $('form#claim-form').find('input, select, button').prop('disabled', true);
+});
+<?php } ?>
 function stateDropdown (fieldName) {
     var options = '', stateCode;
 

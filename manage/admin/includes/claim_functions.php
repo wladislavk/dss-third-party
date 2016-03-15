@@ -1728,16 +1728,27 @@ function updateClaimStatusFromReferenceId ($referenceId, $newStatusName) {
 
     $claimData = minimalClaimDataFromReferenceId($referenceId);
     $currentStatusName = ClaimFormData::statusName($claimData['status']);
+    $validStatusChange = isValidStatusChange($currentStatusName, $newStatusName);
 
-    if ($claimData && isValidStatusChange($currentStatusName, $newStatusName)) {
-        $possibleStatuses = ClaimFormData::statusListByName($newStatusName);
-        $newStatus = $claimData['primary_claim_id'] ? $possibleStatuses[1] : $possibleStatuses[0];
+    if ($claimData) {
+        if ($validStatusChange) {
+            $possibleStatuses = ClaimFormData::statusListByName($newStatusName);
+            $newStatus = $claimData['primary_claim_id'] ? $possibleStatuses[1] : $possibleStatuses[0];
 
-        $db->query("UPDATE dental_insurance
-            SET status = '".$db->escape($newStatus)."'
-            WHERE insuranceid = '".$db->escape($claimData['insuranceid'])."'");
+            $db->query("UPDATE dental_insurance
+                SET status = '" . $db->escape($newStatus) . "'
+                WHERE insuranceid = '" . $db->escape($claimData['insuranceid']) . "'");
 
-        claim_status_history_update($claimData['insuranceid'], $newStatus, $claimData['status'], 0, 0);
+            claim_status_history_update($claimData['insuranceid'], $newStatus, $claimData['status'], 0, 0);
+        } elseif ($currentStatusName != $newStatusName) {
+            $statusLogData = $db->escapeAssignmentList([
+                'claimid' => $claimData['insuranceid'],
+                'reference_id' => $referenceId,
+                'current_status' => $currentStatusName,
+                'rejected_status' => $newStatusName
+            ]);
+            $db->query("INSERT INTO dental_webhook_policy_log SET $statusLogData, created_at = NOW()");
+        }
     }
 }
 

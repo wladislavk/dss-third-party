@@ -124,24 +124,6 @@ require_once __DIR__ . '/includes/top.htm';
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
 <script>
-    var webHookList = <?= webHookEvents() ?>;
-
-    var claim = { id: 0, items: 0 },
-        doctor = { id: 0, username: '', hash: '' },
-        patient = { id: 0 },
-        now = new Date(),
-        today = [now.getDate(), now.getMonth() + 1, now.getFullYear()].join('/'),
-        ledgerItem = {
-            service_date: today,
-            entry_date: today,
-            producer: 0,
-            procedure_code: 1,
-            proccode: 66,
-            amount: 5.55,
-            status: 1
-        },
-        queueCall = [];
-
     function setCookie (name, value, days) {
         var expires = '';
 
@@ -155,11 +137,12 @@ require_once __DIR__ . '/includes/top.htm';
         document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
     }
 
+    function pad (number, positions) {
+        positions = positions || 2;
+        return ['000000', number].join('').substr(-positions);
+    }
+
     function niceTime () {
-        function pad (number, positions) {
-            positions = positions || 2;
-            return ['000000', number].join('').substr(-positions);
-        }
         var now = new Date(),
             time = [pad(now.getHours()), pad(now.getMinutes()), pad(now.getSeconds())].join(':');
 
@@ -328,11 +311,35 @@ require_once __DIR__ . '/includes/top.htm';
                     claim.id +
                     ' Timeline <i class="fa fa-external-link"></i></a>');
 
+                debugLog('<a href="/manage/manage_ledger.php?pid=' + patient.id + '" target="_blank">' +
+                    'View Ledger <i class="fa fa-external-link"></i></a>');
+
+                debugLog('<a href="/manage/view_claim.php?claimid=' + claim.id + '&pid=' + patient.id +
+                    '" target="_blank">View Claim <i class="fa fa-external-link"></i></a>');
+
                 queued(loginAs)();
             },
             error: onError
         })
     }
+
+    var webHookList = <?= webHookEvents() ?>;
+
+    var claim = { id: 0, items: 0 },
+        doctor = { id: 0, username: '', hash: '' },
+        patient = { id: 0 },
+        now = new Date(),
+        today = [now.getDate(), now.getMonth() + 1, now.getFullYear()].join('/'),
+        ledgerItem = {
+            service_date: today,
+            entry_date: today,
+            producer: 0,
+            procedure_code: 1,
+            proccode: 66,
+            amount: 5.55,
+            status: 1
+        },
+        queueCall = [];
 
     jQuery(function($){
         var $menu = $('ul#webhook-menu'),

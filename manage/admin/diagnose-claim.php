@@ -215,6 +215,12 @@ function retrieveEligibleEvents (Array $eligibleReferences) {
         ORDER BY id DESC");
 }
 
+/**
+ * List BO actions that change the FO/BO status of the claim
+ *
+ * @param int $claimId
+ * @return array
+ */
 function retrieveBOFlagHistory ($claimId) {
     $db = new Db();
     $claimId = intval($claimId);
@@ -222,6 +228,22 @@ function retrieveBOFlagHistory ($claimId) {
     return $db->getResults("SELECT *
         FROM dental_insurance_bo_status
         WHERE insuranceid = '$claimId'
+        ORDER BY id DESC");
+}
+
+/**
+ * List status changes that were not approved, for the given claim
+ *
+ * @param int $claimId
+ * @return array
+ */
+function retrieveWebhookPolicyHistory ($claimId) {
+    $db = new Db();
+    $claimId = intval($claimId);
+
+    return $db->getResults("SELECT *
+        FROM dental_webhook_policy_log
+        WHERE claimid = '$claimId'
         ORDER BY id DESC");
 }
 
@@ -274,6 +296,7 @@ $claimId = intval($_GET['claim_id']);
 $claimData = retrieveClaimData($claimId);
 $claimBOFlagHistory = retrieveBOFlagHistory($claimId);
 $claimStatusHistory = retrieveClaimStatusHistory($claimId);
+$claimWebhookPolicyHistory = retrieveWebhookPolicyHistory($claimId);
 
 if ($isTimeLine) {
     $claimHistory = retrieveClaimHistory($claimId, array_merge(['id'], defaultClaimFields()));
@@ -340,6 +363,19 @@ if ($isTimeLine) {
         $timeLine []= [
             'event_date' => $each['adddate'],
             'event_type' => 'Eligible Response',
+            'event_data' => $each,
+        ];
+    }
+
+    foreach ($claimWebhookPolicyHistory as $each) {
+        $eligibleId = array_search($each['reference_id'], $eligibleReferences);
+        $ordinalEligibleId = $eligibleId === false ?  'no' : toOrdinal($eligibleId + 1);
+
+        $each['ordinal'] = "$ordinalEligibleId ID";
+
+        $timeLine []= [
+            'event_date' => $each['created_at'],
+            'event_type' => 'Status Policy',
             'event_data' => $each,
         ];
     }
@@ -424,6 +460,9 @@ if ($isTimeLine) {
                 $each['event_data'] = $each['event_data']['response'];
             } elseif (isset($each['event_data']['status_label'])) {
                 $each['event_data'] = $each['event_data']['status_label'];
+            } elseif (isset($each['event_data']['rejected_status'])) {
+                $each['event_data'] = "Status <code>{$each['event_data']['rejected_status']}</code> rejected, " .
+                    "status <code>{$each['event_data']['current_status']}</code> kept";
             } else {
                 $each['event_data'] = json_encode($each['event_data']);
             }
@@ -440,6 +479,7 @@ if ($isQuickOutput) {
         '$claimBOFlagHistory' => $claimBOFlagHistory,
         '$claimHistory' => $claimHistory,
         '$claimStatusHistory' => $claimStatusHistory,
+        '$claimWebhookPolicyHistory' => $claimWebhookPolicyHistory,
         '$timeLine' => $timeLine,
     ]);
 }
@@ -530,6 +570,7 @@ if ($isTimeLine) {
     renderTableFromArray($claimBOFlagHistory, 'FO/BO flag changes (by admins)');
     renderTableFromArray($claimHistory, 'History');
     renderTableFromArray($claimStatusHistory, 'Status changes');
+    renderTableFromArray($claimWebhookPolicyHistory, 'Rejected status changes');
 }
 
 require_once __DIR__ . '/includes/bottom.htm';

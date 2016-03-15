@@ -12,7 +12,7 @@ class RefundStore extends Request
     public function rules()
     {
         return [
-            'amount'      => 'regex:/^[0-9]+\.[0-9]{2}$/',
+            'amount'      => 'regex:/^[0-9]+\.[0-9]{1,2}$/',
             'userid'      => 'required|integer',
             'adminid'     => 'required|integer',
             'refund_date' => 'date',

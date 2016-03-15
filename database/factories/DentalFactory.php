@@ -305,3 +305,15 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Refund::class, function ($faker) {
+    return [
+        'amount'      => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 1000),
+        'userid'      => $faker->randomDigit,
+        'adminid'     => $faker->randomDigit,
+        'refund_date' => $faker->dateTime(),
+        'charge_id'   => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

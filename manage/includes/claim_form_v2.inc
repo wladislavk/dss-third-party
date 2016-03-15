@@ -5,6 +5,10 @@ $is_front_office = empty($is_back_office);
 
 require_once __DIR__ . '/../admin/includes/claim_functions.php';
 
+$isHistoricView = !empty($isHistoricView) || isset($_GET['history_id']);
+$historyId = intval($_GET['history_id']);
+$isDebug = config('app.debug');
+
 $claimId = intval($_GET['insid']);
 $patientId = intval($_GET['pid']);
 
@@ -26,7 +30,7 @@ $patientData = $db->getRow("SELECT * FROM dental_patients WHERE patientid = '$pa
 $docId = intval($patientData['docid']);
 
 // deleting specified claim form
-if (!empty($_REQUEST["delid"]) ? $_REQUEST["delid"] : '') {
+if (!$isHistoricView && !empty($_REQUEST["delid"]) ? $_REQUEST["delid"] : '') {
     $deleteId = intval($_REQUEST['delid']);
     $db->query("DELETE FROM dental_procedure WHERE procedureid = '$deleteId'");
 
@@ -39,13 +43,13 @@ if (!empty($_REQUEST["delid"]) ? $_REQUEST["delid"] : '') {
     trigger_error("Die called", E_USER_ERROR); // already did a javascript redirect...just die
 }
 
-if (!empty($_POST['ex_statusbtn'])) { ?>
+if (!$isHistoricView && !empty($_POST['ex_statusbtn'])) { ?>
     <script type="text/javascript">
         window.location = '<?= $called_from ?>?insid=<?= $claimId ?>&checkstatus=1&pid=<?= $patientId ?>';
     </script>
     <?php
     trigger_error("Die called", E_USER_ERROR);
-} elseif (!empty($_POST['insurancesub']) && $_POST['insurancesub'] == 1 || !empty($_POST['ex_pagebtn'])) {
+} elseif (!$isHistoricView && !empty($_POST['insurancesub']) && ($_POST['insurancesub'] == 1 || !empty($_POST['ex_pagebtn']))) {
     // If the status is pending, then confirm changes to ledger transactions
     if ($isPending && !confirm_ledger_trxns()) { ?>
         <script type="text/javascript">
@@ -92,7 +96,9 @@ if (!empty($_POST['ex_statusbtn'])) { ?>
  *
  * Only pending states are primary pending, and secondary pending
  */
-if ($isPending) {
+if ($isHistoricView) {
+    $claimData = ClaimFormData::historicClaimData($claimId, $historyId);
+} elseif ($isPending) {
     $claimData = ClaimFormData::dynamicDataForClaim($claimId);
 } else {
     $claimData = ClaimFormData::storedDataForClaim($claimId, $patientId);
@@ -366,6 +372,11 @@ list($billing_provider_phone_code, $billing_provider_phone) = parsePhoneNumber(
     $billing_provider_phone_code, $billing_provider_phone
 );
 
+/**
+ * @see DSS-323
+ *
+ * These results might not reflect accurately the state of the claim at the moment it was stored
+ */
 $acceptAssignment = isOptionSelected($accept_assignment) || $accept_assignment == 'A';
 
 $placeServices = $db->getResults('SELECT * FROM dental_place_service ps WHERE status = 1');
@@ -398,9 +409,9 @@ $balance_due = (empty($balance_due)) ? 0.00 : number_format($balance_due,2);
 
 // We only calculate the dollar amounts when a new claim is created because
 // right now we aren't appending any trxns to an existing claim.
-if ($isPending) {
+if (!$isHistoricView && $isPending) {
     // get total_charge
-    if (ClaimFormData::isPrimary($status)) {
+    if (!$isSecondary) {
         $sql = "SELECT "
             . "  SUM(ledger.amount) as 'total_charge' "
             . "FROM "
@@ -457,7 +468,7 @@ if ($isPending) {
         . "ORDER BY "
         . "  ledger.service_date ASC";
 
-    if (ClaimFormData::isSecondary($status) && ClaimFormData::isStatus('pending', $status)) {
+    if ($isSecondary && $isPending) {
         $sql = "SELECT
                 sum(dlp.amount) as amount_paid
         from dental_ledger dl
@@ -493,7 +504,7 @@ if ($isPending) {
 $eResponse = [];
 $eligibleResponse = [];
 
-if ($isRejected) {
+if (!$isHistoricView && $isRejected) {
     $eDescriptions = eligibleDetailsFromClaimId($claimId);
     $eResponse = $eDescriptions['e_response'];
     $eligibleResponse = $eDescriptions['eligible_response'];
@@ -505,6 +516,14 @@ $insuranceCompanyData = $insuranceCompanyData ?: [];
 
 $qualifiers = $db->getResults("SELECT * FROM dental_qualifier WHERE status = 1 ORDER BY sortby");
 
+if ($isSecondary) {
+    $counterClaimId = $referencedClaimId;
+} else {
+    $counterClaimId = $db->getColumn("SELECT insuranceid
+        FROM dental_insurance
+        WHERE primary_claim_id = '$claimId'", 'insuranceid');
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -515,6 +534,7 @@ $qualifiers = $db->getResults("SELECT * FROM dental_qualifier WHERE status = 1 O
     <style type="text/css">
         .style1 { font-size: 16px }
         input { text-transform: uppercase; }
+        .text-center { text-align: center; }
     </style>
     <link rel="stylesheet" href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" />
     <link rel="stylesheet" href="<?php echo $admin_path?>popup/popup.css" media="screen" />
@@ -526,7 +546,7 @@ $qualifiers = $db->getResults("SELECT * FROM dental_qualifier WHERE status = 1 O
     <script type="text/javascript" src="<?php echo $admin_path?>popup/popup.js"></script>
     <script type="text/javascript" src="/manage/js/top.js?v=<?= time() ?>"></script>
     <?php require_once __DIR__ . '/calendarinc.php' ?>
-    <?php if (config('app.debug')) { ?>
+    <?php if (!$isHistoricView && $isDebug) { ?>
         <link rel="stylesheet" href="/manage/css/claim-form-mock.css?v=<?= time() ?>" />
         <script type="text/javascript" src="/manage/js/claim-form-mock-data.js?v=<?= time() ?>"></script>
         <script type="text/javascript" src="/manage/js/claim-form-mock.js?v=<?= time() ?>"></script>
@@ -538,19 +558,26 @@ $qualifiers = $db->getResults("SELECT * FROM dental_qualifier WHERE status = 1 O
 <body>
     <div id="top-banner">
         <h2>Paper Claim Form</h2>
-        <ol>
-            <li>Verify all claim details.</li>
-            <li>Click "Print Claim".</li>
-            <li>Download the PDF output file and print on CMS1500 form.</li>
-        </ol>
-        <?php if (!empty($is_front_office)) { ?>
-            <input type="button" value="Back to Insurance Page"
-                onclick="window.location='/manage/view_claim.php?claimid=<?= $claimId ?>&pid=<?= $patientId ?>'; return false;" />
-        <?php } else if ($is_back_office) { ?>
-            <input type="button" value="Back to Insurance Page"
-                onclick="window.location='manage_claims.php'; return false;" />
+        <?php if ($isHistoricView) { ?>
+            <h3 class="text-center">
+                Historic snapshot of claim <?= $claimId ?>
+                at <?= date('m/d/Y h:i', strtotime($claimData['updated_at'])) ?>
+            </h3>
+        <?php } else { ?>
+            <ol>
+                <li>Verify all claim details.</li>
+                <li>Click "Print Claim".</li>
+                <li>Download the PDF output file and print on CMS1500 form.</li>
+            </ol>
+            <?php if (!empty($is_front_office)) { ?>
+                <input type="button" value="Back to Insurance Page"
+                    onclick="window.location='/manage/view_claim.php?claimid=<?= $claimId ?>&pid=<?= $patientId ?>'; return false;" />
+            <?php } elseif ($is_back_office) { ?>
+                <input type="button" value="Back to Insurance Page"
+                    onclick="window.location='manage_claims.php'; return false;" />
+            <?php } ?>
         <?php } ?>
-        <?php if ($status==DSS_CLAIM_PENDING || $status==DSS_CLAIM_REJECTED) { ?>
+        <?php if (!$isHistoricView && ($status==DSS_CLAIM_PENDING || $status==DSS_CLAIM_REJECTED)) { ?>
             <?php if ($_SERVER['PHP_SELF'] == "/manage/admin/insurance_claim.php") { ?>
                 <?php if ($_SESSION['admin_access'] == 1) { ?>
                     <a href="manage_claims.php?delid=<?= intval($claimId) ?>"
@@ -573,57 +600,21 @@ $qualifiers = $db->getResults("SELECT * FROM dental_qualifier WHERE status = 1 O
 
     <?php echo (!empty($msg) ? $msg : ''); ?>
 
-    <?php if (!empty($is_front_office)) { ?>
-        <?php if ($isSecondary) { ?>
-            <h4>
-                Secondary Claim
-                (<a href="insurance_v2.php?insid=<?= $referencedClaimId ?>&pid=<?= $patientId ?>">
-                    Primary is
-                    <?= $referencedClaimId ?>
-                </a>)
-            </h4>
-        <?php } else {
-            $sec_sql = "SELECT insuranceid FROM dental_insurance WHERE primary_claim_id = '$claimId'";
-            $sec_r = $db->getRow($sec_sql);
-
-            ?>
-            <h4>
-                Primary Claim
-                <?php if (!empty($sec_r)) { ?>
-                    (<a href="insurance_v2.php?insid=<?php echo $sec_r['insuranceid']; ?>&pid=<?= $patientId ?>">
-                        Secondary is <?php echo $sec_r['insuranceid']; ?>
-                    </a>)
-                <?php } ?>
-            </h4>
+    <h4>
+        <?= $isSecondary ? 'Secondary' : 'Primary' ?> Claim
+        <?php if (!$isHistoricView && $counterClaimId) { ?>
+        (<a href="insurance_<?= !empty($is_front_office) ? '' : 'claim_' ?>v2.php?insid=<?= $counterClaimId ?>&pid=<?= $patientId ?>">
+            <?= $isSecondary ? 'Primary' : 'Secondary' ?> is
+            <?= $counterClaimId ?>
+        </a>)
         <?php } ?>
-    <?php } else { ?>
-        <?php if ($isSecondary) { ?>
-            <h4>
-                Secondary Claim
-                (<a href="insurance_claim_v2.php?insid=<?= $referencedClaimId ?>&pid=<?= $patientId ?>">
-                    Primary is <?= $referencedClaimId ?>
-                </a>)
-            </h4>
-        <?php } else {
-            $sec_sql = "SELECT insuranceid from dental_insurance where primary_claim_id='$claimId'";
-            $sec_r = $db->getRow($sec_sql);
-
-            ?>
-            <h4>
-                Primary Claim
-                <?php if (!empty($sec_r)) { ?>
-                    (<a href="insurance_claim_v2.php?insid=<?php echo $sec_r['insuranceid']; ?>&pid=<?= $patientId ?>">
-                        Secondary is <?php echo $sec_r['insuranceid']; ?>
-                    </a>)
-                <?php } ?>
-            </h4>
-        <?php } ?>
-    <?php } ?>
+    </h4>
 <form name="insurancefrm" action="<?php echo $_SERVER['PHP_SELF'];?>?insid=<?php echo (!empty($_GET['insid']) ? $_GET['insid'] : '')?>&pid=<?php echo $_GET['pid']?>" method="post" id="claim-form">
 	<input type="hidden" name="insurancesub" value="1" />
 	<input type="hidden" name="ed" value="<?php echo $claimId;?>" />
 
 	<div align="right">
+    <?php if (!$isHistoricView) { ?>
         <?php if ($isSent) { ?>
             Claim has been sent
             <!-- Give user ability to print claim again and update claim history -->
@@ -707,6 +698,7 @@ if (!empty($is_back_office)){
     <a href="display_fdf_v2.php?f=<?php echo $fdf_file;?>" class="print-button" >Print Claim Form</a>
 <?php } ?>
 		&nbsp;&nbsp;&nbsp;
+    <?php } ?>
 	</div>
 
 <?php if ($isRejected) { ?>
@@ -2200,6 +2192,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 		</td>
 	</tr>
 </table>
+<?php if (!$isHistoricView) { ?>
     <?php if ($status==DSS_CLAIM_PENDING || $status==DSS_CLAIM_REJECTED) { ?>
         <?php if ($_SERVER['PHP_SELF'] != "/manage/admin/insurance_claim.php") { ?>
 		<div style="float:right;">
@@ -2248,20 +2241,9 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
 
                <?php } ?>
 		</div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
 			<?php } ?>
                                 <?php } ?>
+<?php } ?>
 </form>
 
 <div id="popupContact" style="width:750px;">
@@ -2269,11 +2251,12 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>
-
-</body>
-</html>
-
-<script type="text/javascript">
+<script>
+<?php if ($isHistoricView) { ?>
+jQuery(function($){
+    $('form#claim-form').find('input, select, button').prop('disabled', true);
+});
+<?php } ?>
 
 $(".date_field").keydown(function(e){
 var key = e.charCode || e.keyCode || 0;
@@ -2359,6 +2342,8 @@ $('input, select').bind('change', function(){
             .appendTo('#top-banner');
     });
 </script>
+</body>
+</html>
 <?php
 
 //confirm ledger transactions and make sure they haven't changed.
@@ -2513,7 +2498,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $patientId = intval($patientId);
     $isNewClaim = !$claimId;
 
-    $isFormerPrimary = ClaimFormData::isPrimary($formerStatus);
+    $isFormerPrimary = !$db->getColumn("SELECT primary_claim_id FROM dental_insurance WHERE insuranceid = '$claimId'", 'primary_claim_id', 0);
     $isFormerPending = ClaimFormData::isStatus('pending', $formerStatus);
     $isFormerRejected = ClaimFormData::isStatus('rejected', $formerStatus);
     $needsBackOfficeMarkerUpdate = $isFormerPending || $isFormerRejected;
@@ -2946,6 +2931,8 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             s_charges4_1 = '".$db->escape($s_charges4_1)."',
             s_charges4_2 = '".$db->escape($s_charges4_2)."',
             days_or_units4 = '".$db->escape($days_or_units4)."',
+            ";
+        $ins_sql .= "
             epsdt_family_plan4 = '".$db->escape($epsdt_family_plan4)."',
             id_qua4 = '".$db->escape($id_qua4)."',
             rendering_provider_id4 = '".$db->escape($rendering_provider_id4)."',
@@ -3187,6 +3174,8 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         days_or_units4 = '".$db->escape($days_or_units4)."',
         epsdt_family_plan4 = '".$db->escape($epsdt_family_plan4)."',
         id_qua4 = '".$db->escape($id_qua4)."',
+        ";
+    $ed_sql .= "
         rendering_provider_id4 = '".$db->escape($rendering_provider_id4)."',
         service_date5_from = '".$db->escape($service_date5_from)."',
         service_date5_to = '".$db->escape($service_date5_to)."',

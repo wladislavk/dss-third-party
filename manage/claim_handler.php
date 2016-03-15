@@ -21,8 +21,10 @@ if (!isset($_POST['claim']) || !is_array($_POST['claim'])) { ?>
     trigger_error("Die called", E_USER_ERROR);
 }
 
-$status = $db->getRow("SELECT status FROM dental_insurance WHERE insuranceid = '$claimId' AND patientid = '$patientId'");
-$status = $status ? $status['status'] : 0; // This means default status is zero
+$status = $db->getColumn("SELECT status
+    FROM dental_insurance
+    WHERE insuranceid = '$claimId'
+        AND patientid = '$patientId'", 'status', 0);
 
 $isPending = ClaimFormData::isStatus('pending', $status);
 
@@ -208,6 +210,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
     /**
      * Session 'userid' is not reliable if we are not navigating a BO page
+     * Yet, 'userid' cannot be empty. At a later step, we will ste a default.
      */
     $userId = $filedByBackOffice ? 0 : intval($_SESSION['userid']);
 
@@ -215,7 +218,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $patientId = intval($patientId);
     $isNewClaim = !$claimId;
 
-    $isFormerPrimary = ClaimFormData::isPrimary($formerStatus);
+    $isFormerPrimary = !$db->getColumn("SELECT primary_claim_id FROM dental_insurance WHERE insuranceid = '$claimId'", 'primary_claim_id', 0);
     $isFormerPending = ClaimFormData::isStatus('pending', $formerStatus);
     $isFormerRejected = ClaimFormData::isStatus('rejected', $formerStatus);
     $needsBackOfficeMarkerUpdate = $isFormerPending || $isFormerRejected;
@@ -249,7 +252,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $patientData = $patientData ?: [];
 
     $docId = intval($patientData['docid']);
-    $producer = !empty($_SESSION['userid']) ? intval($_SESSION['userid']) : $docId;
+    $userId = $userId ?: $docId;
+    $producer = $userId;
 
     // Put POST values into variables
     $payer_id = !empty($claimData['payer']['id']) ? $claimData['payer']['id'] : '';
@@ -901,6 +905,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             modifier4_3 = '" . $db->escape($modifier4_3) . "',
             modifier4_4 = '" . $db->escape($modifier4_4) . "',
             diagnosis_pointer4 = '" . $db->escape($diagnosis_pointer4) . "',
+            ";
+    $ed_sql .= "
             s_charges4_1 = '" . $db->escape($s_charges4_1) . "',
             s_charges4_2 = '" . $db->escape(!empty($s_charges4_2) ? $s_charges4_2 : '') . "',
             days_or_units4 = '" . $db->escape($days_or_units4) . "',

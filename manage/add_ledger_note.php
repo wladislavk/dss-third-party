@@ -1,21 +1,21 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-include("includes/calendarinc.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link href="css/admin.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/form.css" type="text/css" />
+    <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
+    <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+    <?php include("includes/calendarinc.php"); ?>
+    <script language="JavaScript" src="/manage/calendar1.js"></script>
+    <script language="JavaScript" src="/manage/calendar2.js"></script>
 </head>
 <body>
-
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-
-<script language="JavaScript" src="calendar1.js"></script>
-<script language="JavaScript" src="calendar2.js"></script>
 <form id="ledgernoteform" name="ledgernoteform" action="insert_ledger_notes.php" method="POST" >
     <table cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>

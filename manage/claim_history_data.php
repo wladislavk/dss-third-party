@@ -1,16 +1,61 @@
-<?php namespace Ds3\Libraries\Legacy; ?><link rel="stylesheet" href="css/ledger.css" />
 <?php
-  $sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' ORDER BY adddate DESC";
-  $my = $db->getResults($sql);
-  $total_rec = count($my);
-  $num_users = $total_rec;
+namespace Ds3\Libraries\Legacy;
 
-  $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''));
-  $claim = $db->getRow($csql);
+$sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' ORDER BY adddate DESC";
+$my = $db->getResults($sql);
+$total_rec = count($my);
+$num_users = $total_rec;
+
+$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''));
+$claim = $db->getRow($csql);
+
+$claimHistory = $db->getResults("SELECT history.*,
+        user.userid, user.first_name AS user_first, user.last_name AS user_last,
+        admin.adminid, admin.first_name AS admin_first, admin.last_name AS admin_last
+    FROM dental_insurance_history history
+        LEFT JOIN dental_users user ON user.userid = history.updated_by_user
+        LEFT JOIN admin ON admin.adminid = history.updated_by_admin
+    WHERE insuranceid = '" . intval($_GET['cid']) . "'
+    ORDER BY id DESC");
+
 ?>
+<link rel="stylesheet" href="css/ledger.css" />
+<style type="text/css">
+    pre { max-height: 350px; }
 
+    table.fullwidth td, table.fullwidth th {
+        padding: 5px;
+    }
+
+    table.fullwidth td {
+        border-top: 1px solid #c6c6c6;
+    }
+
+    table.fullwidth tr.expand td {
+        border-top: none;
+    }
+</style>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+<script>
+jQuery(function($){
+    $('a.expand').click(function(){
+        var $container = $(this).closest('tr').next('tr.expand'),
+            $pre = $container.find('pre:not(.hljs)');
+
+        if ($pre.length) {
+            $pre.each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
+        }
+
+        $container.toggle();
+        return false;
+    });
+});
+</script>
 <span class="admin_head">
-	Claim History
+    Claim History
 </span>
 
 <br />
@@ -93,39 +138,53 @@
 <span class="admin_head">
   Claim Version History
 </span>
-
-<?php
-  $sql = "SELECT * FROM dental_insurance_history WHERE insuranceid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."'";
-  $q = $db->getResults($sql);
-  if ($q) foreach($q as $r) {
-?>
-    <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
-    	<?php echo  $r['updated_at']; ?> - Claim Status = <?php echo  $dss_claim_status_labels[$r['status']];?> - 
-    	<?php
-        $u_sql = "SELECT first_name, last_name from dental_users where userid='".$r['updated_by_user']."'";
-    		$u_r = $db->getRow($u_sql);
-    		echo $u_r['first_name']." ".$u_r['last_name'];
-    		
-        $u_sql = "SELECT first_name, last_name from admin where adminid='".$r['updated_by_admin']."'";
-        $u_r = $db->getRow($u_sql);
-        echo $u_r['first_name']." ".$u_r['last_name']
-      ?>
-	    <a href="#" onclick="$('#cvh_<?php echo $r['id']; ?>').toggle(); return false;">Expand</a>
-    	<div id="cvh_<?php echo $r['id']; ?>" style="display:none;">
-    		<br />
-          <?php print_r($r); ?>
-    	</div>
-	  </div>
-<?php
-  }
-?>
-
-<div id="popupContact" style="width:750px;">
-  <a id="popupContactClose">
-    <button>X</button>
-  </a>
-  <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
-
-<br /><br />	
+<table class="fullwidth" cellpadding="0" cellspacing="0">
+    <colgroup>
+        <col width="12%">
+        <col width="12%">
+        <col width="28%">
+        <col width="28%">
+        <col width="20%">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Status</th>
+            <th colspan="2">Modified by</th>
+            <th>View</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($claimHistory as $r) { ?>
+        <tr>
+            <td>
+                <?= date('m/d/Y h:i', strtotime($r['updated_at'])) ?>
+            </td>
+            <td>
+                <?= $dss_claim_status_labels[$r['status']] ?>
+            </td>
+            <td>
+                FO: <?= $r['userid'] ? e($r['user_first'] . ' ' . $r['user_last']) : 'none' ?>
+            </td>
+            <td>
+                BO: <?= $r['adminid'] ? e($r['admin_first'] . ' ' . $r['admin_last']) : 'none' ?>
+            </td>
+            <td>
+                <a class="button expand" href="#">Raw data</a>
+                <a class="button"
+                    href="/manage/claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=paper">
+                    Paper</a>
+                <a class="button"
+                    href="/manage/claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=efile">
+                    E-File</a>
+            </td>
+        </tr>
+        <tr class="expand" style="display:none">
+            <td colspan="5">
+                <pre class="yaml"><?php foreach ($r as $key=>$value) { echo e("$key: $value") . '<br>'; } ?></pre>
+            </td>
+        </tr>
+    <?php } ?>
+    </tbody>
+</table>
+<p>&nbsp;</p>

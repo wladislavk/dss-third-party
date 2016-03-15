@@ -12,7 +12,7 @@ a, a:hover{
 .fullwidth{
   width:98%;
   margin: 0 1%;
-  }
+}
 .bp{
   font-size: 20px;
   }
@@ -1186,9 +1186,9 @@ padding-top: 1em;
 /* End */
 
 
-/*#contentMain form{
-width:968px;
-}*/
+#contentMain{
+  overflow: auto;
+}
 
 #popupContact{
 width:950px;

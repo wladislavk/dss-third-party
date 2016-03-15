@@ -326,7 +326,7 @@ function retrieveMailerData ($patientId) {
         FROM dental_patients
         WHERE patientid = '$patientId'");
 
-    $locationId = $db->getRow("SELECT location
+    $locationId = $db->getColumn("SELECT location
         FROM dental_summary
         WHERE patientid = '$patientId'", 'location');
 

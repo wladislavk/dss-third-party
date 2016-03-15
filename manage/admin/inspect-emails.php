@@ -17,7 +17,24 @@ if (!empty($_POST['truncate'])) {
     $db->query("DELETE FROM dental_email_log WHERE created_at < (NOW() - INTERVAL 2 WEEK)");
 }
 
-$results = $db->getResults("SELECT * FROM dental_email_log ORDER BY id DESC");
+$page = array_get($_GET, 'page', 0);
+$count = array_get($_GET, 'count', 100);
+
+$page = intval($page);
+$count = intval($count);
+
+$page = $page >= 0 ? $page : 0;
+$count = $count >= 5 ? $count : 100;
+
+$offset = $page*$count;
+$totalCount = $db->getColumn("SELECT COUNT(id) AS total FROM dental_email_log", 'total', 0);
+
+$totalPages = ceil($totalCount/$count);
+
+$results = $db->getResults("SELECT *
+    FROM dental_email_log
+    ORDER BY id DESC
+    LIMIT $offset, $count");
 
 array_walk($results, function(&$each){
     $parts = preg_split(
@@ -31,63 +48,65 @@ array_walk($results, function(&$each){
 require_once __DIR__ . '/includes/top.htm';
 
 ?>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
-    <style type="text/css">
-        pre { max-height: 300px; }
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
+<style type="text/css">
+    pre { max-height: 300px; }
 
-        table { table-layout: fixed; }
+    table { table-layout: fixed; }
 
-        td[rowspan] {
-            position: relative;
-            overflow: auto;
-        }
+    td[rowspan] {
+        position: relative;
+        overflow: auto;
+    }
 
-        td[rowspan] a.btn {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-        }
-    </style>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
-    <script>
-        jQuery(function($){
-            $('form [name=truncate]').click(function(){
-                return confirm('Are you sure you want to remove ALL the logs?');
-            });
-
-            $('.table.table-condensed a').click(function() {
-                var $this = $(this),
-                    $tr = $this.closest('tr').nextUntil('tr.json').last().nextUntil('tr:not(.json)');
-
-                if (!$tr.length) {
-                    return false;
-                }
-
-                $tr.each(function(){
-                    var $this = $(this);
-
-                    if (!$this.is('.parsed')) {
-                        $this.addClass('parsed').find('pre.on-demand').each(function () {
-                            hljs.highlightBlock(this);
-                        });
-                    }
-                });
-
-                $tr.toggleClass('hidden');
-
-                return false;
-            });
+    td[rowspan] a.btn {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+    }
+</style>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+<script>
+    jQuery(function($){
+        $('form [name=truncate]').click(function(){
+            return confirm('Are you sure you want to remove ALL the logs?');
         });
-    </script>
-    <form method="post">
-        <input type="submit" class="btn btn-primary" name="older" value="Delete logs older than 2 weeks" />
-        <input type="submit" class="btn btn-danger pull-right" name="truncate" value="Delete ALL logs" />
-    </form>
-    <p>&nbsp;</p>
+
+        $('.table.table-condensed a').click(function() {
+            var $this = $(this),
+                $tr = $this.closest('tr').nextUntil('tr.json').last().nextUntil('tr:not(.json)');
+
+            if (!$tr.length) {
+                return false;
+            }
+
+            $tr.each(function(){
+                var $this = $(this);
+
+                if (!$this.is('.parsed')) {
+                    $this.addClass('parsed').find('pre.on-demand').each(function () {
+                        hljs.highlightBlock(this);
+                    });
+                }
+            });
+
+            $tr.toggleClass('hidden');
+
+            return false;
+        });
+    });
+</script>
+<form method="post">
+    <input type="submit" class="btn btn-primary" name="older" value="Delete logs older than 2 weeks" />
+    <input type="submit" class="btn btn-danger pull-right" name="truncate" value="Delete ALL logs" />
+</form>
+<p>&nbsp;</p>
+
 <?php if (!$results) { ?>
     <p class="lead text-center">There are no email logs.</p>
 <?php } ?>
 
+    <p class="text-right">Pages: <?php paging($totalPages, $page, "count=$count") ?></p>
 <table class="table table-condensed table-bordered">
     <colgroup>
         <col width="15%" />

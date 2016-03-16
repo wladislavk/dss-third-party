@@ -305,3 +305,11 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Chair::class, function ($faker) {
+    return [
+        'name'  => $faker->word,
+        'rank'  => $faker->randomDigit,
+        'docid' => $faker->randomDigit
+    ];
+});

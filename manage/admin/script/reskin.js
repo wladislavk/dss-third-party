@@ -102,9 +102,26 @@ $(function(){
     /**
      * File input
      */
-    $(':file').filestyle({
-        classButton: 'btn btn-primary',
-        classIcon: 'glyphicon glyphicon-folder-open'
+    $(':file').each(function(){
+        var $file = $(this),
+            id = $file.attr('id'),
+            $replacement;
+
+        $file.filestyle({
+            classButton: 'btn btn-primary btn-xs',
+            classIcon: 'glyphicon glyphicon-folder-open',
+            size: 'sm'
+        });
+
+        $replacement = $file.next('.bootstrap-filestyle');
+
+        $replacement.find('input').removeClass('input-large').addClass('input-xs');
+        $replacement.attr('id', id);
+        $file.attr('id', '');
+
+        if ($file.is(':hidden')) {
+            $replacement.css('display', 'none');
+        }
     });
     
     /**

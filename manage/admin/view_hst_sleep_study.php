@@ -1,281 +1,296 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-$pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$_GET['pid']."';";
-$pat_q = mysqli_query($con,$pat_sql);
-$pat_r = mysqli_fetch_assoc($pat_q);
+<?php
+namespace Ds3\Libraries\Legacy;
+
+$pat_r = $db->getRow("SELECT p_m_ins_type FROM dental_patients WHERE patientid = '" . intval($_GET['pid']) . "'");
+
+$lab_place_r = $db->getResults("SELECT sleeplabid, company
+    FROM dental_sleeplab
+    WHERE status = '1'
+        AND docid = '" . intval($_SESSION['docid']) . "'
+    ORDER BY sleeplabid DESC");
+
+$ins_diag_my = $db->getResults("SELECT *
+    FROM dental_ins_diagnosis
+    WHERE status = 1
+    ORDER BY sortby");
+
+$device_my = $db->getResults("SELECT deviceid, device
+    FROM dental_device
+    WHERE status = 1
+    ORDER BY sortby");
+
+$studyCount = !empty($studyCount) ? $studyCount : 1;
+
 ?>
 <style type="text/css">
-.sleeplabstable tr{height:28px; }
-.yellow .odd, .yellow .even{
-background:#edeb46;
-}
+    .sleep-labs-container {
+        position: relative;
+        display: block;
+        width: 500px;
+        overflow-x: scroll;
+        overflow-y: hidden;
+    }
 
-  .odd{ background: #F9FFDF; }
-  .even{ background: #e4ffcf; }
-  select{width:140px;}
+    .sleep-labs-scroll {
+        position: relative;
+        display: block;
+        max-height: 450px;
+        width: 2000px;
+    }
+
+    .sleeplabstable {
+        position: relative;
+        display: inline-block;
+        line-height: 22px;
+        margin: 0;
+    }
+
+    .sleeplabstable tr { height: 28px; }
+    .yellow .odd, .yellow .even { background: #edeb46; }
+    .odd { background: #f9ffdf; }
+    .even { background: #e4ffcf; }
+    select { width: 140px; }
 </style>
+<script type="text/javascript">
+    function validate_image(){
+        if($('#ss_file').val() == ''){
+            alert('Image is required.');
+            return false;
+        }
+        return true;
+    }
 
+    function updatePlace(f){
+        if(f.sleeptesttype.value == "HST"){
+            f.place.style.display = "none";
+            f.home.style.display = "block";
+        }else{
+            f.place.style.display = "block";
+            f.home.style.display = "none";
+        }
+    }
 
-<table class="sleeplabstable" width="108" align="center" style="float:left; margin: 0;line-height:22px;">
+    function addstudylab(v){
+        if(v == 'add'){
+            parent.loadPopupRefer('add_sleeplab.php?r=flowsheet');
+        }
+    }
 
+    jQuery(function($){
+        $('.sleep-labs-container').each(function(){
+            var $container = $(this),
+                $parent = $container.parent(), // assume a td
+                $scroll = $container.find('.sleep-labs-scroll'),
+                $tables = $scroll.find('table.sleeplabstable'),
+                width = 20;
 
-        <tr>
+            $tables.each(function(){
+                width += $(this).width();
+            });
+
+            $scroll.width(width);
+            $container.width($parent.width() > width ? width : $parent.width());
+        });
+    });
+</script>
+<div class="sleep-labs-container">
+    <div class="sleep-labs-scroll">
+        <table class="sleeplabstable">
+            <tr>
                 <td valign="top" class="odd">
-                Date
+                    Date
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="even">
-                Sleep Test Type
+                    Sleep Test Type
                 </td></tr>
-  <tr>
+            <tr>
                 <td valign="top" class="odd">
-                Place
+                    Place
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="even">
-                Diagnosis
+                    Diagnosis
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="odd">
-                Diagnosing Phys.
+                    Diagnosing Phys.
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="even">
-                Diagnosing NPI#
+                    Diagnosing NPI#
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="odd">
-                File
+                    File
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="even">
-                AHI
+                    AHI
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="odd">
-                AHI Supine
+                    AHI Supine
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="even">
-                RDI
+                    RDI
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="odd">
-                RDI Supine
+                    RDI Supine
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="even">
-                O<sub>2</sub> Nadir
+                    O<sub>2</sub> Nadir
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="odd">
-                T &le; 90% O<sub>2</sub>
+                    T &le; 90% O<sub>2</sub>
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="even">
-                Dental Device
+                    Dental Device
                 </td>
-  </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="odd">
-                Device Setting
+                    Device Setting
                 </td>
-        </tr>
-  <tr>
+            </tr>
+            <tr>
                 <td valign="top" class="even">
-                Notes
+                    Notes
                 </td>
-        </tr>
-  </table>
-
-<script type="text/javascript">
-function validate_image(){
-  if($('#ss_file').val() == ''){
-    alert('Image is required.');
-    return false;
-  }
-  return true;
-}
-</script>
-
-<table class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
-        <tr>
-                <td valign="top" class="odd">
-                <input type="text" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox calendar" name="date" id="date" value="<?= date('m/d/Y'); ?>">
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                <select name="sleeptesttype">
-      <option value="HST">HST</option>
-      <option value="PSG">PSG</option>
-      <option value="PSG Baseline">PSG Baseline</option>
-      <option value="HST Baseline">HST Baseline</option>
-      <option value="HST Titration">HST Titration</option>
-    </select>
-<script type="text/javascript">
-
-function updatePlace(f){
-if(f.sleeptesttype.value == "HST"){
-  f.place.style.display = "none";
-  f.home.style.display = "block";
-}else{
-  f.place.style.display = "block";
-  f.home.style.display = "none";
-}
-}
-
-</script>
-                </td>
-</tr>
-  <tr>
-                <td valign="top" class="odd">
-<script type="text/javascript">
-
-function addstudylab(v){
-  if(v == 'add'){
-    parent.loadPopupRefer('add_sleeplab.php?r=flowsheet');
-  }
-}
-
-</script>
-                <select name="place" class="place_select" onchange="addstudylab(this.value)">
-<option>SELECT</option>
-                <?php
-     $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".(!empty($_SESSION['docid']) ? $_SESSION['docid'] : '')."' ORDER BY sleeplabid DESC";
-     $lab_place_r = mysqli_query($con,$lab_place_q);
-     while($lab_place = mysqli_fetch_array($lab_place_r)){
-    ?>
-                  <option value="<?php echo $lab_place['sleeplabid']; ?>"><?php echo $lab_place['company']; ?></option>
-    <?php
-      }
-    ?>
-                <option value="add">ADD SLEEP LAB</option>
-    </select>
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                          <select name="diagnosis" style="width:140px;" class="field text addr tbox" >
-                                <option value="">SELECT</option>
-                        <?php
-                                $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
-                                                                           $ins_diag_my = mysqli_query($con,$ins_diag_sql);
-
-                                                                                while($ins_diag_myarray = mysqli_fetch_array($ins_diag_my))
-                                                                                {
-                                                                                ?>
-                                                                                        <option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" >
-                                                                                                <?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
-                                                                                        </option>
-                                                                                <?
-                                                                                }?>
-
-                            </select> <span id="req_0" class="req">*</span>
-                </td>
-        </tr>
-        <tr>
-                <td valign="top" class="odd">
-                  <input style="width:100px;" type="text" name="diagnosising_doc" />
-                <?php
-                        if($pat_r['p_m_ins_type']==1){
-                ?>
-                <span id="req_0" class="req">*</span>
-                <?php
-                        }
-                ?>
-                </td>
-        </tr>
-        <tr>
-                <td valign="top" class="even">
-                  <input style="width:100px;" type="text" name="diagnosising_npi" />
-                <?php
-                        if($pat_r['p_m_ins_type']==1){
-                ?>
-                <span id="req_0" class="req">*</span>
-                <?php
-                        }
-                ?>
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                  <input style="width:140px" size="8" type="file" name="ss_file" id="ss_file" /> <span id="req_0" class="req">*</span>
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                <input type="text" name="ahi" />
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                <input type="text" name="ahisupine" />
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                <input type="text" name="rdi" />
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                <input type="text" name="rdisupine" />
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                <input type="text" name="o2nadir" />
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                <input type="text" name="t9002" />
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even" style="height:25px;">
-                <select name="dentaldevice" style="width:150px;">
-<option value="">SELECT</option>
-        <?php
-        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
-                                                                $device_my = mysqli_query($con,$device_sql);
-
-                                                                while($device_myarray = mysqli_fetch_array($device_my))
-                                                                {
-                ?>
-                                                                 <option value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
-                                                                 <?php
-                                                                 }
-                                                                ?>
-    </select>
-                </td>
-  </tr>
-  <tr>
-                <td valign="top" class="odd">
-                <input type="text" name="devicesetting" />
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                <input type="text" name="notes" />
-                </td>
-        </tr>
-        <tr>
-                <td valign="top" class="odd">
-		<input type="hidden" name="submitnewsleeplabsumm" value="1" />
-                </td>
-        </tr>
-</table>
-
+            </tr>
+        </table>
+        <?php for ($n=0; $n<$studyCount; $n++) { ?>
+            <input type="hidden" name="submitnewsleeplabsumm" value="1" />
+            <table class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
+                <tr>
+                    <td valign="top" class="odd">
+                        <input type="text" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox calendar" name="date" id="date" value="<?= date('m/d/Y'); ?>">
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="even">
+                        <select name="sleeptesttype">
+                            <option value="HST">HST</option>
+                            <option value="PSG">PSG</option>
+                            <option value="PSG Baseline">PSG Baseline</option>
+                            <option value="HST Baseline">HST Baseline</option>
+                            <option value="HST Titration">HST Titration</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="odd">
+                        <select name="place" class="place_select" onchange="addstudylab(this.value)">
+                            <option>SELECT</option>
+                            <?php foreach($lab_place_r as $lab_place) { ?>
+                                <option value="<?php echo $lab_place['sleeplabid']; ?>"><?php echo $lab_place['company']; ?></option>
+                            <?php } ?>
+                            <option value="add">ADD SLEEP LAB</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="even">
+                        <select name="diagnosis" style="width:140px;" class="field text addr tbox" >
+                            <option value="">SELECT</option>
+                            <?php foreach ($ins_diag_my as $ins_diag_myarray) { ?>
+                                <option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" >
+                                    <?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                        <span id="req_0" class="req">*</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="odd">
+                        <input style="width:100px;" type="text" name="diagnosising_doc" />
+                        <?php if ($pat_r['p_m_ins_type'] == 1) { ?>
+                            <span id="req_0" class="req">*</span>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="even">
+                        <input style="width:100px;" type="text" name="diagnosising_npi" />
+                        <?php if ($pat_r['p_m_ins_type'] == 1) { ?>
+                            <span id="req_0" class="req">*</span>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="odd">
+                        <input style="width:140px" size="8" type="file" name="ss_file" id="ss_file" /> <span id="req_0" class="req">*</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="even">
+                        <input type="text" name="ahi" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="odd">
+                        <input type="text" name="ahisupine" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="even">
+                        <input type="text" name="rdi" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="odd">
+                        <input type="text" name="rdisupine" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="even">
+                        <input type="text" name="o2nadir" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="odd">
+                        <input type="text" name="t9002" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="even" style="height:25px;">
+                        <select name="dentaldevice" style="width:150px;">
+                            <option value="">SELECT</option>
+                            <?php foreach ($device_my as $device_myarray) { ?>
+                                <option value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="odd">
+                        <input type="text" name="devicesetting" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" class="even">
+                        <input type="text" name="notes" />
+                    </td>
+                </tr>
+            </table>
+        <?php } ?>
+    </div>
+</div>

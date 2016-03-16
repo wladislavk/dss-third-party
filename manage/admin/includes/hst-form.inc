@@ -224,7 +224,15 @@ if ($hstData['status'] != DSS_HST_CANCELED && (isset($_POST['authorize']) || iss
     }
 }
 
-$insuranceCompanyList = [];
+$insuranceCompanyList = [
+    0 => [
+        'id' => 0,
+        'name' => 'NONE',
+        'phone' => '',
+        'fax' => '',
+        'email' => '',
+    ]
+];
 $unorderedInsuranceCompanyList = $db->getResults("SELECT
         contactid AS id,
         company AS name,
@@ -581,4 +589,4 @@ if ($hstData['status'] != DSS_HST_REQUESTED) {
     </div>
 <?php } ?>
 <br />
-<script type="text/javascript" src="/manage/js/hst_request.js?v=20160208"></script>
+<script type="text/javascript" src="/manage/js/hst_request.js?v=20160316"></script>

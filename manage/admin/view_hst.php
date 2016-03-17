@@ -518,7 +518,7 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
             <td valign="top" colspan="2" class="frmdata">
                 <?php
 
-                $studyCount = intval($r['hst_nights']);
+                $studyCount = intval($hst['hst_nights']);
                 include 'view_hst_sleep_study.php';
 
                 ?>

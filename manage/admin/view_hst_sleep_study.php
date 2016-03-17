@@ -1,14 +1,21 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+$hstId = !empty($hstId) ? $hstId : 0;
+$patientData = !empty($patientData) ?: [];
+$hstNights = !empty($hstNights) ? $hstNights : 1;
+
+$patientId = intval($patientData['patientid']);
+$docId = intval($patientData['docid']);
+
 $insuranceType = $db->getColumn("SELECT p_m_ins_type
     FROM dental_patients
-    WHERE patientid = '" . intval($_GET['pid']) . "'", 'p_m_ins_type', 0);
+    WHERE patientid = '$patientId'", 'p_m_ins_type', 0);
 
 $labPlaces = $db->getResults("SELECT sleeplabid, company
     FROM dental_sleeplab
     WHERE status = '1'
-        AND docid = '" . intval($_SESSION['docid']) . "'
+        AND docid = '$docId'
     ORDER BY sleeplabid DESC");
 
 $insuranceDiagnosis = $db->getResults("SELECT *
@@ -21,21 +28,26 @@ $dentalDevices = $db->getResults("SELECT deviceid, device
     WHERE status = 1
     ORDER BY sortby");
 
-$hstId = !empty($hstId) ? $hstId : 0;
-$sleepId = !empty($sleepId) ? $sleepId : 0;
-$hstNights = !empty($hstNights) ? $hstNights : 1;
+$sleepStudies = $db->getResults("SELECT *
+    FROM dental_summ_sleeplab
+    WHERE id IN (
+        SELECT sleep_study_id
+        FROM dental_hst
+        WHERE id = '$hstId'
 
-$sleepStudies = $db->getResults("SELECT lab.*
-    FROM dental_summ_sleeplab lab
-        LEFT JOIN dental_hst_sleeplab pivot ON pivot.sleep_id = lab.id
-    WHERE lab.id = '$sleepId'
-        OR pivot.hst_id = '$hstId'");
+        UNION
+
+        SELECT sleep_id
+        FROM dental_hst_sleeplab
+        WHERE hst_id = '$hstId'
+    )
+    ORDER BY id DESC");
 
 /**
  * Empty case, to always show a studies table
  */
-if (!$sleepStudies) {
-    $sleepStudies = array_fill(0, $hstNights, []);
+if (count($sleepStudies) < $hstNights) {
+    $sleepStudies = array_merge($sleepStudies, array_fill(0, $hstNights - count($sleepStudies), []));
 }
 
 $testTypes = [
@@ -118,6 +130,7 @@ $testTypes = [
         });
     });
 </script>
+<script type="text/javascript" src="/manage/admin/popup/popup.js"></script>
 <div class="sleep-labs-container">
     <div class="sleep-labs-scroll">
         <table class="sleeplabstable">
@@ -203,8 +216,7 @@ $testTypes = [
         </table>
         <?php foreach ($sleepStudies as $n=>$study) { ?>
             <input type="hidden" name="studies[<?= $n ?>][id]" value="<?= e(array_get($study, 'id', 0)) ?>" />
-            <input type="hidden" name="studies[<?= $n ?>][submitnewsleeplabsumm]" value="1" />
-            <table class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
+            <table class="sleeplabstable <?= !empty($show_yellow) && empty($sleepstudy) ? 'yellow' : '' ?>">
                 <tr>
                     <td valign="top" class="odd">
                         <input type="text" onchange="validateDate('date_<?= $n ?>');" maxlength="255"
@@ -273,8 +285,17 @@ $testTypes = [
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input style="width:140px" size="8" type="file" name="ss_file_<?= $n ?>" id="ss_file_<?= $n ?>" />
-                        <span class="req">*</span>
+                        <?php if ($study['filename']) { ?>
+                            <div id="file_edit_<?= $study['id'] ?>">
+                                <a href="/manage/admin/display_file.php?f=<?= rawurlencode($study['filename']) ?>"
+                                    target="_blank" class="btn btn-info btn-xs">View</a>
+                                <a href="#" class="btn btn-primary btn-xs">Edit</a>
+                            </div>
+                            <input type="file" name="ss_file_<?= $n ?>" id="ss_file_<?= $n ?>" style="display: none;" />
+                        <?php } else { ?>
+                            <input type="file" name="ss_file_<?= $n ?>" id="ss_file_<?= $n ?>" />
+                            <span class="req">*</span>
+                        <?php } ?>
                     </td>
                 </tr>
                 <tr>
@@ -340,3 +361,13 @@ $testTypes = [
         <?php } ?>
     </div>
 </div>
+<div id="popupContact" style="width: 750px; display: none;">
+    <a id="popupContactClose"><button>X</button></a>
+    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopup"></div>
+<div id="popupRefer" style="height: 550px; width:750px; display: none;">
+    <a id="popupReferClose"><button>X</button></a>
+    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopupRef"></div>

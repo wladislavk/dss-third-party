@@ -1,33 +1,28 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
-include "includes/top.htm";
-require_once('../includes/constants.inc');
-require_once "includes/general.htm";
+<?php
+namespace Ds3\Libraries\Legacy;
 
+require_once __DIR__ . '/includes/top.htm';
+require_once __DIR__ . '/../includes/constants.inc';
+require_once __DIR__ . '/includes/general.htm';
 require_once __DIR__ . '/includes/access.php';
 
-$isAdmin = is_super($_SESSION['admin_access']);
+$isSaveStudy = !empty($_POST['hst_id']);
+$errorMessages = [];
 
-if (isset($_REQUEST['ed'])) {
-    $hstId = intval($_REQUEST['ed']);
-    $hst = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
+// If Content-Length is set, and is bigger than 1 MB but there are no files, then we assume a failed upload
+if (!empty($_SERVER['CONTENT_LENGTH']) && ($_SERVER['CONTENT_LENGTH'] >= 1024*1024) && !$_FILES) {
+    error_log('Max file size exceeded AND PHP didn\'t populate FILES global variable, and POST might be corrupt');
+    $errorMessages []= $maxFileSizeExceeded;
 
-    if (!$hst) { ?>
-        <script type="text/javascript">
-            window.location = '/manage/admin/manage_hsts.php?msg=<?= rawurlencode('The requested HST does not exist or has been deleted.') ?>';
-        </script>
-        <?php
+    // Abort any action
+    $isSaveStudy = false;
+}
 
-        trigger_error('Die called', E_USER_ERROR);
-    }
-
-    $pat = $db->getRow("SELECT * FROM dental_patients WHERE patientid = '{$hst['patient_id']}'");
-    $pat = $pat ?: [];
-} else {
+if ($isSaveStudy) {
     $hstId = intval($_POST['hst_id']);
-    $hst = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
+    $hstData = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
 
-    if (!$hst) {
-        ?>
+    if (!$hstData) { ?>
         <script type="text/javascript">
             window.location = '/manage/admin/manage_hsts.php?msg=<?= rawurlencode('The requested HST does not exist or has been deleted.') ?>';
         </script>
@@ -38,183 +33,165 @@ if (isset($_REQUEST['ed'])) {
 
     //SAVE SLEEP TEST
     if ($_POST['status'] == DSS_HST_COMPLETE) {
+        $sleepStudyIds = [];
+
+        $patientId = intval($hstData['patient_id']);
+        $docId = $db->getColumn("SELECT docid FROM dental_patients WHERE patientid = '$patientId'", 'docid', 0);
+
         foreach ($_POST['studies'] as $index=>$study) {
-            $sleepId = intval($study['id']);
+            $studyId = intval($study['id']);
             unset($study['id']);
 
-            $date = s_for($study['date']);
-            $sleeptesttype = s_for($study['sleeptesttype']);
-            $place = s_for($study['place']);
-            $diagnosising_doc = s_for($study['diagnosising_doc']);
-            $diagnosising_npi = s_for($study['diagnosising_npi']);
-            $apnea = s_for($study['apnea']);
-            $hypopnea = s_for($study['hypopnea']);
-            $ahi = s_for($study['ahi']);
-            $ahisupine = s_for($study['ahisupine']);
-            $rdi = s_for($study['rdi']);
-            $rdisupine = s_for($study['rdisupine']);
-            $o2nadir = s_for($study['o2nadir']);
-            $t9002 = s_for($study['t9002']);
-            $sleepefficiency = s_for($study['sleepefficiency']);
-            $cpaplevel = s_for($study['cpaplevel']);
-            $dentaldevice = s_for($study['dentaldevice']);
-            $devicesetting = s_for($study['devicesetting']);
-            $diagnosis = s_for($study['diagnosis']);
-            $notes = s_for($study['notes']);
-            $testnumber = s_for($study['testnumber']);
-            $needed = s_for($study['needed']);
-            $scheddate = s_for($study['scheddate']);
-            $completed = s_for($study['completed']);
-            $interpolation = s_for($study['interpolation']);
-            $copyreqdate = s_for($study['copyreqdate']);
-            $sleeplab = s_for($study['sleeplab']);
+            $uploadedFile = "ss_file_$index";
 
-            $patientid = $hst['patient_id'];
+            $previousFile = $db->getRow("SELECT filename, image_id from dental_summ_sleeplab WHERE id = '$studyId'");
+            $previousFile = $previousFile ?: [];
 
-            if ($_FILES["ss_file"]["name"][$index] <> '') {
-                $fname = $_FILES["ss_file"]["name"][$index];
-                $lastdot = strrpos($fname, ".");
-                $name = substr($fname, 0, $lastdot);
-                $extension = substr($fname, $lastdot + 1);
-                $banner1 = $name . '_' . $index . '_' . date('dmy_Hi');
-                $banner1 = str_replace(" ", "_", $banner1);
-                $banner1 = str_replace(".", "_", $banner1);
-                $banner1 = str_replace("'", "_", $banner1);
-                $banner1 = str_replace("&", "amp", $banner1);
-                $banner1 .= "." . $extension;
+            $banner1 = $previousFile['filename'];
+            $imageId = $previousFile['image_id'];
 
-                $uploaded = uploadImage($_FILES["ss_file_$index"], "../../../../shared/q_file/" . $banner1);
-            } else {
-                $banner1 = '';
-            }
+            if (isset($_FILES[$uploadedFile])) {
+                $errorNo = $_FILES[$uploadedFile]['error'];
 
-            if ($hst['sleep_study_id']) {
-                $sleepid = $hst['sleep_study_id'];
-                $q = "UPDATE `dental_summ_sleeplab` SET
-                        `date` = '" . mysqli_real_escape_string($con, $date) . "',
-                        `sleeptesttype`  = '" . mysqli_real_escape_string($con, $sleeptesttype) . "',
-                        `place`  = '" . mysqli_real_escape_string($con, $place) . "',
-                        `diagnosising_doc` = '" . mysqli_real_escape_string($con, $diagnosising_doc) . "',
-                        `diagnosising_npi` = '" . mysqli_real_escape_string($con, $diagnosising_npi) . "',
-                        `ahi` = '" . mysqli_real_escape_string($con, $ahi) . "',
-                        `ahisupine` = '" . mysqli_real_escape_string($con, $ahisupine) . "',
-                        `rdi` = '" . mysqli_real_escape_string($con, $rdi) . "',
-                        `rdisupine` = '" . mysqli_real_escape_string($con, $rdisupine) . "',
-                        `o2nadir` = '" . mysqli_real_escape_string($con, $o2nadir) . "',
-                        `t9002` = '" . mysqli_real_escape_string($con, $t9002) . "',
-                        `dentaldevice` = '" . mysqli_real_escape_string($con, $dentaldevice) . "',
-                        `devicesetting` = '" . mysqli_real_escape_string($con, $devicesetting) . "',
-                        `diagnosis` = '" . mysqli_real_escape_string($con, $diagnosis) . "',
-                        `filename` = '" . mysqli_real_escape_string($con, $banner1) . "',
-                        `notes` = '" . mysqli_real_escape_string($con, $notes) . "',
-                        `testnumber` = '" . mysqli_real_escape_string($con, $testnumber) . "',
-                        `sleeplab` = '" . mysqli_real_escape_string($con, $sleeplab) . "'
-                    WHERE id='" . mysqli_real_escape_string($con, $sleepid) . "'";
-                mysqli_query($con, $q);
-            } else {
-                $q = "INSERT INTO `dental_summ_sleeplab` (
-                        `id` ,
-                        `date` ,
-                        `sleeptesttype` ,
-                        `place` ,
-                        `diagnosising_doc`,
-                        `diagnosising_npi`,
-                        `ahi` ,
-                        `ahisupine` ,
-                        `rdi` ,
-                        `rdisupine` ,
-                        `o2nadir` ,
-                        `t9002` ,
-                        `dentaldevice` ,
-                        `devicesetting` ,
-                        `diagnosis` ,
-                        `filename` ,
-                        `notes`,
-                        `testnumber`,
-                        `sleeplab`,
-                        `patiendid`
-                    ) VALUES (
-                        NULL,
-                        '" . $date . "',
-                        '" . $sleeptesttype . "',
-                        '" . $place . "',
-                        '" . $diagnosising_doc . "',
-                        '" . $diagnosising_npi . "',
-                        '" . $ahi . "',
-                        '" . $ahisupine . "',
-                        '" . $rdi . "',
-                        '" . $rdisupine . "',
-                        '" . $o2nadir . "',
-                        '" . $t9002 . "',
-                        '" . $dentaldevice . "',
-                        '" . $devicesetting . "',
-                        '" . $diagnosis . "',
-                        '" . $banner1 . "',
-                        '" . $notes . "',
-                        '" . $testnumber . "',
-                        '" . $sleeplab . "',
-                        '" . $patientid . "'
-                    )";
-                $run_q = mysqli_query($con, $q);
+                if (isFaultyUpload($errorNo)) {
+                    error_log("SS file upload error [{$errorNo}]: {$dss_file_upload_errors[$errorNo]}");
+                    $errorMessages []= $maxFileSizeExceeded;
+                } elseif (!$errorNo && !strlen(trim($_FILES[$uploadedFile]['name']))) {
+                    error_log('SS file upload error: The file upload misses the filename');
+                    $errorMessages []= $noFileName;
+                } elseif (!$errorNo) {
+                    $fname = $_FILES[$uploadedFile]['name'];
+                    $lastdot = strrpos($fname, '.');
 
-                if (!$run_q) {
-                    echo "Could not add sleep lab... Please try again.";
-                } else {
+                    $name = substr($fname, 0, $lastdot);
+                    $extension = substr($fname, $lastdot + 1);
+
+                    $name = preg_replace('/[^a-z0-9_]+/i', '-', $name);
+                    $extension = preg_replace('/[^a-z0-9_]+/i', '', $extension);
+
+                    $banner1 = $name . '_' . date('dmy_Hi');
+                    $banner1 .= '.' . $extension;
+
+                    $uploaded = uploadImage($_FILES[$uploadedFile], '../../../../shared/q_file/' . $banner1);
+
                     if ($uploaded) {
-                        $sleepid = mysqli_insert_id($con);
-                        $ins_sql = " INSERT INTO dental_q_image SET
-                            patientid = '" . s_for($_GET['pid']) . "',
-                            title = 'Sleep Study " . $sleepid . "',
-                            imagetypeid = '1',
-                            image_file = '" . s_for($banner1) . "',
-                            userid = '" . s_for($_SESSION['userid']) . "',
-                            docid = '" . s_for($_SESSION['docid']) . "',
-                            adddate = now(),
-                            ip_address = '" . s_for($_SERVER['REMOTE_ADDR']) . "'";
+                        if ($imageId) {
+                            $imageData = $db->escapeAssignmentList([
+                                'image_file' => $banner1,
+                            ]);
 
-                        mysqli_query($con, $ins_sql) or trigger_error($ins_sql . " | " . mysqli_error($con), E_USER_ERROR);
+                            $db->query("UPDATE dental_q_image SET $imageData
+                                WHERE imageid = '$imageId'
+                                    AND patientid = '$patientId'");
+
+                            if (file_exists('../../../../shared/q_file/' . $banner1)) {
+                                unlink('../../../../shared/q_file/' . $banner1);
+                            }
+                        } else {
+                            $imageData = $db->escapeAssignmentList([
+                                'patientid' => $patientId,
+                                'title' => "{$study['sleeptesttype']} {$study['date']}",
+                                'imagetypeid' => 1,
+                                'image_file' => $banner1,
+                                'userid' => $docId,
+                                'docid' => $docId,
+                                'ip_address' => $_SERVER['REMOTE_ADDR']
+                            ]);
+
+                            $imageId = $db->getInsertId("INSERT INTO dental_q_image SET $imageData, adddate = NOW()");
+                        }
+                    } else {
+                        error_log('SS file upload save error. The error could be caused by an invalid filetype. ' . json_encode($_FILES));
+                        $errorMessages []= $maxFileSizeExceeded;
+                        $banner1 = '';
                     }
                 }
             }
+
+            /**
+             * @see DSS-365
+             *
+             * This column name has a typo
+             */
+            $study['patiendid'] = $patientId;
+            $study['filename'] = $banner1;
+            $study['image_id'] = $imageId;
+
+            $study = $db->escapeAssignmentList($study);
+
+            if ($studyId) {
+                $db->query("UPDATE dental_summ_sleeplab SET $study WHERE id = '$studyId'");
+            } else {
+                $studyId = $db->getInsertId("INSERT INTO dental_summ_sleeplab SET $study");
+            }
+
+            if ($studyId) {
+                $sleepStudyIds []= $studyId;
+            }
         }
-    } else {
-        $sleepid='';
+
+        if ($sleepStudyIds) {
+            $db->query("DELETE FROM dental_hst_sleeplab WHERE hst_id = '$hstId'");
+            $db->query("INSERT INTO dental_hst_sleeplab (hst_id, sleep_id)
+                VALUES ('$hstId', '" . join("'), ('$hstId', '", $sleepStudyIds) . "')");
+        }
     }
 
-    // update hst
-    $sql = "UPDATE dental_hst SET "
-        . " office_notes = '".s_for($_POST['office_notes'])."', "
-        . " rejected_reason = '".s_for($_POST['rejected_reason'])."', "
-        . " sleep_study_id = '".s_for($sleepid)."', "
-        . " status = '" . s_for($_POST['status']) . "' ";
+    $hstData = $db->escapeAssignmentList([
+        'office_notes' => $_POST['office_notes'],
+        'rejected_reason' => $_POST['rejected_reason'],
+        'sleep_study_id' => 0,
+        'status' => $_POST['status'],
+    ]);
 
-    if ($hst['status'] != $_POST['status']) {
-        $sql .= ", updatedate=now() ";
+    $andTimestamps = '';
 
-        if ($_POST['status']==DSS_HST_REJECTED) {
-            $sql .= ", rejecteddate=now() ";
+    if ($hstData['status'] != $_POST['status']) {
+        $andTimestamps .= ', updatedate = NOW()';
+
+        if ($_POST['status'] == DSS_HST_REJECTED) {
+            $andTimestamps .= ', rejecteddate = NOW()';
         }
     }
 
-    $sql .= "WHERE id = '" . $_POST["hst_id"] . "'";
-    $db->query($sql);
+    $db->query("UPDATE dental_hst SET $hstData $andTimestamps WHERE id = '$hstId'");
 
-    //echo $ed_sql.mysqli_error($con);
-    $msg = "HST Updated Successfully";
+    $msg = 'HST Updated Successfully';
+    $status = !empty($_POST['ret_status']) ? '&status=' . rawurlencode($_POST['ret_status']) . '&from=view' : '';
 
-    ?>
-    <script type='text/javascript'>
-        parent.window.location = 'manage_hsts.php?msg=<?= $msg; ?><?= (isset($_POST['ret_status']) && $_POST['ret_status'] != '')?"&status=".$_POST['ret_status']."&from=view":'';?>';
+    if (!$errorMessages) { ?>
+        <script type='text/javascript'>
+            parent.window.location = 'manage_hsts.php?msg=<?= $msg ?><?= $status ?>';
+        </script>
+        <?php
+
+        trigger_error('Die called', E_USER_ERROR);
+    }
+}
+
+$hstId = intval($_REQUEST['ed']);
+$hstData = $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
+
+if (!$hstData) { ?>
+    <script type="text/javascript">
+        window.location = '/manage/admin/manage_hsts.php?msg=<?= rawurlencode('The requested HST does not exist or has been deleted.') ?>';
     </script>
     <?php
 
     trigger_error('Die called', E_USER_ERROR);
 }
 
-$doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['docid']}'");
+$patientData = $db->getRow("SELECT * FROM dental_patients WHERE patientid = '{$hstData['patient_id']}'");
+$patientData = $patientData ?: [];
 
-$sleepId = intval($hst['sleep_study_id']);
-$hstNights = intval($hst['hst_nights']);
+$doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$patientData['docid']}'");
+$doctorData = $doctorData ?: [];
+
+$hstNights = intval($hstData['hst_nights']);
+
+if ($errorMessages) {
+    $msg .= '<ul><li>' . join('</li><li>', $errorMessages) . '</li></ul>';
+}
 
 ?>
 <style>
@@ -242,10 +219,10 @@ $hstNights = intval($hst['hst_nights']);
     HST Request &mdash;
     Account: <code><?= e($doctorData['username']) ?></code>
     Name: <code><?= e($doctorData['first_name'] . ' ' . $doctorData['last_name']) ?></code>
-    Patient: <code><?= e($pat['firstname'] . ' ' . $pat['lastname']) ?></code>
-    Requested: <code><?= e($hst['adddate']) ?></code>
+    Patient: <code><?= e($patientData['firstname'] . ' ' . $patientData['lastname']) ?></code>
+    Requested: <code><?= e($hstData['adddate']) ?></code>
 </p>
-<a href="/manage/admin/hst_request.php?hst_id=<?= $hst['id'] ?><?=
+<a href="/manage/admin/hst_request.php?hst_id=<?= $hstData['id'] ?><?=
         isset($_REQUEST['ret_status']) ? '&amp;status=' . e($_REQUEST['ret_status']) : ''
     ?>" title="View HST Form" class="btn btn-primary btn-sm">
     HST Form
@@ -254,7 +231,7 @@ $hstNights = intval($hst['hst_nights']);
 
 	<br /><br />
 	
-	<? if(!empty($msg)) {?>
+	<?php if(!empty($msg)) {?>
     <div align="center" class="text-danger">
         <? echo $msg;?>
     </div>
@@ -263,7 +240,7 @@ $hstNights = intval($hst['hst_nights']);
     <table class="table table-bordered table-hover">
         <tr>
             <td class="cat_head" width="30%">
-               HST for <?= $hst['patient_firstname']; ?> <?= $hst['patient_lastname']; ?> 
+               HST for <?= $hstData['patient_firstname']; ?> <?= $hstData['patient_lastname']; ?> 
             </td>
 	    <td class="cat_head" width="35%">
 		HST
@@ -280,11 +257,11 @@ $hstNights = intval($hst['hst_nights']);
 	  <select name="ins_co_id" class="readonly form-control input-sm input-inline" onclick="return false;" readonly>
           <option value="">Select Insurance Company</option>
 <?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hst['doc_id']."'";
+                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hstData['doc_id']."'";
                             $ins_contact_qry_run = mysqli_query($con,$ins_contact_qry);
                             while($ins_contact_res = mysqli_fetch_array($ins_contact_qry_run)){
                             ?>
-                                <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($hst['ins_co_id'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>;
+                                <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($hstData['ins_co_id'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>;
                                 
                                 <?php } ?>
 </select>
@@ -293,11 +270,11 @@ $hstNights = intval($hst['hst_nights']);
             <td valign="top" class="frmdata">
           <select name="pat_ins_co_id" class="readonly form-control input-sm input-inline" onclick="return false;" readonly>
 <?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hst['doc_id']."'";
+                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hstData['doc_id']."'";
                             $ins_contact_qry_run = mysqli_query($con,$ins_contact_qry);
                             while($ins_contact_res = mysqli_fetch_array($ins_contact_qry_run)){
                             ?>
-                                <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($pat['p_m_ins_co'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>;
+                                <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($patientData['p_m_ins_co'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>;
 
                                 <?php } ?>
 </select>
@@ -309,12 +286,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's First Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_firstname" value="<?=$hst['patient_firstname']?>"
+                <input type="text" name="patient_firstname" value="<?=$hstData['patient_firstname']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_firstname" value="<?=$pat['firstname']?>"
+                <input type="text" name="pat_patient_firstname" value="<?=$patientData['firstname']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -324,12 +301,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_lastname" value="<?=$hst['patient_lastname']?>"
+                <input type="text" name="patient_lastname" value="<?=$hstData['patient_lastname']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_lastname" value="<?=$pat['lastname']?>"
+                <input type="text" name="pat_patient_lastname" value="<?=$patientData['lastname']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -339,12 +316,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's Address
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_add1" value="<?=$hst['patient_add1'];?>"
+                <input type="text" name="patient_add1" value="<?=$hstData['patient_add1'];?>"
                        class="tbox readonly form-control input-sm input-inline"readonly />
                 <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_add1" value="<?=$pat['add1'];?>"
+                <input type="text" name="pat_patient_add1" value="<?=$patientData['add1'];?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -354,11 +331,11 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's Address 2
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_add2" value="<?=$hst['patient_add2'];?>"
+                <input type="text" name="patient_add2" value="<?=$hstData['patient_add2'];?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_add2" value="<?=$pat['add2'];?>"
+                <input type="text" name="pat_patient_add2" value="<?=$patientData['add2'];?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
             </td>
         </tr>
@@ -367,12 +344,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's City
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$hst['patient_city']?>" name="patient_city"
+                <input type="text" value="<?=$hstData['patient_city']?>" name="patient_city"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$pat['city']?>" name="pat_patient_city"
+                <input type="text" value="<?=$patientData['city']?>" name="pat_patient_city"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -383,12 +360,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's State
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$hst['patient_state']?>" name="patient_state"
+                <input type="text" value="<?=$hstData['patient_state']?>" name="patient_state"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$pat['state']?>" name="pat_patient_state"
+                <input type="text" value="<?=$patientData['state']?>" name="pat_patient_state"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -399,12 +376,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's Zip
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_zip" value="<?= $hst['patient_zip']?>"
+                <input type="text" name="patient_zip" value="<?= $hstData['patient_zip']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_zip" value="<?= $pat['zip']?>"
+                <input type="text" name="pat_patient_zip" value="<?= $patientData['zip']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -414,12 +391,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's Home Phone
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_home_phone" value="<?= $hst['patient_home_phone']?>"
+                <input type="text" name="patient_home_phone" value="<?= $hstData['patient_home_phone']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_home_phone" value="<?= $pat['home_phone']?>"
+                <input type="text" name="pat_patient_home_phone" value="<?= $patientData['home_phone']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -429,12 +406,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's Cell Phone
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_cell_phone" value="<?= $hst['patient_cell_phone']?>"
+                <input type="text" name="patient_cell_phone" value="<?= $hstData['patient_cell_phone']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_cell_phone" value="<?= $pat['cell_phone']?>"
+                <input type="text" name="pat_patient_cell_phone" value="<?= $patientData['cell_phone']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -446,7 +423,7 @@ $hstNights = intval($hst['hst_nights']);
             <td valign="top" class="frmdata">
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_work_phone" value="<?= $pat['work_phone']?>"
+                <input type="text" name="pat_patient_work_phone" value="<?= $patientData['work_phone']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -457,12 +434,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's Email
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_email" value="<?= $hst['patient_email']?>"
+                <input type="text" name="patient_email" value="<?= $hstData['patient_email']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_email" value="<?= $pat['email']?>"
+                <input type="text" name="pat_patient_email" value="<?= $patientData['email']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -473,12 +450,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's Group Insurance #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_group_id" value="<?=$hst['patient_ins_group_id']?>"
+                <input type="text" name="patient_ins_group_id" value="<?=$hstData['patient_ins_group_id']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_ins_group_id" value="<?=$pat['p_m_ins_grp']?>"
+                <input type="text" name="pat_patient_ins_group_id" value="<?=$patientData['p_m_ins_grp']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -489,12 +466,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's Insurance ID #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_id" value="<?=$hst['patient_ins_id']?>"
+                <input type="text" name="patient_ins_id" value="<?=$hstData['patient_ins_id']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_ins_id" value="<?=$pat['p_m_ins_id']?>"
+                <input type="text" name="pat_patient_ins_id" value="<?=$patientData['p_m_ins_id']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -504,12 +481,12 @@ $hstNights = intval($hst['hst_nights']);
                 Patient's DOB
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_dob" value="<?=$hst['patient_dob']?>"
+                <input type="text" name="patient_dob" value="<?=$hstData['patient_dob']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_dob" value="<?=$pat['dob']?>"
+                <input type="text" name="pat_patient_dob" value="<?=$patientData['dob']?>"
                     class="tbox readonly form-control input-sm input-inline" readonly />
                 <span class="text-danger">*</span>
             </td>
@@ -520,7 +497,7 @@ $hstNights = intval($hst['hst_nights']);
                 Notes to Office
             </td>
             <td valign="top" class="frmdata">
-                <textarea name="office_notes" class="form-control input-sm"><?= $hst['office_notes']; ?></textarea>
+                <textarea name="office_notes" class="form-control input-sm"><?= $hstData['office_notes']; ?></textarea>
             </td>
         </tr>
 
@@ -530,11 +507,11 @@ $hstNights = intval($hst['hst_nights']);
             </td>
             <td valign="top" class="frmdata">
                 <select id="status" name="status" class="tbox form-control input-sm input-inline">
-			<option value="<?= DSS_HST_PENDING; ?>" <?= ($hst['status']==DSS_HST_PENDING)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_PENDING]; ?></option>
-			<option value="<?= DSS_HST_CONTACTED; ?>" <?= ($hst['status']==DSS_HST_CONTACTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_CONTACTED]; ?></option>
-                        <option value="<?= DSS_HST_SCHEDULED; ?>" <?= ($hst['status']==DSS_HST_SCHEDULED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_SCHEDULED]; ?></option>
-                        <option value="<?= DSS_HST_COMPLETE; ?>" <?= ($hst['status']==DSS_HST_COMPLETE)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_COMPLETE]; ?></option>
-                        <option value="<?= DSS_HST_REJECTED; ?>" <?= ($hst['status']==DSS_HST_REJECTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_REJECTED]; ?></option>
+			<option value="<?= DSS_HST_PENDING; ?>" <?= ($hstData['status']==DSS_HST_PENDING)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_PENDING]; ?></option>
+			<option value="<?= DSS_HST_CONTACTED; ?>" <?= ($hstData['status']==DSS_HST_CONTACTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_CONTACTED]; ?></option>
+                        <option value="<?= DSS_HST_SCHEDULED; ?>" <?= ($hstData['status']==DSS_HST_SCHEDULED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_SCHEDULED]; ?></option>
+                        <option value="<?= DSS_HST_COMPLETE; ?>" <?= ($hstData['status']==DSS_HST_COMPLETE)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_COMPLETE]; ?></option>
+                        <option value="<?= DSS_HST_REJECTED; ?>" <?= ($hstData['status']==DSS_HST_REJECTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_REJECTED]; ?></option>
                 <span class="text-danger">*</span>
             </td>
         </tr>
@@ -543,7 +520,7 @@ $hstNights = intval($hst['hst_nights']);
                 Rejected Reason
             </td>
             <td valign="top" class="frmdata">
-                <textarea name="rejected_reason" class="form-control input-sm"><?= $hst['rejected_reason']; ?></textarea>
+                <textarea name="rejected_reason" class="form-control input-sm"><?= $hstData['rejected_reason']; ?></textarea>
             </td>
         </tr>
         <tr class="status_<?= DSS_HST_COMPLETE; ?> status">
@@ -553,7 +530,7 @@ $hstNights = intval($hst['hst_nights']);
             <td valign="top" colspan="2" class="frmdata">
                 <?php
 
-                $studyCount = intval($hst['hst_nights']);
+                $studyCount = intval($hstData['hst_nights']);
                 include 'view_hst_sleep_study.php';
 
                 ?>
@@ -570,8 +547,8 @@ $hstNights = intval($hst['hst_nights']);
 		}
 		?>
                 <input type="hidden" name="hst_id" value="<?= $_REQUEST['ed'] ?>"/>
-                <?php if ($hst['status'] >= 0) { ?>
-                  <input type="submit" value="Save HST" <?= ($hst['status']==DSS_HST_REQUESTED)?'onclick="alert(\'HST must be authorized by user before edits are permitted.\');return false;"':''; ?> class="btn btn-primary">
+                <?php if ($hstData['status'] >= 0) { ?>
+                  <input type="submit" value="Save HST" <?= ($hstData['status']==DSS_HST_REQUESTED)?'onclick="alert(\'HST must be authorized by user before edits are permitted.\');return false;"':''; ?> class="btn btn-primary">
                 <?php } ?>
 	  </td><td align="right">
             </td>
@@ -579,8 +556,6 @@ $hstNights = intval($hst['hst_nights']);
     </table>
     </form>
 <?php
-
-$hstData = $hst;
 
 if ($hstData['status'] != DSS_HST_REQUESTED) {
     $patientName = $hstData['patient_firstname'] . ' ' . $hstData['patient_lastname'];
@@ -609,7 +584,7 @@ if ($hstData['status'] != DSS_HST_REQUESTED) {
 
     $(document).ready(function(){
       $('.status').hide();
-      $('.status_<?=$hst['status'];?>').show();
+      $('.status_<?=$hstData['status'];?>').show();
     });
   </script>
 <?php include 'includes/bottom.htm'; ?>

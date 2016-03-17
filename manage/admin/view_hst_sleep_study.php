@@ -1,25 +1,50 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-$pat_r = $db->getRow("SELECT p_m_ins_type FROM dental_patients WHERE patientid = '" . intval($_GET['pid']) . "'");
+$insuranceType = $db->getColumn("SELECT p_m_ins_type
+    FROM dental_patients
+    WHERE patientid = '" . intval($_GET['pid']) . "'", 'p_m_ins_type', 0);
 
-$lab_place_r = $db->getResults("SELECT sleeplabid, company
+$labPlaces = $db->getResults("SELECT sleeplabid, company
     FROM dental_sleeplab
     WHERE status = '1'
         AND docid = '" . intval($_SESSION['docid']) . "'
     ORDER BY sleeplabid DESC");
 
-$ins_diag_my = $db->getResults("SELECT *
+$insuranceDiagnosis = $db->getResults("SELECT *
     FROM dental_ins_diagnosis
     WHERE status = 1
     ORDER BY sortby");
 
-$device_my = $db->getResults("SELECT deviceid, device
+$dentalDevices = $db->getResults("SELECT deviceid, device
     FROM dental_device
     WHERE status = 1
     ORDER BY sortby");
 
-$studyCount = !empty($studyCount) ? $studyCount : 1;
+$hstId = !empty($hstId) ? $hstId : 0;
+$sleepId = !empty($sleepId) ? $sleepId : 0;
+$hstNights = !empty($hstNights) ? $hstNights : 1;
+
+$sleepStudies = $db->getResults("SELECT lab.*
+    FROM dental_summ_sleeplab lab
+        LEFT JOIN dental_hst_sleeplab pivot ON pivot.sleep_id = lab.id
+    WHERE lab.id = '$sleepId'
+        OR pivot.hst_id = '$hstId'");
+
+/**
+ * Empty case, to always show a studies table
+ */
+if (!$sleepStudies) {
+    $sleepStudies = array_fill(0, $hstNights, []);
+}
+
+$testTypes = [
+    'HST',
+    'PSG',
+    'PSG Baseline',
+    'HST Baseline',
+    'HST Titration',
+];
 
 ?>
 <style type="text/css">
@@ -176,31 +201,39 @@ $studyCount = !empty($studyCount) ? $studyCount : 1;
                 </td>
             </tr>
         </table>
-        <?php for ($n=0; $n<$studyCount; $n++) { ?>
-            <input type="hidden" name="submitnewsleeplabsumm" value="1" />
-            <table class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
+        <?php foreach ($sleepStudies as $n=>$study) { ?>
+            <input type="hidden" name="studies[<?= $n ?>][id]" value="<?= e(array_get($study, 'id', 0)) ?>" />
+            <input type="hidden" name="studies[<?= $n ?>][submitnewsleeplabsumm]" value="1" />
+            <table class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox calendar" name="date" id="date" value="<?= date('m/d/Y'); ?>">
+                        <input type="text" onchange="validateDate('date_<?= $n ?>');" maxlength="255"
+                            style="width: 100px;" tabindex="10" class="field text addr tbox calendar"
+                            name="studies[<?= $n ?>][date]" value="<?= e(array_get($study, 'date', date('m/d/Y'))) ?>"
+                            id="date_<?= $n ?>">
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <select name="sleeptesttype">
-                            <option value="HST">HST</option>
-                            <option value="PSG">PSG</option>
-                            <option value="PSG Baseline">PSG Baseline</option>
-                            <option value="HST Baseline">HST Baseline</option>
-                            <option value="HST Titration">HST Titration</option>
+                        <select name="studies[<?= $n ?>][sleeptesttype]">
+                            <?php foreach ($testTypes as $type) { ?>
+                                <option value="<?= e($type) ?>"
+                                    <?= array_get($study, 'sleeptesttype') == $type ? 'selected' : '' ?>>
+                                    <?= e($type) ?>
+                                </option>
+                            <?php } ?>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <select name="place" class="place_select" onchange="addstudylab(this.value)">
-                            <option>SELECT</option>
-                            <?php foreach($lab_place_r as $lab_place) { ?>
-                                <option value="<?php echo $lab_place['sleeplabid']; ?>"><?php echo $lab_place['company']; ?></option>
+                        <select name="studies[<?= $n ?>][place]" class="place_select" onchange="addstudylab(this.value)">
+                            <option value="">SELECT</option>
+                            <?php foreach ($labPlaces as $place) { ?>
+                                <option value="<?= e($place['sleeplabid']) ?>"
+                                    <?= array_get($study, 'place') == $place['sleeplabid'] ? 'selected' : '' ?>>
+                                    <?= e($place['company']) ?>
+                                </option>
                             <?php } ?>
                             <option value="add">ADD SLEEP LAB</option>
                         </select>
@@ -208,86 +241,99 @@ $studyCount = !empty($studyCount) ? $studyCount : 1;
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <select name="diagnosis" style="width:140px;" class="field text addr tbox" >
+                        <select name="studies[<?= $n ?>][diagnosis]" style="width:140px;" class="field text addr tbox">
                             <option value="">SELECT</option>
-                            <?php foreach ($ins_diag_my as $ins_diag_myarray) { ?>
-                                <option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" >
-                                    <?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
+                            <?php foreach ($insuranceDiagnosis as $diagnosis) { ?>
+                                <option value="<?= e($diagnosis['ins_diagnosisid']) ?>"
+                                    <?= array_get($study, 'diagnosis') == $diagnosis['ins_diagnosisid'] ? 'selected' : '' ?>>
+                                    <?= e("{$diagnosis['ins_diagnosis']} {$diagnosis['description']}") ?>
                                 </option>
                             <?php } ?>
                         </select>
-                        <span id="req_0" class="req">*</span>
+                        <span class="req">*</span>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input style="width:100px;" type="text" name="diagnosising_doc" />
-                        <?php if ($pat_r['p_m_ins_type'] == 1) { ?>
-                            <span id="req_0" class="req">*</span>
+                        <input style="width:100px;" type="text" name="studies[<?= $n ?>][diagnosising_doc]"
+                            value="<?= e(array_get($study, 'diagnosising_doc')) ?>" />
+                        <?php if ($insuranceType == 1) { ?>
+                            <span class="req">*</span>
                         <?php } ?>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input style="width:100px;" type="text" name="diagnosising_npi" />
-                        <?php if ($pat_r['p_m_ins_type'] == 1) { ?>
-                            <span id="req_0" class="req">*</span>
+                        <input style="width:100px;" type="text" name="studies[<?= $n ?>][diagnosising_npi]"
+                            value="<?= e(array_get($study, 'diagnosising_npi')) ?>" />
+                        <?php if ($insuranceType == 1) { ?>
+                            <span class="req">*</span>
                         <?php } ?>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input style="width:140px" size="8" type="file" name="ss_file" id="ss_file" /> <span id="req_0" class="req">*</span>
+                        <input style="width:140px" size="8" type="file" name="ss_file_<?= $n ?>" id="ss_file_<?= $n ?>" />
+                        <span class="req">*</span>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input type="text" name="ahi" />
+                        <input type="text" name="studies[<?= $n ?>][ahi]" value="<?= e(array_get($study, 'ahi')) ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="ahisupine" />
+                        <input type="text" name="studies[<?= $n ?>][ahisupine]"
+                            value="<?= e(array_get($study, 'ahisupine')) ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input type="text" name="rdi" />
+                        <input type="text" name="studies[<?= $n ?>][rdi]" value="<?= e(array_get($study, 'rdi')) ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="rdisupine" />
+                        <input type="text" name="studies[<?= $n ?>][rdisupine]"
+                            value="<?= e(array_get($study, 'rdisupine')) ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input type="text" name="o2nadir" />
+                        <input type="text" name="studies[<?= $n ?>][o2nadir]"
+                            value="<?= e(array_get($study, 'o2nadir')) ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="t9002" />
+                        <input type="text" name="studies[<?= $n ?>][t9002]"
+                            value="<?= e(array_get($study, 't9002')) ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even" style="height:25px;">
-                        <select name="dentaldevice" style="width:150px;">
+                        <select name="studies[<?= $n ?>][dentaldevice]" style="width:150px;">
                             <option value="">SELECT</option>
-                            <?php foreach ($device_my as $device_myarray) { ?>
-                                <option value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                            <?php foreach ($dentalDevices as $device) { ?>
+                                <option value="<?= e($device['deviceid']) ?>"
+                                    <?= array_get($study, 'dentaldevice') == $device['deviceid'] ? 'selected' : '' ?>>
+                                    <?= e($device['device']) ?>
+                                </option>
                             <?php } ?>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <input type="text" name="devicesetting" />
+                        <input type="text" name="studies[<?= $n ?>][devicesetting]"
+                            value="<?= e(array_get($study, 'devicesetting')) ?>" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="even">
-                        <input type="text" name="notes" />
+                        <input type="text" name="studies[<?= $n ?>][notes]"
+                            value="<?= e(array_get($study, 'notes')) ?>" />
                     </td>
                 </tr>
             </table>

@@ -38,137 +38,142 @@ if (isset($_REQUEST['ed'])) {
 
     //SAVE SLEEP TEST
     if ($_POST['status'] == DSS_HST_COMPLETE) {
-        $date = s_for($_POST['date']);
-        $sleeptesttype = s_for($_POST['sleeptesttype']);
-        $place = s_for($_POST['place']);
-        $diagnosising_doc = s_for($_POST['diagnosising_doc']);
-        $diagnosising_npi = s_for($_POST['diagnosising_npi']);
-        $apnea = s_for($_POST['apnea']);
-        $hypopnea = s_for($_POST['hypopnea']);
-        $ahi = s_for($_POST['ahi']);
-        $ahisupine = s_for($_POST['ahisupine']);
-        $rdi = s_for($_POST['rdi']);
-        $rdisupine = s_for($_POST['rdisupine']);
-        $o2nadir = s_for($_POST['o2nadir']);
-        $t9002 = s_for($_POST['t9002']);
-        $sleepefficiency = s_for($_POST['sleepefficiency']);
-        $cpaplevel = s_for($_POST['cpaplevel']);
-        $dentaldevice = s_for($_POST['dentaldevice']);
-        $devicesetting = s_for($_POST['devicesetting']);
-        $diagnosis = s_for($_POST['diagnosis']);
-        $notes = s_for($_POST['notes']);
-        $testnumber = s_for($_POST['testnumber']);
-        $needed = s_for($_POST['needed']);
-        $scheddate = s_for($_POST['scheddate']);
-        $completed = s_for($_POST['completed']);
-        $interpolation = s_for($_POST['interpolation']);
-        $copyreqdate = s_for($_POST['copyreqdate']);
-        $sleeplab = s_for($_POST['sleeplab']);
-        $patientid = $hst['patient_id'];
+        foreach ($_POST['studies'] as $index=>$study) {
+            $sleepId = intval($study['id']);
+            unset($study['id']);
 
-        if ($_FILES["ss_file"]["name"] <> '') {
-            $fname = $_FILES["ss_file"]["name"];
-            $lastdot = strrpos($fname,".");
-            $name = substr($fname,0,$lastdot);
-            $extension = substr($fname,$lastdot+1);
-            $banner1 = $name.'_'.date('dmy_Hi');
-            $banner1 = str_replace(" ","_",$banner1);
-            $banner1 = str_replace(".","_",$banner1);
-            $banner1 = str_replace("'","_",$banner1);
-            $banner1 = str_replace("&","amp",$banner1);
-            $banner1 .= ".".$extension;
+            $date = s_for($study['date']);
+            $sleeptesttype = s_for($study['sleeptesttype']);
+            $place = s_for($study['place']);
+            $diagnosising_doc = s_for($study['diagnosising_doc']);
+            $diagnosising_npi = s_for($study['diagnosising_npi']);
+            $apnea = s_for($study['apnea']);
+            $hypopnea = s_for($study['hypopnea']);
+            $ahi = s_for($study['ahi']);
+            $ahisupine = s_for($study['ahisupine']);
+            $rdi = s_for($study['rdi']);
+            $rdisupine = s_for($study['rdisupine']);
+            $o2nadir = s_for($study['o2nadir']);
+            $t9002 = s_for($study['t9002']);
+            $sleepefficiency = s_for($study['sleepefficiency']);
+            $cpaplevel = s_for($study['cpaplevel']);
+            $dentaldevice = s_for($study['dentaldevice']);
+            $devicesetting = s_for($study['devicesetting']);
+            $diagnosis = s_for($study['diagnosis']);
+            $notes = s_for($study['notes']);
+            $testnumber = s_for($study['testnumber']);
+            $needed = s_for($study['needed']);
+            $scheddate = s_for($study['scheddate']);
+            $completed = s_for($study['completed']);
+            $interpolation = s_for($study['interpolation']);
+            $copyreqdate = s_for($study['copyreqdate']);
+            $sleeplab = s_for($study['sleeplab']);
 
-            $uploaded = uploadImage($_FILES['ss_file'], "../../../../shared/q_file/".$banner1);
+            $patientid = $hst['patient_id'];
 
-        } else {
-            $banner1 = '';
-        }
+            if ($_FILES["ss_file"]["name"][$index] <> '') {
+                $fname = $_FILES["ss_file"]["name"][$index];
+                $lastdot = strrpos($fname, ".");
+                $name = substr($fname, 0, $lastdot);
+                $extension = substr($fname, $lastdot + 1);
+                $banner1 = $name . '_' . $index . '_' . date('dmy_Hi');
+                $banner1 = str_replace(" ", "_", $banner1);
+                $banner1 = str_replace(".", "_", $banner1);
+                $banner1 = str_replace("'", "_", $banner1);
+                $banner1 = str_replace("&", "amp", $banner1);
+                $banner1 .= "." . $extension;
 
-        if ($hst['sleep_study_id']) {
-            $sleepid=$hst['sleep_study_id'];
-            $q = "update `dental_summ_sleeplab` set
-                    `date` = '".mysqli_real_escape_string($con,$date)."',
-                    `sleeptesttype`  = '".mysqli_real_escape_string($con,$sleeptesttype)."',
-                    `place`  = '".mysqli_real_escape_string($con,$place)."',
-                    `diagnosising_doc` = '".mysqli_real_escape_string($con,$diagnosising_doc)."',
-                    `diagnosising_npi` = '".mysqli_real_escape_string($con,$diagnosising_npi)."',
-                    `ahi` = '".mysqli_real_escape_string($con,$ahi)."',
-                    `ahisupine` = '".mysqli_real_escape_string($con,$ahisupine)."',
-                    `rdi` = '".mysqli_real_escape_string($con,$rdi)."',
-                    `rdisupine` = '".mysqli_real_escape_string($con,$rdisupine)."',
-                    `o2nadir` = '".mysqli_real_escape_string($con,$o2nadir)."',
-                    `t9002` = '".mysqli_real_escape_string($con,$t9002)."',
-                    `dentaldevice` = '".mysqli_real_escape_string($con,$dentaldevice)."',
-                    `devicesetting` = '".mysqli_real_escape_string($con,$devicesetting)."',
-                    `diagnosis` = '".mysqli_real_escape_string($con,$diagnosis)."',
-                    `filename` = '".mysqli_real_escape_string($con,$banner1)."',
-                    `notes` = '".mysqli_real_escape_string($con,$notes)."',
-                    `testnumber` = '".mysqli_real_escape_string($con,$testnumber)."',
-                    `sleeplab` = '".mysqli_real_escape_string($con,$sleeplab)."'
-                WHERE id='".mysqli_real_escape_string($con,$sleepid)."'";
-            mysqli_query($con,$q);
-        } else {
-            $q = "INSERT INTO `dental_summ_sleeplab` (
-                    `id` ,
-                    `date` ,
-                    `sleeptesttype` ,
-                    `place` ,
-                    `diagnosising_doc`,
-                    `diagnosising_npi`,
-                    `ahi` ,
-                    `ahisupine` ,
-                    `rdi` ,
-                    `rdisupine` ,
-                    `o2nadir` ,
-                    `t9002` ,
-                    `dentaldevice` ,
-                    `devicesetting` ,
-                    `diagnosis` ,
-                    `filename` ,
-                    `notes`,
-                    `testnumber`,
-                    `sleeplab`,
-                    `patiendid`
-                ) VALUES (
-                    NULL,
-                    '".$date."',
-                    '".$sleeptesttype."',
-                    '".$place."',
-                    '".$diagnosising_doc."',
-                    '".$diagnosising_npi."',
-                    '".$ahi."',
-                    '".$ahisupine."',
-                    '".$rdi."',
-                    '".$rdisupine."',
-                    '".$o2nadir."',
-                    '".$t9002."',
-                    '".$dentaldevice."',
-                    '".$devicesetting."',
-                    '".$diagnosis."',
-                    '".$banner1."',
-                    '".$notes."',
-                    '".$testnumber."',
-                    '".$sleeplab."',
-                    '".$patientid."'
-                )";
-            $run_q = mysqli_query($con,$q);
-
-            if (!$run_q) {
-                echo "Could not add sleep lab... Please try again.";
+                $uploaded = uploadImage($_FILES["ss_file_$index"], "../../../../shared/q_file/" . $banner1);
             } else {
-                if ($uploaded) {
-                    $sleepid = mysqli_insert_id($con);
-                    $ins_sql = " insert into dental_q_image set
-                        patientid = '".s_for($_GET['pid'])."',
-                        title = 'Sleep Study ".$sleepid."',
-                        imagetypeid = '1',
-                        image_file = '".s_for($banner1)."',
-                        userid = '".s_for($_SESSION['userid'])."',
-                        docid = '".s_for($_SESSION['docid'])."',
-                        adddate = now(),
-                        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+                $banner1 = '';
+            }
 
-                    mysqli_query($con,$ins_sql) or trigger_error($ins_sql." | ".mysqli_error($con), E_USER_ERROR);
+            if ($hst['sleep_study_id']) {
+                $sleepid = $hst['sleep_study_id'];
+                $q = "UPDATE `dental_summ_sleeplab` SET
+                        `date` = '" . mysqli_real_escape_string($con, $date) . "',
+                        `sleeptesttype`  = '" . mysqli_real_escape_string($con, $sleeptesttype) . "',
+                        `place`  = '" . mysqli_real_escape_string($con, $place) . "',
+                        `diagnosising_doc` = '" . mysqli_real_escape_string($con, $diagnosising_doc) . "',
+                        `diagnosising_npi` = '" . mysqli_real_escape_string($con, $diagnosising_npi) . "',
+                        `ahi` = '" . mysqli_real_escape_string($con, $ahi) . "',
+                        `ahisupine` = '" . mysqli_real_escape_string($con, $ahisupine) . "',
+                        `rdi` = '" . mysqli_real_escape_string($con, $rdi) . "',
+                        `rdisupine` = '" . mysqli_real_escape_string($con, $rdisupine) . "',
+                        `o2nadir` = '" . mysqli_real_escape_string($con, $o2nadir) . "',
+                        `t9002` = '" . mysqli_real_escape_string($con, $t9002) . "',
+                        `dentaldevice` = '" . mysqli_real_escape_string($con, $dentaldevice) . "',
+                        `devicesetting` = '" . mysqli_real_escape_string($con, $devicesetting) . "',
+                        `diagnosis` = '" . mysqli_real_escape_string($con, $diagnosis) . "',
+                        `filename` = '" . mysqli_real_escape_string($con, $banner1) . "',
+                        `notes` = '" . mysqli_real_escape_string($con, $notes) . "',
+                        `testnumber` = '" . mysqli_real_escape_string($con, $testnumber) . "',
+                        `sleeplab` = '" . mysqli_real_escape_string($con, $sleeplab) . "'
+                    WHERE id='" . mysqli_real_escape_string($con, $sleepid) . "'";
+                mysqli_query($con, $q);
+            } else {
+                $q = "INSERT INTO `dental_summ_sleeplab` (
+                        `id` ,
+                        `date` ,
+                        `sleeptesttype` ,
+                        `place` ,
+                        `diagnosising_doc`,
+                        `diagnosising_npi`,
+                        `ahi` ,
+                        `ahisupine` ,
+                        `rdi` ,
+                        `rdisupine` ,
+                        `o2nadir` ,
+                        `t9002` ,
+                        `dentaldevice` ,
+                        `devicesetting` ,
+                        `diagnosis` ,
+                        `filename` ,
+                        `notes`,
+                        `testnumber`,
+                        `sleeplab`,
+                        `patiendid`
+                    ) VALUES (
+                        NULL,
+                        '" . $date . "',
+                        '" . $sleeptesttype . "',
+                        '" . $place . "',
+                        '" . $diagnosising_doc . "',
+                        '" . $diagnosising_npi . "',
+                        '" . $ahi . "',
+                        '" . $ahisupine . "',
+                        '" . $rdi . "',
+                        '" . $rdisupine . "',
+                        '" . $o2nadir . "',
+                        '" . $t9002 . "',
+                        '" . $dentaldevice . "',
+                        '" . $devicesetting . "',
+                        '" . $diagnosis . "',
+                        '" . $banner1 . "',
+                        '" . $notes . "',
+                        '" . $testnumber . "',
+                        '" . $sleeplab . "',
+                        '" . $patientid . "'
+                    )";
+                $run_q = mysqli_query($con, $q);
+
+                if (!$run_q) {
+                    echo "Could not add sleep lab... Please try again.";
+                } else {
+                    if ($uploaded) {
+                        $sleepid = mysqli_insert_id($con);
+                        $ins_sql = " INSERT INTO dental_q_image SET
+                            patientid = '" . s_for($_GET['pid']) . "',
+                            title = 'Sleep Study " . $sleepid . "',
+                            imagetypeid = '1',
+                            image_file = '" . s_for($banner1) . "',
+                            userid = '" . s_for($_SESSION['userid']) . "',
+                            docid = '" . s_for($_SESSION['docid']) . "',
+                            adddate = now(),
+                            ip_address = '" . s_for($_SERVER['REMOTE_ADDR']) . "'";
+
+                        mysqli_query($con, $ins_sql) or trigger_error($ins_sql . " | " . mysqli_error($con), E_USER_ERROR);
+                    }
                 }
             }
         }
@@ -207,6 +212,9 @@ if (isset($_REQUEST['ed'])) {
 }
 
 $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['docid']}'");
+
+$sleepId = intval($hst['sleep_study_id']);
+$hstNights = intval($hst['hst_nights']);
 
 ?>
 <style>
@@ -247,7 +255,7 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
 	<br /><br />
 	
 	<? if(!empty($msg)) {?>
-    <div align="center" class="red">
+    <div align="center" class="text-danger">
         <? echo $msg;?>
     </div>
     <? }?>
@@ -269,7 +277,7 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's Insurance Company
             </td>
             <td valign="top" class="frmdata">
-	  <select name="ins_co_id" class="readonly" onclick="return false;" readonly="readonly">
+	  <select name="ins_co_id" class="readonly form-control input-sm input-inline" onclick="return false;" readonly>
           <option value="">Select Insurance Company</option>
 <?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hst['doc_id']."'";
@@ -280,10 +288,10 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                                 
                                 <?php } ?>
 </select>
-                <span class="red">*</span>
+                <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-          <select name="pat_ins_co_id" class="readonly" onclick="return false;" readonly="readonly">
+          <select name="pat_ins_co_id" class="readonly form-control input-sm input-inline" onclick="return false;" readonly>
 <?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hst['doc_id']."'";
                             $ins_contact_qry_run = mysqli_query($con,$ins_contact_qry);
@@ -293,7 +301,7 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
 
                                 <?php } ?>
 </select>
-                <span class="red">*</span>
+                <span class="text-danger">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -301,12 +309,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's First Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_firstname" value="<?=$hst['patient_firstname']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
+                <input type="text" name="patient_firstname" value="<?=$hst['patient_firstname']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_firstname" value="<?=$pat['firstname']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="pat_patient_firstname" value="<?=$pat['firstname']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -314,12 +324,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_lastname" value="<?=$hst['patient_lastname']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
+                <input type="text" name="patient_lastname" value="<?=$hst['patient_lastname']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_lastname" value="<?=$pat['lastname']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="pat_patient_lastname" value="<?=$pat['lastname']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -327,12 +339,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's Address
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_add1" class="tbox readonly" value="<?=$hst['patient_add1'];?>" readonly />
-                <span class="red">*</span>				
+                <input type="text" name="patient_add1" value="<?=$hst['patient_add1'];?>"
+                       class="tbox readonly form-control input-sm input-inline"readonly />
+                <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_add1" class="tbox readonly" value="<?=$pat['add1'];?>" readonly />
-                <span class="red">*</span>
+                <input type="text" name="pat_patient_add1" value="<?=$pat['add1'];?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -340,10 +354,12 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's Address 2
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_add2" class="tbox readonly" value="<?=$hst['patient_add2'];?>" readonly />
+                <input type="text" name="patient_add2" value="<?=$hst['patient_add2'];?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_add2" class="tbox readonly" value="<?=$pat['add2'];?>" readonly />
+                <input type="text" name="pat_patient_add2" value="<?=$pat['add2'];?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -351,12 +367,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's City
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$hst['patient_city']?>" name="patient_city" class="tbox readonly" readonly />
-                <span class="red">*</span>				
+                <input type="text" value="<?=$hst['patient_city']?>" name="patient_city"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$pat['city']?>" name="pat_patient_city" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" value="<?=$pat['city']?>" name="pat_patient_city"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
 
         </tr>
@@ -365,12 +383,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's State
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$hst['patient_state']?>" name="patient_state" class="tbox readonly" readonly />
-                <span class="red">*</span>				
+                <input type="text" value="<?=$hst['patient_state']?>" name="patient_state"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$pat['state']?>" name="pat_patient_state" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" value="<?=$pat['state']?>" name="pat_patient_state"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
 
         </tr>
@@ -379,12 +399,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's Zip
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_zip" value="<?= $hst['patient_zip']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>				
+                <input type="text" name="patient_zip" value="<?= $hst['patient_zip']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_zip" value="<?= $pat['zip']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="pat_patient_zip" value="<?= $pat['zip']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -392,12 +414,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's Home Phone
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_home_phone" value="<?= $hst['patient_home_phone']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="patient_home_phone" value="<?= $hst['patient_home_phone']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_home_phone" value="<?= $pat['home_phone']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="pat_patient_home_phone" value="<?= $pat['home_phone']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -405,12 +429,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's Cell Phone
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_cell_phone" value="<?= $hst['patient_cell_phone']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="patient_cell_phone" value="<?= $hst['patient_cell_phone']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_cell_phone" value="<?= $pat['cell_phone']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="pat_patient_cell_phone" value="<?= $pat['cell_phone']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -420,8 +446,9 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
             <td valign="top" class="frmdata">
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_work_phone" value="<?= $pat['work_phone']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="pat_patient_work_phone" value="<?= $pat['work_phone']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
         </tr>
 
@@ -430,12 +457,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's Email
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_email" value="<?= $hst['patient_email']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="patient_email" value="<?= $hst['patient_email']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_email" value="<?= $pat['email']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="pat_patient_email" value="<?= $pat['email']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
         </tr>
 
@@ -444,12 +473,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's Group Insurance #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_group_id" value="<?=$hst['patient_ins_group_id']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
+                <input type="text" name="patient_ins_group_id" value="<?=$hst['patient_ins_group_id']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_ins_group_id" value="<?=$pat['p_m_ins_grp']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="pat_patient_ins_group_id" value="<?=$pat['p_m_ins_grp']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
 
         </tr>
@@ -458,12 +489,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's Insurance ID #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_id" value="<?=$hst['patient_ins_id']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
+                <input type="text" name="patient_ins_id" value="<?=$hst['patient_ins_id']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_ins_id" value="<?=$pat['p_m_ins_id']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="pat_patient_ins_id" value="<?=$pat['p_m_ins_id']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -471,12 +504,14 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Patient's DOB
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_dob" value="<?=$hst['patient_dob']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
+                <input type="text" name="patient_dob" value="<?=$hst['patient_dob']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>				
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="pat_patient_dob" value="<?=$pat['dob']?>" class="tbox readonly" readonly />
-                <span class="red">*</span>
+                <input type="text" name="pat_patient_dob" value="<?=$pat['dob']?>"
+                    class="tbox readonly form-control input-sm input-inline" readonly />
+                <span class="text-danger">*</span>
             </td>
 
         </tr>
@@ -485,7 +520,7 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Notes to Office
             </td>
             <td valign="top" class="frmdata">
-                <textarea name="office_notes"><?= $hst['office_notes']; ?></textarea>
+                <textarea name="office_notes" class="form-control input-sm"><?= $hst['office_notes']; ?></textarea>
             </td>
         </tr>
 
@@ -494,13 +529,13 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Status
             </td>
             <td valign="top" class="frmdata">
-                <select id="status" name="status" class="tbox">
+                <select id="status" name="status" class="tbox form-control input-sm input-inline">
 			<option value="<?= DSS_HST_PENDING; ?>" <?= ($hst['status']==DSS_HST_PENDING)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_PENDING]; ?></option>
 			<option value="<?= DSS_HST_CONTACTED; ?>" <?= ($hst['status']==DSS_HST_CONTACTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_CONTACTED]; ?></option>
                         <option value="<?= DSS_HST_SCHEDULED; ?>" <?= ($hst['status']==DSS_HST_SCHEDULED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_SCHEDULED]; ?></option>
                         <option value="<?= DSS_HST_COMPLETE; ?>" <?= ($hst['status']==DSS_HST_COMPLETE)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_COMPLETE]; ?></option>
                         <option value="<?= DSS_HST_REJECTED; ?>" <?= ($hst['status']==DSS_HST_REJECTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_REJECTED]; ?></option>
-                <span class="red">*</span>
+                <span class="text-danger">*</span>
             </td>
         </tr>
         <tr class="status_<?= DSS_HST_REJECTED; ?> status">
@@ -508,7 +543,7 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
                 Rejected Reason
             </td>
             <td valign="top" class="frmdata">
-                <textarea name="rejected_reason"><?= $hst['rejected_reason']; ?></textarea>
+                <textarea name="rejected_reason" class="form-control input-sm"><?= $hst['rejected_reason']; ?></textarea>
             </td>
         </tr>
         <tr class="status_<?= DSS_HST_COMPLETE; ?> status">
@@ -526,7 +561,7 @@ $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$pat['doc
         </tr>
         <tr>
             <td  colspan="2" align="center">
-                <span class="red">
+                <span class="text-danger">
                     * Required Fields
                 </span><br />
 		<?php

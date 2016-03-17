@@ -305,3 +305,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth::class, function ($faker) {
+    return [
+        'screener_id' => $faker->randomDigit,
+        'epworth_id'  => $faker->randomDigit,
+        'response'    => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

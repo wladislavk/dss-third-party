@@ -18,7 +18,7 @@ use DentalSleepSolutions\Contracts\Repositories\ScreenerEpworth as ScrEpworth;
  * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
  * @link http://laravel.com/docs/5.1/routing#route-model-binding
  */
-class ScreenerEpworthsController extends Controller
+class ScreenerEpworthController extends Controller
 {
     /**
      * Display a listing of the resource.

@@ -119,6 +119,11 @@ jQuery(function($){
             }
         });
 
+        if ($hstForm.find('select#ins_co_id').val() === '0') {
+            $hstForm.find('[name=ins_phone], [name=patient_ins_id], [name=patient_ins_group_id]')
+                .removeClass('required');
+        }
+
         $hstForm.find('ul.frmhead:has(:radio)').each(function(){
             var $this = $(this),
                 fieldName = $this.find(':radio:first').attr('name');

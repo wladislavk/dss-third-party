@@ -31,8 +31,6 @@ function selected ($value, $reference) {
     return '';
 }
 
-$maxFileSizeExceeded = 'There was an error with the file upload. Please verify that the file does not exceed 10MB and try again.';
-$noFileName = 'There was an error with the file upload. Please ensure the filename does not contain strange characters and try again.';
 $errorMessage = '';
 
 $patientId = intval($_GET['pid']);

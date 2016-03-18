@@ -53,7 +53,7 @@ require_once __DIR__ . '/claim_functions.php';
     <script type="text/javascript" src="/manage/3rdParty/jquery.tablesorter.min.js"></script>
     <!--<script type="text/javascript" src="/manage/admin/script/logout_timer.js"></script>-->
     <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
-    <script type="text/javascript" src="/manage/admin/script/reskin.js?v=20160225"></script>
+    <script type="text/javascript" src="/manage/admin/script/reskin.js?v=20160316"></script>
     <script type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
      <script src="/manage/admin/admin/template/assets/plugins/bootstrap-sessiontimeout/jquery.sessionTimeout.min.js" type="text/javascript"></script>
     <script>
@@ -1184,7 +1184,13 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 							<a href="/manage/admin/inspect-emails.php"
 							   title="Patient profile created and updated">
 								<i class="fa fa-search-plus"></i>
-								Inspect Emails
+								Inspect Emails Log
+							</a>
+						</li>
+						<li>
+							<a href="/manage/admin/inspect-webhook-policy.php">
+								<i class="fa fa-search-plus"></i>
+								Inspect Webhook Policy Log
 							</a>
 						</li>
 						<li>

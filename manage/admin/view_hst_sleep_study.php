@@ -1,12 +1,14 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-$hstId = !empty($hstId) ? $hstId : 0;
+$hstId = !empty($hstId) ? intval($hstId) : 0;
 $patientData = !empty($patientData) ? $patientData : [];
 $hstNights = !empty($hstNights) ? $hstNights : 1;
 
 $patientId = intval($patientData['patientid']);
 $docId = intval($patientData['docid']);
+
+$hstData = !empty($hstData) ? $hstData : $db->getRow("SELECT * FROM dental_hst WHERE id = '$hstId'");
 
 $insuranceType = $db->getColumn("SELECT p_m_ins_type
     FROM dental_patients
@@ -28,27 +30,36 @@ $dentalDevices = $db->getResults("SELECT deviceid, device
     WHERE status = 1
     ORDER BY sortby");
 
-$sleepStudies = $db->getResults("SELECT *
-    FROM dental_summ_sleeplab
-    WHERE id IN (
-        SELECT sleep_study_id
-        FROM dental_hst
-        WHERE id = '$hstId'
-
-        UNION
-
-        SELECT sleep_id
-        FROM dental_hst_sleeplab
-        WHERE hst_id = '$hstId'
-    )
-    ORDER BY id DESC");
-
 /**
- * Empty case, to always show a studies table
+ * @see DSS-365
+ *
+ * Copy/paste here and in /manage/admin/view_hst.php
  */
-if (count($sleepStudies) < $hstNights) {
-    $sleepStudies = array_merge($sleepStudies, array_fill(0, $hstNights - count($sleepStudies), []));
+if (!isset($sleepStudies)) {
+    $sleepStudies = $db->getResults("SELECT *
+        FROM dental_summ_sleeplab
+        WHERE id IN (
+            SELECT sleep_study_id
+            FROM dental_hst
+            WHERE id = '$hstId'
+    
+            UNION
+    
+            SELECT sleep_id
+            FROM dental_hst_sleeplab
+            WHERE hst_id = '$hstId'
+        )
+        ORDER BY id DESC");
+
+    /**
+     * Empty case, to always show a studies table
+     */
+    if (count($sleepStudies) < $hstNights) {
+        $sleepStudies = array_merge($sleepStudies, array_fill(0, $hstNights - count($sleepStudies), []));
+    }
 }
+
+$showNights = count($sleepStudies) > 1 || $hstData['hst_type'] != 2;
 
 $testTypes = [
     'HST',
@@ -129,6 +140,9 @@ $testTypes = [
 <div class="sleep-labs-container">
     <div class="sleep-labs-scroll">
         <table class="sleeplabstable">
+            <?php if ($showNights) { ?>
+                <tr><td></td></tr>
+            <?php } ?>
             <tr>
                 <td valign="top" class="odd">
                     Date
@@ -212,6 +226,13 @@ $testTypes = [
         <?php foreach ($sleepStudies as $n=>$study) { ?>
             <input type="hidden" name="studies[<?= $n ?>][id]" value="<?= e(array_get($study, 'id', 0)) ?>" />
             <table class="sleeplabstable <?= !empty($show_yellow) && empty($sleepstudy) ? 'yellow' : '' ?>">
+                <?php if ($showNights) { ?>
+                    <tr>
+                        <td>
+                            <strong>Night <?= $n + 1 ?></strong>
+                        </td>
+                    </tr>
+                <?php } ?>
                 <tr>
                     <td valign="top" class="odd">
                         <input type="text" onchange="validateDate('date_<?= $n ?>');" maxlength="255"

@@ -274,6 +274,23 @@ $defaultProvider = $isStaff ? $userId : $docId;
     var providerList = <?= json_encode($providerList) ?>,
         hstCompanyList = <?= json_encode($hstCompanyList) ?>,
         insuranceCompanyList = <?= json_encode($insuranceCompanyList) ?>;
+
+    <?php if (!$canAuthorize && !$canFinishLater) { ?>
+    jQuery(function($){
+        $('#hst_order_sleep_services').find('input, select, button').prop('disabled', true);
+    });
+    <?php } ?>
+
+    <?php if (!empty($is_back_office)) { ?>
+    jQuery(function($){
+        var $form = $('#hst_order_sleep_services');
+
+        $form.find('input:text, select').addClass('form-control input-sm')
+            .filter('select').addClass('input-inline');
+
+        $form.find('input:submit, button').addClass('btn btn-primary');
+    });
+    <?php } ?>
 </script>
 <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
 <script type="text/javascript" src="/manage/js/masks.js"></script>

@@ -187,7 +187,35 @@ $patientData = $patientData ?: [];
 $doctorData = $db->getRow("SELECT * FROM dental_users WHERE userid = '{$patientData['docid']}'");
 $doctorData = $doctorData ?: [];
 
+/**
+ * @see DSS-365
+ *
+ * Copy/paste here and in /manage/admin/view_hst_sleep_study.php
+ */
 $hstNights = intval($hstData['hst_nights']);
+$sleepStudies = $db->getResults("SELECT *
+    FROM dental_summ_sleeplab
+    WHERE id IN (
+        SELECT sleep_study_id
+        FROM dental_hst
+        WHERE id = '$hstId'
+
+        UNION
+
+        SELECT sleep_id
+        FROM dental_hst_sleeplab
+        WHERE hst_id = '$hstId'
+    )
+    ORDER BY id DESC");
+
+/**
+ * Empty case, to always show a studies table
+ */
+if (count($sleepStudies) < $hstNights) {
+    $sleepStudies = array_merge($sleepStudies, array_fill(0, $hstNights - count($sleepStudies), []));
+}
+
+$showNights = count($sleepStudies) > 1 || $hstData['hst_type'] != 2;
 
 if ($errorMessages) {
     $msg .= '<ul><li>' . join('</li><li>', $errorMessages) . '</li></ul>';
@@ -526,14 +554,12 @@ if ($errorMessages) {
         <tr class="status_<?= DSS_HST_COMPLETE; ?> status">
             <td valign="top" class="frmhead" width="30%">
                 HST
+                <?= $hstData['hst_type'] == 2 ? 'with PAP' : '' ?>
+                <?= $hstData['hst_type'] == 3 ? 'with OAT (titration)' : '' ?>
+                <?= $showNights ? ' - ' . count($sleepStudies) . ' Night Study' : '' ?>
             </td>
             <td valign="top" colspan="2" class="frmdata">
-                <?php
-
-                $studyCount = intval($hstData['hst_nights']);
-                include 'view_hst_sleep_study.php';
-
-                ?>
+                <?php include_once __DIR__ . '/view_hst_sleep_study.php'; ?>
             </td>
         </tr>
         <tr>

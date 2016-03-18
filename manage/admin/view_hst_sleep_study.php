@@ -2,7 +2,7 @@
 namespace Ds3\Libraries\Legacy;
 
 $hstId = !empty($hstId) ? $hstId : 0;
-$patientData = !empty($patientData) ?: [];
+$patientData = !empty($patientData) ? $patientData : [];
 $hstNights = !empty($hstNights) ? $hstNights : 1;
 
 $patientId = intval($patientData['patientid']);

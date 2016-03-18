@@ -88,49 +88,44 @@ $testTypes = [
     .even { background: #e4ffcf; }
     select { width: 140px; }
 </style>
+<script type="text/javascript" src="/manage/js/file-upload-check.js"></script>
 <script type="text/javascript">
-    function validate_image(){
-        if($('#ss_file').val() == ''){
-            alert('Image is required.');
-            return false;
-        }
-        return true;
-    }
-
-    function updatePlace(f){
-        if(f.sleeptesttype.value == "HST"){
-            f.place.style.display = "none";
-            f.home.style.display = "block";
-        }else{
-            f.place.style.display = "block";
-            f.home.style.display = "none";
-        }
-    }
-
-    function addstudylab(v){
-        if(v == 'add'){
-            parent.loadPopupRefer('add_sleeplab.php?r=flowsheet');
-        }
-    }
-
-    jQuery(function($){
-        $('.sleep-labs-container').each(function(){
+    jQuery(function($) {
+        $('.sleep-labs-container').each(function () {
             var $container = $(this),
                 $parent = $container.parent(), // assume a td
                 $scroll = $container.find('.sleep-labs-scroll'),
                 $tables = $scroll.find('table.sleeplabstable'),
                 width = 20;
 
-            $tables.each(function(){
+            $tables.each(function () {
                 width += $(this).width();
             });
 
             $scroll.width(width);
             $container.width($parent.width() > width ? width : $parent.width());
         });
+
+        $('[id^=file_edit_] a').click(function () {
+            var $this = $(this),
+                $parent = $this.closest('td'),
+                $edit = $parent.find('[id^=file_edit_]'),
+                $file = $parent.find('[id^=ss_file_]');
+
+            if ($this.text() === 'Edit') {
+                $file.show();
+                $edit.hide();
+                $this.text('Cancel').appendTo($parent);
+            } else {
+                $file.hide();
+                $edit.show();
+                $this.text('Edit').appendTo($edit);
+            }
+
+            return false;
+        });
     });
 </script>
-<script type="text/javascript" src="/manage/admin/popup/popup.js"></script>
 <div class="sleep-labs-container">
     <div class="sleep-labs-scroll">
         <table class="sleeplabstable">
@@ -239,7 +234,7 @@ $testTypes = [
                 </tr>
                 <tr>
                     <td valign="top" class="odd">
-                        <select name="studies[<?= $n ?>][place]" class="place_select" onchange="addstudylab(this.value)">
+                        <select name="studies[<?= $n ?>][place]" class="place_select">
                             <option value="">SELECT</option>
                             <?php foreach ($labPlaces as $place) { ?>
                                 <option value="<?= e($place['sleeplabid']) ?>"
@@ -247,7 +242,6 @@ $testTypes = [
                                     <?= e($place['company']) ?>
                                 </option>
                             <?php } ?>
-                            <option value="add">ADD SLEEP LAB</option>
                         </select>
                     </td>
                 </tr>
@@ -286,7 +280,7 @@ $testTypes = [
                 <tr>
                     <td valign="top" class="odd">
                         <?php if ($study['filename']) { ?>
-                            <div id="file_edit_<?= $study['id'] ?>">
+                            <div id="file_edit_<?= $n ?>">
                                 <a href="/manage/admin/display_file.php?f=<?= rawurlencode($study['filename']) ?>"
                                     target="_blank" class="btn btn-info btn-xs">View</a>
                                 <a href="#" class="btn btn-primary btn-xs">Edit</a>
@@ -361,13 +355,3 @@ $testTypes = [
         <?php } ?>
     </div>
 </div>
-<div id="popupContact" style="width: 750px; display: none;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
-<div id="popupRefer" style="height: 550px; width:750px; display: none;">
-    <a id="popupReferClose"><button>X</button></a>
-    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopupRef"></div>

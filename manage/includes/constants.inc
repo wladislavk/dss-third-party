@@ -414,3 +414,6 @@ $dss_file_upload_errors = array(
 define('DSS_CLAIM_FILE_TYPE_RX', 6);
 define('DSS_CLAIM_FILE_TYPE_LOMN', 7);
 define('DSS_CLAIM_FILE_TYPE_BOTH', 14);
+
+$maxFileSizeExceeded = 'There was an error with the file upload. Please verify that the file does not exceed 10MB and try again.';
+$noFileName = 'There was an error with the file upload. Please ensure the filename does not contain strange characters and try again.';

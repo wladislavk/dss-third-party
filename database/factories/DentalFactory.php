@@ -305,3 +305,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
         'rec_pattern'  => $faker->word,
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\SoftPalate::class, function ($faker) {
+    return [
+        'soft_palate' => $faker->sentence($nbWords = 4),
+        'description' => $faker->sentence($nbWords = 7),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

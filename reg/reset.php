@@ -8,25 +8,30 @@ $s = "SELECT dp.cell_phone, dp.email FROM dental_patients dp JOIN dental_users d
                 du.use_patient_portal='1'";
 
 $q = mysqli_query($con, $s);
-    if(mysqli_num_rows($q) > 0){
-      $r = mysqli_fetch_assoc($q);
-      }else{
-	?>
-		<script type="text/javascript">
-			window.location = "index.php";
-		</script>
-	<?php
-      }
+
+if (mysqli_num_rows($q) > 0) {
+  $r = mysqli_fetch_assoc($q);
+} else { ?>
+    <script type="text/javascript">
+        window.location = "index.php";
+    </script>
+    <?php
+    trigger_error('Die called', E_USER_ERROR);
+}
 
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?= $sitename ?></title>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
-<link href="css/login.css" rel="stylesheet" type="text/css" />
-<!--[if IE]>
+    <link href="css/login.css" rel="stylesheet" type="text/css" />
+    <!--[if IE]>
         <link rel="stylesheet" type="text/css" href="css/login_ie.css" />
-<![endif]-->
-
-<script type="text/javascript">
-
+    <![endif]-->
+    <script type="text/javascript">
 function send_text(but){
   but.disabled = true;
   $.ajax({
@@ -55,15 +60,11 @@ function send_text(but){
 $(document).ready(function(){
   send_text($('#access_but'));
 });
-</script>
-
-
+    </script>
+</head>
+<body>
 <div id="login_container">
   <h1>Dental Sleep Solutions</h1>
-
-
-
-
   <div class="login_content" id="first2_sect">
      <h3>Enter your access code</h3>
         <button id="access_but" onclick="send_text(this)">Text Access Code</button>
@@ -90,17 +91,12 @@ $(document).ready(function(){
      </div>
      <a href="login.php">&laquo; Return to Login Screen</a>
   </div>
-
 </div>
 <div style="clear:both;"></div>
-
 <span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
 <br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a></span>
 <div style="clear:both;"></div>
-
-
 <script type="text/javascript">
-
 function createPassword(){
   var e = $('#email').val();
   var c = $('#code').val();
@@ -149,7 +145,6 @@ if(p1!=p2){
 }
 
 }
-
-
 </script>
-
+</body>
+</html>

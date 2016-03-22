@@ -1,46 +1,57 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php session_start(); ?>
-<?php include '../manage/admin/includes/main_include.php'; ?>
-<?php include '../manage/admin/includes/password.php';
-?>
-    <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
-<script type="text/javascript" src="/manage/admin/script/validation.js"></script>
-<link href="css/login.css" rel="stylesheet" type="text/css" />
-<!--[if IE]>
-	<link rel="stylesheet" type="text/css" href="css/login_ie.css" />
-<![endif]-->
 <?php
-$e = '';
-if(isset($_POST['loginbut'])){
-        $salt_sql = "SELECT salt FROM dental_patients WHERE email='".mysqli_real_escape_string($con, $_POST['username'])."' AND (parent_patientid IS NULL OR parent_patientid=0 OR parent_patientid='')";
-        $salt_q = mysqli_query($con, $salt_sql);
-        $salt_row = mysqli_fetch_assoc($salt_q);
-        $pass = gen_password($_POST['password'], $salt_row['salt']);
+namespace Ds3\Libraries\Legacy;
 
-        $check_sql = "SELECT dp.patientid, dp.email, dp.registered, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where dp.status='1' && du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".mysqli_real_escape_string($con, $_POST['username'])."' and dp.password='".$pass."' ";
-        $check_my = mysqli_query($con, $check_sql);
-  if(mysqli_num_rows($check_my) > 0){
-    $p = mysqli_fetch_assoc($check_my);
-                $_SESSION['pid']=$p['patientid'];
-    if($p['registered'] == 1){
-    ?>  
-      <script type="text/javascript">
-        window.location = 'index.php';
-      </script>
-    <?php
-    }else{
-    ?>  
-      <script type="text/javascript">
-        window.location = 'register.php';
-      </script>
-    <?php
+session_start();
+
+include '../manage/admin/includes/main_include.php';
+include '../manage/admin/includes/password.php';
+
+$e = '';
+
+if (isset($_POST['loginbut'])) {
+    $salt_sql = "SELECT salt FROM dental_patients WHERE email='".mysqli_real_escape_string($con, $_POST['username'])."' AND (parent_patientid IS NULL OR parent_patientid=0 OR parent_patientid='')";
+    $salt_q = mysqli_query($con, $salt_sql);
+    $salt_row = mysqli_fetch_assoc($salt_q);
+    $pass = gen_password($_POST['password'], $salt_row['salt']);
+
+    $check_sql = "SELECT dp.patientid, dp.email, dp.registered, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where dp.status='1' && du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".mysqli_real_escape_string($con, $_POST['username'])."' and dp.password='".$pass."' ";
+    $check_my = mysqli_query($con, $check_sql);
+
+    if (mysqli_num_rows($check_my) > 0) {
+        $p = mysqli_fetch_assoc($check_my);
+        $_SESSION['pid']=$p['patientid'];
+
+        if ($p['registered'] == 1) { ?>
+            <script type="text/javascript">
+                window.location = 'index.php';
+            </script>
+        <?php } else { ?>
+            <script type="text/javascript">
+                window.location = 'register.php';
+            </script>
+        <?php }
+
+        trigger_error('Die called', E_USER_ERROR);
+    } else {
+        $login_error = true;
     }
-  }else{
-    $login_error = true;
-  }
-  
 }
 
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?= $sitename ?></title>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
+    <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/validation.js"></script>
+    <link href="css/login.css" rel="stylesheet" type="text/css" />
+    <!--[if IE]>
+    <link rel="stylesheet" type="text/css" href="css/login_ie.css" />
+    <![endif]-->
+</head>
+<body>
 <div id="login_container">
   <h1>Dental Sleep Solutions</h1>
   <div class="login_content" id="login_sect">
@@ -140,7 +151,6 @@ if(isset($_POST['loginbut'])){
 
 </div>
 <script type="text/javascript">
-
 $('#email_code').keyup(function(){
 	$('#first1_error').hide('slow');
 });
@@ -300,12 +310,11 @@ if(p1!=p2){
 }
 
 }
-
-
 </script>
 <div style="clear:both;"></div>
 
 <span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
 <br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a></span>
 <div style="clear:both;"></div>
-
+</body>
+</html>

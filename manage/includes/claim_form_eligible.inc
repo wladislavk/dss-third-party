@@ -349,6 +349,8 @@ if ($isSecondary) {
     </style>
     <link rel="stylesheet" href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css?v=20160213" />
     <link rel="stylesheet" href="/manage/css/claim_form_eligible.css?v=<?= time() ?>" />
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="https://eligibleapi.com/js/eligible-claim-1500-2014.min.js?v=20160213"></script>

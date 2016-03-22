@@ -56,24 +56,29 @@ $location_info = mysqli_fetch_assoc($location_result);
     }
   }
 */
-}else{
-		?>
-			<script type="text/javascript">
-				window.location = 'login.php';
-			</script>
-		<?php
-      }
+} else { ?>
+    <script type="text/javascript">
+        window.location = 'login.php';
+    </script>
+    <?php
+    trigger_error('Die called', E_USER_ERROR);
+}
+
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?= $sitename ?></title>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<link href="css/login.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
-<!--[if IE]>
+    <link href="css/login.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+    <!--[if IE]>
         <link rel="stylesheet" type="text/css" href="css/login_ie.css" />
-<![endif]-->
-
-<script type="text/javascript">
-
+    <![endif]-->
+    <script type="text/javascript">
 function send_text(from, but){
   but.disabled = true;
   $('#text_instructions').hide('slow');
@@ -105,17 +110,14 @@ function send_text(from, but){
   });
 }
 
-
-<?php
-  if($r['access_type']==1){
-?>
+<?php if ($r['access_type'] == 1) { ?>
 $(document).ready(function(){
   send_text("load", false);
 });
 <?php } ?>
-</script>
-
-
+    </script>
+</head>
+<body>
 <div id="login_container" class="activate">
   <div class="logos">
     <div id="company_name">
@@ -248,9 +250,7 @@ $(document).ready(function(){
 <p>ANY DISPUTE, CLAIM OR CONTROVERSY ARISING OUT OF OR RELATING TO THIS NOTICE OR THE BREACH, TERMINATION, ENFORCEMENT, INTERPRETATION OR VALIDITY THEREOF, INCLUDING THE DETERMINATION OF THE SCOPE OR APPLICABILITY OF THIS AGREEMENT TO ARBITRATE, OR TO YOUR USE OF THIS SITE OR THE SYSTEMS OR INFORMATION TO WHICH IT GIVES ACCESS, SHALL BE DETERMINED BY ARBITRATION IN HOLMES BEACH, FLORIDA, BEFORE A SINGLE ARBITRATORS. THE ARBITRATION SHALL BE ADMINISTERED BY JAMS PURSUANT TO ITS COMPREHENSIVE ARBITRATION RULES AND PROCEDURES. JUDGMENT ON THE AWARD MAY BE ENTERED IN ANY COURT HAVING JURISDICTION. THIS CLAUSE SHALL NOT PRECLUDE PARTIES FROM SEEKING PROVISIONAL REMEDIES IN AID OF ARBITRATION FROM A COURT OF APPROPRIATE JURISDICTION.</p> 
 </div>
 </div>
-
 <script type="text/javascript">
-
 $(document).ready(function() {
 
 	/* Using custom settings */
@@ -318,5 +318,6 @@ if(p1!=p2){
 }
 
 }
-
 </script>
+</body>
+</html>

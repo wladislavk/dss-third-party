@@ -29,7 +29,6 @@ class RouteServiceProvider extends ServiceProvider
         'diagnostics' => \DentalSleepSolutions\Eloquent\Dental\Diagnostic::class,
         'documents' => \DentalSleepSolutions\Eloquent\Dental\Document::class,
         'document-categories' => \DentalSleepSolutions\Eloquent\Dental\DocumentCategory::class,
-        'educational-documents' => \DentalSleepSolutions\Eloquent\Dental\EducationalDocument::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

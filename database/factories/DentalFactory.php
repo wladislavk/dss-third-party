@@ -360,6 +360,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting::class,
         'ip_address' => $faker->ipv4
     ];
 });
+$factory->define(DentalSleepSolutions\Eloquent\Dental\GuideDevice::class, function ($faker) {
+    return [
+        'name'       => $faker->name,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
+});
 
 $factory->define(DentalSleepSolutions\Eloquent\Dental\GuideSetting::class, function ($faker) {
     return [

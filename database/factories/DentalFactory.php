@@ -340,5 +340,3 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Charge::class, function ($
         'status'                  => $faker->randomDigit
     ];
 });
-=======
->>>>>>> DSS-239-feature/change-list-api

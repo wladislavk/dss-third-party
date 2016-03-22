@@ -47,4 +47,15 @@ class AdminCompany extends Model
     {
         return $this->hasMany(UserCompany::class, 'companyid');
     }
+
+
+    public function admin()
+    {
+        return $this->hasOne(Admin::class, 'adminid', 'adminid');
+    }
+
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'id', 'companyid');
+    }
 }

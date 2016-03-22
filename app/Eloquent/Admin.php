@@ -52,6 +52,6 @@ class Admin extends Model implements Resource, Repository
      */
     public function adminCompany()
     {
-        return $this->hasOne(AdminCompany::class, 'adminid');
+        return $this->hasOne(AdminCompany::class, 'adminid', 'adminid');
     }
 }

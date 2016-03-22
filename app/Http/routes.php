@@ -53,6 +53,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
     Route::resource('allergens', 'AllergensController', ['except' => ['create', 'edit']]);
     Route::resource('charges', 'ChargesController', ['except' => ['create', 'edit']]);
+    Route::resource('change-lists', 'ChangeListsController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
 
 

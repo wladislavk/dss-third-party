@@ -38,6 +38,7 @@ class RouteServiceProvider extends ServiceProvider
         'admins'        => \DentalSleepSolutions\Eloquent\Admin::class,
         'allergens' => \DentalSleepSolutions\Eloquent\Dental\Allergen::class,
         'charges' => \DentalSleepSolutions\Eloquent\Dental\Charge::class,
+        'change-lists' => \DentalSleepSolutions\Eloquent\Dental\ChangeList::class,
     ];
 
     /**

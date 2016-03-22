@@ -60,6 +60,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Calendar::class => [Repositories\Calendars::class, Resources\Calendar::class],
             Eloquent\Dental\Allergen::class => [Repositories\Allergens::class, Resources\Allergen::class],
             Eloquent\Dental\Charge::class => [Repositories\Charges::class, Resources\Charge::class],
+            Eloquent\Dental\ChangeList::class => [Repositories\ChangeLists::class, Resources\ChangeList::class],
         ];
 
 

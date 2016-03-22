@@ -204,6 +204,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment::class
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\ChangeList::class, function ($faker) {
+    return [
+        'content'    => $faker->paragraph($nbSentences = 3),
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\Complaint::class, function ($faker) {
     return [
         'complaint'   => $faker->sentence($nbWords = 6),
@@ -332,3 +340,5 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Charge::class, function ($
         'status'                  => $faker->randomDigit
     ];
 });
+=======
+>>>>>>> DSS-239-feature/change-list-api

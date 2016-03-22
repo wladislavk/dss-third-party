@@ -35,7 +35,8 @@ class RouteServiceProvider extends ServiceProvider
         'contact-types' => \DentalSleepSolutions\Eloquent\Dental\ContactType::class,
         'companies'     => \DentalSleepSolutions\Eloquent\Company::class,
         'calendars'     => \DentalSleepSolutions\Eloquent\Dental\Calendar::class,
-        'admins'        => \DentalSleepSolutions\Eloquent\Admin::class
+        'admins'        => \DentalSleepSolutions\Eloquent\Admin::class,
+        'allergens' => \DentalSleepSolutions\Eloquent\Dental\Allergen::class,
     ];
 
     /**

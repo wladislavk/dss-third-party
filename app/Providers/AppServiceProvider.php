@@ -39,7 +39,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \DentalSleepSolutions\Contracts\Resources\AccessCode::class,
             \DentalSleepSolutions\Eloquent\Dental\AccessCode::class
-
         );
     }
 
@@ -59,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Contact::class => [Repositories\Contacts::class, Resources\Contact::class],
             Eloquent\Dental\ContactType::class => [Repositories\ContactTypes::class, Resources\ContactType::class],
             Eloquent\Dental\Calendar::class => [Repositories\Calendars::class, Resources\Calendar::class],
+            Eloquent\Dental\Allergen::class => [Repositories\Allergens::class, Resources\Allergen::class],
         ];
 
 

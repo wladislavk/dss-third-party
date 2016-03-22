@@ -382,3 +382,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\GuideSetting::class, funct
         'range_end_label'   => $faker->word
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Diagnostic::class, function ($faker) {
+    return [
+        'diagnostic'  => $faker->sentence($nbWords = 6),
+        'description' => $faker->paragraph,
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

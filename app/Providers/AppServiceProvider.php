@@ -64,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\GuideSetting::class => [Repositories\GuideSettings::class, Resources\GuideSetting::class],
             Eloquent\Dental\GuideDevice::class => [Repositories\GuideDevices::class, Resources\GuideDevice::class],
             Eloquent\Dental\Diagnostic::class => [Repositories\Diagnostics::class, Resources\Diagnostic::class],
+            Eloquent\Dental\Document::class => [Repositories\Documents::class, Resources\Document::class],
         ];
 
 

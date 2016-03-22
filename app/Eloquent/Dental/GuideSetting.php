@@ -43,4 +43,13 @@ class GuideSetting extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+
+    /**
+     * RELATIONS
+     */
+    public function options()
+    {
+        return $this->hasMany(GuideSettingOption::class, 'setting_id', 'id');
+    }
 }

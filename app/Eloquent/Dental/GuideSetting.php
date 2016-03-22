@@ -52,4 +52,12 @@ class GuideSetting extends Model implements Resource, Repository
     {
         return $this->hasMany(GuideSettingOption::class, 'setting_id', 'id');
     }
+
+    /**
+     * RELATIONS
+     */
+    public function deviceSettings()
+    {
+        return $this->hasMany(GuideDeviceSetting::class, 'id', 'setting_id');
+    }
 }

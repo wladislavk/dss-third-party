@@ -340,3 +340,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Charge::class, function ($
         'status'                  => $faker->randomDigit
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\GuideSettingOption::class, function ($faker) {
+    return [
+        'option_id'  => $faker->randomDigit,
+        'setting_id' => $faker->randomDigit,
+        'label'      => $faker->sentence($nbWords = 3),
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
+});

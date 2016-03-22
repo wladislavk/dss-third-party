@@ -12,39 +12,6 @@ class Admin extends Model implements Resource, Repository
     use WithoutUpdatedTimestamp;
 
     /**
-     * Mass assignable attributes
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'username', 'status',
-        'adddate', 'ip_address', 'recover_hash',
-        'admin_access', 'claim_margin_top', 'claim_margin_left',
-        'email', 'first_name', 'last_name'
-    ];
-
-    /**
-     * Defining guarded attributes
-     * 
-     * @var array
-     */
-    protected $guarded = ['password', 'salt'];
-
-    /**
-     * Mass of nondisplayed attributes
-     * 
-     * @var array
-     */
-    protected $hidden = ['password', 'ip_address', 'salt'];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['last_accessed_date', 'recover_time'];
-
-    /**
      * The table associated with the model.
      *
      * @var string
@@ -52,11 +19,20 @@ class Admin extends Model implements Resource, Repository
     protected $table = 'admin';
 
     /**
-     * Primary key for the table
+     * Mass assignable attributes
      *
-     * @var string
+     * @var array
      */
-    protected $primaryKey = 'adminid';
+    protected $fillable = ['adminid', 'name', 'username', 'password', 'status', 'adddate', 'ip_address', 'salt',
+        'recover_time', 'admin_access', 'last_accessed_date', 'claim_margin_top', 'claim_margin_left', 'email',
+        'first_name', 'last_name'];
+
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = ['password', 'ip_address', 'salt'];
 
     /**
      * The name of the "created at" column.
@@ -64,4 +40,18 @@ class Admin extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+
+    protected $primaryKey = 'adminid';
+
+
+    /**
+     * User has many Location
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function adminCompany()
+    {
+        return $this->hasOne(AdminCompany::class, 'adminid');
+    }
 }

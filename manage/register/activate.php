@@ -1,62 +1,67 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-    include '../admin/includes/main_include.php';
-    include_once("../../reg/twilio/twilio.config.php");
-
-    if (!empty($_GET['id'])) {
-        $id = $_GET['id'];
-    } else {
-        $id = '';
-    }
-
-    if (!empty($_GET['hash'])) {
-        $hash = $_GET['hash'];
-    } else {
-        $hash = '';
-    }
-
-    $status_sql = "SELECT status FROM dental_users where userid='".mysqli_real_escape_string($con,$id)."'";
-    
-    $status_r = $db->getRow($status_sql);
-    if ($status_r['status'] == 1) {
-?>
-        <script type="text/javascript">
-            window.location = "../login.php";
-        </script>
 <?php
-        trigger_error("Die called", E_USER_ERROR);
-    }
+namespace Ds3\Libraries\Legacy;
 
-    $s = "SELECT du.email, du.phone FROM dental_users du 
-	      WHERE du.userid='".mysqli_real_escape_string($con,$id)."' AND
-    	  du.recover_hash='".mysqli_real_escape_string($con,$hash)."' AND
-    	  du.status='2'";
+include '../admin/includes/main_include.php';
+include_once("../../reg/twilio/twilio.config.php");
 
-    $q = $db->getResults($s);
-    if(count($q) > 0){
-        $r = $q[0];
-    }else{
+if (!empty($_GET['id'])) {
+    $id = $_GET['id'];
+} else {
+    $id = '';
+}
+
+if (!empty($_GET['hash'])) {
+    $hash = $_GET['hash'];
+} else {
+    $hash = '';
+}
+
+$status_sql = "SELECT status FROM dental_users where userid='".mysqli_real_escape_string($con,$id)."'";
+
+$status_r = $db->getRow($status_sql);
+if ($status_r['status'] == 1) { ?>
+    <script type="text/javascript">
+        window.location = "../login.php";
+    </script>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+}
+
+$s = "SELECT du.email, du.phone FROM dental_users du 
+      WHERE du.userid='".mysqli_real_escape_string($con,$id)."' AND
+      du.recover_hash='".mysqli_real_escape_string($con,$hash)."' AND
+      du.status='2'";
+
+$q = $db->getResults($s);
+if(count($q) > 0){
+    $r = $q[0];
+}else{ ?>
+    <h3 style="font-family:Helvetica, Arial, sans-serif;">We are unable to find the page you attempted to access. Please contact Dental Sleep Solutions&reg; for assistance.</h3>
+    <?php
+    trigger_error("Die called", E_USER_ERROR);
+}
+
 ?>
-		<h3 style="font-family:Helvetica, Arial, sans-serif;">We are unable to find the page you attempted to access. Please contact Dental Sleep Solutions&reg; for assistance.</h3>
-<?php
-		trigger_error("Die called", E_USER_ERROR);
-    }
-?>
-
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?= $sitename ?></title>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
     <link href="css/login.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
     <!--[if IE]>
-            <link rel="stylesheet" type="text/css" href="css/login_ie.css" />
+        <link rel="stylesheet" type="text/css" href="css/login_ie.css" />
     <![endif]-->
-
     <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
     <script type="text/javascript" src="/manage/register/js/activate.js"></script>
-
     <script>
         var phone = '<?php echo  substr($r['phone'], strlen($r['phone'])-2); ?>';
     </script>
-
+</head>
+<body>
     <div id="login_container">
         <h1>Dental Sleep Solutions</h1>
         <div class="login_content" id="first2_sect">
@@ -195,3 +200,5 @@
             Dental Sleep Solutions Franchising LLC, 3090 East Bay Drive, Suite 205, Holmes Beach, Florida 34217<br />
         </div>
     </div>
+</body>
+</html>

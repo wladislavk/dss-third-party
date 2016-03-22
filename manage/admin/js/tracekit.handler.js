@@ -93,6 +93,7 @@ function simpleAjax (url, type, data) {
     xmlhttp.send(data);
 }
 
+TraceKit.remoteFetching = false;
 TraceKit.report.subscribe(function errorReportLogger (errorReport) {
     try {
         if (
@@ -118,33 +119,3 @@ TraceKit.report.subscribe(function errorReportLogger (errorReport) {
         }
     } catch (e) { /* Ignore errors here to avoid loops */ }
 });
-
-var hey = {
-    claims: [{
-        id: 123,
-        userid: 23,
-        patientid: 16,
-        status: 'paid'
-    }, {
-        id: 368,
-        userid: 23,
-        patientid: 1,
-        status: 'pending'
-    }],
-    errors: [
-        'The claim was not filed.',
-        'The claim is pending.'
-    ],
-    acknowledgements: {
-        payments: {
-            reports: {
-                amount: 12.36,
-                fields: [
-                    'abc',
-                    '123',
-                    'doremi'
-                ]
-            }
-        }
-    }
-};

@@ -24,7 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var array
      */
     protected $resourceBindings = [
-        'guide-setting-options' => \DentalSleepSolutions\Eloquent\Dental\GuideSettingOption::class,
+        'guide-settings' => \DentalSleepSolutions\Eloquent\Dental\GuideSetting::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

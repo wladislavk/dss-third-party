@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Contracts\Repositories;
 
-interface GuideSettingOptions extends Repository
+interface GuideSettings extends Repository
 {
 
 }

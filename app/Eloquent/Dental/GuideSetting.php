@@ -4,10 +4,10 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\GuideSettingOption as Resource;
-use DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions as Repository;
+use DentalSleepSolutions\Contracts\Resources\GuideSetting as Resource;
+use DentalSleepSolutions\Contracts\Repositories\GuideSettings as Repository;
 
-class GuideSettingOption extends Model implements Resource, Repository
+class GuideSetting extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 
@@ -17,8 +17,10 @@ class GuideSettingOption extends Model implements Resource, Repository
      * @var array
      */
     protected $fillable = [
-        'option_id', 'setting_id', 'label',
-        'adddate', 'ip_address'
+        'name', 'setting_type', 'range_start',
+        'range_end', 'adddate', 'ip_address',
+        'rank', 'options', 'range_start_label',
+        'range_end_label'
     ];
 
     /**
@@ -26,7 +28,7 @@ class GuideSettingOption extends Model implements Resource, Repository
      *
      * @var string
      */
-    protected $table = 'dental_device_guide_setting_options';
+    protected $table = 'dental_device_guide_settings';
 
     /**
      * The primary key for the model.

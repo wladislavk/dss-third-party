@@ -61,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Allergen::class => [Repositories\Allergens::class, Resources\Allergen::class],
             Eloquent\Dental\Charge::class => [Repositories\Charges::class, Resources\Charge::class],
             Eloquent\Dental\ChangeList::class => [Repositories\ChangeLists::class, Resources\ChangeList::class],
-            Eloquent\Dental\GuideSettingOption::class => [Repositories\GuideSettingOptions::class, Resources\GuideSettingOption::class],
+            Eloquent\Dental\GuideSetting::class => [Repositories\GuideSettings::class, Resources\GuideSetting::class],
         ];
 
 

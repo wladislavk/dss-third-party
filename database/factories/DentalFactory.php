@@ -350,3 +350,17 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\GuideSettingOption::class,
         'ip_address' => $faker->ipv4
     ];
 });
+$factory->define(DentalSleepSolutions\Eloquent\Dental\GuideSetting::class, function ($faker) {
+    return [
+        'name'              => $faker->name,
+        'setting_type'      => $faker->randomDigit,
+        'range_start'       => $faker->randomDigit,
+        'range_end'         => $faker->randomDigit,
+        'adddate'           => $faker->dateTime(),
+        'ip_address'        => $faker->ipv4,
+        'rank'              => $faker->randomDigit,
+        'options'           => $faker->randomDigit,
+        'range_start_label' => $faker->word,
+        'range_end_label'   => $faker->word
+    ];
+});

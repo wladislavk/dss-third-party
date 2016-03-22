@@ -153,9 +153,10 @@ function claimAgingBreakdownResults (Array $dayLimit, $isBackOffice, $filterData
             AND $mailingDateConditional
             AND (
                 COALESCE(
-                    CONVERT(
-                        REPLACE(IF(i.primary_claim_id, 0, i.total_charge), ',', ''),
-                        DECIMAL(11, 2)
+                    (
+                        SELECT SUM(l.amount)
+                        FROM dental_ledger
+                        WHERE l.primary_claim_id = i.insuranceid
                     ), 0
                 )
                 -

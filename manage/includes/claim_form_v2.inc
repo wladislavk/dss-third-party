@@ -538,6 +538,8 @@ if ($isSecondary) {
     </style>
     <link rel="stylesheet" href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" />
     <link rel="stylesheet" href="<?php echo $admin_path?>popup/popup.css" media="screen" />
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="/manage/script/autocomplete_local.js?v=<?= time() ?>"></script>
     <script type="text/javascript" src="/manage/script/validation.js"></script>

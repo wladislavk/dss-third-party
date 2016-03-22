@@ -19,9 +19,10 @@ $sql = "SELECT p.firstname, p.lastname, p.patientid
             SELECT (
                 SUM(
                     COALESCE(
-                        CONVERT(
-                            REPLACE(IF(i.primary_claim_id, 0, i.total_charge), ',', ''),
-                            DECIMAL(11, 2)
+                        (
+                            SELECT SUM(dl.amount) AS paid_amount
+                            FROM dental_ledger dl
+                            WHERE dl.primary_claim_id = i.insuranceid
                         ), 0
                     )
                 )
@@ -74,22 +75,22 @@ $my = $db->getResults($sql);
             <th valign="top" class="col_head">
                 Patient Name
             </th>
-            <th valign="top" class="col_head">
+            <th valign="top" class="col_head" width="12%">
                 0-29 Days
             </th>
-            <th valign="top" class="col_head">
+            <th valign="top" class="col_head" width="12%">
                 30-59 Days
             </th>
-            <th valign="top" class="col_head">
+            <th valign="top" class="col_head" width="12%">
                 60-89 Days
             </th>
-            <th valign="top" class="col_head">
+            <th valign="top" class="col_head" width="12%">
                 90-119 Days
             </th>
-            <th valign="top" class="col_head">
+            <th valign="top" class="col_head" width="12%">
                 120+
             </th>
-            <th valign="top" class="col_head">
+            <th valign="top" class="col_head" width="12%">
                 Total
             </th>
         </tr>

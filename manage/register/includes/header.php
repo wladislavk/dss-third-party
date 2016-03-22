@@ -9,15 +9,17 @@
     <link rel="stylesheet" href="lib/datatables/css/table_jui.css" type="text/css" />
     <link rel="stylesheet" href="lib/harvesthq-chosen/chosen.css" type="text/css" />
     <link rel="stylesheet" href="css/style.css" />
-<!--[if IE]>
-	<link rel="stylesheet" type="text/css" href="css/style_ie.css" />
-<![endif]-->
+    <!--[if IE]>
+        <link rel="stylesheet" type="text/css" href="css/style_ie.css" />
+    <![endif]-->
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
     <script type="text/javascript" src="js/head.load.min.js"></script>
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="lib/datatables/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="lib/datatables/dataTables.plugins.js"></script>
     <script type="text/javascript" src="lib/fusion-charts/FusionCharts.js"></script>
-        <script type="text/javascript" src="js/jquery.microaccordion.js"></script>
+    <script type="text/javascript" src="js/jquery.microaccordion.js"></script>
     <script type="text/javascript" src="js/jquery.stickyPanel.js"></script>
     <script type="text/javascript" src="js/xbreadcrumbs.js"></script>
     <script type="text/javascript" src="js/jquery.tools.min.js"></script>

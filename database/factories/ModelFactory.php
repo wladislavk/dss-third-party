@@ -78,3 +78,11 @@ $factory->define(DentalSleepSolutions\Eloquent\MemoAdmin::class, function ($fake
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\AdminCompany::class, function ($faker) {
+    return [
+        'adminid'    => $faker->randomDigit,
+        'companyid'  => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
+});

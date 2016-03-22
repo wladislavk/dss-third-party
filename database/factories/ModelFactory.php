@@ -50,12 +50,27 @@ $factory->define(DentalSleepSolutions\Eloquent\Payer::class, function ($faker) {
     ];
 });
 
-$factory->define(DentalSleepSolutions\User::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\User::class, function ($faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->email,
         'password' => str_random(10),
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Admin::class, function ($faker) {
+    return [
+        'name'         => 'PHPUnit admin',
+        'username'     => $faker->userName,
+        'password'     => $faker->password,
+        'status'       => $faker->randomDigit,
+        'adddate'      => $faker->dateTime(),
+        'ip_address'   => $faker->ipv4,
+        'admin_access' => $faker->randomDigit,
+        'email'        => $faker->email,
+        'first_name'   => $faker->firstName,
+        'last_name'    => $faker->lastName
     ];
 });
 

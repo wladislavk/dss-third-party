@@ -1,14 +1,11 @@
 <?php
-
 namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\Dental\UserCompany;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\AdminCompany as Resource;
-use DentalSleepSolutions\Contracts\Repositories\AdminCompanies as Repository;
 
-class AdminCompany extends Model implements Resource, Repository
+class AdminCompany extends Model
 {
     use WithoutUpdatedTimestamp;
 
@@ -24,9 +21,7 @@ class AdminCompany extends Model implements Resource, Repository
      *
      * @var array
      */
-    protected $fillable = [
-        'adminid', 'companyid', 'adddate', 'ip_address'
-    ];
+    protected $fillable = ['id', 'adminid', 'companyid', 'adddate', 'ip_address'];
 
     /**
      * The name of the "created at" column.

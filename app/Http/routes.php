@@ -45,7 +45,6 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('calendars', 'CalendarsController', ['except' => ['create', 'edit']]);
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
-    Route::resource('admin-companies', 'AdminCompaniesController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
 
 

@@ -87,7 +87,6 @@ function isValidCreditCard(type, ccnum)
    if ((checksum % 10) == 0) return true; else return false;
 }
 
-
 function adminticketabc(fa){
 
   if(trim(fa.docid.value) == ""){
@@ -118,8 +117,6 @@ function adminticketabc(fa){
 
 }
 
-
-<!--
 function loginabc(fa)
 {
 	if(trim(fa.username.value) == "" )
@@ -1100,5 +1097,3 @@ function transaction_codeabc(fa)
 		return false;
 	}
 }
-
-//-->

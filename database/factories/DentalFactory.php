@@ -379,6 +379,15 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\GuideDevice::class, functi
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\DocumentCategory::class, function ($faker) {
+    return [
+        'name'       => $faker->name,
+        'status'     => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\GuideSetting::class, function ($faker) {
     return [
         'name'              => $faker->name,

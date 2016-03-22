@@ -4,10 +4,10 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Document as Resource;
-use DentalSleepSolutions\Contracts\Repositories\Documents as Repository;
+use DentalSleepSolutions\Contracts\Resources\DocumentCategory as Resource;
+use DentalSleepSolutions\Contracts\Repositories\DocumentCategories as Repository;
 
-class Document extends Model implements Resource, Repository
+class DocumentCategory extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 
@@ -17,8 +17,7 @@ class Document extends Model implements Resource, Repository
      * @var array
      */
     protected $fillable = [
-        'categoryid', 'name', 'filename',
-        'adddate', 'ip_address'
+        'name', 'status', 'adddate', 'ip_address'
     ];
 
     /**
@@ -26,14 +25,14 @@ class Document extends Model implements Resource, Repository
      *
      * @var string
      */
-    protected $table = 'dental_document';
+    protected $table = 'dental_document_category';
 
     /**
      * The primary key for the model.
      *
      * @var string
      */
-    protected $primaryKey = 'documentid';
+    protected $primaryKey = 'categoryid';
 
     /**
      * The name of the "created at" column.
@@ -41,12 +40,4 @@ class Document extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
-
-    /**
-     * RELATIONS
-     */
-    public function category()
-    {
-        return $this->hasOne(DocumentCategory::class, 'categoryid', 'id');
-    }
 }

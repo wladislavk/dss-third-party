@@ -39,6 +39,7 @@ class RouteServiceProvider extends ServiceProvider
         'tmj-clinical-exams' => \DentalSleepSolutions\Eloquent\Dental\TmjClinicalExam::class,
         'fax-invoices' => \DentalSleepSolutions\Eloquent\Dental\FaxInvoice::class,
         'gag-reflexes' => \DentalSleepSolutions\Eloquent\Dental\GagReflex::class,
+        'medical-histories' => \DentalSleepSolutions\Eloquent\Dental\MedicalHistory::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

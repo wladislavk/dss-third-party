@@ -577,3 +577,62 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\DentalClinicalExam::class,
         'crossbite'                        => $faker->randomElement($teethPairs)
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\TmjClinicalExam::class, function ($faker) {
+    $palpation = [
+        '1|1~3|4~5|0~',
+        '1|0~2|0~3|0~4|0~5|0~6|0~7|0~8|0~9|0~10|0~11|0~12|0~13|0~',
+        '1|0~2|0~3|0~4|0~5|0~6|0~7|0~',
+        '1|0~2|0~3|0~4|0~5|0~6|0~7|0~',
+        '7|3~11|3~'
+    ];
+
+    $joints = [
+        '1|L~2|L~3|R~4|B~5|B~',
+        '1|WNL~2|WNL~3|WNL~4|WNL~5|WNL~',
+        '1|B~2|R~3|R~4|R~5|R~'
+    ];
+
+    return [
+        'formid'                   => $faker->randomDigit,
+        'patientid'                => $faker->randomDigit,
+        'palpationid'              => $faker->randomElement($palpation),
+        'palpationRid'             => $faker->randomElement($palpation),
+        'additional_paragraph_pal' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
+        'joint_exam'               => $faker->regexify('~([1-9]~)+'),
+        'jointid'                  => $faker->randomElement($joints),
+        'i_opening_from'           => $faker->numerify('##'),
+        'i_opening_to'             => $faker->numerify('##'),
+        'i_opening_equal'          => $faker->numerify('##'),
+        'protrusion_from'          => $faker->numerify('-#'),
+        'protrusion_to'            => $faker->numerify('##'),
+        'protrusion_equal'         => $faker->numerify('##'),
+        'l_lateral_from'           => $faker->numerify('##'),
+        'l_lateral_to'             => $faker->numerify('##'),
+        'l_lateral_equal'          => $faker->numerify('##'),
+        'r_lateral_from'           => $faker->numerify('##'),
+        'r_lateral_to'             => $faker->numerify('##'),
+        'r_lateral_equal'          => $faker->numerify('##'),
+        'deviation_from'           => $faker->numerify('#'),
+        'deviation_to'             => $faker->numerify('##'),
+        'deviation_equal'          => $faker->numerify('##'),
+        'deflection_from'          => $faker->numerify('##'),
+        'deflection_to'            => $faker->numerify('##'),
+        'deflection_equal'         => $faker->numerify('##'),
+        'range_normal'             => $faker->numerify('#'),
+        'normal'                   => $faker->numerify('#'),
+        'other_range_motion'       => $faker->sentence($nbWords = 3),
+        'additional_paragraph_rm'  => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
+        'screening_aware'          => $faker->numerify('#'),
+        'screening_normal'         => $faker->numerify('#'),
+        'userid'                   => $faker->randomDigit,
+        'docid'                    => $faker->randomDigit,
+        'status'                   => $faker->randomDigit,
+        'adddate'                  => $faker->dateTime(),
+        'ip_address'               => $faker->ipv4,
+        'deviation_r_l'            => $faker->randomElement(['Right', 'Left']),
+        'deflection_r_l'           => $faker->randomElement(['Right', 'Left']),
+        'dentaldevice'             => $faker->randomDigit,
+        'dentaldevice_date'        => $faker->dateTime()
+    ];
+});

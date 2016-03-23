@@ -32,4 +32,9 @@ class Patient extends Model
     {
         return $this->hasOne(DentalClinicalExam::class, 'patientid', 'patientid');
     }
+
+    public function tmjClinicalExam()
+    {
+        return $this->hasOne(TmjClinicalExam::class, 'patientid', 'patientid');
+    }
 }

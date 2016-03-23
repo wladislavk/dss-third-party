@@ -30,6 +30,7 @@ class RouteServiceProvider extends ServiceProvider
         'documents' => \DentalSleepSolutions\Eloquent\Dental\Document::class,
         'document-categories' => \DentalSleepSolutions\Eloquent\Dental\DocumentCategory::class,
         'insurance-documents' => \DentalSleepSolutions\Eloquent\Dental\InsuranceDocument::class,
+        'faxes' => \DentalSleepSolutions\Eloquent\Dental\Fax::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

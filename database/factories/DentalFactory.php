@@ -658,3 +658,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\FaxInvoice::class, functio
         'ip_address'  => $faker->ipv4
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\GagReflex::class, function ($faker) {
+    return [
+        'gag_reflex'  => $faker->word,
+        'description' => $faker->sentence($nbWords = 5),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

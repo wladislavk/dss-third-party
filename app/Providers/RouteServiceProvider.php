@@ -33,6 +33,7 @@ class RouteServiceProvider extends ServiceProvider
         'faxes' => \DentalSleepSolutions\Eloquent\Dental\Fax::class,
         'epworth-sleepiness-scale' => \DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale::class,
         'tonsils-clinical-exams' => \DentalSleepSolutions\Eloquent\Dental\TonsilsClinicalExam::class,
+        'tongue-clinical-exams' => \DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

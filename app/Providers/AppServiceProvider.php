@@ -70,6 +70,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Fax::class => [Repositories\Faxes::class, Resources\Fax::class],
             Eloquent\Dental\EpworthSleepinessScale::class => [Repositories\EpworthSleepinessScale::class, Resources\EpworthSleepinessScale::class],
             Eloquent\Dental\TonsilsClinicalExam::class => [Repositories\TonsilsClinicalExams::class, Resources\TonsilsClinicalExam::class],
+            Eloquent\Dental\TongueClinicalExam::class => [Repositories\TongueClinicalExams::class, Resources\TongueClinicalExam::class],
         ];
 
 

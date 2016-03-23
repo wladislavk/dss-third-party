@@ -45,6 +45,7 @@ class RouteServiceProvider extends ServiceProvider
         'insurance-types' => \DentalSleepSolutions\Eloquent\Dental\InsuranceType::class,
         'insurances' => \DentalSleepSolutions\Eloquent\Dental\Insurance::class,
         'insurance-files' => \DentalSleepSolutions\Eloquent\Dental\InsuranceFile::class,
+        'insurance-histories' => \DentalSleepSolutions\Eloquent\Dental\InsuranceHistory::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

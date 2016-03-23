@@ -526,3 +526,54 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation::class, f
         'ip_address'           => $faker->ipv4
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\DentalClinicalExam::class, function ($faker) {
+    $teethNumbers = [
+        'A, B, C, 01, 02, 03, 17, 18, 19',
+        '04, 05, 20, 25',
+        '01, 04, 07',
+        '06, 07, 08, 09, 22, 23',
+        '06, 07, 08, 09, 10, 11',
+        'C, E, G, I, 10, 23, 24, 25',
+        '18, 19, 26, 27',
+        'B, C, 18, 19',
+        '09, 22, 23, 26, 28, 30, 31'
+    ];
+
+    $dentalClasses = [
+        'I (normal)',
+        'II (Retrognathic)(Retruded Lower Jaw)',
+        'III (Prognathic)(Protruded Lower Jaw)'
+    ];
+
+    $teethPairs = [
+        '05/21', '22/07', '25/10', '02/18',
+        '02/03', '09/25', '09/10', '04/20'
+    ];
+
+    return [
+        'formid'                           => $faker->randomDigit,
+        'patientid'                        => $faker->randomDigit,
+        'exam_teeth'                       => $faker->regexify('~([0-9]~)+'),
+        'other_exam_teeth'                 => $faker->sentence($nbWords = 4),
+        'caries'                           => $faker->randomElement($teethNumbers),
+        'where_facets'                     => $faker->randomElement($teethNumbers),
+        'cracked_fractured'                => $faker->randomElement($teethNumbers),
+        'old_worn_inadequate_restorations' => $faker->randomElement($teethNumbers),
+        'dental_class_right'               => $faker->randomElement($dentalClasses),
+        'dental_division_right'            => $faker->numerify('#'),
+        'dental_class_left'                => $faker->randomElement($dentalClasses),
+        'dental_division_left'             => $faker->numerify('#'),
+        'additional_paragraph'             => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
+        'initial_tooth'                    => $faker->randomElement($teethPairs),
+        'open_proximal'                    => $faker->randomElement($teethPairs),
+        'deistema'                         => $faker->randomElement($teethPairs),
+        'userid'                           => $faker->randomDigit,
+        'docid'                            => $faker->randomDigit,
+        'status'                           => $faker->randomDigit,
+        'adddate'                          => $faker->dateTime(),
+        'ip_address'                       => $faker->ipv4,
+        'missing'                          => $faker->randomElement($teethNumbers),
+        'crossbite'                        => $faker->randomElement($teethPairs)
+    ];
+});

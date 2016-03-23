@@ -35,6 +35,7 @@ class RouteServiceProvider extends ServiceProvider
         'tonsils-clinical-exams' => \DentalSleepSolutions\Eloquent\Dental\TonsilsClinicalExam::class,
         'tongue-clinical-exams' => \DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam::class,
         'airway-evaluations' => \DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation::class,
+        'dental-clinical-exams' => \DentalSleepSolutions\Eloquent\Dental\DentalClinicalExam::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

@@ -13,12 +13,12 @@ class Patient extends Model
     /**
      * RELATIONS
      */
-    public function tongue()
+    public function tongueClinicalExam()
     {
         return $this->hasOne(TongueClinicalExam::class, 'patientid', 'patientid');
     }
 
-    public function tonsils()
+    public function tonsilsClinicalExam()
     {
         return $this->hasOne(TonsilsClinicalExam::class, 'patientid', 'patientid');
     }
@@ -26,5 +26,10 @@ class Patient extends Model
     public function airwayEvaluation()
     {
         return $this->hasOne(AirwayEvaluation::class, 'patientid', 'patientid');
+    }
+
+    public function dentalClinicalExam()
+    {
+        return $this->hasOne(DentalClinicalExam::class, 'patientid', 'patientid');
     }
 }

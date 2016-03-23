@@ -414,6 +414,16 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Diagnostic::class, functio
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\FaxErrorCode::class, function ($faker) {
+    return [
+        'error_code'  => $faker->numerify('2####'),
+        'description' => $faker->sentence($nbWords = 6),
+        'resolution'  => $faker->sentence($nbWords = 8),
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale::class, function ($faker) {
     return [
         'epworth'     => $faker->sentence($nbWords = 4),

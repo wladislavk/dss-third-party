@@ -399,6 +399,15 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\DocumentCategory::class, f
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\InsurancePayer::class, function ($faker) {
+    return [
+        'name'       => $faker->sentence($nbWords = 5),
+        'payer_id'   => $faker->numerify('#####'),
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\GuideSetting::class, function ($faker) {
     return [
         'name'              => $faker->name,

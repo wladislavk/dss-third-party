@@ -455,6 +455,16 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale::cl
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceType::class, function ($faker) {
+    return [
+        'ins_type'    => $faker->sentence($nbWords = 5),
+        'description' => $faker->sentence($nbWords = 7),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
 
 $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceDocument::class, function ($faker) {
     return [

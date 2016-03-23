@@ -956,3 +956,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceHistory::class, f
         'updated_by_admin'                  => $faker->randomDigit
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory::class, function ($faker) {
+    return [
+        'insuranceid' => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'userid'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4,
+        'adminid'     => $faker->randomDigit
+    ];
+});

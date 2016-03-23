@@ -55,6 +55,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('image-types', 'ImageTypesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-diagnoses', 'InsuranceDiagnosesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-types', 'InsuranceTypesController', ['except' => ['create', 'edit']]);
+    Route::resource('insurances', 'InsurancesController', ['except' => ['create', 'edit']]);
     Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);
     Route::resource('complaints', 'ComplaintsController', ['except' => ['create', 'edit']]);
     Route::resource('custom-texts', 'CustomTextsController', ['except' => ['create', 'edit']]);

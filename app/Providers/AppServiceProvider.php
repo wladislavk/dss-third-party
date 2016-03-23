@@ -80,6 +80,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\ImageType::class => [Repositories\ImageTypes::class, Resources\ImageType::class],
             Eloquent\Dental\InsDiagnosis::class => [Repositories\InsDiagnoses::class, Resources\InsDiagnosis::class],
             Eloquent\Dental\InsuranceType::class => [Repositories\InsuranceTypes::class, Resources\InsuranceType::class],
+            Eloquent\Dental\Insurance::class => [Repositories\Insurances::class, Resources\Insurance::class],
         ];
 
 

@@ -41,6 +41,7 @@ class RouteServiceProvider extends ServiceProvider
         'gag-reflexes' => \DentalSleepSolutions\Eloquent\Dental\GagReflex::class,
         'medical-histories' => \DentalSleepSolutions\Eloquent\Dental\MedicalHistory::class,
         'image-types' => \DentalSleepSolutions\Eloquent\Dental\ImageType::class,
+        'insurance-diagnoses' => \DentalSleepSolutions\Eloquent\Dental\InsDiagnosis::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

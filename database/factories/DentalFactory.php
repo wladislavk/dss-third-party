@@ -87,8 +87,19 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory::cl
 });
 
 $factory->define(DentalSleepSolutions\Eloquent\Dental\InsDiagnosis::class, function ($faker) {
+    $insuranceDiagnoses = [
+        '039.3 ACTINOMYCOTIC INFECTION CERVICOFACIAL (3)',
+        '053.12 POSTHERPETIC TRIGEMINAL NEURALGIA (5)',
+        '053.13 POSTHERPETIC POLYNEUROPATHY (6)'
+    ];
+
     return [
-        'ip_address' => $faker->ipv4,
+        'ins_diagnosis' => $faker->randomElement($insuranceDiagnoses),
+        'description'   => $faker->sentence($nbWords = 6),
+        'sortby'        => $faker->randomDigit,
+        'status'        => $faker->randomDigit,
+        'adddate'       => $faker->dateTime(),
+        'ip_address'    => $faker->ipv4
     ];
 });
 

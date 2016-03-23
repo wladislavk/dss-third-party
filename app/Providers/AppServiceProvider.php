@@ -77,6 +77,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\FaxInvoice::class => [Repositories\FaxInvoices::class, Resources\FaxInvoice::class],
             Eloquent\Dental\GagReflex::class => [Repositories\GagReflexes::class, Resources\GagReflex::class],
             Eloquent\Dental\MedicalHistory::class => [Repositories\MedicalHistories::class, Resources\MedicalHistory::class],
+            Eloquent\Dental\ImageType::class => [Repositories\ImageTypes::class, Resources\ImageType::class],
         ];
 
 

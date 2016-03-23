@@ -680,3 +680,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\MedicalHistory::class, fun
         'ip_address'  => $faker->ipv4
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\ImageType::class, function ($faker) {
+    return [
+        'imagetype'   => $faker->word,
+        'description' => $faker->sentence($nbWords = 5),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

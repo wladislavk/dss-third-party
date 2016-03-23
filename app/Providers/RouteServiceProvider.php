@@ -40,6 +40,7 @@ class RouteServiceProvider extends ServiceProvider
         'fax-invoices' => \DentalSleepSolutions\Eloquent\Dental\FaxInvoice::class,
         'gag-reflexes' => \DentalSleepSolutions\Eloquent\Dental\GagReflex::class,
         'medical-histories' => \DentalSleepSolutions\Eloquent\Dental\MedicalHistory::class,
+        'image-types' => \DentalSleepSolutions\Eloquent\Dental\ImageType::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

@@ -325,6 +325,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
     ];
 });
 
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\Charge::class, function ($faker) {
     return [
         'amount'                  => $faker->regexify('^\d*(\.\d{2})?$'),
@@ -413,6 +414,18 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Diagnostic::class, functio
         'ip_address'  => $faker->ipv4
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale::class, function ($faker) {
+    return [
+        'epworth'     => $faker->sentence($nbWords = 4),
+        'description' => $faker->sentence($nbWords = 7),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
+
 
 $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceDocument::class, function ($faker) {
     return [

@@ -22,4 +22,9 @@ class Patient extends Model
     {
         return $this->hasOne(TonsilsClinicalExam::class, 'patientid', 'patientid');
     }
+
+    public function airwayEvaluation()
+    {
+        return $this->hasOne(AirwayEvaluation::class, 'patientid', 'patientid');
+    }
 }

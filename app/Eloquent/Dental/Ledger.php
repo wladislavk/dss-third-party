@@ -3,11 +3,45 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Contracts\Resources\Ledger as Resource;
+use DentalSleepSolutions\Contracts\Repositories\Ledgers as Repository;
 
-class Ledger extends Model
+class Ledger extends Model implements Resource, Repository
 {
+    /**
+     * Guarded attributes
+     *
+     * @var array
+     */
+    protected $guarded = ['ledgerid'];
+
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
     protected $table = 'dental_ledger';
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
     protected $primaryKey = 'ledgerid';
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['service_date', 'entry_date', 'percase_date'];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     public static function getForSendClaim($pid, $insid, $docid, $type)
     {

@@ -51,6 +51,7 @@ class RouteServiceProvider extends ServiceProvider
         'joints' => \DentalSleepSolutions\Eloquent\Dental\Joint::class,
         'joint-exams' => \DentalSleepSolutions\Eloquent\Dental\JointExam::class,
         'ledger-notes' => \DentalSleepSolutions\Eloquent\Dental\LedgerNote::class,
+        'ledgers' => \DentalSleepSolutions\Eloquent\Dental\Ledger::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

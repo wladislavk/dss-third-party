@@ -69,6 +69,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('ledger-records', 'LedgerRecordsController', ['except' => ['create', 'edit']]);
     Route::resource('letter-templates', 'LetterTemplatesController', ['except' => ['create', 'edit']]);
     Route::resource('custom-letter-templates', 'CustomLetterTemplatesController', ['except' => ['create', 'edit']]);
+    Route::resource('letters', 'LettersController', ['except' => ['create', 'edit']]);
     Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);
     Route::resource('complaints', 'ComplaintsController', ['except' => ['create', 'edit']]);
     Route::resource('custom-texts', 'CustomTextsController', ['except' => ['create', 'edit']]);

@@ -94,6 +94,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\LedgerRecord::class => [Repositories\LedgerRecords::class, Resources\LedgerRecord::class],
             Eloquent\Dental\LetterTemplate::class => [Repositories\LetterTemplates::class, Resources\LetterTemplate::class],
             Eloquent\Dental\CustomLetterTemplate::class => [Repositories\CustomLetterTemplates::class, Resources\CustomLetterTemplate::class],
+            Eloquent\Dental\Letter::class => [Repositories\Letters::class, Resources\Letter::class],
         ];
 
 

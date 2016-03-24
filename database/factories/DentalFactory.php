@@ -1301,3 +1301,39 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate::clas
         'status'     => $faker->randomDigit
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Letter::class, function ($faker) {
+    return [
+        'patientid'            => $faker->randomDigit,
+        'stepid'               => $faker->randomDigit,
+        'delivery_date'        => $faker->dateTime(),
+        'send_method'          => $faker->word,
+        'template'             => $faker->sentence($nbWords = 6),
+        'pdf_path'             => $faker->word,
+        'status'               => $faker->randomDigit,
+        'delivered'            => $faker->randomDigit,
+        'deleted'              => $faker->boolean($chanceOfGettingTrue = 50),
+        'templateid'           => $faker->randomDigit,
+        'parentid'             => $faker->randomDigit,
+        'topatient'            => $faker->boolean($chanceOfGettingTrue = 50),
+        'md_list'              => $faker->word,
+        'md_referral_list'     => $faker->word,
+        'docid'                => $faker->randomDigit,
+        'userid'               => $faker->randomDigit,
+        'date_sent'            => $faker->dateTime(),
+        'info_id'              => $faker->randomDigit,
+        'edit_userid'          => $faker->randomDigit,
+        'mailed_date'          => $faker->dateTime(),
+        'mailed_once'          => $faker->randomDigit,
+        'template_type'        => $faker->randomDigit,
+        'cc_topatient'         => $faker->randomDigit,
+        'cc_md_list'           => $faker->word,
+        'cc_md_referral_list'  => $faker->word,
+        'font_family'          => $faker->word,
+        'font_size'            => $faker->randomDigit,
+        'pat_referral_list'    => $faker->word,
+        'cc_pat_referral_list' => $faker->word,
+        'deleted_by'           => $faker->randomDigit,
+        'deleted_on'           => $faker->dateTime()
+    ];
+});

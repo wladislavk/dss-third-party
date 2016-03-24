@@ -61,6 +61,7 @@ class RouteServiceProvider extends ServiceProvider
         'locations' => \DentalSleepSolutions\Eloquent\Dental\Location::class,
         'logins' => \DentalSleepSolutions\Eloquent\Dental\Login::class,
         'login-details' => \DentalSleepSolutions\Eloquent\Dental\LoginDetail::class,
+        'mandibles' => \DentalSleepSolutions\Eloquent\Dental\Mandible::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

@@ -83,6 +83,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Insurance::class => [Repositories\Insurances::class, Resources\Insurance::class],
             Eloquent\Dental\InsuranceFile::class => [Repositories\InsuranceFiles::class, Resources\InsuranceFile::class],
             Eloquent\Dental\InsuranceHistory::class => [Repositories\InsuranceHistories::class, Resources\InsuranceHistory::class],
+            Eloquent\Dental\InsurancePreauth::class => [Repositories\InsurancePreauth::class, Resources\InsurancePreauth::class],
         ];
 
 

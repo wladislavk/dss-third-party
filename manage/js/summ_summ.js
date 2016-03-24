@@ -15,7 +15,7 @@ $(document).ready(function(){
 $('#dental_device').change( function(){
     var val = $('#dental_device').val();
     var pid = getParameterByName('pid');
-    alert('change');
+
     $.ajax({
         url: "includes/summ_device_update.php",
         type: "post",

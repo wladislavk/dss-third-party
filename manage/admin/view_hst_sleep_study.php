@@ -98,6 +98,11 @@ $testTypes = [
     .odd { background: #f9ffdf; }
     .even { background: #e4ffcf; }
     select { width: 140px; }
+
+    input.no-file-input {
+        width: 110px;
+        display: inline-block;
+    }
 </style>
 <script type="text/javascript" src="/manage/js/file-upload-check.js"></script>
 <script type="text/javascript">
@@ -117,7 +122,7 @@ $testTypes = [
             $container.width($parent.width() > width ? width : $parent.width());
         });
 
-        $('[id^=file_edit_] a').click(function () {
+        $('[id^=file_edit_] a:contains(Edit)').click(function () {
             var $this = $(this),
                 $parent = $this.closest('td'),
                 $edit = $parent.find('[id^=file_edit_]'),
@@ -306,9 +311,9 @@ $testTypes = [
                                     target="_blank" class="btn btn-info btn-xs">View</a>
                                 <a href="#" class="btn btn-primary btn-xs">Edit</a>
                             </div>
-                            <input type="file" name="ss_file_<?= $n ?>" id="ss_file_<?= $n ?>" style="display: none;" />
+                            <input type="file" class="no-file-input" name="ss_file_<?= $n ?>" id="ss_file_<?= $n ?>" style="display: none;" />
                         <?php } else { ?>
-                            <input type="file" name="ss_file_<?= $n ?>" id="ss_file_<?= $n ?>" />
+                            <input type="file" class="no-file-input" name="ss_file_<?= $n ?>" id="ss_file_<?= $n ?>" />
                             <span class="req">*</span>
                         <?php } ?>
                     </td>

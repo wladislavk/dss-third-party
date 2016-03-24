@@ -79,43 +79,43 @@ function remove_notification(id){
 }
 
 function cal_bmi(){
-  fa = document.patientfrm;
-  if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0){
-    var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
+  var fa = $('[name=patientfrm], #patientfrm');
+  if(fa.find('[name=feet]').val() != 0 && fa.find('[name=inches]').val() != -1 && fa.find('[name=weight]').val() != 0) {
+    var inc = (parseInt(fa.find('[name=feet]').val()) * 12) + parseInt(fa.find('[name=inches]').val());
     //alert(inc);
 
     var inc_sqr = parseInt(inc) * parseInt(inc);
-    var wei = parseInt(fa.weight.value) * 703;
+    var wei = parseInt(fa.find('[name=weight]').val()) * 703;
     var bmi = parseInt(wei) / parseInt(inc_sqr);
 
     //alert("BMI " + bmi.toFixed(2));
-    fa.bmi.value = bmi.toFixed(1);
+    fa.find('[name=bmi]').val(bmi.toFixed(1));
   } else {
-    fa.bmi.value = '';
+    fa.find('[name=bmi]').val('');
   }
 }
 
 function show_referredby(t, rs){
   if(t=='person'){
-    document.getElementById('referred_notes').style.display="none";
-    document.getElementById('referred_person').style.display="block";
+    $('#referred_notes').hide();
+    $('#referred_person').show();
   }else{
-    document.getElementById('referred_notes').style.display="block";
-    document.getElementById('referred_person').style.display="none";
+    $('#referred_notes').show();
+    $('#referred_person').hide();
   }
   $('#referred_source').val(rs);
 }
 
 function updateNumber(f){
-  var selectBox = document.getElementById("p_m_ins_co");
-  var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-  document.getElementById(f).innerHTML = insurance_nums[selectedValue];
+  var selectBox = $("#p_m_ins_co");
+  var selectedValue = selectBox.val();
+  $('#' + f).html((typeof insurance_nums === 'object' ? insurance_nums : [])[selectedValue]);
 }
 
 function updateNumber2(f){
-  var selectBox = document.getElementById("s_m_ins_co");
-  var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-  document.getElementById(f).innerHTML = insurance_nums[selectedValue];
+  var selectBox = $("#s_m_ins_co");
+  var selectedValue = selectBox.val();
+  $('#' + f).html((typeof insurance_nums === 'object' ? insurance_nums : [])[selectedValue]);
 }
 
 function clearInfo(){

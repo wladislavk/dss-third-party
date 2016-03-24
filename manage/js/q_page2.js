@@ -27,11 +27,11 @@ function chk_poly()
 
 function other_chk1()
 { 	
-	fa = document.q_page2frm;
-	if(fa.other_chk.checked) {
-		fa.other_therapy.disabled = false;
+	fa = $('[name=q_page2frm]');
+	if(fa.find('[name=other_chk]').is(':checked')) {
+		fa.find('[name=other_therapy]').prop('disabled', false);
 	} else {
-		fa.other_therapy.disabled = true;
+		fa.find('[name=other_therapy]').prop('disabled', true);
 	}
 }
 

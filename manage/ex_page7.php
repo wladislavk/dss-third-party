@@ -258,7 +258,6 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
-<script type="text/javascript" src="script/wufoo.js"></script>
 
 <a name="top"></a>
 &nbsp;&nbsp;

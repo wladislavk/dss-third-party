@@ -6,6 +6,7 @@
 ?>
 
     <script type="text/javascript" src="/manage/js/q_page4.js"></script>
+    <script type="text/javascript" src="/manage/js/form_top.js"></script>
 
 <?php
     if(isset($_POST['q_page4sub']) && $_POST['q_page4sub'] == 1) {
@@ -105,7 +106,6 @@
 ?>
 
     <link rel="stylesheet" href="css/form.css" type="text/css" />
-    <script type="text/javascript" src="script/wufoo.js"></script>
 
     <a name="top"></a>
     &nbsp;&nbsp;

@@ -102,7 +102,7 @@ $(function(){
     /**
      * File input
      */
-    $(':file').each(function(){
+    $(':file:not(.no-file-input)').each(function(){
         var $file = $(this),
             id = $file.attr('id'),
             $replacement;

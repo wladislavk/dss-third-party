@@ -176,7 +176,6 @@ include_once('includes/patient_changes.php');
 
     <link rel="stylesheet" href="css/letter-form.css" type="text/css" />
     <link rel="stylesheet" href="css/form.css" type="text/css" />
-    <script type="text/javascript" src="script/wufoo.js"></script>
 
  <?php if($_SERVER['PHP_SELF'] == "/manage/manage_flowsheet3.php" || $_SERVER['PHP_SELF'] == "/manage/manage_flowsheet4.php") {
     $getstepqrysql = "SELECT * FROM dental_flow_pg2 WHERE patientid='".$_GET['pid']."' LIMIT 1;";

@@ -1247,3 +1247,23 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerPaymentHistory::clas
         'updated_by_admin'  => $faker->boolean($chanceOfGettingTrue = 50)
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerRecord::class, function ($faker) {
+    return [
+        'formid'           => $faker->randomDigit,
+        'patientid'        => $faker->randomDigit,
+        'service_date'     => Carbon::now()->format('m/d/Y'),
+        'entry_date'       => Carbon::now()->addDays(2)->format('m/d/Y'),
+        'description'      => $faker->sentence($nbWords = 5),
+        'producer'         => $faker->word,
+        'amount'           => $faker->numerify('###.##'),
+        'transaction_type' => $faker->randomElement(['Charge', 'None', 'Credit']),
+        'paid_amount'      => $faker->numerify('###.##'),
+        'userid'           => $faker->randomDigit,
+        'docid'            => $faker->randomDigit,
+        'status'           => $faker->randomDigit,
+        'adddate'          => Carbon::now()->format('m/d/Y'),
+        'ip_address'       => $faker->ipv4,
+        'transaction_code' => $faker->regexify('[A-Z][0-9]{4}')
+    ];
+});

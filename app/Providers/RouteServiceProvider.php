@@ -54,6 +54,7 @@ class RouteServiceProvider extends ServiceProvider
         'ledgers' => \DentalSleepSolutions\Eloquent\Dental\Ledger::class,
         'ledger-histories' => \DentalSleepSolutions\Eloquent\Dental\LedgerHistory::class,
         'ledger-payments' => \DentalSleepSolutions\Eloquent\Dental\LedgerPayment::class,
+        'ledger-records' => \DentalSleepSolutions\Eloquent\Dental\LedgerRecord::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

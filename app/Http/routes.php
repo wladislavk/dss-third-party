@@ -66,6 +66,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('ledgers', 'LedgersController', ['except' => ['create', 'edit']]);
     Route::resource('ledger-histories', 'LedgerHistoriesController', ['except' => ['create', 'edit']]);
     Route::resource('ledger-payments', 'LedgerPaymentsController', ['except' => ['create', 'edit']]);
+    Route::resource('ledger-records', 'LedgerRecordsController', ['except' => ['create', 'edit']]);
     Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);
     Route::resource('complaints', 'ComplaintsController', ['except' => ['create', 'edit']]);
     Route::resource('custom-texts', 'CustomTextsController', ['except' => ['create', 'edit']]);

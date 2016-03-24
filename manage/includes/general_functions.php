@@ -5,6 +5,7 @@ define('SHARED_FOLDER', __DIR__ . '/../../../../shared/');
 define('Q_FILE_FOLDER', SHARED_FOLDER . '/q_file/');
 
 require_once __DIR__ . '/constants.inc';
+require_once __DIR__ . '/../../reg/twilio/Services/Twilio.php';
 
 function generateApiToken($idOrEmail) {
     $apiPath = env('API_PATH');
@@ -480,6 +481,64 @@ function sendUpdatedEmail ($patientId, $newEmail, $oldEmail, $sentBy) {
     $return = sendEmail($from, "$to <$newEmail>", $subject, $message, $mailingData) && $return;
 
     return $return;
+}
+
+/**
+ * Save SMS activity, for debugging purposes
+ *
+ * @param string $to
+ * @param string $text
+ * @param string $status
+ */
+function logSMSActivity ($from, $to, $text, $status) {
+    $db = new Db();
+    $smsData = [
+        'from' => $from,
+        'to' => $to,
+        'text' => $text,
+        'status' => $status,
+    ];
+
+    if (config('app.debug') && config('app.debugEmail')) {
+        error_log("sendSMS debug information:");
+        error_log(json_encode($smsData));
+    }
+
+    $smsData = $db->escapeAssignmentList($smsData);
+    $db->query("INSERT INTO dental_sms_log SET $smsData, created_at = NOW()");
+}
+
+function sendSMS ($to, $text) {
+    $sid = config('app.twilio.sid');
+    $token = config('app.twilio.token');
+    $from = config('app.twilio.number');
+    $sendSMS = config('app.twilio.enabled');
+
+    if (empty($to)) {
+        logSMSActivity($from, $to, $text, 'No phone number provided');
+        return false;
+    }
+
+    if (!$sendSMS) {
+        logSMSActivity($from, $to, $text, 'SMS send disabled');
+        return false;
+    }
+
+    $sent = false;
+
+    try {
+        $client = new \Services_Twilio($sid, $token);
+        $sms = $client->account->sms_messages->create($from, $to, $text);
+
+        logSMSActivity($from, $to, $text, 'SMS in queue');
+        $sent = true;
+
+        dd($sms);
+    } catch (\Services_Twilio_RestException $e) {
+        logSMSActivity($from, $to, $text, 'Twilio exception: ' . $e->getMessage());
+    }
+
+    return $sent;
 }
 
 function showPatientValue($table, $pid, $f, $pv, $fv, $showValues = true, $show=true, $type="text"){

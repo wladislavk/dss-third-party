@@ -2,6 +2,7 @@
 namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/constants.inc';
+require_once __DIR__ . '/general_functions.php';
 
 /**
  * Create a new patient, based on a HST request. The patient will NOT be created if the requested HST already has
@@ -187,67 +188,17 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId) {
     $companyEmail = $db->getColumn("SELECT email FROM companies WHERE id = '$hstCompanyId'", 'email');
 
     if ($companyEmail) {
-        $headers = join("\r\n", [
-            'From: Dental Sleep Solutions <noreply@dentalsleepsolutions.com>',
-            'Content-type: text/html',
-            'Mime-Version: 1.0',
-            'Reply-To: noreply@dentalsleepsolutions.com',
-            'X-Mailer: PHP/' . phpversion()
-        ]);
+        $from = 'Dental Sleep Solutions <noreply@dentalsleepsolutions.com>';
+        $to = $companyEmail;
+        $subject = 'New HST Order Created';
+        $template = getTemplate('hst-authorization.tpl');
 
-        $today = date('m/d/Y h:i p');
-        $host = 'https://' . $_SERVER['HTTP_HOST'];
-        $footer = DSS_EMAIL_FOOTER;
+        $mailingData = $db->getRow("SELECT first_name, last_name, mailing_practice
+            FROM dental_users
+            WHERE userid = '$docId'");
+        $mailingData['today'] = date('m/d/Y h:i p');
 
-        $subject = "New HST Order Created";
-        $user_sql = "SELECT * FROM dental_users WHERE userid = '$docId'";
-        $user = $db->getRow($user_sql);
-        $body = "<html>
-            <body>
-                <center>
-                    <table width='600'>
-                        <tr>
-                            <td colspan='2'>
-                                <img alt='A message from your healthcare provider'
-                                    src='$host/reg/images/email/email_header_fo.png' />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width='400'>
-                                <h2>New HST Order Created</h2>
-                                <p>A new HST order has been submitted to you by
-                                    {$user['first_name']} {$user['last_name']}
-                                    at {$user['mailing_practice']}
-                                    on {$today}
-                                </p>
-                                <p>Please log in to your DS3 backoffice account to check the details:
-                                    <a href='$host/manage/admin'>
-                                        $host/manage/admin
-                                    </a>
-                                </p>
-                            </td>
-                            <td>
-                                <img alt='Logo' src='$host/reg/images/email/reg_logo.gif' />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan='2'>
-                                <img alt='A message from your healthcare provider'
-                                    src='$host/reg/images/email/email_footer_fo.png' />
-                            </td>
-                        </tr>
-                    </table>
-                </center>
-                <span style='font-size:12px;'>
-                    This email was sent by Dental Sleep Solutions&reg;
-                    on behalf of {$user['mailing_practice']}
-                    {$footer}
-                </span>
-            </body></html>";
-
-        $body = preg_replace('/[\s\t\r\n]+/', ' ', $body);
-
-        mail($companyEmail, $subject, $body, $headers);
+        sendEmail($from, $to, $subject, $template, $mailingData);
     }
 
     return true;

@@ -7,49 +7,31 @@
         <tr>
             <td colspan="2">
                 <img alt="A message from your healthcare provider"
-                     src="{{baseUrl}}/reg/images/email/email_header_fo.png" />
+                    src="{{baseUrl}}/reg/images/email/email_header_fo.png" />
             </td>
         </tr>
         <tr>
             <td>
-                <h2>Your Updated Account</h2>
+                <h2>New HST Order Created</h2>
                 <p>
-                    An update has been made to your account.<br />
-                    Please use the updated email address below to login:
+                    A new HST order has been submitted to you by
+                    {{first_name}} {{last_name}}
+                    at {{mailing_practice}}
+                    on {{today}}
                 </p>
-                <h3>New Email: {{new_email}}</h3>
                 <p>
-                    <b>Old Email:</b> {{old_email}}
+                    Please log in to your DS3 backoffice account to check the details:
+                    <a href="{{baseUrl}}/manage/admin">{{baseUrl}}/manage/admin</a>
                 </p>
             </td>
             <td>
-                <center>
-                    <img alt="{{mailing_practice}} Logo" src="{{baseUrl}}/{{logo}}" />
-                </center>
+                <img alt="Logo" src="{{baseUrl}}/reg/images/email/reg_logo.gif" />
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <p>
-                    Click the link below to login with your new email address:<br />
-                    <a href="{{baseUrl}}/reg/login.php">{{baseUrl}}/reg/login.php</a>
-                </p>
-                <p>
-                    {{mailing_practice}}<br />
-                    {{mailing_address}}<br />
-                    {{mailing_city}} {{mailing_state}} {{mailing_zip}}<br />
-                    {{mailing_phone}}
-                </p>
-                <h3>Need assistance?</h3>
-                <p>
-                    <b>Contact us at {{mailing_phone}}</b>
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <img alt="Powered by Dental Sleep Solutions&reg;"
-                     src="{{baseUrl}}/reg/images/email/email_footer_fo.png" />
+                <img alt="A message from your healthcare provider"
+                    src="{{baseUrl}}/reg/images/email/email_footer_fo.png" />
             </td>
         </tr>
     </table>
